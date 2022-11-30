@@ -90,7 +90,7 @@ theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ
     (1 : K) ≤ b ^ f.natDegree * |eval ((a : K) / b) (f.map (algebraMap ℤ K))| := by
   obtain ⟨ev, bi, bu, hF⟩ :=
     @denoms_clearable_nat_degree _ _ _ _ b _ (algebraMap ℤ K) f a
-      (by
+      (by 
         rw [eq_int_cast, one_div_mul_cancel]
         rw [Int.cast_ne_zero]
         exact b0.ne.symm)
@@ -102,8 +102,6 @@ theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ
   rw [eq_one_div_of_mul_eq_one_left bu, F0, one_div, eq_int_cast, Int.cast_zero, zero_eq_mul] at hF
   cases' hF with hF hF
   · exact (not_le.mpr b0 (le_of_eq (int.cast_eq_zero.mp (pow_eq_zero hF)))).elim
-    
   · rwa [div_eq_mul_inv]
-    
 #align one_le_pow_mul_abs_eval_div one_le_pow_mul_abs_eval_div
 

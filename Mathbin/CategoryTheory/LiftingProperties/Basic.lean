@@ -50,14 +50,14 @@ namespace HasLiftingProperty
 variable {i p}
 
 theorem op (h : HasLiftingProperty i p) : HasLiftingProperty p.op i.op :=
-  ⟨fun f g sq => by
+  ⟨fun f g sq => by 
     simp only [comm_sq.has_lift.iff_unop, Quiver.Hom.unop_op]
     infer_instance⟩
 #align category_theory.has_lifting_property.op CategoryTheory.HasLiftingProperty.op
 
 theorem unop {A B X Y : Cᵒᵖ} {i : A ⟶ B} {p : X ⟶ Y} (h : HasLiftingProperty i p) :
     HasLiftingProperty p.unop i.unop :=
-  ⟨fun f g sq => by
+  ⟨fun f g sq => by 
     rw [comm_sq.has_lift.iff_op]
     simp only [Quiver.Hom.op_unop]
     infer_instance⟩
@@ -92,7 +92,7 @@ instance (priority := 100) of_right_iso [IsIso p] : HasLiftingProperty i p :=
 
 instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] :
     HasLiftingProperty (i ≫ i') p :=
-  ⟨fun f g sq => by
+  ⟨fun f g sq => by 
     have fac := sq.w
     rw [assoc] at fac
     exact
@@ -105,7 +105,7 @@ instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] :
 
 instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] :
     HasLiftingProperty i (p ≫ p') :=
-  ⟨fun f g sq => by
+  ⟨fun f g sq => by 
     have fac := sq.w
     rw [← assoc] at fac
     let sq₂ := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift
@@ -119,7 +119,7 @@ instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] :
 
 theorem of_arrow_iso_left {A B A' B' X Y : C} {i : A ⟶ B} {i' : A' ⟶ B'}
     (e : Arrow.mk i ≅ Arrow.mk i') (p : X ⟶ Y) [hip : HasLiftingProperty i p] :
-    HasLiftingProperty i' p := by
+    HasLiftingProperty i' p := by 
   rw [arrow.iso_w' e]
   infer_instance
 #align
@@ -134,7 +134,7 @@ theorem of_arrow_iso_right {A B X Y X' Y' : C} (i : A ⟶ B) {p : X ⟶ Y} {p' :
 
 theorem iff_of_arrow_iso_left {A B A' B' X Y : C} {i : A ⟶ B} {i' : A' ⟶ B'}
     (e : Arrow.mk i ≅ Arrow.mk i') (p : X ⟶ Y) : HasLiftingProperty i p ↔ HasLiftingProperty i' p :=
-  by
+  by 
   constructor <;> intro
   exacts[of_arrow_iso_left e p, of_arrow_iso_left e.symm p]
 #align

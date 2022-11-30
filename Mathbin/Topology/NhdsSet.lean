@@ -86,7 +86,7 @@ theorem nhds_set_interior : 𝓝ˢ (interior s) = 𝓟 (interior s) :=
 #align nhds_set_interior nhds_set_interior
 
 @[simp]
-theorem nhds_set_singleton : 𝓝ˢ {x} = 𝓝 x := by
+theorem nhds_set_singleton : 𝓝ˢ {x} = 𝓝 x := by 
   ext
   rw [← subset_interior_iff_mem_nhds_set, ← mem_interior_iff_mem_nhds, singleton_subset_iff]
 #align nhds_set_singleton nhds_set_singleton

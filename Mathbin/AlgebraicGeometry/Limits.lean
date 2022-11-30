@@ -54,7 +54,7 @@ def SchemeCat.emptyTo (X : SchemeCat.{u}) : ∅ ⟶ X :=
     fun x => PEmpty.elim x⟩
 #align algebraic_geometry.Scheme.empty_to AlgebraicGeometry.SchemeCat.emptyTo
 
-@[ext.1]
+@[ext]
 theorem SchemeCat.empty_ext {X : SchemeCat.{u}} (f g : ∅ ⟶ X) : f = g := by
   ext a
   exact PEmpty.elim a
@@ -89,27 +89,22 @@ instance (priority := 100) is_open_immersion_of_is_empty {X Y : SchemeCat} (f : 
   apply (config := { instances := false }) is_open_immersion.of_stalk_iso
   · apply open_embedding_of_continuous_injective_open
     · continuity
-      
     · rintro (i : X.carrier)
       exact isEmptyElim i
-      
     · intro U hU
       convert is_open_empty
       ext
       apply (iff_false_iff _).mpr
       exact fun x => isEmptyElim (show X.carrier from x.some)
-      
-    
   · rintro (i : X.carrier)
     exact isEmptyElim i
-    
 #align
   algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.is_open_immersion_of_is_empty
 
 instance (priority := 100) is_iso_of_is_empty {X Y : SchemeCat} (f : X ⟶ Y) [IsEmpty Y.carrier] :
     IsIso f := by
   haveI : IsEmpty X.carrier := ⟨fun x => isEmptyElim (show Y.carrier from f.1.base x)⟩
-  have : epi f.1.base := by
+  have : epi f.1.base := by 
     rw [TopCat.epi_iff_surjective]
     rintro (x : Y.carrier)
     exact isEmptyElim x

@@ -74,7 +74,8 @@ unsafe def valid_types : expr → List expr
   | _ => []
 #align tactic.valid_types tactic.valid_types
 
-unsafe def replacer_attr (ntac : Name) : user_attribute where
+unsafe def replacer_attr (ntac : Name) :
+    user_attribute where 
   Name := ntac
   descr :=
     "Replaces the definition of `" ++ toString ntac ++ "`. This should be " ++
@@ -147,7 +148,8 @@ unsafe def unprime : Name → tactic Name
 #align tactic.unprime tactic.unprime
 
 @[user_attribute]
-unsafe def replaceable_attr : user_attribute where
+unsafe def replaceable_attr :
+    user_attribute where 
   Name := `replaceable
   descr := "make definition replaceable in dependent modules"
   after_set :=

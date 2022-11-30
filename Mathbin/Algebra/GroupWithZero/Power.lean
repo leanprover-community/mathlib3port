@@ -29,9 +29,7 @@ theorem pow_sub₀ (a : G₀) {m n : ℕ} (ha : a ≠ 0) (h : n ≤ m) : a ^ (m 
 theorem pow_sub_of_lt (a : G₀) {m n : ℕ} (h : n < m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
   · rw [zero_pow (tsub_pos_of_lt h), zero_pow (n.zero_le.trans_lt h), zero_mul]
-    
   · exact pow_sub₀ _ ha h.le
-    
 #align pow_sub_of_lt pow_sub_of_lt
 
 theorem pow_inv_comm₀ (a : G₀) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
@@ -59,7 +57,7 @@ variable {G₀ : Type _} [GroupWithZero G₀]
 attribute [local ematch] le_of_lt
 
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
-  | (n : ℕ), h => by
+  | (n : ℕ), h => by 
     rw [zpow_coe_nat, zero_pow']
     simpa using h
   | -[n+1], h => by simp
@@ -68,9 +66,7 @@ theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
 theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
   · rw [h, zpow_zero]
-    
   · rw [zero_zpow _ h]
-    
 #align zero_zpow_eq zero_zpow_eq
 
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
@@ -93,27 +89,19 @@ theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m 
   induction' n using Int.induction_on with n ihn n ihn
   case hz => simp
   · simp only [← add_assoc, zpow_add_one₀ ha, ihn, mul_assoc]
-    
   · rw [zpow_sub_one₀ ha, ← mul_assoc, ← ihn, ← zpow_sub_one₀ ha, add_sub_assoc]
-    
 #align zpow_add₀ zpow_add₀
 
 theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) :
-    a ^ (m + n) = a ^ m * a ^ n := by
-  by_cases hm : m = 0;
-  · simp [hm]
-    
-  by_cases hn : n = 0;
-  · simp [hn]
-    
+    a ^ (m + n) = a ^ m * a ^ n := by 
+  by_cases hm : m = 0; · simp [hm]
+  by_cases hn : n = 0; · simp [hn]
   by_cases ha : a = 0
   · subst a
     simp only [false_or_iff, eq_self_iff_true, not_true, Ne.def, hm, hn, false_and_iff,
       or_false_iff] at h
     rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
-    
   · exact zpow_add₀ ha m n
-    
 #align zpow_add' zpow_add'
 
 theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a ^ i := by
@@ -157,10 +145,10 @@ theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a := by
 #align zpow_bit1₀ zpow_bit1₀
 
 theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
-  | (n : ℕ) => by
+  | (n : ℕ) => by 
     rw [zpow_coe_nat]
     exact pow_ne_zero _ ha
-  | -[n+1] => by
+  | -[n+1] => by 
     rw [zpow_neg_succ_of_nat]
     exact inv_ne_zero (pow_ne_zero _ ha)
 #align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
@@ -199,7 +187,6 @@ variable {G₀ : Type _} [CommGroupWithZero G₀]
 theorem div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b := by
   by_cases ha : a = 0
   · simp [ha]
-    
   rw [sq, mul_assoc, mul_div_cancel_left _ ha]
 #align div_sq_cancel div_sq_cancel
 

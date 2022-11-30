@@ -58,12 +58,13 @@ variable {I A : Type _} {X : I → Type _} [∀ i, TopologicalSpace (X i)] [Topo
 
 /-- The product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
-def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi g) where
+def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) :
+    Homotopy (pi f) (pi g) where 
   toFun t i := homotopies i t
-  map_zero_left' t := by
+  map_zero_left' t := by 
     ext i
     simp only [pi_eval, homotopy.apply_zero]
-  map_one_left' t := by
+  map_one_left' t := by 
     ext i
     simp only [pi_eval, homotopy.apply_one]
 #align continuous_map.homotopy.pi ContinuousMap.Homotopy.pi
@@ -73,7 +74,7 @@ def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi
 def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) :
     HomotopyRel (pi f) (pi g) S :=
   { Homotopy.pi fun i => (homotopies i).toHomotopy with
-    prop' := by
+    prop' := by 
       intro t x hx
       dsimp only [coe_mk, pi_eval, to_fun_eq_coe, homotopy_with.coe_to_continuous_map]
       simp only [Function.funext_iff, ← forall_and]
@@ -92,7 +93,8 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {A : Type 
   where `F` takes `f₀` to `f₁`  and `G` takes `g₀` to `g₁` -/
 @[simps]
 def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) :
-    Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
+    Homotopy (prodMk f₀ g₀)
+      (prodMk f₁ g₁) where 
   toFun t := (F t, G t)
   map_zero_left' x := by simp only [prod_eval, homotopy.apply_zero]
   map_one_left' x := by simp only [prod_eval, homotopy.apply_one]
@@ -104,7 +106,7 @@ def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) :
 def HomotopyRel.prod (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel g₀ g₁ S) :
     HomotopyRel (prodMk f₀ g₀) (prodMk f₁ g₁) S :=
   { Homotopy.prod F.toHomotopy G.toHomotopy with
-    prop' := by
+    prop' := by 
       intro t x hx
       have hF := F.prop' t x hx
       have hG := G.prop' t x hx
@@ -141,7 +143,7 @@ def pi (γ : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) : Path.Homotopic.Quot
 #align path.homotopic.pi Path.Homotopic.pi
 
 theorem pi_lift (γ : ∀ i, Path (as i) (bs i)) : (Path.Homotopic.pi fun i => ⟦γ i⟧) = ⟦Path.pi γ⟧ :=
-  by
+  by 
   unfold pi
   simp
 #align path.homotopic.pi_lift Path.Homotopic.pi_lift
@@ -150,7 +152,7 @@ theorem pi_lift (γ : ∀ i, Path (as i) (bs i)) : (Path.Homotopic.pi fun i => �
   This is `path.trans_pi_eq_pi_trans` descended to path homotopy classes -/
 theorem comp_pi_eq_pi_comp (γ₀ : ∀ i, Path.Homotopic.Quotient (as i) (bs i))
     (γ₁ : ∀ i, Path.Homotopic.Quotient (bs i) (cs i)) : pi γ₀ ⬝ pi γ₁ = pi fun i => γ₀ i ⬝ γ₁ i :=
-  by
+  by 
   apply Quotient.induction_on_pi γ₁
   apply Quotient.induction_on_pi γ₀
   intros

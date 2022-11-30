@@ -34,19 +34,17 @@ variable {G : Type _} [Group G] {H : Subgroup G} {R S : Set G}
 
 theorem closure_mul_image_mul_eq_top (hR : R ∈ rightTransversals (H : Set G)) (hR1 : (1 : G) ∈ R)
     (hS : closure S = ⊤) : (closure ((R * S).image fun g => g * (toFun hR g)⁻¹) : Set G) * R = ⊤ :=
-  by
+  by 
   let f : G → R := fun g => to_fun hR g
   let U : Set G := (R * S).image fun g => g * (f g)⁻¹
   change (closure U : Set G) * R = ⊤
   refine' top_le_iff.mp fun g hg => _
   apply closure_induction_right (eq_top_iff.mp hS (mem_top g))
   · exact ⟨1, 1, (closure U).one_mem, hR1, one_mul 1⟩
-    
   · rintro - s hs ⟨u, r, hu, hr, rfl⟩
     rw [show u * r * s = u * (r * s * (f (r * s))⁻¹) * f (r * s) by group]
     refine' Set.mul_mem_mul ((closure U).mul_mem hu _) (f (r * s)).coe_prop
     exact subset_closure ⟨r * s, Set.mul_mem_mul hr hs, rfl⟩
-    
   · rintro - s hs ⟨u, r, hu, hr, rfl⟩
     rw [show u * r * s⁻¹ = u * (f (r * s⁻¹) * s * r⁻¹)⁻¹ * f (r * s⁻¹) by group]
     refine' Set.mul_mem_mul ((closure U).mul_mem hu ((closure U).inv_mem _)) (f (r * s⁻¹)).2
@@ -57,7 +55,6 @@ theorem closure_mul_image_mul_eq_top (hR : R ∈ rightTransversals (H : Set G)) 
         (mul_inv_to_fun_mem hR (f (r * s⁻¹) * s))
     rw [mul_assoc, ← inv_inv s, ← mul_inv_rev, inv_inv]
     exact to_fun_mul_inv_mem hR (r * s⁻¹)
-    
 #align subgroup.closure_mul_image_mul_eq_top Subgroup.closure_mul_image_mul_eq_top
 
 /-- **Schreier's Lemma**: If `R : set G` is a right_transversal of `H : subgroup G`
@@ -76,10 +73,8 @@ theorem closure_mul_image_eq (hR : R ∈ rightTransversals (H : Set G)) (hR1 : (
   apply (mem_right_transversals_iff_exists_unique_mul_inv_mem.mp hR r).unique
   · rw [Subtype.coe_mk, mul_inv_self]
     exact H.one_mem
-    
   · rw [Subtype.coe_mk, inv_one, mul_one]
     exact (H.mul_mem_cancel_left (hU hg)).mp hh
-    
 #align subgroup.closure_mul_image_eq Subgroup.closure_mul_image_eq
 
 /-- **Schreier's Lemma**: If `R : set G` is a right_transversal of `H : subgroup G`
@@ -161,7 +156,6 @@ theorem card_commutator_dvd_index_center_pow [Finite (commutatorSet G)] :
   -- First handle the case when `Z(G)` has infinite index and `[G : Z(G)]` is defined to be `0`
   by_cases hG : (center G).index = 0
   · simp_rw [hG, zero_mul, zero_add, pow_one, dvd_zero]
-    
   haveI : finite_index (center G) := ⟨hG⟩
   -- Rewrite as `|Z(G) ∩ G'| * [G' : Z(G) ∩ G'] ∣ [G : Z(G)] ^ ([G : Z(G)] * n) * [G : Z(G)]`
   rw [← ((center G).subgroupOf (commutator G)).card_mul_index, pow_succ']

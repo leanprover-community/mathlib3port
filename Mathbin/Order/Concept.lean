@@ -177,7 +177,7 @@ variable {r α β} {c d : Concept α β r}
 
 attribute [simp] closure_fst closure_snd
 
-@[ext.1]
+@[ext]
 theorem ext (h : c.fst = d.fst) : c = d := by
   obtain ⟨⟨s₁, t₁⟩, h₁, _⟩ := c
   obtain ⟨⟨s₂, t₂⟩, h₂, _⟩ := d
@@ -235,10 +235,8 @@ theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c := by
   refine' ⟨fun h => _, fun h => _⟩
   · rw [← fst_subset_fst_iff, ← c.closure_snd, ← d.closure_snd]
     exact extent_closure_anti _ h
-    
   · rw [← c.closure_fst, ← d.closure_fst]
     exact intent_closure_anti _ h
-    
 #align concept.snd_subset_snd_iff Concept.snd_subset_snd_iff
 
 @[simp]
@@ -258,11 +256,14 @@ instance : Lattice (Concept α β r) :=
   { Concept.semilatticeInf with sup := (· ⊔ ·),
     le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _,
     le_sup_right := fun c d => snd_subset_snd_iff.1 <| inter_subset_right _ _,
-    sup_le := fun c d e => by
+    sup_le := fun c d e => by 
       simp_rw [← snd_subset_snd_iff]
       exact subset_inter }
 
-instance : BoundedOrder (Concept α β r) where
+instance :
+    BoundedOrder
+      (Concept α β
+        r) where 
   top := ⟨⟨univ, intentClosure r univ⟩, rfl, eq_univ_of_forall fun a b hb => hb trivial⟩
   le_top _ := subset_univ _
   bot := ⟨⟨extentClosure r univ, univ⟩, eq_univ_of_forall fun b a ha => ha trivial, rfl⟩
@@ -380,7 +381,10 @@ theorem swap_lt_swap_iff : c.swap < d.swap ↔ d < c :=
 
 /-- The dual of a concept lattice is isomorphic to the concept lattice of the dual context. -/
 @[simps]
-def swapEquiv : (Concept α β r)ᵒᵈ ≃o Concept β α (Function.swap r) where
+def swapEquiv :
+    (Concept α β r)ᵒᵈ ≃o
+      Concept β α (Function.swap
+          r) where 
   toFun := swap ∘ of_dual
   invFun := to_dual ∘ swap
   left_inv := swap_swap

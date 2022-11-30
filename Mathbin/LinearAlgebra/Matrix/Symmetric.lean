@@ -41,7 +41,7 @@ theorem IsSymm.ext_iff {A : Matrix n n α} : A.IsSymm ↔ ∀ i j, A j i = A i j
 #align matrix.is_symm.ext_iff Matrix.IsSymm.ext_iff
 
 /-- A version of `matrix.ext` that unfolds the `matrix.transpose`. -/
-@[ext.1]
+@[ext]
 theorem IsSymm.ext {A : Matrix n n α} : (∀ i j, A j i = A i j) → A.IsSymm :=
   Matrix.ext
 #align matrix.is_symm.ext Matrix.IsSymm.ext
@@ -129,7 +129,7 @@ theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonal v)
 theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
     {D : Matrix n n α} (hA : A.IsSymm) (hBC : Bᵀ = C) (hD : D.IsSymm) :
     (A.fromBlocks B C D).IsSymm := by
-  have hCB : Cᵀ = B := by
+  have hCB : Cᵀ = B := by 
     rw [← hBC]
     simp
   unfold Matrix.IsSymm

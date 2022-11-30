@@ -117,13 +117,13 @@ instance is_artinian_pi {R ι : Type _} [Finite ι] :
     ∀ {M : ι → Type _} [Ring R] [∀ i, AddCommGroup (M i)],
       ∀ [∀ i, Module R (M i)], ∀ [∀ i, IsArtinian R (M i)], IsArtinian R (∀ i, M i) :=
   Finite.induction_empty_option
-    (by
+    (by 
       intro α β e hα M _ _ _ _
       exact is_artinian_of_linear_equiv (LinearEquiv.piCongrLeft R M e))
-    (by
+    (by 
       intro M _ _ _ _
       infer_instance)
-    (by
+    (by 
       intro α _ ih M _ _ _ _
       exact is_artinian_of_linear_equiv (LinearEquiv.piOptionEquivProd R).symm)
     ι
@@ -162,7 +162,7 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
     rintro n x ⟨y, hy₁, rfl⟩
     exact (f y).2
   have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | b ≤ m }) ≤ span R (coe ∘ f '' { m | a ≤ m }) :=
-    by
+    by 
     intro a b
     rw [span_le_span_iff hs (this b) (this a),
       Set.image_subset_image_iff (subtype.coe_injective.comp f.injective), Set.subset_def]
@@ -171,7 +171,7 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
   exact
     ⟨⟨fun n => span R (coe ∘ f '' { m | n ≤ m }), fun x y => by
         simp (config := { contextual := true }) [le_antisymm_iff, (this _ _).symm]⟩,
-      by
+      by 
       intro a b
       conv_rhs => rw [GT.gt, lt_iff_le_not_le, this, this, ← lt_iff_le_not_le]
       simp⟩
@@ -231,10 +231,8 @@ theorem exists_endomorphism_iterate_ker_sup_range_eq_top (f : M →ₗ[R] M) :
   constructor
   · rw [LinearMap.mem_ker, LinearMap.map_sub, ← hy, sub_eq_zero, pow_add]
     simp [iterate_add_apply]
-    
   · use (f ^ (n + 1)) y
     simp
-    
 #align
   is_artinian.exists_endomorphism_iterate_ker_sup_range_eq_top IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top
 
@@ -259,17 +257,15 @@ is eventually ⊤.
 -/
 theorem disjoint_partial_infs_eventually_top (f : ℕ → Submodule R M)
     (h : ∀ n, Disjoint (partialSups (OrderDual.toDual ∘ f) n) (OrderDual.toDual (f (n + 1)))) :
-    ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊤ := by
+    ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊤ :=
+  by
   -- A little off-by-one cleanup first:
   rsuffices ⟨n, w⟩ : ∃ n : ℕ, ∀ m, n ≤ m → OrderDual.toDual f (m + 1) = ⊤
   · use n + 1
     rintro (_ | m) p
     · cases p
-      
     · apply w
       exact nat.succ_le_succ_iff.mp p
-      
-    
   obtain ⟨n, w⟩ := monotone_stabilizes (partialSups (OrderDual.toDual ∘ f))
   refine' ⟨n, fun m p => _⟩
   exact (h m).eq_bot_of_ge (sup_eq_left.1 <| (w (m + 1) <| le_add_right p).symm.trans <| w m p)
@@ -293,7 +289,7 @@ theorem range_smul_pow_stabilizes (r : R) :
           (r ^ n • LinearMap.id : M →ₗ[R] M).range = (r ^ m • LinearMap.id : M →ₗ[R] M).range :=
   monotone_stabilizes
     ⟨fun n => (r ^ n • LinearMap.id : M →ₗ[R] M).range, fun n m h x ⟨y, hy⟩ =>
-      ⟨r ^ (m - n) • y, by
+      ⟨r ^ (m - n) • y, by 
         dsimp at hy⊢
         rw [← smul_assoc, smul_eq_mul, ← pow_add, ← hy, add_tsub_cancel_of_le h]⟩⟩
 #align is_artinian.range_smul_pow_stabilizes IsArtinian.range_smul_pow_stabilizes
@@ -301,7 +297,7 @@ theorem range_smul_pow_stabilizes (r : R) :
 variable {M}
 
 theorem exists_pow_succ_smul_dvd (r : R) (x : M) : ∃ (n : ℕ)(y : M), r ^ n.succ • y = r ^ n • x :=
-  by
+  by 
   obtain ⟨n, hn⟩ := IsArtinian.range_smul_pow_stabilizes M r
   simp_rw [SetLike.ext_iff] at hn
   exact ⟨n, by simpa using hn n.succ n.le_succ (r ^ n • x)⟩
@@ -373,20 +369,16 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R 
   refine' @is_artinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_artinian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
-      
     · intro f g
       apply Subtype.eq
       change (∑ i in s.attach, (f i + g i) • _) = _
       simp only [add_smul, Finset.sum_add_distrib]
       rfl
-      
     · intro c f
       apply Subtype.eq
       change (∑ i in s.attach, (c • f i) • _) = _
       simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
-      
-    
   rintro ⟨n, hn⟩
   change n ∈ N at hn
   rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn
@@ -434,7 +426,7 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
   obtain ⟨n, hn⟩ : ∃ n, ∀ m, n ≤ m → Jac ^ n = Jac ^ m := IsArtinian.monotone_stabilizes f
   refine' ⟨n, _⟩
   let J : Ideal R := annihilator (Jac ^ n)
-  suffices J = ⊤ by
+  suffices J = ⊤ by 
     have hJ : J • Jac ^ n = ⊥ := annihilator_smul (Jac ^ n)
     simpa only [this, top_smul, Ideal.zero_eq_bot] using hJ
   by_contra hJ
@@ -446,17 +438,16 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
     refine' hJ' (J ⊔ Ideal.span {x}) _ _
     · rw [SetLike.lt_iff_le_and_exists]
       exact ⟨le_sup_left, ⟨x, mem_sup_right (mem_span_singleton_self x), hxJ⟩⟩
-      
     · exact sup_le hJJ'.le (span_le.2 (singleton_subset_iff.2 hxJ'))
-      
   have : J ⊔ Jac • Ideal.span {x} ≤ J ⊔ Ideal.span {x} :=
     sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
-  have : Jac * Ideal.span {x} ≤ J := by classical
-    --Need version 4 of Nakayamas lemma on Stacks
-    by_contra H
-    refine'
-      H (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl (hJ' _ _ this).ge)
-    exact lt_of_le_of_ne le_sup_left fun h => H <| h.symm ▸ le_sup_right
+  have : Jac * Ideal.span {x} ≤ J := by
+    classical
+      --Need version 4 of Nakayamas lemma on Stacks
+      by_contra H
+      refine'
+        H (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl (hJ' _ _ this).ge)
+      exact lt_of_le_of_ne le_sup_left fun h => H <| h.symm ▸ le_sup_right
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc
     Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by rw [pow_succ, ← mul_assoc]
@@ -479,9 +470,7 @@ theorem localization_surjective : Function.Surjective (algebraMap R L) := by
   intro r'
   obtain ⟨r₁, s, rfl⟩ := IsLocalization.mk'_surjective S r'
   obtain ⟨r₂, h⟩ : ∃ r : R, IsLocalization.mk' L 1 s = algebraMap R L r
-  swap;
-  · exact ⟨r₁ * r₂, by rw [IsLocalization.mk'_eq_mul_mk'_one, map_mul, h]⟩
-    
+  swap; · exact ⟨r₁ * r₂, by rw [IsLocalization.mk'_eq_mul_mk'_one, map_mul, h]⟩
   obtain ⟨n, r, hr⟩ := IsArtinian.exists_pow_succ_smul_dvd (s : R) (1 : R)
   use r
   rw [smul_eq_mul, smul_eq_mul, pow_succ', mul_assoc] at hr

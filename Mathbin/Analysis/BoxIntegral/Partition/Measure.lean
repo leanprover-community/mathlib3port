@@ -101,7 +101,8 @@ namespace Measure
 /-- If `μ` is a locally finite measure on `ℝⁿ`, then `λ J, (μ J).to_real` is a box-additive
 function. -/
 @[simps]
-def toBoxAdditive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ where
+def toBoxAdditive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
+    ι →ᵇᵃ[⊤] ℝ where 
   toFun J := (μ J).toReal
   sum_partition_boxes' J hJ π hπ := by rw [← π.measure_Union_to_real, hπ.Union_eq]
 #align measure_theory.measure.to_box_additive MeasureTheory.Measure.toBoxAdditive

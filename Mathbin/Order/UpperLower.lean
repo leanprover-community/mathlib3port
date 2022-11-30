@@ -86,14 +86,14 @@ theorem IsLowerSet.compl (hs : IsLowerSet s) : IsUpperSet (sᶜ) := fun a b h hb
 
 @[simp]
 theorem is_upper_set_compl : IsUpperSet (sᶜ) ↔ IsLowerSet s :=
-  ⟨fun h => by
+  ⟨fun h => by 
     convert h.compl
     rw [compl_compl], IsLowerSet.compl⟩
 #align is_upper_set_compl is_upper_set_compl
 
 @[simp]
 theorem is_lower_set_compl : IsLowerSet (sᶜ) ↔ IsUpperSet s :=
-  ⟨fun h => by
+  ⟨fun h => by 
     convert h.compl
     rw [compl_compl], IsUpperSet.compl⟩
 #align is_lower_set_compl is_lower_set_compl
@@ -403,14 +403,14 @@ structure LowerSet (α : Type _) [LE α] where
 
 namespace UpperSet
 
-instance : SetLike (UpperSet α) α where
+instance : SetLike (UpperSet α) α where 
   coe := UpperSet.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     cases s
     cases t
     congr
 
-@[ext.1]
+@[ext]
 theorem ext {s t : UpperSet α} : (s : Set α) = t → s = t :=
   SetLike.ext'
 #align upper_set.ext UpperSet.ext
@@ -433,14 +433,14 @@ end UpperSet
 
 namespace LowerSet
 
-instance : SetLike (LowerSet α) α where
+instance : SetLike (LowerSet α) α where 
   coe := LowerSet.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     cases s
     cases t
     congr
 
-@[ext.1]
+@[ext]
 theorem ext {s t : LowerSet α} : (s : Set α) = t → s = t :=
   SetLike.ext'
 #align lower_set.ext LowerSet.ext
@@ -474,10 +474,10 @@ instance : HasSup (UpperSet α) :=
 instance : HasInf (UpperSet α) :=
   ⟨fun s t => ⟨s ∪ t, s.upper.union t.upper⟩⟩
 
-instance : HasTop (UpperSet α) :=
+instance : Top (UpperSet α) :=
   ⟨⟨∅, is_upper_set_empty⟩⟩
 
-instance : HasBot (UpperSet α) :=
+instance : Bot (UpperSet α) :=
   ⟨⟨univ, is_upper_set_univ⟩⟩
 
 instance : HasSup (UpperSet α) :=
@@ -616,10 +616,10 @@ instance : HasSup (LowerSet α) :=
 instance : HasInf (LowerSet α) :=
   ⟨fun s t => ⟨s ∩ t, fun a b h => And.imp (s.lower h) (t.lower h)⟩⟩
 
-instance : HasTop (LowerSet α) :=
+instance : Top (LowerSet α) :=
   ⟨⟨univ, fun a b h => id⟩⟩
 
-instance : HasBot (LowerSet α) :=
+instance : Bot (LowerSet α) :=
   ⟨⟨∅, fun a b h => id⟩⟩
 
 instance : HasSup (LowerSet α) :=
@@ -917,7 +917,8 @@ end LowerSet
 
 /-- Upper sets are order-isomorphic to lower sets under complementation. -/
 @[simps]
-def upperSetIsoLowerSet : UpperSet α ≃o LowerSet α where
+def upperSetIsoLowerSet :
+    UpperSet α ≃o LowerSet α where 
   toFun := UpperSet.compl
   invFun := LowerSet.compl
   left_inv := UpperSet.compl_compl
@@ -939,7 +940,9 @@ namespace UpperSet
 variable {f : α ≃o β} {s t : UpperSet α} {a : α} {b : β}
 
 /-- An order isomorphism of preorders induces an order isomorphism of their upper sets. -/
-def map (f : α ≃o β) : UpperSet α ≃o UpperSet β where
+def map (f : α ≃o β) :
+    UpperSet α ≃o UpperSet
+        β where 
   toFun s := ⟨f '' s, s.upper.image f⟩
   invFun t := ⟨f ⁻¹' t, t.upper.Preimage f.Monotone⟩
   left_inv _ := ext <| f.preimage_image _
@@ -999,28 +1002,28 @@ protected theorem map_bot : map f ⊥ = ⊥ :=
 
 @[simp]
 protected theorem map_Sup (S : Set (UpperSet α)) : map f (sup S) = ⨆ s ∈ S, map f s :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Inter₂ f.bijective _
 #align upper_set.map_Sup UpperSet.map_Sup
 
 @[simp]
 protected theorem map_Inf (S : Set (UpperSet α)) : map f (inf S) = ⨅ s ∈ S, map f s :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Union₂ _ _
 #align upper_set.map_Inf UpperSet.map_Inf
 
 @[simp]
 protected theorem map_supr (g : ι → UpperSet α) : map f (⨆ i, g i) = ⨆ i, map f (g i) :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Inter f.bijective _
 #align upper_set.map_supr UpperSet.map_supr
 
 @[simp]
 protected theorem map_infi (g : ι → UpperSet α) : map f (⨅ i, g i) = ⨅ i, map f (g i) :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Union
 #align upper_set.map_infi UpperSet.map_infi
@@ -1032,7 +1035,9 @@ namespace LowerSet
 variable {f : α ≃o β} {s t : LowerSet α} {a : α} {b : β}
 
 /-- An order isomorphism of preorders induces an order isomorphism of their lower sets. -/
-def map (f : α ≃o β) : LowerSet α ≃o LowerSet β where
+def map (f : α ≃o β) :
+    LowerSet α ≃o LowerSet
+        β where 
   toFun s := ⟨f '' s, s.lower.image f⟩
   invFun t := ⟨f ⁻¹' t, t.lower.Preimage f.Monotone⟩
   left_inv _ := SetLike.coe_injective <| f.preimage_image _
@@ -1092,25 +1097,25 @@ protected theorem map_bot : map f ⊥ = ⊥ :=
 
 @[simp]
 protected theorem map_Sup (S : Set (LowerSet α)) : map f (sup S) = ⨆ s ∈ S, map f s :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Union₂ _ _
 #align lower_set.map_Sup LowerSet.map_Sup
 
 protected theorem map_Inf (S : Set (LowerSet α)) : map f (inf S) = ⨅ s ∈ S, map f s :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Inter₂ f.bijective _
 #align lower_set.map_Inf LowerSet.map_Inf
 
 protected theorem map_supr (g : ι → LowerSet α) : map f (⨆ i, g i) = ⨆ i, map f (g i) :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Union
 #align lower_set.map_supr LowerSet.map_supr
 
 protected theorem map_infi (g : ι → LowerSet α) : map f (⨅ i, g i) = ⨅ i, map f (g i) :=
-  ext <| by
+  ext <| by 
     push_cast
     exact image_Inter f.bijective _
 #align lower_set.map_infi LowerSet.map_infi
@@ -1508,7 +1513,9 @@ theorem gc_lower_closure_coe : GaloisConnection (lowerClosure : Set α → Lower
 
 /-- `upper_closure` forms a reversed Galois insertion with the coercion from upper sets to sets. -/
 def giUpperClosureCoe :
-    GaloisInsertion (to_dual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ) (coe ∘ of_dual) where
+    GaloisInsertion (to_dual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ)
+      (coe ∘
+        of_dual) where 
   choice s hs := toDual (⟨s, fun a b hab ha => hs ⟨a, ha, hab⟩⟩ : UpperSet α)
   gc := gc_upper_closure_coe
   le_l_u _ := subset_upper_closure
@@ -1516,7 +1523,9 @@ def giUpperClosureCoe :
 #align gi_upper_closure_coe giUpperClosureCoe
 
 /-- `lower_closure` forms a Galois insertion with the coercion from lower sets to sets. -/
-def giLowerClosureCoe : GaloisInsertion (lowerClosure : Set α → LowerSet α) coe where
+def giLowerClosureCoe :
+    GaloisInsertion (lowerClosure : Set α → LowerSet α)
+      coe where 
   choice s hs := ⟨s, fun a b hba ha => hs ⟨a, ha, hba⟩⟩
   gc := gc_lower_closure_coe
   le_l_u _ := subset_lower_closure
@@ -1595,14 +1604,14 @@ theorem lower_closure_union (s t : Set α) :
 
 @[simp]
 theorem upper_closure_Union (f : ι → Set α) : upperClosure (⋃ i, f i) = ⨅ i, upperClosure (f i) :=
-  by
+  by 
   ext
   simp [← exists_and_right, @exists_comm α]
 #align upper_closure_Union upper_closure_Union
 
 @[simp]
 theorem lower_closure_Union (f : ι → Set α) : lowerClosure (⋃ i, f i) = ⨆ i, lowerClosure (f i) :=
-  by
+  by 
   ext
   simp [← exists_and_right, @exists_comm α]
 #align lower_closure_Union lower_closure_Union

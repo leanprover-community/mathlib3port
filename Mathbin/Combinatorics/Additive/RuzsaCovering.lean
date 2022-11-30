@@ -40,12 +40,10 @@ theorem exists_subset_mul_div (ht : t.Nonempty) :
   rw [mul_div_assoc]
   by_cases hau : a ∈ u
   · exact subset_mul_left _ ht.one_mem_div hau
-    
   by_cases H : ∀ b ∈ u, Disjoint (a • t) (b • t)
   · refine' (hCmax _ _ <| ssubset_insert hau).elim
     rw [mem_filter, mem_powerset, insert_subset, coe_insert]
     exact ⟨⟨ha, hu.1⟩, hu.2.insert fun b hb _ => H _ hb⟩
-    
   push_neg  at H
   simp_rw [not_disjoint_iff, ← inv_smul_mem_iff] at H
   obtain ⟨b, hb, c, hc₁, hc₂⟩ := H

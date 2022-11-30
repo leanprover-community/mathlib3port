@@ -92,7 +92,8 @@ section
 open ZeroObject
 
 instance zero_projective [HasZeroObject C] [HasZeroMorphisms C] :
-    Projective (0 : C) where Factors E X f e epi := by
+    Projective
+      (0 : C) where Factors E X f e epi := by 
     use 0
     ext
 #align category_theory.projective.zero_projective CategoryTheory.Projective.zero_projective
@@ -174,13 +175,12 @@ theorem projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj (P : C) :
     Projective P ↔ (preadditiveCoyoneda.obj (op P)).PreservesEpimorphisms := by
   rw [projective_iff_preserves_epimorphisms_coyoneda_obj]
   refine' ⟨fun h : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms => _, _⟩
-  · exact
+  ·
+    exact
       functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_coyoneda.obj (op P))
         (forget _)
-    
   · intro
     exact (inferInstance : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms)
-    
 #align
   category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj CategoryTheory.Projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj
 
@@ -188,13 +188,12 @@ theorem projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' (P : C) 
     Projective P ↔ (preadditiveCoyonedaObj (op P)).PreservesEpimorphisms := by
   rw [projective_iff_preserves_epimorphisms_coyoneda_obj]
   refine' ⟨fun h : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms => _, _⟩
-  · exact
+  ·
+    exact
       functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_coyoneda_obj (op P))
         (forget _)
-    
   · intro
     exact (inferInstance : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms)
-    
 #align
   category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' CategoryTheory.Projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj'
 
@@ -259,7 +258,7 @@ variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
 
 theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : Projective P) :
     Projective (F.obj P) :=
-  ⟨fun X Y f g => by
+  ⟨fun X Y f g => by 
     intro
     rcases hP.factors (adj.unit.app P ≫ G.map f) (G.map g) with ⟨⟩
     use F.map w ≫ adj.counit.app X
@@ -269,7 +268,7 @@ theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : P
 
 theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : C)
     (hP : Projective (F.obj P)) : Projective P :=
-  ⟨fun X Y f g => by
+  ⟨fun X Y f g => by 
     intro
     haveI := adj.left_adjoint_preserves_colimits
     rcases(@hP).1 (F.map f) (F.map g) with ⟨⟩
@@ -282,7 +281,8 @@ theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : 
 /-- Given an adjunction `F ⊣ G` such that `G` preserves epis, `F` maps a projective presentation of
 `X` to a projective presentation of `F(X)`. -/
 def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
-    (Y : ProjectivePresentation X) : ProjectivePresentation (F.obj X) where
+    (Y : ProjectivePresentation X) :
+    ProjectivePresentation (F.obj X) where 
   P := F.obj Y.P
   Projective := adj.map_projective _ Y.Projective
   f := F.map Y.f
@@ -299,7 +299,8 @@ variable {D : Type _} [Category D] (F : C ≌ D)
 /-- Given an equivalence of categories `F`, a projective presentation of `F(X)` induces a
 projective presentation of `X.` -/
 def projectivePresentationOfMapProjectivePresentation (X : C)
-    (Y : ProjectivePresentation (F.Functor.obj X)) : ProjectivePresentation X where
+    (Y : ProjectivePresentation (F.Functor.obj X)) :
+    ProjectivePresentation X where 
   P := F.inverse.obj Y.P
   Projective := Adjunction.map_projective F.symm.toAdjunction Y.P Y.Projective
   f := F.inverse.map Y.f ≫ F.unitInv.app _
@@ -310,14 +311,14 @@ def projectivePresentationOfMapProjectivePresentation (X : C)
 theorem enough_projectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughProjectives D := by
   constructor
   all_goals intro H; constructor; intro X; constructor
-  · exact
+  ·
+    exact
       F.symm.projective_presentation_of_map_projective_presentation _
         (Nonempty.some (H.presentation (F.inverse.obj X)))
-    
-  · exact
+  ·
+    exact
       F.projective_presentation_of_map_projective_presentation X
         (Nonempty.some (H.presentation (F.functor.obj X)))
-    
 #align
   category_theory.equivalence.enough_projectives_iff CategoryTheory.Equivalence.enough_projectives_iff
 
@@ -343,10 +344,10 @@ def Exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R �
 theorem Exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S)
     (hfg : Exact f g) (w : h ≫ g = 0) : Exact.lift h f g hfg w ≫ f = h := by
   simp [exact.lift]
-  conv_lhs =>
-  congr
-  skip
-  rw [← image_subobject_arrow_comp f]
+  conv_lhs => 
+    congr
+    skip
+    rw [← image_subobject_arrow_comp f]
   rw [← category.assoc, factor_thru_comp, ← image_to_kernel_arrow, ← category.assoc,
     CategoryTheory.Projective.factor_thru_comp, factor_thru_kernel_subobject_comp_arrow]
 #align category_theory.exact.lift_comp CategoryTheory.Exact.lift_comp

@@ -77,12 +77,10 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
   refine' ⟨18, 512, by norm_num1, by norm_num1, le_trans (by norm_num1) n_large, _, _⟩
   · have : sqrt (2 * 18) = 6 := (sqrt_eq_iff_mul_self_eq_of_pos (by norm_num1)).mpr (by norm_num1)
     rw [hf, log_nonneg_iff (hf' 18 _), this] <;> norm_num1
-    
   · have : sqrt (2 * 512) = 32 := (sqrt_eq_iff_mul_self_eq_of_pos (by norm_num1)).mpr (by norm_num1)
     rw [hf, log_nonpos_iff (hf' _ _), this, div_le_one (rpow_pos_of_pos four_pos _), ←
         rpow_le_rpow_iff _ (rpow_pos_of_pos four_pos _).le three_pos, ← rpow_mul] <;>
       norm_num1
-    
 #align bertrand.real_main_inequality Bertrand.real_main_inequality
 
 end Bertrand
@@ -105,14 +103,10 @@ theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
   · refine' mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg _)
     refine' Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast n2_pos) _
     exact_mod_cast Real.nat_sqrt_le_real_sqrt
-    
   · exact Real.rpow_le_rpow_of_exponent_le (by norm_num1) (cast_div_le.trans (by norm_cast))
-    
   · exact Real.rpow_nonneg_of_nonneg (by norm_num1) _
-    
   · refine' mul_nonneg (Nat.cast_nonneg _) _
     exact Real.rpow_nonneg_of_nonneg (mul_nonneg zero_le_two (Nat.cast_nonneg _)) _
-    
 #align bertrand_main_inequality bertrand_main_inequality
 
 /-- A lemma that tells us that, in the case where Bertrand's postulate does not hold, the prime
@@ -124,7 +118,6 @@ theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n)
   refine' (Eq.trans _ n.prod_pow_factorization_central_binom).symm
   apply Finset.prod_subset
   · exact Finset.range_subset.2 (add_le_add_right (Nat.div_le_self _ _) _)
-    
   intro x hx h2x
   rw [Finset.mem_range, lt_succ_iff] at hx h2x
   rw [not_le, div_lt_iff_lt_mul' three_pos, mul_comm x] at h2x
@@ -132,9 +125,7 @@ theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n)
   rw [← and_assoc', not_and', not_and_or, not_lt] at no_prime
   cases' no_prime hx with h h
   · rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
-    
   · rw [factorization_central_binom_of_two_mul_self_lt_three_mul n_large h h2x, pow_zero]
-    
 #align central_binom_factorization_small central_binom_factorization_small
 
 /-- An upper bound on the central binomial coefficient used in the proof of Bertrand's postulate.
@@ -162,22 +153,18 @@ theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
   apply mul_le_mul'
   · refine' (Finset.prod_le_prod'' fun p hp => (_ : f p ≤ 2 * n)).trans _
     · exact pow_factorization_choose_le (mul_pos two_pos n_pos)
-      
     have : (Finset.icc 1 (sqrt (2 * n))).card = sqrt (2 * n) := by rw [card_Icc, Nat.add_sub_cancel]
     rw [Finset.prod_const]
     refine' pow_le_pow n2_pos ((Finset.card_le_of_subset fun x hx => _).trans this.le)
     obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hx
     exact finset.mem_Icc.mpr ⟨(Finset.mem_filter.1 h1).2.one_lt.le, h2⟩
-    
   · refine' le_trans _ (primorial_le_4_pow (2 * n / 3))
     refine' (Finset.prod_le_prod' fun p hp => (_ : f p ≤ p)).trans _
     · obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
       refine' (pow_le_pow (Finset.mem_filter.1 h1).2.one_lt.le _).trans (pow_one p).le
       exact Nat.factorization_choose_le_one (sqrt_lt'.mp <| not_le.1 h2)
-      
     refine' Finset.prod_le_prod_of_subset_of_one_le' (Finset.filter_subset _ _) _
     exact fun p hp _ => (Finset.mem_filter.1 hp).2.one_lt.le
-    
 #align central_binom_le_of_no_bertrand_prime central_binom_le_of_no_bertrand_prime
 
 namespace Nat
@@ -185,7 +172,8 @@ namespace Nat
 /-- Proves that Bertrand's postulate holds for all sufficiently large `n`.
 -/
 theorem exists_prime_lt_and_le_two_mul_eventually (n : ℕ) (n_big : 512 ≤ n) :
-    ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n := by
+    ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n :=
+  by
   -- Assume there is no prime in the range.
   by_contra no_prime
   -- Then we have the above sub-exponential bound on the size of this central binomial coefficient.
@@ -206,9 +194,7 @@ for each number ≤ n.
 theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Prime p)
     (covering : p ≤ 2 * q) (H : n < q → ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) (hn : n < p) :
     ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n := by
-  by_cases p ≤ 2 * n;
-  · exact ⟨p, prime_p, hn, h⟩
-    
+  by_cases p ≤ 2 * n; · exact ⟨p, prime_p, hn, h⟩
   exact H (lt_of_mul_lt_mul_left' (lt_of_lt_of_le (not_le.1 h) covering))
 #align nat.exists_prime_lt_and_le_two_mul_succ Nat.exists_prime_lt_and_le_two_mul_succ
 
@@ -218,13 +204,13 @@ theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Pri
 it, but no more than twice as large.
 -/
 theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) :
-    ∃ p, Nat.Prime p ∧ n < p ∧ p ≤ 2 * n := by
+    ∃ p, Nat.Prime p ∧ n < p ∧ p ≤ 2 * n :=
+  by
   -- Split into cases whether `n` is large or small
   cases lt_or_le 511 n
   -- If `n` is large, apply the lemma derived from the inequalities on the central binomial
   -- coefficient.
   · exact exists_prime_lt_and_le_two_mul_eventually n h
-    
   replace h : n < 521 := h.trans_lt (by norm_num1)
   revert h
   -- For small `n`, supply a list of primes to cover the initial cases.

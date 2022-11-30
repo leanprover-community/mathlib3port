@@ -43,12 +43,10 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
   calc
     nat_degree (sign g • ∏ i : n, (X • A.map C + B.map C) (g i) i) ≤
         nat_degree (∏ i : n, (X • A.map C + B.map C) (g i) i) :=
-      by
+      by 
       cases' Int.units_eq_one_or (sign g) with sg sg
       · rw [sg, one_smul]
-        
       · rw [sg, Units.neg_smul, one_smul, nat_degree_neg]
-        
     _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
       nat_degree_prod_le (Finset.univ : Finset n) fun i : n => (X • A.map C + B.map C) (g i) i
     _ ≤ finset.univ.card • 1 := Finset.sum_le_card_nsmul _ _ 1 fun (i : n) _ => _
@@ -90,31 +88,26 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
   convert (coeff_prod_of_nat_degree_le _ _ _ _).symm
   · ext
     simp [coeff_C]
-    
   · intro p hp
     refine' (nat_degree_add_le _ _).trans _
     simpa only [Pi.smul_apply, map_apply, Algebra.id.smul_eq_mul, X_mul_C, nat_degree_C,
       max_eq_left, zero_le'] using (nat_degree_C_mul_le _ _).trans nat_degree_X_le
-    
 #align polynomial.coeff_det_X_add_C_card Polynomial.coeff_det_X_add_C_card
 
 theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
     leadingCoeff (det ((x : α[X]) • (1 : Matrix n n α[X]) + A.map c)) = 1 := by
   cases subsingleton_or_nontrivial α
   · simp
-    
   rw [← @det_one n, ← coeff_det_X_add_C_card _ A, leading_coeff]
   simp only [Matrix.map_one, C_eq_zero, RingHom.map_one]
   cases' (nat_degree_det_X_add_C_le 1 A).eq_or_lt with h h
   · simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h
     rw [h]
-    
   · -- contradiction. we have a hypothesis that the degree is less than |n|
     -- but we know that coeff _ n = 1
     have H := coeff_eq_zero_of_nat_degree_lt h
     rw [coeff_det_X_add_C_card] at H
     simpa using H
-    
 #align polynomial.leading_coeff_det_X_one_add_C Polynomial.leading_coeff_det_X_one_add_C
 
 end Polynomial

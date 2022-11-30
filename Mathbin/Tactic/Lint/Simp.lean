@@ -210,7 +210,7 @@ Here are some tips depending on the error raised by the linter:
 
 /-- A linter for simp lemmas whose lhs is not in simp-normal form, and which hence never fire. -/
 @[linter]
-unsafe def linter.simp_nf : linter where
+unsafe def linter.simp_nf : linter where 
   test := simp_nf_linter
   auto_decls := true
   no_errors_found := "All left-hand sides of simp lemmas are in simp-normal form."
@@ -237,7 +237,8 @@ private unsafe def simp_var_head (d : declaration) : tactic (Option String) := d
 and which hence never fire.
 -/
 @[linter]
-unsafe def linter.simp_var_head : linter where
+unsafe def linter.simp_var_head :
+    linter where 
   test := simp_var_head
   auto_decls := true
   no_errors_found := "No left-hand sides of a simp lemma has a variable as head symbol."
@@ -271,7 +272,7 @@ private unsafe def simp_comm (d : declaration) : tactic (Option String) := do
 
 /-- A linter for commutativity lemmas that are marked simp. -/
 @[linter]
-unsafe def linter.simp_comm : linter where
+unsafe def linter.simp_comm : linter where 
   test := simp_comm
   auto_decls := true
   no_errors_found := "No commutativity lemma is marked simp."

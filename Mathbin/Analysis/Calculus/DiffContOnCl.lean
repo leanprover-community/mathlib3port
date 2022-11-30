@@ -65,10 +65,8 @@ theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOn
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero]
     exact continuous_on_singleton f x
-    
   · rw [← closure_ball x hr]
     exact h.continuous_on
-    
 #align diff_cont_on_cl.continuous_on_ball DiffContOnCl.continuous_on_ball
 
 theorem mkBall {x : E} {r : ℝ} (hd : DifferentiableOn 𝕜 f (ball x r))

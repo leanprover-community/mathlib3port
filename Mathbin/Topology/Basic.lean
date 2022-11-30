@@ -80,7 +80,8 @@ attribute [class] TopologicalSpace
 and showing that they satisfy the appropriate conditions. -/
 def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ ∈ T)
     (sInter_mem : ∀ (A) (_ : A ⊆ T), ⋂₀ A ∈ T)
-    (union_mem : ∀ (A B) (_ : A ∈ T) (_ : B ∈ T), A ∪ B ∈ T) : TopologicalSpace α where
+    (union_mem : ∀ (A B) (_ : A ∈ T) (_ : B ∈ T), A ∪ B ∈ T) :
+    TopologicalSpace α where 
   IsOpen X := Xᶜ ∈ T
   is_open_univ := by simp [empty_mem]
   is_open_inter s t hs ht := by simpa only [compl_inter] using union_mem (sᶜ) hs (tᶜ) ht
@@ -93,7 +94,7 @@ section TopologicalSpace
 
 variable {α : Type u} {β : Type v} {ι : Sort w} {a : α} {s s₁ s₂ t : Set α} {p p₁ p₂ : α → Prop}
 
-@[ext.1]
+@[ext]
 theorem topological_space_eq : ∀ {f g : TopologicalSpace α}, f.IsOpen = g.IsOpen → f = g
   | ⟨a, _, _, _⟩, ⟨b, _, _, _⟩, rfl => rfl
 #align topological_space_eq topological_space_eq
@@ -124,7 +125,7 @@ end
 
 theorem topological_space_eq_iff {t t' : TopologicalSpace α} :
     t = t' ↔ ∀ s, @IsOpen α t s ↔ @IsOpen α t' s :=
-  ⟨fun h s => h ▸ Iff.rfl, fun h => by
+  ⟨fun h s => h ▸ Iff.rfl, fun h => by 
     ext
     exact h _⟩
 #align topological_space_eq_iff topological_space_eq_iff
@@ -368,10 +369,11 @@ theorem interior_inter {s t : Set α} : interior (s ∩ t) = interior s ∩ inte
 
 @[simp]
 theorem Finset.interior_Inter {ι : Type _} (s : Finset ι) (f : ι → Set α) :
-    interior (⋂ i ∈ s, f i) = ⋂ i ∈ s, interior (f i) := by classical
-  refine' s.induction_on (by simp) _
-  intro i s h₁ h₂
-  simp [h₂]
+    interior (⋂ i ∈ s, f i) = ⋂ i ∈ s, interior (f i) := by
+  classical 
+    refine' s.induction_on (by simp) _
+    intro i s h₁ h₂
+    simp [h₂]
 #align finset.interior_Inter Finset.interior_Inter
 
 @[simp]
@@ -536,10 +538,11 @@ theorem closure_union {s t : Set α} : closure (s ∪ t) = closure s ∪ closure
 
 @[simp]
 theorem Finset.closure_bUnion {ι : Type _} (s : Finset ι) (f : ι → Set α) :
-    closure (⋃ i ∈ s, f i) = ⋃ i ∈ s, closure (f i) := by classical
-  refine' s.induction_on (by simp) _
-  intro i s h₁ h₂
-  simp [h₂]
+    closure (⋃ i ∈ s, f i) = ⋃ i ∈ s, closure (f i) := by
+  classical 
+    refine' s.induction_on (by simp) _
+    intro i s h₁ h₂
+    simp [h₂]
 #align finset.closure_bUnion Finset.closure_bUnion
 
 @[simp]
@@ -646,12 +649,10 @@ theorem dense_iff_inter_open {s : Set α} :
   constructor <;> intro h
   · rintro U U_op ⟨x, x_in⟩
     exact mem_closure_iff.1 (by simp only [h.closure_eq]) U U_op x_in
-    
   · intro x
     rw [mem_closure_iff]
     intro U U_op x_in
     exact h U U_op ⟨_, x_in⟩
-    
 #align dense_iff_inter_open dense_iff_inter_open
 
 alias dense_iff_inter_open ↔ Dense.inter_open_nonempty _
@@ -679,16 +680,14 @@ theorem Dense.mono {s₁ s₂ : Set α} (h : s₁ ⊆ s₂) (hd : Dense s₁) : 
 
 /-- Complement to a singleton is dense if and only if the singleton is not an open set. -/
 theorem dense_compl_singleton_iff_not_open {x : α} : Dense ({x}ᶜ : Set α) ↔ ¬IsOpen ({x} : Set α) :=
-  by
+  by 
   fconstructor
   · intro hd ho
     exact (hd.inter_open_nonempty _ ho (singleton_nonempty _)).ne_empty (inter_compl_self _)
-    
   · refine' fun ho => dense_iff_inter_open.2 fun U hU hne => inter_compl_nonempty_iff.2 fun hUx => _
     obtain rfl : U = {x}
     exact eq_singleton_iff_nonempty_unique_mem.2 ⟨hne, hUx⟩
     exact ho hU
-    
 #align dense_compl_singleton_iff_not_open dense_compl_singleton_iff_not_open
 
 /-!
@@ -811,13 +810,13 @@ theorem Disjoint.frontier_right (hs : IsOpen s) (hd : Disjoint s t) : Disjoint s
 #align disjoint.frontier_right Disjoint.frontier_right
 
 theorem frontier_eq_inter_compl_interior {s : Set α} : frontier s = interior sᶜ ∩ interior (sᶜ)ᶜ :=
-  by
+  by 
   rw [← frontier_compl, ← closure_compl]
   rfl
 #align frontier_eq_inter_compl_interior frontier_eq_inter_compl_interior
 
 theorem compl_frontier_eq_union_interior {s : Set α} : frontier sᶜ = interior s ∪ interior (sᶜ) :=
-  by
+  by 
   rw [frontier_eq_inter_compl_interior]
   simp only [compl_inter, compl_compl]
 #align compl_frontier_eq_union_interior compl_frontier_eq_union_interior
@@ -871,7 +870,7 @@ theorem nhds_def' (a : α) : 𝓝 a = ⨅ (s : Set α) (hs : IsOpen s) (ha : a �
 /-- The open sets containing `a` are a basis for the neighborhood filter. See `nhds_basis_opens'`
 for a variant using open neighborhoods instead. -/
 theorem nhds_basis_opens (a : α) : (𝓝 a).HasBasis (fun s : Set α => a ∈ s ∧ IsOpen s) fun s => s :=
-  by
+  by 
   rw [nhds_def]
   exact
     has_basis_binfi_principal
@@ -1253,10 +1252,8 @@ theorem is_open_singleton_iff_nhds_eq_pure (a : α) : IsOpen ({a} : Set α) ↔ 
     apply le_antisymm _ (pure_le_nhds a)
     rw [le_pure_iff]
     exact h.mem_nhds (mem_singleton a)
-    
   · intro h
     simp [is_open_iff_nhds, h]
-    
 #align is_open_singleton_iff_nhds_eq_pure is_open_singleton_iff_nhds_eq_pure
 
 theorem mem_closure_iff_frequently {s : Set α} {a : α} : a ∈ closure s ↔ ∃ᶠ x in 𝓝 a, x ∈ s := by
@@ -1301,9 +1298,7 @@ theorem dense_compl_singleton (x : α) [NeBot (𝓝[≠] x)] : Dense ({x}ᶜ : S
   intro y
   rcases eq_or_ne y x with (rfl | hne)
   · rwa [mem_closure_iff_nhds_within_ne_bot]
-    
   · exact subset_closure hne
-    
 #align dense_compl_singleton dense_compl_singleton
 
 /-- If `x` is not an isolated point of a topological space, then the closure of `{x}ᶜ` is the whole
@@ -1475,7 +1470,6 @@ theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter 
   · rintro U ⟨t, ht, htU⟩ x hx
     have : f x ∈ t := (h x hx).symm ▸ mem_of_mem_nhds ht
     exact htU this
-    
   refine' ⟨fun h' => _, le_trans inf_le_left⟩
   have := sup_le h' h
   rw [sup_inf_right, sup_principal, union_compl_self, principal_univ, inf_top_eq, sup_le_iff] at
@@ -1750,7 +1744,6 @@ theorem pcontinuous_iff' {f : α →. β} :
     simp only [ptendsto'_def, mem_nhds_iff]
     rintro s ⟨t, tsubs, opent, yt⟩
     exact ⟨f.preimage t, Pfun.preimage_mono _ tsubs, h _ opent, ⟨y, yt, h'⟩⟩
-    
   intro hf s os
   rw [is_open_iff_nhds]
   rintro x ⟨y, ys, fxy⟩ t

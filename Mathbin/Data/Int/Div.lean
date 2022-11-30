@@ -28,7 +28,7 @@ theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc
 /-- If an integer with larger absolute value divides an integer, it is
 zero. -/
 theorem eq_zero_of_dvd_of_nat_abs_lt_nat_abs {a b : ℤ} (w : a ∣ b) (h : natAbs b < natAbs a) :
-    b = 0 := by
+    b = 0 := by 
   rw [← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd] at w
   rw [← nat_abs_eq_zero]
   exact eq_zero_of_dvd_of_lt w h

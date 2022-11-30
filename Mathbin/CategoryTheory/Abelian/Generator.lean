@@ -38,7 +38,6 @@ theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG
   refine' (preadditive.is_separator_iff _).1 hG _ fun h => _
   suffices hh : factor_thru_image (h ≫ f) = 0
   · rw [← limits.image.fac (h ≫ f), hh, zero_comp]
-    
   let R := subobject.mk (factor_thru_image (h ≫ f)).op
   let q₁ : image (h ≫ f) ⟶ unop R :=
     (subobject.underlying_iso (factor_thru_image (h ≫ f)).op).unop.Hom

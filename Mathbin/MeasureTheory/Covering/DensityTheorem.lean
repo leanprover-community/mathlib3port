@@ -45,7 +45,8 @@ open TopologicalSpace
 
 /-- A Vitali family in a space with a doubling measure, designed so that the sets at `x` contain
 all `closed_ball y r` when `dist x y ≤ K * r`. -/
-irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ := by
+irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
+  by
   /- the Vitali covering theorem gives a family that works well at small scales, thanks to the
     doubling property. We enlarge this family to add large sets, to make sure that all balls and not
     only small ones belong to the family, for convenience. -/
@@ -56,7 +57,7 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ := by
       ∃ᶠ r in 𝓝[>] (0 : ℝ),
         μ (closed_ball x (3 * r)) ≤
           scaling_constant_of μ (max (4 * K + 3) 3) * μ (closed_ball x r) :=
-    by
+    by 
     intro x
     apply frequently_iff.2 fun U hU => _
     obtain ⟨ε, εpos, hε⟩ := mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 hU
@@ -80,9 +81,7 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
     and large balls. For large balls, this follows directly from the enlargement we used in the
     definition. -/
   by_cases H : closed_ball y r ⊆ closed_ball x (R / 4)
-  swap;
-  · exact Or.inr H
-    
+  swap; · exact Or.inr H
   left
   /- For small balls, there is the difficulty that `r` could be large but still the ball could be
     small, if the annulus `{y | ε ≤ dist y x ≤ R/4}` is empty. We split between the cases `r ≤ R`
@@ -93,7 +92,6 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
     · apply closed_ball_subset_closed_ball'
       rw [dist_comm]
       linarith
-      
     · have I1 : closed_ball x (3 * ((K + 1) * r)) ⊆ closed_ball y ((4 * K + 3) * r) := by
         apply closed_ball_subset_closed_ball'
         linarith
@@ -104,8 +102,6 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
       exact
         measure_mul_le_scaling_constant_of_mul _ ⟨zero_lt_three.trans_le (le_max_right _ _), le_rfl⟩
           hr
-      
-    
   · refine' ⟨R / 4, H, _⟩
     have : closed_ball x (3 * (R / 4)) ⊆ closed_ball y r := by
       apply closed_ball_subset_closed_ball'
@@ -115,7 +111,6 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
     apply (measure_mono this).trans _
     refine' le_mul_of_one_le_left (zero_le _) _
     exact Ennreal.one_le_coe_iff.2 (le_max_right _ _)
-    
 #align
   is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closed_ball_mem_vitali_family_of_dist_le_mul
 
@@ -125,12 +120,10 @@ theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filt
   refine' (VitaliFamily μ K).tendsto_filter_at_iff.mpr ⟨_, fun ε hε => _⟩
   · filter_upwards [xmem, δlim self_mem_nhds_within] with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
-    
   · by_cases l.ne_bot
     swap
     · simp [not_ne_bot.1 h]
-      
-    have hK : 0 ≤ K := by
+    have hK : 0 ≤ K := by 
       skip
       rcases(xmem.and (δlim self_mem_nhds_within)).exists with ⟨j, hj, h'j⟩
       have : 0 ≤ K * δ j := nonempty_closed_ball.1 ⟨x, hj⟩
@@ -139,14 +132,12 @@ theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filt
     replace δlim := tendsto_nhds_of_tendsto_nhds_within δlim
     replace hK : 0 < K + 1
     · linarith
-      
     apply (((metric.tendsto_nhds.mp δlim _ (div_pos hε hK)).And δpos).And xmem).mono
     rintro j ⟨⟨hjε, hj₀ : 0 < δ j⟩, hx⟩ y hy
     replace hjε : (K + 1) * δ j < ε := by
       simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
     simp only [mem_closed_ball] at hx hy⊢
     linarith [dist_triangle_right y x (w j)]
-    
 #align
   is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closed_ball_filter_at
 

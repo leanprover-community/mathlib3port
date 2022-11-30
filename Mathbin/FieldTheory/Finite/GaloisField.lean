@@ -35,7 +35,7 @@ open Polynomial
 open Polynomial
 
 theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h : p ∣ q) :
-    Separable (X ^ q - X : K[X]) := by
+    Separable (X ^ q - X : K[X]) := by 
   use 1, X ^ q - X - 1
   rw [← CharP.cast_eq_zero_iff K[X] p] at h
   rw [derivative_sub, derivative_pow, derivative_X, h]
@@ -98,33 +98,25 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
   · rintro x (⟨r, rfl⟩ | hx)
     · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
       rw [← map_pow, Zmod.pow_card_pow, sub_self]
-      
     · dsimp only [GaloisField] at hx
       rwa [mem_root_set aux] at hx
-      
-    
   · dsimp only [g_poly]
     rw [← coeff_zero_eq_aeval_zero']
     simp only [coeff_X_pow, coeff_X_zero, sub_zero, _root_.map_eq_zero, ite_eq_right_iff,
       one_ne_zero, coeff_sub]
     intro hn
     exact Nat.not_lt_zero 1 (pow_eq_zero hn.symm ▸ hp)
-    
   · simp
-    
   · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, add_pow_char_pow, sub_eq_zero]
     intro x y hx hy
     rw [hx, hy]
-    
   · intro x hx
     simp only [sub_eq_zero, aeval_X_pow, aeval_X, AlgHom.map_sub, sub_neg_eq_add] at *
     rw [neg_pow, hx, CharP.neg_one_pow_char_pow]
     simp
-    
   · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, mul_pow, sub_eq_zero]
     intro x y hx hy
     rw [hx, hy]
-    
 #align galois_field.finrank GaloisField.finrank
 
 theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = p ^ n := by
@@ -165,7 +157,7 @@ theorem isSplittingFieldOfCardEq (h : Fintype.card K = p ^ n) :
 #align galois_field.is_splitting_field_of_card_eq GaloisField.isSplittingFieldOfCardEq
 
 instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Algebra K K'] :
-    IsGalois K K' := by
+    IsGalois K K' := by 
   cases nonempty_fintype K'
   obtain ⟨p, hp⟩ := CharP.exists K
   haveI : CharP K p := hp
@@ -192,10 +184,10 @@ variable {K : Type _} [Field K] [Fintype K] {K' : Type _} [Field K'] [Fintype K'
   Any two finite fields of the same cardinality are (possibly non canonically) isomorphic-/
 def algEquivOfCardEq (p : ℕ) [Fact p.Prime] [Algebra (Zmod p) K] [Algebra (Zmod p) K']
     (hKK' : Fintype.card K = Fintype.card K') : K ≃ₐ[Zmod p] K' := by
-  have : CharP K p := by
+  have : CharP K p := by 
     rw [← Algebra.char_p_iff (Zmod p) K p]
     exact Zmod.char_p p
-  have : CharP K' p := by
+  have : CharP K' p := by 
     rw [← Algebra.char_p_iff (Zmod p) K' p]
     exact Zmod.char_p p
   choose n a hK using FiniteField.card K p
@@ -215,7 +207,8 @@ def ringEquivOfCardEq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' := 
   skip
   choose n hp hK using FiniteField.card K p
   choose n' hp' hK' using FiniteField.card K' p'
-  have hpp' : p = p' := by
+  have hpp' : p = p' :=
+    by
     -- := eq_prime_of_eq_prime_pow
     by_contra hne
     have h2 := Nat.coprime_pow_primes n n' hp hp' hne

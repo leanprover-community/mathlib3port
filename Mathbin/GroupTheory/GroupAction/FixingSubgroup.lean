@@ -45,7 +45,8 @@ variable (M : Type _) {α : Type _} [Monoid M] [MulAction M α]
 
 /-- The submonoid fixing a set under a `mul_action`. -/
 @[to_additive " The additive submonoid fixing a set under an `add_action`. "]
-def fixingSubmonoid (s : Set α) : Submonoid M where
+def fixingSubmonoid (s : Set α) :
+    Submonoid M where 
   carrier := { ϕ : M | ∀ x : s, ϕ • (x : α) = x }
   one_mem' _ := one_smul _ _
   mul_mem' x y hx hy z := by rw [mul_smul, hy z, hx z]

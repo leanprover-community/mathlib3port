@@ -769,18 +769,16 @@ theorem blimsup_eq_infi_bsupr {f : Filter β} {p : β → Prop} {u : β → α} 
   refine' le_antisymm (Inf_le_Inf _) (infi_le_iff.mpr fun a ha => le_Inf_iff.mpr fun a' ha' => _)
   · rintro - ⟨s, rfl⟩
     simp only [mem_set_of_eq, le_infi_iff]
-    conv =>
-    congr
-    ext
-    rw [Imp.swap]
+    conv => 
+      congr
+      ext
+      rw [Imp.swap]
     refine'
       eventually_imp_distrib_left.mpr fun h => eventually_iff_exists_mem.2 ⟨s, h, fun x h₁ h₂ => _⟩
     exact @le_supr₂ α β (fun b => p b ∧ b ∈ s) _ (fun b hb => u b) x ⟨h₂, h₁⟩
-    
   · obtain ⟨s, hs, hs'⟩ := eventually_iff_exists_mem.mp ha'
     simp_rw [Imp.swap] at hs'
     exact (le_infi_iff.mp (ha s) hs).trans (by simpa only [supr₂_le_iff, and_imp] )
-    
 #align filter.blimsup_eq_infi_bsupr Filter.blimsup_eq_infi_bsupr
 
 /-- In a complete lattice, the liminf of a function is the infimum over sets `s` in the filter
@@ -815,13 +813,11 @@ theorem limsup_eq_Inf_Sup {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a
     rcases(mem_image _ F.sets x).mp hx with ⟨I, ⟨I_mem_F, hI⟩⟩
     filter_upwards [I_mem_F] with i hi
     exact hI ▸ le_Sup (mem_image_of_mem _ hi)
-    
   · refine'
       le_Inf_iff.mpr fun b hb =>
         Inf_le_of_le (mem_image_of_mem _ <| filter.mem_sets.mpr hb) <| Sup_le _
     rintro _ ⟨_, h, rfl⟩
     exact h
-    
 #align filter.limsup_eq_Inf_Sup Filter.limsup_eq_Inf_Sup
 
 theorem liminf_eq_Sup_Inf {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
@@ -831,7 +827,7 @@ theorem liminf_eq_Sup_Inf {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a
 
 @[simp]
 theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : liminf (fun i => f (i + k)) atTop = liminf f atTop :=
-  by
+  by 
   simp_rw [liminf_eq_supr_infi_of_nat]
   exact supr_infi_ge_nat_add f k
 #align filter.liminf_nat_add Filter.liminf_nat_add
@@ -845,7 +841,7 @@ theorem liminf_le_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α}
     (h : ∃ᶠ a in f, u a ≤ x) : liminf u f ≤ x := by
   rw [liminf_eq]
   refine' Sup_le fun b hb => _
-  have hbx : ∃ᶠ a in f, b ≤ x := by
+  have hbx : ∃ᶠ a in f, b ≤ x := by 
     revert h
     rw [← not_imp_not, not_frequently, not_frequently]
     exact fun h => hb.mp (h.mono fun a hbx hba hax => hbx (hba.trans hax))
@@ -1022,9 +1018,7 @@ theorem cofinite.blimsup_set_eq : blimsup s cofinite p = { x | { n | p n ∧ x �
   refine' ⟨fun h => _, fun hx t h => _⟩ <;> contrapose! h
   · simp only [mem_sInter, mem_set_of_eq, not_forall, exists_prop]
     exact ⟨{x}ᶜ, by simpa using h, by simp⟩
-    
   · exact hx.mono fun i hi => ⟨hi.1, fun hit => h (hit hi.2)⟩
-    
 #align filter.cofinite.blimsup_set_eq Filter.cofinite.blimsup_set_eq
 
 theorem cofinite.bliminf_set_eq : bliminf s cofinite p = { x | { n | p n ∧ x ∉ s n }.Finite } := by
@@ -1097,7 +1091,7 @@ theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β]
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
       run_tac
         is_bounded_default) :
-    b ≤ limsup u f := by
+    b ≤ limsup u f := by 
   revert hu_le
   rw [← not_imp_not, not_frequently]
   simp_rw [← lt_iff_not_ge]

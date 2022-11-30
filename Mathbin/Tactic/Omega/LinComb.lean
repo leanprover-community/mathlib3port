@@ -33,10 +33,8 @@ theorem lin_comb_holds {v : Nat → Int} :
       · apply mul_nonneg
         apply Int.coe_nat_nonneg
         apply h _ (Or.inl rfl)
-        
       · apply lin_comb_holds
         apply List.forall_mem_of_forall_mem_cons h
-        
     simpa only [lin_comb, term.val_mul, term.val_add]
 #align omega.lin_comb_holds Omega.lin_comb_holds
 

@@ -28,7 +28,8 @@ open CategoryTheory
 /-- The functor of adjoining a neutral element `one` to a semigroup.
  -/
 @[to_additive "The functor of adjoining a neutral element `zero` to a semigroup", simps]
-def adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u} where
+def adjoinOne :
+    SemigroupCat.{u} ⥤ MonCat.{u} where 
   obj S := MonCat.of (WithOne S)
   map X Y := WithOne.map
   map_id' X := WithOne.map_id
@@ -47,27 +48,25 @@ instance hasForgetToSemigroup :
 def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun S M => WithOne.lift.symm,
-      hom_equiv_naturality_left_symm' := by
+      hom_equiv_naturality_left_symm' := by 
         intro S T M f g
         ext
         simp only [Equiv.symm_symm, adjoin_one_map, coe_comp]
         simp_rw [WithOne.map]
         apply WithOne.cases_on x
         · rfl
-          
-        · simp
-           }
+        · simp }
 #align adjoin_one_adj adjoinOneAdj
 
 /-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
-def free : Type u ⥤ MonCat.{u} where
+def free : Type u ⥤ MonCat.{u} where 
   obj α := MonCat.of (FreeMonoid α)
   map X Y := FreeMonoid.map
-  map_id' := by
+  map_id' := by 
     intros
     ext1
     rfl
-  map_comp' := by
+  map_comp' := by 
     intros
     ext1
     rfl

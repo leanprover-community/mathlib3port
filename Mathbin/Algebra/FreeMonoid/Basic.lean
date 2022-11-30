@@ -75,7 +75,8 @@ theorem of_list_comp_to_list : @ofList α ∘ to_list = id :=
 #align free_monoid.of_list_comp_to_list FreeMonoid.of_list_comp_to_list
 
 @[to_additive]
-instance : CancelMonoid (FreeMonoid α) where
+instance : CancelMonoid (FreeMonoid
+        α) where 
   one := ofList []
   mul x y := ofList (x.toList ++ y.toList)
   mul_one := List.append_nil
@@ -193,7 +194,7 @@ theorem cases_on_of_mul {C : FreeMonoid α → Sort _} (x : α) (xs : FreeMonoid
   rfl
 #align free_monoid.cases_on_of_mul FreeMonoid.cases_on_of_mul
 
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
   MonoidHom.ext fun l =>
     (recOn l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by
@@ -203,7 +204,10 @@ theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x))
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/
 @[to_additive
       "Equivalence between maps `α → A` and additive monoid homomorphisms\n`free_add_monoid α →+ A`."]
-def lift : (α → M) ≃ (FreeMonoid α →* M) where
+def lift :
+    (α → M) ≃
+      (FreeMonoid α →*
+        M) where 
   toFun f :=
     ⟨fun l => (l.toList.map f).Prod, rfl, fun l₁ l₂ => by
       simp only [to_list_mul, List.map_append, List.prod_append]⟩
@@ -250,7 +254,8 @@ theorem hom_map_lift (g : M →* N) (f : α → M) (x : FreeMonoid α) : g (lift
 
 /-- Define a multiplicative action of `free_monoid α` on `β`. -/
 @[to_additive "Define an additive action of `free_add_monoid α` on `β`."]
-def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β where
+def mkMulAction (f : α → β → β) :
+    MulAction (FreeMonoid α) β where 
   smul l b := l.toList.foldr f b
   one_smul x := rfl
   mul_smul xs ys b := List.foldr_append _ _ _ _
@@ -282,7 +287,9 @@ theorem of_smul (f : α → β → β) (x : α) (y : β) :
 each `of x` to `of (f x)`. -/
 @[to_additive
       "The unique additive monoid homomorphism `free_add_monoid α →+ free_add_monoid β`\nthat sends each `of x` to `of (f x)`."]
-def map (f : α → β) : FreeMonoid α →* FreeMonoid β where
+def map (f : α → β) :
+    FreeMonoid α →* FreeMonoid
+        β where 
   toFun l := of_list <| l.toList.map f
   map_one' := rfl
   map_mul' l₁ l₂ := List.map_append _ _ _

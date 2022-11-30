@@ -58,7 +58,7 @@ theorem proj_Icc_eq_left (h : a < b) : projIcc a b h.le x = ⟨a, left_mem_Icc.m
 #align set.proj_Icc_eq_left Set.proj_Icc_eq_left
 
 theorem proj_Icc_eq_right (h : a < b) : projIcc a b h.le x = ⟨b, right_mem_Icc.mpr h.le⟩ ↔ b ≤ x :=
-  by
+  by 
   refine' ⟨fun h' => _, proj_Icc_of_right_le _⟩
   simp_rw [Subtype.ext_iff_val, proj_Icc] at h'
   have := ((max_choice _ _).resolve_left (by simp [h.ne', h'])).symm.trans h'

@@ -99,11 +99,9 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
     simp only [hb, inv_zero, mul_zero, MulChar.map_zero, zero_mul, Finset.sum_const_zero,
       map_zero_one, mul_one]
     exact hχ.sum_eq_zero.symm
-    
   · -- case `b ≠ 0`
     refine' ((Fintype.sum_bijective _ (mul_left_bijective₀ b hb) _ _) fun x => _).symm
     rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mul, mul_sub, mul_one]
-    
 #align gauss_sum_mul_aux gauss_sum_mul_aux
 
 /-- We have `gauss_sum χ ψ * gauss_sum χ⁻¹ ψ⁻¹ = fintype.card R`
@@ -115,10 +113,10 @@ theorem gauss_sum_mul_gauss_sum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial 
   simp_rw [gauss_sum_mul_aux hχ ψ]
   rw [Finset.sum_comm]
   classical
-  -- to get `[decidable_eq R]` for `sum_mul_shift`
-  simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, mul_zero]
-  rw [Finset.sum_ite_eq' Finset.univ (1 : R)]
-  simp only [Finset.mem_univ, map_one, one_mul, if_true]
+    -- to get `[decidable_eq R]` for `sum_mul_shift`
+    simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, mul_zero]
+    rw [Finset.sum_ite_eq' Finset.univ (1 : R)]
+    simp only [Finset.mem_univ, map_one, one_mul, if_true]
 #align gauss_sum_mul_gauss_sum_eq_card gauss_sum_mul_gauss_sum_eq_card
 
 /-- When `χ` is a nontrivial quadratic character, then the square of `gauss_sum χ ψ`
@@ -173,10 +171,9 @@ theorem MulChar.IsQuadratic.gauss_sum_frob_iter (n : ℕ) (hp : IsUnit (p : R)) 
     (hχ : IsQuadratic χ) (ψ : AddChar R R') : gaussSum χ ψ ^ p ^ n = χ (p ^ n) * gaussSum χ ψ := by
   induction' n with n ih
   · rw [pow_zero, pow_one, pow_zero, MulChar.map_one, one_mul]
-    
-  · rw [pow_succ, mul_comm p, pow_mul, ih, mul_pow, hχ.gauss_sum_frob _ hp, ← mul_assoc, pow_succ,
+  ·
+    rw [pow_succ, mul_comm p, pow_mul, ih, mul_pow, hχ.gauss_sum_frob _ hp, ← mul_assoc, pow_succ,
       mul_comm (p : R), map_mul, ← pow_apply' χ fp.1.Pos (p ^ n), hχ.pow_char p]
-    
 #align mul_char.is_quadratic.gauss_sum_frob_iter MulChar.IsQuadratic.gauss_sum_frob_iter
 
 end gauss_sum_frob
@@ -198,7 +195,7 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
     [fp : Fact p.Prime] [hch : CharP R' p] (hp : IsUnit (p : R)) (hp' : p ≠ 2)
     (hg : gaussSum χ ψ ^ 2 = χ (-1) * Fintype.card R) :
     (χ (-1) * Fintype.card R) ^ (p ^ n / 2) = χ (p ^ n) := by
-  have : gaussSum χ ψ ≠ 0 := by
+  have : gaussSum χ ψ ≠ 0 := by 
     intro hf
     rw [hf, zero_pow (by norm_num : 0 < 2), eq_comm, mul_eq_zero] at hg
     exact
@@ -281,7 +278,6 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
       · simp only [τ, ← map_nsmul_pow]
         erw [AddChar.IsPrimitive.zmod_char_eq_one_iff 8 ψ₈.prim]
         decide
-        
   -- we consider `χ₈` as a multiplicative character `ℤ/8ℤ → FF`
   let χ := χ₈.ring_hom_comp (Int.castRingHom FF)
   have hχ : χ (-1) = 1 := NormNum.int_cast_one
@@ -293,28 +289,24 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
     · ext
       congr
       apply pow_one
-      
     convert_to (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = _
     · simp only [χ₈_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
         Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_append,
         Matrix.cons_vec_alt0, Matrix.cons_vec_alt1, Int.cast_zero, Int.cast_one, Int.cast_neg,
         zero_mul]
       rfl
-      
     convert_to 8 + (τ ^ 4 + 1) * (τ ^ 10 - 2 * τ ^ 8 - 2 * τ ^ 6 + 6 * τ ^ 4 + τ ^ 2 - 8) = _
     · ring
-      
     · rw [τ_spec]
       norm_num
-      
   -- this allows us to apply `card_pow_char_pow` to our situation
   have h := Char.card_pow_char_pow hq ψ₈.char (ringChar FF) n hu hFF hg
   rw [card, ← hchar, hχ, one_mul, ← hc, ← Nat.cast_pow (ringChar F), ← hc] at h
   -- finally, we change `2` to `8` on the left hand side
   convert_to (8 : F) ^ (Fintype.card F / 2) = _
-  · rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow,
+  ·
+    rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow,
       (FiniteField.is_square_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mul]
-    
   apply (algebraMap F FF).Injective
   simp only [map_pow, map_bit0, map_one, map_int_cast]
   convert h

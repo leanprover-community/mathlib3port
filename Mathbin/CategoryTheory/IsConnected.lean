@@ -92,7 +92,7 @@ def isoConstant [IsPreconnected J] {α : Type u₁} (F : J ⥤ Discrete α) (j :
 The converse is given in `is_connected.of_any_functor_const_on_obj`.
 -/
 theorem any_functor_const_on_obj [IsPreconnected J] {α : Type u₁} (F : J ⥤ Discrete α) (j j' : J) :
-    F.obj j = F.obj j' := by
+    F.obj j = F.obj j' := by 
   ext
   exact ((iso_constant F j').Hom.app j).down.1
 #align category_theory.any_functor_const_on_obj CategoryTheory.any_functor_const_on_obj
@@ -120,7 +120,7 @@ theorem constant_of_preserves_morphisms [IsPreconnected J] {α : Type u₁} (F :
       { obj := discrete.mk ∘ F,
         map := fun _ _ f =>
           eq_to_hom
-            (by
+            (by 
               ext
               exact h _ _ f) }
       j j'
@@ -139,7 +139,7 @@ theorem IsConnected.of_constant_of_preserves_morphisms [Nonempty J]
         (∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), F j₁ = F j₂) → ∀ j j' : J, F j = F j') :
     IsConnected J :=
   IsConnected.of_any_functor_const_on_obj fun _ F =>
-    h F.obj fun _ _ f => by
+    h F.obj fun _ _ f => by 
       ext
       exact discrete.eq_of_hom (F.map f)
 #align
@@ -198,9 +198,9 @@ theorem is_preconnected_induction [IsPreconnected J] (Z : J → Sort _)
     {j₀ : J} (x : Z j₀) (j : J) : Nonempty (Z j) :=
   (induct_on_objects { j | Nonempty (Z j) } ⟨x⟩
       (fun j₁ j₂ f =>
-        ⟨by
+        ⟨by 
           rintro ⟨y⟩
-          exact ⟨h₁ f y⟩, by
+          exact ⟨h₁ f y⟩, by 
           rintro ⟨y⟩
           exact ⟨h₂ f y⟩⟩)
       j :
@@ -287,7 +287,8 @@ theorem zigzag_equivalence : Equivalence (@Zigzag J _) :=
 /-- The setoid given by the equivalence relation `zigzag`. A quotient for this
 setoid is a connected component of the category.
 -/
-def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] : Setoid J where
+def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] :
+    Setoid J where 
   R := Zigzag
   iseqv := zigzag_equivalence
 #align category_theory.zigzag.setoid CategoryTheory.Zigzag.setoid
@@ -330,12 +331,10 @@ theorem zigzag_is_connected [Nonempty J] (h : ∀ j₁ j₂ : J, Zigzag j₁ j�
     introv k
     induction' k with _ _ rt_zag zag
     · rfl
-      
     · rw [k_ih]
       rcases zag with (⟨⟨_⟩⟩ | ⟨⟨_⟩⟩)
       apply hjp zag
       apply (hjp zag).symm
-      
   rwa [this j (Classical.arbitrary J) (h _ _)]
 #align category_theory.zigzag_is_connected CategoryTheory.zigzag_is_connected
 
@@ -351,7 +350,7 @@ The converse of `exists_zigzag'`.
 -/
 theorem is_connected_of_zigzag [Nonempty J]
     (h : ∀ j₁ j₂ : J, ∃ l, List.Chain Zag j₁ l ∧ List.last (j₁ :: l) (List.cons_ne_nil _ _) = j₂) :
-    IsConnected J := by
+    IsConnected J := by 
   apply zigzag_is_connected
   intro j₁ j₂
   rcases h j₁ j₂ with ⟨l, hl₁, hl₂⟩
@@ -382,9 +381,12 @@ theorem nat_trans_from_is_connected [IsPreconnected J] {X Y : C}
     exact this.symm
 #align category_theory.nat_trans_from_is_connected CategoryTheory.nat_trans_from_is_connected
 
-instance [IsConnected J] : Full (Functor.const J : C ⥤ J ⥤ C) where
+instance [IsConnected J] :
+    Full
+      (Functor.const J :
+        C ⥤ J ⥤ C) where 
   Preimage X Y f := f.app (Classical.arbitrary J)
-  witness' X Y f := by
+  witness' X Y f := by 
     ext j
     apply nat_trans_from_is_connected f (Classical.arbitrary J) j
 

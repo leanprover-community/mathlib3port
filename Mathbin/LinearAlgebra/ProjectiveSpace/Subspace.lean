@@ -37,7 +37,7 @@ namespace Projectivization
 /-- A subspace of a projective space is a structure consisting of a set of points such that:
 If two nonzero vectors determine points which are in the set, and the sum of the two vectors is
 nonzero, then the point determined by the sum is also in the set. -/
-@[ext.1]
+@[ext]
 structure Subspace where
   carrier : Set (ℙ K V)
   mem_add' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw : v + w ≠ 0) :
@@ -48,9 +48,10 @@ namespace Subspace
 
 variable {K V}
 
-instance : SetLike (Subspace K V) (ℙ K V) where
+instance : SetLike (Subspace K V) (ℙ K
+        V) where 
   coe := carrier
-  coe_injective' A B := by
+  coe_injective' A B := by 
     cases A
     cases B
     simp
@@ -78,7 +79,8 @@ inductive spanCarrier (S : Set (ℙ K V)) : Set (ℙ K V)
 #align projectivization.subspace.span_carrier Projectivization.Subspace.spanCarrier
 
 /-- The span of a set of points in projective space is a subspace. -/
-def span (S : Set (ℙ K V)) : Subspace K V where
+def span (S : Set (ℙ K V)) :
+    Subspace K V where 
   carrier := spanCarrier S
   mem_add' v w hv hw hvw := spanCarrier.mem_add v w hv hw hvw
 #align projectivization.subspace.span Projectivization.Subspace.span
@@ -89,18 +91,18 @@ theorem subset_span (S : Set (ℙ K V)) : S ⊆ span S := fun x hx => spanCarrie
 
 /-- The span of a set of points is a Galois insertion between sets of points of a projective space
 and subspaces of the projective space. -/
-def gi : GaloisInsertion (span : Set (ℙ K V) → Subspace K V) coe where
+def gi :
+    GaloisInsertion (span : Set (ℙ K V) → Subspace K V)
+      coe where 
   choice S hS := span S
   gc A B :=
-    ⟨fun h => le_trans (subset_span _) h, by
+    ⟨fun h => le_trans (subset_span _) h, by 
       intro h x hx
       induction hx
       · apply h
         assumption
-        
       · apply B.mem_add
-        assumption'
-        ⟩
+        assumption'⟩
   le_l_u S := subset_span _
   choice_eq _ _ := rfl
 #align projectivization.subspace.gi Projectivization.Subspace.gi
@@ -134,7 +136,7 @@ instance hasInf : HasInf (Subspace K V) :=
 instance : CompleteLattice (Subspace K V) :=
   { (inferInstance : HasInf _),
     completeLatticeOfInf (Subspace K V)
-      (by
+      (by 
         refine' fun s => ⟨fun a ha x hx => hx _ ⟨a, ha, rfl⟩, fun a ha x hx E => _⟩
         rintro ⟨E, hE, rfl⟩
         exact ha hE hx) with
@@ -200,7 +202,7 @@ theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S
 /-- A point in a projective space is contained in the span of a set of points if and only if the
 point is contained in all subspaces of the projective space which contain the set of points. -/
 theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Subspace K V, S ⊆ W → u ∈ W :=
-  by
+  by 
   simp_rw [← span_le_subspace_iff]
   exact ⟨fun hu W hW => hW hu, fun W => W (span S) (le_refl _)⟩
 #align projectivization.subspace.mem_span Projectivization.Subspace.mem_span
@@ -213,9 +215,7 @@ theorem span_eq_Inf {S : Set (ℙ K V)} : span S = inf { W | S ⊆ W } := by
   refine' ⟨fun hx => _, fun hx W hW => _⟩
   · rintro W ⟨T, ⟨hT, rfl⟩⟩
     exact hx T hT
-    
   · exact (@Inf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
-    
 #align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_Inf
 
 /-- If a set of points in projective space is contained in a subspace, and that subspace is

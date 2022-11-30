@@ -77,7 +77,7 @@ theorem ι_eq_zero : ι (0 : QuadraticForm R Unit) = 0 :=
 /-- Since the vector space is empty the ring is commutative. -/
 instance : CommRing (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
   { CliffordAlgebra.ring _ with
-    mul_comm := fun x y => by
+    mul_comm := fun x y => by 
       induction x using CliffordAlgebra.induction
       case h_grade0 r => apply Algebra.commutes
       case h_grade1 x => simp
@@ -111,10 +111,10 @@ protected def equiv : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
     (CliffordAlgebra.lift (0 : QuadraticForm R Unit) <|
       ⟨0, fun m : Unit => (zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
     (Algebra.ofId R _)
-    (by
+    (by 
       ext x
       exact AlgHom.commutes _ x)
-    (by
+    (by 
       ext : 1
       rw [ι_eq_zero, LinearMap.comp_zero, LinearMap.comp_zero])
 #align clifford_algebra_ring.equiv CliffordAlgebraRing.equiv
@@ -193,7 +193,7 @@ theorem to_complex_of_complex (c : ℂ) : toComplex (ofComplex c) = c :=
 
 @[simp]
 theorem of_complex_comp_to_complex : ofComplex.comp toComplex = AlgHom.id ℝ (CliffordAlgebra q) :=
-  by
+  by 
   ext
   dsimp only [LinearMap.comp_apply, Subtype.coe_mk, AlgHom.id_apply, AlgHom.to_linear_map_apply,
     AlgHom.comp_apply]
@@ -272,18 +272,20 @@ theorem Q_apply (v : R × R) : q c₁ c₂ v = c₁ * (v.1 * v.1) + c₂ * (v.2 
 
 /-- The quaternion basis vectors within the algebra. -/
 @[simps i j k]
-def quaternionBasis : QuaternionAlgebra.Basis (CliffordAlgebra (q c₁ c₂)) c₁ c₂ where
+def quaternionBasis :
+    QuaternionAlgebra.Basis (CliffordAlgebra (q c₁ c₂)) c₁
+      c₂ where 
   i := ι (q c₁ c₂) (1, 0)
   j := ι (q c₁ c₂) (0, 1)
   k := ι (q c₁ c₂) (1, 0) * ι (q c₁ c₂) (0, 1)
-  i_mul_i := by
+  i_mul_i := by 
     rw [ι_sq_scalar, Q_apply, ← Algebra.algebra_map_eq_smul_one]
     simp
-  j_mul_j := by
+  j_mul_j := by 
     rw [ι_sq_scalar, Q_apply, ← Algebra.algebra_map_eq_smul_one]
     simp
   i_mul_j := rfl
-  j_mul_i := by
+  j_mul_i := by 
     rw [eq_neg_iff_add_eq_zero, ι_mul_ι_add_swap, QuadraticForm.polar]
     simp
 #align clifford_algebra_quaternion.quaternion_basis CliffordAlgebraQuaternion.quaternionBasis
@@ -296,7 +298,7 @@ def toQuaternion : CliffordAlgebra (q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
   CliffordAlgebra.lift (q c₁ c₂)
     ⟨{ toFun := fun v => (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]), map_add' := fun v₁ v₂ => by simp,
         map_smul' := fun r v => by ext <;> simp },
-      fun v => by
+      fun v => by 
       dsimp
       ext
       all_goals dsimp; ring⟩
@@ -345,11 +347,11 @@ theorem of_quaternion_comp_to_quaternion :
   dsimp
   -- before we end up with two goals and have to do this twice
   ext
-  all_goals
-  dsimp
-  rw [to_quaternion_ι]
-  dsimp
-  simp only [to_quaternion_ι, zero_smul, one_smul, zero_add, add_zero, RingHom.map_zero]
+  all_goals 
+    dsimp
+    rw [to_quaternion_ι]
+    dsimp
+    simp only [to_quaternion_ι, zero_smul, one_smul, zero_add, add_zero, RingHom.map_zero]
 #align
   clifford_algebra_quaternion.of_quaternion_comp_to_quaternion CliffordAlgebraQuaternion.of_quaternion_comp_to_quaternion
 
@@ -419,11 +421,11 @@ protected def equiv : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] R[ε] :=
   AlgEquiv.ofAlgHom
     (CliffordAlgebra.lift (0 : QuadraticForm R R) ⟨inrHom R _, fun m => inr_mul_inr _ m m⟩)
     (DualNumber.lift ⟨ι _ (1 : R), ι_mul_ι (1 : R) 1⟩)
-    (by
+    (by 
       ext x : 1
       dsimp
       rw [lift_apply_eps, Subtype.coe_mk, lift_ι_apply, inr_hom_apply, eps])
-    (by
+    (by 
       ext : 2
       dsimp
       rw [lift_ι_apply, inr_hom_apply, ← eps, lift_apply_eps, Subtype.coe_mk])

@@ -40,13 +40,14 @@ class QuasiIso (f : C ⟶ D) : Prop where
 attribute [instance] QuasiIso.is_iso
 
 instance (priority := 100) quasi_iso_of_iso (f : C ⟶ D) [IsIso f] :
-    QuasiIso f where IsIso i := by
+    QuasiIso
+      f where IsIso i := by
     change is_iso ((homologyFunctor V c i).mapIso (as_iso f)).Hom
     infer_instance
 #align quasi_iso_of_iso quasi_iso_of_iso
 
 instance quasi_iso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] :
-    QuasiIso (f ≫ g) where IsIso i := by
+    QuasiIso (f ≫ g) where IsIso i := by 
     rw [functor.map_comp]
     infer_instance
 #align quasi_iso_comp quasi_iso_comp
@@ -70,7 +71,7 @@ variable {W : Type _} [Category W] [Preadditive W] [HasCokernels W] [HasImages W
 
 /-- An homotopy equivalence is a quasi-isomorphism. -/
 theorem to_quasi_iso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : QuasiIso e.Hom :=
-  ⟨fun i => by
+  ⟨fun i => by 
     refine' ⟨⟨(homologyFunctor W c i).map e.inv, _⟩⟩
     simp only [← functor.map_comp, ← (homologyFunctor W c i).map_id]
     constructor <;> apply homology_map_eq_of_homotopy
@@ -109,7 +110,7 @@ noncomputable def toSingle₀CokernelAtZeroIso : cokernel (X.d 1 0) ≅ Y :=
 theorem to_single₀_cokernel_at_zero_iso_hom_eq [hf : QuasiIso f] :
     f.toSingle₀CokernelAtZeroIso.Hom =
       cokernel.desc (X.d 1 0) (f.f 0) (by rw [← f.2 1 0 rfl] <;> exact comp_zero) :=
-  by
+  by 
   ext
   dsimp only [to_single₀_cokernel_at_zero_iso, ChainComplex.homologyZeroIso, homologyOfZeroRight,
     homology.mapIso, ChainComplex.homologyFunctor0Single₀, cokernel.map]
@@ -132,12 +133,11 @@ theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 
   have h : X.d 1 0 ≫ f.f 0 = 0 := by
     simp only [← f.2 1 0 rfl, ChainComplex.single₀_obj_X_d, comp_zero]
   refine' ⟨h, Nonempty.intro (homologyIsoKernelDesc _ _ _ ≪≫ _)⟩
-  · suffices is_iso (cokernel.desc _ _ h) by
+  · suffices is_iso (cokernel.desc _ _ h) by 
       haveI := this
       apply kernel.of_mono
     rw [← to_single₀_cokernel_at_zero_iso_hom_eq]
     infer_instance
-    
 #align
   homological_complex.hom.to_single₀_exact_d_f_at_zero HomologicalComplex.Hom.to_single₀_exact_d_f_at_zero
 
@@ -167,7 +167,7 @@ noncomputable def fromSingle₀KernelAtZeroIso [hf : QuasiIso f] : kernel (X.d 0
 theorem from_single₀_kernel_at_zero_iso_inv_eq [hf : QuasiIso f] :
     f.fromSingle₀KernelAtZeroIso.inv =
       kernel.lift (X.d 0 1) (f.f 0) (by rw [f.2 0 1 rfl] <;> exact zero_comp) :=
-  by
+  by 
   ext
   dsimp only [from_single₀_kernel_at_zero_iso, CochainComplex.homologyZeroIso, homologyOfZeroLeft,
     homology.mapIso, CochainComplex.homologyFunctor0Single₀, kernel.map]
@@ -200,7 +200,6 @@ theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 
       apply cokernel.of_epi
     rw [← from_single₀_kernel_at_zero_iso_inv_eq f]
     infer_instance
-    
 #align
   homological_complex.hom.from_single₀_exact_f_d_at_zero HomologicalComplex.Hom.from_single₀_exact_f_d_at_zero
 

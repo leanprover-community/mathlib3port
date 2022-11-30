@@ -50,7 +50,8 @@ theorem coe_of (α : Type _) [Lattice α] [BoundedOrder α] : ↥(of α) = α :=
 instance : Inhabited BoundedLatticeCat :=
   ⟨of PUnit⟩
 
-instance : LargeCategory.{u} BoundedLatticeCat where
+instance : LargeCategory.{u}
+      BoundedLatticeCat where 
   Hom X Y := BoundedLatticeHom X Y
   id X := BoundedLatticeHom.id X
   comp X Y Z f g := g.comp f
@@ -58,7 +59,9 @@ instance : LargeCategory.{u} BoundedLatticeCat where
   comp_id' X Y := BoundedLatticeHom.id_comp
   assoc' W X Y Z _ _ _ := BoundedLatticeHom.comp_assoc _ _ _
 
-instance : ConcreteCategory BoundedLatticeCat where
+instance :
+    ConcreteCategory
+      BoundedLatticeCat where 
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
 
@@ -134,20 +137,22 @@ theorem forget_SemilatticeInf_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
 /-- Constructs an equivalence between bounded lattices from an order isomorphism
 between them. -/
 @[simps]
-def Iso.mk {α β : BoundedLatticeCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : BoundedLatticeCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align BoundedLattice.iso.mk BoundedLatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : BoundedLatticeCat ⥤ BoundedLatticeCat where
+def dual : BoundedLatticeCat ⥤
+      BoundedLatticeCat where 
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
 #align BoundedLattice.dual BoundedLatticeCat.dual

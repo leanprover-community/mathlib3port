@@ -137,11 +137,9 @@ theorem mem_omega_limit_iff_frequently (y : β) :
   · intro h _ hn _ hu
     rcases h _ hu _ hn with ⟨_, _, _, _, ht, hx, hϕtx⟩
     exact ⟨_, ht, _, hx, by rwa [mem_preimage, hϕtx]⟩
-    
   · intro h _ hu _ hn
     rcases h _ hn hu with ⟨_, ht, _, hx, hϕtx⟩
     exact ⟨_, hϕtx, _, _, ht, hx, rfl⟩
-    
 #align mem_omega_limit_iff_frequently mem_omega_limit_iff_frequently
 
 /-- An element `y` is in the ω-limit set of `s` w.r.t. `f` if the
@@ -186,11 +184,9 @@ theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s
     refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t => _, h₂.mono fun t => _⟩
     exacts[subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
       subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_right _ _]
-    
   · rintro (hy | hy)
     exacts[omega_limit_mono_right _ _ (subset_union_left _ _) hy,
       omega_limit_mono_right _ _ (subset_union_right _ _) hy]
-    
 #align omega_limit_union omega_limit_union
 
 theorem omega_limit_Union (p : ι → Set α) : (⋃ i, ω f ϕ (p i)) ⊆ ω f ϕ (⋃ i, p i) := by
@@ -327,21 +323,17 @@ theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc�
     use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
     constructor
     all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) subset.rfl)
-    
   · intro u
     have hn : (image2 ϕ (u ∩ v) s).Nonempty :=
       nonempty.image2 (nonempty_of_mem (inter_mem u.prop hv₁)) hs
     exact hn.mono subset_closure
-    
   · intro
     apply is_compact_of_is_closed_subset hc₁ isClosedClosure
     calc
       _ ⊆ closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
       _ ⊆ c := hv₂
       
-    
   · exact fun _ => isClosedClosure
-    
 #align nonempty_omega_limit_of_is_compact_absorbing nonempty_omega_limit_of_is_compact_absorbing
 
 theorem nonempty_omega_limit [CompactSpace β] [NeBot f] (hs : s.Nonempty) : (ω f ϕ s).Nonempty :=
@@ -371,7 +363,7 @@ theorem is_invariant_omega_limit (hf : ∀ t, Tendsto ((· + ·) t) f f) : IsInv
 #align flow.is_invariant_omega_limit Flow.is_invariant_omega_limit
 
 theorem omega_limit_image_subset (t : τ) (ht : Tendsto (· + t) f f) : ω f ϕ (ϕ t '' s) ⊆ ω f ϕ s :=
-  by
+  by 
   simp only [omega_limit_image_eq, ← map_add]
   exact omega_limit_subset_of_tendsto ϕ s ht
 #align flow.omega_limit_image_subset Flow.omega_limit_image_subset
@@ -401,7 +393,7 @@ theorem omega_limit_image_eq (hf : ∀ t, Tendsto (· + t) f f) (t : τ) : ω f 
 #align flow.omega_limit_image_eq Flow.omega_limit_image_eq
 
 theorem omega_limit_omega_limit (hf : ∀ t, Tendsto ((· + ·) t) f f) : ω f ϕ (ω f ϕ s) ⊆ ω f ϕ s :=
-  by
+  by 
   simp only [subset_def, mem_omega_limit_iff_frequently₂, frequently_iff]
   intro _ h
   rintro n hn u hu

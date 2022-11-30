@@ -35,7 +35,9 @@ variable [CommSemiring R] {p q r : R[X]}
 variable [Semiring A] [Algebra R A]
 
 /-- Note that this instance also provides `algebra R R[X]`. -/
-instance algebraOfAlgebra : Algebra R A[X] where
+instance algebraOfAlgebra :
+    Algebra R
+      A[X] where 
   smul_def' r p :=
     to_finsupp_injective <| by
       dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
@@ -77,7 +79,7 @@ variable {R}
 
 /-- Extensionality lemma for algebra maps out of `A'[X]` over a smaller base ring than `A'`
 -/
-@[ext.1]
+@[ext]
 theorem alg_hom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
     (h₁ : f.comp (IsScalarTower.toAlgHom R A' A'[X]) = g.comp (IsScalarTower.toAlgHom R A' A'[X]))
     (h₂ : f x = g x) : f = g :=
@@ -91,7 +93,7 @@ implementation detail, but it can be useful to transfer results from `finsupp` t
 @[simps]
 def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
   { toFinsuppIso R with
-    commutes' := fun r => by
+    commutes' := fun r => by 
       dsimp
       exact to_finsupp_algebra_map _ }
 #align polynomial.to_finsupp_iso_alg Polynomial.toFinsuppIsoAlg
@@ -99,7 +101,7 @@ def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
 variable {R}
 
 instance [Nontrivial A] : Nontrivial (Subalgebra R A[X]) :=
-  ⟨⟨⊥, ⊤, by
+  ⟨⟨⊥, ⊤, by 
       rw [Ne.def, SetLike.ext_iff, not_forall]
       refine' ⟨X, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top,
@@ -170,7 +172,7 @@ theorem adjoin_X : Algebra.adjoin R ({x} : Set R[X]) = ⊤ := by
   exact S.sum_mem fun n hn => S.smul_mem (S.pow_mem (Algebra.subset_adjoin rfl) _) _
 #align polynomial.adjoin_X Polynomial.adjoin_X
 
-@[ext.1]
+@[ext]
 theorem alg_hom_ext {f g : R[X] →ₐ[R] A} (h : f x = g x) : f = g :=
   (AlgHom.ext_of_adjoin_eq_top adjoin_X) fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
 #align polynomial.alg_hom_ext Polynomial.alg_hom_ext
@@ -322,7 +324,7 @@ theorem aeval_eq_sum_range' [Algebra R S] {p : R[X]} {n : ℕ} (hn : p.natDegree
 #align polynomial.aeval_eq_sum_range' Polynomial.aeval_eq_sum_range'
 
 theorem is_root_of_eval₂_map_eq_zero (hf : Function.Injective f) {r : R} :
-    eval₂ f (f r) p = 0 → p.IsRoot r := by
+    eval₂ f (f r) p = 0 → p.IsRoot r := by 
   intro h
   apply hf
   rw [← eval₂_hom, h, f.map_zero]
@@ -412,11 +414,9 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
     apply Finset.dvd_sum
     intro j hj
     exact dvd_terms j (Finset.ne_of_mem_erase hj)
-    
   · convert dvd_zero p
     rw [not_mem_support_iff] at hi
     simp [hi]
-    
 #align polynomial.dvd_term_of_dvd_eval_of_dvd_terms Polynomial.dvd_term_of_dvd_eval_of_dvd_terms
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
@@ -450,13 +450,12 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 := by
   rw [sum_over_range' _ _ (p.nat_degree + 2) bound]
   swap
   · simp
-    
   rw [sum_range_succ']
-  conv_lhs =>
-  congr
-  apply_congr
-  skip
-  rw [coeff_mul_X_sub_C, sub_mul, mul_assoc, ← pow_succ]
+  conv_lhs => 
+    congr
+    apply_congr
+    skip
+    rw [coeff_mul_X_sub_C, sub_mul, mul_assoc, ← pow_succ]
   simp [sum_range_sub', coeff_monomial]
 #align polynomial.eval_mul_X_sub_C Polynomial.eval_mul_X_sub_C
 

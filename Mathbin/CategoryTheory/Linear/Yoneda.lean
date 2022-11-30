@@ -31,7 +31,11 @@ variable (R : Type w) [Ring R] (C : Type u) [Category.{v} C] [Preadditive C] [Li
 sending an object `X : C` to the `Module R`-valued presheaf on `C`,
 with value on `Y : Cᵒᵖ` given by `Module.of R (unop Y ⟶ X)`. -/
 @[simps]
-def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R where
+def linearYoneda :
+    C ⥤
+      Cᵒᵖ ⥤
+        ModuleCat
+          R where 
   obj X :=
     { obj := fun Y => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' f => Linear.leftComp R _ f.unop,
       map_comp' := fun _ _ _ f g => LinearMap.ext fun _ => Category.assoc _ _ _,
@@ -60,7 +64,11 @@ def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R where
 sending an object `Y : Cᵒᵖ` to the `Module R`-valued copresheaf on `C`,
 with value on `X : C` given by `Module.of R (unop Y ⟶ X)`. -/
 @[simps]
-def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R where
+def linearCoyoneda :
+    Cᵒᵖ ⥤
+      C ⥤
+        ModuleCat
+          R where 
   obj Y :=
     { obj := fun X => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' => Linear.rightComp _ _,
       map_id' := fun Y => LinearMap.ext fun _ => Category.comp_id _,

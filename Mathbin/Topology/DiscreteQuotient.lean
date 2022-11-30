@@ -55,7 +55,7 @@ of finite discrete spaces.
 variable (X : Type _) [TopologicalSpace X]
 
 /-- The type of discrete quotients of a topological space. -/
-@[ext.1]
+@[ext]
 structure DiscreteQuotient where
   Rel : X → X → Prop
   Equiv : Equivalence Rel
@@ -67,30 +67,25 @@ namespace DiscreteQuotient
 variable {X} (S : DiscreteQuotient X)
 
 /-- Construct a discrete quotient from a clopen set. -/
-def ofClopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X where
+def ofClopen {A : Set X} (h : IsClopen A) :
+    DiscreteQuotient X where 
   Rel x y := x ∈ A ∧ y ∈ A ∨ x ∉ A ∧ y ∉ A
   Equiv := ⟨by tauto!, by tauto!, by tauto!⟩
-  clopen := by
+  clopen := by 
     intro x
     by_cases hx : x ∈ A
     · apply IsClopen.union
       · convert h
         ext
         exact ⟨fun i => i.2, fun i => ⟨hx, i⟩⟩
-        
       · convert is_clopen_empty
         tidy
-        
-      
     · apply IsClopen.union
       · convert is_clopen_empty
         tidy
-        
       · convert IsClopen.compl h
         ext
         exact ⟨fun i => i.2, fun i => ⟨hx, i⟩⟩
-        
-      
 #align discrete_quotient.of_clopen DiscreteQuotient.ofClopen
 
 theorem refl : ∀ x : X, S.Rel x x :=
@@ -155,15 +150,21 @@ theorem fiber_clopen (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
   ⟨fiber_open _ _, fiberClosed _ _⟩
 #align discrete_quotient.fiber_clopen DiscreteQuotient.fiber_clopen
 
-instance : PartialOrder (DiscreteQuotient X) where
+instance :
+    PartialOrder
+      (DiscreteQuotient
+        X) where 
   le A B := ∀ x y : X, A.Rel x y → B.Rel x y
   le_refl a := by tauto
   le_trans a b c h1 h2 := by tauto
-  le_antisymm a b h1 h2 := by
+  le_antisymm a b h1 h2 := by 
     ext
     tauto
 
-instance : OrderTop (DiscreteQuotient X) where
+instance :
+    OrderTop
+      (DiscreteQuotient
+        X) where 
   top := ⟨fun a b => True, ⟨by tauto, by tauto, by tauto⟩, fun _ => is_clopen_univ⟩
   le_top a := by tauto
 
@@ -186,7 +187,7 @@ section Comap
 variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f)
 
 /-- Comap a discrete quotient along a continuous map. -/
-def comap : DiscreteQuotient Y where
+def comap : DiscreteQuotient Y where 
   Rel a b := S.Rel (f a) (f b)
   Equiv := ⟨fun a => S.refl _, fun a b h => S.symm _ _ h, fun a b c h1 h2 => S.trans _ _ _ h1 h2⟩
   clopen y := ⟨IsOpen.preimage cont (S.clopen _).1, IsClosed.preimage cont (S.clopen _).2⟩
@@ -258,9 +259,12 @@ end OfLe
 
 /-- When X is discrete, there is a `order_bot` instance on `discrete_quotient X`
 -/
-instance [DiscreteTopology X] : OrderBot (DiscreteQuotient X) where
+instance [DiscreteTopology X] :
+    OrderBot
+      (DiscreteQuotient
+        X) where 
   bot := { Rel := (· = ·), Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ }
-  bot_le := by
+  bot_le := by 
     rintro S a b (h : a = b)
     rw [h]
     exact S.refl _
@@ -320,7 +324,7 @@ theorem map_proj_apply (cond : LeComap cont A B) (y : Y) : map cond (A.proj y) =
 #align discrete_quotient.map_proj_apply DiscreteQuotient.map_proj_apply
 
 @[simp]
-theorem map_id : map (le_comap_id A) = id := by
+theorem map_id : map (le_comap_id A) = id := by 
   ext ⟨⟩
   rfl
 #align discrete_quotient.map_id DiscreteQuotient.map_id
@@ -390,23 +394,18 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
       (fun i => (fiber_closed _ _).IsCompact) fun i => fiber_closed _ _
   · refine' ⟨x, fun Q => _⟩
     exact hx _ ⟨Q, rfl⟩
-    
   · refine' ⟨A ⊓ B, fun a ha => _, fun a ha => _⟩
     · dsimp only
       erw [← compat (A ⊓ B) A inf_le_left]
       exact fiber_le_of_le _ _ ha
-      
     · dsimp only
       erw [← compat (A ⊓ B) B inf_le_right]
       exact fiber_le_of_le _ _ ha
-      
-    
   · obtain ⟨x, hx⟩ := i.proj_surjective (Qs i)
     refine' ⟨x, _⟩
     dsimp only
     rw [← hx, fiber_eq]
     apply i.refl
-    
 #align discrete_quotient.exists_of_compat DiscreteQuotient.exists_of_compat
 
 noncomputable instance [CompactSpace X] : Fintype S := by
@@ -434,7 +433,8 @@ namespace LocallyConstant
 variable {X} {α : Type _} (f : LocallyConstant X α)
 
 /-- Any locally constant function induces a discrete quotient. -/
-def discreteQuotient : DiscreteQuotient X where
+def discreteQuotient : DiscreteQuotient
+      X where 
   Rel a b := f b = f a
   Equiv := ⟨by tauto, by tauto, fun a b c h1 h2 => by rw [h2, h1]⟩
   clopen x := f.IsLocallyConstant.is_clopen_fiber _

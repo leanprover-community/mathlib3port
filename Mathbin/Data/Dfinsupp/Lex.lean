@@ -46,15 +46,15 @@ instance [LT ι] [∀ i, LT (α i)] : LT (Lex (Π₀ i, α i)) :=
 theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (α i)] (r) [IsStrictOrder ι r] {x y : Π₀ i, α i}
     (hlt : x < y) : ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i := by
   obtain ⟨hle, j, hlt⟩ := Pi.lt_def.1 hlt
-  classical
-  have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_to_set.WellFoundedOn
-  obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
-  exact
-    ⟨i, fun k hk =>
-      ⟨hle k,
-        of_not_not fun h =>
-          hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩,
-      hi⟩
+  classical 
+    have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_to_set.WellFoundedOn
+    obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
+    exact
+      ⟨i, fun k hk =>
+        ⟨hle k,
+          of_not_not fun h =>
+            hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩,
+        hi⟩
 #align dfinsupp.lex_lt_of_lt_of_preorder Dfinsupp.lex_lt_of_lt_of_preorder
 
 theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y : Π₀ i, α i}
@@ -892,7 +892,7 @@ instance Lex.covariant_class_lt_left :
 
 instance Lex.covariant_class_le_left :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (· + ·) (· ≤ ·) :=
-  Add.to_covariant_class_left _
+  Add.to_CovariantClass_left _
 #align dfinsupp.lex.covariant_class_le_left Dfinsupp.Lex.covariant_class_le_left
 
 end Left
@@ -909,7 +909,7 @@ instance Lex.covariant_class_lt_right :
 
 instance Lex.covariant_class_le_right :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (Function.swap (· + ·)) (· ≤ ·) :=
-  Add.to_covariant_class_right _
+  Add.to_CovariantClass_right _
 #align dfinsupp.lex.covariant_class_le_right Dfinsupp.Lex.covariant_class_le_right
 
 end Right

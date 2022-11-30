@@ -126,7 +126,7 @@ theorem nil_mem_star (l : Language α) : [] ∈ l.star :=
   ⟨[], rfl, fun _ => False.elim⟩
 #align language.nil_mem_star Language.nil_mem_star
 
-instance : Semiring (Language α) where
+instance : Semiring (Language α) where 
   add := (· + ·)
   add_assoc := union_assoc
   zero := 0
@@ -152,7 +152,8 @@ theorem add_self (l : Language α) : l + l = l :=
 #align language.add_self Language.add_self
 
 /-- Maps the alphabet of a language. -/
-def map (f : α → β) : Language α →+* Language β where
+def map (f : α → β) :
+    Language α →+* Language β where 
   toFun := image (List.map f)
   map_zero' := image_empty _
   map_one' := image_singleton
@@ -177,10 +178,8 @@ theorem star_def_nonempty (l : Language α) :
     refine' ⟨S.filter fun l => ¬List.empty l, by simp, fun y hy => _⟩
     rw [mem_filter, empty_iff_eq_nil] at hy
     exact ⟨h y hy.1, hy.2⟩
-    
   · rintro ⟨S, hx, h⟩
     exact ⟨S, hx, fun y hy => (h y hy).1⟩
-    
 #align language.star_def_nonempty Language.star_def_nonempty
 
 theorem le_iff (l m : Language α) : l ≤ m ↔ l + m = m :=
@@ -228,21 +227,15 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
     constructor
     · rintro rfl
       exact ⟨[], rfl, rfl, fun y h => h.elim⟩
-      
     · rintro ⟨_, rfl, rfl, _⟩
       rfl
-      
-    
   · simp only [pow_succ, mem_mul, ihn]
     constructor
     · rintro ⟨a, b, ha, ⟨S, rfl, rfl, hS⟩, rfl⟩
       exact ⟨a :: S, rfl, rfl, forall_mem_cons.2 ⟨ha, hS⟩⟩
-      
     · rintro ⟨_ | ⟨a, S⟩, rfl, hn, hS⟩ <;> cases hn
       rw [forall_mem_cons] at hS
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
-      
-    
 #align language.mem_pow Language.mem_pow
 
 theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i := by
@@ -251,10 +244,8 @@ theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i := by
   constructor
   · rintro ⟨S, rfl, hS⟩
     exact ⟨_, S, rfl, rfl, hS⟩
-    
   · rintro ⟨_, S, rfl, rfl, hS⟩
     exact ⟨S, rfl, hS⟩
-    
 #align language.star_eq_supr_pow Language.star_eq_supr_pow
 
 @[simp]
@@ -286,7 +277,6 @@ theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → 
   intro n
   induction' n with n ih
   · simp
-    
   rw [pow_succ', mul_assoc (l ^ n) l m]
   exact le_trans (le_mul_congr le_rfl h) ih
 #align language.star_mul_le_right_of_mul_le_right Language.star_mul_le_right_of_mul_le_right
@@ -298,7 +288,6 @@ theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m 
   intro n
   induction' n with n ih
   · simp
-    
   rw [pow_succ, ← mul_assoc m l (l ^ n)]
   exact le_trans (le_mul_congr h le_rfl) ih
 #align language.star_mul_le_left_of_mul_le_left Language.star_mul_le_left_of_mul_le_left

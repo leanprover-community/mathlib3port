@@ -47,7 +47,8 @@ theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 #align dfinsupp.le_def Dfinsupp.le_def
 
 /-- The order on `dfinsupp`s over a partial order embeds into the order on functions -/
-def orderEmbeddingToFun : (Π₀ i, α i) ↪o ∀ i, α i where
+def orderEmbeddingToFun : (Π₀ i, α i) ↪o
+      ∀ i, α i where 
   toFun := coeFn
   inj' := coe_fn_injective
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
@@ -79,13 +80,13 @@ instance [∀ i, PartialOrder (α i)] : PartialOrder (Π₀ i, α i) :=
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
   { Dfinsupp.partialOrder α with inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem,
-    inf_le_left := fun f g i => by
+    inf_le_left := fun f g i => by 
       rw [zip_with_apply]
       exact inf_le_left,
-    inf_le_right := fun f g i => by
+    inf_le_right := fun f g i => by 
       rw [zip_with_apply]
       exact inf_le_right,
-    le_inf := fun f g h hf hg i => by
+    le_inf := fun f g h hf hg i => by 
       rw [zip_with_apply]
       exact le_inf (hf i) (hg i) }
 
@@ -96,13 +97,13 @@ theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) 
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
   { Dfinsupp.partialOrder α with sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem,
-    le_sup_left := fun f g i => by
+    le_sup_left := fun f g i => by 
       rw [zip_with_apply]
       exact le_sup_left,
-    le_sup_right := fun f g i => by
+    le_sup_right := fun f g i => by 
       rw [zip_with_apply]
       exact le_sup_right,
-    sup_le := fun f g h hf hg i => by
+    sup_le := fun f g h hf hg i => by 
       rw [zip_with_apply]
       exact sup_le (hf i) (hg i) }
 
@@ -136,7 +137,7 @@ instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] :
 
 instance [∀ i, OrderedAddCommMonoid (α i)] [∀ i, ContravariantClass (α i) (α i) (· + ·) (· ≤ ·)] :
     ContravariantClass (Π₀ i, α i) (Π₀ i, α i) (· + ·) (· ≤ ·) :=
-  ⟨fun f g h H i => by
+  ⟨fun f g h H i => by 
     specialize H i
     rw [add_apply, add_apply] at H
     exact le_of_add_le_add_left H⟩
@@ -145,7 +146,7 @@ section CanonicallyOrderedAddMonoid
 
 variable (α) [∀ i, CanonicallyOrderedAddMonoid (α i)]
 
-instance : OrderBot (Π₀ i, α i) where
+instance : OrderBot (Π₀ i, α i) where 
   bot := 0
   bot_le := by simp only [le_def, coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
 
@@ -188,7 +189,7 @@ theorem single_le_iff {i : ι} {a : α i} : single i a ≤ f ↔ a ≤ f i :=
 
 end Le
 
-variable (α) [∀ i, Sub (α i)] [∀ i, HasOrderedSub (α i)] {f g : Π₀ i, α i} {i : ι} {a b : α i}
+variable (α) [∀ i, Sub (α i)] [∀ i, OrderedSub (α i)] {f g : Π₀ i, α i} {i : ι} {a b : α i}
 
 /-- This is called `tsub` for truncated subtraction, to distinguish it with subtraction in an
 additive group. -/
@@ -210,20 +211,20 @@ theorem coe_tsub (f g : Π₀ i, α i) : ⇑(f - g) = f - g := by
 
 variable (α)
 
-instance : HasOrderedSub (Π₀ i, α i) :=
+instance : OrderedSub (Π₀ i, α i) :=
   ⟨fun n m k =>
-    forall_congr' fun i => by
+    forall_congr' fun i => by 
       rw [add_apply, tsub_apply]
       exact tsub_le_iff_right⟩
 
 instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
   { Dfinsupp.orderBot α, Dfinsupp.orderedAddCommMonoid α with
     exists_add_of_le := fun f g h =>
-      ⟨g - f, by
+      ⟨g - f, by 
         ext i
         rw [add_apply, tsub_apply]
         exact (add_tsub_cancel_of_le <| h i).symm⟩,
-    le_self_add := fun f g i => by
+    le_self_add := fun f g i => by 
       rw [add_apply]
       exact le_self_add }
 
@@ -234,9 +235,7 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
   ext j
   obtain rfl | h := eq_or_ne i j
   · rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same]
-    
   · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
-    
 #align dfinsupp.single_tsub Dfinsupp.single_tsub
 
 variable [∀ (i) (x : α i), Decidable (x ≠ 0)]

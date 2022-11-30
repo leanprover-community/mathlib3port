@@ -68,10 +68,8 @@ theorem le_exp_log (x : ℝ) : x ≤ exp (log x) := by
   by_cases h_zero : x = 0
   · rw [h_zero, log, dif_pos rfl, exp_zero]
     exact zero_le_one
-    
   · rw [exp_log_eq_abs h_zero]
     exact le_abs_self _
-    
 #align real.le_exp_log Real.le_exp_log
 
 @[simp]
@@ -104,9 +102,7 @@ theorem log_one : log 1 = 0 :=
 theorem log_abs (x : ℝ) : log (|x|) = log x := by
   by_cases h : x = 0
   · simp [h]
-    
   · rw [← exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
-    
 #align real.log_abs Real.log_abs
 
 @[simp]
@@ -137,9 +133,7 @@ theorem log_div (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y :=
 
 @[simp]
 theorem log_inv (x : ℝ) : log x⁻¹ = -log x := by
-  by_cases hx : x = 0;
-  · simp [hx]
-    
+  by_cases hx : x = 0; · simp [hx]
   rw [← exp_eq_exp, exp_log_eq_abs (inv_ne_zero hx), exp_neg, exp_log_eq_abs hx, abs_inv]
 #align real.log_inv Real.log_inv
 
@@ -199,7 +193,6 @@ theorem log_nonpos_iff (hx : 0 < x) : log x ≤ 0 ↔ x ≤ 1 := by rw [← not_
 theorem log_nonpos_iff' (hx : 0 ≤ x) : log x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
   · simp [le_refl, zero_le_one]
-    
   exact log_nonpos_iff hx
 #align real.log_nonpos_iff' Real.log_nonpos_iff'
 
@@ -237,24 +230,17 @@ theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 := by
     · refine' Or.inr (Or.inr (eq_neg_iff_eq_neg.mp _))
       rw [← log_neg_eq_log x] at h
       exact (eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h).symm
-      
     · exact Or.inl rfl
-      
     · exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
-      
-    
   · rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]
-    
 #align real.log_eq_zero Real.log_eq_zero
 
 @[simp]
 theorem log_pow (x : ℝ) (n : ℕ) : log (x ^ n) = n * log x := by
   induction' n with n ih
   · simp
-    
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
-    
   rw [pow_succ', log_mul (pow_ne_zero _ hx) hx, ih, Nat.cast_succ, add_mul, one_mul]
 #align real.log_pow Real.log_pow
 
@@ -262,7 +248,6 @@ theorem log_pow (x : ℝ) (n : ℕ) : log (x ^ n) = n * log x := by
 theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
   induction n
   · rw [Int.ofNat_eq_coe, zpow_coe_nat, log_pow, Int.cast_ofNat]
-    
   rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_negSucc, Nat.cast_add_one,
     neg_mul_eq_neg_mul]
 #align real.log_zpow Real.log_zpow
@@ -284,7 +269,7 @@ theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| 
   replace := log_le_sub_one_of_pos this
   replace : log (1 / x) < 1 / x := by linarith
   rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff h1] at this
-  have aux : 0 ≤ -log x * x := by
+  have aux : 0 ≤ -log x * x := by 
     refine' mul_nonneg _ h1.le
     rw [← log_inv]
     apply log_nonneg
@@ -340,24 +325,19 @@ theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ 
     log (∏ i in s, f i) = ∑ i in s, log (f i) := by
   induction' s using Finset.cons_induction_on with a s ha ih
   · simp
-    
   · rw [Finset.forall_mem_cons] at hf
     simp [ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
-    
 #align real.log_prod Real.log_prod
 
 theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun p t => t * log p :=
-  by
+  by 
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
-    
   nth_rw 0 [← Nat.factorization_prod_pow_eq_self hn]
   rw [Finsupp.prod, Nat.cast_prod, log_prod _ _ fun p hp => _, Finsupp.sum]
   · simp_rw [Nat.cast_pow, log_pow]
-    
   · norm_cast
     exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).NeZero
-    
 #align real.log_nat_eq_sum_factorization Real.log_nat_eq_sum_factorization
 
 theorem tendsto_pow_log_div_mul_add_at_top (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
@@ -369,7 +349,6 @@ theorem tendsto_pow_log_div_mul_add_at_top (a b : ℝ) (n : ℕ) (ha : a ≠ 0) 
 theorem is_o_pow_log_id_at_top {n : ℕ} : (fun x => log x ^ n) =o[at_top] id := by
   rw [Asymptotics.is_o_iff_tendsto']
   · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_ne_zero
-    
   filter_upwards [eventually_ne_at_top (0 : ℝ)] with x h₁ h₂ using(h₁ h₂).elim
 #align real.is_o_pow_log_id_at_top Real.is_o_pow_log_id_at_top
 

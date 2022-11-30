@@ -48,7 +48,8 @@ namespace Iso
 /-- The application of a natural isomorphism to an object. We put this definition in a different
 namespace, so that we can use `α.app` -/
 @[simps]
-def app {F G : C ⥤ D} (α : F ≅ G) (X : C) : F.obj X ≅ G.obj X where
+def app {F G : C ⥤ D} (α : F ≅ G) (X : C) :
+    F.obj X ≅ G.obj X where 
   Hom := α.Hom.app X
   inv := α.inv.app X
   hom_inv_id' := by rw [← comp_app, iso.hom_inv_id]; rfl
@@ -209,7 +210,7 @@ and checking naturality only in the forward direction.
 @[simps]
 def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) :
-    F ≅ G where
+    F ≅ G where 
   Hom := { app := fun X => (app X).Hom }
   inv :=
     { app := fun X => (app X).inv,
@@ -239,7 +240,6 @@ def hcomp {F G : C ⥤ D} {H I : D ⥤ E} (α : F ≅ G) (β : H ≅ I) : F ⋙ 
     rw [← nat_trans.exchange]
     simp
     rfl
-    
   ext; rw [← nat_trans.exchange]; simp; rfl
 #align category_theory.nat_iso.hcomp CategoryTheory.NatIso.hcomp
 
@@ -251,9 +251,7 @@ theorem is_iso_map_iff {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) {X Y : C} (f : 
   intro F₁ F₂ e hf
   refine' is_iso.mk ⟨e.inv.app Y ≫ inv (F₁.map f) ≫ e.hom.app X, _, _⟩
   · simp only [nat_trans.naturality_assoc, is_iso.hom_inv_id_assoc, iso.inv_hom_id_app]
-    
   · simp only [assoc, ← e.hom.naturality, is_iso.inv_hom_id_assoc, iso.inv_hom_id_app]
-    
 #align category_theory.nat_iso.is_iso_map_iff CategoryTheory.NatIso.is_iso_map_iff
 
 end NatIso

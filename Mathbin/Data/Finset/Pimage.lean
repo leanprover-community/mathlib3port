@@ -85,7 +85,7 @@ theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f
 theorem pimage_eq_image_filter :
     s.pimage f =
       (filter (fun x => (f x).Dom) s).attach.image fun x => (f x).get (mem_filter.1 x.coe_prop).2 :=
-  by
+  by 
   ext x
   simp [Part.mem_eq, And.exists, -exists_prop]
 #align finset.pimage_eq_image_filter Finset.pimage_eq_image_filter
@@ -95,7 +95,7 @@ theorem pimage_union [DecidableEq α] : (s ∪ t).pimage f = s.pimage f ∪ t.pi
 #align finset.pimage_union Finset.pimage_union
 
 @[simp]
-theorem pimage_empty : pimage f ∅ = ∅ := by
+theorem pimage_empty : pimage f ∅ = ∅ := by 
   ext
   simp
 #align finset.pimage_empty Finset.pimage_empty

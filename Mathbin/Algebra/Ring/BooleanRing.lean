@@ -308,7 +308,7 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
 
 @[simp]
 theorem of_boolalg_symm_diff (a b : AsBoolalg α) : ofBoolalg (a ∆ b) = ofBoolalg a + ofBoolalg b :=
-  by
+  by 
   rw [symm_diff_eq_sup_sdiff_inf]
   exact of_boolalg_symm_diff_aux _ _
 #align of_boolalg_symm_diff of_boolalg_symm_diff
@@ -348,9 +348,11 @@ theorem to_boolalg_add (a b : α) : toBoolalg (a + b) = toBoolalg a ∆ toBoolal
 /-- Turn a ring homomorphism from Boolean rings `α` to `β` into a bounded lattice homomorphism
 from `α` to `β` considered as Boolean algebras. -/
 @[simps]
-protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg α) (AsBoolalg β) where
+protected def RingHom.asBoolalg (f : α →+* β) :
+    BoundedLatticeHom (AsBoolalg α)
+      (AsBoolalg β) where 
   toFun := toBoolalg ∘ f ∘ ofBoolalg
-  map_sup' a b := by
+  map_sup' a b := by 
     dsimp
     simp_rw [map_add f, map_mul f]
     rfl
@@ -436,7 +438,7 @@ following data:
 -/
 @[reducible]
 def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α] :
-    NonUnitalCommRing α where
+    NonUnitalCommRing α where 
   add := (· ∆ ·)
   add_assoc := symm_diff_assoc
   zero := ⊥
@@ -543,7 +545,8 @@ theorem to_boolring_symm_diff (a b : α) : toBoolring (a ∆ b) = toBoolring a +
 from `α` to `β` considered as Boolean rings. -/
 @[simps]
 protected def BoundedLatticeHom.asBoolring (f : BoundedLatticeHom α β) :
-    AsBoolring α →+* AsBoolring β where
+    AsBoolring α →+*
+      AsBoolring β where 
   toFun := toBoolring ∘ f ∘ ofBoolring
   map_zero' := f.map_bot'
   map_one' := f.map_top'
@@ -584,7 +587,7 @@ def RingEquiv.asBoolringAsBoolalg (α : Type _) [BooleanRing α] : AsBoolring (A
 
 open Bool
 
-instance : BooleanRing Bool where
+instance : BooleanRing Bool where 
   add := xor
   add_assoc := xor_assoc
   zero := false

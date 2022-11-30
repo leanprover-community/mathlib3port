@@ -37,7 +37,7 @@ variable {p q : Submodule R M}
 namespace Submodule
 
 /-- The set `{0}` is the bottom element of the lattice of submodules. -/
-instance : HasBot (Submodule R M) :=
+instance : Bot (Submodule R M) :=
   ⟨{ (⊥ : AddSubmonoid M) with carrier := {0},
       smul_mem' := by simp (config := { contextual := true }) }⟩
 
@@ -80,7 +80,7 @@ instance uniqueBot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
 #align submodule.unique_bot Submodule.uniqueBot
 
-instance : OrderBot (Submodule R M) where
+instance : OrderBot (Submodule R M) where 
   bot := ⊥
   bot_le p x := by simp (config := { contextual := true }) [zero_mem]
 
@@ -89,7 +89,7 @@ protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀ x ∈ p, x = 
     eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
 #align submodule.eq_bot_iff Submodule.eq_bot_iff
 
-@[ext.1]
+@[ext]
 protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y := by
   rcases x with ⟨x, xm⟩; rcases y with ⟨y, ym⟩; congr
   rw [(Submodule.eq_bot_iff _).mp rfl x xm]
@@ -113,19 +113,20 @@ theorem exists_mem_ne_zero_of_ne_bot {p : Submodule R M} (h : p ≠ ⊥) : ∃ b
 
 /-- The bottom submodule is linearly equivalent to punit as an `R`-module. -/
 @[simps]
-def botEquivPunit : (⊥ : Submodule R M) ≃ₗ[R] PUnit where
+def botEquivPunit :
+    (⊥ : Submodule R M) ≃ₗ[R] PUnit where 
   toFun x := PUnit.unit
   invFun x := 0
-  map_add' := by
+  map_add' := by 
     intros
     ext
-  map_smul' := by
+  map_smul' := by 
     intros
     ext
-  left_inv := by
+  left_inv := by 
     intro x
     ext
-  right_inv := by
+  right_inv := by 
     intro x
     ext
 #align submodule.bot_equiv_punit Submodule.botEquivPunit
@@ -137,7 +138,7 @@ theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ :=
 #align submodule.eq_bot_of_subsingleton Submodule.eq_bot_of_subsingleton
 
 /-- The universal set is the top element of the lattice of submodules. -/
-instance : HasTop (Submodule R M) :=
+instance : Top (Submodule R M) :=
   ⟨{ (⊤ : AddSubmonoid M) with carrier := Set.univ, smul_mem' := fun _ _ _ => trivial }⟩
 
 @[simp]
@@ -171,7 +172,7 @@ theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = 
   simp [SetLike.ext_iff]
 #align submodule.restrict_scalars_eq_top_iff Submodule.restrict_scalars_eq_top_iff
 
-instance : OrderTop (Submodule R M) where
+instance : OrderTop (Submodule R M) where 
   top := ⊤
   le_top p x _ := trivial
 
@@ -183,20 +184,21 @@ theorem eq_top_iff' {p : Submodule R M} : p = ⊤ ↔ ∀ x, x ∈ p :=
 
 This is the module version of `add_submonoid.top_equiv`. -/
 @[simps]
-def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M where
+def topEquiv : (⊤ : Submodule R M) ≃ₗ[R]
+      M where 
   toFun x := x
   invFun x := ⟨x, by simp⟩
-  map_add' := by
+  map_add' := by 
     intros
     rfl
-  map_smul' := by
+  map_smul' := by 
     intros
     rfl
-  left_inv := by
+  left_inv := by 
     intro x
     ext
     rfl
-  right_inv := by
+  right_inv := by 
     intro x
     rfl
 #align submodule.top_equiv Submodule.topEquiv
@@ -254,10 +256,8 @@ theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) :
   letI := Classical.decEq ι
   refine' s.induction_on _ fun i s hi ih => _
   · simp
-    
   · rw [Finset.inf_insert, inf_coe, ih]
     simp
-    
 #align submodule.finset_inf_coe Submodule.finset_inf_coe
 
 @[simp]
@@ -344,7 +344,10 @@ end Submodule
 section NatSubmodule
 
 /-- An additive submonoid is equivalent to a ℕ-submodule. -/
-def AddSubmonoid.toNatSubmodule : AddSubmonoid M ≃o Submodule ℕ M where
+def AddSubmonoid.toNatSubmodule :
+    AddSubmonoid M ≃o
+      Submodule ℕ
+        M where 
   toFun S := { S with smul_mem' := fun r s hs => show r • s ∈ S from nsmul_mem hs _ }
   invFun := Submodule.toAddSubmonoid
   left_inv := fun ⟨S, _, _⟩ => rfl
@@ -385,7 +388,10 @@ section IntSubmodule
 variable [AddCommGroup M]
 
 /-- An additive subgroup is equivalent to a ℤ-submodule. -/
-def AddSubgroup.toIntSubmodule : AddSubgroup M ≃o Submodule ℤ M where
+def AddSubgroup.toIntSubmodule :
+    AddSubgroup M ≃o
+      Submodule ℤ
+        M where 
   toFun S := { S with smul_mem' := fun r s hs => S.zsmul_mem hs _ }
   invFun := Submodule.toAddSubgroup
   left_inv := fun ⟨S, _, _, _⟩ => rfl

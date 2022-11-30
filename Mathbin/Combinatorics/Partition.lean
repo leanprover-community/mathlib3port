@@ -48,7 +48,7 @@ open BigOperators
 namespace Nat
 
 /-- A partition of `n` is a multiset of positive integers summing to `n`. -/
-@[ext.1]
+@[ext]
 structure Partition (n : ℕ) where
   parts : Multiset ℕ
   parts_pos : ∀ {i}, i ∈ parts → 0 < i
@@ -59,7 +59,8 @@ structure Partition (n : ℕ) where
 namespace Partition
 
 /-- A composition induces a partition (just convert the list to a multiset). -/
-def ofComposition (n : ℕ) (c : Composition n) : Partition n where
+def ofComposition (n : ℕ) (c : Composition n) :
+    Partition n where 
   parts := c.blocks
   parts_pos i hi := c.blocks_pos hi
   parts_sum := by rw [Multiset.coe_sum, c.blocks_sum]
@@ -77,7 +78,8 @@ theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
 /-- Given a multiset which sums to `n`, construct a partition of `n` with the same multiset, but
 without the zeros.
 -/
-def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
+def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) :
+    Partition n where 
   parts := l.filter (· ≠ 0)
   parts_pos i hi := Nat.pos_of_ne_zero <| by apply of_mem_filter hi
   parts_sum := by

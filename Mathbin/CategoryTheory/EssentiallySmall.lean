@@ -67,11 +67,9 @@ theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cat
   · rintro ⟨S, 𝒮, ⟨f⟩⟩
     skip
     exact essentially_small.mk' (e.symm.trans f)
-    
   · rintro ⟨S, 𝒮, ⟨f⟩⟩
     skip
     exact essentially_small.mk' (e.trans f)
-    
 #align category_theory.essentially_small_congr CategoryTheory.essentially_small_congr
 
 theorem Discrete.essentially_small_of_small {α : Type u} [Small.{w} α] :
@@ -104,14 +102,12 @@ theorem locally_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Categor
     specialize L (e.inverse.obj X) (e.inverse.obj Y)
     refine' (small_congr _).mpr L
     exact equiv_of_fully_faithful e.inverse
-    
   · rintro ⟨L⟩
     fconstructor
     intro X Y
     specialize L (e.functor.obj X) (e.functor.obj Y)
     refine' (small_congr _).mpr L
     exact equiv_of_fully_faithful e.functor
-    
 #align category_theory.locally_small_congr CategoryTheory.locally_small_congr
 
 instance (priority := 100) locally_small_self (C : Type u) [Category.{v} C] :
@@ -164,21 +160,26 @@ end
 variable (C) [LocallySmall.{w} C]
 
 @[simps]
-noncomputable instance : Category.{w} (ShrinkHoms C) where
+noncomputable instance :
+    Category.{w}
+      (ShrinkHoms
+        C) where 
   Hom X Y := Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
   id X := equivShrink _ (𝟙 (fromShrinkHoms X))
   comp X Y Z f g := equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
-noncomputable def functor : C ⥤ ShrinkHoms C where
+noncomputable def functor :
+    C ⥤ ShrinkHoms C where 
   obj X := toShrinkHoms X
   map X Y f := equivShrink (X ⟶ Y) f
 #align category_theory.shrink_homs.functor CategoryTheory.ShrinkHoms.functor
 
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
-noncomputable def inverse : ShrinkHoms C ⥤ C where
+noncomputable def inverse :
+    ShrinkHoms C ⥤ C where 
   obj X := fromShrinkHoms X
   map X Y f := (equivShrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)).symm f
 #align category_theory.shrink_homs.inverse CategoryTheory.ShrinkHoms.inverse
@@ -198,7 +199,8 @@ the underlying type of its skeleton (i.e. the "set" of isomorphism classes) is s
 and it is locally small.
 -/
 theorem essentially_small_iff (C : Type u) [Category.{v} C] :
-    EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) ∧ LocallySmall.{w} C := by
+    EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) ∧ LocallySmall.{w} C :=
+  by
   -- This theorem is the only bit of real work in this file.
   fconstructor
   · intro h
@@ -207,11 +209,8 @@ theorem essentially_small_iff (C : Type u) [Category.{v} C] :
       skip
       refine' ⟨⟨skeleton S, ⟨_⟩⟩⟩
       exact e.skeleton_equiv
-      
     · skip
       infer_instance
-      
-    
   · rintro ⟨⟨S, ⟨e⟩⟩, L⟩
     skip
     let e' := (shrink_homs.equivalence C).skeletonEquiv.symm
@@ -220,7 +219,6 @@ theorem essentially_small_iff (C : Type u) [Category.{v} C] :
     refine'
       (shrink_homs.equivalence C).trans
         ((skeleton_equivalence _).symm.trans (induced_functor (e'.trans e).symm).asEquivalence.symm)
-    
 #align category_theory.essentially_small_iff CategoryTheory.essentially_small_iff
 
 /-- Any thin category is locally small.

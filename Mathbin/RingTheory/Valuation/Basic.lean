@@ -113,9 +113,10 @@ section Monoid
 
 variable [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZero Γ'₀]
 
-instance : ValuationClass (Valuation R Γ₀) R Γ₀ where
+instance : ValuationClass (Valuation R Γ₀) R
+      Γ₀ where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -134,7 +135,7 @@ theorem to_fun_eq_coe (v : Valuation R Γ₀) : v.toFun = v :=
   rfl
 #align valuation.to_fun_eq_coe Valuation.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {v₁ v₂ : Valuation R Γ₀} (h : ∀ r, v₁ r = v₂ r) : v₁ = v₂ :=
   FunLike.ext _ _ h
 #align valuation.ext Valuation.ext
@@ -300,7 +301,6 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
   intro h'
   wlog vyx : v y < v x using x y
   · apply lt_or_gt_of_ne h.symm
-    
   · rw [max_eq_left_of_lt vyx] at h'
     apply lt_irrefl (v x)
     calc
@@ -308,10 +308,8 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
       _ ≤ max (v <| x + y) (v y) := map_sub _ _ _
       _ < v x := max_lt h' vyx
       
-    
   · apply this h.symm
     rwa [add_comm, max_comm] at h'
-    
 #align valuation.map_add_of_distinct_val Valuation.map_add_of_distinct_val
 
 theorem map_add_eq_of_lt_right (h : v x < v y) : v (x + y) = v y := by
@@ -319,9 +317,7 @@ theorem map_add_eq_of_lt_right (h : v x < v y) : v (x + y) = v y := by
   · symm
     rw [max_eq_right_iff]
     exact le_of_lt h
-    
   · exact ne_of_lt h
-    
 #align valuation.map_add_eq_of_lt_right Valuation.map_add_eq_of_lt_right
 
 theorem map_add_eq_of_lt_left (h : v y < v x) : v (x + y) = v x := by rw [add_comm];
@@ -350,9 +346,10 @@ theorem one_lt_val_iff (v : Valuation K Γ₀) {x : K} (h : x ≠ 0) : 1 < v x �
 #align valuation.one_lt_val_iff Valuation.one_lt_val_iff
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
-def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R where
+def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) :
+    AddSubgroup R where 
   carrier := { x | v x < γ }
-  zero_mem' := by
+  zero_mem' := by 
     have h := Units.ne_zero γ
     contrapose! h
     simpa using h
@@ -429,11 +426,9 @@ theorem isEquivOfMapStrictMono [LinearOrderedCommMonoidWithZero Γ₀]
 
 theorem isEquivOfValLeOne [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
     (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) (h : ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1) :
-    v.IsEquiv v' := by
+    v.IsEquiv v' := by 
   intro x y
-  by_cases hy : y = 0;
-  · simp [hy, zero_iff]
-    
+  by_cases hy : y = 0; · simp [hy, zero_iff]
   rw [show y = 1 * y by rw [one_mul]]
   rw [← inv_mul_cancel_right₀ hy x]
   iterate 2 rw [v.map_mul _ y, v'.map_mul _ y]
@@ -443,12 +438,10 @@ theorem isEquivOfValLeOne [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedC
     replace hy := v.ne_zero_iff.mpr hy
     replace H := le_of_le_mul_right hy H
     rwa [h] at H
-    
   · apply mul_le_mul_right'
     replace hy := v'.ne_zero_iff.mpr hy
     replace H := le_of_le_mul_right hy H
     rwa [h]
-    
 #align valuation.is_equiv_of_val_le_one Valuation.isEquivOfValLeOne
 
 theorem is_equiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
@@ -463,14 +456,13 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
   constructor
   · intro h x
     simpa using @is_equiv.val_eq _ _ _ _ _ _ v v' h x 1
-    
   · intro h
     apply is_equiv_of_val_le_one
     intro x
     constructor
     · intro hx
       cases' lt_or_eq_of_le hx with hx' hx'
-      · have : v (1 + x) = 1 := by
+      · have : v (1 + x) = 1 := by 
           rw [← v.map_one]
           apply map_add_eq_of_lt_left
           simpa
@@ -478,14 +470,11 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
         rw [show x = -1 + (1 + x) by simp]
         refine' le_trans (v'.map_add _ _) _
         simp [this]
-        
       · rw [h] at hx'
         exact le_of_eq hx'
-        
-      
     · intro hx
       cases' lt_or_eq_of_le hx with hx' hx'
-      · have : v' (1 + x) = 1 := by
+      · have : v' (1 + x) = 1 := by 
           rw [← v'.map_one]
           apply map_add_eq_of_lt_left
           simpa
@@ -493,12 +482,8 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
         rw [show x = -1 + (1 + x) by simp]
         refine' le_trans (v.map_add _ _) _
         simp [this]
-        
       · rw [← h] at hx'
         exact le_of_eq hx'
-        
-      
-    
 #align valuation.is_equiv_iff_val_eq_one Valuation.is_equiv_iff_val_eq_one
 
 theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
@@ -508,32 +493,23 @@ theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
   · intro h x
     simp only [lt_iff_le_and_ne,
       and_congr ((is_equiv_iff_val_le_one _ _).1 h) ((is_equiv_iff_val_eq_one _ _).1 h).Not]
-    
   · rw [is_equiv_iff_val_eq_one]
     intro h x
     by_cases hx : x = 0
     · simp only [(zero_iff _).2 hx, zero_ne_one]
-      
     constructor
     · intro hh
       by_contra h_1
       cases ne_iff_lt_or_gt.1 h_1
       · simpa [hh, lt_self_iff_false] using h.2 h_2
-        
       · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv₀] at hh
         exact hh.le.not_lt (h.2 ((one_lt_val_iff v' hx).1 h_2))
-        
-      
     · intro hh
       by_contra h_1
       cases ne_iff_lt_or_gt.1 h_1
       · simpa [hh, lt_self_iff_false] using h.1 h_2
-        
       · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv₀] at hh
         exact hh.le.not_lt (h.1 ((one_lt_val_iff v hx).1 h_2))
-        
-      
-    
 #align valuation.is_equiv_iff_val_lt_one Valuation.is_equiv_iff_val_lt_one
 
 theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
@@ -611,27 +587,27 @@ theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
            ";"
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.apply "apply" `is_equiv_iff_val_le_one) [])])
+            [(Tactic.apply "apply" `is_equiv_iff_val_le_one)])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
            ";"
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.apply "apply" `is_equiv_iff_val_eq_one) [])])
+            [(Tactic.apply "apply" `is_equiv_iff_val_eq_one)])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
            ";"
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.apply "apply" `is_equiv_iff_val_lt_one) [])])
+            [(Tactic.apply "apply" `is_equiv_iff_val_lt_one)])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
            ";"
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one) [])])
+            [(Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one)])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -646,27 +622,27 @@ theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
           ";"
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.apply "apply" `is_equiv_iff_val_le_one) [])])
+           [(Tactic.apply "apply" `is_equiv_iff_val_le_one)])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
           ";"
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.apply "apply" `is_equiv_iff_val_eq_one) [])])
+           [(Tactic.apply "apply" `is_equiv_iff_val_eq_one)])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
           ";"
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.apply "apply" `is_equiv_iff_val_lt_one) [])])
+           [(Tactic.apply "apply" `is_equiv_iff_val_lt_one)])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
           ";"
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one) [])])
+           [(Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one)])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -674,9 +650,9 @@ theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one) [])])
+       [(Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" `is_equiv_iff_val_sub_one_lt_one)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -747,7 +723,7 @@ variable [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZer
 variable (v : Valuation R Γ₀)
 
 /-- The support of a valuation `v : R → Γ₀` is the ideal of `R` where `v` vanishes. -/
-def supp : Ideal R where
+def supp : Ideal R where 
   carrier := { x | v x = 0 }
   zero_mem' := map_zero v
   add_mem' x y hx hy :=
@@ -778,11 +754,11 @@ instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
         calc
           1 = v 1 := v.map_one.symm
           _ = 0 :=
-            show (1 : R) ∈ supp v by
+            show (1 : R) ∈ supp v by 
               rw [h]
               trivial
           ,
-    fun x y hxy => by
+    fun x y hxy => by 
     show v x = 0 ∨ v y = 0
     change v (x * y) = 0 at hxy
     rw [v.map_mul x y] at hxy
@@ -812,7 +788,8 @@ def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
 #align valuation.on_quot_val Valuation.onQuotVal
 
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
-def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀ where
+def onQuot {J : Ideal R} (hJ : J ≤ supp v) :
+    Valuation (R ⧸ J) Γ₀ where 
   toFun := v.onQuotVal hJ
   map_zero' := v.map_zero
   map_one' := v.map_one
@@ -828,7 +805,7 @@ theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :
 
 theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) :
     supp (v.comap f) = Ideal.comap f v.supp :=
-  Ideal.ext fun x => by
+  Ideal.ext fun x => by 
     rw [mem_supp_iff, Ideal.mem_comap, mem_supp_iff]
     rfl
 #align valuation.comap_supp Valuation.comap_supp
@@ -842,7 +819,7 @@ theorem self_le_supp_comap (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
 @[simp]
 theorem comap_on_quot_eq (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
     (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
-  ext <| by
+  ext <| by 
     rintro ⟨x⟩
     rfl
 #align valuation.comap_on_quot_eq Valuation.comap_on_quot_eq
@@ -854,11 +831,9 @@ theorem supp_quot {J : Ideal R} (hJ : J ≤ supp v) :
   · rintro ⟨x⟩ hx
     apply Ideal.subset_span
     exact ⟨x, hx, rfl⟩
-    
   · rw [Ideal.map_le_iff_le_comap]
     intro x hx
     exact hx
-    
 #align valuation.supp_quot Valuation.supp_quot
 
 theorem supp_quot_supp : supp (v.onQuot le_rfl) = 0 := by
@@ -907,7 +882,7 @@ variable (f : R → Γ₀) (h0 : f 0 = ⊤) (h1 : f 1 = 0)
 variable (hadd : ∀ x y, min (f x) (f y) ≤ f (x + y)) (hmul : ∀ x y, f (x * y) = f x + f y)
 
 /-- An alternate constructor of `add_valuation`, that doesn't reference `multiplicative Γ₀ᵒᵈ` -/
-def of : AddValuation R Γ₀ where
+def of : AddValuation R Γ₀ where 
   toFun := f
   map_one' := h1
   map_zero' := h0
@@ -983,7 +958,7 @@ theorem map_pow : ∀ (x) (n : ℕ), v (x ^ n) = n • v x :=
   v.map_pow
 #align add_valuation.map_pow AddValuation.map_pow
 
-@[ext.1]
+@[ext]
 theorem ext {v₁ v₂ : AddValuation R Γ₀} (h : ∀ r, v₁ r = v₂ r) : v₁ = v₂ :=
   Valuation.ext h
 #align add_valuation.ext AddValuation.ext
@@ -1106,9 +1081,9 @@ theorem trans (h₁₂ : v₁.IsEquiv v₂) (h₂₃ : v₂.IsEquiv v₃) : v₁
   h₁₂.trans h₂₃
 #align add_valuation.is_equiv.trans AddValuation.IsEquiv.trans
 
-theorem ofEq {v' : AddValuation R Γ₀} (h : v = v') : v.IsEquiv v' :=
+theorem of_eq {v' : AddValuation R Γ₀} (h : v = v') : v.IsEquiv v' :=
   Valuation.IsEquiv.ofEq h
-#align add_valuation.is_equiv.of_eq AddValuation.IsEquiv.ofEq
+#align add_valuation.is_equiv.of_eq AddValuation.IsEquiv.of_eq
 
 theorem map {v' : AddValuation R Γ₀} (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotone f)
     (inf : Injective f) (h : v.IsEquiv v') : (v.map f ht hf).IsEquiv (v'.map f ht hf) :=

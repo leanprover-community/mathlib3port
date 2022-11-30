@@ -74,7 +74,7 @@ theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b
 
 theorem of_nat_dvd_of_dvd_nat_abs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAbs), ↑a ∣ z
   | Int.ofNat _, haz => Int.coe_nat_dvd.2 haz
-  | -[k+1], haz => by
+  | -[k+1], haz => by 
     change ↑a ∣ -(k + 1 : ℤ)
     apply dvd_neg_of_dvd
     apply Int.coe_nat_dvd.2

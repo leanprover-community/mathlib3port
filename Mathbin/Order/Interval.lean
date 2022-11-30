@@ -28,7 +28,7 @@ variable {α β γ : Type _} {ι : Sort _} {κ : ι → Sort _}
 
 We define intervals by the pair of endpoints `fst`, `snd`. To convert intervals to the set of
 elements between these endpoints, use the coercion `nonempty_interval α → set α`. -/
-@[ext.1]
+@[ext]
 structure NonemptyInterval (α : Type _) [LE α] extends α × α where
   fst_le_snd : fst ≤ snd
 #align nonempty_interval NonemptyInterval
@@ -68,14 +68,17 @@ theorem le_def : s ≤ t ↔ t.fst ≤ s.fst ∧ s.snd ≤ t.snd :=
 
 /-- `to_dual_prod` as an order embedding. -/
 @[simps]
-def toDualProdHom : NonemptyInterval α ↪o αᵒᵈ × α where
+def toDualProdHom : NonemptyInterval α ↪o
+      αᵒᵈ × α where 
   toFun := toDualProd
   inj' := to_dual_prod_injective
   map_rel_iff' _ _ := Iff.rfl
 #align nonempty_interval.to_dual_prod_hom NonemptyInterval.toDualProdHom
 
 /-- Turn an interval into an interval in the dual order. -/
-def dual : NonemptyInterval α ≃ NonemptyInterval αᵒᵈ where
+def dual :
+    NonemptyInterval α ≃
+      NonemptyInterval αᵒᵈ where 
   toFun s := ⟨s.toProd.swap, s.fst_le_snd⟩
   invFun s := ⟨s.toProd.swap, s.fst_le_snd⟩
   left_inv s := ext _ _ <| Prod.swap_swap _
@@ -149,7 +152,8 @@ theorem dual_map (f : α →o β) (a : NonemptyInterval α) : (a.map f).dual = a
 
 variable [BoundedOrder α]
 
-instance : OrderTop (NonemptyInterval α) where
+instance : OrderTop (NonemptyInterval
+        α) where 
   top := ⟨⟨⊥, ⊤⟩, bot_le⟩
   le_top a := ⟨bot_le, le_top⟩
 
@@ -172,7 +176,8 @@ def coeHom : NonemptyInterval α ↪o Set α :=
   OrderEmbedding.ofMapLeIff (fun s => icc s.fst s.snd) fun s t => Icc_subset_Icc_iff s.fst_le_snd
 #align nonempty_interval.coe_hom NonemptyInterval.coeHom
 
-instance : SetLike (NonemptyInterval α) α where
+instance : SetLike (NonemptyInterval α)
+      α where 
   coe s := icc s.fst s.snd
   coe_injective' := coeHom.Injective
 
@@ -345,9 +350,7 @@ theorem map_map (g : β →o γ) (f : α →o β) (s : Interval α) : (s.map f).
 theorem dual_map (f : α →o β) (s : Interval α) : (s.map f).dual = s.dual.map f.dual := by
   cases s
   · rfl
-    
   · exact WithBot.map_comm rfl _
-    
 #align interval.dual_map Interval.dual_map
 
 variable [BoundedOrder α]
@@ -384,7 +387,7 @@ def coeHom : Interval α ↪o Set α :=
     | some s, some t => (@NonemptyInterval.coeHom α _).le_iff_le.trans WithBot.some_le_some.symm
 #align interval.coe_hom Interval.coeHom
 
-instance : SetLike (Interval α) α where
+instance : SetLike (Interval α) α where 
   coe := coeHom
   coe_injective' := coeHom.Injective
 
@@ -422,7 +425,6 @@ theorem coe_top [BoundedOrder α] : ((⊤ : Interval α) : Set α) = univ :=
 theorem coe_dual (s : Interval α) : (s.dual : Set αᵒᵈ) = of_dual ⁻¹' s := by
   cases s
   · rfl
-    
   exact s.coe_dual
 #align interval.coe_dual Interval.coe_dual
 
@@ -456,25 +458,21 @@ instance : Lattice (Interval α) :=
       | ⊥, ⊥ => bot_le
       | ⊥, some t => bot_le
       | some s, ⊥ => bot_le
-      | some s, some t => by
+      | some s, some t => by 
         change dite _ _ _ ≤ _
         split_ifs
         · exact WithBot.some_le_some.2 ⟨le_sup_left, inf_le_left⟩
-          
-        · exact bot_le
-          ,
+        · exact bot_le,
     inf_le_right := fun s t =>
       match s, t with
       | ⊥, ⊥ => bot_le
       | ⊥, some t => bot_le
       | some s, ⊥ => bot_le
-      | some s, some t => by
+      | some s, some t => by 
         change dite _ _ _ ≤ _
         split_ifs
         · exact WithBot.some_le_some.2 ⟨le_sup_right, inf_le_right⟩
-          
-        · exact bot_le
-          ,
+        · exact bot_le,
     le_inf := fun s t c =>
       match s, t, c with
       | ⊥, t, c => fun _ _ => bot_le
@@ -492,29 +490,27 @@ theorem coe_inf (s t : Interval α) : (↑(s ⊓ t) : Set α) = s ∩ t := by
   cases s
   · rw [WithBot.none_eq_bot, bot_inf_eq]
     exact (empty_inter _).symm
-    
   cases t
   · rw [WithBot.none_eq_bot, inf_bot_eq]
     exact (inter_empty _).symm
-    
   refine' (_ : coe (dite _ _ _) = _).trans Icc_inter_Icc.symm
   split_ifs
   · rfl
-    
-  · exact
+  ·
+    exact
       (Icc_eq_empty fun H =>
           h
             ⟨le_sup_left.trans <| H.trans inf_le_right,
               le_sup_right.trans <| H.trans inf_le_left⟩).symm
-    
 #align interval.coe_inf Interval.coe_inf
 
 end Decidable
 
 @[simp, norm_cast]
-theorem disjoint_coe (s t : Interval α) : Disjoint (s : Set α) t ↔ Disjoint s t := by classical
-  rw [disjoint_iff_inf_le, disjoint_iff_inf_le, le_eq_subset, ← coe_subset_coe, coe_inf]
-  rfl
+theorem disjoint_coe (s t : Interval α) : Disjoint (s : Set α) t ↔ Disjoint s t := by
+  classical 
+    rw [disjoint_iff_inf_le, disjoint_iff_inf_le, le_eq_subset, ← coe_subset_coe, coe_inf]
+    rfl
 #align interval.disjoint_coe Interval.disjoint_coe
 
 end Lattice
@@ -708,30 +704,28 @@ variable [CompleteLattice α]
                     (Tactic.tacticSeq1Indented
                      [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+                       [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
                       []
                       (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.exact "exact" `bot_le) [])])
+                       [(Tactic.exact "exact" `bot_le)])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.exact
-                          "exact"
-                          (Term.app
-                           (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                           [(Term.anonymousCtor
-                             "⟨"
-                             [(Term.app `infi₂_le [(Term.hole "_") `ha])
-                              ","
-                              (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-                             "⟩")]))
-                         [])])]))))))
+                       [(Tactic.exact
+                         "exact"
+                         (Term.app
+                          (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                          [(Term.anonymousCtor
+                            "⟨"
+                            [(Term.app `infi₂_le [(Term.hole "_") `ha])
+                             ","
+                             (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+                            "⟩")]))])]))))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `Sup_le [])
@@ -748,9 +742,9 @@ variable [CompleteLattice α]
                     (Tactic.tacticSeq1Indented
                      [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.exact "exact" `bot_le) [])])
+                       [(Tactic.exact "exact" `bot_le)])
                       []
                       (Std.Tactic.obtain
                        "obtain"
@@ -940,32 +934,29 @@ variable [CompleteLattice α]
                     (Tactic.tacticSeq1Indented
                      [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.lift
-                          "lift"
-                          `s
-                          "to"
-                          (Term.app `NonemptyInterval [`α])
-                          ["using"
-                           (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-                          [])
+                       [(Tactic.lift
+                         "lift"
+                         `s
+                         "to"
+                         (Term.app `NonemptyInterval [`α])
+                         ["using"
+                          (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                          [])
-                        (group
-                         (Tactic.exact
-                          "exact"
-                          (Term.app
-                           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                           [(Term.anonymousCtor
-                             "⟨"
-                             [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-                             "⟩")]))
-                         [])])
+                        []
+                        (Tactic.exact
+                         "exact"
+                         (Term.app
+                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+                          [(Term.anonymousCtor
+                            "⟨"
+                            [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                            "⟩")]))])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.exact "exact" `bot_le) [])])]))))))
+                       [(Tactic.exact "exact" `bot_le)])]))))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `le_Inf [])
@@ -982,54 +973,52 @@ variable [CompleteLattice α]
                     (Tactic.tacticSeq1Indented
                      [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.exact "exact" `bot_le) [])])
+                       [(Tactic.exact "exact" `bot_le)])
                       []
                       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.exact
-                          "exact"
-                          (Term.app
-                           (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                           [(Term.anonymousCtor
-                             "⟨"
-                             [(Term.app
-                               `supr₂_le
-                               [(Term.fun
-                                 "fun"
-                                 (Term.basicFun
-                                  [`t `hb]
-                                  []
-                                  "=>"
-                                  (Term.proj
-                                   («term_<|_»
-                                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                    "<|"
-                                    (Term.app `ha [(Term.hole "_") `hb]))
-                                   "."
-                                   (fieldIdx "1"))))])
-                              ","
-                              (Term.app
-                               `le_infi₂
-                               [(Term.fun
-                                 "fun"
-                                 (Term.basicFun
-                                  [`t `hb]
-                                  []
-                                  "=>"
-                                  (Term.proj
-                                   («term_<|_»
-                                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                    "<|"
-                                    (Term.app `ha [(Term.hole "_") `hb]))
-                                   "."
-                                   (fieldIdx "2"))))])]
-                             "⟩")]))
-                         [])])
+                       [(Tactic.exact
+                         "exact"
+                         (Term.app
+                          (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                          [(Term.anonymousCtor
+                            "⟨"
+                            [(Term.app
+                              `supr₂_le
+                              [(Term.fun
+                                "fun"
+                                (Term.basicFun
+                                 [`t `hb]
+                                 []
+                                 "=>"
+                                 (Term.proj
+                                  («term_<|_»
+                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                   "<|"
+                                   (Term.app `ha [(Term.hole "_") `hb]))
+                                  "."
+                                  (fieldIdx "1"))))])
+                             ","
+                             (Term.app
+                              `le_infi₂
+                              [(Term.fun
+                                "fun"
+                                (Term.basicFun
+                                 [`t `hb]
+                                 []
+                                 "=>"
+                                 (Term.proj
+                                  («term_<|_»
+                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                   "<|"
+                                   (Term.app `ha [(Term.hole "_") `hb]))
+                                  "."
+                                  (fieldIdx "2"))))])]
+                            "⟩")]))])
                       []
                       (Tactic.rwSeq
                        "rw"
@@ -1042,9 +1031,9 @@ variable [CompleteLattice α]
                       []
                       (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+                       [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
                       []
                       (Tactic.cases
                        "cases"
@@ -1223,30 +1212,28 @@ variable [CompleteLattice α]
                    (Tactic.tacticSeq1Indented
                     [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+                      [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
                      []
                      (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.exact "exact" `bot_le) [])])
+                      [(Tactic.exact "exact" `bot_le)])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.exact
-                         "exact"
-                         (Term.app
-                          (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                          [(Term.anonymousCtor
-                            "⟨"
-                            [(Term.app `infi₂_le [(Term.hole "_") `ha])
-                             ","
-                             (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-                            "⟩")]))
-                        [])])]))))))
+                      [(Tactic.exact
+                        "exact"
+                        (Term.app
+                         (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                         [(Term.anonymousCtor
+                           "⟨"
+                           [(Term.app `infi₂_le [(Term.hole "_") `ha])
+                            ","
+                            (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+                           "⟩")]))])]))))))
               ","
               (Term.structInstField
                (Term.structInstLVal `Sup_le [])
@@ -1263,9 +1250,9 @@ variable [CompleteLattice α]
                    (Tactic.tacticSeq1Indented
                     [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.exact "exact" `bot_le) [])])
+                      [(Tactic.exact "exact" `bot_le)])
                      []
                      (Std.Tactic.obtain
                       "obtain"
@@ -1453,32 +1440,29 @@ variable [CompleteLattice α]
                    (Tactic.tacticSeq1Indented
                     [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.lift
-                         "lift"
-                         `s
-                         "to"
-                         (Term.app `NonemptyInterval [`α])
-                         ["using"
-                          (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-                         [])
+                      [(Tactic.lift
+                        "lift"
+                        `s
+                        "to"
+                        (Term.app `NonemptyInterval [`α])
+                        ["using"
+                         (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                         [])
-                       (group
-                        (Tactic.exact
-                         "exact"
-                         (Term.app
-                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                          [(Term.anonymousCtor
-                            "⟨"
-                            [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-                            "⟩")]))
-                        [])])
+                       []
+                       (Tactic.exact
+                        "exact"
+                        (Term.app
+                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+                         [(Term.anonymousCtor
+                           "⟨"
+                           [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                           "⟩")]))])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.exact "exact" `bot_le) [])])]))))))
+                      [(Tactic.exact "exact" `bot_le)])]))))))
               ","
               (Term.structInstField
                (Term.structInstLVal `le_Inf [])
@@ -1495,54 +1479,52 @@ variable [CompleteLattice α]
                    (Tactic.tacticSeq1Indented
                     [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.exact "exact" `bot_le) [])])
+                      [(Tactic.exact "exact" `bot_le)])
                      []
                      (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.exact
-                         "exact"
-                         (Term.app
-                          (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                          [(Term.anonymousCtor
-                            "⟨"
-                            [(Term.app
-                              `supr₂_le
-                              [(Term.fun
-                                "fun"
-                                (Term.basicFun
-                                 [`t `hb]
-                                 []
-                                 "=>"
-                                 (Term.proj
-                                  («term_<|_»
-                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                   "<|"
-                                   (Term.app `ha [(Term.hole "_") `hb]))
-                                  "."
-                                  (fieldIdx "1"))))])
-                             ","
-                             (Term.app
-                              `le_infi₂
-                              [(Term.fun
-                                "fun"
-                                (Term.basicFun
-                                 [`t `hb]
-                                 []
-                                 "=>"
-                                 (Term.proj
-                                  («term_<|_»
-                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                   "<|"
-                                   (Term.app `ha [(Term.hole "_") `hb]))
-                                  "."
-                                  (fieldIdx "2"))))])]
-                            "⟩")]))
-                        [])])
+                      [(Tactic.exact
+                        "exact"
+                        (Term.app
+                         (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                         [(Term.anonymousCtor
+                           "⟨"
+                           [(Term.app
+                             `supr₂_le
+                             [(Term.fun
+                               "fun"
+                               (Term.basicFun
+                                [`t `hb]
+                                []
+                                "=>"
+                                (Term.proj
+                                 («term_<|_»
+                                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                  "<|"
+                                  (Term.app `ha [(Term.hole "_") `hb]))
+                                 "."
+                                 (fieldIdx "1"))))])
+                            ","
+                            (Term.app
+                             `le_infi₂
+                             [(Term.fun
+                               "fun"
+                               (Term.basicFun
+                                [`t `hb]
+                                []
+                                "=>"
+                                (Term.proj
+                                 («term_<|_»
+                                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                  "<|"
+                                  (Term.app `ha [(Term.hole "_") `hb]))
+                                 "."
+                                 (fieldIdx "2"))))])]
+                           "⟩")]))])
                      []
                      (Tactic.rwSeq
                       "rw"
@@ -1555,9 +1537,9 @@ variable [CompleteLattice α]
                      []
                      (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+                      [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
                      []
                      (Tactic.cases
                       "cases"
@@ -1725,30 +1707,28 @@ variable [CompleteLattice α]
                (Tactic.tacticSeq1Indented
                 [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+                  [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
                  []
                  (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" `bot_le) [])])
+                  [(Tactic.exact "exact" `bot_le)])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.exact
-                     "exact"
-                     (Term.app
-                      (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                      [(Term.anonymousCtor
-                        "⟨"
-                        [(Term.app `infi₂_le [(Term.hole "_") `ha])
-                         ","
-                         (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-                        "⟩")]))
-                    [])])]))))))
+                  [(Tactic.exact
+                    "exact"
+                    (Term.app
+                     (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                     [(Term.anonymousCtor
+                       "⟨"
+                       [(Term.app `infi₂_le [(Term.hole "_") `ha])
+                        ","
+                        (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+                       "⟩")]))])]))))))
           ","
           (Term.structInstField
            (Term.structInstLVal `Sup_le [])
@@ -1765,9 +1745,9 @@ variable [CompleteLattice α]
                (Tactic.tacticSeq1Indented
                 [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" `bot_le) [])])
+                  [(Tactic.exact "exact" `bot_le)])
                  []
                  (Std.Tactic.obtain
                   "obtain"
@@ -1947,32 +1927,29 @@ variable [CompleteLattice α]
                (Tactic.tacticSeq1Indented
                 [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.lift
-                     "lift"
-                     `s
-                     "to"
-                     (Term.app `NonemptyInterval [`α])
-                     ["using"
-                      (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-                     [])
+                  [(Tactic.lift
+                    "lift"
+                    `s
+                    "to"
+                    (Term.app `NonemptyInterval [`α])
+                    ["using"
+                     (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                     [])
-                   (group
-                    (Tactic.exact
-                     "exact"
-                     (Term.app
-                      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                      [(Term.anonymousCtor
-                        "⟨"
-                        [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-                        "⟩")]))
-                    [])])
+                   []
+                   (Tactic.exact
+                    "exact"
+                    (Term.app
+                     (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+                     [(Term.anonymousCtor
+                       "⟨"
+                       [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                       "⟩")]))])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" `bot_le) [])])]))))))
+                  [(Tactic.exact "exact" `bot_le)])]))))))
           ","
           (Term.structInstField
            (Term.structInstLVal `le_Inf [])
@@ -1989,54 +1966,52 @@ variable [CompleteLattice α]
                (Tactic.tacticSeq1Indented
                 [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" `bot_le) [])])
+                  [(Tactic.exact "exact" `bot_le)])
                  []
                  (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.exact
-                     "exact"
-                     (Term.app
-                      (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                      [(Term.anonymousCtor
-                        "⟨"
-                        [(Term.app
-                          `supr₂_le
-                          [(Term.fun
-                            "fun"
-                            (Term.basicFun
-                             [`t `hb]
-                             []
-                             "=>"
-                             (Term.proj
-                              («term_<|_»
-                               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                               "<|"
-                               (Term.app `ha [(Term.hole "_") `hb]))
-                              "."
-                              (fieldIdx "1"))))])
-                         ","
-                         (Term.app
-                          `le_infi₂
-                          [(Term.fun
-                            "fun"
-                            (Term.basicFun
-                             [`t `hb]
-                             []
-                             "=>"
-                             (Term.proj
-                              («term_<|_»
-                               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                               "<|"
-                               (Term.app `ha [(Term.hole "_") `hb]))
-                              "."
-                              (fieldIdx "2"))))])]
-                        "⟩")]))
-                    [])])
+                  [(Tactic.exact
+                    "exact"
+                    (Term.app
+                     (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                     [(Term.anonymousCtor
+                       "⟨"
+                       [(Term.app
+                         `supr₂_le
+                         [(Term.fun
+                           "fun"
+                           (Term.basicFun
+                            [`t `hb]
+                            []
+                            "=>"
+                            (Term.proj
+                             («term_<|_»
+                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                              "<|"
+                              (Term.app `ha [(Term.hole "_") `hb]))
+                             "."
+                             (fieldIdx "1"))))])
+                        ","
+                        (Term.app
+                         `le_infi₂
+                         [(Term.fun
+                           "fun"
+                           (Term.basicFun
+                            [`t `hb]
+                            []
+                            "=>"
+                            (Term.proj
+                             («term_<|_»
+                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                              "<|"
+                              (Term.app `ha [(Term.hole "_") `hb]))
+                             "."
+                             (fieldIdx "2"))))])]
+                       "⟩")]))])
                  []
                  (Tactic.rwSeq
                   "rw"
@@ -2049,9 +2024,9 @@ variable [CompleteLattice α]
                  []
                  (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+                  [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
                  []
                  (Tactic.cases
                   "cases"
@@ -2207,30 +2182,28 @@ variable [CompleteLattice α]
               (Tactic.tacticSeq1Indented
                [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+                 [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
                 []
                 (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" `bot_le) [])])
+                 [(Tactic.exact "exact" `bot_le)])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group
-                   (Tactic.exact
-                    "exact"
-                    (Term.app
-                     (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                     [(Term.anonymousCtor
-                       "⟨"
-                       [(Term.app `infi₂_le [(Term.hole "_") `ha])
-                        ","
-                        (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-                       "⟩")]))
-                   [])])]))))))
+                 [(Tactic.exact
+                   "exact"
+                   (Term.app
+                    (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                    [(Term.anonymousCtor
+                      "⟨"
+                      [(Term.app `infi₂_le [(Term.hole "_") `ha])
+                       ","
+                       (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+                      "⟩")]))])]))))))
          ","
          (Term.structInstField
           (Term.structInstLVal `Sup_le [])
@@ -2247,9 +2220,9 @@ variable [CompleteLattice α]
               (Tactic.tacticSeq1Indented
                [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" `bot_le) [])])
+                 [(Tactic.exact "exact" `bot_le)])
                 []
                 (Std.Tactic.obtain
                  "obtain"
@@ -2429,32 +2402,29 @@ variable [CompleteLattice α]
               (Tactic.tacticSeq1Indented
                [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group
-                   (Tactic.lift
-                    "lift"
-                    `s
-                    "to"
-                    (Term.app `NonemptyInterval [`α])
-                    ["using"
-                     (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-                    [])
+                 [(Tactic.lift
+                   "lift"
+                   `s
+                   "to"
+                   (Term.app `NonemptyInterval [`α])
+                   ["using"
+                    (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                    [])
-                  (group
-                   (Tactic.exact
-                    "exact"
-                    (Term.app
-                     (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                     [(Term.anonymousCtor
-                       "⟨"
-                       [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-                       "⟩")]))
-                   [])])
+                  []
+                  (Tactic.exact
+                   "exact"
+                   (Term.app
+                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+                    [(Term.anonymousCtor
+                      "⟨"
+                      [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                      "⟩")]))])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" `bot_le) [])])]))))))
+                 [(Tactic.exact "exact" `bot_le)])]))))))
          ","
          (Term.structInstField
           (Term.structInstLVal `le_Inf [])
@@ -2471,54 +2441,52 @@ variable [CompleteLattice α]
               (Tactic.tacticSeq1Indented
                [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" `bot_le) [])])
+                 [(Tactic.exact "exact" `bot_le)])
                 []
                 (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group
-                   (Tactic.exact
-                    "exact"
-                    (Term.app
-                     (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                     [(Term.anonymousCtor
-                       "⟨"
-                       [(Term.app
-                         `supr₂_le
-                         [(Term.fun
-                           "fun"
-                           (Term.basicFun
-                            [`t `hb]
-                            []
-                            "=>"
-                            (Term.proj
-                             («term_<|_»
-                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                              "<|"
-                              (Term.app `ha [(Term.hole "_") `hb]))
-                             "."
-                             (fieldIdx "1"))))])
-                        ","
-                        (Term.app
-                         `le_infi₂
-                         [(Term.fun
-                           "fun"
-                           (Term.basicFun
-                            [`t `hb]
-                            []
-                            "=>"
-                            (Term.proj
-                             («term_<|_»
-                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                              "<|"
-                              (Term.app `ha [(Term.hole "_") `hb]))
-                             "."
-                             (fieldIdx "2"))))])]
-                       "⟩")]))
-                   [])])
+                 [(Tactic.exact
+                   "exact"
+                   (Term.app
+                    (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                    [(Term.anonymousCtor
+                      "⟨"
+                      [(Term.app
+                        `supr₂_le
+                        [(Term.fun
+                          "fun"
+                          (Term.basicFun
+                           [`t `hb]
+                           []
+                           "=>"
+                           (Term.proj
+                            («term_<|_»
+                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                             "<|"
+                             (Term.app `ha [(Term.hole "_") `hb]))
+                            "."
+                            (fieldIdx "1"))))])
+                       ","
+                       (Term.app
+                        `le_infi₂
+                        [(Term.fun
+                          "fun"
+                          (Term.basicFun
+                           [`t `hb]
+                           []
+                           "=>"
+                           (Term.proj
+                            («term_<|_»
+                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                             "<|"
+                             (Term.app `ha [(Term.hole "_") `hb]))
+                            "."
+                            (fieldIdx "2"))))])]
+                      "⟩")]))])
                 []
                 (Tactic.rwSeq
                  "rw"
@@ -2531,9 +2499,9 @@ variable [CompleteLattice α]
                 []
                 (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+                 [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
                 []
                 (Tactic.cases
                  "cases"
@@ -2687,30 +2655,26 @@ variable [CompleteLattice α]
              (Tactic.tacticSeq1Indented
               [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+                [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
                []
                (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" `bot_le) [])])
+               (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app
-                    (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                    [(Term.anonymousCtor
-                      "⟨"
-                      [(Term.app `infi₂_le [(Term.hole "_") `ha])
-                       ","
-                       (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-                      "⟩")]))
-                  [])])]))))))
+                [(Tactic.exact
+                  "exact"
+                  (Term.app
+                   (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                   [(Term.anonymousCtor
+                     "⟨"
+                     [(Term.app `infi₂_le [(Term.hole "_") `ha])
+                      ","
+                      (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+                     "⟩")]))])]))))))
         ","
         (Term.structInstField
          (Term.structInstLVal `Sup_le [])
@@ -2727,9 +2691,7 @@ variable [CompleteLattice α]
              (Tactic.tacticSeq1Indented
               [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" `bot_le) [])])
+               (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
                []
                (Std.Tactic.obtain
                 "obtain"
@@ -2908,32 +2870,28 @@ variable [CompleteLattice α]
              (Tactic.tacticSeq1Indented
               [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.lift
-                   "lift"
-                   `s
-                   "to"
-                   (Term.app `NonemptyInterval [`α])
-                   ["using"
-                    (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-                   [])
+                [(Tactic.lift
+                  "lift"
+                  `s
+                  "to"
+                  (Term.app `NonemptyInterval [`α])
+                  ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                   [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app
-                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                    [(Term.anonymousCtor
-                      "⟨"
-                      [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-                      "⟩")]))
-                  [])])
+                 []
+                 (Tactic.exact
+                  "exact"
+                  (Term.app
+                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+                   [(Term.anonymousCtor
+                     "⟨"
+                     [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                     "⟩")]))])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" `bot_le) [])])]))))))
+                [(Tactic.exact "exact" `bot_le)])]))))))
         ","
         (Term.structInstField
          (Term.structInstLVal `le_Inf [])
@@ -2950,54 +2908,50 @@ variable [CompleteLattice α]
              (Tactic.tacticSeq1Indented
               [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" `bot_le) [])])
+               (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
                []
                (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app
-                    (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                    [(Term.anonymousCtor
-                      "⟨"
-                      [(Term.app
-                        `supr₂_le
-                        [(Term.fun
-                          "fun"
-                          (Term.basicFun
-                           [`t `hb]
-                           []
-                           "=>"
-                           (Term.proj
-                            («term_<|_»
-                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                             "<|"
-                             (Term.app `ha [(Term.hole "_") `hb]))
-                            "."
-                            (fieldIdx "1"))))])
-                       ","
-                       (Term.app
-                        `le_infi₂
-                        [(Term.fun
-                          "fun"
-                          (Term.basicFun
-                           [`t `hb]
-                           []
-                           "=>"
-                           (Term.proj
-                            («term_<|_»
-                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                             "<|"
-                             (Term.app `ha [(Term.hole "_") `hb]))
-                            "."
-                            (fieldIdx "2"))))])]
-                      "⟩")]))
-                  [])])
+                [(Tactic.exact
+                  "exact"
+                  (Term.app
+                   (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                   [(Term.anonymousCtor
+                     "⟨"
+                     [(Term.app
+                       `supr₂_le
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`t `hb]
+                          []
+                          "=>"
+                          (Term.proj
+                           («term_<|_»
+                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                            "<|"
+                            (Term.app `ha [(Term.hole "_") `hb]))
+                           "."
+                           (fieldIdx "1"))))])
+                      ","
+                      (Term.app
+                       `le_infi₂
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`t `hb]
+                          []
+                          "=>"
+                          (Term.proj
+                           («term_<|_»
+                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                            "<|"
+                            (Term.app `ha [(Term.hole "_") `hb]))
+                           "."
+                           (fieldIdx "2"))))])]
+                     "⟩")]))])
                []
                (Tactic.rwSeq
                 "rw"
@@ -3010,9 +2964,9 @@ variable [CompleteLattice α]
                []
                (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+                [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
                []
                (Tactic.cases
                 "cases"
@@ -3066,54 +3020,50 @@ variable [CompleteLattice α]
           (Tactic.tacticSeq1Indented
            [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
             []
-            («tactic___;_»
-             (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" `bot_le) [])])
+            (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
             []
             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group
-               (Tactic.exact
-                "exact"
-                (Term.app
-                 (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                 [(Term.anonymousCtor
-                   "⟨"
-                   [(Term.app
-                     `supr₂_le
-                     [(Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`t `hb]
-                        []
-                        "=>"
-                        (Term.proj
-                         («term_<|_»
-                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                          "<|"
-                          (Term.app `ha [(Term.hole "_") `hb]))
-                         "."
-                         (fieldIdx "1"))))])
-                    ","
-                    (Term.app
-                     `le_infi₂
-                     [(Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`t `hb]
-                        []
-                        "=>"
-                        (Term.proj
-                         («term_<|_»
-                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                          "<|"
-                          (Term.app `ha [(Term.hole "_") `hb]))
-                         "."
-                         (fieldIdx "2"))))])]
-                   "⟩")]))
-               [])])
+             [(Tactic.exact
+               "exact"
+               (Term.app
+                (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                [(Term.anonymousCtor
+                  "⟨"
+                  [(Term.app
+                    `supr₂_le
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`t `hb]
+                       []
+                       "=>"
+                       (Term.proj
+                        («term_<|_»
+                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                         "<|"
+                         (Term.app `ha [(Term.hole "_") `hb]))
+                        "."
+                        (fieldIdx "1"))))])
+                   ","
+                   (Term.app
+                    `le_infi₂
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`t `hb]
+                       []
+                       "=>"
+                       (Term.proj
+                        («term_<|_»
+                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                         "<|"
+                         (Term.app `ha [(Term.hole "_") `hb]))
+                        "."
+                        (fieldIdx "2"))))])]
+                  "⟩")]))])
             []
             (Tactic.rwSeq
              "rw"
@@ -3126,9 +3076,9 @@ variable [CompleteLattice α]
             []
             (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+             [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
             []
             (Tactic.cases
              "cases"
@@ -3172,54 +3122,50 @@ variable [CompleteLattice α]
         (Tactic.tacticSeq1Indented
          [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
           []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" `bot_le) [])])
+          (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
           []
           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact
-              "exact"
-              (Term.app
-               (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-               [(Term.anonymousCtor
-                 "⟨"
-                 [(Term.app
-                   `supr₂_le
-                   [(Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`t `hb]
-                      []
-                      "=>"
-                      (Term.proj
-                       («term_<|_»
-                        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                        "<|"
-                        (Term.app `ha [(Term.hole "_") `hb]))
-                       "."
-                       (fieldIdx "1"))))])
-                  ","
-                  (Term.app
-                   `le_infi₂
-                   [(Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`t `hb]
-                      []
-                      "=>"
-                      (Term.proj
-                       («term_<|_»
-                        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                        "<|"
-                        (Term.app `ha [(Term.hole "_") `hb]))
-                       "."
-                       (fieldIdx "2"))))])]
-                 "⟩")]))
-             [])])
+           [(Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+              [(Term.anonymousCtor
+                "⟨"
+                [(Term.app
+                  `supr₂_le
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`t `hb]
+                     []
+                     "=>"
+                     (Term.proj
+                      («term_<|_»
+                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                       "<|"
+                       (Term.app `ha [(Term.hole "_") `hb]))
+                      "."
+                      (fieldIdx "1"))))])
+                 ","
+                 (Term.app
+                  `le_infi₂
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`t `hb]
+                     []
+                     "=>"
+                     (Term.proj
+                      («term_<|_»
+                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                       "<|"
+                       (Term.app `ha [(Term.hole "_") `hb]))
+                      "."
+                      (fieldIdx "2"))))])]
+                "⟩")]))])
           []
           (Tactic.rwSeq
            "rw"
@@ -3232,9 +3178,9 @@ variable [CompleteLattice α]
           []
           (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+           [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
           []
           (Tactic.cases
            "cases"
@@ -3554,9 +3500,9 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h])) [])])
+       [(Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `ha [(Term.hole "_") `h]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3608,48 +3554,46 @@ variable [CompleteLattice α]
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.exact
-          "exact"
-          (Term.app
-           (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-           [(Term.anonymousCtor
-             "⟨"
-             [(Term.app
-               `supr₂_le
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`t `hb]
-                  []
-                  "=>"
-                  (Term.proj
-                   («term_<|_»
-                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                    "<|"
-                    (Term.app `ha [(Term.hole "_") `hb]))
-                   "."
-                   (fieldIdx "1"))))])
-              ","
-              (Term.app
-               `le_infi₂
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`t `hb]
-                  []
-                  "=>"
-                  (Term.proj
-                   («term_<|_»
-                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                    "<|"
-                    (Term.app `ha [(Term.hole "_") `hb]))
-                   "."
-                   (fieldIdx "2"))))])]
-             "⟩")]))
-         [])])
+       [(Tactic.exact
+         "exact"
+         (Term.app
+          (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+          [(Term.anonymousCtor
+            "⟨"
+            [(Term.app
+              `supr₂_le
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`t `hb]
+                 []
+                 "=>"
+                 (Term.proj
+                  («term_<|_»
+                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                   "<|"
+                   (Term.app `ha [(Term.hole "_") `hb]))
+                  "."
+                  (fieldIdx "1"))))])
+             ","
+             (Term.app
+              `le_infi₂
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`t `hb]
+                 []
+                 "=>"
+                 (Term.proj
+                  («term_<|_»
+                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                   "<|"
+                   (Term.app `ha [(Term.hole "_") `hb]))
+                  "."
+                  (fieldIdx "2"))))])]
+            "⟩")]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -3981,9 +3925,7 @@ variable [CompleteLattice α]
       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
-       (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" `bot_le) [])])
+      (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4036,31 +3978,28 @@ variable [CompleteLattice α]
           (Tactic.tacticSeq1Indented
            [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group
-               (Tactic.lift
-                "lift"
-                `s
-                "to"
-                (Term.app `NonemptyInterval [`α])
-                ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-                [])
+             [(Tactic.lift
+               "lift"
+               `s
+               "to"
+               (Term.app `NonemptyInterval [`α])
+               ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                [])
-              (group
-               (Tactic.exact
-                "exact"
-                (Term.app
-                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                 [(Term.anonymousCtor
-                   "⟨"
-                   [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-                   "⟩")]))
-               [])])
+              []
+              (Tactic.exact
+               "exact"
+               (Term.app
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+                [(Term.anonymousCtor
+                  "⟨"
+                  [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                  "⟩")]))])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" `bot_le) [])])])))))
+             [(Tactic.exact "exact" `bot_le)])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -4068,36 +4007,29 @@ variable [CompleteLattice α]
         (Tactic.tacticSeq1Indented
          [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.lift
-              "lift"
-              `s
-              "to"
-              (Term.app `NonemptyInterval [`α])
-              ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-              [])
+           [(Tactic.lift
+             "lift"
+             `s
+             "to"
+             (Term.app `NonemptyInterval [`α])
+             ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
              [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.app
-               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-               [(Term.anonymousCtor
-                 "⟨"
-                 [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-                 "⟩")]))
-             [])])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+              [(Term.anonymousCtor
+                "⟨"
+                [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                "⟩")]))])
           []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" `bot_le) [])])])))
+          (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
-       (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" `bot_le) [])])
+      (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4107,27 +4039,24 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.lift
-          "lift"
-          `s
-          "to"
-          (Term.app `NonemptyInterval [`α])
-          ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
-          [])
+       [(Tactic.lift
+         "lift"
+         `s
+         "to"
+         (Term.app `NonemptyInterval [`α])
+         ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
          [])
-        (group
-         (Tactic.exact
-          "exact"
-          (Term.app
-           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-           [(Term.anonymousCtor
-             "⟨"
-             [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
-             "⟩")]))
-         [])])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.app
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
+          [(Term.anonymousCtor
+            "⟨"
+            [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+            "⟩")]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -4197,7 +4126,7 @@ variable [CompleteLattice α]
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.lift
        "lift"
        `s
@@ -4969,9 +4898,7 @@ variable [CompleteLattice α]
           (Tactic.tacticSeq1Indented
            [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_»
-             (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" `bot_le) [])])
+            (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
             []
             (Std.Tactic.obtain
              "obtain"
@@ -5046,9 +4973,7 @@ variable [CompleteLattice α]
         (Tactic.tacticSeq1Indented
          [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" `bot_le) [])])
+          (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
           []
           (Std.Tactic.obtain
            "obtain"
@@ -5546,9 +5471,7 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
-       (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" `bot_le) [])])
+      (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5597,30 +5520,26 @@ variable [CompleteLattice α]
           (Tactic.tacticSeq1Indented
            [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+             [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
             []
             (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
             []
-            («tactic___;_»
-             (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" `bot_le) [])])
+            (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group
-               (Tactic.exact
-                "exact"
-                (Term.app
-                 (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-                 [(Term.anonymousCtor
-                   "⟨"
-                   [(Term.app `infi₂_le [(Term.hole "_") `ha])
-                    ","
-                    (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-                   "⟩")]))
-               [])])])))))
+             [(Tactic.exact
+               "exact"
+               (Term.app
+                (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+                [(Term.anonymousCtor
+                  "⟨"
+                  [(Term.app `infi₂_le [(Term.hole "_") `ha])
+                   ","
+                   (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+                  "⟩")]))])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -5628,46 +5547,40 @@ variable [CompleteLattice α]
         (Tactic.tacticSeq1Indented
          [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+           [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
           []
           (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
           []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" `bot_le) [])])
+          (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact
-              "exact"
-              (Term.app
-               (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-               [(Term.anonymousCtor
-                 "⟨"
-                 [(Term.app `infi₂_le [(Term.hole "_") `ha])
-                  ","
-                  (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-                 "⟩")]))
-             [])])])))
+           [(Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+              [(Term.anonymousCtor
+                "⟨"
+                [(Term.app `infi₂_le [(Term.hole "_") `ha])
+                 ","
+                 (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+                "⟩")]))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.exact
-          "exact"
-          (Term.app
-           (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
-           [(Term.anonymousCtor
-             "⟨"
-             [(Term.app `infi₂_le [(Term.hole "_") `ha])
-              ","
-              (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
-             "⟩")]))
-         [])])
+       [(Tactic.exact
+         "exact"
+         (Term.app
+          (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
+          [(Term.anonymousCtor
+            "⟨"
+            [(Term.app `infi₂_le [(Term.hole "_") `ha])
+             ","
+             (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+            "⟩")]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -5754,9 +5667,7 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
-       (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" `bot_le) [])])
+      (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.exact "exact" `bot_le)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5773,9 +5684,9 @@ variable [CompleteLattice α]
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le)) [])])
+       [(Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.proj (Term.app `h [`ha]) "." `le))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -6663,17 +6574,14 @@ theorem coe_Inf (S : Set (Interval α)) : ↑(inf S) = ⋂ s ∈ S, (s : Set α)
   split_ifs
   · ext
     simp [WithBot.some_eq_coe, Interval.forall, h.1, ← forall_and, ← NonemptyInterval.mem_def]
-    
   simp_rw [not_and_or, not_not] at h
   cases h
   · refine' (eq_empty_of_subset_empty _).symm
     exact Inter₂_subset_of_subset _ h subset.rfl
-    
   · refine' (not_nonempty_iff_eq_empty.1 _).symm
     rintro ⟨x, hx⟩
     rw [mem_Inter₂] at hx
     exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
-    
 #align interval.coe_Inf Interval.coe_Inf
 
 @[simp, norm_cast]

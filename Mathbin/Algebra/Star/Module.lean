@@ -95,15 +95,18 @@ variable {A} [Invertible (2 : R)]
 
 /-- The self-adjoint part of an element of a star module, as a linear map. -/
 @[simps]
-def selfAdjointPart : A →ₗ[R] selfAdjoint A where
+def selfAdjointPart :
+    A →ₗ[R]
+      selfAdjoint
+        A where 
   toFun x :=
     ⟨(⅟ 2 : R) • (x + star x), by
       simp only [selfAdjoint.mem_iff, star_smul, add_comm, StarAddMonoid.star_add, star_inv',
         star_bit0, star_one, star_star, star_inv_of (2 : R), star_trivial]⟩
-  map_add' x y := by
+  map_add' x y := by 
     ext
     simp [add_add_add_comm]
-  map_smul' r x := by
+  map_smul' r x := by 
     ext
     simp [← mul_smul,
       show ⅟ 2 * r = r * ⅟ 2 from Commute.inv_of_left (Commute.one_left r).bit0_left]
@@ -111,16 +114,19 @@ def selfAdjointPart : A →ₗ[R] selfAdjoint A where
 
 /-- The skew-adjoint part of an element of a star module, as a linear map. -/
 @[simps]
-def skewAdjointPart : A →ₗ[R] skewAdjoint A where
+def skewAdjointPart :
+    A →ₗ[R]
+      skewAdjoint
+        A where 
   toFun x :=
     ⟨(⅟ 2 : R) • (x - star x), by
       simp only [skewAdjoint.mem_iff, star_smul, star_sub, star_star, star_trivial, ← smul_neg,
         neg_sub]⟩
-  map_add' x y := by
+  map_add' x y := by 
     ext
     simp only [sub_add, ← smul_add, sub_sub_eq_add_sub, star_add, AddSubgroup.coe_mk,
       AddSubgroup.coe_add]
-  map_smul' r x := by
+  map_smul' r x := by 
     ext
     simp [← mul_smul, ← smul_sub,
       show r * ⅟ 2 = ⅟ 2 * r from Commute.inv_of_right (Commute.one_right r).bit0_right]

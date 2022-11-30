@@ -58,7 +58,8 @@ variable (α) (β)
 
 /-- Given an action of a group `α` on a set `β`, each `g : α` defines a permutation of `β`. -/
 @[simps]
-def MulAction.toPermHom : α →* Equiv.Perm β where
+def MulAction.toPermHom :
+    α →* Equiv.Perm β where 
   toFun := MulAction.toPerm
   map_one' := Equiv.ext <| one_smul α
   map_mul' u₁ u₂ := Equiv.ext <| mul_smul (u₁ : α) u₂
@@ -68,7 +69,8 @@ def MulAction.toPermHom : α →* Equiv.Perm β where
 `β`. -/
 @[simps]
 def AddAction.toPermHom (α : Type _) [AddGroup α] [AddAction α β] :
-    α →+ Additive (Equiv.Perm β) where
+    α →+ Additive
+        (Equiv.Perm β) where 
   toFun a := Additive.ofMul <| AddAction.toPerm a
   map_zero' := Equiv.ext <| zero_vadd α
   map_add' a₁ a₂ := Equiv.ext <| add_vadd a₁ a₂
@@ -77,7 +79,8 @@ def AddAction.toPermHom (α : Type _) [AddGroup α] [AddAction α β] :
 /-- The tautological action by `equiv.perm α` on `α`.
 
 This generalizes `function.End.apply_mul_action`.-/
-instance Equiv.Perm.applyMulAction (α : Type _) : MulAction (Equiv.Perm α) α where
+instance Equiv.Perm.applyMulAction (α : Type _) :
+    MulAction (Equiv.Perm α) α where 
   smul f a := f a
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
@@ -219,7 +222,8 @@ variable (α β)
 
 This is a stronger version of `mul_action.to_perm_hom`. -/
 @[simps]
-def DistribMulAction.toAddAut : α →* AddAut β where
+def DistribMulAction.toAddAut :
+    α →* AddAut β where 
   toFun := DistribMulAction.toAddEquiv β
   map_one' := AddEquiv.ext (one_smul _)
   map_mul' a₁ a₂ := AddEquiv.ext (mul_smul _ _)
@@ -273,7 +277,8 @@ variable (α β)
 
 This is a stronger version of `mul_action.to_perm_hom`. -/
 @[simps]
-def MulDistribMulAction.toMulAut : α →* MulAut β where
+def MulDistribMulAction.toMulAut :
+    α →* MulAut β where 
   toFun := MulDistribMulAction.toMulEquiv β
   map_one' := MulEquiv.ext (one_smul _)
   map_mul' a₁ a₂ := MulEquiv.ext (mul_smul _ _)
@@ -289,12 +294,13 @@ section Arrow
 @[to_additive arrowAddAction
       "If `G` acts on `A`, then it acts also on `A → B`, by\n`(g +ᵥ F) a = F (g⁻¹ +ᵥ a)`",
   simps]
-def arrowAction {G A B : Type _} [DivisionMonoid G] [MulAction G A] : MulAction G (A → B) where
+def arrowAction {G A B : Type _} [DivisionMonoid G] [MulAction G A] :
+    MulAction G (A → B) where 
   smul g F a := F (g⁻¹ • a)
-  one_smul := by
+  one_smul := by 
     intro
     simp only [inv_one, one_smul]
-  mul_smul := by
+  mul_smul := by 
     intros
     simp only [mul_smul, mul_inv_rev]
 #align arrow_action arrowAction
@@ -303,7 +309,7 @@ attribute [local instance] arrowAction
 
 /-- When `B` is a monoid, `arrow_action` is additionally a `mul_distrib_mul_action`. -/
 def arrowMulDistribMulAction {G A B : Type _} [Group G] [MulAction G A] [Monoid B] :
-    MulDistribMulAction G (A → B) where
+    MulDistribMulAction G (A → B) where 
   smul_one g := rfl
   smul_mul g f₁ f₂ := rfl
 #align arrow_mul_distrib_mul_action arrowMulDistribMulAction

@@ -32,7 +32,7 @@ namespace Commute
 variable [NonUnitalNonAssocSemiring α] {a : α} {s : Multiset ι} {f : ι → α}
 
 theorem multiset_sum_right (s : Multiset α) (a : α) (h : ∀ b ∈ s, Commute a b) : Commute a s.Sum :=
-  by
+  by 
   induction s using Quotient.induction_on
   rw [quot_mk_to_coe, coe_sum]
   exact Commute.list_sum_right _ _ h

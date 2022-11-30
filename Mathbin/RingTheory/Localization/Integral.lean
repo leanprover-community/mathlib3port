@@ -85,24 +85,21 @@ theorem integer_normalization_spec (p : S[X]) :
   intro i
   rw [integer_normalization_coeff, coeff_integer_normalization]
   split_ifs with hi
-  · exact
+  ·
+    exact
       Classical.choose_spec
         (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.image p.coeff))
           (p.coeff i) (finset.mem_image.mpr ⟨i, hi, rfl⟩))
-    
   · convert (smul_zero _).symm
     · apply RingHom.map_zero
-      
     · exact not_mem_support_iff.mp hi
-      
-    
 #align is_localization.integer_normalization_spec IsLocalization.integer_normalization_spec
 
 theorem integer_normalization_map_to_map (p : S[X]) :
     ∃ b : M, (integerNormalization M p).map (algebraMap R S) = (b : R) • p :=
   let ⟨b, hb⟩ := integer_normalization_spec M p
   ⟨b,
-    Polynomial.ext fun i => by
+    Polynomial.ext fun i => by 
       rw [coeff_map, coeff_smul]
       exact hb i⟩
 #align
@@ -145,14 +142,12 @@ theorem integer_normalization_eq_zero_iff {p : K[X]} :
     rw [hb i, h i]
     apply smul_zero
     assumption
-    
   · have hi := h i
     rw [Polynomial.coeff_zero, ← @to_map_eq_zero_iff A _ K, hb i, Algebra.smul_def] at hi
     apply Or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hi)
     intro h
     apply mem_non_zero_divisors_iff_ne_zero.mp nonzero
     exact to_map_eq_zero_iff.mp h
-    
 #align
   is_fraction_ring.integer_normalization_eq_zero_iff IsFractionRing.integer_normalization_eq_zero_iff
 
@@ -167,14 +162,11 @@ theorem is_algebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] {x : 
   · refine' ⟨p.map (algebraMap A K), fun h => hp (Polynomial.ext fun i => _), _⟩
     · have : algebraMap A K (p.coeff i) = 0 := trans (Polynomial.coeff_map _ _).symm (by simp [h])
       exact to_map_eq_zero_iff.mp this
-      
     · exact (Polynomial.aeval_map_algebra_map K _ _).trans px
-      
-    
-  · exact
+  ·
+    exact
       ⟨integer_normalization _ p, mt integer_normalization_eq_zero_iff.mp hp,
         integer_normalization_aeval_eq_zero _ p px⟩
-    
 #align is_fraction_ring.is_algebraic_iff IsFractionRing.is_algebraic_iff
 
 variable {A K C}
@@ -209,18 +201,15 @@ theorem RingHom.is_integral_elem_localization_at_leading_coeff {R S : Type _} [C
     (map Sₘ f M.le_comap_map : Rₘ →+* _).IsIntegralElem (algebraMap S Sₘ x) := by
   by_cases triv : (1 : Rₘ) = 0
   · exact ⟨0, ⟨trans leading_coeff_zero triv.symm, eval₂_zero _ _⟩⟩
-    
   haveI : Nontrivial Rₘ := nontrivial_of_ne 1 0 triv
   obtain ⟨b, hb⟩ := is_unit_iff_exists_inv.mp (map_units Rₘ ⟨p.leading_coeff, hM⟩)
   refine' ⟨p.map (algebraMap R Rₘ) * C b, ⟨_, _⟩⟩
   · refine' monic_mul_C_of_leading_coeff_mul_eq_one _
     rwa [leading_coeff_map_of_leading_coeff_ne_zero (algebraMap R Rₘ)]
     refine' fun hfp => zero_ne_one (trans (zero_mul b).symm (hfp ▸ hb) : (0 : Rₘ) = 1)
-    
   · refine' eval₂_mul_eq_zero_of_left _ _ _ _
     erw [eval₂_map, IsLocalization.map_comp, ← hom_eval₂ _ f (algebraMap S Sₘ) x]
     exact trans (congr_arg (algebraMap S Sₘ) hf) (RingHom.map_zero _)
-    
 #align
   ring_hom.is_integral_elem_localization_at_leading_coeff RingHom.is_integral_elem_localization_at_leading_coeff
 
@@ -244,7 +233,7 @@ theorem is_integral_localization (H : Algebra.IsIntegral R S) :
     (map Sₘ (algebraMap R S)
           (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map) :
         Rₘ →+* _).IsIntegral :=
-  by
+  by 
   intro x
   obtain ⟨⟨s, ⟨u, hu⟩⟩, hx⟩ := surj (Algebra.algebraMapSubmonoid S M) x
   obtain ⟨v, hv⟩ := hu
@@ -256,10 +245,8 @@ theorem is_integral_localization (H : Algebra.IsIntegral R S) :
     rw [RingHom.map_mul, RingHom.map_one, ← RingHom.comp_apply _ (algebraMap R Rₘ)] at hv'
     erw [IsLocalization.map_comp] at hv'
     exact hv.2 ▸ hv'
-    
   · obtain ⟨p, hp⟩ := H s
     exact hx.symm ▸ is_integral_localization_at_leading_coeff p hp.2 (hp.1.symm ▸ M.one_mem)
-    
 #align is_integral_localization is_integral_localization
 
 theorem is_integral_localization' {R S : Type _} [CommRing R] [CommRing S] {f : R →+* S}
@@ -276,29 +263,24 @@ theorem IsLocalization.scale_roots_common_denom_mem_lifts (p : Rₘ[X])
     (hp : p.leadingCoeff ∈ (algebraMap R Rₘ).range) :
     p.scaleRoots (algebraMap R Rₘ <| IsLocalization.commonDenom M p.support p.coeff) ∈
       Polynomial.lifts (algebraMap R Rₘ) :=
-  by
+  by 
   rw [Polynomial.lifts_iff_coeff_lifts]
   intro n
   rw [Polynomial.coeff_scale_roots]
   by_cases h₁ : n ∈ p.support
   by_cases h₂ : n = p.nat_degree
   · rwa [h₂, Polynomial.coeff_nat_degree, tsub_self, pow_zero, _root_.mul_one]
-    
   · have : n + 1 ≤ p.nat_degree := lt_of_le_of_ne (Polynomial.le_nat_degree_of_mem_supp _ h₁) h₂
     rw [← tsub_add_cancel_of_le (le_tsub_of_add_le_left this), pow_add, pow_one, mul_comm,
       _root_.mul_assoc, ← map_pow]
     change _ ∈ (algebraMap R Rₘ).range
     apply mul_mem
     · exact RingHom.mem_range_self _ _
-      
     · rw [← Algebra.smul_def]
       exact ⟨_, IsLocalization.map_integer_multiple M p.support p.coeff ⟨n, h₁⟩⟩
-      
-    
   · rw [Polynomial.not_mem_support_iff] at h₁
     rw [h₁, zero_mul]
     exact zero_mem (algebraMap R Rₘ).range
-    
 #align
   is_localization.scale_roots_common_denom_mem_lifts IsLocalization.scale_roots_common_denom_mem_lifts
 
@@ -307,7 +289,6 @@ theorem IsIntegral.exists_multiple_integral_of_is_localization [Algebra Rₘ S] 
   cases' subsingleton_or_nontrivial Rₘ with _ nontriv <;> skip
   · haveI := (algebraMap Rₘ S).codomain_trivial
     exact ⟨1, Polynomial.x, Polynomial.monic_X, Subsingleton.elim _ _⟩
-    
   obtain ⟨p, hp₁, hp₂⟩ := hx
   obtain ⟨p', hp'₁, -, hp'₂⟩ :=
     lifts_and_nat_degree_eq_and_monic (IsLocalization.scale_roots_common_denom_mem_lifts M p _) _
@@ -315,12 +296,9 @@ theorem IsIntegral.exists_multiple_integral_of_is_localization [Algebra Rₘ S] 
     rw [IsScalarTower.algebra_map_eq R Rₘ S, ← Polynomial.eval₂_map, hp'₁, Submonoid.smul_def,
       Algebra.smul_def, IsScalarTower.algebra_map_apply R Rₘ S]
     exact Polynomial.scale_roots_eval₂_eq_zero _ hp₂
-    
   · rw [hp₁.leading_coeff]
     exact one_mem _
-    
   · rwa [Polynomial.monic_scale_roots_iff]
-    
 #align
   is_integral.exists_multiple_integral_of_is_localization IsIntegral.exists_multiple_integral_of_is_localization
 
@@ -422,15 +400,14 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
         _root_.is_algebraic_of_larger_base_of_injective
           (NoZeroSmulDivisors.algebra_map_injective R (FractionRing R)) _
       exact is_algebraic_algebra_map_of_is_algebraic (h a)
-      
     · rw [← is_algebraic_iff_is_integral]
       use (f.map (algebraMap R (FractionRing R))).reverse
       constructor
-      · rwa [Ne.def, Polynomial.reverse_eq_zero, ← Polynomial.degree_eq_bot,
+      ·
+        rwa [Ne.def, Polynomial.reverse_eq_zero, ← Polynomial.degree_eq_bot,
           Polynomial.degree_map_eq_of_injective
             (NoZeroSmulDivisors.algebra_map_injective R (FractionRing R)),
           Polynomial.degree_eq_bot]
-        
       · have : Invertible (algebraMap S K b) :=
           IsUnit.invertible
             (is_unit_of_mem_non_zero_divisors
@@ -441,9 +418,6 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
         rw [Polynomial.aeval_def, ← inv_of_eq_inv, Polynomial.eval₂_reverse_eq_zero_iff,
           Polynomial.eval₂_map, ← IsScalarTower.algebra_map_eq, ← Polynomial.aeval_def,
           Polynomial.aeval_algebra_map_apply, hf₂, RingHom.map_zero]
-        
-      
-    
   · intro h x
     obtain ⟨f, hf₁, hf₂⟩ := h (algebraMap S K x)
     use f, hf₁
@@ -451,7 +425,6 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
     exact
       (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _)
         _ hf₂
-    
 #align is_fraction_ring.is_algebraic_iff' IsFractionRing.is_algebraic_iff'
 
 open nonZeroDivisors
@@ -486,7 +459,6 @@ theorem ideal_span_singleton_map_subset {L : Type _} [IsDomain R] [IsDomain S] [
       IsScalarTower.algebra_map_apply R K L, div_eq_mul_inv, ← mul_assoc, mul_comm, ← map_inv₀, ←
       Algebra.smul_def, ← _root_.map_mul]
     exact (Submodule.span K _).smul_mem _ hy
-    
   refine' Submodule.span_subset_span R K _ _
   rw [Submodule.span_algebra_map_image_of_tower]
   exact Submodule.mem_map_of_mem (h (ideal.mem_span_singleton.mpr ⟨y, rfl⟩))

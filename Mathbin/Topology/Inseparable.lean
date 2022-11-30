@@ -203,84 +203,79 @@ infixl:300 " ⤳ " => Specializes
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "7"))
            ";"
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule [] `mem_closure_iff_cluster_pt)
-                 ","
-                 (Tactic.rwRule [] `principal_singleton)]
-                "]")
-               [])
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `mem_closure_iff_cluster_pt)
+                ","
+                (Tactic.rwRule [] `principal_singleton)]
+               "]")
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.refine'
-               "refine'"
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`h]
-                 []
-                 "=>"
-                 (Term.app
-                  (Term.proj
-                   (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `ge_iff)
-                   "."
-                   (fieldIdx "2"))
-                  [(Term.hole "_")]))))
+            [(Tactic.refine'
+              "refine'"
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`h]
+                []
+                "=>"
+                (Term.app
+                 (Term.proj
+                  (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `ge_iff)
+                  "."
+                  (fieldIdx "2"))
+                 [(Term.hole "_")]))))
+             []
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
+               (Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ho)])
+                   [])]
+                 "⟩"))]
               [])
-             (group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
-                (Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ho)])
-                    [])]
-                  "⟩"))]
-               [])
-              [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget
-                 []
-                 (Term.app (Term.proj `mem_closure_iff "." (fieldIdx "1")) [`h `s `ho `hy]))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxs)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                      [":" («term_=_» `z "=" `x)])]
-                    "⟩")])
-                 [])])
-              [])
-             (group (Tactic.exact "exact" (Term.app `ho.mem_nhds [`hxs])) [])])
+             []
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget
+                []
+                (Term.app (Term.proj `mem_closure_iff "." (fieldIdx "1")) [`h `s `ho `hy]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxs)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                     [":" («term_=_» `z "=" `x)])]
+                   "⟩")])
+                [])])
+             []
+             (Tactic.exact "exact" (Term.app `ho.mem_nhds [`hxs]))])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -358,84 +353,79 @@ infixl:300 " ⤳ " => Specializes
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "7"))
           ";"
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [] `mem_closure_iff_cluster_pt)
-                ","
-                (Tactic.rwRule [] `principal_singleton)]
-               "]")
-              [])
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `mem_closure_iff_cluster_pt)
+               ","
+               (Tactic.rwRule [] `principal_singleton)]
+              "]")
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.refine'
-              "refine'"
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`h]
-                []
-                "=>"
-                (Term.app
-                 (Term.proj
-                  (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `ge_iff)
-                  "."
-                  (fieldIdx "2"))
-                 [(Term.hole "_")]))))
+           [(Tactic.refine'
+             "refine'"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`h]
+               []
+               "=>"
+               (Term.app
+                (Term.proj
+                 (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `ge_iff)
+                 "."
+                 (fieldIdx "2"))
+                [(Term.hole "_")]))))
+            []
+            (Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
+              (Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ho)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
-               (Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ho)])
-                   [])]
-                 "⟩"))]
-              [])
-             [])
-            (group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget
-                []
-                (Term.app (Term.proj `mem_closure_iff "." (fieldIdx "1")) [`h `s `ho `hy]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxs)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                     [":" («term_=_» `z "=" `x)])]
-                   "⟩")])
-                [])])
-             [])
-            (group (Tactic.exact "exact" (Term.app `ho.mem_nhds [`hxs])) [])])
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget
+               []
+               (Term.app (Term.proj `mem_closure_iff "." (fieldIdx "1")) [`h `s `ho `hy]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxs)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                    [":" («term_=_» `z "=" `x)])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.exact "exact" (Term.app `ho.mem_nhds [`hxs]))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -443,67 +433,64 @@ infixl:300 " ⤳ " => Specializes
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.refine'
-          "refine'"
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`h]
-            []
-            "=>"
-            (Term.app
-             (Term.proj
-              (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `ge_iff)
-              "."
-              (fieldIdx "2"))
-             [(Term.hole "_")]))))
+       [(Tactic.refine'
+         "refine'"
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`h]
+           []
+           "=>"
+           (Term.app
+            (Term.proj
+             (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `ge_iff)
+             "."
+             (fieldIdx "2"))
+            [(Term.hole "_")]))))
+        []
+        (Std.Tactic.rintro
+         "rintro"
+         [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
+          (Std.Tactic.RCases.rintroPat.one
+           (Std.Tactic.RCases.rcasesPat.tuple
+            "⟨"
+            [(Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+              [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ho)])
+              [])]
+            "⟩"))]
          [])
-        (group
-         (Std.Tactic.rintro
-          "rintro"
-          [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
-           (Std.Tactic.RCases.rintroPat.one
-            (Std.Tactic.RCases.rcasesPat.tuple
-             "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-               [])
-              ","
-              (Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ho)])
-               [])]
-             "⟩"))]
-          [])
-         [])
-        (group
-         (Std.Tactic.rcases
-          "rcases"
-          [(Tactic.casesTarget
-            []
-            (Term.app (Term.proj `mem_closure_iff "." (fieldIdx "1")) [`h `s `ho `hy]))]
-          ["with"
-           (Std.Tactic.RCases.rcasesPatLo
-            (Std.Tactic.RCases.rcasesPatMed
-             [(Std.Tactic.RCases.rcasesPat.tuple
-               "⟨"
-               [(Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
-                 [])
-                ","
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxs)])
-                 [])
-                ","
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                 [":" («term_=_» `z "=" `x)])]
-               "⟩")])
-            [])])
-         [])
-        (group (Tactic.exact "exact" (Term.app `ho.mem_nhds [`hxs])) [])])
+        []
+        (Std.Tactic.rcases
+         "rcases"
+         [(Tactic.casesTarget
+           []
+           (Term.app (Term.proj `mem_closure_iff "." (fieldIdx "1")) [`h `s `ho `hy]))]
+         ["with"
+          (Std.Tactic.RCases.rcasesPatLo
+           (Std.Tactic.RCases.rcasesPatMed
+            [(Std.Tactic.RCases.rcasesPat.tuple
+              "⟨"
+              [(Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
+                [])
+               ","
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxs)])
+                [])
+               ","
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                [":" («term_=_» `z "=" `x)])]
+              "⟩")])
+           [])])
+        []
+        (Tactic.exact "exact" (Term.app `ho.mem_nhds [`hxs]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `ho.mem_nhds [`hxs]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -520,7 +507,7 @@ infixl:300 " ⤳ " => Specializes
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rcases
        "rcases"
        [(Tactic.casesTarget
@@ -589,7 +576,7 @@ infixl:300 " ⤳ " => Specializes
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rintro
        "rintro"
        [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
@@ -606,7 +593,7 @@ infixl:300 " ⤳ " => Specializes
           "⟩"))]
        [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.refine'
        "refine'"
        (Term.fun
@@ -1114,7 +1101,7 @@ theorem inducing_mk : Inducing (mk : X → SeparationQuotient X) :=
 #align separation_quotient.inducing_mk SeparationQuotient.inducing_mk
 
 theorem is_closed_map_mk : IsClosedMap (mk : X → SeparationQuotient X) :=
-  inducing_mk.IsClosedMap <| by
+  inducing_mk.IsClosedMap <| by 
     rw [range_mk]
     exact isClosedUniv
 #align separation_quotient.is_closed_map_mk SeparationQuotient.is_closed_map_mk
@@ -1249,7 +1236,7 @@ theorem tendsto_lift₂_nhds_within {f : X → Y → α}
     {s : Set (SeparationQuotient X × SeparationQuotient Y)} {l : Filter α} :
     Tendsto (uncurry <| lift₂ f hf) (𝓝[s] (mk x, mk y)) l ↔
       Tendsto (uncurry f) (𝓝[Prod.map mk mk ⁻¹' s] (x, y)) l :=
-  by
+  by 
   rw [nhdsWithin, ← map_prod_map_mk_nhds, ← Filter.push_pull, comap_principal]
   rfl
 #align separation_quotient.tendsto_lift₂_nhds_within SeparationQuotient.tendsto_lift₂_nhds_within

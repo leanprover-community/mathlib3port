@@ -109,18 +109,14 @@ theorem conj_mul {a b c : α} : b * a * b⁻¹ * (b * c * b⁻¹) = b * (a * c) 
 theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻¹ := by
   induction' i with i hi
   · simp
-    
   · simp [pow_succ, hi]
-    
 #align conj_pow conj_pow
 
 @[simp]
 theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻¹ := by
   induction i
   · simp
-    
   · simp [zpow_neg_succ_of_nat, conj_pow]
-    
 #align conj_zpow conj_zpow
 
 theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=
@@ -132,12 +128,12 @@ end Group
 @[simp]
 theorem is_conj_iff₀ [GroupWithZero α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ =>
-    ⟨c, by
+    ⟨c, by 
       rw [← Units.val_inv_eq_inv_val, Units.mul_inv_eq_iff_eq_mul]
       exact ⟨c.ne_zero, hc⟩⟩,
     fun ⟨c, c0, hc⟩ =>
     ⟨Units.mk0 c c0, by
-      rw [SemiconjBy, ← Units.mul_inv_eq_iff_eq_mul, Units.val_inv_eq_inv_val, Units.coe_mk0]
+      rw [SemiconjBy, ← Units.mul_inv_eq_iff_eq_mul, Units.val_inv_eq_inv_val, Units.val_mk0]
       exact hc⟩⟩
 #align is_conj_iff₀ is_conj_iff₀
 
@@ -146,7 +142,8 @@ namespace IsConj
 /- This small quotient API is largely copied from the API of `associates`;
 where possible, try to keep them in sync -/
 /-- The setoid of the relation `is_conj` iff there is a unit `u` such that `u * x = y * u` -/
-protected def setoid (α : Type _) [Monoid α] : Setoid α where
+protected def setoid (α : Type _) [Monoid α] :
+    Setoid α where 
   R := IsConj
   iseqv := ⟨IsConj.refl, fun a b => IsConj.symm, fun a b c => IsConj.trans⟩
 #align is_conj.setoid IsConj.setoid
@@ -332,7 +329,7 @@ theorem mem_carrier_mk {a : α} : a ∈ carrier (ConjClasses.mk a) :=
 #align conj_classes.mem_carrier_mk ConjClasses.mem_carrier_mk
 
 theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ carrier b ↔ ConjClasses.mk a = b :=
-  by
+  by 
   revert b
   rw [forall_is_conj]
   intro b

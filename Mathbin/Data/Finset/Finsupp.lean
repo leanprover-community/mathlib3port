@@ -43,17 +43,15 @@ protected def finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀
 #align finset.finsupp Finset.finsupp
 
 theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
-  by
+  by 
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_indicator_subset _ _, fun i hi => _⟩
     convert mem_pi.1 hf i hi
     exact indicator_of_mem hi _
-    
   · refine' fun h => ⟨fun i _ => f i, mem_pi.2 h.2, _⟩
     ext i
     exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
-    
 #align finset.mem_finsupp_iff Finset.mem_finsupp_iff
 
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
@@ -68,13 +66,9 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.supp
             ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi : i ∈ s
     · exact h.2 hi
-      
     · rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 fun H => hi <| ht H]
       exact zero_mem_zero
-      
-    
   · rwa [H, mem_zero] at h
-    
 #align finset.mem_finsupp_iff_of_support_subset Finset.mem_finsupp_iff_of_support_subset
 
 @[simp]

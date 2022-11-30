@@ -58,14 +58,15 @@ theorem hamming_dist_comm (x y : ∀ i, β i) : hammingDist x y = hammingDist y 
 
 /-- Corresponds to `dist_triangle`. -/
 theorem hamming_dist_triangle (x y z : ∀ i, β i) :
-    hammingDist x z ≤ hammingDist x y + hammingDist y z := by classical
-  simp_rw [hammingDist]
-  refine' le_trans (card_mono _) (card_union_le _ _)
-  rw [← filter_or]
-  refine' monotone_filter_right _ _
-  intro i h
-  by_contra' H
-  exact h (Eq.trans H.1 H.2)
+    hammingDist x z ≤ hammingDist x y + hammingDist y z := by
+  classical 
+    simp_rw [hammingDist]
+    refine' le_trans (card_mono _) (card_union_le _ _)
+    rw [← filter_or]
+    refine' monotone_filter_right _ _
+    intro i h
+    by_contra' H
+    exact h (Eq.trans H.1 H.2)
 #align hamming_dist_triangle hamming_dist_triangle
 
 /-- Corresponds to `dist_triangle_left`. -/
@@ -97,7 +98,7 @@ theorem eq_of_hamming_dist_eq_zero {x y : ∀ i, β i} : hammingDist x y = 0 →
 /-- Corresponds to `dist_eq_zero`. -/
 @[simp]
 theorem hamming_dist_eq_zero {x y : ∀ i, β i} : hammingDist x y = 0 ↔ x = y :=
-  ⟨eq_of_hamming_dist_eq_zero, fun H => by
+  ⟨eq_of_hamming_dist_eq_zero, fun H => by 
     rw [H]
     exact hamming_dist_self _⟩
 #align hamming_dist_eq_zero hamming_dist_eq_zero
@@ -272,19 +273,19 @@ instance [Fintype ι] [∀ i, DecidableEq (β i)] : DecidableEq (Hamming β) :=
   Fintype.decidablePiFintype
 
 instance [∀ i, Zero (β i)] : Zero (Hamming β) :=
-  Pi.hasZero
+  Pi.instZero
 
 instance [∀ i, Neg (β i)] : Neg (Hamming β) :=
-  Pi.hasNeg
+  Pi.instNeg
 
 instance [∀ i, Add (β i)] : Add (Hamming β) :=
-  Pi.hasAdd
+  Pi.instAdd
 
 instance [∀ i, Sub (β i)] : Sub (Hamming β) :=
-  Pi.hasSub
+  Pi.instSub
 
 instance [∀ i, HasSmul α (β i)] : HasSmul α (Hamming β) :=
-  Pi.hasSmul
+  Pi.instSMul
 
 instance [Zero α] [∀ i, Zero (β i)] [∀ i, SmulWithZero α (β i)] : SmulWithZero α (Hamming β) :=
   Pi.smulWithZero _
@@ -421,13 +422,13 @@ theorem dist_eq_hamming_dist (x y : Hamming β) :
 
 instance : PseudoMetricSpace (Hamming β) :=
   { Hamming.hasDist with
-    dist_self := by
+    dist_self := by 
       push_cast
       exact_mod_cast hamming_dist_self,
-    dist_comm := by
+    dist_comm := by 
       push_cast
       exact_mod_cast hamming_dist_comm,
-    dist_triangle := by
+    dist_triangle := by 
       push_cast
       exact_mod_cast hamming_dist_triangle,
     toUniformSpace := ⊥,
@@ -439,15 +440,13 @@ instance : PseudoMetricSpace (Hamming β) :=
           rw_mod_cast [hamming_dist_lt_one]  at hab
           rw [of_hamming_inj, ← mem_id_rel] at hab
           exact hs hab
-          
         · rintro ⟨_, hε, hs⟩ ⟨_, _⟩ hab
           rw [mem_id_rel] at hab
           rw [hab]
           refine' hs (lt_of_eq_of_lt _ hε)
-          exact_mod_cast hamming_dist_self _
-          ,
+          exact_mod_cast hamming_dist_self _,
     toBornology := ⟨⊥, bot_le⟩,
-    cobounded_sets := by
+    cobounded_sets := by 
       ext
       push_cast
       refine' iff_of_true (filter.mem_sets.mpr Filter.mem_bot) ⟨Fintype.card ι, fun _ _ _ _ => _⟩
@@ -461,7 +460,7 @@ theorem nndist_eq_hamming_dist (x y : Hamming β) :
 
 instance : MetricSpace (Hamming β) :=
   { Hamming.pseudoMetricSpace with
-    eq_of_dist_eq_zero := by
+    eq_of_dist_eq_zero := by 
       push_cast
       exact_mod_cast @eq_of_hamming_dist_eq_zero _ _ _ _ }
 
@@ -475,7 +474,7 @@ theorem norm_eq_hamming_norm [∀ i, Zero (β i)] (x : Hamming β) : ‖x‖ = h
 
 instance [∀ i, AddCommGroup (β i)] : SeminormedAddCommGroup (Hamming β) :=
   { Pi.addCommGroup with
-    dist_eq := by
+    dist_eq := by 
       push_cast
       exact_mod_cast hamming_dist_eq_hamming_norm }
 

@@ -128,7 +128,6 @@ instance : AddGroup Cauchy := by
       try intros <;> rfl <;>
     · repeat' refine' fun a => Quotient.induction_on a fun _ => _
       simp [zero_def, add_comm, add_left_comm, sub_eq_neg_add]
-      
 
 instance : AddGroupWithOne Cauchy :=
   { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zero,
@@ -154,7 +153,6 @@ instance : CommRing Cauchy := by
     · repeat' refine' fun a => Quotient.induction_on a fun _ => _
       simp [zero_def, one_def, mul_left_comm, mul_comm, mul_add, add_comm, add_left_comm,
         sub_eq_add_neg]
-      
 
 -- shortcut instance to ensure computability
 instance : Ring Cauchy :=
@@ -162,7 +160,7 @@ instance : Ring Cauchy :=
 
 /-- `cau_seq.completion.of_rat` as a `ring_hom`  -/
 @[simps]
-def ofRatRingHom : β →+* Cauchy where
+def ofRatRingHom : β →+* Cauchy where 
   toFun := of_rat
   map_zero' := of_rat_zero
   map_one' := of_rat_one
@@ -201,15 +199,13 @@ noncomputable instance : Inv Cauchy :=
       have := lim_zero_congr fg
       by_cases hf : lim_zero f
       · simp [hf, this.1 hf, Setoid.refl]
-        
       · have hg := mt this.2 hf
         simp [hf, hg]
         have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
         have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
         rw [mk_eq.2 fg, ← Ig] at If
         rw [mul_comm] at Ig
-        rw [← mul_one (mk (inv f hf)), ← Ig, ← mul_assoc, If, mul_assoc, Ig, mul_one]
-        ⟩
+        rw [← mul_one (mk (inv f hf)), ← Ig, ← mul_assoc, If, mul_assoc, Ig, mul_one]⟩
 
 @[simp]
 theorem inv_zero : (0 : Cauchy)⁻¹ = 0 :=
@@ -231,7 +227,7 @@ theorem zero_ne_one : (0 : Cauchy) ≠ 1 := fun h => cau_seq_zero_ne_one <| mk_e
 #align cau_seq.completion.zero_ne_one CauSeq.Completion.zero_ne_one
 
 protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
-  (Quotient.induction_on x) fun f hf => by
+  (Quotient.induction_on x) fun f hf => by 
     simp at hf; simp [hf]
     exact Quotient.sound (CauSeq.inv_mul_cancel hf)
 #align cau_seq.completion.inv_mul_cancel CauSeq.Completion.inv_mul_cancel

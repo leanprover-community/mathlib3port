@@ -49,12 +49,10 @@ theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ 
     refine' ⟨support_mk_subset, fun i hi => _⟩
     convert mem_pi.1 hf i hi
     exact mk_of_mem hi
-    
   · refine' fun h => ⟨fun i _ => f i, mem_pi.2 h.2, _⟩
     ext i
     dsimp
     exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
-    
 #align finset.mem_dfinsupp_iff Finset.mem_dfinsupp_iff
 
 /-- When `t` is supported on `s`, `f ∈ s.dfinsupp t` precisely means that `f` is pointwise in `t`.
@@ -70,13 +68,9 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
             ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi : i ∈ s
     · exact h.2 hi
-      
     · rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 (not_mem_mono ht hi)]
       exact zero_mem_zero
-      
-    
   · rwa [H, mem_zero] at h
-    
 #align finset.mem_dfinsupp_iff_of_support_subset Finset.mem_dfinsupp_iff_of_support_subset
 
 end Finset
@@ -90,7 +84,8 @@ section BundledSingleton
 variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.singleton` bundled as a `dfinsupp`. -/
-def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) where
+def singleton (f : Π₀ i, α i) :
+    Π₀ i, Finset (α i) where 
   toFun i := {f i}
   support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
 #align dfinsupp.singleton Dfinsupp.singleton
@@ -107,7 +102,8 @@ variable [∀ i, Zero (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFinite
   {f g : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
-def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) where
+def rangeIcc (f g : Π₀ i, α i) :
+    Π₀ i, Finset (α i) where 
   toFun i := icc (f i) (g i)
   support' :=
     f.support'.bind fun fs =>

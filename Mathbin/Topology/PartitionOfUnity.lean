@@ -246,7 +246,8 @@ theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
 
 /-- A `bump_covering` that consists of a single function, uniformly equal to one, defined as an
 example for `inhabited` instance. -/
-protected def single (i : ι) (s : Set X) : BumpCovering ι X s where
+protected def single (i : ι) (s : Set X) :
+    BumpCovering ι X s where 
   toFun := Pi.single i 1
   locally_finite' x := by
     refine' ⟨univ, univ_mem, (finite_singleton i).Subset _⟩
@@ -416,7 +417,7 @@ theorem sum_to_pou_fun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1
 theorem exists_finset_to_pou_fun_eventually_eq (i : ι) (x : X) :
     ∃ t : Finset ι,
       f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
-  by
+  by 
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
   filter_upwards [hU] with y hyU
@@ -443,7 +444,9 @@ words, `g i x = ∏ᶠ j < i, (1 - f j x) - ∏ᶠ j ≤ i, (1 - f j x)`, so
 of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
-def toPartitionOfUnity : PartitionOfUnity ι X s where
+def toPartitionOfUnity :
+    PartitionOfUnity ι X
+      s where 
   toFun i := ⟨f.toPouFun i, f.continuous_to_pou_fun i⟩
   locally_finite' := f.LocallyFinite.Subset f.support_to_pou_fun_subset
   nonneg' i x :=
@@ -452,10 +455,8 @@ def toPartitionOfUnity : PartitionOfUnity ι X s where
     simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_eq_self]
     apply finprod_eq_zero (fun i => 1 - f i x) (f.ind x hx)
     · simp only [f.ind_apply x hx, sub_self]
-      
     · rw [mul_support_one_sub]
       exact f.point_finite x
-      
   sum_le_one' x := by
     simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_le_self_iff]
     exact finprod_nonneg fun i => sub_nonneg.2 <| f.le_one i x

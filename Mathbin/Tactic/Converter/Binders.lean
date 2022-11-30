@@ -184,7 +184,8 @@ theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a =
     fun h => ⟨a, rfl, h⟩⟩
 #align exists_elim_eq_right exists_elim_eq_right
 
-unsafe def exists_eq_elim : binder_eq_elim where
+unsafe def exists_eq_elim :
+    binder_eq_elim where 
   match_binder e := do
     let q(@Exists $(β) $(f)) ← return e
     return (β, f)
@@ -213,7 +214,8 @@ theorem forall_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a =
     | _, rfl => h⟩
 #align forall_elim_eq_right forall_elim_eq_right
 
-unsafe def forall_eq_elim : binder_eq_elim where
+unsafe def forall_eq_elim :
+    binder_eq_elim where 
   match_binder e := do
     let expr.pi n bi d bd ← return e
     return (d, expr.lam n bi d bd)
@@ -223,7 +225,8 @@ unsafe def forall_eq_elim : binder_eq_elim where
   apply_elim_eq := apply' `` forall_elim_eq_left <|> apply' `` forall_elim_eq_right
 #align forall_eq_elim forall_eq_elim
 
-unsafe def supr_eq_elim : binder_eq_elim where
+unsafe def supr_eq_elim :
+    binder_eq_elim where 
   match_binder e := do
     let q(@supr $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
@@ -236,7 +239,8 @@ unsafe def supr_eq_elim : binder_eq_elim where
   apply_elim_eq := applyc `` supr_supr_eq_left <|> applyc `` supr_supr_eq_right
 #align supr_eq_elim supr_eq_elim
 
-unsafe def infi_eq_elim : binder_eq_elim where
+unsafe def infi_eq_elim :
+    binder_eq_elim where 
   match_binder e := do
     let q(@infi $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)

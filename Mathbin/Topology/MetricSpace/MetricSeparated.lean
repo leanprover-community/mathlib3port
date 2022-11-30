@@ -80,11 +80,8 @@ theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t)
   refine' ⟨min r r', _, fun x hx y hy => hx.elim _ _⟩
   · rw [← pos_iff_ne_zero] at r0 r0'⊢
     exact lt_min r0 r0'
-    
   · exact fun hx => (min_le_left _ _).trans (hr _ hx _ hy)
-    
   · exact fun hx => (min_le_right _ _).trans (hr' _ hx _ hy)
-    
 #align is_metric_separated.union_left IsMetricSeparated.unionLeft
 
 @[simp]

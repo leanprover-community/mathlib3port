@@ -449,7 +449,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
       return <|
         success <|
           PSum.inr
-            (by
+            (by 
               introv x h
               cases h)⟩
   | x::xs =>
@@ -460,7 +460,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
           | failure _ _ _ =>
             return <|
               add_var_to_counter_example var x
-                (by
+                (by 
                   intro h
                   apply h
                   left
@@ -470,14 +470,14 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
             let rs ← @testable.run _ (test_forall_in_list xs) cfg min
             return <|
                 convert_counter_example
-                  (by
+                  (by 
                     intro h i h'
                     apply h
                     right
                     apply h')
                   rs
                   (combine
-                    (PSum.inr <| by
+                    (PSum.inr <| by 
                       intro j h
                       simp only [ball_cons, named_binder]
                       constructor <;> assumption)
@@ -489,7 +489,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
               | failure Hce xs n =>
                 return <|
                   failure
-                    (by
+                    (by 
                       simp only [ball_cons, named_binder]
                       apply not_and_of_not_right _ Hce)
                     xs n

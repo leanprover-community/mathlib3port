@@ -44,24 +44,18 @@ theorem mem_sum_lift₂ :
     c ∈ sumLift₂ f g a b ↔
       (∃ a₁ b₁ c₁, a = inl a₁ ∧ b = inl b₁ ∧ c = inl c₁ ∧ c₁ ∈ f a₁ b₁) ∨
         ∃ a₂ b₂ c₂, a = inr a₂ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ g a₂ b₂ :=
-  by
+  by 
   constructor
   · cases a <;> cases b
     · rw [sum_lift₂, mem_map]
       rintro ⟨c, hc, rfl⟩
       exact Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩
-      
     · refine' fun h => (not_mem_empty _ h).elim
-      
     · refine' fun h => (not_mem_empty _ h).elim
-      
     · rw [sum_lift₂, mem_map]
       rintro ⟨c, hc, rfl⟩
       exact Or.inr ⟨a, b, c, rfl, rfl, rfl, hc⟩
-      
-    
   · rintro (⟨a, b, c, rfl, rfl, rfl, h⟩ | ⟨a, b, c, rfl, rfl, rfl, h⟩) <;> exact mem_map_of_mem _ h
-    
 #align finset.mem_sum_lift₂ Finset.mem_sum_lift₂
 
 theorem inl_mem_sum_lift₂ {c₁ : γ₁} :
@@ -84,22 +78,17 @@ theorem sum_lift₂_eq_empty :
     sumLift₂ f g a b = ∅ ↔
       (∀ a₁ b₁, a = inl a₁ → b = inl b₁ → f a₁ b₁ = ∅) ∧
         ∀ a₂ b₂, a = inr a₂ → b = inr b₂ → g a₂ b₂ = ∅ :=
-  by
+  by 
   refine' ⟨fun h => _, fun h => _⟩
-  · constructor <;>
+  ·
+    constructor <;>
       · rintro a b rfl rfl
         exact map_eq_empty.1 h
-        
-    
   cases a <;> cases b
   · exact map_eq_empty.2 (h.1 _ _ rfl rfl)
-    
   · rfl
-    
   · rfl
-    
   · exact map_eq_empty.2 (h.2 _ _ rfl rfl)
-    
 #align finset.sum_lift₂_eq_empty Finset.sum_lift₂_eq_empty
 
 theorem sum_lift₂_nonempty :
@@ -134,7 +123,8 @@ section Disjoint
 
 variable [Preorder α] [Preorder β] [LocallyFiniteOrder α] [LocallyFiniteOrder β]
 
-instance : LocallyFiniteOrder (Sum α β) where
+instance : LocallyFiniteOrder
+      (Sum α β) where 
   finsetIcc := sumLift₂ icc icc
   finsetIco := sumLift₂ ico ico
   finsetIoc := sumLift₂ ioc ioc

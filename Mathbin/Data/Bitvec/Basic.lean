@@ -44,7 +44,6 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
   clear xs
   induction ys generalizing n
   · simp [← h]
-    
   · simp only [← h, pow_add, flip, List.length, List.foldr, pow_one]
     rw [add_lsb_eq_twice_add_one]
     trans 2 * List.foldr (fun (x : Bool) (y : ℕ) => add_lsb y x) 0 ys_tl + 2 * 1
@@ -52,13 +51,10 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
       rw [two_mul]
       mono
       cases ys_hd <;> simp
-      
     · rw [← left_distrib]
       ac_mono
       exact ys_ih rfl
       norm_num
-      
-    
 #align bitvec.to_nat_lt Bitvec.to_nat_lt
 
 theorem add_lsb_div_two {x b} : addLsb x b / 2 = x := by
@@ -86,7 +82,6 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := b
   induction ys generalizing n
   · cases h
     simp [Bitvec.ofNat]
-    
   · simp only [← Nat.succ_eq_add_one, List.length] at h
     subst n
     simp only [Bitvec.ofNat, Vector.to_list_cons, Vector.to_list_nil, List.reverse_cons,
@@ -95,7 +90,6 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := b
     congr
     apply ys_ih
     rfl
-    
 #align bitvec.of_nat_to_nat Bitvec.of_nat_to_nat
 
 theorem to_fin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by

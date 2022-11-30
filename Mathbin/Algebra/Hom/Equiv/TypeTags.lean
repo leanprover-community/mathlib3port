@@ -15,40 +15,50 @@ variable {G H : Type _}
 
 /-- Reinterpret `G ≃+ H` as `multiplicative G ≃* multiplicative H`. -/
 def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] :
-    G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H) where
+    G ≃+ H ≃
+      (Multiplicative G ≃*
+        Multiplicative
+          H) where 
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align add_equiv.to_multiplicative AddEquiv.toMultiplicative
 
 /-- Reinterpret `G ≃* H` as `additive G ≃+ additive H`. -/
-def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] : G ≃* H ≃ (Additive G ≃+ Additive H) where
+def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] :
+    G ≃* H ≃
+      (Additive G ≃+
+        Additive
+          H) where 
   toFun f := ⟨f.toMonoidHom.toAdditive, f.symm.toMonoidHom.toAdditive, f.3, f.4, f.5⟩
   invFun f := ⟨f.toAddMonoidHom, f.symm.toAddMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align mul_equiv.to_additive MulEquiv.toAdditive
 
 /-- Reinterpret `additive G ≃+ H` as `G ≃* multiplicative H`. -/
 def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] :
-    Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
+    Additive G ≃+ H ≃
+      (G ≃*
+        Multiplicative
+          H) where 
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align add_equiv.to_multiplicative' AddEquiv.toMultiplicative'
@@ -61,14 +71,16 @@ def MulEquiv.toAdditive' [MulOneClass G] [AddZeroClass H] :
 
 /-- Reinterpret `G ≃+ additive H` as `multiplicative G ≃* H`. -/
 def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] :
-    G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
+    G ≃+ Additive H ≃
+      (Multiplicative G ≃*
+        H) where 
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align add_equiv.to_multiplicative'' AddEquiv.toMultiplicative''

@@ -43,7 +43,8 @@ from `nat` or `int` to `rat`.
 For example, `rat.coe_nat_le_coe_nat_iff : ∀ (m n : ℕ), ↑m ≤ ↑n ↔ m ≤ n` is a `qify` lemma.
 -/
 @[user_attribute]
-unsafe def qify_attr : user_attribute simp_lemmas Unit where
+unsafe def qify_attr :
+    user_attribute simp_lemmas Unit where 
   Name := `qify
   descr := "Used to tag lemmas for use in the `qify` tactic"
   cache_cfg :=

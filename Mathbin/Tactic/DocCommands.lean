@@ -77,7 +77,8 @@ unsafe def copy_doc_string_cmd (_ : parse (tk "copy_doc_string")) : parser Unit 
 /-- A user attribute `library_note` for tagging decls of type `string × string` for use in note
 output. -/
 @[user_attribute]
-unsafe def library_note_attr : user_attribute where
+unsafe def library_note_attr :
+    user_attribute where 
   Name := `library_note
   descr := "Notes about library features to be included in documentation"
   parser := failed
@@ -179,7 +180,8 @@ unsafe instance tactic_doc_entry.has_to_string : ToString (TacticDocEntry × Str
 /-- A user attribute `tactic_doc` for tagging decls of type `tactic_doc_entry`
 for use in doc output -/
 @[user_attribute]
-unsafe def tactic_doc_entry_attr : user_attribute where
+unsafe def tactic_doc_entry_attr :
+    user_attribute where 
   Name := `tactic_doc
   descr := "Information about a tactic to be included in documentation"
   parser := failed

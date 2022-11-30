@@ -78,7 +78,7 @@ variable [PartialOrder α]
 
 /-- The identity function as a closure operator. -/
 @[simps]
-def id : ClosureOperator α where
+def id : ClosureOperator α where 
   toOrderHom := OrderHom.id
   le_closure' _ := le_rfl
   idempotent' _ := rfl
@@ -89,9 +89,9 @@ instance : Inhabited (ClosureOperator α) :=
 
 variable {α} (c : ClosureOperator α)
 
-@[ext.1]
+@[ext]
 theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : α → α) → c₁ = c₂
-  | ⟨⟨c₁, _⟩, _, _⟩, ⟨⟨c₂, _⟩, _, _⟩, h => by
+  | ⟨⟨c₁, _⟩, _, _⟩, ⟨⟨c₂, _⟩, _, _⟩, h => by 
     congr
     exact h
 #align closure_operator.ext ClosureOperator.ext
@@ -99,7 +99,7 @@ theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : �
 /-- Constructor for a closure operator using the weaker idempotency axiom: `f (f x) ≤ f x`. -/
 @[simps]
 def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) :
-    ClosureOperator α where
+    ClosureOperator α where 
   toFun := f
   monotone' := hf₁
   le_closure' := hf₂
@@ -110,7 +110,7 @@ def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ :
 `x ≤ f y → f x ≤ f y`, which is sometimes easier to prove in practice. -/
 @[simps]
 def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f y → f x ≤ f y) :
-    ClosureOperator α where
+    ClosureOperator α where 
   toFun := f
   monotone' x y hxy := hmin (hxy.trans (hf y))
   le_closure' := hf
@@ -185,7 +185,7 @@ theorem closure_is_closed (x : α) : c x ∈ c.closed :=
 /-- The set of closed elements for `c` is exactly its range. -/
 theorem closed_eq_range_close : c.closed = Set.range c :=
   Set.ext fun x =>
-    ⟨fun h => ⟨x, h⟩, by
+    ⟨fun h => ⟨x, h⟩, by 
       rintro ⟨y, rfl⟩
       apply c.idempotent⟩
 #align closure_operator.closed_eq_range_close ClosureOperator.closed_eq_range_close
@@ -206,7 +206,7 @@ theorem eq_mk₃_closed (c : ClosureOperator α) :
     c =
       mk₃ c c.closed c.le_closure c.closure_is_closed fun x y hxy hy =>
         (c.closure_le_closed_iff_le x hy).2 hxy :=
-  by
+  by 
   ext
   rfl
 #align closure_operator.eq_mk₃_closed ClosureOperator.eq_mk₃_closed
@@ -307,7 +307,8 @@ variable (α)
 
 /-- The identity function as a lower adjoint to itself. -/
 @[simps]
-protected def id [Preorder α] : LowerAdjoint (id : α → α) where
+protected def id [Preorder α] :
+    LowerAdjoint (id : α → α) where 
   toFun x := x
   gc' := GaloisConnection.id
 #align lower_adjoint.id LowerAdjoint.id
@@ -332,9 +333,9 @@ theorem gc : GaloisConnection l u :=
   l.gc'
 #align lower_adjoint.gc LowerAdjoint.gc
 
-@[ext.1]
+@[ext]
 theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α → β) → l₁ = l₂
-  | ⟨l₁, _⟩, ⟨l₂, _⟩, h => by
+  | ⟨l₁, _⟩, ⟨l₂, _⟩, h => by 
     congr
     exact h
 #align lower_adjoint.ext LowerAdjoint.ext
@@ -359,7 +360,8 @@ variable [PartialOrder α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 /-- Every lower adjoint induces a closure operator given by the composition. This is the partial
 order version of the statement that every adjunction induces a monad. -/
 @[simps]
-def closureOperator : ClosureOperator α where
+def closureOperator : ClosureOperator
+      α where 
   toFun x := u (l x)
   monotone' := l.Monotone
   le_closure' := l.le_closure
@@ -543,7 +545,8 @@ variable {α}
 /-- Every Galois connection induces a lower adjoint. -/
 @[simps]
 def GaloisConnection.lowerAdjoint [Preorder α] [Preorder β] {l : α → β} {u : β → α}
-    (gc : GaloisConnection l u) : LowerAdjoint u where
+    (gc : GaloisConnection l u) :
+    LowerAdjoint u where 
   toFun := l
   gc' := gc
 #align galois_connection.lower_adjoint GaloisConnection.lowerAdjoint
@@ -558,7 +561,8 @@ def GaloisConnection.closureOperator [PartialOrder α] [Preorder β] {l : α →
 
 /-- The set of closed elements has a Galois insertion to the underlying type. -/
 def ClosureOperator.gi [PartialOrder α] (c : ClosureOperator α) :
-    GaloisInsertion c.toClosed coe where
+    GaloisInsertion c.toClosed
+      coe where 
   choice x hx := ⟨x, hx.antisymm (c.le_closure x)⟩
   gc x y := c.closure_le_closed_iff_le _ y.2
   le_l_u x := c.le_closure _
@@ -570,7 +574,7 @@ operator.
 Note that the inverse in the opposite direction does not hold in general. -/
 @[simp]
 theorem closure_operator_gi_self [PartialOrder α] (c : ClosureOperator α) :
-    c.gi.gc.ClosureOperator = c := by
+    c.gi.gc.ClosureOperator = c := by 
   ext x
   rfl
 #align closure_operator_gi_self closure_operator_gi_self

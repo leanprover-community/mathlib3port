@@ -25,7 +25,10 @@ variable [Monoid R] [Monoid S] [AddMonoid A] [AddCommMonoid B]
 
 variable [DistribMulAction R B] [DistribMulAction S B]
 
-instance : DistribMulAction R (A →+ B) where
+instance :
+    DistribMulAction R
+      (A →+
+        B) where 
   smul r f := { toFun := r • f, map_zero' := by simp, map_add' := fun x y => by simp [smul_add] }
   one_smul f := by simp
   mul_smul r s f := by simp [mul_smul]

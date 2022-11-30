@@ -105,7 +105,9 @@ from `clifford_algebra Q` to `A`.
 -/
 @[simps symmApply]
 def lift :
-    { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A) where
+    { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃
+      (CliffordAlgebra Q →ₐ[R]
+        A) where 
   toFun f :=
     RingQuot.liftAlgHom R
       ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y (h : Rel Q x y) => by
@@ -114,11 +116,11 @@ def lift :
   invFun F :=
     ⟨F.toLinearMap.comp (ι Q), fun m => by
       rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_scalar]⟩
-  left_inv f := by
+  left_inv f := by 
     ext
     simp only [ι, AlgHom.to_linear_map_apply, Function.comp_apply, LinearMap.coe_comp,
       Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
-  right_inv F := by
+  right_inv F := by 
     ext
     simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_apply,
       LinearMap.coe_comp, Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply,
@@ -156,7 +158,7 @@ theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) :
 #align clifford_algebra.lift_comp_ι CliffordAlgebra.lift_comp_ι
 
 /-- See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : CliffordAlgebra Q →ₐ[R] A} :
     f.toLinearMap.comp (ι Q) = g.toLinearMap.comp (ι Q) → f = g := by
   intro h
@@ -175,7 +177,8 @@ See also the stronger `clifford_algebra.left_induction` and `clifford_algebra.ri
 theorem induction {C : CliffordAlgebra Q → Prop}
     (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r)) (h_grade1 : ∀ x, C (ι Q x))
     (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
-    (a : CliffordAlgebra Q) : C a := by
+    (a : CliffordAlgebra Q) : C a :=
+  by
   -- the arguments are enough to construct a subalgebra, and a mapping into it from M
   let s : Subalgebra R (CliffordAlgebra Q) :=
     { carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
@@ -262,7 +265,7 @@ theorem map_id :
 @[simp]
 theorem map_comp_map (f : M₂ →ₗ[R] M₃) (hf) (g : M₁ →ₗ[R] M₂) (hg) :
     (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans <| hg m :=
-  by
+  by 
   ext m
   dsimp only [LinearMap.comp_apply, AlgHom.comp_apply, AlgHom.to_linear_map_apply, AlgHom.id_apply]
   rw [map_apply_ι, map_apply_ι, map_apply_ι, LinearMap.comp_apply]
@@ -316,7 +319,8 @@ end Map
 variable (Q)
 
 /-- If the quadratic form of a vector is invertible, then so is that vector. -/
-def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m) where
+def invertibleιOfInvertible (m : M) [Invertible (Q m)] :
+    Invertible (ι Q m) where 
   invOf := ι Q (⅟ (Q m) • m)
   inv_of_mul_self := by
     rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self,
@@ -327,7 +331,7 @@ def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m) wh
 
 /-- For a vector with invertible quadratic form, $v^{-1} = \frac{v}{Q(v)}$ -/
 theorem inv_of_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m) = ι Q (⅟ (Q m) • m) :=
-  by
+  by 
   letI := invertible_ι_of_invertible Q m
   convert (rfl : ⅟ (ι Q m) = _)
 #align clifford_algebra.inv_of_ι CliffordAlgebra.inv_of_ι

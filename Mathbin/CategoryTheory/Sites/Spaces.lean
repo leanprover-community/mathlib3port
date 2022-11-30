@@ -41,7 +41,9 @@ variable (T : Type u) [TopologicalSpace T]
 open CategoryTheory TopologicalSpace CategoryTheory.Limits
 
 /-- The Grothendieck topology associated to a topological space. -/
-def grothendieckTopology : GrothendieckTopology (Opens T) where
+def grothendieckTopology :
+    GrothendieckTopology
+      (Opens T) where 
   sieves X S := ∀ x ∈ X, ∃ (U : _)(f : U ⟶ X), S f ∧ x ∈ U
   top_mem' X x hx := ⟨_, 𝟙 _, trivial, hx⟩
   pullback_stable' X Y S f hf y hy := by
@@ -55,7 +57,9 @@ def grothendieckTopology : GrothendieckTopology (Opens T) where
 #align opens.grothendieck_topology Opens.grothendieckTopology
 
 /-- The Grothendieck pretopology associated to a topological space. -/
-def pretopology : Pretopology (Opens T) where
+def pretopology :
+    Pretopology
+      (Opens T) where 
   coverings X R := ∀ x ∈ X, ∃ (U : _)(f : U ⟶ X), R f ∧ x ∈ U
   has_isos X Y f i x hx := ⟨_, _, presieve.singleton_self _, (inv f).le hx⟩
   pullbacks X Y f S hS x hx := by
@@ -79,11 +83,9 @@ theorem pretopology_of_grothendieck :
   · intro X R hR x hx
     rcases hR x hx with ⟨U, f, ⟨V, g₁, g₂, hg₂, _⟩, hU⟩
     exact ⟨V, g₂, hg₂, g₁.le hU⟩
-    
   · intro X R hR x hx
     rcases hR x hx with ⟨U, f, hf, hU⟩
     exact ⟨U, f, sieve.le_generate R U hf, hU⟩
-    
 #align opens.pretopology_of_grothendieck Opens.pretopology_of_grothendieck
 
 /-- The pretopology associated to a space induces the Grothendieck topology associated to the space.

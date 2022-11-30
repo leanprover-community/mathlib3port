@@ -68,10 +68,11 @@ theorem is_unit_res_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x
 
 /-- If a section `f` is a unit in each stalk, `f` must be a unit. -/
 theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
-    (h : ∀ x : U, IsUnit (X.Presheaf.germ x f)) : IsUnit f := by
+    (h : ∀ x : U, IsUnit (X.Presheaf.germ x f)) : IsUnit f :=
+  by
   -- We pick a cover of `U` by open sets `V x`, such that `f` is a unit on each `V x`.
   choose V iVU m h_unit using fun x : U => X.is_unit_res_of_is_unit_germ U f x (h x)
-  have hcover : U ≤ supr V := by
+  have hcover : U ≤ supr V := by 
     intro x hxU
     rw [opens.mem_coe, opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
@@ -89,7 +90,6 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
       congr_arg (X.presheaf.germ (⟨z, hzVx⟩ : V x)) (hg x), germ_res_apply, ←
       X.presheaf.germ_res_apply (iVU y) ⟨z, hzVy⟩ f, ← RingHom.map_mul,
       congr_arg (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
-    
   apply isUnit_of_mul_eq_one f gl
   apply X.sheaf.eq_of_locally_eq' V U iVU hcover
   intro i
@@ -101,9 +101,10 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
 /-- The basic open of a section `f` is the set of all points `x`, such that the germ of `f` at
 `x` is a unit.
 -/
-def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X where
+def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
+    Opens X where 
   val := coe '' { x : U | IsUnit (X.Presheaf.germ x f) }
-  property := by
+  property := by 
     rw [is_open_iff_forall_mem_open]
     rintro _ ⟨x, hx, rfl⟩
     obtain ⟨V, i, hxV, hf⟩ := X.is_unit_res_of_is_unit_germ U f x hx
@@ -115,9 +116,7 @@ def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X where
     constructor
     · convert RingHom.is_unit_map (X.presheaf.germ ⟨y, hy⟩) hf
       exact (X.presheaf.germ_res_apply i ⟨y, hy⟩ f).symm
-      
     · rfl
-      
 #align algebraic_geometry.RingedSpace.basic_open AlgebraicGeometry.RingedSpaceCat.basicOpen
 
 @[simp]
@@ -127,10 +126,8 @@ theorem mem_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) (x : U) :
   · rintro ⟨x, hx, a⟩
     cases Subtype.eq a
     exact hx
-    
   · intro h
     exact ⟨x, h, rfl⟩
-    
 #align algebraic_geometry.RingedSpace.mem_basic_open AlgebraicGeometry.RingedSpaceCat.mem_basic_open
 
 @[simp]
@@ -166,11 +163,9 @@ theorem basic_open_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj
   · rintro ⟨x, hx : IsUnit _, rfl⟩
     rw [germ_res_apply] at hx
     exact ⟨x.2, g x, hx, rfl⟩
-    
   · rintro ⟨hxV, x, hx, rfl⟩
     refine' ⟨⟨x, hxV⟩, (_ : IsUnit _), rfl⟩
     rwa [germ_res_apply]
-    
 #align algebraic_geometry.RingedSpace.basic_open_res AlgebraicGeometry.RingedSpaceCat.basic_open_res
 
 -- This should fire before `basic_open_res`.
@@ -180,12 +175,10 @@ theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X
   apply le_antisymm
   · rw [X.basic_open_res i f]
     exact inf_le_right
-    
   · have := X.basic_open_res (inv i) (X.presheaf.map i f)
     rw [← comp_apply, ← X.presheaf.map_comp, is_iso.hom_inv_id, X.presheaf.map_id] at this
     erw [this]
     exact inf_le_right
-    
 #align
   algebraic_geometry.RingedSpace.basic_open_res_eq AlgebraicGeometry.RingedSpaceCat.basic_open_res_eq
 
@@ -202,10 +195,9 @@ theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
 #align algebraic_geometry.RingedSpace.basic_open_mul AlgebraicGeometry.RingedSpaceCat.basic_open_mul
 
 theorem basic_open_of_is_unit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : IsUnit f) :
-    X.basicOpen f = U := by
+    X.basicOpen f = U := by 
   apply le_antisymm
   · exact X.basic_open_le f
-    
   intro x hx
   erw [X.mem_basic_open f (⟨x, hx⟩ : U)]
   exact RingHom.is_unit_map _ hf

@@ -32,14 +32,13 @@ theorem ord_connected_component_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a 
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a := by
-  have hmem : tᶜ ∈ 𝓝[≥] a := by
+  have hmem : tᶜ ∈ 𝓝[≥] a := by 
     refine' mem_nhds_within_of_mem_nhds _
     rw [← mem_interior_iff_mem_nhds, interior_compl]
     exact disjoint_left.1 hd ha
   rcases exists_Icc_mem_subset_of_mem_nhds_within_Ici hmem with ⟨b, hab, hmem', hsub⟩
   by_cases H : Disjoint (Icc a b) (ord_connected_section <| ord_separating_set s t)
   · exact mem_of_superset hmem' (disjoint_left.1 H)
-    
   · simp only [Set.disjoint_left, not_forall, not_not] at H
     rcases H with ⟨c, ⟨hac, hcb⟩, hc⟩
     have hsub' : Icc a b ⊆ ord_connected_component (tᶜ) a :=
@@ -53,21 +52,19 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (c
     refine' mem_of_superset (Ico_mem_nhds_within_Ici (left_mem_Ico.2 hac)) fun x hx hx' => _
     refine' hx.2.Ne (eq_of_mem_ord_connected_section_of_interval_subset hx' hc _)
     refine' subset_inter (subset_Union₂_of_subset a ha _) _
-    · exact
+    ·
+      exact
         ord_connected.interval_subset inferInstance (hsub' ⟨hx.1, hx.2.le.trans hcb⟩)
           (hsub' ⟨hac.le, hcb⟩)
-      
     · rcases mem_Union₂.1 (ord_connected_section_subset hx').2 with ⟨y, hyt, hxy⟩
       refine' subset_Union₂_of_subset y hyt (ord_connected.interval_subset inferInstance hxy _)
       refine' subset_ord_connected_component left_mem_interval hxy _
-      suffices c < y by
+      suffices c < y by 
         rw [interval_of_ge (hx.2.trans this).le]
         exact ⟨hx.2.le, this.le⟩
       refine' lt_of_not_le fun hyc => _
       have hya : y < a := not_le.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
       exact hxy (Icc_subset_interval ⟨hya.le, hx.1⟩) ha
-      
-    
 #align
   set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ord_separating_set_mem_nhds_within_Ici
 
@@ -92,7 +89,7 @@ theorem ord_t5_nhd_mem_nhds_set (hd : Disjoint s (closure t)) : ordT5Nhd s t ∈
   bUnion_mem_nhds_set fun x hx =>
     ord_connected_component_mem_nhds.2 <|
       inter_mem
-        (by
+        (by 
           rw [← mem_interior_iff_mem_nhds, interior_compl]
           exact disjoint_left.1 hd hx)
         (compl_section_ord_separating_set_mem_nhds hd hx)

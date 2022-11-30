@@ -57,7 +57,6 @@ theorem rayleigh_smul (x : E) {c : 𝕜} (hc : c ≠ 0) :
     rayleigh_quotient (c • x) = rayleigh_quotient x := by
   by_cases hx : x = 0
   · simp [hx]
-    
   have : ‖c‖ ≠ 0 := by simp [hc]
   have : ‖x‖ ≠ 0 := by simp [hx]
   field_simp [norm_smul, T.re_apply_inner_self_smul]
@@ -74,14 +73,10 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     have : c ≠ 0 := by simp [c, hx, hr.ne']
     refine' ⟨c • x, _, _⟩
     · field_simp [norm_smul, IsROrC.norm_eq_abs, abs_of_nonneg hr.le]
-      
     · rw [T.rayleigh_smul x this]
       exact hxT
-      
-    
   · rintro ⟨x, hx, hxT⟩
     exact ⟨x, ne_zero_of_mem_sphere hr.ne' ⟨x, hx⟩, hxT⟩
-    
 #align
   continuous_linear_map.image_rayleigh_eq_image_rayleigh_sphere ContinuousLinearMap.image_rayleigh_eq_image_rayleigh_sphere
 
@@ -150,13 +145,11 @@ theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint T) {x₀ : F}
   obtain ⟨a, b, h₁, h₂⟩ := hT.linearly_dependent_of_is_local_extr_on hextr
   by_cases hx₀ : x₀ = 0
   · simp [hx₀]
-    
   by_cases hb : b = 0
   · have : a ≠ 0 := by simpa [hb] using h₁
     refine' absurd _ hx₀
     apply smul_right_injective F this
     simpa [hb] using h₂
-    
   let c : ℝ := -b⁻¹ * a
   have hc : T x₀ = c • x₀ := by
     have : b * (b⁻¹ * a) = a := by field_simp [mul_comm]

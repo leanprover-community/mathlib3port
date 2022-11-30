@@ -27,7 +27,8 @@ variable [IsDomain R] [IsPrincipalIdealRing R] [IsDomain S] [Fintype ι]
 /-- We can write the quotient of an ideal over a PID as a product of quotients by principal ideals.
 -/
 noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI : I ≠ ⊥) :
-    (S ⧸ I) ≃ₗ[R] ∀ i, R ⧸ Ideal.span ({I.smithCoeffs b hI i} : Set R) := by
+    (S ⧸ I) ≃ₗ[R] ∀ i, R ⧸ Ideal.span ({I.smithCoeffs b hI i} : Set R) :=
+  by
   -- Choose `e : S ≃ₗ I` and a basis `b'` for `S` that turns the map
   -- `f := ((submodule.subtype I).restrict_scalars R).comp e` into a diagonal matrix:
   -- there is an `a : ι → ℤ` such that `f (b' i) = a i • b' i`.
@@ -38,7 +39,7 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
   let e : S ≃ₗ[R] I := b'.equiv ab (Equiv.refl _)
   let f : S →ₗ[R] S := (I.subtype.restrict_scalars R).comp (e : S →ₗ[R] I)
   let f_apply : ∀ x, f x = b'.equiv ab (Equiv.refl _) x := fun x => rfl
-  have ha : ∀ i, f (b' i) = a i • b' i := by
+  have ha : ∀ i, f (b' i) = a i • b' i := by 
     intro i
     rw [f_apply, b'.equiv_apply, Equiv.refl_apply, ab_eq]
   have mem_I_iff : ∀ x, x ∈ I ↔ ∀ i, a i ∣ b'.repr x i := by
@@ -50,11 +51,9 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
     constructor
     · rintro ⟨c, rfl⟩ i
       exact ⟨c i, this c i⟩
-      
     · rintro ha
       choose c hc using ha
       exact ⟨c, b'.ext_elem fun i => trans (hc i) (this c i).symm⟩
-      
   -- Now we map everything through the linear equiv `S ≃ₗ (ι → R)`,
   -- which maps `I` to `I' := Π i, a i ℤ`.
   let I' : Submodule R (ι → R) := Submodule.pi Set.univ fun i => Ideal.span ({a i} : Set R)
@@ -66,22 +65,19 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
     constructor
     · rintro ⟨y, hy, rfl⟩ i
       exact hy i
-      
     · rintro hdvd
       refine' ⟨∑ i, x i • b' i, fun i => _, _⟩ <;> rwa [b'.repr_sum_self]
       · exact hdvd i
-        
-      
   refine' ((Submodule.Quotient.restrictScalarsEquiv R I).restrictScalars R).symm.trans _
   any_goals apply RingHom.id
   any_goals infer_instance
   refine' (Submodule.Quotient.equiv (I.restrict_scalars R) I' b'.equiv_fun this).trans _
   any_goals apply RingHom.id
   any_goals infer_instance
-  classical
-  let this :=
-    Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
-  exact this
+  classical 
+    let this :=
+      Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
+    exact this
 #align ideal.quotient_equiv_pi_span Ideal.quotientEquivPiSpan
 
 /-- Ideal quotients over a free finite extension of `ℤ` are isomorphic to a direct product of

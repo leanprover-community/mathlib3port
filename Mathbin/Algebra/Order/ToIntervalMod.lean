@@ -6,6 +6,7 @@ Authors: Joseph Myers
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Periodic
+import Mathbin.GroupTheory.QuotientGroup
 
 /-!
 # Reducing to an interval modulo its length
@@ -398,11 +399,9 @@ theorem to_Ico_mod_eq_to_Ico_mod (a : α) {b x y : α} (hb : 0 < b) :
       rw [← to_Ico_mod_sub_to_Ico_div_zsmul a hb x, ← to_Ico_mod_sub_to_Ico_div_zsmul a hb y]
     rw [h, sub_smul]
     abel
-    
   · rcases h with ⟨z, hz⟩
     rw [sub_eq_iff_eq_add] at hz
     rw [hz, to_Ico_mod_zsmul_add]
-    
 #align to_Ico_mod_eq_to_Ico_mod to_Ico_mod_eq_to_Ico_mod
 
 theorem to_Ioc_mod_eq_to_Ioc_mod (a : α) {b x y : α} (hb : 0 < b) :
@@ -412,11 +411,9 @@ theorem to_Ioc_mod_eq_to_Ioc_mod (a : α) {b x y : α} (hb : 0 < b) :
       rw [← to_Ioc_mod_sub_to_Ioc_div_zsmul a hb x, ← to_Ioc_mod_sub_to_Ioc_div_zsmul a hb y]
     rw [h, sub_smul]
     abel
-    
   · rcases h with ⟨z, hz⟩
     rw [sub_eq_iff_eq_add] at hz
     rw [hz, to_Ioc_mod_zsmul_add]
-    
 #align to_Ioc_mod_eq_to_Ioc_mod to_Ioc_mod_eq_to_Ioc_mod
 
 theorem to_Ico_mod_eq_self {a b x : α} (hb : 0 < b) : toIcoMod a hb x = x ↔ a ≤ x ∧ x < a + b := by
@@ -466,6 +463,54 @@ theorem to_Ico_mod_periodic (a : α) {b : α} (hb : 0 < b) : Function.Periodic (
 theorem to_Ioc_mod_periodic (a : α) {b : α} (hb : 0 < b) : Function.Periodic (toIocMod a hb) b :=
   to_Ioc_mod_add_right a hb
 #align to_Ioc_mod_periodic to_Ioc_mod_periodic
+
+/-- `to_Ico_mod` as an equiv from the quotient. -/
+@[simps symmApply]
+def QuotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
+    α ⧸ AddSubgroup.zmultiples b ≃
+      Set.ico a
+        (a +
+          b) where 
+  toFun x :=
+    ⟨(to_Ico_mod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| to_Ico_mod_mem_Ico a hb⟩
+  invFun := coe
+  right_inv x := Subtype.ext <| (to_Ico_mod_eq_self hb).mpr x.Prop
+  left_inv x := by 
+    induction x using QuotientAddGroup.induction_on'
+    dsimp
+    rw [QuotientAddGroup.eq_iff_sub_mem, to_Ico_mod_sub_self]
+    apply AddSubgroup.zsmul_mem_zmultiples
+#align quotient_add_group.equiv_Ico_mod QuotientAddGroup.equivIcoMod
+
+@[simp]
+theorem QuotientAddGroup.equiv_Ico_mod_coe (a : α) {b : α} (hb : 0 < b) (x : α) :
+    QuotientAddGroup.equivIcoMod a hb ↑x = ⟨toIcoMod a hb x, to_Ico_mod_mem_Ico a hb _⟩ :=
+  rfl
+#align quotient_add_group.equiv_Ico_mod_coe QuotientAddGroup.equiv_Ico_mod_coe
+
+/-- `to_Ioc_mod` as an equiv  from the quotient. -/
+@[simps symmApply]
+def QuotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
+    α ⧸ AddSubgroup.zmultiples b ≃
+      Set.ioc a
+        (a +
+          b) where 
+  toFun x :=
+    ⟨(to_Ioc_mod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| to_Ioc_mod_mem_Ioc a hb⟩
+  invFun := coe
+  right_inv x := Subtype.ext <| (to_Ioc_mod_eq_self hb).mpr x.Prop
+  left_inv x := by 
+    induction x using QuotientAddGroup.induction_on'
+    dsimp
+    rw [QuotientAddGroup.eq_iff_sub_mem, to_Ioc_mod_sub_self]
+    apply AddSubgroup.zsmul_mem_zmultiples
+#align quotient_add_group.equiv_Ioc_mod QuotientAddGroup.equivIocMod
+
+@[simp]
+theorem QuotientAddGroup.equiv_Ioc_mod_coe (a : α) {b : α} (hb : 0 < b) (x : α) :
+    QuotientAddGroup.equivIocMod a hb ↑x = ⟨toIocMod a hb x, to_Ioc_mod_mem_Ioc a hb _⟩ :=
+  rfl
+#align quotient_add_group.equiv_Ioc_mod_coe QuotientAddGroup.equiv_Ioc_mod_coe
 
 end LinearOrderedAddCommGroup
 

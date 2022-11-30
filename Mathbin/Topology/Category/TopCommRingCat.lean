@@ -37,18 +37,22 @@ instance : CoeSort TopCommRingCat (Type u) :=
 
 attribute [instance] is_comm_ring is_topological_space is_topological_ring
 
-instance : Category TopCommRingCat.{u} where
+instance :
+    Category TopCommRingCat.{u} where 
   Hom R S := { f : R →+* S // Continuous f }
   id R := ⟨RingHom.id R, by obviously⟩
   -- TODO remove obviously?
   comp R S T f g :=
-    ⟨g.val.comp f.val, by
+    ⟨g.val.comp f.val,
+      by
       -- TODO automate
       cases f;
       cases g
       dsimp; apply Continuous.comp <;> assumption⟩
 
-instance : ConcreteCategory TopCommRingCat.{u} where
+instance :
+    ConcreteCategory
+      TopCommRingCat.{u} where 
   forget := { obj := fun R => R, map := fun R S f => f.val }
   forget_faithful := {  }
 
@@ -108,7 +112,9 @@ instance forget_to_Top_topological_ring (R : TopCommRingCat) :
 but the forgetful functor from `TopCommRing` to `Top` does.
 -/
 instance :
-    ReflectsIsomorphisms (forget₂ TopCommRingCat.{u} TopCat.{u}) where reflects X Y f _ := by
+    ReflectsIsomorphisms
+      (forget₂ TopCommRingCat.{u}
+        TopCat.{u}) where reflects X Y f _ := by 
     skip
     -- We have an isomorphism in `Top`,
     let i_Top := as_iso ((forget₂ TopCommRingCat TopCat).map f)
@@ -117,9 +123,9 @@ instance :
     -- Putting these together we obtain the isomorphism we're after:
     exact
       ⟨⟨⟨e_Ring.symm, i_Top.inv.2⟩,
-          ⟨by
+          ⟨by 
             ext x
-            exact e_Ring.left_inv x, by
+            exact e_Ring.left_inv x, by 
             ext x
             exact e_Ring.right_inv x⟩⟩⟩
 

@@ -52,9 +52,9 @@ variable {R}
 theorem Module.Finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M]
     [Finite ι] (b : Basis ι R M) : Module.Finite R M := by
   cases nonempty_fintype ι
-  classical
-  refine' ⟨⟨finset.univ.image b, _⟩⟩
-  simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
+  classical 
+    refine' ⟨⟨finset.univ.image b, _⟩⟩
+    simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
 #align module.finite.of_basis Module.Finite.of_basis
 
 instance Module.Finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] :

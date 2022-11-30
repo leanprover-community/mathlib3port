@@ -241,7 +241,7 @@ theorem image_inv : Inv.inv '' s = s⁻¹ :=
 #align set.image_inv Set.image_inv
 
 @[simp, to_additive]
-instance : HasInvolutiveInv (Set α) where
+instance : HasInvolutiveInv (Set α) where 
   inv := Inv.inv
   inv_inv s := by simp only [← inv_preimage, preimage_preimage, inv_inv, preimage_id']
 
@@ -809,33 +809,31 @@ instance decidableMemMul [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)
 
 @[to_additive]
 instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
-    DecidablePred (· ∈ s ^ n) := by
+    DecidablePred (· ∈ s ^ n) := by 
   induction' n with n ih
   · simp_rw [pow_zero, mem_one]
     infer_instance
-    
   · letI := ih
     rw [pow_succ]
     infer_instance
-    
 #align set.decidable_mem_pow Set.decidableMemPow
 
 @[to_additive]
 theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
-  | 0 => by
+  | 0 => by 
     rw [pow_zero]
     exact one_mem_one
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ]
     exact mul_mem_mul ha (pow_mem_pow _)
 #align set.pow_mem_pow Set.pow_mem_pow
 
 @[to_additive]
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
-  | 0 => by
+  | 0 => by 
     rw [pow_zero]
     exact subset.rfl
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ]
     exact mul_subset_mul hst (pow_subset_pow _)
 #align set.pow_subset_pow Set.pow_subset_pow
@@ -844,10 +842,8 @@ theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
 theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ s ^ n := by
   refine' Nat.le_induction _ (fun n h ih => _) _
   · exact subset.rfl
-    
   · rw [pow_succ]
     exact ih.trans (subset_mul_right _ hs)
-    
 #align set.pow_subset_pow_of_one_mem Set.pow_subset_pow_of_one_mem
 
 @[to_additive]
@@ -855,11 +851,10 @@ theorem mem_prod_list_of_fn {a : α} {s : Fin n → Set α} :
     a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a := by
   induction' n with n ih generalizing a
   · simp_rw [List.of_fn_zero, List.prod_nil, Fin.exists_fin_zero_pi, eq_comm, Set.mem_one]
-    
-  · simp_rw [List.of_fn_succ, List.prod_cons, Fin.exists_fin_succ_pi, Fin.cons_zero, Fin.cons_succ,
+  ·
+    simp_rw [List.of_fn_succ, List.prod_cons, Fin.exists_fin_succ_pi, Fin.cons_zero, Fin.cons_succ,
       mem_mul, @ih, exists_and_left, exists_exists_eq_and, SetCoe.exists, Subtype.coe_mk,
       exists_prop]
-    
 #align set.mem_prod_list_of_fn Set.mem_prod_list_of_fn
 
 @[to_additive]
@@ -867,17 +862,15 @@ theorem mem_list_prod {l : List (Set α)} {a : α} :
     a ∈ l.Prod ↔
       ∃ l' : List (Σs : Set α, ↥s),
         List.prod (l'.map fun x => (Sigma.snd x : α)) = a ∧ l'.map Sigma.fst = l :=
-  by
+  by 
   induction' l using List.ofFnRec with n f
   simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', and_left_comm,
     exists_and_left, exists_eq_left, heq_iff_eq, Function.comp, mem_prod_list_of_fn]
   constructor
   · rintro ⟨fi, rfl⟩
     exact ⟨fun i => ⟨_, fi i⟩, rfl, rfl⟩
-    
   · rintro ⟨fi, rfl, rfl⟩
     exact ⟨fun i => _, rfl⟩
-    
 #align set.mem_list_prod Set.mem_list_prod
 
 @[to_additive]
@@ -952,20 +945,16 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} �
       h.subset <| mem_image2_of_mem ha hb
     refine' ⟨a, b, _, _, H ha hb⟩ <;> refine' eq_singleton_iff_unique_mem.2 ⟨‹_›, fun x hx => _⟩
     · exact (eq_inv_of_mul_eq_one_left <| H hx hb).trans (inv_eq_of_mul_eq_one_left <| H ha hb)
-      
     · exact (eq_inv_of_mul_eq_one_right <| H ha hx).trans (inv_eq_of_mul_eq_one_right <| H ha hb)
-      
-    
   · rintro ⟨b, c, rfl, rfl, h⟩
     rw [singleton_mul_singleton, h, singleton_one]
-    
 #align set.mul_eq_one_iff Set.mul_eq_one_iff
 
 /-- `set α` is a division monoid under pointwise operations if `α` is. -/
 @[to_additive "`set α` is a subtraction monoid under pointwise operations if `α` is."]
 protected def divisionMonoid : DivisionMonoid (Set α) :=
   { Set.monoid, Set.hasInvolutiveInv, Set.hasDiv, Set.hasZpow with
-    mul_inv_rev := fun s t => by
+    mul_inv_rev := fun s t => by 
       simp_rw [← image_inv]
       exact image_image2_antidistrib mul_inv_rev,
     inv_eq_of_mul := fun s t h => by
@@ -984,10 +973,8 @@ theorem is_unit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a := by
     refine' ⟨a, ha, ⟨a, b, h, singleton_injective _⟩, rfl⟩
     rw [← singleton_mul_singleton, ← ha, ← hb]
     exact u.inv_mul
-    
   · rintro ⟨a, rfl, ha⟩
     exact ha.set
-    
 #align set.is_unit_iff Set.is_unit_iff
 
 end DivisionMonoid
@@ -1002,10 +989,10 @@ protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (S
 /-- `set α` has distributive negation if `α` has. -/
 protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Set α) :=
   { Set.hasInvolutiveNeg with
-    neg_mul := fun _ _ => by
+    neg_mul := fun _ _ => by 
       simp_rw [← image_neg]
       exact image2_image_left_comm neg_mul,
-    mul_neg := fun _ _ => by
+    mul_neg := fun _ _ => by 
       simp_rw [← image_neg]
       exact image_image2_right_comm mul_neg }
 #align set.has_distrib_neg Set.hasDistribNeg
@@ -1632,7 +1619,9 @@ instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralSc
 on `set β`. -/
 @[to_additive
       "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `set α` on `set β`"]
-protected def mulAction [Monoid α] [MulAction α β] : MulAction (Set α) (Set β) where
+protected def mulAction [Monoid α] [MulAction α β] :
+    MulAction (Set α)
+      (Set β) where 
   mul_smul _ _ _ := image2_assoc mul_smul
   one_smul s := image2_singleton_left.trans <| by simp_rw [one_smul, image_id']
 #align set.mul_action Set.mulAction
@@ -1640,11 +1629,13 @@ protected def mulAction [Monoid α] [MulAction α β] : MulAction (Set α) (Set 
 /-- A multiplicative action of a monoid on a type `β` gives a multiplicative action on `set β`. -/
 @[to_additive
       "An additive action of an additive monoid on a type `β` gives an additive action\non `set β`."]
-protected def mulActionSet [Monoid α] [MulAction α β] : MulAction α (Set β) where
-  mul_smul := by
+protected def mulActionSet [Monoid α] [MulAction α β] :
+    MulAction α
+      (Set β) where 
+  mul_smul := by 
     intros
     simp only [← image_smul, image_image, ← mul_smul]
-  one_smul := by
+  one_smul := by 
     intros
     simp only [← image_smul, one_smul, image_id']
 #align set.mul_action_set Set.mulActionSet
@@ -1654,14 +1645,16 @@ scoped[Pointwise] attribute [instance] Set.mulActionSet Set.addActionSet Set.mul
 /-- A distributive multiplicative action of a monoid on an additive monoid `β` gives a distributive
 multiplicative action on `set β`. -/
 protected def distribMulActionSet [Monoid α] [AddMonoid β] [DistribMulAction α β] :
-    DistribMulAction α (Set β) where
+    DistribMulAction α
+      (Set β) where 
   smul_add _ _ _ := image_image2_distrib <| smul_add _
   smul_zero _ := image_singleton.trans <| by rw [smul_zero, singleton_zero]
 #align set.distrib_mul_action_set Set.distribMulActionSet
 
 /-- A multiplicative action of a monoid on a monoid `β` gives a multiplicative action on `set β`. -/
 protected def mulDistribMulActionSet [Monoid α] [Monoid β] [MulDistribMulAction α β] :
-    MulDistribMulAction α (Set β) where
+    MulDistribMulAction α
+      (Set β) where 
   smul_mul _ _ _ := image_image2_distrib <| smul_mul' _
   smul_one _ := image_singleton.trans <| by rw [smul_one, singleton_one]
 #align set.mul_distrib_mul_action_set Set.mulDistribMulActionSet
@@ -1670,7 +1663,7 @@ scoped[Pointwise] attribute [instance] Set.distribMulActionSet Set.mulDistribMul
 
 instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
     NoZeroSmulDivisors (Set α) (Set β) :=
-  ⟨fun s t h => by
+  ⟨fun s t h => by 
     by_contra' H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_smul_left.subset_zero_iff, ← hst.of_smul_right.subset_zero_iff, not_subset,
@@ -1680,7 +1673,7 @@ instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
 
 instance no_zero_smul_divisors_set [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
     NoZeroSmulDivisors α (Set β) :=
-  ⟨fun a s h => by
+  ⟨fun a s h => by 
     by_contra' H
     have hst : (a • s).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_image.subset_zero_iff, not_subset, mem_zero] at H
@@ -1910,21 +1903,15 @@ theorem zero_mem_smul_set {t : Set β} {a : α} (h : (0 : β) ∈ t) : (0 : β) 
 variable [NoZeroSmulDivisors α β] {a : α}
 
 theorem zero_mem_smul_iff : (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonempty ∨ (0 : β) ∈ t ∧ s.Nonempty :=
-  by
+  by 
   constructor
   · rintro ⟨a, b, ha, hb, h⟩
     obtain rfl | rfl := eq_zero_or_eq_zero_of_smul_eq_zero h
     · exact Or.inl ⟨ha, b, hb⟩
-      
     · exact Or.inr ⟨hb, a, ha⟩
-      
-    
   · rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
     · exact ⟨0, b, hs, hb, zero_smul _ _⟩
-      
     · exact ⟨a, 0, ha, ht, smul_zero _⟩
-      
-    
 #align set.zero_mem_smul_iff Set.zero_mem_smul_iff
 
 theorem zero_mem_smul_set_iff (ha : a ≠ 0) : (0 : β) ∈ a • t ↔ (0 : β) ∈ t := by
@@ -2003,10 +1990,8 @@ theorem smul_inter_ne_empty_iff {s t : Set α} {x : α} :
   · rintro ⟨a, h, ha⟩
     obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h
     exact ⟨x • b, b, ⟨ha, hb⟩, by simp⟩
-    
   · rintro ⟨a, b, ⟨ha, hb⟩, rfl⟩
     exact ⟨a, mem_inter (mem_smul_set.mpr ⟨b, hb, by simp⟩) ha⟩
-    
 #align set.smul_inter_ne_empty_iff Set.smul_inter_ne_empty_iff
 
 @[to_additive]
@@ -2023,11 +2008,9 @@ theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
   · rintro ⟨a, h, ha⟩
     obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h
     exact ⟨b, x • b, ⟨hb, ha⟩, by simp⟩
-    
   · rintro ⟨a, b, ⟨ha, hb⟩, H⟩
     have : MulOpposite.op (a⁻¹ * b) = x := congr_arg MulOpposite.op H
     exact ⟨b, mem_inter (mem_smul_set.mpr ⟨a, ha, by simp [← this]⟩) hb⟩
-    
 #align set.op_smul_inter_ne_empty_iff Set.op_smul_inter_ne_empty_iff
 
 @[simp, to_additive]
@@ -2153,7 +2136,6 @@ theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {
     replace key : ∀ k : ℕ, n ≤ k → f k = f n := fun k hk =>
       (congr_arg f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2
     exact fun k hk => (key k (hn1.trans hk)).trans (key B hn1).symm
-    
 #align group.card_pow_eq_card_pow_card_univ_aux Group.card_pow_eq_card_pow_card_univ_aux
 
 variable {G : Type _} [Group G] [Fintype G] (S : Set G)
@@ -2165,11 +2147,10 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   by_cases hS : S = ∅
   · refine' fun k hk => Fintype.card_congr _
     rw [hS, empty_pow (ne_of_gt (lt_of_lt_of_le hG hk)), empty_pow (ne_of_gt hG)]
-    
   obtain ⟨a, ha⟩ := set.ne_empty_iff_nonempty.mp hS
   classical!
   have key : ∀ (a) (s t : Set G), (∀ b : G, b ∈ s → a * b ∈ t) → Fintype.card s ≤ Fintype.card t :=
-    by
+    by 
     refine' fun a s t h => Fintype.card_le_of_injective (fun ⟨b, hb⟩ => ⟨a * b, h b hb⟩) _
     rintro ⟨b, hb⟩ ⟨c, hc⟩ hbc
     exact Subtype.ext (mul_left_cancel (subtype.ext_iff.mp hbc))
@@ -2179,14 +2160,10 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
     card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n)) fun n h =>
       le_antisymm (mono (n + 1).le_succ) (key a⁻¹ _ _ _)
   · simp only [Finset.filter_congr_decidable, Fintype.card_of_finset]
-    
   replace h : {a} * S ^ n = S ^ (n + 1)
   · refine' Set.eq_of_subset_of_card_le _ (le_trans (ge_of_eq h) _)
     · exact mul_subset_mul (set.singleton_subset_iff.mpr ha) Set.Subset.rfl
-      
     · convert key a (S ^ n) ({a} * S ^ n) fun b hb => Set.mul_mem_mul (Set.mem_singleton a) hb
-      
-    
   rw [pow_succ', ← h, mul_assoc, ← pow_succ', h]
   rintro _ ⟨b, c, hb, hc, rfl⟩
   rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_left]

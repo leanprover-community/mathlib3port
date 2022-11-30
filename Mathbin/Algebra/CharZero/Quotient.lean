@@ -18,7 +18,7 @@ namespace AddSubgroup
 theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0) :
     z • r ∈ AddSubgroup.zmultiples p ↔
       ∃ k : Fin z.natAbs, r - (k : ℕ) • (p / z : R) ∈ AddSubgroup.zmultiples p :=
-  by
+  by 
   rw [AddSubgroup.mem_zmultiples_iff]
   simp_rw [AddSubgroup.mem_zmultiples_iff, div_eq_mul_inv, ← smul_mul_assoc, eq_sub_iff_add_eq]
   have hz' : (z : R) ≠ 0 := int.cast_ne_zero.mpr hz
@@ -31,12 +31,9 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
     refine' ⟨⟨(k % z).toNat, _⟩, k / z, _⟩
     · rw [← Int.coe_nat_lt, Int.toNat_of_nonneg (Int.mod_nonneg _ hz)]
       exact (Int.mod_lt _ hz).trans_eq (Int.abs_eq_nat_abs _)
-      
     rw [Fin.coe_mk, Int.toNat_of_nonneg (Int.mod_nonneg _ hz), Int.div_add_mod]
-    
   · rintro ⟨k, n, h⟩
     exact ⟨_, h⟩
-    
 #align
   add_subgroup.zsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div
 

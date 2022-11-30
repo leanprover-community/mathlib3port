@@ -24,36 +24,28 @@ variable {α β : Type _} {n : ℕ}
 @[simp]
 theorem Ioi_zero_eq_map : ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).toEmbedding := by
   ext i
-  simp only [mem_Ioi, mem_map, mem_univ, Function.Embedding.coe_fn_mk, exists_true_left]
+  simp only [mem_Ioi, mem_map, mem_univ, Function.Embedding.coeFn_mk, exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
-      
     · intro j _
       exact ⟨j, rfl⟩
-      
-    
   · rintro ⟨i, _, rfl⟩
     exact succ_pos _
-    
 #align fin.Ioi_zero_eq_map Fin.Ioi_zero_eq_map
 
 @[simp]
 theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).toEmbedding := by
   ext i
-  simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coe_fn_mk,
+  simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coeFn_mk,
     exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
-      
     · intro i hi
       refine' ⟨i, succ_lt_succ_iff.mp hi, rfl⟩
-      
-    
   · rintro ⟨i, hi, rfl⟩
     simpa
-    
 #align fin.Ioi_succ Fin.Ioi_succ
 
 theorem card_filter_univ_succ' (p : Fin (n + 1) → Prop) [DecidablePred p] :
@@ -72,10 +64,9 @@ theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : V
     (univ.filter fun i => a = v.nth i).card = v.toList.count a := by
   induction' v using Vector.inductionOn with n x xs hxs
   · simp
-    
-  · simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.to_list_cons, Function.comp,
+  ·
+    simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.to_list_cons, Function.comp,
       Vector.nth_cons_succ, hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
-    
 #align fin.card_filter_univ_eq_vector_nth_eq_count Fin.card_filter_univ_eq_vector_nth_eq_count
 
 end Fin

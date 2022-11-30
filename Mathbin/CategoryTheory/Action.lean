@@ -32,7 +32,8 @@ variable (M : Type _) [Monoid M] (X : Type u) [MulAction M X]
 /-- A multiplicative action M ↻ X viewed as a functor mapping the single object of M to X
   and an element `m : M` to the map `X → X` given by multiplication by `m`. -/
 @[simps]
-def actionAsFunctor : SingleObj M ⥤ Type u where
+def actionAsFunctor : SingleObj M ⥤ Type
+        u where 
   obj _ := X
   map _ _ := (· • ·)
   map_id' _ := funext <| MulAction.one_smul
@@ -86,7 +87,7 @@ theorem back_coe (x : ActionCategory M X) : ↑x.back = x := by ext <;> rfl
 variable (M X)
 
 /-- An object of the action category given by M ↻ X corresponds to an element of X. -/
-def objEquiv : X ≃ ActionCategory M X where
+def objEquiv : X ≃ ActionCategory M X where 
   toFun := coe
   invFun x := x.back
   left_inv := coe_back
@@ -187,11 +188,11 @@ def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAut
   have F_map_eq : ∀ {a b} {f : a ⟶ b}, F.map f = (F.map (homOfPair b.back f.val) : H) :=
     ActionCategory.cases fun _ _ => rfl
   { toFun := fun g => ⟨fun b => F.map (homOfPair b g), g⟩,
-    map_one' := by
+    map_one' := by 
       congr
       funext
       exact F_map_eq.symm.trans (F.map_id b),
-    map_mul' := by
+    map_mul' := by 
       intro g h
       congr ; funext
       exact F_map_eq.symm.trans (F.map_comp (hom_of_pair (g⁻¹ • b) h) (hom_of_pair b g)) }
@@ -201,14 +202,14 @@ def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAut
     a functor from the action groupoid to `H`, provided that `φ g = (_, g)` for all `g`. -/
 @[simps]
 def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right = g) :
-    ActionCategory G X ⥤ SingleObj H where
+    ActionCategory G X ⥤ SingleObj H where 
   obj _ := ()
   map a b f := (F f.val).left b.back
-  map_id' := by
+  map_id' := by 
     intro x
     rw [action_category.id_val, F.map_one]
     rfl
-  map_comp' := by
+  map_comp' := by 
     intro x y z f g; revert y z g
     refine' action_category.cases _
     simp [single_obj.comp_as_mul, sane]

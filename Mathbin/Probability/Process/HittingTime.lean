@@ -71,22 +71,19 @@ theorem hitting_le {m : ι} (ω : Ω) : hitting u s n m ω ≤ m := by
     split_ifs
     · obtain ⟨j, hj₁, hj₂⟩ := h
       exact (cInf_le (BddBelow.inter_of_left bdd_below_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
-      
     · exact le_rfl
-      
-    
   · rw [hitting_of_lt h_lt]
-    
 #align measure_theory.hitting_le MeasureTheory.hitting_le
 
 theorem not_mem_of_lt_hitting {m k : ι} (hk₁ : k < hitting u s n m ω) (hk₂ : n ≤ k) : u k ω ∉ s :=
-  by classical
-  intro h
-  have hexists : ∃ j ∈ Set.icc n m, u j ω ∈ s
-  refine' ⟨k, ⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
-  refine' not_le.2 hk₁ _
-  simp_rw [hitting, if_pos hexists]
-  exact cInf_le bdd_below_Icc.inter_of_left ⟨⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
+  by
+  classical 
+    intro h
+    have hexists : ∃ j ∈ Set.icc n m, u j ω ∈ s
+    refine' ⟨k, ⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
+    refine' not_le.2 hk₁ _
+    simp_rw [hitting, if_pos hexists]
+    exact cInf_le bdd_below_Icc.inter_of_left ⟨⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
 #align measure_theory.not_mem_of_lt_hitting MeasureTheory.not_mem_of_lt_hitting
 
 theorem hitting_eq_end_iff {m : ι} :
@@ -102,9 +99,7 @@ theorem hitting_of_le {m : ι} (hmn : m ≤ n) : hitting u s n m ω = m := by
     intro i hi₁ hi₂ hi
     rw [Set.inter_eq_left_iff_subset.2, cInf_singleton]
     exact Set.singleton_subset_iff.2 (le_antisymm hi₂ hi₁ ▸ hi)
-    
   · exact hitting_of_lt h
-    
 #align measure_theory.hitting_of_le MeasureTheory.hitting_of_le
 
 theorem le_hitting {m : ι} (hnm : n ≤ m) (ω : Ω) : n ≤ hitting u s n m ω := by
@@ -113,17 +108,13 @@ theorem le_hitting {m : ι} (hnm : n ≤ m) (ω : Ω) : n ≤ hitting u s n m ω
   · refine' le_cInf _ fun b hb => _
     · obtain ⟨k, hk_Icc, hk_s⟩ := h
       exact ⟨k, hk_Icc, hk_s⟩
-      
     · rw [Set.mem_inter_iff] at hb
       exact hb.1.1
-      
-    
   · exact hnm
-    
 #align measure_theory.le_hitting MeasureTheory.le_hitting
 
 theorem le_hitting_of_exists {m : ι} (h_exists : ∃ j ∈ Set.icc n m, u j ω ∈ s) :
-    n ≤ hitting u s n m ω := by
+    n ≤ hitting u s n m ω := by 
   refine' le_hitting _ ω
   by_contra
   rw [Set.Icc_eq_empty_of_lt (not_le.mp h)] at h_exists
@@ -149,10 +140,8 @@ theorem hitting_mem_set_of_hitting_lt [IsWellOrder ι (· < ·)] {m : ι} (hl : 
     u (hitting u s n m ω) ω ∈ s := by
   by_cases h : ∃ j ∈ Set.icc n m, u j ω ∈ s
   · exact hitting_mem_set h
-    
   · simp_rw [hitting, if_neg h] at hl
     exact False.elim (hl.ne rfl)
-    
 #align measure_theory.hitting_mem_set_of_hitting_lt MeasureTheory.hitting_mem_set_of_hitting_lt
 
 theorem hitting_le_of_mem {m : ι} (hin : n ≤ i) (him : i ≤ m) (his : u i ω ∈ s) :
@@ -167,7 +156,6 @@ theorem hitting_le_iff_of_exists [IsWellOrder ι (· < ·)] {m : ι}
     hitting u s n m ω ≤ i ↔ ∃ j ∈ Set.icc n i, u j ω ∈ s := by
   constructor <;> intro h'
   · exact ⟨hitting u s n m ω, ⟨le_hitting_of_exists h_exists, h'⟩, hitting_mem_set h_exists⟩
-    
   · have h'' : ∃ k ∈ Set.icc n (min m i), u k ω ∈ s := by
       obtain ⟨k₁, hk₁_mem, hk₁_s⟩ := h_exists
       obtain ⟨k₂, hk₂_mem, hk₂_s⟩ := h'
@@ -176,34 +164,29 @@ theorem hitting_le_iff_of_exists [IsWellOrder ι (· < ·)] {m : ι}
     obtain ⟨k, hk₁, hk₂⟩ := h''
     refine' le_trans _ (hk₁.2.trans (min_le_right _ _))
     exact hitting_le_of_mem hk₁.1 (hk₁.2.trans (min_le_left _ _)) hk₂
-    
 #align measure_theory.hitting_le_iff_of_exists MeasureTheory.hitting_le_iff_of_exists
 
 theorem hitting_le_iff_of_lt [IsWellOrder ι (· < ·)] {m : ι} (i : ι) (hi : i < m) :
     hitting u s n m ω ≤ i ↔ ∃ j ∈ Set.icc n i, u j ω ∈ s := by
   by_cases h_exists : ∃ j ∈ Set.icc n m, u j ω ∈ s
   · rw [hitting_le_iff_of_exists h_exists]
-    
   · simp_rw [hitting, if_neg h_exists]
     push_neg  at h_exists
     simp only [not_le.mpr hi, Set.mem_Icc, false_iff_iff, not_exists, and_imp]
     exact fun k hkn hki => h_exists k ⟨hkn, hki.trans hi.le⟩
-    
 #align measure_theory.hitting_le_iff_of_lt MeasureTheory.hitting_le_iff_of_lt
 
 theorem hitting_lt_iff [IsWellOrder ι (· < ·)] {m : ι} (i : ι) (hi : i ≤ m) :
     hitting u s n m ω < i ↔ ∃ j ∈ Set.ico n i, u j ω ∈ s := by
   constructor <;> intro h'
-  · have h : ∃ j ∈ Set.icc n m, u j ω ∈ s := by
+  · have h : ∃ j ∈ Set.icc n m, u j ω ∈ s := by 
       by_contra
       simp_rw [hitting, if_neg h, ← not_le] at h'
       exact h' hi
     exact ⟨hitting u s n m ω, ⟨le_hitting_of_exists h, h'⟩, hitting_mem_set h⟩
-    
   · obtain ⟨k, hk₁, hk₂⟩ := h'
     refine' lt_of_le_of_lt _ hk₁.2
     exact hitting_le_of_mem hk₁.1 (hk₁.2.le.trans hi) hk₂
-    
 #align measure_theory.hitting_lt_iff MeasureTheory.hitting_lt_iff
 
 theorem hitting_eq_hitting_of_exists {m₁ m₂ : ι} (h : m₁ ≤ m₂)
@@ -218,19 +201,16 @@ theorem hitting_eq_hitting_of_exists {m₁ m₂ : ι} (h : m₁ ≤ m₂)
     refine' le_cInf ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => _
     by_cases hi' : i ≤ m₁
     · exact cInf_le bdd_below_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
-      
-    · exact
+    ·
+      exact
         ((cInf_le bdd_below_Icc.inter_of_left ⟨hj₁, hj₂⟩).trans (hj₁.2.trans le_rfl)).trans
           (le_of_lt (not_le.1 hi'))
-      
-    
   exact ⟨j, ⟨hj₁.1, hj₁.2.trans h⟩, hj₂⟩
 #align measure_theory.hitting_eq_hitting_of_exists MeasureTheory.hitting_eq_hitting_of_exists
 
 theorem hitting_mono {m₁ m₂ : ι} (hm : m₁ ≤ m₂) : hitting u s n m₁ ω ≤ hitting u s n m₂ ω := by
   by_cases h : ∃ j ∈ Set.icc n m₁, u j ω ∈ s
   · exact (hitting_eq_hitting_of_exists hm h).le
-    
   · simp_rw [hitting, if_neg h]
     split_ifs with h'
     · obtain ⟨j, hj₁, hj₂⟩ := h'
@@ -239,10 +219,7 @@ theorem hitting_mono {m₁ m₂ : ι} (hm : m₁ ≤ m₂) : hitting u s n m₁ 
       push_neg  at hneg
       obtain ⟨i, hi₁, hi₂⟩ := hneg
       exact h ⟨i, ⟨hi₁.1.1, hi₂.le⟩, hi₁.2⟩
-      
     · exact hm
-      
-    
 #align measure_theory.hitting_mono MeasureTheory.hitting_mono
 
 end Inequalities
@@ -256,7 +233,6 @@ theorem hittingIsStoppingTime [ConditionallyCompleteLinearOrder ι] [IsWellOrder
   cases' le_or_lt n' i with hi hi
   · have h_le : ∀ ω, hitting u s n n' ω ≤ i := fun x => (hitting_le x).trans hi
     simp [h_le]
-    
   · have h_set_eq_Union : { ω | hitting u s n n' ω ≤ i } = ⋃ j ∈ Set.icc n i, u j ⁻¹' s := by
       ext x
       rw [Set.mem_set_of_eq, hitting_le_iff_of_lt _ hi]
@@ -265,7 +241,6 @@ theorem hittingIsStoppingTime [ConditionallyCompleteLinearOrder ι] [IsWellOrder
     exact
       MeasurableSet.union fun j =>
         MeasurableSet.union fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
-    
 #align measure_theory.hitting_is_stopping_time MeasureTheory.hittingIsStoppingTime
 
 theorem stopped_value_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
@@ -291,7 +266,7 @@ theorem isStoppingTimeHittingIsStoppingTime [ConditionallyCompleteLinearOrder ι
     { x | hitting u s (τ x) N x ≤ n } =
       (⋃ i ≤ n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n }) ∪
         ⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n } :=
-    by
+    by 
     ext x
     simp [← exists_or, ← or_and_right, le_or_lt]
   have h₂ : (⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n }) = ∅ := by
@@ -334,11 +309,9 @@ theorem hitting_bot_le_iff {i n : ι} {ω : Ω} (hx : ∃ j, j ≤ n ∧ u j ω 
   cases' lt_or_le i n with hi hi
   · rw [hitting_le_iff_of_lt _ hi]
     simp
-    
   · simp only [(hitting_le ω).trans hi, true_iff_iff]
     obtain ⟨j, hj₁, hj₂⟩ := hx
     exact ⟨j, hj₁.trans hi, hj₂⟩
-    
 #align measure_theory.hitting_bot_le_iff MeasureTheory.hitting_bot_le_iff
 
 end ConditionallyCompleteLinearOrderBot

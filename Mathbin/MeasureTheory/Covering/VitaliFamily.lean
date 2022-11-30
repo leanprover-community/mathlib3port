@@ -87,7 +87,8 @@ include μ
 
 /-- A Vitali family for a measure `μ` is also a Vitali family for any measure absolutely continuous
 with respect to `μ`. -/
-def mono (v : VitaliFamily μ) (ν : Measure α) (hν : ν ≪ μ) : VitaliFamily ν where
+def mono (v : VitaliFamily μ) (ν : Measure α) (hν : ν ≪ μ) :
+    VitaliFamily ν where 
   setsAt := v.setsAt
   MeasurableSet' := v.MeasurableSet'
   nonempty_interior := v.nonempty_interior
@@ -195,19 +196,21 @@ end FineSubfamilyOn
 /-- One can enlarge a Vitali family by adding to the sets `f x` at `x` all sets which are not
 contained in a `δ`-neighborhood on `x`. This does not change the local filter at a point, but it
 can be convenient to get a nicer global behavior. -/
-def enlarge (v : VitaliFamily μ) (δ : ℝ) (δpos : 0 < δ) : VitaliFamily μ where
+def enlarge (v : VitaliFamily μ) (δ : ℝ) (δpos : 0 < δ) :
+    VitaliFamily
+      μ where 
   setsAt x := v.setsAt x ∪ { a | MeasurableSet a ∧ (interior a).Nonempty ∧ ¬a ⊆ closedBall x δ }
-  MeasurableSet' x a ha := by
+  MeasurableSet' x a ha := by 
     cases ha
     exacts[v.measurable_set' _ _ ha, ha.1]
-  nonempty_interior x a ha := by
+  nonempty_interior x a ha := by 
     cases ha
     exacts[v.nonempty_interior _ _ ha, ha.2.1]
-  Nontrivial := by
+  Nontrivial := by 
     intro x ε εpos
     rcases v.nontrivial x ε εpos with ⟨a, ha, h'a⟩
     exact ⟨a, mem_union_left _ ha, h'a⟩
-  covering := by
+  covering := by 
     intro s f fset ffine
     let g : α → Set (Set α) := fun x => f x ∩ v.sets_at x
     have : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (a : Set α)(H : a ∈ g x), a ⊆ closed_ball x ε := by
@@ -216,10 +219,8 @@ def enlarge (v : VitaliFamily μ) (δ : ℝ) (δpos : 0 < δ) : VitaliFamily μ 
       exact ffine x hx (min ε δ) (lt_min εpos δpos)
       rcases fset x hx af with (h'a | h'a)
       · exact ⟨a, ⟨af, h'a⟩, ha.trans (closed_ball_subset_closed_ball (min_le_left _ _))⟩
-        
       · refine' False.elim (h'a.2.2 _)
         exact ha.trans (closed_ball_subset_closed_ball (min_le_right _ _))
-        
     rcases v.covering s g (fun x hx => inter_subset_right _ _) this with ⟨t, ts, tdisj, tg, μt⟩
     exact ⟨t, ts, tdisj, fun p hp => (tg p hp).1, μt⟩
 #align vitali_family.enlarge VitaliFamily.enlarge
@@ -240,7 +241,6 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
   simp only [filter_at, exists_prop, gt_iff_lt]
   rw [mem_binfi_of_directed]
   · simp only [subset_def, and_imp, exists_prop, mem_sep_iff, mem_Ioi, mem_principal]
-    
   · simp only [DirectedOn, exists_prop, ge_iff_le, le_principal_iff, mem_Ioi, Order.Preimage,
       mem_principal]
     intro x hx y hy
@@ -248,9 +248,7 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
       ⟨min x y, lt_min hx hy, fun a ha =>
         ⟨ha.1, ha.2.trans (closed_ball_subset_closed_ball (min_le_left _ _))⟩, fun a ha =>
         ⟨ha.1, ha.2.trans (closed_ball_subset_closed_ball (min_le_right _ _))⟩⟩
-    
   · exact ⟨(1 : ℝ), mem_Ioi.2 zero_lt_one⟩
-    
 #align vitali_family.mem_filter_at_iff VitaliFamily.mem_filter_at_iff
 
 instance filterAtNeBot (x : α) : (v.filterAt x).ne_bot := by

@@ -25,21 +25,23 @@ namespace Finset
 
 variable [DecidableEq α] (s t : Finset α)
 
-instance : LocallyFiniteOrder (Finset α) where
+instance :
+    LocallyFiniteOrder
+      (Finset α) where 
   finsetIcc s t := t.powerset.filter ((· ⊆ ·) s)
   finsetIco s t := t.ssubsets.filter ((· ⊆ ·) s)
   finsetIoc s t := t.powerset.filter ((· ⊂ ·) s)
   finsetIoo s t := t.ssubsets.filter ((· ⊂ ·) s)
-  finset_mem_Icc s t u := by
+  finset_mem_Icc s t u := by 
     rw [mem_filter, mem_powerset]
     exact and_comm' _ _
-  finset_mem_Ico s t u := by
+  finset_mem_Ico s t u := by 
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
-  finset_mem_Ioc s t u := by
+  finset_mem_Ioc s t u := by 
     rw [mem_filter, mem_powerset]
     exact and_comm' _ _
-  finset_mem_Ioo s t u := by
+  finset_mem_Ioo s t u := by 
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
 
@@ -75,10 +77,8 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).powerset.image (
   constructor
   · rintro ⟨hs, ht⟩
     exact ⟨u \ s, sdiff_le_sdiff_right ht, sup_sdiff_cancel_right hs⟩
-    
   · rintro ⟨v, hv, rfl⟩
     exact ⟨le_sup_left, union_subset h <| hv.trans <| sdiff_subset _ _⟩
-    
 #align finset.Icc_eq_image_powerset Finset.Icc_eq_image_powerset
 
 theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.image ((· ∪ ·) s) := by
@@ -87,10 +87,8 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.image (
   constructor
   · rintro ⟨hs, ht⟩
     exact ⟨u \ s, sdiff_lt_sdiff_right ht hs, sup_sdiff_cancel_right hs⟩
-    
   · rintro ⟨v, hv, rfl⟩
     exact ⟨le_sup_left, sup_lt_of_lt_sdiff_left hv h⟩
-    
 #align finset.Ico_eq_image_ssubsets Finset.Ico_eq_image_ssubsets
 
 /-- Cardinality of a non-empty `Icc` of finsets. -/

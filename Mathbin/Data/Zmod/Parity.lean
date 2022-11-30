@@ -32,7 +32,6 @@ theorem ne_zero_iff_odd {n : ℕ} : (n : Zmod 2) ≠ 0 ↔ Odd n := by
   constructor <;>
     · contrapose
       simp [eq_zero_iff_even]
-      
 #align zmod.ne_zero_iff_odd Zmod.ne_zero_iff_odd
 
 end Zmod

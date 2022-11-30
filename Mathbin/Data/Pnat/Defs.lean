@@ -120,7 +120,7 @@ Case conversion may be inaccurate. Consider using '#align nat.to_pnat'_coe Nat.t
 @[simp]
 theorem toPNat'_coe : ∀ n : ℕ, (toPNat' n : ℕ) = ite (0 < n) n 1
   | 0 => rfl
-  | m + 1 => by
+  | m + 1 => by 
     rw [if_pos (succ_pos m)]
     rfl
 #align nat.to_pnat'_coe Nat.toPNat'_coe
@@ -339,10 +339,8 @@ theorem mod_coe (m k : ℕ+) :
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
-    
   · rw [if_neg n.succ_ne_zero]
     rfl
-    
 #align pnat.mod_coe PNat.mod_coe
 
 /- warning: pnat.div_coe -> PNat.div_coe is a dubious translation:
@@ -357,10 +355,8 @@ theorem div_coe (m k : ℕ+) :
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
-    
   · rw [if_neg n.succ_ne_zero]
     rfl
-    
 #align pnat.div_coe PNat.div_coe
 
 #print PNat.divExact /-

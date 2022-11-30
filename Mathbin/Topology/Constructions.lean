@@ -247,7 +247,7 @@ instance Sum.discreteTopology [TopologicalSpace α] [TopologicalSpace β] [hα :
 
 instance Sigma.discreteTopology {β : α → Type v} [∀ a, TopologicalSpace (β a)]
     [h : ∀ a, DiscreteTopology (β a)] : DiscreteTopology (Sigma β) :=
-  ⟨by
+  ⟨by 
     unfold Sigma.topologicalSpace
     simp [fun a => (h a).eq_bot]⟩
 #align sigma.discrete_topology Sigma.discreteTopology
@@ -307,14 +307,17 @@ def of : α ≃ CofiniteTopology α :=
 
 instance [Inhabited α] : Inhabited (CofiniteTopology α) where default := of default
 
-instance : TopologicalSpace (CofiniteTopology α) where
+instance :
+    TopologicalSpace
+      (CofiniteTopology
+        α) where 
   IsOpen s := s.Nonempty → Set.Finite (sᶜ)
   is_open_univ := by simp
-  is_open_inter s t := by
+  is_open_inter s t := by 
     rintro hs ht ⟨x, hxs, hxt⟩
     rw [compl_inter]
     exact (hs ⟨x, hxs⟩).union (ht ⟨x, hxt⟩)
-  is_open_sUnion := by
+  is_open_sUnion := by 
     rintro s h ⟨x, t, hts, hzt⟩
     rw [Set.compl_sUnion]
     exact Set.Finite.sInter (mem_image_of_mem _ hts) (h t hts ⟨x, hzt⟩)
@@ -337,10 +340,8 @@ theorem nhds_eq (a : CofiniteTopology α) : 𝓝 a = pure a ⊔ cofinite := by
   constructor
   · rintro ⟨V, hVU, V_op, haV⟩
     exact mem_sup.mpr ⟨hVU haV, mem_of_superset (V_op ⟨_, haV⟩) hVU⟩
-    
   · rintro ⟨hU : a ∈ U, hU' : Uᶜ.Finite⟩
     exact ⟨U, subset.rfl, fun h => hU', hU⟩
-    
 #align cofinite_topology.nhds_eq CofiniteTopology.nhds_eq
 
 theorem mem_nhds_iff {a : CofiniteTopology α} {s : Set (CofiniteTopology α)} :
@@ -503,7 +504,7 @@ theorem continuous_Inf_dom₂ {α β γ} {f : α → β → γ} {tas : Set (Topo
     (hf : Continuous fun p : α × β => f p.1 p.2) : by
     haveI := Inf tas <;> haveI := Inf tbs <;>
       exact @Continuous _ _ _ tc fun p : α × β => f p.1 p.2 :=
-  by
+  by 
   let t : TopologicalSpace (α × β) := Prod.topologicalSpace
   have ha := continuous_Inf_dom ha continuous_id
   have hb := continuous_Inf_dom hb continuous_id
@@ -578,16 +579,14 @@ theorem mem_nhds_prod_iff' {a : α} {b : β} {s : Set (α × β)} :
     rcases mem_nhds_iff.1 Hu with ⟨u', u'u, u'_open, Hu'⟩
     rcases mem_nhds_iff.1 Hv with ⟨v', v'v, v'_open, Hv'⟩
     exact ⟨u', v', u'_open, Hu', v'_open, Hv', (Set.prod_mono u'u v'v).trans h⟩
-    
   · rintro ⟨u, v, u_open, au, v_open, bv, huv⟩
     exact ⟨u, u_open.mem_nhds au, v, v_open.mem_nhds bv, huv⟩
-    
 #align mem_nhds_prod_iff' mem_nhds_prod_iff'
 
 theorem Prod.tendsto_iff {α} (seq : α → β × γ) {f : Filter α} (x : β × γ) :
     Tendsto seq f (𝓝 x) ↔
       Tendsto (fun n => (seq n).fst) f (𝓝 x.fst) ∧ Tendsto (fun n => (seq n).snd) f (𝓝 x.snd) :=
-  by
+  by 
   cases x
   rw [nhds_prod_eq, Filter.tendsto_prod_iff']
 #align prod.tendsto_iff Prod.tendsto_iff
@@ -680,7 +679,7 @@ theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} 
         le_generate_from fun u hu =>
           have : (⋃ v ∈ t, u ×ˢ v) = Prod.fst ⁻¹' u := by
             simp_rw [← prod_Union, ← sUnion_eq_bUnion, ht, prod_univ]
-          show G.IsOpen (Prod.fst ⁻¹' u) by
+          show G.IsOpen (Prod.fst ⁻¹' u) by 
             rw [← this]
             exact
               is_open_Union fun v =>
@@ -689,7 +688,7 @@ theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} 
         le_generate_from fun v hv =>
           have : (⋃ u ∈ s, u ×ˢ v) = Prod.snd ⁻¹' v := by
             simp_rw [← Union_prod_const, ← sUnion_eq_bUnion, hs, univ_prod]
-          show G.IsOpen (Prod.snd ⁻¹' v) by
+          show G.IsOpen (Prod.snd ⁻¹' v) by 
             rw [← this]
             exact
               is_open_Union fun u =>
@@ -713,7 +712,7 @@ theorem is_open_prod_iff {s : Set (α × β)} :
     IsOpen s ↔
       ∀ a b,
         (a, b) ∈ s → ∃ (u : Set α)(v : Set β), IsOpen u ∧ IsOpen v ∧ a ∈ u ∧ b ∈ v ∧ u ×ˢ v ⊆ s :=
-  by
+  by 
   rw [is_open_iff_nhds]
   simp_rw [le_principal_iff, Prod.forall,
     ((nhds_basis_opens _).prod_nhds (nhds_basis_opens _)).mem_iff, Prod.exists, exists_prop]
@@ -793,7 +792,6 @@ theorem is_open_prod_iff' {s : Set α} {t : Set β} :
     IsOpen (s ×ˢ t) ↔ IsOpen s ∧ IsOpen t ∨ s = ∅ ∨ t = ∅ := by
   cases' (s ×ˢ t).eq_empty_or_nonempty with h h
   · simp [h, prod_eq_empty_iff.1 h]
-    
   · have st : s.nonempty ∧ t.nonempty := prod_nonempty_iff.1 h
     constructor
     · intro (H : IsOpen (s ×ˢ t))
@@ -801,17 +799,12 @@ theorem is_open_prod_iff' {s : Set α} {t : Set β} :
       show IsOpen s
       · rw [← fst_image_prod s st.2]
         exact is_open_map_fst _ H
-        
       show IsOpen t
       · rw [← snd_image_prod st.1 t]
         exact is_open_map_snd _ H
-        
-      
     · intro H
       simp only [st.1.ne_empty, st.2.ne_empty, not_false_iff, or_false_iff] at H
       exact H.1.Prod H.2
-      
-    
 #align is_open_prod_iff' is_open_prod_iff'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -871,7 +864,7 @@ theorem IsClosed.prod {s₁ : Set α} {s₂ : Set β} (h₁ : IsClosed s₁) (h�
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two dense sets is a dense set. -/
 theorem Dense.prod {s : Set α} {t : Set β} (hs : Dense s) (ht : Dense t) : Dense (s ×ˢ t) :=
-  fun x => by
+  fun x => by 
   rw [closure_prod_eq]
   exact ⟨hs x.1, ht x.2⟩
 #align dense.prod Dense.prod
@@ -1400,7 +1393,7 @@ theorem pi_generate_from_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
     (@PiCat.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom
         { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s } :=
-  by
+  by 
   let G := { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s }
   rw [pi_eq_generate_from]
   refine' le_antisymm (generate_from_mono _) (le_generate_from _)
@@ -1412,14 +1405,13 @@ theorem pi_generate_from_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
     show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
     refine' le_generate_from _ _ (hi a ha)
     exact fun s hs => generate_open.basic _ ⟨update (fun a => univ) a s, {a}, by simp [hs]⟩
-    
 #align pi_generate_from_eq pi_generate_from_eq
 
 theorem pi_generate_from_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π a))} [Finite ι]
     (hg : ∀ a, ⋃₀g a = univ) :
     (@PiCat.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom { t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi univ s } :=
-  by
+  by 
   cases nonempty_fintype ι
   rw [pi_generate_from_eq]
   refine' le_antisymm (generate_from_mono _) (le_generate_from _)
@@ -1428,22 +1420,18 @@ theorem pi_generate_from_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π
     apply is_open_iff_forall_mem_open.2 _
     intro f hf
     choose c hc using
-      show ∀ a, ∃ s, s ∈ g a ∧ f a ∈ s by
+      show ∀ a, ∃ s, s ∈ g a ∧ f a ∈ s by 
         intro a
-        have : f a ∈ ⋃₀g a := by
+        have : f a ∈ ⋃₀g a := by 
           rw [hg]
           apply mem_univ
         simpa
     refine' ⟨pi univ fun a => if a ∈ i then t a else (c : ∀ a, Set (π a)) a, _, _, _⟩
     · simp [pi_if]
-      
     · refine' generate_open.basic _ ⟨_, fun a => _, rfl⟩
       by_cases a ∈ i <;> simp_all [Set.pi]
-      
     · have : f ∈ pi { a | a ∉ i } c := by simp_all [Set.pi]
       simpa [pi_if, hf]
-      
-    
 #align pi_generate_from_eq_finite pi_generate_from_eq_finite
 
 /-- Suppose `π i` is a family of topological spaces indexed by `i : ι`, and `X` is a type
@@ -1497,10 +1485,8 @@ theorem is_open_map_sigma_mk {i : ι} : IsOpenMap (@Sigma.mk ι σ i) := by
   intro j
   rcases eq_or_ne j i with (rfl | hne)
   · rwa [Set.preimage_image_eq _ sigma_mk_injective]
-    
   · rw [preimage_image_sigma_mk_of_ne hne]
     exact is_open_empty
-    
 #align is_open_map_sigma_mk is_open_map_sigma_mk
 
 theorem is_open_range_sigma_mk {i : ι} : IsOpen (Set.range (@Sigma.mk ι σ i)) :=
@@ -1513,10 +1499,8 @@ theorem is_closed_map_sigma_mk {i : ι} : IsClosedMap (@Sigma.mk ι σ i) := by
   intro j
   rcases eq_or_ne j i with (rfl | hne)
   · rwa [Set.preimage_image_eq _ sigma_mk_injective]
-    
   · rw [preimage_image_sigma_mk_of_ne hne]
     exact isClosedEmpty
-    
 #align is_closed_map_sigma_mk is_closed_map_sigma_mk
 
 theorem isClosedRangeSigmaMk {i : ι} : IsClosed (Set.range (@Sigma.mk ι σ i)) :=

@@ -97,10 +97,8 @@ theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ 
   · rintro ⟨s, hs, a, ha, rfl⟩
     refine' ⟨a, not_mem_erase a s, _⟩
     rwa [insert_erase ha]
-    
   · rintro ⟨a, ha, hs⟩
     exact ⟨insert a s, hs, a, mem_insert_self _ _, erase_insert ha⟩
-    
 #align finset.mem_shadow_iff_insert_mem Finset.mem_shadow_iff_insert_mem
 
 /-- The shadow of a family of `r`-sets is a family of `r - 1`-sets. -/
@@ -124,14 +122,12 @@ theorem mem_shadow_iff_exists_mem_card_add_one :
   refine' mem_shadow_iff_insert_mem.trans ⟨_, _⟩
   · rintro ⟨a, ha, hs⟩
     exact ⟨insert a s, hs, subset_insert _ _, card_insert_of_not_mem ha⟩
-    
   · rintro ⟨t, ht, hst, h⟩
     obtain ⟨a, ha⟩ : ∃ a, t \ s = {a} :=
       card_eq_one.1 (by rw [card_sdiff hst, h, add_tsub_cancel_left])
     exact
       ⟨a, fun hat => not_mem_sdiff_of_mem_right hat ((ha.ge : _ ⊆ _) <| mem_singleton_self a), by
         rwa [insert_eq a s, ← ha, sdiff_union_of_subset hst]⟩
-    
 #align finset.mem_shadow_iff_exists_mem_card_add_one Finset.mem_shadow_iff_exists_mem_card_add_one
 
 /-- Being in the shadow of `𝒜` means we have a superset in `𝒜`. -/
@@ -147,7 +143,6 @@ theorem mem_shadow_iff_exists_mem_card_add :
   · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩
     rwa [eq_of_subset_of_card_le hst hcard.le]
-    
   simp only [exists_prop, Function.comp_apply, Function.iterate_succ]
   refine' ih.trans _
   clear ih
@@ -157,11 +152,10 @@ theorem mem_shadow_iff_exists_mem_card_add :
     refine' ⟨u, hu, hst.trans htu, _⟩
     rw [hcardtu, hcardst]
     rfl
-    
   · rintro ⟨t, ht, hst, hcard⟩
     obtain ⟨u, hsu, hut, hu⟩ :=
       Finset.exists_intermediate_set k
-        (by
+        (by 
           rw [add_comm, hcard]
           exact le_succ _)
         hst
@@ -169,7 +163,6 @@ theorem mem_shadow_iff_exists_mem_card_add :
     refine' ⟨u, mem_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, hut, _⟩, hsu, hu⟩
     rw [hcard, hu]
     rfl
-    
 #align finset.mem_shadow_iff_exists_mem_card_add Finset.mem_shadow_iff_exists_mem_card_add
 
 end Shadow
@@ -228,10 +221,8 @@ theorem mem_up_shadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.er
   · rintro ⟨s, hs, a, ha, rfl⟩
     refine' ⟨a, mem_insert_self a s, _⟩
     rwa [erase_insert ha]
-    
   · rintro ⟨a, ha, hs⟩
     exact ⟨s.erase a, hs, a, not_mem_erase _ _, insert_erase ha⟩
-    
 #align finset.mem_up_shadow_iff_erase_mem Finset.mem_up_shadow_iff_erase_mem
 
 /-- `s ∈ ∂⁺ 𝒜` iff `s` is exactly one element less than something from `𝒜`. -/
@@ -240,13 +231,11 @@ theorem mem_up_shadow_iff_exists_mem_card_add_one :
   refine' mem_up_shadow_iff_erase_mem.trans ⟨_, _⟩
   · rintro ⟨a, ha, hs⟩
     exact ⟨s.erase a, hs, erase_subset _ _, card_erase_add_one ha⟩
-    
   · rintro ⟨t, ht, hts, h⟩
     obtain ⟨a, ha⟩ : ∃ a, s \ t = {a} :=
       card_eq_one.1 (by rw [card_sdiff hts, ← h, add_tsub_cancel_left])
     refine' ⟨a, sdiff_subset _ _ ((ha.ge : _ ⊆ _) <| mem_singleton_self a), _⟩
     rwa [← sdiff_singleton_eq_erase, ← ha, sdiff_sdiff_eq_self hts]
-    
 #align
   finset.mem_up_shadow_iff_exists_mem_card_add_one Finset.mem_up_shadow_iff_exists_mem_card_add_one
 
@@ -263,7 +252,6 @@ theorem mem_up_shadow_iff_exists_mem_card_add :
   · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩
     rwa [← eq_of_subset_of_card_le hst hcard.ge]
-    
   simp only [exists_prop, Function.comp_apply, Function.iterate_succ]
   refine' ih.trans _
   clear ih
@@ -273,11 +261,10 @@ theorem mem_up_shadow_iff_exists_mem_card_add :
     refine' ⟨u, hu, hut.trans hts, _⟩
     rw [← hcardst, ← hcardtu, add_right_comm]
     rfl
-    
   · rintro ⟨t, ht, hts, hcard⟩
     obtain ⟨u, htu, hus, hu⟩ :=
       Finset.exists_intermediate_set 1
-        (by
+        (by 
           rw [add_comm, ← hcard]
           exact add_le_add_left (zero_lt_succ _) _)
         hts
@@ -285,7 +272,6 @@ theorem mem_up_shadow_iff_exists_mem_card_add :
     refine' ⟨u, mem_up_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, htu, hu.symm⟩, hus, _⟩
     rw [hu, ← hcard, add_right_comm]
     rfl
-    
 #align finset.mem_up_shadow_iff_exists_mem_card_add Finset.mem_up_shadow_iff_exists_mem_card_add
 
 @[simp]
@@ -295,10 +281,8 @@ theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image c
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, not_mem_compl.2 ha, compl_erase.symm⟩
-    
   · rintro ⟨_, ⟨s, hs, rfl⟩, a, ha, rfl⟩
     exact ⟨s.erase a, ⟨s, hs, a, not_mem_compl.1 ha, rfl⟩, compl_erase⟩
-    
 #align finset.shadow_image_compl Finset.shadow_image_compl
 
 @[simp]
@@ -308,10 +292,8 @@ theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.imag
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, mem_compl.2 ha, compl_insert.symm⟩
-    
   · rintro ⟨_, ⟨s, hs, rfl⟩, a, ha, rfl⟩
     exact ⟨insert a s, ⟨s, hs, a, mem_compl.1 ha, rfl⟩, compl_insert⟩
-    
 #align finset.up_shadow_image_compl Finset.up_shadow_image_compl
 
 end UpShadow

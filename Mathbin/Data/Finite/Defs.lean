@@ -51,6 +51,7 @@ open Function
 
 variable {α β : Sort _}
 
+#print Finite /-
 /-- A type is `finite` if it is in bijective correspondence to some
 `fin n`.
 
@@ -60,31 +61,64 @@ in this way to allow there to be `finite` instances for propositions.
 class inductive Finite (α : Sort _) : Prop
   | intro {n : ℕ} : α ≃ Fin n → Finite
 #align finite Finite
+-/
 
+/- warning: finite_iff_exists_equiv_fin -> finite_iff_exists_equiv_fin is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}}, Iff (Finite.{u_1} α) (Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 (max u_1 1) (imax 1 u_1)} (Equiv.{u_1, 1} α (Fin n))))
+but is expected to have type
+  forall {α : Sort.{u_1}}, Iff (Finite.{u_1} α) (Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 u_1} (Equiv.{u_1, 1} α (Fin n))))
+Case conversion may be inaccurate. Consider using '#align finite_iff_exists_equiv_fin finite_iff_exists_equiv_finₓ'. -/
 theorem finite_iff_exists_equiv_fin {α : Sort _} : Finite α ↔ ∃ n, Nonempty (α ≃ Fin n) :=
   ⟨fun ⟨e⟩ => ⟨_, ⟨e⟩⟩, fun ⟨n, ⟨e⟩⟩ => ⟨e⟩⟩
 #align finite_iff_exists_equiv_fin finite_iff_exists_equiv_fin
 
+/- warning: finite.exists_equiv_fin -> Finite.exists_equiv_fin is a dubious translation:
+lean 3 declaration is
+  forall (α : Sort.{u_1}) [h : Finite.{u_1} α], Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 (max u_1 1) (imax 1 u_1)} (Equiv.{u_1, 1} α (Fin n)))
+but is expected to have type
+  forall (α : Sort.{u_1}) [h : Finite.{u_1} α], Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 u_1} (Equiv.{u_1, 1} α (Fin n)))
+Case conversion may be inaccurate. Consider using '#align finite.exists_equiv_fin Finite.exists_equiv_finₓ'. -/
 theorem Finite.exists_equiv_fin (α : Sort _) [h : Finite α] : ∃ n : ℕ, Nonempty (α ≃ Fin n) :=
   finite_iff_exists_equiv_fin.mp h
 #align finite.exists_equiv_fin Finite.exists_equiv_fin
 
+#print Finite.of_equiv /-
 theorem Finite.of_equiv (α : Sort _) [h : Finite α] (f : α ≃ β) : Finite β := by
   cases' h with n e
   exact Finite.intro (f.symm.trans e)
 #align finite.of_equiv Finite.of_equiv
+-/
 
+/- warning: equiv.finite_iff -> Equiv.finite_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, (Equiv.{u_1, u_2} α β) -> (Iff (Finite.{u_1} α) (Finite.{u_2} β))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, (Equiv.{u_1, u_2} α β) -> (Iff (Finite.{u_1} α) (Finite.{u_2} β))
+Case conversion may be inaccurate. Consider using '#align equiv.finite_iff Equiv.finite_iffₓ'. -/
 theorem Equiv.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
   ⟨fun _ => Finite.of_equiv _ f, fun _ => Finite.of_equiv _ f.symm⟩
 #align equiv.finite_iff Equiv.finite_iff
 
+/- warning: function.bijective.finite_iff -> Function.Bijective.finite_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β}, (Function.Bijective.{u_1, u_2} α β f) -> (Iff (Finite.{u_1} α) (Finite.{u_2} β))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β}, (Function.Bijective.{u_1, u_2} α β f) -> (Iff (Finite.{u_1} α) (Finite.{u_2} β))
+Case conversion may be inaccurate. Consider using '#align function.bijective.finite_iff Function.Bijective.finite_iffₓ'. -/
 theorem Function.Bijective.finite_iff {f : α → β} (h : Bijective f) : Finite α ↔ Finite β :=
   (Equiv.ofBijective f h).finite_iff
 #align function.bijective.finite_iff Function.Bijective.finite_iff
 
-theorem Finite.of_bijective [Finite α] {f : α → β} (h : Bijective f) : Finite β :=
+/- warning: finite.of_bijective -> Finite.ofBijective is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Finite.{u_1} α] {f : α -> β}, (Function.Bijective.{u_1, u_2} α β f) -> (Finite.{u_2} β)
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Data.Finite.Defs._hyg.240 : Finite.{u_1} α] {f : α -> β}, (Function.Bijective.{u_1, u_2} α β f) -> (Finite.{u_2} β)
+Case conversion may be inaccurate. Consider using '#align finite.of_bijective Finite.ofBijectiveₓ'. -/
+theorem Finite.ofBijective [Finite α] {f : α → β} (h : Bijective f) : Finite β :=
   h.finite_iff.mp ‹_›
-#align finite.of_bijective Finite.of_bijective
+#align finite.of_bijective Finite.ofBijective
 
 instance [Finite α] : Finite (PLift α) :=
   Finite.of_equiv α Equiv.plift.symm
@@ -92,22 +126,34 @@ instance [Finite α] : Finite (PLift α) :=
 instance {α : Type v} [Finite α] : Finite (ULift.{u} α) :=
   Finite.of_equiv α Equiv.ulift.symm
 
+#print Infinite /-
 /-- A type is said to be infinite if it is not finite. Note that `infinite α` is equivalent to
 `is_empty (fintype α)` or `is_empty (finite α)`. -/
 class Infinite (α : Sort _) : Prop where
   not_finite : ¬Finite α
 #align infinite Infinite
+-/
 
+#print not_finite_iff_infinite /-
 @[simp]
 theorem not_finite_iff_infinite : ¬Finite α ↔ Infinite α :=
   ⟨Infinite.mk, fun h => h.1⟩
 #align not_finite_iff_infinite not_finite_iff_infinite
+-/
 
+#print not_infinite_iff_finite /-
 @[simp]
 theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
   not_finite_iff_infinite.not_right.symm
 #align not_infinite_iff_finite not_infinite_iff_finite
+-/
 
+/- warning: equiv.infinite_iff -> Equiv.infinite_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, (Equiv.{u_1, u_2} α β) -> (Iff (Infinite.{u_1} α) (Infinite.{u_2} β))
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, (Equiv.{u_1, u_2} α β) -> (Iff (Infinite.{u_1} α) (Infinite.{u_2} β))
+Case conversion may be inaccurate. Consider using '#align equiv.infinite_iff Equiv.infinite_iffₓ'. -/
 theorem Equiv.infinite_iff (e : α ≃ β) : Infinite α ↔ Infinite β :=
   not_finite_iff_infinite.symm.trans <| e.finite_iff.Not.trans not_finite_iff_infinite
 #align equiv.infinite_iff Equiv.infinite_iff
@@ -118,21 +164,29 @@ instance [Infinite α] : Infinite (PLift α) :=
 instance {α : Type v} [Infinite α] : Infinite (ULift.{u} α) :=
   Equiv.ulift.infinite_iff.2 ‹_›
 
+#print finite_or_infinite /-
 theorem finite_or_infinite (α : Sort _) : Finite α ∨ Infinite α :=
   or_iff_not_imp_left.2 <| not_finite_iff_infinite.1
 #align finite_or_infinite finite_or_infinite
+-/
 
+#print not_finite /-
 theorem not_finite (α : Sort _) [Infinite α] [Finite α] : False :=
   @Infinite.not_finite α ‹_› ‹_›
 #align not_finite not_finite
+-/
 
+#print Finite.false /-
 protected theorem Finite.false [Infinite α] (h : Finite α) : False :=
   not_finite α
 #align finite.false Finite.false
+-/
 
+#print Infinite.false /-
 protected theorem Infinite.false [Finite α] (h : Infinite α) : False :=
   not_finite α
 #align infinite.false Infinite.false
+-/
 
 alias not_infinite_iff_finite ↔ Finite.of_not_infinite Finite.not_infinite
 

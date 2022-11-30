@@ -73,9 +73,7 @@ theorem norm_sub_sq_eq_norm_sq_add_norm_sq' (x y : V) (h : angle x y = π / 2) :
 theorem angle_add_eq_arccos_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
     angle x (x + y) = Real.arccos (‖x‖ / ‖x + y‖) := by
   rw [angle, inner_add_right, h, add_zero, real_inner_self_eq_norm_mul_norm]
-  by_cases hx : ‖x‖ = 0;
-  · simp [hx]
-    
+  by_cases hx : ‖x‖ = 0; · simp [hx]
   rw [div_mul_eq_div_div, mul_self_div_self]
 #align
   inner_product_geometry.angle_add_eq_arccos_of_inner_eq_zero InnerProductGeometry.angle_add_eq_arccos_of_inner_eq_zero
@@ -87,12 +85,12 @@ theorem angle_add_eq_arcsin_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 
     rw [pow_two, norm_add_sq_eq_norm_sq_add_norm_sq_real h, ne_comm]
     refine' ne_of_lt _
     rcases h0 with (h0 | h0)
-    · exact
+    ·
+      exact
         Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
-      
-    · exact
+    ·
+      exact
         Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
-      
   rw [angle_add_eq_arccos_of_inner_eq_zero h,
     Real.arccos_eq_arcsin (div_nonneg (norm_nonneg _) (norm_nonneg _)), div_pow, one_sub_div hxy]
   nth_rw 0 [pow_two]
@@ -117,9 +115,7 @@ theorem angle_add_pos_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x = 
     0 < angle x (x + y) := by
   rw [angle_add_eq_arccos_of_inner_eq_zero h, Real.arccos_pos,
     norm_add_eq_sqrt_iff_real_inner_eq_zero.2 h]
-  by_cases hx : x = 0;
-  · simp [hx]
-    
+  by_cases hx : x = 0; · simp [hx]
   rw [div_lt_one
       (Real.sqrt_pos.2
         (Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 hx))
@@ -177,9 +173,7 @@ theorem sin_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x �
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides. -/
 theorem tan_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
     Real.tan (angle x (x + y)) = ‖y‖ / ‖x‖ := by
-  by_cases h0 : x = 0;
-  · simp [h0]
-    
+  by_cases h0 : x = 0; · simp [h0]
   rw [angle_add_eq_arctan_of_inner_eq_zero h h0, Real.tan_arctan]
 #align
   inner_product_geometry.tan_angle_add_of_inner_eq_zero InnerProductGeometry.tan_angle_add_of_inner_eq_zero
@@ -194,9 +188,7 @@ theorem cos_angle_add_mul_norm_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
     rw [hxy, zero_mul, eq_comm, add_eq_zero_iff' (mul_self_nonneg ‖x‖) (mul_self_nonneg ‖y‖),
       mul_self_eq_zero] at h'
     simp [h'.1]
-    
   · exact div_mul_cancel _ hxy
-    
 #align
   inner_product_geometry.cos_angle_add_mul_norm_of_inner_eq_zero InnerProductGeometry.cos_angle_add_mul_norm_of_inner_eq_zero
 
@@ -204,18 +196,14 @@ theorem cos_angle_add_mul_norm_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
 opposite side. -/
 theorem sin_angle_add_mul_norm_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
     Real.sin (angle x (x + y)) * ‖x + y‖ = ‖y‖ := by
-  by_cases h0 : x = 0 ∧ y = 0;
-  · simp [h0]
-    
+  by_cases h0 : x = 0 ∧ y = 0; · simp [h0]
   rw [not_and_or] at h0
   rw [sin_angle_add_of_inner_eq_zero h h0, div_mul_cancel]
   rw [← mul_self_ne_zero, norm_add_sq_eq_norm_sq_add_norm_sq_real h]
   refine' (ne_of_lt _).symm
   rcases h0 with (h0 | h0)
   · exact Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
-    
   · exact Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
-    
 #align
   inner_product_geometry.sin_angle_add_mul_norm_of_inner_eq_zero InnerProductGeometry.sin_angle_add_mul_norm_of_inner_eq_zero
 
@@ -235,9 +223,7 @@ theorem norm_div_cos_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (
   rw [cos_angle_add_of_inner_eq_zero h]
   rcases h0 with (h0 | h0)
   · rw [div_div_eq_mul_div, mul_comm, div_eq_mul_inv, mul_inv_cancel_right₀ (norm_ne_zero_iff.2 h0)]
-    
   · simp [h0]
-    
 #align
   inner_product_geometry.norm_div_cos_angle_add_of_inner_eq_zero InnerProductGeometry.norm_div_cos_angle_add_of_inner_eq_zero
 
@@ -245,9 +231,7 @@ theorem norm_div_cos_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (
 hypotenuse. -/
 theorem norm_div_sin_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x = 0 ∨ y ≠ 0) :
     ‖y‖ / Real.sin (angle x (x + y)) = ‖x + y‖ := by
-  rcases h0 with (h0 | h0);
-  · simp [h0]
-    
+  rcases h0 with (h0 | h0); · simp [h0]
   rw [sin_angle_add_of_inner_eq_zero h (Or.inr h0), div_div_eq_mul_div, mul_comm, div_eq_mul_inv,
     mul_inv_cancel_right₀ (norm_ne_zero_iff.2 h0)]
 #align
@@ -260,9 +244,7 @@ theorem norm_div_tan_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (
   rw [tan_angle_add_of_inner_eq_zero h]
   rcases h0 with (h0 | h0)
   · simp [h0]
-    
   · rw [div_div_eq_mul_div, mul_comm, div_eq_mul_inv, mul_inv_cancel_right₀ (norm_ne_zero_iff.2 h0)]
-    
 #align
   inner_product_geometry.norm_div_tan_angle_add_of_inner_eq_zero InnerProductGeometry.norm_div_tan_angle_add_of_inner_eq_zero
 
@@ -294,7 +276,7 @@ theorem angle_sub_eq_arctan_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 
 /-- An angle in a non-degenerate right-angled triangle is positive, version subtracting
 vectors. -/
 theorem angle_sub_pos_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x = 0 ∨ y ≠ 0) :
-    0 < angle x (x - y) := by
+    0 < angle x (x - y) := by 
   rw [← neg_eq_zero, ← inner_neg_right] at h
   rw [← neg_ne_zero] at h0
   rw [sub_eq_add_neg]

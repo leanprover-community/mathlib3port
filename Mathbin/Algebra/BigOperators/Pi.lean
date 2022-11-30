@@ -82,7 +82,7 @@ theorem AddMonoidHom.functions_ext [Finite I] (G : Type _) [AddCommMonoid G] (g 
 
 /-- This is used as the ext lemma instead of `add_monoid_hom.functions_ext` for reasons explained in
 note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem AddMonoidHom.functions_ext' [Finite I] (M : Type _) [AddCommMonoid M]
     (g h : (∀ i, Z i) →+ M)
     (H : ∀ i, g.comp (AddMonoidHom.single Z i) = h.comp (AddMonoidHom.single Z i)) : g = h :=
@@ -102,7 +102,7 @@ variable {I : Type _} [DecidableEq I] {f : I → Type _}
 
 variable [∀ i, NonAssocSemiring (f i)]
 
-@[ext.1]
+@[ext]
 theorem RingHom.functions_ext [Finite I] (G : Type _) [NonAssocSemiring G] (g h : (∀ i, f i) →+* G)
     (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
   RingHom.coe_add_monoid_hom_injective <|

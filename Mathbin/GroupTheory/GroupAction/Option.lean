@@ -49,7 +49,7 @@ theorem smul_some : a • some b = some (a • b) :=
 
 @[to_additive]
 instance [HasSmul M N] [IsScalarTower M N α] : IsScalarTower M N (Option α) :=
-  ⟨fun a b x => by
+  ⟨fun a b x => by 
     cases x
     exacts[rfl, congr_arg some (smul_assoc _ _ _)]⟩
 
@@ -59,7 +59,7 @@ instance [SmulCommClass M N α] : SmulCommClass M N (Option α) :=
 
 @[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : IsCentralScalar M (Option α) :=
-  ⟨fun a x => by
+  ⟨fun a x => by 
     cases x
     exacts[rfl, congr_arg some (op_smul_eq_smul _ _)]⟩
 
@@ -69,12 +69,13 @@ instance [HasFaithfulSmul M α] : HasFaithfulSmul M (Option α) :=
 
 end HasSmul
 
-instance [Monoid M] [MulAction M α] : MulAction M (Option α) where
+instance [Monoid M] [MulAction M α] :
+    MulAction M (Option α) where 
   smul := (· • ·)
-  one_smul b := by
+  one_smul b := by 
     cases b
     exacts[rfl, congr_arg some (one_smul _ _)]
-  mul_smul a₁ a₂ b := by
+  mul_smul a₁ a₂ b := by 
     cases b
     exacts[rfl, congr_arg some (mul_smul _ _ _)]
 

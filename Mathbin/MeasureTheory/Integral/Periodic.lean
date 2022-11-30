@@ -98,7 +98,7 @@ theorem volume_closed_ball {x : AddCircle T} (ε : ℝ) :
   have h₂ :
     coe ⁻¹' Metric.closedBall (0 : AddCircle T) ε ∩ I =
       if ε < T / 2 then Metric.closedBall (0 : ℝ) ε else I :=
-    by
+    by 
     conv_rhs => rw [← if_ctx_congr (Iff.rfl : ε < T / 2 ↔ ε < T / 2) h₁ fun _ => rfl, ← hT']
     apply coe_real_preimage_closed_ball_inter_eq
     simpa only [hT', Real.closed_ball_eq_Icc, zero_add, zero_sub] using Ioc_subset_Icc_self
@@ -107,9 +107,7 @@ theorem volume_closed_ball {x : AddCircle T} (ε : ℝ) :
     (AddCircle.measurePreservingMk T (-(T / 2))).measure_preimage measurableSetClosedBall]
   by_cases hε : ε < T / 2
   · simp [hε, min_eq_right (by linarith : 2 * ε ≤ T)]
-    
   · simp [hε, min_eq_left (by linarith : T ≤ 2 * ε)]
-    
 #align add_circle.volume_closed_ball AddCircle.volume_closed_ball
 
 instance : IsDoublingMeasure (volume : Measure (AddCircle T)) := by
@@ -133,7 +131,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 to the integral over an interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem integral_preimage (t : ℝ) {f : AddCircle T → E}
     (hf : AeStronglyMeasurable f volume) : (∫ a in ioc t (t + T), f a) = ∫ b : AddCircle T, f b :=
-  by
+  by 
   rw [← (AddCircle.measurePreservingMk T t).map_eq] at hf⊢
   rw [integral_map add_circle.measurable_mk'.ae_measurable hf]
 #align add_circle.integral_preimage AddCircle.integral_preimage
@@ -228,13 +226,10 @@ theorem interval_integral_add_eq (hf : Periodic f T) (t s : ℝ) :
     (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x := by
   rcases lt_trichotomy 0 T with (hT | rfl | hT)
   · exact hf.interval_integral_add_eq_of_pos hT t s
-    
   · simp
-    
   · rw [← neg_inj, ← integral_symm, ← integral_symm]
     simpa only [← sub_eq_add_neg, add_sub_cancel] using
       hf.neg.interval_integral_add_eq_of_pos (neg_pos.2 hT) (t + T) (s + T)
-    
 #align function.periodic.interval_integral_add_eq Function.Periodic.interval_integral_add_eq
 
 /-- If `f` is an integrable periodic function with period `T`, then its integral over `[t, s + T]`
@@ -249,7 +244,8 @@ theorem interval_integral_add_eq_add (hf : Periodic f T) (t s : ℝ)
 integral over `[t, t + n • T]` is `n` times its integral over `[t, t + T]`. -/
 theorem interval_integral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
     (h_int : ∀ t₁ t₂, IntervalIntegrable f MeasureSpace.volume t₁ t₂) :
-    (∫ x in t..t + n • T, f x) = n • ∫ x in t..t + T, f x := by
+    (∫ x in t..t + n • T, f x) = n • ∫ x in t..t + T, f x :=
+  by
   -- Reduce to the case `b = 0`
   suffices (∫ x in 0 ..n • T, f x) = n • ∫ x in 0 ..T, f x by
     simp only [hf.interval_integral_add_eq t 0, (hf.zsmul n).interval_integral_add_eq t 0, zero_add,
@@ -259,13 +255,10 @@ theorem interval_integral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
     intros
     induction' m with m ih
     · simp
-      
     · simp only [succ_nsmul', hf.interval_integral_add_eq_add 0 (m • T) h_int, ih, zero_add]
-      
   -- Then prove it for all integers
   cases' n with n n
   · simp [← this n]
-    
   · conv_rhs => rw [zsmul_neg_succ_of_nat]
     have h₀ : Int.negSucc n • T + (n + 1) • T = 0 := by
       simp
@@ -273,7 +266,6 @@ theorem interval_integral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
     rw [integral_symm, ← (hf.nsmul (n + 1)).funext, neg_inj]
     simp_rw [integral_comp_add_right, h₀, zero_add, this (n + 1), add_comm T,
       hf.interval_integral_add_eq ((n + 1) • T) 0, zero_add]
-    
 #align
   function.periodic.interval_integral_add_zsmul_eq Function.Periodic.interval_integral_add_zsmul_eq
 
@@ -293,7 +285,7 @@ include hg h_int
 theorem Inf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
     (inf ((fun t => ∫ x in 0 ..t, g x) '' icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤
       ∫ x in 0 ..t, g x :=
-  by
+  by 
   let ε := Int.fract (t / T) * T
   conv_rhs =>
     rw [← Int.fract_div_mul_self_add_zsmul_eq T t (by linarith), ←
@@ -312,7 +304,7 @@ theorem Inf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
 theorem integral_le_Sup_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
     (∫ x in 0 ..t, g x) ≤
       sup ((fun t => ∫ x in 0 ..t, g x) '' icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x :=
-  by
+  by 
   let ε := Int.fract (t / T) * T
   conv_lhs =>
     rw [← Int.fract_div_mul_self_add_zsmul_eq T t (by linarith), ←

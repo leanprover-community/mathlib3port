@@ -21,8 +21,8 @@ about this type.
 /-- Extended natural numbers `ℕ∞ = with_top ℕ`. -/
 def Enat : Type :=
   WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial,
-  LinearOrder, OrderBot, OrderTop, HasBot, HasTop, CanonicallyLinearOrderedAddMonoid, Sub,
-  HasOrderedSub, CompleteLinearOrder, LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt,
+  LinearOrder, OrderBot, OrderTop, Bot, Top, CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub,
+  CompleteLinearOrder, LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt,
   WellFoundedRelation, CharZero,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 #align enat Enat
@@ -69,7 +69,8 @@ instance canLift : CanLift ℕ∞ ℕ coe fun n => n ≠ ⊤ :=
 #align enat.can_lift Enat.canLift
 
 /-- Conversion of `ℕ∞` to `ℕ` sending `∞` to `0`. -/
-def toNat : MonoidWithZeroHom ℕ∞ ℕ where
+def toNat : MonoidWithZeroHom ℕ∞
+      ℕ where 
   toFun := WithTop.untop' 0
   map_one' := rfl
   map_zero' := rfl
@@ -107,9 +108,7 @@ theorem to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = 
   lift n to ℕ using hn
   induction m using WithTop.recTopCoe
   · rw [WithTop.top_sub_coe, to_nat_top, zero_tsub]
-    
   · rw [← coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
-    
 #align enat.to_nat_sub Enat.to_nat_sub
 
 theorem to_nat_eq_iff {m : ℕ∞} {n : ℕ} (hn : n ≠ 0) : m.toNat = n ↔ m = n := by
@@ -125,7 +124,7 @@ theorem add_one_le_of_lt (h : m < n) : m + 1 ≤ n :=
 #align enat.add_one_le_of_lt Enat.add_one_le_of_lt
 
 theorem add_one_le_iff (hm : m ≠ ⊤) : m + 1 ≤ n ↔ m < n :=
-  m.succ_def ▸ (Order.succ_le_iff_of_not_is_max <| by rwa [is_max_iff_eq_top])
+  m.succ_def ▸ (Order.succ_le_iff_of_not_is_max <| by rwa [isMax_iff_eq_top])
 #align enat.add_one_le_iff Enat.add_one_le_iff
 
 theorem one_le_iff_pos : 1 ≤ n ↔ 0 < n :=

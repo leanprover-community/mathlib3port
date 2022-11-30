@@ -21,7 +21,8 @@ namespace FreeMonoid
 
 variable {α : Type _}
 
-instance : StarSemigroup (FreeMonoid α) where
+instance : StarSemigroup (FreeMonoid
+        α) where 
   star := List.reverse
   star_involutive := List.reverse_reverse
   star_mul := List.reverse_append
@@ -44,24 +45,23 @@ namespace FreeAlgebra
 variable {R : Type _} [CommSemiring R] {X : Type _}
 
 /-- The star ring formed by reversing the elements of products -/
-instance : StarRing (FreeAlgebra R X) where
+instance :
+    StarRing
+      (FreeAlgebra R
+        X) where 
   star := MulOpposite.unop ∘ lift R (MulOpposite.op ∘ ι R)
-  star_involutive x := by
+  star_involutive x := by 
     unfold HasStar.star
     simp only [Function.comp_apply]
     refine' FreeAlgebra.induction R X _ _ _ _ x
     · intros
       simp only [AlgHom.commutes, MulOpposite.algebra_map_apply, MulOpposite.unop_op]
-      
     · intros
       simp only [lift_ι_apply, MulOpposite.unop_op]
-      
     · intros
       simp only [*, map_mul, MulOpposite.unop_mul]
-      
     · intros
       simp only [*, map_add, MulOpposite.unop_add]
-      
   star_mul a b := by simp only [Function.comp_apply, map_mul, MulOpposite.unop_mul]
   star_add a b := by simp only [Function.comp_apply, map_add, MulOpposite.unop_add]
 

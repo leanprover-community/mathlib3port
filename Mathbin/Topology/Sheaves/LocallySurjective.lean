@@ -91,7 +91,6 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
     use ℱ.germ ⟨x, hxV⟩ s
     convert stalk_functor_map_germ_apply V ⟨x, hxV⟩ T s
     simpa [h_eq] using germ_res_apply 𝒢 ι ⟨x, hxV⟩ t
-    
   · /- human proof:
         Let U be an open set, t ∈ Γ ℱ U a section, x ∈ U a point.
         By surjectivity on stalks, the germ of t is the image of
@@ -105,7 +104,7 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
     -- rfl : ℱ.germ x s = s_x
     have key_W :=
       𝒢.germ_eq x hxV hxU (T.app _ s) t
-        (by
+        (by 
           convert hs_x
           symm
           convert stalk_functor_map_germ_apply _ _ _ s)
@@ -113,7 +112,6 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
     refine' ⟨W, hWU, ⟨ℱ.map hWV.op s, _⟩, hxW⟩
     convert h_eq
     simp only [← comp_apply, T.naturality]
-    
 #align
   Top.presheaf.locally_surjective_iff_surjective_on_stalks TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks
 

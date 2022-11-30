@@ -84,7 +84,7 @@ theorem eigenvector_matrix_inv_apply (i j : n) :
   matrix.is_hermitian.eigenvector_matrix_inv_apply Matrix.IsHermitian.eigenvector_matrix_inv_apply
 
 theorem conj_transpose_eigenvector_matrix_inv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix :=
-  by
+  by 
   ext (i j)
   rw [conj_transpose_apply, eigenvector_matrix_inv_apply, eigenvector_matrix_apply, star_star]
 #align
@@ -114,17 +114,15 @@ theorem spectral_theorem :
     simp_rw [OrthonormalBasis.coe_to_basis_repr_apply, OrthonormalBasis.reindex_repr,
       LinearEquiv.symm_symm, PiLp.linear_equiv_apply, PiLp.equiv_single, mul_vec_single, mul_one]
     rfl
-    
   · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis]
     rw [Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis_repr_apply,
       OrthonormalBasis.reindex_repr, eigenvalues₀, PiLp.basis_fun_apply, PiLp.equiv_symm_single]
-    
 #align matrix.is_hermitian.spectral_theorem Matrix.IsHermitian.spectral_theorem
 
 theorem eigenvalues_eq (i : n) :
     hA.Eigenvalues i =
       IsROrC.re (star (hA.eigenvectorMatrixᵀ i) ⬝ᵥ A.mulVec (hA.eigenvectorMatrixᵀ i)) :=
-  by
+  by 
   have := hA.spectral_theorem
   rw [← Matrix.mul_inv_eq_iff_eq_mul_of_invertible] at this
   have := congr_arg IsROrC.re (congr_fun (congr_fun this i) i)

@@ -115,7 +115,7 @@ theorem add_coe (m n : ℕ+) : ((m + n : ℕ+) : ℕ) = m + n :=
 #align pnat.add_coe PNat.add_coe
 
 /-- `pnat.coe` promoted to an `add_hom`, that is, a morphism which preserves addition. -/
-def coeAddHom : AddHom ℕ+ ℕ where
+def coeAddHom : AddHom ℕ+ ℕ where 
   toFun := coe
   map_add' := add_coe
 #align pnat.coe_add_hom PNat.coeAddHom
@@ -134,7 +134,7 @@ instance : ContravariantClass ℕ+ ℕ+ (· + ·) (· < ·) :=
 
 /-- An equivalence between `ℕ+` and `ℕ` given by `pnat.nat_pred` and `nat.succ_pnat`. -/
 @[simps (config := { fullyApplied := false })]
-def Equiv.pnatEquivNat : ℕ+ ≃ ℕ where
+def Equiv.pnatEquivNat : ℕ+ ≃ ℕ where 
   toFun := PNat.natPred
   invFun := Nat.succPNat
   left_inv := succ_pnat_nat_pred
@@ -143,7 +143,8 @@ def Equiv.pnatEquivNat : ℕ+ ≃ ℕ where
 
 /-- The order isomorphism between ℕ and ℕ+ given by `succ`. -/
 @[simps (config := { fullyApplied := false }) apply]
-def OrderIso.pnatIsoNat : ℕ+ ≃o ℕ where
+def OrderIso.pnatIsoNat : ℕ+ ≃o
+      ℕ where 
   toEquiv := Equiv.pnatEquivNat
   map_rel_iff' _ _ := nat_pred_le_nat_pred
 #align order_iso.pnat_iso_nat OrderIso.pnatIsoNat
@@ -159,7 +160,7 @@ theorem lt_add_one_iff : ∀ {a b : ℕ+}, a < b + 1 ↔ a ≤ b := fun a b => N
 theorem add_one_le_iff : ∀ {a b : ℕ+}, a + 1 ≤ b ↔ a < b := fun a b => Nat.add_one_le_iff
 #align pnat.add_one_le_iff PNat.add_one_le_iff
 
-instance : OrderBot ℕ+ where
+instance : OrderBot ℕ+ where 
   bot := 1
   bot_le a := a.property
 
@@ -212,7 +213,7 @@ theorem mul_coe (m n : ℕ+) : ((m * n : ℕ+) : ℕ) = m * n :=
 #align pnat.mul_coe PNat.mul_coe
 
 /-- `pnat.coe` promoted to a `monoid_hom`. -/
-def coeMonoidHom : ℕ+ →* ℕ where
+def coeMonoidHom : ℕ+ →* ℕ where 
   toFun := coe
   map_one' := one_coe
   map_mul' := mul_coe
@@ -261,14 +262,12 @@ theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ
   change (to_pnat' _ : ℕ) = ite _ _ _
   split_ifs with h
   · exact to_pnat'_coe (tsub_pos_of_lt h)
-    
   · rw [tsub_eq_zero_iff_le.mpr (le_of_not_gt h : (a : ℕ) ≤ b)]
     rfl
-    
 #align pnat.sub_coe PNat.sub_coe
 
 theorem add_sub_of_lt {a b : ℕ+} : a < b → a + (b - a) = b := fun h =>
-  Eq <| by
+  Eq <| by 
     rw [add_coe, sub_coe, if_pos h]
     exact add_tsub_cancel_of_le h.le
 #align pnat.add_sub_of_lt PNat.add_sub_of_lt
@@ -286,10 +285,8 @@ def caseStrongInductionOn {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1)
   rintro ⟨k, kprop⟩ hk
   cases' k with k
   · exact (lt_irrefl 0 kprop).elim
-    
   cases' k with k
   · exact hz
-    
   exact hi ⟨k.succ, Nat.succ_pos _⟩ fun m hm => hk _ (lt_succ_iff.2 hm)
 #align pnat.case_strong_induction_on PNat.caseStrongInductionOn
 
@@ -300,13 +297,9 @@ def recOn (n : ℕ+) {p : ℕ+ → Sort _} (p1 : p 1) (hp : ∀ n, p n → p (n 
   rcases n with ⟨n, h⟩
   induction' n with n IH
   · exact absurd h (by decide)
-    
   · cases' n with n
     · exact p1
-      
     · exact hp _ (IH n.succ_pos)
-      
-    
 #align pnat.rec_on PNat.recOn
 
 @[simp]
@@ -363,14 +356,10 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k := by
     by_cases h' : (m : ℕ) / (k : ℕ) = 0
     · rw [h', mul_zero] at hm
       exact (lt_irrefl _ hm).elim
-      
     · let h' := Nat.mul_le_mul_left (k : ℕ) (Nat.succ_le_of_lt (Nat.pos_of_ne_zero h'))
       rw [mul_one] at h'
       exact ⟨h', le_refl (k : ℕ)⟩
-      
-    
   · exact ⟨Nat.mod_le (m : ℕ) (k : ℕ), (Nat.mod_lt (m : ℕ) k.pos).le⟩
-    
 #align pnat.mod_le PNat.mod_le
 
 theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) := by
@@ -378,7 +367,6 @@ theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) := by
   rcases h with ⟨a, h⟩; cases a;
   · contrapose h
     apply NeZero
-    
   use a.succ; apply Nat.succ_pos; rw [← coe_inj, h, mul_coe, mk_coe]
 #align pnat.dvd_iff PNat.dvd_iff
 
@@ -388,16 +376,12 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k := by
   · intro h
     apply Eq
     rw [mod_coe, if_pos h]
-    
   · intro h
     by_cases h' : (m : ℕ) % (k : ℕ) = 0
     · exact h'
-      
     · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
       rw [mod_coe, if_neg h'] at h
       exact ((Nat.mod_lt (m : ℕ) k.pos).Ne h).elim
-      
-    
 #align pnat.dvd_iff' PNat.dvd_iff'
 
 theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n := by

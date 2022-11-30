@@ -74,10 +74,8 @@ def mkSol (init : Fin E.order → α) : ℕ → α
         have : n - E.order + k < n := by
           rw [add_comm, ← add_tsub_assoc_of_le (not_lt.mp h), tsub_lt_iff_left]
           · exact add_lt_add_right k.is_lt n
-            
           · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h)
             simp only [zero_add]
-            
         E.coeffs k * mk_sol (n - E.order + k)
 #align linear_recurrence.mk_sol LinearRecurrence.mkSol
 
@@ -88,7 +86,7 @@ theorem is_sol_mk_sol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) 
 
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
 theorem mk_sol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n :=
-  fun n => by
+  fun n => by 
   rw [mk_sol]
   simp only [n.is_lt, dif_pos, Fin.mk_coe, Fin.eta]
 #align linear_recurrence.mk_sol_eq_init LinearRecurrence.mk_sol_eq_init
@@ -100,7 +98,7 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} 
   | n =>
     if h' : n < E.order then by
       rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
-    else by
+    else by 
       rw [mk_sol, ← tsub_add_cancel_of_le (le_of_not_lt h'), h (n - E.order)]
       simp [h']
       congr with k
@@ -108,10 +106,8 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} 
         have wf : n - E.order + k < n := by
           rw [add_comm, ← add_tsub_assoc_of_le (not_lt.mp h'), tsub_lt_iff_left]
           · exact add_lt_add_right k.is_lt n
-            
           · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h')
             simp only [zero_add]
-            
         rw [eq_mk_of_is_sol_of_eq_init]
 #align linear_recurrence.eq_mk_of_is_sol_of_eq_init LinearRecurrence.eq_mk_of_is_sol_of_eq_init
 
@@ -124,7 +120,8 @@ theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Fin E.order → α}
 #align linear_recurrence.eq_mk_of_is_sol_of_eq_init' LinearRecurrence.eq_mk_of_is_sol_of_eq_init'
 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
-def solSpace : Submodule α (ℕ → α) where
+def solSpace : Submodule α
+      (ℕ → α) where 
   carrier := { u | E.IsSolution u }
   zero_mem' n := by simp
   add_mem' u v hu hv n := by simp [mul_add, sum_add_distrib, hu n, hv n]
@@ -139,12 +136,13 @@ theorem is_sol_iff_mem_sol_space (u : ℕ → α) : E.IsSolution u ↔ u ∈ E.s
 
 /-- The function that maps a solution `u` of `E` to its first
   `E.order` terms as a `linear_equiv`. -/
-def toInit : E.solSpace ≃ₗ[α] Fin E.order → α where
+def toInit : E.solSpace ≃ₗ[α]
+      Fin E.order → α where 
   toFun u x := (u : ℕ → α) x
-  map_add' u v := by
+  map_add' u v := by 
     ext
     simp
-  map_smul' a u := by
+  map_smul' a u := by 
     ext
     simp
   invFun u := ⟨E.mkSol u, E.is_sol_mk_sol u⟩
@@ -173,12 +171,15 @@ theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSol
 
 /-- `E.tuple_succ` maps `![s₀, s₁, ..., sₙ]` to `![s₁, ..., sₙ, ∑ (E.coeffs i) * sᵢ]`,
   where `n := E.order`. -/
-def tupleSucc : (Fin E.order → α) →ₗ[α] Fin E.order → α where
+def tupleSucc :
+    (Fin E.order → α) →ₗ[α]
+      Fin E.order →
+        α where 
   toFun X i := if h : (i : ℕ) + 1 < E.order then X ⟨i + 1, h⟩ else ∑ i, E.coeffs i * X i
-  map_add' x y := by
+  map_add' x y := by 
     ext i
     split_ifs <;> simp [h, mul_add, sum_add_distrib]
-  map_smul' x y := by
+  map_smul' x y := by 
     ext i
     split_ifs <;> simp [h, mul_sum]
     exact sum_congr rfl fun x _ => by ac_rfl
@@ -210,18 +211,16 @@ def charPoly : α[X] :=
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_char_poly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=
-  by
+  by 
   rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
   simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial,
     Polynomial.eval₂_sub]
   constructor
   · intro h
     simpa [sub_eq_zero] using h 0
-    
   · intro h n
     simp only [pow_add, sub_eq_zero.mp h, mul_sum]
     exact sum_congr rfl fun _ _ => by ring
-    
 #align linear_recurrence.geom_sol_iff_root_char_poly LinearRecurrence.geom_sol_iff_root_char_poly
 
 end CommRing

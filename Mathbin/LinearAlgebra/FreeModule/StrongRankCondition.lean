@@ -50,7 +50,8 @@ instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition
   have hnex : ¬∃ i : Fin n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_lt (cast_succ_lt_last i) hi
   let a₀ := (minpoly R g).coeff 0
   have : a₀ ≠ 0 := minpoly_coeff_zero_of_injective hg
-  have : a₀ = 0 := by
+  have : a₀ = 0 :=
+    by
     -- Evaluate `(minpoly R g) g` at the vector `(0,...,0,1)`
     have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Fin.last n) 1)
     obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)

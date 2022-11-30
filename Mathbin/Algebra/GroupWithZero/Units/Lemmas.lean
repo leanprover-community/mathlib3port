@@ -217,9 +217,7 @@ include M₀'
 theorem eq_on_inv₀ (f g : F') (h : f a = g a) : f a⁻¹ = g a⁻¹ := by
   rcases eq_or_ne a 0 with (rfl | ha)
   · rw [inv_zero, map_zero, map_zero]
-    
   · exact (IsUnit.mk0 a ha).eq_on_inv f g h
-    
 #align eq_on_inv₀ eq_on_inv₀
 
 end MonoidWithZero
@@ -232,10 +230,8 @@ include G₀'
 
 /-- A monoid homomorphism between groups with zeros sending `0` to `0` sends `a⁻¹` to `(f a)⁻¹`. -/
 @[simp]
-theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
-  by_cases h : a = 0;
-  · simp [h]
-    
+theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by 
+  by_cases h : a = 0; · simp [h]
   apply eq_inv_of_mul_eq_one_left
   rw [← map_mul, inv_mul_cancel h, map_one]
 #align map_inv₀ map_inv₀
@@ -249,7 +245,8 @@ end GroupWithZero
 
 /-- We define the inverse as a `monoid_with_zero_hom` by extending the inverse map by zero
 on non-units. -/
-noncomputable def MonoidWithZero.inverse {M : Type _} [CommMonoidWithZero M] : M →*₀ M where
+noncomputable def MonoidWithZero.inverse {M : Type _} [CommMonoidWithZero M] :
+    M →*₀ M where 
   toFun := Ring.inverse
   map_zero' := Ring.inverse_zero _
   map_one' := Ring.inverse_one _

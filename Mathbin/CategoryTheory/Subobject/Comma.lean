@@ -85,25 +85,23 @@ theorem lift_project_subobject [HasLimits C] [PreservesLimits T] {A : Structured
     ∀ (P : Subobject A) {q} (hq : q ≫ T.map (projectSubobject P).arrow = A.Hom),
       liftSubobject (projectSubobject P) hq = P :=
   Subobject.ind _
-    (by
+    (by 
       intro P f hf q hq
       fapply subobject.mk_eq_mk_of_comm
       · fapply iso_mk
         · exact subobject.underlying_iso _
-          
-        · exact
+        ·
+          exact
             (cancel_mono (T.map f.right)).1
-              (by
+              (by 
                 dsimp
                 simpa [← T.map_comp] using hq)
-          
-        
-      · exact
+      ·
+        exact
           ext _ _
-            (by
+            (by 
               dsimp
-              simp)
-        )
+              simp))
 #align
   category_theory.structured_arrow.lift_project_subobject CategoryTheory.StructuredArrow.lift_project_subobject
 
@@ -112,25 +110,27 @@ theorem lift_project_subobject [HasLimits C] [PreservesLimits T] {A : Structured
     through the image of `P` under `T`. -/
 @[simps]
 def subobjectEquiv [HasLimits C] [PreservesLimits T] (A : StructuredArrow S T) :
-    Subobject A ≃o { P : Subobject A.right // ∃ q, q ≫ T.map P.arrow = A.Hom } where
+    Subobject A ≃o
+      { P : Subobject A.right //
+        ∃ q,
+          q ≫ T.map P.arrow =
+            A.Hom } where 
   toFun P := ⟨projectSubobject P, project_subobject_factors P⟩
   invFun P := liftSubobject P.val P.Prop.some_spec
   left_inv P := lift_project_subobject _ _
   right_inv P := Subtype.ext (by simp)
   map_rel_iff' :=
     Subobject.ind₂ _
-      (by
+      (by 
         intro P Q f g hf hg
         refine' ⟨fun h => subobject.mk_le_mk_of_comm _ (ext _ _ _), fun h => _⟩
         · refine' hom_mk (subobject.of_mk_le_mk _ _ h) ((cancel_mono (T.map g.right)).1 _)
           simp [← T.map_comp]
-          
-        · simp only [mono_over.mk'_arrow, subobject.of_mk_le_mk_comp, comma.comp_right,
+        ·
+          simp only [mono_over.mk'_arrow, subobject.of_mk_le_mk_comp, comma.comp_right,
             hom_mk_right]
-          
         · refine' subobject.mk_le_mk_of_comm (subobject.of_mk_le_mk _ _ h).right _
-          exact congr_arg comma_morphism.right (subobject.of_mk_le_mk_comp h)
-          )
+          exact congr_arg comma_morphism.right (subobject.of_mk_le_mk_comp h))
 #align
   category_theory.structured_arrow.subobject_equiv CategoryTheory.StructuredArrow.subobjectEquiv
 
@@ -195,9 +195,9 @@ theorem unop_left_comp_underlying_iso_hom_unop {A : CostructuredArrow S T}
     f.unop.left ≫ (Subobject.underlyingIso f.unop.left.op).Hom.unop =
       (Subobject.mk f.unop.left.op).arrow.unop :=
   by
-  conv_lhs =>
-  congr
-  rw [← Quiver.Hom.unop_op f.unop.left]
+  conv_lhs => 
+    congr
+    rw [← Quiver.Hom.unop_op f.unop.left]
   rw [← unop_comp, subobject.underlying_iso_hom_comp_eq_mk]
 #align
   category_theory.costructured_arrow.unop_left_comp_underlying_iso_hom_unop CategoryTheory.CostructuredArrow.unop_left_comp_underlying_iso_hom_unop
@@ -208,23 +208,20 @@ theorem lift_project_quotient [HasColimits C] [PreservesColimits S] {A : Costruc
     ∀ (P : Subobject (op A)) {q} (hq : S.map (projectQuotient P).arrow.unop ≫ q = A.Hom),
       liftQuotient (projectQuotient P) hq = P :=
   Subobject.ind _
-    (by
+    (by 
       intro P f hf q hq
       fapply subobject.mk_eq_mk_of_comm
       · refine' (iso.op (iso_mk _ _) : _ ≅ op (unop P))
         · exact (subobject.underlying_iso f.unop.left.op).unop
-          
         · refine' (cancel_epi (S.map f.unop.left)).1 _
           simpa [← category.assoc, ← S.map_comp] using hq
-          
-        
-      · exact
+      ·
+        exact
           Quiver.Hom.unop_inj
             (ext _ _
-              (by
+              (by 
                 dsimp
-                simp))
-        )
+                simp)))
 #align
   category_theory.costructured_arrow.lift_project_quotient CategoryTheory.CostructuredArrow.lift_project_quotient
 
@@ -233,9 +230,9 @@ theorem unop_left_comp_of_mk_le_mk_unop {A : CostructuredArrow S T}
     {P Q : (CostructuredArrow S T)ᵒᵖ} {f : P ⟶ op A} {g : Q ⟶ op A} [Mono f.unop.left.op]
     [Mono g.unop.left.op] (h : Subobject.mk f.unop.left.op ≤ Subobject.mk g.unop.left.op) :
     g.unop.left ≫ (Subobject.ofMkLeMk f.unop.left.op g.unop.left.op h).unop = f.unop.left := by
-  conv_lhs =>
-  congr
-  rw [← Quiver.Hom.unop_op g.unop.left]
+  conv_lhs => 
+    congr
+    rw [← Quiver.Hom.unop_op g.unop.left]
   rw [← unop_comp]
   simp only [subobject.of_mk_le_mk_comp, Quiver.Hom.unop_op]
 #align
@@ -245,14 +242,18 @@ theorem unop_left_comp_of_mk_le_mk_unop {A : CostructuredArrow S T}
     explicitly describe the quotients of `A` as the quotients `P` of `B` in `C` for which `A.hom`
     factors through the image of `P` under `S`. -/
 def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S T) :
-    Subobject (op A) ≃o { P : Subobject (op A.left) // ∃ q, S.map P.arrow.unop ≫ q = A.Hom } where
+    Subobject (op A) ≃o
+      { P : Subobject (op A.left) //
+        ∃ q,
+          S.map P.arrow.unop ≫ q =
+            A.Hom } where 
   toFun P := ⟨projectQuotient P, project_quotient_factors P⟩
   invFun P := liftQuotient P.val P.Prop.some_spec
   left_inv P := lift_project_quotient _ _
   right_inv P := Subtype.ext (by simp)
   map_rel_iff' :=
     Subobject.ind₂ _
-      (by
+      (by 
         intro P Q f g hf hg
         refine'
           ⟨fun h => subobject.mk_le_mk_of_comm _ (Quiver.Hom.unop_inj (ext _ _ _)), fun h => _⟩
@@ -262,14 +263,11 @@ def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S
           rw [← category.assoc, ← S.map_comp, unop_left_comp_of_mk_le_mk_unop]
           dsimp
           simp
-          
         · exact unop_left_comp_of_mk_le_mk_unop _
-          
         · refine' subobject.mk_le_mk_of_comm (subobject.of_mk_le_mk _ _ h).unop.left.op _
           refine' Quiver.Hom.unop_inj _
           have := congr_arg Quiver.Hom.unop (subobject.of_mk_le_mk_comp h)
-          simpa [-subobject.of_mk_le_mk_comp] using congr_arg comma_morphism.left this
-          )
+          simpa [-subobject.of_mk_le_mk_comp] using congr_arg comma_morphism.left this)
 #align
   category_theory.costructured_arrow.quotient_equiv CategoryTheory.CostructuredArrow.quotientEquiv
 

@@ -75,12 +75,10 @@ theorem IsHermitian.from_blocks₁₁ [Fintype m] [DecidableEq m] {A : Matrix m 
   constructor
   · intro h
     apply is_hermitian.sub h.2.2.2 hBAB
-    
   · intro h
     refine' ⟨hA, rfl, conj_transpose_conj_transpose B, _⟩
     rw [← sub_add_cancel D]
     apply is_hermitian.add h hBAB
-    
 #align matrix.is_hermitian.from_blocks₁₁ Matrix.IsHermitian.from_blocks₁₁
 
 theorem IsHermitian.from_blocks₂₂ [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜) (B : Matrix m n 𝕜)
@@ -102,17 +100,13 @@ theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A 
       zero_add] at this
     rw [dot_product_mul_vec]
     exact this
-    
   · refine' fun h => ⟨h.1, fun x => _⟩
     rw [dot_product_mul_vec, ← Sum.elim_comp_inl_inr x, schur_complement_eq₁₁ B D _ _ hA.1, map_add]
     apply le_add_of_nonneg_of_le
     · rw [← dot_product_mul_vec]
       apply hA.pos_semidef.2
-      
     · rw [← dot_product_mul_vec]
       apply h.2
-      
-    
 #align matrix.pos_semidef.from_blocks₁₁ Matrix.PosSemidef.from_blocks₁₁
 
 theorem PosSemidef.from_blocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜)

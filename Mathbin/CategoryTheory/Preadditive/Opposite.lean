@@ -19,14 +19,17 @@ namespace CategoryTheory
 
 variable (C : Type _) [Category C] [Preadditive C]
 
-instance : Preadditive Cᵒᵖ where
+instance : Preadditive
+      Cᵒᵖ where 
   homGroup X Y := Equiv.addCommGroup (opEquiv X Y)
   add_comp' X Y Z f f' g :=
     congr_arg Quiver.Hom.op (Preadditive.comp_add _ _ _ g.unop f.unop f'.unop)
   comp_add' X Y Z f g g' :=
     congr_arg Quiver.Hom.op (Preadditive.add_comp _ _ _ g.unop g'.unop f.unop)
 
-instance moduleEndLeft {X : Cᵒᵖ} {Y : C} : Module (EndCat X) (unop X ⟶ Y) where
+instance moduleEndLeft {X : Cᵒᵖ} {Y : C} :
+    Module (EndCat X)
+      (unop X ⟶ Y) where 
   smul_add r f g := Preadditive.comp_add _ _ _ _ _ _
   smul_zero r := Limits.comp_zero
   add_smul r s f := Preadditive.add_comp _ _ _ _ _ _

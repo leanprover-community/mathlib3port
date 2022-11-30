@@ -59,35 +59,31 @@ protected theorem dist_self (x : Completion α) : dist x x = 0 := by
   apply induction_on x
   · refine' isClosedEq _ continuous_const
     exact completion.continuous_dist continuous_id continuous_id
-    
   · intro a
     rw [completion.dist_eq, dist_self]
-    
 #align uniform_space.completion.dist_self UniformSpace.Completion.dist_self
 
 protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
   apply induction_on₂ x y
-  · exact
+  ·
+    exact
       isClosedEq (completion.continuous_dist continuous_fst continuous_snd)
         (completion.continuous_dist continuous_snd continuous_fst)
-    
   · intro a b
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
-    
 #align uniform_space.completion.dist_comm UniformSpace.Completion.dist_comm
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr completion.continuous_dist, ",", expr continuous.fst, ",", expr continuous.snd, ",", expr continuous_id, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
   apply induction_on₃ x y z
-  · refine' isClosedLe _ (Continuous.add _ _) <;>
+  ·
+    refine' isClosedLe _ (Continuous.add _ _) <;>
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr completion.continuous_dist, \",\", expr continuous.fst, \",\", expr continuous.snd, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-    
   · intro a b c
     rw [completion.dist_eq, completion.dist_eq, completion.dist_eq]
     exact dist_triangle a b c
-    
 #align uniform_space.completion.dist_triangle UniformSpace.Completion.dist_triangle
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -115,20 +111,15 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
         rw [this]
         apply IsClosed.union _ tclosed
         exact isClosedLe continuous_const completion.uniform_continuous_dist.continuous
-        
       · intro x y
         rw [completion.dist_eq]
         by_cases h : ε ≤ dist x y
         · exact Or.inl h
-          
         · have Z := hε (not_le.1 h)
           simp only [Set.mem_set_of_eq] at Z
           exact Or.inr Z
-          
-        
     simp only [not_le.mpr hxy, false_or_iff, not_le] at this
     exact ts this
-    
   · /- Start from a set `s` containing an ε-neighborhood of the diagonal in `completion α`. To show
         that it is an entourage, we use the fact that `dist` is uniformly continuous on
         `completion α × completion α` (this is a general property of the extension of uniformly
@@ -154,12 +145,11 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
     · rintro ⟨a, b⟩ hp
       have : dist a b < ε := A a b hp
       exact hε this
-      
-    
 #align uniform_space.completion.mem_uniformity_dist UniformSpace.Completion.mem_uniformity_dist
 
 /-- If two points are at distance 0, then they coincide. -/
-protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : x = y := by
+protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : x = y :=
+  by
   /- This follows from the separation of `completion α` and from the description of
     entourages in terms of the distance. -/
   have : SeparatedSpace (completion α) := by infer_instance
@@ -175,11 +165,9 @@ protected theorem uniformity_dist' :
     𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } := by
   ext s; rw [mem_infi_of_directed]
   · simp [completion.mem_uniformity_dist, subset_def]
-    
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
     use ⟨min r p, lt_min hr hp⟩
     simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]
-    
 #align uniform_space.completion.uniformity_dist' UniformSpace.Completion.uniformity_dist'
 
 protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 { p | dist p.1 p.2 < ε } := by
@@ -187,7 +175,8 @@ protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 { p 
 #align uniform_space.completion.uniformity_dist UniformSpace.Completion.uniformity_dist
 
 /-- Metric space structure on the completion of a pseudo_metric space. -/
-instance : MetricSpace (Completion α) where
+instance : MetricSpace
+      (Completion α) where 
   dist_self := Completion.dist_self
   eq_of_dist_eq_zero := Completion.eq_of_dist_eq_zero
   dist_comm := Completion.dist_comm

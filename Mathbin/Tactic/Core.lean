@@ -1021,7 +1021,7 @@ private unsafe def expanded_field_list' : Name → tactic (Dlist <| Name × Name
       so.mmap fun n => do
           let (_, e) ← mk_const (n.updatePrefix struct_n) >>= infer_type >>= open_pis
           expanded_field_list' <| e
-    return <| Dlist.join ts ++ Dlist.ofList (fs <| Prod.mk struct_n)
+    return <| Std.DList.join ts ++ Dlist.ofList (fs <| Prod.mk struct_n)
 #align tactic.expanded_field_list' tactic.expanded_field_list'
 
 open Functor Function
@@ -1716,7 +1716,7 @@ instance : monad id :=
 ```
 -/
 @[hole_command]
-unsafe def instance_stub : hole_command where
+unsafe def instance_stub : hole_command where 
   Name := "Instance Stub"
   descr := "Generate a skeleton for the structure under construction."
   action _ := do
@@ -1821,7 +1821,7 @@ end
 ```
 -/
 @[hole_command]
-unsafe def match_stub : hole_command where
+unsafe def match_stub : hole_command where 
   Name := "Match Stub"
   descr := "Generate a list of equations for a `match` expression."
   action es := do
@@ -1890,7 +1890,7 @@ meta def foo : expr → tactic unit := -- don't forget to erase `:=`!!
 
 -/
 @[hole_command]
-unsafe def eqn_stub : hole_command where
+unsafe def eqn_stub : hole_command where 
   Name := "Equations Stub"
   descr := "Generate a list of equations for a recursive definition."
   action es := do
@@ -1948,7 +1948,8 @@ sum.inr : ℕ → ℤ ⊕ ℕ
 
 -/
 @[hole_command]
-unsafe def list_constructors_hole : hole_command where
+unsafe def list_constructors_hole :
+    hole_command where 
   Name := "List Constructors"
   descr := "Show the list of constructors of the expected type."
   action es := do
@@ -2041,7 +2042,9 @@ open Lean.Parser Interactive.Types
 It derives an auxiliary lemma of the form `f ∘ g = h` for reasoning about higher-order functions.
 -/
 @[user_attribute]
-unsafe def higher_order_attr : user_attribute Unit (Option Name) where
+unsafe def higher_order_attr :
+    user_attribute Unit (Option
+        Name) where 
   Name := `higher_order
   parser := optional ident
   descr :=
@@ -2092,7 +2095,8 @@ run_cmd add_interactive [``my_tactic]
 ```
 -/
 @[user_attribute]
-unsafe def interactive_attr : user_attribute where
+unsafe def interactive_attr :
+    user_attribute where 
   Name := `interactive
   descr :=
     "Put a definition in the `tactic.interactive` namespace to make it usable\nin proof scripts."

@@ -50,30 +50,28 @@ theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
   apply Submodule.span_induction h
   · rintro y ⟨⟨z, hz⟩, ⟨⟨w, hw⟩, rfl⟩⟩
     apply lie_character_apply_lie
-    
   · exact χ.map_zero
-    
   · intro y z hy hz
     rw [LieHom.map_add, hy, hz, add_zero]
-    
   · intro t y hy
     rw [LieHom.map_smul, hy, smul_zero]
-    
 #align lie_algebra.lie_character_apply_of_mem_derived LieAlgebra.lie_character_apply_of_mem_derived
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]
-def lieCharacterEquivLinearDual [IsLieAbelian L] : LieCharacter R L ≃ Module.Dual R L where
+def lieCharacterEquivLinearDual [IsLieAbelian L] :
+    LieCharacter R L ≃ Module.Dual R
+        L where 
   toFun χ := (χ : L →ₗ[R] R)
   invFun ψ :=
     { ψ with
       map_lie' := fun x y => by
         rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_comm, sub_self,
           LinearMap.to_fun_eq_coe, LinearMap.map_zero] }
-  left_inv χ := by
+  left_inv χ := by 
     ext
     rfl
-  right_inv ψ := by
+  right_inv ψ := by 
     ext
     rfl
 #align lie_algebra.lie_character_equiv_linear_dual LieAlgebra.lieCharacterEquivLinearDual

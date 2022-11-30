@@ -180,7 +180,7 @@ protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M * N)
 protected theorem mul_induction_on' {C : ∀ r, r ∈ M * N → Prop}
     (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n) (mul_mem_mul ‹_› ‹_›))
     (ha : ∀ x hx y hy, C x hx → C y hy → C (x + y) (add_mem ‹_› ‹_›)) {r : A} (hr : r ∈ M * N) :
-    C r hr := by
+    C r hr := by 
   refine' Exists.elim _ fun (hr : r ∈ M * N) (hc : C r hr) => hc
   exact
     Submodule.mul_induction_on hr (fun x hx y hy => ⟨_, hm _ hx _ hy⟩) fun x y ⟨_, hx⟩ ⟨_, hy⟩ =>
@@ -261,14 +261,12 @@ protected theorem map_mul {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A')
         refine' trans _ hy
         ext
         simp
-        
       · obtain ⟨y', hy', fy_eq⟩ := mem_map.mp y.2
         use y', hy'
         refine' trans _ hy
         rw [f.to_linear_map_apply] at fy_eq
         ext
         simp [fy_eq]
-        
     
 #align submodule.map_mul Submodule.map_mul
 
@@ -276,18 +274,16 @@ theorem map_op_mul :
     map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M * N) =
       map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) N *
         map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M :=
-  by
+  by 
   apply le_antisymm
   · simp_rw [map_le_iff_le_comap]
     refine' mul_le.2 fun m hm n hn => _
     rw [mem_comap, map_equiv_eq_comap_symm, map_equiv_eq_comap_symm]
     show op n * op m ∈ _
     exact mul_mem_mul hn hm
-    
   · refine' mul_le.2 (MulOpposite.rec fun m hm => MulOpposite.rec fun n hn => _)
     rw [Submodule.mem_map_equiv] at hm hn⊢
     exact mul_mem_mul hn hm
-    
 #align submodule.map_op_mul Submodule.map_op_mul
 
 theorem comap_unop_mul :
@@ -394,26 +390,20 @@ theorem pow_mem_pow {x : A} (hx : x ∈ M) (n : ℕ) : x ^ n ∈ M ^ n :=
 #align submodule.pow_mem_pow Submodule.pow_mem_pow
 
 theorem pow_to_add_submonoid {n : ℕ} (h : n ≠ 0) : (M ^ n).toAddSubmonoid = M.toAddSubmonoid ^ n :=
-  by
+  by 
   induction' n with n ih
   · exact (h rfl).elim
-    
   · rw [pow_succ, pow_succ, mul_to_add_submonoid]
     cases n
     · rw [pow_zero, pow_zero, mul_one, ← mul_to_add_submonoid, mul_one]
-      
     · rw [ih n.succ_ne_zero]
-      
-    
 #align submodule.pow_to_add_submonoid Submodule.pow_to_add_submonoid
 
 theorem le_pow_to_add_submonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toAddSubmonoid := by
   obtain rfl | hn := Decidable.eq_or_ne n 0
   · rw [pow_zero, pow_zero]
     exact le_one_to_add_submonoid
-    
   · exact (pow_to_add_submonoid M hn).ge
-    
 #align submodule.le_pow_to_add_submonoid Submodule.le_pow_to_add_submonoid
 
 /-- Dependent version of `submodule.pow_induction_on_left`. -/
@@ -427,7 +417,6 @@ protected theorem pow_induction_on_left' {C : ∀ (n : ℕ) (x), x ∈ M ^ n →
   · rw [pow_zero] at hx
     obtain ⟨r, rfl⟩ := hx
     exact hr r
-    
   exact
     Submodule.mul_induction_on' (fun m hm x ih => hmul _ hm _ _ _ (n_ih ih))
       (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy) hx
@@ -445,7 +434,6 @@ protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n �
   · rw [pow_zero] at hx
     obtain ⟨r, rfl⟩ := hx
     exact hr r
-    
   revert hx
   simp_rw [pow_succ']
   intro hx
@@ -476,7 +464,8 @@ protected theorem pow_induction_on_right {C : A → Prop} (hr : ∀ r : R, C (al
 /-- `submonoid.map` as a `monoid_with_zero_hom`, when applied to `alg_hom`s. -/
 @[simps]
 def mapHom {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A') :
-    Submodule R A →*₀ Submodule R A' where
+    Submodule R A →*₀ Submodule R
+        A' where 
   toFun := map f.toLinearMap
   map_zero' := Submodule.map_bot _
   map_one' := Submodule.map_one _
@@ -486,7 +475,10 @@ def mapHom {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A') :
 /-- The ring of submodules of the opposite algebra is isomorphic to the opposite ring of
 submodules. -/
 @[simps apply symmApply]
-def equivOpposite : Submodule R Aᵐᵒᵖ ≃+* (Submodule R A)ᵐᵒᵖ where
+def equivOpposite :
+    Submodule R Aᵐᵒᵖ ≃+*
+      (Submodule R
+          A)ᵐᵒᵖ where 
   toFun p := op <| p.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ)
   invFun p := p.unop.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A)
   left_inv p := SetLike.coe_injective <| rfl
@@ -526,7 +518,9 @@ theorem map_unop_pow (n : ℕ) (M : Submodule R Aᵐᵒᵖ) :
 
 /-- `span` is a semiring homomorphism (recall multiplication is pointwise multiplication of subsets
 on either side). -/
-def span.ringHom : SetSemiring A →+* Submodule R A where
+def span.ringHom :
+    SetSemiring A →+* Submodule R
+        A where 
   toFun := Submodule.span R
   map_zero' := span_empty
   map_one' := one_eq_span.symm
@@ -581,10 +575,8 @@ theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
   letI := Classical.decEq ι
   refine' Finset.induction_on s _ _
   · simp [one_eq_span, Set.singleton_one]
-    
   · intro _ _ H ih
     rw [Finset.prod_insert H, Finset.prod_insert H, ih, span_mul_span]
-    
 #align submodule.prod_span Submodule.prod_span
 
 theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
@@ -595,13 +587,15 @@ theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
 variable (R A)
 
 /-- R-submodules of the R-algebra A are a module over `set A`. -/
-instance moduleSet : Module (SetSemiring A) (Submodule R A) where
+instance moduleSet :
+    Module (SetSemiring A)
+      (Submodule R A) where 
   smul s P := span R s * P
   smul_add _ _ _ := mul_add _ _ _
   add_smul s t P := show span R (s ⊔ t) * P = _ by erw [span_union, right_distrib]
   mul_smul s t P := show _ = _ * (_ * _) by rw [← mul_assoc, span_mul_span, ← image_mul_prod]
   one_smul P :=
-    show span R {(1 : A)} * P = _ by
+    show span R {(1 : A)} * P = _ by 
       conv_lhs => erw [← span_eq P]
       erw [span_mul_span, one_mul, span_eq]
   zero_smul P := show span R ∅ * P = ⊥ by erw [span_empty, bot_mul]
@@ -629,10 +623,8 @@ theorem smul_singleton (a : A) (M : Submodule R A) :
     rintro _ ⟨b, m, hb, hm, rfl⟩
     rw [SetLike.mem_coe, mem_map, set.mem_singleton_iff.mp hb]
     exact ⟨m, hm, rfl⟩
-    
   · rintro _ ⟨m, hm, rfl⟩
     exact subset_span ⟨a, m, Set.mem_singleton a, hm, rfl⟩
-    
 #align submodule.smul_singleton Submodule.smul_singleton
 
 section Quotient
@@ -647,13 +639,13 @@ This is the general form of the ideal quotient, traditionally written $I : J$.
 instance : Div (Submodule R A) :=
   ⟨fun I J =>
     { carrier := { x | ∀ y ∈ J, x * y ∈ I },
-      zero_mem' := fun y hy => by
+      zero_mem' := fun y hy => by 
         rw [zero_mul]
         apply Submodule.zero_mem,
-      add_mem' := fun a b ha hb y hy => by
+      add_mem' := fun a b ha hb y hy => by 
         rw [add_mul]
         exact Submodule.add_mem _ (ha _ hy) (hb _ hy),
-      smul_mem' := fun r x hx y hy => by
+      smul_mem' := fun r x hx y hy => by 
         rw [Algebra.smul_mul_assoc]
         exact Submodule.smul_mem _ _ (hx _ hy) }⟩
 
@@ -662,7 +654,7 @@ theorem mem_div_iff_forall_mul_mem {x : A} {I J : Submodule R A} : x ∈ I / J �
 #align submodule.mem_div_iff_forall_mul_mem Submodule.mem_div_iff_forall_mul_mem
 
 theorem mem_div_iff_smul_subset {x : A} {I J : Submodule R A} : x ∈ I / J ↔ x • (J : Set A) ⊆ I :=
-  ⟨fun h y ⟨y', hy', xy'_eq_y⟩ => by
+  ⟨fun h y ⟨y', hy', xy'_eq_y⟩ => by 
     rw [← xy'_eq_y]
     apply h
     assumption, fun h y hy => h (Set.smul_mem_smul_set hy)⟩
@@ -680,9 +672,7 @@ theorem le_div_iff_mul_le {I J K : Submodule R A} : I ≤ J / K ↔ I * K ≤ J 
 theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 := by
   constructor; all_goals intro hI
   · rwa [le_div_iff_mul_le, one_mul] at hI
-    
   · rwa [le_div_iff_mul_le, one_mul]
-    
 #align submodule.one_le_one_div Submodule.one_le_one_div
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
@@ -707,14 +697,12 @@ protected theorem map_div {B : Type _} [CommSemiring B] [Algebra R B] (I J : Sub
   constructor
   · rintro ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
     exact ⟨x * y, hx _ hy, h.map_mul x y⟩
-    
   · rintro hx
     refine' ⟨h.symm x, fun z hz => _, h.apply_symm_apply x⟩
     obtain ⟨xz, xz_mem, hxz⟩ := hx (h z) ⟨z, hz, rfl⟩
     convert xz_mem
     apply h.injective
     erw [h.map_mul, h.apply_symm_apply, hxz]
-    
 #align submodule.map_div Submodule.map_div
 
 end Quotient

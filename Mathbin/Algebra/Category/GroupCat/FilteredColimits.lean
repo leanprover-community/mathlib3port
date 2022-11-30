@@ -86,7 +86,7 @@ theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j)
 /-- Taking inverses in the colimit. See also `colimit_inv_aux`. -/
 @[to_additive "Negation in the colimit. See also `colimit_neg_aux`."]
 instance colimitHasInv :
-    Inv G where inv x := by
+    Inv G where inv x := by 
     refine' Quot.lift (colimit_inv_aux F) _ x
     intro x y h
     apply colimit_inv_aux_eq_of_rel
@@ -102,7 +102,7 @@ theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2�
 @[to_additive]
 instance colimitGroup : Group G :=
   { G.Monoid, colimit_has_inv with
-    mul_left_inv := fun x => by
+    mul_left_inv := fun x => by 
       apply Quot.induction_on x; clear x; intro x
       cases' x with j x
       erw [colimit_inv_mk_eq,
@@ -120,14 +120,16 @@ def colimit : GroupCat :=
 
 /-- The cocone over the proposed colimit group. -/
 @[to_additive "The cocone over the proposed colimit additive group."]
-def colimitCocone : cocone F where
+def colimitCocone : cocone F where 
   x := colimit
   ι := { (MonCat.FilteredColimits.colimitCocone (F ⋙ forget₂ GroupCat MonCat.{max v u})).ι with }
 #align Group.filtered_colimits.colimit_cocone GroupCat.FilteredColimits.colimitCocone
 
 /-- The proposed colimit cocone is a colimit in `Group`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddGroup`."]
-def colimitCoconeIsColimit : IsColimit colimit_cocone where
+def colimitCoconeIsColimit :
+    IsColimit
+      colimit_cocone where 
   desc t :=
     MonCat.FilteredColimits.colimitDesc (F ⋙ forget₂ GroupCat MonCat.{max v u})
       ((forget₂ GroupCat MonCat).mapCocone t)
@@ -194,7 +196,7 @@ def colimit : CommGroupCat :=
 
 /-- The cocone over the proposed colimit commutative group. -/
 @[to_additive "The cocone over the proposed colimit additive commutative group."]
-def colimitCocone : cocone F where
+def colimitCocone : cocone F where 
   x := colimit
   ι :=
     { (GroupCat.FilteredColimits.colimitCocone
@@ -203,7 +205,9 @@ def colimitCocone : cocone F where
 
 /-- The proposed colimit cocone is a colimit in `CommGroup`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddCommGroup`."]
-def colimitCoconeIsColimit : IsColimit colimit_cocone where
+def colimitCoconeIsColimit :
+    IsColimit
+      colimit_cocone where 
   desc t :=
     (GroupCat.FilteredColimits.colimitCoconeIsColimit
           (F ⋙ forget₂ CommGroupCat GroupCat.{max v u})).desc

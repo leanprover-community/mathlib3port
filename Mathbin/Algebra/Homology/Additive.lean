@@ -119,7 +119,8 @@ instance boundaries_additive : (boundariesFunctor V c i).Additive where
 variable [HasEqualizers V] [HasCokernels V]
 
 instance homology_additive :
-    (homologyFunctor V c i).Additive where map_add' C D f g := by
+    (homologyFunctor V c
+        i).Additive where map_add' C D f g := by
     dsimp [homologyFunctor]
     ext
     simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
@@ -138,14 +139,16 @@ This is sometimes called the "prolongation".
 -/
 @[simps]
 def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
-    HomologicalComplex V c ⥤ HomologicalComplex W c where
+    HomologicalComplex V c ⥤
+      HomologicalComplex W
+        c where 
   obj C :=
     { x := fun i => F.obj (C.x i), d := fun i j => F.map (C.d i j),
       shape' := fun i j w => by rw [C.shape _ _ w, F.map_zero],
       d_comp_d' := fun i j k _ _ => by rw [← F.map_comp, C.d_comp_d, F.map_zero] }
   map C D f :=
     { f := fun i => F.map (f.f i),
-      comm' := fun i j h => by
+      comm' := fun i j h => by 
         dsimp
         rw [← F.map_comp, ← F.map_comp, f.comm] }
 #align category_theory.functor.map_homological_complex CategoryTheory.Functor.mapHomologicalComplex
@@ -202,7 +205,7 @@ theorem map_chain_complex_of (F : V ⥤ W) [F.Additive] (X : α → V) (d : ∀ 
     (F.mapHomologicalComplex _).obj (ChainComplex.of X d sq) =
       ChainComplex.of (fun n => F.obj (X n)) (fun n => F.map (d n)) fun n => by
         rw [← F.map_comp, sq n, functor.map_zero] :=
-  by
+  by 
   refine' HomologicalComplex.ext rfl _
   rintro i j (rfl : j + 1 = i)
   simp only [CategoryTheory.Functor.map_homological_complex_obj_d, of_d, eq_to_hom_refl, comp_id,
@@ -226,25 +229,21 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
     (fun X =>
       { Hom := { f := fun i => if h : i = j then eqToHom (by simp [h]) else 0 },
         inv := { f := fun i => if h : i = j then eqToHom (by simp [h]) else 0 },
-        hom_inv_id' := by
+        hom_inv_id' := by 
           ext i
           dsimp
           split_ifs with h
           · simp [h]
-            
           · rw [zero_comp, if_neg h]
-            exact (zero_of_source_iso_zero _ F.map_zero_object).symm
-            ,
-        inv_hom_id' := by
+            exact (zero_of_source_iso_zero _ F.map_zero_object).symm,
+        inv_hom_id' := by 
           ext i
           dsimp
           split_ifs with h
           · simp [h]
-            
           · rw [zero_comp, if_neg h]
-            simp
-             })
-    fun X Y f => by
+            simp })
+    fun X Y f => by 
     ext i
     dsimp
     split_ifs with h <;> simp [h]
@@ -302,28 +301,24 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
               match i with
               | 0 => 𝟙 _
               | i + 1 => F.mapZeroObject.inv },
-        hom_inv_id' := by
+        hom_inv_id' := by 
           ext (_ | i)
           · unfold_aux
             simp
-            
           · unfold_aux
             dsimp
             simp only [comp_f, id_f, zero_comp]
-            exact (zero_of_source_iso_zero _ F.map_zero_object).symm
-            ,
+            exact (zero_of_source_iso_zero _ F.map_zero_object).symm,
         inv_hom_id' := by
           ext (_ | i) <;>
             · unfold_aux
               dsimp
-              simp
-               })
+              simp })
     fun X Y f => by
     ext (_ | i) <;>
       · unfold_aux
         dsimp
         simp
-        
 #align chain_complex.single₀_map_homological_complex ChainComplex.single₀MapHomologicalComplex
 
 @[simp]
@@ -375,28 +370,24 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
               match i with
               | 0 => 𝟙 _
               | i + 1 => F.mapZeroObject.inv },
-        hom_inv_id' := by
+        hom_inv_id' := by 
           ext (_ | i)
           · unfold_aux
             simp
-            
           · unfold_aux
             dsimp
             simp only [comp_f, id_f, zero_comp]
-            exact (zero_of_source_iso_zero _ F.map_zero_object).symm
-            ,
+            exact (zero_of_source_iso_zero _ F.map_zero_object).symm,
         inv_hom_id' := by
           ext (_ | i) <;>
             · unfold_aux
               dsimp
-              simp
-               })
+              simp })
     fun X Y f => by
     ext (_ | i) <;>
       · unfold_aux
         dsimp
         simp
-        
 #align cochain_complex.single₀_map_homological_complex CochainComplex.single₀MapHomologicalComplex
 
 @[simp]

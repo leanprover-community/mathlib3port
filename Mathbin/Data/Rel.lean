@@ -50,7 +50,7 @@ theorem inv_def (x : α) (y : β) : r.inv y x ↔ r x y :=
   Iff.rfl
 #align rel.inv_def Rel.inv_def
 
-theorem inv_inv : inv (inv r) = r := by
+theorem inv_inv : inv (inv r) = r := by 
   ext (x y)
   rfl
 #align rel.inv_inv Rel.inv_inv
@@ -68,12 +68,12 @@ def codom :=
   { y | ∃ x, r x y }
 #align rel.codom Rel.codom
 
-theorem codom_inv : r.inv.codom = r.dom := by
+theorem codom_inv : r.inv.codom = r.dom := by 
   ext (x y)
   rfl
 #align rel.codom_inv Rel.codom_inv
 
-theorem dom_inv : r.inv.dom = r.codom := by
+theorem dom_inv : r.inv.dom = r.codom := by 
   ext (x y)
   rfl
 #align rel.dom_inv Rel.dom_inv
@@ -89,7 +89,6 @@ theorem comp_assoc (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) : ((r ∘ s) 
   unfold comp; ext (x w); constructor
   · rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩
     exact ⟨y, rxy, z, syz, tzw⟩
-    
   rintro ⟨y, rxy, z, syz, tzw⟩; exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
 #align rel.comp_assoc Rel.comp_assoc
 
@@ -107,7 +106,7 @@ theorem comp_left_id (r : Rel α β) : (@Eq α ∘ r) = r := by
   simp
 #align rel.comp_left_id Rel.comp_left_id
 
-theorem inv_id : inv (@Eq α) = @Eq α := by
+theorem inv_id : inv (@Eq α) = @Eq α := by 
   ext (x y)
   constructor <;> apply Eq.symm
 #align rel.inv_id Rel.inv_id
@@ -155,7 +154,6 @@ theorem image_comp (s : Rel β γ) (t : Set α) : image (r ∘ s) t = image s (i
   ext z; simp only [mem_image]; constructor
   · rintro ⟨x, xt, y, rxy, syz⟩
     exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
-    
   rintro ⟨y, ⟨x, xt, rxy⟩, syz⟩; exact ⟨x, xt, y, rxy, syz⟩
 #align rel.image_comp Rel.image_comp
 
@@ -236,9 +234,7 @@ theorem core_id (s : Set α) : core (@Eq α) s = s := by simp [core]
 theorem core_comp (s : Rel β γ) (t : Set γ) : core (r ∘ s) t = core r (core s t) := by
   ext x; simp [core, comp]; constructor
   · exact fun h y rxy z => h z y rxy
-    
   · exact fun h z y rzy => h y rzy z
-    
 #align rel.core_comp Rel.core_comp
 
 /-- Restrict the domain of a relation to a subtype. -/

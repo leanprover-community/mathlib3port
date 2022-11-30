@@ -50,7 +50,7 @@ variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 theorem dim_mul_dim' :
     Cardinal.lift.{w} (Module.rank F K) * Cardinal.lift.{v} (Module.rank K A) =
       Cardinal.lift.{v} (Module.rank F A) :=
-  by
+  by 
   let b := Basis.ofVectorSpace F K
   let c := Basis.ofVectorSpace K A
   rw [← (Module.rank F K).lift_id, ← b.mk_eq_dim, ← (Module.rank K A).lift_id, ← c.mk_eq_dim, ←
@@ -104,10 +104,8 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A 
     let c := Basis.ofVectorSpace K A
     rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c),
       Fintype.card_prod]
-    
   · rw [finrank_of_infinite_dimensional hA, mul_zero, finrank_of_infinite_dimensional]
     exact mt (@right F K A _ _ _ _ _ _ _) hA
-    
 #align finite_dimensional.finrank_mul_finrank FiniteDimensional.finrank_mul_finrank
 
 theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [Algebra F A]
@@ -120,9 +118,9 @@ theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [A
       letI := divisionRingOfFiniteDimensional F K
       refine' (hp.eq_one_or_self_of_dvd _ ⟨_, (finrank_mul_finrank F K A).symm⟩).imp _ fun h => _
       · exact Subalgebra.eq_bot_of_finrank_one
-        
-      · exact Algebra.to_submodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h)
-         }
+      ·
+        exact
+          Algebra.to_submodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h) }
 #align
   finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.is_simple_order_of_finrank_prime
 

@@ -27,10 +27,9 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
     (hp : ∀ i ∈ s, Prime (p i)) (hx : x * y = a * ∏ i in s, p i) :
     ∃ (t u : Finset α)(b c : R),
       t ∪ u = s ∧ Disjoint t u ∧ a = b * c ∧ (x = b * ∏ i in t, p i) ∧ y = c * ∏ i in u, p i :=
-  by
+  by 
   induction' s using Finset.induction with i s his ih generalizing x y a
   · exact ⟨∅, ∅, x, y, by simp [hx]⟩
-    
   · rw [prod_insert his, ← mul_assoc] at hx
     have hpi : Prime (p i) := hp i (mem_insert_self _ _)
     rcases ih (fun i hi => hp i (mem_insert_of_mem hi)) hx with
@@ -43,13 +42,10 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
       exact
         ⟨insert i t, u, d, c, by rw [insert_union, htus], disjoint_insert_left.2 ⟨hiu, htu⟩, by
           simp [hbc, prod_insert hit, mul_assoc, mul_comm, mul_left_comm]⟩
-      
     · rw [← mul_assoc, mul_right_comm b, mul_left_inj' hpi.ne_zero] at hbc
       exact
         ⟨t, insert i u, b, d, by rw [union_insert, htus], disjoint_insert_right.2 ⟨hit, htu⟩, by
           simp [← hbc, prod_insert hiu, mul_assoc, mul_comm, mul_left_comm]⟩
-      
-    
 #align mul_eq_mul_prime_prod mul_eq_mul_prime_prod
 
 /-- If ` x * y = a * p ^ n` where `p` is prime, then `x` and `y` can both be written
@@ -76,9 +72,7 @@ theorem Prime.neg {p : α} (hp : Prime p) : Prime (-p) := by
 theorem Prime.abs [LinearOrder α] {p : α} (hp : Prime p) : Prime (abs p) := by
   obtain h | h := abs_choice p <;> rw [h]
   · exact hp
-    
   · exact hp.neg
-    
 #align prime.abs Prime.abs
 
 end CommRing

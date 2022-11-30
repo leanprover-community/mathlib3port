@@ -27,7 +27,7 @@ section Mul
 
 variable [Zero α] [Mul α]
 
-instance : MulZeroClass (WithTop α) where
+instance : MulZeroClass (WithTop α) where 
   zero := 0
   mul m n := if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind fun b => ↑(a * b)
   zero_mul a := if_pos <| Or.inl rfl
@@ -75,13 +75,9 @@ theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, a * b = a.bind f
 theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 := by
   cases a <;> cases b <;> simp only [none_eq_top, some_eq_coe]
   · simp [← coe_mul]
-    
   · by_cases hb : b = 0 <;> simp [hb]
-    
   · by_cases ha : a = 0 <;> simp [ha]
-    
   · simp [← coe_mul]
-    
 #align with_top.mul_eq_top_iff WithTop.mul_eq_top_iff
 
 theorem mul_lt_top [Preorder α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ := by
@@ -92,18 +88,10 @@ theorem mul_lt_top [Preorder α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠
 
 @[simp]
 theorem untop'_zero_mul (a b : WithTop α) : (a * b).untop' 0 = a.untop' 0 * b.untop' 0 := by
-  by_cases ha : a = 0;
-  · rw [ha, zero_mul, ← coe_zero, untop'_coe, zero_mul]
-    
-  by_cases hb : b = 0;
-  · rw [hb, mul_zero, ← coe_zero, untop'_coe, mul_zero]
-    
-  induction a using WithTop.recTopCoe;
-  · rw [top_mul hb, untop'_top, zero_mul]
-    
-  induction b using WithTop.recTopCoe;
-  · rw [mul_top ha, untop'_top, mul_zero]
-    
+  by_cases ha : a = 0; · rw [ha, zero_mul, ← coe_zero, untop'_coe, zero_mul]
+  by_cases hb : b = 0; · rw [hb, mul_zero, ← coe_zero, untop'_coe, mul_zero]
+  induction a using WithTop.recTopCoe; · rw [top_mul hb, untop'_top, zero_mul]
+  induction b using WithTop.recTopCoe; · rw [mul_top ha, untop'_top, mul_zero]
   rw [← coe_mul, untop'_coe, untop'_coe, untop'_coe]
 #align with_top.untop'_zero_mul WithTop.untop'_zero_mul
 
@@ -132,17 +120,13 @@ protected def MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneClass R] [D
         (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
       rcases eq_or_ne x 0 with (rfl | hx)
       · simp
-        
       rcases eq_or_ne y 0 with (rfl | hy)
       · simp
-        
       induction x using WithTop.recTopCoe
       · simp [hy, this]
-        
       induction y using WithTop.recTopCoe
       · have : (f x : WithTop S) ≠ 0 := by simpa [hf.eq_iff' (map_zero f)] using hx
         simp [hx, this]
-        
       simp [← coe_mul] }
 #align monoid_with_zero_hom.with_top_map MonoidWithZeroHom.withTopMap
 
@@ -153,25 +137,13 @@ instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
 
 instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
   { WithTop.mulZeroClass with mul := (· * ·), zero := 0,
-    mul_assoc := fun a b c => by
-      rcases eq_or_ne a 0 with (rfl | ha);
-      · simp only [zero_mul]
-        
-      rcases eq_or_ne b 0 with (rfl | hb);
-      · simp only [zero_mul, mul_zero]
-        
-      rcases eq_or_ne c 0 with (rfl | hc);
-      · simp only [mul_zero]
-        
-      induction a using WithTop.recTopCoe;
-      · simp [hb, hc]
-        
-      induction b using WithTop.recTopCoe;
-      · simp [ha, hc]
-        
-      induction c using WithTop.recTopCoe;
-      · simp [ha, hb]
-        
+    mul_assoc := fun a b c => by 
+      rcases eq_or_ne a 0 with (rfl | ha); · simp only [zero_mul]
+      rcases eq_or_ne b 0 with (rfl | hb); · simp only [zero_mul, mul_zero]
+      rcases eq_or_ne c 0 with (rfl | hc); · simp only [mul_zero]
+      induction a using WithTop.recTopCoe; · simp [hb, hc]
+      induction b using WithTop.recTopCoe; · simp [ha, hc]
+      induction c using WithTop.recTopCoe; · simp [ha, hb]
       simp only [← coe_mul, mul_assoc] }
 
 instance [MonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZero (WithTop α) :=
@@ -187,14 +159,11 @@ variable [CanonicallyOrderedCommSemiring α]
 private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := by
   induction c using WithTop.recTopCoe
   · by_cases ha : a = 0 <;> simp [ha]
-    
   · by_cases hc : c = 0
     · simp [hc]
-      
     simp [mul_coe hc]
     cases a <;> cases b
     repeat' first |rfl|exact congr_arg some (add_mul _ _ _)
-    
 #align with_top.distrib' with_top.distrib'
 
 /-- This instance requires `canonically_ordered_comm_semiring` as it is the smallest class
@@ -307,15 +276,11 @@ instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiring (Wit
 
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : PosMulMono (WithBot α) :=
   posMulMono_iff_covariant_pos.2
-    ⟨by
+    ⟨by 
       rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk]
       lift x to α using x0.ne_bot
-      induction a using WithBot.recBotCoe;
-      · simp_rw [mul_bot x0.ne.symm, bot_le]
-        
-      induction b using WithBot.recBotCoe;
-      · exact absurd h (bot_lt_coe a).not_le
-        
+      induction a using WithBot.recBotCoe; · simp_rw [mul_bot x0.ne.symm, bot_le]
+      induction b using WithBot.recBotCoe; · exact absurd h (bot_lt_coe a).not_le
       simp only [← coe_mul, coe_le_coe] at *
       exact mul_le_mul_left' h x⟩
 

@@ -273,7 +273,7 @@ unsafe def merge_path (path : List (expr × expr)) (e : expr) : tactic Unit := d
     path.mmapAccumr
         (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p')
         p₂
-  let ps ← mzipWith (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.init
+  let ps ← zipWithM (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.init
   ps cl
 #align tactic.impl_graph.merge_path tactic.impl_graph.merge_path
 

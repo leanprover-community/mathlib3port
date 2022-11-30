@@ -39,7 +39,8 @@ this is another small category at that level.
 However if `C` and `D` are both large categories at the same universe level,
 this is a small category at the next higher level.
 -/
-instance Functor.category : Category.{max u₁ v₂} (C ⥤ D) where
+instance Functor.category :
+    Category.{max u₁ v₂} (C ⥤ D) where 
   Hom F G := NatTrans F G
   id F := NatTrans.id F
   comp _ _ _ α β := vcomp α β
@@ -86,21 +87,22 @@ theorem naturality_app {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (Z : D) {X Y : C} (f 
 
 /-- A natural transformation is a monomorphism if each component is. -/
 theorem mono_of_mono_app (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=
-  ⟨fun H g h eq => by
+  ⟨fun H g h eq => by 
     ext X
     rw [← cancel_mono (α.app X), ← comp_app, Eq, comp_app]⟩
 #align category_theory.nat_trans.mono_of_mono_app CategoryTheory.NatTrans.mono_of_mono_app
 
 /-- A natural transformation is an epimorphism if each component is. -/
 theorem epi_of_epi_app (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
-  ⟨fun H g h eq => by
+  ⟨fun H g h eq => by 
     ext X
     rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩
 #align category_theory.nat_trans.epi_of_epi_app CategoryTheory.NatTrans.epi_of_epi_app
 
 /-- `hcomp α β` is the horizontal composition of natural transformations. -/
 @[simps]
-def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I where
+def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) :
+    F ⋙ H ⟶ G ⋙ I where 
   app := fun X : C => β.app (F.obj X) ≫ I.map (α.app X)
   naturality' X Y f := by
     rw [functor.comp_map, functor.comp_map, ← assoc, naturality, assoc, ← map_comp I, naturality,
@@ -136,7 +138,10 @@ namespace Functor
 
 /-- Flip the arguments of a bifunctor. See also `currying.lean`. -/
 @[simps]
-protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E where
+protected def flip (F : C ⥤ D ⥤ E) :
+    D ⥤
+      C ⥤
+        E where 
   obj k :=
     { obj := fun j => (F.obj j).obj k, map := fun j j' f => (F.map f).app k,
       map_id' := fun X => by rw [CategoryTheory.Functor.map_id]; rfl,

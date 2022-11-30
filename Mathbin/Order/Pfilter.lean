@@ -102,8 +102,8 @@ theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => 
 #align order.pfilter.mem_of_le Order.Pfilter.mem_of_le
 
 /-- Two filters are equal when their underlying sets are equal. -/
-@[ext.1]
-theorem ext (h : (s : Set P) = t) : s = t := by
+@[ext]
+theorem ext (h : (s : Set P) = t) : s = t := by 
   cases s
   cases t
   exact congr_arg _ (ideal.ext h)
@@ -158,14 +158,15 @@ theorem top_mem : ⊤ ∈ F :=
 #align order.pfilter.top_mem Order.Pfilter.top_mem
 
 /-- There is a bottom filter when `P` has a top element. -/
-instance : OrderBot (Pfilter P) where
+instance : OrderBot (Pfilter P) where 
   bot := ⟨⊥⟩
   bot_le F := (bot_le : ⊥ ≤ F.dual)
 
 end OrderTop
 
 /-- There is a top filter when `P` has a bottom element. -/
-instance {P} [Preorder P] [OrderBot P] : OrderTop (Pfilter P) where
+instance {P} [Preorder P] [OrderBot P] :
+    OrderTop (Pfilter P) where 
   top := ⟨⊤⟩
   le_top F := (le_top : F.dual ≤ ⊤)
 
@@ -192,7 +193,7 @@ variable [CompleteSemilatticeInf P] {F : Pfilter P}
 theorem Inf_gc :
     GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F =>
       inf (OrderDual.ofDual F : Pfilter P) :=
-  fun x F => by
+  fun x F => by 
   simp
   rfl
 #align order.pfilter.Inf_gc Order.Pfilter.Inf_gc
@@ -200,7 +201,8 @@ theorem Inf_gc :
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def infGi :
     GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F =>
-      inf (OrderDual.ofDual F : Pfilter P) where
+      inf (OrderDual.ofDual F :
+          Pfilter P) where 
   choice F _ := inf (id F : Pfilter P)
   gc := Inf_gc
   u_l_le s := Inf_le <| mem_principal.2 <| le_refl s

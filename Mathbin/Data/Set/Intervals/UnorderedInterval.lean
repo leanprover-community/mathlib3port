@@ -166,9 +166,7 @@ theorem interval_subset_interval_union_interval : [a, c] ⊆ [a, b] ∪ [b, c] :
 
 theorem eq_of_mem_interval_of_mem_interval : a ∈ [b, c] → b ∈ [a, c] → a = b := by
   simp_rw [mem_interval] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;> apply le_antisymm <;>
-    first
-      |assumption|· exact le_trans ‹_› ‹_›
-        
+    first |assumption|· exact le_trans ‹_› ‹_›
 #align set.eq_of_mem_interval_of_mem_interval Set.eq_of_mem_interval_of_mem_interval
 
 theorem eq_of_mem_interval_of_mem_interval' : b ∈ [a, c] → c ∈ [a, b] → b = c := by
@@ -190,10 +188,8 @@ theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) :
   constructor
   · rintro ⟨a, b, h⟩
     exact ⟨a, b, fun x hx => Icc_subset_interval (h hx)⟩
-    
   · rintro ⟨a, b, h⟩
     exact ⟨min a b, max a b, h⟩
-    
 #align set.bdd_below_bdd_above_iff_subset_interval Set.bdd_below_bdd_above_iff_subset_interval
 
 /-- The open-closed interval with unordered bounds. -/
@@ -282,12 +278,10 @@ theorem interval_oc_injective_right (a : α) : Injective fun b => Ι b a := by
       and_true_iff, not_true, false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb
     refine' hb.eq_of_not_lt fun hc => _
     simpa [ha, and_iff_right hc, ← @not_le _ _ _ a, -not_le] using h c
-    
   · refine'
       eq_of_mem_interval_oc_of_mem_interval_oc ((h _).1 <| left_mem_interval_oc.2 ha)
         ((h _).2 <| left_mem_interval_oc.2 <| ha.trans_le _)
     simpa [ha, ha.not_le, mem_interval_oc] using h b
-    
 #align set.interval_oc_injective_right Set.interval_oc_injective_right
 
 theorem interval_oc_injective_left (a : α) : Injective (Ι a) := by

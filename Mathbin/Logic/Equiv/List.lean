@@ -72,7 +72,7 @@ theorem decode_list_zero : decode (List α) 0 = some [] :=
 @[simp]
 theorem decode_list_succ (v : ℕ) :
     decode (List α) (succ v) = (· :: ·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
-  show decodeList (succ v) = _ by
+  show decodeList (succ v) = _ by 
     cases' e : unpair v with v₁ v₂
     simp [decode_list, e]; rfl
 #align encodable.decode_list_succ Encodable.decode_list_succ
@@ -234,7 +234,6 @@ def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Fin (Fintype.card 
   haveI : DecidableEq α := Encodable.decidableEqOfEncodable _
   trans
   · exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm
-    
   exact Equiv.cast (congr_arg _ (length_sorted_univ α))
 #align encodable.fintype_equiv_fin Encodable.fintypeEquivFin
 
@@ -256,7 +255,7 @@ section List
 
 theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encodeList a = n
   | 0 => by rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
-  | succ v => by
+  | succ v => by 
     cases' e : unpair v with v₁ v₂
     have h := unpair_right_le v
     rw [e] at h
@@ -281,7 +280,7 @@ theorem list_of_nat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil
 theorem list_of_nat_succ (v : ℕ) :
     ofNat (List α) (succ v) = ofNat α v.unpair.1 :: ofNat (List α) v.unpair.2 :=
   of_nat_of_decode <|
-    show decodeList (succ v) = _ by
+    show decodeList (succ v) = _ by 
       cases' e : unpair v with v₁ v₂
       simp [decode_list, e]
       rw [show decode_list v₂ = decode (List α) v₂ from rfl, decode_eq_of_nat] <;> rfl
@@ -367,7 +366,7 @@ theorem lower_raise' : ∀ l n, lower' (raise' l n) n = l
 
 theorem raise_lower' : ∀ {l n}, (∀ m ∈ l, n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
   | [], n, h₁, h₂ => rfl
-  | m :: l, n, h₁, h₂ => by
+  | m :: l, n, h₁, h₂ => by 
     have : n ≤ m := h₁ _ (l.mem_cons_self _)
     simp [raise', lower', tsub_add_cancel_of_le this,
       raise_lower' (List.rel_of_sorted_cons h₂ : ∀ a ∈ l, m < a) h₂.of_cons]
@@ -411,7 +410,7 @@ end Denumerable
 namespace Equiv
 
 /-- The type lists on unit is canonically equivalent to the natural numbers. -/
-def listUnitEquiv : List Unit ≃ ℕ where
+def listUnitEquiv : List Unit ≃ ℕ where 
   toFun := List.length
   invFun := List.repeat ()
   left_inv u := List.length_injective (by simp)

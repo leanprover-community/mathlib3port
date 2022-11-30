@@ -219,13 +219,15 @@ theorem to_add_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
   rfl
 #align to_add_one to_add_one
 
-instance [MulOneClass α] : AddZeroClass (Additive α) where
+instance [MulOneClass α] : AddZeroClass
+      (Additive α) where 
   zero := 0
   add := (· + ·)
   zero_add := one_mul
   add_zero := mul_one
 
-instance [AddZeroClass α] : MulOneClass (Multiplicative α) where
+instance [AddZeroClass α] :
+    MulOneClass (Multiplicative α) where 
   one := 1
   mul := (· * ·)
   one_mul := zero_add
@@ -364,13 +366,16 @@ open Additive (ofMul)
 /-- Reinterpret `α →+ β` as `multiplicative α →* multiplicative β`. -/
 @[simps]
 def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
-    (α →+ β) ≃ (Multiplicative α →* Multiplicative β) where
+    (α →+ β) ≃
+      (Multiplicative α →*
+        Multiplicative
+          β) where 
   toFun f := ⟨fun a => ofAdd (f a.toAdd), f.2, f.3⟩
   invFun f := ⟨fun a => (f (ofAdd a)).toAdd, f.2, f.3⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align add_monoid_hom.to_multiplicative AddMonoidHom.toMultiplicative
@@ -378,13 +383,15 @@ def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
 /-- Reinterpret `α →* β` as `additive α →+ additive β`. -/
 @[simps]
 def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] :
-    (α →* β) ≃ (Additive α →+ Additive β) where
+    (α →* β) ≃
+      (Additive α →+
+        Additive β) where 
   toFun f := ⟨fun a => ofMul (f a.toMul), f.2, f.3⟩
   invFun f := ⟨fun a => (f (ofMul a)).toMul, f.2, f.3⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align monoid_hom.to_additive MonoidHom.toAdditive
@@ -392,13 +399,16 @@ def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] :
 /-- Reinterpret `additive α →+ β` as `α →* multiplicative β`. -/
 @[simps]
 def AddMonoidHom.toMultiplicative' [MulOneClass α] [AddZeroClass β] :
-    (Additive α →+ β) ≃ (α →* Multiplicative β) where
+    (Additive α →+ β) ≃
+      (α →*
+        Multiplicative
+          β) where 
   toFun f := ⟨fun a => ofAdd (f (ofMul a)), f.2, f.3⟩
   invFun f := ⟨fun a => (f a.toMul).toAdd, f.2, f.3⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align add_monoid_hom.to_multiplicative' AddMonoidHom.toMultiplicative'
@@ -413,13 +423,15 @@ def MonoidHom.toAdditive' [MulOneClass α] [AddZeroClass β] :
 /-- Reinterpret `α →+ additive β` as `multiplicative α →* β`. -/
 @[simps]
 def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClass β] :
-    (α →+ Additive β) ≃ (Multiplicative α →* β) where
+    (α →+ Additive β) ≃
+      (Multiplicative α →*
+        β) where 
   toFun f := ⟨fun a => (f a.toAdd).toMul, f.2, f.3⟩
   invFun f := ⟨fun a => ofMul (f (ofAdd a)), f.2, f.3⟩
-  left_inv x := by
+  left_inv x := by 
     ext
     rfl
-  right_inv x := by
+  right_inv x := by 
     ext
     rfl
 #align add_monoid_hom.to_multiplicative'' AddMonoidHom.toMultiplicative''

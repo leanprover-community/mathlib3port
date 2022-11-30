@@ -77,8 +77,9 @@ instance (priority := 100) HasLipschitzMul.has_continuous_mul : HasContinuousMul
 
 @[to_additive]
 instance Submonoid.hasLipschitzMul (s : Submonoid β) :
-    HasLipschitzMul s where lipschitz_mul :=
-    ⟨HasLipschitzMul.c β, by
+    HasLipschitzMul
+      s where lipschitz_mul :=
+    ⟨HasLipschitzMul.c β, by 
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitzWithLipschitzConstMulEdist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 #align submonoid.has_lipschitz_mul Submonoid.hasLipschitzMul
@@ -95,15 +96,15 @@ instance MulOpposite.hasLipschitzMul :
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy
 instance Real.hasLipschitzAdd :
-    HasLipschitzAdd ℝ where lipschitz_add :=
-    ⟨2, by
+    HasLipschitzAdd
+      ℝ where lipschitz_add :=
+    ⟨2, by 
       rw [lipschitz_with_iff_dist_le_mul]
       intro p q
       simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one,
         Nnreal.coe_bit0]
       convert le_trans (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
-        
       have := le_max_left (|p.1 - q.1|) (|p.2 - q.2|)
       have := le_max_right (|p.1 - q.1|) (|p.2 - q.2|)
       linarith⟩
@@ -112,8 +113,9 @@ instance Real.hasLipschitzAdd :
 -- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
 -- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
 instance Nnreal.hasLipschitzAdd :
-    HasLipschitzAdd ℝ≥0 where lipschitz_add :=
-    ⟨HasLipschitzAdd.c ℝ, by
+    HasLipschitzAdd
+      ℝ≥0 where lipschitz_add :=
+    ⟨HasLipschitzAdd.c ℝ, by 
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitzWithLipschitzConstAddEdist ⟨(x₁ : ℝ), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 #align nnreal.has_lipschitz_add Nnreal.hasLipschitzAdd
@@ -147,7 +149,8 @@ theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
 action. -/
 instance (priority := 100) HasBoundedSmul.has_continuous_smul :
-    HasContinuousSmul α β where continuous_smul := by
+    HasContinuousSmul α
+      β where continuous_smul := by 
     rw [Metric.continuous_iff]
     rintro ⟨a, b⟩ ε hε
     have : 0 ≤ dist a 0 := dist_nonneg
@@ -173,29 +176,33 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
       have := dist_smul_pair a b' b
       have := dist_pair_smul a a' b'
       nlinarith
-      
     · have : δ ≤ _ := min_le_right _ _
       have : δ ≤ _ := min_le_left _ _
       have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by
         rw [inv_mul_lt_iff] <;> nlinarith
       nlinarith
-      
 #align has_bounded_smul.has_continuous_smul HasBoundedSmul.has_continuous_smul
 
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
-instance Real.hasBoundedSmul : HasBoundedSmul ℝ ℝ where
+instance Real.hasBoundedSmul :
+    HasBoundedSmul ℝ
+      ℝ where 
   dist_smul_pair' x y₁ y₂ := by simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
   dist_pair_smul' x₁ x₂ y := by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 #align real.has_bounded_smul Real.hasBoundedSmul
 
-instance Nnreal.hasBoundedSmul : HasBoundedSmul ℝ≥0 ℝ≥0 where
+instance Nnreal.hasBoundedSmul :
+    HasBoundedSmul ℝ≥0
+      ℝ≥0 where 
   dist_smul_pair' x y₁ y₂ := by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
   dist_pair_smul' x₁ x₂ y := by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
 #align nnreal.has_bounded_smul Nnreal.hasBoundedSmul
 
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
-instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
+instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] :
+    HasBoundedSmul αᵐᵒᵖ
+      β where 
   dist_smul_pair' :=
     MulOpposite.rec fun x y₁ y₂ => by simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
   dist_pair_smul' :=

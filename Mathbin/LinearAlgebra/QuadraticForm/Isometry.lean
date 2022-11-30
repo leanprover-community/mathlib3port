@@ -79,7 +79,7 @@ def refl (Q : QuadraticForm R M) : Q.Isometry Q :=
 @[symm]
 def symm (f : Q₁.Isometry Q₂) : Q₂.Isometry Q₁ :=
   { (f : M₁ ≃ₗ[R] M₂).symm with
-    map_app' := by
+    map_app' := by 
       intro m
       rw [← f.map_app]
       congr
@@ -90,7 +90,7 @@ def symm (f : Q₁.Isometry Q₂) : Q₂.Isometry Q₁ :=
 @[trans]
 def trans (f : Q₁.Isometry Q₂) (g : Q₂.Isometry Q₃) : Q₁.Isometry Q₃ :=
   { (f : M₁ ≃ₗ[R] M₂).trans (g : M₂ ≃ₗ[R] M₃) with
-    map_app' := by
+    map_app' := by 
       intro m
       rw [← f.map_app, ← g.map_app]
       rfl }
@@ -125,7 +125,7 @@ variable [Fintype ι] {v : Basis ι R M}
 def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) :
     Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
   { f.symm with
-    map_app' := by
+    map_app' := by 
       intro
       simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.to_fun_eq_coe,
         LinearEquiv.apply_symm_apply, f.apply_symm_apply] }

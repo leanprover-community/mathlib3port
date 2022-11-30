@@ -22,7 +22,9 @@ The code is inspired by code from Gabriel Ebner from the
 open Lean Lean.Parser Interactive Tactic Native
 
 @[user_attribute]
-unsafe def localized_attr : user_attribute (rb_lmap Name String) Unit where
+unsafe def localized_attr :
+    user_attribute (rb_lmap Name String)
+      Unit where 
   Name := "_localized"
   descr := "(interal) attribute that flags localized commands"
   parser := failed

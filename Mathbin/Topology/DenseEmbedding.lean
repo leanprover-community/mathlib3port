@@ -198,7 +198,7 @@ theorem continuous_at_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseIn
     simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
   set V₁ := { x | tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
-  have V₁_in : V₁ ∈ 𝓝 b := by
+  have V₁_in : V₁ ∈ 𝓝 b := by 
     filter_upwards [hf]
     rintro x ⟨c, hc⟩
     dsimp [V₁, φ]
@@ -278,7 +278,7 @@ def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }
 
 protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
   { dense :=
-      dense_iff_closure_eq.2 <| by
+      dense_iff_closure_eq.2 <| by 
         ext ⟨x, hx⟩
         rw [image_eq_range] at hx
         simpa [closure_subtype, ← range_comp, (· ∘ ·)] ,
@@ -367,7 +367,7 @@ theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [Topol
   intro T
   refine' ⟨fun hT => _, fun hT => _⟩
   · obtain ⟨T', hT₁, hT₂, hT₃⟩ := exists_mem_nhds_is_closed_subset hT
-    have hT₄ : f ⁻¹' T' ∈ 𝓝 x := by
+    have hT₄ : f ⁻¹' T' ∈ 𝓝 x := by 
       rw [hf.to_inducing.nhds_eq_comap x]
       exact ⟨T', hT₁, subset.rfl⟩
     obtain ⟨i, hi, hi'⟩ := (h _).mp hT₄
@@ -375,11 +375,9 @@ theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [Topol
       ⟨i, hi,
         (closure_mono (image_subset f hi')).trans
           (subset.trans (closure_minimal (image_subset_iff.mpr subset.rfl) hT₂) hT₃)⟩
-    
   · obtain ⟨i, hi, hi'⟩ := hT
     suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
     replace h := (h (s i)).mpr ⟨i, hi, subset.rfl⟩
     exact hf.closure_image_mem_nhds h
-    
 #align filter.has_basis.has_basis_of_dense_inducing Filter.HasBasis.has_basis_of_dense_inducing
 

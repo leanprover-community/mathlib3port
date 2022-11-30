@@ -39,7 +39,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
             ∃ u v,
               MeasurableSet u ∧
                 MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
-    AeMeasurable f μ := by
+    AeMeasurable f μ := by 
   haveI : Encodable s := s_count.to_encodable
   have h' :
     ∀ p q,
@@ -47,25 +47,23 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
         MeasurableSet u ∧
           MeasurableSet v ∧
             { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
-    by
+    by 
     intro p q
     by_cases H : p ∈ s ∧ q ∈ s ∧ p < q
     · rcases h p H.1 q H.2.1 H.2.2 with ⟨u, v, hu, hv, h'u, h'v, hμ⟩
       exact ⟨u, v, hu, hv, h'u, h'v, fun ps qs pq => hμ⟩
-      
     · refine'
         ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _,
           fun ps qs pq => _⟩
       simp only [not_and] at H
       exact (H ps qs pq).elim
-      
   choose! u v huv using h'
   let u' : β → Set α := fun p => ⋂ q ∈ s ∩ Ioi p, u p q
-  have u'_meas : ∀ i, MeasurableSet (u' i) := by
+  have u'_meas : ∀ i, MeasurableSet (u' i) := by 
     intro i
     exact MeasurableSet.bInter (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
   let f' : α → β := fun x => ⨅ i : s, piecewise (u' i) (fun x => (i : β)) (fun x => (⊤ : β)) x
-  have f'_meas : Measurable f' := by
+  have f'_meas : Measurable f' := by 
     apply measurableInfi
     exact fun i => Measurable.piecewise (u'_meas i) measurableConst measurableConst
   let t := ⋃ (p : s) (q : s ∩ Ioi p), u' p ∩ v p q
@@ -89,7 +87,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       _ = 0 := by simp only [tsum_zero]
       
   have ff' : ∀ᵐ x ∂μ, f x = f' x := by
-    have : ∀ᵐ x ∂μ, x ∉ t := by
+    have : ∀ᵐ x ∂μ, x ∉ t := by 
       have : μ t = 0 := le_antisymm μt bot_le
       change μ _ = 0
       convert this
@@ -101,7 +99,6 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       by_cases H : x ∈ u' i
       swap
       · simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
-        
       simp only [H, piecewise_eq_of_mem]
       contrapose! hx
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
@@ -110,14 +107,12 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       apply mem_Union.2 ⟨i, _⟩
       refine' mem_Union.2 ⟨⟨r, ⟨rs, xr⟩⟩, _⟩
       exact ⟨H, A⟩
-      
     · intro q hq
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (f x) q ∩ s :=
         dense_iff_inter_open.1 s_dense (Ioo (f x) q) is_open_Ioo (nonempty_Ioo.2 hq)
       refine' ⟨⟨r, rs⟩, _⟩
       have A : x ∈ u' r := mem_bInter fun i hi => (huv r i).2.2.1 xr
       simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]
-      
   exact ⟨f', f'_meas, ff'⟩
 #align
   measure_theory.ae_measurable_of_exist_almost_disjoint_supersets MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets

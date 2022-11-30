@@ -52,10 +52,11 @@ variable (f : β → γ)
 
 /-- The natural applicative transformation from the identity functor
 to `F`, defined by `pure : Π {α}, α → F α`. -/
-def pureTransformation : ApplicativeTransformation id F where
+def pureTransformation :
+    ApplicativeTransformation id F where 
   app := @pure F _
   preserves_pure' α x := rfl
-  preserves_seq' α β f x := by
+  preserves_seq' α β f x := by 
     simp only [map_pure, seq_pure]
     rfl
 #align traversable.pure_transformation Traversable.pureTransformation
@@ -113,7 +114,7 @@ theorem traverse_id : traverse id.mk = (id.mk : t α → id (t α)) := by
 theorem traverse_comp (g : α → F β) (h : β → G γ) :
     traverse (comp.mk ∘ map h ∘ g) =
       (comp.mk ∘ map (traverse h) ∘ traverse g : t α → Comp F G (t γ)) :=
-  by
+  by 
   ext
   exact comp_traverse _ _ _
 #align traversable.traverse_comp Traversable.traverse_comp

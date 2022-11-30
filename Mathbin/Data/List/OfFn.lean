@@ -49,12 +49,10 @@ theorem nth_of_fn_aux {n} (f : Fin n → α) (i) :
   | 0, h, l, H => H i
   | succ m, h, l, H =>
     nth_of_fn_aux m _ _
-      (by
+      (by 
         intro j; cases' j with j
         · simp only [nth, of_fn_nth_val, zero_add, dif_pos (show m < n from h)]
-          
-        · simp only [nth, H, add_succ, succ_add]
-          )
+        · simp only [nth, H, add_succ, succ_add])
 #align list.nth_of_fn_aux List.nth_of_fn_aux
 
 /-- The `n`th element of a list -/
@@ -86,10 +84,7 @@ theorem map_of_fn {β : Type _} {n : ℕ} (f : Fin n → α) (g : α → β) :
 theorem array_eq_of_fn {n} (a : Array' n α) : a.toList = ofFn a.read := by
   suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAux (DArray.read a) m h l
     from this
-  intros
-  induction' m with m IH generalizing l
-  · rfl
-    
+  intros ; induction' m with m IH generalizing l; · rfl
   simp only [DArray.revIterateAux, of_fn_aux, IH]
 #align list.array_eq_of_fn List.array_eq_of_fn
 
@@ -111,12 +106,8 @@ theorem of_fn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i =>
   suffices
     ∀ {m h l}, ofFnAux f (succ m) (succ_le_succ h) l = f 0 :: ofFnAux (fun i => f i.succ) m h l from
     this
-  intros
-  induction' m with m IH generalizing l
-  · rfl
-    
-  rw [of_fn_aux, IH]
-  rfl
+  intros ; induction' m with m IH generalizing l; · rfl
+  rw [of_fn_aux, IH]; rfl
 #align list.of_fn_succ List.of_fn_succ
 
 theorem of_fn_succ' {n} (f : Fin (succ n) → α) :
@@ -124,11 +115,9 @@ theorem of_fn_succ' {n} (f : Fin (succ n) → α) :
   induction' n with n IH
   · rw [of_fn_zero, concat_nil, of_fn_succ, of_fn_zero]
     rfl
-    
   · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.cast_succ_zero]
     congr 3
     simp_rw [Fin.cast_succ_fin_succ]
-    
 #align list.of_fn_succ' List.of_fn_succ'
 
 @[simp]
@@ -151,14 +140,12 @@ theorem last_of_fn_succ {n : ℕ} (f : Fin n.succ → α)
 theorem of_fn_add {m n} (f : Fin (m + n) → α) :
     List.ofFn f =
       (List.ofFn fun i => f (Fin.castAdd n i)) ++ List.ofFn fun j => f (Fin.natAdd m j) :=
-  by
+  by 
   induction' n with n IH
   · rw [of_fn_zero, append_nil, Fin.cast_add_zero, Fin.cast_refl]
     rfl
-    
   · rw [of_fn_succ', of_fn_succ', IH, append_concat]
     rfl
-    
 #align list.of_fn_add List.of_fn_add
 
 /-- This breaks a list of `m*n` items into `m` groups each containing `n` elements. -/
@@ -174,13 +161,11 @@ theorem of_fn_mul {m n} (f : Fin (m * n) → α) :
                     (add_lt_add_left j.Prop _).trans_eq (add_one_mul _ _).symm
                   _ ≤ _ := Nat.mul_le_mul_right _ i.Prop
                   ⟩) :=
-  by
+  by 
   induction' m with m IH
   · simp_rw [of_fn_zero, zero_mul, of_fn_zero, join]
-    
   · simp_rw [of_fn_succ', succ_mul, join_concat, of_fn_add, IH]
     rfl
-    
 #align list.of_fn_mul List.of_fn_mul
 
 /-- This breaks a list of `m*n` items into `n` groups each containing `m` elements. -/
@@ -201,7 +186,7 @@ theorem of_fn_mul' {m n} (f : Fin (m * n) → α) :
 
 theorem of_fn_nth_le : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
   | [] => rfl
-  | a :: l => by
+  | a :: l => by 
     rw [of_fn_succ]
     congr
     simp only [Fin.coe_succ]
@@ -228,7 +213,9 @@ theorem of_fn_const (n : ℕ) (c : α) : (ofFn fun i : Fin n => c) = repeat c n 
 
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/
 @[simps]
-def equivSigmaTuple : List α ≃ Σn, Fin n → α where
+def equivSigmaTuple :
+    List α ≃ Σn,
+        Fin n → α where 
   toFun l := ⟨l.length, fun i => l.nthLe (↑i) i.2⟩
   invFun f := List.ofFn f.2
   left_inv := List.of_fn_nth_le

@@ -127,10 +127,10 @@ theorem id_def : @id α = fun x => x :=
 theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f : ∀ a, β a} {f' : ∀ a, β' a}
     (hα : α = α') (h : ∀ a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' := by
   subst hα
-  have : ∀ a, HEq (f a) (f' a) := by
+  have : ∀ a, HEq (f a) (f' a) := by 
     intro a
     exact h a a (HEq.refl a)
-  have : β = β' := by
+  have : β = β' := by 
     funext a
     exact type_eq_of_heq (this a)
   subst this
@@ -298,16 +298,12 @@ theorem Injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a 
   by_cases h₁ : p x₁ <;> by_cases h₂ : p x₂
   · rw [dif_pos h₁, dif_pos h₂] at h
     injection hf h
-    
   · rw [dif_pos h₁, dif_neg h₂] at h
     exact (im_disj h).elim
-    
   · rw [dif_neg h₁, dif_pos h₂] at h
     exact (im_disj h.symm).elim
-    
   · rw [dif_neg h₁, dif_neg h₂] at h
     injection hf' h
-    
 #align function.injective.dite Function.Injective.dite
 
 #print Function.Surjective.of_comp /-
@@ -451,12 +447,10 @@ theorem surjective_of_right_cancellable_Prop (h : ∀ g₁ g₂ : β → Prop, g
     Surjective f := by
   specialize h (fun _ => True) (fun y => ∃ x, f x = y) (funext fun x => _)
   · simp only [(· ∘ ·), exists_apply_eq_apply]
-    
   · intro y
     have : True = ∃ x, f x = y := congr_fun h y
     rw [← this]
     exact trivial
-    
 #align function.surjective_of_right_cancellable_Prop Function.surjective_of_right_cancellable_Prop
 
 /- warning: function.bijective_iff_exists_unique -> Function.bijective_iff_existsUnique is a dubious translation:
@@ -553,14 +547,13 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
   let T : Type max u v := Sigma f
   cases' hf (Set T) with U hU
   let g : Set T → T := fun s => ⟨U, cast hU.symm s⟩
-  have hg : injective g := by
+  have hg : injective g := by 
     intro s t h
     suffices cast hU (g s).2 = cast hU (g t).2 by
       simp only [cast_cast, cast_eq] at this
       assumption
     · congr
       assumption
-      
   exact cantor_injective g hg
 #align function.not_surjective_Type Function.not_surjective_Type
 -/
@@ -748,7 +741,7 @@ Case conversion may be inaccurate. Consider using '#align function.partial_inv_o
 theorem partialInv_of_injective {α β} {f : α → β} (I : Injective f) : IsPartialInv f (partialInv f)
   | a, b =>
     ⟨fun h =>
-      if h' : ∃ a, f a = b then by
+      if h' : ∃ a, f a = b then by 
         rw [partial_inv, dif_pos h'] at h
         injection h with h; subst h
         apply Classical.choose_spec h'
@@ -789,7 +782,7 @@ noncomputable def invFun (f : α → β) : β → α := fun y =>
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β} {b : β}, (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) -> (Eq.{u_2} β (f (Function.invFun.{u_1, u_2} α β _inst_1 f b)) b)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4412 : Nonempty.{u_1} α] {f : α -> β} {b : β}, (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) -> (Eq.{u_2} β (f (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4412 f b)) b)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4370 : Nonempty.{u_1} α] {f : α -> β} {b : β}, (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) -> (Eq.{u_2} β (f (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4370 f b)) b)
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_eq Function.invFun_eqₓ'. -/
 theorem invFun_eq (h : ∃ a, f a = b) : f (invFun f b) = b := by
   simp only [inv_fun, dif_pos h, h.some_spec]
@@ -799,7 +792,7 @@ theorem invFun_eq (h : ∃ a, f a = b) : f (invFun f b) = b := by
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β} {b : β}, (Not (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))) -> (Eq.{u_1} α (Function.invFun.{u_1, u_2} α β _inst_1 f b) (Classical.choice.{u_1} α _inst_1))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4453 : Nonempty.{u_1} α] {f : α -> β} {b : β}, (Not (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))) -> (Eq.{u_1} α (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4453 f b) (Classical.choice.{u_1} α inst._@.Mathlib.Logic.Function.Basic._hyg.4453))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4411 : Nonempty.{u_1} α] {f : α -> β} {b : β}, (Not (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))) -> (Eq.{u_1} α (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4411 f b) (Classical.choice.{u_1} α inst._@.Mathlib.Logic.Function.Basic._hyg.4411))
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_neg Function.invFun_negₓ'. -/
 theorem invFun_neg (h : ¬∃ a, f a = b) : invFun f b = Classical.choice ‹_› :=
   dif_neg h
@@ -809,7 +802,7 @@ theorem invFun_neg (h : ¬∃ a, f a = b) : invFun f b = Classical.choice ‹_�
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β} {g : β -> α}, (Function.Injective.{u_1, u_2} α β f) -> (Function.RightInverse.{u_1, u_2} α β g f) -> (Eq.{imax u_2 u_1} (β -> α) (Function.invFun.{u_1, u_2} α β _inst_1 f) g)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4498 : Nonempty.{u_1} α] {f : α -> β} {g : β -> α}, (Function.Injective.{u_1, u_2} α β f) -> (Function.RightInverse.{u_1, u_2} α β g f) -> (Eq.{imax u_2 u_1} (β -> α) (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4498 f) g)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4456 : Nonempty.{u_1} α] {f : α -> β} {g : β -> α}, (Function.Injective.{u_1, u_2} α β f) -> (Function.RightInverse.{u_1, u_2} α β g f) -> (Eq.{imax u_2 u_1} (β -> α) (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4456 f) g)
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_eq_of_injective_of_right_inverse Function.invFun_eq_of_injective_of_rightInverseₓ'. -/
 theorem invFun_eq_of_injective_of_rightInverse {g : β → α} (hf : Injective f)
     (hg : RightInverse g f) : invFun f = g :=
@@ -821,7 +814,7 @@ theorem invFun_eq_of_injective_of_rightInverse {g : β → α} (hf : Injective f
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β}, (Function.Surjective.{u_1, u_2} α β f) -> (Function.RightInverse.{u_1, u_2} α β (Function.invFun.{u_1, u_2} α β _inst_1 f) f)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4574 : Nonempty.{u_1} α] {f : α -> β}, (Function.Surjective.{u_1, u_2} α β f) -> (Function.RightInverse.{u_1, u_2} α β (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4574 f) f)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4532 : Nonempty.{u_1} α] {f : α -> β}, (Function.Surjective.{u_1, u_2} α β f) -> (Function.RightInverse.{u_1, u_2} α β (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4532 f) f)
 Case conversion may be inaccurate. Consider using '#align function.right_inverse_inv_fun Function.rightInverse_invFunₓ'. -/
 theorem rightInverse_invFun (hf : Surjective f) : RightInverse (invFun f) f := fun b =>
   inv_fun_eq <| hf b
@@ -831,7 +824,7 @@ theorem rightInverse_invFun (hf : Surjective f) : RightInverse (invFun f) f := f
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.LeftInverse.{u_1, u_2} α β (Function.invFun.{u_1, u_2} α β _inst_1 f) f)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4604 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.LeftInverse.{u_1, u_2} α β (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4604 f) f)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4562 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.LeftInverse.{u_1, u_2} α β (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4562 f) f)
 Case conversion may be inaccurate. Consider using '#align function.left_inverse_inv_fun Function.leftInverse_invFunₓ'. -/
 theorem leftInverse_invFun (hf : Injective f) : LeftInverse (invFun f) f := fun b =>
   hf <| invFun_eq ⟨b, rfl⟩
@@ -841,7 +834,7 @@ theorem leftInverse_invFun (hf : Injective f) : LeftInverse (invFun f) f := fun 
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.Surjective.{u_2, u_1} β α (Function.invFun.{u_1, u_2} α β _inst_1 f))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4637 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.Surjective.{u_2, u_1} β α (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4637 f))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4595 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.Surjective.{u_2, u_1} β α (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4595 f))
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_surjective Function.invFun_surjectiveₓ'. -/
 theorem invFun_surjective (hf : Injective f) : Surjective (invFun f) :=
   (leftInverse_invFun hf).Surjective
@@ -851,7 +844,7 @@ theorem invFun_surjective (hf : Injective f) : Surjective (invFun f) :=
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Eq.{u_1} (α -> α) (Function.comp.{u_1, u_2, u_1} α β α (Function.invFun.{u_1, u_2} α β _inst_1 f) f) (id.{u_1} α))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4661 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Eq.{u_1} (α -> α) (Function.comp.{u_1, u_2, u_1} α β α (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4661 f) f) (id.{u_1} α))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4619 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Eq.{u_1} (α -> α) (Function.comp.{u_1, u_2, u_1} α β α (Function.invFun.{u_1, u_2} α β inst._@.Mathlib.Logic.Function.Basic._hyg.4619 f) f) (id.{u_1} α))
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_comp Function.invFun_compₓ'. -/
 theorem invFun_comp (hf : Injective f) : invFun f ∘ f = id :=
   funext <| leftInverse_invFun hf
@@ -861,7 +854,7 @@ theorem invFun_comp (hf : Injective f) : invFun f ∘ f = id :=
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.HasLeftInverse.{u_1, u_2} α β f)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4694 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.HasLeftInverse.{u_1, u_2} α β f)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Function.Basic._hyg.4652 : Nonempty.{u_1} α] {f : α -> β}, (Function.Injective.{u_1, u_2} α β f) -> (Function.HasLeftInverse.{u_1, u_2} α β f)
 Case conversion may be inaccurate. Consider using '#align function.injective.has_left_inverse Function.Injective.hasLeftInverseₓ'. -/
 theorem Injective.hasLeftInverse (hf : Injective f) : HasLeftInverse f :=
   ⟨invFun f, leftInverse_invFun hf⟩
@@ -968,7 +961,7 @@ def update (f : ∀ a, β a) (a' : α) (v : β a') (a : α) : β a :=
 lean 3 declaration is
   forall {α : Sort.{u}} [_inst_1 : DecidableEq.{u} α] {β : Sort.{u_1}} (f : α -> β) (a' : α) (b : β) (a : α), Eq.{u_1} β (Function.update.{u, u_1} α (fun (ᾰ : α) => β) (fun (a : α) (b : α) => _inst_1 a b) f a' b a) (ite.{u_1} β (Eq.{u} α a a') (_inst_1 a a') b (f a))
 but is expected to have type
-  forall {α : Sort.{u}} [inst._@.Mathlib.Logic.Function.Basic._hyg.5228 : DecidableEq.{u} α] {β : Sort.{u_1}} (f : α -> β) (a' : α) (b : β) (a : α), Eq.{u_1} β (Function.update.{u, u_1} α (fun (a : α) => β) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.5228 a b) f a' b a) (ite.{u_1} β (Eq.{u} α a a') (inst._@.Mathlib.Logic.Function.Basic._hyg.5228 a a') b (f a))
+  forall {α : Sort.{u}} [inst._@.Mathlib.Logic.Function.Basic._hyg.5186 : DecidableEq.{u} α] {β : Sort.{u_1}} (f : α -> β) (a' : α) (b : β) (a : α), Eq.{u_1} β (Function.update.{u, u_1} α (fun (a : α) => β) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.5186 a b) f a' b a) (ite.{u_1} β (Eq.{u} α a a') (inst._@.Mathlib.Logic.Function.Basic._hyg.5186 a a') b (f a))
 Case conversion may be inaccurate. Consider using '#align function.update_apply Function.update_applyₓ'. -/
 /-- On non-dependent functions, `function.update` can be expressed as an `ite` -/
 theorem update_apply {β : Sort _} (f : α → β) (a' : α) (b : β) (a : α) :
@@ -1077,7 +1070,7 @@ theorem update_eq_self (a : α) (f : ∀ a, β a) : update f a (f a) = f :=
 lean 3 declaration is
   forall {α : Sort.{u}} {β : α -> Sort.{v}} [_inst_1 : DecidableEq.{u} α] {α' : Sort.{u_1}} (g : forall (a : α), β a) {f : α' -> α} {i : α} (a : β i), (forall (x : α'), Ne.{u} α (f x) i) -> (Eq.{imax u_1 v} (forall (j : α'), (fun (a : α) => β a) (f j)) (fun (j : α') => Function.update.{u, v} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_1 a b) g i a (f j)) (fun (j : α') => g (f j)))
 but is expected to have type
-  forall {α : Sort.{u}} {β : α -> Sort.{v}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6413 : DecidableEq.{u} α] {α' : Sort.{u_1}} (g : forall (a : α), β a) {f : α' -> α} {i : α} (a : β i), (forall (x : α'), Ne.{u} α (f x) i) -> (Eq.{imax u_1 v} (forall (j : α'), β (f j)) (fun (j : α') => Function.update.{u, v} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.6413 a b) g i a (f j)) (fun (j : α') => g (f j)))
+  forall {α : Sort.{u}} {β : α -> Sort.{v}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6371 : DecidableEq.{u} α] {α' : Sort.{u_1}} (g : forall (a : α), β a) {f : α' -> α} {i : α} (a : β i), (forall (x : α'), Ne.{u} α (f x) i) -> (Eq.{imax u_1 v} (forall (j : α'), β (f j)) (fun (j : α') => Function.update.{u, v} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.6371 a b) g i a (f j)) (fun (j : α') => g (f j)))
 Case conversion may be inaccurate. Consider using '#align function.update_comp_eq_of_forall_ne' Function.update_comp_eq_of_forall_ne'ₓ'. -/
 theorem update_comp_eq_of_forall_ne' {α'} (g : ∀ a, β a) {f : α' → α} {i : α} (a : β i)
     (h : ∀ x, f x ≠ i) : (fun j => (update g i a) (f j)) = fun j => g (f j) :=
@@ -1088,7 +1081,7 @@ theorem update_comp_eq_of_forall_ne' {α'} (g : ∀ a, β a) {f : α' → α} {i
 lean 3 declaration is
   forall {α' : Sort.{w}} [_inst_2 : DecidableEq.{w} α'] {α : Sort.{u_1}} {β : Sort.{u_2}} (g : α' -> β) {f : α -> α'} {i : α'} (a : β), (forall (x : α), Ne.{w} α' (f x) i) -> (Eq.{imax u_1 u_2} (α -> β) (Function.comp.{u_1, w, u_2} α α' β (Function.update.{w, u_2} α' (fun (ᾰ : α') => β) (fun (a : α') (b : α') => _inst_2 a b) g i a) f) (Function.comp.{u_1, w, u_2} α α' β g f))
 but is expected to have type
-  forall {α' : Sort.{w}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6505 : DecidableEq.{w} α'] {α : Sort.{u_1}} {β : Sort.{u_2}} (g : α' -> β) {f : α -> α'} {i : α'} (a : β), (forall (x : α), Ne.{w} α' (f x) i) -> (Eq.{imax u_1 u_2} (α -> β) (Function.comp.{u_1, w, u_2} α α' β (Function.update.{w, u_2} α' (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5164 : α') => β) (fun (a : α') (b : α') => inst._@.Mathlib.Logic.Function.Basic._hyg.6505 a b) g i a) f) (Function.comp.{u_1, w, u_2} α α' β g f))
+  forall {α' : Sort.{w}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6463 : DecidableEq.{w} α'] {α : Sort.{u_1}} {β : Sort.{u_2}} (g : α' -> β) {f : α -> α'} {i : α'} (a : β), (forall (x : α), Ne.{w} α' (f x) i) -> (Eq.{imax u_1 u_2} (α -> β) (Function.comp.{u_1, w, u_2} α α' β (Function.update.{w, u_2} α' (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5122 : α') => β) (fun (a : α') (b : α') => inst._@.Mathlib.Logic.Function.Basic._hyg.6463 a b) g i a) f) (Function.comp.{u_1, w, u_2} α α' β g f))
 Case conversion may be inaccurate. Consider using '#align function.update_comp_eq_of_forall_ne Function.update_comp_eq_of_forall_neₓ'. -/
 /-- Non-dependent version of `function.update_comp_eq_of_forall_ne'` -/
 theorem update_comp_eq_of_forall_ne {α β : Sort _} (g : α' → β) {f : α → α'} {i : α'} (a : β)
@@ -1107,7 +1100,7 @@ theorem update_comp_eq_of_injective' (g : ∀ a, β a) {f : α' → α} (hf : Fu
 lean 3 declaration is
   forall {α : Sort.{u}} {α' : Sort.{w}} [_inst_1 : DecidableEq.{u} α] [_inst_2 : DecidableEq.{w} α'] {β : Sort.{u_1}} (g : α' -> β) {f : α -> α'}, (Function.Injective.{u, w} α α' f) -> (forall (i : α) (a : β), Eq.{imax u u_1} (α -> β) (Function.comp.{u, w, u_1} α α' β (Function.update.{w, u_1} α' (fun (ᾰ : α') => β) (fun (a : α') (b : α') => _inst_2 a b) g (f i) a) f) (Function.update.{u, u_1} α (fun (ᾰ : α) => β) (fun (a : α) (b : α) => _inst_1 a b) (Function.comp.{u, w, u_1} α α' β g f) i a))
 but is expected to have type
-  forall {α : Sort.{u}} {α' : Sort.{w}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6661 : DecidableEq.{u} α] [inst._@.Mathlib.Logic.Function.Basic._hyg.6664 : DecidableEq.{w} α'] {β : Sort.{u_1}} (g : α' -> β) {f : α -> α'}, (Function.Injective.{u, w} α α' f) -> (forall (i : α) (a : β), Eq.{imax u u_1} (α -> β) (Function.comp.{u, w, u_1} α α' β (Function.update.{w, u_1} α' (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5164 : α') => β) (fun (a : α') (b : α') => inst._@.Mathlib.Logic.Function.Basic._hyg.6664 a b) g (f i) a) f) (Function.update.{u, u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5164 : α) => β) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.6661 a b) (Function.comp.{u, w, u_1} α α' β g f) i a))
+  forall {α : Sort.{u}} {α' : Sort.{w}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6619 : DecidableEq.{u} α] [inst._@.Mathlib.Logic.Function.Basic._hyg.6622 : DecidableEq.{w} α'] {β : Sort.{u_1}} (g : α' -> β) {f : α -> α'}, (Function.Injective.{u, w} α α' f) -> (forall (i : α) (a : β), Eq.{imax u u_1} (α -> β) (Function.comp.{u, w, u_1} α α' β (Function.update.{w, u_1} α' (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5122 : α') => β) (fun (a : α') (b : α') => inst._@.Mathlib.Logic.Function.Basic._hyg.6622 a b) g (f i) a) f) (Function.update.{u, u_1} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5122 : α) => β) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.6619 a b) (Function.comp.{u, w, u_1} α α' β g f) i a))
 Case conversion may be inaccurate. Consider using '#align function.update_comp_eq_of_injective Function.update_comp_eq_of_injectiveₓ'. -/
 /-- Non-dependent version of `function.update_comp_eq_of_injective'` -/
 theorem update_comp_eq_of_injective {β : Sort _} (g : α' → β) {f : α → α'}
@@ -1120,7 +1113,7 @@ theorem update_comp_eq_of_injective {β : Sort _} (g : α' → β) {f : α → �
 lean 3 declaration is
   forall {ι : Sort.{u_1}} [_inst_3 : DecidableEq.{u_1} ι] {α : ι -> Sort.{u_2}} {β : ι -> Sort.{u_3}} (f : forall (i : ι), (α i) -> (β i)) (g : forall (i : ι), α i) (i : ι) (v : α i) (j : ι), Eq.{u_3} (β j) (f j (Function.update.{u_1, u_2} ι α (fun (a : ι) (b : ι) => _inst_3 a b) g i v j)) (Function.update.{u_1, u_3} ι β (fun (a : ι) (b : ι) => _inst_3 a b) (fun (k : ι) => f k (g k)) i (f i v) j)
 but is expected to have type
-  forall {ι : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6743 : DecidableEq.{u_1} ι] {α : ι -> Sort.{u_2}} {β : ι -> Sort.{u_3}} (f : forall (i : ι), (α i) -> (β i)) (g : forall (i : ι), α i) (i : ι) (v : α i) (j : ι), Eq.{u_3} (β j) (f j (Function.update.{u_1, u_2} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6743 a b) g i v j)) (Function.update.{u_1, u_3} ι (fun (k : ι) => β k) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6743 a b) (fun (k : ι) => f k (g k)) i (f i v) j)
+  forall {ι : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6701 : DecidableEq.{u_1} ι] {α : ι -> Sort.{u_2}} {β : ι -> Sort.{u_3}} (f : forall (i : ι), (α i) -> (β i)) (g : forall (i : ι), α i) (i : ι) (v : α i) (j : ι), Eq.{u_3} (β j) (f j (Function.update.{u_1, u_2} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6701 a b) g i v j)) (Function.update.{u_1, u_3} ι (fun (k : ι) => β k) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6701 a b) (fun (k : ι) => f k (g k)) i (f i v) j)
 Case conversion may be inaccurate. Consider using '#align function.apply_update Function.apply_updateₓ'. -/
 theorem apply_update {ι : Sort _} [DecidableEq ι] {α β : ι → Sort _} (f : ∀ i, α i → β i)
     (g : ∀ i, α i) (i : ι) (v : α i) (j : ι) :
@@ -1128,16 +1121,14 @@ theorem apply_update {ι : Sort _} [DecidableEq ι] {α β : ι → Sort _} (f :
   by_cases h : j = i
   · subst j
     simp
-    
   · simp [h]
-    
 #align function.apply_update Function.apply_update
 
 /- warning: function.apply_update₂ -> Function.apply_update₂ is a dubious translation:
 lean 3 declaration is
   forall {ι : Sort.{u_1}} [_inst_3 : DecidableEq.{u_1} ι] {α : ι -> Sort.{u_2}} {β : ι -> Sort.{u_3}} {γ : ι -> Sort.{u_4}} (f : forall (i : ι), (α i) -> (β i) -> (γ i)) (g : forall (i : ι), α i) (h : forall (i : ι), β i) (i : ι) (v : α i) (w : β i) (j : ι), Eq.{u_4} (γ j) (f j (Function.update.{u_1, u_2} ι α (fun (a : ι) (b : ι) => _inst_3 a b) g i v j) (Function.update.{u_1, u_3} ι β (fun (a : ι) (b : ι) => _inst_3 a b) h i w j)) (Function.update.{u_1, u_4} ι γ (fun (a : ι) (b : ι) => _inst_3 a b) (fun (k : ι) => f k (g k) (h k)) i (f i v w) j)
 but is expected to have type
-  forall {ι : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6868 : DecidableEq.{u_1} ι] {α : ι -> Sort.{u_2}} {β : ι -> Sort.{u_3}} {γ : ι -> Sort.{u_4}} (f : forall (i : ι), (α i) -> (β i) -> (γ i)) (g : forall (i : ι), α i) (h : forall (i : ι), β i) (i : ι) (v : α i) (w : β i) (j : ι), Eq.{u_4} (γ j) (f j (Function.update.{u_1, u_2} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6868 a b) g i v j) (Function.update.{u_1, u_3} ι (fun (a : ι) => β a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6868 a b) h i w j)) (Function.update.{u_1, u_4} ι (fun (k : ι) => γ k) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6868 a b) (fun (k : ι) => f k (g k) (h k)) i (f i v w) j)
+  forall {ι : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6822 : DecidableEq.{u_1} ι] {α : ι -> Sort.{u_2}} {β : ι -> Sort.{u_3}} {γ : ι -> Sort.{u_4}} (f : forall (i : ι), (α i) -> (β i) -> (γ i)) (g : forall (i : ι), α i) (h : forall (i : ι), β i) (i : ι) (v : α i) (w : β i) (j : ι), Eq.{u_4} (γ j) (f j (Function.update.{u_1, u_2} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6822 a b) g i v j) (Function.update.{u_1, u_3} ι (fun (a : ι) => β a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6822 a b) h i w j)) (Function.update.{u_1, u_4} ι (fun (k : ι) => γ k) (fun (a : ι) (b : ι) => inst._@.Mathlib.Logic.Function.Basic._hyg.6822 a b) (fun (k : ι) => f k (g k) (h k)) i (f i v w) j)
 Case conversion may be inaccurate. Consider using '#align function.apply_update₂ Function.apply_update₂ₓ'. -/
 theorem apply_update₂ {ι : Sort _} [DecidableEq ι] {α β γ : ι → Sort _} (f : ∀ i, α i → β i → γ i)
     (g : ∀ i, α i) (h : ∀ i, β i) (i : ι) (v : α i) (w : β i) (j : ι) :
@@ -1145,16 +1136,14 @@ theorem apply_update₂ {ι : Sort _} [DecidableEq ι] {α β γ : ι → Sort _
   by_cases h : j = i
   · subst j
     simp
-    
   · simp [h]
-    
 #align function.apply_update₂ Function.apply_update₂
 
 /- warning: function.comp_update -> Function.comp_update is a dubious translation:
 lean 3 declaration is
   forall {α : Sort.{u}} [_inst_1 : DecidableEq.{u} α] {α' : Sort.{u_1}} {β : Sort.{u_2}} (f : α' -> β) (g : α -> α') (i : α) (v : α'), Eq.{imax u u_2} (α -> β) (Function.comp.{u, u_1, u_2} α α' β f (Function.update.{u, u_1} α (fun (ᾰ : α) => α') (fun (a : α) (b : α) => _inst_1 a b) g i v)) (Function.update.{u, u_2} α (fun (ᾰ : α) => β) (fun (a : α) (b : α) => _inst_1 a b) (Function.comp.{u, u_1, u_2} α α' β f g) i (f v))
 but is expected to have type
-  forall {α : Sort.{u}} [inst._@.Mathlib.Logic.Function.Basic._hyg.7000 : DecidableEq.{u} α] {α' : Sort.{u_1}} {β : Sort.{u_2}} (f : α' -> β) (g : α -> α') (i : α) (v : α'), Eq.{imax u u_2} (α -> β) (Function.comp.{u, u_1, u_2} α α' β f (Function.update.{u, u_1} α (fun (a._@.Init.Prelude._hyg.22 : α) => α') (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7000 a b) g i v)) (Function.update.{u, u_2} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5164 : α) => β) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7000 a b) (Function.comp.{u, u_1, u_2} α α' β f g) i (f v))
+  forall {α : Sort.{u}} [inst._@.Mathlib.Logic.Function.Basic._hyg.6950 : DecidableEq.{u} α] {α' : Sort.{u_1}} {β : Sort.{u_2}} (f : α' -> β) (g : α -> α') (i : α) (v : α'), Eq.{imax u u_2} (α -> β) (Function.comp.{u, u_1, u_2} α α' β f (Function.update.{u, u_1} α (fun (a._@.Init.Prelude._hyg.22 : α) => α') (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.6950 a b) g i v)) (Function.update.{u, u_2} α (fun (a._@.Mathlib.Logic.Function.Basic._hyg.5122 : α) => β) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.6950 a b) (Function.comp.{u, u_1, u_2} α α' β f g) i (f v))
 Case conversion may be inaccurate. Consider using '#align function.comp_update Function.comp_updateₓ'. -/
 theorem comp_update {α' : Sort _} {β : Sort _} (f : α' → β) (g : α → α') (i : α) (v : α') :
     f ∘ update g i v = update (f ∘ g) i (f v) :=
@@ -1165,7 +1154,7 @@ theorem comp_update {α' : Sort _} {β : Sort _} (f : α' → β) (g : α → α
 lean 3 declaration is
   forall {α : Sort.{u_1}} [_inst_3 : DecidableEq.{u_1} α] {β : α -> Sort.{u_2}} {a : α} {b : α}, (Ne.{u_1} α a b) -> (forall (v : β a) (w : β b) (f : forall (a : α), β a), Eq.{imax u_1 u_2} (forall (a : α), β a) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) f a v) b w) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) f b w) a v))
 but is expected to have type
-  forall {α : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.7084 : DecidableEq.{u_1} α] {β : α -> Sort.{u_2}} {a : α} {b : α}, (Ne.{u_1} α a b) -> (forall (v : β a) (w : β b) (f : forall (a : α), β a), Eq.{imax u_1 u_2} (forall (a : α), β a) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7084 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7084 a b) f a v) b w) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7084 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7084 a b) f b w) a v))
+  forall {α : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.7034 : DecidableEq.{u_1} α] {β : α -> Sort.{u_2}} {a : α} {b : α}, (Ne.{u_1} α a b) -> (forall (v : β a) (w : β b) (f : forall (a : α), β a), Eq.{imax u_1 u_2} (forall (a : α), β a) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7034 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7034 a b) f a v) b w) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7034 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7034 a b) f b w) a v))
 Case conversion may be inaccurate. Consider using '#align function.update_comm Function.update_commₓ'. -/
 theorem update_comm {α} [DecidableEq α] {β : α → Sort _} {a b : α} (h : a ≠ b) (v : β a) (w : β b)
     (f : ∀ a, β a) : update (update f a v) b w = update (update f b w) a v := by
@@ -1178,7 +1167,7 @@ theorem update_comm {α} [DecidableEq α] {β : α → Sort _} {a b : α} (h : a
 lean 3 declaration is
   forall {α : Sort.{u_1}} [_inst_3 : DecidableEq.{u_1} α] {β : α -> Sort.{u_2}} {a : α} (v : β a) (w : β a) (f : forall (a : α), β a), Eq.{imax u_1 u_2} (forall (a : α), β a) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) f a v) a w) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) f a w)
 but is expected to have type
-  forall {α : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.7403 : DecidableEq.{u_1} α] {β : α -> Sort.{u_2}} {a : α} (v : β a) (w : β a) (f : forall (a : α), β a), Eq.{imax u_1 u_2} (forall (a : α), β a) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7403 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7403 a b) f a v) a w) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7403 a b) f a w)
+  forall {α : Sort.{u_1}} [inst._@.Mathlib.Logic.Function.Basic._hyg.7345 : DecidableEq.{u_1} α] {β : α -> Sort.{u_2}} {a : α} (v : β a) (w : β a) (f : forall (a : α), β a), Eq.{imax u_1 u_2} (forall (a : α), β a) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7345 a b) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7345 a b) f a v) a w) (Function.update.{u_1, u_2} α (fun (a : α) => β a) (fun (a : α) (b : α) => inst._@.Mathlib.Logic.Function.Basic._hyg.7345 a b) f a w)
 Case conversion may be inaccurate. Consider using '#align function.update_idem Function.update_idemₓ'. -/
 @[simp]
 theorem update_idem {α} [DecidableEq α] {β : α → Sort _} {a : α} (v w : β a) (f : ∀ a, β a) :
@@ -1224,7 +1213,7 @@ theorem Injective.factors_through (hf : Injective f) (g : α → γ) : g.Factors
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β) (g : α -> γ) (e' : β -> γ) (b : β) [_inst_1 : Decidable (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))], Eq.{u_3} γ (Function.extend.{u_1, u_2, u_3} α β γ f g e' b) (dite.{u_3} γ (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) _inst_1 (fun (h : Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) => g (Classical.choose.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b) h)) (fun (h : Not (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))) => e' b))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β) (g : α -> γ) (e' : β -> γ) (b : β) [inst._@.Mathlib.Logic.Function.Basic._hyg.7628 : Decidable (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))], Eq.{u_3} γ (Function.extend.{u_1, u_2, u_3} α β γ f g e' b) (dite.{u_3} γ (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) inst._@.Mathlib.Logic.Function.Basic._hyg.7628 (fun (h : Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) => g (Classical.choose.{u_1} α (fun (x : α) => Eq.{u_2} β (f x) b) h)) (fun (h : Not (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))) => e' b))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β) (g : α -> γ) (e' : β -> γ) (b : β) [inst._@.Mathlib.Logic.Function.Basic._hyg.7570 : Decidable (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))], Eq.{u_3} γ (Function.extend.{u_1, u_2, u_3} α β γ f g e' b) (dite.{u_3} γ (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) inst._@.Mathlib.Logic.Function.Basic._hyg.7570 (fun (h : Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b)) => g (Classical.choose.{u_1} α (fun (x : α) => Eq.{u_2} β (f x) b) h)) (fun (h : Not (Exists.{u_1} α (fun (a : α) => Eq.{u_2} β (f a) b))) => e' b))
 Case conversion may be inaccurate. Consider using '#align function.extend_def Function.extend_defₓ'. -/
 theorem extend_def (f : α → β) (g : α → γ) (e' : β → γ) (b : β) [Decidable (∃ a, f a = b)] :
     extend f g e' b = if h : ∃ a, f a = b then g (Classical.choose h) else e' b := by
@@ -1291,12 +1280,8 @@ theorem FactorsThrough.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g 
       simp only [comp_apply]
       apply congr_arg
       exact hf h
-      
     · exact hf
-      
-    
   · rw [extend_apply' _ _ _ hb, extend_apply' _ _ _ hb]
-    
 #align function.factors_through.apply_extend Function.FactorsThrough.apply_extend
 
 /- warning: function.injective.apply_extend -> Function.Injective.apply_extend is a dubious translation:
@@ -1360,7 +1345,7 @@ theorem Injective.surjective_comp_right' (hf : Injective f) (g₀ : β → γ) :
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β} [_inst_1 : Nonempty.{u_3} γ], (Function.Injective.{u_1, u_2} α β f) -> (Function.Surjective.{imax u_2 u_3, imax u_1 u_3} (β -> γ) (α -> γ) (fun (g : β -> γ) => Function.comp.{u_1, u_2, u_3} α β γ g f))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {f : α -> β} [inst._@.Mathlib.Logic.Function.Basic._hyg.8416 : Nonempty.{u_1} γ], (Function.Injective.{u_2, u_3} α β f) -> (Function.Surjective.{imax u_3 u_1, imax u_2 u_1} (β -> γ) (α -> γ) (fun (g : β -> γ) => Function.comp.{u_2, u_3, u_1} α β γ g f))
+  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {f : α -> β} [inst._@.Mathlib.Logic.Function.Basic._hyg.8358 : Nonempty.{u_1} γ], (Function.Injective.{u_2, u_3} α β f) -> (Function.Surjective.{imax u_3 u_1, imax u_2 u_1} (β -> γ) (α -> γ) (fun (g : β -> γ) => Function.comp.{u_2, u_3, u_1} α β γ g f))
 Case conversion may be inaccurate. Consider using '#align function.injective.surjective_comp_right Function.Injective.surjective_comp_rightₓ'. -/
 theorem Injective.surjective_comp_right [Nonempty γ] (hf : Injective f) :
     Surjective fun g : β → γ => g ∘ f :=
@@ -1614,7 +1599,7 @@ protected theorem uncurry {α β γ : Type _} {f : α → β → γ} (hf : Injec
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β -> γ}, (Function.Injective2.{u_1, u_2, u_3} α β γ f) -> (forall [_inst_1 : Nonempty.{u_2} β], Function.Injective.{u_1, imax u_2 u_3} α (β -> γ) f)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β -> γ}, (Function.Injective2.{u_1, u_2, u_3} α β γ f) -> (forall [inst._@.Mathlib.Logic.Function.Basic._hyg.10544 : Nonempty.{u_2} β], Function.Injective.{u_1, imax u_2 u_3} α (β -> γ) f)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β -> γ}, (Function.Injective2.{u_1, u_2, u_3} α β γ f) -> (forall [inst._@.Mathlib.Logic.Function.Basic._hyg.10489 : Nonempty.{u_2} β], Function.Injective.{u_1, imax u_2 u_3} α (β -> γ) f)
 Case conversion may be inaccurate. Consider using '#align function.injective2.left' Function.Injective2.left'ₓ'. -/
 /-- As a map from the left argument to a unary function, `f` is injective. -/
 theorem left' (hf : Injective2 f) [Nonempty β] : Function.Injective f := fun a₁ a₂ h =>
@@ -1626,7 +1611,7 @@ theorem left' (hf : Injective2 f) [Nonempty β] : Function.Injective f := fun a�
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β -> γ}, (Function.Injective2.{u_1, u_2, u_3} α β γ f) -> (forall [_inst_1 : Nonempty.{u_1} α], Function.Injective.{u_2, imax u_1 u_3} β (α -> γ) (fun (b : β) (a : α) => f a b))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β -> γ}, (Function.Injective2.{u_1, u_2, u_3} α β γ f) -> (forall [inst._@.Mathlib.Logic.Function.Basic._hyg.10601 : Nonempty.{u_1} α], Function.Injective.{u_2, imax u_1 u_3} β (α -> γ) (fun (b : β) (a : α) => f a b))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β -> γ}, (Function.Injective2.{u_1, u_2, u_3} α β γ f) -> (forall [inst._@.Mathlib.Logic.Function.Basic._hyg.10546 : Nonempty.{u_1} α], Function.Injective.{u_2, imax u_1 u_3} β (α -> γ) (fun (b : β) (a : α) => f a b))
 Case conversion may be inaccurate. Consider using '#align function.injective2.right' Function.Injective2.right'ₓ'. -/
 /-- As a map from the right argument to a unary function, `f` is injective. -/
 theorem right' (hf : Injective2 f) [Nonempty α] : Function.Injective fun b a => f a b :=
@@ -1690,7 +1675,7 @@ def Set.piecewise {α : Type u} {β : α → Sort v} (s : Set α) (f g : ∀ i, 
 lean 3 declaration is
   forall {α : Sort.{u_1}} {C : α -> Sort.{u_2}} {a : α} {a' : α} (h : Eq.{u_1} α a a'), Function.Bijective.{u_2, u_2} (C a) (C a') (Eq.recOn.{u_2, u_1} α a C a' h)
 but is expected to have type
-  forall {α : Sort.{u_1}} {C : α -> Sort.{u_2}} {a : α} {a' : α} (h : Eq.{u_1} α a a'), Function.Bijective.{u_2, u_2} (C a) (C a') (fun (x._@.Mathlib.Logic.Function.Basic._hyg.10936 : C a) => Eq.ndrec.{u_2, u_1} α a C x._@.Mathlib.Logic.Function.Basic._hyg.10936 a' h)
+  forall {α : Sort.{u_1}} {C : α -> Sort.{u_2}} {a : α} {a' : α} (h : Eq.{u_1} α a a'), Function.Bijective.{u_2, u_2} (C a) (C a') (fun (x._@.Mathlib.Logic.Function.Basic._hyg.10881 : C a) => Eq.ndrec.{u_2, u_1} α a C x._@.Mathlib.Logic.Function.Basic._hyg.10881 a' h)
 Case conversion may be inaccurate. Consider using '#align eq_rec_on_bijective eq_rec_on_bijectiveₓ'. -/
 theorem eq_rec_on_bijective {α : Sort _} {C : α → Sort _} :
     ∀ {a a' : α} (h : a = a'), Function.Bijective (@Eq.recOn _ _ C _ h)
@@ -1742,7 +1727,7 @@ theorem cast_inj {α β : Type _} (h : α = β) {x y : α} : cast h x = cast h y
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : β -> Sort.{v}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u_1, u_2} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{v} (γ (f a)) (Eq.ndrec.{v, u_2} β (f (g (f a))) γ (C (g (f a))) (f a) (congr_arg.{u_1, u_2} α β (g (f a)) a f (h a))) (C a)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : β -> Sort.{v}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u_1, u_2} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{v} (γ (f a)) (Eq.rec.{v, u_2} β (f (g (f a))) (fun (x : β) (x._@.Mathlib.Logic.Function.Basic._hyg.11277 : Eq.{u_2} β (f (g (f a))) x) => γ x) (C (g (f a))) (f a) (congr_arg.{u_1, u_2} α β (g (f a)) a f (h a))) (C a)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : β -> Sort.{v}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u_1, u_2} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{v} (γ (f a)) (Eq.rec.{v, u_2} β (f (g (f a))) (fun (x : β) (x._@.Mathlib.Logic.Function.Basic._hyg.11222 : Eq.{u_2} β (f (g (f a))) x) => γ x) (C (g (f a))) (f a) (congr_arg.{u_1, u_2} α β (g (f a)) a f (h a))) (C a)
 Case conversion may be inaccurate. Consider using '#align function.left_inverse.eq_rec_eq Function.LeftInverse.eq_rec_eqₓ'. -/
 theorem Function.LeftInverse.eq_rec_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
     (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) :
@@ -1754,7 +1739,7 @@ theorem Function.LeftInverse.eq_rec_eq {α β : Sort _} {γ : β → Sort v} {f 
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : β -> Sort.{v}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u_1, u_2} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{v} (γ (f a)) (Eq.recOn.{v, u_2} β (f (g (f a))) γ (f a) (congr_arg.{u_1, u_2} α β (g (f a)) a f (h a)) (C (g (f a)))) (C a)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : β -> Sort.{v}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u_1, u_2} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{v} (γ (f a)) (Eq.recOn.{v, u_2} β (f (g (f a))) (fun (x : β) (x._@.Mathlib.Logic.Function.Basic._hyg.11394 : Eq.{u_2} β (f (g (f a))) x) => γ x) (f a) (congr_arg.{u_1, u_2} α β (g (f a)) a f (h a)) (C (g (f a)))) (C a)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : β -> Sort.{v}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u_1, u_2} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{v} (γ (f a)) (Eq.recOn.{v, u_2} β (f (g (f a))) (fun (x : β) (x._@.Mathlib.Logic.Function.Basic._hyg.11339 : Eq.{u_2} β (f (g (f a))) x) => γ x) (f a) (congr_arg.{u_1, u_2} α β (g (f a)) a f (h a)) (C (g (f a)))) (C a)
 Case conversion may be inaccurate. Consider using '#align function.left_inverse.eq_rec_on_eq Function.LeftInverse.eq_rec_on_eqₓ'. -/
 theorem Function.LeftInverse.eq_rec_on_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
     (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) :
@@ -1786,7 +1771,7 @@ def Set.SeparatesPoints {α β : Type _} (A : Set (α → β)) : Prop :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : outParam.{succ (succ u_2)} Type.{u_2}} (op : α -> α -> β) [_inst_1 : IsSymmOp.{u_1, u_2} α β op], Eq.{max (succ u_1) (succ u_2)} (α -> α -> β) (flip.{succ u_1, succ u_1, succ u_2} α α β op) op
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (op : α -> α -> β) [inst._@.Mathlib.Logic.Function.Basic._hyg.11577 : IsSymmOp.{u_1, u_2} α β op], Eq.{max (succ u_2) (succ u_1)} (α -> α -> β) (flip.{succ u_1, succ u_1, succ u_2} α α β op) op
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (op : α -> α -> β) [inst._@.Mathlib.Logic.Function.Basic._hyg.11522 : IsSymmOp.{u_1, u_2} α β op], Eq.{max (succ u_2) (succ u_1)} (α -> α -> β) (flip.{succ u_1, succ u_1, succ u_2} α α β op) op
 Case conversion may be inaccurate. Consider using '#align is_symm_op.flip_eq IsSymmOp.flip_eqₓ'. -/
 theorem IsSymmOp.flip_eq {α β} (op) [IsSymmOp α β op] : flip op = op :=
   funext fun a => funext fun b => (IsSymmOp.symm_op a b).symm

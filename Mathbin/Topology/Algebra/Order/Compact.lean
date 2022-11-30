@@ -53,12 +53,11 @@ export CompactIccSpace (is_compact_Icc)
 /-- A closed interval in a conditionally complete linear order is compact. -/
 instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space (α : Type _)
     [ConditionallyCompleteLinearOrder α] [TopologicalSpace α] [OrderTopology α] :
-    CompactIccSpace α := by
+    CompactIccSpace α := by 
   refine' ⟨fun a b => _⟩
   cases' le_or_lt a b with hab hab
   swap
   · simp [hab]
-    
   refine' is_compact_iff_ultrafilter_le_nhds.2 fun f hf => _
   contrapose! hf
   rw [le_principal_iff]
@@ -70,15 +69,13 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   have ha : a ∈ s := by simp [hpt, hab]
   rcases hab.eq_or_lt with (rfl | hlt)
   · exact ha.2
-    
   set c := Sup s
   have hsc : IsLub s c := is_lub_cSup ⟨a, ha⟩ sbd
   have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
   specialize hf c hc
-  have hcs : c ∈ s := by
+  have hcs : c ∈ s := by 
     cases' hc.1.eq_or_lt with heq hlt
     · rwa [← HEq]
-      
     refine' ⟨hc, fun hcf => hf fun U hU => _⟩
     rcases(mem_nhds_within_Iic_iff_exists_Ioc_subset' hlt).1 (mem_nhds_within_of_mem_nhds hU) with
       ⟨x, hxc, hxU⟩
@@ -93,7 +90,6 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   cases' hc.2.eq_or_lt with heq hlt
   · rw [← HEq]
     exact hcs.2
-    
   contrapose! hf
   intro U hU
   rcases(mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
@@ -106,9 +102,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   · refine' mem_of_superset (f.diff_mem_iff.2 ⟨f.diff_mem_iff.2 ⟨hay, hcs.2⟩, hpt y hy⟩) _
     rw [diff_subset_iff, union_comm, Ico_union_right hxy.1.le, diff_subset_iff]
     exact Icc_subset_Icc_union_Icc
-    
   · exact ((hsc.1 ⟨hy, hay⟩).not_lt hxy.1).elim
-    
 #align
   conditionally_complete_linear_order.to_compact_Icc_space ConditionallyCompleteLinearOrder.to_compact_Icc_space
 
@@ -349,7 +343,6 @@ theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCom
   rcases eq_empty_or_nonempty K with (rfl | h0K)
   · simp_rw [image_empty]
     exact continuous_const
-    
   rw [continuous_iff_continuous_at]
   intro x
   obtain ⟨y, hyK, h2y, hy⟩ :=
@@ -365,7 +358,6 @@ theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCom
   · refine'
       (this.1 z hz).mono fun x' hx' => hx'.trans_le <| le_cSup _ <| mem_image_of_mem (f x') hyK
     exact hK.bdd_above_image (hf.comp <| Continuous.Prod.mk x').ContinuousOn
-    
   · have h : ({x} : Set γ) ×ˢ K ⊆ ↿f ⁻¹' Iio z := by
       rintro ⟨x', y'⟩ ⟨hx', hy'⟩
       cases hx'
@@ -376,7 +368,6 @@ theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCom
     rw [hK.Sup_lt_iff_of_continuous h0K
         (show Continuous (f x') from hf.comp <| Continuous.Prod.mk x').ContinuousOn]
     exact fun y' hy' => huv (mk_mem_prod hx' (hKv hy'))
-    
 #align is_compact.continuous_Sup IsCompact.continuous_Sup
 
 theorem IsCompact.continuous_Inf {f : γ → β → α} {K : Set β} (hK : IsCompact K)
@@ -407,10 +398,8 @@ theorem image_interval_eq_Icc (h : ContinuousOn f <| [a, b]) :
   cases' le_total a b with h2 h2
   · simp_rw [interval_of_le h2] at h⊢
     exact h.image_Icc h2
-    
   · simp_rw [interval_of_ge h2] at h⊢
     exact h.image_Icc h2
-    
 #align continuous_on.image_interval_eq_Icc ContinuousOn.image_interval_eq_Icc
 
 theorem image_interval (h : ContinuousOn f <| [a, b]) :

@@ -36,7 +36,6 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) := by
   cases subsingleton_or_nontrivial R
   · apply Module.Free.ofSubsingleton'
-    
   classical exact
       of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
 #align module.free.linear_map Module.Free.linearMap
@@ -47,10 +46,9 @@ instance Module.Finite.linear_map [Module.Finite R M] [Module.Finite R N] :
     Module.Finite R (M →ₗ[R] N) := by
   cases subsingleton_or_nontrivial R
   · infer_instance
-    
-  classical
-  have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
-  exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
+  classical 
+    have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
+    exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
 #align module.finite.linear_map Module.Finite.linear_map
 
 end CommRing
@@ -84,13 +82,14 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
-theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by classical
-  letI := nontrivial_of_invariant_basis_number R
-  have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
-  let b := (Matrix.stdBasis _ _ _).map h.symm
-  rw [finrank, dim_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_to_nat_eq_card, finrank,
-    finrank, rank_eq_card_choose_basis_index, rank_eq_card_choose_basis_index,
-    Cardinal.mk_to_nat_eq_card, Cardinal.mk_to_nat_eq_card, Fintype.card_prod, mul_comm]
+theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
+  classical 
+    letI := nontrivial_of_invariant_basis_number R
+    have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
+    let b := (Matrix.stdBasis _ _ _).map h.symm
+    rw [finrank, dim_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_to_nat_eq_card, finrank,
+      finrank, rank_eq_card_choose_basis_index, rank_eq_card_choose_basis_index,
+      Cardinal.mk_to_nat_eq_card, Cardinal.mk_to_nat_eq_card, Fintype.card_prod, mul_comm]
 #align module.free.finrank_linear_hom Module.Free.finrank_linear_hom
 
 end CommRing

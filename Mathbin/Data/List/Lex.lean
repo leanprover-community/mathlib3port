@@ -80,11 +80,8 @@ instance isOrderConnected (r : α → α → Prop) [IsOrderConnected α r] [IsTr
     | a :: l₁, b :: l₂, _ :: l₃, cons h => by
       rcases trichotomous_of r a b with (ab | rfl | ab)
       · exact Or.inl (rel ab)
-        
       · exact (_match _ l₂ _ h).imp cons cons
-        
-      · exact Or.inr (rel ab)
-        ⟩
+      · exact Or.inr (rel ab)⟩
 #align list.lex.is_order_connected List.Lex.isOrderConnected
 -/
 
@@ -95,14 +92,11 @@ instance isTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrich
     | [], [] => Or.inr (Or.inl rfl)
     | [], b :: l₂ => Or.inl nil
     | a :: l₁, [] => Or.inr (Or.inr nil)
-    | a :: l₁, b :: l₂ => by
+    | a :: l₁, b :: l₂ => by 
       rcases trichotomous_of r a b with (ab | rfl | ab)
       · exact Or.inl (rel ab)
-        
       · exact (_match l₁ l₂).imp cons (Or.imp (congr_arg _) cons)
-        
-      · exact Or.inr (Or.inr (rel ab))
-        ⟩
+      · exact Or.inr (Or.inr (rel ab))⟩
 #align list.lex.is_trichotomous List.Lex.isTrichotomous
 -/
 
@@ -128,21 +122,15 @@ instance isStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder α r] :
 instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
   | l₁, [] => is_false fun h => by cases h
   | [], b :: l₂ => isTrue Lex.nil
-  | a :: l₁, b :: l₂ => by
+  | a :: l₁, b :: l₂ => by 
     haveI := DecidableRel l₁ l₂
     refine' decidable_of_iff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
     · rcases h with (h | ⟨rfl, h⟩)
       · exact lex.rel h
-        
       · exact lex.cons h
-        
-      
     · rcases h with (_ | h | h)
       · exact Or.inr ⟨rfl, h⟩
-        
       · exact Or.inl h
-        
-      
 #align list.lex.decidable_rel List.Lex.decidableRel
 -/
 
@@ -182,19 +170,13 @@ theorem Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : le
   ⟨to_ne, fun h => by
     induction' l₁ with a l₁ IH generalizing l₂ <;> cases' l₂ with b l₂
     · contradiction
-      
     · apply nil
-      
     · exact (not_lt_of_ge H).elim (succ_pos _)
-      
     · by_cases ab : a = b
       · subst b
         apply cons
         exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
-        
-      · exact rel ab
-        
-      ⟩
+      · exact rel ab⟩
 #align decidable.list.lex.ne_iff Decidable.List.Lex.ne_iff
 -/
 

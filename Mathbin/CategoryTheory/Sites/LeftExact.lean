@@ -38,11 +38,12 @@ namespace CategoryTheory.GrothendieckTopology
 def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type max v u}
     [SmallCategory K] {F : K ⥤ Cᵒᵖ ⥤ D} {W : J.cover X} (i : W.arrow)
     (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover X)ᵒᵖ D).obj (op W))) :
-    Cone (F ⋙ (evaluation _ _).obj (op i.y)) where
+    Cone (F ⋙ (evaluation _ _).obj (op
+            i.y)) where 
   x := E.x
   π :=
     { app := fun k => E.π.app k ≫ multiequalizer.ι (W.index (F.obj k)) i,
-      naturality' := by
+      naturality' := by 
         intro a b f
         dsimp
         rw [category.id_comp, category.assoc, ← E.w f]
@@ -61,7 +62,7 @@ abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLi
     (fun i =>
       (isLimitOfPreserves ((evaluation _ _).obj (op i.y)) (limit.isLimit _)).lift
         (coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation i E))
-    (by
+    (by 
       intro i
       change (_ ≫ _) ≫ _ = (_ ≫ _) ≫ _
       dsimp [evaluate_combined_cones]
@@ -80,7 +81,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
   (preservesLimitOfEvaluation _ _) fun W =>
     preservesLimitOfPreservesLimitCone (limit.isLimit _)
       { lift := fun E => liftToDiagramLimitObj F E,
-        fac' := by
+        fac' := by 
           intro E k
           dsimp [diagram_nat_trans]
           ext1
@@ -89,7 +90,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
           dsimp [evaluate_combined_cones]
           erw [category.comp_id, category.assoc, ← nat_trans.comp_app, limit.lift_π, limit.lift_π]
           rfl,
-        uniq' := by
+        uniq' := by 
           intro E m hm
           ext
           delta lift_to_diagram_limit_obj
@@ -131,7 +132,7 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K]
   let s :
     colimit (F ⋙ J.diagramFunctor D X).flip ≅ F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X) :=
     NatIso.ofComponents (fun k => colimitObjIsoColimitCompEvaluation _ k)
-      (by
+      (by 
         intro i j f
         rw [← iso.eq_comp_inv, category.assoc, ← iso.inv_comp_eq]
         ext w
@@ -184,7 +185,6 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
   refine' ⟨fun S => lift_to_plus_obj_limit_obj F X.unop S, _, _⟩
   · intro S k
     apply lift_to_plus_obj_limit_obj_fac
-    
   · intro S m hm
     dsimp [lift_to_plus_obj_limit_obj]
     simp_rw [← category.assoc, iso.eq_comp_inv, ← iso.comp_inv_eq]
@@ -202,7 +202,6 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
     dsimp [is_limit.cone_point_unique_up_to_iso]
     rw [← category.assoc, ← nat_trans.comp_app, limit.lift_π]
     rfl
-    
 
 instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)] [ReflectsIsomorphisms (forget D)] :
     PreservesFiniteLimits (J.plusFunctor D) := by

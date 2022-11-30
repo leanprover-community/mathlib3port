@@ -127,7 +127,7 @@ skew-adjoint with respect to a square matrix `J` and those with respect to `Pᵀ
 def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) :
     skewAdjointMatricesLieSubalgebra J ≃ₗ⁅R⁆ skewAdjointMatricesLieSubalgebra (Pᵀ ⬝ J ⬝ P) :=
   LieEquiv.ofSubalgebras _ _ (P.lieConj h).symm
-    (by
+    (by 
       ext A
       suffices
         P.lie_conj h A ∈ skewAdjointMatricesSubmodule J ↔
@@ -152,7 +152,7 @@ def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] 
     (e : Matrix n n R ≃ₐ[R] Matrix m m R) (h : ∀ A, (e A)ᵀ = e Aᵀ) :
     skewAdjointMatricesLieSubalgebra J ≃ₗ⁅R⁆ skewAdjointMatricesLieSubalgebra (e J) :=
   LieEquiv.ofSubalgebras _ _ e.toLieEquiv
-    (by
+    (by 
       ext A
       suffices J.is_skew_adjoint (e.symm A) ↔ (e J).IsSkewAdjoint A by simpa [this]
       simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, ← Matrix.mul_eq_mul, ← h, ←
@@ -175,9 +175,7 @@ theorem mem_skew_adjoint_matrices_lie_subalgebra_unit_smul (u : Rˣ) (J A : Matr
   simp only [mem_skew_adjoint_matrices_submodule, Matrix.IsSkewAdjoint, Matrix.IsAdjointPair]
   constructor <;> intro h
   · simpa using congr_arg (fun B => u⁻¹ • B) h
-    
   · simp [h]
-    
 #align
   mem_skew_adjoint_matrices_lie_subalgebra_unit_smul mem_skew_adjoint_matrices_lie_subalgebra_unit_smul
 

@@ -67,7 +67,7 @@ theorem has_finite_limits_of_has_finite_limits_of_size
         skip
         exact has_limits_of_shape J C) :
     HasFiniteLimits C :=
-  ⟨fun J hJ hhJ => by
+  ⟨fun J hJ hhJ => by 
     skip
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
@@ -109,7 +109,7 @@ theorem has_finite_colimits_of_has_finite_colimits_of_size
         skip
         exact has_colimits_of_shape J C) :
     HasFiniteColimits C :=
-  ⟨fun J hJ hhJ => by
+  ⟨fun J hJ hhJ => by 
     skip
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
@@ -123,7 +123,9 @@ section
 
 open WalkingParallelPair WalkingParallelPairHom
 
-instance fintypeWalkingParallelPair : Fintype WalkingParallelPair where
+instance fintypeWalkingParallelPair :
+    Fintype
+      WalkingParallelPair where 
   elems := [WalkingParallelPair.zero, WalkingParallelPair.one].toFinset
   complete x := by cases x <;> simp
 #align
@@ -131,7 +133,10 @@ instance fintypeWalkingParallelPair : Fintype WalkingParallelPair where
 
 attribute [local tidy] tactic.case_bash
 
-instance (j j' : WalkingParallelPair) : Fintype (WalkingParallelPairHom j j') where
+instance (j j' : WalkingParallelPair) :
+    Fintype
+      (WalkingParallelPairHom j
+        j') where 
   elems :=
     WalkingParallelPair.recOn j
       (WalkingParallelPair.recOn j' [WalkingParallelPairHom.id zero].toFinset
@@ -162,22 +167,18 @@ instance fintypeObj [Fintype J] : Fintype (WidePullbackShape J) := by
 #align
   category_theory.limits.wide_pullback_shape.fintype_obj CategoryTheory.Limits.WidePullbackShape.fintypeObj
 
-instance fintypeHom (j j' : WidePullbackShape J) : Fintype (j ⟶ j') where
-  elems := by
+instance fintypeHom (j j' : WidePullbackShape J) :
+    Fintype
+      (j ⟶ j') where 
+  elems := by 
     cases j'
     · cases j
       · exact {hom.id none}
-        
       · exact {hom.term j}
-        
-      
     · by_cases some j' = j
       · rw [h]
         exact {hom.id j}
-        
       · exact ∅
-        
-      
   complete := by tidy
 #align
   category_theory.limits.wide_pullback_shape.fintype_hom CategoryTheory.Limits.WidePullbackShape.fintypeHom
@@ -192,22 +193,18 @@ instance fintypeObj [Fintype J] : Fintype (WidePushoutShape J) := by
 #align
   category_theory.limits.wide_pushout_shape.fintype_obj CategoryTheory.Limits.WidePushoutShape.fintypeObj
 
-instance fintypeHom (j j' : WidePushoutShape J) : Fintype (j ⟶ j') where
-  elems := by
+instance fintypeHom (j j' : WidePushoutShape J) :
+    Fintype
+      (j ⟶ j') where 
+  elems := by 
     cases j
     · cases j'
       · exact {hom.id none}
-        
       · exact {hom.init j'}
-        
-      
     · by_cases some j = j'
       · rw [h]
         exact {hom.id j'}
-        
       · exact ∅
-        
-      
   complete := by tidy
 #align
   category_theory.limits.wide_pushout_shape.fintype_hom CategoryTheory.Limits.WidePushoutShape.fintypeHom
@@ -273,7 +270,8 @@ theorem has_finite_wide_pushouts_of_has_finite_limits [HasFiniteColimits C] :
 #align
   category_theory.limits.has_finite_wide_pushouts_of_has_finite_limits CategoryTheory.Limits.has_finite_wide_pushouts_of_has_finite_limits
 
-instance fintypeWalkingPair : Fintype WalkingPair where
+instance fintypeWalkingPair :
+    Fintype WalkingPair where 
   elems := {WalkingPair.left, WalkingPair.right}
   complete x := by cases x <;> simp
 #align category_theory.limits.fintype_walking_pair CategoryTheory.Limits.fintypeWalkingPair

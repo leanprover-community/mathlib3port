@@ -76,7 +76,7 @@ theorem martingale_part_add_predictable_part (ℱ : Filtration ℕ m0) (μ : Mea
 theorem martingale_part_eq_sum :
     martingalePart f ℱ μ = fun n =>
       f 0 + ∑ i in Finset.range n, f (i + 1) - f i - μ[f (i + 1) - f i|ℱ i] :=
-  by
+  by 
   rw [martingale_part, predictable_part]
   ext1 n
   rw [Finset.eq_sum_range_sub f n, ← add_sub, ← Finset.sum_sub_distrib]
@@ -101,24 +101,19 @@ theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrabl
   have h_eq_sum :
     μ[martingale_part f ℱ μ j|ℱ i] =ᵐ[μ]
       f 0 + ∑ k in Finset.range j, μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] :=
-    by
+    by 
     rw [martingale_part_eq_sum]
     refine' (condexp_add (hf_int 0) _).trans _
     · exact integrable_finset_sum' _ fun i hij => ((hf_int _).sub (hf_int _)).sub integrable_condexp
-      
     refine' (eventually_eq.add eventually_eq.rfl (condexp_finset_sum fun i hij => _)).trans _
     · exact ((hf_int _).sub (hf_int _)).sub integrable_condexp
-      
     refine' eventually_eq.add _ _
     · rw [condexp_of_strongly_measurable (ℱ.le _) _ (hf_int 0)]
       · infer_instance
-        
       · exact (hf 0).mono (ℱ.mono (zero_le i))
-        
-      
-    · exact
+    ·
+      exact
         eventually_eq_sum fun k hkj => condexp_sub ((hf_int _).sub (hf_int _)) integrable_condexp
-      
   refine' h_eq_sum.trans _
   have h_ge : ∀ k, i ≤ k → μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ] 0 := by
     intro k hk
@@ -131,20 +126,14 @@ theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrabl
       k < i →
         μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ]
           f (k + 1) - f k - μ[f (k + 1) - f k|ℱ k] :=
-    by
+    by 
     refine' fun k hk => eventually_eq.sub _ _
     · rw [condexp_of_strongly_measurable]
       · exact ((hf (k + 1)).mono (ℱ.mono (Nat.succ_le_of_lt hk))).sub ((hf k).mono (ℱ.mono hk.le))
-        
       · exact (hf_int _).sub (hf_int _)
-        
-      
     · rw [condexp_of_strongly_measurable]
       · exact strongly_measurable_condexp.mono (ℱ.mono hk.le)
-        
       · exact integrable_condexp
-        
-      
   rw [martingale_part_eq_sum]
   refine' eventually_eq.add eventually_eq.rfl _
   rw [← Finset.sum_range_add_sum_Ico _ hij, ←

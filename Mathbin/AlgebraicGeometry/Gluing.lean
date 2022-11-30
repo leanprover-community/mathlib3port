@@ -114,9 +114,7 @@ def gluedScheme : SchemeCat := by
     rw [coe_comp, Set.range_comp]
     refine' Set.mem_image_of_mem _ _
     exact (D.U i).affineCover.Covers y
-    
   · infer_instance
-    
 #align
   algebraic_geometry.Scheme.glue_data.glued_Scheme AlgebraicGeometry.SchemeCat.GlueData.gluedScheme
 
@@ -214,7 +212,7 @@ theorem ι_iso_carrier_inv (i : D.J) :
           i ≫
         D.isoCarrier.inv =
       (D.ι i).1.base :=
-  by
+  by 
   delta iso_carrier
   simp only [functor.map_iso_inv, iso.trans_inv, iso.trans_assoc, glue_data.ι_glued_iso_inv_assoc,
     functor.map_iso_trans, category.assoc]
@@ -254,7 +252,8 @@ theorem is_open_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.�
   algebraic_geometry.Scheme.glue_data.is_open_iff AlgebraicGeometry.SchemeCat.GlueData.is_open_iff
 
 /-- The open cover of the glued space given by the glue data. -/
-def openCover (D : SchemeCat.GlueData) : OpenCover D.glued where
+def openCover (D : SchemeCat.GlueData) :
+    OpenCover D.glued where 
   J := D.J
   obj := D.U
   map := D.ι
@@ -274,15 +273,13 @@ def gluedCoverT' (x y z : 𝒰.J) :
         (pullback.fst : pullback (𝒰.map x) (𝒰.map z) ⟶ _) ⟶
       pullback (pullback.fst : pullback (𝒰.map y) (𝒰.map z) ⟶ _)
         (pullback.fst : pullback (𝒰.map y) (𝒰.map x) ⟶ _) :=
-  by
+  by 
   refine' (pullback_right_pullback_fst_iso _ _ _).Hom ≫ _
   refine' _ ≫ (pullback_symmetry _ _).Hom
   refine' _ ≫ (pullback_right_pullback_fst_iso _ _ _).inv
   refine' pullback.map _ _ _ _ (pullback_symmetry _ _).Hom (𝟙 _) (𝟙 _) _ _
   · simp [pullback.condition]
-    
   · simp
-    
 #align
   algebraic_geometry.Scheme.open_cover.glued_cover_t' AlgebraicGeometry.SchemeCat.OpenCover.gluedCoverT'
 
@@ -343,7 +340,7 @@ theorem glued_cover_cocycle (x y z : 𝒰.J) :
 /-- The glue data associated with an open cover.
 The canonical isomorphism `𝒰.glued_cover.glued ⟶ X` is provided by `𝒰.from_glued`. -/
 @[simps]
-def gluedCover : SchemeCat.GlueData.{u} where
+def gluedCover : SchemeCat.GlueData.{u} where 
   J := 𝒰.J
   U := 𝒰.obj
   V := fun ⟨x, y⟩ => pullback (𝒰.map x) (𝒰.map y)
@@ -392,11 +389,9 @@ theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base := by
   constructor
   · erw [is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.left]
     rfl
-    
   · erw [pullback_symmetry_hom_comp_fst,
       is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right]
     rfl
-    
 #align
   algebraic_geometry.Scheme.open_cover.from_glued_injective AlgebraicGeometry.SchemeCat.OpenCover.from_glued_injective
 
@@ -429,9 +424,7 @@ theorem from_glued_open_map : IsOpenMap 𝒰.fromGlued.1.base := by
     rw [Set.preimage_comp]
     congr 1
     refine' Set.preimage_image_eq _ 𝒰.from_glued_injective
-    
   · exact ⟨hx, 𝒰.covers x⟩
-    
 #align
   algebraic_geometry.Scheme.open_cover.from_glued_open_map AlgebraicGeometry.SchemeCat.OpenCover.from_glued_open_map
 
@@ -472,7 +465,7 @@ If `X` is exactly (defeq to) the gluing of `U i`, then using `multicoequalizer.d
 -/
 def glueMorphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
     (hf : ∀ x y, (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) ≫ f x = pullback.snd ≫ f y) :
-    X ⟶ Y := by
+    X ⟶ Y := by 
   refine' inv 𝒰.from_glued ≫ _
   fapply multicoequalizer.desc
   exact f
@@ -493,7 +486,7 @@ theorem ι_glue_morphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
   algebraic_geometry.Scheme.open_cover.ι_glue_morphisms AlgebraicGeometry.SchemeCat.OpenCover.ι_glue_morphisms
 
 theorem hom_ext {Y : SchemeCat} (f₁ f₂ : X ⟶ Y) (h : ∀ x, 𝒰.map x ≫ f₁ = 𝒰.map x ≫ f₂) : f₁ = f₂ :=
-  by
+  by 
   rw [← cancel_epi 𝒰.from_glued]
   apply multicoequalizer.hom_ext
   intro x

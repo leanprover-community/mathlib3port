@@ -50,11 +50,9 @@ theorem exists_has_sum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a 
     (ha : ∀ k < n, a k = 0) : ∃ t : E, z ^ n • t = s ∧ HasSum (fun m => z ^ m • a (m + n)) t := by
   obtain rfl | hn := n.eq_zero_or_pos
   · simpa
-    
   by_cases h : z = 0
   · have : s = 0 := hs.unique (by simpa [ha 0 hn, h] using has_sum_at_zero a)
     exact ⟨a n, by simp [h, hn, this], by simpa [h] using has_sum_at_zero fun m => a (m + n)⟩
-    
   · refine' ⟨(z ^ n)⁻¹ • s, by field_simp [smul_smul] , _⟩
     have h1 : (∑ i in Finset.range n, z ^ i • a i) = 0 :=
       Finset.sum_eq_zero fun k hk => by simp [ha k (finset.mem_range.mp hk)]
@@ -62,10 +60,7 @@ theorem exists_has_sum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a 
       simpa [h1] using (has_sum_nat_add_iff' n).mpr hs
     convert @HasSum.const_smul E ℕ 𝕜 _ _ _ _ _ _ _ (z⁻¹ ^ n) h2
     · field_simp [pow_add, smul_smul]
-      
     · simp only [inv_pow]
-      
-    
 #align has_sum.exists_has_sum_smul_of_apply_eq_zero HasSum.exists_has_sum_smul_of_apply_eq_zero
 
 end HasSum
@@ -80,13 +75,10 @@ theorem hasFpowerSeriesDslopeFslope (hp : HasFpowerSeriesAt f p z₀) :
   refine' hp.mono fun x hx => _
   by_cases h : x = 0
   · convert has_sum_single 0 _ <;> intros <;> simp [*]
-    
   · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ']
     suffices HasSum (fun n => x⁻¹ • x ^ (n + 1) • p.coeff (n + 1)) (x⁻¹ • (f (z₀ + x) - f z₀)) by
       simpa [dslope, slope, h, smul_smul, hxx] using this
     · simpa [hp0] using ((has_sum_nat_add_iff' 1).mpr hx).const_smul
-      
-    
 #align
   has_fpower_series_at.has_fpower_series_dslope_fslope HasFpowerSeriesAt.hasFpowerSeriesDslopeFslope
 
@@ -94,9 +86,7 @@ theorem hasFpowerSeriesIterateDslopeFslope (n : ℕ) (hp : HasFpowerSeriesAt f p
     HasFpowerSeriesAt ((swap dslope z₀^[n]) f) ((fslope^[n]) p) z₀ := by
   induction' n with n ih generalizing f p
   · exact hp
-    
   · simpa using ih (has_fpower_series_dslope_fslope hp)
-    
 #align
   has_fpower_series_at.has_fpower_series_iterate_dslope_fslope HasFpowerSeriesAt.hasFpowerSeriesIterateDslopeFslope
 
@@ -144,9 +134,7 @@ theorem eventually_eq_zero_or_eventually_ne_zero (hf : AnalyticAt 𝕜 f z₀) :
   rcases hf with ⟨p, hp⟩
   by_cases h : p = 0
   · exact Or.inl (HasFpowerSeriesAt.eventually_eq_zero (by rwa [h] at hp))
-    
   · exact Or.inr (hp.locally_ne_zero h)
-    
 #align
   analytic_at.eventually_eq_zero_or_eventually_ne_zero AnalyticAt.eventually_eq_zero_or_eventually_ne_zero
 

@@ -125,7 +125,7 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
     _ =
         diam (univ : Set X) + (dist default default + 1 + dist default default) +
           diam (univ : Set Y) :=
-      by
+      by 
       rw [isometry_inl.diam_image, isometry_inr.diam_image]
       rfl
     _ = 1 * diam (univ : Set X) + 1 + 1 * diam (univ : Set Y) := by simp
@@ -157,7 +157,6 @@ private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) :
       _ = 2 * f (x, y) := by ring
       
   · linarith
-    
 #align Gromov_Hausdorff.candidates_nonneg Gromov_Hausdorff.candidates_nonneg
 
 private theorem candidates_dist_inl (fA : f ∈ candidates X Y) (x y : X) :
@@ -180,7 +179,7 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
   | inl x, inl y =>
     calc
       f (inl x, inl y) = dist x y := candidates_dist_inl fA x y
-      _ = dist (inl x) (inl y) := by
+      _ = dist (inl x) (inl y) := by 
         rw [@sum.dist_eq X Y]
         rfl
       _ = 1 * dist (inl x) (inl y) := by simp
@@ -204,7 +203,7 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
   | inr x, inr y =>
     calc
       f (inr x, inr y) = dist x y := candidates_dist_inr fA x y
-      _ = dist (inr x) (inr y) := by
+      _ = dist (inr x) (inr y) := by 
         rw [@sum.dist_eq X Y]
         rfl
       _ = 1 * dist (inr x) (inr y) := by simp
@@ -241,7 +240,7 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
 
 /-- Candidates are Lipschitz -/
 private theorem candidates_lipschitz (fA : f ∈ candidates X Y) : LipschitzWith (2 * maxVar X Y) f :=
-  by
+  by 
   apply LipschitzWith.ofDistLeMul
   rintro ⟨x, y⟩ ⟨z, t⟩
   rw [Real.dist_eq, abs_sub_le_iff]
@@ -315,7 +314,7 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) := by
             ⋂ (x) (y) (z), { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) }) ∩
           ⋂ x, { f : Cb X Y | f (x, x) = 0 }) ∩
         ⋂ (x) (y), { f : Cb X Y | f (x, y) ≤ max_var X Y } :=
-    by
+    by 
     ext
     simp only [candidates_b, candidates, mem_inter_iff, mem_Inter, mem_set_of_eq]
   rw [this]
@@ -335,16 +334,12 @@ private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) := by
   · rintro f ⟨x1, x2⟩ hf
     simp only [Set.mem_Icc]
     exact ⟨candidates_nonneg hf, candidates_le_max_var hf⟩
-    
   · refine' equicontinuous_of_continuity_modulus (fun t => 2 * max_var X Y * t) _ _ _
     · have : tendsto (fun t : ℝ => 2 * (max_var X Y : ℝ) * t) (𝓝 0) (𝓝 (2 * max_var X Y * 0)) :=
         tendsto_const_nhds.mul tendsto_id
       simpa using this
-      
     · intro x y f hf
       exact (candidates_lipschitz hf).dist_le_mul _ _
-      
-    
 #align Gromov_Hausdorff.is_compact_candidates_b Gromov_Hausdorff.is_compact_candidates_b
 
 /-- We will then choose the candidate minimizing the Hausdorff distance. Except that we are not
@@ -405,12 +400,11 @@ theorem HD_candidates_b_dist_le :
         _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
           apply add_le_add (add_le_add _ le_rfl)
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-          any_goals exact OrderedAddCommMonoid.to_covariant_class_left ℝ
-          any_goals exact OrderedAddCommMonoid.to_covariant_class_right ℝ
+          any_goals exact OrderedAddCommMonoid.to_CovariantClass_left ℝ
+          any_goals exact OrderedAddCommMonoid.to_CovariantClass_right ℝ
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
         
     exact le_trans A B
-    
   · have A :
       (⨅ x, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl default, inr y) :=
       cinfi_le (by simpa using HD_below_aux2 0) default
@@ -420,12 +414,11 @@ theorem HD_candidates_b_dist_le :
         _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
           apply add_le_add (add_le_add _ le_rfl)
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-          any_goals exact OrderedAddCommMonoid.to_covariant_class_left ℝ
-          any_goals exact OrderedAddCommMonoid.to_covariant_class_right ℝ
+          any_goals exact OrderedAddCommMonoid.to_CovariantClass_left ℝ
+          any_goals exact OrderedAddCommMonoid.to_CovariantClass_right ℝ
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
         
     exact le_trans A B
-    
 #align Gromov_Hausdorff.HD_candidates_b_dist_le GromovHausdorff.HD_candidates_b_dist_le
 
 /- To check that HD is continuous, we check that it is Lipschitz. As HD is a max, we
@@ -448,17 +441,13 @@ private theorem HD_lipschitz_aux1 (f g : CbCat X Y) :
     refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
-      
     · show BddBelow (range fun y : Y => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
-      
   have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g := by
     refine' Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
-      
     · simpa using HD_bound_aux1 _ 0
-      
   -- deduce the result from the above two steps
   simpa [E2, E1, Function.comp]
 #align Gromov_Hausdorff.HD_lipschitz_aux1 Gromov_Hausdorff.HD_lipschitz_aux1
@@ -481,17 +470,13 @@ private theorem HD_lipschitz_aux2 (f g : CbCat X Y) :
     refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
-      
     · show BddBelow (range fun x : X => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
-      
   have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g := by
     refine' Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
-      
     · simpa using HD_bound_aux2 _ 0
-      
   -- deduce the result from the above two steps
   simpa [E2, E1]
 #align Gromov_Hausdorff.HD_lipschitz_aux2 Gromov_Hausdorff.HD_lipschitz_aux2
@@ -539,7 +524,9 @@ private theorem HD_optimal_GH_dist_le (g : CbCat X Y) (hg : g ∈ candidatesB X 
 /-- With the optimal candidate, construct a premetric space structure on `X ⊕ Y`, on which the
 predistance is given by the candidate. Then, we will identify points at `0` predistance
 to obtain a genuine metric space -/
-def premetricOptimalGHDist : PseudoMetricSpace (Sum X Y) where
+def premetricOptimalGHDist :
+    PseudoMetricSpace (Sum X
+        Y) where 
   dist p q := optimalGHDist X Y (p, q)
   dist_self x := candidates_refl (optimal_GH_dist_mem_candidates_b X Y)
   dist_comm x y := candidates_symm (optimal_GH_dist_mem_candidates_b X Y)
@@ -584,18 +571,16 @@ instance compact_space_optimal_GH_coupling : CompactSpace (OptimalGHCoupling X Y
     have :
       (univ : Set (optimal_GH_coupling X Y)) =
         optimal_GH_injl X Y '' univ ∪ optimal_GH_injr X Y '' univ :=
-      by
+      by 
       refine' subset.antisymm (fun xc hxc => _) (subset_univ _)
       rcases Quotient.exists_rep xc with ⟨x, hx⟩
       cases x <;> rw [← hx]
       · have : ⟦inl x⟧ = optimal_GH_injl X Y x := rfl
         rw [this]
         exact mem_union_left _ (mem_image_of_mem _ (mem_univ _))
-        
       · have : ⟦inr x⟧ = optimal_GH_injr X Y x := rfl
         rw [this]
         exact mem_union_right _ (mem_image_of_mem _ (mem_univ _))
-        
     rw [this]
     exact
       (is_compact_univ.image (isometry_optimal_GH_injl X Y).Continuous).union
@@ -632,7 +617,6 @@ theorem Hausdorff_dist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
     have : optimal_GH_injl X Y xX ∈ range (optimal_GH_injl X Y) := mem_range_self _
     rcases A _ this with ⟨y, yrange, hy⟩
     exact le_trans dist_nonneg hy
-    
   · intro y hy
     rcases mem_range.1 hy with ⟨z, hz⟩
     rw [← hz]
@@ -650,7 +634,6 @@ theorem Hausdorff_dist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
       exact le_of_lt hr'
     rw [dist_comm]
     exact this
-    
 #align Gromov_Hausdorff.Hausdorff_dist_optimal_le_HD GromovHausdorff.Hausdorff_dist_optimal_le_HD
 
 end Consequences

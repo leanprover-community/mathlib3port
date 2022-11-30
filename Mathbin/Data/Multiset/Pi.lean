@@ -52,7 +52,7 @@ theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ
 theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a}
     (h : a ≠ a') :
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) :=
-  by
+  by 
   apply hfunext rfl
   rintro a'' _ rfl
   refine' hfunext (by rw [cons_swap]) fun ha₁ ha₂ _ => _
@@ -65,26 +65,21 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
   m.recOn {Pi.empty δ}
     (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
-    (by
+    (by 
       intro a a' m n
       by_cases eq : a = a'
       · subst Eq
-        
       · simp [map_bind, bind_bind (t a') (t a)]
         apply bind_hcongr
         · rw [cons_swap a a']
-          
         intro b hb
         apply bind_hcongr
         · rw [cons_swap a a']
-          
         intro b' hb'
         apply map_hcongr
         · rw [cons_swap a a']
-          
         intro f hf
-        exact pi.cons_swap Eq
-        )
+        exact pi.cons_swap Eq)
 #align multiset.pi Multiset.pi
 
 @[simp]
@@ -119,7 +114,7 @@ theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
 protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
     Nodup s → (∀ a ∈ s, Nodup (t a)) → Nodup (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
-    (by
+    (by 
       intro a s ih hs ht
       have has : a ∉ s := by simp at hs <;> exact hs.1
       have hs : nodup s := by simp at hs <;> exact hs.2
@@ -142,9 +137,7 @@ theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a')
   by_cases a' = a
   · subst h
     rw [pi.cons_same]
-    
   · rw [pi.cons_ne _ h]
-    
 #align multiset.pi.cons_ext Multiset.pi.cons_ext
 
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
@@ -152,22 +145,17 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
   intro f
   induction' m using Multiset.induction_on with a m ih
   · simpa using show f = pi.empty δ by funext a ha <;> exact ha.elim
-    
   simp_rw [pi_cons, mem_bind, mem_map, ih]
   constructor
   · rintro ⟨b, hb, f', hf', rfl⟩ a' ha'
     by_cases a' = a
     · subst h
       rwa [pi.cons_same]
-      
     · rw [pi.cons_ne _ h]
       apply hf'
-      
-    
   · intro hf
     refine' ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), _⟩
     rw [pi.cons_ext]
-    
 #align multiset.mem_pi Multiset.mem_pi
 
 end Pi

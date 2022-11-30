@@ -24,7 +24,10 @@ variable {𝕜 𝕜' E : Type _} [NormedField 𝕜] [NormedField 𝕜'] [Seminor
 
 section ClosedBall
 
-instance mulActionClosedBallBall : MulAction (closedBall (0 : 𝕜) 1) (ball (0 : E) r) where
+instance mulActionClosedBallBall :
+    MulAction (closedBall (0 : 𝕜) 1)
+      (ball (0 : E)
+        r) where 
   smul c x :=
     ⟨(c : 𝕜) • x,
       mem_ball_zero_iff.2 <| by
@@ -41,7 +44,9 @@ instance has_continuous_smul_closed_ball_ball :
 #align has_continuous_smul_closed_ball_ball has_continuous_smul_closed_ball_ball
 
 instance mulActionClosedBallClosedBall :
-    MulAction (closedBall (0 : 𝕜) 1) (closedBall (0 : E) r) where
+    MulAction (closedBall (0 : 𝕜) 1)
+      (closedBall (0 : E)
+        r) where 
   smul c x :=
     ⟨(c : 𝕜) • x,
       mem_closed_ball_zero_iff.2 <| by
@@ -61,7 +66,10 @@ end ClosedBall
 
 section Sphere
 
-instance mulActionSphereBall : MulAction (sphere (0 : 𝕜) 1) (ball (0 : E) r) where
+instance mulActionSphereBall :
+    MulAction (sphere (0 : 𝕜) 1)
+      (ball (0 : E)
+        r) where 
   smul c x := inclusion sphere_subset_closed_ball c • x
   one_smul x := Subtype.ext <| one_smul _ _
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
@@ -71,7 +79,10 @@ instance has_continuous_smul_sphere_ball : HasContinuousSmul (sphere (0 : 𝕜) 
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 #align has_continuous_smul_sphere_ball has_continuous_smul_sphere_ball
 
-instance mulActionSphereClosedBall : MulAction (sphere (0 : 𝕜) 1) (closedBall (0 : E) r) where
+instance mulActionSphereClosedBall :
+    MulAction (sphere (0 : 𝕜) 1)
+      (closedBall (0 : E)
+        r) where 
   smul c x := inclusion sphere_subset_closed_ball c • x
   one_smul x := Subtype.ext <| one_smul _ _
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
@@ -82,7 +93,10 @@ instance has_continuous_smul_sphere_closed_ball :
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 #align has_continuous_smul_sphere_closed_ball has_continuous_smul_sphere_closed_ball
 
-instance mulActionSphereSphere : MulAction (sphere (0 : 𝕜) 1) (sphere (0 : E) r) where
+instance mulActionSphereSphere :
+    MulAction (sphere (0 : 𝕜) 1)
+      (sphere (0 : E)
+        r) where 
   smul c x :=
     ⟨(c : 𝕜) • x,
       mem_sphere_zero_iff_norm.2 <| by
@@ -203,7 +217,7 @@ variable (𝕜) [CharZero 𝕜]
 theorem ne_neg_of_mem_sphere {r : ℝ} (hr : r ≠ 0) (x : sphere (0 : E) r) : x ≠ -x := fun h =>
   ne_zero_of_mem_sphere hr x
     ((self_eq_neg 𝕜 _).mp
-      (by
+      (by 
         conv_lhs => rw [h]
         simp))
 #align ne_neg_of_mem_sphere ne_neg_of_mem_sphere

@@ -130,19 +130,15 @@ theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n := by
   intro n
   induction' n with m hm m hm <;> unfold encode_pos_num decode_pos_num
   · rfl
-    
   · rw [hm]
     exact if_neg (encode_pos_num_nonempty m)
-    
   · exact congr_arg PosNum.bit0 hm
-    
 #align computability.decode_encode_pos_num Computability.decode_encode_pos_num
 
 theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n := by
   intro n
   cases n <;> unfold encode_num decode_num
   · rfl
-    
   rw [decode_encode_pos_num n]
   rw [PosNum.cast_to_num]
   exact if_neg (encode_pos_num_nonempty n)
@@ -155,7 +151,7 @@ theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n := by
 #align computability.decode_encode_nat Computability.decode_encode_nat
 
 /-- A binary encoding of ℕ in bool. -/
-def encodingNatBool : Encoding ℕ where
+def encodingNatBool : Encoding ℕ where 
   Γ := Bool
   encode := encodeNat
   decode n := some (decodeNat n)
@@ -168,7 +164,7 @@ def finEncodingNatBool : FinEncoding ℕ :=
 #align computability.fin_encoding_nat_bool Computability.finEncodingNatBool
 
 /-- A binary encoding of ℕ in Γ'. -/
-def encodingNatΓ' : Encoding ℕ where
+def encodingNatΓ' : Encoding ℕ where 
   Γ := Γ'
   encode x := List.map inclusionBoolΓ' (encodeNat x)
   decode x := some (decodeNat (List.map sectionΓ'Bool x))
@@ -199,7 +195,7 @@ theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n :
 #align computability.unary_decode_encode_nat Computability.unary_decode_encode_nat
 
 /-- A unary fin_encoding of ℕ. -/
-def unaryFinEncodingNat : FinEncoding ℕ where
+def unaryFinEncodingNat : FinEncoding ℕ where 
   Γ := Bool
   encode := unaryEncodeNat
   decode n := some (unaryDecodeNat n)
@@ -223,7 +219,7 @@ theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bo
 #align computability.decode_encode_bool Computability.decode_encode_bool
 
 /-- A fin_encoding of bool in bool. -/
-def finEncodingBoolBool : FinEncoding Bool where
+def finEncodingBoolBool : FinEncoding Bool where 
   Γ := Bool
   encode := encodeBool
   decode x := some (decodeBool x)
@@ -245,14 +241,12 @@ theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
 #align computability.encoding.card_le_card_list Computability.Encoding.card_le_card_list
 
 theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : (#α) ≤ ℵ₀ :=
-  by
+  by 
   refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
   simp only [Cardinal.lift_aleph_0, Cardinal.lift_le_aleph_0]
   cases' isEmpty_or_nonempty e.Γ with h h
   · simp only [Cardinal.mk_le_aleph_0]
-    
   · rw [Cardinal.mk_list_eq_aleph_0]
-    
 #align computability.encoding.card_le_aleph_0 Computability.Encoding.card_le_aleph_0
 
 theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : (#α) ≤ ℵ₀ :=

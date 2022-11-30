@@ -139,7 +139,8 @@ end DivisionMonoid
 this map is a monoid homomorphism too. -/
 @[to_additive
       "If a map `g : M → add_units N` agrees with a homomorphism `f : M →+ N`, then this map\nis an add_monoid homomorphism too."]
-def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) : M →* Nˣ where
+def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) :
+    M →* Nˣ where 
   toFun := g
   map_one' := Units.ext <| (h 1).symm ▸ f.map_one
   map_mul' x y := Units.ext <| by simp only [h, coe_mul, f.map_mul]
@@ -334,7 +335,7 @@ protected theorem one_div_mul_cancel (h : IsUnit a) : 1 / a * a = 1 := by simp [
 #align is_unit.one_div_mul_cancel IsUnit.one_div_mul_cancel
 
 @[to_additive]
-theorem inv : IsUnit a → IsUnit a⁻¹ := by
+theorem inv : IsUnit a → IsUnit a⁻¹ := by 
   rintro ⟨u, rfl⟩
   rw [← Units.val_inv_eq_inv_val]
   exact Units.isUnit _

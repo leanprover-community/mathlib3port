@@ -99,7 +99,8 @@ theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ‖v‖ := by rw [
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 addition/subtraction of `x : P`. -/
 @[simps]
-def Isometric.vaddConst (x : P) : V ≃ᵢ P where
+def Isometric.vaddConst (x : P) :
+    V ≃ᵢ P where 
   toEquiv := Equiv.vaddConst x
   isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_right _ _ _
 #align isometric.vadd_const Isometric.vaddConst
@@ -110,7 +111,8 @@ variable (P)
 
 /-- Self-isometry of a (semi)normed add torsor given by addition of a constant vector `x`. -/
 @[simps]
-def Isometric.constVadd (x : V) : P ≃ᵢ P where
+def Isometric.constVadd (x : V) :
+    P ≃ᵢ P where 
   toEquiv := Equiv.constVadd P x
   isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_left _ _ _
 #align isometric.const_vadd Isometric.constVadd
@@ -125,7 +127,8 @@ theorem dist_vsub_cancel_left (x y z : P) : dist (x -ᵥ y) (x -ᵥ z) = dist y 
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 subtraction from `x : P`. -/
 @[simps]
-def Isometric.constVsub (x : P) : P ≃ᵢ V where
+def Isometric.constVsub (x : P) :
+    P ≃ᵢ V where 
   toEquiv := Equiv.constVsub x
   isometryToFun := Isometry.ofDistEq fun y z => dist_vsub_cancel_left _ _ _
 #align isometric.const_vsub Isometric.constVsub
@@ -196,11 +199,12 @@ omit V
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V]
-    [AddTorsor V P] : PseudoMetricSpace P where
+    [AddTorsor V P] : PseudoMetricSpace
+      P where 
   dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
-  dist_triangle := by
+  dist_triangle := by 
     intro x y z
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
@@ -212,12 +216,13 @@ def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedA
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V]
-    [AddTorsor V P] : MetricSpace P where
+    [AddTorsor V P] : MetricSpace
+      P where 
   dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   eq_of_dist_eq_zero x y h := by simpa using h
   dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
-  dist_triangle := by
+  dist_triangle := by 
     intro x y z
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]

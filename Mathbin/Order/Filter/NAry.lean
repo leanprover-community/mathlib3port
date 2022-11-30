@@ -35,12 +35,13 @@ variable {α α' β β' γ γ' δ δ' ε ε' : Type _} {m : α → β → γ} {f
 
 /-- The image of a binary function `m : α → β → γ` as a function `filter α → filter β → filter γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
-def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ where
+def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) :
+    Filter γ where 
   sets := { s | ∃ u v, u ∈ f ∧ v ∈ g ∧ image2 m u v ⊆ s }
   univ_sets := ⟨univ, univ, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
     Exists₂Cat.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
-  inter_sets s t := by
+  inter_sets s t := by 
     simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, hs₁, hs₂, hs⟩ ⟨t₁, t₂, ht₁, ht₂, ht⟩
     exact
@@ -71,14 +72,12 @@ theorem map_prod_eq_map₂ (m : α → β → γ) (f : Filter α) (g : Filter β
     refine' ⟨t, t', ht, ht', _⟩
     rw [← Set.image_prod]
     exact subset_trans (Set.image_subset (fun p : α × β => m p.fst p.snd) hsub') hsub
-    
   · intro hmem
     rw [mem_map₂_iff] at hmem
     obtain ⟨t, t', ht, ht', hsub⟩ := hmem
     rw [← Set.image_prod] at hsub
     rw [Filter.mem_map_iff_exists_image]
     exact ⟨t ×ˢ t', Filter.prod_mem_prod ht ht', hsub⟩
-    
 #align filter.map_prod_eq_map₂ Filter.map_prod_eq_map₂
 
 theorem map_prod_eq_map₂' (m : α × β → γ) (f : Filter α) (g : Filter β) :
@@ -131,16 +130,10 @@ theorem map₂_eq_bot_iff : map₂ m f g = ⊥ ↔ f = ⊥ ∨ g = ⊥ := by
   constructor
   · rintro ⟨s, t, hs, ht, rfl | rfl⟩
     · exact Or.inl hs
-      
     · exact Or.inr ht
-      
-    
   · rintro (h | h)
     · exact ⟨_, _, h, univ_mem, Or.inl rfl⟩
-      
     · exact ⟨_, _, univ_mem, h, Or.inr rfl⟩
-      
-    
 #align filter.map₂_eq_bot_iff Filter.map₂_eq_bot_iff
 
 @[simp]
@@ -166,14 +159,12 @@ theorem map₂_sup_left : map₂ m (f₁ ⊔ f₂) g = map₂ m f₁ g ⊔ map�
   constructor
   · rintro ⟨s, t, ⟨h₁, h₂⟩, ht, hu⟩
     exact ⟨mem_of_superset (image2_mem_map₂ h₁ ht) hu, mem_of_superset (image2_mem_map₂ h₂ ht) hu⟩
-    
   · rintro ⟨⟨s₁, t₁, hs₁, ht₁, hu₁⟩, s₂, t₂, hs₂, ht₂, hu₂⟩
     refine' ⟨s₁ ∪ s₂, t₁ ∩ t₂, union_mem_sup hs₁ hs₂, inter_mem ht₁ ht₂, _⟩
     rw [image2_union_left]
     exact
       union_subset ((image2_subset_left <| inter_subset_left _ _).trans hu₁)
         ((image2_subset_left <| inter_subset_right _ _).trans hu₂)
-    
 #align filter.map₂_sup_left Filter.map₂_sup_left
 
 theorem map₂_sup_right : map₂ m f (g₁ ⊔ g₂) = map₂ m f g₁ ⊔ map₂ m f g₂ := by
@@ -181,14 +172,12 @@ theorem map₂_sup_right : map₂ m f (g₁ ⊔ g₂) = map₂ m f g₁ ⊔ map�
   constructor
   · rintro ⟨s, t, hs, ⟨h₁, h₂⟩, hu⟩
     exact ⟨mem_of_superset (image2_mem_map₂ hs h₁) hu, mem_of_superset (image2_mem_map₂ hs h₂) hu⟩
-    
   · rintro ⟨⟨s₁, t₁, hs₁, ht₁, hu₁⟩, s₂, t₂, hs₂, ht₂, hu₂⟩
     refine' ⟨s₁ ∩ s₂, t₁ ∪ t₂, inter_mem hs₁ hs₂, union_mem_sup ht₁ ht₂, _⟩
     rw [image2_union_right]
     exact
       union_subset ((image2_subset_right <| inter_subset_left _ _).trans hu₁)
         ((image2_subset_right <| inter_subset_right _ _).trans hu₂)
-    
 #align filter.map₂_sup_right Filter.map₂_sup_right
 
 theorem map₂_inf_subset_left : map₂ m (f₁ ⊓ f₂) g ≤ map₂ m f₁ g ⊓ map₂ m f₂ g :=
@@ -240,13 +229,15 @@ theorem map₂_right (h : f.ne_bot) : map₂ (fun x y => y) f g = g := by rw [ma
 /-- The image of a ternary function `m : α → β → γ → δ` as a function
 `filter α → filter β → filter γ → filter δ`. Mathematically this should be thought of as the image
 of the corresponding function `α × β × γ → δ`. -/
-def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Filter γ) : Filter δ where
+def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Filter γ) :
+    Filter
+      δ where 
   sets := { s | ∃ u v w, u ∈ f ∧ v ∈ g ∧ w ∈ h ∧ image3 m u v w ⊆ s }
   univ_sets := ⟨univ, univ, univ, univ_sets _, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
     Exists₃Cat.imp
       (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
-  inter_sets s t := by
+  inter_sets s t := by 
     simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, s₃, hs₁, hs₂, hs₃, hs⟩ ⟨t₁, t₂, t₃, ht₁, ht₂, ht₃, ht⟩
     exact
@@ -266,10 +257,8 @@ theorem map₂_map₂_left (m : δ → γ → ε) (n : α → β → δ) :
     refine' ⟨u, v, t, hu, hv, ht, _⟩
     rw [← image2_image2_left]
     exact (image2_subset_right hs).trans hw
-    
   · rintro ⟨s, t, u, hs, ht, hu, hw⟩
     exact ⟨_, u, image2_mem_map₂ hs ht, hu, by rwa [image2_image2_left]⟩
-    
 #align filter.map₂_map₂_left Filter.map₂_map₂_left
 
 theorem map₂_map₂_right (m : α → δ → ε) (n : β → γ → δ) :
@@ -280,10 +269,8 @@ theorem map₂_map₂_right (m : α → δ → ε) (n : β → γ → δ) :
     refine' ⟨s, u, v, hs, hu, hv, _⟩
     rw [← image2_image2_right]
     exact (image2_subset_left ht).trans hw
-    
   · rintro ⟨s, t, u, hs, ht, hu, hw⟩
     exact ⟨s, _, hs, image2_mem_map₂ ht hu, by rwa [image2_image2_right]⟩
-    
 #align filter.map₂_map₂_right Filter.map₂_map₂_right
 
 theorem map_map₂ (m : α → β → γ) (n : γ → δ) :
@@ -299,10 +286,8 @@ theorem map₂_map_left (m : γ → β → δ) (n : α → γ) :
     refine' ⟨_, t, hs, ht, _⟩
     rw [← image2_image_left]
     exact (image2_subset_right <| image_preimage_subset _ _).trans hu
-    
   · rintro ⟨s, t, hs, ht, hu⟩
     exact ⟨_, t, image_mem_map hs, ht, by rwa [image2_image_left]⟩
-    
 #align filter.map₂_map_left Filter.map₂_map_left
 
 theorem map₂_map_right (m : α → γ → δ) (n : β → γ) :
@@ -393,9 +378,7 @@ theorem map₂_distrib_le_left {m : α → δ → ε} {n : β → γ → δ} {m�
   refine' ⟨u₁ ∩ u₂, _, inter_mem hu₁ hu₂, image2_mem_map₂ hv hw, _⟩
   refine' (image2_distrib_subset_left h_distrib).trans ((image2_subset _ _).trans hs)
   · exact (image2_subset_right <| inter_subset_left _ _).trans ht₁
-    
   · exact (image2_subset_right <| inter_subset_right _ _).trans ht₂
-    
 #align filter.map₂_distrib_le_left Filter.map₂_distrib_le_left
 
 /-- The other direction does not hold because of the `h`-`h` cross terms on the RHS. -/
@@ -406,9 +389,7 @@ theorem map₂_distrib_le_right {m : δ → γ → ε} {n : α → β → δ} {m
   refine' ⟨_, w₁ ∩ w₂, image2_mem_map₂ hu hv, inter_mem hw₁ hw₂, _⟩
   refine' (image2_distrib_subset_right h_distrib).trans ((image2_subset _ _).trans hs)
   · exact (image2_subset_left <| inter_subset_left _ _).trans ht₁
-    
   · exact (image2_subset_left <| inter_subset_right _ _).trans ht₂
-    
 #align filter.map₂_distrib_le_right Filter.map₂_distrib_le_right
 
 theorem map_map₂_antidistrib {n : γ → δ} {m' : β' → α' → δ} {n₁ : β → β'} {n₂ : α → α'}

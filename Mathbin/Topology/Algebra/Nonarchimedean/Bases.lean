@@ -50,7 +50,7 @@ theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A)
     (left_mul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x * y) ⁻¹' B i) :
     RingSubgroupsBasis B :=
   { inter, mul, leftMul,
-    rightMul := by
+    rightMul := by 
       intro x i
       cases' leftMul x i with j hj
       use j
@@ -59,41 +59,41 @@ theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A)
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) :
-    RingFilterBasis A where
+    RingFilterBasis A where 
   sets := { U | ∃ i, U = B i }
-  Nonempty := by
+  Nonempty := by 
     inhabit ι
     exact ⟨B default, default, rfl⟩
-  inter_sets := by
+  inter_sets := by 
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
     cases' hB.inter i j with k hk
     use B k, k, rfl, hk
-  zero' := by
+  zero' := by 
     rintro _ ⟨i, rfl⟩
     exact (B i).zero_mem
-  add' := by
+  add' := by 
     rintro _ ⟨i, rfl⟩
     use B i, i, rfl
     rintro x ⟨y, z, y_in, z_in, rfl⟩
     exact (B i).add_mem y_in z_in
-  neg' := by
+  neg' := by 
     rintro _ ⟨i, rfl⟩
     use B i, i, rfl
     intro x x_in
     exact (B i).neg_mem x_in
-  conj' := by
+  conj' := by 
     rintro x₀ _ ⟨i, rfl⟩
     use B i, i, rfl
     simp
-  mul' := by
+  mul' := by 
     rintro _ ⟨i, rfl⟩
     cases' hB.mul i with k hk
     use B k, k, rfl, hk
-  mul_left' := by
+  mul_left' := by 
     rintro x₀ _ ⟨i, rfl⟩
     cases' hB.left_mul x₀ i with k hk
     use B k, k, rfl, hk
-  mul_right' := by
+  mul_right' := by 
     rintro x₀ _ ⟨i, rfl⟩
     cases' hB.right_mul x₀ i with k hk
     use B k, k, rfl, hk
@@ -119,21 +119,19 @@ def topology : TopologicalSpace A :=
 #align ring_subgroups_basis.topology RingSubgroupsBasis.topology
 
 theorem has_basis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) fun i => B i :=
-  ⟨by
+  ⟨by 
     intro s
     rw [hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
     constructor
     · rintro ⟨-, ⟨i, rfl⟩, hi⟩
       exact ⟨i, trivial, hi⟩
-      
     · rintro ⟨i, -, hi⟩
-      exact ⟨B i, ⟨i, rfl⟩, hi⟩
-      ⟩
+      exact ⟨B i, ⟨i, rfl⟩, hi⟩⟩
 #align ring_subgroups_basis.has_basis_nhds_zero RingSubgroupsBasis.has_basis_nhds_zero
 
 theorem has_basis_nhds (a : A) :
     HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
-  ⟨by
+  ⟨by 
     intro s
     rw [(hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff]
     simp only [exists_prop, exists_true_left]
@@ -146,25 +144,21 @@ theorem has_basis_nhds (a : A) :
       · intro h
         use b - a, h
         abel
-        
       · rintro ⟨c, hc, rfl⟩
         simpa using hc
-        
-      
     · rintro ⟨i, hi⟩
       use B i, i, rfl
       rw [image_subset_iff]
       rintro b b_in
       apply hi
-      simpa using b_in
-      ⟩
+      simpa using b_in⟩
 #align ring_subgroups_basis.has_basis_nhds RingSubgroupsBasis.has_basis_nhds
 
 /-- Given a subgroups basis, the basis elements as open additive subgroups in the associated
 topology. -/
 def openAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
   { B i with
-    is_open' := by
+    is_open' := by 
       letI := hB.topology
       rw [is_open_iff_mem_nhds]
       intro a a_in
@@ -234,43 +228,44 @@ variable [TopologicalSpace R] [Nonempty ι] {B : ι → Submodule R M} (hB : Sub
 include hB
 
 /-- The image of a submodules basis is a module filter basis. -/
-def toModuleFilterBasis : ModuleFilterBasis R M where
+def toModuleFilterBasis :
+    ModuleFilterBasis R M where 
   sets := { U | ∃ i, U = B i }
-  Nonempty := by
+  Nonempty := by 
     inhabit ι
     exact ⟨B default, default, rfl⟩
-  inter_sets := by
+  inter_sets := by 
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
     cases' hB.inter i j with k hk
     use B k, k, rfl, hk
-  zero' := by
+  zero' := by 
     rintro _ ⟨i, rfl⟩
     exact (B i).zero_mem
-  add' := by
+  add' := by 
     rintro _ ⟨i, rfl⟩
     use B i, i, rfl
     rintro x ⟨y, z, y_in, z_in, rfl⟩
     exact (B i).add_mem y_in z_in
-  neg' := by
+  neg' := by 
     rintro _ ⟨i, rfl⟩
     use B i, i, rfl
     intro x x_in
     exact (B i).neg_mem x_in
-  conj' := by
+  conj' := by 
     rintro x₀ _ ⟨i, rfl⟩
     use B i, i, rfl
     simp
-  smul' := by
+  smul' := by 
     rintro _ ⟨i, rfl⟩
     use univ, univ_mem, B i, i, rfl
     rintro _ ⟨a, m, -, hm, rfl⟩
     exact (B i).smul_mem _ hm
-  smul_left' := by
+  smul_left' := by 
     rintro x₀ _ ⟨i, rfl⟩
     use B i, i, rfl
     intro m
     exact (B i).smul_mem _
-  smul_right' := by
+  smul_right' := by 
     rintro m₀ _ ⟨i, rfl⟩
     exact hB.smul m₀ i
 #align submodules_basis.to_module_filter_basis SubmodulesBasis.toModuleFilterBasis
@@ -284,7 +279,7 @@ def topology : TopologicalSpace M :=
 topology. -/
 def openAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
   { (B i).toAddSubgroup with
-    is_open' := by
+    is_open' := by 
       letI := hB.topology
       rw [is_open_iff_mem_nhds]
       intro a a_in
@@ -345,7 +340,7 @@ structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → S
 theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
   { inter := hB.inter,
-    smul := by
+    smul := by 
       letI := BR.topology
       intro m i
       rcases hB.smul m i with ⟨V, V_in, hV⟩

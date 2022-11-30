@@ -90,7 +90,7 @@ theorem ext_iff (A B : SpecialLinearGroup n R) : A = B ↔ ∀ i j, ↑ₘA i j 
   Subtype.ext_iff.trans Matrix.ext_iff.symm
 #align matrix.special_linear_group.ext_iff Matrix.SpecialLinearGroup.ext_iff
 
-@[ext.1]
+@[ext]
 theorem ext (A B : SpecialLinearGroup n R) : (∀ i j, ↑ₘA i j = ↑ₘB i j) → A = B :=
   (SpecialLinearGroup.ext_iff A B).mpr
 #align matrix.special_linear_group.ext Matrix.SpecialLinearGroup.ext
@@ -164,12 +164,16 @@ instance : Monoid (SpecialLinearGroup n R) :=
 
 instance : Group (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
-    mul_left_inv := fun A => by
+    mul_left_inv := fun A => by 
       ext1
       simp [adjugate_mul] }
 
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
-def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
+def toLin' :
+    SpecialLinearGroup n R →*
+      (n → R) ≃ₗ[R]
+        n →
+          R where 
   toFun A :=
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
       (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
@@ -220,9 +224,12 @@ variable {S : Type _} [CommRing S]
 /-- A ring homomorphism from `R` to `S` induces a group homomorphism from
 `special_linear_group n R` to `special_linear_group n S`. -/
 @[simps]
-def map (f : R →+* S) : SpecialLinearGroup n R →* SpecialLinearGroup n S where
+def map (f : R →+* S) :
+    SpecialLinearGroup n R →*
+      SpecialLinearGroup n
+        S where 
   toFun g :=
-    ⟨f.mapMatrix ↑g, by
+    ⟨f.mapMatrix ↑g, by 
       rw [← f.map_det]
       simp [g.2]⟩
   map_one' := Subtype.ext <| f.mapMatrix.map_one
@@ -273,7 +280,7 @@ end Neg
 section SpecialCases
 
 theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]] = 1 :=
-  by
+  by 
   rw [Matrix.det_fin_two, mul_comm]
   simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, mul_neg, neg_mul, neg_neg]
   have := A.2

@@ -66,7 +66,8 @@ variable {ι : Type _} {R : Type _} {M : Type _}
 section Defs
 
 /-- Interpret a `finsupp` as a homogenous `dfinsupp`. -/
-def Finsupp.toDfinsupp [Zero M] (f : ι →₀ M) : Π₀ i : ι, M where
+def Finsupp.toDfinsupp [Zero M] (f : ι →₀ M) :
+    Π₀ i : ι, M where 
   toFun := f
   support' :=
     Trunc.mk
@@ -220,7 +221,7 @@ section Equivs
 /-- `finsupp.to_dfinsupp` and `dfinsupp.to_finsupp` together form an equiv. -/
 @[simps (config := { fullyApplied := false })]
 def finsuppEquivDfinsupp [DecidableEq ι] [Zero M] [∀ m : M, Decidable (m ≠ 0)] :
-    (ι →₀ M) ≃ Π₀ i : ι, M where
+    (ι →₀ M) ≃ Π₀ i : ι, M where 
   toFun := Finsupp.toDfinsupp
   invFun := Dfinsupp.toFinsupp
   left_inv := Finsupp.to_dfinsupp_to_finsupp
@@ -259,7 +260,11 @@ variable {η : ι → Type _} {N : Type _} [Semiring R]
 open Finsupp
 
 /-- `finsupp.split` is an equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
-def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η i →₀ N where
+def sigmaFinsuppEquivDfinsupp [Zero N] :
+    ((Σi, η i) →₀ N) ≃
+      Π₀ i,
+        η i →₀
+          N where 
   toFun f :=
     ⟨split f,
       Trunc.mk
@@ -274,10 +279,10 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
     intro h
     rw [h] at hg
     simpa using hg
-  left_inv f := by
+  left_inv f := by 
     ext
     simp [split]
-  right_inv f := by
+  right_inv f := by 
     ext
     simp [split]
 #align sigma_finsupp_equiv_dfinsupp sigmaFinsuppEquivDfinsupp
@@ -306,13 +311,12 @@ theorem sigma_finsupp_equiv_dfinsupp_support [Zero N] (f : (Σi, η i) →₀ N)
 theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
     sigmaFinsuppEquivDfinsupp (Finsupp.single a n) =
       @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
-  by
+  by 
   obtain ⟨i, a⟩ := a
   ext (j b)
   by_cases h : i = j
   · subst h
     simp [split_apply, Finsupp.single_apply]
-    
   suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
   have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by simp [h]
   rw [Finsupp.single_apply, if_neg H]
@@ -325,7 +329,7 @@ attribute [-instance] Finsupp.hasZero
 theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (f + g) =
       (sigmaFinsuppEquivDfinsupp f + sigmaFinsuppEquivDfinsupp g : Π₀ i : ι, η i →₀ N) :=
-  by
+  by 
   ext
   rfl
 #align sigma_finsupp_equiv_dfinsupp_add sigma_finsupp_equiv_dfinsupp_add
@@ -345,7 +349,7 @@ theorem sigma_finsupp_equiv_dfinsupp_smul {R} [Monoid R] [AddMonoid N] [DistribM
     (r : R) (f : (Σi, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (r • f) =
       @HasSmul.smul R (Π₀ i, η i →₀ N) MulAction.toHasSmul r (sigmaFinsuppEquivDfinsupp f) :=
-  by
+  by 
   ext
   rfl
 #align sigma_finsupp_equiv_dfinsupp_smul sigma_finsupp_equiv_dfinsupp_smul

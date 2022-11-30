@@ -83,7 +83,8 @@ namespace HasLimits
 /-- Construction of a limit cone in `Algebra R`.
 (Internal use only; use the limits API.)
 -/
-def limitCone (F : J ⥤ AlgebraCat.{max v w} R) : Cone F where
+def limitCone (F : J ⥤ AlgebraCat.{max v w} R) :
+    Cone F where 
   x := AlgebraCat.of R (Types.limitCone (F ⋙ forget _)).x
   π :=
     { app := limitπAlgHom F,
@@ -100,22 +101,17 @@ def limitConeIsLimit (F : J ⥤ AlgebraCat.{max v w} R) : IsLimit (limitCone F) 
       fun s => rfl
   · simp only [forget_map_eq_coe, AlgHom.map_one, functor.map_cone_π_app]
     rfl
-    
   · intro x y
     simp only [forget_map_eq_coe, AlgHom.map_mul, functor.map_cone_π_app]
     rfl
-    
   · simp only [forget_map_eq_coe, AlgHom.map_zero, functor.map_cone_π_app]
     rfl
-    
   · intro x y
     simp only [forget_map_eq_coe, AlgHom.map_add, functor.map_cone_π_app]
     rfl
-    
   · intro r
     ext j
     exact (s.π.app j).commutes r
-    
 #align Algebra.has_limits.limit_cone_is_limit AlgebraCat.HasLimits.limitConeIsLimit
 
 end HasLimits

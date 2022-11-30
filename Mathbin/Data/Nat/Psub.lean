@@ -61,7 +61,7 @@ theorem ppred_eq_none : ∀ {n : ℕ}, ppred n = none ↔ n = 0
 
 theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
   | 0, k => by simp [eq_comm]
-  | n + 1, k => by
+  | n + 1, k => by 
     dsimp
     apply option.bind_eq_some.trans
     simp [psub_eq_some, add_comm, add_left_comm, Nat.succ_eq_add_one]
@@ -73,11 +73,9 @@ theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
     refine' lt_of_not_ge fun h => _
     cases' le.dest h with k e
     injection s.symm.trans (psub_eq_some.2 <| (add_comm _ _).trans e)
-    
   · show n ≤ m
     rw [← psub_eq_some.1 s]
     apply Nat.le_add_left
-    
 #align nat.psub_eq_none Nat.psub_eq_none
 
 theorem ppred_eq_pred {n} (h : 0 < n) : ppred n = some (pred n) :=

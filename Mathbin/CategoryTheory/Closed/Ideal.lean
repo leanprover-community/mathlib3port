@@ -52,7 +52,7 @@ class ExponentialIdeal : Prop where
 -/
 theorem ExponentialIdeal.mk' (h : ∀ (B : D) (A : C), (A ⟹ i.obj B) ∈ i.essImage) :
     ExponentialIdeal i :=
-  ⟨fun B hB A => by
+  ⟨fun B hB A => by 
     rcases hB with ⟨B', ⟨iB'⟩⟩
     exact functor.ess_image.of_iso ((exp A).mapIso iB') (h B' A)⟩
 #align category_theory.exponential_ideal.mk' CategoryTheory.ExponentialIdeal.mk'
@@ -82,9 +82,7 @@ def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
   · intro X
     haveI := (exponential_ideal.exp_closed (i.obj_mem_ess_image X) A).unit_is_iso
     apply as_iso ((adjunction.of_right_adjoint i).Unit.app (A ⟹ i.obj X))
-    
   · simp
-    
 #align category_theory.exponential_ideal_reflective CategoryTheory.exponentialIdealReflective
 
 /-- Given a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, we can show `i`
@@ -151,7 +149,7 @@ def cartesianClosedOfReflective :
       D where closed' B :=
     { isAdj :=
         { right := i ⋙ exp (i.obj B) ⋙ leftAdjoint i,
-          adj := by
+          adj := by 
             apply adjunction.restrict_fully_faithful i i (exp.adjunction (i.obj B))
             · symm
               apply nat_iso.of_components _ _
@@ -159,15 +157,11 @@ def cartesianClosedOfReflective :
                 haveI :=
                   Adjunction.rightAdjointPreservesLimits.{0, 0} (adjunction.of_right_adjoint i)
                 apply as_iso (prod_comparison i B X)
-                
               · intro X Y f
                 dsimp
                 rw [prod_comparison_natural]
                 simp
-                
-              
-            · apply (exponential_ideal_reflective i _).symm
-               } }
+            · apply (exponential_ideal_reflective i _).symm } }
 #align category_theory.cartesian_closed_of_reflective CategoryTheory.cartesianClosedOfReflective
 
 -- It's annoying that I need to do this.
@@ -209,7 +203,7 @@ noncomputable def bijection (A B : C) (X : D) :
 #align category_theory.bijection CategoryTheory.bijection
 
 theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = prodComparison _ _ _ :=
-  by
+  by 
   dsimp [bijection]
   rw [comp_id, comp_id, comp_id, i.map_id, comp_id, unit_comp_partial_bijective_symm_apply,
     unit_comp_partial_bijective_symm_apply, uncurry_natural_left, uncurry_curry,
@@ -220,10 +214,8 @@ theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = 
   apply prod.hom_ext
   · rw [limits.prod.map_fst, assoc, assoc, prod_comparison_fst, ← i.map_comp, prod_comparison_fst]
     apply (adjunction.of_right_adjoint i).Unit.naturality
-    
   · rw [limits.prod.map_snd, assoc, assoc, prod_comparison_snd, ← i.map_comp, prod_comparison_snd]
     apply (adjunction.of_right_adjoint i).Unit.naturality
-    
 #align category_theory.bijection_symm_apply_id CategoryTheory.bijection_symm_apply_id
 
 theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
@@ -254,7 +246,9 @@ If a reflective subcategory is an exponential ideal, then the reflector preserve
 This is the converse of `exponential_ideal_of_preserves_binary_products`.
 -/
 noncomputable def preservesBinaryProductsOfExponentialIdeal :
-    PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i) where PreservesLimit K := by
+    PreservesLimitsOfShape (Discrete WalkingPair)
+      (leftAdjoint
+        i) where PreservesLimit K := by
     apply limits.preserves_limit_of_iso_diagram _ (diagram_iso_pair K).symm
     apply preserves_limit_pair.of_iso_prod_comparison
 #align

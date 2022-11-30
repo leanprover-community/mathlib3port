@@ -55,7 +55,8 @@ variable (α) [Nonempty α]
 -- See note [reducible non-instances]
 /-- Constructs the `⊥` of a finite nonempty `semilattice_inf`. -/
 @[reducible]
-def toOrderBot [SemilatticeInf α] : OrderBot α where
+def toOrderBot [SemilatticeInf α] :
+    OrderBot α where 
   bot := univ.inf' univ_nonempty id
   bot_le a := inf'_le _ <| mem_univ a
 #align fintype.to_order_bot Fintype.toOrderBot
@@ -63,7 +64,8 @@ def toOrderBot [SemilatticeInf α] : OrderBot α where
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
 @[reducible]
-def toOrderTop [SemilatticeSup α] : OrderTop α where
+def toOrderTop [SemilatticeSup α] :
+    OrderTop α where 
   top := univ.sup' univ_nonempty id
   le_top a := le_sup' _ <| mem_univ a
 #align fintype.to_order_top Fintype.toOrderTop
@@ -172,9 +174,10 @@ noncomputable instance : CompleteBooleanAlgebra Bool :=
 variable {α : Type _}
 
 theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α}
-    [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by classical
-  obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
-  exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
+    [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
+  classical 
+    obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
+    exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
 #align directed.fintype_le Directed.fintype_le
 
 theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β]

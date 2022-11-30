@@ -103,7 +103,7 @@ theorem arsinh_sinh (x : ℝ) : arsinh (sinh x) = x :=
 
 /-- `real.sinh` as an `equiv`. -/
 @[simps]
-def sinhEquiv : ℝ ≃ ℝ where
+def sinhEquiv : ℝ ≃ ℝ where 
   toFun := sinh
   invFun := arsinh
   left_inv := arsinh_sinh
@@ -112,7 +112,7 @@ def sinhEquiv : ℝ ≃ ℝ where
 
 /-- `real.sinh` as an `order_iso`. -/
 @[simps (config := { fullyApplied := false })]
-def sinhOrderIso : ℝ ≃o ℝ where
+def sinhOrderIso : ℝ ≃o ℝ where 
   toEquiv := sinhEquiv
   map_rel_iff' := @sinh_le_sinh
 #align real.sinh_order_iso Real.sinhOrderIso

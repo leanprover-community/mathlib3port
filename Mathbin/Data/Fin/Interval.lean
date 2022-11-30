@@ -135,12 +135,9 @@ theorem map_subtype_embedding_Ici : (ici a).map Fin.coeEmbedding = icc a (n - 1)
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩
-    
   cases n
   · exact Fin.elim0 a
-    
   · exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
-    
 #align fin.map_subtype_embedding_Ici Fin.map_subtype_embedding_Ici
 
 @[simp]
@@ -150,12 +147,9 @@ theorem map_subtype_embedding_Ioi : (ioi a).map Fin.coeEmbedding = ioc a (n - 1)
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩
-    
   cases n
   · exact Fin.elim0 a
-    
   · exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
-    
 #align fin.map_subtype_embedding_Ioi Fin.map_subtype_embedding_Ioi
 
 @[simp]
@@ -169,10 +163,9 @@ theorem map_subtype_embedding_Iio : (iio b).map Fin.coeEmbedding = iio b := by
 #align fin.map_subtype_embedding_Iio Fin.map_subtype_embedding_Iio
 
 @[simp]
-theorem card_Ici : (ici a).card = n - a := by
+theorem card_Ici : (ici a).card = n - a := by 
   cases n
   · exact Fin.elim0 a
-    
   rw [← card_map, map_subtype_embedding_Ici, Nat.card_Icc]
   rfl
 #align fin.card_Ici Fin.card_Ici

@@ -85,7 +85,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
   have h_int :
     ∀ (x : ℝ) (hx : x ∈ Ioc (0 : ℝ) 1),
       Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n) ≤ Ennreal.ofReal (x ^ (-(r⁻¹ * n))) :=
-    by
+    by 
     intro x hx
     have hxr : 0 ≤ x ^ (-r⁻¹) := rpow_nonneg_of_nonneg hx.1.le _
     apply Ennreal.of_real_le_of_real
@@ -118,7 +118,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     ∀ (t : ℝ) (ht : t ∈ Ioi (0 : ℝ)),
       (volume { a : E | t ≤ (1 + ‖a‖) ^ (-r) } : Ennreal) =
         volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) :=
-    by
+    by 
     intro t ht
     congr 1
     ext x
@@ -133,7 +133,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
       (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) =
         Ennreal.ofReal ((t ^ (-r⁻¹) - 1) ^ FiniteDimensional.finrank ℝ E) *
           volume (Metric.ball (0 : E) 1) :=
-    by
+    by 
     intro t ht
     refine' volume.add_haar_closed_ball (0 : E) _
     rw [le_sub_iff_add_le', add_zero]
@@ -147,7 +147,6 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     left
     -- We calculate the integral
     exact ⟨finite_integral_rpow_sub_one_pow_aux (finrank ℝ E) hnr, measure_ball_lt_top⟩
-    
   -- The integral from 1 to ∞ is zero:
   have h_int'' :
     ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)),

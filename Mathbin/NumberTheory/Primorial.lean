@@ -46,7 +46,7 @@ theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n#
 theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ) (p_big : m + 1 < p)
     (p_small : p ≤ 2 * m + 1) : p ∣ choose (2 * m + 1) (m + 1) := by
   have m_size : m + 1 ≤ 2 * m + 1 := le_of_lt (lt_of_lt_of_le p_big p_small)
-  have s : ¬p ∣ (m + 1)! := by
+  have s : ¬p ∣ (m + 1)! := by 
     intro p_div_fact
     exact lt_le_antisymm p_big (is_prime.dvd_factorial.mp p_div_fact)
   have t : ¬p ∣ (2 * m + 1 - (m + 1))! := by
@@ -61,7 +61,6 @@ theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ
   obtain p_div_choose | p_div_facts : p ∣ choose (2 * m + 1) (m + 1) ∨ p ∣ _ ! * _ ! :=
     (prime.dvd_mul is_prime).1 p_div_big_fact
   · exact p_div_choose
-    
   cases (prime.dvd_mul is_prime).1 p_div_facts
   exacts[(s h).elim, (t h).elim]
 #align dvd_choose_of_middling_prime dvd_choose_of_middling_prime
@@ -73,16 +72,14 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
     match Nat.mod_two_eq_zero_or_one (n + 1) with
     | Or.inl n_odd =>
       match Nat.even_iff.2 n_odd with
-      | ⟨m, twice_m⟩ => by
+      | ⟨m, twice_m⟩ => by 
         have recurse : m + 1 < n + 2 := by linarith
         calc
           (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by simpa [two_mul, ← twice_m]
           _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i := by
             rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
             · exact bot_le
-              
             · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_left m m
-              
           _ =
               ∏ i in
                 filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪
@@ -92,7 +89,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           _ =
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) *
                 ∏ i in filter Nat.Prime (range (m + 2)), i :=
-            by
+            by 
             apply Finset.prod_union
             have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) := by
               simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_lt, Finset.mem_range]
@@ -105,12 +102,11 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
             have s :
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣
                 choose (2 * m + 1) (m + 1) :=
-              by
+              by 
               refine' prod_primes_dvd (choose (2 * m + 1) (m + 1)) _ _
               · intro a
                 rw [Finset.mem_filter, Nat.prime_iff]
                 apply And.right
-                
               · intro a
                 rw [Finset.mem_filter]
                 intro pr
@@ -118,11 +114,10 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
                 simp only [Finset.mem_Ico] at size
                 rcases size with ⟨a_big, a_small⟩
                 exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
-                
             have r :
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ≤
                 choose (2 * m + 1) (m + 1) :=
-              by
+              by 
               refine' @Nat.le_of_dvd _ _ _ s
               exact @choose_pos (2 * m + 1) (m + 1) (by linarith)
             exact Nat.mul_le_mul_right _ r
@@ -138,9 +133,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           (n + 1)# ≤ 4 ^ n.succ := primorial_le_4_pow (n + 1)
           _ ≤ 4 ^ (n + 2) := pow_le_pow (by norm_num) (Nat.le_succ _)
           
-        
       · have n_zero : n = 0 := eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)
         norm_num [n_zero, primorial, range_succ, prod_filter, Nat.not_prime_zero, Nat.prime_two]
-        
 #align primorial_le_4_pow primorial_le_4_pow
 

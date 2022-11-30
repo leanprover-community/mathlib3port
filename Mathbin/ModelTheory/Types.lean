@@ -55,7 +55,7 @@ variable {T α}
 namespace CompleteType
 
 instance : SetLike (T.CompleteType α) L[[α]].Sentence :=
-  ⟨fun p => p.toTheory, fun p q h => by
+  ⟨fun p => p.toTheory, fun p q h => by 
     cases p
     cases q
     congr ⟩
@@ -107,7 +107,7 @@ theorem compl_set_of_mem {φ : L[[α]].Sentence} :
 theorem set_of_subset_eq_empty_iff (S : L[[α]].TheoryCat) :
     { p : T.CompleteType α | S ⊆ ↑p } = ∅ ↔
       ¬((L.lhomWithConstants α).onTheory T ∪ S).IsSatisfiable :=
-  by
+  by 
   rw [iff_not_comm, ← not_nonempty_iff_eq_empty, not_not, Set.Nonempty]
   refine'
     ⟨fun h =>

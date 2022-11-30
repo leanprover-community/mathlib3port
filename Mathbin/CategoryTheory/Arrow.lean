@@ -59,7 +59,7 @@ theorem id_right (f : Arrow T) : CommaMorphism.right (𝟙 f) = 𝟙 f.right :=
 
 /-- An object in the arrow category is simply a morphism in `T`. -/
 @[simps]
-def mk {X Y : T} (f : X ⟶ Y) : Arrow T where
+def mk {X Y : T} (f : X ⟶ Y) : Arrow T where 
   left := X
   right := Y
   Hom := f
@@ -72,7 +72,7 @@ theorem mk_eq (f : Arrow T) : Arrow.mk f.Hom = f := by
 #align category_theory.arrow.mk_eq CategoryTheory.Arrow.mk_eq
 
 theorem mk_injective (A B : T) : Function.Injective (Arrow.mk : (A ⟶ B) → Arrow T) := fun f g h =>
-  by
+  by 
   cases h
   rfl
 #align category_theory.arrow.mk_injective CategoryTheory.Arrow.mk_injective
@@ -88,7 +88,7 @@ instance {X Y : T} : Coe (X ⟶ Y) (Arrow T) :=
     category. -/
 @[simps]
 def homMk {f g : Arrow T} {u : f.left ⟶ g.left} {v : f.right ⟶ g.right}
-    (w : u ≫ g.Hom = f.Hom ≫ v) : f ⟶ g where
+    (w : u ≫ g.Hom = f.Hom ≫ v) : f ⟶ g where 
   left := u
   right := v
   w' := w
@@ -97,7 +97,7 @@ def homMk {f g : Arrow T} {u : f.left ⟶ g.left} {v : f.right ⟶ g.right}
 /-- We can also build a morphism in the arrow category out of any commutative square in `T`. -/
 @[simps]
 def homMk' {X Y : T} {f : X ⟶ Y} {P Q : T} {g : P ⟶ Q} {u : X ⟶ P} {v : Y ⟶ Q} (w : u ≫ g = f ≫ v) :
-    Arrow.mk f ⟶ Arrow.mk g where
+    Arrow.mk f ⟶ Arrow.mk g where 
   left := u
   right := v
   w' := w
@@ -199,30 +199,28 @@ theorem inv_left_hom_right [IsIso sq] : inv sq.left ≫ f.Hom ≫ sq.right = g.H
 #align category_theory.arrow.inv_left_hom_right CategoryTheory.Arrow.inv_left_hom_right
 
 instance mono_left [Mono sq] :
-    Mono sq.left where right_cancellation Z φ ψ h := by
+    Mono
+      sq.left where right_cancellation Z φ ψ h := by
     let aux : (Z ⟶ f.left) → (arrow.mk (𝟙 Z) ⟶ f) := fun φ => { left := φ, right := φ ≫ f.hom }
     show (aux φ).left = (aux ψ).left
     congr 1
     rw [← cancel_mono sq]
     ext
     · exact h
-      
     · simp only [comma.comp_right, category.assoc, ← arrow.w]
       simp only [← category.assoc, h]
-      
 #align category_theory.arrow.mono_left CategoryTheory.Arrow.mono_left
 
 instance epi_right [Epi sq] :
-    Epi sq.right where left_cancellation Z φ ψ h := by
+    Epi
+      sq.right where left_cancellation Z φ ψ h := by
     let aux : (g.right ⟶ Z) → (g ⟶ arrow.mk (𝟙 Z)) := fun φ => { right := φ, left := g.hom ≫ φ }
     show (aux φ).right = (aux ψ).right
     congr 1
     rw [← cancel_epi sq]
     ext
     · simp only [comma.comp_left, category.assoc, arrow.w_assoc, h]
-      
     · exact h
-      
 #align category_theory.arrow.epi_right CategoryTheory.Arrow.epi_right
 
 end
@@ -253,7 +251,7 @@ B  → Z                 B → Z
  -/
 @[simps]
 def squareToSnd {X Y Z : C} {i : Arrow C} {f : X ⟶ Y} {g : Y ⟶ Z} (sq : i ⟶ Arrow.mk (f ≫ g)) :
-    i ⟶ Arrow.mk g where
+    i ⟶ Arrow.mk g where 
   left := sq.left ≫ f
   right := sq.right
 #align category_theory.arrow.square_to_snd CategoryTheory.Arrow.squareToSnd
@@ -285,11 +283,14 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 /-- A functor `C ⥤ D` induces a functor between the corresponding arrow categories. -/
 @[simps]
-def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D where
+def mapArrow (F : C ⥤ D) :
+    Arrow C ⥤
+      Arrow
+        D where 
   obj a := { left := F.obj a.left, right := F.obj a.right, Hom := F.map a.Hom }
   map a b f :=
     { left := F.map f.left, right := F.map f.right,
-      w' := by
+      w' := by 
         have w := f.w
         simp only [id_map] at w
         dsimp

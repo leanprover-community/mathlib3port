@@ -92,7 +92,7 @@ theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : 
     a₁ * a₂ * (algebraMap R A) ((p₁ * p₂).coeff k) =
       (Finset.Nat.antidiagonal k).Sum fun x =>
         a₁ * (algebraMap R A) (coeff p₁ x.1) * (a₂ * (algebraMap R A) (coeff p₂ x.2)) :=
-  by
+  by 
   simp_rw [mul_assoc, Algebra.commutes, ← Finset.mul_sum, mul_assoc, ← Finset.mul_sum]
   congr
   simp_rw [Algebra.commutes (coeff p₂ _), coeff_mul, RingHom.map_sum, RingHom.map_mul]
@@ -102,16 +102,17 @@ theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : 
 theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     (toFunLinear R A) ((a₁ * a₂) ⊗ₜ[R] (p₁ * p₂)) =
       (toFunLinear R A) (a₁ ⊗ₜ[R] p₁) * (toFunLinear R A) (a₂ ⊗ₜ[R] p₂) :=
-  by classical
-  simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
-  ext k
-  simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
-  conv_rhs => rw [coeff_mul]
-  simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite,
-    mul_zero, ite_mul, zero_mul]
-  simp_rw [ite_mul_zero_left (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
-  simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
-  simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
+  by
+  classical 
+    simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
+    ext k
+    simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
+    conv_rhs => rw [coeff_mul]
+    simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite,
+      mul_zero, ite_mul, zero_mul]
+    simp_rw [ite_mul_zero_left (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
+    simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
+    simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
 #align poly_equiv_tensor.to_fun_linear_mul_tmul_mul PolyEquivTensor.to_fun_linear_mul_tmul_mul
 
 theorem to_fun_linear_algebra_map_tmul_one (r : R) :
@@ -158,7 +159,6 @@ theorem inv_fun_monomial (n : ℕ) (a : A) :
 theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
   apply TensorProduct.induction_on x
   · simp [inv_fun]
-    
   · intro a p
     dsimp only [inv_fun]
     rw [to_fun_alg_hom_apply_tmul, eval₂_sum]
@@ -168,30 +168,26 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
     conv_rhs => rw [← sum_C_mul_X_pow_eq p]
     simp only [Algebra.smul_def]
     rfl
-    
   · intro p q hp hq
     simp only [AlgHom.map_add, inv_fun_add, hp, hq]
-    
 #align poly_equiv_tensor.left_inv PolyEquivTensor.left_inv
 
 theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
   apply Polynomial.induction_on' x
   · intro p q hp hq
     simp only [inv_fun_add, AlgHom.map_add, hp, hq]
-    
   · intro n a
     rw [inv_fun_monomial, Algebra.TensorProduct.include_left_apply, Algebra.TensorProduct.tmul_pow,
         one_pow, Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, to_fun_alg_hom_apply_tmul,
         X_pow_eq_monomial, sum_monomial_index] <;>
       simp
-    
 #align poly_equiv_tensor.right_inv PolyEquivTensor.right_inv
 
 /-- (Implementation detail)
 
 The equivalence, ignoring the algebra structure, `(A ⊗[R] R[X]) ≃ A[X]`.
 -/
-def equiv : A ⊗[R] R[X] ≃ A[X] where
+def equiv : A ⊗[R] R[X] ≃ A[X] where 
   toFun := toFunAlgHom R A
   invFun := invFun R A
   left_inv := left_inv R A
@@ -263,14 +259,11 @@ theorem mat_poly_equiv_coeff_apply_aux_2 (i j : n) (p : R[X]) (k : ℕ) :
   · intro p q hp hq
     ext
     simp [hp, hq, coeff_add, add_apply, std_basis_matrix_add]
-    
   · intro k x
     simp only [mat_poly_equiv_coeff_apply_aux_1, coeff_monomial]
     split_ifs <;>
       · funext
         simp
-        
-    
 #align mat_poly_equiv_coeff_apply_aux_2 mat_poly_equiv_coeff_apply_aux_2
 
 @[simp]
@@ -278,20 +271,15 @@ theorem mat_poly_equiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
     coeff (matPolyEquiv m) k i j = coeff (m i j) k := by
   apply Matrix.induction_on' m
   · simp
-    
   · intro p q hp hq
     simp [hp, hq]
-    
   · intro i' j' x
     erw [mat_poly_equiv_coeff_apply_aux_2]
     dsimp [std_basis_matrix]
     split_ifs
     · rcases h with ⟨rfl, rfl⟩
       simp [std_basis_matrix]
-      
     · simp [std_basis_matrix, h]
-      
-    
 #align mat_poly_equiv_coeff_apply mat_poly_equiv_coeff_apply
 
 @[simp]

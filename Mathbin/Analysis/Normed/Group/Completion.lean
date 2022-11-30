@@ -36,15 +36,13 @@ theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)�
 
 instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
   { Completion.addCommGroup, Completion.metricSpace with
-    dist_eq := by
+    dist_eq := by 
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
       · refine' isClosedEq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
-        
       · intro x y
-        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm]
-         }
+        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm] }
 
 end Completion
 

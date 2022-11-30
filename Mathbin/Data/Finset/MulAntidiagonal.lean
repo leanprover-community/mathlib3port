@@ -87,7 +87,7 @@ theorem swap_mem_mul_antidiagonal :
 
 @[to_additive]
 theorem support_mul_antidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t :=
-  fun a ⟨b, hb⟩ => by
+  fun a ⟨b, hb⟩ => by 
   rw [mem_mul_antidiagonal] at hb
   exact ⟨b.1, b.2, hb⟩
 #align finset.support_mul_antidiagonal_subset_mul Finset.support_mul_antidiagonal_subset_mul
@@ -109,10 +109,8 @@ theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s 
       (hs.min_le hns has).eq_of_not_lt fun hlt =>
         (mul_lt_mul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
     exact ⟨rfl, mul_left_cancel hst⟩
-    
   · rintro ⟨rfl, rfl⟩
     exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
-    
 #align finset.mul_antidiagonal_min_mul_min Finset.mul_antidiagonal_min_mul_min
 
 end Finset

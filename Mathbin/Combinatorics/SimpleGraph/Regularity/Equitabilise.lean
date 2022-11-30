@@ -46,7 +46,6 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       sdiff_eq_empty_iff_subset, subset_iff]
     exact fun x hx a ha =>
       ⟨{a}, mem_map_of_mem _ (P.le hx ha), singleton_subset_iff.2 ha, mem_singleton_self _⟩
-    
   -- Prove the case `m > 0` by strong induction on `s`
   induction' s using Finset.strongInduction with s ih generalizing P a b
   -- If `a = b = 0`, then `s = ∅` and we can partition into zero parts
@@ -54,7 +53,6 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   · simp only [hab.1, hab.2, add_zero, zero_mul, eq_comm, card_eq_zero] at hs
     subst hs
     exact ⟨Finpartition.empty _, by simp, by simp [Unique.eq_default P], by simp [hab.2]⟩
-    
   simp_rw [not_and_or, ← Ne.def, ← pos_iff_ne_zero] at hab
   -- `n` will be the size of the smallest part
   set n := if 0 < a then m else m + 1 with hn
@@ -64,15 +62,13 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       n ≤ m + 1 ∧
         n ≤ a * m + b * (m + 1) ∧
           ite (0 < a) (a - 1) a * m + ite (0 < a) b (b - 1) * (m + 1) = s.card - n :=
-    by
+    by 
     rw [hn, ← hs]
     split_ifs <;> rw [tsub_mul, one_mul]
     · refine' ⟨m_pos, le_succ _, le_add_right (le_mul_of_pos_left ‹0 < a›), _⟩
       rw [tsub_add_eq_add_tsub (le_mul_of_pos_left h)]
-      
     · refine' ⟨succ_pos', le_rfl, le_add_left (le_mul_of_pos_left <| hab.resolve_left ‹¬0 < a›), _⟩
       rw [← add_tsub_assoc_of_le (le_mul_of_pos_left <| hab.resolve_left ‹¬0 < a›)]
-      
   /- We will call the inductive hypothesis on a partition of `s \ t` for a carefully chosen `t ⊆ s`.
     To decide which, however, we must distinguish the case where all parts of `P` have size `m` (in
     which case we take `t` to be an arbitrary subset of `s` of size `n`) from the case where at least
@@ -90,19 +86,13 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
     refine' ⟨R.extend ht.ne_empty sdiff_disjoint (sdiff_sup_cancel hts), _, _, _⟩
     · simp only [extend_parts, mem_insert, forall_eq_or_imp, and_iff_left hR₁, htn, hn]
       exact ite_eq_or_eq _ _ _
-      
     · exact fun x hx => (card_le_of_subset <| sdiff_subset _ _).trans (lt_succ_iff.1 <| h _ hx)
-      
     simp_rw [extend_parts, filter_insert, htn, hn, m.succ_ne_self.symm.ite_eq_right_iff]
     split_ifs with ha
     · rw [hR₃, if_pos ha]
-      
     rw [card_insert_of_not_mem fun H => _, hR₃, if_neg ha, tsub_add_cancel_of_le]
     · exact hab.resolve_left ha
-      
     · exact ht.ne_empty (le_sdiff_iff.1 <| R.le <| filter_subset _ _ H)
-      
-    
   push_neg  at h
   obtain ⟨u, hu₁, hu₂⟩ := h
   obtain ⟨t, htu, htn⟩ := exists_smaller_set _ _ (hn₁.trans hu₂)
@@ -115,7 +105,6 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   refine' ⟨R.extend ht.ne_empty sdiff_disjoint (sdiff_sup_cancel <| htu.trans <| P.le hu₁), _, _, _⟩
   · simp only [mem_insert, forall_eq_or_imp, extend_parts, and_iff_left hR₁, htn, hn]
     exact ite_eq_or_eq _ _ _
-    
   · conv in _ ∈ _ => rw [← insert_erase hu₁]
     simp only [and_imp, mem_insert, forall_eq_or_imp, Ne.def, extend_parts]
     refine' ⟨_, fun x hx => (card_le_of_subset _).trans <| hR₂ x _⟩
@@ -123,30 +112,24 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       obtain rfl | hut := eq_or_ne u t
       · rw [sdiff_eq_empty_iff_subset.2 (subset_union_left _ _)]
         exact bot_le
-        
       refine'
         (card_le_of_subset fun i => _).trans
           (hR₂ (u \ t) <| P.mem_avoid.2 ⟨u, hu₁, fun i => hut <| i.antisymm htu, rfl⟩)
       simp only [not_exists, mem_bUnion, and_imp, mem_union, mem_filter, mem_sdiff, id.def, not_or]
       exact fun hi₁ hi₂ hi₃ =>
         ⟨⟨hi₁, hi₂⟩, fun x hx hx' => hi₃ _ hx <| hx'.trans <| sdiff_subset _ _⟩
-      
     · apply sdiff_subset_sdiff subset.rfl (bUnion_subset_bUnion_of_subset_left _ _)
       exact filter_subset_filter _ (subset_insert _ _)
-      
     simp only [avoid, of_erase, mem_erase, mem_image, bot_eq_empty]
     exact
       ⟨(nonempty_of_mem_parts _ <| mem_of_mem_erase hx).ne_empty, _, mem_of_mem_erase hx,
         (disjoint_of_subset_right htu <|
             P.disjoint (mem_of_mem_erase hx) hu₁ <| ne_of_mem_erase hx).sdiff_eq_left⟩
-    
   simp only [extend_parts, filter_insert, htn, hn, m.succ_ne_self.symm.ite_eq_right_iff]
   split_ifs
   · rw [hR₃, if_pos h]
-    
   · rw [card_insert_of_not_mem fun H => _, hR₃, if_neg h, Nat.sub_add_cancel (hab.resolve_left h)]
     exact ht.ne_empty (le_sdiff_iff.1 <| R.le <| filter_subset _ _ H)
-    
 #align finpartition.equitabilise_aux Finpartition.equitabilise_aux
 
 variable (P) (h : a * m + b * (m + 1) = s.card)
@@ -186,7 +169,7 @@ theorem card_filter_equitabilise_small (hm : m ≠ 0) :
     (P.equitabilise h).parts =
       ((P.equitabilise h).parts.filter fun u => u.card = m) ∪
         (P.equitabilise h).parts.filter fun u => u.card = m + 1 :=
-    by
+    by 
     rw [← filter_or, filter_true_of_mem]
     exact fun x => card_eq_of_mem_parts_equitabilise
   nth_rw 1 [hunion]

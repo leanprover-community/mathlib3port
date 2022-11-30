@@ -283,14 +283,16 @@ theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [
 end Pre
 
 /-- The internal hom functor given by the cartesian closed structure. -/
-def internalHom [CartesianClosed C] : Cᵒᵖ ⥤ C ⥤ C where
+def internalHom [CartesianClosed C] :
+    Cᵒᵖ ⥤ C ⥤ C where 
   obj X := exp X.unop
   map X Y f := pre f.unop
 #align category_theory.internal_hom CategoryTheory.internalHom
 
 /-- If an initial object `I` exists in a CCC, then `A ⨯ I ≅ I`. -/
 @[simps]
-def zeroMul {I : C} (t : IsInitial I) : A ⨯ I ≅ I where
+def zeroMul {I : C} (t : IsInitial I) :
+    A ⨯ I ≅ I where 
   Hom := Limits.prod.snd
   inv := t.to _
   hom_inv_id' := by
@@ -308,33 +310,34 @@ def mulZero {I : C} (t : IsInitial I) : I ⨯ A ≅ I :=
 #align category_theory.mul_zero CategoryTheory.mulZero
 
 /-- If an initial object `0` exists in a CCC then `0^B ≅ 1` for any `B`. -/
-def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C where
+def powZero {I : C} (t : IsInitial I) [CartesianClosed C] :
+    I ⟹ B ≅ ⊤_ C where 
   Hom := default
   inv := CartesianClosed.curry ((mulZero t).Hom ≫ t.to _)
   hom_inv_id' := by
     rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]
     · apply t.hom_ext
-      
     · infer_instance
-      
     · infer_instance
-      
 #align category_theory.pow_zero CategoryTheory.powZero
 
 -- TODO: Generalise the below to its commutated variants.
 -- TODO: Define a distributive category, so that zero_mul and friends can be derived from this.
 /-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
 def prodCoprodDistrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) :
-    (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y where
+    (Z ⨯ X) ⨿ Z ⨯ Y ≅
+      Z ⨯
+        X ⨿
+          Y where 
   Hom := coprod.desc (Limits.prod.map (𝟙 _) coprod.inl) (Limits.prod.map (𝟙 _) coprod.inr)
   inv :=
     CartesianClosed.uncurry
       (coprod.desc (CartesianClosed.curry coprod.inl) (CartesianClosed.curry coprod.inr))
-  hom_inv_id' := by
+  hom_inv_id' := by 
     apply coprod.hom_ext
     rw [coprod.inl_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inl_desc, uncurry_curry]
     rw [coprod.inr_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inr_desc, uncurry_curry]
-  inv_hom_id' := by
+  inv_hom_id' := by 
     rw [← uncurry_natural_right, ← eq_curry_iff]
     apply coprod.hom_ext
     rw [coprod.inl_desc_assoc, ← curry_natural_right, coprod.inl_desc, ← curry_natural_left,
@@ -361,7 +364,7 @@ instance to_initial_is_iso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
 
 /-- If an initial object `0` exists in a CCC then every morphism from it is monic. -/
 theorem initial_mono {I : C} (B : C) (t : IsInitial I) [CartesianClosed C] : Mono (t.to B) :=
-  ⟨fun B g h _ => by
+  ⟨fun B g h _ => by 
     haveI := strict_initial t g
     haveI := strict_initial t h
     exact eq_of_inv_eq_inv (t.hom_ext _ _)⟩
@@ -383,8 +386,9 @@ Note we didn't require any coherence between the choice of finite products here,
 along the `prod_comparison` isomorphism.
 -/
 def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
-    CartesianClosed D where closed' X :=
-    { isAdj := by
+    CartesianClosed
+      D where closed' X :=
+    { isAdj := by 
         haveI q : exponentiable (e.inverse.obj X) := inferInstance
         have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
         have : e.functor ⋙ prod.functor.obj X ⋙ e.inverse ≅ prod.functor.obj (e.inverse.obj X)
@@ -392,14 +396,12 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
         intro Y
         · apply as_iso (prod_comparison e.inverse X (e.functor.obj Y)) ≪≫ _
           apply prod.map_iso (iso.refl _) (e.unit_iso.app Y).symm
-          
         · intro Y Z g
           dsimp [prod_comparison]
           simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
           -- I wonder if it would be a good idea to make `map_comp` a simp lemma the other way round
           dsimp
           simp
-          
         -- See note [dsimp, simp]
         · have : is_left_adjoint (e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
             adjunction.left_adjoint_of_nat_iso this.symm
@@ -413,8 +415,7 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
             change prod.functor.obj X ⋙ e.inverse ⋙ e.functor ≅ prod.functor.obj X
             apply iso_whisker_left (prod.functor.obj X) e.counit_iso
           skip
-          apply adjunction.left_adjoint_of_nat_iso this
-           }
+          apply adjunction.left_adjoint_of_nat_iso this }
 #align category_theory.cartesian_closed_of_equiv CategoryTheory.cartesianClosedOfEquiv
 
 end Functor

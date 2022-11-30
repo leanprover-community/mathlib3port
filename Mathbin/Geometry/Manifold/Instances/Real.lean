@@ -92,7 +92,8 @@ Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_ha
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
 def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
-    ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanHalfSpace n) where
+    ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n))
+      (EuclideanHalfSpace n) where 
   toFun := Subtype.val
   invFun x := ⟨update x 0 (max (x 0) 0), by simp [le_refl]⟩
   source := univ
@@ -118,17 +119,18 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a
 model for manifolds with corners -/
 def modelWithCornersEuclideanQuadrant (n : ℕ) :
-    ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanQuadrant n) where
+    ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n))
+      (EuclideanQuadrant n) where 
   toFun := Subtype.val
   invFun x := ⟨fun i => max (x i) 0, fun i => by simp only [le_refl, or_true_iff, le_max_iff]⟩
   source := univ
   target := { x | ∀ i, 0 ≤ x i }
   map_source' x hx := by simpa only [Subtype.range_val] using x.property
   map_target' x hx := mem_univ _
-  left_inv' := fun ⟨xval, xprop⟩ hx => by
+  left_inv' := fun ⟨xval, xprop⟩ hx => by 
     ext i
     simp only [Subtype.coe_mk, xprop i, max_eq_left]
-  right_inv' x hx := by
+  right_inv' x hx := by 
     ext1 i
     simp only [hx i, max_eq_left]
   source_eq := rfl
@@ -157,23 +159,26 @@ scoped[Manifold]
 /-- The left chart for the topological space `[x, y]`, defined on `[x,y)` and sending `x` to `0` in
 `euclidean_half_space 1`.
 -/
-def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (EuclideanHalfSpace 1) where
+def iccLeftChart (x y : ℝ) [Fact (x < y)] :
+    LocalHomeomorph (icc x y)
+      (EuclideanHalfSpace
+        1) where 
   source := { z : icc x y | z.val < y }
   target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
   toFun := fun z : icc x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
   invFun z := ⟨min (z.val 0 + x) y, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y))]⟩
   map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
-  map_target' := by
+  map_target' := by 
     simp only [min_lt_iff, mem_set_of_eq]
     intro z hz
     left
     dsimp [-Subtype.val_eq_coe] at hz
     linarith
-  left_inv' := by
+  left_inv' := by 
     rintro ⟨z, hz⟩ h'z
     simp only [mem_set_of_eq, mem_Icc] at hz h'z
     simp only [hz, min_eq_left, sub_add_cancel]
-  right_inv' := by
+  right_inv' := by 
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
@@ -184,18 +189,18 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (Euclide
   open_source :=
     haveI : IsOpen { z : ℝ | z < y } := is_open_Iio
     this.preimage continuous_subtype_val
-  open_target := by
+  open_target := by 
     have : IsOpen { z : ℝ | z < y - x } := is_open_Iio
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
-  continuous_to_fun := by
+  continuous_to_fun := by 
     apply Continuous.continuous_on
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => z - x :=
       Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
-  continuous_inv_fun := by
+  continuous_inv_fun := by 
     apply Continuous.continuous_on
     apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => min (z + x) y :=
@@ -207,24 +212,27 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (Euclide
 /-- The right chart for the topological space `[x, y]`, defined on `(x,y]` and sending `y` to `0` in
 `euclidean_half_space 1`.
 -/
-def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (EuclideanHalfSpace 1) where
+def iccRightChart (x y : ℝ) [Fact (x < y)] :
+    LocalHomeomorph (icc x y)
+      (EuclideanHalfSpace
+        1) where 
   source := { z : icc x y | x < z.val }
   target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
   toFun := fun z : icc x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
   invFun z :=
     ⟨max (y - z.val 0) x, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y)), sub_eq_add_neg]⟩
   map_source' := by simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
-  map_target' := by
+  map_target' := by 
     simp only [lt_max_iff, mem_set_of_eq]
     intro z hz
     left
     dsimp [-Subtype.val_eq_coe] at hz
     linarith
-  left_inv' := by
+  left_inv' := by 
     rintro ⟨z, hz⟩ h'z
     simp only [mem_set_of_eq, mem_Icc] at hz h'z
     simp only [hz, sub_eq_add_neg, max_eq_left, add_add_neg_cancel'_right, neg_add_rev, neg_neg]
-  right_inv' := by
+  right_inv' := by 
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
@@ -235,18 +243,18 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (Euclid
   open_source :=
     haveI : IsOpen { z : ℝ | x < z } := is_open_Ioi
     this.preimage continuous_subtype_val
-  open_target := by
+  open_target := by 
     have : IsOpen { z : ℝ | z < y - x } := is_open_Iio
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
-  continuous_to_fun := by
+  continuous_to_fun := by 
     apply Continuous.continuous_on
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => y - z :=
       continuous_const.sub (continuous_pi fun i => continuous_id)
     exact this.comp continuous_subtype_val
-  continuous_inv_fun := by
+  continuous_inv_fun := by 
     apply Continuous.continuous_on
     apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => max (y - z) x :=
@@ -258,18 +266,18 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (Euclid
 /-- Charted space structure on `[x, y]`, using only two charts taking values in
 `euclidean_half_space 1`.
 -/
-instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpace 1) (icc x y) where
+instance iccManifold (x y : ℝ) [Fact (x < y)] :
+    ChartedSpace (EuclideanHalfSpace 1)
+      (icc x y) where 
   atlas := {iccLeftChart x y, iccRightChart x y}
   chartAt z := if z.val < y then iccLeftChart x y else iccRightChart x y
-  mem_chart_source z := by
+  mem_chart_source z := by 
     by_cases h' : z.val < y
     · simp only [h', if_true]
       exact h'
-      
     · simp only [h', if_false]
       apply lt_of_lt_of_le (Fact.out (x < y))
       simpa only [not_lt] using h'
-      
   chart_mem_atlas z := by by_cases h' : (z : ℝ) < y <;> simp [h']
 #align Icc_manifold iccManifold
 
@@ -288,9 +296,9 @@ instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorner
       -/
     rcases he with (rfl | rfl) <;>
     rcases he' with (rfl | rfl)
-  · -- `e = left chart`, `e' = left chart`
+  ·
+    -- `e = left chart`, `e' = left chart`
     exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
-    
   · -- `e = left chart`, `e' = right chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
@@ -302,7 +310,6 @@ instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorner
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, *, PiLp.add_apply,
       PiLp.neg_apply, max_eq_left, min_eq_left hz₁.le, update_same, mfld_simps]
     abel
-    
   · -- `e = right chart`, `e' = left chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
@@ -314,10 +321,9 @@ instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorner
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, PiLp.add_apply,
       PiLp.neg_apply, update_same, max_eq_left, hz₀, hz₁.le, mfld_simps]
     abel
-    
-  · -- `e = right chart`, `e' = right chart`
+  ·
+    -- `e = right chart`, `e' = right chart`
     exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
-    
 #align Icc_smooth_manifold iccSmoothManifold
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/

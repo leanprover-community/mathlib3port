@@ -126,9 +126,7 @@ protected theorem mul (h₁ : a ≡ b [MOD n]) (h₂ : c ≡ d [MOD n]) : a * c 
 #align nat.modeq.mul Nat.Modeq.mul
 
 protected theorem pow (m : ℕ) (h : a ≡ b [MOD n]) : a ^ m ≡ b ^ m [MOD n] := by
-  induction' m with d hd;
-  · rfl
-    
+  induction' m with d hd; · rfl
   rw [pow_succ, pow_succ]
   exact h.mul hd
 #align nat.modeq.pow Nat.Modeq.pow
@@ -147,7 +145,7 @@ protected theorem add_right (c : ℕ) (h : a ≡ b [MOD n]) : a + c ≡ b + c [M
 #align nat.modeq.add_right Nat.Modeq.add_right
 
 protected theorem add_left_cancel (h₁ : a ≡ b [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) :
-    c ≡ d [MOD n] := by
+    c ≡ d [MOD n] := by 
   simp only [modeq_iff_dvd, Int.ofNat_add] at *
   rw [add_sub_add_comm] at h₂
   convert _root_.dvd_sub h₂ h₁ using 1
@@ -159,7 +157,7 @@ protected theorem add_left_cancel' (c : ℕ) (h : c + a ≡ c + b [MOD n]) : a �
 #align nat.modeq.add_left_cancel' Nat.Modeq.add_left_cancel'
 
 protected theorem add_right_cancel (h₁ : c ≡ d [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) :
-    a ≡ b [MOD n] := by
+    a ≡ b [MOD n] := by 
   rw [add_comm a, add_comm b] at h₂
   exact h₁.add_left_cancel h₂
 #align nat.modeq.add_right_cancel Nat.Modeq.add_right_cancel
@@ -233,7 +231,7 @@ theorem add_le_of_lt (h1 : a ≡ b [MOD m]) (h2 : a < b) : a + m ≤ b :=
 #align nat.modeq.add_le_of_lt Nat.Modeq.add_le_of_lt
 
 theorem dvd_iff_of_modeq_of_dvd {a b d m : ℕ} (h : a ≡ b [MOD m]) (hdm : d ∣ m) : d ∣ a ↔ d ∣ b :=
-  by
+  by 
   simp only [← modeq_zero_iff_dvd]
   replace h := h.modeq_of_dvd hdm
   exact ⟨h.symm.trans, h.trans⟩
@@ -255,7 +253,7 @@ theorem eq_of_modeq_of_abs_lt {a b m : ℕ} (h : a ≡ b [MOD m]) (h2 : |(b : �
 
 /-- To cancel a common factor `c` from a `modeq` we must divide the modulus `m` by `gcd m c` -/
 theorem modeq_cancel_left_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : c * a ≡ c * b [MOD m]) :
-    a ≡ b [MOD m / gcd m c] := by
+    a ≡ b [MOD m / gcd m c] := by 
   let d := gcd m c
   have hmd := gcd_dvd_left m c
   have hcd := gcd_dvd_right m c
@@ -266,15 +264,14 @@ theorem modeq_cancel_left_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : c * a ≡ c 
     apply Int.div_dvd_div (int.coe_nat_dvd.mpr hmd)
     rw [mul_sub]
     exact modeq_iff_dvd.mp h
-    
   show Int.gcd (m / d) (c / d) = 1
-  · simp only [← Int.coe_nat_div, Int.coe_nat_gcd (m / d) (c / d), gcd_div hmd hcd,
+  ·
+    simp only [← Int.coe_nat_div, Int.coe_nat_gcd (m / d) (c / d), gcd_div hmd hcd,
       Nat.div_self (gcd_pos_of_pos_left c hm)]
-    
 #align nat.modeq.modeq_cancel_left_div_gcd Nat.Modeq.modeq_cancel_left_div_gcd
 
 theorem modeq_cancel_right_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : a * c ≡ b * c [MOD m]) :
-    a ≡ b [MOD m / gcd m c] := by
+    a ≡ b [MOD m / gcd m c] := by 
   apply modeq_cancel_left_div_gcd hm
   simpa [mul_comm] using h
 #align nat.modeq.modeq_cancel_right_div_gcd Nat.Modeq.modeq_cancel_right_div_gcd
@@ -292,12 +289,11 @@ theorem modeq_cancel_right_div_gcd' {a b c d m : ℕ} (hm : 0 < m) (hcd : c ≡ 
 
 /-- A common factor that's coprime with the modulus can be cancelled from a `modeq` -/
 theorem modeq_cancel_left_of_coprime {a b c m : ℕ} (hmc : gcd m c = 1) (h : c * a ≡ c * b [MOD m]) :
-    a ≡ b [MOD m] := by
+    a ≡ b [MOD m] := by 
   rcases m.eq_zero_or_pos with (rfl | hm)
   · simp only [gcd_zero_left] at hmc
     simp only [gcd_zero_left, hmc, one_mul, modeq_zero_iff] at h
     subst h
-    
   simpa [hmc] using modeq_cancel_left_div_gcd hm h
 #align nat.modeq.modeq_cancel_left_of_coprime Nat.Modeq.modeq_cancel_left_of_coprime
 
@@ -320,12 +316,12 @@ def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k
     else
       ⟨let (c, d) := xgcd n m
         Int.toNat ((n * c * b + m * d * a) / gcd n m % lcm n m),
-        by
+        by 
         rw [xgcd_val]
         dsimp [chinese_remainder'._match_1]
         rw [modeq_iff_dvd, modeq_iff_dvd,
           Int.toNat_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
-        have hnonzero : (gcd n m : ℤ) ≠ 0 := by
+        have hnonzero : (gcd n m : ℤ) ≠ 0 := by 
           norm_cast
           rw [Nat.gcd_eq_zero_iff, not_and]
           exact fun _ => hm
@@ -341,18 +337,14 @@ def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k
           exact dvd_mul_right _ _
           norm_cast
           exact dvd_mul_right _ _
-          
         · exact dvd_lcm_left n m
-          
         · rw [← sub_eq_iff_eq_add] at this
           rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_div_of_dvd,
             Int.mul_div_cancel_left _ hnonzero, Int.mul_div_assoc _ h.dvd, ← sub_add, sub_self,
             zero_add, mul_assoc]
           exact dvd_mul_right _ _
           exact hcoedvd _
-          
-        · exact dvd_lcm_right n m
-          ⟩
+        · exact dvd_lcm_right n m⟩
 #align nat.chinese_remainder' Nat.chineseRemainder'
 
 /-- The natural number less than `n*m` congruent to `a` mod `n` and `b` mod `m` -/
@@ -416,7 +408,7 @@ theorem add_mod_add_ite (a b c : ℕ) :
     ((a + b) % c + if c ≤ a % c + b % c then c else 0) = a % c + b % c :=
   have : (a + b) % c = (a % c + b % c) % c := ((mod_modeq _ _).add <| mod_modeq _ _).symm
   if hc0 : c = 0 then by simp [hc0]
-  else by
+  else by 
     rw [this]
     split_ifs
     · have h2 : (a % c + b % c) / c < 2 :=
@@ -429,9 +421,7 @@ theorem add_mod_add_ite (a b c : ℕ) :
       have h0 : 0 < (a % c + b % c) / c := Nat.div_pos h (Nat.pos_of_ne_zero hc0)
       rw [← @add_right_cancel_iff _ _ (c * ((a % c + b % c) / c)), add_comm _ c, add_assoc,
         mod_add_div, le_antisymm (le_of_lt_succ h2) h0, mul_one, add_comm]
-      
     · rw [Nat.mod_eq_of_lt (lt_of_not_ge h), add_zero]
-      
 #align nat.add_mod_add_ite Nat.add_mod_add_ite
 
 theorem add_mod_of_add_mod_lt {a b c : ℕ} (hc : a % c + b % c < c) : (a + b) % c = a % c + b % c :=
@@ -466,7 +456,7 @@ protected theorem add_div_of_dvd_right {a b c : ℕ} (hca : c ∣ a) : (a + b) /
   if h : c = 0 then by simp [h]
   else
     add_div_eq_of_add_mod_lt
-      (by
+      (by 
         rw [Nat.mod_eq_zero_of_dvd hca, zero_add]
         exact Nat.mod_lt _ (pos_iff_ne_zero.mpr h))
 #align nat.add_div_of_dvd_right Nat.add_div_of_dvd_right
@@ -568,9 +558,9 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
       ⟨a,
         (List.ext_le (by simp)) fun n hn h₁ => by
           rw [← Option.some_inj, ← List.nth_le_nth]
-          conv =>
-          lhs
-          rw [← h (List.length (a :: l) - n)]
+          conv => 
+            lhs
+            rw [← h (List.length (a :: l) - n)]
           rw [nth_rotate hn, add_tsub_cancel_of_le (le_of_lt hn), Nat.mod_self, nth_le_repeat]
           rfl⟩,
       fun ⟨a, ha⟩ n =>

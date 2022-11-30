@@ -114,14 +114,12 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   apply t.induction_on
   · use 0
     simp only [LinearMap.map_zero, LieModuleHom.map_zero]
-    
   swap
   · rintro t₁ t₂ ⟨k₁, hk₁⟩ ⟨k₂, hk₂⟩
     use max k₁ k₂
     simp only [LieModuleHom.map_add, LinearMap.map_add,
       LinearMap.pow_map_zero_of_le (le_max_left k₁ k₂) hk₁,
       LinearMap.pow_map_zero_of_le (le_max_right k₁ k₂) hk₂, add_zero]
-    
   -- Now the main argument: pure tensors.
   rintro ⟨m₁, hm₁⟩ ⟨m₂, hm₂⟩
   change ∃ k, (F ^ k) ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃) (m₁ ⊗ₜ m₂)) = 0
@@ -141,7 +139,6 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   · use k
     rw [← LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square,
       LinearMap.comp_apply, hk, LinearMap.map_zero]
-    
   -- Unpack the information we have about `m₁`, `m₂`.
   simp only [mem_pre_weight_space] at hm₁ hm₂
   obtain ⟨k₁, hk₁⟩ := hm₁ x
@@ -152,7 +149,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     simp only [hk₂, tmul_zero, LinearMap.ltensor_tmul, LinearMap.ltensor_pow]
   -- It's now just an application of the binomial theorem.
   use k₁ + k₂ - 1
-  have hf_comm : Commute f₁ f₂ := by
+  have hf_comm : Commute f₁ f₂ := by 
     ext (m₁ m₂)
     simp only [LinearMap.mul_apply, LinearMap.rtensor_tmul, LinearMap.ltensor_tmul,
       algebra_tensor_module.curry_apply, LinearMap.to_fun_eq_coe, LinearMap.ltensor_tmul,
@@ -164,16 +161,15 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
   -- Eliminate the binomial coefficients from the picture.
-  suffices (f₁ ^ i * f₂ ^ j) (m₁ ⊗ₜ m₂) = 0 by
+  suffices (f₁ ^ i * f₂ ^ j) (m₁ ⊗ₜ m₂) = 0 by 
     rw [this]
     apply smul_zero
   -- Finish off with appropriate case analysis.
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
-  · rw [(hf_comm.pow_pow i j).Eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hf₁,
+  ·
+    rw [(hf_comm.pow_pow i j).Eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hf₁,
       LinearMap.map_zero]
-    
   · rw [LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hj hf₂, LinearMap.map_zero]
-    
 #align lie_module.weight_vector_multiplication LieModule.weight_vector_multiplication
 
 variable {L M}
@@ -195,7 +191,7 @@ variable (M)
 /-- If a Lie algebra is nilpotent, then pre-weight spaces are Lie submodules. -/
 def weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M :=
   { preWeightSpace M χ with
-    lie_mem := fun x m hm => by
+    lie_mem := fun x m hm => by 
       rw [← zero_add χ]
       refine' lie_mem_pre_weight_space_of_mem_pre_weight_space _ hm
       suffices pre_weight_space L (0 : L → R) = ⊤ by simp only [this, Submodule.mem_top]
@@ -225,16 +221,15 @@ theorem coe_weight_space_of_top [LieAlgebra.IsNilpotent R L] (χ : L → R) :
   · obtain ⟨k, hk⟩ := h ⟨x, Set.mem_univ x⟩
     use k
     exact hk
-    
   · obtain ⟨k, hk⟩ := h x
     use k
     exact hk
-    
 #align lie_module.coe_weight_space_of_top LieModule.coe_weight_space_of_top
 
 @[simp]
 theorem zero_weight_space_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
-    weightSpace M (0 : (⊤ : LieSubalgebra R L) → R) = ⊤ := by
+    weightSpace M (0 : (⊤ : LieSubalgebra R L) → R) = ⊤ :=
+  by
   /- We use `coe_weight_space_of_top` as a trick to circumvent the fact that we don't (yet) know
       `is_nilpotent R (⊤ : lie_subalgebra R L) M` is equivalent to `is_nilpotent R L M`. -/
   have h₀ : (0 : L → R) ∘ (⊤ : LieSubalgebra R L).incl = 0 := by
@@ -353,23 +348,26 @@ variable (R L H M)
 which is close to the deterministic timeout limit.
 -/
 def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + χ₂ = χ₃) :
-    rootSpace H χ₁ →ₗ[R] weightSpace M χ₂ →ₗ[R] weightSpace M χ₃ where
+    rootSpace H χ₁ →ₗ[R]
+      weightSpace M χ₂ →ₗ[R]
+        weightSpace M
+          χ₃ where 
   toFun x :=
     { toFun := fun m =>
         ⟨⁅(x : L), (m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
-      map_add' := fun m n => by
+      map_add' := fun m n => by 
         simp only [LieSubmodule.coe_add, lie_add]
         rfl,
       map_smul' := fun t m => by
-        conv_lhs =>
-        congr
-        rw [LieSubmodule.coe_smul, lie_smul]
+        conv_lhs => 
+          congr
+          rw [LieSubmodule.coe_smul, lie_smul]
         rfl }
   map_add' x y := by
     ext m <;>
       rw [LinearMap.add_apply, LinearMap.coe_mk, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk,
         LieSubmodule.coe_add, LieSubmodule.coe_add, add_lie, Subtype.coe_mk, Subtype.coe_mk]
-  map_smul' t x := by
+  map_smul' t x := by 
     simp only [RingHom.id_apply]
     ext m
     rw [LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk,
@@ -497,7 +495,7 @@ When `L` is Noetherian, it follows from Engel's theorem that the converse holds.
 theorem is_cartan_of_zero_root_subalgebra_eq (h : zeroRootSubalgebra R L H = H) :
     H.IsCartanSubalgebra :=
   { nilpotent := inferInstance,
-    self_normalizing := by
+    self_normalizing := by 
       rw [← h]
       exact zero_root_subalgebra_normalizer_eq_self R L H }
 #align

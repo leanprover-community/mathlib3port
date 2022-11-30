@@ -46,7 +46,6 @@ theorem nat_abs_le_iff_mul_self_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a * a
 theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a := by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp only [Int.div_zero, dvd_zero]
-    
   rcases h with ⟨d, rfl⟩
   refine' ⟨d, _⟩
   rw [mul_assoc, Int.mul_div_cancel_left _ ha]
@@ -59,7 +58,6 @@ theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 
   by_cases hm : m = 0;
   · subst m
     exact zero_dvd_iff.mp h1
-    
   rcases h1 with ⟨d, rfl⟩
   apply mul_eq_zero_of_right
   rw [← abs_lt_one_iff, ← mul_lt_iff_lt_one_right (abs_pos.mpr hm), ← abs_mul]

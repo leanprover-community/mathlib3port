@@ -24,7 +24,9 @@ open CategoryTheory.TypeCat
 
 /-- A Grothendieck topology associated to the category of all types.
 A sieve is a covering iff it is jointly surjective. -/
-def typesGrothendieckTopology : GrothendieckTopology (Type u) where
+def typesGrothendieckTopology :
+    GrothendieckTopology
+      (Type u) where 
   sieves α S := ∀ x : α, S fun _ : PUnit => x
   top_mem' α x := trivial
   pullback_stable' α β S f hs x := hs (f x)
@@ -33,7 +35,8 @@ def typesGrothendieckTopology : GrothendieckTopology (Type u) where
 
 /-- The discrete sieve on a type, which only includes arrows whose image is a subsingleton. -/
 @[simps]
-def discreteSieve (α : Type u) : Sieve α where
+def discreteSieve (α : Type u) :
+    Sieve α where 
   arrows β f := ∃ x, ∀ y, f y = x
   downward_closed' := fun β γ f ⟨x, hx⟩ g => ⟨x, fun y => hx <| g y⟩
 #align category_theory.discrete_sieve CategoryTheory.discreteSieve
@@ -65,7 +68,10 @@ theorem isSheafYoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoneda
 
 /-- The yoneda functor that sends a type to a sheaf over the category of types -/
 @[simps]
-def yoneda' : Type u ⥤ SheafOfTypesCat typesGrothendieckTopology where
+def yoneda' :
+    Type u ⥤
+      SheafOfTypesCat
+        typesGrothendieckTopology where 
   obj α := ⟨yoneda.obj α, isSheafYoneda'⟩
   map α β f := ⟨yoneda.map f⟩
 #align category_theory.yoneda' CategoryTheory.yoneda'
@@ -118,7 +124,9 @@ theorem types_glue_eval {S hs α} (s) : typesGlue.{u} S hs α (eval S α s) = s 
 /-- Given a sheaf `S`, construct an equivalence `S(α) ≃ (α → S(*))`. -/
 @[simps]
 noncomputable def evalEquiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S)
-    (α : Type u) : S.obj (op α) ≃ (α → S.obj (op PUnit)) where
+    (α : Type u) :
+    S.obj (op α) ≃ (α → S.obj (op
+            PUnit)) where 
   toFun := eval S α
   invFun := typesGlue S hs α
   left_inv := types_glue_eval
@@ -142,13 +150,14 @@ noncomputable def equivYoneda (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesG
 /-- Given a sheaf `S`, construct an isomorphism `S ≅ [-, S(*)]`. -/
 @[simps]
 noncomputable def equivYoneda' (S : SheafOfTypesCat typesGrothendieckTopology) :
-    S ≅ yoneda'.obj (S.1.obj (op PUnit)) where
+    S ≅ yoneda'.obj
+        (S.1.obj (op PUnit)) where 
   Hom := ⟨(equivYoneda S.1 S.2).Hom⟩
   inv := ⟨(equivYoneda S.1 S.2).inv⟩
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext1
     apply (equiv_yoneda S.1 S.2).hom_inv_id
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext1
     apply (equiv_yoneda S.1 S.2).inv_hom_id
 #align category_theory.equiv_yoneda' CategoryTheory.equivYoneda'

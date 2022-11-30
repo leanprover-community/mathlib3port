@@ -78,7 +78,6 @@ theorem strict_convex_closed_ball [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) :
     StrictConvex 𝕜 (closedBall x r) := by
   cases' le_or_lt r 0 with hr hr
   · exact (subsingleton_closed_ball x hr).StrictConvex
-    
   rw [← vadd_closed_ball_zero]
   exact (StrictConvexSpace.strict_convex_closed_ball r hr).vadd _
 #align strict_convex_closed_ball strict_convex_closed_ball
@@ -157,10 +156,8 @@ theorem combo_mem_ball_of_ne (hx : x ∈ closedBall z r) (hy : y ∈ closedBall 
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero, mem_singleton_iff] at hx hy
     exact (hne (hx.trans hy.symm)).elim
-    
   · simp only [← interior_closed_ball _ hr] at hx hy⊢
     exact strict_convex_closed_ball ℝ z r hx hy hne ha hb hab
-    
 #align combo_mem_ball_of_ne combo_mem_ball_of_ne
 
 /-- If `x ≠ y` belong to the same closed ball, then the open segment with endpoints `x` and `y` is
@@ -260,7 +257,6 @@ theorem eq_line_map_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y =
   rcases eq_or_ne x z with (rfl | hne)
   · obtain rfl : y = x := by simpa
     simp
-    
   · rw [← dist_ne_zero] at hne
     rcases this with ⟨a, b, ha, hb, hab, H⟩
     rw [smul_zero, zero_add] at H
@@ -268,16 +264,13 @@ theorem eq_line_map_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y =
     rw [norm_smul, Real.norm_of_nonneg hb, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy,
       mul_left_inj' hne] at H'
     rw [AffineMap.line_map_apply, ← H', H, vsub_vadd]
-    
 #align eq_line_map_of_dist_eq_mul_of_dist_eq_mul eq_line_map_of_dist_eq_mul_of_dist_eq_mul
 
 theorem eq_midpoint_of_dist_eq_half {x y z : PE} (hx : dist x y = dist x z / 2)
     (hy : dist y z = dist x z / 2) : y = midpoint ℝ x z := by
   apply eq_line_map_of_dist_eq_mul_of_dist_eq_mul
   · rwa [inv_of_eq_inv, ← div_eq_inv_mul]
-    
   · rwa [inv_of_eq_inv, ← one_div, sub_half, one_div, ← div_eq_inv_mul]
-    
 #align eq_midpoint_of_dist_eq_half eq_midpoint_of_dist_eq_half
 
 namespace Isometry
@@ -290,14 +283,14 @@ be surjective.  -/
 noncomputable def affineIsometryOfStrictConvexSpace {f : PF → PE} (hi : Isometry f) :
     PF →ᵃⁱ[ℝ] PE :=
   { AffineMap.ofMapMidpoint f
-      (fun x y => by
+      (fun x y => by 
         apply eq_midpoint_of_dist_eq_half
-        · rw [hi.dist_eq, hi.dist_eq, dist_left_midpoint, Real.norm_of_nonneg zero_le_two,
+        ·
+          rw [hi.dist_eq, hi.dist_eq, dist_left_midpoint, Real.norm_of_nonneg zero_le_two,
             div_eq_inv_mul]
-          
-        · rw [hi.dist_eq, hi.dist_eq, dist_midpoint_right, Real.norm_of_nonneg zero_le_two,
-            div_eq_inv_mul]
-          )
+        ·
+          rw [hi.dist_eq, hi.dist_eq, dist_midpoint_right, Real.norm_of_nonneg zero_le_two,
+            div_eq_inv_mul])
       hi.Continuous with
     norm_map := fun x => by simp [AffineMap.ofMapMidpoint, ← dist_eq_norm_vsub E, hi.dist_eq] }
 #align isometry.affine_isometry_of_strict_convex_space Isometry.affineIsometryOfStrictConvexSpace

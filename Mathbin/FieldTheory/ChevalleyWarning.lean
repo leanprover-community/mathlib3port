@@ -90,7 +90,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
   calc
     (∏ j : σ, (e a : σ → K) j ^ d j) =
         (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j :=
-      by
+      by 
       rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
       rfl
     _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
@@ -105,7 +105,6 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
     rintro ⟨j, hj⟩
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
     rw [Equiv.subtypeEquivCodomain_symm_apply_ne]
-    
 #align mv_polynomial.sum_mv_polynomial_eq_zero MvPolynomial.sum_mv_polynomial_eq_zero
 
 variable [DecidableEq K] [DecidableEq σ]
@@ -118,7 +117,7 @@ Then the number of common solutions of the `f i` is divisible by `p`. -/
 theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : Finset ι}
     {f : ι → MvPolynomial σ K} (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
     p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } := by
-  have hq : 0 < q - 1 := by
+  have hq : 0 < q - 1 := by 
     rw [← Fintype.card_units, Fintype.card_pos_iff]
     exact ⟨1⟩
   let S : Finset (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }
@@ -143,12 +142,10 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
       intro i hi
       rw [hS] at hx
       rw [hx i hi, zero_pow hq, sub_zero]
-      
     · obtain ⟨i, hi, hx⟩ : ∃ i : ι, i ∈ s ∧ eval x (f i) ≠ 0 := by
         simpa only [hS, not_forall, not_imp] using hx
       apply Finset.prod_eq_zero hi
       rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
-      
   -- In particular, we can now show:
   have key : (∑ x, eval x F) = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
   rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_one, ←

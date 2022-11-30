@@ -67,14 +67,13 @@ instance : SecondCountableTopology Ereal :=
         apply is_open_Union
         intro hq
         apply generate_open.basic
-        exact mem_Union.2 ⟨q, by simp⟩
-        ⟩
+        exact mem_Union.2 ⟨q, by simp⟩⟩
 
 /-! ### Real coercion -/
 
 
 theorem embedding_coe : Embedding (coe : ℝ → Ereal) :=
-  ⟨⟨by
+  ⟨⟨by 
       refine' le_antisymm _ _
       · rw [@OrderTopology.topology_eq_generate_intervals Ereal _, ← coinduced_le_iff_le_induced]
         refine' le_generate_from fun s ha => _
@@ -82,44 +81,31 @@ theorem embedding_coe : Embedding (coe : ℝ → Ereal) :=
         show IsOpen { b : ℝ | a < ↑b }
         · induction a using Ereal.rec
           · simp only [is_open_univ, bot_lt_coe, set_of_true]
-            
           · simp only [Ereal.coe_lt_coe_iff]
             exact is_open_Ioi
-            
           · simp only [set_of_false, is_open_empty, not_top_lt]
-            
-          
         show IsOpen { b : ℝ | ↑b < a }
         · induction a using Ereal.rec
           · simp only [not_lt_bot, set_of_false, is_open_empty]
-            
           · simp only [Ereal.coe_lt_coe_iff]
             exact is_open_Iio
-            
           · simp only [is_open_univ, coe_lt_top, set_of_true]
-            
-          
-        
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ _]
         refine' le_generate_from fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
         exact ⟨Ioi a, is_open_Ioi, by simp [Ioi]⟩
-        exact ⟨Iio a, is_open_Iio, by simp [Iio]⟩
-        ⟩,
+        exact ⟨Iio a, is_open_Iio, by simp [Iio]⟩⟩,
     fun a b => by simp only [imp_self, Ereal.coe_eq_coe_iff]⟩
 #align ereal.embedding_coe Ereal.embedding_coe
 
 theorem open_embedding_coe : OpenEmbedding (coe : ℝ → Ereal) :=
-  ⟨embedding_coe, by
+  ⟨embedding_coe, by 
     convert @is_open_Ioo Ereal _ _ _ ⊥ ⊤
     ext x
     induction x using Ereal.rec
     · simp only [left_mem_Ioo, mem_range, coe_ne_bot, exists_false, not_false_iff]
-      
     · simp only [mem_range_self, mem_Ioo, bot_lt_coe, coe_lt_top, and_self_iff]
-      
-    · simp only [mem_range, right_mem_Ioo, exists_false, coe_ne_top]
-      ⟩
+    · simp only [mem_range, right_mem_Ioo, exists_false, coe_ne_top]⟩
 #align ereal.open_embedding_coe Ereal.open_embedding_coe
 
 @[norm_cast]
@@ -155,10 +141,10 @@ theorem tendsto_to_real {a : Ereal} (ha : a ≠ ⊤) (h'a : a ≠ ⊥) :
 theorem continuous_on_to_real : ContinuousOn Ereal.toReal ({⊥, ⊤}ᶜ : Set Ereal) := fun a ha =>
   ContinuousAt.continuous_within_at
     (tendsto_to_real
-      (by
+      (by 
         simp [not_or] at ha
         exact ha.2)
-      (by
+      (by 
         simp [not_or] at ha
         exact ha.1))
 #align ereal.continuous_on_to_real Ereal.continuous_on_to_real
@@ -174,7 +160,7 @@ def neBotTopHomeomorphReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ₜ ℝ :=
 
 
 theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
-  ⟨⟨by
+  ⟨⟨by 
       refine' le_antisymm _ _
       · rw [@OrderTopology.topology_eq_generate_intervals Ereal _, ← coinduced_le_iff_le_induced]
         refine' le_generate_from fun s ha => _
@@ -182,47 +168,33 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
         show IsOpen { b : ℝ≥0∞ | a < ↑b }
         · induction' a using Ereal.rec with x
           · simp only [is_open_univ, bot_lt_coe_ennreal, set_of_true]
-            
           · rcases le_or_lt 0 x with (h | h)
             · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0) : ℝ≥0∞) := rfl
               rw [this]
               simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
               exact is_open_Ioi
-              
             · have : ∀ y : ℝ≥0∞, (x : Ereal) < y := fun y =>
                 (Ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg _)
               simp only [this, is_open_univ, set_of_true]
-              
-            
           · simp only [set_of_false, is_open_empty, not_top_lt]
-            
-          
         show IsOpen { b : ℝ≥0∞ | ↑b < a }
         · induction' a using Ereal.rec with x
           · simp only [not_lt_bot, set_of_false, is_open_empty]
-            
           · rcases le_or_lt 0 x with (h | h)
             · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0) : ℝ≥0∞) := rfl
               rw [this]
               simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
               exact is_open_Iio
-              
             · convert is_open_empty
               apply eq_empty_iff_forall_not_mem.2 fun y hy => lt_irrefl (x : Ereal) _
               exact ((Ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg y)).trans hy
-              
-            
           · simp only [← coe_ennreal_top, coe_ennreal_lt_coe_ennreal_iff]
             exact is_open_Iio
-            
-          
-        
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0∞ _]
         refine' le_generate_from fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
         exact ⟨Ioi a, is_open_Ioi, by simp [Ioi]⟩
-        exact ⟨Iio a, is_open_Iio, by simp [Iio]⟩
-        ⟩,
+        exact ⟨Iio a, is_open_Iio, by simp [Iio]⟩⟩,
     fun a b => by simp only [imp_self, coe_ennreal_eq_coe_ennreal_iff]⟩
 #align ereal.embedding_coe_ennreal Ereal.embedding_coe_ennreal
 
@@ -253,22 +225,16 @@ theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (ioi a) := by
   rw [nhds_top]
   apply le_antisymm
   · exact infi_mono' fun x => ⟨x, by simp⟩
-    
   · refine' le_infi fun r => le_infi fun hr => _
     induction r using Ereal.rec
     · exact (infi_le _ 0).trans (by simp)
-      
     · exact infi_le _ _
-      
     · simpa using hr
-      
-    
 #align ereal.nhds_top' Ereal.nhds_top'
 
 theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : ℝ, ioi (y : Ereal) ⊆ s := by
   rw [nhds_top', mem_infi_of_directed]
   · rfl
-    
   exact fun x y => ⟨max x y, by simp [le_refl], by simp [le_refl]⟩
 #align ereal.mem_nhds_top_iff Ereal.mem_nhds_top_iff
 
@@ -286,22 +252,16 @@ theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (iio a) := by
   rw [nhds_bot]
   apply le_antisymm
   · exact infi_mono' fun x => ⟨x, by simp⟩
-    
   · refine' le_infi fun r => le_infi fun hr => _
     induction r using Ereal.rec
     · simpa using hr
-      
     · exact infi_le _ _
-      
     · exact (infi_le _ 0).trans (by simp)
-      
-    
 #align ereal.nhds_bot' Ereal.nhds_bot'
 
 theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : ℝ, iio (y : Ereal) ⊆ s := by
   rw [nhds_bot', mem_infi_of_directed]
   · rfl
-    
   exact fun x y => ⟨min x y, by simp [le_refl], by simp [le_refl]⟩
 #align ereal.mem_nhds_bot_iff Ereal.mem_nhds_bot_iff
 
@@ -391,23 +351,14 @@ theorem continuous_at_add {p : Ereal × Ereal} (h : p.1 ≠ ⊤ ∨ p.2 ≠ ⊥)
   rcases p with ⟨x, y⟩
   induction x using Ereal.rec <;> induction y using Ereal.rec
   · exact continuous_at_add_bot_bot
-    
   · exact continuous_at_add_bot_coe _
-    
   · simpa using h'
-    
   · exact continuous_at_add_coe_bot _
-    
   · exact continuous_at_add_coe_coe _ _
-    
   · exact continuous_at_add_coe_top _
-    
   · simpa using h
-    
   · exact continuous_at_add_top_coe _
-    
   · exact continuous_at_add_top_top
-    
 #align ereal.continuous_at_add Ereal.continuous_at_add
 
 /-! ### Negation-/

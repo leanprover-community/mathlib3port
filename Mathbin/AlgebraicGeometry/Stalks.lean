@@ -139,7 +139,7 @@ theorem comp {X Y Z : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (β : Y ⟶ Z) (x
     stalkMap (α ≫ β) x =
       (stalkMap β (α.base x) : Z.stalk (β.base (α.base x)) ⟶ Y.stalk (α.base x)) ≫
         (stalkMap α x : Y.stalk (α.base x) ⟶ X.stalk x) :=
-  by
+  by 
   dsimp [stalk_map, stalk_functor, stalk_pushforward]
   ext U
   induction U using Opposite.rec
@@ -163,7 +163,7 @@ either side of the equality.
 theorem congr {X Y : PresheafedSpaceCat.{v} C} (α β : X ⟶ Y) (h₁ : α = β) (x x' : X) (h₂ : x = x') :
     stalkMap α x ≫ eqToHom (show X.stalk x = X.stalk x' by rw [h₂]) =
       eqToHom (show Y.stalk (α.base x) = Y.stalk (β.base x') by rw [h₁, h₂]) ≫ stalkMap β x' :=
-  (stalk_hom_ext _) fun U hx => by
+  (stalk_hom_ext _) fun U hx => by 
     subst h₁
     subst h₂
     simp
@@ -185,7 +185,8 @@ theorem congr_point {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (x x' : X) (
   algebraic_geometry.PresheafedSpace.stalk_map.congr_point AlgebraicGeometry.PresheafedSpaceCat.stalkMap.congr_point
 
 instance is_iso {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) [IsIso α] (x : X) :
-    IsIso (stalkMap α x) where out := by
+    IsIso (stalkMap α
+        x) where out := by 
     let β : Y ⟶ X := CategoryTheory.inv α
     have h_eq : (α ≫ β).base x = x := by rw [is_iso.hom_inv_id α, id_base, TopCat.id_app]
     -- Intuitively, the inverse of the stalk map of `α` at `x` should just be the stalk map of `β`
@@ -202,10 +203,9 @@ instance is_iso {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) [IsIso α] (x : 
       erw [← stalk_map.comp β α (α.base x)]
       rw [congr_hom _ _ (is_iso.inv_hom_id α), stalk_map.id, eq_to_hom_trans_assoc, eq_to_hom_refl,
         category.id_comp]
-      
-    · rw [category.assoc, ← stalk_map.comp, congr_hom _ _ (is_iso.hom_inv_id α), stalk_map.id,
+    ·
+      rw [category.assoc, ← stalk_map.comp, congr_hom _ _ (is_iso.hom_inv_id α), stalk_map.id,
         eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp]
-      
 #align
   algebraic_geometry.PresheafedSpace.stalk_map.is_iso AlgebraicGeometry.PresheafedSpaceCat.stalkMap.is_iso
 
@@ -222,7 +222,7 @@ theorem stalk_specializes_stalk_map {X Y : PresheafedSpaceCat.{v} C} (f : X ⟶ 
     (h : x ⤳ y) :
     Y.Presheaf.stalkSpecializes (f.base.map_specializes h) ≫ stalkMap f x =
       stalkMap f y ≫ X.Presheaf.stalkSpecializes h :=
-  by
+  by 
   delta PresheafedSpace.stalk_map
   simp [stalk_map]
 #align

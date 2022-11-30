@@ -61,7 +61,7 @@ theorem even_to_submodule : (even Q).toSubmodule = evenOdd Q 0 :=
 variable (A)
 
 /-- The type of bilinear maps which are accepted by `clifford_algebra.even.lift`. -/
-@[ext.1]
+@[ext]
 structure EvenHom : Type max u_2 u_3 where
   bilin : M →ₗ[R] M →ₗ[R] A
   contract (m : M) : bilin m m = algebraMap R A (Q m)
@@ -72,7 +72,8 @@ variable {A Q}
 
 /-- Compose an `even_hom` with an `alg_hom` on the output. -/
 @[simps]
-def EvenHom.compr₂ (g : EvenHom Q A) (f : A →ₐ[R] B) : EvenHom Q B where
+def EvenHom.compr₂ (g : EvenHom Q A) (f : A →ₐ[R] B) :
+    EvenHom Q B where 
   bilin := g.bilin.compr₂ f.toLinearMap
   contract m := (f.congr_arg <| g.contract _).trans <| f.commutes _
   contract_mid m₁ m₂ m₃ :=
@@ -83,19 +84,22 @@ variable (Q)
 
 /-- The embedding of pairs of vectors into the even subalgebra, as a bilinear map. -/
 @[simps bilin_apply_apply_coe]
-def even.ι : EvenHom Q (even Q) where
+def even.ι :
+    EvenHom Q
+      (even
+        Q) where 
   bilin :=
     LinearMap.mk₂ R (fun m₁ m₂ => ⟨ι Q m₁ * ι Q m₂, ι_mul_ι_mem_even_odd_zero _ _ _⟩)
-      (fun _ _ _ => by
+      (fun _ _ _ => by 
         simp only [LinearMap.map_add, add_mul]
         rfl)
-      (fun _ _ _ => by
+      (fun _ _ _ => by 
         simp only [LinearMap.map_smul, smul_mul_assoc]
         rfl)
-      (fun _ _ _ => by
+      (fun _ _ _ => by 
         simp only [LinearMap.map_add, mul_add]
         rfl)
-      fun _ _ _ => by
+      fun _ _ _ => by 
       simp only [LinearMap.map_smul, mul_smul_comm]
       rfl
   contract m := Subtype.ext <| ι_sq_scalar Q m
@@ -116,23 +120,20 @@ variable (f : EvenHom Q A)
 /-- Two algebra morphisms from the even subalgebra are equal if they agree on pairs of generators.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr₂ f = (even.ι Q).compr₂ g) :
-    f = g := by
+    f = g := by 
   rw [even_hom.ext_iff] at h
   ext ⟨x, hx⟩
   refine' even_induction _ _ _ _ _ hx
   · intro r
     exact (f.commutes r).trans (g.commutes r).symm
-    
   · intro x y hx hy ihx ihy
     have := congr_arg₂ (· + ·) ihx ihy
     exact (f.map_add _ _).trans (this.trans <| (g.map_add _ _).symm)
-    
   · intro m₁ m₂ x hx ih
     have := congr_arg₂ (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
     exact (f.map_mul _ _).trans (this.trans <| (g.map_mul _ _).symm)
-    
 #align clifford_algebra.even.alg_hom_ext CliffordAlgebra.even.alg_hom_ext
 
 variable {Q}
@@ -194,24 +195,18 @@ private theorem f_fold_f_fold (m : M) (x : A × s f) : fFold f m (fFold f m x) =
   ext : 2
   · change f.bilin m m * a = Q m • a
     rw [Algebra.smul_def, f.contract]
-    
   · ext m₁
     change f.bilin _ _ * g m = Q m • g m₁
     apply Submodule.span_induction' _ _ _ _ hg
     · rintro _ ⟨b, m₃, rfl⟩
       change f.bilin _ _ * (f.bilin _ _ * b) = Q m • (f.bilin _ _ * b)
       rw [← smul_mul_assoc, ← mul_assoc, f.contract_mid]
-      
     · change f.bilin m₁ m * 0 = Q m • 0
       rw [mul_zero, smul_zero]
-      
     · rintro x hx y hy ihx ihy
       rw [LinearMap.add_apply, LinearMap.add_apply, mul_add, smul_add, ihx, ihy]
-      
     · rintro x hx c ihx
       rw [LinearMap.smul_apply, LinearMap.smul_apply, mul_smul_comm, ihx, smul_comm]
-      
-    
 #align clifford_algebra.even.lift.f_fold_f_fold clifford_algebra.even.lift.f_fold_f_fold
 
 /-- The final auxiliary construction for `clifford_algebra.even.lift`. This map is the forwards
@@ -230,7 +225,7 @@ theorem aux_one : aux f 1 = 1 :=
 @[simp]
 theorem aux_ι (m₁ m₂ : M) : aux f ((even.ι Q).bilin m₁ m₂) = f.bilin m₁ m₂ :=
   (congr_arg Prod.fst (foldr_mul _ _ _ _ _ _)).trans
-    (by
+    (by 
       rw [foldr_ι, foldr_ι]
       exact mul_one _)
 #align clifford_algebra.even.lift.aux_ι CliffordAlgebra.even.Lift.aux_ι
@@ -250,16 +245,13 @@ theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y := by
   · intro r
     rw [foldr_algebra_map, aux_algebra_map]
     exact Algebra.smul_def r _
-    
   · intro x y hx hy ihx ihy
     rw [LinearMap.map_add, Prod.fst_add, ihx, ihy, ← add_mul, ← LinearMap.map_add]
     rfl
-    
   · rintro m₁ m₂ x (hx : x ∈ Even Q) ih
     rw [aux_apply, foldr_mul, foldr_mul, foldr_ι, foldr_ι, fst_f_fold_f_fold, ih, ← mul_assoc,
       Subtype.coe_mk, foldr_mul, foldr_mul, foldr_ι, foldr_ι, fst_f_fold_f_fold]
     rfl
-    
 #align clifford_algebra.even.lift.aux_mul CliffordAlgebra.even.Lift.aux_mul
 
 end Even.Lift
@@ -272,7 +264,10 @@ variable (Q) {A}
 bilinear map that sends duplicate arguments to the quadratic form, and contracts across
 multiplication. -/
 @[simps symm_apply_bilin]
-def even.lift : EvenHom Q A ≃ (CliffordAlgebra.even Q →ₐ[R] A) where
+def even.lift :
+    EvenHom Q A ≃
+      (CliffordAlgebra.even Q →ₐ[R]
+        A) where 
   toFun f := AlgHom.ofLinearMap (aux f) (aux_one f) (aux_mul f)
   invFun F := (even.ι Q).compr₂ F
   left_inv f := EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι f

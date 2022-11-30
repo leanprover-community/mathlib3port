@@ -49,14 +49,15 @@ structure Alist (β : α → Type v) : Type max u v where
 
 /-- Given `l : list (sigma β)`, create a term of type `alist β` by removing
 entries with duplicate keys. -/
-def List.toAlist [DecidableEq α] {β : α → Type v} (l : List (Sigma β)) : Alist β where
+def List.toAlist [DecidableEq α] {β : α → Type v} (l : List (Sigma β)) :
+    Alist β where 
   entries := _
   Nodupkeys := nodupkeys_dedupkeys l
 #align list.to_alist List.toAlist
 
 namespace Alist
 
-@[ext.1]
+@[ext]
 theorem ext : ∀ {s t : Alist β}, s.entries = t.entries → s = t
   | ⟨l₁, h₁⟩, ⟨l₂, h₂⟩, H => by congr
 #align alist.ext Alist.ext
@@ -435,7 +436,7 @@ variable [DecidableEq α]
 theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) :
     (s₁ ∪ s₂).entries ~ (s₂ ∪ s₁).entries :=
   lookup_ext (Alist.nodupkeys _) (Alist.nodupkeys _)
-    (by
+    (by 
       intros ; simp
       constructor <;> intro h'
       cases h'
@@ -444,10 +445,8 @@ theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) :
         apply h
         rw [keys, ← List.lookup_is_some, h']
         exact rfl
-        
       · left
         rw [h'.2]
-        
       cases h'
       · right
         refine' ⟨_, h'⟩
@@ -455,10 +454,8 @@ theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) :
         apply h _ h''
         rw [keys, ← List.lookup_is_some, h']
         exact rfl
-        
       · left
-        rw [h'.2]
-        )
+        rw [h'.2])
 #align alist.union_comm_of_disjoint Alist.union_comm_of_disjoint
 
 end Alist

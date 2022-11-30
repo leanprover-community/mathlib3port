@@ -82,7 +82,8 @@ instance monoid {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.",
   simps]
 def coeFnMonoidHom {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
-    [HasSmoothMul I' G] : C^∞⟮I, N; I', G⟯ →* N → G where
+    [HasSmoothMul I' G] :
+    C^∞⟮I, N; I', G⟯ →* N → G where 
   toFun := coeFn
   map_one' := coe_one
   map_mul' := coe_mul
@@ -222,7 +223,10 @@ inherit an algebra structure.
 variable {A : Type _} [NormedRing A] [NormedAlgebra 𝕜 A] [SmoothRing 𝓘(𝕜, A) A]
 
 /-- Smooth constant functions as a `ring_hom`. -/
-def c : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯ where
+def c :
+    𝕜 →+*
+      C^∞⟮I, N; 𝓘(𝕜, A),
+        A⟯ where 
   toFun := fun c : 𝕜 => ⟨fun x => (algebraMap 𝕜 A) c, smoothConst⟩
   map_one' := by ext x <;> exact (algebraMap 𝕜 A).map_one
   map_mul' c₁ c₂ := by ext x <;> exact (algebraMap 𝕜 A).map_mul _ _
@@ -238,7 +242,8 @@ instance algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
 
 /-- Coercion to a function as an `alg_hom`. -/
 @[simps]
-def coeFnAlgHom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →ₐ[𝕜] N → A where
+def coeFnAlgHom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →ₐ[𝕜]
+      N → A where 
   toFun := coeFn
   commutes' r := rfl
   -- `..(smooth_map.coe_fn_ring_hom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →+* _)` times out for some reason
@@ -272,7 +277,8 @@ theorem smul_comp' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] (f :
 #align smooth_map.smul_comp' SmoothMap.smul_comp'
 
 instance module' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
-    Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ where
+    Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯
+      C^∞⟮I, N; 𝓘(𝕜, V), V⟯ where 
   smul := (· • ·)
   smul_add c f g := by ext x <;> exact smul_add (c x) (f x) (g x)
   add_smul c₁ c₂ f := by ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)

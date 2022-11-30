@@ -47,7 +47,6 @@ theorem range_eq_top_of_cancel {f : A →* B}
     rw [show (1 : B ⧸ f.range) = (1 : B) from QuotientGroup.coe_one _, QuotientGroup.eq, inv_one,
       one_mul]
     exact ⟨x, rfl⟩
-    
   replace h : (QuotientGroup.mk' _).ker = (1 : B →* B ⧸ f.range).ker := by rw [h]
   rwa [ker_one, QuotientGroup.ker_mk] at h
 #align monoid_hom.range_eq_top_of_cancel MonoidHom.range_eq_top_of_cancel
@@ -112,14 +111,14 @@ instance :
     match x with
     | from_coset y =>
       from_coset
-        ⟨b *l y, by
+        ⟨b *l y, by 
           rw [← Subtype.val_eq_coe, ← y.2.some_spec, left_coset_assoc]
           use b * y.2.some⟩
     | ∞ => ∞
 
 theorem mul_smul (b b' : B) (x : X') : (b * b') • x = b • b' • x :=
   match x with
-  | from_coset y => by
+  | from_coset y => by 
     change from_coset _ = from_coset _
     simp only [← Subtype.val_eq_coe, left_coset_assoc]
   | ∞ => rfl
@@ -127,7 +126,7 @@ theorem mul_smul (b b' : B) (x : X') : (b * b') • x = b • b' • x :=
 
 theorem one_smul (x : X') : (1 : B) • x = x :=
   match x with
-  | from_coset y => by
+  | from_coset y => by 
     change from_coset _ = from_coset _
     simp only [← Subtype.val_eq_coe, one_left_coset, Subtype.ext_iff_val]
   | ∞ => rfl
@@ -136,7 +135,7 @@ theorem one_smul (x : X') : (1 : B) • x = x :=
 theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
     from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ =
       from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
-  by
+  by 
   congr
   change b *l f.range = f.range
   nth_rw 1 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
@@ -148,7 +147,7 @@ theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
 theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
     from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ ≠
       from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
-  by
+  by 
   intro r
   simp only [Subtype.mk_eq_mk] at r
   change b *l f.range = f.range at r
@@ -200,19 +199,21 @@ theorem τ_symm_apply_infinity :
 /-- Let `g : B ⟶ S(X')` be defined as such that, for any `β : B`, `g(β)` is the function sending
 point at infinity to point at infinity and sending coset `y` to `β *l y`.
 -/
-def g : B →* SX' where
+def g :
+    B →*
+      SX' where 
   toFun β :=
     { toFun := fun x => β • x, invFun := fun x => β⁻¹ • x,
-      left_inv := fun x => by
+      left_inv := fun x => by 
         dsimp only
         rw [← mul_smul, mul_left_inv, one_smul],
-      right_inv := fun x => by
+      right_inv := fun x => by 
         dsimp only
         rw [← mul_smul, mul_right_inv, one_smul] }
-  map_one' := by
+  map_one' := by 
     ext
     simp [one_smul]
-  map_mul' b1 b2 := by
+  map_mul' b1 b2 := by 
     ext
     simp [mul_smul]
 #align Group.surjective_of_epi_auxs.G GroupCat.SurjectiveOfEpiAuxs.g
@@ -222,12 +223,12 @@ local notation "g" => g f
 
 /-- Define `h : B ⟶ S(X')` to be `τ g τ⁻¹`
 -/
-def h : B →* SX' where
+def h : B →* SX' where 
   toFun β := (τ.symm.trans (g β)).trans τ
-  map_one' := by
+  map_one' := by 
     ext
     simp
-  map_mul' b1 b2 := by
+  map_mul' b1 b2 := by 
     ext
     simp
 #align Group.surjective_of_epi_auxs.H GroupCat.SurjectiveOfEpiAuxs.h
@@ -298,14 +299,9 @@ theorem agree : f.range.carrier = { x | h x = g x } := by
         change from_coset _ = from_coset ⟨f a *l (y *l _), _⟩
         simpa only [← from_coset_eq_of_mem_range _ (Subgroup.mul_mem _ ⟨a, rfl⟩ m),
           left_coset_assoc]
-        
       · rw [h_apply_from_coset_nin_range _ _ ⟨_, rfl⟩ _ m]
         simpa only [← Subtype.val_eq_coe, left_coset_assoc]
-        
-      
     · rw [g_apply_infinity, h_apply_infinity _ _ ⟨_, rfl⟩]
-      
-    
   · have eq1 :
       (h b) (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) =
         from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
@@ -315,7 +311,6 @@ theorem agree : f.range.carrier = { x | h x = g x } := by
         from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ :=
       rfl
     exact (from_coset_ne_of_nin_range _ r).symm (by rw [← eq1, ← eq2, FunLike.congr_fun hb])
-    
 #align Group.surjective_of_epi_auxs.agree GroupCat.SurjectiveOfEpiAuxs.agree
 
 theorem comp_eq : (f ≫ show B ⟶ GroupCat.of SX' from g) = f ≫ h :=

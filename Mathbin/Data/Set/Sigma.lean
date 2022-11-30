@@ -22,14 +22,12 @@ theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma
   apply subset.antisymm
   · rintro _ ⟨b, rfl⟩
     simp
-    
   · rintro ⟨x, y⟩ (rfl | _)
     exact mem_range_self y
-    
 #align set.range_sigma_mk Set.range_sigma_mk
 
 theorem preimage_image_sigma_mk_of_ne (h : i ≠ j) (s : Set (α j)) :
-    Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
+    Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by 
   ext x
   simp [h.symm]
 #align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigma_mk_of_ne
@@ -109,15 +107,13 @@ theorem sigma_univ : s.Sigma (fun _ => univ : ∀ i, Set (α i)) = Sigma.fst ⁻
 
 @[simp]
 theorem singleton_sigma : ({i} : Set ι).Sigma t = Sigma.mk i '' t i :=
-  ext fun x => by
+  ext fun x => by 
     constructor
     · obtain ⟨j, a⟩ := x
       rintro ⟨rfl : j = i, ha⟩
       exact mem_image_of_mem _ ha
-      
     · rintro ⟨b, hb, rfl⟩
       exact ⟨rfl, hb⟩
-      
 #align set.singleton_sigma Set.singleton_sigma
 
 @[simp]

@@ -342,7 +342,8 @@ unsafe def poly_parser : Parser Poly :=
     ch ')'
 #align polyrith.poly_parser polyrith.poly_parser
 
-unsafe instance : non_null_json_serializable Poly where
+unsafe instance : non_null_json_serializable
+      Poly where 
   to_json p := json.null
   -- we don't actually need this, but the typeclass asks for it
   of_json j := do

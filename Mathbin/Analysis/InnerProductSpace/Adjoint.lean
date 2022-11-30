@@ -99,12 +99,10 @@ theorem adjoint_aux_norm (A : E →L[𝕜] F) : ‖adjointAux A‖ = ‖A‖ := 
   · refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
-    
   · nth_rw_lhs 0 [← adjoint_aux_adjoint_aux A]
     refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
-    
 #align continuous_linear_map.adjoint_aux_norm ContinuousLinearMap.adjoint_aux_norm
 
 /-- The adjoint of a bounded operator from Hilbert space E to Hilbert space F. -/
@@ -187,7 +185,7 @@ theorem adjoint_id : (ContinuousLinearMap.id 𝕜 E).adjoint = ContinuousLinearM
 #align continuous_linear_map.adjoint_id ContinuousLinearMap.adjoint_id
 
 theorem Submodule.adjoint_subtypeL (U : Submodule 𝕜 E) [CompleteSpace U] :
-    U.subtypeL† = orthogonalProjection U := by
+    U.subtypeL† = orthogonalProjection U := by 
   symm
   rw [eq_adjoint_iff]
   intro x u
@@ -227,15 +225,15 @@ theorem is_self_adjoint_iff' {A : E →L[𝕜] E} : IsSelfAdjoint A ↔ A.adjoin
 #align continuous_linear_map.is_self_adjoint_iff' ContinuousLinearMap.is_self_adjoint_iff'
 
 instance : CstarRing (E →L[𝕜] E) :=
-  ⟨by
+  ⟨by 
     intro A
     rw [star_eq_adjoint]
     refine' le_antisymm _ _
-    · calc
+    ·
+      calc
         ‖A† * A‖ ≤ ‖A†‖ * ‖A‖ := op_norm_comp_le _ _
         _ = ‖A‖ * ‖A‖ := by rw [LinearIsometryEquiv.norm_map]
         
-      
     · rw [← sq, ← Real.sqrt_le_sqrt_iff (norm_nonneg _), Real.sqrt_sq (norm_nonneg _)]
       refine' op_norm_le_bound _ (Real.sqrt_nonneg _) fun x => _
       have :=
@@ -248,8 +246,7 @@ instance : CstarRing (E →L[𝕜] E) :=
         _ ≤ Real.sqrt (‖A† * A‖ * ‖x‖ * ‖x‖) := Real.sqrt_le_sqrt this
         _ = Real.sqrt ‖A† * A‖ * ‖x‖ := by
           rw [mul_assoc, Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul_self (norm_nonneg _)]
-        
-      ⟩
+        ⟩
 
 section Real
 
@@ -324,7 +321,7 @@ theorem conj_orthogonal_projection {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (
     [CompleteSpace U] :
     IsSelfAdjoint
       (U.subtypeL ∘L orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U) :=
-  by
+  by 
   rw [← ContinuousLinearMap.comp_assoc]
   nth_rw 0 [← (orthogonal_projection_is_self_adjoint U).adjoint_eq]
   refine' hT.adjoint_conj _
@@ -401,7 +398,7 @@ theorem adjoint_adjoint (A : E →ₗ[𝕜] F) : A.adjoint.adjoint = A := by
 in reverse order. -/
 @[simp]
 theorem adjoint_comp (A : F →ₗ[𝕜] G) (B : E →ₗ[𝕜] F) : (A ∘ₗ B).adjoint = B.adjoint ∘ₗ A.adjoint :=
-  by
+  by 
   ext v
   refine' ext_inner_left 𝕜 fun w => _
   simp only [adjoint_inner_right, LinearMap.coe_comp, Function.comp_apply]
@@ -491,7 +488,7 @@ theorem isSymmetricAdjointMulSelf (T : E →ₗ[𝕜] E) : IsSymmetric (T.adjoin
 
 /-- The Gram operator T†T is a positive operator. -/
 theorem re_inner_adjoint_mul_self_nonneg (T : E →ₗ[𝕜] E) (x : E) : 0 ≤ re ⟪x, (T.adjoint * T) x⟫ :=
-  by
+  by 
   simp only [mul_apply, adjoint_inner_right, inner_self_eq_norm_sq_to_K]
   norm_cast
   exact sq_nonneg _
@@ -517,7 +514,7 @@ conjugate transpose of that matrix. -/
 theorem conj_transpose_eq_adjoint (A : Matrix m n 𝕜) :
     toLin' A.conjTranspose =
       @LinearMap.adjoint _ (EuclideanSpace 𝕜 n) (EuclideanSpace 𝕜 m) _ _ _ _ _ (toLin' A) :=
-  by
+  by 
   rw [@LinearMap.eq_adjoint_iff _ (EuclideanSpace 𝕜 m) (EuclideanSpace 𝕜 n)]
   intro x y
   convert dot_product_assoc (conj ∘ (id x : m → 𝕜)) y A using 1

@@ -23,7 +23,8 @@ variable {α : Type _}
 `2 * x`.
 -/
 @[simps]
-def boolProdNatEquivNat : Bool × ℕ ≃ ℕ where
+def boolProdNatEquivNat : Bool × ℕ ≃
+      ℕ where 
   toFun := uncurry bit
   invFun := boddDiv2
   left_inv := fun ⟨b, n⟩ => by simp only [bodd_bit, div2_bit, uncurry_apply_pair, bodd_div2_eq]

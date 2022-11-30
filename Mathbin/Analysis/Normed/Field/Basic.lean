@@ -275,7 +275,7 @@ instance Subalgebra.normedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} 
 
 theorem Nat.norm_cast_le : ∀ n : ℕ, ‖(n : α)‖ ≤ n * ‖(1 : α)‖
   | 0 => by simp
-  | n + 1 => by
+  | n + 1 => by 
     rw [n.cast_succ, n.cast_succ, add_mul, one_mul]
     exact norm_add_le_of_le (Nat.norm_cast_le n) le_rfl
 #align nat.norm_cast_le Nat.norm_cast_le
@@ -285,7 +285,7 @@ theorem Nat.norm_cast_le : ∀ n : ℕ, ‖(n : α)‖ ≤ n * ‖(1 : α)‖
 theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ‖l.Prod‖ ≤ (l.map norm).Prod
   | [], h => (h rfl).elim
   | [a], _ => by simp
-  | a::b::l, _ => by
+  | a::b::l, _ => by 
     rw [List.map_cons, List.prod_cons, @List.prod_cons _ _ _ ‖a‖]
     refine' le_trans (norm_mul_le _ _) (mul_le_mul_of_nonneg_left _ (norm_nonneg _))
     exact List.norm_prod_le' (List.cons_ne_nil b l)
@@ -431,7 +431,7 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing 
   ⟨continuous_iff_continuous_at.2 fun x =>
       tendsto_iff_norm_tendsto_zero.2 <| by
         have : ∀ e : α × α, ‖e.1 * e.2 - x.1 * x.2‖ ≤ ‖e.1‖ * ‖e.2 - x.2‖ + ‖e.1 - x.1‖ * ‖x.2‖ :=
-          by
+          by 
           intro e
           calc
             ‖e.1 * e.2 - x.1 * x.2‖ ≤ ‖e.1 * (e.2 - x.2) + (e.1 - x.1) * x.2‖ := by
@@ -574,9 +574,7 @@ theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖
   rw [(_ : ‖x‖ = 1 ↔ ‖x‖₊ = 1)]
   apply (@pow_left_inj Nnreal _ _ _ (↑k) zero_le' zero_le' (PNat.pos k)).mp
   · rw [← nnnorm_pow, one_pow, h, nnnorm_one]
-    
   · exact subtype.mk_eq_mk.symm
-    
 #align norm_one_of_pow_eq_one norm_one_of_pow_eq_one
 
 theorem norm_map_one_of_pow_eq_one [CommMonoid β] (φ : β →* α) {x : β} {k : ℕ+}
@@ -681,7 +679,7 @@ theorem puncturedNhdsNeBot (x : α) : NeBot (𝓝[≠] x) := by
 
 @[instance]
 theorem nhdsWithinIsUnitNeBot : NeBot (𝓝[{ x : α | IsUnit x }] 0) := by
-  simpa only [is_unit_iff_ne_zero] using punctured_nhds_ne_bot (0 : α)
+  simpa only [isUnit_iff_ne_zero] using punctured_nhds_ne_bot (0 : α)
 #align normed_field.nhds_within_is_unit_ne_bot NormedField.nhdsWithinIsUnitNeBot
 
 end Nontrivially
@@ -699,7 +697,10 @@ theorem exists_lt_nnnorm_lt {r₁ r₂ : ℝ≥0} (h : r₁ < r₂) : ∃ x : α
 #align normed_field.exists_lt_nnnorm_lt NormedField.exists_lt_nnnorm_lt
 
 instance densely_ordered_range_norm :
-    DenselyOrdered (Set.range (norm : α → ℝ)) where dense := by
+    DenselyOrdered
+      (Set.range
+        (norm :
+          α → ℝ)) where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
     exact
       let ⟨z, h⟩ := exists_lt_norm_lt α (norm_nonneg _) hxy
@@ -707,7 +708,10 @@ instance densely_ordered_range_norm :
 #align normed_field.densely_ordered_range_norm NormedField.densely_ordered_range_norm
 
 instance densely_ordered_range_nnnorm :
-    DenselyOrdered (Set.range (nnnorm : α → ℝ≥0)) where dense := by
+    DenselyOrdered
+      (Set.range
+        (nnnorm :
+          α → ℝ≥0)) where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
     exact
       let ⟨z, h⟩ := exists_lt_nnnorm_lt α hxy
@@ -796,7 +800,7 @@ theorem NormedAddCommGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [No
   (at_top_basis_Ioi.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top' NormedAddCommGroup.tendsto_at_top'
 
-instance : NormedCommRing ℤ where
+instance : NormedCommRing ℤ where 
   norm n := ‖(n : ℝ)‖
   norm_mul m n := le_of_eq <| by simp only [norm, Int.cast_mul, abs_mul]
   dist_eq m n := by simp only [Int.dist_eq, norm, Int.cast_sub]
@@ -829,7 +833,7 @@ theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊
 instance : NormOneClass ℤ :=
   ⟨by simp [← Int.norm_cast_real]⟩
 
-instance : NormedField ℚ where
+instance : NormedField ℚ where 
   norm r := ‖(r : ℝ)‖
   norm_mul' r₁ r₂ := by simp only [norm, Rat.cast_mul, abs_mul]
   dist_eq r₁ r₂ := by simp only [Rat.dist_eq, norm, Rat.cast_sub]
@@ -837,7 +841,7 @@ instance : NormedField ℚ where
 instance :
     DenselyNormedField ℚ where lt_norm_lt r₁ r₂ h₀ hr :=
     let ⟨q, h⟩ := exists_rat_btwn hr
-    ⟨q, by
+    ⟨q, by 
       unfold norm
       rwa [abs_of_pos (h₀.trans_lt h.1)]⟩
 
@@ -860,7 +864,6 @@ variable [SeminormedAddCommGroup α]
 theorem norm_nsmul_le (n : ℕ) (a : α) : ‖n • a‖ ≤ n * ‖a‖ := by
   induction' n with n ih
   · simp only [norm_zero, Nat.cast_zero, zero_mul, zero_smul]
-    
   simp only [Nat.succ_eq_add_one, add_smul, add_mul, one_mul, Nat.cast_add, Nat.cast_one, one_nsmul]
   exact norm_add_le_of_le ih le_rfl
 #align norm_nsmul_le norm_nsmul_le
@@ -870,11 +873,9 @@ theorem norm_zsmul_le (n : ℤ) (a : α) : ‖n • a‖ ≤ ‖n‖ * ‖a‖ :
   · simp only [Int.ofNat_eq_coe, coe_nat_zsmul]
     convert norm_nsmul_le n a
     exact Nat.abs_cast n
-    
   · simp only [Int.negSucc_coe, neg_smul, norm_neg, coe_nat_zsmul]
     convert norm_nsmul_le n.succ a
     exact Nat.abs_cast n.succ
-    
 #align norm_zsmul_le norm_zsmul_le
 
 theorem nnnorm_nsmul_le (n : ℕ) (a : α) : ‖n • a‖₊ ≤ n * ‖a‖₊ := by
@@ -1055,7 +1056,7 @@ See note [reducible non-instances] -/
 def NonUnitalSemiNormedRing.induced [NonUnitalRing R] [NonUnitalSemiNormedRing S]
     [NonUnitalRingHomClass F R S] (f : F) : NonUnitalSemiNormedRing R :=
   { SeminormedAddCommGroup.induced R S f with
-    norm_mul := fun x y => by
+    norm_mul := fun x y => by 
       unfold norm
       exact (map_mul f x y).symm ▸ norm_mul_le (f x) (f y) }
 #align non_unital_semi_normed_ring.induced NonUnitalSemiNormedRing.induced
@@ -1119,7 +1120,7 @@ See note [reducible non-instances] -/
 def NormedDivisionRing.induced [DivisionRing R] [NormedDivisionRing S] [NonUnitalRingHomClass F R S]
     (f : F) (hf : Function.Injective f) : NormedDivisionRing R :=
   { NormedAddCommGroup.induced R S f hf with
-    norm_mul' := fun x y => by
+    norm_mul' := fun x y => by 
       unfold norm
       exact (map_mul f x y).symm ▸ norm_mul (f x) (f y) }
 #align normed_division_ring.induced NormedDivisionRing.induced

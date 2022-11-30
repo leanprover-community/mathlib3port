@@ -35,7 +35,10 @@ instance : HasFiniteBiproducts AddCommGroupCat :=
 /-- Construct limit data for a binary product in `AddCommGroup`, using `AddCommGroup.of (G × H)`.
 -/
 @[simps cone_X is_limit_lift]
-def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair G H) where
+def binaryProductLimitCone (G H : AddCommGroupCat.{u}) :
+    Limits.LimitCone
+      (pair G
+        H) where 
   Cone :=
     { x := AddCommGroupCat.of (G × H),
       π :=
@@ -48,8 +51,7 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
       fac' := by
         rintro s (⟨⟩ | ⟨⟩) <;>
           · ext x
-            simp
-            ,
+            simp,
       uniq' := fun s m w => by
         ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align AddCommGroup.binary_product_limit_cone AddCommGroupCat.binaryProductLimitCone
@@ -97,12 +99,14 @@ variable {J : Type w} (f : J → AddCommGroupCat.{max w u})
 to the cartesian product of those groups.
 -/
 @[simps]
-def lift (s : Fan f) : s.x ⟶ AddCommGroupCat.of (∀ j, f j) where
+def lift (s : Fan f) :
+    s.x ⟶ AddCommGroupCat.of
+        (∀ j, f j) where 
   toFun x j := s.π.app ⟨j⟩ x
-  map_zero' := by
+  map_zero' := by 
     ext
     simp
-  map_add' x y := by
+  map_add' x y := by 
     ext
     simp
 #align AddCommGroup.has_limit.lift AddCommGroupCat.HasLimit.lift
@@ -110,17 +114,20 @@ def lift (s : Fan f) : s.x ⟶ AddCommGroupCat.of (∀ j, f j) where
 /-- Construct limit data for a product in `AddCommGroup`, using `AddCommGroup.of (Π j, F.obj j)`.
 -/
 @[simps]
-def productLimitCone : Limits.LimitCone (Discrete.functor f) where
+def productLimitCone :
+    Limits.LimitCone
+      (Discrete.functor
+        f) where 
   Cone :=
     { x := AddCommGroupCat.of (∀ j, f j),
       π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => f j) j.as }
   IsLimit :=
     { lift := lift f,
-      fac' := fun s j => by
+      fac' := fun s j => by 
         cases j
         ext
         simp,
-      uniq' := fun s m w => by
+      uniq' := fun s m w => by 
         ext (x j)
         dsimp only [has_limit.lift]
         simp only [AddMonoidHom.coe_mk]

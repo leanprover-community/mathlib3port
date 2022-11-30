@@ -46,7 +46,7 @@ automorphism of `α`. -/
 @[to_additive
       "If an additive group `G` acts on `α` by measurable maps, then each element `c : G`\ndefines a measurable automorphism of `α`.",
   simps (config := { fullyApplied := false }) toEquiv apply]
-def smul (c : G) : α ≃ᵐ α where
+def smul (c : G) : α ≃ᵐ α where 
   toEquiv := MulAction.toPerm c
   measurableToFun := measurableConstSmul c
   measurableInvFun := measurableConstSmul c⁻¹
@@ -120,7 +120,7 @@ theorem measurableEmbeddingMulLeft (g : G) : MeasurableEmbedding ((· * ·) g) :
 measurable automorphism of `G`. -/
 @[to_additive
       "If `G` is an additive group with measurable addition, then addition of `g : G`\non the right is a measurable automorphism of `G`."]
-def mulRight (g : G) : G ≃ᵐ G where
+def mulRight (g : G) : G ≃ᵐ G where 
   toEquiv := Equiv.mulRight g
   measurableToFun := measurableMulConst g
   measurableInvFun := measurableMulConst g⁻¹
@@ -174,7 +174,8 @@ theorem to_equiv_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mulLeft₀ g hg).toEqu
 
 /-- If `G₀` is a group with zero with measurable multiplication, then right multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
-def mulRight₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ where
+def mulRight₀ (g : G₀) (hg : g ≠ 0) :
+    G₀ ≃ᵐ G₀ where 
   toEquiv := Equiv.mulRight₀ g hg
   measurableToFun := measurableMulConst g
   measurableInvFun := measurableMulConst g⁻¹
@@ -206,7 +207,8 @@ end Mul
 /-- Inversion as a measurable automorphism of a group or group with zero. -/
 @[to_additive "Negation as a measurable automorphism of an additive group.",
   simps (config := { fullyApplied := false }) toEquiv apply]
-def inv (G) [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] : G ≃ᵐ G where
+def inv (G) [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] :
+    G ≃ᵐ G where 
   toEquiv := Equiv.inv G
   measurableToFun := measurableInv
   measurableInvFun := measurableInv
@@ -220,7 +222,8 @@ theorem symm_inv {G} [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv 
 
 /-- `equiv.div_right` as a `measurable_equiv`. -/
 @[to_additive " `equiv.sub_right` as a `measurable_equiv` "]
-def divRight [HasMeasurableMul G] (g : G) : G ≃ᵐ G where
+def divRight [HasMeasurableMul G] (g : G) :
+    G ≃ᵐ G where 
   toEquiv := Equiv.divRight g
   measurableToFun := measurableDivConst' g
   measurableInvFun := measurableMulConst g
@@ -228,7 +231,8 @@ def divRight [HasMeasurableMul G] (g : G) : G ≃ᵐ G where
 
 /-- `equiv.div_left` as a `measurable_equiv` -/
 @[to_additive " `equiv.sub_left` as a `measurable_equiv` "]
-def divLeft [HasMeasurableMul G] [HasMeasurableInv G] (g : G) : G ≃ᵐ G where
+def divLeft [HasMeasurableMul G] [HasMeasurableInv G] (g : G) :
+    G ≃ᵐ G where 
   toEquiv := Equiv.divLeft g
   measurableToFun := measurableId.const_div g
   measurableInvFun := measurableInv.mul_const g

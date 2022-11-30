@@ -84,7 +84,7 @@ protected theorem exists' {q : ∀ x, p x → Prop} : (∃ x h, q x h) ↔ ∃ x
 -/
 
 #print Subtype.ext /-
-@[ext.1]
+@[ext]
 protected theorem ext : ∀ {a1 a2 : { x // p x }}, (a1 : α) = (a2 : α) → a1 = a2
   | ⟨x, h1⟩, ⟨x, h2⟩, rfl => rfl
 #align subtype.ext Subtype.ext
@@ -338,7 +338,7 @@ instance [HasEquiv α] (p : α → Prop) : HasEquiv (Subtype p) :=
 lean 3 declaration is
   forall {α : Sort.{u_1}} [_inst_1 : HasEquivₓ.{u_1} α] {p : α -> Prop} {s : Subtype.{u_1} α p} {t : Subtype.{u_1} α p}, Iff (HasEquivₓ.Equiv.{max 1 u_1} (Subtype.{u_1} α p) (Subtype.hasEquiv.{u_1} α _inst_1 p) s t) (HasEquivₓ.Equiv.{u_1} α _inst_1 ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{max 1 u_1, u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{max 1 u_1, u_1} (Subtype.{u_1} α p) α (CoeTCₓ.coe.{max 1 u_1, u_1} (Subtype.{u_1} α p) α (CoeTCₓ.mk.{max 1 u_1, u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x))))) s) ((fun (a : Sort.{max 1 u_1}) (b : Sort.{u_1}) [self : HasLiftT.{max 1 u_1, u_1} a b] => self.0) (Subtype.{u_1} α p) α (HasLiftT.mk.{max 1 u_1, u_1} (Subtype.{u_1} α p) α (CoeTCₓ.coe.{max 1 u_1, u_1} (Subtype.{u_1} α p) α (CoeTCₓ.mk.{max 1 u_1, u_1} (Subtype.{u_1} α p) α (Subtype.val.{u_1} α (fun (x : α) => (fun (x : α) => p x) x))))) t))
 but is expected to have type
-  forall {α : Sort.{u_1}} [inst._@.Mathlib.Data.Subtype._hyg.2080 : HasEquiv.{u_1, 0} α] {p : α -> Prop} {s : Subtype.{u_1} α p} {t : Subtype.{u_1} α p}, Iff (HasEquiv.Equiv.{max 1 u_1, 0} (Subtype.{u_1} α p) (Subtype.instHasEquivSubtype.{u_1, 0} α inst._@.Mathlib.Data.Subtype._hyg.2080 p) s t) (HasEquiv.Equiv.{u_1, 0} α inst._@.Mathlib.Data.Subtype._hyg.2080 (Subtype.val.{u_1} α p s) (Subtype.val.{u_1} α p t))
+  forall {α : Sort.{u_1}} [inst._@.Mathlib.Data.Subtype._hyg.2091 : HasEquiv.{u_1, 0} α] {p : α -> Prop} {s : Subtype.{u_1} α p} {t : Subtype.{u_1} α p}, Iff (HasEquiv.Equiv.{max 1 u_1, 0} (Subtype.{u_1} α p) (Subtype.instHasEquivSubtype.{u_1, 0} α inst._@.Mathlib.Data.Subtype._hyg.2091 p) s t) (HasEquiv.Equiv.{u_1, 0} α inst._@.Mathlib.Data.Subtype._hyg.2091 (Subtype.val.{u_1} α p s) (Subtype.val.{u_1} α p t))
 Case conversion may be inaccurate. Consider using '#align subtype.equiv_iff Subtype.equiv_iffₓ'. -/
 theorem equiv_iff [HasEquiv α] {p : α → Prop} {s t : Subtype p} : s ≈ t ↔ (s : α) ≈ (t : α) :=
   Iff.rfl

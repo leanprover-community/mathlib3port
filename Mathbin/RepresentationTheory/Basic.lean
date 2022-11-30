@@ -199,20 +199,17 @@ theorem of_module_as_algebra_hom_apply_apply (r : MonoidAlgebra k G)
     (m : RestrictScalars k (MonoidAlgebra k G) M) :
     ((ofModule k G M).asAlgebraHom r) m =
       (RestrictScalars.addEquiv _ _ _).symm (r • RestrictScalars.addEquiv _ _ _ m) :=
-  by
+  by 
   apply MonoidAlgebra.induction_on r
   · intro g
     simp only [one_smul, MonoidAlgebra.lift_symm_apply, MonoidAlgebra.of_apply,
       Representation.as_algebra_hom_single, Representation.ofModule, AddEquiv.apply_eq_iff_eq,
       RestrictScalars.lsmul_apply_apply]
-    
   · intro f g fw gw
     simp only [fw, gw, map_add, add_smul, LinearMap.add_apply]
-    
   · intro r f w
     simp only [w, AlgHom.map_smul, LinearMap.smul_apply,
       RestrictScalars.add_equiv_symm_map_smul_smul]
-    
 #align
   representation.of_module_as_algebra_hom_apply_apply Representation.of_module_as_algebra_hom_apply_apply
 
@@ -231,7 +228,7 @@ theorem of_module_as_module_act (g : G) (x : RestrictScalars k (MonoidAlgebra k 
 theorem smul_of_module_as_module (r : MonoidAlgebra k G) (m : (ofModule k G M).AsModule) :
     (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv (r • m)) =
       r • (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv m) :=
-  by
+  by 
   dsimp
   simp only [AddEquiv.apply_symm_apply, of_module_as_algebra_hom_apply_apply]
 #align representation.smul_of_module_as_module Representation.smul_of_module_as_module
@@ -256,13 +253,15 @@ section MulAction
 variable (k : Type _) [CommSemiring k] (G : Type _) [Monoid G] (H : Type _) [MulAction G H]
 
 /-- A `G`-action on `H` induces a representation `G →* End(k[H])` in the natural way. -/
-noncomputable def ofMulAction : Representation k G (H →₀ k) where
+noncomputable def ofMulAction :
+    Representation k G
+      (H →₀ k) where 
   toFun g := Finsupp.lmapDomain k k ((· • ·) g)
-  map_one' := by
+  map_one' := by 
     ext (x y)
     dsimp
     simp
-  map_mul' x y := by
+  map_mul' x y := by 
     ext (z w)
     simp [mul_smul]
 #align representation.of_mul_action Representation.ofMulAction
@@ -335,7 +334,9 @@ open TensorProduct
 /-- Given representations of `G` on `V` and `W`, there is a natural representation of `G` on their
 tensor product `V ⊗[k] W`.
 -/
-def tprod : Representation k G (V ⊗[k] W) where
+def tprod :
+    Representation k G
+      (V ⊗[k] W) where 
   toFun g := TensorProduct.map (ρV g) (ρW g)
   map_one' := by simp only [map_one, TensorProduct.map_one]
   map_mul' g h := by simp only [map_mul, TensorProduct.map_mul]
@@ -379,7 +380,10 @@ variable (ρV : Representation k G V) (ρW : Representation k G W)
 /-- Given representations of `G` on `V` and `W`, there is a natural representation of `G` on the
 module `V →ₗ[k] W`, where `G` acts by conjugation.
 -/
-def linHom : Representation k G (V →ₗ[k] W) where
+def linHom :
+    Representation k G
+      (V →ₗ[k]
+        W) where 
   toFun g :=
     { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹,
       map_add' := fun f₁ f₂ => by simp_rw [add_comp, comp_add],
@@ -400,16 +404,19 @@ theorem lin_hom_apply (g : G) (f : V →ₗ[k] W) : (linHom ρV ρW) g f = ρW g
 /-- The dual of a representation `ρ` of `G` on a module `V`, given by `(dual ρ) g f = f ∘ₗ (ρ g⁻¹)`,
 where `f : module.dual k V`.
 -/
-def dual : Representation k G (Module.Dual k V) where
+def dual :
+    Representation k G
+      (Module.Dual k
+        V) where 
   toFun g :=
     { toFun := fun f => f ∘ₗ ρV g⁻¹, map_add' := fun f₁ f₂ => by simp only [add_comp],
-      map_smul' := fun r f => by
+      map_smul' := fun r f => by 
         ext
         simp only [coe_comp, Function.comp_apply, smul_apply, RingHom.id_apply] }
-  map_one' := by
+  map_one' := by 
     ext
     simp only [coe_comp, Function.comp_apply, map_one, inv_one, coe_mk, one_apply]
-  map_mul' g h := by
+  map_mul' g h := by 
     ext
     simp only [coe_comp, Function.comp_apply, mul_inv_rev, map_mul, coe_mk, mul_apply]
 #align representation.dual Representation.dual

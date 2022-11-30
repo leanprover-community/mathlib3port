@@ -76,7 +76,8 @@ namespace ContinuousMap
 variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
   [TopologicalSpace δ]
 
-instance : ContinuousMapClass C(α, β) α β where
+instance : ContinuousMapClass C(α, β) α
+      β where 
   coe := ContinuousMap.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_continuous := ContinuousMap.continuous_to_fun
@@ -99,14 +100,15 @@ theorem coe_coe {F : Type _} [ContinuousMapClass F α β] (f : F) : ⇑(f : C(α
   rfl
 #align continuous_map.coe_coe ContinuousMap.coe_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : C(α, β)} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext _ _ h
 #align continuous_map.ext ContinuousMap.ext
 
 /-- Copy of a `continuous_map` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : C(α, β)) (f' : α → β) (h : f' = f) : C(α, β) where
+protected def copy (f : C(α, β)) (f' : α → β) (h : f' = f) :
+    C(α, β) where 
   toFun := f'
   continuous_to_fun := h.symm ▸ f.continuous_to_fun
 #align continuous_map.copy ContinuousMap.copy
@@ -171,7 +173,7 @@ The continuous functions from `α` to `β` are the same as the plain functions w
 def equivFnOfDiscrete [DiscreteTopology α] : C(α, β) ≃ (α → β) :=
   ⟨fun f => f, fun f => ⟨f, continuous_of_discrete_topology⟩, fun f => by
     ext
-    rfl, fun f => by
+    rfl, fun f => by 
     ext
     rfl⟩
 #align continuous_map.equiv_fn_of_discrete ContinuousMap.equivFnOfDiscrete
@@ -276,14 +278,16 @@ variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [Topologica
   [TopologicalSpace β₂]
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
-def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂) where
+def prodMk (f : C(α, β₁)) (g : C(α, β₂)) :
+    C(α, β₁ × β₂) where 
   toFun x := (f x, g x)
   continuous_to_fun := Continuous.prod_mk f.Continuous g.Continuous
 #align continuous_map.prod_mk ContinuousMap.prodMk
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
 @[simps]
-def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂) where
+def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) :
+    C(α₁ × β₁, α₂ × β₂) where 
   toFun := Prod.map f g
   continuous_to_fun := Continuous.prod_map f.Continuous g.Continuous
 #align continuous_map.prod_map ContinuousMap.prodMap
@@ -345,7 +349,7 @@ include hφ hS
 of each point in `α` and the functions `φ i` agree pairwise on intersections, can be glued to
 construct a continuous map in `C(α, β)`. -/
 noncomputable def liftCover : C(α, β) := by
-  have H : (⋃ i, S i) = Set.univ := by
+  have H : (⋃ i, S i) = Set.univ := by 
     rw [Set.eq_univ_iff_forall]
     intro x
     rw [Set.mem_Union]

@@ -50,24 +50,20 @@ instance : SecondCountableTopology ℝ≥0∞ :=
   orderIsoUnitIntervalBirational.toHomeomorph.Embedding.SecondCountableTopology
 
 theorem embedding_coe : Embedding (coe : ℝ≥0 → ℝ≥0∞) :=
-  ⟨⟨by
+  ⟨⟨by 
       refine' le_antisymm _ _
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0∞ _, ← coinduced_le_iff_le_induced]
         refine' le_generate_from fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
         show IsOpen { b : ℝ≥0 | a < ↑b }
         · cases a <;> simp [none_eq_top, some_eq_coe, is_open_lt']
-          
         show IsOpen { b : ℝ≥0 | ↑b < a }
         · cases a <;> simp [none_eq_top, some_eq_coe, is_open_gt', is_open_const]
-          
-        
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0 _]
         refine' le_generate_from fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
         exact ⟨Ioi a, is_open_Ioi, by simp [Ioi]⟩
-        exact ⟨Iio a, is_open_Iio, by simp [Iio]⟩
-        ⟩,
+        exact ⟨Iio a, is_open_Iio, by simp [Iio]⟩⟩,
     fun a b => coe_eq_coe.1⟩
 #align ennreal.embedding_coe Ennreal.embedding_coe
 
@@ -81,7 +77,7 @@ theorem is_open_Ico_zero : IsOpen (ico 0 b) := by
 #align ennreal.is_open_Ico_zero Ennreal.is_open_Ico_zero
 
 theorem open_embedding_coe : OpenEmbedding (coe : ℝ≥0 → ℝ≥0∞) :=
-  ⟨embedding_coe, by
+  ⟨embedding_coe, by 
     convert is_open_ne_top
     ext (x | _) <;> simp [none_eq_top, some_eq_coe]⟩
 #align ennreal.open_embedding_coe Ennreal.open_embedding_coe
@@ -134,7 +130,7 @@ theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {a : ℝ} (h : Tendsto 
 #align ennreal.tendsto_of_real Ennreal.tendsto_of_real
 
 theorem tendsto_to_nnreal {a : ℝ≥0∞} (ha : a ≠ ⊤) : Tendsto Ennreal.toNnreal (𝓝 a) (𝓝 a.toNnreal) :=
-  by
+  by 
   lift a to ℝ≥0 using ha
   rw [nhds_coe, tendsto_map'_iff]
   exact tendsto_id
@@ -251,11 +247,9 @@ theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : icc (x - ε) (x + ε) �
     simpa using le_of_lt
     use this
     exact ⟨is_open_Iio, mem_Iio_self_add xt ε0⟩
-    
   · use Ioo (x - ε) (x + ε)
     use Ioo_subset_Icc_self
     exact ⟨is_open_Ioo, mem_Ioo_self_sub_add xt x0 ε0 ε0⟩
-    
 #align ennreal.Icc_mem_nhds Ennreal.Icc_mem_nhds
 
 theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (icc (x - ε) (x + ε)) := by
@@ -279,7 +273,6 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (icc (x - ε
       a < b := ab
       _ ≤ y := h₁
       
-    
   · rcases exists_between xs with ⟨b, xb, ba⟩
     have bx_pos : 0 < b - x := tsub_pos_iff_lt.2 xb
     have xbx : x + (b - x) = b := add_tsub_cancel_of_le xb.le
@@ -292,7 +285,6 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (icc (x - ε
       y ≤ b := h₂
       _ < a := ba
       
-    
 #align ennreal.nhds_of_ne_top Ennreal.nhds_of_ne_top
 
 /-- Characterization of neighborhoods for `ℝ≥0∞` numbers. See also `tendsto_order`
@@ -317,10 +309,8 @@ instance : HasContinuousAdd ℝ≥0∞ := by
   refine' ⟨continuous_iff_continuous_at.2 _⟩
   rintro ⟨_ | a, b⟩
   · exact tendsto_nhds_top_mono' continuous_at_fst fun p => le_add_right le_rfl
-    
   rcases b with (_ | b)
   · exact tendsto_nhds_top_mono' continuous_at_snd fun p => le_add_left le_rfl
-    
   simp only [ContinuousAt, some_eq_coe, nhds_coe_coe, ← coe_add, tendsto_map'_iff, (· ∘ ·),
     tendsto_coe, tendsto_add]
 
@@ -328,9 +318,7 @@ protected theorem tendsto_at_top_zero [hβ : Nonempty β] [SemilatticeSup β] {f
     Filter.atTop.Tendsto f (𝓝 0) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, f n ≤ ε := by
   rw [Ennreal.tendsto_at_top zero_ne_top]
   · simp_rw [Set.mem_Icc, zero_add, zero_tsub, zero_le _, true_and_iff]
-    
   · exact hβ
-    
 #align ennreal.tendsto_at_top_zero Ennreal.tendsto_at_top_zero
 
 theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
@@ -338,7 +326,6 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
   cases a <;> cases b
   · simp only [eq_self_iff_true, not_true, Ne.def, none_eq_top, or_self_iff] at h
     contradiction
-    
   · simp only [some_eq_coe, WithTop.top_sub_coe, none_eq_top]
     apply tendsto_nhds_top_iff_nnreal.2 fun n => _
     rw [nhds_prod_eq, eventually_prod_iff]
@@ -354,7 +341,6 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
         _ < x + (b + 1) := Ennreal.add_lt_add hx hy
         
     exact lt_of_add_lt_add_right this
-    
   · simp only [some_eq_coe, WithTop.sub_top, none_eq_top]
     suffices H : ∀ᶠ p : ℝ≥0∞ × ℝ≥0∞ in 𝓝 (a, ∞), 0 = p.1 - p.2
     exact tendsto_const_nhds.congr' H
@@ -366,11 +352,9 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
         fun x hx y hy => _⟩
     rw [eq_comm]
     simp only [tsub_eq_zero_iff_le, (LT.lt.trans hx hy).le]
-    
   · simp only [some_eq_coe, nhds_coe_coe, tendsto_map'_iff, Function.comp, ← Ennreal.coe_sub,
       tendsto_coe]
     exact Continuous.tendsto (by continuity) _
-    
 #align ennreal.tendsto_sub Ennreal.tendsto_sub
 
 protected theorem Tendsto.sub {f : Filter α} {ma : α → ℝ≥0∞} {mb : α → ℝ≥0∞} {a b : ℝ≥0∞}
@@ -393,12 +377,10 @@ protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a �
   cases a
   · simp [none_eq_top] at hb
     simp [none_eq_top, ht b hb, top_mul, hb]
-    
   cases b
   · simp [none_eq_top] at ha
     simp [*, nhds_swap (a : ℝ≥0∞) ⊤, none_eq_top, some_eq_coe, top_mul, tendsto_map'_iff, (· ∘ ·),
       mul_comm]
-    
   simp [some_eq_coe, nhds_coe_coe, tendsto_map'_iff, (· ∘ ·)]
   simp only [coe_mul.symm, tendsto_coe, tendsto_mul]
 #align ennreal.tendsto_mul Ennreal.tendsto_mul
@@ -437,20 +419,16 @@ protected theorem Tendsto.mul_const {f : Filter α} {m : α → ℝ≥0∞} {a b
 theorem tendsto_finset_prod_of_ne_top {ι : Type _} {f : ι → α → ℝ≥0∞} {x : Filter α} {a : ι → ℝ≥0∞}
     (s : Finset ι) (h : ∀ i ∈ s, Tendsto (f i) x (𝓝 (a i))) (h' : ∀ i ∈ s, a i ≠ ∞) :
     Tendsto (fun b => ∏ c in s, f c b) x (𝓝 (∏ c in s, a c)) := by
-  induction' s using Finset.induction with a s has IH;
-  · simp [tendsto_const_nhds]
-    
+  induction' s using Finset.induction with a s has IH; · simp [tendsto_const_nhds]
   simp only [Finset.prod_insert has]
   apply tendsto.mul (h _ (Finset.mem_insert_self _ _))
   · right
     exact (prod_lt_top fun i hi => h' _ (Finset.mem_insert_of_mem hi)).Ne
-    
-  · exact
+  ·
+    exact
       IH (fun i hi => h _ (Finset.mem_insert_of_mem hi)) fun i hi =>
         h' _ (Finset.mem_insert_of_mem hi)
-    
   · exact Or.inr (h' _ (Finset.mem_insert_self _ _))
-    
 #align ennreal.tendsto_finset_prod_of_ne_top Ennreal.tendsto_finset_prod_of_ne_top
 
 protected theorem continuous_at_const_mul {a b : ℝ≥0∞} (h : a ≠ ⊤ ∨ b ≠ 0) :
@@ -482,19 +460,15 @@ protected theorem continuous_div_const (c : ℝ≥0∞) (c_ne_zero : c ≠ 0) :
 theorem continuous_pow (n : ℕ) : Continuous fun a : ℝ≥0∞ => a ^ n := by
   induction' n with n IH
   · simp [continuous_const]
-    
   simp_rw [Nat.succ_eq_add_one, pow_add, pow_one, continuous_iff_continuous_at]
   intro x
   refine' Ennreal.Tendsto.mul (IH.tendsto _) _ tendsto_id _ <;> by_cases H : x = 0
   · simp only [H, zero_ne_top, Ne.def, or_true_iff, not_false_iff]
-    
   · exact Or.inl fun h => H (pow_eq_zero h)
-    
-  · simp only [H, pow_eq_top_iff, zero_ne_top, false_or_iff, eq_self_iff_true, not_true, Ne.def,
+  ·
+    simp only [H, pow_eq_top_iff, zero_ne_top, false_or_iff, eq_self_iff_true, not_true, Ne.def,
       not_false_iff, false_and_iff]
-    
   · simp only [H, true_or_iff, Ne.def, not_false_iff]
-    
 #align ennreal.continuous_pow Ennreal.continuous_pow
 
 theorem continuous_on_sub :
@@ -526,12 +500,10 @@ theorem continuous_on_sub_left (a : ℝ≥0∞) : ContinuousOn (fun x => a - x) 
 theorem continuous_sub_right (a : ℝ≥0∞) : Continuous fun x : ℝ≥0∞ => x - a := by
   by_cases a_infty : a = ∞
   · simp [a_infty, continuous_const]
-    
   · rw [show (fun x => x - a) = (fun p : ℝ≥0∞ × ℝ≥0∞ => p.fst - p.snd) ∘ fun x => ⟨x, a⟩ by rfl]
     apply ContinuousOn.comp_continuous continuous_on_sub (continuous_id'.prod_mk continuous_const)
     intro x
     simp only [a_infty, Ne.def, mem_set_of_eq, Prod.mk.inj_iff, and_false_iff, not_false_iff]
-    
 #align ennreal.continuous_sub_right Ennreal.continuous_sub_right
 
 protected theorem Tendsto.pow {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} {n : ℕ}
@@ -553,16 +525,13 @@ theorem infi_mul_left' {ι} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = �
   · rcases h H.1 H.2 with ⟨i, hi⟩
     rw [H.2, mul_zero, ← bot_eq_zero, infi_eq_bot]
     exact fun b hb => ⟨i, by rwa [hi, mul_zero, ← bot_eq_zero]⟩
-    
   · rw [not_and_or] at H
     cases isEmpty_or_nonempty ι
     · rw [infi_of_empty, infi_of_empty, mul_top, if_neg]
       exact mt h0 (not_nonempty_iff.2 ‹_›)
-      
-    · exact
+    ·
+      exact
         (ennreal.mul_left_mono.map_infi_of_continuous_at' (Ennreal.continuous_at_const_mul H)).symm
-      
-    
 #align ennreal.infi_mul_left' Ennreal.infi_mul_left'
 
 theorem infi_mul_left {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {a : ℝ≥0∞}
@@ -685,12 +654,10 @@ theorem supr_add_supr {ι : Sort _} {f g : ι → ℝ≥0∞} (h : ∀ i j, ∃ 
     supr f + supr g = ⨆ a, f a + g a := by
   cases isEmpty_or_nonempty ι
   · simp only [supr_of_empty, bot_eq_zero, zero_add]
-    
   · refine' le_antisymm _ (supr_le fun a => add_le_add (le_supr _ _) (le_supr _ _))
     refine' supr_add_supr_le fun i j => _
     rcases h i j with ⟨k, hk⟩
     exact le_supr_of_le k hk
-    
 #align ennreal.supr_add_supr Ennreal.supr_add_supr
 
 theorem supr_add_supr_of_monotone {ι : Sort _} [SemilatticeSup ι] {f g : ι → ℝ≥0∞} (hf : Monotone f)
@@ -702,13 +669,11 @@ theorem finset_sum_supr_nat {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : �
     (hf : ∀ a, Monotone (f a)) : (∑ a in s, supr (f a)) = ⨆ n, ∑ a in s, f a n := by
   refine' Finset.induction_on s _ _
   · simp
-    
   · intro a s has ih
     simp only [Finset.sum_insert has]
     rw [ih, supr_add_supr_of_monotone (hf a)]
     intro i j h
     exact Finset.sum_le_sum fun a ha => hf a h
-    
 #align ennreal.finset_sum_supr_nat Ennreal.finset_sum_supr_nat
 
 theorem mul_supr {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * supr f = ⨆ i, a * f i := by
@@ -716,11 +681,9 @@ theorem mul_supr {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * su
   · obtain rfl : f = fun _ => 0
     exact funext hf
     simp only [supr_zero_eq_zero, mul_zero]
-    
   · refine' (monotone_id.const_mul' _).map_supr_of_continuous_at _ (mul_zero a)
     refine' Ennreal.Tendsto.const_mul tendsto_id (Or.inl _)
     exact mt supr_eq_zero.1 hf
-    
 #align ennreal.mul_supr Ennreal.mul_supr
 
 theorem mul_Sup {s : Set ℝ≥0∞} {a : ℝ≥0∞} : a * sup s = ⨆ i ∈ s, a * i := by
@@ -740,7 +703,6 @@ protected theorem tendsto_coe_sub :
   refine' forall_ennreal.2 ⟨fun a => _, _⟩
   · simp [@nhds_coe a, tendsto_map'_iff, (· ∘ ·), tendsto_coe, ← WithTop.coe_sub]
     exact tendsto_const_nhds.sub tendsto_id
-    
   simp
   exact
     (tendsto.congr'
@@ -830,13 +792,10 @@ theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x
     refine' ⟨q, q + 1, (lt_add_iff_pos_right _).2 zero_lt_one, _, _⟩
     · refine' fun hcon => hR _
       filter_upwards [hcon] with x hx using not_lt.2 (lt_of_lt_of_le hq (not_lt.1 hx)).le
-      
     · simp only [is_bounded_under, is_bounded, eventually_map, eventually_at_top, ge_iff_le,
         not_exists, not_forall, not_le, exists_prop] at hbdd
       refine' fun hcon => hbdd ↑(q + 1) _
       filter_upwards [hcon] with x hx using not_lt.1 hx
-      
-    
   · obtain ⟨R, hR⟩ := exists_frequently_lt_of_liminf_ne_top' hf
     obtain ⟨q, hq⟩ := exists_rat_lt R
     refine' ⟨q - 1, q, (sub_lt_self_iff _).2 zero_lt_one, _, _⟩
@@ -844,11 +803,8 @@ theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x
         not_exists, not_forall, not_le, exists_prop] at hbdd
       refine' fun hcon => hbdd ↑(q - 1) _
       filter_upwards [hcon] with x hx using not_lt.1 hx
-      
     · refine' fun hcon => hR _
       filter_upwards [hcon] with x hx using not_lt.2 ((not_lt.1 hx).trans hq.le)
-      
-    
 #align
   ennreal.exists_upcrossings_of_not_bounded_under Ennreal.exists_upcrossings_of_not_bounded_under
 
@@ -957,10 +913,8 @@ protected theorem tsum_eq_liminf_sum_nat {f : ℕ → ℝ≥0∞} :
   refine' funext fun n => le_antisymm _ _
   · refine' le_infi₂ fun i hi => Finset.sum_le_sum_of_subset_of_nonneg _ fun _ _ _ => zero_le _
     simpa only [Finset.range_subset, add_le_add_iff_right] using hi
-    
   · refine' le_trans (infi_le _ n) _
     simp [le_refl n, le_refl ((Finset.range n).Sum f)]
-    
 #align ennreal.tsum_eq_liminf_sum_nat Ennreal.tsum_eq_liminf_sum_nat
 
 protected theorem le_tsum (a : α) : f a ≤ ∑' a, f a :=
@@ -977,7 +931,7 @@ protected theorem tsum_eq_top_of_eq_top : (∃ a, f a = ∞) → (∑' a, f a) =
 #align ennreal.tsum_eq_top_of_eq_top Ennreal.tsum_eq_top_of_eq_top
 
 protected theorem lt_top_of_tsum_ne_top {a : α → ℝ≥0∞} (tsum_ne_top : (∑' i, a i) ≠ ∞) (j : α) :
-    a j < ∞ := by
+    a j < ∞ := by 
   have key := not_imp_not.mpr Ennreal.tsum_eq_top_of_eq_top
   simp only [not_exists] at key
   exact lt_top_iff_ne_top.mpr (key tsum_ne_top j)
@@ -1052,9 +1006,7 @@ theorem has_sum_iff_tendsto_nat {f : ℕ → ℝ≥0∞} (r : ℝ≥0∞) :
   refine' ⟨HasSum.tendsto_sum_nat, fun h => _⟩
   rw [← supr_eq_of_tendsto _ h, ← Ennreal.tsum_eq_supr_nat]
   · exact ennreal.summable.has_sum
-    
   · exact fun s t hst => Finset.sum_le_sum_of_subset (Finset.range_subset.2 hst)
-    
 #align ennreal.has_sum_iff_tendsto_nat Ennreal.has_sum_iff_tendsto_nat
 
 theorem tendsto_nat_tsum (f : ℕ → ℝ≥0∞) :
@@ -1083,7 +1035,7 @@ theorem tendsto_cofinite_zero_of_tsum_ne_top {α} {f : α → ℝ≥0∞} (hf : 
 #align ennreal.tendsto_cofinite_zero_of_tsum_ne_top Ennreal.tendsto_cofinite_zero_of_tsum_ne_top
 
 theorem tendsto_at_top_zero_of_tsum_ne_top {f : ℕ → ℝ≥0∞} (hf : (∑' x, f x) ≠ ∞) :
-    Tendsto f atTop (𝓝 0) := by
+    Tendsto f atTop (𝓝 0) := by 
   rw [← Nat.cofinite_eq_at_top]
   exact tendsto_cofinite_zero_of_tsum_ne_top hf
 #align ennreal.tendsto_at_top_zero_of_tsum_ne_top Ennreal.tendsto_at_top_zero_of_tsum_ne_top
@@ -1108,7 +1060,7 @@ theorem tsum_sub {f : ℕ → ℝ≥0∞} {g : ℕ → ℝ≥0∞} (h₁ : (∑'
     (∑' i, f i - g i) = (∑' i, f i) - ∑' i, g i := by
   have h₃ : (∑' i, f i - g i) = (∑' i, f i - g i + g i) - ∑' i, g i := by
     rw [Ennreal.tsum_add, Ennreal.add_sub_cancel_right h₁]
-  have h₄ : (fun i => f i - g i + g i) = f := by
+  have h₄ : (fun i => f i - g i + g i) = f := by 
     ext n
     rw [tsub_add_cancel_of_le (h₂ n)]
   rw [h₄] at h₃
@@ -1135,25 +1087,26 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
 #align ennreal.tsum_union_le Ennreal.tsum_union_le
 
 theorem tsum_bUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t : ι → Set α) :
-    (∑' x : ⋃ i ∈ s, t i, f x) ≤ ∑ i in s, ∑' x : t i, f x := by classical
-  induction' s using Finset.induction_on with i s hi ihs h
-  · simp
-    
-  have : (⋃ j ∈ insert i s, t j) = t i ∪ ⋃ j ∈ s, t j := by simp
-  rw [tsum_congr_subtype f this]
-  calc
-    (∑' x : t i ∪ ⋃ j ∈ s, t j, f x) ≤ (∑' x : t i, f x) + ∑' x : ⋃ j ∈ s, t j, f x :=
-      tsum_union_le _ _ _
-    _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x := add_le_add le_rfl ihs
-    _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
-    
+    (∑' x : ⋃ i ∈ s, t i, f x) ≤ ∑ i in s, ∑' x : t i, f x := by
+  classical 
+    induction' s using Finset.induction_on with i s hi ihs h
+    · simp
+    have : (⋃ j ∈ insert i s, t j) = t i ∪ ⋃ j ∈ s, t j := by simp
+    rw [tsum_congr_subtype f this]
+    calc
+      (∑' x : t i ∪ ⋃ j ∈ s, t j, f x) ≤ (∑' x : t i, f x) + ∑' x : ⋃ j ∈ s, t j, f x :=
+        tsum_union_le _ _ _
+      _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x := add_le_add le_rfl ihs
+      _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
+      
 #align ennreal.tsum_bUnion_le Ennreal.tsum_bUnion_le
 
 theorem tsum_Union_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι → Set α) :
-    (∑' x : ⋃ i, t i, f x) ≤ ∑ i, ∑' x : t i, f x := by classical
-  have : (⋃ i, t i) = ⋃ i ∈ (Finset.univ : Finset ι), t i := by simp
-  rw [tsum_congr_subtype f this]
-  exact tsum_bUnion_le _ _ _
+    (∑' x : ⋃ i, t i, f x) ≤ ∑ i, ∑' x : t i, f x := by
+  classical 
+    have : (⋃ i, t i) = ⋃ i ∈ (Finset.univ : Finset ι), t i := by simp
+    rw [tsum_congr_subtype f this]
+    exact tsum_bUnion_le _ _ _
 #align ennreal.tsum_Union_le Ennreal.tsum_Union_le
 
 theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) (hf0 : f 0 ≠ ∞) :
@@ -1161,7 +1114,6 @@ theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) 
   rw [← tsum_eq_tsum_of_has_sum_iff_has_sum fun _ => (notMemRangeEquiv 1).has_sum_iff]
   swap
   · infer_instance
-    
   have h₁ :
     ((∑' b : { n // n ∈ Finset.range 1 }, f b) + ∑' b : { n // n ∉ Finset.range 1 }, f b) =
       ∑' b, f b :=
@@ -1183,7 +1135,6 @@ theorem finite_const_le_of_tsum_ne_top {ι : Type _} {a : ι → ℝ≥0∞} (ts
     by_contra maybe_infinite
     obtain ⟨j, hj⟩ := Set.Infinite.nonempty maybe_infinite
     exact tsum_ne_top (le_antisymm le_top (le_trans hj (le_tsum' (@Ennreal.summable _ a) j)))
-    
   have key :=
     (nnreal.summable_coe.mpr (summable_to_nnreal_of_tsum_ne_top tsum_ne_top)).tendsto_cofinite_zero
       (Iio_mem_nhds (to_real_pos ε_ne_zero ε_infty))
@@ -1208,7 +1159,6 @@ theorem finset_card_const_le_le_of_tsum_le {ι : Type _} {a : ι → ℝ≥0∞}
       exact c_ne_top (le_antisymm le_top oops)
     simp only [obs, finite_empty, finite_empty_to_finset, Finset.card_empty, algebraMap.coe_zero,
       zero_le', exists_true_left]
-    
   have hf : { i : ι | ε ≤ a i }.Finite :=
     Ennreal.finite_const_le_of_tsum_ne_top (lt_of_le_of_lt tsum_le_c c_ne_top.lt_top).Ne ε_ne_zero
   use hf
@@ -1267,11 +1217,9 @@ open Nnreal
 theorem tsum_eq_to_nnreal_tsum {f : β → ℝ≥0} : (∑' b, f b) = (∑' b, (f b : ℝ≥0∞)).toNnreal := by
   by_cases h : Summable f
   · rw [← Ennreal.coe_tsum h, Ennreal.to_nnreal_coe]
-    
   · have A := tsum_eq_zero_of_not_summable h
     simp only [← Ennreal.tsum_coe_ne_top_iff_summable, not_not] at h
     simp only [h, Ennreal.top_to_nnreal, A]
-    
 #align nnreal.tsum_eq_to_nnreal_tsum Nnreal.tsum_eq_to_nnreal_tsum
 
 /-- Comparison test of convergence of `ℝ≥0`-valued series. -/
@@ -1306,10 +1254,8 @@ theorem not_summable_iff_tendsto_nat_at_top {f : ℕ → ℝ≥0} :
   · intro h
     refine' ((tendsto_of_monotone _).resolve_right h).comp _
     exacts[Finset.sum_mono_set _, tendsto_finset_range]
-    
   · rintro hnat ⟨r, hr⟩
     exact not_tendsto_nhds_of_tendsto_at_top hnat _ (has_sum_iff_tendsto_nat.1 hr)
-    
 #align nnreal.not_summable_iff_tendsto_nat_at_top Nnreal.not_summable_iff_tendsto_nat_at_top
 
 theorem summable_iff_not_tendsto_nat_at_top {f : ℕ → ℝ≥0} :
@@ -1340,15 +1286,13 @@ theorem summable_sigma {β : ∀ x : α, Type _} {f : (Σx, β x) → ℝ≥0} :
   constructor
   · simp only [← Nnreal.summable_coe, Nnreal.coe_tsum]
     exact fun h => ⟨h.sigma_factor, h.Sigma⟩
-    
   · rintro ⟨h₁, h₂⟩
     simpa only [← Ennreal.tsum_coe_ne_top_iff_summable, Ennreal.tsum_sigma', Ennreal.coe_tsum,
       h₁] using h₂
-    
 #align nnreal.summable_sigma Nnreal.summable_sigma
 
 theorem indicator_summable {f : α → ℝ≥0} (hf : Summable f) (s : Set α) : Summable (s.indicator f) :=
-  by
+  by 
   refine' Nnreal.summable_of_le (fun a => le_trans (le_of_eq (s.indicator_apply f a)) _) hf
   split_ifs
   exact le_refl (f a)
@@ -1436,7 +1380,6 @@ theorem has_sum_lt {f g : α → ℝ≥0∞} {sf sg : ℝ≥0∞} {i : α} (h : 
     (hsf : sf ≠ ⊤) (hf : HasSum f sf) (hg : HasSum g sg) : sf < sg := by
   by_cases hsg : sg = ⊤
   · exact hsg.symm ▸ lt_of_le_of_ne le_top hsf
-    
   · have hg' : ∀ x, g x ≠ ⊤ := Ennreal.ne_top_of_tsum_ne_top (hg.tsum_eq.symm ▸ hsg)
     lift f to α → ℝ≥0 using fun x =>
       ne_of_lt (lt_of_le_of_lt (h x) <| lt_of_le_of_ne le_top (hg' x))
@@ -1445,7 +1388,6 @@ theorem has_sum_lt {f g : α → ℝ≥0∞} {sf sg : ℝ≥0∞} {i : α} (h : 
     lift sg to ℝ≥0 using hsg
     simp only [coe_le_coe, coe_lt_coe] at h hi⊢
     exact Nnreal.has_sum_lt h hi (Ennreal.has_sum_coe.1 hf) (Ennreal.has_sum_coe.1 hg)
-    
 #align ennreal.has_sum_lt Ennreal.has_sum_lt
 
 theorem tsum_lt_tsum {f g : α → ℝ≥0∞} {i : α} (hfi : tsum f ≠ ⊤) (h : ∀ a : α, f a ≤ g a)
@@ -1584,7 +1526,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
     CauchySeq s ↔
       ∃ b : β → ℝ≥0∞,
         (∀ n m N : β, N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N) ∧ Tendsto b atTop (𝓝 0) :=
-  ⟨by
+  ⟨by 
     intro hs
     rw [Emetric.cauchy_seq_iff] at hs
     /- `s` is Cauchy sequence. The sequence `b` will be constructed by taking
@@ -1604,7 +1546,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
       refine' Filter.mem_at_top_sets.2 ⟨N, fun n hn => _⟩
       have : b n ≤ δ :=
         Sup_le
-          (by
+          (by 
             simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp, Prod.exists]
             intro d p q hp hq hd
             rw [← hd]
@@ -1612,7 +1554,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
       simpa using lt_of_le_of_lt this δlt
     -- Conclude
     exact ⟨b, ⟨C, D⟩⟩,
-    by
+    by 
     rintro ⟨b, ⟨b_bound, b_lim⟩⟩
     /-b : ℕ → ℝ, b_bound : ∀ (n m N : ℕ), N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N,
         b_lim : tendsto b at_top (𝓝 0)-/
@@ -1632,7 +1574,6 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
   rcases eq_or_ne C 0 with (rfl | C0)
   · simp only [zero_mul, add_zero] at h
     exact continuous_of_const fun x y => le_antisymm (h _ _) (h _ _)
-    
   · refine' continuous_iff_continuous_at.2 fun x => _
     by_cases hx : f x = ∞
     · have : f =ᶠ[𝓝 x] fun _ => ∞ := by
@@ -1641,7 +1582,6 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
         rw [edist_comm] at hy
         simpa [hx, hC, hy.ne] using h x y
       exact this.continuous_at
-      
     · refine' (Ennreal.tendsto_nhds hx).2 fun ε (ε0 : 0 < ε) => _
       filter_upwards [Emetric.closed_ball_mem_nhds x (Ennreal.div_pos_iff.2 ⟨ε0.ne', hC⟩)]
       have hεC : C * (ε / C) = ε := Ennreal.mul_div_cancel' C0 hC
@@ -1652,15 +1592,12 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
           _ ≤ f y + C * (ε / C) := add_le_add_left (mul_le_mul_left' hy C) (f y)
           _ = f y + ε := by rw [hεC]
           
-        
-      · calc
+      ·
+        calc
           f y ≤ f x + C * edist y x := h y x
           _ ≤ f x + C * (ε / C) := add_le_add_left (mul_le_mul_left' hy C) (f x)
           _ = f x + ε := by rw [hεC]
           
-        
-      
-    
 #align continuous_of_le_add_edist continuous_of_le_add_edist
 
 theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 := by
@@ -1686,12 +1623,12 @@ theorem Filter.Tendsto.edist {f g : β → α} {x : Filter β} {a b : α} (hf : 
   (continuous_edist.Tendsto (a, b)).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.edist Filter.Tendsto.edist
 
-theorem cauchySeqOfEdistLeOfTsumNeTop {f : ℕ → α} (d : ℕ → ℝ≥0∞)
+theorem cauchy_seq_of_edist_le_of_tsum_ne_top {f : ℕ → α} (d : ℕ → ℝ≥0∞)
     (hf : ∀ n, edist (f n) (f n.succ) ≤ d n) (hd : tsum d ≠ ∞) : CauchySeq f := by
   lift d to ℕ → Nnreal using fun i => Ennreal.ne_top_of_tsum_ne_top hd i
   rw [Ennreal.tsum_coe_ne_top_iff_summable] at hd
-  exact cauchySeqOfEdistLeOfSummable d hf hd
-#align cauchy_seq_of_edist_le_of_tsum_ne_top cauchySeqOfEdistLeOfTsumNeTop
+  exact cauchy_seq_of_edist_le_of_summable d hf hd
+#align cauchy_seq_of_edist_le_of_tsum_ne_top cauchy_seq_of_edist_le_of_tsum_ne_top
 
 theorem Emetric.isClosedBall {a : α} {r : ℝ≥0∞} : IsClosed (closedBall a r) :=
   isClosedLe (continuous_id.edist continuous_const) continuous_const
@@ -1727,13 +1664,10 @@ namespace Real
 /-- For a bounded set `s : set ℝ`, its `emetric.diam` is equal to `Sup s - Inf s` reinterpreted as
 `ℝ≥0∞`. -/
 theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal (sup s - inf s) := by
-  rcases eq_empty_or_nonempty s with (rfl | hne);
-  · simp
-    
+  rcases eq_empty_or_nonempty s with (rfl | hne); · simp
   refine' le_antisymm (Metric.ediam_le_of_forall_dist_le fun x hx y hy => _) _
   · have := Real.subset_Icc_Inf_Sup_of_bounded h
     exact Real.dist_le_of_mem_Icc (this hx) (this hy)
-    
   · apply Ennreal.of_real_le_of_le_to_real
     rw [← Metric.diam, ← Metric.diam_closure]
     have h' := Real.bounded_iff_bdd_below_bdd_above.1 h
@@ -1742,7 +1676,6 @@ theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal
       _ ≤ diam (closure s) :=
         dist_le_diam_of_mem h.closure (cSup_mem_closure hne h'.2) (cInf_mem_closure hne h'.1)
       
-    
 #align real.ediam_eq Real.ediam_eq
 
 /-- For a bounded set `s : set ℝ`, its `metric.diam` is equal to `Sup s - Inf s`. -/
@@ -1756,18 +1689,14 @@ theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = sup s - inf s :=
 theorem ediam_Ioo (a b : ℝ) : Emetric.diam (ioo a b) = Ennreal.ofReal (b - a) := by
   rcases le_or_lt b a with (h | h)
   · simp [h]
-    
   · rw [Real.ediam_eq (bounded_Ioo _ _), cSup_Ioo h, cInf_Ioo h]
-    
 #align real.ediam_Ioo Real.ediam_Ioo
 
 @[simp]
 theorem ediam_Icc (a b : ℝ) : Emetric.diam (icc a b) = Ennreal.ofReal (b - a) := by
   rcases le_or_lt a b with (h | h)
   · rw [Real.ediam_eq (bounded_Icc _ _), cSup_Icc h, cInf_Icc h]
-    
   · simp [h, h.le]
-    
 #align real.ediam_Icc Real.ediam_Icc
 
 @[simp]

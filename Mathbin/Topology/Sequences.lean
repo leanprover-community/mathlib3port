@@ -158,12 +158,10 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
     (h :
       ∀ (f : X → Prop) (a : X),
         (∀ u : ℕ → X, Tendsto u atTop (𝓝 a) → Tendsto (f ∘ u) atTop (𝓝 (f a))) → ContinuousAt f a) :
-    FrechetUrysohnSpace X := by
+    FrechetUrysohnSpace X := by 
   refine' ⟨fun s x hcx => _⟩
   specialize h (· ∉ s) x
-  by_cases hx : x ∈ s;
-  · exact subset_seq_closure hx
-    
+  by_cases hx : x ∈ s; · exact subset_seq_closure hx
   simp_rw [(· ∘ ·), ContinuousAt, hx, not_false_iff, nhds_true, tendsto_pure, eq_true_iff, ←
     mem_compl_iff, eventually_mem_set, ← mem_interior_iff_mem_nhds, interior_compl] at h
   rw [mem_compl_iff, imp_not_comm] at h

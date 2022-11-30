@@ -73,10 +73,8 @@ theorem exponent_exists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 := b
   rw [exponent]
   split_ifs
   · simp [h, @not_lt_zero' ℕ]
-    
   --if this isn't done this way, `to_additive` freaks
   · tauto
-    
 #align monoid.exponent_exists_iff_ne_zero Monoid.exponent_exists_iff_ne_zero
 
 @[to_additive]
@@ -94,9 +92,7 @@ theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 := by
   by_cases exponent_exists G
   · simp_rw [exponent, dif_pos h]
     exact (Nat.find_spec h).2 g
-    
   · simp_rw [exponent, dif_neg h, pow_zero]
-    
 #align monoid.pow_exponent_eq_one Monoid.pow_exponent_eq_one
 
 @[to_additive]
@@ -109,7 +105,7 @@ theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
 
 @[to_additive]
 theorem exponent_pos_of_exists (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : 0 < exponent G :=
-  by
+  by 
   have h : ∃ n, 0 < n ∧ ∀ g : G, g ^ n = 1 := ⟨n, hpos, hG⟩
   rw [exponent, dif_pos]
   exact (Nat.find_spec h).1
@@ -120,9 +116,7 @@ theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exp
   rw [exponent, dif_pos]
   · apply Nat.find_min'
     exact ⟨hpos, hG⟩
-    
   · exact ⟨n, hpos, hG⟩
-    
 #align monoid.exponent_min' Monoid.exponent_min'
 
 @[to_additive]
@@ -137,11 +131,9 @@ theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 := by
   apply le_antisymm
   · apply exponent_min' _ Nat.one_pos
     simp
-    
   · apply Nat.succ_le_of_lt
     apply exponent_pos_of_exists 1 Nat.one_pos
     simp
-    
 #align monoid.exp_eq_one_of_subsingleton Monoid.exp_eq_one_of_subsingleton
 
 @[to_additive add_order_dvd_exponent]
@@ -153,10 +145,9 @@ variable (G)
 
 @[to_additive]
 theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoid G] (n : ℕ) (hG : ∀ g : G, g ^ n = 1) :
-    exponent G ∣ n := by
+    exponent G ∣ n := by 
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · exact dvd_zero _
-    
   apply Nat.dvd_of_mod_eq_zero
   by_contra h
   have h₁ := Nat.pos_of_ne_zero h
@@ -170,7 +161,7 @@ theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoid G] (n : ℕ) (hG : ∀ g :
 
 @[to_additive lcm_add_order_of_dvd_exponent]
 theorem lcm_order_of_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf ∣ exponent G :=
-  by
+  by 
   apply Finset.lcm_dvd
   intro g hg
   exact order_dvd_exponent g
@@ -182,9 +173,8 @@ theorem Nat.Prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ} (hp : 
   haveI := Fact.mk hp
   rcases eq_or_ne ((exponent G).factorization p) 0 with (h | h)
   · refine' ⟨1, by rw [h, pow_zero, order_of_one]⟩
-    
   have he : 0 < exponent G :=
-    Ne.bot_lt fun ht => by
+    Ne.bot_lt fun ht => by 
       rw [ht] at h
       apply h
       rw [bot_eq_zero, Nat.factorization_zero, Finsupp.zero_apply]
@@ -192,7 +182,6 @@ theorem Nat.Prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ} (hp : 
   obtain ⟨g, hg⟩ : ∃ g : G, g ^ (exponent G / p) ≠ 1 := by
     suffices key : ¬exponent G ∣ exponent G / p
     · simpa using mt (exponent_dvd_of_forall_pow_eq_one G (exponent G / p)) key
-      
     exact fun hd =>
       hp.one_lt.not_le
         ((mul_le_iff_le_one_left he).mp <|
@@ -203,10 +192,8 @@ theorem Nat.Prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ} (hp : 
   rw [ht]
   apply order_of_eq_prime_pow
   · rwa [hk, mul_comm, ht, pow_succ', ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg
-    
   · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mul, mul_comm, ← hk]
     exact pow_exponent_eq_one g
-    
 #align
   nat.prime.exists_order_of_eq_pow_factorization_exponent Nat.Prime.exists_order_of_eq_pow_factorization_exponent
 
@@ -219,14 +206,13 @@ theorem exponent_ne_zero_iff_range_order_of_finite (h : ∀ g : G, 0 < orderOf g
   · by_contra h
     obtain ⟨m, ⟨t, rfl⟩, het⟩ := Set.Infinite.exists_nat_lt h (exponent G)
     exact pow_ne_one_of_lt_order_of' he het (pow_exponent_eq_one t)
-    
   · lift Set.range orderOf to Finset ℕ using he with t ht
     have htpos : 0 < t.prod id := by
       refine' Finset.prod_pos fun a ha => _
       rw [← Finset.mem_coe, ht] at ha
       obtain ⟨k, rfl⟩ := ha
       exact h k
-    suffices exponent G ∣ t.prod id by
+    suffices exponent G ∣ t.prod id by 
       intro h
       rw [h, zero_dvd_iff] at this
       exact htpos.ne' this
@@ -235,7 +221,6 @@ theorem exponent_ne_zero_iff_range_order_of_finite (h : ∀ g : G, 0 < orderOf g
     apply Finset.dvd_prod_of_mem
     rw [← Finset.mem_coe, ht]
     exact Set.mem_range_self g
-    
 #align
   monoid.exponent_ne_zero_iff_range_order_of_finite Monoid.exponent_ne_zero_iff_range_order_of_finite
 
@@ -275,11 +260,10 @@ variable [CommMonoid G]
 
 @[to_additive]
 theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g :=
-  by
+  by 
   rw [supr]
   rcases eq_or_ne (exponent G) 0 with (he | he)
   · rw [he, Set.Infinite.Nat.Sup_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
-    
   have hne : (Set.range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, order_of_one⟩
   have hfin : (Set.range (orderOf : G → ℕ)).Finite := by
     rwa [← exponent_ne_zero_iff_range_order_of_finite h]
@@ -287,7 +271,6 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   apply Nat.dvd_antisymm _
   · rw [← ht]
     apply order_dvd_exponent
-    
   refine' Nat.dvd_of_factors_subperm he _
   rw [List.subperm_ext_iff]
   by_contra' h
@@ -323,10 +306,8 @@ theorem exponent_eq_supr_order_of' :
   split_ifs
   · obtain ⟨g, hg⟩ := h
     exact exponent_eq_zero_of_order_zero hg
-    
   · have := not_exists.mp h
     exact exponent_eq_supr_order_of fun g => Ne.bot_lt <| this g
-    
 #align monoid.exponent_eq_supr_order_of' Monoid.exponent_eq_supr_order_of'
 
 end CommMonoid

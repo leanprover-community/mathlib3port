@@ -27,7 +27,6 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
         (le_mul_of_le_of_one_le (Nat.succ_pos _) n.factorial_pos)
     rcases k with (_ | _ | k)
     · simpa using hpos
-      
     · simp only [one_mul, Int.ofNat_mul, Int.ofNat_succ, Int.ofNat_zero, zero_add, cyclotomic_one,
         eval_sub, eval_X, eval_one]
       convert Int.natAbs_lt_natAbs_of_nonneg_of_lt Int.one_nonneg _
@@ -35,9 +34,8 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
       specialize hkey 0
       norm_cast
       rwa [one_mul] at hkey
-      
     calc
-      1 ≤ _ := by
+      1 ≤ _ := by 
         rw [le_tsub_iff_left (one_le_two.trans (hkey _).le)]
         exact (hkey _).le
       _ < _ :=
@@ -57,7 +55,6 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
     exact
       (prime.dvd_iff_not_coprime hprime.1).1 (dvd_factorial (min_fac_pos _) (le_of_not_ge habs))
         (coprime_of_root_cyclotomic hpos hroot).symm.coprime_mul_left_right.coprime_mul_left_right
-    
   · have hdiv :=
       order_of_dvd_of_pow_eq_one
         (Zmod.units_pow_card_sub_one_eq_one p
@@ -69,7 +66,6 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
     have : k = orderOf (b : Zmod p) := (is_root_cyclotomic_iff.mp hroot).eq_order_of
     rw [← order_of_units, Zmod.coe_unit_of_coprime, ← this] at hdiv
     exact ((modeq_iff_dvd' hprime.1.Pos).2 hdiv).symm
-    
 #align nat.exists_prime_ge_modeq_one Nat.exists_prime_ge_modeq_one
 
 theorem frequently_at_top_modeq_one {k : ℕ} (hpos : 0 < k) :

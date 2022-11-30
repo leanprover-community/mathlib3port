@@ -35,9 +35,7 @@ instance wide_pullback_shape_connected (J : Type v₁) : IsConnected (WidePullba
   introv hp t
   cases j
   · exact hp
-    
   · rwa [t (wide_pullback_shape.hom.term j)]
-    
 #align category_theory.wide_pullback_shape_connected CategoryTheory.wide_pullback_shape_connected
 
 instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) := by
@@ -45,9 +43,7 @@ instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushout
   introv hp t
   cases j
   · exact hp
-    
   · rwa [← t (wide_pushout_shape.hom.init j)]
-    
 #align category_theory.wide_pushout_shape_connected CategoryTheory.wide_pushout_shape_connected
 
 instance parallelPairInhabited : Inhabited WalkingParallelPair :=
@@ -59,9 +55,7 @@ instance parallel_pair_connected : IsConnected WalkingParallelPair := by
   introv _ t
   cases j
   · rwa [t walking_parallel_pair_hom.left]
-    
   · assumption
-    
 #align category_theory.parallel_pair_connected CategoryTheory.parallel_pair_connected
 
 end Examples
@@ -92,7 +86,8 @@ def γ₁ {K : J ⥤ C} (X : C) :
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
 @[simps]
-def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Cone K where
+def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) :
+    Cone K where 
   x := s.x
   π := s.π ≫ γ₂ X
 #align
@@ -114,23 +109,19 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
     { preserves := fun c l =>
         { lift := fun s =>
             prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s)),
-          fac' := fun s j => by
+          fac' := fun s j => by 
             apply prod.hom_ext
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]
               exact (nat_trans_from_is_connected (s.π ≫ γ₁ X) j (Classical.arbitrary _)).symm
-              
-            · simp [← l.fac (forget_cone s) j]
-              ,
-          uniq' := fun s m L => by
+            · simp [← l.fac (forget_cone s) j],
+          uniq' := fun s m L => by 
             apply prod.hom_ext
             · erw [limit.lift_π, ← L (Classical.arbitrary J), assoc, lim_map_π, comp_id]
               rfl
-              
             · rw [limit.lift_π]
               apply l.uniq (forget_cone s)
               intro j
-              simp [← L j]
-               } }
+              simp [← L j] } }
 #align category_theory.prod_preserves_connected_limits CategoryTheory.prodPreservesConnectedLimits
 
 end CategoryTheory

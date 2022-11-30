@@ -130,7 +130,8 @@ protected def shrink : ShrinkFn (TotalFunction α β)
 
 variable [Repr α] [Repr β]
 
-instance Pi.sampleableExt : SampleableExt (α → β) where
+instance Pi.sampleableExt :
+    SampleableExt (α → β) where 
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.apply
   sample := do
@@ -163,10 +164,11 @@ def zeroDefaultSupp : TotalFunction α β → Finset α
 
 /-- Create a finitely supported function from a total function by taking the default value to
 zero. -/
-def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
+def applyFinsupp (tf : TotalFunction α β) :
+    α →₀ β where 
   support := zeroDefaultSupp tf
   toFun := tf.zeroDefault.apply
-  mem_support_to_fun := by
+  mem_support_to_fun := by 
     intro a
     rcases tf with ⟨A, y⟩
     simp only [apply, zero_default_supp, List.mem_map, List.mem_filter, exists_and_right,
@@ -176,10 +178,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
       have := List.mem_lookup (List.nodupkeys_dedupkeys A) hval
       rw [(_ : List.lookup a A = od)]
       · simpa
-        
       · simpa [List.lookup_dedupkeys, WithTop.some_eq_coe]
-        
-      
     · intro h
       use (A.lookup a).getOrElse (0 : β)
       rw [← List.lookup_dedupkeys] at h⊢
@@ -187,15 +186,13 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
         Option.mem_def]
       cases List.lookup a A.dedupkeys
       · simpa using h
-        
       · simp
-        
-      
 #align slim_check.total_function.apply_finsupp SlimCheck.TotalFunction.applyFinsupp
 
 variable [Sampleable α] [Sampleable β]
 
-instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β) where
+instance Finsupp.sampleableExt [Repr α] [Repr β] :
+    SampleableExt (α →₀ β) where 
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.applyFinsupp
   sample := do
@@ -207,7 +204,9 @@ instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β
   slim_check.total_function.finsupp.sampleable_ext SlimCheck.TotalFunction.Finsupp.sampleableExt
 
 -- TODO: support a non-constant codomain type
-instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : α, β) where
+instance Dfinsupp.sampleableExt [Repr α] [Repr β] :
+    SampleableExt (Π₀ a : α,
+        β) where 
   ProxyRepr := TotalFunction α β
   interp := Finsupp.toDfinsupp ∘ total_function.apply_finsupp
   sample := do
@@ -225,7 +224,8 @@ section SampleableExt
 open SampleableExt
 
 instance (priority := 2000) PiPred.sampleableExt [SampleableExt (α → Bool)] :
-    SampleableExt.{u + 1} (α → Prop) where
+    SampleableExt.{u + 1}
+      (α → Prop) where 
   ProxyRepr := ProxyRepr (α → Bool)
   interp m x := interp (α → Bool) m x
   sample := sample (α → Bool)
@@ -233,7 +233,8 @@ instance (priority := 2000) PiPred.sampleableExt [SampleableExt (α → Bool)] :
 #align slim_check.total_function.pi_pred.sampleable_ext SlimCheck.TotalFunction.PiPred.sampleableExt
 
 instance (priority := 2000) PiUncurry.sampleableExt [SampleableExt (α × β → γ)] :
-    SampleableExt.{imax (u + 1) (v + 1) w} (α → β → γ) where
+    SampleableExt.{imax (u + 1) (v + 1) w}
+      (α → β → γ) where 
   ProxyRepr := ProxyRepr (α × β → γ)
   interp m x y := interp (α × β → γ) m (x, y)
   sample := sample (α × β → γ)
@@ -309,30 +310,23 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
     List.applyId.{u} (xs.zip ys) x = y ↔ ys.nth i = some y := by
   induction xs generalizing ys i
   case nil ys i h₁ h₂ => cases h₂
-  case cons x' xs xs_ih ys i h₁ h₂ =>
-  cases i
-  · injection h₂ with h₀ h₁
-    subst h₀
-    cases ys
-    · cases h₁
-      
-    · simp only [list.apply_id, to_sigma, Option.get_or_else_some, nth, lookup_cons_eq,
-        zip_cons_cons, List.map]
-      
-    
-  · cases ys
-    · cases h₁
-      
-    · cases' h₀ with _ _ h₀ h₁
-      simp only [nth, zip_cons_cons, list.apply_id_cons] at h₂⊢
-      rw [if_neg]
-      · apply xs_ih <;> solve_by_elim [succ.inj]
-        
-      · apply h₀
-        apply nth_mem h₂
-        
-      
-    
+  case cons x' xs xs_ih ys i h₁ h₂ => 
+    cases i
+    · injection h₂ with h₀ h₁
+      subst h₀
+      cases ys
+      · cases h₁
+      ·
+        simp only [list.apply_id, to_sigma, Option.get_or_else_some, nth, lookup_cons_eq,
+          zip_cons_cons, List.map]
+    · cases ys
+      · cases h₁
+      · cases' h₀ with _ _ h₀ h₁
+        simp only [nth, zip_cons_cons, list.apply_id_cons] at h₂⊢
+        rw [if_neg]
+        · apply xs_ih <;> solve_by_elim [succ.inj]
+        · apply h₀
+          apply nth_mem h₂
 #align
   slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.apply_id_zip_eq
 
@@ -343,38 +337,33 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup x
   cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
   · dsimp [Option.getD]
     rw [h₁.mem_iff]
-    
   · have h₂ : ys.nodup := h₁.nodup_iff.1 h₀
     replace h₁ : xs.length = ys.length := h₁.length_eq
     dsimp
     induction xs generalizing ys
     case nil ys h₃ h₂ h₁ => contradiction
-    case cons x' xs xs_ih ys h₃ h₂ h₁ =>
-    cases' ys with y ys
-    · cases h₃
-      
-    dsimp [lookup] at h₃; split_ifs  at h₃
-    · subst x'
-      subst val
-      simp only [mem_cons_iff, true_or_iff, eq_self_iff_true]
-      
-    · cases' h₀ with _ _ h₀ h₅
-      cases' h₂ with _ _ h₂ h₄
-      have h₆ := Nat.succ.inj h₁
-      specialize xs_ih h₅ ys h₃ h₄ h₆
-      simp only [Ne.symm h, xs_ih, mem_cons_iff, false_or_iff]
-      suffices : val ∈ ys
-      tauto!
-      erw [← Option.mem_def, mem_lookup_iff] at h₃
-      simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
-      rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
-      subst a
-      subst b
-      apply (mem_zip h₃).2
-      simp only [nodupkeys, keys, comp, Prod.fst_toSigma, map_map]
-      rwa [map_fst_zip _ _ (le_of_eq h₆)]
-      
-    
+    case cons x' xs xs_ih ys h₃ h₂ h₁ => 
+      cases' ys with y ys
+      · cases h₃
+      dsimp [lookup] at h₃; split_ifs  at h₃
+      · subst x'
+        subst val
+        simp only [mem_cons_iff, true_or_iff, eq_self_iff_true]
+      · cases' h₀ with _ _ h₀ h₅
+        cases' h₂ with _ _ h₂ h₄
+        have h₆ := Nat.succ.inj h₁
+        specialize xs_ih h₅ ys h₃ h₄ h₆
+        simp only [Ne.symm h, xs_ih, mem_cons_iff, false_or_iff]
+        suffices : val ∈ ys
+        tauto!
+        erw [← Option.mem_def, mem_lookup_iff] at h₃
+        simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
+        rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
+        subst a
+        subst b
+        apply (mem_zip h₃).2
+        simp only [nodupkeys, keys, comp, Prod.fst_toSigma, map_map]
+        rwa [map_fst_zip _ _ (le_of_eq h₆)]
 #align slim_check.injective_function.apply_id_mem_iff SlimCheck.InjectiveFunction.apply_id_mem_iff
 
 theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
@@ -405,23 +394,17 @@ theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup
     · symm
       rw [h]
       rw [← list.apply_id_zip_eq] <;> assumption
-      
     · rw [← h₁.length_eq]
       rw [nth_eq_some] at hx
       cases' hx with hx hx'
       exact hx
-      
-    
   · rw [← apply_id_mem_iff h₀ h₁] at hx hy
     rw [h] at hx
     contradiction
-    
   · rw [← apply_id_mem_iff h₀ h₁] at hx hy
     rw [h] at hx
     contradiction
-    
   · rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
-    
 #align
   slim_check.injective_function.apply_id_injective SlimCheck.InjectiveFunction.apply_id_injective
 
@@ -523,19 +506,20 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
     induction xs
     case nil => simp only [zip_nil_right, map_nil]
     case cons xs_hd xs_tl xs_ih =>
-    simp only [true_and_iff, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
-    exact xs_ih
+      simp only [true_and_iff, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
+      exact xs_ih
   revert hperm hnodup
   rw [hxs]
   intros
   apply apply_id_injective
   · rwa [← h₀, hxs, hperm.nodup_iff]
-    
   · rwa [← hxs, h₀, h₁] at hperm
-    
 #align slim_check.injective_function.injective SlimCheck.InjectiveFunction.injective
 
-instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function.Injective f } where
+instance PiInjective.sampleableExt :
+    SampleableExt
+      { f : ℤ → ℤ //
+        Function.Injective f } where 
   ProxyRepr := InjectiveFunction ℤ
   interp f := ⟨apply f, f.Injective⟩
   sample :=

@@ -135,7 +135,7 @@ theorem Finset.measurableSetBUnion {f : β → Set α} (s : Finset β)
 #align finset.measurable_set_bUnion Finset.measurableSetBUnion
 
 theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
-    MeasurableSet (⋃₀s) := by
+    MeasurableSet (⋃₀s) := by 
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
 #align measurable_set.sUnion MeasurableSet.sUnion
@@ -147,14 +147,14 @@ theorem Set.Finite.measurableSetSUnion {s : Set (Set α)} (hs : s.Finite)
 
 theorem MeasurableSet.inter [Countable ι] {f : ι → Set α} (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋂ b, f b) :=
-  MeasurableSet.compl_iff.1 <| by
+  MeasurableSet.compl_iff.1 <| by 
     rw [compl_Inter]
     exact MeasurableSet.union fun b => (h b).compl
 #align measurable_set.Inter MeasurableSet.inter
 
 theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
-  MeasurableSet.compl_iff.1 <| by
+  MeasurableSet.compl_iff.1 <| by 
     rw [compl_Inter₂]
     exact MeasurableSet.bUnion hs fun b hb => (h b hb).compl
 #align measurable_set.bInter MeasurableSet.bInter
@@ -170,7 +170,7 @@ theorem Finset.measurableSetBInter {f : β → Set α} (s : Finset β)
 #align finset.measurable_set_bInter Finset.measurableSetBInter
 
 theorem MeasurableSet.sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
-    MeasurableSet (⋂₀ s) := by
+    MeasurableSet (⋂₀ s) := by 
   rw [sInter_eq_bInter]
   exact MeasurableSet.bInter hs h
 #align measurable_set.sInter MeasurableSet.sInter
@@ -189,7 +189,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_set.union MeasurableSet.unionₓ'. -/
 @[simp]
 theorem MeasurableSet.union {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
-    MeasurableSet (s₁ ∪ s₂) := by
+    MeasurableSet (s₁ ∪ s₂) := by 
   rw [union_eq_Union]
   exact MeasurableSet.union (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 #align measurable_set.union MeasurableSet.union
@@ -259,7 +259,7 @@ end
 
 open MeasureTheory
 
-@[ext.1]
+@[ext]
 theorem MeasurableSpace.ext :
     ∀ {m₁ m₂ : MeasurableSpace α},
       (∀ s : Set α, measurable_set[m₁] s ↔ measurable_set[m₂] s) → m₁ = m₂
@@ -268,10 +268,10 @@ theorem MeasurableSpace.ext :
     subst this
 #align measurable_space.ext MeasurableSpace.ext
 
-@[ext.1]
+@[ext]
 theorem MeasurableSpace.ext_iff {m₁ m₂ : MeasurableSpace α} :
     m₁ = m₂ ↔ ∀ s : Set α, measurable_set[m₁] s ↔ measurable_set[m₂] s :=
-  ⟨by
+  ⟨by 
     rintro rfl
     intro s
     rfl, MeasurableSpace.ext⟩
@@ -350,7 +350,8 @@ inductive GenerateMeasurable (s : Set (Set α)) : Set α → Prop
 #align measurable_space.generate_measurable MeasurableSpace.GenerateMeasurable
 
 /-- Construct the smallest measure space containing a collection of basic sets -/
-def generateFrom (s : Set (Set α)) : MeasurableSpace α where
+def generateFrom (s : Set (Set α)) :
+    MeasurableSpace α where 
   MeasurableSet' := GenerateMeasurable s
   measurableSetEmpty := GenerateMeasurable.empty
   measurableSetCompl := GenerateMeasurable.compl
@@ -392,7 +393,7 @@ theorem generate_from_measurable_set [MeasurableSpace α] :
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
 the same sets as `g`, then `g` was already a `σ`-algebra. -/
 protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generateFrom g] t } = g) :
-    MeasurableSpace α where
+    MeasurableSpace α where 
   MeasurableSet' s := s ∈ g
   measurableSetEmpty := hg ▸ measurableSetEmpty _
   measurableSetCompl := hg ▸ measurableSetCompl _
@@ -402,14 +403,17 @@ protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generate
 theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | measurable_set[generateFrom s] t } = s} :
     MeasurableSpace.mkOfClosure s hs = generateFrom s :=
   MeasurableSpace.ext fun t =>
-    show t ∈ s ↔ _ by
+    show t ∈ s ↔ _ by 
       conv_lhs => rw [← hs]
       rfl
 #align measurable_space.mk_of_closure_sets MeasurableSpace.mk_of_closure_sets
 
 /-- We get a Galois insertion between `σ`-algebras on `α` and `set (set α)` by using `generate_from`
   on one side and the collection of measurable sets on the other side. -/
-def giGenerateFrom : GaloisInsertion (@generateFrom α) fun m => { t | @MeasurableSet α m t } where
+def giGenerateFrom :
+    GaloisInsertion (@generateFrom α) fun m =>
+      { t | @MeasurableSet α m
+          t } where 
   gc s := generate_from_le_iff
   le_l_u m s := measurableSetGenerateFrom
   choice g hg :=
@@ -443,23 +447,19 @@ theorem generate_from_insert_univ (S : Set (Set α)) :
   cases ht
   · rw [ht]
     exact MeasurableSet.univ
-    
   · exact measurable_set_generate_from ht
-    
 #align measurable_space.generate_from_insert_univ MeasurableSpace.generate_from_insert_univ
 
 @[simp]
 theorem generate_from_insert_empty (S : Set (Set α)) : generateFrom (insert ∅ S) = generateFrom S :=
-  by
+  by 
   refine' le_antisymm _ (generate_from_mono (Set.subset_insert _ _))
   rw [generate_from_le_iff]
   intro t ht
   cases ht
   · rw [ht]
     exact @MeasurableSet.empty _ (generate_from S)
-    
   · exact measurable_set_generate_from ht
-    
 #align measurable_space.generate_from_insert_empty MeasurableSpace.generate_from_insert_empty
 
 @[simp]
@@ -525,7 +525,7 @@ theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
     measurable_set[sup ms] s ↔ GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s :=
-  by
+  by 
   change @measurable_set' _ (generate_from <| ⋃₀_) _ ↔ _
   simp [generate_from, ← set_of_exists]
 #align measurable_space.measurable_set_Sup MeasurableSpace.measurable_set_Sup

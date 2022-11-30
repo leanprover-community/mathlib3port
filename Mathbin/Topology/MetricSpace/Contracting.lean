@@ -106,7 +106,7 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
         Tendsto (fun n => (f^[n]) x) atTop (𝓝 y) ∧
           ∀ n : ℕ, edist ((f^[n]) x) y ≤ edist x (f x) * K ^ n / (1 - K) :=
   have : CauchySeq fun n => (f^[n]) x :=
-    cauchySeqOfEdistLeGeometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
+    cauchy_seq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
       (hf.toLipschitzWith.edist_iterate_succ_le_geometric x)
   let ⟨y, hy⟩ := cauchy_seq_tendsto_of_complete this
   ⟨y, is_fixed_pt_of_tendsto_iterate hy hf.2.Continuous.ContinuousAt, hy,
@@ -165,7 +165,6 @@ theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx 
   trans x;
   · symm
     exact hf.edist_efixed_point_lt_top hx
-    
   trans y
   exacts[lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
 #align
@@ -180,17 +179,15 @@ theorem exists_fixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s 
       IsFixedPt f y ∧
         Tendsto (fun n => (f^[n]) x) atTop (𝓝 y) ∧
           ∀ n : ℕ, edist ((f^[n]) x) y ≤ edist x (f x) * K ^ n / (1 - K) :=
-  by
+  by 
   haveI := hsc.complete_space_coe
   rcases hf.exists_fixed_point ⟨x, hxs⟩ hx with ⟨y, hfy, h_tendsto, hle⟩
   refine' ⟨y, y.2, Subtype.ext_iff_val.1 hfy, _, fun n => _⟩
   · convert (continuous_subtype_coe.tendsto _).comp h_tendsto
     ext n
     simp only [(· ∘ ·), maps_to.iterate_restrict, maps_to.coe_restrict_apply, Subtype.coe_mk]
-    
   · convert hle n
     rw [maps_to.iterate_restrict, eq_comm, maps_to.coe_restrict_apply, Subtype.coe_mk]
-    
 #align contracting_with.exists_fixed_point' ContractingWith.exists_fixed_point'
 
 variable (f)
@@ -266,7 +263,6 @@ theorem efixed_point_eq_of_edist_lt_top' (hf : ContractingWith K f) {s : Set α}
   trans x;
   · symm
     apply edist_efixed_point_lt_top'
-    
   trans y
   exact lt_top_iff_ne_top.2 hxy
   apply edist_efixed_point_lt_top'

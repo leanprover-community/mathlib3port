@@ -256,10 +256,8 @@ instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass icc l l] :
   cases le_total p.1 p.2
   · rw [mem_preimage, interval_of_le h]
     exact hts p hp
-    
   · rw [mem_preimage, interval_of_ge h]
     exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
-    
 #align filter.tendsto_interval_of_Icc Filter.tendsto_interval_of_Icc
 
 theorem Tendsto.interval {l : Filter α} [TendstoIxxClass icc l l] {f g : β → α} {lb : Filter β}

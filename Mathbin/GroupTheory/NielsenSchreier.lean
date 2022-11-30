@@ -87,7 +87,7 @@ attribute [instance] quiver_generators
 
 /-- Two functors from a free groupoid to a group are equal when they agree on the generating
 quiver. -/
-@[ext.1]
+@[ext]
 theorem ext_functor {G} [Groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Group X]
     (f g : G ⥤ SingleObj X) (h : ∀ (a b) (e : a ⟶ b), f.map (of e) = g.map (of e)) : f = g :=
   let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun (a b : Generators G) (e : a ⟶ b) => g.map (of e)
@@ -101,11 +101,13 @@ purposes.
 Analogous to the fact that a covering space of a graph is a graph. (A free groupoid is like a graph,
 and a groupoid of elements is like a covering space.) -/
 instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulAction G A] :
-    IsFreeGroupoid (ActionCategory G A) where
+    IsFreeGroupoid
+      (ActionCategory G
+        A) where 
   quiverGenerators :=
     ⟨fun a b => { e : IsFreeGroup.Generators G // IsFreeGroup.of e • a.back = b.back }⟩
   of a b e := ⟨IsFreeGroup.of e, e.property⟩
-  unique_lift := by
+  unique_lift := by 
     intro X _ f
     let f' : fgp.generators G → (A → X) ⋊[mulAutArrow] G := fun e =>
       ⟨fun b => @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, fgp.of e⟩
@@ -116,32 +118,25 @@ instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulActio
       ext
       rw [MonoidHom.comp_apply, hF']
       rfl
-      
     · rintro ⟨⟨⟩, a : A⟩ ⟨⟨⟩, b⟩ ⟨e, h : fgp.of e • a = b⟩
       change (F' (fgp.of _)).left _ = _
       rw [hF']
       cases inv_smul_eq_iff.mpr h.symm
       rfl
-      
     · intro E hE
-      have : curry E = F' := by
+      have : curry E = F' := by 
         apply uF'
         intro e
         ext
         · convert hE _ _ _
           rfl
-          
         · rfl
-          
       apply functor.hext
       · intro
         apply Unit.ext
-        
       · refine' action_category.cases _
         intros
         simp only [← this, uncurry_map, curry_apply_left, coe_back, hom_of_pair.val]
-        
-      
 #align is_free_groupoid.action_groupoid_is_free IsFreeGroupoid.actionGroupoidIsFree
 
 namespace SpanningTree
@@ -196,23 +191,22 @@ theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymme
   cases H
   · rw [tree_hom_eq T (path.cons default ⟨Sum.inl e, H⟩), hom_of_path]
     rfl
-    
   · rw [tree_hom_eq T (path.cons default ⟨Sum.inr e, H⟩), hom_of_path]
     simp only [is_iso.inv_hom_id, category.comp_id, category.assoc, tree_hom]
-    
 #align
   is_free_groupoid.spanning_tree.loop_of_hom_eq_id IsFreeGroupoid.SpanningTree.loop_of_hom_eq_id
 
 /-- Since a hom gives a loop, any homomorphism from the vertex group at the root
     extends to a functor on the whole groupoid. -/
 @[simps]
-def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) : G ⥤ SingleObj X where
+def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) :
+    G ⥤ SingleObj X where 
   obj _ := ()
   map a b p := f (loopOfHom T p)
-  map_id' := by
+  map_id' := by 
     intro a
     rw [loop_of_hom, category.id_comp, is_iso.hom_inv_id, ← End.one_def, f.map_one, id_as_one]
-  map_comp' := by
+  map_comp' := by 
     intros
     rw [comp_as_mul, ← f.map_mul]
     simp only [is_iso.inv_hom_id_assoc, loop_of_hom, End.mul_def, category.assoc]
@@ -225,7 +219,7 @@ def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) : G ⥤ Sing
 def endIsFree : IsFreeGroup (EndCat (root' T)) :=
   IsFreeGroup.ofUniqueLift ((wide_subquiver_equiv_set_total <| wideSubquiverSymmetrify T)ᶜ : Set _)
     (fun e => loopOfHom T (of e.val.Hom))
-    (by
+    (by 
       intro X _ f
       let f' : labelling (generators G) X := fun a b e =>
         if h : e ∈ wide_subquiver_symmetrify T a b then 1 else f ⟨⟨a, b, e⟩, h⟩
@@ -242,16 +236,12 @@ def endIsFree : IsFreeGroup (EndCat (root' T)) :=
         intro a p
         induction' p with b c p e ih
         · rw [hom_of_path, F'.map_id, id_as_one]
-          
         rw [hom_of_path, F'.map_comp, comp_as_mul, ih, mul_one]
         rcases e with ⟨e | e, eT⟩
         · rw [hF']
           exact dif_pos (Or.inl eT)
-          
         · rw [F'.map_inv, inv_as_inv, inv_eq_one, hF']
           exact dif_pos (Or.inr eT)
-          
-        
       · intro E hE
         ext
         suffices (functor_of_monoid_hom T E).map x = F'.map x by
@@ -263,10 +253,7 @@ def endIsFree : IsFreeGroup (EndCat (root' T)) :=
         change E (loop_of_hom T _) = dite _ _ _
         split_ifs
         · rw [loop_of_hom_eq_id T e h, ← End.one_def, E.map_one]
-          
-        · exact hE ⟨⟨a, b, e⟩, h⟩
-          
-        )
+        · exact hE ⟨⟨a, b, e⟩, h⟩)
 #align is_free_groupoid.spanning_tree.End_is_free IsFreeGroupoid.SpanningTree.endIsFree
 
 end SpanningTree

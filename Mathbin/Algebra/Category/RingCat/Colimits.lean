@@ -131,7 +131,8 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
 
 /-- The setoid corresponding to commutative expressions modulo monoid relations and identifications.
 -/
-def colimitSetoid : Setoid (Prequotient F) where
+def colimitSetoid : Setoid (Prequotient
+        F) where 
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 #align CommRing.colimits.colimit_setoid CommRingCat.Colimits.colimitSetoid
@@ -144,58 +145,51 @@ def ColimitType : Type v :=
   Quotient (colimitSetoid F)deriving Inhabited
 #align CommRing.colimits.colimit_type CommRingCat.Colimits.ColimitType
 
-instance : AddGroup (ColimitType F) where
+instance : AddGroup (ColimitType
+        F) where 
   zero := Quot.mk _ zero
-  neg := by
+  neg := by 
     fapply @Quot.lift
     · intro x
       exact Quot.mk _ (neg x)
-      
     · intro x x' r
       apply Quot.sound
       exact relation.neg_1 _ _ r
-      
-  add := by
+  add := by 
     fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
     · intro x
       fapply @Quot.lift
       · intro y
         exact Quot.mk _ (add x y)
-        
       · intro y y' r
         apply Quot.sound
         exact relation.add_2 _ _ _ r
-        
-      
     · intro x x' r
       funext y
       induction y
       dsimp
       apply Quot.sound
       · exact relation.add_1 _ _ _ r
-        
       · rfl
-        
-      
-  zero_add x := by
+  zero_add x := by 
     induction x
     dsimp
     apply Quot.sound
     apply relation.zero_add
     rfl
-  add_zero x := by
+  add_zero x := by 
     induction x
     dsimp
     apply Quot.sound
     apply relation.add_zero
     rfl
-  add_left_neg x := by
+  add_left_neg x := by 
     induction x
     dsimp
     apply Quot.sound
     apply relation.add_left_neg
     rfl
-  add_assoc x y z := by
+  add_assoc x y z := by 
     induction x
     induction y
     induction z
@@ -211,41 +205,35 @@ instance : AddGroupWithOne (ColimitType F) :=
 
 instance : CommRing (ColimitType F) :=
   { ColimitType.addGroupWithOne F with one := Quot.mk _ one,
-    mul := by
+    mul := by 
       fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
       · intro x
         fapply @Quot.lift
         · intro y
           exact Quot.mk _ (mul x y)
-          
         · intro y y' r
           apply Quot.sound
           exact relation.mul_2 _ _ _ r
-          
-        
       · intro x x' r
         funext y
         induction y
         dsimp
         apply Quot.sound
         · exact relation.mul_1 _ _ _ r
-          
-        · rfl
-          
-        ,
-    one_mul := fun x => by
+        · rfl,
+    one_mul := fun x => by 
       induction x
       dsimp
       apply Quot.sound
       apply relation.one_mul
       rfl,
-    mul_one := fun x => by
+    mul_one := fun x => by 
       induction x
       dsimp
       apply Quot.sound
       apply relation.mul_one
       rfl,
-    add_comm := fun x y => by
+    add_comm := fun x y => by 
       induction x
       induction y
       dsimp
@@ -253,7 +241,7 @@ instance : CommRing (ColimitType F) :=
       apply relation.add_comm
       rfl
       rfl,
-    mul_comm := fun x y => by
+    mul_comm := fun x y => by 
       induction x
       induction y
       dsimp
@@ -261,7 +249,7 @@ instance : CommRing (ColimitType F) :=
       apply relation.mul_comm
       rfl
       rfl,
-    add_assoc := fun x y z => by
+    add_assoc := fun x y z => by 
       induction x
       induction y
       induction z
@@ -271,7 +259,7 @@ instance : CommRing (ColimitType F) :=
       rfl
       rfl
       rfl,
-    mul_assoc := fun x y z => by
+    mul_assoc := fun x y z => by 
       induction x
       induction y
       induction z
@@ -281,7 +269,7 @@ instance : CommRing (ColimitType F) :=
       rfl
       rfl
       rfl,
-    left_distrib := fun x y z => by
+    left_distrib := fun x y z => by 
       induction x
       induction y
       induction z
@@ -291,7 +279,7 @@ instance : CommRing (ColimitType F) :=
       rfl
       rfl
       rfl,
-    right_distrib := fun x y z => by
+    right_distrib := fun x y z => by 
       induction x
       induction y
       induction z
@@ -341,7 +329,8 @@ def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
 
 /-- The ring homomorphism from a given commutative ring in the diagram to the colimit commutative
 ring. -/
-def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
+def coconeMorphism (j : J) :
+    F.obj j ⟶ colimit F where 
   toFun := coconeFun F j
   map_one' := by apply Quot.sound <;> apply relation.one
   map_mul' := by intros <;> apply Quot.sound <;> apply relation.mul
@@ -366,7 +355,7 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
   CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit commutative ring. -/
-def colimitCocone : Cocone F where
+def colimitCocone : Cocone F where 
   x := colimit F
   ι := { app := coconeMorphism F }
 #align CommRing.colimits.colimit_cocone CommRingCat.Colimits.colimitCocone
@@ -387,90 +376,64 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
 def descFun (s : Cocone F) : ColimitType F → s.x := by
   fapply Quot.lift
   · exact desc_fun_lift F s
-    
   · intro x y r
     induction r <;> try dsimp
     -- refl
     · rfl
-      
     -- symm
     · exact r_ih.symm
-      
     -- trans
     · exact Eq.trans r_ih_h r_ih_k
-      
     -- map
     · simp
-      
     -- zero
     · simp
-      
     -- one
     · simp
-      
     -- neg
     · simp
-      
     -- add
     · simp
-      
     -- mul
     · simp
-      
     -- neg_1
     · rw [r_ih]
-      
     -- add_1
     · rw [r_ih]
-      
     -- add_2
     · rw [r_ih]
-      
     -- mul_1
     · rw [r_ih]
-      
     -- mul_2
     · rw [r_ih]
-      
     -- zero_add
     · rw [zero_add]
-      
     -- add_zero
     · rw [add_zero]
-      
     -- one_mul
     · rw [one_mul]
-      
     -- mul_one
     · rw [mul_one]
-      
     -- add_left_neg
     · rw [add_left_neg]
-      
     -- add_comm
     · rw [add_comm]
-      
     -- mul_comm
     · rw [mul_comm]
-      
     -- add_assoc
     · rw [add_assoc]
-      
     -- mul_assoc
     · rw [mul_assoc]
-      
     -- left_distrib
     · rw [left_distrib]
-      
     -- right_distrib
     · rw [right_distrib]
-      
-    
 #align CommRing.colimits.desc_fun CommRingCat.Colimits.descFun
 
 /-- The ring homomorphism from the colimit commutative ring to the cone point of any other
 cocone. -/
-def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
+def descMorphism (s : Cocone F) :
+    colimit F ⟶ s.x where 
   toFun := descFun F s
   map_one' := rfl
   map_zero' := rfl
@@ -479,9 +442,10 @@ def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
 #align CommRing.colimits.desc_morphism CommRingCat.Colimits.descMorphism
 
 /-- Evidence that the proposed colimit is the colimit. -/
-def colimitIsColimit : IsColimit (colimitCocone F) where
+def colimitIsColimit :
+    IsColimit (colimitCocone F) where 
   desc s := descMorphism F s
-  uniq' s m w := by
+  uniq' s m w := by 
     ext
     induction x
     induction x
@@ -489,17 +453,11 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
         congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
       erw [w']
       rfl
-      
     · simp
-      
     · simp
-      
     · simp [*]
-      
     · simp [*]
-      
     · simp [*]
-      
     rfl
 #align CommRing.colimits.colimit_is_colimit CommRingCat.Colimits.colimitIsColimit
 

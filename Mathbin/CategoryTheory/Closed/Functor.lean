@@ -88,7 +88,7 @@ def expComparison (A : C) : exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
 theorem exp_comparison_ev (A B : C) :
     Limits.prod.map (𝟙 (F.obj A)) ((expComparison F A).app B) ≫ (exp.ev (F.obj A)).app (F.obj B) =
       inv (prodComparison F _ _) ≫ F.map ((exp.ev _).app _) :=
-  by
+  by 
   convert transfer_nat_trans_counit _ _ (prod_comparison_nat_iso F A).inv B
   ext
   simp
@@ -97,7 +97,7 @@ theorem exp_comparison_ev (A B : C) :
 theorem coev_exp_comparison (A B : C) :
     F.map ((exp.coev A).app B) ≫ (expComparison F A).app (A ⨯ B) =
       (exp.coev _).app (F.obj B) ≫ (exp (F.obj A)).map (inv (prodComparison F A B)) :=
-  by
+  by 
   convert unit_transfer_nat_trans _ _ (prod_comparison_nat_iso F A).inv B
   ext
   dsimp
@@ -114,7 +114,7 @@ theorem uncurry_exp_comparison (A B : C) :
 theorem exp_comparison_whisker_left {A A' : C} (f : A' ⟶ A) :
     expComparison F A ≫ whiskerLeft _ (pre (F.map f)) =
       whiskerRight (pre f) _ ≫ expComparison F A' :=
-  by
+  by 
   ext B
   dsimp
   apply uncurry_injective
@@ -137,7 +137,7 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
     transferNatTransSelf (h.comp (exp.adjunction A)) ((exp.adjunction (F.obj A)).comp h)
         (frobeniusMorphism F h A) =
       expComparison F A :=
-  by
+  by 
   rw [← Equiv.eq_symm_apply]
   ext B : 2
   dsimp [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp]
@@ -148,10 +148,8 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
   apply prod.hom_ext
   · rw [assoc, assoc, ← h.counit_naturality, ← L.map_comp_assoc, assoc, inv_prod_comparison_map_fst]
     simp
-    
   · rw [assoc, assoc, ← h.counit_naturality, ← L.map_comp_assoc, assoc, inv_prod_comparison_map_snd]
     simp
-    
 #align category_theory.frobenius_morphism_mate CategoryTheory.frobenius_morphism_mate
 
 /--

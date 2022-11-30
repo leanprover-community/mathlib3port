@@ -75,7 +75,7 @@ instance : DecidableEq (AdjoinRoot f) :=
 
 protected theorem nontrivial [IsDomain R] (h : degree f ≠ 0) : Nontrivial (AdjoinRoot f) :=
   Ideal.Quotient.nontrivial
-    (by
+    (by 
       simp_rw [Ne.def, span_singleton_eq_top, Polynomial.is_unit_iff, not_exists, not_and]
       rintro x hx rfl
       exact h (degree_C hx.ne_zero))
@@ -143,7 +143,7 @@ instance hasCoeT : CoeTC R (AdjoinRoot f) :=
 
 /-- Two `R`-`alg_hom` from `adjoin_root f` to the same `R`-algebra are the same iff
     they agree on `root f`. -/
-@[ext.1]
+@[ext]
 theorem alg_hom_ext [Semiring S] [Algebra R S] {g₁ g₂ : AdjoinRoot f →ₐ[R] S}
     (h : g₁ (root f) = g₂ (root f)) : g₁ = g₂ :=
   Ideal.Quotient.alg_hom_ext R <| Polynomial.alg_hom_ext h
@@ -172,7 +172,7 @@ theorem mk_X : mk f x = root f :=
 @[simp]
 theorem aeval_eq (p : R[X]) : aeval (root f) p = mk f p :=
   Polynomial.induction_on p
-    (fun x => by
+    (fun x => by 
       rw [aeval_C]
       rfl)
     (fun p q ihp ihq => by rw [AlgHom.map_add, RingHom.map_add, ihp, ihq]) fun n x ih => by
@@ -390,32 +390,28 @@ def powerBasisAux' (hg : g.Monic) : Basis (Fin g.natDegree) R (AdjoinRoot g) :=
               rw [mod_by_monic_eq_sub_mul_div _ hg, sub_sub_cancel]
               exact dvd_mul_right _ _,
       right_inv := fun x =>
-        funext fun i => by
+        funext fun i => by 
           nontriviality R
           simp only [mod_by_monic_hom_mk]
           rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff, Finset.sum_eq_single i] <;>
             try simp only [coeff_monomial, eq_self_iff_true, if_true]
           · intro j _ hj
             exact if_neg (fin.coe_injective.ne hj)
-            
           · intros
             have := Finset.mem_univ i
             contradiction
-            
           · refine' (degree_sum_le _ _).trans_lt ((Finset.sup_lt_iff _).mpr fun j _ => _)
             · exact bot_lt_iff_ne_bot.mpr (mt degree_eq_bot.mp hg.ne_zero)
-              
             · refine' (degree_monomial_le _ _).trans_lt _
               rw [degree_eq_nat_degree hg.ne_zero, WithBot.coe_lt_coe]
-              exact j.2
-              
-             }
+              exact j.2 }
 #align adjoin_root.power_basis_aux' AdjoinRoot.powerBasisAux'
 
 /-- The power basis `1, root g, ..., root g ^ (d - 1)` for `adjoin_root g`,
 where `g` is a monic polynomial of degree `d`. -/
 @[simps]
-def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
+def powerBasis' (hg : g.Monic) :
+    PowerBasis R (AdjoinRoot g) where 
   gen := root g
   dim := g.natDegree
   Basis := powerBasisAux' hg
@@ -423,16 +419,13 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
     simp only [power_basis_aux', Basis.coe_of_equiv_fun, LinearEquiv.coe_symm_mk]
     rw [Finset.sum_eq_single i]
     · rw [Function.update_same, monomial_one_right_eq_X_pow, (mk g).map_pow, mk_X]
-      
     · intro j _ hj
       rw [← monomial_zero_right _]
       convert congr_arg _ (Function.update_noteq hj _ _)
-      
     -- Fix `decidable_eq` mismatch
     · intros
       have := Finset.mem_univ i
       contradiction
-      
 #align adjoin_root.power_basis' AdjoinRoot.powerBasis'
 
 variable [Field K] {f : K[X]}
@@ -445,25 +438,19 @@ theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * c f.leadingCoeff�
   have f'_monic : monic _ := monic_mul_leading_coeff_inv hf
   refine' (minpoly.unique K _ f'_monic _ _).symm
   · rw [AlgHom.map_mul, aeval_eq, mk_self, zero_mul]
-    
   intro q q_monic q_aeval
   have commutes : (lift (algebraMap K (AdjoinRoot f)) (root f) q_aeval).comp (mk q) = mk f := by
     ext
     · simp only [RingHom.comp_apply, mk_C, lift_of]
       rfl
-      
     · simp only [RingHom.comp_apply, mk_X, lift_root]
-      
   rw [degree_eq_nat_degree f'_monic.ne_zero, degree_eq_nat_degree q_monic.ne_zero,
     WithBot.coe_le_coe, nat_degree_mul hf, nat_degree_C, add_zero]
   apply nat_degree_le_of_dvd
   · have : mk f q = 0 := by rw [← commutes, RingHom.comp_apply, mk_self, RingHom.map_zero]
     rwa [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem]
-    
   · exact q_monic.ne_zero
-    
   · rwa [Ne.def, C_eq_zero, inv_eq_zero, leading_coeff_eq_zero]
-    
 #align adjoin_root.minpoly_root AdjoinRoot.minpoly_root
 
 /-- The elements `1, root f, ..., root f ^ (d - 1)` form a basis for `adjoin_root f`,
@@ -473,12 +460,10 @@ def powerBasisAux (hf : f ≠ 0) : Basis (Fin f.natDegree) K (AdjoinRoot f) := b
   have deg_f' : f'.nat_degree = f.nat_degree := by
     rw [nat_degree_mul hf, nat_degree_C, add_zero]
     · rwa [Ne.def, C_eq_zero, inv_eq_zero, leading_coeff_eq_zero]
-      
   have minpoly_eq : minpoly K (root f) = f' := minpoly_root hf
   apply @Basis.mk _ _ _ fun i : Fin f.nat_degree => root f ^ i.val
   · rw [← deg_f', ← minpoly_eq]
     exact (is_integral_root hf).linear_independent_pow
-    
   · rintro y -
     rw [← deg_f', ← minpoly_eq]
     apply (is_integral_root hf).mem_span_pow
@@ -486,13 +471,13 @@ def powerBasisAux (hf : f ≠ 0) : Basis (Fin f.natDegree) K (AdjoinRoot f) := b
     use g
     rw [aeval_eq]
     rfl
-    
 #align adjoin_root.power_basis_aux AdjoinRoot.powerBasisAux
 
 /-- The power basis `1, root f, ..., root f ^ (d - 1)` for `adjoin_root f`,
 where `f` is an irreducible polynomial over a field of degree `d`. -/
 @[simps]
-def powerBasis (hf : f ≠ 0) : PowerBasis K (AdjoinRoot f) where
+def powerBasis (hf : f ≠ 0) :
+    PowerBasis K (AdjoinRoot f) where 
   gen := root f
   dim := f.natDegree
   Basis := powerBasisAux hf
@@ -558,7 +543,6 @@ theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) :
   obtain ⟨P, hP⟩ := mk_surjective (minpoly.monic hx) P₁
   by_cases hPzero : P = 0
   · simpa [hPzero] using hP.symm
-    
   have hPcont : P.content ≠ 0 := fun h => hPzero (content_eq_zero_iff.1 h)
   rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
     SetLike.coe_mk, P.eq_C_content_mul_prim_part, aeval_mul, aeval_C] at hP₁
@@ -617,7 +601,7 @@ def equiv' (h₁ : aeval (root g) (minpoly R pb.gen) = 0) (h₂ : aeval pb.gen g
   { AdjoinRoot.liftHom g pb.gen h₂ with toFun := AdjoinRoot.liftHom g pb.gen h₂,
     invFun := pb.lift (root g) h₁,
     left_inv := fun x => (induction_on g x) fun f => by rw [lift_hom_mk, pb.lift_aeval, aeval_eq],
-    right_inv := fun x => by
+    right_inv := fun x => by 
       obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval x
       rw [pb.lift_aeval, aeval_eq, lift_hom_mk] }
 #align adjoin_root.equiv' AdjoinRoot.equiv'
@@ -651,8 +635,7 @@ def equiv (f : F[X]) (hf : f ≠ 0) :
       rw [power_basis_gen, minpoly_root hf, Polynomial.map_mul, roots_mul, Polynomial.map_C,
         roots_C, add_zero, Equiv.refl_apply]
       · rw [← Polynomial.map_mul]
-        exact map_monic_ne_zero (monic_mul_leading_coeff_inv hf)
-        )
+        exact map_monic_ne_zero (monic_mul_leading_coeff_inv hf))
 #align adjoin_root.equiv AdjoinRoot.equiv
 
 end Field

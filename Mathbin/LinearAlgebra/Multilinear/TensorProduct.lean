@@ -45,7 +45,9 @@ https://leanprover.zulipchat.com/#narrow/stream/217875-Is-there.20code.20for.20X
 @[simps apply]
 def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
-    MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) where
+    MultilinearMap R (fun _ : Sum ι₁ ι₂ => N)
+      (N₁ ⊗[R]
+        N₂) where 
   toFun v := (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i)
   map_add' v i p q := by cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
   map_smul' v i c p := by cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
@@ -58,16 +60,16 @@ def domCoprod' :
       MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
   TensorProduct.lift <|
     LinearMap.mk₂ R domCoprod
-      (fun m₁ m₂ n => by
+      (fun m₁ m₂ n => by 
         ext
         simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
-      (fun c m n => by
+      (fun c m n => by 
         ext
         simp only [dom_coprod_apply, TensorProduct.smul_tmul', smul_apply])
-      (fun m n₁ n₂ => by
+      (fun m n₁ n₂ => by 
         ext
         simp only [dom_coprod_apply, TensorProduct.tmul_add, add_apply])
-      fun c m n => by
+      fun c m n => by 
       ext
       simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
 #align multilinear_map.dom_coprod' MultilinearMap.domCoprod'

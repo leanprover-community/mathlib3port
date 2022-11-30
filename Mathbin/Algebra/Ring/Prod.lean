@@ -290,7 +290,7 @@ variable (R S) [Subsingleton S]
 
 /-- A ring `R` is isomorphic to `R × S` when `S` is the zero ring -/
 @[simps]
-def prodZeroRing : R ≃+* R × S where
+def prodZeroRing : R ≃+* R × S where 
   toFun x := (x, 0)
   invFun := Prod.fst
   map_add' := by simp
@@ -301,7 +301,7 @@ def prodZeroRing : R ≃+* R × S where
 
 /-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps]
-def zeroRingProd : R ≃+* S × R where
+def zeroRingProd : R ≃+* S × R where 
   toFun x := (0, x)
   invFun := Prod.snd
   map_add' := by simp
@@ -319,9 +319,7 @@ theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ring R] [Ring S] [
   rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at this
   rcases this with (⟨_, h⟩ | ⟨h, _⟩)
   · exact zero_ne_one h.symm
-    
   · exact zero_ne_one h.symm
-    
 #align false_of_nontrivial_of_product_domain false_of_nontrivial_of_product_domain
 
 /-! ### Order -/

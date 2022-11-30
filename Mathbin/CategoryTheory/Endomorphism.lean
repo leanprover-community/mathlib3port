@@ -83,13 +83,16 @@ variable {C : Type u} [Category.{v} C]
 
 open Opposite
 
-instance mulActionRight {X Y : C} : MulAction (EndCat Y) (X ⟶ Y) where
+instance mulActionRight {X Y : C} :
+    MulAction (EndCat Y) (X ⟶ Y) where 
   smul r f := f ≫ r
   one_smul := Category.comp_id
   mul_smul r s f := Eq.symm <| Category.assoc _ _ _
 #align category_theory.End.mul_action_right CategoryTheory.EndCat.mulActionRight
 
-instance mulActionLeft {X : Cᵒᵖ} {Y : C} : MulAction (EndCat X) (unop X ⟶ Y) where
+instance mulActionLeft {X : Cᵒᵖ} {Y : C} :
+    MulAction (EndCat X) (unop X ⟶
+        Y) where 
   smul r f := r.unop ≫ f
   one_smul := Category.id_comp
   mul_smul r s f := Category.assoc _ _ _
@@ -156,7 +159,8 @@ theorem Aut_inv_def (f : AutCat X) : f⁻¹ = f.symm :=
 /-- Units in the monoid of endomorphisms of an object
 are (multiplicatively) equivalent to automorphisms of that object.
 -/
-def unitsEndEquivAut : (EndCat X)ˣ ≃* AutCat X where
+def unitsEndEquivAut :
+    (EndCat X)ˣ ≃* AutCat X where 
   toFun f := ⟨f.1, f.2, f.4, f.3⟩
   invFun f := ⟨f.1, f.2, f.4, f.3⟩
   left_inv := fun ⟨f₁, f₂, f₃, f₄⟩ => rfl
@@ -165,7 +169,9 @@ def unitsEndEquivAut : (EndCat X)ˣ ≃* AutCat X where
 #align category_theory.Aut.units_End_equiv_Aut CategoryTheory.AutCat.unitsEndEquivAut
 
 /-- Isomorphisms induce isomorphisms of the automorphism group -/
-def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : AutCat X ≃* AutCat Y where
+def autMulEquivOfIso {X Y : C} (h : X ≅ Y) :
+    AutCat X ≃*
+      AutCat Y where 
   toFun x := ⟨h.inv ≫ x.Hom ≫ h.Hom, h.inv ≫ x.inv ≫ h.Hom⟩
   invFun y := ⟨h.Hom ≫ y.Hom ≫ h.inv, h.Hom ≫ y.inv ≫ h.inv⟩
   left_inv := by tidy
@@ -181,14 +187,16 @@ variable {D : Type u'} [Category.{v'} D] (f : C ⥤ D) (X)
 
 /-- `f.map` as a monoid hom between endomorphism monoids. -/
 @[simps]
-def mapEnd : EndCat X →* EndCat (f.obj X) where
+def mapEnd : EndCat X →* EndCat
+        (f.obj X) where 
   toFun := Functor.map f
   map_mul' x y := f.map_comp y x
   map_one' := f.map_id X
 #align category_theory.functor.map_End CategoryTheory.Functor.mapEnd
 
 /-- `f.map_iso` as a group hom between automorphism groups. -/
-def mapAut : AutCat X →* AutCat (f.obj X) where
+def mapAut : AutCat X →* AutCat
+        (f.obj X) where 
   toFun := f.mapIso
   map_mul' x y := f.map_iso_trans y x
   map_one' := f.map_iso_refl X

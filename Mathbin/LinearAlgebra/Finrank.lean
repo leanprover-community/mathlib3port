@@ -67,27 +67,21 @@ theorem finrank_eq_of_dim_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K 
 theorem finrank_le_of_dim_le {n : ℕ} (h : Module.rank K V ≤ ↑n) : finrank K V ≤ n := by
   rwa [← Cardinal.to_nat_le_iff_le_of_lt_aleph_0, to_nat_cast] at h
   · exact h.trans_lt (nat_lt_aleph_0 n)
-    
   · exact nat_lt_aleph_0 n
-    
 #align finite_dimensional.finrank_le_of_dim_le FiniteDimensional.finrank_le_of_dim_le
 
 theorem finrank_lt_of_dim_lt {n : ℕ} (h : Module.rank K V < ↑n) : finrank K V < n := by
   rwa [← Cardinal.to_nat_lt_iff_lt_of_lt_aleph_0, to_nat_cast] at h
   · exact h.trans (nat_lt_aleph_0 n)
-    
   · exact nat_lt_aleph_0 n
-    
 #align finite_dimensional.finrank_lt_of_dim_lt FiniteDimensional.finrank_lt_of_dim_lt
 
 theorem dim_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.rank K V := by
   rwa [← Cardinal.to_nat_lt_iff_lt_of_lt_aleph_0, to_nat_cast]
   · exact nat_lt_aleph_0 n
-    
   · contrapose! h
     rw [finrank, Cardinal.to_nat_apply_of_aleph_0_le h]
     exact n.zero_le
-    
 #align finite_dimensional.dim_lt_of_finrank_lt FiniteDimensional.dim_lt_of_finrank_lt
 
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
@@ -170,7 +164,7 @@ theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s :
     finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_not_finite fun s b hs =>
     h hs.toFinset
-      (by
+      (by 
         convert b
         simp)
 #align finrank_eq_zero_of_basis_imp_false finrank_eq_zero_of_basis_imp_false
@@ -269,7 +263,7 @@ theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t)
 #align submodule.lt_of_le_of_finrank_lt_finrank Submodule.lt_of_le_of_finrank_lt_finrank
 
 theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < finrank K V) : s < ⊤ :=
-  by
+  by 
   rw [← @finrank_top K V] at lt
   exact lt_of_le_of_finrank_lt_finrank le_top lt
 #align submodule.lt_top_of_finrank_lt_finrank Submodule.lt_top_of_finrank_lt_finrank
@@ -308,7 +302,7 @@ theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s
 
 theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} :
     (Set.range b).finrank K ≤ Fintype.card ι :=
-  (finrank_span_le_card _).trans <| by
+  (finrank_span_le_card _).trans <| by 
     rw [Set.to_finset_range]
     exact Finset.card_image_le
 #align finrank_range_le_card finrank_range_le_card
@@ -316,7 +310,7 @@ theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} :
 theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : LinearIndependent K b) :
     finrank K (span K (Set.range b)) = Fintype.card ι :=
   finrank_eq_of_dim_eq
-    (by
+    (by 
       have : Module.rank K (span K (Set.range b)) = (#Set.range b) := dim_span hb
       rwa [← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast,
         lift_eq_nat_iff] at this)
@@ -325,7 +319,7 @@ theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : Lin
 theorem finrank_span_set_eq_card (s : Set V) [Fintype s] (hs : LinearIndependent K (coe : s → V)) :
     finrank K (span K s) = s.toFinset.card :=
   finrank_eq_of_dim_eq
-    (by
+    (by 
       have : Module.rank K (span K s) = (#s) := dim_span_set hs
       rwa [Cardinal.mk_fintype, ← Set.to_finset_card] at this)
 #align finrank_span_set_eq_card finrank_span_set_eq_card
@@ -370,7 +364,8 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
         (span_lt_top_of_card_lt_finrank
           (show (b '' (Set.univ \ {i})).toFinset.card < finrank K V from _))
         _
-    · calc
+    ·
+      calc
         (b '' (Set.univ \ {i})).toFinset.card = ((Set.univ \ {i}).toFinset.image b).card := by
           rw [Set.to_finset_card, Fintype.card_of_finset]
         _ ≤ (Set.univ \ {i}).toFinset.card := Finset.card_image_le
@@ -378,7 +373,6 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
         _ < finset.univ.card := Finset.card_erase_lt_of_mem (Finset.mem_univ i)
         _ = finrank K V := card_eq
         
-      
     -- We already have that `b '' univ` spans the whole space,
     -- so we only need to show that the span of `b '' (univ \ {i})` contains each `b j`.
     refine' spans.trans (span_le.mpr _)
@@ -388,7 +382,6 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
     swap
     · refine' subset_span ⟨j, (Set.mem_diff _).mpr ⟨Set.mem_univ _, _⟩, rfl⟩
       exact mt set.mem_singleton_iff.mp j_eq
-      
     -- To show `b i ∈ span (b '' (univ \ {i}))`, we use that it's a weighted sum
     -- of the other `b j`s.
     rw [j_eq, SetLike.mem_coe, show b i = -((g i)⁻¹ • (s.erase i).Sum fun j => g j • b j) from _]
@@ -396,7 +389,6 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
       obtain ⟨k_ne_i, k_mem⟩ := finset.mem_erase.mp hk
       refine' smul_mem _ _ (subset_span ⟨k, _, rfl⟩)
       simpa using k_mem
-      
     -- To show `b i` is a weighted sum of the other `b j`s, we'll rewrite this sum
     -- to have the form of the assumption `dependent`.
     apply eq_neg_of_add_eq_zero_left
@@ -419,12 +411,11 @@ theorem linear_independent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {
   constructor
   · intro h
     exact (finrank_span_eq_card h).symm
-    
   · intro hc
     let f := Submodule.subtype (span K (Set.range b))
     let b' : ι → span K (Set.range b) := fun i =>
       ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
-    have hs : ⊤ ≤ span K (Set.range b') := by
+    have hs : ⊤ ≤ span K (Set.range b') := by 
       intro x
       have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
       have hf : f '' Set.range b' = Set.range b := by
@@ -432,14 +423,13 @@ theorem linear_independent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {
         simp [Set.mem_image, Set.mem_range]
       rw [hf] at h
       have hx : (x : V) ∈ span K (Set.range b) := x.property
-      conv at hx =>
-      congr
-      skip
-      rw [h]
+      conv at hx => 
+        congr
+        skip
+        rw [h]
       simpa [mem_map] using hx
     have hi : f.ker = ⊥ := ker_subtype _
     convert (linear_independent_of_top_le_span_of_card_eq_finrank hs hc).map' _ hi
-    
 #align linear_independent_iff_card_eq_finrank_span linear_independent_iff_card_eq_finrank_span
 
 theorem linear_independent_iff_card_le_finrank_span {ι : Type _} [Fintype ι] {b : ι → V} :
@@ -507,9 +497,7 @@ theorem finrank_le_one (v : V) (h : ∀ w : V, ∃ c : K, c • v = w) : finrank
         simp
     rw [finrank_zero_of_subsingleton]
     exact zero_le_one
-    
   · exact (finrank_eq_one v hn h).le
-    
 #align finrank_le_one finrank_le_one
 
 end finrank_eq_one
@@ -524,7 +512,7 @@ variable {F E : Type _} [Field F] [Ring E] [Algebra F E]
 theorem Subalgebra.dim_bot [Nontrivial E] : Module.rank F (⊥ : Subalgebra F E) = 1 :=
   ((Subalgebra.toSubmoduleEquiv (⊥ : Subalgebra F E)).symm.trans <|
           LinearEquiv.ofEq _ _ Algebra.to_submodule_bot).dim_eq.trans <|
-    by
+    by 
     rw [dim_span_set]
     exacts[mk_singleton _, linear_independent_singleton one_ne_zero]
 #align subalgebra.dim_bot Subalgebra.dim_bot

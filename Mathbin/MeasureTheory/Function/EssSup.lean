@@ -104,9 +104,7 @@ theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ =>
   refine' (ess_sup_mono_ae hf).trans _
   by_cases hμ : μ = 0
   · simp [hμ]
-    
   · rwa [ess_sup_const]
-    
 #align ess_sup_le_of_ae_le ess_sup_le_of_ae_le
 
 theorem ess_inf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c :=
@@ -162,11 +160,9 @@ theorem ess_inf_antitone_measure {f : α → β} (hμν : μ ≪ ν) : essInf f 
 #align ess_inf_antitone_measure ess_inf_antitone_measure
 
 theorem ess_sup_smul_measure {f : α → β} {c : ℝ≥0∞} (hc : c ≠ 0) : essSup f (c • μ) = essSup f μ :=
-  by
+  by 
   simp_rw [essSup]
-  suffices h_smul : (c • μ).ae = μ.ae;
-  · rw [h_smul]
-    
+  suffices h_smul : (c • μ).ae = μ.ae; · rw [h_smul]
   ext1
   simp_rw [mem_ae_iff]
   simp [hc]
@@ -191,7 +187,7 @@ theorem ess_sup_comp_le_ess_sup_map_measure (hf : AeMeasurable f μ) :
         run_tac
           is_bounded_default)
   simp_rw [Filter.mem_map]
-  have : g ∘ f ⁻¹' t = f ⁻¹' (g ⁻¹' t) := by
+  have : g ∘ f ⁻¹' t = f ⁻¹' (g ⁻¹' t) := by 
     ext1 x
     simp_rw [Set.mem_preimage]
   rw [this]
@@ -292,14 +288,13 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
       fun c h_restrict_le => _
   rw [eventually_map] at h_restrict_le⊢
   rw [ae_restrict_iff' hs] at h_restrict_le
-  have hc : 0 ≤ c := by
+  have hc : 0 ≤ c := by 
     rsuffices ⟨x, hx⟩ : ∃ x, 0 ≤ f x ∧ f x ≤ c
     exact hx.1.trans hx.2
     refine' frequently.exists _
     · exact μ.ae
-      
     rw [eventually_le, ae_restrict_iff' hs] at hf
-    have hs' : ∃ᵐ x ∂μ, x ∈ s := by
+    have hs' : ∃ᵐ x ∂μ, x ∈ s := by 
       contrapose! hs_not_null
       rw [not_frequently, ae_iff] at hs_not_null
       suffices { a : α | ¬a ∉ s } = s by rwa [← this]
@@ -310,9 +305,7 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
   refine' h_restrict_le.mono fun x hxc => _
   by_cases hxs : x ∈ s
   · simpa [hxs] using hxc hxs
-    
   · simpa [hxs] using hc
-    
 #align ess_sup_indicator_eq_ess_sup_restrict ess_sup_indicator_eq_ess_sup_restrict
 
 end CompleteLinearOrder
@@ -345,7 +338,7 @@ theorem ess_sup_add_le (f g : α → ℝ≥0∞) : essSup (f + g) μ ≤ essSup 
 theorem ess_sup_liminf_le {ι} [Countable ι] [LinearOrder ι] (f : ι → α → ℝ≥0∞) :
     essSup (fun x => atTop.liminf fun n => f n x) μ ≤
       atTop.liminf fun n => essSup (fun x => f n x) μ :=
-  by
+  by 
   simp_rw [essSup]
   exact Ennreal.limsup_liminf_le_liminf_limsup fun a b => f b a
 #align ennreal.ess_sup_liminf_le Ennreal.ess_sup_liminf_le

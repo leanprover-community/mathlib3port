@@ -28,7 +28,8 @@ namespace Real
 
 variable {x y : ℝ}
 
-theorem log_mul_self_monotone_on : MonotoneOn (fun x : ℝ => log x * x) { x | 1 ≤ x } := by
+theorem log_mul_self_monotone_on : MonotoneOn (fun x : ℝ => log x * x) { x | 1 ≤ x } :=
+  by
   -- TODO: can be strengthened to exp (-1) ≤ x
   simp only [MonotoneOn, mem_set_of_eq]
   intro x hex y hey hxy
@@ -74,16 +75,13 @@ theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
       simp only [Real.exp_eq_exp]
       field_simp [(ne_of_lt ha).symm]
       exact le_of_lt (exp_pos (1 / a))
-      
     · simp only [Set.mem_set_of_eq]
       convert rpow_le_rpow _ (trans hex hxy) (le_of_lt ha)
       rw [← exp_mul]
       simp only [Real.exp_eq_exp]
       field_simp [(ne_of_lt ha).symm]
       exact le_of_lt (exp_pos (1 / a))
-      
     exact rpow_le_rpow x_nonneg hxy (le_of_lt ha)
-    
 #align real.log_div_self_rpow_antitone_on Real.log_div_self_rpow_antitone_on
 
 theorem log_div_sqrt_antitone_on : AntitoneOn (fun x : ℝ => log x / sqrt x) { x | exp 2 ≤ x } := by

@@ -97,10 +97,8 @@ theorem convex_hull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ := by
   · intro h
     rw [← Set.subset_empty_iff, ← h]
     exact subset_convex_hull 𝕜 _
-    
   · rintro rfl
     exact convex_hull_empty
-    
 #align convex_hull_empty_iff convex_hull_empty_iff
 
 @[simp]
@@ -147,11 +145,8 @@ theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Co
   · rintro hsx hx
     rw [hsx.convex_hull_eq] at hx
     exact hx.2 (mem_singleton _)
-    
   rintro hx
-  suffices h : s \ {x} = convexHull 𝕜 (s \ {x});
-  · convert convex_convex_hull 𝕜 _
-    
+  suffices h : s \ {x} = convexHull 𝕜 (s \ {x}); · convert convex_convex_hull 𝕜 _
   exact
     subset.antisymm (subset_convex_hull 𝕜 _) fun y hy =>
       ⟨convex_hull_min (diff_subset _ _) hs hy, by
@@ -198,17 +193,16 @@ section AddCommGroup
 variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] (s : Set E)
 
 theorem AffineMap.image_convex_hull (f : E →ᵃ[𝕜] F) : f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) :=
-  by
+  by 
   apply Set.Subset.antisymm
   · rw [Set.image_subset_iff]
     refine' convex_hull_min _ ((convex_convex_hull 𝕜 (⇑f '' s)).affine_preimage f)
     rw [← Set.image_subset_iff]
     exact subset_convex_hull 𝕜 (f '' s)
-    
-  · exact
+  ·
+    exact
       convex_hull_min (Set.image_subset _ (subset_convex_hull 𝕜 s))
         ((convex_convex_hull 𝕜 s).affine_image f)
-    
 #align affine_map.image_convex_hull AffineMap.image_convex_hull
 
 theorem convex_hull_subset_affine_span : convexHull 𝕜 s ⊆ (affineSpan 𝕜 s : Set E) :=

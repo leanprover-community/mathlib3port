@@ -38,12 +38,12 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     refine' (ne_of_lt (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _) _)).symm
   convert
     (weighted_sum_squares ℝ w).isometryBasisRepr
-      ((Pi.basisFun ℝ ι).units_smul fun i => (is_unit_iff_ne_zero.2 <| hu' i).Unit)
+      ((Pi.basisFun ℝ ι).units_smul fun i => (isUnit_iff_ne_zero.2 <| hu' i).Unit)
   ext1 v
   rw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
   refine' sum_congr rfl fun j hj => _
   have hsum :
-    (∑ i : ι, v i • ((is_unit_iff_ne_zero.2 <| hu' i).Unit : ℝ) • (Pi.basisFun ℝ ι) i) j =
+    (∑ i : ι, v i • ((isUnit_iff_ne_zero.2 <| hu' i).Unit : ℝ) • (Pi.basisFun ℝ ι) i) j =
       v j • (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) :=
     by
     rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec,
@@ -59,13 +59,12 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
   simp only [u, Function.comp, smul_eq_mul]
   split_ifs
   · simp only [h, zero_smul, zero_mul, Real.sign_zero]
-    
-  have hwu : w j = u j := by simp only [u, dif_neg h, Units.coe_mk0]
-  simp only [hwu, Units.coe_mk0]
+  have hwu : w j = u j := by simp only [u, dif_neg h, Units.val_mk0]
+  simp only [hwu, Units.val_mk0]
   suffices
     (u j : ℝ).sign * v j * v j =
       (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) * (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) * u j * v j * v j
-    by
+    by 
     erw [← mul_assoc, this]
     ring
   rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _),

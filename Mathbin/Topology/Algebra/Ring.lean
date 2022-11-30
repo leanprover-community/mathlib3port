@@ -235,14 +235,12 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
       ((fun x : R => x + x₀ * y₀) ∘
         (fun p : R × R => p.1 + p.2) ∘ fun p : R × R => (p.1 * y₀ + x₀ * p.2, p.1 * p.2))
       (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) <| 𝓝 0)
-    by
+    by 
     convert this using 1
     · ext
       simp only [comp_app, mul_add, add_mul]
       abel
-      
     · simp only [add_comm]
-      
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
 #align topological_ring.of_add_group_of_nhds_zero TopologicalRing.of_add_group_of_nhds_zero
@@ -393,7 +391,7 @@ universe u v
 
 /-- A ring topology on a ring `α` is a topology for which addition, negation and multiplication
 are continuous. -/
-@[ext.1]
+@[ext]
 structure RingTopology (α : Type u) [Ring α] extends TopologicalSpace α, TopologicalRing α : Type u
 #align ring_topology RingTopology
 
@@ -406,7 +404,7 @@ instance inhabited {α : Type u} [Ring α] : Inhabited (RingTopology α) :=
       continuous_neg := continuous_top }⟩
 #align ring_topology.inhabited RingTopology.inhabited
 
-@[ext.1]
+@[ext]
 theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by
   ext
   rw [h]
@@ -423,19 +421,19 @@ local notation "cont" => @Continuous _ _
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
   let Inf_S' := inf (to_topological_space '' S)
   { toTopologicalSpace := Inf_S',
-    continuous_add := by
+    continuous_add := by 
       apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id,
-    continuous_mul := by
+    continuous_mul := by 
       apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_mul h_continuous_id,
-    continuous_neg := by
+    continuous_neg := by 
       apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
@@ -455,7 +453,7 @@ instance : CompleteSemilatticeInf (RingTopology α) :=
     Inf_le := fun S a haS => by
       apply topological_space.complete_lattice.Inf_le
       use a, ⟨haS, rfl⟩,
-    le_Inf := by
+    le_Inf := by 
       intro S a hab
       apply topological_space.complete_lattice.le_Inf
       rintro _ ⟨b, hbS, rfl⟩
@@ -479,23 +477,26 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β
 #align ring_topology.coinduced_continuous RingTopology.coinduced_continuous
 
 /-- The forgetful functor from ring topologies on `a` to additive group topologies on `a`. -/
-def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α where
+def toAddGroupTopology (t : RingTopology α) :
+    AddGroupTopology α where 
   toTopologicalSpace := t.toTopologicalSpace
   to_topological_add_group :=
     @TopologicalRing.to_topological_add_group _ _ t.toTopologicalSpace t.to_topological_ring
 #align ring_topology.to_add_group_topology RingTopology.toAddGroupTopology
 
 /-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
-def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) where
+def toAddGroupTopology.orderEmbedding :
+    OrderEmbedding (RingTopology α)
+      (AddGroupTopology α) where 
   toFun t := t.toAddGroupTopology
-  inj' := by
+  inj' := by 
     intro t₁ t₂ h_eq
     dsimp only at h_eq
     ext
     have h_t₁ : t₁.to_topological_space = t₁.to_add_group_topology.to_topological_space := rfl
     rw [h_t₁, h_eq]
     rfl
-  map_rel_iff' := by
+  map_rel_iff' := by 
     intro t₁ t₂
     rw [embedding.coe_fn_mk]
     have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by rfl

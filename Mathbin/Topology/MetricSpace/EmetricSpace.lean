@@ -146,7 +146,6 @@ theorem edist_le_Ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
   · simp only [Finset.sum_empty, Finset.Ico_self, edist_self]
     -- TODO: Why doesn't Lean close this goal automatically? `exact le_rfl` fails too.
     exact le_refl (0 : ℝ≥0∞)
-    
   · intro n hn hrec
     calc
       edist (f m) (f (n + 1)) ≤ edist (f m) (f n) + edist (f n) (f (n + 1)) := edist_triangle _ _ _
@@ -154,7 +153,6 @@ theorem edist_le_Ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
       _ = ∑ i in Finset.ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
       
-    
 #align edist_le_Ico_sum_edist edist_le_Ico_sum_edist
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
@@ -214,9 +212,7 @@ protected theorem Emetric.mk_uniformity_basis {β : Type _} {p : β → Prop} {f
   · rintro ⟨ε, ε₀, hε⟩
     rcases hf ε ε₀ with ⟨i, hi, H⟩
     exact ⟨i, hi, fun x hx => hε <| lt_of_lt_of_le hx H⟩
-    
   · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
-    
 #align emetric.mk_uniformity_basis Emetric.mk_uniformity_basis
 
 /-- Given `f : β → ℝ≥0∞`, if `f` sends `{i | p i}` to a set of positive numbers
@@ -232,9 +228,7 @@ protected theorem Emetric.mk_uniformity_basis_le {β : Type _} {p : β → Prop}
     rcases exists_between ε₀ with ⟨ε', hε'⟩
     rcases hf ε' hε'.1 with ⟨i, hi, H⟩
     exact ⟨i, hi, fun x hx => hε <| lt_of_le_of_lt (le_trans hx H) hε'.2⟩
-    
   · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, fun x hx => H (le_of_lt hx)⟩
-    
 #align emetric.mk_uniformity_basis_le Emetric.mk_uniformity_basis_le
 
 theorem uniformity_basis_edist_le :
@@ -334,7 +328,7 @@ theorem controlled_of_uniform_embedding [PseudoEmetricSpace β] {f : α → β} 
     UniformEmbedding f →
       (∀ ε > 0, ∃ δ > 0, ∀ {a b : α}, edist a b < δ → edist (f a) (f b) < ε) ∧
         ∀ δ > 0, ∃ ε > 0, ∀ {a b : α}, edist (f a) (f b) < ε → edist a b < δ :=
-  by
+  by 
   intro h
   exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 #align emetric.controlled_of_uniform_embedding Emetric.controlled_of_uniform_embedding
@@ -372,7 +366,7 @@ theorem tendsto_locally_uniformly_on_iff {ι : Type _} [TopologicalSpace β] {F 
     {f : β → α} {p : Filter ι} {s : Set β} :
     TendstoLocallyUniformlyOn F f p s ↔
       ∀ ε > 0, ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, ∀ᶠ n in p, ∀ y ∈ t, edist (f y) (F n y) < ε :=
-  by
+  by 
   refine' ⟨fun H ε hε => H _ (edist_mem_uniformity hε), fun H u hu x hx => _⟩
   rcases mem_uniformity_edist.1 hu with ⟨ε, εpos, hε⟩
   rcases H ε εpos x hx with ⟨t, ht, Ht⟩
@@ -416,7 +410,7 @@ the right uniformity is often important.
 -/
 def PseudoEmetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoEmetricSpace α)
     (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) :
-    PseudoEmetricSpace α where
+    PseudoEmetricSpace α where 
   edist := @edist _ m.toHasEdist
   edist_self := edist_self
   edist_comm := edist_comm
@@ -427,7 +421,7 @@ def PseudoEmetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoE
 
 /-- The extended pseudometric induced by a function taking values in a pseudoemetric space. -/
 def PseudoEmetricSpace.induced {α β} (f : α → β) (m : PseudoEmetricSpace β) :
-    PseudoEmetricSpace α where
+    PseudoEmetricSpace α where 
   edist x y := edist (f x) (f y)
   edist_self x := edist_self _
   edist_comm x y := edist_comm _ _
@@ -441,10 +435,8 @@ def PseudoEmetricSpace.induced {α β} (f : α → β) (m : PseudoEmetricSpace �
       rcases mem_uniformity_edist.1 ru with ⟨ε, ε0, hε⟩
       refine' ⟨ε, ε0, fun a b h => rs (hε _)⟩
       exact h
-      
     · rcases H with ⟨ε, ε0, hε⟩
       exact ⟨_, edist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩
-      
 #align pseudo_emetric_space.induced PseudoEmetricSpace.induced
 
 /-- Pseudoemetric space instance on subsets of pseudoemetric spaces -/
@@ -495,14 +487,16 @@ end ULift
 /-- The product of two pseudoemetric spaces, with the max distance, is an extended
 pseudometric spaces. We make sure that the uniform structure thus constructed is the one
 corresponding to the product of uniform spaces, to avoid diamond problems. -/
-instance Prod.pseudoEmetricSpaceMax [PseudoEmetricSpace β] : PseudoEmetricSpace (α × β) where
+instance Prod.pseudoEmetricSpaceMax [PseudoEmetricSpace β] :
+    PseudoEmetricSpace
+      (α × β) where 
   edist x y := edist x.1 y.1 ⊔ edist x.2 y.2
   edist_self x := by simp
   edist_comm x y := by simp [edist_comm]
   edist_triangle x y z :=
     max_le (le_trans (edist_triangle _ _ _) (add_le_add (le_max_left _ _) (le_max_left _ _)))
       (le_trans (edist_triangle _ _ _) (add_le_add (le_max_right _ _) (le_max_right _ _)))
-  uniformity_edist := by
+  uniformity_edist := by 
     refine' uniformity_prod.trans _
     simp only [PseudoEmetricSpace.uniformity_edist, comap_infi]
     rw [← infi_inf_eq]; congr ; funext
@@ -527,11 +521,13 @@ a pseudoemetric space.
 This construction would also work for infinite products, but it would not give rise
 to the product topology. Hence, we only formalize it in the good situation of finitely many
 spaces. -/
-instance pseudoEmetricSpacePi [∀ b, PseudoEmetricSpace (π b)] : PseudoEmetricSpace (∀ b, π b) where
+instance pseudoEmetricSpacePi [∀ b, PseudoEmetricSpace (π b)] :
+    PseudoEmetricSpace
+      (∀ b, π b) where 
   edist f g := Finset.sup univ fun b => edist (f b) (g b)
   edist_self f := bot_unique <| Finset.sup_le <| by simp
   edist_comm f g := by unfold edist <;> congr <;> funext a <;> exact edist_comm _ _
-  edist_triangle f g h := by
+  edist_triangle f g h := by 
     simp only [Finset.sup_le_iff]
     intro b hb
     exact le_trans (edist_triangle _ (g b) _) (add_le_add (le_sup hb) (le_sup hb))
@@ -674,10 +670,10 @@ theorem ord_connected_set_of_ball_subset (x : α) (s : Set α) : OrdConnected { 
 #align emetric.ord_connected_set_of_ball_subset Emetric.ord_connected_set_of_ball_subset
 
 /-- Relation “two points are at a finite edistance” is an equivalence relation. -/
-def edistLtTopSetoid : Setoid α where
+def edistLtTopSetoid : Setoid α where 
   R x y := edist x y < ⊤
   iseqv :=
-    ⟨fun x => by
+    ⟨fun x => by 
       rw [edist_self]
       exact Ennreal.coe_lt_top, fun x y h => by rwa [edist_comm], fun x y z hxy hyz =>
       lt_of_le_of_lt (edist_triangle x y z) (Ennreal.add_lt_top.2 ⟨hxy, hyz⟩)⟩
@@ -730,7 +726,7 @@ theorem tendsto_nhds_within_nhds_within {t : Set β} {a b} :
 theorem tendsto_nhds_within_nhds {a b} :
     Tendsto f (𝓝[s] a) (𝓝 b) ↔
       ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → edist x a < δ → edist (f x) b < ε :=
-  by
+  by 
   rw [← nhds_within_univ b, tendsto_nhds_within_nhds_within]
   simp only [mem_univ, true_and_iff]
 #align emetric.tendsto_nhds_within_nhds Emetric.tendsto_nhds_within_nhds
@@ -754,7 +750,7 @@ theorem isClosedBallTop : IsClosed (ball x ⊤) :=
   is_open_compl_iff.1 <|
     is_open_iff.2 fun y hy =>
       ⟨⊤, Ennreal.coe_lt_top,
-        (ball_disjoint <| by
+        (ball_disjoint <| by 
             rw [Ennreal.top_add]
             exact le_of_not_lt hy).subset_compl_right⟩
 #align emetric.is_closed_ball_top Emetric.isClosedBallTop
@@ -849,7 +845,6 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ closure t := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨x₀, hx₀⟩)
   · exact ⟨∅, empty_subset _, countable_empty, empty_subset _⟩
-    
   choose! T hTc hsT using fun n : ℕ => hs n⁻¹ (by simp)
   have : ∀ r x, ∃ y ∈ s, closed_ball x r ∩ s ⊆ closed_ball y (r * 2) := by
     intro r x
@@ -857,14 +852,12 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     · refine' ⟨x₀, hx₀, _⟩
       rw [he]
       exact empty_subset _
-      
     · refine' ⟨y, hys, fun z hz => _⟩
       calc
         edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _
         _ ≤ r + r := add_le_add hz.1 hxy
         _ = r * 2 := (mul_two r).symm
         
-      
   choose f hfs hf
   refine'
     ⟨⋃ n : ℕ, f n⁻¹ '' T n, Union_subset fun n => image_subset_iff.2 fun z hz => hfs _ _,
@@ -918,10 +911,8 @@ theorem second_countable_of_almost_dense_set
   rcases subset_countable_closure_of_almost_dense_set (univ : Set α) fun ε ε0 => _ with
     ⟨t, -, htc, ht⟩
   · exact ⟨⟨t, htc, fun x => ht (mem_univ x)⟩⟩
-    
   · rcases hs ε ε0 with ⟨t, htc, ht⟩
     exact ⟨t, htc, univ_subset_iff.2 ht⟩
-    
 #align emetric.second_countable_of_almost_dense_set Emetric.second_countable_of_almost_dense_set
 
 end SecondCountable
@@ -1010,22 +1001,20 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
       
   refine' diam_le fun a ha b hb => _
   cases' (mem_union _ _ _).1 ha with h'a h'a <;> cases' (mem_union _ _ _).1 hb with h'b h'b
-  · calc
+  ·
+    calc
       edist a b ≤ diam s := edist_le_diam_of_mem h'a h'b
       _ ≤ diam s + (edist x y + diam t) := le_self_add
       _ = diam s + edist x y + diam t := (add_assoc _ _ _).symm
       
-    
   · exact A a h'a b h'b
-    
   · have Z := A b h'b a h'a
     rwa [edist_comm] at Z
-    
-  · calc
+  ·
+    calc
       edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b
       _ ≤ diam s + edist x y + diam t := le_add_self
       
-    
 #align emetric.diam_union Emetric.diam_union
 
 theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ diam s + diam t := by
@@ -1097,23 +1086,21 @@ theorem uniform_embedding_iff' [EmetricSpace β] {f : γ → β} :
     UniformEmbedding f ↔
       (∀ ε > 0, ∃ δ > 0, ∀ {a b : γ}, edist a b < δ → edist (f a) (f b) < ε) ∧
         ∀ δ > 0, ∃ ε > 0, ∀ {a b : γ}, edist (f a) (f b) < ε → edist a b < δ :=
-  by
+  by 
   constructor
   · intro h
     exact
       ⟨Emetric.uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1,
         (uniform_embedding_iff.1 h).2.2⟩
-    
   · rintro ⟨h₁, h₂⟩
     refine' uniform_embedding_iff.2 ⟨_, Emetric.uniform_continuous_iff.2 h₁, h₂⟩
     intro x y hxy
-    have : edist x y ≤ 0 := by
+    have : edist x y ≤ 0 := by 
       refine' le_of_forall_lt' fun δ δpos => _
       rcases h₂ δ δpos with ⟨ε, εpos, hε⟩
       have : edist (f x) (f y) < ε := by simpa [hxy]
       exact hε this
     simpa using this
-    
 #align uniform_embedding_iff' uniform_embedding_iff'
 
 -- see Note [lower instance priority]
@@ -1137,7 +1124,8 @@ specified uniformity. See Note [forgetful inheritance] explaining why having def
 the right uniformity is often important.
 -/
 def EmetricSpace.replaceUniformity {γ} [U : UniformSpace γ] (m : EmetricSpace γ)
-    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) : EmetricSpace γ where
+    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) :
+    EmetricSpace γ where 
   edist := @edist _ m.toHasEdist
   edist_self := edist_self
   eq_of_edist_eq_zero := @eq_of_edist_eq_zero _ _
@@ -1149,7 +1137,7 @@ def EmetricSpace.replaceUniformity {γ} [U : UniformSpace γ] (m : EmetricSpace 
 
 /-- The extended metric induced by an injective function taking values in a emetric space. -/
 def EmetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) (m : EmetricSpace β) :
-    EmetricSpace γ where
+    EmetricSpace γ where 
   edist x y := edist (f x) (f y)
   edist_self x := edist_self _
   eq_of_edist_eq_zero x y h := hf (edist_eq_zero.1 h)
@@ -1164,10 +1152,8 @@ def EmetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) (m 
       rcases mem_uniformity_edist.1 ru with ⟨ε, ε0, hε⟩
       refine' ⟨ε, ε0, fun a b h => rs (hε _)⟩
       exact h
-      
     · rcases H with ⟨ε, ε0, hε⟩
       exact ⟨_, edist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩
-      
 #align emetric_space.induced EmetricSpace.induced
 
 /-- Emetric space instance on subsets of emetric spaces -/

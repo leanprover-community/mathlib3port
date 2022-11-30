@@ -151,20 +151,21 @@ is determined by the evaluations f(X_1), f(X_2), ... -/
 theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →+* S) (x : MvPolynomial R ℤ) :
     eval₂ c (f ∘ X) x = f x :=
   MvPolynomial.induction_on x
-    (fun n => by
+    (fun n => by 
       rw [hom_C f, eval₂_C]
       exact eq_int_cast c n)
-    (fun p q hp hq => by
+    (fun p q hp hq => by 
       rw [eval₂_add, hp, hq]
       exact (f.map_add _ _).symm)
-    fun p n hp => by
+    fun p n hp => by 
     rw [eval₂_mul, eval₂_X, hp]
     exact (f.map_mul _ _).symm
 #align mv_polynomial.eval₂_hom_X MvPolynomial.eval₂_hom_X
 
 /-- Ring homomorphisms out of integer polynomials on a type `σ` are the same as
 functions out of the type `σ`, -/
-def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
+def homEquiv : (MvPolynomial σ ℤ →+* S) ≃
+      (σ → S) where 
   toFun f := ⇑f ∘ X
   invFun f := eval₂Hom (Int.castRingHom S) f
   left_inv f := RingHom.ext <| eval₂_hom_X _ _
@@ -178,7 +179,7 @@ section DegreeOf
 theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
     (hf : ∀ m : σ →₀ ℕ, m ∈ f.support → k ≤ m x → coeff m f = coeff m g)
     (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degreeOf x (f - g) < k :=
-  by
+  by 
   rw [degree_of_lt_iff h]
   intro m hm
   by_contra hc
@@ -187,9 +188,7 @@ theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k
   simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm
   cases' Finset.mem_union.1 h with cf cg
   · exact hm (hf m cf hc)
-    
   · exact hm (hg m cg hc)
-    
 #align mv_polynomial.degree_of_sub_lt MvPolynomial.degree_of_sub_lt
 
 end DegreeOf

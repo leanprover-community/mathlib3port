@@ -194,7 +194,8 @@ end IsSelfAdjoint
 variable (R)
 
 /-- The self-adjoint elements of a star additive group, as an additive subgroup. -/
-def selfAdjoint [AddGroup R] [StarAddMonoid R] : AddSubgroup R where
+def selfAdjoint [AddGroup R] [StarAddMonoid R] :
+    AddSubgroup R where 
   carrier := { x | IsSelfAdjoint x }
   zero_mem' := star_zero R
   add_mem' _ _ hx := hx.add
@@ -202,7 +203,8 @@ def selfAdjoint [AddGroup R] [StarAddMonoid R] : AddSubgroup R where
 #align self_adjoint selfAdjoint
 
 /-- The skew-adjoint elements of a star additive group, as an additive subgroup. -/
-def skewAdjoint [AddCommGroup R] [StarAddMonoid R] : AddSubgroup R where
+def skewAdjoint [AddCommGroup R] [StarAddMonoid R] :
+    AddSubgroup R where 
   carrier := { x | star x = -x }
   zero_mem' := show star (0 : R) = -0 by simp only [star_zero, neg_zero]
   add_mem' x y (hx : star x = -x) (hy : star y = -y) :=
@@ -256,7 +258,7 @@ instance : NatCast (selfAdjoint R) :=
 
 instance : IntCast (selfAdjoint R) :=
   ⟨fun n =>
-    ⟨n, by
+    ⟨n, by 
       cases n <;> simp [show ↑n ∈ selfAdjoint R from (n : selfAdjoint R).2]
       refine' add_mem (is_self_adjoint_one R).neg (n : selfAdjoint R).2.neg⟩⟩
 
@@ -420,7 +422,7 @@ theorem conjugate' {x : R} (hx : x ∈ skewAdjoint R) (z : R) : star z * x * z �
 #align skew_adjoint.conjugate' skewAdjoint.conjugate'
 
 theorem is_star_normal_of_mem {x : R} (hx : x ∈ skewAdjoint R) : IsStarNormal x :=
-  ⟨by
+  ⟨by 
     simp only [mem_iff] at hx
     simp only [hx, Commute.neg_left]⟩
 #align skew_adjoint.is_star_normal_of_mem skewAdjoint.is_star_normal_of_mem

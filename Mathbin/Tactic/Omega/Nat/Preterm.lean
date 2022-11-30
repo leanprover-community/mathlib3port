@@ -100,16 +100,16 @@ in term `t`, the value of `t` under `v` and `w` are identical. -/
 theorem val_constant (v w : Nat → Nat) :
     ∀ t : Preterm, (∀ x < t.freshIndex, v x = w x) → t.val v = t.val w
   | &n, h1 => rfl
-  | m ** n, h1 => by
+  | m ** n, h1 => by 
     simp only [val_var]
     apply congr_arg fun y => m * y
     apply h1 _ (lt_add_one _)
-  | t +* s, h1 => by
+  | t +* s, h1 => by 
     simp only [val_add]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_left _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_right _ _))
     rw [ht, hs]
-  | t -* s, h1 => by
+  | t -* s, h1 => by 
     simp only [val_sub]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_left _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_right _ _))

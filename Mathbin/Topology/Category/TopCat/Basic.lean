@@ -71,27 +71,29 @@ instance : Inhabited TopCat :=
   ⟨TopCat.of Empty⟩
 
 /-- The discrete topology on any type. -/
-def discrete : Type u ⥤ TopCat.{u} where
+def discrete : Type u ⥤ TopCat.{u} where 
   obj X := ⟨X, ⊥⟩
   map X Y f := { toFun := f, continuous_to_fun := continuous_bot }
 #align Top.discrete TopCat.discrete
 
 /-- The trivial topology on any type. -/
-def trivial : Type u ⥤ TopCat.{u} where
+def trivial : Type u ⥤ TopCat.{u} where 
   obj X := ⟨X, ⊤⟩
   map X Y f := { toFun := f, continuous_to_fun := continuous_top }
 #align Top.trivial TopCat.trivial
 
 /-- Any homeomorphisms induces an isomorphism in `Top`. -/
 @[simps]
-def isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : X ≅ Y where
+def isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) :
+    X ≅ Y where 
   Hom := ⟨f⟩
   inv := ⟨f.symm⟩
 #align Top.iso_of_homeo TopCat.isoOfHomeo
 
 /-- Any isomorphism in `Top` induces a homeomorphism. -/
 @[simps]
-def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : X ≃ₜ Y where
+def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) :
+    X ≃ₜ Y where 
   toFun := f.Hom
   invFun := f.inv
   left_inv x := by simp
@@ -125,9 +127,7 @@ theorem open_embedding_iff_is_iso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶
   · intro h
     convert h.comp (TopCat.homeoOfIso (as_iso f).symm).OpenEmbedding
     exact congr_arg _ (is_iso.inv_hom_id_assoc f g).symm
-    
   · exact fun h => h.comp (TopCat.homeoOfIso (as_iso f)).OpenEmbedding
-    
 #align Top.open_embedding_iff_is_iso_comp TopCat.open_embedding_iff_is_iso_comp
 
 end TopCat

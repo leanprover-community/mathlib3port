@@ -22,16 +22,10 @@ theorem Int.nat_abs_eq_iff_associated {a b : ℤ} : a.natAbs = b.natAbs ↔ Asso
   constructor
   · rintro (rfl | rfl)
     · rfl
-      
     · exact ⟨-1, by simp⟩
-      
-    
   · rintro ⟨u, rfl⟩
     obtain rfl | rfl := Int.units_eq_one_or u
     · exact Or.inl (by simp)
-      
     · exact Or.inr (by simp)
-      
-    
 #align int.nat_abs_eq_iff_associated Int.nat_abs_eq_iff_associated
 

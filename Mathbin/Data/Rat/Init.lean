@@ -86,7 +86,7 @@ theorem ext_iff {p q : ℚ} : p = q ↔ p.num = q.num ∧ p.denom = q.denom := b
 -/
 
 #print Rat.ext /-
-@[ext.1]
+@[ext]
 theorem ext {p q : ℚ} (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
   Rat.ext_iff.mpr ⟨hn, hd⟩
 #align rat.ext Rat.ext

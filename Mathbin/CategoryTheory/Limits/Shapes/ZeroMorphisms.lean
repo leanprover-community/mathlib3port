@@ -87,16 +87,13 @@ private theorem ext_aux (I J : HasZeroMorphisms C)
     (w :
       ∀ X Y : C,
         (@HasZeroMorphisms.hasZero _ _ I X Y).zero = (@HasZeroMorphisms.hasZero _ _ J X Y).zero) :
-    I = J := by
+    I = J := by 
   cases I; cases J
   congr
   · ext (X Y)
     exact w X Y
-    
   · apply proof_irrel_heq
-    
   · apply proof_irrel_heq
-    
 #align
   category_theory.limits.has_zero_morphisms.ext_aux category_theory.limits.has_zero_morphisms.ext_aux
 
@@ -120,7 +117,8 @@ end HasZeroMorphisms
 
 open Opposite HasZeroMorphisms
 
-instance hasZeroMorphismsOpposite [HasZeroMorphisms C] : HasZeroMorphisms Cᵒᵖ where
+instance hasZeroMorphismsOpposite [HasZeroMorphisms C] :
+    HasZeroMorphisms Cᵒᵖ where 
   HasZero X Y := ⟨(0 : unop Y ⟶ unop X).op⟩
   comp_zero' X Y f Z := congr_arg Quiver.Hom.op (HasZeroMorphisms.zero_comp (unop Z) f.unop)
   zero_comp' X Y Z f := congr_arg Quiver.Hom.op (HasZeroMorphisms.comp_zero f.unop (unop X))
@@ -207,11 +205,9 @@ theorem iff_is_split_mono_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsZe
   constructor
   · intro h
     rw [← category.id_comp f, h, zero_comp]
-    
   · intro h
     rw [← is_split_mono.id f]
     simp [h]
-    
 #align
   category_theory.limits.is_zero.iff_is_split_mono_eq_zero CategoryTheory.Limits.IsZero.iff_is_split_mono_eq_zero
 
@@ -220,11 +216,9 @@ theorem iff_is_split_epi_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsZero
   constructor
   · intro h
     rw [← category.comp_id f, h, comp_zero]
-    
   · intro h
     rw [← is_split_epi.id f]
     simp [h]
-    
 #align
   category_theory.limits.is_zero.iff_is_split_epi_eq_zero CategoryTheory.Limits.IsZero.iff_is_split_epi_eq_zero
 
@@ -250,13 +244,14 @@ end IsZero
     the `has_zero_morphisms` instances will not be definitionally equal. For this reason library
     code should generally ask for an instance of `has_zero_morphisms` separately, even if it already
     asks for an instance of `has_zero_objects`. -/
-def IsZero.hasZeroMorphisms {O : C} (hO : IsZero O) : HasZeroMorphisms C where
+def IsZero.hasZeroMorphisms {O : C} (hO : IsZero O) :
+    HasZeroMorphisms C where 
   HasZero X Y := { zero := hO.from X ≫ hO.to Y }
-  zero_comp' X Y Z f := by
+  zero_comp' X Y Z f := by 
     rw [category.assoc]
     congr
     apply hO.eq_of_src
-  comp_zero' X Y Z f := by
+  comp_zero' X Y Z f := by 
     rw [← category.assoc]
     congr
     apply hO.eq_of_tgt
@@ -277,13 +272,15 @@ open ZeroObject
     the `has_zero_morphisms` instances will not be definitionally equal. For this reason library
     code should generally ask for an instance of `has_zero_morphisms` separately, even if it already
     asks for an instance of `has_zero_objects`. -/
-def zeroMorphismsOfZeroObject : HasZeroMorphisms C where
+def zeroMorphismsOfZeroObject :
+    HasZeroMorphisms
+      C where 
   HasZero X Y := { zero := (default : X ⟶ 0) ≫ default }
-  zero_comp' X Y Z f := by
+  zero_comp' X Y Z f := by 
     dsimp only [Zero.zero]
     rw [category.assoc]
     congr
-  comp_zero' X Y Z f := by
+  comp_zero' X Y Z f := by 
     dsimp only [Zero.zero]
     rw [← category.assoc]
     congr
@@ -417,7 +414,8 @@ theorem epi_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : Epi f :=
 
 Because `X ≅ 0` contains data (even if a subsingleton), we express this `↔` as an `≃`.
 -/
-def idZeroEquivIsoZero (X : C) : 𝟙 X = 0 ≃ (X ≅ 0) where
+def idZeroEquivIsoZero (X : C) :
+    𝟙 X = 0 ≃ (X ≅ 0) where 
   toFun h := { Hom := 0, inv := 0 }
   invFun i := zero_of_target_iso_zero (𝟙 X) i
   left_inv := by tidy
@@ -440,7 +438,8 @@ theorem id_zero_equiv_iso_zero_apply_inv (X : C) (h : 𝟙 X = 0) :
 
 /-- If `0 : X ⟶ Y` is an monomorphism, then `X ≅ 0`. -/
 @[simps]
-def isoZeroOfMonoZero {X Y : C} (h : Mono (0 : X ⟶ Y)) : X ≅ 0 where
+def isoZeroOfMonoZero {X Y : C} (h : Mono (0 : X ⟶ Y)) :
+    X ≅ 0 where 
   Hom := 0
   inv := 0
   hom_inv_id' := (cancel_mono (0 : X ⟶ Y)).mp (by simp)
@@ -448,7 +447,8 @@ def isoZeroOfMonoZero {X Y : C} (h : Mono (0 : X ⟶ Y)) : X ≅ 0 where
 
 /-- If `0 : X ⟶ Y` is an epimorphism, then `Y ≅ 0`. -/
 @[simps]
-def isoZeroOfEpiZero {X Y : C} (h : Epi (0 : X ⟶ Y)) : Y ≅ 0 where
+def isoZeroOfEpiZero {X Y : C} (h : Epi (0 : X ⟶ Y)) :
+    Y ≅ 0 where 
   Hom := 0
   inv := 0
   hom_inv_id' := (cancel_epi (0 : X ⟶ Y)).mp (by simp)
@@ -468,10 +468,11 @@ def isoZeroOfEpiEqZero {X Y : C} {f : X ⟶ Y} [Epi f] (h : f = 0) : Y ≅ 0 := 
 
 /-- If an object `X` is isomorphic to 0, there's no need to use choice to construct
 an explicit isomorphism: the zero morphism suffices. -/
-def isoOfIsIsomorphicZero {X : C} (P : IsIsomorphic X 0) : X ≅ 0 where
+def isoOfIsIsomorphicZero {X : C} (P : IsIsomorphic X 0) :
+    X ≅ 0 where 
   Hom := 0
   inv := 0
-  hom_inv_id' := by
+  hom_inv_id' := by 
     cases P
     rw [← P.hom_inv_id]
     rw [← category.id_comp P.inv]
@@ -489,8 +490,12 @@ variable [HasZeroMorphisms C]
 the identities on both `X` and `Y` are zero.
 -/
 @[simps]
-def isIsoZeroEquiv (X Y : C) : IsIso (0 : X ⟶ Y) ≃ 𝟙 X = 0 ∧ 𝟙 Y = 0 where
-  toFun := by
+def isIsoZeroEquiv (X Y : C) :
+    IsIso (0 : X ⟶ Y) ≃
+      𝟙 X = 0 ∧
+        𝟙 Y =
+          0 where 
+  toFun := by 
     intro i
     rw [← is_iso.hom_inv_id (0 : X ⟶ Y)]
     rw [← is_iso.inv_hom_id (0 : X ⟶ Y)]
@@ -513,7 +518,8 @@ open ZeroObject
 /-- A zero morphism `0 : X ⟶ Y` is an isomorphism if and only if
 `X` and `Y` are isomorphic to the zero object.
 -/
-def isIsoZeroEquivIsoZero (X Y : C) : IsIso (0 : X ⟶ Y) ≃ (X ≅ 0) × (Y ≅ 0) := by
+def isIsoZeroEquivIsoZero (X Y : C) : IsIso (0 : X ⟶ Y) ≃ (X ≅ 0) × (Y ≅ 0) :=
+  by
   -- This is lame, because `prod` can't cope with `Prop`, so we can't use `equiv.prod_congr`.
   refine' (is_iso_zero_equiv X Y).trans _
   symm
@@ -522,20 +528,16 @@ def isIsoZeroEquivIsoZero (X Y : C) : IsIso (0 : X ⟶ Y) ≃ (X ≅ 0) × (Y �
     fconstructor
     exact (id_zero_equiv_iso_zero X).symm eX
     exact (id_zero_equiv_iso_zero Y).symm eY
-    
   · rintro ⟨hX, hY⟩
     fconstructor
     exact (id_zero_equiv_iso_zero X) hX
     exact (id_zero_equiv_iso_zero Y) hY
-    
   · tidy
-    
   · tidy
-    
 #align category_theory.limits.is_iso_zero_equiv_iso_zero CategoryTheory.Limits.isIsoZeroEquivIsoZero
 
 theorem is_iso_of_source_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : X ≅ 0) (j : Y ≅ 0) : IsIso f :=
-  by
+  by 
   rw [zero_of_source_iso_zero f i]
   exact (is_iso_zero_equiv_iso_zero _ _).invFun ⟨i, j⟩
 #align
@@ -597,7 +599,8 @@ open ZeroObject
 /-- The zero morphism has a `mono_factorisation` through the zero object.
 -/
 @[simps]
-def monoFactorisationZero (X Y : C) : MonoFactorisation (0 : X ⟶ Y) where
+def monoFactorisationZero (X Y : C) :
+    MonoFactorisation (0 : X ⟶ Y) where 
   i := 0
   m := 0
   e := 0
@@ -605,7 +608,9 @@ def monoFactorisationZero (X Y : C) : MonoFactorisation (0 : X ⟶ Y) where
 
 /-- The factorisation through the zero object is an image factorisation.
 -/
-def imageFactorisationZero (X Y : C) : ImageFactorisation (0 : X ⟶ Y) where
+def imageFactorisationZero (X Y : C) :
+    ImageFactorisation (0 :
+        X ⟶ Y) where 
   f := monoFactorisationZero X Y
   IsImage := { lift := fun F' => 0 }
 #align category_theory.limits.image_factorisation_zero CategoryTheory.Limits.imageFactorisationZero
@@ -636,7 +641,7 @@ because `f = g` only implies `image f ≅ image g`.
 -/
 @[simp]
 theorem image.ι_zero' [HasEqualizers C] {X Y : C} {f : X ⟶ Y} (h : f = 0) [HasImage f] :
-    image.ι f = 0 := by
+    image.ι f = 0 := by 
   rw [image.eq_fac h]
   simp
 #align category_theory.limits.image.ι_zero' CategoryTheory.Limits.image.ι_zero'

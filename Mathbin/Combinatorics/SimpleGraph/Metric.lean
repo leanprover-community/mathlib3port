@@ -118,10 +118,8 @@ private theorem dist_comm_aux {u v : V} (h : G.Reachable u v) : G.dist u v ≤ G
 theorem dist_comm {u v : V} : G.dist u v = G.dist v u := by
   by_cases h : G.reachable u v
   · apply le_antisymm (dist_comm_aux h) (dist_comm_aux h.symm)
-    
   · have h' : ¬G.reachable v u := fun h' => absurd h'.symm h
     simp [h, h', dist_eq_zero_of_not_reachable]
-    
 #align simple_graph.dist_comm SimpleGraph.dist_comm
 
 end SimpleGraph

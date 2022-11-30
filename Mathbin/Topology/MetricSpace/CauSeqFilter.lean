@@ -25,7 +25,7 @@ variable {β : Type v}
 theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β → ℝ)]
     (f : CauSeq β norm) [CauSeq.IsComplete β norm] : Tendsto f atTop (𝓝 f.lim) :=
   tendsto_nhds.mpr
-    (by
+    (by 
       intro s os lfs
       suffices ∃ a : ℕ, ∀ b : ℕ, b ≥ a → f b ∈ s by simpa using this
       rcases Metric.is_open_iff.1 os _ lfs with ⟨ε, ⟨hε, hεs⟩⟩
@@ -47,7 +47,9 @@ variable [NormedField β]
  specific to norm. Furthermore, norm only instantiates is_absolute_value on normed_field.
  This needs to be fixed, since it prevents showing that ℤ_[hp] is complete
 -/
-instance NormedField.is_absolute_value : IsAbsoluteValue (norm : β → ℝ) where
+instance NormedField.is_absolute_value :
+    IsAbsoluteValue (norm : β →
+          ℝ) where 
   abv_nonneg := norm_nonneg
   abv_eq_zero _ := norm_eq_zero
   abv_add := norm_add_le
@@ -68,7 +70,7 @@ theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f
   apply Set.mk_mem_prod <;> solve_by_elim [le_refl]
 #align cauchy_seq.is_cau_seq CauchySeq.isCauSeq
 
-theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f := by
+theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
   refine' cauchy_iff.2 ⟨by infer_instance, fun s hs => _⟩
   rcases mem_uniformity_dist.1 hs with ⟨ε, ⟨hε, hεs⟩⟩
   cases' CauSeq.cauchy₂ f hε with N hN
@@ -79,27 +81,25 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f := by
     intro b hb
     exists b
     simp [hb]
-    
   · rintro ⟨a, b⟩ ⟨⟨a', ⟨ha'1, ha'2⟩⟩, ⟨b', ⟨hb'1, hb'2⟩⟩⟩
     dsimp at ha'1 ha'2 hb'1 hb'2
     rw [← ha'2, ← hb'2]
     apply hεs
     rw [dist_eq_norm]
     apply hN <;> assumption
-    
-#align cau_seq.cauchy_seq CauSeq.cauchySeq
+#align cau_seq.cauchy_seq CauSeq.cauchy_seq
 
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
 theorem cau_seq_iff_cauchy_seq {α : Type u} [NormedField α] {u : ℕ → α} :
     IsCauSeq norm u ↔ CauchySeq u :=
-  ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.IsCauSeq⟩
+  ⟨fun h => CauSeq.cauchy_seq ⟨u, h⟩, fun h => h.IsCauSeq⟩
 #align cau_seq_iff_cauchy_seq cau_seq_iff_cauchy_seq
 
 -- see Note [lower instance priority]
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
 assumption and this suffices to characterize completeness. -/
 instance (priority := 100) complete_space_of_cau_seq_complete [CauSeq.IsComplete β norm] :
-    CompleteSpace β := by
+    CompleteSpace β := by 
   apply complete_of_cauchy_seq_tendsto
   intro u hu
   have C : IsCauSeq norm u := cau_seq_iff_cauchy_seq.2 hu

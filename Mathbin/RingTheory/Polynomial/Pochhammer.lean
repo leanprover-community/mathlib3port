@@ -65,9 +65,7 @@ variable {S} {T : Type v} [Semiring T]
 theorem pochhammer_map (f : S →+* T) (n : ℕ) : (pochhammer S n).map f = pochhammer T n := by
   induction' n with n ih
   · simp
-    
   · simp [ih, pochhammer_succ_left, map_comp]
-    
 #align pochhammer_map pochhammer_map
 
 end
@@ -82,9 +80,7 @@ theorem pochhammer_eval_cast (n k : ℕ) : ((pochhammer ℕ n).eval k : S) = (po
 theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then 1 else 0 := by
   cases n
   · simp
-    
   · simp [X_mul, Nat.succ_ne_zero, pochhammer_succ_left]
-    
 #align pochhammer_eval_zero pochhammer_eval_zero
 
 theorem pochhammer_zero_eval_zero : (pochhammer S 0).eval 0 = 1 := by simp
@@ -100,14 +96,12 @@ theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n 
   · apply_fun Polynomial.map (algebraMap ℕ S)  at h
     simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X,
       Polynomial.map_nat_cast] using h
-    
   induction' n with n ih
   · simp
-    
-  · conv_lhs =>
+  ·
+    conv_lhs =>
       rw [pochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← pochhammer_succ_left, add_comp, X_comp,
         nat_cast_comp, add_assoc, add_comm (1 : ℕ[X]), ← Nat.cast_succ]
-    
 #align pochhammer_succ_right pochhammer_succ_right
 
 theorem pochhammer_succ_eval {S : Type _} [Semiring S] (n : ℕ) (k : S) :
@@ -138,16 +132,15 @@ theorem pochhammer_mul (n m : ℕ) :
     pochhammer S n * (pochhammer S m).comp (X + n) = pochhammer S (n + m) := by
   induction' m with m ih
   · simp
-    
-  · rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih,
+  ·
+    rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih,
       Nat.succ_eq_add_one, ← add_assoc, pochhammer_succ_right, Nat.cast_add, add_assoc]
-    
 #align pochhammer_mul pochhammer_mul
 
 theorem pochhammer_nat_eq_asc_factorial (n : ℕ) :
     ∀ k, (pochhammer ℕ k).eval (n + 1) = n.ascFactorial k
   | 0 => by erw [eval_one] <;> rfl
-  | t + 1 => by
+  | t + 1 => by 
     rw [pochhammer_succ_right, eval_mul, pochhammer_nat_eq_asc_factorial t]
     suffices n.asc_factorial t * (n + 1 + t) = n.asc_factorial (t + 1) by simpa
     rw [Nat.asc_factorial_succ, add_right_comm, mul_comm]
@@ -157,15 +150,14 @@ theorem pochhammer_nat_eq_desc_factorial (a b : ℕ) :
     (pochhammer ℕ b).eval a = (a + b - 1).descFactorial b := by
   cases b
   · rw [Nat.desc_factorial_zero, pochhammer_zero, Polynomial.eval_one]
-    
   rw [Nat.add_succ, Nat.succ_sub_succ, tsub_zero]
   cases a
-  · rw [pochhammer_ne_zero_eval_zero _ b.succ_ne_zero, zero_add,
+  ·
+    rw [pochhammer_ne_zero_eval_zero _ b.succ_ne_zero, zero_add,
       Nat.desc_factorial_of_lt b.lt_succ_self]
-    
-  · rw [Nat.succ_add, ← Nat.add_succ, Nat.add_desc_factorial_eq_asc_factorial,
+  ·
+    rw [Nat.succ_add, ← Nat.add_succ, Nat.add_desc_factorial_eq_asc_factorial,
       pochhammer_nat_eq_asc_factorial]
-    
 #align pochhammer_nat_eq_desc_factorial pochhammer_nat_eq_desc_factorial
 
 end Semiring
@@ -178,11 +170,9 @@ theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval
   induction' n with n ih
   · simp only [Nat.zero_eq, pochhammer_zero, eval_one]
     exact zero_lt_one
-    
   · rw [pochhammer_succ_right, mul_add, eval_add, ← Nat.cast_comm, eval_nat_cast_mul, eval_mul_X,
       Nat.cast_comm, ← mul_add]
     exact mul_pos ih (lt_of_lt_of_le h ((le_add_iff_nonneg_right _).mpr (Nat.cast_nonneg n)))
-    
 #align pochhammer_pos pochhammer_pos
 
 end StrictOrderedSemiring
@@ -206,12 +196,10 @@ theorem factorial_mul_pochhammer (S : Type _) [Semiring S] (r n : ℕ) :
 
 theorem pochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (pochhammer ℕ r).eval (n + 1) = (n + r) * (pochhammer ℕ r).eval n
-  | 0 => by
+  | 0 => by 
     by_cases h : r = 0
     · simp only [h, zero_mul, zero_add]
-      
     · simp only [pochhammer_eval_zero, zero_mul, if_neg h, mul_zero]
-      
   | k + 1 => by simp only [pochhammer_nat_eq_asc_factorial, Nat.succ_asc_factorial, add_right_comm]
 #align pochhammer_nat_eval_succ pochhammer_nat_eval_succ
 

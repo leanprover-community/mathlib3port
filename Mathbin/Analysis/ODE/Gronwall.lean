@@ -59,7 +59,6 @@ theorem hasDerivAtGronwallBound (δ K ε x : ℝ) :
     simp only [gronwall_bound_K0, zero_mul, zero_add]
     convert ((hasDerivAtId x).const_mul ε).const_add δ
     rw [mul_one]
-    
   · simp only [gronwall_bound_of_K_ne_0 hK]
     convert
       (((hasDerivAtId x).const_mul K).exp.const_mul δ).add
@@ -67,7 +66,6 @@ theorem hasDerivAtGronwallBound (δ K ε x : ℝ) :
       1
     simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
     ring
-    
 #align has_deriv_at_gronwall_bound hasDerivAtGronwallBound
 
 theorem hasDerivAtGronwallBoundShift (δ K ε x a : ℝ) :
@@ -79,17 +77,13 @@ theorem hasDerivAtGronwallBoundShift (δ K ε x a : ℝ) :
 theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ := by
   by_cases hK : K = 0
   · simp only [gronwallBound, if_pos hK, mul_zero, add_zero]
-    
   · simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_one, add_zero]
-    
 #align gronwall_bound_x0 gronwall_bound_x0
 
 theorem gronwall_bound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) := by
   by_cases hK : K = 0
   · simp only [gronwall_bound_K0, hK, zero_mul, exp_zero, add_zero, mul_one]
-    
   · simp only [gronwall_bound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
-    
 #align gronwall_bound_ε0 gronwall_bound_ε0
 
 theorem gronwall_bound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by
@@ -100,10 +94,8 @@ theorem gronwall_bound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronw
   by_cases hK : K = 0
   · simp only [gronwall_bound_K0, hK]
     exact continuous_const.add (continuous_id.mul continuous_const)
-    
   · simp only [gronwall_bound_of_K_ne_0 hK]
     exact continuous_const.add ((continuous_id.mul continuous_const).mul continuous_const)
-    
 #align gronwall_bound_continuous_ε gronwall_bound_continuous_ε
 
 /-! ### Inequality and corollaries -/
@@ -125,21 +117,16 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
     intro x hx ε' hε'
     apply image_le_of_liminf_slope_right_lt_deriv_boundary hf hf'
     · rwa [sub_self, gronwall_bound_x0]
-      
     · exact fun x => hasDerivAtGronwallBoundShift δ K ε' x a
-      
     · intro x hx hfB
       rw [← hfB]
       apply lt_of_le_of_lt (bound x hx)
       exact add_lt_add_left hε' _
-      
     · exact hx
-      
   intro x hx
   change f x ≤ (fun ε' => gronwallBound δ K ε' (x - a)) ε
   convert continuous_within_at_const.closure_le _ _ (H x hx)
   · simp only [closure_Ioi, left_mem_Ici]
-    
   exact (gronwall_bound_continuous_ε δ K (x - a)).ContinuousWithinAt
 #align le_gronwall_bound_of_liminf_deriv_right_le le_gronwall_bound_of_liminf_deriv_right_le
 

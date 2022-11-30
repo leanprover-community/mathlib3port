@@ -40,7 +40,6 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) :
     · apply div_pos pi_pos
       apply pow_pos
       norm_num
-      
     · rw [div_le_iff']
       · refine' le_trans pi_le_four _
         simp only [show (4 : ℝ) = 2 ^ 2 by norm_num, mul_one]
@@ -48,11 +47,8 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) :
         norm_num
         apply le_add_of_nonneg_left
         apply Nat.zero_le
-        
       · apply pow_pos
         norm_num
-        
-      
     apply add_le_add_left
     rw [div_le_div_right]
     rw [le_div_iff, ← mul_pow]
@@ -65,7 +61,6 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) :
       norm_num
       apply pow_pos
       norm_num
-      
     rw [← le_div_iff]
     refine' le_trans ((div_le_div_right _).mpr pi_le_four) _
     apply pow_pos
@@ -78,7 +73,6 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) :
   congr 1
   · rw [pow_succ _ (n + 1), ← mul_assoc, div_mul_cancel, mul_comm]
     norm_num
-    
   rw [pow_succ, ← pow_mul, mul_comm n 2, pow_mul, show (2 : ℝ) ^ 2 = 4 by norm_num, pow_succ,
     pow_succ, ← mul_assoc (2 : ℝ), show (2 : ℝ) * 2 = 4 by norm_num, ← mul_assoc, div_mul_cancel,
     mul_comm ((2 : ℝ) ^ n), ← div_div, div_mul_cancel]
@@ -137,11 +131,8 @@ theorem pi_upper_bound_start (n : ℕ) {a}
   refine' lt_of_lt_of_le (pi_lt_sqrt_two_add_series n) _
   rw [← le_sub_iff_add_le, ← le_div_iff', sqrt_le_left, sub_le_comm]
   · rwa [Nat.cast_zero, zero_div] at h
-    
   · exact div_nonneg (sub_nonneg.2 h₂) (pow_nonneg (le_of_lt zero_lt_two) _)
-    
   · exact pow_pos zero_lt_two _
-    
 #align real.pi_upper_bound_start Real.pi_upper_bound_start
 
 theorem sqrt_two_add_series_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ}

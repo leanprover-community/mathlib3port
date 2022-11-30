@@ -618,7 +618,7 @@ section Eventually
 
 theorem Filter.EventuallyLe.is_max_filter {α β : Type _} [Preorder β] {f g : α → β} {a : α}
     {l : Filter α} (hle : g ≤ᶠ[l] f) (hfga : f a = g a) (h : IsMaxFilter f l a) :
-    IsMaxFilter g l a := by
+    IsMaxFilter g l a := by 
   refine' hle.mp (h.mono fun x hf hgf => _)
   rw [← hfga]
   exact le_trans hgf hf

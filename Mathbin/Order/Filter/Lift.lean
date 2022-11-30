@@ -47,10 +47,8 @@ theorem HasBasis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : Fi
   refine' (mem_binfi_of_directed _ ⟨univ, univ_sets _⟩).trans _
   · intro t₁ ht₁ t₂ ht₂
     exact ⟨t₁ ∩ t₂, inter_mem ht₁ ht₂, gm <| inter_subset_left _ _, gm <| inter_subset_right _ _⟩
-    
   · simp only [← (hg _).mem_iff]
     exact hf.exists_iff fun t₁ t₂ ht H => gm ht H
-    
 #align filter.has_basis.mem_lift_iff Filter.HasBasis.mem_lift_iff
 
 /-- If `(p : ι → Prop, s : ι → set α)` is a basis of a filter `f`, `g` is a monotone function
@@ -216,10 +214,8 @@ theorem lift_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β
     refine' infi_sets_induct ht _ fun i s t hs ht => _
     · inhabit ι
       exact infi₂_le_of_le default univ (infi_le _ univ_mem)
-      
     · rw [hg]
       exact le_inf (infi₂_le_of_le i s <| infi_le _ hs) ht
-      
   simp only [mem_lift_sets (Monotone.of_map_inf hg), exists_imp]
   exact fun t ht hs => H t ht hs
 #align filter.lift_infi Filter.lift_infi
@@ -233,12 +229,10 @@ theorem lift_infi_of_directed [Nonempty ι] {f : ι → Filter α} {g : Set α �
 
 theorem lift_infi_of_map_univ {f : ι → Filter α} {g : Set α → Filter β}
     (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) (hg' : g univ = ⊤) : (infi f).lift g = ⨅ i, (f i).lift g :=
-  by
+  by 
   cases isEmpty_or_nonempty ι
   · simp [infi_of_empty, hg']
-    
   · exact lift_infi hg
-    
 #align filter.lift_infi_of_map_univ Filter.lift_infi_of_map_univ
 
 end lift

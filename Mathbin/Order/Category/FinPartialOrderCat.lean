@@ -77,20 +77,22 @@ instance hasForgetToFintype :
 
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : FinPartialOrderCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : FinPartialOrderCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align FinPartialOrder.iso.mk FinPartialOrderCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : FinPartialOrderCat ⥤ FinPartialOrderCat where
+def dual : FinPartialOrderCat ⥤
+      FinPartialOrderCat where 
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
 #align FinPartialOrder.dual FinPartialOrderCat.dual

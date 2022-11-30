@@ -74,12 +74,15 @@ variable {M}
 
 /-- The canonical linear map `M →ₗ[R] tensor_algebra R M`.
 -/
-def ι : M →ₗ[R] TensorAlgebra R M where
+def ι :
+    M →ₗ[R]
+      TensorAlgebra R
+        M where 
   toFun m := RingQuot.mkAlgHom R _ (FreeAlgebra.ι R m)
-  map_add' x y := by
+  map_add' x y := by 
     rw [← AlgHom.map_add]
     exact RingQuot.mk_alg_hom_rel R rel.add
-  map_smul' r x := by
+  map_smul' r x := by 
     rw [← AlgHom.map_smul]
     exact RingQuot.mk_alg_hom_rel R rel.smul
 #align tensor_algebra.ι TensorAlgebra.ι
@@ -94,7 +97,10 @@ theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) :
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 -/
 @[simps symmApply]
-def lift {A : Type _} [Semiring A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) where
+def lift {A : Type _} [Semiring A] [Algebra R A] :
+    (M →ₗ[R] A) ≃
+      (TensorAlgebra R M →ₐ[R]
+        A) where 
   toFun :=
     RingQuot.liftAlgHom R ∘ fun f =>
       ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by
@@ -120,7 +126,7 @@ theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) (x) :
-    lift R f (ι R x) = f x := by
+    lift R f (ι R x) = f x := by 
   dsimp [lift, ι]
   rfl
 #align tensor_algebra.lift_ι_apply TensorAlgebra.lift_ι_apply
@@ -142,7 +148,7 @@ theorem lift_comp_ι {A : Type _} [Semiring A] [Algebra R A] (g : TensorAlgebra 
 #align tensor_algebra.lift_comp_ι TensorAlgebra.lift_comp_ι
 
 /-- See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : TensorAlgebra R M →ₐ[R] A}
     (w : f.toLinearMap.comp (ι R) = g.toLinearMap.comp (ι R)) : f = g := by
   rw [← lift_symm_apply, ← lift_symm_apply] at w
@@ -157,7 +163,8 @@ and is preserved under addition and muliplication, then it holds for all of `ten
 theorem induction {C : TensorAlgebra R M → Prop}
     (h_grade0 : ∀ r, C (algebraMap R (TensorAlgebra R M) r)) (h_grade1 : ∀ x, C (ι R x))
     (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
-    (a : TensorAlgebra R M) : C a := by
+    (a : TensorAlgebra R M) : C a :=
+  by
   -- the arguments are enough to construct a subalgebra, and a mapping into it from M
   let s : Subalgebra R (TensorAlgebra R M) :=
     { carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
@@ -244,10 +251,8 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
     rw [h, AlgHom.commutes] at hf0
     have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
     exact this.symm.imp_left Eq.symm
-    
   · rintro ⟨rfl, rfl⟩
     rw [LinearMap.map_zero, RingHom.map_zero]
-    
 #align tensor_algebra.ι_eq_algebra_map_iff TensorAlgebra.ι_eq_algebra_map_iff
 
 @[simp]
@@ -260,7 +265,7 @@ theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
 theorem ι_range_disjoint_one :
     Disjoint (LinearMap.range (ι R : M →ₗ[R] TensorAlgebra R M))
       (1 : Submodule R (TensorAlgebra R M)) :=
-  by
+  by 
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
   rw [ι_eq_algebra_map_iff x] at hx

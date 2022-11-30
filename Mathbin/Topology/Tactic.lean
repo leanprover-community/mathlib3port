@@ -29,7 +29,7 @@ used by `continuity`.
 
 /-- User attribute used to mark tactics used by `continuity`. -/
 @[user_attribute]
-unsafe def continuity : user_attribute where
+unsafe def continuity : user_attribute where 
   Name := `continuity
   descr := "lemmas usable to prove continuity"
 #align continuity continuity

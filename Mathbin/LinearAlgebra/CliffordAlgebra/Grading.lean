@@ -47,7 +47,7 @@ theorem ι_mem_even_odd_one (m : M) : ι Q m ∈ evenOdd Q 1 :=
 
 theorem ι_mul_ι_mem_even_odd_zero (m₁ m₂ : M) : ι Q m₁ * ι Q m₂ ∈ evenOdd Q 0 :=
   Submodule.mem_supr_of_mem ⟨2, rfl⟩
-    (by
+    (by 
       rw [Subtype.coe_mk, pow_two]
       exact
         Submodule.mul_mem_mul (LinearMap.mem_range_self (ι Q) m₁)
@@ -66,7 +66,9 @@ theorem even_odd_mul_le (i j : Zmod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q
   exact Submodule.mul_mem_mul hx' hy'
 #align clifford_algebra.even_odd_mul_le CliffordAlgebra.even_odd_mul_le
 
-instance evenOdd.graded_monoid : SetLike.GradedMonoid (evenOdd Q) where
+instance evenOdd.graded_monoid :
+    SetLike.GradedMonoid
+      (evenOdd Q) where 
   one_mem := Submodule.one_le.mp (one_le_even_odd_zero Q)
   mul_mem i j p q hp hq := Submodule.mul_le.mp (even_odd_mul_le Q _ _) _ hp _ hq
 #align clifford_algebra.even_odd.graded_monoid CliffordAlgebra.evenOdd.graded_monoid
@@ -92,7 +94,7 @@ theorem GradedAlgebra.ι_sq_scalar (m : M) :
 theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
     lift Q ⟨by apply graded_algebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩ x' =
       DirectSum.of (fun i => evenOdd Q i) i' x' :=
-  by
+  by 
   cases' x' with x' hx'
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
   refine' Submodule.supr_induction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
@@ -103,27 +105,20 @@ theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
         (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl
-      
     · rw [AlgHom.map_add, ihx, ihy, ← map_add]
       rfl
-      
     · obtain ⟨_, rfl⟩ := hm
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.of_mul_of]
       refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext _ _) <;>
         dsimp only [GradedMonoid.mk, Subtype.coe_mk]
       · rw [Nat.succ_eq_add_one, add_comm, Nat.cast_add, Nat.cast_one]
-        
       rfl
-      
-    
   · rw [AlgHom.map_zero]
     apply Eq.symm
     apply dfinsupp.single_eq_zero.mpr
     rfl
-    
   · rw [AlgHom.map_add, ihx, ihy, ← map_add]
     rfl
-    
 #align clifford_algebra.graded_algebra.lift_ι_eq CliffordAlgebra.GradedAlgebra.lift_ι_eq
 
 /-- The clifford algebra is graded by the even and odd parts. -/
@@ -134,7 +129,7 @@ instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
       Q ⟨by apply graded_algebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
     (-- the proof from here onward is mostly similar to the `tensor_algebra` case, with some extra
     -- handling for the `supr` in `even_odd`.
-    by
+    by 
       ext m
       dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
         AlgHom.id_apply]
@@ -185,11 +180,9 @@ theorem even_odd_induction (n : Zmod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
     · intro r
       simp_rw [← Algebra.smul_def]
       exact hr _ (Submodule.smul_mem _ _ hb)
-      
     · intro x y n hx hy
       simp_rw [add_mul]
       apply hadd
-      
     · intro x hx n y hy ihy
       revert hx
       simp_rw [pow_two]
@@ -198,16 +191,11 @@ theorem even_odd_induction (n : Zmod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
         rintro _ ⟨m₁, rfl⟩ _ ⟨m₂, rfl⟩
         simp_rw [mul_assoc _ y b]
         refine' hιι_mul _ _ ihy
-        
       · intro x hx y hy ihx ihy
         simp_rw [add_mul]
         apply hadd ihx ihy
-        
-      
-    
   · intro x y hx hy
     apply hadd
-    
 #align clifford_algebra.even_odd_induction CliffordAlgebra.even_odd_induction
 
 /-- To show a property is true on the even parts, it suffices to show it is true on the

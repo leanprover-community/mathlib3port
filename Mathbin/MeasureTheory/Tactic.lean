@@ -30,7 +30,8 @@ copy the attribute to the additive version.
 
 /-- User attribute used to mark tactics used by `measurability`. -/
 @[user_attribute]
-unsafe def measurability : user_attribute where
+unsafe def measurability :
+    user_attribute where 
   Name := `measurability
   descr := "lemmas usable to prove (ae)-measurability"
 #align measurability measurability

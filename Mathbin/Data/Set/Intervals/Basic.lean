@@ -716,10 +716,8 @@ theorem Icc_eq_singleton_iff : icc a b = {c} ↔ a = c ∧ b = c := by
     exact
       ⟨eq_of_mem_singleton <| h.subst <| left_mem_Icc.2 hab,
         eq_of_mem_singleton <| h.subst <| right_mem_Icc.2 hab⟩
-    
   · rintro ⟨rfl, rfl⟩
     exact Icc_self _
-    
 #align set.Icc_eq_singleton_iff Set.Icc_eq_singleton_iff
 
 @[simp]
@@ -867,31 +865,24 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : iio a ⊆ s) (hc : s 
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr subset_diff_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : ioo a b ⊆ s) (hc : s ⊆ icc a b) :
-    s ∈ ({icc a b, ico a b, ioc a b, ioo a b} : Set (Set α)) := by classical
-  by_cases ha : a ∈ s <;> by_cases hb : b ∈ s
-  · refine' Or.inl (subset.antisymm hc _)
-    rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha, ← Icc_diff_right,
-      diff_singleton_subset_iff, insert_eq_of_mem hb] at ho
-    
-  · refine' Or.inr <| Or.inl <| subset.antisymm _ _
-    · rw [← Icc_diff_right]
-      exact subset_diff_singleton hc hb
-      
-    · rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha] at ho
-      
-    
-  · refine' Or.inr <| Or.inr <| Or.inl <| subset.antisymm _ _
-    · rw [← Icc_diff_left]
-      exact subset_diff_singleton hc ha
-      
-    · rwa [← Ioc_diff_right, diff_singleton_subset_iff, insert_eq_of_mem hb] at ho
-      
-    
-  · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
-    rw [← Ico_diff_left, ← Icc_diff_right]
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr subset_diff_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-    
+    s ∈ ({icc a b, ico a b, ioc a b, ioo a b} : Set (Set α)) := by
+  classical 
+    by_cases ha : a ∈ s <;> by_cases hb : b ∈ s
+    · refine' Or.inl (subset.antisymm hc _)
+      rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha, ← Icc_diff_right,
+        diff_singleton_subset_iff, insert_eq_of_mem hb] at ho
+    · refine' Or.inr <| Or.inl <| subset.antisymm _ _
+      · rw [← Icc_diff_right]
+        exact subset_diff_singleton hc hb
+      · rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha] at ho
+    · refine' Or.inr <| Or.inr <| Or.inl <| subset.antisymm _ _
+      · rw [← Icc_diff_left]
+        exact subset_diff_singleton hc ha
+      · rwa [← Ioc_diff_right, diff_singleton_subset_iff, insert_eq_of_mem hb] at ho
+    · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
+      rw [← Ico_diff_left, ← Icc_diff_right]
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr subset_diff_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset Set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset
 
 theorem eq_left_or_mem_Ioo_of_mem_Ico {x : α} (hmem : x ∈ ico a b) : x = a ∨ x ∈ ioo a b :=
@@ -937,19 +928,19 @@ section OrderTop
 
 @[simp]
 theorem Ici_top [PartialOrder α] [OrderTop α] : ici (⊤ : α) = {⊤} :=
-  is_max_top.Ici_eq
+  isMax_top.Ici_eq
 #align set.Ici_top Set.Ici_top
 
 variable [Preorder α] [OrderTop α] {a : α}
 
 @[simp]
 theorem Ioi_top : ioi (⊤ : α) = ∅ :=
-  is_max_top.Ioi_eq
+  isMax_top.Ioi_eq
 #align set.Ioi_top Set.Ioi_top
 
 @[simp]
 theorem Iic_top : iic (⊤ : α) = univ :=
-  is_top_top.Iic_eq
+  isTop_top.Iic_eq
 #align set.Iic_top Set.Iic_top
 
 @[simp]
@@ -966,19 +957,19 @@ section OrderBot
 
 @[simp]
 theorem Iic_bot [PartialOrder α] [OrderBot α] : iic (⊥ : α) = {⊥} :=
-  is_min_bot.Iic_eq
+  isMin_bot.Iic_eq
 #align set.Iic_bot Set.Iic_bot
 
 variable [Preorder α] [OrderBot α] {a : α}
 
 @[simp]
 theorem Iio_bot : iio (⊥ : α) = ∅ :=
-  is_min_bot.Iio_eq
+  isMin_bot.Iio_eq
 #align set.Iio_bot Set.Iio_bot
 
 @[simp]
 theorem Ici_bot : ici (⊥ : α) = univ :=
-  is_bot_bot.Ici_eq
+  isBot_bot.Ici_eq
 #align set.Ici_bot Set.Ici_bot
 
 @[simp]
@@ -1141,20 +1132,18 @@ theorem Ioc_subset_Ioc_iff (h₁ : a₁ < b₁) : ioc a₁ b₁ ⊆ ioc a₂ b�
 
 theorem Ioo_subset_Ioo_iff [DenselyOrdered α] (h₁ : a₁ < b₁) :
     ioo a₁ b₁ ⊆ ioo a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
-  ⟨fun h => by
+  ⟨fun h => by 
     rcases exists_between h₁ with ⟨x, xa, xb⟩
     constructor <;> refine' le_of_not_lt fun h' => _
     · have ab := (h ⟨xa, xb⟩).1.trans xb
       exact lt_irrefl _ (h ⟨h', ab⟩).1
-      
     · have ab := xa.trans (h ⟨xa, xb⟩).2
-      exact lt_irrefl _ (h ⟨ab, h'⟩).2
-      ,
+      exact lt_irrefl _ (h ⟨ab, h'⟩).2,
     fun ⟨h₁, h₂⟩ => Ioo_subset_Ioo h₁ h₂⟩
 #align set.Ioo_subset_Ioo_iff Set.Ioo_subset_Ioo_iff
 
 theorem Ico_eq_Ico_iff (h : a₁ < b₁ ∨ a₂ < b₂) : ico a₁ b₁ = ico a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
-  ⟨fun e => by
+  ⟨fun e => by 
     simp [subset.antisymm_iff] at e; simp [le_antisymm_iff]
     cases h <;> simp [Ico_subset_Ico_iff h] at e <;> [rcases e with ⟨⟨h₁, h₂⟩, e'⟩,
           rcases e with ⟨e', ⟨h₁, h₂⟩⟩] <;>
@@ -1242,19 +1231,15 @@ theorem Ioo_union_Ioi' (h₁ : c < b) : ioo a b ∪ ioi c = ioi (min a c) := by
   simp_rw [mem_union, mem_Ioo, mem_Ioi, min_lt_iff]
   by_cases hc : c < x
   · tauto
-    
   · have hxb : x < b := (le_of_not_gt hc).trans_lt h₁
     tauto
-    
 #align set.Ioo_union_Ioi' Set.Ioo_union_Ioi'
 
 theorem Ioo_union_Ioi (h : c < max a b) : ioo a b ∪ ioi c = ioi (min a c) := by
   cases' le_total a b with hab hab <;> simp [hab] at h
   · exact Ioo_union_Ioi' h
-    
   · rw [min_comm]
     simp [*, min_eq_left_of_lt]
-    
 #align set.Ioo_union_Ioi Set.Ioo_union_Ioi
 
 theorem Ioi_subset_Ioo_union_Ici : ioi a ⊆ ioo a b ∪ ici b := fun x hx =>
@@ -1280,18 +1265,14 @@ theorem Ico_union_Ici' (h₁ : c ≤ b) : ico a b ∪ ici c = ici (min a c) := b
   simp_rw [mem_union, mem_Ico, mem_Ici, min_le_iff]
   by_cases hc : c ≤ x
   · tauto
-    
   · have hxb : x < b := (lt_of_not_ge hc).trans_le h₁
     tauto
-    
 #align set.Ico_union_Ici' Set.Ico_union_Ici'
 
 theorem Ico_union_Ici (h : c ≤ max a b) : ico a b ∪ ici c = ici (min a c) := by
   cases' le_total a b with hab hab <;> simp [hab] at h
   · exact Ico_union_Ici' h
-    
   · simp [*]
-    
 #align set.Ico_union_Ici Set.Ico_union_Ici
 
 theorem Ioi_subset_Ioc_union_Ioi : ioi a ⊆ ioc a b ∪ ioi b := fun x hx =>
@@ -1308,18 +1289,14 @@ theorem Ioc_union_Ioi' (h₁ : c ≤ b) : ioc a b ∪ ioi c = ioi (min a c) := b
   simp_rw [mem_union, mem_Ioc, mem_Ioi, min_lt_iff]
   by_cases hc : c < x
   · tauto
-    
   · have hxb : x ≤ b := (le_of_not_gt hc).trans h₁
     tauto
-    
 #align set.Ioc_union_Ioi' Set.Ioc_union_Ioi'
 
 theorem Ioc_union_Ioi (h : c ≤ max a b) : ioc a b ∪ ioi c = ioi (min a c) := by
   cases' le_total a b with hab hab <;> simp [hab] at h
   · exact Ioc_union_Ioi' h
-    
   · simp [*]
-    
 #align set.Ioc_union_Ioi Set.Ioc_union_Ioi
 
 theorem Ici_subset_Icc_union_Ioi : ici a ⊆ icc a b ∪ ioi b := fun x hx =>
@@ -1355,23 +1332,17 @@ theorem Icc_union_Ici' (h₁ : c ≤ b) : icc a b ∪ ici c = ici (min a c) := b
   simp_rw [mem_union, mem_Icc, mem_Ici, min_le_iff]
   by_cases hc : c ≤ x
   · tauto
-    
   · have hxb : x ≤ b := (le_of_not_ge hc).trans h₁
     tauto
-    
 #align set.Icc_union_Ici' Set.Icc_union_Ici'
 
 theorem Icc_union_Ici (h : c ≤ max a b) : icc a b ∪ ici c = ici (min a c) := by
   cases' le_or_lt a b with hab hab <;> simp [hab] at h
   · exact Icc_union_Ici' h
-    
   · cases h
     · simp [*]
-      
     · have hca : c ≤ a := h.trans hab.le
       simp [*]
-      
-    
 #align set.Icc_union_Ici Set.Icc_union_Ici
 
 /-! #### An infinite and a finite interval -/
@@ -1402,18 +1373,14 @@ theorem Iio_union_Ico' (h₁ : c ≤ b) : iio b ∪ ico c d = iio (max b d) := b
   simp_rw [mem_union, mem_Iio, mem_Ico, lt_max_iff]
   by_cases hc : c ≤ x
   · tauto
-    
   · have hxb : x < b := (lt_of_not_ge hc).trans_le h₁
     tauto
-    
 #align set.Iio_union_Ico' Set.Iio_union_Ico'
 
 theorem Iio_union_Ico (h : min c d ≤ b) : iio b ∪ ico c d = iio (max b d) := by
   cases' le_total c d with hcd hcd <;> simp [hcd] at h
   · exact Iio_union_Ico' h
-    
   · simp [*]
-    
 #align set.Iio_union_Ico Set.Iio_union_Ico
 
 theorem Iic_subset_Iic_union_Ioc : iic b ⊆ iic a ∪ ioc a b := fun x hx =>
@@ -1431,19 +1398,15 @@ theorem Iic_union_Ioc' (h₁ : c < b) : iic b ∪ ioc c d = iic (max b d) := by
   simp_rw [mem_union, mem_Iic, mem_Ioc, le_max_iff]
   by_cases hc : c < x
   · tauto
-    
   · have hxb : x ≤ b := (le_of_not_gt hc).trans h₁.le
     tauto
-    
 #align set.Iic_union_Ioc' Set.Iic_union_Ioc'
 
 theorem Iic_union_Ioc (h : min c d < b) : iic b ∪ ioc c d = iic (max b d) := by
   cases' le_total c d with hcd hcd <;> simp [hcd] at h
   · exact Iic_union_Ioc' h
-    
   · rw [max_comm]
     simp [*, max_eq_right_of_lt h]
-    
 #align set.Iic_union_Ioc Set.Iic_union_Ioc
 
 theorem Iio_subset_Iic_union_Ioo : iio b ⊆ iic a ∪ ioo a b := fun x hx =>
@@ -1460,20 +1423,16 @@ theorem Iio_union_Ioo' (h₁ : c < b) : iio b ∪ ioo c d = iio (max b d) := by
   ext x
   cases' lt_or_le x b with hba hba
   · simp [hba, h₁]
-    
   · simp only [mem_Iio, mem_union, mem_Ioo, lt_max_iff]
     refine' or_congr Iff.rfl ⟨And.right, _⟩
     exact fun h₂ => ⟨h₁.trans_le hba, h₂⟩
-    
 #align set.Iio_union_Ioo' Set.Iio_union_Ioo'
 
 theorem Iio_union_Ioo (h : min c d < b) : iio b ∪ ioo c d = iio (max b d) := by
   cases' le_total c d with hcd hcd <;> simp [hcd] at h
   · exact Iio_union_Ioo' h
-    
   · rw [max_comm]
     simp [*, max_eq_right_of_lt h]
-    
 #align set.Iio_union_Ioo Set.Iio_union_Ioo
 
 theorem Iic_subset_Iic_union_Icc : iic b ⊆ iic a ∪ icc a b :=
@@ -1491,23 +1450,17 @@ theorem Iic_union_Icc' (h₁ : c ≤ b) : iic b ∪ icc c d = iic (max b d) := b
   simp_rw [mem_union, mem_Iic, mem_Icc, le_max_iff]
   by_cases hc : c ≤ x
   · tauto
-    
   · have hxb : x ≤ b := (le_of_not_ge hc).trans h₁
     tauto
-    
 #align set.Iic_union_Icc' Set.Iic_union_Icc'
 
 theorem Iic_union_Icc (h : min c d ≤ b) : iic b ∪ icc c d = iic (max b d) := by
   cases' le_or_lt c d with hcd hcd <;> simp [hcd] at h
   · exact Iic_union_Icc' h
-    
   · cases h
     · have hdb : d ≤ b := hcd.le.trans h
       simp [*]
-      
     · simp [*]
-      
-    
 #align set.Iic_union_Icc Set.Iic_union_Icc
 
 theorem Iio_subset_Iic_union_Ico : iio b ⊆ iic a ∪ ico a b :=
@@ -1550,22 +1503,17 @@ theorem Ico_union_Ico' (h₁ : c ≤ b) (h₂ : a ≤ d) : ico a b ∪ ico c d =
   simp_rw [mem_union, mem_Ico, min_le_iff, lt_max_iff]
   by_cases hc : c ≤ x <;> by_cases hd : x < d
   · tauto
-    
   · have hax : a ≤ x := h₂.trans (le_of_not_gt hd)
     tauto
-    
   · have hxb : x < b := (lt_of_not_ge hc).trans_le h₁
     tauto
-    
   · tauto
-    
 #align set.Ico_union_Ico' Set.Ico_union_Ico'
 
 theorem Ico_union_Ico (h₁ : min a b ≤ max c d) (h₂ : min c d ≤ max a b) :
     ico a b ∪ ico c d = ico (min a c) (max b d) := by
   cases' le_total a b with hab hab <;> cases' le_total c d with hcd hcd <;> simp [hab, hcd] at h₁ h₂
   · exact Ico_union_Ico' h₂ h₁
-    
   all_goals simp [*]
 #align set.Ico_union_Ico Set.Ico_union_Ico
 
@@ -1643,22 +1591,17 @@ theorem Ioc_union_Ioc' (h₁ : c ≤ b) (h₂ : a ≤ d) : ioc a b ∪ ioc c d =
   simp_rw [mem_union, mem_Ioc, min_lt_iff, le_max_iff]
   by_cases hc : c < x <;> by_cases hd : x ≤ d
   · tauto
-    
   · have hax : a < x := h₂.trans_lt (lt_of_not_ge hd)
     tauto
-    
   · have hxb : x ≤ b := (le_of_not_gt hc).trans h₁
     tauto
-    
   · tauto
-    
 #align set.Ioc_union_Ioc' Set.Ioc_union_Ioc'
 
 theorem Ioc_union_Ioc (h₁ : min a b ≤ max c d) (h₂ : min c d ≤ max a b) :
     ioc a b ∪ ioc c d = ioc (min a c) (max b d) := by
   cases' le_total a b with hab hab <;> cases' le_total c d with hcd hcd <;> simp [hab, hcd] at h₁ h₂
   · exact Ioc_union_Ioc' h₂ h₁
-    
   all_goals simp [*]
 #align set.Ioc_union_Ioc Set.Ioc_union_Ioc
 
@@ -1704,15 +1647,11 @@ theorem Icc_union_Icc' (h₁ : c ≤ b) (h₂ : a ≤ d) : icc a b ∪ icc c d =
   simp_rw [mem_union, mem_Icc, min_le_iff, le_max_iff]
   by_cases hc : c ≤ x <;> by_cases hd : x ≤ d
   · tauto
-    
   · have hax : a ≤ x := h₂.trans (le_of_not_ge hd)
     tauto
-    
   · have hxb : x ≤ b := (le_of_not_ge hc).trans h₁
     tauto
-    
   · tauto
-    
 #align set.Icc_union_Icc' Set.Icc_union_Icc'
 
 /-- We cannot replace `<` by `≤` in the hypotheses.
@@ -1724,7 +1663,6 @@ theorem Icc_union_Icc (h₁ : min a b < max c d) (h₂ : min c d < max a b) :
     simp only [min_eq_left, min_eq_right, max_eq_left, max_eq_right, min_eq_left_of_lt,
       min_eq_right_of_lt, max_eq_left_of_lt, max_eq_right_of_lt, hab, hcd] at h₁ h₂
   · exact Icc_union_Icc' h₂.le h₁.le
-    
   all_goals simp [*, min_eq_left_of_lt, max_eq_left_of_lt, min_eq_right_of_lt, max_eq_right_of_lt]
 #align set.Icc_union_Icc Set.Icc_union_Icc
 
@@ -1744,15 +1682,11 @@ theorem Ioo_union_Ioo' (h₁ : c < b) (h₂ : a < d) : ioo a b ∪ ioo c d = ioo
   simp_rw [mem_union, mem_Ioo, min_lt_iff, lt_max_iff]
   by_cases hc : c < x <;> by_cases hd : x < d
   · tauto
-    
   · have hax : a < x := h₂.trans_le (le_of_not_lt hd)
     tauto
-    
   · have hxb : x < b := (le_of_not_lt hc).trans_lt h₁
     tauto
-    
   · tauto
-    
 #align set.Ioo_union_Ioo' Set.Ioo_union_Ioo'
 
 theorem Ioo_union_Ioo (h₁ : min a b < max c d) (h₂ : min c d < max a b) :
@@ -1760,7 +1694,6 @@ theorem Ioo_union_Ioo (h₁ : min a b < max c d) (h₂ : min c d < max a b) :
   cases' le_total a b with hab hab <;> cases' le_total c d with hcd hcd <;>
     simp only [min_eq_left, min_eq_right, max_eq_left, max_eq_right, hab, hcd] at h₁ h₂
   · exact Ioo_union_Ioo' h₂ h₁
-    
   all_goals
     simp [*, min_eq_left_of_lt, min_eq_right_of_lt, max_eq_left_of_lt, max_eq_right_of_lt,
       le_of_lt h₂, le_of_lt h₁]
@@ -1974,32 +1907,32 @@ section Dense
 variable (α) [Preorder α] [DenselyOrdered α] {x y : α}
 
 instance : NoMinOrder (Set.ioo x y) :=
-  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by 
     rcases exists_between ha₁ with ⟨b, hb₁, hb₂⟩
     exact ⟨⟨b, hb₁, hb₂.trans ha₂⟩, hb₂⟩⟩
 
 instance : NoMinOrder (Set.ioc x y) :=
-  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by 
     rcases exists_between ha₁ with ⟨b, hb₁, hb₂⟩
     exact ⟨⟨b, hb₁, hb₂.le.trans ha₂⟩, hb₂⟩⟩
 
 instance : NoMinOrder (Set.ioi x) :=
-  ⟨fun ⟨a, ha⟩ => by
+  ⟨fun ⟨a, ha⟩ => by 
     rcases exists_between ha with ⟨b, hb₁, hb₂⟩
     exact ⟨⟨b, hb₁⟩, hb₂⟩⟩
 
 instance : NoMaxOrder (Set.ioo x y) :=
-  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by 
     rcases exists_between ha₂ with ⟨b, hb₁, hb₂⟩
     exact ⟨⟨b, ha₁.trans hb₁, hb₂⟩, hb₁⟩⟩
 
 instance : NoMaxOrder (Set.ico x y) :=
-  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by 
     rcases exists_between ha₂ with ⟨b, hb₁, hb₂⟩
     exact ⟨⟨b, ha₁.trans hb₁.le, hb₂⟩, hb₁⟩⟩
 
 instance : NoMaxOrder (Set.iio x) :=
-  ⟨fun ⟨a, ha⟩ => by
+  ⟨fun ⟨a, ha⟩ => by 
     rcases exists_between ha with ⟨b, hb₁, hb₂⟩
     exact ⟨⟨b, hb₂⟩, hb₁⟩⟩
 

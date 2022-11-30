@@ -84,16 +84,14 @@ namespace bernstein
 /-- Send `k : fin (n+1)` to the equally spaced points `k/n` in the unit interval.
 -/
 def z {n : ℕ} (k : Fin (n + 1)) : I :=
-  ⟨(k : ℝ) / n, by
+  ⟨(k : ℝ) / n, by 
     cases n
     · norm_num
-      
     · have h₁ : 0 < (n.succ : ℝ) := by exact_mod_cast Nat.succ_pos _
       have h₂ : ↑k ≤ n.succ := by exact_mod_cast Fin.le_last k
       rw [Set.mem_Icc, le_div_iff h₁, div_le_iff h₁]
       norm_cast
-      simp [h₂]
-      ⟩
+      simp [h₂]⟩
 #align bernstein.z bernstein.z
 
 -- mathport name: «expr /ₙ»
@@ -124,9 +122,7 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
     congr 1
     field_simp [h]
     ring
-    
   · ring
-    
 #align bernstein.variance bernstein.variance
 
 end bernstein
@@ -255,7 +251,8 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
       add_lt_add_of_le_of_lt _ _
     _ = ε := add_halves ε
     
-  · -- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
+  ·
+    -- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
     -- quickly give us a bound.
     calc
       (∑ k in S, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
@@ -270,8 +267,8 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
           (le_of_lt (half_pos h))
       _ = ε / 2 := by rw [bernstein.probability, mul_one]
       
-    
-  · -- We now turn to working on `Sᶜ`: we control the difference term just using `‖f‖`,
+  ·
+    -- We now turn to working on `Sᶜ`: we control the difference term just using `‖f‖`,
     -- and then insert a `δ^(-2) * (x - k/n)^2` factor
     -- (which is at least one because we are not in `S`).
     calc
@@ -293,13 +290,13 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
             mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)
           w₁
       _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * ∑ k : Fin (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x := by
-        conv_rhs =>
-        rw [mul_assoc, Finset.mul_sum]
-        simp only [← mul_assoc]
+        conv_rhs => 
+          rw [mul_assoc, Finset.mul_sum]
+          simp only [← mul_assoc]
       -- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
           _ =
           2 * ‖f‖ * δ ^ (-2 : ℤ) * x * (1 - x) / n :=
-        by
+        by 
         rw [variance npos]
         ring
       _ ≤ 2 * ‖f‖ * δ ^ (-2 : ℤ) / n :=
@@ -307,6 +304,5 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
           refine' mul_le_of_le_of_le_one' (mul_le_of_le_one_right w₂ _) _ _ w₂ <;> unit_interval
       _ < ε / 2 := nh
       
-    
 #align bernstein_approximation_uniform bernstein_approximation_uniform
 

@@ -156,104 +156,99 @@ namespace IsLocallyConstant
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "5"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`h `x]) [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget
-                 []
-                 (Term.app (Term.proj `mem_nhds_iff "." (fieldIdx "1")) [(Term.app `h [`x])]))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
-                      [])]
-                    "⟩")])
-                 [])])
-              [])
-             (group
-              (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`U "," `hU "," `hx "," `Eq] "⟩"))
-              [])])
+            [(Tactic.intro "intro" [`h `x])
+             []
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget
+                []
+                (Term.app (Term.proj `mem_nhds_iff "." (fieldIdx "1")) [(Term.app `h [`x])]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                     [])]
+                   "⟩")])
+                [])])
+             []
+             (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`U "," `hU "," `hx "," `Eq] "⟩"))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`h `s]) [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.app
-                (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
-                [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
-              [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget [] (Term.app `h [`x]))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxU)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
-                      [])]
-                    "⟩")])
-                 [])])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.anonymousCtor
-                "⟨"
-                [`U
-                 ","
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`x' `hx']
-                   []
-                   "=>"
-                   («term_<|_»
-                    (Term.proj `mem_preimage "." (fieldIdx "2"))
-                    "<|"
-                    (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
-                 ","
-                 `hU
-                 ","
-                 `hxU]
-                "⟩"))
-              [])])
+            [(Tactic.intro "intro" [`h `s])
+             []
+             (Tactic.refine'
+              "refine'"
+              (Term.app
+               (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+               [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
+             []
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget [] (Term.app `h [`x]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxU)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
+                     [])]
+                   "⟩")])
+                [])])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.anonymousCtor
+               "⟨"
+               [`U
+                ","
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`x' `hx']
+                  []
+                  "=>"
+                  («term_<|_»
+                   (Term.proj `mem_preimage "." (fieldIdx "2"))
+                   "<|"
+                   (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+                ","
+                `hU
+                ","
+                `hxU]
+               "⟩"))])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -290,104 +285,99 @@ namespace IsLocallyConstant
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "5"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`h `x]) [])
-            (group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget
-                []
-                (Term.app (Term.proj `mem_nhds_iff "." (fieldIdx "1")) [(Term.app `h [`x])]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
-                     [])]
-                   "⟩")])
-                [])])
-             [])
-            (group
-             (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`U "," `hU "," `hx "," `Eq] "⟩"))
-             [])])
+           [(Tactic.intro "intro" [`h `x])
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget
+               []
+               (Term.app (Term.proj `mem_nhds_iff "." (fieldIdx "1")) [(Term.app `h [`x])]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`U "," `hU "," `hx "," `Eq] "⟩"))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`h `s]) [])
-            (group
-             (Tactic.refine'
-              "refine'"
-              (Term.app
-               (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
-               [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
-             [])
-            (group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget [] (Term.app `h [`x]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxU)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
-                     [])]
-                   "⟩")])
-                [])])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.anonymousCtor
-               "⟨"
-               [`U
-                ","
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`x' `hx']
-                  []
-                  "=>"
-                  («term_<|_»
-                   (Term.proj `mem_preimage "." (fieldIdx "2"))
-                   "<|"
-                   (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
-                ","
-                `hU
-                ","
-                `hxU]
-               "⟩"))
-             [])])
+           [(Tactic.intro "intro" [`h `s])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.app
+              (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+              [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget [] (Term.app `h [`x]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxU)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [`U
+               ","
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`x' `hx']
+                 []
+                 "=>"
+                 («term_<|_»
+                  (Term.proj `mem_preimage "." (fieldIdx "2"))
+                  "<|"
+                  (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+               ","
+               `hU
+               ","
+               `hxU]
+              "⟩"))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -395,66 +385,63 @@ namespace IsLocallyConstant
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.intro "intro" [`h `s]) [])
-        (group
-         (Tactic.refine'
-          "refine'"
-          (Term.app
-           (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
-           [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
-         [])
-        (group
-         (Std.Tactic.rcases
-          "rcases"
-          [(Tactic.casesTarget [] (Term.app `h [`x]))]
-          ["with"
-           (Std.Tactic.RCases.rcasesPatLo
-            (Std.Tactic.RCases.rcasesPatMed
-             [(Std.Tactic.RCases.rcasesPat.tuple
-               "⟨"
-               [(Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
-                 [])
-                ","
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
-                 [])
-                ","
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxU)])
-                 [])
-                ","
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
-                 [])]
-               "⟩")])
-            [])])
-         [])
-        (group
-         (Tactic.exact
-          "exact"
-          (Term.anonymousCtor
-           "⟨"
-           [`U
-            ","
-            (Term.fun
-             "fun"
-             (Term.basicFun
-              [`x' `hx']
-              []
-              "=>"
-              («term_<|_»
-               (Term.proj `mem_preimage "." (fieldIdx "2"))
-               "<|"
-               (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
-            ","
-            `hU
-            ","
-            `hxU]
-           "⟩"))
-         [])])
+       [(Tactic.intro "intro" [`h `s])
+        []
+        (Tactic.refine'
+         "refine'"
+         (Term.app
+          (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+          [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
+        []
+        (Std.Tactic.rcases
+         "rcases"
+         [(Tactic.casesTarget [] (Term.app `h [`x]))]
+         ["with"
+          (Std.Tactic.RCases.rcasesPatLo
+           (Std.Tactic.RCases.rcasesPatMed
+            [(Std.Tactic.RCases.rcasesPat.tuple
+              "⟨"
+              [(Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+                [])
+               ","
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+                [])
+               ","
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hxU)])
+                [])
+               ","
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `eq)])
+                [])]
+              "⟩")])
+           [])])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.anonymousCtor
+          "⟨"
+          [`U
+           ","
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`x' `hx']
+             []
+             "=>"
+             («term_<|_»
+              (Term.proj `mem_preimage "." (fieldIdx "2"))
+              "<|"
+              (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+           ","
+           `hU
+           ","
+           `hxU]
+          "⟩"))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -580,7 +567,7 @@ namespace IsLocallyConstant
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rcases
        "rcases"
        [(Tactic.casesTarget [] (Term.app `h [`x]))]
@@ -620,7 +607,7 @@ namespace IsLocallyConstant
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.refine'
        "refine'"
        (Term.app
@@ -662,7 +649,7 @@ namespace IsLocallyConstant
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.intro "intro" [`h `s])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
@@ -789,7 +776,7 @@ theorem const (y : Y) : IsLocallyConstant (Function.const X y) :=
 #align is_locally_constant.const IsLocallyConstant.const
 
 theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyConstant (g ∘ f) :=
-  fun s => by
+  fun s => by 
   rw [Set.preimage_comp]
   exact hf _
 #align is_locally_constant.comp IsLocallyConstant.comp
@@ -819,9 +806,7 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
   intro hxV
   specialize hs U (Uᶜ) (hf {f y}) (hf ({f y}ᶜ)) _ ⟨y, ⟨hy, rfl⟩⟩ ⟨x, ⟨hx, hxV⟩⟩
   · simp only [union_compl_self, subset_univ]
-    
   · simpa only [inter_empty, not_nonempty_empty, inter_compl_self] using hs
-    
 #align is_locally_constant.apply_eq_of_is_preconnected IsLocallyConstant.apply_eq_of_is_preconnected
 
 theorem apply_eq_of_preconnected_space [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f)
@@ -836,12 +821,10 @@ theorem eq_const [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) 
 #align is_locally_constant.eq_const IsLocallyConstant.eq_const
 
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] {f : X → Y} (hf : IsLocallyConstant f) :
-    ∃ y, f = Function.const X y := by
+    ∃ y, f = Function.const X y := by 
   cases isEmpty_or_nonempty X
   · exact ⟨Classical.arbitrary Y, funext <| h.elim⟩
-    
   · exact ⟨f (Classical.arbitrary X), hf.eq_const _⟩
-    
 #align is_locally_constant.exists_eq_const IsLocallyConstant.exists_eq_const
 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
@@ -849,7 +832,7 @@ theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f �
 #align is_locally_constant.iff_is_const IsLocallyConstant.iff_is_const
 
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
-    (Set.range f).Finite := by
+    (Set.range f).Finite := by 
   letI : TopologicalSpace Y := ⊥
   haveI : DiscreteTopology Y := ⟨rfl⟩
   rw [@iff_continuous X Y ‹_› ‹_›] at hf
@@ -884,7 +867,7 @@ theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConst
     (inj : Function.Injective g) : IsLocallyConstant f := by
   rw [(IsLocallyConstant.tfae f).out 0 3]
   intro a
-  have : f ⁻¹' {a} = g ∘ f ⁻¹' {g a} := by
+  have : f ⁻¹' {a} = g ∘ f ⁻¹' {g a} := by 
     ext x
     simp only [mem_singleton_iff, Function.comp_apply, mem_preimage]
     exact ⟨fun h => by rw [h], fun h => inj h⟩
@@ -945,7 +928,7 @@ theorem congr_arg (f : LocallyConstant X Y) {x y : X} (h : x = y) : f x = f y :=
 #align locally_constant.congr_arg LocallyConstant.congr_arg
 
 theorem coe_injective : @Function.Injective (LocallyConstant X Y) (X → Y) coeFn
-  | ⟨f, hf⟩, ⟨g, hg⟩, h => by
+  | ⟨f, hf⟩, ⟨g, hg⟩, h => by 
     have : f = g := h
     subst f
 #align locally_constant.coe_injective LocallyConstant.coe_injective
@@ -955,7 +938,7 @@ theorem coe_inj {f g : LocallyConstant X Y} : (f : X → Y) = g ↔ f = g :=
   coe_injective.eq_iff
 #align locally_constant.coe_inj LocallyConstant.coe_inj
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : LocallyConstant X Y⦄ (h : ∀ x, f x = g x) : f = g :=
   coe_injective (funext h)
 #align locally_constant.ext LocallyConstant.ext
@@ -1010,7 +993,8 @@ theorem coe_const (y : Y) : (const X y : X → Y) = Function.const X y :=
 
 /-- The locally constant function to `fin 2` associated to a clopen set. -/
 def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
-    (hU : IsClopen U) : LocallyConstant X (Fin 2) where
+    (hU : IsClopen U) :
+    LocallyConstant X (Fin 2) where 
   toFun x := if x ∈ U then 0 else 1
   IsLocallyConstant := by
     rw [(IsLocallyConstant.tfae fun x => if x ∈ U then (0 : Fin 2) else 1).out 0 3]
@@ -1021,12 +1005,10 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
       simp only [Nat.one_ne_zero, mem_singleton_iff, Fin.one_eq_zero_iff, mem_preimage,
         ite_eq_left_iff]
       tauto
-      
     · rw [← is_closed_compl_iff]
       convert hU.2
       ext
       simp
-      
 #align locally_constant.of_clopen LocallyConstant.ofClopen
 
 @[simp]
@@ -1078,14 +1060,12 @@ theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] (f : LocallyConstant 
     ∃ y, f = const X y := by
   rcases Classical.em (Nonempty X) with (⟨⟨x⟩⟩ | hX)
   · exact ⟨f x, f.eq_const x⟩
-    
   · exact ⟨Classical.arbitrary Y, ext fun x => (hX ⟨x⟩).elim⟩
-    
 #align locally_constant.exists_eq_const LocallyConstant.exists_eq_const
 
 /-- Push forward of locally constant maps under any map, by post-composition. -/
 def map (f : Y → Z) : LocallyConstant X Y → LocallyConstant X Z := fun g =>
-  ⟨f ∘ g, fun s => by
+  ⟨f ∘ g, fun s => by 
     rw [Set.preimage_comp]
     apply g.is_locally_constant⟩
 #align locally_constant.map LocallyConstant.map
@@ -1096,14 +1076,14 @@ theorem map_apply (f : Y → Z) (g : LocallyConstant X Y) : ⇑(map f g) = f ∘
 #align locally_constant.map_apply LocallyConstant.map_apply
 
 @[simp]
-theorem map_id : @map X Y Y _ id = id := by
+theorem map_id : @map X Y Y _ id = id := by 
   ext
   rfl
 #align locally_constant.map_id LocallyConstant.map_id
 
 @[simp]
 theorem map_comp {Y₁ Y₂ Y₃ : Type _} (g : Y₂ → Y₃) (f : Y₁ → Y₂) :
-    @map X _ _ _ g ∘ map f = map (g ∘ f) := by
+    @map X _ _ _ g ∘ map f = map (g ∘ f) := by 
   ext
   rfl
 #align locally_constant.map_comp LocallyConstant.map_comp
@@ -1118,7 +1098,7 @@ def flip {X α β : Type _} [TopologicalSpace X] (f : LocallyConstant X (α → 
 /-- If α is finite, this constructs a locally constant function to `α → β` given a
 family of locally constant functions with values in β indexed by α. -/
 def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
-    LocallyConstant X (α → β) where
+    LocallyConstant X (α → β) where 
   toFun x a := f a x
   IsLocallyConstant := by
     rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
@@ -1157,29 +1137,27 @@ in which case it sends locally constant functions to their precomposition with `
 See also `locally_constant.coe_comap`. -/
 noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant X Z :=
   if hf : Continuous f then fun g => ⟨g ∘ f, g.IsLocallyConstant.comp_continuous hf⟩
-  else by
+  else by 
     by_cases H : Nonempty X
     · intro g
       exact const X (g <| f <| Classical.arbitrary X)
-      
     · intro g
       refine' ⟨fun x => (H ⟨x⟩).elim, _⟩
       intro s
       rw [is_open_iff_nhds]
       intro x
       exact (H ⟨x⟩).elim
-      
 #align locally_constant.comap LocallyConstant.comap
 
 @[simp]
 theorem coe_comap (f : X → Y) (g : LocallyConstant Y Z) (hf : Continuous f) :
-    ⇑(comap f g) = g ∘ f := by
+    ⇑(comap f g) = g ∘ f := by 
   rw [comap, dif_pos hf]
   rfl
 #align locally_constant.coe_comap LocallyConstant.coe_comap
 
 @[simp]
-theorem comap_id : @comap X X Z _ _ id = id := by
+theorem comap_id : @comap X X Z _ _ id = id := by 
   ext
   simp only [continuous_id, id.def, Function.comp.right_id, coe_comap]
 #align locally_constant.comap_id LocallyConstant.comap_id
@@ -1193,13 +1171,11 @@ theorem comap_comp [TopologicalSpace Z] (f : X → Y) (g : Y → Z) (hf : Contin
 theorem comap_const (f : X → Y) (y : Y) (h : ∀ x, f x = y) :
     (comap f : LocallyConstant Y Z → LocallyConstant X Z) = fun g =>
       ⟨fun x => g y, IsLocallyConstant.const _⟩ :=
-  by
+  by 
   ext; rw [coe_comap]
   · simp only [h, coe_mk, Function.comp_apply]
-    
   · rw [show f = fun x => y by ext <;> apply h]
     exact continuous_const
-    
 #align locally_constant.comap_const LocallyConstant.comap_const
 
 end Comap
@@ -1209,11 +1185,12 @@ section Desc
 /-- If a locally constant function factors through an injection, then it factors through a locally
 constant function. -/
 def desc {X α β : Type _} [TopologicalSpace X] {g : α → β} (f : X → α) (h : LocallyConstant X β)
-    (cond : g ∘ f = h) (inj : Function.Injective g) : LocallyConstant X α where
+    (cond : g ∘ f = h) (inj : Function.Injective g) :
+    LocallyConstant X α where 
   toFun := f
   IsLocallyConstant :=
     IsLocallyConstant.desc _ g
-      (by
+      (by 
         rw [cond]
         exact h.2)
       inj
@@ -1239,9 +1216,10 @@ open Classical
 @[to_additive
       " Given a clopen set `U` and a locally constant function `f`,\n  `locally_constant.indicator` returns the locally constant function that is `f` on `U` and `0`\n  otherwise. ",
   simps]
-noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R where
+noncomputable def mulIndicator (hU : IsClopen U) :
+    LocallyConstant X R where 
   toFun := Set.mulIndicator U f
-  IsLocallyConstant := by
+  IsLocallyConstant := by 
     rw [IsLocallyConstant.iff_exists_open]; rintro x
     obtain ⟨V, hV, hx, h'⟩ := (IsLocallyConstant.iff_exists_open _).1 f.is_locally_constant x
     by_cases x ∈ U
@@ -1250,14 +1228,12 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R where
       rw [Set.mem_inter_iff] at hy
       rw [Set.mul_indicator_of_mem hy.1, Set.mul_indicator_of_mem h]
       apply h' y hy.2
-      
     · rw [← Set.mem_compl_iff] at h
       refine' ⟨Uᶜ, (IsClopen.compl hU).1, h, _⟩
       rintro y hy
       rw [Set.mem_compl_iff] at h
       rw [Set.mem_compl_iff] at hy
       simp [h, hy]
-      
 #align locally_constant.mul_indicator LocallyConstant.mulIndicator
 
 variable (a : X)

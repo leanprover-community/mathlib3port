@@ -95,10 +95,12 @@ not an instance as `i` cannot be inferred. -/
 theorem has_faithful_smul_at {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, Nonempty (f i)] (i : I)
     [HasFaithfulSmul α (f i)] : HasFaithfulSmul α (∀ i, f i) :=
   ⟨fun x y h =>
-    eq_of_smul_eq_smul fun a : f i => by classical
-      have :=
-        congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
-      simpa using this⟩
+    eq_of_smul_eq_smul fun a : f i => by
+      classical 
+        have :=
+          congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a)
+            i
+        simpa using this⟩
 #align pi.has_faithful_smul_at Pi.has_faithful_smul_at
 
 @[to_additive Pi.has_faithful_vadd]
@@ -110,7 +112,7 @@ instance has_faithful_smul {α : Type _} [Nonempty I] [∀ i, HasSmul α <| f i]
 
 @[to_additive]
 instance mulAction (α) {m : Monoid α} [∀ i, MulAction α <| f i] :
-    @MulAction α (∀ i : I, f i) m where
+    @MulAction α (∀ i : I, f i) m where 
   smul := (· • ·)
   mul_smul r s f := funext fun i => mul_smul _ _ _
   one_smul f := funext fun i => one_smul α _
@@ -118,7 +120,8 @@ instance mulAction (α) {m : Monoid α} [∀ i, MulAction α <| f i] :
 
 @[to_additive]
 instance mulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} [∀ i, MulAction (f i) (g i)] :
-    @MulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) where
+    @MulAction (∀ i, f i) (∀ i : I, g i)
+      (@Pi.monoid I f m) where 
   smul := (· • ·)
   mul_smul r s f := funext fun i => mul_smul _ _ _
   one_smul f := funext fun i => one_smul _ _
@@ -126,11 +129,12 @@ instance mulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} [∀ i, MulActi
 
 instance smulZeroClass (α) {n : ∀ i, Zero <| f i} [∀ i, SmulZeroClass α <| f i] :
     @SmulZeroClass α (∀ i : I, f i)
-      (@Pi.hasZero I f n) where smul_zero c := funext fun i => smul_zero _
+      (@Pi.instZero I f n) where smul_zero c := funext fun i => smul_zero _
 #align pi.smul_zero_class Pi.smulZeroClass
 
 instance smulZeroClass' {g : I → Type _} {n : ∀ i, Zero <| g i} [∀ i, SmulZeroClass (f i) (g i)] :
-    @SmulZeroClass (∀ i, f i) (∀ i : I, g i) (@Pi.hasZero I g n) where smul_zero := by
+    @SmulZeroClass (∀ i, f i) (∀ i : I, g i)
+      (@Pi.instZero I g n) where smul_zero := by 
     intros
     ext x
     apply smul_zero
@@ -143,7 +147,9 @@ instance distribSmul (α) {n : ∀ i, AddZeroClass <| f i} [∀ i, DistribSmul �
 
 instance distribSmul' {g : I → Type _} {n : ∀ i, AddZeroClass <| g i}
     [∀ i, DistribSmul (f i) (g i)] :
-    @DistribSmul (∀ i, f i) (∀ i : I, g i) (@Pi.addZeroClass I g n) where smul_add := by
+    @DistribSmul (∀ i, f i) (∀ i : I, g i)
+      (@Pi.addZeroClass I g
+        n) where smul_add := by 
     intros
     ext x
     apply smul_add
@@ -187,12 +193,14 @@ instance mulDistribMulAction (α) {m : Monoid α} {n : ∀ i, Monoid <| f i}
 
 instance mulDistribMulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} {n : ∀ i, Monoid <| g i}
     [∀ i, MulDistribMulAction (f i) (g i)] :
-    @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.monoid I g n) where
-  smul_mul := by
+    @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m)
+      (@Pi.monoid I g
+        n) where 
+  smul_mul := by 
     intros
     ext x
     apply smul_mul'
-  smul_one := by
+  smul_one := by 
     intros
     ext x
     apply smul_one
@@ -207,7 +215,7 @@ is not present. -/
 @[to_additive
       "Non-dependent version of `pi.has_vadd`. Lean gets confused by the dependent instance\nif this is not present."]
 instance hasSmul {ι R M : Type _} [HasSmul R M] : HasSmul R (ι → M) :=
-  Pi.hasSmul
+  Pi.instSMul
 #align function.has_smul Function.hasSmul
 
 /-- Non-dependent version of `pi.smul_comm_class`. Lean gets confused by the dependent instance if

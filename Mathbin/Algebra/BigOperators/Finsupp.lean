@@ -155,12 +155,11 @@ then its product over `f : α →₀ M` is the same as multiplying the value on 
 @[to_additive
       " Generalization of `finsupp.add_sum_erase`: if `g` maps a second argument of 0\nto 0, then its sum over `f : α →₀ M` is the same as adding the value on any element\n`y : α` to the sum over `erase y f`. "]
 theorem mul_prod_erase' (f : α →₀ M) (y : α) (g : α → M → N) (hg : ∀ i : α, g i 0 = 1) :
-    g y (f y) * (erase y f).Prod g = f.Prod g := by classical
-  by_cases hyf : y ∈ f.support
-  · exact Finsupp.mul_prod_erase f y g hyf
-    
-  · rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
-    
+    g y (f y) * (erase y f).Prod g = f.Prod g := by
+  classical 
+    by_cases hyf : y ∈ f.support
+    · exact Finsupp.mul_prod_erase f y g hyf
+    · rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
 #align finsupp.mul_prod_erase' Finsupp.mul_prod_erase'
 
 @[to_additive]
@@ -288,10 +287,8 @@ theorem support_finset_sum [DecidableEq β] [AddCommMonoid M] {s : Finset α} {f
   rw [← Finset.sup_eq_bUnion]
   induction' s using Finset.cons_induction_on with a s ha ih
   · rfl
-    
   · rw [Finset.sum_cons, Finset.sup_cons]
     exact support_add.trans (Finset.union_subset_union (Finset.Subset.refl _) ih)
-    
 #align finsupp.support_finset_sum Finsupp.support_finset_sum
 
 @[simp]
@@ -360,18 +357,21 @@ theorem prod_hom_add_index [AddZeroClass M] [CommMonoid N] {f g : α →₀ M}
 
 /-- The canonical isomorphism between families of additive monoid homomorphisms `α → (M →+ N)`
 and monoid homomorphisms `(α →₀ M) →+ N`. -/
-def liftAddHom [AddZeroClass M] [AddCommMonoid N] : (α → M →+ N) ≃+ ((α →₀ M) →+ N) where
+def liftAddHom [AddZeroClass M] [AddCommMonoid N] :
+    (α → M →+ N) ≃+
+      ((α →₀ M) →+
+        N) where 
   toFun F :=
     { toFun := fun f => f.Sum fun x => F x, map_zero' := Finset.sum_empty,
       map_add' := fun _ _ => sum_add_index' (fun x => (F x).map_zero) fun x => (F x).map_add }
   invFun F x := F.comp <| singleAddHom x
-  left_inv F := by
+  left_inv F := by 
     ext
     simp
-  right_inv F := by
+  right_inv F := by 
     ext
     simp
-  map_add' F G := by
+  map_add' F G := by 
     ext
     simp
 #align finsupp.lift_add_hom Finsupp.liftAddHom
@@ -475,7 +475,6 @@ theorem support_sum_eq_bUnion {α : Type _} {ι : Type _} {M : Type _} [AddCommM
     (∑ i in s, g i).support = s.bUnion fun i => (g i).support := by
   apply Finset.induction_on s
   · simp
-    
   · intro i s hi
     simp only [hi, sum_insert, not_false_iff, bUnion_insert]
     intro hs
@@ -483,7 +482,6 @@ theorem support_sum_eq_bUnion {α : Type _} {ι : Type _} {M : Type _} [AddCommM
     rw [hs, Finset.disjoint_bUnion_right]
     intro j hj
     refine' h _ _ (ne_of_mem_of_not_mem hj hi).symm
-    
 #align finsupp.support_sum_eq_bUnion Finsupp.support_sum_eq_bUnion
 
 theorem multiset_map_sum [Zero M] {f : α →₀ M} {m : β → γ} {h : α → M → Multiset β} :
@@ -566,7 +564,7 @@ namespace Nat
 theorem prod_pow_pos_of_zero_not_mem_support {f : ℕ →₀ ℕ} (hf : 0 ∉ f.support) : 0 < f.Prod pow :=
   Finset.prod_pos fun a ha =>
     pos_iff_ne_zero.mpr
-      (pow_ne_zero _ fun H => by
+      (pow_ne_zero _ fun H => by 
         subst H
         exact hf ha)
 #align nat.prod_pow_pos_of_zero_not_mem_support Nat.prod_pow_pos_of_zero_not_mem_support

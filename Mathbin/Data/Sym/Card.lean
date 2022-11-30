@@ -64,7 +64,9 @@ variable (α) (n : ℕ)
 /-- Over `fin n+1`, the multisets of size `k+1` containing `0` are equivalent to those of size `k`,
 as demonstrated by respectively erasing or appending `0`.
 -/
-protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃ Sym (Fin n.succ) k where
+protected def e1 {n k : ℕ} :
+    { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃
+      Sym (Fin n.succ) k where 
   toFun s := s.1.erase 0 s.2
   invFun s := ⟨cons 0 s, mem_cons_self 0 s⟩
   left_inv s := by simp
@@ -75,18 +77,20 @@ protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃
 are equivalent to those of size `k` over `fin n+1`,
 as demonstrated by respectively decrementing or incrementing every element of the multiset.
 -/
-protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃ Sym (Fin n.succ) k where
+protected def e2 {n k : ℕ} :
+    { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
+      Sym (Fin n.succ) k where 
   toFun s := map (Fin.predAbove 0) s.1
   invFun s :=
     ⟨map (Fin.succAbove 0) s,
       (mt mem_map.1) (not_exists.2 fun t => not_and.2 fun _ => Fin.succ_above_ne _ t)⟩
-  left_inv s := by
+  left_inv s := by 
     obtain ⟨s, hs⟩ := s
     simp only [map_map, comp_app]
     nth_rw_rhs 0 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     simp [Fin.pred_above_zero (ne_of_mem_of_not_mem hv hs)]
-  right_inv s := by
+  right_inv s := by 
     simp only [Fin.zero_succ_above, map_map, comp_app]
     nth_rw_rhs 0 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
@@ -96,25 +100,20 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
 theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multichoose n k := by
   apply @pincer_recursion fun n k => card (Sym (Fin n) k) = multichoose n k
   · simp
-    
   · intro b
     induction' b with b IHb
     · simp
-      
     rw [multichoose_zero_succ, card_eq_zero_iff]
     infer_instance
-    
   · intro x y h1 h2
     rw [multichoose_succ_succ, ← h1, ← h2, add_comm]
     cases x
     · simp only [card_eq_zero_iff, card_unique, self_eq_add_right]
       infer_instance
-      
     rw [← card_sum]
     refine' Fintype.card_congr (Equiv.symm _)
     apply (Equiv.sumCongr sym.E1.symm sym.E2.symm).trans
     apply Equiv.sumCompl
-    
 #align sym.card_sym_fin_eq_multichoose Sym.card_sym_fin_eq_multichoose
 
 /-- For any fintype `α` of cardinality `n`, `card (sym α k) = multichoose (card α) k` -/
@@ -145,10 +144,8 @@ theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk'').card = s.
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Quotient.eq.1 h
   · rfl
-    
   · simp only [mem_coe, mem_diag] at hx
     rw [hx.2]
-    
 #align sym2.card_image_diag Sym2.card_image_diag
 
 theorem two_mul_card_image_off_diag (s : Finset α) :
@@ -193,7 +190,7 @@ theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card
 #align sym2.card_subtype_diag Sym2.card_subtype_diag
 
 theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } = (card α).choose 2 :=
-  by
+  by 
   convert card_image_off_diag (univ : Finset α)
   rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_not_is_diag]
   rintro x

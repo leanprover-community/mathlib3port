@@ -40,7 +40,7 @@ theorem AbsoluteValue.map_units_int_smul (abv : AbsoluteValue R S) (x : ℤˣ) (
 
 /-- `int.nat_abs` as a bundled monoid with zero hom. -/
 @[simps]
-def Int.natAbsHom : ℤ →*₀ ℕ where
+def Int.natAbsHom : ℤ →*₀ ℕ where 
   toFun := Int.natAbs
   map_mul' := Int.natAbs_mul
   map_one' := Int.natAbs_one

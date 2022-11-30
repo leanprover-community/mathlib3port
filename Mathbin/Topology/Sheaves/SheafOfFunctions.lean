@@ -56,8 +56,7 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
     -- We use the sheaf condition in terms of unique gluing
   -- U is a family of open sets, indexed by `ι` and `sf` is a compatible family of sections.
   -- In the informal comments below, I'll just write `U` to represent the union.
-  by
-    -- Our first goal is to define a function "lifted" to all of `U`.
+  by-- Our first goal is to define a function "lifted" to all of `U`.
     -- We do this one point at a time. Using the axiom of choice, we can pick for each
     -- `x : supr U` an index `i : ι` such that `x` lies in `U i`
     choose index index_spec using fun x : supr U => opens.mem_supr.mp x.2
@@ -74,7 +73,6 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
       convert congr_fun (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩
       ext
       rfl
-      
     · -- Now we just need to check that the lift we picked was the only possible one.
       -- So we suppose we had some other gluing `t` of our sections
       intro t ht
@@ -84,7 +82,6 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
       convert congr_fun (ht (index x)) ⟨x.1, index_spec x⟩
       ext
       rfl
-      
 #align Top.presheaf.to_Types_is_sheaf TopCat.Presheaf.to_Types_is_sheaf
 
 -- We verify that the non-dependent version is an immediate consequence:

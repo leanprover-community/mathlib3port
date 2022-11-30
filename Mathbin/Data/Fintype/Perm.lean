@@ -35,26 +35,24 @@ def permsOfList : List α → List (Perm α)
 
 theorem length_perms_of_list : ∀ l : List α, length (permsOfList l) = l.length !
   | [] => rfl
-  | a :: l => by
+  | a :: l => by 
     rw [length_cons, Nat.factorial_succ]
     simp [permsOfList, length_bind, length_perms_of_list, Function.comp, Nat.succ_mul]
     cc
 #align length_perms_of_list length_perms_of_list
 
 theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠ x → x ∈ l) :
-    f ∈ permsOfList l := by
+    f ∈ permsOfList l := by 
   induction' l with a l IH generalizing f h
   · exact List.mem_singleton.2 (Equiv.ext fun x => Decidable.by_contradiction <| h _)
-    
   by_cases hfa : f a = a
   · refine' mem_append_left _ (IH fun x hx => mem_of_ne_of_mem _ (h x hx))
     rintro rfl
     exact hx hfa
-    
   have hfa' : f (f a) ≠ f a := mt (fun h => f.injective h) hfa
   have : ∀ x : α, (swap a (f a) * f) x ≠ x → x ∈ l := by
     intro x hx
-    have hxa : x ≠ a := by
+    have hxa : x ≠ a := by 
       rintro rfl
       apply hx
       simp only [mul_apply, swap_apply_right]
@@ -66,14 +64,12 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
     simpa only [permsOfList, exists_prop, List.mem_map, mem_append, List.mem_bind]
   refine' or_iff_not_imp_left.2 fun hfl => ⟨f a, _, swap a (f a) * f, IH this, _⟩
   · exact mem_of_ne_of_mem hfa (h _ hfa')
-    
   · rw [← mul_assoc, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← perm.one_def, one_mul]
-    
 #align mem_perms_of_list_of_mem mem_perms_of_list_of_mem
 
 theorem mem_of_mem_perms_of_list :
     ∀ {l : List α} {f : Perm α}, f ∈ permsOfList l → ∀ {x}, f x ≠ x → x ∈ l
-  | [], f, h => by
+  | [], f, h => by 
     have : f = 1 := by simpa [permsOfList] using h
     rw [this] <;> simp
   | a :: l, f, h =>
@@ -99,7 +95,7 @@ theorem mem_perms_of_list_iff {l : List α} {f : Perm α} :
 
 theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).Nodup
   | [], hl => by simp [permsOfList]
-  | a :: l, hl => by
+  | a :: l, hl => by 
     have hl' : l.Nodup := hl.of_cons
     have hln' : (permsOfList l).Nodup := nodup_perms_of_list hl'
     have hmeml : ∀ {f : Perm α}, f ∈ permsOfList l → f a = a := fun f hf =>

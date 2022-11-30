@@ -96,10 +96,8 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
       List.mem_iff_nth_le.1 this
     rw [← hi]
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.zero_le i)
-    
   · have : l.nth_le 0 h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l 0 h)
     exact s.min'_le _ this
-    
 #align finset.sorted_zero_eq_min'_aux Finset.sorted_zero_eq_min'_aux
 
 theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length} :
@@ -110,7 +108,7 @@ theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length
 theorem min'_eq_sorted_zero {s : Finset α} {h : s.Nonempty} :
     s.min' h =
       (s.sort (· ≤ ·)).nthLe 0
-        (by
+        (by 
           rw [length_sort]
           exact card_pos.2 h) :=
   (sorted_zero_eq_min'_aux _ _ _).symm
@@ -124,21 +122,19 @@ theorem sorted_last_eq_max'_aux (s : Finset α)
   · have : l.nth_le ((s.sort (· ≤ ·)).length - 1) h ∈ s :=
       (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l _ h)
     exact s.le_max' _ this
-    
   · have : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
     obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.max' H :=
       List.mem_iff_nth_le.1 this
     rw [← hi]
     have : i ≤ l.length - 1 := Nat.le_pred_of_lt i_lt
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.le_pred_of_lt i_lt)
-    
 #align finset.sorted_last_eq_max'_aux Finset.sorted_last_eq_max'_aux
 
 theorem sorted_last_eq_max' {s : Finset α}
     {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h =
       s.max'
-        (by
+        (by 
           rw [length_sort] at h
           exact card_pos.1 (lt_of_le_of_lt bot_le h)) :=
   sorted_last_eq_max'_aux _ _ _
@@ -182,7 +178,7 @@ theorem order_iso_of_fin_symm_apply (s : Finset α) {k : ℕ} (h : s.card = k) (
 theorem order_emb_of_fin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin k) :
     s.orderEmbOfFin h i =
       (s.sort (· ≤ ·)).nthLe i
-        (by
+        (by 
           rw [length_sort, h]
           exact i.2) :=
   rfl
@@ -231,9 +227,7 @@ theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : 
   refine' eq_of_subset_of_card_le (fun x hx => _) _
   · rcases mem_image.1 hx with ⟨x, hx, rfl⟩
     exact hfs x
-    
   · rw [h, card_image_of_injective _ hmono.injective, card_univ, Fintype.card_fin]
-    
 #align finset.order_emb_of_fin_unique Finset.order_emb_of_fin_unique
 
 /-- An order embedding `f` from `fin k` to a finset of cardinality `k` has to coincide with

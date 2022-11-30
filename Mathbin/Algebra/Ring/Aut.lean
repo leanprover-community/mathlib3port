@@ -80,7 +80,8 @@ section Semiring
 variable {G R : Type _} [Group G] [Semiring R]
 
 /-- The tautological action by the group of automorphism of a ring `R` on `R`.-/
-instance applyMulSemiringAction : MulSemiringAction (RingAut R) R where
+instance applyMulSemiringAction :
+    MulSemiringAction (RingAut R) R where 
   smul := (· <| ·)
   smul_zero := RingEquiv.map_zero
   smul_add := RingEquiv.map_add
@@ -106,7 +107,8 @@ variable (G R)
 This is a stronger version of `distrib_mul_action.to_add_aut` and
 `mul_distrib_mul_action.to_mul_aut`. -/
 @[simps]
-def MulSemiringAction.toRingAut [MulSemiringAction G R] : G →* RingAut R where
+def MulSemiringAction.toRingAut [MulSemiringAction G R] :
+    G →* RingAut R where 
   toFun := MulSemiringAction.toRingEquiv G R
   map_mul' g h := RingEquiv.ext <| mul_smul g h
   map_one' := RingEquiv.ext <| one_smul _

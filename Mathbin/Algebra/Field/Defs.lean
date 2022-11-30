@@ -234,14 +234,12 @@ theorem uniq_inv_of_is_field (R : Type u) [Ring R] (hf : IsField R) :
   intro x hx
   apply exists_unique_of_exists_of_unique
   · exact hf.mul_inv_cancel hx
-    
   · intro y z hxy hxz
     calc
       y = y * (x * z) := by rw [hxz, mul_one]
       _ = x * y * z := by rw [← mul_assoc, hf.mul_comm y x]
       _ = z := by rw [hxy, one_mul]
       
-    
 #align uniq_inv_of_is_field uniq_inv_of_is_field
 
 end IsField

@@ -166,7 +166,7 @@ variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [HasSmul M X]
 @[to_additive]
 theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)}
     (h : ∀ t ∈ ts, @HasContinuousSmul M X _ _ t) : @HasContinuousSmul M X _ _ (inf ts) :=
-  { continuous_smul := by
+  { continuous_smul := by 
       rw [← @Inf_singleton _ _ ‹TopologicalSpace M›]
       exact
         continuous_Inf_rng.2 fun t ht =>

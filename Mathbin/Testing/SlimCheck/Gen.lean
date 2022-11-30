@@ -182,7 +182,7 @@ def freqAux : ∀ (xs : List (ℕ+ × Gen α)) (i), i < (xs.map (Subtype.val ∘
     if h' : j < i then x
     else
       freq_aux xs (j - i)
-        (by
+        (by 
           rw [tsub_lt_iff_right (le_of_not_gt h')]
           simpa [List.sum_cons, add_comm] using h)
 #align slim_check.gen.freq_aux SlimCheck.Gen.freqAux
@@ -197,7 +197,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
   have ha : 1 ≤ s :=
     le_trans Pos <|
       List.length_map (Subtype.val ∘ Prod.fst) xs ▸
-        List.length_le_sum_of_one_le _ fun i => by
+        List.length_le_sum_of_one_le _ fun i => by 
           simp
           intros
           assumption

@@ -103,11 +103,11 @@ notation "ℓ²(" ι ", " 𝕜 ")" => lp (fun i : ι => 𝕜) 2
 
 namespace lp
 
-theorem summable_inner (f g : lp G 2) : Summable fun i => ⟪f i, g i⟫ := by
+theorem summable_inner (f g : lp G 2) : Summable fun i => ⟪f i, g i⟫ :=
+  by
   -- Apply the Direct Comparison Test, comparing with ∑' i, ‖f i‖ * ‖g i‖ (summable by Hölder)
   refine' summable_of_norm_bounded (fun i => ‖f i‖ * ‖g i‖) (lp.summable_mul _ f g) _
   · rw [Real.is_conjugate_exponent_iff] <;> norm_num
-    
   intro i
   -- Then apply Cauchy-Schwarz pointwise
   exact norm_inner_le_norm _ _
@@ -125,9 +125,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = _ := by congr
         
       · norm_num
-        
-      · exact summable_inner f f
-        ,
+      · exact summable_inner f f,
     conj_sym := fun f g => by
       calc
         conj _ = conj (∑' i, ⟪g i, f i⟫) := by congr
@@ -144,11 +142,8 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = _ := by congr
         
       · congr
-        
       · exact summable_inner f₁ g
-        
-      · exact summable_inner f₂ g
-        ,
+      · exact summable_inner f₂ g,
     smul_left := fun f g c => by
       calc
         _ = ∑' i, ⟪c • f i, g i⟫ := _
@@ -157,9 +152,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = _ := _
         
       · simp only [coe_fn_smul, Pi.smul_apply]
-        
-      · congr
-         }
+      · congr }
 
 theorem inner_eq_tsum (f g : lp G 2) : ⟪f, g⟫ = ∑' i, ⟪f i, g i⟫ :=
   rfl
@@ -176,9 +169,7 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
   rw [lp.single_apply]
   split_ifs
   · subst h
-    
   · simp
-    
 #align lp.inner_single_left lp.inner_single_left
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
@@ -200,14 +191,13 @@ protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) := b
   rw [hV.summable_iff_norm_sq_summable]
   convert (lp.memℓp f).Summable _
   · norm_cast
-    
   · norm_num
-    
 #align orthogonal_family.summable_of_lp OrthogonalFamily.summable_of_lp
 
 /-- A mutually orthogonal family of subspaces of `E` induce a linear isometry from `lp 2` of the
 subspaces into `E`. -/
-protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
+protected def linearIsometry :
+    lp G 2 →ₗᵢ[𝕜] E where 
   toFun f := ∑' i, V i (f i)
   map_add' f g := by
     simp only [tsum_add (hV.summable_of_lp f) (hV.summable_of_lp g), lp.coe_fn_add, Pi.add_apply,
@@ -215,15 +205,16 @@ protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
   map_smul' c f := by
     simpa only [LinearIsometry.map_smul, Pi.smul_apply, lp.coe_fn_smul] using
       tsum_const_smul (hV.summable_of_lp f)
-  norm_map' f := by classical
-    -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`
-    have H : 0 < (2 : ℝ≥0∞).toReal := by norm_num
-    suffices ‖∑' i : ι, V i (f i)‖ ^ (2 : ℝ≥0∞).toReal = ‖f‖ ^ (2 : ℝ≥0∞).toReal by
-      exact Real.rpow_left_inj_on H.ne' (norm_nonneg _) (norm_nonneg _) this
-    refine' tendsto_nhds_unique _ (lp.has_sum_norm H f)
-    convert (hV.summable_of_lp f).HasSum.norm.rpow_const (Or.inr H.le)
-    ext s
-    exact_mod_cast (hV.norm_sum f s).symm
+  norm_map' f := by
+    classical
+      -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`
+      have H : 0 < (2 : ℝ≥0∞).toReal := by norm_num
+      suffices ‖∑' i : ι, V i (f i)‖ ^ (2 : ℝ≥0∞).toReal = ‖f‖ ^ (2 : ℝ≥0∞).toReal by
+        exact Real.rpow_left_inj_on H.ne' (norm_nonneg _) (norm_nonneg _) this
+      refine' tendsto_nhds_unique _ (lp.has_sum_norm H f)
+      convert (hV.summable_of_lp f).HasSum.norm.rpow_const (Or.inr H.le)
+      ext s
+      exact_mod_cast (hV.norm_sum f s).symm
 #align orthogonal_family.linear_isometry OrthogonalFamily.linearIsometry
 
 protected theorem linear_isometry_apply (f : lp G 2) : hV.LinearIsometry f = ∑' i, V i (f i) :=
@@ -244,9 +235,7 @@ protected theorem linear_isometry_apply_single {i : ι} (x : G i) :
   rw [lp.single_apply]
   split_ifs
   · subst h
-    
   · simp
-    
 #align orthogonal_family.linear_isometry_apply_single OrthogonalFamily.linear_isometry_apply_single
 
 @[simp]
@@ -273,15 +262,12 @@ protected theorem range_linear_isometry [∀ i, CompleteSpace (G i)] :
     intro i hi
     refine' mem_supr_of_mem i _
     exact LinearMap.mem_range_self _ (f i)
-    
   · apply topological_closure_minimal
     · refine' supr_le _
       rintro i x ⟨x, rfl⟩
       use lp.single 2 i x
       exact hV.linear_isometry_apply_single x
-      
     exact hV.linear_isometry.isometry.uniform_inducing.is_complete_range.is_closed
-    
 #align orthogonal_family.range_linear_isometry OrthogonalFamily.range_linear_isometry
 
 end OrthogonalFamily
@@ -311,7 +297,7 @@ variable {𝕜 E V}
 theorem IsHilbertSum.mk [∀ i, CompleteSpace <| G i] (hVortho : OrthogonalFamily 𝕜 V)
     (hVtotal : ⊤ ≤ (⨆ i, (V i).toLinearMap.range).topologicalClosure) : IsHilbertSum 𝕜 E V :=
   { OrthogonalFamily := hVortho,
-    surjective_isometry := by
+    surjective_isometry := by 
       rw [← LinearIsometry.coe_to_linear_map]
       exact
         linear_map.range_eq_top.mp
@@ -394,7 +380,7 @@ theorem Orthonormal.isHilbertSum {v : ι → E} (hv : Orthonormal 𝕜 v)
     @IsHilbertSum _ 𝕜 _ _ _ _ (fun i : ι => 𝕜) _ fun i =>
       LinearIsometry.toSpanSingleton 𝕜 E (hv.1 i) :=
   IsHilbertSum.mk hv.OrthogonalFamily
-    (by
+    (by 
       convert hsp
       simp [← LinearMap.span_singleton_eq_range, ← Submodule.span_Union])
 #align orthonormal.is_hilbert_sum Orthonormal.isHilbertSum
@@ -474,7 +460,6 @@ protected theorem has_sum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, 
   · rw [H]
     have : HasSum (fun i : ι => lp.single 2 i (f i)) f := lp.has_sum_single Ennreal.two_ne_top f
     exact (↑b.repr.symm.to_continuous_linear_equiv : ℓ²(ι, 𝕜) →L[𝕜] E).HasSum this
-    
   ext i
   apply b.repr.injective
   have : lp.single 2 i (f i * 1) = f i • lp.single 2 i 1 := lp.single_smul 2 i (1 : 𝕜) (f i)
@@ -490,16 +475,17 @@ protected theorem has_sum_repr (b : HilbertBasis ι 𝕜 E) (x : E) :
 
 @[simp]
 protected theorem dense_span (b : HilbertBasis ι 𝕜 E) :
-    (span 𝕜 (Set.range b)).topologicalClosure = ⊤ := by classical
-  rw [eq_top_iff]
-  rintro x -
-  refine' mem_closure_of_tendsto (b.has_sum_repr x) (eventually_of_forall _)
-  intro s
-  simp only [SetLike.mem_coe]
-  refine' sum_mem _
-  rintro i -
-  refine' smul_mem _ _ _
-  exact subset_span ⟨i, rfl⟩
+    (span 𝕜 (Set.range b)).topologicalClosure = ⊤ := by
+  classical 
+    rw [eq_top_iff]
+    rintro x -
+    refine' mem_closure_of_tendsto (b.has_sum_repr x) (eventually_of_forall _)
+    intro s
+    simp only [SetLike.mem_coe]
+    refine' sum_mem _
+    rintro i -
+    refine' smul_mem _ _ _
+    exact subset_span ⟨i, rfl⟩
 #align hilbert_basis.dense_span HilbertBasis.dense_span
 
 protected theorem has_sum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
@@ -524,7 +510,7 @@ protected theorem tsum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
 /-- A finite Hilbert basis is an orthonormal basis. -/
 protected def toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : OrthonormalBasis ι 𝕜 E :=
   OrthonormalBasis.mk b.Orthonormal
-    (by
+    (by 
       refine' Eq.ge _
       have := (span 𝕜 (finset.univ.image b : Set E)).closedOfFiniteDimensional
       simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ, HilbertBasis.dense_span] using
@@ -548,7 +534,7 @@ theorem finite_spans_dense (b : HilbertBasis ι 𝕜 E) :
     (⨆ J : Finset ι, span 𝕜 (J.image b : Set E)).topologicalClosure = ⊤ :=
   eq_top_iff.mpr <|
     b.dense_span.ge.trans
-      (by
+      (by 
         simp_rw [← Submodule.span_Union]
         exact
           topological_closure_mono

@@ -44,7 +44,7 @@ def isLimitMapConeBinaryFanEquiv :
   (IsLimit.postcomposeHomEquiv (diagramIsoPair _) _).symm.trans
     (IsLimit.equivIsoLimit
       (Cones.ext (Iso.refl _)
-        (by
+        (by 
           rintro (_ | _)
           tidy)))
 #align
@@ -123,7 +123,7 @@ def isColimitMapCoconeBinaryCofanEquiv :
   (IsColimit.precomposeHomEquiv (diagramIsoPair _).symm _).symm.trans
     (IsColimit.equivIsoColimit
       (Cocones.ext (Iso.refl _)
-        (by
+        (by 
           rintro (_ | _)
           tidy)))
 #align

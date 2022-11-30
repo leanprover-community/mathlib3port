@@ -170,7 +170,7 @@ instance {M} [Monoid M] [DistribMulAction M α] [HasUniformContinuousConstSmul M
 
 /-- The map from a group to its completion as a group hom. -/
 @[simps]
-def toCompl : α →+ Completion α where
+def toCompl : α →+ Completion α where 
   toFun := coe
   map_add' := coe_add
   map_zero' := coe_zero
@@ -201,7 +201,7 @@ instance : AddCommGroup (Completion α) :=
       Completion.inductionOn₂ a b
         (isClosedEq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_snd continuous_fst))
-        fun x y => by
+        fun x y => by 
         change ↑x + ↑y = ↑y + ↑x
         rw [← coe_add, ← coe_add, add_comm] }
 
@@ -209,7 +209,7 @@ instance [Semiring R] [Module R α] [HasUniformContinuousConstSmul R α] : Modul
   { Completion.distribMulAction, Completion.mulActionWithZero with smul := (· • ·),
     add_smul := fun a b =>
       (ext' (continuous_const_smul _) ((continuous_const_smul _).add (continuous_const_smul _)))
-        fun x => by
+        fun x => by 
         norm_cast
         rw [add_smul] }
 
@@ -270,10 +270,8 @@ theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_co
   apply completion.induction_on x
   · apply isClosedEq ((0 : α →+ β).continuous_completion continuous_const)
     simp [continuous_const]
-    
   · intro a
     simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
-    
 #align add_monoid_hom.completion_zero AddMonoidHom.completion_zero
 
 theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroup γ] [UniformSpace γ]
@@ -282,13 +280,12 @@ theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroup γ] [UniformSpac
   have hfg := hf.add hg
   ext x
   apply completion.induction_on x
-  · exact
+  ·
+    exact
       isClosedEq ((f + g).continuous_completion hfg)
         ((f.continuous_completion hf).add (g.continuous_completion hg))
-    
   · intro a
     simp [(f + g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
-    
 #align add_monoid_hom.completion_add AddMonoidHom.completion_add
 
 end AddMonoidHom

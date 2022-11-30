@@ -39,7 +39,7 @@ variable (M : ModuleCat.{v} S)
 
 /-- Any `S`-module M is also an `R`-module via a ring homomorphism `f : R ⟶ S` by defining
     `r • m := f r • m` (`module.comp_hom`). This is called restriction of scalars. -/
-def obj' : ModuleCat R where
+def obj' : ModuleCat R where 
   carrier := M
   isModule := Module.compHom M f
 #align category_theory.Module.restrict_scalars.obj' CategoryTheory.ModuleCat.RestrictScalars.obj'
@@ -58,7 +58,8 @@ end RestrictScalars
 * an `S`-linear map is also `R`-linear
 -/
 def restrictScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) :
-    ModuleCat.{v} S ⥤ ModuleCat.{v} R where
+    ModuleCat.{v} S ⥤ ModuleCat.{v}
+        R where 
   obj := RestrictScalars.obj' f
   map _ _ := RestrictScalars.map' f
   map_id' _ := LinearMap.ext fun m => rfl
@@ -132,24 +133,18 @@ theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
     dsimp only [map', ModuleCat.id_apply]
     induction' x using TensorProduct.induction_on with _ _ m s ihx ihy
     · simp only [map_zero]
-      
     · rw [LinearMap.base_change_tmul, ModuleCat.id_apply]
-      
     · rw [map_add, ihx, ihy]
-      
 #align category_theory.Module.extend_scalars.map'_id CategoryTheory.ModuleCat.ExtendScalars.map'_id
 
 theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (l₂₃ : M₂ ⟶ M₃) :
     map' f (l₁₂ ≫ l₂₃) = map' f l₁₂ ≫ map' f l₂₃ :=
-  LinearMap.ext fun x : obj' f M₁ => by
+  LinearMap.ext fun x : obj' f M₁ => by 
     dsimp only [map']
     induction' x using TensorProduct.induction_on with _ _ x y ihx ihy
     · rfl
-      
     · rfl
-      
     · simp only [map_add, ihx, ihy]
-      
 #align
   category_theory.Module.extend_scalars.map'_comp CategoryTheory.ModuleCat.ExtendScalars.map'_comp
 
@@ -159,7 +154,8 @@ end ExtendScalars
 `l : M1 ⟶ M2` is sent to `s ⊗ m ↦ s ⊗ l m`
 -/
 def extendScalars {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
-    ModuleCat.{v} R ⥤ ModuleCat.{max v u₂} S where
+    ModuleCat.{v} R ⥤
+      ModuleCat.{max v u₂} S where 
   obj M := ExtendScalars.obj' f M
   map M1 M2 l := ExtendScalars.map' f l
   map_id' _ := ExtendScalars.map'_id f

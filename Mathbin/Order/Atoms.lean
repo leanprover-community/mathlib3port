@@ -355,13 +355,11 @@ instance isCoatomisticDual [h : IsAtomistic α] : IsCoatomistic αᵒᵈ :=
 variable [IsAtomistic α]
 
 instance (priority := 100) : IsAtomic α :=
-  ⟨fun b => by
+  ⟨fun b => by 
     rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
-      
-    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, le_Sup h.some_spec⟩
-      ⟩
+    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, le_Sup h.some_spec⟩⟩
 
 end IsAtomistic
 
@@ -398,13 +396,11 @@ instance isAtomisticDual [h : IsCoatomistic α] : IsAtomistic αᵒᵈ :=
 variable [IsCoatomistic α]
 
 instance (priority := 100) : IsCoatomic α :=
-  ⟨fun b => by
+  ⟨fun b => by 
     rcases eq_Inf_coatoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
-      
-    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, Inf_le h.some_spec⟩
-      ⟩
+    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, Inf_le h.some_spec⟩⟩
 
 end IsCoatomistic
 
@@ -420,14 +416,14 @@ export IsSimpleOrder (eq_bot_or_eq_top)
 theorem is_simple_order_iff_is_simple_order_order_dual [LE α] [BoundedOrder α] :
     IsSimpleOrder α ↔ IsSimpleOrder αᵒᵈ := by
   constructor <;> intro i <;> haveI := i
-  · exact
+  ·
+    exact
       { exists_pair_ne := @exists_pair_ne α _,
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
-    
-  · exact
+  ·
+    exact
       { exists_pair_ne := @exists_pair_ne αᵒᵈ _,
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
-    
 #align is_simple_order_iff_is_simple_order_order_dual is_simple_order_iff_is_simple_order_order_dual
 
 theorem IsSimpleOrder.bot_ne_top [LE α] [BoundedOrder α] [IsSimpleOrder α] : (⊥ : α) ≠ (⊤ : α) := by
@@ -445,19 +441,15 @@ instance {α} [LE α] [BoundedOrder α] [IsSimpleOrder α] : IsSimpleOrder αᵒ
 
 /-- A simple `bounded_order` induces a preorder. This is not an instance to prevent loops. -/
 protected def IsSimpleOrder.preorder {α} [LE α] [BoundedOrder α] [IsSimpleOrder α] :
-    Preorder α where
+    Preorder α where 
   le := (· ≤ ·)
   le_refl a := by rcases eq_bot_or_eq_top a with (rfl | rfl) <;> simp
-  le_trans a b c := by
+  le_trans a b c := by 
     rcases eq_bot_or_eq_top a with (rfl | rfl)
     · simp
-      
     · rcases eq_bot_or_eq_top b with (rfl | rfl)
       · rcases eq_bot_or_eq_top c with (rfl | rfl) <;> simp
-        
       · simp
-        
-      
 #align is_simple_order.preorder IsSimpleOrder.preorder
 
 /-- A simple partial ordered `bounded_order` induces a linear order.
@@ -546,7 +538,8 @@ variable [DecidableEq α] [PartialOrder α] [BoundedOrder α] [IsSimpleOrder α]
 
 /-- Every simple lattice is isomorphic to `bool`, regardless of order. -/
 @[simps]
-def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α] : α ≃ Bool where
+def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α] :
+    α ≃ Bool where 
   toFun x := x = ⊤
   invFun x := cond x ⊤ ⊥
   left_inv x := by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top]
@@ -559,13 +552,9 @@ def orderIsoBool : α ≃o Bool :=
     map_rel_iff' := fun a b => by
       rcases eq_bot_or_eq_top a with (rfl | rfl)
       · simp [bot_ne_top]
-        
       · rcases eq_bot_or_eq_top b with (rfl | rfl)
         · simp [bot_ne_top.symm, bot_ne_top, Bool.false_lt_true]
-          
-        · simp [bot_ne_top]
-          
-         }
+        · simp [bot_ne_top] }
 #align is_simple_order.order_iso_bool IsSimpleOrder.orderIsoBool
 
 /- It is important that `is_simple_order` is the last type-class argument of this instance,
@@ -584,10 +573,8 @@ protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α
     inf_compl_le_bot := fun x => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp
-        
       · simp only [top_inf_eq]
-        split_ifs with h h <;> simp [h]
-        ,
+        split_ifs with h h <;> simp [h],
     top_le_sup_compl := fun x => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
 #align is_simple_order.boolean_algebra IsSimpleOrder.booleanAlgebra
 
@@ -601,34 +588,26 @@ open Classical
 protected noncomputable def completeLattice : CompleteLattice α :=
   { (inferInstance : Lattice α), (inferInstance : BoundedOrder α) with
     sup := fun s => if ⊤ ∈ s then ⊤ else ⊥, inf := fun s => if ⊥ ∈ s then ⊥ else ⊤,
-    le_Sup := fun s x h => by
+    le_Sup := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
-        
-      · rw [if_pos h]
-        ,
-    Sup_le := fun s x h => by
+      · rw [if_pos h],
+    Sup_le := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_neg]
         intro con
         exact bot_ne_top (eq_top_iff.2 (h ⊤ con))
-        
-      · exact le_top
-        ,
-    Inf_le := fun s x h => by
+      · exact le_top,
+    Inf_le := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_pos h]
-        
-      · exact le_top
-        ,
-    le_Inf := fun s x h => by
+      · exact le_top,
+    le_Inf := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
-        
       · rw [if_neg]
         intro con
-        exact top_ne_bot (eq_bot_iff.2 (h ⊥ con))
-         }
+        exact top_ne_bot (eq_bot_iff.2 (h ⊥ con)) }
 #align is_simple_order.complete_lattice IsSimpleOrder.completeLattice
 
 /-- A simple `bounded_order` is also a `complete_boolean_algebra`. -/
@@ -638,16 +617,12 @@ protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_sup_eq, ← Inf_eq_infi]
         exact le_rfl
-        
-      · simp only [top_sup_eq, le_top]
-        ,
+      · simp only [top_sup_eq, le_top],
     inf_Sup_le_supr_inf := fun x s => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_inf_eq, bot_le]
-        
       · simp only [top_inf_eq, ← Sup_eq_supr]
-        exact le_rfl
-         }
+        exact le_rfl }
 #align is_simple_order.complete_boolean_algebra IsSimpleOrder.completeBooleanAlgebra
 
 end IsSimpleOrder
@@ -681,7 +656,7 @@ variable [PartialOrder α] [BoundedOrder α] [IsSimpleOrder α] [DecidableEq α]
 theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} := by
   change Finset.map _ (Finset.univ : Finset Bool) = _
   rw [Fintype.univ_bool]
-  simp only [Finset.map_insert, Function.Embedding.coe_fn_mk, Finset.map_singleton]
+  simp only [Finset.map_insert, Function.Embedding.coeFn_mk, Finset.map_singleton]
   rfl
 #align fintype.is_simple_order.univ Fintype.IsSimpleOrder.univ
 
@@ -697,7 +672,7 @@ namespace Bool
 
 instance : IsSimpleOrder Bool :=
   ⟨fun a => by
-    rw [← Finset.mem_singleton, or_comm, ← Finset.mem_insert, top_eq_tt, bot_eq_ff, ←
+    rw [← Finset.mem_singleton, or_comm, ← Finset.mem_insert, top_eq_true, bot_eq_false, ←
       Fintype.univ_bool]
     apply Finset.mem_univ⟩
 
@@ -903,18 +878,16 @@ variable [ComplementedLattice α]
 
 theorem is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular [IsAtomic α] :
     IsCoatomic α :=
-  ⟨fun x => by
+  ⟨fun x => by 
     rcases exists_is_compl x with ⟨y, xy⟩
     apply (eq_bot_or_exists_atom_le y).imp _ _
     · rintro rfl
-      exact eq_top_of_is_compl_bot xy
-      
+      exact eq_top_of_isCompl_bot xy
     · rintro ⟨a, ha, ay⟩
       rcases exists_is_compl (xy.symm.Iic_order_iso_Ici ⟨a, ay⟩) with ⟨⟨b, xb⟩, hb⟩
       refine' ⟨↑(⟨b, xb⟩ : Set.ici x), IsCoatom.of_is_coatom_coe_Ici _, xb⟩
       rw [← hb.is_atom_iff_is_coatom, OrderIso.is_atom_iff]
-      apply ha.Iic
-      ⟩
+      apply ha.Iic⟩
 #align
   is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular
 
@@ -963,7 +936,7 @@ theorem is_atom_singleton (x : α) : IsAtom ({x} : Set α) :=
 
 theorem is_atom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} := by
   refine'
-    ⟨_, by
+    ⟨_, by 
       rintro ⟨x, rfl⟩
       exact is_atom_singleton x⟩
   rintro ⟨hs₁, hs₂⟩

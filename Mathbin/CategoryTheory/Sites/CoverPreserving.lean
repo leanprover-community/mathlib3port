@@ -86,7 +86,7 @@ variable (J) (K)
 /-- The composition of two cover-preserving functors is cover-preserving. -/
 theorem CoverPreserving.comp {F} (hF : CoverPreserving J K F) {G} (hG : CoverPreserving K L G) :
     CoverPreserving J L (F ⋙ G) :=
-  ⟨fun U S hS => by
+  ⟨fun U S hS => by 
     rw [sieve.functor_pushforward_comp]
     exact hG.cover_preserve (hF.cover_preserve hS)⟩
 #align category_theory.cover_preserving.comp CategoryTheory.CoverPreserving.comp
@@ -748,12 +748,10 @@ theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreser
   constructor; swap
   · apply H.amalgamate (x.functor_pushforward G)
     exact hx'
-    
   constructor
   · intro V f hf
     convert H.is_amalgamation hx' (G.map f) (image_mem_functor_pushforward G S hf)
     rw [hG₁.apply_map (sheaf_over ℱ X) hx]
-    
   · intro y hy
     refine'
       H.is_separated_for _ y _ _ (H.is_amalgamation (hx.functor_pushforward hG₁ (sheaf_over ℱ X)))
@@ -762,7 +760,6 @@ theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreser
         (image_mem_functor_pushforward G S h) g']
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
-    
 #align
   category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullbackIsSheafOfCoverPreserving
 
@@ -779,13 +776,14 @@ if `G` is cover-preserving and compatible-preserving.
 -/
 @[simps]
 def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
-    SheafCat K A ⥤ SheafCat J A where
+    SheafCat K A ⥤ SheafCat J
+        A where 
   obj ℱ := pullbackSheaf hG₁ hG₂ ℱ
   map _ _ f := ⟨((whiskeringLeft _ _ _).obj G.op).map f.val⟩
-  map_id' ℱ := by
+  map_id' ℱ := by 
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_id
-  map_comp' _ _ _ f g := by
+  map_comp' _ _ _ f g := by 
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_comp
 #align category_theory.sites.pullback CategoryTheory.Sites.pullback
@@ -823,13 +821,10 @@ def Sites.pushforward (G : C ⥤ D) : SheafCat J A ⥤ SheafCat K A :=
 instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) := by
   apply (config := { instances := false }) comp_preserves_finite_limits
   · infer_instance
-    
   apply (config := { instances := false }) comp_preserves_finite_limits
   · apply CategoryTheory.lanPreservesFiniteLimitsOfFlat
-    
   · apply CategoryTheory.presheafToSheaf.Limits.preservesFiniteLimits.{u₂, v₁, v₁}
     infer_instance
-    
 
 /-- The pushforward functor is left adjoint to the pullback functor. -/
 def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)

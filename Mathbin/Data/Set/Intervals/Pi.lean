@@ -109,7 +109,7 @@ theorem pi_univ_Ioc_update_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (
 theorem disjoint_pi_univ_Ioc_update_left_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} :
     Disjoint (pi univ fun i => ioc (x i) (update y i₀ m i))
       (pi univ fun i => ioc (update x i₀ m i) (y i)) :=
-  by
+  by 
   rw [disjoint_left]
   rintro z h₁ h₂
   refine' (h₁ i₀ (mem_univ _)).2.not_lt _
@@ -142,7 +142,7 @@ of the faces of `[x, y]`. -/
 theorem Icc_diff_pi_univ_Ioo_subset (x y x' y' : ∀ i, α i) :
     (icc x y \ pi univ fun i => ioo (x' i) (y' i)) ⊆
       (⋃ i : ι, icc x (update y i (x' i))) ∪ ⋃ i : ι, icc (update x i (y' i)) y :=
-  by
+  by 
   rintro a ⟨⟨hxa, hay⟩, ha'⟩
   simpa [le_update_iff, update_le_iff, hxa, hay, hxa _, hay _, ← exists_or, not_and_or] using ha'
 #align set.Icc_diff_pi_univ_Ioo_subset Set.Icc_diff_pi_univ_Ioo_subset

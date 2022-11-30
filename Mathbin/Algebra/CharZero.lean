@@ -33,7 +33,7 @@ def castEmbedding : ℕ ↪ R :=
 
 @[simp]
 theorem cast_pow_eq_one {R : Type _} [Semiring R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
-    (q : R) ^ n = 1 ↔ q = 1 := by
+    (q : R) ^ n = 1 ↔ q = 1 := by 
   rw [← cast_pow, cast_eq_one]
   exact pow_eq_one_iff hn
 #align nat.cast_pow_eq_one Nat.cast_pow_eq_one
@@ -43,9 +43,7 @@ theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℕ} (n_dv
     ((m / n : ℕ) : k) = m / n := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
-    
   · exact cast_div n_dvd (cast_ne_zero.2 hn)
-    
 #align nat.cast_div_char_zero Nat.cast_div_char_zero
 
 end Nat
@@ -60,7 +58,7 @@ instance (priority := 100) CharZero.infinite : Infinite M :=
 #align char_zero.infinite CharZero.infinite
 
 instance CharZero.NeZero.two : NeZero (2 : M) :=
-  ⟨by
+  ⟨by 
     have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 (by decide)
     rwa [Nat.cast_two] at this⟩
 #align char_zero.ne_zero.two CharZero.NeZero.two

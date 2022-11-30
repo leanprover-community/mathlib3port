@@ -85,7 +85,7 @@ theorem rename_expand (f : σ → τ) (p : ℕ) (φ : MvPolynomial σ R) :
 theorem rename_comp_expand (f : σ → τ) (p : ℕ) :
     (rename f).comp (expand p) =
       (expand p).comp (rename f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) :=
-  by
+  by 
   ext1 φ
   simp only [rename_expand, AlgHom.comp_apply]
 #align mv_polynomial.rename_comp_expand MvPolynomial.rename_comp_expand

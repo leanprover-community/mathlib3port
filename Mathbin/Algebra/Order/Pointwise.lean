@@ -168,12 +168,10 @@ theorem smul_Ioo : r • ioo a b = ioo (r • a) (r • b) := by
     constructor
     exact (mul_lt_mul_left hr).mpr a_h_left_left
     exact (mul_lt_mul_left hr).mpr a_h_left_right
-    
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(lt_div_iff' hr).mpr a_left, (div_lt_iff' hr).mpr a_right⟩, _⟩
     rw [mul_div_cancel' _ (ne_of_gt hr)]
-    
 #align linear_ordered_field.smul_Ioo LinearOrderedField.smul_Ioo
 
 theorem smul_Icc : r • icc a b = icc (r • a) (r • b) := by
@@ -184,12 +182,10 @@ theorem smul_Icc : r • icc a b = icc (r • a) (r • b) := by
     constructor
     exact (mul_le_mul_left hr).mpr a_h_left_left
     exact (mul_le_mul_left hr).mpr a_h_left_right
-    
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(le_div_iff' hr).mpr a_left, (div_le_iff' hr).mpr a_right⟩, _⟩
     rw [mul_div_cancel' _ (ne_of_gt hr)]
-    
 #align linear_ordered_field.smul_Icc LinearOrderedField.smul_Icc
 
 theorem smul_Ico : r • ico a b = ico (r • a) (r • b) := by
@@ -200,12 +196,10 @@ theorem smul_Ico : r • ico a b = ico (r • a) (r • b) := by
     constructor
     exact (mul_le_mul_left hr).mpr a_h_left_left
     exact (mul_lt_mul_left hr).mpr a_h_left_right
-    
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(le_div_iff' hr).mpr a_left, (div_lt_iff' hr).mpr a_right⟩, _⟩
     rw [mul_div_cancel' _ (ne_of_gt hr)]
-    
 #align linear_ordered_field.smul_Ico LinearOrderedField.smul_Ico
 
 theorem smul_Ioc : r • ioc a b = ioc (r • a) (r • b) := by
@@ -216,72 +210,62 @@ theorem smul_Ioc : r • ioc a b = ioc (r • a) (r • b) := by
     constructor
     exact (mul_lt_mul_left hr).mpr a_h_left_left
     exact (mul_le_mul_left hr).mpr a_h_left_right
-    
   · rintro ⟨a_left, a_right⟩
     use x / r
     refine' ⟨⟨(lt_div_iff' hr).mpr a_left, (div_le_iff' hr).mpr a_right⟩, _⟩
     rw [mul_div_cancel' _ (ne_of_gt hr)]
-    
 #align linear_ordered_field.smul_Ioc LinearOrderedField.smul_Ioc
 
-theorem smul_Ioi : r • ioi a = ioi (r • a) := by
+theorem smul_Ioi : r • ioi a = ioi (r • a) := by 
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_lt_mul_left hr).mpr a_h_left
-    
   · rintro h
     use x / r
     constructor
     exact (lt_div_iff' hr).mpr h
     exact mul_div_cancel' _ (ne_of_gt hr)
-    
 #align linear_ordered_field.smul_Ioi LinearOrderedField.smul_Ioi
 
-theorem smul_Iio : r • iio a = iio (r • a) := by
+theorem smul_Iio : r • iio a = iio (r • a) := by 
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_lt_mul_left hr).mpr a_h_left
-    
   · rintro h
     use x / r
     constructor
     exact (div_lt_iff' hr).mpr h
     exact mul_div_cancel' _ (ne_of_gt hr)
-    
 #align linear_ordered_field.smul_Iio LinearOrderedField.smul_Iio
 
-theorem smul_Ici : r • ici a = ici (r • a) := by
+theorem smul_Ici : r • ici a = ici (r • a) := by 
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_le_mul_left hr).mpr a_h_left
-    
   · rintro h
     use x / r
     constructor
     exact (le_div_iff' hr).mpr h
     exact mul_div_cancel' _ (ne_of_gt hr)
-    
 #align linear_ordered_field.smul_Ici LinearOrderedField.smul_Ici
 
-theorem smul_Iic : r • iic a = iic (r • a) := by
+theorem smul_Iic : r • iic a = iic (r • a) := by 
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_le_mul_left hr).mpr a_h_left
-    
   · rintro h
     use x / r
     constructor
     exact (div_le_iff' hr).mpr h
     exact mul_div_cancel' _ (ne_of_gt hr)
-    
 #align linear_ordered_field.smul_Iic LinearOrderedField.smul_Iic
 
 end LinearOrderedField

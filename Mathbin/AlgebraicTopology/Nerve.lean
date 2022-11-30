@@ -26,10 +26,11 @@ namespace CategoryTheory
 
 /-- The nerve of a category -/
 @[simps]
-def nerve (C : Type u) [Category.{v} C] : SSet.{max u v} where
+def nerve (C : Type u) [Category.{v} C] :
+    SSet.{max u v} where 
   obj Δ := SimplexCategory.toCat.obj Δ.unop ⥤ C
   map Δ₁ Δ₂ f x := SimplexCategory.toCat.map f.unop ⋙ x
-  map_id' Δ := by
+  map_id' Δ := by 
     rw [unop_id, Functor.map_id]
     ext x
     apply functor.id_comp
@@ -40,10 +41,10 @@ instance {C : Type _} [Category C] {Δ : SimplexCategoryᵒᵖ} : Category ((ner
 
 /-- The nerve of a category, as a functor `Cat ⥤ sSet` -/
 @[simps]
-def nerveFunctor : Cat ⥤ SSet where
+def nerveFunctor : Cat ⥤ SSet where 
   obj C := nerve C
   map C C' F := { app := fun Δ x => x ⋙ F }
-  map_id' C := by
+  map_id' C := by 
     ext (Δ x)
     apply functor.comp_id
 #align category_theory.nerve_functor CategoryTheory.nerveFunctor

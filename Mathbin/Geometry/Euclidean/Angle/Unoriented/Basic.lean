@@ -209,14 +209,10 @@ theorem sin_angle_mul_norm_mul_norm (x y : V) :
     cases' eq_zero_or_eq_zero_of_mul_eq_zero h with hx hy
     · rw [norm_eq_zero] at hx
       rw [hx, inner_zero_left, zero_mul, neg_zero]
-      
     · rw [norm_eq_zero] at hy
       rw [hy, inner_zero_right, zero_mul, neg_zero]
-      
-    
   · field_simp [h]
     ring_nf
-    
 #align
   inner_product_geometry.sin_angle_mul_norm_mul_norm InnerProductGeometry.sin_angle_mul_norm_mul_norm
 
@@ -287,7 +283,7 @@ theorem inner_eq_mul_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠
 /-- If the angle between two vectors is π, the norm of their difference equals
 the sum of their norms. -/
 theorem norm_sub_eq_add_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ‖x - y‖ = ‖x‖ + ‖y‖ :=
-  by
+  by 
   rw [← sq_eq_sq (norm_nonneg (x - y)) (add_nonneg (norm_nonneg x) (norm_nonneg y))]
   rw [norm_sub_pow_two_real, inner_eq_neg_mul_norm_of_angle_eq_pi h]
   ring
@@ -297,7 +293,7 @@ theorem norm_sub_eq_add_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ‖
 /-- If the angle between two vectors is 0, the norm of their sum equals
 the sum of their norms. -/
 theorem norm_add_eq_add_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ‖x + y‖ = ‖x‖ + ‖y‖ :=
-  by
+  by 
   rw [← sq_eq_sq (norm_nonneg (x + y)) (add_nonneg (norm_nonneg x) (norm_nonneg y))]
   rw [norm_add_pow_two_real, inner_eq_mul_norm_of_angle_eq_zero h]
   ring
@@ -350,7 +346,7 @@ theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy 
     ‖x - y‖ = |‖x‖ - ‖y‖| ↔ angle x y = 0 := by
   refine' ⟨fun h => _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
-  have h1 : ‖x - y‖ ^ 2 = (‖x‖ - ‖y‖) ^ 2 := by
+  have h1 : ‖x - y‖ ^ 2 = (‖x‖ - ‖y‖) ^ 2 := by 
     rw [h]
     exact sq_abs (‖x‖ - ‖y‖)
   rw [norm_sub_pow_two_real] at h1

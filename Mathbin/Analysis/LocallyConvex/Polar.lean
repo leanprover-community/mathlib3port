@@ -119,7 +119,7 @@ theorem tripolar_eq_polar (s : Set E) : B.polar (B.flip.polar (B.polar s)) = B.p
 
 /-- The polar set is closed in the weak topology induced by `B.flip`. -/
 theorem polarWeakClosed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.polar s) :=
-  by
+  by 
   rw [polar_eq_Inter]
   refine' isClosedInter fun x => isClosedInter fun _ => _
   exact isClosedLe (WeakBilin.eval_continuous B.flip x).norm continuous_const

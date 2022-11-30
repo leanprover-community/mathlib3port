@@ -35,13 +35,13 @@ protected def floor : ℚ → ℤ
 -/
 
 protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z : ℚ) ≤ r
-  | ⟨n, d, h, c⟩ => by
+  | ⟨n, d, h, c⟩ => by 
     simp [Rat.floor]
     rw [num_denom']
     have h' := Int.coe_nat_lt.2 h
-    conv =>
-    rhs
-    rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_one]
+    conv => 
+      rhs
+      rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_one]
     exact Int.le_div_iff_mul_le h'
 #align rat.le_floor Rat.le_floor
 
@@ -57,7 +57,6 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
   rw [Rat.floor_def]
   obtain rfl | hd := @eq_zero_or_pos _ _ d
   · simp
-    
   set q := (n : ℚ) / d with q_eq
   obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom := by
     rw [q_eq]
@@ -120,14 +119,15 @@ theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom 
   suffices 0 < (1 - fract q) * q.denom by
     rw [← sub_lt_iff_lt_add']
     simpa
-  have : 0 < 1 - fract q := by
+  have : 0 < 1 - fract q := by 
     have : fract q < 1 := fract_lt_one q
     have : 0 + fract q < 1 := by simp [this]
     rwa [lt_sub_iff_add_lt]
   exact mul_pos this (by exact_mod_cast q.pos)
 #align rat.num_lt_succ_floor_mul_denom Rat.num_lt_succ_floor_mul_denom
 
-theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).num < q.num := by
+theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).num < q.num :=
+  by
   -- we know that the numerator must be positive
   have q_num_pos : 0 < q.num := rat.num_pos_iff_pos.elim_right q_pos
   -- we will work with the absolute value of the numerator, which is equal to the numerator
@@ -137,7 +137,8 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   suffices (q_inv - ⌊q_inv⌋).num < q.num by rwa [q_inv_eq]
   suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by
     field_simp [this, ne_of_gt q_num_pos]
-  suffices (q.denom : ℤ) - q.num * ⌊q_inv⌋ < q.num by
+  suffices (q.denom : ℤ) - q.num * ⌊q_inv⌋ < q.num
+    by
     -- use that `q.num` and `q.denom` are coprime to show that the numerator stays unreduced
     have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ := by
       suffices ((q.denom : ℤ) - q.num * ⌊q_inv⌋).natAbs.Coprime q.num.nat_abs by
@@ -160,11 +161,9 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
     rw [q_inv_def]
     constructor
     · exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
-      
     · suffices (((q.denom : ℚ) / q.num).denom : ℤ) = q.num.nat_abs by exact_mod_cast this
       rw [q_num_abs_eq_q_num]
       exact_mod_cast Rat.denom_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
-      
   rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq
 #align rat.fract_inv_num_lt_num_of_pos Rat.fract_inv_num_lt_num_of_pos
 

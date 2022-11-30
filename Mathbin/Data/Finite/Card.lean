@@ -49,9 +49,7 @@ theorem Nat.card_eq (α : Type _) :
   cases finite_or_infinite α
   · letI := Fintype.ofFinite α
     simp only [*, Nat.card_eq_fintype_card, dif_pos]
-    
   · simp [*, not_finite_iff_infinite.mpr h]
-    
 #align nat.card_eq Nat.card_eq
 
 theorem Finite.card_pos_iff [Finite α] : 0 < Nat.card α ↔ Nonempty α := by
@@ -96,7 +94,7 @@ theorem card_option [Finite α] : Nat.card (Option α) = Nat.card α + 1 := by
 #align finite.card_option Finite.card_option
 
 theorem card_le_of_injective [Finite β] (f : α → β) (hf : Function.Injective f) :
-    Nat.card α ≤ Nat.card β := by
+    Nat.card α ≤ Nat.card β := by 
   haveI := Fintype.ofFinite β
   haveI := Fintype.ofInjective f hf
   simpa using Fintype.card_le_of_injective f hf
@@ -107,7 +105,7 @@ theorem card_le_of_embedding [Finite β] (f : α ↪ β) : Nat.card α ≤ Nat.c
 #align finite.card_le_of_embedding Finite.card_le_of_embedding
 
 theorem card_le_of_surjective [Finite α] (f : α → β) (hf : Function.Surjective f) :
-    Nat.card β ≤ Nat.card α := by
+    Nat.card β ≤ Nat.card α := by 
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofSurjective f hf
   simpa using Fintype.card_le_of_surjective f hf
@@ -143,15 +141,13 @@ theorem card_le_of_surjective' {f : α → β} (hf : Function.Surjective f)
 
 /-- NB: `nat.card` is defined to be `0` for infinite types. -/
 theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) (h : Nat.card β = 0) :
-    Nat.card α = 0 := by
+    Nat.card α = 0 := by 
   cases finite_or_infinite β
   · haveI := card_eq_zero_iff.mp h
     haveI := Function.isEmpty f
     exact Nat.card_of_is_empty
-    
   · haveI := Infinite.of_surjective f hf
     exact Nat.card_eq_zero_of_infinite
-    
 #align finite.card_eq_zero_of_surjective Finite.card_eq_zero_of_surjective
 
 /-- NB: `nat.card` is defined to be `0` for infinite types. -/
@@ -201,9 +197,7 @@ theorem card_union_le (s t : Set α) : Nat.card ↥(s ∪ t) ≤ Nat.card s + Na
     rw [← Cardinal.nat_cast_le, Nat.cast_add, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk,
       Finite.cast_card_eq_mk]
     exact Cardinal.mk_union_le s t
-    
   · exact nat.card_eq_zero_of_infinite.trans_le (zero_le _)
-    
 #align set.card_union_le Set.card_union_le
 
 end Set

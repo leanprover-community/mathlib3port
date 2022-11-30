@@ -111,7 +111,7 @@ section HasSmul
 variable [HasSmul 𝕜 E] {s : Set E} {f g : E → β}
 
 theorem QuasiconvexOn.sup (hf : QuasiconvexOn 𝕜 s f) (hg : QuasiconvexOn 𝕜 s g) :
-    QuasiconvexOn 𝕜 s (f ⊔ g) := by
+    QuasiconvexOn 𝕜 s (f ⊔ g) := by 
   intro r
   simp_rw [Pi.sup_def, sup_le_iff, Set.sep_and]
   exact (hf r).inter (hg r)

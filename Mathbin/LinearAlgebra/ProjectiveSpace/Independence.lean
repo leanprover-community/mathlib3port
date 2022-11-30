@@ -50,15 +50,11 @@ theorem independent_iff : Independent f ↔ LinearIndependent K (Projectivizatio
     convert hh.units_smul a
     ext i
     exact (ha i).symm
-    
   · convert independent.mk _ _ h
     · ext
       simp only [mk_rep]
-      
     · intro i
       apply rep_nonzero
-      
-    
 #align projectivization.independent_iff Projectivization.independent_iff
 
 /-- A family of points in projective space is independent if and only if the family of
@@ -68,14 +64,10 @@ theorem independent_iff_complete_lattice_independent :
   refine' ⟨_, fun h => _⟩
   · rintro ⟨f, hf, hi⟩
     simpa [submodule_mk, CompleteLattice.independent_iff_linear_independent_of_ne_zero hf]
-    
   · rw [independent_iff]
     refine' h.linear_independent (Projectivization.submodule ∘ f) (fun i => _) fun i => _
     · simpa only [Function.comp_apply, submodule_eq] using Submodule.mem_span_singleton_self _
-      
     · exact rep_nonzero (f i)
-      
-    
 #align
   projectivization.independent_iff_complete_lattice_independent Projectivization.independent_iff_complete_lattice_independent
 
@@ -97,14 +89,10 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
     convert hh1.units_smul a⁻¹
     ext i
     simp only [← ha, inv_smul_smul, Pi.smul_apply', Pi.inv_apply, Function.comp_apply]
-    
   · convert dependent.mk _ _ h
     · ext i
       simp only [mk_rep]
-      
     · exact fun i => rep_nonzero (f i)
-      
-    
 #align projectivization.dependent_iff Projectivization.dependent_iff
 
 /-- Dependence is the negation of independence. -/

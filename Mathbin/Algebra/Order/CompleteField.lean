@@ -65,7 +65,7 @@ class ConditionallyCompleteLinearOrderedField (α : Type _) extends
 instance (priority := 100) ConditionallyCompleteLinearOrderedField.to_archimedean
     [ConditionallyCompleteLinearOrderedField α] : Archimedean α :=
   archimedean_iff_nat_lt.2
-    (by
+    (by 
       by_contra' h
       obtain ⟨x, h⟩ := h
       have :=
@@ -126,10 +126,8 @@ theorem cut_map_self (a : α) : cutMap α a = iio a ∩ range (coe : ℚ → α)
   constructor
   · rintro ⟨q, h, rfl⟩
     exact ⟨h, q, rfl⟩
-    
   · rintro ⟨h, q, rfl⟩
     exact ⟨q, h, rfl⟩
-    
 #align linear_ordered_field.cut_map_self LinearOrderedField.cut_map_self
 
 end DivisionRing
@@ -158,12 +156,10 @@ theorem cut_map_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b :
     refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;> try norm_cast <;>
       rwa [coe_mem_cut_map_iff]
     exact_mod_cast sub_lt_comm.mp hq₁q
-    
   · rintro _ ⟨_, _, ⟨qa, ha, rfl⟩, ⟨qb, hb, rfl⟩, rfl⟩
     refine' ⟨qa + qb, _, by norm_cast⟩
     rw [mem_set_of_eq, cast_add]
     exact add_lt_add ha hb
-    
 #align linear_ordered_field.cut_map_add LinearOrderedField.cut_map_add
 
 end CutMap
@@ -199,11 +195,9 @@ theorem induced_map_rat (q : ℚ) : inducedMap α β (q : α) = q := by
   · rw [cut_map_coe] at h
     obtain ⟨r, h, rfl⟩ := h
     exact le_of_lt h
-    
   · obtain ⟨q', hwq, hq⟩ := exists_rat_btwn h
     rw [cut_map_coe]
     exact ⟨q', ⟨_, hq, rfl⟩, hwq⟩
-    
 #align linear_ordered_field.induced_map_rat LinearOrderedField.induced_map_rat
 
 @[simp]
@@ -224,11 +218,9 @@ theorem coe_lt_induced_map_iff : (q : β) < inducedMap α β a ↔ (q : α) < a 
   refine' ⟨fun h => _, fun hq => _⟩
   · rw [← induced_map_rat α] at h
     exact (induced_map_mono α β).reflect_lt h
-    
   · obtain ⟨q', hq, hqa⟩ := exists_rat_btwn hq
     apply lt_cSup_of_lt (cut_map_bdd_above β a) (coe_mem_cut_map_iff.mpr hqa)
     exact_mod_cast hq
-    
 #align linear_ordered_field.coe_lt_induced_map_iff LinearOrderedField.coe_lt_induced_map_iff
 
 theorem lt_induced_map_iff : b < inducedMap α β a ↔ ∃ q : ℚ, b < q ∧ (q : α) < a :=
@@ -255,7 +247,7 @@ theorem induced_map_inv_self (b : β) : inducedMap γ β (inducedMap β γ b) = 
 #align linear_ordered_field.induced_map_inv_self LinearOrderedField.induced_map_inv_self
 
 theorem induced_map_add (x y : α) : inducedMap α β (x + y) = inducedMap α β x + inducedMap α β y :=
-  by
+  by 
   rw [induced_map, cut_map_add]
   exact
     cSup_add (cut_map_nonempty β x) (cut_map_bdd_above β x) (cut_map_nonempty β y)
@@ -286,7 +278,6 @@ theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b :
   · refine' ⟨0, _, hb⟩
     rw [← Rat.cast_zero, coe_mem_cut_map_iff, Rat.cast_zero]
     exact mul_self_pos.2 ha.ne'
-    
   obtain ⟨q, hq, hbq, hqa⟩ := exists_rat_pow_btwn two_ne_zero hba (hb.trans_lt hba)
   rw [← cast_pow] at hbq
   refine' ⟨(q ^ 2 : ℚ), coe_mem_cut_map_iff.2 _, hbq⟩
@@ -310,23 +301,17 @@ def inducedAddHom : α →+ β :=
 def inducedOrderRingHom : α →+*o β :=
   { (inducedAddHom α β).mkRingHomOfMulSelfOfTwoNeZero
       (-- reduce to the case of x = y
-      by
-        -- reduce to the case of 0 < x
+      by-- reduce to the case of 0 < x
         suffices
           ∀ x, 0 < x → induced_add_hom α β (x * x) = induced_add_hom α β x * induced_add_hom α β x
-          by
+          by 
           rintro x
           obtain h | rfl | h := lt_trichotomy x 0
           · convert this (-x) (neg_pos.2 h) using 1
             · rw [neg_mul, mul_neg, neg_neg]
-              
             · simp_rw [AddMonoidHom.map_neg, neg_mul, mul_neg, neg_neg]
-              
-            
           · simp only [mul_zero, AddMonoidHom.map_zero]
-            
           · exact this x h
-            
         -- prove that the (Sup of rationals less than x) ^ 2 is the Sup of the set of rationals less
         -- than (x ^ 2) by showing it is an upper bound and any smaller number is not an upper bound
         refine' fun x hx => cSup_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β _) _ _
@@ -391,7 +376,8 @@ theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f 
 #align ring_hom_monotone ring_hom_monotone
 
 /-- There exists no nontrivial ring homomorphism `ℝ →+* ℝ`. -/
-instance Real.RingHom.unique : Unique (ℝ →+* ℝ) where
+instance Real.RingHom.unique :
+    Unique (ℝ →+* ℝ) where 
   default := RingHom.id ℝ
   uniq f :=
     congr_arg OrderRingHom.toRingHom

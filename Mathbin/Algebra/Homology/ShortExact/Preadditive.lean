@@ -52,9 +52,9 @@ structure LeftSplit : Prop where
 #align category_theory.left_split CategoryTheory.LeftSplit
 
 theorem LeftSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : ShortExact f g :=
-  { Mono := by
+  { Mono := by 
       obtain ⟨φ, hφ⟩ := h.left_split
-      haveI : mono (f ≫ φ) := by
+      haveI : mono (f ≫ φ) := by 
         rw [hφ]
         infer_instance
       exact mono_of_mono f φ,
@@ -72,9 +72,9 @@ structure RightSplit : Prop where
 #align category_theory.right_split CategoryTheory.RightSplit
 
 theorem RightSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : ShortExact f g :=
-  { Epi := by
+  { Epi := by 
       obtain ⟨χ, hχ⟩ := h.right_split
-      haveI : epi (χ ≫ g) := by
+      haveI : epi (χ ≫ g) := by 
         rw [hχ]
         infer_instance
       exact epi_of_epi χ g,
@@ -117,7 +117,6 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
       rw [← cancel_mono (subobject.arrow _)]
       swap
       · infer_instance
-        
       simp only [image_to_kernel_arrow, image_subobject_arrow_comp, category.id_comp,
         category.assoc]
       calc
@@ -138,12 +137,12 @@ theorem Split.exact (h : Split f g) : Exact f g := by
 #align category_theory.split.exact CategoryTheory.Split.exact
 
 theorem Split.left_split (h : Split f g) : LeftSplit f g :=
-  { LeftSplit := by
+  { LeftSplit := by 
       obtain ⟨φ, χ, h1, -⟩ := h
       exact ⟨φ, h1⟩,
-    Epi := by
+    Epi := by 
       obtain ⟨φ, χ, -, h2, -⟩ := h
-      have : epi (χ ≫ g) := by
+      have : epi (χ ≫ g) := by 
         rw [h2]
         infer_instance
       exact epi_of_epi χ g,
@@ -151,12 +150,12 @@ theorem Split.left_split (h : Split f g) : LeftSplit f g :=
 #align category_theory.split.left_split CategoryTheory.Split.left_split
 
 theorem Split.right_split (h : Split f g) : RightSplit f g :=
-  { RightSplit := by
+  { RightSplit := by 
       obtain ⟨φ, χ, -, h1, -⟩ := h
       exact ⟨χ, h1⟩,
-    Mono := by
+    Mono := by 
       obtain ⟨φ, χ, h1, -⟩ := h
-      have : mono (f ≫ φ) := by
+      have : mono (f ≫ φ) := by 
         rw [h1]
         infer_instance
       exact mono_of_mono f φ,
@@ -293,11 +292,11 @@ protected theorem epi : Epi g := by
   infer_instance
 #align category_theory.splitting.epi CategoryTheory.Splitting.epi
 
-instance : Mono h.section := by
+instance : Mono h.section := by 
   delta splitting.section
   infer_instance
 
-instance : Epi h.retraction := by
+instance : Epi h.retraction := by 
   delta retraction
   apply epi_comp
 
@@ -337,7 +336,7 @@ theorem splittings_comm (h h' : Splitting f g) :
 
 include h
 
-theorem split : Split f g := by
+theorem split : Split f g := by 
   let φ := h.iso.hom ≫ biprod.fst
   let χ := biprod.inr ≫ h.iso.inv
   refine'
@@ -355,16 +354,12 @@ variable [HasKernels 𝒜] [HasImages 𝒜] [HasZeroObject 𝒜] [HasCokernels �
 protected theorem exact : Exact f g := by
   rw [exact_iff_exact_of_iso f g (biprod.inl : A ⟶ A ⊞ C) (biprod.snd : A ⊞ C ⟶ C) _ _ _]
   · exact exact_inl_snd _ _
-    
   · refine' arrow.iso_mk (iso.refl _) h.iso _
     simp only [iso.refl_hom, arrow.mk_hom, category.id_comp, comp_iso_eq_inl]
-    
   · refine' arrow.iso_mk h.iso (iso.refl _) _
     dsimp
     simp
-    
   · rfl
-    
 #align category_theory.splitting.exact CategoryTheory.Splitting.exact
 
 protected theorem short_exact : ShortExact f g :=

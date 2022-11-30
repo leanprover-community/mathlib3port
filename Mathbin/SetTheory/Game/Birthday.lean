@@ -44,21 +44,21 @@ theorem birthday_def (x : Pgame) :
     birthday x =
       max (lsub.{u, u} fun i => birthday (x.moveLeft i))
         (lsub.{u, u} fun i => birthday (x.moveRight i)) :=
-  by
+  by 
   cases x
   rw [birthday]
   rfl
 #align pgame.birthday_def Pgame.birthday_def
 
 theorem birthday_move_left_lt {x : Pgame} (i : x.LeftMoves) :
-    (x.moveLeft i).birthday < x.birthday := by
+    (x.moveLeft i).birthday < x.birthday := by 
   cases x
   rw [birthday]
   exact lt_max_of_lt_left (lt_lsub _ i)
 #align pgame.birthday_move_left_lt Pgame.birthday_move_left_lt
 
 theorem birthday_move_right_lt {x : Pgame} (i : x.RightMoves) :
-    (x.moveRight i).birthday < x.birthday := by
+    (x.moveRight i).birthday < x.birthday := by 
   cases x
   rw [birthday]
   exact lt_max_of_lt_right (lt_lsub _ i)
@@ -68,43 +68,32 @@ theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
     o < x.birthday ↔
       (∃ i : x.LeftMoves, o ≤ (x.moveLeft i).birthday) ∨
         ∃ i : x.RightMoves, o ≤ (x.moveRight i).birthday :=
-  by
+  by 
   constructor
   · rw [birthday_def]
     intro h
     cases' lt_max_iff.1 h with h' h'
     · left
       rwa [lt_lsub_iff] at h'
-      
     · right
       rwa [lt_lsub_iff] at h'
-      
-    
   · rintro (⟨i, hi⟩ | ⟨i, hi⟩)
     · exact hi.trans_lt (birthday_move_left_lt i)
-      
     · exact hi.trans_lt (birthday_move_right_lt i)
-      
-    
 #align pgame.lt_birthday_iff Pgame.lt_birthday_iff
 
 theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthday x = birthday y
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, r => by
     unfold birthday
     congr 1
-    all_goals
-    apply lsub_eq_of_range_eq.{u, u, u}
-    ext i; constructor
+    all_goals 
+      apply lsub_eq_of_range_eq.{u, u, u}
+      ext i; constructor
     all_goals rintro ⟨j, rfl⟩
     · exact ⟨_, (r.move_left j).birthday_congr.symm⟩
-      
     · exact ⟨_, (r.move_left_symm j).birthday_congr⟩
-      
     · exact ⟨_, (r.move_right j).birthday_congr.symm⟩
-      
-    · exact ⟨_, (r.move_right_symm j).birthday_congr⟩
-      decreasing_by
-  pgame_wf_tac
+    · exact ⟨_, (r.move_right_symm j).birthday_congr⟩decreasing_by pgame_wf_tac
 #align pgame.relabelling.birthday_congr Pgame.Relabelling.birthday_congr
 
 @[simp]
@@ -131,7 +120,7 @@ theorem birthday_star : birthday star = 1 := by
 
 @[simp]
 theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
-  | ⟨xl, xr, xL, xR⟩ => by
+  | ⟨xl, xr, xL, xR⟩ => by 
     rw [birthday_def, birthday_def, max_comm]
     congr <;> funext <;> apply neg_birthday
 #align pgame.neg_birthday Pgame.neg_birthday
@@ -173,17 +162,13 @@ theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.
         max_le_iff.2
           ⟨lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_left_lt i),
             lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_right_lt i)⟩
-    all_goals
-    apply blsub_le_iff.2 fun i hi => _
-    rcases lt_birthday_iff.1 hi with (⟨j, hj⟩ | ⟨j, hj⟩)
+    all_goals 
+      apply blsub_le_iff.2 fun i hi => _
+      rcases lt_birthday_iff.1 hi with (⟨j, hj⟩ | ⟨j, hj⟩)
     · exact lt_max_of_lt_left ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
-      
     · exact lt_max_of_lt_right ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
-      
     · exact lt_max_of_lt_left ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
-      
-    · exact lt_max_of_lt_right ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
-      decreasing_by
+    · exact lt_max_of_lt_right ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))decreasing_by
   pgame_wf_tac
 #align pgame.birthday_add Pgame.birthday_add
 

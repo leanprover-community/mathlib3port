@@ -104,7 +104,6 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y)
   rcases n with (_ | _ | n) <;>
     · dsimp [desc, desc_f_one, desc_f_zero]
       simp
-      
 #align
   category_theory.InjectiveResolution.desc_commutes CategoryTheory.InjectiveResolutionCat.desc_commutes
 
@@ -178,7 +177,8 @@ def descCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (I : InjectiveResol
 -- We don't care about the actual definitions of these homotopies.
 /-- Any two injective resolutions are homotopy equivalent. -/
 def homotopyEquiv {X : C} (I J : InjectiveResolutionCat X) :
-    HomotopyEquiv I.cocomplex J.cocomplex where
+    HomotopyEquiv I.cocomplex
+      J.cocomplex where 
   Hom := desc (𝟙 X) J I
   inv := desc (𝟙 X) I J
   homotopyHomInvId :=
@@ -235,14 +235,18 @@ variable (C) [HasInjectiveResolutions C]
 if considered with target the homotopy category
 (`ℕ`-indexed cochain complexes and chain maps up to homotopy).
 -/
-def injectiveResolutions : C ⥤ HomotopyCategory C (ComplexShape.up ℕ) where
+def injectiveResolutions :
+    C ⥤
+      HomotopyCategory C
+        (ComplexShape.up
+          ℕ) where 
   obj X := (HomotopyCategory.quotient _ _).obj (injectiveResolution X)
   map X Y f := (HomotopyCategory.quotient _ _).map (injectiveResolution.desc f)
-  map_id' X := by
+  map_id' X := by 
     rw [← (HomotopyCategory.quotient _ _).map_id]
     apply HomotopyCategory.eq_of_homotopy
     apply InjectiveResolution.desc_id_homotopy
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     rw [← (HomotopyCategory.quotient _ _).map_comp]
     apply HomotopyCategory.eq_of_homotopy
     apply InjectiveResolution.desc_comp_homotopy
@@ -296,16 +300,12 @@ irreducible_def of (Z : C) : InjectiveResolutionCat Z :=
             dite_eq_ite, if_true, comp_zero]
           exact (exact_f_d (injective.ι Z)).w)
         fun n _ => ⟨0, by ext⟩,
-    Injective := by
-      rintro (_ | _ | _ | n) <;>
-        · apply injective.injective_under
-          ,
+    Injective := by rintro (_ | _ | _ | n) <;> · apply injective.injective_under,
     exact₀ := by simpa using exact_f_d (injective.ι Z),
     exact := by
       rintro (_ | n) <;>
         · simp
-          apply exact_f_d
-          ,
+          apply exact_f_d,
     Mono := Injective.ι_mono Z }
 #align category_theory.InjectiveResolution.of CategoryTheory.InjectiveResolutionCat.of
 
@@ -325,7 +325,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 `f : Y[0] ⟶ X`, then `X` is an injective resolution of `Y.` -/
 def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex C ℕ) (Y : C)
     (f : (CochainComplex.single₀ C).obj Y ⟶ X) [QuasiIso f] (H : ∀ n, Injective (X.x n)) :
-    InjectiveResolutionCat Y where
+    InjectiveResolutionCat Y where 
   cocomplex := X
   ι := f
   Injective := H

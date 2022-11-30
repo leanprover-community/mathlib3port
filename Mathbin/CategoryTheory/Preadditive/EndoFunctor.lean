@@ -27,7 +27,10 @@ open CategoryTheory.Limits Preadditive
 /-- The category of algebras over an additive endofunctor on a preadditive category is preadditive.
 -/
 @[simps]
-instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) where
+instance Endofunctor.algebraPreadditive :
+    Preadditive
+      (Endofunctor.Algebra
+        F) where 
   homGroup A₁ A₂ :=
     { add := fun α β =>
         { f := α.f + β.f,
@@ -45,57 +48,57 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) wh
       zsmul := fun r α =>
         { f := r • α.f,
           h' := by rw [comp_zsmul, functor.map_zsmul, zsmul_comp, endofunctor.algebra.hom.h] },
-      add_assoc := by
+      add_assoc := by 
         intros
         ext
         apply add_assoc,
-      zero_add := by
+      zero_add := by 
         intros
         ext
         apply zero_add,
-      add_zero := by
+      add_zero := by 
         intros
         ext
         apply add_zero,
-      nsmul_zero' := by
+      nsmul_zero' := by 
         intros
         ext
         apply zero_smul,
-      nsmul_succ' := by
+      nsmul_succ' := by 
         intros
         ext
         apply succ_nsmul,
-      sub_eq_add_neg := by
+      sub_eq_add_neg := by 
         intros
         ext
         apply sub_eq_add_neg,
-      zsmul_zero' := by
+      zsmul_zero' := by 
         intros
         ext
         apply zero_smul,
-      zsmul_succ' := by
+      zsmul_succ' := by 
         intros
         ext
         dsimp
         simp only [coe_nat_zsmul, succ_nsmul]
         rfl,
-      zsmul_neg' := by
+      zsmul_neg' := by 
         intros
         ext
         simp only [zsmul_neg_succ_of_nat, neg_inj, nsmul_eq_smul_cast ℤ],
-      add_left_neg := by
+      add_left_neg := by 
         intros
         ext
         apply add_left_neg,
-      add_comm := by
+      add_comm := by 
         intros
         ext
         apply add_comm }
-  add_comp' := by
+  add_comp' := by 
     intros
     ext
     apply add_comp
-  comp_add' := by
+  comp_add' := by 
     intros
     ext
     apply comp_add
@@ -105,7 +108,10 @@ instance Algebra.forget_additive : (Endofunctor.Algebra.forget F).Additive where
 #align category_theory.algebra.forget_additive CategoryTheory.Algebra.forget_additive
 
 @[simps]
-instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F) where
+instance Endofunctor.coalgebraPreadditive :
+    Preadditive
+      (Endofunctor.Coalgebra
+        F) where 
   homGroup A₁ A₂ :=
     { add := fun α β =>
         { f := α.f + β.f,
@@ -123,57 +129,57 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
       zsmul := fun r α =>
         { f := r • α.f,
           h' := by rw [functor.map_zsmul, comp_zsmul, endofunctor.coalgebra.hom.h, zsmul_comp] },
-      add_assoc := by
+      add_assoc := by 
         intros
         ext
         apply add_assoc,
-      zero_add := by
+      zero_add := by 
         intros
         ext
         apply zero_add,
-      add_zero := by
+      add_zero := by 
         intros
         ext
         apply add_zero,
-      nsmul_zero' := by
+      nsmul_zero' := by 
         intros
         ext
         apply zero_smul,
-      nsmul_succ' := by
+      nsmul_succ' := by 
         intros
         ext
         apply succ_nsmul,
-      sub_eq_add_neg := by
+      sub_eq_add_neg := by 
         intros
         ext
         apply sub_eq_add_neg,
-      zsmul_zero' := by
+      zsmul_zero' := by 
         intros
         ext
         apply zero_smul,
-      zsmul_succ' := by
+      zsmul_succ' := by 
         intros
         ext
         dsimp
         simp only [coe_nat_zsmul, succ_nsmul]
         rfl,
-      zsmul_neg' := by
+      zsmul_neg' := by 
         intros
         ext
         simp only [zsmul_neg_succ_of_nat, neg_inj, nsmul_eq_smul_cast ℤ],
-      add_left_neg := by
+      add_left_neg := by 
         intros
         ext
         apply add_left_neg,
-      add_comm := by
+      add_comm := by 
         intros
         ext
         apply add_comm }
-  add_comp' := by
+  add_comp' := by 
     intros
     ext
     apply add_comp
-  comp_add' := by
+  comp_add' := by 
     intros
     ext
     apply comp_add

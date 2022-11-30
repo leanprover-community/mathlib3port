@@ -21,7 +21,7 @@ contraction, dual module, tensor product
 
 variable {ι : Type _} (R M N P Q : Type _)
 
-attribute [local ext.1] TensorProduct.ext
+attribute [local ext] TensorProduct.ext
 
 section Contraction
 
@@ -116,7 +116,7 @@ theorem map_dual_tensor_hom (f : Module.Dual R M) (p : P) (g : Module.Dual R N) 
 theorem comp_dual_tensor_hom (f : Module.Dual R M) (n : N) (g : Module.Dual R N) (p : P) :
     dualTensorHom R N P (g ⊗ₜ[R] p) ∘ₗ dualTensorHom R M N (f ⊗ₜ[R] n) =
       g n • dualTensorHom R M P (f ⊗ₜ p) :=
-  by
+  by 
   ext m;
   simp only [coe_comp, Function.comp_apply, dual_tensor_hom_apply, LinearMap.map_smul,
     RingHom.id_apply, smul_apply]
@@ -154,12 +154,12 @@ provides this equivalence in return for a basis of `M`. -/
 noncomputable def dualTensorHomEquivOfBasis : Module.Dual R M ⊗[R] N ≃ₗ[R] M →ₗ[R] N :=
   LinearEquiv.ofLinear (dualTensorHom R M N)
     (∑ i, TensorProduct.mk R _ N (b.dualBasis i) ∘ₗ LinearMap.applyₗ (b i))
-    (by
+    (by 
       ext (f m)
       simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def,
         Fintype.sum_apply, Function.comp_apply, Basis.coe_dual_basis, coe_comp, Basis.coord_apply, ←
         f.map_smul, (dualTensorHom R M N).map_sum, ← f.map_sum, b.sum_repr])
-    (by
+    (by 
       ext (f m)
       simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def,
         Fintype.sum_apply, Function.comp_apply, Basis.coe_dual_basis, coe_comp, compr₂_apply,

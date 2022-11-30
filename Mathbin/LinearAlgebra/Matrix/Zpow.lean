@@ -41,9 +41,7 @@ section NatPow
 theorem inv_pow' (A : M) (n : ℕ) : A⁻¹ ^ n = (A ^ n)⁻¹ := by
   induction' n with n ih
   · simp
-    
   · rw [pow_succ A, mul_eq_mul, mul_inv_rev, ← ih, ← mul_eq_mul, ← pow_succ']
-    
 #align matrix.inv_pow' Matrix.inv_pow'
 
 theorem pow_sub' (A : M) {m n : ℕ} (ha : IsUnit A.det) (h : n ≤ m) :
@@ -56,12 +54,11 @@ theorem pow_sub' (A : M) {m n : ℕ} (ha : IsUnit A.det) (h : n ≤ m) :
 theorem pow_inv_comm' (A : M) (m n : ℕ) : A⁻¹ ^ m ⬝ A ^ n = A ^ n ⬝ A⁻¹ ^ m := by
   induction' n with n IH generalizing m
   · simp
-    
   cases m
   · simp
-    
   rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
-  · calc
+  ·
+    calc
       A⁻¹ ^ (m + 1) ⬝ A ^ (n + 1) = A⁻¹ ^ m ⬝ (A⁻¹ ⬝ A) ⬝ A ^ n := by
         simp only [pow_succ' A⁻¹, pow_succ A, mul_eq_mul, Matrix.mul_assoc]
       _ = A ^ n ⬝ A⁻¹ ^ m := by simp only [h, Matrix.mul_one, Matrix.one_mul, IH m]
@@ -69,9 +66,7 @@ theorem pow_inv_comm' (A : M) (m n : ℕ) : A⁻¹ ^ m ⬝ A ^ n = A ^ n ⬝ A�
       _ = A ^ (n + 1) ⬝ A⁻¹ ^ (m + 1) := by
         simp only [pow_succ' A, pow_succ A⁻¹, mul_eq_mul, Matrix.mul_assoc]
       
-    
   · simp [h]
-    
 #align matrix.pow_inv_comm' Matrix.pow_inv_comm'
 
 end NatPow
@@ -87,7 +82,7 @@ theorem one_zpow : ∀ n : ℤ, (1 : M) ^ n = 1
 #align matrix.one_zpow Matrix.one_zpow
 
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : M) ^ z = 0
-  | (n : ℕ), h => by
+  | (n : ℕ), h => by 
     rw [zpow_coe_nat, zero_pow]
     refine' lt_of_le_of_ne n.zero_le (Ne.symm _)
     simpa using h
@@ -97,9 +92,7 @@ theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : M) ^ z = 0
 theorem zero_zpow_eq (n : ℤ) : (0 : M) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
   · rw [h, zpow_zero]
-    
   · rw [zero_zpow _ h]
-    
 #align matrix.zero_zpow_eq Matrix.zero_zpow_eq
 
 theorem inv_zpow (A : M) : ∀ n : ℤ, A⁻¹ ^ n = (A ^ n)⁻¹
@@ -121,31 +114,24 @@ theorem zpow_coe_nat (A : M) (n : ℕ) : A ^ (n : ℤ) = A ^ n :=
 theorem zpow_neg_coe_nat (A : M) (n : ℕ) : A ^ (-n : ℤ) = (A ^ n)⁻¹ := by
   cases n
   · simp
-    
   · exact DivInvMonoid.zpow_neg' _ _
-    
 #align matrix.zpow_neg_coe_nat Matrix.zpow_neg_coe_nat
 
 theorem IsUnit.det_zpow {A : M} (h : IsUnit A.det) (n : ℤ) : IsUnit (A ^ n).det := by
   cases n
   · simpa using h.pow n
-    
   · simpa using h.pow n.succ
-    
 #align is_unit.det_zpow IsUnit.det_zpow
 
 theorem is_unit_det_zpow_iff {A : M} {z : ℤ} : IsUnit (A ^ z).det ↔ IsUnit A.det ∨ z = 0 := by
   induction' z using Int.induction_on with z IH z IH
   · simp
-    
   · rw [← Int.ofNat_succ, zpow_coe_nat, det_pow, is_unit_pow_succ_iff, ← Int.ofNat_zero,
       Int.ofNat_inj]
     simp
-    
   · rw [← neg_add', ← Int.ofNat_succ, zpow_neg_coe_nat, is_unit_nonsing_inv_det_iff, det_pow,
       is_unit_pow_succ_iff, neg_eq_zero, ← Int.ofNat_zero, Int.ofNat_inj]
     simp
-    
 #align matrix.is_unit_det_zpow_iff Matrix.is_unit_det_zpow_iff
 
 theorem zpow_neg {A : M} (h : IsUnit A.det) : ∀ n : ℤ, A ^ (-n) = (A ^ n)⁻¹
@@ -186,20 +172,16 @@ theorem zpow_add {A : M} (ha : IsUnit A.det) (m n : ℤ) : A ^ (m + n) = A ^ m *
   induction' n using Int.induction_on with n ihn n ihn
   case hz => simp
   · simp only [← add_assoc, zpow_add_one ha, ihn, mul_assoc]
-    
   · rw [zpow_sub_one ha, ← mul_assoc, ← ihn, ← zpow_sub_one ha, add_sub_assoc]
-    
 #align matrix.zpow_add Matrix.zpow_add
 
 theorem zpow_add_of_nonpos {A : M} {m n : ℤ} (hm : m ≤ 0) (hn : n ≤ 0) :
     A ^ (m + n) = A ^ m * A ^ n := by
   rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
   · exact zpow_add (is_unit_det_of_left_inverse h) m n
-    
   · obtain ⟨k, rfl⟩ := exists_eq_neg_of_nat hm
     obtain ⟨l, rfl⟩ := exists_eq_neg_of_nat hn
     simp_rw [← neg_add, ← Int.ofNat_add, zpow_neg_coe_nat, ← inv_pow', h, pow_add]
-    
 #align matrix.zpow_add_of_nonpos Matrix.zpow_add_of_nonpos
 
 theorem zpow_add_of_nonneg {A : M} {m n : ℤ} (hm : 0 ≤ m) (hn : 0 ≤ n) :
@@ -217,10 +199,10 @@ theorem SemiconjBy.zpow_right {A X Y : M} (hx : IsUnit X.det) (hy : IsUnit Y.det
     (h : SemiconjBy A X Y) : ∀ m : ℤ, SemiconjBy A (X ^ m) (Y ^ m)
   | (n : ℕ) => by simp [h.pow_right n]
   | -[n+1] => by
-    have hx' : IsUnit (X ^ n.succ).det := by
+    have hx' : IsUnit (X ^ n.succ).det := by 
       rw [det_pow]
       exact hx.pow n.succ
-    have hy' : IsUnit (Y ^ n.succ).det := by
+    have hy' : IsUnit (Y ^ n.succ).det := by 
       rw [det_pow]
       exact hy.pow n.succ
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, nonsing_inv_apply _ hx',
@@ -235,13 +217,9 @@ theorem SemiconjBy.zpow_right {A X Y : M} (hx : IsUnit X.det) (hy : IsUnit Y.det
 theorem Commute.zpow_right {A B : M} (h : Commute A B) (m : ℤ) : Commute A (B ^ m) := by
   rcases nonsing_inv_cancel_or_zero B with (⟨hB, hB'⟩ | hB)
   · refine' SemiconjBy.zpow_right _ _ h _ <;> exact is_unit_det_of_left_inverse hB
-    
   · cases m
     · simpa using h.pow_right _
-      
     · simp [← inv_pow', hB]
-      
-    
 #align matrix.commute.zpow_right Matrix.Commute.zpow_right
 
 theorem Commute.zpow_left {A B : M} (h : Commute A B) (m : ℤ) : Commute (A ^ m) B :=
@@ -267,9 +245,7 @@ theorem Commute.zpow_zpow_self (A : M) (m n : ℤ) : Commute (A ^ m) (A ^ n) :=
 theorem zpow_bit0 (A : M) (n : ℤ) : A ^ bit0 n = A ^ n * A ^ n := by
   cases' le_total 0 n with nonneg nonpos
   · exact zpow_add_of_nonneg nonneg nonneg
-    
   · exact zpow_add_of_nonpos nonpos nonpos
-    
 #align matrix.zpow_bit0 Matrix.zpow_bit0
 
 theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ n : ℤ, n ≠ -1 → A ^ (n + 1) = A ^ n * A
@@ -278,10 +254,8 @@ theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ n : ℤ, n ≠ -1 → A ^ (n + 
   | -((n : ℕ) + 2), _ => by
     rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
     · apply zpow_add_one (is_unit_det_of_left_inverse h)
-      
     · show A ^ (-((n + 1 : ℕ) : ℤ)) = A ^ (-((n + 2 : ℕ) : ℤ)) * A
       simp_rw [zpow_neg_coe_nat, ← inv_pow', h, zero_pow Nat.succ_pos', zero_mul]
-      
 #align matrix.zpow_add_one_of_ne_neg_one Matrix.zpow_add_one_of_ne_neg_one
 
 theorem zpow_bit1 (A : M) (n : ℤ) : A ^ bit1 n = A ^ n * A ^ n * A := by
@@ -318,11 +292,11 @@ theorem coe_units_zpow (u : Mˣ) : ∀ n : ℤ, ((u ^ n : Mˣ) : M) = u ^ n
 #align matrix.coe_units_zpow Matrix.coe_units_zpow
 
 theorem zpow_ne_zero_of_is_unit_det [Nonempty n'] [Nontrivial R] {A : M} (ha : IsUnit A.det)
-    (z : ℤ) : A ^ z ≠ 0 := by
+    (z : ℤ) : A ^ z ≠ 0 := by 
   have := ha.det_zpow z
   contrapose! this
   rw [this, det_zero ‹_›]
-  exact not_is_unit_zero
+  exact not_isUnit_zero
 #align matrix.zpow_ne_zero_of_is_unit_det Matrix.zpow_ne_zero_of_is_unit_det
 
 theorem zpow_sub {A : M} (ha : IsUnit A.det) (z1 z2 : ℤ) : A ^ (z1 - z2) = A ^ z1 / A ^ z2 := by

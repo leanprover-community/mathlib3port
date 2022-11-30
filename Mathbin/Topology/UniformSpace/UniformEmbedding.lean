@@ -100,17 +100,15 @@ theorem UniformEmbedding.comp {g : β → γ} (hg : UniformEmbedding g) {f : α 
 theorem uniform_embedding_def {f : α → β} :
     UniformEmbedding f ↔
       Function.Injective f ∧ ∀ s, s ∈ 𝓤 α ↔ ∃ t ∈ 𝓤 β, ∀ x y : α, (f x, f y) ∈ t → (x, y) ∈ s :=
-  by
+  by 
   constructor
   · rintro ⟨⟨h⟩, h'⟩
     rw [eq_comm, Filter.ext_iff] at h
     simp [*, subset_def]
-    
   · rintro ⟨h, h'⟩
     refine' UniformEmbedding.mk ⟨_⟩ h
     rw [eq_comm, Filter.ext_iff]
     simp [*, subset_def]
-    
 #align uniform_embedding_def uniform_embedding_def
 
 theorem uniform_embedding_def' {f : α → β} :
@@ -127,15 +125,13 @@ theorem uniform_embedding_def' {f : α → β} :
 
 theorem Equiv.uniform_embedding {α β : Type _} [UniformSpace α] [UniformSpace β] (f : α ≃ β)
     (h₁ : UniformContinuous f) (h₂ : UniformContinuous f.symm) : UniformEmbedding f :=
-  { comap_uniformity := by
+  { comap_uniformity := by 
       refine' le_antisymm _ _
       · change comap (f.prod_congr f) _ ≤ _
         rw [← map_equiv_symm (f.prod_congr f)]
         exact h₂
-        
       · rw [← map_le_iff_le_comap]
-        exact h₁
-        ,
+        exact h₁,
     inj := f.Injective }
 #align equiv.uniform_embedding Equiv.uniform_embedding
 
@@ -147,16 +143,12 @@ theorem uniform_embedding_inl : UniformEmbedding (Sum.inl : α → Sum α β) :=
           (fun p : β × β => (Sum.inr p.1, Sum.inr p.2)) '' univ,
         _, _⟩
     · exact union_mem_uniformity_sum hs univ_mem
-      
     · simp
-      
-    
   · rintro ⟨t, ht, h't⟩
     simp only [Sum.uniformity, mem_sup, mem_map] at ht
     apply Filter.mem_of_superset ht.1
     rintro ⟨x, y⟩ hx
     exact h't _ _ hx
-    
 #align uniform_embedding_inl uniform_embedding_inl
 
 theorem uniform_embedding_inr : UniformEmbedding (Sum.inr : β → Sum α β) := by
@@ -167,16 +159,12 @@ theorem uniform_embedding_inr : UniformEmbedding (Sum.inr : β → Sum α β) :=
           (fun p : β × β => (Sum.inr p.1, Sum.inr p.2)) '' s,
         _, _⟩
     · exact union_mem_uniformity_sum univ_mem hs
-      
     · simp
-      
-    
   · rintro ⟨t, ht, h't⟩
     simp only [Sum.uniformity, mem_sup, mem_map] at ht
     apply Filter.mem_of_superset ht.2
     rintro ⟨x, y⟩ hx
     exact h't _ _ hx
-    
 #align uniform_embedding_inr uniform_embedding_inr
 
 /-- If the domain of a `uniform_inducing` map `f` is a `separated_space`, then `f` is injective,
@@ -252,7 +240,7 @@ theorem UniformEmbedding.dense_embedding {f : α → β} (h : UniformEmbedding f
 
 theorem closedEmbeddingOfSpacedOut {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β]
     {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β) (hf : Pairwise fun x y => (f x, f y) ∉ s) :
-    ClosedEmbedding f := by
+    ClosedEmbedding f := by 
   rcases DiscreteTopology.eq_bot α with rfl; letI : UniformSpace α := ⊥
   exact
     { (uniform_embedding_of_spaced_out hs hf).Embedding with
@@ -505,7 +493,7 @@ theorem uniform_extend_subtype [CompleteSpace γ] {p : α → Prop} {e : α → 
   rw [← comap_comap, tendsto_comap'_iff] at hc
   exact ⟨c, hc⟩
   exact
-    ⟨_, hb, fun x => by
+    ⟨_, hb, fun x => by 
       change e x ∈ closure (e '' s) → x ∈ range Subtype.val
       rw [← closure_induced, mem_closure_iff_cluster_pt, ClusterPt, ne_bot_iff, nhds_induced, ←
         de.to_dense_inducing.nhds_eq_comap, ← mem_closure_iff_nhds_ne_bot, hs.closure_eq]

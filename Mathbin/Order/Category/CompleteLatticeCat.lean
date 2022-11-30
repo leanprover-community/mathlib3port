@@ -43,7 +43,7 @@ theorem coe_of (α : Type _) [CompleteLattice α] : ↥(of α) = α :=
 instance : Inhabited CompleteLatticeCat :=
   ⟨of PUnit⟩
 
-instance : BundledHom @CompleteLatticeHom where
+instance : BundledHom @CompleteLatticeHom where 
   toFun _ _ _ _ := coeFn
   id := @CompleteLatticeHom.id
   comp := @CompleteLatticeHom.comp
@@ -55,7 +55,9 @@ instance : LargeCategory.{u} CompleteLatticeCat :=
 instance : ConcreteCategory CompleteLatticeCat :=
   BundledHom.concreteCategory CompleteLatticeHom
 
-instance hasForgetToBoundedLattice : HasForget₂ CompleteLatticeCat BoundedLatticeCat where
+instance hasForgetToBoundedLattice :
+    HasForget₂ CompleteLatticeCat
+      BoundedLatticeCat where 
   forget₂ :=
     { obj := fun X => BoundedLatticeCat.of X,
       map := fun X Y => CompleteLatticeHom.toBoundedLatticeHom }
@@ -64,20 +66,22 @@ instance hasForgetToBoundedLattice : HasForget₂ CompleteLatticeCat BoundedLatt
 
 /-- Constructs an isomorphism of complete lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : CompleteLatticeCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : CompleteLatticeCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align CompleteLattice.iso.mk CompleteLatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : CompleteLatticeCat ⥤ CompleteLatticeCat where
+def dual : CompleteLatticeCat ⥤
+      CompleteLatticeCat where 
   obj X := of Xᵒᵈ
   map X Y := CompleteLatticeHom.dual
 #align CompleteLattice.dual CompleteLatticeCat.dual

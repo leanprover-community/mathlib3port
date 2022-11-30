@@ -116,7 +116,7 @@ protected theorem is_poly (f : Poly α) : IsPoly f :=
 #align poly.is_poly Poly.is_poly
 
 /-- Extensionality for `poly α` -/
-@[ext.1]
+@[ext]
 theorem ext {f g : Poly α} : (∀ x, f x = g x) → f = g :=
   FunLike.ext _ _
 #align poly.ext Poly.ext
@@ -335,10 +335,8 @@ theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, 
   · have : (v ⊗ (0 ::ₒ t) ∘ g) ∘ (inl ⊗ inr ∘ f) = v ⊗ t :=
       funext fun s => by cases' s with a b <;> dsimp [(· ∘ ·)] <;> try rw [inv] <;> rfl
     exact ⟨(0 ::ₒ t) ∘ g, by rwa [this]⟩
-    
   · have : v ⊗ t ∘ f = (v ⊗ t) ∘ (inl ⊗ inr ∘ f) := funext fun s => by cases' s with a b <;> rfl
     exact ⟨t ∘ f, by rwa [this]⟩
-    
 #align dioph.inject_dummies_lem Dioph.inject_dummies_lem
 
 theorem inject_dummies (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x)
@@ -386,7 +384,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                 rw [show (v ⊗ m ⊗ n) ∘ (inl ⊗ inr ∘ inl) = v ⊗ m from
                       funext fun s => by cases' s with a b <;> rfl] <;>
                   exact hm,
-                by
+                by 
                 refine' List.All₂.imp (fun q hq => _) hn
                 dsimp [(· ∘ ·)]
                 rw [show
@@ -398,7 +396,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                   rwa [show (v ⊗ t) ∘ (inl ⊗ inr ∘ inl) = v ⊗ t ∘ inl from
                       funext fun s => by cases' s with a b <;> rfl] at
                     hl⟩,
-                ⟨t ∘ inr, by
+                ⟨t ∘ inr, by 
                   refine' List.All₂.imp (fun q hq => _) hr
                   dsimp [(· ∘ ·)] at hq
                   rwa [show
@@ -546,7 +544,7 @@ theorem dioph_fn_vec_comp1 {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : V
 theorem vec_ex1_dioph (n) {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) :
     Dioph { v : Fin2 n → ℕ | ∃ x, (x::v) ∈ S } :=
   (ext (ex1_dioph <| reindex_dioph _ (none::some) d)) fun v =>
-    exists_congr fun x => by
+    exists_congr fun x => by 
       dsimp
       rw [show Option.elim' x v ∘ cons none some = x::v from
           funext fun s => by cases' s with a b <;> rfl]
@@ -585,14 +583,14 @@ theorem dioph_fn_compn :
             (ext
                 (dioph_fn_comp1 (reindex_dioph _ (some ∘ inl ⊗ none::some ∘ inr) d) <|
                   reindex_dioph_fn inl df))
-              fun v => by
+              fun v => by 
               dsimp
               congr
               ext x
               obtain _ | _ | _ := x <;> rfl
           have : Dioph { v | (v ⊗ f v::fun i : Fin2 n => fl i v) ∈ S } :=
             @dioph_fn_compn n (fun v => S (v ∘ inl ⊗ f (v ∘ inl)::v ∘ inr)) this _ dfl
-          (ext this) fun v => by
+          (ext this) fun v => by 
             dsimp
             congr
             ext x
@@ -694,7 +692,7 @@ theorem lt_dioph : Dioph { v | f v < g v } :=
 scoped infixl:50 " D< " => Dioph.lt_dioph
 
 theorem ne_dioph : Dioph { v | f v ≠ g v } :=
-  (ext (df D< dg D∨ dg D< df)) fun v => by
+  (ext (df D< dg D∨ dg D< df)) fun v => by 
     dsimp
     exact lt_or_lt_iff_ne
 #align dioph.ne_dioph Dioph.ne_dioph
@@ -708,19 +706,14 @@ theorem sub_dioph : DiophFn fun v => f v - g v :=
       ext (D&1 D= D&0 D+ D&2 D∨ D&1 D≤ D&2 D∧ D&0 D= D.0) <|
         (vector_all_iff_forall _).1 fun x y z =>
           show y = x + z ∨ y ≤ z ∧ x = 0 ↔ y - z = x from
-            ⟨fun o => by
+            ⟨fun o => by 
               rcases o with (ae | ⟨yz, x0⟩)
               · rw [ae, add_tsub_cancel_right]
-                
-              · rw [x0, tsub_eq_zero_iff_le.mpr yz]
-                ,
-              by
+              · rw [x0, tsub_eq_zero_iff_le.mpr yz], by
               rintro rfl
               cases' le_total y z with yz zy
               · exact Or.inr ⟨yz, tsub_eq_zero_iff_le.mpr yz⟩
-                
-              · exact Or.inl (tsub_add_cancel_of_le zy).symm
-                ⟩
+              · exact Or.inl (tsub_add_cancel_of_le zy).symm⟩
 #align dioph.sub_dioph Dioph.sub_dioph
 
 -- mathport name: sub_dioph
@@ -741,7 +734,7 @@ theorem mod_dioph : DiophFn fun v => f v % g v :=
       ext this <|
         (vector_all_iff_forall _).1 fun z x y =>
           show ((y = 0 ∨ z < y) ∧ ∃ c, z + y * c = x) ↔ x % y = z from
-            ⟨fun ⟨h, c, hc⟩ => by
+            ⟨fun ⟨h, c, hc⟩ => by 
               rw [← hc] <;> simp <;> cases' h with x0 hl; rw [x0, mod_zero]
               exact mod_eq_of_lt hl, fun e => by
               rw [← e] <;>

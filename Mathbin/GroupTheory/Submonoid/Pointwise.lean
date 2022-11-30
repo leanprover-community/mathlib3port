@@ -98,14 +98,11 @@ theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [I
   apply @closure_induction N _ s (fun x : N => ∃ n : ℕ, r ^ n • x ∈ closure (r • s)) _ hx
   · intro x hx
     exact ⟨1, subset_closure ⟨_, hx, by rw [pow_one]⟩⟩
-    
   · exact ⟨0, by simpa using one_mem _⟩
-    
   · rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
     use nx + ny
     convert mul_mem hx hy
     rw [pow_add, smul_mul_assoc, mul_smul, mul_comm, ← smul_mul_assoc, mul_comm]
-    
 #align submonoid.pow_smul_mem_closure_smul Submonoid.pow_smul_mem_closure_smul
 
 variable [Group G]
@@ -115,14 +112,16 @@ open Pointwise
 /-- The submonoid with every element inverted. -/
 @[to_additive " The additive submonoid with every element negated. "]
 protected def hasInv :
-    Inv (Submonoid G) where inv S :=
+    Inv
+      (Submonoid
+        G) where inv S :=
     { carrier := (S : Set G)⁻¹,
       one_mem' :=
-        show (1 : G)⁻¹ ∈ S by
+        show (1 : G)⁻¹ ∈ S by 
           rw [inv_one]
           exact S.one_mem,
       mul_mem' := fun a b (ha : a⁻¹ ∈ S) (hb : b⁻¹ ∈ S) =>
-        show (a * b)⁻¹ ∈ S by
+        show (a * b)⁻¹ ∈ S by 
           rw [mul_inv_rev]
           exact S.mul_mem hb ha }
 #align submonoid.has_inv Submonoid.hasInv
@@ -157,7 +156,8 @@ theorem inv_le (S T : Submonoid G) : S⁻¹ ≤ T ↔ S ≤ T⁻¹ :=
 
 /-- `submonoid.has_inv` as an order isomorphism. -/
 @[to_additive " `add_submonoid.has_neg` as an order isomorphism ", simps]
-def invOrderIso : Submonoid G ≃o Submonoid G where
+def invOrderIso : Submonoid G ≃o
+      Submonoid G where 
   toEquiv := Equiv.inv _
   map_rel_iff' := inv_le_inv
 #align submonoid.inv_order_iso Submonoid.invOrderIso
@@ -167,10 +167,8 @@ theorem closure_inv (s : Set G) : closure s⁻¹ = (closure s)⁻¹ := by
   apply le_antisymm
   · rw [closure_le, coe_inv, ← Set.inv_subset, inv_inv]
     exact subset_closure
-    
   · rw [inv_le, closure_le, coe_inv, ← Set.inv_subset]
     exact subset_closure
-    
 #align submonoid.closure_inv Submonoid.closure_inv
 
 @[simp, to_additive]
@@ -214,9 +212,12 @@ variable [Monoid α] [MulDistribMulAction α M]
 /-- The action on a submonoid corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwiseMulAction : MulAction α (Submonoid M) where
+protected def pointwiseMulAction :
+    MulAction α
+      (Submonoid
+        M) where 
   smul a S := S.map (MulDistribMulAction.toMonoidEnd _ M a)
-  one_smul S := by
+  one_smul S := by 
     ext
     simp
   mul_smul a₁ a₂ S :=
@@ -341,7 +342,10 @@ variable [Monoid α] [DistribMulAction α A]
 /-- The action on an additive submonoid corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwiseMulAction : MulAction α (AddSubmonoid A) where
+protected def pointwiseMulAction :
+    MulAction α
+      (AddSubmonoid
+        A) where 
   smul a S := S.map (DistribMulAction.toAddMonoidEnd _ A a)
   one_smul S :=
     (congr_arg (fun f : AddMonoid.EndCat A => S.map f) (MonoidHom.map_one _)).trans S.map_id
@@ -532,20 +536,19 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
   · rw [mul_le]
     intro a ha b hb
     apply closure_induction ha
-    on_goal 1 =>
-    intros ; apply closure_induction hb
-    on_goal 1 => intros ; exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
-    all_goals
-    intros ;
-    simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm,
-      smul_mul_assoc]
-    solve_by_elim (config :=
-      { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _, zero_mem _]
-    
+    on_goal 1 => 
+      intros ; apply closure_induction hb
+      on_goal 1 => intros ; exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
+    all_goals 
+      intros ;
+      simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm,
+        smul_mul_assoc]
+      solve_by_elim (config :=
+        { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
+        zero_mem _]
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩
     exact mul_mem_mul (subset_closure ha) (subset_closure hb)
-    
 #align add_submonoid.closure_mul_closure AddSubmonoid.closure_mul_closure
 
 theorem mul_eq_closure_mul_set (M N : AddSubmonoid R) : M * N = closure (M * N) := by
@@ -578,7 +581,7 @@ theorem mul_le_mul_right {M N P : AddSubmonoid R} (h : N ≤ P) : M * N ≤ M * 
 #align add_submonoid.mul_le_mul_right AddSubmonoid.mul_le_mul_right
 
 theorem mul_subset_mul {M N : AddSubmonoid R} : (↑M : Set R) * (↑N : Set R) ⊆ (↑(M * N) : Set R) :=
-  by
+  by 
   rintro _ ⟨i, j, hi, hj, rfl⟩
   exact mul_mem_mul hi hj
 #align add_submonoid.mul_subset_mul AddSubmonoid.mul_subset_mul
@@ -600,18 +603,14 @@ protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
             ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
         simp only [AddSubmonoid.mem_neg, ← neg_mul] at *
       · exact mul_mem_mul hm hn
-        
-      · exact mul_mem_mul (neg_mem_neg.2 hm) hn
-        ,
+      · exact mul_mem_mul (neg_mem_neg.2 hm) hn,
     mul_neg := fun x y => by
       refine'
           le_antisymm (mul_le.2 fun m hm n hn => _)
             ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
         simp only [AddSubmonoid.mem_neg, ← mul_neg] at *
       · exact mul_mem_mul hm hn
-        
-      · exact mul_mem_mul hm (neg_mem_neg.2 hn)
-         }
+      · exact mul_mem_mul hm (neg_mem_neg.2 hn) }
 #align add_submonoid.has_distrib_neg AddSubmonoid.hasDistribNeg
 
 scoped[Pointwise] attribute [instance] AddSubmonoid.hasDistribNeg
@@ -622,7 +621,7 @@ section NonAssocSemiring
 
 variable [NonAssocSemiring R]
 
-instance : MulOneClass (AddSubmonoid R) where
+instance : MulOneClass (AddSubmonoid R) where 
   one := 1
   mul := (· * ·)
   one_mul M := by rw [one_eq_closure_one_set, ← closure_eq M, closure_mul_closure, one_mul]
@@ -634,7 +633,7 @@ section NonUnitalSemiring
 
 variable [NonUnitalSemiring R]
 
-instance : Semigroup (AddSubmonoid R) where
+instance : Semigroup (AddSubmonoid R) where 
   mul := (· * ·)
   mul_assoc M N P :=
     le_antisymm

@@ -99,7 +99,7 @@ theorem coe_injective : Injective (coe : OpenSubgroup G → Set G) := by
   congr
 #align open_subgroup.coe_injective OpenSubgroup.coe_injective
 
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem ext (h : ∀ x, x ∈ U ↔ x ∈ V) : U = V :=
   coe_injective <| Set.ext h
 #align open_subgroup.ext OpenSubgroup.ext
@@ -139,7 +139,7 @@ theorem mem_nhds_one : (U : Set G) ∈ 𝓝 (1 : G) :=
 variable {U}
 
 @[to_additive]
-instance : HasTop (OpenSubgroup G) :=
+instance : Top (OpenSubgroup G) :=
   ⟨{ (⊤ : Subgroup G) with is_open' := is_open_univ }⟩
 
 @[to_additive]
@@ -155,11 +155,8 @@ theorem isClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G
     refine' mt (fun hu => _) hx
     convert U.mul_mem (U.inv_mem hux) hu
     simp
-    
   · exact U.is_open.preimage (continuous_mul_right _)
-    
   · simp [U.one_mem]
-    
 #align open_subgroup.is_closed OpenSubgroup.isClosed
 
 section
@@ -190,7 +187,7 @@ instance : SemilatticeInf (OpenSubgroup G) :=
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
 
 @[to_additive]
-instance : OrderTop (OpenSubgroup G) where
+instance : OrderTop (OpenSubgroup G) where 
   top := ⊤
   le_top U := Set.subset_univ _
 

@@ -300,7 +300,8 @@ bar : ∀ (m n : ℕ), foo m n ↔ m = n ∧ m + n = 2
 See also the user command `mk_iff_of_inductive_prop`.
 -/
 @[user_attribute]
-unsafe def mk_iff_attr : user_attribute Unit (Option Name) where
+unsafe def mk_iff_attr :
+    user_attribute Unit (Option Name) where 
   Name := `mk_iff
   descr := "Generate an `iff` lemma for an inductive `Prop`."
   parser := parser.optional ident

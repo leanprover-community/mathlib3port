@@ -28,10 +28,8 @@ theorem is_zero_of_subsingleton (G : GroupCat) [Subsingleton G] : IsZero G := by
   · ext
     have : x = 1 := Subsingleton.elim _ _
     rw [this, map_one, map_one]
-    
   · ext
     apply Subsingleton.elim
-    
 #align Group.is_zero_of_subsingleton GroupCat.is_zero_of_subsingleton
 
 @[to_additive AddGroupCat.has_zero_object]
@@ -48,10 +46,8 @@ theorem is_zero_of_subsingleton (G : CommGroupCat) [Subsingleton G] : IsZero G :
   · ext
     have : x = 1 := Subsingleton.elim _ _
     rw [this, map_one, map_one]
-    
   · ext
     apply Subsingleton.elim
-    
 #align CommGroup.is_zero_of_subsingleton CommGroupCat.is_zero_of_subsingleton
 
 @[to_additive AddCommGroupCat.has_zero_object]

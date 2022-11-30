@@ -26,7 +26,7 @@ variable {K ι : Type _} {R : ι → Type _}
 
 @[to_additive]
 theorem smul_pi_subset [∀ i, HasSmul K (R i)] (r : K) (s : Set ι) (t : ∀ i, Set (R i)) :
-    r • pi s t ⊆ pi s (r • t) := by
+    r • pi s t ⊆ pi s (r • t) := by 
   rintro x ⟨y, h, rfl⟩ i hi
   exact smul_mem_smul_set (h i hi)
 #align smul_pi_subset smul_pi_subset
@@ -37,9 +37,7 @@ theorem smul_univ_pi [∀ i, HasSmul K (R i)] (r : K) (t : ∀ i, Set (R i)) :
   (Subset.antisymm (smul_pi_subset _ _ _)) fun x h => by
     refine' ⟨fun i => Classical.choose (h i <| Set.mem_univ _), fun i hi => _, funext fun i => _⟩
     · exact (Classical.choose_spec (h i _)).left
-      
     · exact (Classical.choose_spec (h i _)).right
-      
 #align smul_univ_pi smul_univ_pi
 
 @[to_additive]

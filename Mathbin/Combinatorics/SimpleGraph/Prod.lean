@@ -36,7 +36,9 @@ variable {G : SimpleGraph α} {H : SimpleGraph β} {I : SimpleGraph γ} {a a₁ 
 
 /-- Box product of simple graphs. It relates `(a₁, b)` and `(a₂, b)` if `G` relates `a₁` and `a₂`,
 and `(a, b₁)` and `(a, b₂)` if `H` relates `b₁` and `b₂`. -/
-def boxProd (G : SimpleGraph α) (H : SimpleGraph β) : SimpleGraph (α × β) where
+def boxProd (G : SimpleGraph α) (H : SimpleGraph β) :
+    SimpleGraph
+      (α × β) where 
   Adj x y := G.Adj x.1 y.1 ∧ x.2 = y.2 ∨ H.Adj x.2 y.2 ∧ x.1 = y.1
   symm x y := by simp [and_comm', or_comm', eq_comm, adj_comm]
   loopless x := by simp
@@ -87,7 +89,7 @@ def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
 
 /-- The embedding of `G` into `G □ H` given by `b`. -/
 @[simps]
-def boxProdLeft (b : β) : G ↪g G □ H where
+def boxProdLeft (b : β) : G ↪g G □ H where 
   toFun a := (a, b)
   inj' a₁ a₂ := congr_arg Prod.fst
   map_rel_iff' a₁ a₂ := box_prod_adj_left
@@ -95,7 +97,8 @@ def boxProdLeft (b : β) : G ↪g G □ H where
 
 /-- The embedding of `H` into `G □ H` given by `a`. -/
 @[simps]
-def boxProdRight (a : α) : H ↪g G □ H where
+def boxProdRight (a : α) : H ↪g G □
+        H where 
   toFun := Prod.mk a
   inj' b₁ b₂ := congr_arg Prod.snd
   map_rel_iff' b₁ b₂ := box_prod_adj_right
@@ -164,7 +167,7 @@ end Walk
 variable {G H}
 
 protected theorem Preconnected.box_prod (hG : G.Preconnected) (hH : H.Preconnected) :
-    (G □ H).Preconnected := by
+    (G □ H).Preconnected := by 
   rintro x y
   obtain ⟨w₁⟩ := hG x.1 y.1
   obtain ⟨w₂⟩ := hH x.2 y.2
@@ -173,17 +176,19 @@ protected theorem Preconnected.box_prod (hG : G.Preconnected) (hH : H.Preconnect
 #align simple_graph.preconnected.box_prod SimpleGraph.Preconnected.box_prod
 
 protected theorem Preconnected.of_box_prod_left [Nonempty β] (h : (G □ H).Preconnected) :
-    G.Preconnected := by classical
-  rintro a₁ a₂
-  obtain ⟨w⟩ := h (a₁, Classical.arbitrary _) (a₂, Classical.arbitrary _)
-  exact ⟨w.of_box_prod_left⟩
+    G.Preconnected := by
+  classical 
+    rintro a₁ a₂
+    obtain ⟨w⟩ := h (a₁, Classical.arbitrary _) (a₂, Classical.arbitrary _)
+    exact ⟨w.of_box_prod_left⟩
 #align simple_graph.preconnected.of_box_prod_left SimpleGraph.Preconnected.of_box_prod_left
 
 protected theorem Preconnected.of_box_prod_right [Nonempty α] (h : (G □ H).Preconnected) :
-    H.Preconnected := by classical
-  rintro b₁ b₂
-  obtain ⟨w⟩ := h (Classical.arbitrary _, b₁) (Classical.arbitrary _, b₂)
-  exact ⟨w.of_box_prod_right⟩
+    H.Preconnected := by
+  classical 
+    rintro b₁ b₂
+    obtain ⟨w⟩ := h (Classical.arbitrary _, b₁) (Classical.arbitrary _, b₂)
+    exact ⟨w.of_box_prod_right⟩
 #align simple_graph.preconnected.of_box_prod_right SimpleGraph.Preconnected.of_box_prod_right
 
 protected theorem Connected.box_prod (hG : G.Connected) (hH : H.Connected) : (G □ H).Connected := by

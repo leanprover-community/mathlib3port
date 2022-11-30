@@ -105,13 +105,11 @@ theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.EndCat R M} :
   · intro h i
     have := LinearMap.congr_fun h (Pi.single i 1)
     rwa [PiToModule.from_End_apply_single_one, PiToModule.from_matrix_apply_single_one] at this
-    
   · intro h
     ext
     simp_rw [LinearMap.comp_apply, LinearMap.coe_single, PiToModule.from_End_apply_single_one,
       PiToModule.from_matrix_apply_single_one]
     apply h
-    
 #align matrix.represents_iff' Matrix.represents_iff'
 
 theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.EndCat R M}
@@ -154,7 +152,10 @@ variable (b R)
 
 /-- The subalgebra of `matrix ι ι R` that consists of matrices that actually represent
 endomorphisms on `M`. -/
-def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R) where
+def Matrix.isRepresentation :
+    Subalgebra R
+      (Matrix ι ι
+        R) where 
   carrier := { A | ∃ f : Module.EndCat R M, A.Represents b f }
   mul_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ * f₂, e₁.mul e₂⟩
   one_mem' := ⟨1, Matrix.Represents.one⟩
@@ -165,7 +166,8 @@ def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R) where
 
 /-- The map sending a matrix to the endomorphism it represents. This is an `R`-algebra morphism. -/
 noncomputable def Matrix.isRepresentation.toEnd :
-    Matrix.isRepresentation R b →ₐ[R] Module.EndCat R M where
+    Matrix.isRepresentation R b →ₐ[R]
+      Module.EndCat R M where 
   toFun A := A.2.some
   map_one' := (1 : Matrix.isRepresentation R b).2.some_spec.Eq hb Matrix.Represents.one
   map_mul' A₁ A₂ := (A₁ * A₂).2.some_spec.Eq hb (A₁.2.some_spec.mul A₂.2.some_spec)
@@ -195,7 +197,7 @@ theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) 
     exact fun x => hI (f.mem_range_self x)
   choose bM' hbM'
   let A : Matrix ι ι R := fun i j => bM' (b j) i
-  have : A.represents b f := by
+  have : A.represents b f := by 
     rw [Matrix.represents_iff']
     dsimp [A]
     intro j
@@ -227,26 +229,22 @@ This is the version found in Eisenbud 4.3, which is slightly weaker than Matsumu
 theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
     [Module.Finite R M] (f : Module.EndCat R M) (I : Ideal R) (hI : f.range ≤ I • ⊤) :
     ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
-  classical
-  cases subsingleton_or_nontrivial R
-  · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
-    
-  obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ := Module.Finite.out
-  obtain ⟨A, rfl, h⟩ :=
-    Matrix.isRepresentation.to_End_exists_mem_ideal R (coe : s → M)
-      (by rw [Subtype.range_coe_subtype, Finset.set_of_mem, hs]) f I hI
-  refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
-  · rw [A.1.charpoly_nat_degree_eq_dim]
-    exact coeff_charpoly_mem_ideal_pow h
-    
-  · rw [Polynomial.aeval_alg_hom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
-    congr 1
-    ext1
-    rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly,
-      Subalgebra.coe_zero]
-    
-  · infer_instance
-    
+  classical 
+    cases subsingleton_or_nontrivial R
+    · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
+    obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ := Module.Finite.out
+    obtain ⟨A, rfl, h⟩ :=
+      Matrix.isRepresentation.to_End_exists_mem_ideal R (coe : s → M)
+        (by rw [Subtype.range_coe_subtype, Finset.set_of_mem, hs]) f I hI
+    refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
+    · rw [A.1.charpoly_nat_degree_eq_dim]
+      exact coeff_charpoly_mem_ideal_pow h
+    · rw [Polynomial.aeval_alg_hom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
+      congr 1
+      ext1
+      rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly,
+        Subalgebra.coe_zero]
+    · infer_instance
 #align
   linear_map.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
 

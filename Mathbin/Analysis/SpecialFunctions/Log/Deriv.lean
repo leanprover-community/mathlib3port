@@ -40,12 +40,8 @@ theorem hasStrictDerivAtLog (hx : x ≠ 0) : HasStrictDerivAt log x⁻¹ x := by
   · convert (has_strict_deriv_at_log_of_pos (neg_pos.mpr hx)).comp x (hasStrictDerivAtNeg x)
     · ext y
       exact (log_neg_eq_log y).symm
-      
     · field_simp [hx.ne]
-      
-    
   · exact has_strict_deriv_at_log_of_pos hx
-    
 #align real.has_strict_deriv_at_log Real.hasStrictDerivAtLog
 
 theorem hasDerivAtLog (hx : x ≠ 0) : HasDerivAt log x⁻¹ x :=
@@ -226,7 +222,8 @@ where the main point of the bound is that it tends to `0`. The goal is to deduce
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
 -/
 theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
-    |(∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) := by
+    |(∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) :=
+  by
   /- For the proof, we show that the derivative of the function to be estimated is small,
     and then apply the mean value inequality. -/
   let F : ℝ → ℝ := fun x => (∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)
@@ -245,7 +242,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_le (neg_lt_neg h) hy.1, lt_of_le_of_lt hy.2 h⟩
     calc
       |deriv F y| = |-y ^ n / (1 - y)| := by rw [A y this]
-      _ ≤ |x| ^ n / (1 - |x|) := by
+      _ ≤ |x| ^ n / (1 - |x|) := by 
         have : |y| ≤ |x| := abs_le.2 hy
         have : 0 < 1 - |x| := by linarith
         have : 1 - |x| ≤ |1 - y| := le_trans (by linarith [hy.2]) (le_abs_self _)
@@ -261,9 +258,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
       simp [F, this]
     apply Convex.norm_image_sub_le_of_norm_deriv_le this B (convex_Icc _ _) _ _
     · simp
-      
     · simp [le_abs_self x, neg_le.mp (neg_le_abs_self x)]
-      
   -- fourth step: conclude by massaging the inequality of the third step
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'] using C
 #align real.abs_log_sub_add_sum_range_le Real.abs_log_sub_add_sum_range_le
@@ -283,7 +278,6 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     simp only [pow_succ]
     refine' (tendsto_const_nhds.mul _).div_const
     exact tendsto_pow_at_top_nhds_0_of_lt_1 (abs_nonneg _) h
-    
   show Summable fun n : ℕ => x ^ (n + 1) / (n + 1)
   · refine' summable_of_norm_bounded _ (summable_geometric_of_lt_1 (abs_nonneg _) h) fun i => _
     calc
@@ -297,17 +291,16 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
       _ ≤ |x| ^ i := by
         simpa [pow_succ'] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_lt h)
       
-    
 #align real.has_sum_pow_div_log_of_abs_lt_1 Real.has_sum_pow_div_log_of_abs_lt_1
 
 /-- Power series expansion of `log(1 + x) - log(1 - x)` for `|x| < 1`. -/
 theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     HasSum (fun k : ℕ => (2 : ℝ) * (1 / (2 * k + 1)) * x ^ (2 * k + 1))
       (log (1 + x) - log (1 - x)) :=
-  by
+  by 
   let term := fun n : ℕ => -1 * ((-x) ^ (n + 1) / ((n : ℝ) + 1)) + x ^ (n + 1) / (n + 1)
   have h_term_eq_goal : term ∘ (· * ·) 2 = fun k : ℕ => 2 * (1 / (2 * k + 1)) * x ^ (2 * k + 1) :=
-    by
+    by 
     ext n
     dsimp [term]
     rw [Odd.neg_pow (⟨n, rfl⟩ : Odd (2 * n + 1)) x]
@@ -317,12 +310,10 @@ theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
   · have h₁ := (has_sum_pow_div_log_of_abs_lt_1 (Eq.trans_lt (abs_neg x) h)).mul_left (-1)
     convert h₁.add (has_sum_pow_div_log_of_abs_lt_1 h)
     ring_nf
-    
   · intro m hm
     rw [range_two_mul, Set.mem_set_of_eq, ← Nat.even_add_one] at hm
     dsimp [term]
     rw [Even.neg_pow hm, neg_one_mul, neg_add_self]
-    
 #align real.has_sum_log_sub_log_of_abs_lt_1 Real.has_sum_log_sub_log_of_abs_lt_1
 
 /-- Expansion of `log (1 + a⁻¹)` as a series in powers of `1 / (2 * a + 1)`. -/
@@ -333,11 +324,8 @@ theorem has_sum_log_one_add_inv {a : ℝ} (h : 0 < a) :
   have h₁ : |1 / (2 * a + 1)| < 1 := by
     rw [abs_of_pos, div_lt_one]
     · linarith
-      
     · linarith
-      
     · exact div_pos one_pos (by linarith)
-      
   convert has_sum_log_sub_log_of_abs_lt_1 h₁
   have h₂ : (2 : ℝ) * a + 1 ≠ 0 := by linarith
   have h₃ := h.ne'
@@ -345,12 +333,9 @@ theorem has_sum_log_one_add_inv {a : ℝ} (h : 0 < a) :
   · congr
     field_simp
     linarith
-    
   · field_simp
     linarith
-    
   · field_simp
-    
 #align real.has_sum_log_one_add_inv Real.has_sum_log_one_add_inv
 
 end Real

@@ -104,7 +104,7 @@ theorem prod_Ico_eq_div {δ : Type _} [CommGroup δ] (f : ℕ → δ) {m n : ℕ
 @[to_additive]
 theorem prod_range_sub_prod_range {α : Type _} [CommGroup α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
     ((∏ k in range m, f k) / ∏ k in range n, f k) = ∏ k in (range m).filter fun k => n ≤ k, f k :=
-  by
+  by 
   rw [← prod_Ico_eq_div f hnm]
   congr
   apply Finset.ext
@@ -116,7 +116,7 @@ theorem prod_range_sub_prod_range {α : Type _} [CommGroup α] {f : ℕ → α} 
 theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoid M] (a b : ℕ) (f : ℕ → ℕ → M) :
     (∑ i in Finset.ico a b, ∑ j in Finset.ico i b, f i j) =
       ∑ j in Finset.ico a b, ∑ i in Finset.ico a (j + 1), f i j :=
-  by
+  by 
   rw [Finset.sum_sigma', Finset.sum_sigma']
   refine'
             Finset.sum_bij' (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (fun _ _ => rfl)
@@ -133,15 +133,13 @@ theorem prod_Ico_eq_prod_range (f : ℕ → β) (m n : ℕ) :
     (∏ k in ico m n, f k) = ∏ k in range (n - m), f (m + k) := by
   by_cases h : m ≤ n
   · rw [← Nat.Ico_zero_eq_range, prod_Ico_add, zero_add, tsub_add_cancel_of_le h]
-    
   · replace h : n ≤ m := le_of_not_ge h
     rw [Ico_eq_empty_of_le h, tsub_eq_zero_iff_le.mpr h, range_zero, prod_empty, prod_empty]
-    
 #align finset.prod_Ico_eq_prod_range Finset.prod_Ico_eq_prod_range
 
 theorem prod_Ico_reflect (f : ℕ → β) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1) :
     (∏ j in ico k m, f (n - j)) = ∏ j in ico (n + 1 - m) (n + 1 - k), f j := by
-  have : ∀ i < m, i ≤ n := by
+  have : ∀ i < m, i ≤ n := by 
     intro i hi
     exact (add_le_add_iff_right 1).1 (le_trans (Nat.lt_iff_add_one_le.1 hi) h)
   cases' lt_or_le k m with hkm hkm
@@ -150,9 +148,7 @@ theorem prod_Ico_reflect (f : ℕ → β) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1
     simp only [mem_Ico]
     rintro i ⟨ki, im⟩ j ⟨kj, jm⟩ Hij
     rw [← tsub_tsub_cancel_of_le (this _ im), Hij, tsub_tsub_cancel_of_le (this _ jm)]
-    
   · simp [Ico_eq_empty_of_le, tsub_le_tsub_left, hkm]
-    
 #align finset.prod_Ico_reflect Finset.prod_Ico_reflect
 
 theorem sum_Ico_reflect {δ : Type _} [AddCommMonoid δ] (f : ℕ → δ) (k : ℕ) {m n : ℕ}
@@ -164,11 +160,9 @@ theorem prod_range_reflect (f : ℕ → β) (n : ℕ) :
     (∏ j in range n, f (n - 1 - j)) = ∏ j in range n, f j := by
   cases n
   · simp
-    
   · simp only [← Nat.Ico_zero_eq_range, Nat.succ_sub_succ_eq_sub, tsub_zero]
     rw [prod_Ico_reflect _ _ le_rfl]
     simp
-    
 #align finset.prod_range_reflect Finset.prod_range_reflect
 
 theorem sum_range_reflect {δ : Type _} [AddCommMonoid δ] (f : ℕ → δ) (n : ℕ) :
@@ -275,10 +269,10 @@ theorem sum_Ico_by_parts (hmn : m < n) :
   rw [sum_eq_sum_Ico_succ_bot hmn]
   conv => pattern (occs := 2)f _ • g _ <;> (rw [← sum_range_succ_sub_sum g])
   simp_rw [smul_sub, sum_sub_distrib, h₂, h₁]
-  conv_lhs =>
-  congr
-  skip
-  rw [← add_sub, add_comm, ← add_sub, ← sum_sub_distrib]
+  conv_lhs => 
+    congr
+    skip
+    rw [← add_sub, add_comm, ← add_sub, ← sum_sub_distrib]
   have : ∀ i, f i • G (i + 1) - f (i + 1) • G (i + 1) = -((f (i + 1) - f i) • G (i + 1)) := by
     intro i
     rw [sub_smul]
@@ -293,13 +287,12 @@ variable (n)
 theorem sum_range_by_parts :
     (∑ i in range n, f i • g i) =
       f (n - 1) • G n - ∑ i in range (n - 1), (f (i + 1) - f i) • G (i + 1) :=
-  by
+  by 
   by_cases hn : n = 0
   · simp [hn]
-    
-  · rw [range_eq_Ico, sum_Ico_by_parts f g (Nat.pos_of_ne_zero hn), sum_range_zero, smul_zero,
+  ·
+    rw [range_eq_Ico, sum_Ico_by_parts f g (Nat.pos_of_ne_zero hn), sum_range_zero, smul_zero,
       sub_zero, range_eq_Ico]
-    
 #align finset.sum_range_by_parts Finset.sum_range_by_parts
 
 end Module

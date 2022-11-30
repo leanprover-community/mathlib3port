@@ -106,7 +106,7 @@ abbrev mk {X A : C} (f : A ⟶ X) [Mono f] : Subobject X :=
 
 section
 
-attribute [local ext.1] CategoryTheory.Comma
+attribute [local ext] CategoryTheory.Comma
 
 protected theorem ind {X : C} (p : Subobject X → Prop)
     (h : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mono f], p (subobject.mk f)) (P : Subobject X) : p P := by
@@ -236,7 +236,7 @@ theorem underlying_iso_hom_comp_eq_mk {X Y : C} (f : X ⟶ Y) [Mono f] :
 
 /-- Two morphisms into a subobject are equal exactly if
 the morphisms into the ambient object are equal -/
-@[ext.1]
+@[ext]
 theorem eq_of_comp_arrow_eq {X Y : C} {P : Subobject Y} {f g : X ⟶ P}
     (h : f ≫ P.arrow = g ≫ P.arrow) : f = g :=
   (cancel_mono P.arrow).mp h
@@ -270,7 +270,7 @@ theorem mk_le_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : A 
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
-@[ext.1]
+@[ext]
 theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C))
     (w : f.Hom ≫ Y.arrow = X.arrow) : X = Y :=
   le_antisymm (le_of_comm f.Hom w) <| le_of_comm f.inv <| f.inv_comp_eq.2 w.symm
@@ -278,7 +278,7 @@ theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C))
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
-@[ext.1]
+@[ext]
 theorem eq_mk_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : (X : C) ≅ A)
     (w : i.Hom ≫ f = X.arrow) : X = mk f :=
   eq_of_comm (i.trans (underlyingIso f).symm) <| by simp [w]
@@ -286,7 +286,7 @@ theorem eq_mk_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : (X
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
-@[ext.1]
+@[ext]
 theorem mk_eq_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : A ≅ (X : C))
     (w : i.Hom ≫ X.arrow = f) : mk f = X :=
   Eq.symm <| eq_mk_of_comm _ i.symm <| by rw [iso.symm_hom, iso.inv_comp_eq, w]
@@ -294,7 +294,7 @@ theorem mk_eq_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : A 
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
-@[ext.1]
+@[ext]
 theorem mk_eq_mk_of_comm {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (i : A₁ ≅ A₂)
     (w : i.Hom ≫ g = f) : mk f = mk g :=
   eq_mk_of_comm _ ((underlyingIso f).trans i) <| by simp [w]
@@ -432,21 +432,24 @@ theorem of_mk_le_mk_refl {B A₁ : C} (f : A₁ ⟶ B) [Mono f] : ofMkLeMk f f l
 /-- An equality of subobjects gives an isomorphism of the corresponding objects.
 (One could use `underlying.map_iso (eq_to_iso h))` here, but this is more readable.) -/
 @[simps]
-def isoOfEq {B : C} (X Y : Subobject B) (h : X = Y) : (X : C) ≅ (Y : C) where
+def isoOfEq {B : C} (X Y : Subobject B) (h : X = Y) :
+    (X : C) ≅ (Y : C) where 
   Hom := ofLe _ _ h.le
   inv := ofLe _ _ h.ge
 #align category_theory.subobject.iso_of_eq CategoryTheory.Subobject.isoOfEq
 
 /-- An equality of subobjects gives an isomorphism of the corresponding objects. -/
 @[simps]
-def isoOfEqMk {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (h : X = mk f) : (X : C) ≅ A where
+def isoOfEqMk {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (h : X = mk f) :
+    (X : C) ≅ A where 
   Hom := ofLeMk X f h.le
   inv := ofMkLe f X h.ge
 #align category_theory.subobject.iso_of_eq_mk CategoryTheory.Subobject.isoOfEqMk
 
 /-- An equality of subobjects gives an isomorphism of the corresponding objects. -/
 @[simps]
-def isoOfMkEq {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f = X) : A ≅ (X : C) where
+def isoOfMkEq {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f = X) :
+    A ≅ (X : C) where 
   Hom := ofMkLe f X h.le
   inv := ofLeMk X f h.ge
 #align category_theory.subobject.iso_of_mk_eq CategoryTheory.Subobject.isoOfMkEq
@@ -454,7 +457,7 @@ def isoOfMkEq {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f = X) 
 /-- An equality of subobjects gives an isomorphism of the corresponding objects. -/
 @[simps]
 def isoOfMkEqMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (h : mk f = mk g) :
-    A₁ ≅ A₂ where
+    A₁ ≅ A₂ where 
   Hom := ofMkLeMk f g h.le
   inv := ofMkLeMk g f h.ge
 #align category_theory.subobject.iso_of_mk_eq_mk CategoryTheory.Subobject.isoOfMkEqMk
@@ -499,23 +502,20 @@ def lowerAdjunction {A : C} {B : D} {L : MonoOver A ⥤ MonoOver B} {R : MonoOve
 /-- An equivalence between `mono_over A` and `mono_over B` gives an equivalence
 between `subobject A` and `subobject B`. -/
 @[simps]
-def lowerEquivalence {A : C} {B : D} (e : MonoOver A ≌ MonoOver B) : Subobject A ≌ Subobject B where
+def lowerEquivalence {A : C} {B : D} (e : MonoOver A ≌ MonoOver B) :
+    Subobject A ≌ Subobject B where 
   Functor := lower e.Functor
   inverse := lower e.inverse
-  unitIso := by
+  unitIso := by 
     apply eq_to_iso
     convert thin_skeleton.map_iso_eq e.unit_iso
     · exact thin_skeleton.map_id_eq.symm
-      
     · exact (thin_skeleton.map_comp_eq _ _).symm
-      
-  counitIso := by
+  counitIso := by 
     apply eq_to_iso
     convert thin_skeleton.map_iso_eq e.counit_iso
     · exact (thin_skeleton.map_comp_eq _ _).symm
-      
     · exact thin_skeleton.map_id_eq.symm
-      
 #align category_theory.subobject.lower_equivalence CategoryTheory.Subobject.lowerEquivalence
 
 section Pullback
@@ -580,22 +580,21 @@ def mapIso {A B : C} (e : A ≅ B) : Subobject A ≌ Subobject B :=
 -- whose left hand side is not in simp normal form.
 /-- In fact, there's a type level bijection between the subobjects of isomorphic objects,
 which preserves the order. -/
-def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y where
+def mapIsoToOrderIso (e : X ≅ Y) :
+    Subobject X ≃o Subobject Y where 
   toFun := (map e.Hom).obj
   invFun := (map e.inv).obj
   left_inv g := by simp_rw [← map_comp, e.hom_inv_id, map_id]
   right_inv g := by simp_rw [← map_comp, e.inv_hom_id, map_id]
-  map_rel_iff' A B := by
+  map_rel_iff' A B := by 
     dsimp; fconstructor
     · intro h
       apply_fun (map e.inv).obj  at h
       simp_rw [← map_comp, e.hom_inv_id, map_id] at h
       exact h
-      
     · intro h
       apply_fun (map e.hom).obj  at h
       exact h
-      
 #align category_theory.subobject.map_iso_to_order_iso CategoryTheory.Subobject.mapIsoToOrderIso
 
 @[simp]
@@ -620,7 +619,7 @@ def mapPullbackAdj [HasPullbacks C] (f : X ⟶ Y) [Mono f] : map f ⊣ pullback 
 
 @[simp]
 theorem pullback_map_self [HasPullbacks C] (f : X ⟶ Y) [Mono f] (g : Subobject X) :
-    (pullback f).obj ((map f).obj g) = g := by
+    (pullback f).obj ((map f).obj g) = g := by 
   revert g
   apply Quotient.ind
   intro g'
@@ -639,7 +638,6 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
   · refine' mono_over.hom_mk (pullback.lift pullback.fst _ _) (pullback.lift_snd _ _ _)
     change _ ≫ a.arrow ≫ h = (pullback.snd ≫ g) ≫ _
     rw [assoc, ← comm, pullback.condition_assoc]
-    
   · refine'
       mono_over.hom_mk
         (pullback.lift pullback.fst
@@ -648,12 +646,9 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
         _
     · rw [← pullback.condition, assoc]
       rfl
-      
     · dsimp
       rw [pullback.lift_snd_assoc]
       apply (pullback_cone.is_limit.lift' _ _ _ _).2.2
-      
-    
 #align category_theory.subobject.map_pullback CategoryTheory.Subobject.map_pullback
 
 end Map

@@ -53,7 +53,9 @@ variable [T2Space M] [hi : Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I 
 include hi
 
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
-def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
+def embeddingPiTangent :
+    C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ),
+      ι → E × ℝ⟯ where 
   toFun x i := (f i x • extChartAt I (f.c i) x, f i x)
   contMdiffToFun :=
     cont_mdiff_pi_space.2 fun i => ((f i).smoothSmul contMdiffOnExtChartAt).prodMkSpace (f i).Smooth
@@ -126,7 +128,7 @@ Euclidean space. -/
 theorem exists_immersion_euclidean [Finite ι] (f : SmoothBumpCovering ι I M) :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ Injective e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
-  by
+  by 
   cases nonempty_fintype ι
   set F := EuclideanSpace ℝ (Fin <| finrank ℝ (ι → E × ℝ))
   letI : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance

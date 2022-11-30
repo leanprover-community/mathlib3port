@@ -69,7 +69,7 @@ theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a
 theorem mem_grade_iff' (m : M) (a : AddMonoidAlgebra R M) :
     a ∈ grade R m ↔
       a ∈ ((Finsupp.lsingle m : R →ₗ[R] M →₀ R).range : Submodule R (AddMonoidAlgebra R M)) :=
-  by
+  by 
   rw [mem_grade_iff, Finsupp.support_subset_singleton']
   apply exists_congr
   intro r
@@ -95,18 +95,21 @@ end
 open DirectSum
 
 instance gradeBy.graded_monoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f : M →+ ι) :
-    SetLike.GradedMonoid (gradeBy R f : ι → Submodule R (AddMonoidAlgebra R M)) where
-  one_mem m h := by
+    SetLike.GradedMonoid
+      (gradeBy R f :
+        ι →
+          Submodule R
+            (AddMonoidAlgebra R
+              M)) where 
+  one_mem m h := by 
     rw [one_def] at h
     by_cases H : (1 : R) = (0 : R)
     · rw [H, Finsupp.single_zero] at h
       exfalso
       exact h
-      
     · rw [Finsupp.support_single_ne_zero _ H, Finset.mem_singleton] at h
       rw [h, AddMonoidHom.map_zero]
-      
-  mul_mem i j a b ha hb c hc := by
+  mul_mem i j a b ha hb c hc := by 
     set h := support_mul a b hc
     simp only [Finset.mem_bUnion] at h
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩
@@ -133,25 +136,22 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
           (by
             congr 2 <;> try ext <;>
               simp only [Submodule.mem_to_add_submonoid, to_add_one, AddMonoidHom.map_zero]),
-      map_mul' := fun i j => by
+      map_mul' := fun i j => by 
         symm
         convert DirectSum.of_mul_of _ _
         apply DirectSum.of_eq_of_graded_monoid_eq
         congr 2
         · rw [to_add_mul, AddMonoidHom.map_add]
-          
         · ext
           simp only [Submodule.mem_to_add_submonoid, AddMonoidHom.map_add, to_add_mul]
-          
-        · exact Eq.trans (by rw [one_mul, to_add_mul]) single_mul_single.symm
-           }
+        · exact Eq.trans (by rw [one_mul, to_add_mul]) single_mul_single.symm }
 #align add_monoid_algebra.decompose_aux AddMonoidAlgebra.decomposeAux
 
 theorem decompose_aux_single (m : M) (r : R) :
     decomposeAux f (Finsupp.single m r) =
       DirectSum.of (fun i : ι => gradeBy R f i) (f m)
         ⟨Finsupp.single m r, single_mem_grade_by _ _ _⟩ :=
-  by
+  by 
   refine' (lift_single _ _ _).trans _
   refine' (DirectSum.of_smul _ _ _ _).symm.trans _
   apply DirectSum.of_eq_of_graded_monoid_eq
@@ -169,7 +169,6 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) :
   · intro hx
     symm
     exact AddMonoidHom.map_zero _
-    
   · intro m b y hmy hb ih hmby
     have : Disjoint (Finsupp.single m b).support y.support := by
       simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
@@ -186,12 +185,11 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) :
     rw [ih', ← AddMonoidHom.map_add]
     apply DirectSum.of_eq_of_graded_monoid_eq
     congr 2
-    
 #align add_monoid_algebra.decompose_aux_coe AddMonoidAlgebra.decompose_aux_coe
 
 instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
   GradedAlgebra.ofAlgHom _ (decomposeAux f)
-    (by
+    (by 
       ext : 2
       dsimp
       rw [decompose_aux_single, DirectSum.coe_alg_hom_of, Subtype.coe_mk])

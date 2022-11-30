@@ -67,7 +67,8 @@ def objX : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
 @[simp]
 def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
   | 0 => Subobject.arrow _ ≫ X.δ (0 : Fin 2) ≫ inv (⊤ : Subobject _).arrow
-  | n + 1 => by
+  | n + 1 =>
+    by
     -- The differential is `subobject.arrow _ ≫ X.δ (0 : fin (n+3))`,
     -- factored through the intersection of the kernels.
     refine' factor_thru _ (arrow _ ≫ X.δ (0 : Fin (n + 3))) _
@@ -91,7 +92,8 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
 #align
   algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objD
 
-theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
+theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
+  by
   -- It's a pity we need to do a case split here;
     -- after the first simp the proofs are almost identical
     cases n <;>
@@ -101,14 +103,12 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin 2) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
-    
   · simp [factor_thru_right]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le 0)]
     rw [←
       factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin (n + 3)) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
-    
 #align
   algebraic_topology.normalized_Moore_complex.d_squared AlgebraicTopology.NormalizedMooreComplex.d_squared
 
@@ -130,26 +130,22 @@ variable {X} {Y : SimplicialObject C} (f : X ⟶ Y)
 @[simps]
 def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _
-    (fun n => by
+    (fun n => by 
       refine' factor_thru _ (arrow _ ≫ f.app (op (SimplexCategory.mk n))) _
       cases n <;> dsimp
       · apply top_factors
-        
       · refine' (finset_inf_factors _).mpr fun i m => _
         apply kernel_subobject_factors
         slice_lhs 2 3 => erw [← f.naturality]
         rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ i (by simp))]
         slice_lhs 2 3 => erw [kernel_subobject_arrow_comp]
-        simp
-        )
-    fun n => by
+        simp)
+    fun n => by 
     cases n <;> dsimp
     · ext
       simp
-      
     · ext
       simp
-      
 #align algebraic_topology.normalized_Moore_complex.map AlgebraicTopology.NormalizedMooreComplex.map
 
 end NormalizedMooreComplex
@@ -167,16 +163,17 @@ The differentials are induced from `X.δ 0`,
 which maps each of these intersections of kernels to the next.
 -/
 @[simps]
-def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
+def normalizedMooreComplex :
+    SimplicialObject C ⥤ ChainComplex C
+        ℕ where 
   obj := obj
   map X Y f := map f
-  map_id' X := by
+  map_id' X := by 
     ext n
     cases n <;>
       · dsimp
         simp
-        
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     ext n
     cases n <;> simp
 #align algebraic_topology.normalized_Moore_complex AlgebraicTopology.normalizedMooreComplex

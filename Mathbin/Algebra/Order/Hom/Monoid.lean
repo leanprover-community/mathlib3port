@@ -210,9 +210,9 @@ section OrderedAddCommGroup
 variable [OrderedAddCommGroup α] [OrderedAddCommMonoid β] [AddMonoidHomClass F α β] (f : F)
 
 theorem monotone_iff_map_nonneg : Monotone (f : α → β) ↔ ∀ a, 0 ≤ a → 0 ≤ f a :=
-  ⟨fun h a => by
+  ⟨fun h a => by 
     rw [← map_zero f]
-    apply h, fun h a b hl => by
+    apply h, fun h a b hl => by 
     rw [← sub_add_cancel b a, map_add f]
     exact le_add_of_nonneg_left (h _ <| sub_nonneg.2 hl)⟩
 #align monotone_iff_map_nonneg monotone_iff_map_nonneg
@@ -232,9 +232,9 @@ theorem antitone_iff_map_nonneg : Antitone (f : α → β) ↔ ∀ a ≤ 0, 0 �
 variable [CovariantClass β β (· + ·) (· < ·)]
 
 theorem strict_mono_iff_map_pos : StrictMono (f : α → β) ↔ ∀ a, 0 < a → 0 < f a :=
-  ⟨fun h a => by
+  ⟨fun h a => by 
     rw [← map_zero f]
-    apply h, fun h a b hl => by
+    apply h, fun h a b hl => by 
     rw [← sub_add_cancel b a, map_add f]
     exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)⟩
 #align strict_mono_iff_map_pos strict_mono_iff_map_pos
@@ -261,9 +261,10 @@ variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] [MulOneClass α
   [MulOneClass γ] [MulOneClass δ] {f g : α →*o β}
 
 @[to_additive]
-instance : OrderMonoidHomClass (α →*o β) α β where
+instance : OrderMonoidHomClass (α →*o β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -279,7 +280,7 @@ instance : CoeFun (α →*o β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 -- Other lemmas should be accessed through the `fun_like` API
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem ext (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align order_monoid_hom.ext OrderMonoidHom.ext
@@ -525,9 +526,10 @@ section Preorder
 variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] [MulZeroOneClass α] [MulZeroOneClass β]
   [MulZeroOneClass γ] [MulZeroOneClass δ] {f g : α →*₀o β}
 
-instance : OrderMonoidWithZeroHomClass (α →*₀o β) α β where
+instance : OrderMonoidWithZeroHomClass (α →*₀o β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -542,7 +544,7 @@ instance : CoeFun (α →*₀o β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 -- Other lemmas should be accessed through the `fun_like` API
-@[ext.1]
+@[ext]
 theorem ext (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align order_monoid_with_zero_hom.ext OrderMonoidWithZeroHom.ext

@@ -133,7 +133,8 @@ section ProfiniteCat
 to Profinite spaces, given by quotienting a space by its connected components.
 See: https://stacks.math.columbia.edu/tag/0900
 -/
-def CompHausCat.toProfiniteObj (X : CompHausCat.{u}) : ProfiniteCat.{u} where
+def CompHausCat.toProfiniteObj (X : CompHausCat.{u}) :
+    ProfiniteCat.{u} where 
   toCompHaus :=
     { toTop := TopCat.of (ConnectedComponents X), IsCompact := Quotient.compact_space,
       isHausdorff := ConnectedComponents.t2 }
@@ -144,7 +145,10 @@ def CompHausCat.toProfiniteObj (X : CompHausCat.{u}) : ProfiniteCat.{u} where
 spaces in compact Hausdorff spaces.
 -/
 def ProfiniteCat.toCompHausEquivalence (X : CompHausCat.{u}) (Y : ProfiniteCat.{u}) :
-    (CompHausCat.toProfiniteObj X ⟶ Y) ≃ (X ⟶ profiniteToCompHaus.obj Y) where
+    (CompHausCat.toProfiniteObj X ⟶ Y) ≃
+      (X ⟶
+        profiniteToCompHaus.obj
+          Y) where 
   toFun f := f.comp ⟨Quotient.mk', continuous_quotient_mk⟩
   invFun g :=
     { toFun := Continuous.connectedComponentsLift g.2,
@@ -177,7 +181,8 @@ attribute [local instance] FintypeCat.discreteTopology
 /-- The natural functor from `Fintype` to `Profinite`, endowing a finite type with the
 discrete topology. -/
 @[simps]
-def FintypeCat.toProfinite : FintypeCat ⥤ ProfiniteCat where
+def FintypeCat.toProfinite :
+    FintypeCat ⥤ ProfiniteCat where 
   obj A := ProfiniteCat.of A
   map _ _ f := ⟨f⟩
 #align Fintype.to_Profinite FintypeCat.toProfinite
@@ -192,7 +197,9 @@ namespace ProfiniteCat
 -- to allow diagrams in lower universes.
 /-- An explicit limit cone for a functor `F : J ⥤ Profinite`, defined in terms of
 `Top.limit_cone`. -/
-def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) : Limits.Cone F where
+def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) :
+    Limits.Cone
+      F where 
   x :=
     { toCompHaus := (CompHausCat.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).x,
       IsTotallyDisconnected := by
@@ -203,7 +210,9 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) : Limi
 
 /-- The limit cone `Profinite.limit_cone F` is indeed a limit cone. -/
 def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) :
-    Limits.IsLimit (limitCone F) where
+    Limits.IsLimit
+      (limitCone
+        F) where 
   lift S :=
     (CompHausCat.limitConeIsLimit.{u, u} (F ⋙ profiniteToCompHaus)).lift
       (profiniteToCompHaus.mapCone S)
@@ -271,26 +280,27 @@ instance forget_reflects_isomorphisms : ReflectsIsomorphisms (forget ProfiniteCa
 
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
-def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y where
+def isoOfHomeo (f : X ≃ₜ Y) : X ≅
+      Y where 
   Hom := ⟨f, f.Continuous⟩
   inv := ⟨f.symm, f.symm.Continuous⟩
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext x
     exact f.symm_apply_apply x
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext x
     exact f.apply_symm_apply x
 #align Profinite.iso_of_homeo ProfiniteCat.isoOfHomeo
 
 /-- Construct a homeomorphism from an isomorphism. -/
 @[simps]
-def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
+def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where 
   toFun := f.Hom
   invFun := f.inv
-  left_inv x := by
+  left_inv x := by 
     change (f.hom ≫ f.inv) x = x
     rw [iso.hom_inv_id, coe_id, id.def]
-  right_inv x := by
+  right_inv x := by 
     change (f.inv ≫ f.hom) x = x
     rw [iso.inv_hom_id, coe_id, id.def]
   continuous_to_fun := f.Hom.Continuous
@@ -300,19 +310,20 @@ def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
 /-- The equivalence between isomorphisms in `Profinite` and homeomorphisms
 of topological spaces. -/
 @[simps]
-def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y) where
+def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ
+        Y) where 
   toFun := homeoOfIso
   invFun := isoOfHomeo
-  left_inv f := by
+  left_inv f := by 
     ext
     rfl
-  right_inv f := by
+  right_inv f := by 
     ext
     rfl
 #align Profinite.iso_equiv_homeo ProfiniteCat.isoEquivHomeo
 
 theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
-  by
+  by 
   constructor
   · contrapose!
     rintro ⟨y, hy⟩ hf
@@ -320,47 +331,42 @@ theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fu
     have hC : IsClosed C := (is_compact_range f.continuous).IsClosed
     let U := Cᶜ
     have hU : IsOpen U := is_open_compl_iff.mpr hC
-    have hyU : y ∈ U := by
+    have hyU : y ∈ U := by 
       refine' Set.mem_compl _
       rintro ⟨y', hy'⟩
       exact hy y' hy'
     have hUy : U ∈ nhds y := hU.mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
-    classical
-    letI : TopologicalSpace (ULift.{u} <| Fin 2) := ⊥
-    let Z := of (ULift.{u} <| Fin 2)
-    let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
-    let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
-    have H : h = g := by
-      rw [← cancel_epi f]
-      ext x
-      dsimp [LocallyConstant.ofClopen]
-      rw [if_neg]
-      · rfl
-        
-      refine' mt (fun α => hVU α) _
-      simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
-    apply_fun fun e => (e y).down  at H
-    dsimp [LocallyConstant.ofClopen] at H
-    rw [if_pos hyV] at H
-    exact top_ne_bot H
-    
+    classical 
+      letI : TopologicalSpace (ULift.{u} <| Fin 2) := ⊥
+      let Z := of (ULift.{u} <| Fin 2)
+      let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
+      let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
+      have H : h = g := by 
+        rw [← cancel_epi f]
+        ext x
+        dsimp [LocallyConstant.ofClopen]
+        rw [if_neg]
+        · rfl
+        refine' mt (fun α => hVU α) _
+        simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
+      apply_fun fun e => (e y).down  at H
+      dsimp [LocallyConstant.ofClopen] at H
+      rw [if_pos hyV] at H
+      exact top_ne_bot H
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget ProfiniteCat).epi_of_epi_map
-    
 #align Profinite.epi_iff_surjective ProfiniteCat.epi_iff_surjective
 
 theorem mono_iff_injective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
-  by
+  by 
   constructor
   · intro h
     haveI : limits.preserves_limits profiniteToCompHaus := inferInstance
     haveI : mono (Profinite_to_CompHaus.map f) := inferInstance
     rwa [← CompHausCat.mono_iff_injective]
-    
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget ProfiniteCat).mono_of_mono_map
-    
 #align Profinite.mono_iff_injective ProfiniteCat.mono_iff_injective
 
 end ProfiniteCat

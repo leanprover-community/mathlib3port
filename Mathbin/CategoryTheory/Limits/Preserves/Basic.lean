@@ -249,7 +249,8 @@ def preservesLimitOfPreservesLimitCone {F : C ⥤ D} {t : Cone K} (h : IsLimit t
 
 /-- Transfer preservation of limits along a natural isomorphism in the diagram. -/
 def preservesLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [PreservesLimit K₁ F] :
-    PreservesLimit K₂ F where preserves c t := by
+    PreservesLimit K₂
+      F where preserves c t := by
     apply is_limit.postcompose_inv_equiv (iso_whisker_right h F : _) _ _
     have := (is_limit.postcompose_inv_equiv h c).symm t
     apply is_limit.of_iso_limit (is_limit_of_preserves F this)
@@ -279,15 +280,15 @@ def preservesLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [PreservesLimitsOfSize
 /-- Transfer preservation of limits along a equivalence in the shape. -/
 def preservesLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [PreservesLimitsOfShape J F] :
-    PreservesLimitsOfShape J' F where PreservesLimit K :=
-    { preserves := fun c t => by
+    PreservesLimitsOfShape J'
+      F where PreservesLimit K :=
+    { preserves := fun c t => by 
         let equ := e.inv_fun_id_assoc (K ⋙ F)
         have := (is_limit_of_preserves F (t.whisker_equivalence e)).whiskerEquivalence e.symm
         apply ((is_limit.postcompose_hom_equiv equ _).symm this).ofIsoLimit
         refine' cones.ext (iso.refl _) fun j => _
         · dsimp
-          simp [← functor.map_comp]
-           }
+          simp [← functor.map_comp] }
 #align
   category_theory.limits.preserves_limits_of_shape_of_equiv CategoryTheory.Limits.preservesLimitsOfShapeOfEquiv
 
@@ -318,7 +319,8 @@ def preservesColimitOfPreservesColimitCocone {F : C ⥤ D} {t : Cocone K} (h : I
 
 /-- Transfer preservation of colimits along a natural isomorphism in the shape. -/
 def preservesColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [PreservesColimit K₁ F] :
-    PreservesColimit K₂ F where preserves c t := by
+    PreservesColimit K₂
+      F where preserves c t := by
     apply is_colimit.precompose_hom_equiv (iso_whisker_right h F : _) _ _
     have := (is_colimit.precompose_hom_equiv h c).symm t
     apply is_colimit.of_iso_colimit (is_colimit_of_preserves F this)
@@ -349,15 +351,15 @@ def preservesColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [PreservesColimitsOf
 /-- Transfer preservation of colimits along a equivalence in the shape. -/
 def preservesColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [PreservesColimitsOfShape J F] :
-    PreservesColimitsOfShape J' F where PreservesColimit K :=
-    { preserves := fun c t => by
+    PreservesColimitsOfShape J'
+      F where PreservesColimit K :=
+    { preserves := fun c t => by 
         let equ := e.inv_fun_id_assoc (K ⋙ F)
         have := (is_colimit_of_preserves F (t.whisker_equivalence e)).whiskerEquivalence e.symm
         apply ((is_colimit.precompose_inv_equiv equ _).symm this).ofIsoColimit
         refine' cocones.ext (iso.refl _) fun j => _
         · dsimp
-          simp [← functor.map_comp]
-           }
+          simp [← functor.map_comp] }
 #align
   category_theory.limits.preserves_colimits_of_shape_of_equiv CategoryTheory.Limits.preservesColimitsOfShapeOfEquiv
 
@@ -507,7 +509,7 @@ instance reflects_colimits_of_shape_subsingleton (J : Type w) [Category.{w'} J] 
   category_theory.limits.reflects_colimits_of_shape_subsingleton CategoryTheory.Limits.reflects_colimits_of_shape_subsingleton
 
 instance reflects_limits_subsingleton (F : C ⥤ D) : Subsingleton (ReflectsLimitsOfSize.{w', w} F) :=
-  by
+  by 
   constructor
   intros
   cases a
@@ -616,7 +618,7 @@ instance compReflectsColimits [ReflectsColimitsOfSize.{w', w} F]
 then `F` preserves limits for `K`. -/
 def preservesLimitOfReflectsOfPreserves [PreservesLimit K (F ⋙ G)] [ReflectsLimit (K ⋙ F) G] :
     PreservesLimit K F :=
-  ⟨fun c h => by
+  ⟨fun c h => by 
     apply is_limit_of_reflects G
     apply is_limit_of_preserves (F ⋙ G) h⟩
 #align
@@ -642,7 +644,8 @@ def preservesLimitsOfReflectsOfPreserves [PreservesLimitsOfSize.{w', w} (F ⋙ G
 
 /-- Transfer reflection of limits along a natural isomorphism in the diagram. -/
 def reflectsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [ReflectsLimit K₁ F] :
-    ReflectsLimit K₂ F where reflects c t := by
+    ReflectsLimit K₂
+      F where reflects c t := by
     apply is_limit.postcompose_inv_equiv h c (is_limit_of_reflects F _)
     apply ((is_limit.postcompose_inv_equiv (iso_whisker_right h F : _) _).symm t).ofIsoLimit _
     exact cones.ext (iso.refl _) (by tidy)
@@ -670,8 +673,9 @@ def reflectsLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [ReflectsLimitsOfSize.{
 /-- Transfer reflection of limits along a equivalence in the shape. -/
 def reflectsLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [ReflectsLimitsOfShape J F] :
-    ReflectsLimitsOfShape J' F where ReflectsLimit K :=
-    { reflects := fun c t => by
+    ReflectsLimitsOfShape J'
+      F where ReflectsLimit K :=
+    { reflects := fun c t => by 
         apply is_limit.of_whisker_equivalence e
         apply is_limit_of_reflects F
         apply is_limit.of_iso_limit _ (functor.map_cone_whisker _).symm
@@ -700,7 +704,8 @@ reflects the limit of `F`.
 -/
 def reflectsLimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsIsomorphisms G]
     [HasLimit F] [PreservesLimit F G] :
-    ReflectsLimit F G where reflects c t := by
+    ReflectsLimit F
+      G where reflects c t := by
     apply is_limit.of_point_iso (limit.is_limit F)
     change is_iso ((cones.forget _).map ((limit.is_limit F).liftConeMorphism c))
     apply (cones.forget F).map_is_iso _
@@ -732,7 +737,7 @@ def reflectsLimitsOfReflectsIsomorphisms {G : C ⥤ D} [ReflectsIsomorphisms G]
 then `F` preserves colimits for `K`. -/
 def preservesColimitOfReflectsOfPreserves [PreservesColimit K (F ⋙ G)] [ReflectsColimit (K ⋙ F) G] :
     PreservesColimit K F :=
-  ⟨fun c h => by
+  ⟨fun c h => by 
     apply is_colimit_of_reflects G
     apply is_colimit_of_preserves (F ⋙ G) h⟩
 #align
@@ -759,7 +764,8 @@ def preservesColimitsOfReflectsOfPreserves [PreservesColimitsOfSize.{w', w} (F �
 
 /-- Transfer reflection of colimits along a natural isomorphism in the diagram. -/
 def reflectsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [ReflectsColimit K₁ F] :
-    ReflectsColimit K₂ F where reflects c t := by
+    ReflectsColimit K₂
+      F where reflects c t := by
     apply is_colimit.precompose_hom_equiv h c (is_colimit_of_reflects F _)
     apply ((is_colimit.precompose_hom_equiv (iso_whisker_right h F : _) _).symm t).ofIsoColimit _
     exact cocones.ext (iso.refl _) (by tidy)
@@ -789,8 +795,9 @@ def reflectsColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [ReflectsColimitsOfSi
 /-- Transfer reflection of colimits along a equivalence in the shape. -/
 def reflectsColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [ReflectsColimitsOfShape J F] :
-    ReflectsColimitsOfShape J' F where ReflectsColimit K :=
-    { reflects := fun c t => by
+    ReflectsColimitsOfShape J'
+      F where ReflectsColimit K :=
+    { reflects := fun c t => by 
         apply is_colimit.of_whisker_equivalence e
         apply is_colimit_of_reflects F
         apply is_colimit.of_iso_colimit _ (functor.map_cocone_whisker _).symm
@@ -819,7 +826,8 @@ reflects the colimit of `F`.
 -/
 def reflectsColimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsIsomorphisms G]
     [HasColimit F] [PreservesColimit F G] :
-    ReflectsColimit F G where reflects c t := by
+    ReflectsColimit F
+      G where reflects c t := by
     apply is_colimit.of_point_iso (colimit.is_colimit F)
     change is_iso ((cocones.forget _).map ((colimit.is_colimit F).descCoconeMorphism c))
     apply (cocones.forget F).map_is_iso _
@@ -861,7 +869,7 @@ def fullyFaithfulReflectsLimits [Full F] [Faithful F] :
         { reflects := fun c t =>
             (is_limit.mk_cone_morphism fun s =>
                 (cones.functoriality K F).preimage (t.liftConeMorphism _)) <|
-              by
+              by 
               apply fun s m => (cones.functoriality K F).map_injective _
               rw [functor.image_preimage]
               apply t.uniq_cone_morphism } }
@@ -876,7 +884,7 @@ def fullyFaithfulReflectsColimits [Full F] [Faithful F] :
         { reflects := fun c t =>
             (is_colimit.mk_cocone_morphism fun s =>
                 (cocones.functoriality K F).preimage (t.descCoconeMorphism _)) <|
-              by
+              by 
               apply fun s m => (cocones.functoriality K F).map_injective _
               rw [functor.image_preimage]
               apply t.uniq_cocone_morphism } }

@@ -245,10 +245,8 @@ theorem analyticAtExpOfMemBall (x : 𝔸) (hx : x ∈ Emetric.ball (0 : 𝔸) (e
   by_cases h : (expSeries 𝕂 𝔸).radius = 0
   · rw [h] at hx
     exact (Ennreal.not_lt_zero hx).elim
-    
   · have h := pos_iff_ne_zero.mpr h
     exact (hasFpowerSeriesOnBallExpOfRadiusPos h).analyticAtOfMem hx
-    
 #align analytic_at_exp_of_mem_ball analyticAtExpOfMemBall
 
 /-- In a Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero, if `x` and `y` are
@@ -260,10 +258,10 @@ theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commu
     tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm
       (norm_exp_series_summable_of_mem_ball' x hx) (norm_exp_series_summable_of_mem_ball' y hy)]
   dsimp only
-  conv_lhs =>
-  congr
-  ext
-  rw [hxy.add_pow' _, Finset.smul_sum]
+  conv_lhs => 
+    congr
+    ext
+    rw [hxy.add_pow' _, Finset.smul_sum]
   refine' tsum_congr fun n => (Finset.sum_congr rfl) fun kl hkl => _
   rw [nsmul_eq_smul_cast 𝕂, smul_smul, smul_mul_smul, ← finset.nat.mem_antidiagonal.mp hkl,
     Nat.cast_add_choose, finset.nat.mem_antidiagonal.mp hkl]
@@ -274,7 +272,8 @@ theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commu
 
 /-- `exp 𝕂 x` has explicit two-sided inverse `exp 𝕂 (-x)`. -/
 noncomputable def invertibleExpOfMemBall [CharZero 𝕂] {x : 𝔸}
-    (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : Invertible (exp 𝕂 x) where
+    (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+    Invertible (exp 𝕂 x) where 
   invOf := exp 𝕂 (-x)
   inv_of_mul_self := by
     have hnx : -x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius := by
@@ -297,7 +296,7 @@ theorem is_unit_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
 
 theorem inv_of_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) [Invertible (exp 𝕂 x)] :
-    ⅟ (exp 𝕂 x) = exp 𝕂 (-x) := by
+    ⅟ (exp 𝕂 x) = exp 𝕂 (-x) := by 
   letI := invertibleExpOfMemBall hx
   convert (rfl : ⅟ (exp 𝕂 x) = _)
 #align inv_of_exp_of_mem_ball inv_of_exp_of_mem_ball
@@ -482,22 +481,20 @@ theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸)
     (h : (s : Set ι).Pairwise fun i j => Commute (f i) (f j)) :
     exp 𝕂 (∑ i in s, f i) =
       s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj _ => (h.of_refl hi hj).exp 𝕂 :=
-  by classical
-  induction' s using Finset.induction_on with a s ha ih
-  · simp
-    
-  rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute,
-    ih (h.mono <| Finset.subset_insert _ _)]
-  refine' Commute.sum_right _ _ _ fun i hi => _
-  exact h.of_refl (Finset.mem_insert_self _ _) (Finset.mem_insert_of_mem hi)
+  by
+  classical 
+    induction' s using Finset.induction_on with a s ha ih
+    · simp
+    rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute,
+      ih (h.mono <| Finset.subset_insert _ _)]
+    refine' Commute.sum_right _ _ _ fun i hi => _
+    exact h.of_refl (Finset.mem_insert_self _ _) (Finset.mem_insert_of_mem hi)
 #align exp_sum_of_commute exp_sum_of_commute
 
 theorem exp_nsmul (n : ℕ) (x : 𝔸) : exp 𝕂 (n • x) = exp 𝕂 x ^ n := by
   induction' n with n ih
   · rw [zero_smul, pow_zero, exp_zero]
-    
   · rw [succ_nsmul, pow_succ, exp_add_of_commute ((Commute.refl x).smul_right n), ih]
-    
 #align exp_nsmul exp_nsmul
 
 variable (𝕂)
@@ -549,7 +546,7 @@ theorem Pi.exp_def {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, Nor
 theorem Function.update_exp {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [DecidableEq ι]
     [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)] [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i)
     (j : ι) (xj : 𝔸 j) : Function.update (exp 𝕂 x) j (exp 𝕂 xj) = exp 𝕂 (Function.update x j xj) :=
-  by
+  by 
   ext i
   simp_rw [Pi.exp_def]
   exact (Function.apply_update (fun i => exp 𝕂) x j xj i).symm
@@ -594,9 +591,7 @@ theorem exp_neg (x : 𝔸) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ :=
 theorem exp_zsmul (z : ℤ) (x : 𝔸) : exp 𝕂 (z • x) = exp 𝕂 x ^ z := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
   · rw [zpow_coe_nat, coe_nat_zsmul, exp_nsmul]
-    
   · rw [zpow_neg, zpow_coe_nat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
-    
 #align exp_zsmul exp_zsmul
 
 theorem exp_conj (y : 𝔸) (x : 𝔸) (hy : y ≠ 0) : exp 𝕂 (y * x * y⁻¹) = y * exp 𝕂 x * y⁻¹ :=

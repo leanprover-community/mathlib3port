@@ -67,7 +67,7 @@ variable (C : Type u₁) [Category.{v₁} C]
 
 -- We don't use `@[simps]` here because we want `C` implicit for the simp lemmas.
 /-- `𝟭 C` is the identity functor on a category `C`. -/
-protected def id : C ⥤ C where
+protected def id : C ⥤ C where 
   obj X := X
   map _ _ f := f
 #align category_theory.functor.id CategoryTheory.Functor.id
@@ -101,7 +101,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 /-- `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/
 @[simps obj]
-def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E where
+def comp (F : C ⥤ D) (G : D ⥤ E) :
+    C ⥤ E where 
   obj X := G.obj (F.obj X)
   map _ _ f := G.map (F.map f)
 #align category_theory.functor.comp CategoryTheory.Functor.comp

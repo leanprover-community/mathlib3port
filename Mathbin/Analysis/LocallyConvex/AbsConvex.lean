@@ -65,14 +65,13 @@ variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
 
 theorem nhds_basis_abs_convex_open :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
-  by
+  by 
   refine' (nhds_basis_abs_convex 𝕜 E).to_has_basis _ _
   · rintro s ⟨hs_nhds, hs_balanced, hs_convex⟩
     refine' ⟨interior s, _, interior_subset⟩
     exact
       ⟨mem_interior_iff_mem_nhds.mpr hs_nhds, is_open_interior,
         hs_balanced.interior (mem_interior_iff_mem_nhds.mpr hs_nhds), hs_convex.interior⟩
-    
   rintro s ⟨hs_zero, hs_open, hs_balanced, hs_convex⟩
   exact ⟨s, ⟨hs_open.mem_nhds hs_zero, hs_balanced, hs_convex⟩, rfl.subset⟩
 #align nhds_basis_abs_convex_open nhds_basis_abs_convex_open
@@ -170,7 +169,6 @@ theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) := 
     simp only [Finset.sup_singleton]
     rw [gauge_seminorm_family_ball]
     simp only [Subtype.coe_mk]
-    
   refine' ⟨s, ⟨_, rfl.subset⟩⟩
   rw [SeminormFamily.basis_sets_iff] at hs
   rcases hs with ⟨t, r, hr, hs⟩

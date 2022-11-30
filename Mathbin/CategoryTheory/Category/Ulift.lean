@@ -46,44 +46,47 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 /-- The functorial version of `ulift.up`. -/
 @[simps]
-def Ulift.upFunctor : C ⥤ ULift.{u₂} C where
+def Ulift.upFunctor : C ⥤ ULift.{u₂}
+        C where 
   obj := ULift.up
   map X Y f := f
 #align category_theory.ulift.up_functor CategoryTheory.Ulift.upFunctor
 
 /-- The functorial version of `ulift.down`. -/
 @[simps]
-def Ulift.downFunctor : ULift.{u₂} C ⥤ C where
+def Ulift.downFunctor : ULift.{u₂} C ⥤
+      C where 
   obj := ULift.down
   map X Y f := f
 #align category_theory.ulift.down_functor CategoryTheory.Ulift.downFunctor
 
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
-def Ulift.equivalence : C ≌ ULift.{u₂} C where
+def Ulift.equivalence :
+    C ≌ ULift.{u₂} C where 
   Functor := Ulift.upFunctor
   inverse := Ulift.downFunctor
   unitIso := { Hom := 𝟙 _, inv := 𝟙 _ }
   counitIso :=
     { Hom :=
         { app := fun X => 𝟙 _,
-          naturality' := fun X Y f => by
+          naturality' := fun X Y f => by 
             change f ≫ 𝟙 _ = 𝟙 _ ≫ f
             simp },
       inv :=
         { app := fun X => 𝟙 _,
-          naturality' := fun X Y f => by
+          naturality' := fun X Y f => by 
             change f ≫ 𝟙 _ = 𝟙 _ ≫ f
             simp },
-      hom_inv_id' := by
+      hom_inv_id' := by 
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
         simp,
-      inv_hom_id' := by
+      inv_hom_id' := by 
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
         simp }
-  functor_unit_iso_comp' X := by
+  functor_unit_iso_comp' X := by 
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
 #align category_theory.ulift.equivalence CategoryTheory.Ulift.equivalence
@@ -120,27 +123,32 @@ theorem obj_up_obj_down {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
   rfl
 #align category_theory.obj_up_obj_down CategoryTheory.obj_up_obj_down
 
-instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
+instance :
+    Category.{max v₂ v₁}
+      (UliftHom.{v₂}
+        C) where 
   Hom A B := ULift.{v₂} <| A.objDown ⟶ B.objDown
   id A := ⟨𝟙 _⟩
   comp A B C f g := ⟨f.down ≫ g.down⟩
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def UliftHom.up : C ⥤ UliftHom C where
+def UliftHom.up : C ⥤ UliftHom C where 
   obj := UliftHom.objUp
   map X Y f := ⟨f⟩
 #align category_theory.ulift_hom.up CategoryTheory.UliftHom.up
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def UliftHom.down : UliftHom C ⥤ C where
+def UliftHom.down : UliftHom C ⥤
+      C where 
   obj := UliftHom.objDown
   map X Y f := f.down
 #align category_theory.ulift_hom.down CategoryTheory.UliftHom.down
 
 /-- The equivalence between `C` and `ulift_hom C`. -/
-def UliftHom.equiv : C ≌ UliftHom C where
+def UliftHom.equiv : C ≌ UliftHom
+        C where 
   Functor := UliftHom.up
   inverse := UliftHom.down
   unitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
@@ -164,35 +172,37 @@ def AsSmall.{w, v, u} (C : Type u) [Category.{v} C] :=
   ULift.{max w v} C
 #align category_theory.as_small CategoryTheory.AsSmall
 
-instance : SmallCategory (AsSmall.{w₁} C) where
+instance :
+    SmallCategory
+      (AsSmall.{w₁} C) where 
   Hom X Y := ULift.{max w₁ u₁} <| X.down ⟶ Y.down
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.down ≫ g.down⟩
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
-def AsSmall.up : C ⥤ AsSmall C where
+def AsSmall.up : C ⥤ AsSmall C where 
   obj X := ⟨X⟩
   map X Y f := ⟨f⟩
 #align category_theory.as_small.up CategoryTheory.AsSmall.up
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
-def AsSmall.down : AsSmall C ⥤ C where
+def AsSmall.down : AsSmall C ⥤ C where 
   obj X := X.down
   map X Y f := f.down
 #align category_theory.as_small.down CategoryTheory.AsSmall.down
 
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
-def AsSmall.equiv : C ≌ AsSmall C where
+def AsSmall.equiv : C ≌ AsSmall C where 
   Functor := AsSmall.up
   inverse := AsSmall.down
   unitIso := NatIso.ofComponents (fun X => eqToIso rfl) (by tidy)
   counitIso :=
     NatIso.ofComponents
       (fun X =>
-        eq_to_iso <| by
+        eq_to_iso <| by 
           ext
           rfl)
       (by tidy)

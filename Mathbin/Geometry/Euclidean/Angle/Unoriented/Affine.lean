@@ -174,7 +174,7 @@ theorem angle_eq_zero_of_angle_eq_pi_left {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π)
 
 /-- If the angle ∠ABC at a point is π, the angle ∠BCA is 0. -/
 theorem angle_eq_zero_of_angle_eq_pi_right {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : ∠ p2 p3 p1 = 0 :=
-  by
+  by 
   rw [angle_comm] at h
   exact angle_eq_zero_of_angle_eq_pi_left h
 #align
@@ -182,7 +182,7 @@ theorem angle_eq_zero_of_angle_eq_pi_right {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π
 
 /-- If ∠BCD = π, then ∠ABC = ∠ABD. -/
 theorem angle_eq_angle_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 = π) :
-    ∠ p1 p2 p3 = ∠ p1 p2 p4 := by
+    ∠ p1 p2 p3 = ∠ p1 p2 p4 := by 
   unfold angle at *
   rcases angle_eq_pi_iff.1 h with ⟨hp2p3, ⟨r, ⟨hr, hpr⟩⟩⟩
   rw [eq_comm]
@@ -194,7 +194,7 @@ theorem angle_eq_angle_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 
 
 /-- If ∠BCD = π, then ∠ACB + ∠ACD = π. -/
 theorem angle_add_angle_eq_pi_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 = π) :
-    ∠ p1 p3 p2 + ∠ p1 p3 p4 = π := by
+    ∠ p1 p3 p2 + ∠ p1 p3 p4 = π := by 
   unfold angle at h
   rw [angle_comm p1 p3 p2, angle_comm p1 p3 p4]
   unfold angle
@@ -297,11 +297,11 @@ theorem Sbtw.angle₁₂₃_eq_pi {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p
   rw [angle, angle_eq_pi_iff]
   rcases h with ⟨⟨r, ⟨hr0, hr1⟩, hp₂⟩, hp₂p₁, hp₂p₃⟩
   refine' ⟨vsub_ne_zero.2 hp₂p₁.symm, -(1 - r) / r, _⟩
-  have hr0' : r ≠ 0 := by
+  have hr0' : r ≠ 0 := by 
     rintro rfl
     rw [← hp₂] at hp₂p₁
     simpa using hp₂p₁
-  have hr1' : r ≠ 1 := by
+  have hr1' : r ≠ 1 := by 
     rintro rfl
     rw [← hp₂] at hp₂p₃
     simpa using hp₂p₃
@@ -337,19 +337,17 @@ theorem angle_eq_pi_iff_sbtw {p₁ p₂ p₃ : P} : ∠ p₁ p₂ p₃ = π ↔ 
     convert (one_smul ℝ (p₂ -ᵥ p₁)).symm
     field_simp [(sub_pos.2 (hr.trans zero_lt_one)).Ne.symm]
     abel
-    
   · rw [ne_comm, ← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
     exact ⟨hr.ne, hp₁p₂⟩
-    
 #align euclidean_geometry.angle_eq_pi_iff_sbtw EuclideanGeometry.angle_eq_pi_iff_sbtw
 
 /-- If the second of three points is weakly between the other two, and not equal to the first,
 the angle at the first point is zero. -/
 theorem Wbtw.angle₂₁₃_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p₁ p₂ p₃) (hp₂p₁ : p₂ ≠ p₁) :
-    ∠ p₂ p₁ p₃ = 0 := by
+    ∠ p₂ p₁ p₃ = 0 := by 
   rw [angle, angle_eq_zero_iff]
   rcases h with ⟨r, ⟨hr0, hr1⟩, rfl⟩
-  have hr0' : r ≠ 0 := by
+  have hr0' : r ≠ 0 := by 
     rintro rfl
     simpa using hp₂p₁
   replace hr0 := hr0.lt_of_ne hr0'.symm
@@ -413,21 +411,13 @@ theorem angle_eq_zero_iff_ne_and_wbtw {p₁ p₂ p₃ : P} :
     · refine' Or.inl ⟨vsub_ne_zero.1 hp₁p₂, r⁻¹, ⟨(inv_pos.2 hr0).le, inv_le_one hr1⟩, _⟩
       rw [AffineMap.line_map_apply, hp₃p₂, smul_smul, inv_mul_cancel hr0.ne.symm, one_smul,
         vsub_vadd]
-      
     · refine' Or.inr ⟨_, r, ⟨hr0.le, hr1.le⟩, _⟩
       · rw [← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
         exact ⟨hr0.ne.symm, hp₁p₂⟩
-        
       · rw [AffineMap.line_map_apply, ← hp₃p₂, vsub_vadd]
-        
-      
-    
   · rintro (⟨hp₁p₂, h⟩ | ⟨hp₃p₂, h⟩)
     · exact h.angle₂₁₃_eq_zero_of_ne hp₁p₂
-      
     · exact h.angle₃₁₂_eq_zero_of_ne hp₃p₂
-      
-    
 #align
   euclidean_geometry.angle_eq_zero_iff_ne_and_wbtw EuclideanGeometry.angle_eq_zero_iff_ne_and_wbtw
 
@@ -436,15 +426,9 @@ strictly between the other two, or those two points are equal but not equal to t
 theorem angle_eq_zero_iff_eq_and_ne_or_sbtw {p₁ p₂ p₃ : P} :
     ∠ p₁ p₂ p₃ = 0 ↔ p₁ = p₃ ∧ p₁ ≠ p₂ ∨ Sbtw ℝ p₂ p₁ p₃ ∨ Sbtw ℝ p₂ p₃ p₁ := by
   rw [angle_eq_zero_iff_ne_and_wbtw]
-  by_cases hp₁p₂ : p₁ = p₂;
-  · simp [hp₁p₂]
-    
-  by_cases hp₁p₃ : p₁ = p₃;
-  · simp [hp₁p₃]
-    
-  by_cases hp₃p₂ : p₃ = p₂;
-  · simp [hp₃p₂]
-    
+  by_cases hp₁p₂ : p₁ = p₂; · simp [hp₁p₂]
+  by_cases hp₁p₃ : p₁ = p₃; · simp [hp₁p₃]
+  by_cases hp₃p₂ : p₃ = p₂; · simp [hp₃p₂]
   simp [hp₁p₂, hp₁p₃, Ne.symm hp₁p₃, Sbtw, hp₃p₂]
 #align
   euclidean_geometry.angle_eq_zero_iff_eq_and_ne_or_sbtw EuclideanGeometry.angle_eq_zero_iff_eq_and_ne_or_sbtw

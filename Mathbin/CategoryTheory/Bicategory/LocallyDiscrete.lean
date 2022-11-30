@@ -40,7 +40,9 @@ namespace LocallyDiscrete
 instance : ∀ [Inhabited C], Inhabited (LocallyDiscrete C) :=
   id
 
-instance [CategoryStruct.{v} C] : CategoryStruct (LocallyDiscrete C) where
+instance [CategoryStruct.{v} C] :
+    CategoryStruct
+      (LocallyDiscrete C) where 
   Hom := fun X Y : C => Discrete (X ⟶ Y)
   id := fun X : C => ⟨𝟙 X⟩
   comp X Y Z f g := ⟨f.as ≫ g.as⟩
@@ -66,36 +68,42 @@ variable (C) [Category.{v} C]
 1-morphisms are the same as those in the underlying category, and the 2-morphisms are the
 equalities between 1-morphisms.
 -/
-instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
+instance locallyDiscreteBicategory :
+    Bicategory
+      (LocallyDiscrete
+        C) where 
   whiskerLeft X Y Z f g h η := eqToHom (congr_arg₂ (· ≫ ·) rfl (LocallyDiscrete.eq_of_hom η))
   whiskerRight X Y Z f g η h := eqToHom (congr_arg₂ (· ≫ ·) (LocallyDiscrete.eq_of_hom η) rfl)
   associator W X Y Z f g h :=
-    eq_to_iso <| by
+    eq_to_iso <| by 
       unfold_projs
       simp only [category.assoc]
   leftUnitor X Y f :=
-    eq_to_iso <| by
+    eq_to_iso <| by 
       unfold_projs
       simp only [category.id_comp, mk_as]
   rightUnitor X Y f :=
-    eq_to_iso <| by
+    eq_to_iso <| by 
       unfold_projs
       simp only [category.comp_id, mk_as]
 #align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory
 
 /-- A locally discrete bicategory is strict. -/
-instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C) where
-  id_comp' := by
+instance locallyDiscreteBicategory.strict :
+    Strict
+      (LocallyDiscrete
+        C) where 
+  id_comp' := by 
     intros
     ext1
     unfold_projs
     apply category.id_comp
-  comp_id' := by
+  comp_id' := by 
     intros
     ext1
     unfold_projs
     apply category.comp_id
-  assoc' := by
+  assoc' := by 
     intros
     ext1
     unfold_projs
@@ -110,7 +118,8 @@ If `B` is a strict bicategory and `I` is a (1-)category, any functor (of 1-categ
 be promoted to an oplax functor from `locally_discrete I` to `B`.
 -/
 @[simps]
-def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B where
+def Functor.toOplaxFunctor (F : I ⥤ B) :
+    OplaxFunctor (LocallyDiscrete I) B where 
   obj := F.obj
   map X Y f := F.map f.as
   map₂ i j f g η := eqToHom (congr_arg _ (eq_of_hom η))

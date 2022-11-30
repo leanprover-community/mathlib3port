@@ -91,15 +91,14 @@ Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`
 -/
 theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β]
     (f : PartialIso α β) (a : α) : ∃ b : β, ∀ p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b :=
-  by
+  by 
   by_cases h : ∃ b, (a, b) ∈ f.val
   · cases' h with b hb
     exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
-    
   have :
     ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).image Prod.snd,
       ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).image Prod.snd, x < y :=
-    by
+    by 
     intro x hx y hy
     rw [Finset.mem_image] at hx hy
     rcases hx with ⟨p, hp1, rfl⟩
@@ -116,12 +115,10 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
       ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
     rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this
     cc
-    
   · have : a < p1 ∧ b < p2 :=
       ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
     rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this
     cc
-    
 #align order.partial_iso.exists_across Order.PartialIso.exists_across
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
@@ -129,11 +126,11 @@ protected def comm : PartialIso α β → PartialIso β α :=
   (Subtype.map (Finset.image (Equiv.prodComm _ _))) fun f hf p hp q hq =>
     Eq.symm <|
       hf ((Equiv.prodComm α β).symm p)
-        (by
+        (by 
           rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp
           rwa [← Finset.mem_coe])
         ((Equiv.prodComm α β).symm q)
-        (by
+        (by 
           rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq
           rwa [← Finset.mem_coe])
 #align order.partial_iso.comm Order.PartialIso.comm
@@ -143,9 +140,10 @@ variable (β)
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
 def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) :
-    Cofinal (PartialIso α β) where
+    Cofinal (PartialIso α
+        β) where 
   carrier f := ∃ b : β, (a, b) ∈ f.val
-  mem_gt f := by
+  mem_gt f := by 
     cases' exists_across f a with b a_b
     refine'
       ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩,
@@ -153,14 +151,10 @@ def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty 
     rw [Finset.mem_insert] at hp hq
     rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
     · simp only [cmp_self_eq_eq]
-      
     · rw [cmp_eq_cmp_symm]
       exact a_b _ qf
-      
     · exact a_b _ pf
-      
     · exact f.prop _ pf _ qf
-      
 #align order.partial_iso.defined_at_left Order.PartialIso.definedAtLeft
 
 variable (α) {β}
@@ -168,19 +162,17 @@ variable (α) {β}
 /-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
-    Cofinal (PartialIso α β) where
+    Cofinal (PartialIso α β) where 
   carrier f := ∃ a, (a, b) ∈ f.val
-  mem_gt f := by
+  mem_gt f := by 
     rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
     refine' ⟨f'.comm, ⟨a, _⟩, _⟩
     · change (a, b) ∈ f'.val.image _
       rwa [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage]
-      
     · change _ ⊆ f'.val.image _
       rw [← Finset.coe_subset, Finset.coe_image, ← Equiv.subset_image]
       change f.val.image _ ⊆ _ at hl
       rwa [← Finset.coe_subset, Finset.coe_image] at hl
-      
 #align order.partial_iso.defined_at_right Order.PartialIso.definedAtRight
 
 variable {α}
@@ -209,7 +201,7 @@ variable (α β)
 
 /-- Any countable linear order embeds in any nontrivial dense linear order. -/
 theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] :
-    Nonempty (α ↪o β) := by
+    Nonempty (α ↪o β) := by 
   rcases exists_pair_lt β with ⟨x, y, hxy⟩
   cases' exists_between hxy with a ha
   haveI : Nonempty (Set.ioo x y) := ⟨⟨a, ha⟩⟩

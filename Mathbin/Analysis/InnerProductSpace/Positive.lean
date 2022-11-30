@@ -93,7 +93,7 @@ theorem IsPositive.conjAdjoint {T : E →L[𝕜] E} (hT : T.IsPositive) (S : E �
 #align continuous_linear_map.is_positive.conj_adjoint ContinuousLinearMap.IsPositive.conjAdjoint
 
 theorem IsPositive.adjointConj {T : E →L[𝕜] E} (hT : T.IsPositive) (S : F →L[𝕜] E) :
-    (S† ∘L T ∘L S).IsPositive := by
+    (S† ∘L T ∘L S).IsPositive := by 
   convert hT.conj_adjoint (S†)
   rw [adjoint_adjoint]
 #align continuous_linear_map.is_positive.adjoint_conj ContinuousLinearMap.IsPositive.adjointConj
@@ -102,7 +102,7 @@ theorem IsPositive.conjOrthogonalProjection (U : Submodule 𝕜 E) {T : E →L[�
     [CompleteSpace U] :
     (U.subtypeL ∘L
         orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U).IsPositive :=
-  by
+  by 
   have := hT.conj_adjoint (U.subtypeL ∘L orthogonalProjection U)
   rwa [(orthogonal_projection_is_self_adjoint U).adjoint_eq] at this
 #align

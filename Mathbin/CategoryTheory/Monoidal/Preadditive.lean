@@ -78,21 +78,22 @@ instance tensoring_right_additive (X : C) : ((tensoringRight C).obj X).Additive 
 ensures that the domain is monoidal preadditive. -/
 def monoidalPreadditiveOfFaithful {D : Type _} [Category D] [Preadditive D] [MonoidalCategory D]
     (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] :
-    MonoidalPreadditive D where
-  tensor_zero' := by
+    MonoidalPreadditive
+      D where 
+  tensor_zero' := by 
     intros
     apply F.to_functor.map_injective
     simp [F.map_tensor]
-  zero_tensor' := by
+  zero_tensor' := by 
     intros
     apply F.to_functor.map_injective
     simp [F.map_tensor]
-  tensor_add' := by
+  tensor_add' := by 
     intros
     apply F.to_functor.map_injective
     simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
       monoidal_preadditive.tensor_add]
-  add_tensor' := by
+  add_tensor' := by 
     intros
     apply F.to_functor.map_injective
     simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
@@ -137,7 +138,7 @@ instance (X : C) :
     { preserves := fun f =>
         { preserves := fun b i =>
             is_bilimit_of_total _
-              (by
+              (by 
                 dsimp
                 simp only [← tensor_comp, category.comp_id, ← tensor_sum, ← tensor_id,
                   is_bilimit.total i]) } }
@@ -149,7 +150,7 @@ instance (X : C) :
     { preserves := fun f =>
         { preserves := fun b i =>
             is_bilimit_of_total _
-              (by
+              (by 
                 dsimp
                 simp only [← tensor_comp, category.comp_id, ← sum_tensor, ← tensor_id,
                   is_bilimit.total i]) } }
@@ -184,7 +185,7 @@ theorem left_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
 theorem left_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (asIso (𝟙 X) ⊗ leftDistributor Y f) ≪≫ leftDistributor X _ =
       (α_ X Y (⨁ f)).symm ≪≫ leftDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => α_ X Y _ :=
-  by
+  by 
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.trans_hom, iso.symm_hom,
     as_iso_hom, comp_zero, comp_dite, preadditive.sum_comp, preadditive.comp_sum, tensor_sum,
@@ -225,7 +226,7 @@ theorem right_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
 theorem right_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (rightDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ (⨁ f) X Y ≪≫ rightDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => (α_ _ X Y).symm :=
-  by
+  by 
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.symm_hom, iso.trans_hom,
     as_iso_hom, comp_zero, comp_dite, preadditive.sum_comp, preadditive.comp_sum, sum_tensor,
@@ -246,7 +247,7 @@ theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y :
       α_ X (⨁ f) Y ≪≫
         (asIso (𝟙 X) ⊗ rightDistributor Y _) ≪≫
           leftDistributor X _ ≪≫ biproduct.mapIso fun j => (α_ _ _ _).symm :=
-  by
+  by 
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.symm_hom, iso.trans_hom,
     as_iso_hom, comp_zero, comp_dite, preadditive.sum_comp, preadditive.comp_sum, sum_tensor,

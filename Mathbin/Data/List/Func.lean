@@ -97,7 +97,7 @@ def sub {α : Type u} [Zero α] [Sub α] : List α → List α → List α :=
 -- set
 theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.length (m + 1)
   | 0, [] => rfl
-  | 0, a :: as => by
+  | 0, a :: as => by 
     rw [max_eq_left]
     rfl
     simp [Nat.le_add_right]
@@ -113,7 +113,7 @@ theorem get_eq_default_of_le : ∀ (k : ℕ) {as : List α}, as.length ≤ k →
   | 0, [], h1 => rfl
   | 0, a :: as, h1 => by cases h1
   | k + 1, [], h1 => rfl
-  | k + 1, a :: as, h1 => by
+  | k + 1, a :: as, h1 => by 
     apply get_eq_default_of_le k
     rw [← Nat.succ_le_succ_iff]; apply h1
 #align list.func.get_eq_default_of_le List.Func.get_eq_default_of_le
@@ -126,22 +126,20 @@ theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = 
 
 theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h
-  | b :: as, h => by
+  | b :: as, h => by 
     rw [mem_cons_iff] at h; cases h
     · exists 0
       intro d
       apply h
-      
     · cases' eq_get_of_mem h with n h2
       exists n + 1
       apply h2
-      
 #align list.func.eq_get_of_mem List.Func.eq_get_of_mem
 
 theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as ∈ as
   | _, [], h1 => by cases h1
   | 0, a :: as, _ => Or.inl rfl
-  | n + 1, a :: as, h1 => by
+  | n + 1, a :: as, h1 => by 
     apply Or.inr; unfold get
     apply mem_get_of_le
     apply Nat.lt_of_succ_lt_succ h1
@@ -150,7 +148,7 @@ theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as
 theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default → get n as ∈ as
   | _, [], h1 => by exfalso; apply h1; rw [get_nil]
   | 0, a :: as, h1 => Or.inl rfl
-  | n + 1, a :: as, h1 => by
+  | n + 1, a :: as, h1 => by 
     unfold get
     apply Or.inr (mem_get_of_ne_zero _)
     apply h1
@@ -158,11 +156,11 @@ theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default 
 
 theorem get_set_eq_of_ne {a : α} :
     ∀ {as : List α} (k : ℕ) (m : ℕ), m ≠ k → get m (as {k ↦ a}) = get m as
-  | as, 0, m, h1 => by
+  | as, 0, m, h1 => by 
     cases m
     contradiction
     cases as <;> simp only [Set, get, get_nil]
-  | as, k + 1, m, h1 => by
+  | as, k + 1, m, h1 => by 
     cases as <;> cases m
     simp only [Set, get]
     · have h3 : get m (nil {k ↦ a}) = default := by
@@ -171,13 +169,11 @@ theorem get_set_eq_of_ne {a : α} :
         apply h1
         simp [hc]
       apply h3
-      
     simp only [Set, get]
     · apply get_set_eq_of_ne k m
       intro hc
       apply h1
       simp [hc]
-      
 #align list.func.get_set_eq_of_ne List.Func.get_set_eq_of_ne
 
 theorem get_map {f : α → β} :
@@ -195,12 +191,10 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} :
     f default = default → get n (as.map f) = f (get n as) := by
   intro h1; by_cases h2 : n < as.length
   · apply get_map h2
-    
   · rw [not_lt] at h2
     rw [get_eq_default_of_le _ h2, get_eq_default_of_le, h1]
     rw [length_map]
     apply h2
-    
 #align list.func.get_map' List.Func.get_map'
 
 theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
@@ -208,11 +202,9 @@ theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
   intro h1 h2 n
   by_cases h3 : n < as.length
   · apply h2 _ (mem_get_of_le h3)
-    
   · rw [not_lt] at h3
     rw [get_eq_default_of_le _ h3]
     apply h1
-    
 #align list.func.forall_val_of_forall_mem List.Func.forall_val_of_forall_mem
 
 -- equiv
@@ -233,10 +225,9 @@ theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equiv
   | [], [], h1, h2 => rfl
   | _ :: _, [], h1, h2 => by cases h1
   | [], _ :: _, h1, h2 => by cases h1
-  | a1 :: as1, a2 :: as2, h1, h2 => by
+  | a1 :: as1, a2 :: as2, h1, h2 => by 
     congr
     · apply h2 0
-      
     have h3 : as1.length = as2.length := by simpa [add_left_inj, add_comm, length] using h1
     apply eq_of_equiv h3
     intro m
@@ -341,12 +332,10 @@ theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α
   · rw [length_map, length_add, max_eq_left, length_map]
     apply le_of_eq
     rw [length_map, length_map]
-    
   intro m
   rw [get_add]
   by_cases h : m < length as
   · repeat' rw [@get_map α α ⟨0⟩ ⟨0⟩ _ _ _ h]
-    
   rw [not_lt] at h
   repeat' rw [get_eq_default_of_le m] <;> try rw [length_map]; apply h
   apply zero_add

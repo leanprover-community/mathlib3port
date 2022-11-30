@@ -39,7 +39,8 @@ universe v v' w u u'
 /- The `@[to_additive]` attribute is just a hint that expressions involving this instance can
   still be additivized. -/
 @[to_additive CategoryTheory.types]
-instance types : LargeCategory (Type u) where
+instance types : LargeCategory (Type
+        u) where 
   Hom a b := a → b
   id a := id
   comp _ _ _ f g := g ∘ f
@@ -184,7 +185,8 @@ def uliftTrivial (V : Type u) : ULift.{u} V ≅ V := by tidy
 /-- The functor embedding `Type u` into `Type (max u v)`.
 Write this as `ulift_functor.{5 2}` to get `Type 2 ⥤ Type 5`.
 -/
-def uliftFunctor : Type u ⥤ Type max u v where
+def uliftFunctor : Type u ⥤ Type
+        max u v where 
   obj X := ULift.{v} X
   map X Y f := fun x : ULift.{v} X => ULift.up (f x.down)
 #align category_theory.ulift_functor CategoryTheory.uliftFunctor
@@ -231,9 +233,7 @@ theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : Mono f ↔ Function.In
     skip
     rw [← hom_of_element_eq_iff] at h⊢
     exact (cancel_mono f).mp h
-    
   · exact fun H => ⟨fun Z => H.compLeft⟩
-    
 #align category_theory.mono_iff_injective CategoryTheory.mono_iff_injective
 
 theorem injective_of_mono {X Y : Type u} (f : X ⟶ Y) [hf : Mono f] : Function.Injective f :=
@@ -252,9 +252,7 @@ theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : Epi f ↔ Function.Sur
     apply H
     change ULift.up ∘ g₁ ∘ f = ULift.up ∘ g₂ ∘ f
     rw [hg]
-    
   · exact fun H => ⟨fun Z => H.injective_comp_right⟩
-    
 #align category_theory.epi_iff_surjective CategoryTheory.epi_iff_surjective
 
 theorem surjective_of_epi {X Y : Type u} (f : X ⟶ Y) [hf : Epi f] : Function.Surjective f :=
@@ -265,7 +263,8 @@ section
 
 /-- `of_type_functor m` converts from Lean's `Type`-based `category` to `category_theory`. This
 allows us to use these functors in category theory. -/
-def ofTypeFunctor (m : Type u → Type v) [Functor m] [IsLawfulFunctor m] : Type u ⥤ Type v where
+def ofTypeFunctor (m : Type u → Type v) [Functor m] [IsLawfulFunctor m] :
+    Type u ⥤ Type v where 
   obj := m
   map α β := Functor.map
   map_id' α := Functor.map_id
@@ -299,7 +298,7 @@ variable {X Y : Type u}
 /-- Any equivalence between types in the same universe gives
 a categorical isomorphism between those types.
 -/
-def toIso (e : X ≃ Y) : X ≅ Y where
+def toIso (e : X ≃ Y) : X ≅ Y where 
   Hom := e.toFun
   inv := e.invFun
   hom_inv_id' := funext e.left_inv
@@ -328,7 +327,7 @@ variable {X Y : Type u}
 
 /-- Any isomorphism between types gives an equivalence.
 -/
-def toEquiv (i : X ≅ Y) : X ≃ Y where
+def toEquiv (i : X ≅ Y) : X ≃ Y where 
   toFun := i.Hom
   invFun := i.inv
   left_inv x := congr_fun i.hom_inv_id x
@@ -381,7 +380,8 @@ end CategoryTheory
 /-- Equivalences (between types in the same universe) are the same as (isomorphic to) isomorphisms
 of types. -/
 @[simps]
-def equivIsoIso {X Y : Type u} : X ≃ Y ≅ X ≅ Y where
+def equivIsoIso {X Y : Type u} :
+    X ≃ Y ≅ X ≅ Y where 
   Hom e := e.toIso
   inv i := i.toEquiv
 #align equiv_iso_iso equivIsoIso

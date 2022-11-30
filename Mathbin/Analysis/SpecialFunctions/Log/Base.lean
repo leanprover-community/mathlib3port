@@ -131,9 +131,7 @@ theorem surj_on_logb' : SurjOn (logb b) (iio 0) univ := by
   constructor
   · simp only [Right.neg_neg_iff, Set.mem_Iio]
     apply rpow_pos_of_pos b_pos
-    
   · rw [logb_neg_eq_logb, logb_rpow b_pos b_ne_one]
-    
 #align real.surj_on_logb' Real.surj_on_logb'
 
 end BPosAndNeOne
@@ -216,7 +214,6 @@ theorem logb_nonpos_iff (hx : 0 < x) : logb b x ≤ 0 ↔ x ≤ 1 := by
 theorem logb_nonpos_iff' (hx : 0 ≤ x) : logb b x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
   · simp [le_refl, zero_le_one]
-    
   exact logb_nonpos_iff hb hx
 #align real.logb_nonpos_iff' Real.logb_nonpos_iff'
 
@@ -278,7 +275,7 @@ theorem logb_lt_logb_of_base_lt_one (hx : 0 < x) (hxy : x < y) : logb b y < logb
 
 @[simp]
 theorem logb_lt_logb_iff_of_base_lt_one (hx : 0 < x) (hy : 0 < y) : logb b x < logb b y ↔ y < x :=
-  by
+  by 
   rw [logb, logb, div_lt_div_right_of_neg (log_neg b_pos b_lt_one)]
   exact log_lt_log_iff hy hx
 #align real.logb_lt_logb_iff_of_base_lt_one Real.logb_lt_logb_iff_of_base_lt_one
@@ -370,35 +367,29 @@ theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot := by
 end BPosAndBLtOne
 
 theorem floor_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌊logb b r⌋ = Int.log b r :=
-  by
+  by 
   obtain rfl | hr := hr.eq_or_lt
   · rw [logb_zero, Int.log_zero_right, Int.floor_zero]
-    
   have hb1' : 1 < (b : ℝ) := nat.one_lt_cast.mpr hb
   apply le_antisymm
   · rw [← Int.zpow_le_iff_le_log hb hr, ← rpow_int_cast b]
     refine' le_of_le_of_eq _ (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr)
     exact rpow_le_rpow_of_exponent_le hb1'.le (Int.floor_le _)
-    
   · rw [Int.le_floor, le_logb_iff_rpow_le hb1' hr, rpow_int_cast]
     exact Int.zpow_log_le_self hb hr
-    
 #align real.floor_logb_nat_cast Real.floor_logb_nat_cast
 
 theorem ceil_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌈logb b r⌉ = Int.clog b r :=
-  by
+  by 
   obtain rfl | hr := hr.eq_or_lt
   · rw [logb_zero, Int.clog_zero_right, Int.ceil_zero]
-    
   have hb1' : 1 < (b : ℝ) := nat.one_lt_cast.mpr hb
   apply le_antisymm
   · rw [Int.ceil_le, logb_le_iff_le_rpow hb1' hr, rpow_int_cast]
     refine' Int.self_le_zpow_clog hb r
-    
   · rw [← Int.le_zpow_iff_clog_le hb hr, ← rpow_int_cast b]
     refine' (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr).symm.trans_le _
     exact rpow_le_rpow_of_exponent_le hb1'.le (Int.le_ceil _)
-    
 #align real.ceil_logb_nat_cast Real.ceil_logb_nat_cast
 
 @[simp]
@@ -411,12 +402,12 @@ theorem logb_eq_zero : logb b x = 0 ↔ b = 0 ∨ b = 1 ∨ b = -1 ∨ x = 0 ∨
 open BigOperators
 
 theorem logb_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
-    logb b (∏ i in s, f i) = ∑ i in s, logb b (f i) := by classical
-  induction' s using Finset.induction_on with a s ha ih
-  · simp
-    
-  simp only [Finset.mem_insert, forall_eq_or_imp] at hf
-  simp [ha, ih hf.2, logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
+    logb b (∏ i in s, f i) = ∑ i in s, logb b (f i) := by
+  classical 
+    induction' s using Finset.induction_on with a s ha ih
+    · simp
+    simp only [Finset.mem_insert, forall_eq_or_imp] at hf
+    simp [ha, ih hf.2, logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 #align real.logb_prod Real.logb_prod
 
 end Real

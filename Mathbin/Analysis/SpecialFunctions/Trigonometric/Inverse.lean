@@ -100,7 +100,7 @@ theorem continuous_at_arcsin {x : ℝ} : ContinuousAt arcsin x :=
 #align real.continuous_at_arcsin Real.continuous_at_arcsin
 
 theorem arcsin_eq_of_sin_eq {x y : ℝ} (h₁ : sin x = y) (h₂ : x ∈ icc (-(π / 2)) (π / 2)) :
-    arcsin y = x := by
+    arcsin y = x := by 
   subst y
   exact inj_on_sin (arcsin_mem_Icc _) h₂ (sin_arcsin' (sin_mem_Icc x))
 #align real.arcsin_eq_of_sin_eq Real.arcsin_eq_of_sin_eq
@@ -132,15 +132,11 @@ theorem arcsin_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arcsin x = -(π / 2) :=
 theorem arcsin_neg (x : ℝ) : arcsin (-x) = -arcsin x := by
   cases' le_total x (-1) with hx₁ hx₁
   · rw [arcsin_of_le_neg_one hx₁, neg_neg, arcsin_of_one_le (le_neg.2 hx₁)]
-    
   cases' le_total 1 x with hx₂ hx₂
   · rw [arcsin_of_one_le hx₂, arcsin_of_le_neg_one (neg_le_neg hx₂)]
-    
   refine' arcsin_eq_of_sin_eq _ _
   · rw [sin_neg, sin_arcsin hx₁ hx₂]
-    
   · exact ⟨neg_le_neg (arcsin_le_pi_div_two _), neg_le.2 (neg_pi_div_two_le_arcsin _)⟩
-    
 #align real.arcsin_neg Real.arcsin_neg
 
 theorem arcsin_le_iff_le_sin {x y : ℝ} (hx : x ∈ icc (-1 : ℝ) 1) (hy : y ∈ icc (-(π / 2)) (π / 2)) :
@@ -152,10 +148,8 @@ theorem arcsin_le_iff_le_sin' {x y : ℝ} (hy : y ∈ ico (-(π / 2)) (π / 2)) 
     arcsin x ≤ y ↔ x ≤ sin y := by
   cases' le_total x (-1) with hx₁ hx₁
   · simp [arcsin_of_le_neg_one hx₁, hy.1, hx₁.trans (neg_one_le_sin _)]
-    
   cases' lt_or_le 1 x with hx₂ hx₂
   · simp [arcsin_of_one_le hx₂.le, hy.2.not_le, (sin_le_one y).trans_lt hx₂]
-    
   exact arcsin_le_iff_le_sin ⟨hx₁, hx₂⟩ (mem_Icc_of_Ico hy)
 #align real.arcsin_le_iff_le_sin' Real.arcsin_le_iff_le_sin'
 
@@ -283,7 +277,8 @@ theorem maps_to_sin_Ioo : MapsTo sin (ioo (-(π / 2)) (π / 2)) (ioo (-1) 1) := 
 
 /-- `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
 @[simp]
-def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ where
+def sinLocalHomeomorph : LocalHomeomorph ℝ
+      ℝ where 
   toFun := sin
   invFun := arcsin
   source := ioo (-(π / 2)) (π / 2)
@@ -308,12 +303,10 @@ theorem cos_arcsin (x : ℝ) : cos (arcsin x) = sqrt (1 - x ^ 2) := by
   · rw [not_le] at hx₁
     rw [arcsin_of_le_neg_one hx₁.le, cos_neg, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
     nlinarith
-    
   by_cases hx₂ : x ≤ 1; swap
   · rw [not_le] at hx₂
     rw [arcsin_of_one_le hx₂.le, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
     nlinarith
-    
   have : sin (arcsin x) ^ 2 + cos (arcsin x) ^ 2 = 1 := sin_sq_add_cos_sq (arcsin x)
   rw [← eq_sub_iff_add_eq', ← sqrt_inj (sq_nonneg _) (sub_nonneg.2 (sin_sq_le_one (arcsin x))), sq,
     sqrt_mul_self (cos_arcsin_nonneg _)] at this
@@ -327,12 +320,10 @@ theorem tan_arcsin (x : ℝ) : tan (arcsin x) = x / sqrt (1 - x ^ 2) := by
   · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
     rw [h]
     simp
-    
   by_cases hx₂ : x ≤ 1; swap
   · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
     rw [h]
     simp
-    
   rw [sin_arcsin hx₁ hx₂]
 #align real.tan_arcsin Real.tan_arcsin
 
@@ -426,12 +417,10 @@ theorem sin_arccos (x : ℝ) : sin (arccos x) = sqrt (1 - x ^ 2) := by
   · rw [not_le] at hx₁
     rw [arccos_of_le_neg_one hx₁.le, sin_pi, sqrt_eq_zero_of_nonpos]
     nlinarith
-    
   by_cases hx₂ : x ≤ 1; swap
   · rw [not_le] at hx₂
     rw [arccos_of_one_le hx₂.le, sin_zero, sqrt_eq_zero_of_nonpos]
     nlinarith
-    
   rw [arccos_eq_pi_div_two_sub_arcsin, sin_pi_div_two_sub, cos_arcsin]
 #align real.sin_arccos Real.sin_arccos
 
@@ -449,7 +438,6 @@ theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x := 
   constructor <;>
     · intro
       linarith
-      
 #align real.arccos_le_pi_div_four Real.arccos_le_pi_div_four
 
 @[continuity]

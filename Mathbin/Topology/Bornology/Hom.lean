@@ -60,9 +60,10 @@ namespace LocallyBoundedMap
 
 variable [Bornology α] [Bornology β] [Bornology γ] [Bornology δ]
 
-instance : LocallyBoundedMapClass (LocallyBoundedMap α β) α β where
+instance : LocallyBoundedMapClass (LocallyBoundedMap α β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     cases f
     cases g
     congr
@@ -78,7 +79,7 @@ theorem to_fun_eq_coe {f : LocallyBoundedMap α β} : f.toFun = (f : α → β) 
   rfl
 #align locally_bounded_map.to_fun_eq_coe LocallyBoundedMap.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : LocallyBoundedMap α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align locally_bounded_map.ext LocallyBoundedMap.ext
@@ -137,7 +138,8 @@ theorem id_apply (a : α) : LocallyBoundedMap.id α a = a :=
 #align locally_bounded_map.id_apply LocallyBoundedMap.id_apply
 
 /-- Composition of `locally_bounded_map`s as a `locally_bounded_map`. -/
-def comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) : LocallyBoundedMap α γ where
+def comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) :
+    LocallyBoundedMap α γ where 
   toFun := f ∘ g
   comap_cobounded_le' :=
     comap_comap.ge.trans <| (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'

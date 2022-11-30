@@ -82,7 +82,7 @@ functorial wrt `F`. -/
 @[simps]
 def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :=
   NatIso.ofComponents (fun F => preservesLimitIso G F)
-    (by
+    (by 
       intro _ _ f
       ext
       dsimp
@@ -139,7 +139,7 @@ is functorial wrt `F`. -/
 @[simps]
 def preservesColimitNatIso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ colim :=
   NatIso.ofComponents (fun F => preservesColimitIso G F)
-    (by
+    (by 
       intro _ _ f
       rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv]
       ext

@@ -102,7 +102,7 @@ theorem HasEigenvalue.exists_has_eigenvector {f : EndCat R M} {μ : R} (hμ : f.
   module.End.has_eigenvalue.exists_has_eigenvector Module.EndCat.HasEigenvalue.exists_has_eigenvector
 
 theorem mem_spectrum_of_has_eigenvalue {f : EndCat R M} {μ : R} (hμ : HasEigenvalue f μ) :
-    μ ∈ spectrum R f := by
+    μ ∈ spectrum R f := by 
   refine' spectrum.mem_iff.mpr fun h_unit => _
   set f' := LinearMap.GeneralLinearGroup.toLinearEquiv h_unit.unit
   rcases hμ.exists_has_eigenvector with ⟨v, hv⟩
@@ -133,7 +133,7 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : EndCat K V) (q : K[X]) (hq : d
   calc
     eigenspace f (-q.coeff 0 / q.leadingCoeff) =
         (q.leadingCoeff • f - algebraMap K (EndCat K V) (-q.coeff 0)).ker :=
-      by
+      by 
       rw [eigenspace_div]
       intro h
       rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq
@@ -160,15 +160,12 @@ theorem aeval_apply_of_has_eigenvector {f : EndCat K V} {p : K[X]} {μ : K} {x :
   apply p.induction_on
   · intro a
     simp [Module.algebra_map_End_apply]
-    
   · intro p q hp hq
     simp [hp, hq, add_smul]
-    
   · intro n a hna
     rw [mul_comm, pow_succ, mul_assoc, AlgHom.map_mul, LinearMap.mul_apply, mul_comm, hna]
     simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_X, eval_mul, eval_C, eval_pow, eval_X,
       LinearMap.map_smulₛₗ, RingHom.id_apply, mul_comm]
-    
 #align module.End.aeval_apply_of_has_eigenvector Module.EndCat.aeval_apply_of_has_eigenvector
 
 section minpoly
@@ -189,7 +186,7 @@ theorem has_eigenvalue_of_is_root (h : (minpoly K f).IsRoot μ) : f.HasEigenvalu
   rw [has_eigenvalue, eigenspace]
   intro con
   cases' (LinearMap.is_unit_iff_ker_eq_bot _).2 Con with u hu
-  have p_ne_0 : p ≠ 0 := by
+  have p_ne_0 : p ≠ 0 := by 
     intro con
     apply minpoly.ne_zero f.is_integral
     rw [hp, Con, mul_zero]
@@ -197,11 +194,9 @@ theorem has_eigenvalue_of_is_root (h : (minpoly K f).IsRoot μ) : f.HasEigenvalu
   · rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_nat_degree p_ne_0] at h_deg
     norm_cast  at h_deg
     linarith
-    
   · have h_aeval := minpoly.aeval K f
     revert h_aeval
     simp [hp, ← hu]
-    
 #align module.End.has_eigenvalue_of_is_root Module.EndCat.has_eigenvalue_of_is_root
 
 theorem has_eigenvalue_iff_is_root : f.HasEigenvalue μ ↔ (minpoly K f).IsRoot μ :=
@@ -211,7 +206,7 @@ theorem has_eigenvalue_iff_is_root : f.HasEigenvalue μ ↔ (minpoly K f).IsRoot
 /-- An endomorphism of a finite-dimensional vector space has finitely many eigenvalues. -/
 noncomputable instance (f : EndCat K V) : Fintype f.Eigenvalues :=
   Set.Finite.fintype
-    (by
+    (by 
       have h : minpoly K f ≠ 0 := minpoly.ne_zero f.is_integral
       convert (minpoly K f).root_set_finite K
       ext μ
@@ -239,117 +234,111 @@ noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f
 any eigenspace has trivial intersection with the span of all the other eigenspaces. -/
 theorem eigenspacesIndependent (f : EndCat K V) : CompleteLattice.Independent f.eigenspace := by
   classical
-  -- Define an operation from `Π₀ μ : K, f.eigenspace μ`, the vector space of of finitely-supported
-  -- choices of an eigenvector from each eigenspace, to `V`, by sending a collection to its sum.
-  let S :
-    @LinearMap K K _ _ (RingHom.id K) (Π₀ μ : K, f.eigenspace μ) V
-      (@Dfinsupp.addCommMonoid K (fun μ => f.eigenspace μ) _) _
-      (@Dfinsupp.module K _ (fun μ => f.eigenspace μ) _ _ _) _ :=
-    @Dfinsupp.lsum K K ℕ _ V _ _ _ _ _ _ _ _ _ fun μ => (f.eigenspace μ).Subtype
-  -- We need to show that if a finitely-supported collection `l` of representatives of the
-  -- eigenspaces has sum `0`, then it itself is zero.
-  suffices ∀ l : Π₀ μ, f.eigenspace μ, S l = 0 → l = 0 by
-    rw [CompleteLattice.independent_iff_dfinsupp_lsum_injective]
-    change Function.Injective S
-    rw [←
-      @LinearMap.ker_eq_bot K K (Π₀ μ, f.eigenspace μ) V _ _
-        (@Dfinsupp.addCommGroup K (fun μ => f.eigenspace μ) _)]
-    rw [eq_bot_iff]
-    exact this
-  intro l hl
-  -- We apply induction on the finite set of eigenvalues from which `l` selects a nonzero
-  -- eigenvector, i.e. on the support of `l`.
-  induction' h_l_support : l.support using Finset.induction with μ₀ l_support' hμ₀ ih generalizing l
-  -- If the support is empty, all coefficients are zero and we are done.
-  · exact Dfinsupp.support_eq_empty.1 h_l_support
-    
-  -- Now assume that the support of `l` contains at least one eigenvalue `μ₀`. We define a new
-  -- collection of representatives `l'` to apply the induction hypothesis on later. The collection
-  -- of representatives `l'` is derived from `l` by multiplying the coefficient of the eigenvector
-  -- with eigenvalue `μ` by `μ - μ₀`.
-  · let l' :=
-      Dfinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @LinearMap.id K (f.eigenspace μ) _ _ _) l
-    -- The support of `l'` is the support of `l` without `μ₀`.
-    have h_l_support' : l'.support = l_support' := by
-      rw [← Finset.erase_insert hμ₀, ← h_l_support]
-      ext a
-      have : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 := not_or
-      simp only [l', Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_apply,
-        Dfinsupp.mem_support_iff, Finset.mem_erase, id.def, LinearMap.id_coe, LinearMap.smul_apply,
-        Ne.def, smul_eq_zero, sub_eq_zero, this]
-    -- The entries of `l'` add up to `0`.
-    have total_l' : S l' = 0 := by
-      let g := f - algebraMap K (End K V) μ₀
-      let a : Π₀ μ : K, V := Dfinsupp.mapRange.linearMap (fun μ => (f.eigenspace μ).Subtype) l
-      calc
-        S l' =
-            Dfinsupp.lsum ℕ (fun μ => (f.eigenspace μ).Subtype.comp ((μ - μ₀) • LinearMap.id)) l :=
-          _
-        _ = Dfinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _
-        _ = Dfinsupp.lsum ℕ (fun μ => g) a := _
-        _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _
-        _ = g (S l) := _
-        _ = 0 := by rw [hl, g.map_zero]
-        
-      · exact Dfinsupp.sum_map_range_index.linear_map
-        
-      · congr
-        ext (μ v)
-        simp only [g, eq_self_iff_true, Function.comp_apply, id.def, LinearMap.coe_comp,
-          LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply, Module.algebra_map_End_apply,
-          sub_left_inj, sub_smul, Submodule.coe_smul_of_tower, Submodule.coe_sub,
-          Submodule.subtype_apply, mem_eigenspace_iff.1 v.prop]
-        
-      · rw [Dfinsupp.sum_map_range_index.linear_map]
-        
-      · simp only [Dfinsupp.sum_add_hom_apply, LinearMap.id_coe, LinearMap.map_dfinsupp_sum, id.def,
-          LinearMap.to_add_monoid_hom_coe, Dfinsupp.lsum_apply_apply]
-        
-      · congr
-        simp only [S, a, Dfinsupp.sum_map_range_index.linear_map, LinearMap.id_comp]
-        
-    -- Therefore, by the induction hypothesis, all entries of `l'` are zero.
-    have l'_eq_0 := ih l' total_l' h_l_support'
-    -- By the definition of `l'`, this means that `(μ - μ₀) • l μ = 0` for all `μ`.
-    have h_smul_eq_0 : ∀ μ, (μ - μ₀) • l μ = 0 := by
-      intro μ
-      calc
-        (μ - μ₀) • l μ = l' μ := by
-          simp only [l', LinearMap.id_coe, id.def, LinearMap.smul_apply, Dfinsupp.map_range_apply,
-            Dfinsupp.mapRange.linear_map_apply]
-        _ = 0 := by
-          rw [l'_eq_0]
-          rfl
-        
-    -- Thus, the eigenspace-representatives in `l` for all `μ ≠ μ₀` are `0`.
-    have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0 := by
-      intro μ hμ
-      apply or_iff_not_imp_left.1 (smul_eq_zero.1 (h_smul_eq_0 μ))
-      rwa [sub_eq_zero]
-    -- So if we sum over all these representatives, we obtain `0`.
-    have h_sum_l_support'_eq_0 : (Finset.sum l_support' fun μ => (l μ : V)) = 0 := by
-      rw [← Finset.sum_const_zero]
-      apply Finset.sum_congr rfl
-      intro μ hμ
-      rw [Submodule.coe_eq_zero, h_lμ_eq_0]
-      rintro rfl
-      exact hμ₀ hμ
-    -- The only potentially nonzero eigenspace-representative in `l` is the one corresponding to
-    -- `μ₀`. But since the overall sum is `0` by assumption, this representative must also be `0`.
-    have : l μ₀ = 0 := by
-      simp only [S, Dfinsupp.lsum_apply_apply, Dfinsupp.sum_add_hom_apply,
-        LinearMap.to_add_monoid_hom_coe, Dfinsupp.sum, h_l_support, Submodule.subtype_apply,
-        Submodule.coe_eq_zero, Finset.sum_insert hμ₀, h_sum_l_support'_eq_0, add_zero] at hl
-      exact hl
-    -- Thus, all coefficients in `l` are `0`.
-    show l = 0
-    · ext μ
-      by_cases h_cases : μ = μ₀
-      · rwa [h_cases, SetLike.coe_eq_coe, Dfinsupp.coe_zero, Pi.zero_apply]
-        
-      exact congr_arg (coe : _ → V) (h_lμ_eq_0 μ h_cases)
-      
-    
+    -- Define an operation from `Π₀ μ : K, f.eigenspace μ`, the vector space of of finitely-supported
+    -- choices of an eigenvector from each eigenspace, to `V`, by sending a collection to its sum.
+    let S :
+      @LinearMap K K _ _ (RingHom.id K) (Π₀ μ : K, f.eigenspace μ) V
+        (@Dfinsupp.addCommMonoid K (fun μ => f.eigenspace μ) _) _
+        (@Dfinsupp.module K _ (fun μ => f.eigenspace μ) _ _ _) _ :=
+      @Dfinsupp.lsum K K ℕ _ V _ _ _ _ _ _ _ _ _ fun μ => (f.eigenspace μ).Subtype
+    -- We need to show that if a finitely-supported collection `l` of representatives of the
+    -- eigenspaces has sum `0`, then it itself is zero.
+    suffices ∀ l : Π₀ μ, f.eigenspace μ, S l = 0 → l = 0 by
+      rw [CompleteLattice.independent_iff_dfinsupp_lsum_injective]
+      change Function.Injective S
+      rw [←
+        @LinearMap.ker_eq_bot K K (Π₀ μ, f.eigenspace μ) V _ _
+          (@Dfinsupp.addCommGroup K (fun μ => f.eigenspace μ) _)]
+      rw [eq_bot_iff]
+      exact this
+    intro l hl
+    -- We apply induction on the finite set of eigenvalues from which `l` selects a nonzero
+    -- eigenvector, i.e. on the support of `l`.
+    induction' h_l_support : l.support using Finset.induction with μ₀ l_support' hμ₀ ih generalizing
+      l
+    -- If the support is empty, all coefficients are zero and we are done.
+    · exact Dfinsupp.support_eq_empty.1 h_l_support
+    -- Now assume that the support of `l` contains at least one eigenvalue `μ₀`. We define a new
+    -- collection of representatives `l'` to apply the induction hypothesis on later. The collection
+    -- of representatives `l'` is derived from `l` by multiplying the coefficient of the eigenvector
+    -- with eigenvalue `μ` by `μ - μ₀`.
+    · let l' :=
+        Dfinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @LinearMap.id K (f.eigenspace μ) _ _ _) l
+      -- The support of `l'` is the support of `l` without `μ₀`.
+      have h_l_support' : l'.support = l_support' := by
+        rw [← Finset.erase_insert hμ₀, ← h_l_support]
+        ext a
+        have : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 := not_or
+        simp only [l', Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_apply,
+          Dfinsupp.mem_support_iff, Finset.mem_erase, id.def, LinearMap.id_coe,
+          LinearMap.smul_apply, Ne.def, smul_eq_zero, sub_eq_zero, this]
+      -- The entries of `l'` add up to `0`.
+      have total_l' : S l' = 0 := by
+        let g := f - algebraMap K (End K V) μ₀
+        let a : Π₀ μ : K, V := Dfinsupp.mapRange.linearMap (fun μ => (f.eigenspace μ).Subtype) l
+        calc
+          S l' =
+              Dfinsupp.lsum ℕ (fun μ => (f.eigenspace μ).Subtype.comp ((μ - μ₀) • LinearMap.id))
+                l :=
+            _
+          _ = Dfinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _
+          _ = Dfinsupp.lsum ℕ (fun μ => g) a := _
+          _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _
+          _ = g (S l) := _
+          _ = 0 := by rw [hl, g.map_zero]
+          
+        · exact Dfinsupp.sum_map_range_index.linear_map
+        · congr
+          ext (μ v)
+          simp only [g, eq_self_iff_true, Function.comp_apply, id.def, LinearMap.coe_comp,
+            LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply,
+            Module.algebra_map_End_apply, sub_left_inj, sub_smul, Submodule.coe_smul_of_tower,
+            Submodule.coe_sub, Submodule.subtype_apply, mem_eigenspace_iff.1 v.prop]
+        · rw [Dfinsupp.sum_map_range_index.linear_map]
+        ·
+          simp only [Dfinsupp.sum_add_hom_apply, LinearMap.id_coe, LinearMap.map_dfinsupp_sum,
+            id.def, LinearMap.to_add_monoid_hom_coe, Dfinsupp.lsum_apply_apply]
+        · congr
+          simp only [S, a, Dfinsupp.sum_map_range_index.linear_map, LinearMap.id_comp]
+      -- Therefore, by the induction hypothesis, all entries of `l'` are zero.
+      have l'_eq_0 := ih l' total_l' h_l_support'
+      -- By the definition of `l'`, this means that `(μ - μ₀) • l μ = 0` for all `μ`.
+      have h_smul_eq_0 : ∀ μ, (μ - μ₀) • l μ = 0 := by
+        intro μ
+        calc
+          (μ - μ₀) • l μ = l' μ := by
+            simp only [l', LinearMap.id_coe, id.def, LinearMap.smul_apply, Dfinsupp.map_range_apply,
+              Dfinsupp.mapRange.linear_map_apply]
+          _ = 0 := by 
+            rw [l'_eq_0]
+            rfl
+          
+      -- Thus, the eigenspace-representatives in `l` for all `μ ≠ μ₀` are `0`.
+      have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0 := by
+        intro μ hμ
+        apply or_iff_not_imp_left.1 (smul_eq_zero.1 (h_smul_eq_0 μ))
+        rwa [sub_eq_zero]
+      -- So if we sum over all these representatives, we obtain `0`.
+      have h_sum_l_support'_eq_0 : (Finset.sum l_support' fun μ => (l μ : V)) = 0 := by
+        rw [← Finset.sum_const_zero]
+        apply Finset.sum_congr rfl
+        intro μ hμ
+        rw [Submodule.coe_eq_zero, h_lμ_eq_0]
+        rintro rfl
+        exact hμ₀ hμ
+      -- The only potentially nonzero eigenspace-representative in `l` is the one corresponding to
+      -- `μ₀`. But since the overall sum is `0` by assumption, this representative must also be `0`.
+      have : l μ₀ = 0 := by
+        simp only [S, Dfinsupp.lsum_apply_apply, Dfinsupp.sum_add_hom_apply,
+          LinearMap.to_add_monoid_hom_coe, Dfinsupp.sum, h_l_support, Submodule.subtype_apply,
+          Submodule.coe_eq_zero, Finset.sum_insert hμ₀, h_sum_l_support'_eq_0, add_zero] at hl
+        exact hl
+      -- Thus, all coefficients in `l` are `0`.
+      show l = 0
+      · ext μ
+        by_cases h_cases : μ = μ₀
+        · rwa [h_cases, SetLike.coe_eq_coe, Dfinsupp.coe_zero, Pi.zero_apply]
+        exact congr_arg (coe : _ → V) (h_lμ_eq_0 μ h_cases)
 #align module.End.eigenspaces_independent Module.EndCat.eigenspacesIndependent
 
 /-- Eigenvectors corresponding to distinct eigenvalues of a linear operator are linearly
@@ -367,9 +356,11 @@ theorem eigenvectors_linear_independent (f : EndCat K V) (μs : Set K) (xs : μs
 /-- The generalized eigenspace for a linear map `f`, a scalar `μ`, and an exponent `k ∈ ℕ` is the
 kernel of `(f - μ • id) ^ k`. (Def 8.10 of [axler2015]). Furthermore, a generalized eigenspace for
 some exponent `k` is contained in the generalized eigenspace for exponents larger than `k`. -/
-def generalizedEigenspace (f : EndCat R M) (μ : R) : ℕ →o Submodule R M where
+def generalizedEigenspace (f : EndCat R M) (μ : R) :
+    ℕ →o Submodule R
+        M where 
   toFun k := ((f - algebraMap R (EndCat R M) μ) ^ k).ker
-  monotone' k m hm := by
+  monotone' k m hm := by 
     simp only [← pow_sub_mul_pow _ hm]
     exact
       LinearMap.ker_le_ker_comp ((f - algebraMap R (End R M) μ) ^ k)
@@ -444,7 +435,7 @@ noncomputable def maximalGeneralizedEigenspaceIndex (f : EndCat R M) (μ : R) :=
 theorem maximal_generalized_eigenspace_eq [h : IsNoetherian R M] (f : EndCat R M) (μ : R) :
     maximalGeneralizedEigenspace f μ =
       f.generalizedEigenspace μ (maximalGeneralizedEigenspaceIndex f μ) :=
-  by
+  by 
   rw [is_noetherian_iff_well_founded] at h
   exact (WellFounded.supr_eq_monotonic_sequence_limit h (f.generalized_eigenspace μ) : _)
 #align module.End.maximal_generalized_eigenspace_eq Module.EndCat.maximal_generalized_eigenspace_eq
@@ -517,15 +508,14 @@ theorem generalized_eigenspace_restrict (f : EndCat R M) (p : Submodule R M) (k 
     (hfp : ∀ x : M, x ∈ p → f x ∈ p) :
     generalizedEigenspace (LinearMap.restrict f hfp) μ k =
       Submodule.comap p.Subtype (f.generalizedEigenspace μ k) :=
-  by
+  by 
   simp only [generalized_eigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
   induction' k with k ih
   · rw [pow_zero, pow_zero, LinearMap.one_eq_id]
     apply (Submodule.ker_subtype _).symm
-    
-  · erw [pow_succ', pow_succ', LinearMap.ker_comp, LinearMap.ker_comp, ih, ← LinearMap.ker_comp,
+  ·
+    erw [pow_succ', pow_succ', LinearMap.ker_comp, LinearMap.ker_comp, ih, ← LinearMap.ker_comp,
       LinearMap.comp_assoc]
-    
 #align module.End.generalized_eigenspace_restrict Module.EndCat.generalized_eigenspace_restrict
 
 /-- If `p` is an invariant submodule of an endomorphism `f`, then the `μ`-eigenspace of the
@@ -598,18 +588,18 @@ theorem map_generalized_eigenrange_le {f : EndCat K V} {μ : K} {n : ℕ} :
 
 /-- The generalized eigenvectors span the entire vector space (Lemma 8.21 of [axler2015]). -/
 theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V]
-    (f : EndCat K V) : (⨆ (μ : K) (k : ℕ), f.generalizedEigenspace μ k) = ⊤ := by
+    (f : EndCat K V) : (⨆ (μ : K) (k : ℕ), f.generalizedEigenspace μ k) = ⊤ :=
+  by
   -- We prove the claim by strong induction on the dimension of the vector space.
   induction' h_dim : finrank K V using Nat.strong_induction_on with n ih generalizing V
   cases n
   -- If the vector space is 0-dimensional, the result is trivial.
   · rw [← top_le_iff]
     simp only [finrank_eq_zero.1 (Eq.trans finrank_top h_dim), bot_le]
-    
   -- Otherwise the vector space is nontrivial.
   · haveI : Nontrivial V :=
       finrank_pos_iff.1
-        (by
+        (by 
           rw [h_dim]
           apply Nat.zero_lt_succ)
     -- Hence, `f` has an eigenvalue `μ₀`.
@@ -662,8 +652,6 @@ theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K 
     show (⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k) = ⊤
     · rw [← top_le_iff, ← Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
       apply sup_le hER hES
-      
-    
 #align
   module.End.supr_generalized_eigenspace_eq_top Module.EndCat.supr_generalized_eigenspace_eq_top
 

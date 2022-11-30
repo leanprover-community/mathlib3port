@@ -75,9 +75,12 @@ end JMatrixLemmas
 variable [Fintype l]
 
 /-- The group of symplectic matrices over a ring `R`. -/
-def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R) where
+def symplecticGroup :
+    Submonoid
+      (Matrix (Sum l l) (Sum l l)
+        R) where 
   carrier := { A | A ⬝ j l R ⬝ Aᵀ = j l R }
-  mul_mem' := by
+  mul_mem' := by 
     intro a b ha hb
     simp only [mul_eq_mul, Set.mem_set_of_eq, transpose_mul] at *
     rw [← Matrix.mul_assoc, a.mul_assoc, a.mul_assoc, hb]
@@ -146,7 +149,7 @@ theorem transpose_mem (hA : A ∈ symplecticGroup l R) : Aᵀ ∈ symplecticGrou
   rw [mem_iff] at hA⊢
   rw [transpose_transpose]
   have huA := symplectic_det hA
-  have huAT : IsUnit Aᵀ.det := by
+  have huAT : IsUnit Aᵀ.det := by 
     rw [Matrix.det_transpose]
     exact huA
   calc
@@ -186,7 +189,7 @@ theorem inv_left_mul_aux (hA : A ∈ symplecticGroup l R) : -j l R ⬝ Aᵀ ⬝ 
   calc
     -j l R ⬝ Aᵀ ⬝ j l R ⬝ A = (-j l R) ⬝ (Aᵀ ⬝ j l R ⬝ A) := by
       simp only [Matrix.mul_assoc, Matrix.neg_mul]
-    _ = (-j l R) ⬝ j l R := by
+    _ = (-j l R) ⬝ j l R := by 
       rw [mem_iff'] at hA
       rw [hA]
     _ = (-1 : R) • j l R ⬝ j l R := by simp only [Matrix.neg_mul, neg_smul, one_smul]
@@ -207,7 +210,7 @@ theorem inv_eq_symplectic_inv (A : Matrix (Sum l l) (Sum l l) R) (hA : A ∈ sym
 
 instance : Group (symplecticGroup l R) :=
   { SymplecticGroup.hasInv, Submonoid.toMonoid _ with
-    mul_left_inv := fun A => by
+    mul_left_inv := fun A => by 
       apply Subtype.ext
       simp only [Submonoid.coe_one, Submonoid.coe_mul, Matrix.neg_mul, coe_inv]
       rw [Matrix.mul_eq_mul, Matrix.neg_mul]

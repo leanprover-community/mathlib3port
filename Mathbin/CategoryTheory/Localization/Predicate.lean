@@ -50,7 +50,8 @@ class IsLocalization : Prop where
   nonempty_is_equivalence : Nonempty (IsEquivalence (Localization.Construction.lift L inverts))
 #align category_theory.functor.is_localization CategoryTheory.Functor.IsLocalization
 
-instance Q_is_localization : W.q.IsLocalization W where
+instance Q_is_localization :
+    W.q.IsLocalization W where 
   inverts := W.Q_inverts
   nonempty_is_equivalence := by
     suffices localization.construction.lift W.Q W.Q_inverts = 𝟭 _ by
@@ -79,7 +80,9 @@ structure StrictUniversalPropertyFixedTarget where
 /-- The localized category `W.localization` that was constructed satisfies
 the universal property of the localization. -/
 @[simps]
-def strictUniversalPropertyFixedTargetQ : StrictUniversalPropertyFixedTarget W.q W E where
+def strictUniversalPropertyFixedTargetQ :
+    StrictUniversalPropertyFixedTarget W.q W
+      E where 
   inverts := W.Q_inverts
   lift := Construction.lift
   fac := Construction.fac
@@ -94,13 +97,14 @@ instance : Inhabited (StrictUniversalPropertyFixedTarget W.q W E) :=
 of the localization. -/
 @[simps]
 def strictUniversalPropertyFixedTargetId (hW : W ⊆ MorphismProperty.isomorphisms C) :
-    StrictUniversalPropertyFixedTarget (𝟭 C) W E where
+    StrictUniversalPropertyFixedTarget (𝟭 C) W
+      E where 
   inverts X Y f hf := hW f hf
   lift F hF := F
-  fac F hF := by
+  fac F hF := by 
     cases F
     rfl
-  uniq F₁ F₂ eq := by
+  uniq F₁ F₂ eq := by 
     cases F₁
     cases F₂
     exact Eq
@@ -216,20 +220,20 @@ instance : IsEquivalence (whiskeringLeftFunctor L W E) := by
     nat_iso.of_components
       (fun F =>
         eq_to_iso
-          (by
+          (by 
             ext
             change (W.Q ⋙ localization.construction.lift L (inverts L W)) ⋙ F = L ⋙ F
             rw [construction.fac]))
-      fun F₁ F₂ τ => by
+      fun F₁ F₂ τ => by 
       ext X
       dsimp [equivalence_from_model, whisker_left, construction.whiskering_left_equivalence,
         construction.whiskering_left_equivalence.functor, whiskering_left_functor,
         morphism_property.Q]
       erw [nat_trans.comp_app, nat_trans.comp_app, eq_to_hom_app, eq_to_hom_app, eq_to_hom_refl,
         eq_to_hom_refl, comp_id, id_comp]
-      all_goals
-      change (W.Q ⋙ localization.construction.lift L (inverts L W)) ⋙ _ = L ⋙ _
-      rw [construction.fac]
+      all_goals 
+        change (W.Q ⋙ localization.construction.lift L (inverts L W)) ⋙ _ = L ⋙ _
+        rw [construction.fac]
 
 /-- The equivalence of categories `(D ⥤ E) ≌ (W.functors_inverting E)` induced by
 the composition with a localization functor `L : C ⥤ D` with respect to
@@ -356,7 +360,8 @@ if `(F₁' F₂' : D ⥤ E)` are functors which lifts functors `(F₁ F₂ : C �
 a natural isomorphism `τ : F₁ ⟶ F₂` lifts to a natural isomorphism `F₁' ⟶ F₂'`. -/
 @[simps]
 def liftNatIso (F₁ F₂ : C ⥤ E) (F₁' F₂' : D ⥤ E) [h₁ : Lifting L W F₁ F₁'] [h₂ : Lifting L W F₂ F₂']
-    (e : F₁ ≅ F₂) : F₁' ≅ F₂' where
+    (e : F₁ ≅ F₂) :
+    F₁' ≅ F₂' where 
   Hom := liftNatTrans L W F₁ F₂ F₁' F₂' e.Hom
   inv := liftNatTrans L W F₂ F₁ F₂' F₁' e.inv
 #align category_theory.localization.lift_nat_iso CategoryTheory.Localization.liftNatIso

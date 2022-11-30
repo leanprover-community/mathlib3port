@@ -222,23 +222,19 @@ theorem nadd_lt_nadd_right (h : b < c) (a) : b ♯ a < c ♯ a :=
 theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c := by
   rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_left h a).le
-    
   · exact le_rfl
-    
 #align ordinal.nadd_le_nadd_left Ordinal.nadd_le_nadd_left
 
 theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a := by
   rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_right h a).le
-    
   · exact le_rfl
-    
 #align ordinal.nadd_le_nadd_right Ordinal.nadd_le_nadd_right
 
 variable (a b)
 
 theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
-  | a, b => by
+  | a, b => by 
     rw [nadd_def, nadd_def, max_comm]
     congr <;> ext (c hc) <;> apply nadd_comm decreasing_by
   solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
@@ -249,29 +245,23 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}}
     blsub _ f =
       max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) <| nadd_lt_nadd_right ha' b)
         (blsub.{u, v} b fun b' hb' => f (a ♯ b') <| nadd_lt_nadd_left hb' a) :=
-  by
+  by 
   apply (blsub_le_iff.2 fun i h => _).antisymm (max_le _ _)
   · rcases lt_nadd_iff.1 h with (⟨a', ha', hi⟩ | ⟨b', hb', hi⟩)
     · exact lt_max_of_lt_left ((hf h (nadd_lt_nadd_right ha' b) hi).trans_lt (lt_blsub _ _ _))
-      
     · exact lt_max_of_lt_right ((hf h (nadd_lt_nadd_left hb' a) hi).trans_lt (lt_blsub _ _ _))
-      
-    
-  all_goals
-  apply blsub_le_of_brange_subset.{u, u, v}
-  rintro c ⟨d, hd, rfl⟩
-  apply mem_brange_self
+  all_goals 
+    apply blsub_le_of_brange_subset.{u, u, v}
+    rintro c ⟨d, hd, rfl⟩
+    apply mem_brange_self
 #align ordinal.blsub_nadd_of_mono Ordinal.blsub_nadd_of_mono
 
 theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
   | a, b, c => by
     rw [nadd_def a (b ♯ c), nadd_def, blsub_nadd_of_mono, blsub_nadd_of_mono, max_assoc]
     · congr <;> ext (d hd) <;> apply nadd_assoc
-      
     · exact fun i j _ _ h => nadd_le_nadd_left h a
-      
-    · exact fun i j _ _ h => nadd_le_nadd_right h c
-      decreasing_by
+    · exact fun i j _ _ h => nadd_le_nadd_right h c decreasing_by
   solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nadd_assoc Ordinal.nadd_assoc
 
@@ -310,9 +300,7 @@ theorem succ_nadd : succ a ♯ b = succ (a ♯ b) := by rw [← one_nadd (a ♯ 
 theorem nadd_nat (n : ℕ) : a ♯ n = a + n := by
   induction' n with n hn
   · simp
-    
   · rw [Nat.cast_succ, add_one_eq_succ, nadd_succ, add_succ, hn]
-    
 #align ordinal.nadd_nat Ordinal.nadd_nat
 
 @[simp]
@@ -322,14 +310,11 @@ theorem nat_nadd (n : ℕ) : ↑n ♯ a = a + n := by rw [nadd_comm, nadd_nat]
 theorem add_le_nadd : a + b ≤ a ♯ b := by
   apply b.limit_rec_on
   · simp
-    
   · intro c h
     rwa [add_succ, nadd_succ, succ_le_succ_iff]
-    
   · intro c hc H
     rw [← IsNormal.blsub_eq.{u, u} (add_is_normal a) hc, blsub_le_iff]
     exact fun i hi => (H i hi).trans_lt (nadd_lt_nadd_left hi a)
-    
 #align ordinal.add_le_nadd Ordinal.add_le_nadd
 
 end Ordinal
@@ -351,7 +336,7 @@ instance add_covariant_class_le : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (
 
 instance add_contravariant_class_le :
     ContravariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
-  ⟨fun a b c h => by
+  ⟨fun a b c h => by 
     by_contra' h'
     exact h.not_lt (add_lt_add_left h' a)⟩
 #align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariant_class_le
@@ -374,11 +359,9 @@ theorem add_one_eq_succ : ∀ a : NatOrdinal, a + 1 = succ a :=
 theorem to_ordinal_cast_nat (n : ℕ) : toOrdinal n = n := by
   induction' n with n hn
   · rfl
-    
   · change nadd (to_ordinal n) 1 = n + 1
     rw [hn]
     apply nadd_one
-    
 #align nat_ordinal.to_ordinal_cast_nat NatOrdinal.to_ordinal_cast_nat
 
 end NatOrdinal

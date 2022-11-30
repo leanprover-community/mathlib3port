@@ -87,10 +87,9 @@ theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
   unfold sub_nat_nat; cases e : n - m
   · simp only [sub_nat_nat, cast_of_nat]
     simp [e, Nat.le_of_sub_eq_zero e]
-    
-  · rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e,
+  ·
+    rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e,
       Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e, neg_sub]
-    
 #align int.cast_sub_nat_nat Int.cast_subNatNatₓ
 
 #print Int.negOfNat_eq /-
@@ -102,7 +101,7 @@ theorem negOfNat_eq (n : ℕ) : negOfNat n = -(n : ℤ) := by cases n <;> rfl
 lean 3 declaration is
   forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R] (n : Nat), Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (Int.negOfNat n)) (Neg.neg.{u} R (SubNegMonoid.toHasNeg.{u} R (AddGroup.toSubNegMonoid.{u} R (AddGroupWithOne.toAddGroup.{u} R _inst_1))) ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u} Nat R (CoeTCₓ.coe.{1, succ u} Nat R (Nat.castCoe.{u} R (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1))))) n))
 but is expected to have type
-  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.674 : AddGroupWithOne.{u} R] (n : Nat), Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.674) (Int.negOfNat n)) (Neg.neg.{u} R (AddGroupWithOne.toNeg.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.674) (Nat.cast.{u} R (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.674)) n))
+  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.666 : AddGroupWithOne.{u} R] (n : Nat), Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.666) (Int.negOfNat n)) (Neg.neg.{u} R (AddGroupWithOne.toNeg.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.666) (Nat.cast.{u} R (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.666)) n))
 Case conversion may be inaccurate. Consider using '#align int.cast_neg_of_nat Int.cast_negOfNatₓ'. -/
 @[simp]
 theorem cast_negOfNat (n : ℕ) : ((negOfNat n : ℤ) : R) = -n := by simp [neg_of_nat_eq]
@@ -143,7 +142,7 @@ theorem ofNat_bit1 (n : ℕ) : (↑(bit1 n) : ℤ) = bit1 ↑n :=
 lean 3 declaration is
   forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R] (n : Int), Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (bit0.{0} Int Int.hasAdd n)) (bit0.{u} R (AddZeroClass.toHasAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))) ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) n))
 but is expected to have type
-  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1068 : AddGroupWithOne.{u} R] (n : Int), Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1068) (bit0.{0} Int Int.instAddInt n)) (bit0.{u} R (AddZeroClass.toAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1068)))) (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1068) n))
+  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1058 : AddGroupWithOne.{u} R] (n : Int), Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1058) (bit0.{0} Int Int.instAddInt n)) (bit0.{u} R (AddZeroClass.toAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1058)))) (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1058) n))
 Case conversion may be inaccurate. Consider using '#align int.cast_bit0 Int.cast_bit0ₓ'. -/
 @[simp, norm_cast]
 theorem cast_bit0 (n : ℤ) : ((bit0 n : ℤ) : R) = bit0 n :=
@@ -154,7 +153,7 @@ theorem cast_bit0 (n : ℤ) : ((bit0 n : ℤ) : R) = bit0 n :=
 lean 3 declaration is
   forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R] (n : Int), Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (bit1.{0} Int Int.hasOne Int.hasAdd n)) (bit1.{u} R (AddMonoidWithOne.toOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)) (AddZeroClass.toHasAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))) ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) n))
 but is expected to have type
-  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1099 : AddGroupWithOne.{u} R] (n : Int), Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1099) (bit1.{0} Int (One.ofOfNat1.{0} Int (instOfNatInt 1)) Int.instAddInt n)) (bit1.{u} R (AddMonoidWithOne.toOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1099)) (AddZeroClass.toAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1099)))) (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1099) n))
+  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1089 : AddGroupWithOne.{u} R] (n : Int), Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1089) (bit1.{0} Int (One.ofOfNat1.{0} Int (instOfNatInt 1)) Int.instAddInt n)) (bit1.{u} R (AddMonoidWithOne.toOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1089)) (AddZeroClass.toAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1089)))) (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1089) n))
 Case conversion may be inaccurate. Consider using '#align int.cast_bit1 Int.cast_bit1ₓ'. -/
 @[simp, norm_cast]
 theorem cast_bit1 (n : ℤ) : ((bit1 n : ℤ) : R) = bit1 n := by
@@ -165,7 +164,7 @@ theorem cast_bit1 (n : ℤ) : ((bit1 n : ℤ) : R) = bit1 n := by
 lean 3 declaration is
   forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{u} R 2 (OfNat.mk.{u} R 2 (bit0.{u} R (AddZeroClass.toHasAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))) (One.one.{u} R (AddMonoidWithOne.toOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1))))))
 but is expected to have type
-  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1169 : AddGroupWithOne.{u} R], Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1169) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{u} R 2 (instOfNat.{u} R 2 (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1169)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
+  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1159 : AddGroupWithOne.{u} R], Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1159) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{u} R 2 (instOfNat.{u} R 2 (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1159)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
 Case conversion may be inaccurate. Consider using '#align int.cast_two Int.cast_twoₓ'. -/
 theorem cast_two : ((2 : ℤ) : R) = 2 := by simp
 #align int.cast_two Int.cast_two
@@ -174,7 +173,7 @@ theorem cast_two : ((2 : ℤ) : R) = 2 := by simp
 lean 3 declaration is
   forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (OfNat.ofNat.{0} Int 3 (OfNat.mk.{0} Int 3 (bit1.{0} Int Int.hasOne Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{u} R 3 (OfNat.mk.{u} R 3 (bit1.{u} R (AddMonoidWithOne.toOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)) (AddZeroClass.toHasAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))) (One.one.{u} R (AddMonoidWithOne.toOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1))))))
 but is expected to have type
-  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1253 : AddGroupWithOne.{u} R], Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1253) (OfNat.ofNat.{0} Int 3 (instOfNatInt 3))) (OfNat.ofNat.{u} R 3 (instOfNat.{u} R 3 (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1253)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
+  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1243 : AddGroupWithOne.{u} R], Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1243) (OfNat.ofNat.{0} Int 3 (instOfNatInt 3))) (OfNat.ofNat.{u} R 3 (instOfNat.{u} R 3 (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1243)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
 Case conversion may be inaccurate. Consider using '#align int.cast_three Int.cast_threeₓ'. -/
 theorem cast_three : ((3 : ℤ) : R) = 3 := by simp
 #align int.cast_three Int.cast_three
@@ -183,7 +182,7 @@ theorem cast_three : ((3 : ℤ) : R) = 3 := by simp
 lean 3 declaration is
   forall {R : Type.{u}} [_inst_1 : AddGroupWithOne.{u} R], Eq.{succ u} R ((fun (a : Type) (b : Type.{u}) [self : HasLiftT.{1, succ u} a b] => self.0) Int R (HasLiftT.mk.{1, succ u} Int R (CoeTCₓ.coe.{1, succ u} Int R (Int.castCoe.{u} R (AddGroupWithOne.toHasIntCast.{u} R _inst_1)))) (OfNat.ofNat.{0} Int 4 (OfNat.mk.{0} Int 4 (bit0.{0} Int Int.hasAdd (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))))) (OfNat.ofNat.{u} R 4 (OfNat.mk.{u} R 4 (bit0.{u} R (AddZeroClass.toHasAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))) (bit0.{u} R (AddZeroClass.toHasAdd.{u} R (AddMonoid.toAddZeroClass.{u} R (AddMonoidWithOne.toAddMonoid.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))) (One.one.{u} R (AddMonoidWithOne.toOne.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R _inst_1)))))))
 but is expected to have type
-  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1337 : AddGroupWithOne.{u} R], Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1337) (OfNat.ofNat.{0} Int 4 (instOfNatInt 4))) (OfNat.ofNat.{u} R 4 (instOfNat.{u} R 4 (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1337)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
+  forall {R : Type.{u}} [inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1327 : AddGroupWithOne.{u} R], Eq.{succ u} R (Int.cast.{u} R (AddGroupWithOne.toIntCast.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1327) (OfNat.ofNat.{0} Int 4 (instOfNatInt 4))) (OfNat.ofNat.{u} R 4 (instOfNat.{u} R 4 (AddMonoidWithOne.toNatCast.{u} R (AddGroupWithOne.toAddMonoidWithOne.{u} R inst._@.Mathlib.Data.Int.Cast.Basic._hyg.1327)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
 Case conversion may be inaccurate. Consider using '#align int.cast_four Int.cast_fourₓ'. -/
 theorem cast_four : ((4 : ℤ) : R) = 4 := by simp
 #align int.cast_four Int.cast_four

@@ -47,7 +47,7 @@ def isLimitMapConeForkEquiv' :
       IsLimit
         (KernelFork.ofι (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) :
           Fork (G.map f) 0) :=
-  by
+  by 
   refine' (is_limit.postcompose_hom_equiv _ _).symm.trans (is_limit.equiv_iso_limit _)
   refine' parallel_pair.ext (iso.refl _) (iso.refl _) _ _ <;> simp
   refine' fork.ext (iso.refl _) _
@@ -125,7 +125,7 @@ theorem kernel_map_comp_preserves_kernel_iso_inv {X' Y' : C} (g : X' ⟶ Y') [Ha
     kernel.map (G.map f) (G.map g) (G.map p) (G.map q) (by rw [← G.map_comp, hpq, G.map_comp]) ≫
         (PreservesKernel.iso G _).inv =
       (PreservesKernel.iso G _).inv ≫ G.map (kernel.map f g p q hpq) :=
-  by
+  by 
   rw [iso.comp_inv_eq, category.assoc, preserves_kernel.iso_hom, iso.eq_inv_comp]
   exact kernel_comparison_comp_kernel_map _ _ _ _ _ _
 #align
@@ -149,7 +149,7 @@ def isColimitMapCoconeCoforkEquiv' :
       IsColimit
         (CokernelCofork.ofπ (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) :
           Cofork (G.map f) 0) :=
-  by
+  by 
   refine' (is_colimit.precompose_hom_equiv _ _).symm.trans (is_colimit.equiv_iso_colimit _)
   refine' parallel_pair.ext (iso.refl _) (iso.refl _) _ _ <;> simp
   refine' cofork.ext (iso.refl _) _
@@ -234,7 +234,7 @@ theorem preserves_cokernel_iso_comp_cokernel_map {X' Y' : C} (g : X' ⟶ Y') [Ha
         cokernel.map (G.map f) (G.map g) (G.map p) (G.map q)
           (by rw [← G.map_comp, hpq, G.map_comp]) =
       G.map (cokernel.map f g p q hpq) ≫ (PreservesCokernel.iso G _).Hom :=
-  by
+  by 
   rw [← iso.comp_inv_eq, category.assoc, ← iso.eq_inv_comp]
   exact cokernel_map_comp_cokernel_comparison _ _ _ _ _ _
 #align

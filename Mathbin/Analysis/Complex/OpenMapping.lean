@@ -41,7 +41,8 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {U : Set E} {f 
 contains a disk of radius `ε / 2`. -/
 theorem DiffContOnCl.ball_subset_image_closed_ball (h : DiffContOnCl ℂ f (ball z₀ r)) (hr : 0 < r)
     (hf : ∀ z ∈ sphere z₀ r, ε ≤ ‖f z - f z₀‖) (hz₀ : ∃ᶠ z in 𝓝 z₀, f z ≠ f z₀) :
-    ball (f z₀) (ε / 2) ⊆ f '' closedBall z₀ r := by
+    ball (f z₀) (ε / 2) ⊆ f '' closedBall z₀ r :=
+  by
   /- This is a direct application of the maximum principle. Pick `v` close to `f z₀`, and look at
     the function `λ z, ‖f z - v‖`: it is bounded below on the circle, and takes a small value at `z₀`
     so it is not constant on the disk, which implies that its infimum is equal to `0` and hence that
@@ -73,7 +74,8 @@ of `z₀`, or behaves locally like an open function (in the sense that the image
 of `z₀` is a neighborhood of `f z₀`, as in `is_open_map_iff_nhds_le`). For a function `f : E → ℂ`
 the same result holds, see `analytic_at.eventually_constant_or_nhds_le_map_nhds`. -/
 theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt ℂ f z₀) :
-    (∀ᶠ z in 𝓝 z₀, f z = f z₀) ∨ 𝓝 (f z₀) ≤ map f (𝓝 z₀) := by
+    (∀ᶠ z in 𝓝 z₀, f z = f z₀) ∨ 𝓝 (f z₀) ≤ map f (𝓝 z₀) :=
+  by
   /- The function `f` is analytic in a neighborhood of `z₀`; by the isolated zeros principle, if `f`
     is not constant in a neighborhood of `z₀`, then it is nonzero, and therefore bounded below, on
     every small enough circle around `z₀` and then `diff_cont_on_cl.ball_subset_image_closed_ball`
@@ -113,7 +115,8 @@ is analytic at a point `z₀`, then either it is constant in a neighborhood of `
 neighborhood of `z₀` to a neighborhood of `z₀`. For the particular case of a holomorphic function on
 `ℂ`, see `analytic_at.eventually_constant_or_nhds_le_map_nhds_aux`. -/
 theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : AnalyticAt ℂ g z₀) :
-    (∀ᶠ z in 𝓝 z₀, g z = g z₀) ∨ 𝓝 (g z₀) ≤ map g (𝓝 z₀) := by
+    (∀ᶠ z in 𝓝 z₀, g z = g z₀) ∨ 𝓝 (g z₀) ≤ map g (𝓝 z₀) :=
+  by
   /- The idea of the proof is to use the one-dimensional version applied to the restriction of `g`
     to lines going through `z₀` (indexed by `sphere (0 : E) 1`). If the restriction is eventually
     constant along each of these lines, then the identity theorem implies that `g` is constant on any
@@ -126,11 +129,10 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
   have h1 : ∀ z ∈ sphere (0 : E) 1, AnalyticOn ℂ (gray z) (ball 0 r) := by
     refine' fun z hz t ht => AnalyticAt.comp _ _
     · exact hgr (by simpa [ray, norm_smul, mem_sphere_zero_iff_norm.mp hz] using ht)
-      
-    · exact
+    ·
+      exact
         analytic_at_const.add
           ((ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℂ ℂ) z).AnalyticAt t)
-      
   by_cases ∀ z ∈ sphere (0 : E) 1, ∀ᶠ t in 𝓝 0, gray z t = gray z 0
   · left
     -- If g is eventually constant along every direction, then it is eventually constant
@@ -149,7 +151,6 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
       simpa only [mem_ball_zero_iff, norm_eq_abs, abs_of_real, abs_norm_eq_norm]
     simpa only [gray, ray, smul_smul, mul_inv_cancel h', one_smul, add_sub_cancel'_right,
       Function.comp_apply, coe_smul] using h3 (↑‖z - z₀‖) h4
-    
   · right
     -- Otherwise, it is open along at least one direction and that implies the result
     push_neg  at h
@@ -161,7 +162,6 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     have h10 : Continuous fun t : ℂ => z₀ + t • z :=
       continuous_const.add (continuous_id'.smul continuous_const)
     simpa using h10.tendsto 0
-    
 #align
   analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
 
@@ -174,13 +174,11 @@ theorem AnalyticOn.is_constant_or_is_open (hg : AnalyticOn ℂ g U) (hU : IsPrec
   by_cases ∃ z₀ ∈ U, ∀ᶠ z in 𝓝 z₀, g z = g z₀
   · obtain ⟨z₀, hz₀, h⟩ := h
     exact Or.inl ⟨g z₀, hg.eq_on_of_preconnected_of_eventually_eq analyticOnConst hU hz₀ h⟩
-    
   · push_neg  at h
     refine' Or.inr fun s hs1 hs2 => is_open_iff_mem_nhds.mpr _
     rintro z ⟨w, hw1, rfl⟩
     exact
       (hg w (hs1 hw1)).eventually_constant_or_nhds_le_map_nhds.resolve_left (h w (hs1 hw1))
         (image_mem_map (hs2.mem_nhds hw1))
-    
 #align analytic_on.is_constant_or_is_open AnalyticOn.is_constant_or_is_open
 

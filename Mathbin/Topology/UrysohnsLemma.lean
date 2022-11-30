@@ -97,7 +97,7 @@ namespace CU
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. -/
 @[simps c]
-def left (c : CU X) : CU X where
+def left (c : CU X) : CU X where 
   c := c.c
   U := (normal_exists_closure_subset c.closedC c.open_U c.Subset).some
   closedC := c.closedC
@@ -108,7 +108,9 @@ def left (c : CU X) : CU X where
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u, c.U)`. -/
 @[simps U]
-def right (c : CU X) : CU X where
+def right (c : CU X) :
+    CU
+      X where 
   c := closure (normal_exists_closure_subset c.closedC c.open_U c.Subset).some
   U := c.U
   closedC := isClosedClosure
@@ -138,39 +140,31 @@ noncomputable def approx : ℕ → CU X → X → ℝ
 theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 := by
   induction' n with n ihn generalizing c
   · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
-    
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
     exacts[c.subset_right_C hx, hx]
-    
 #align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_C
 
 theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 := by
   induction' n with n ihn generalizing c
   · exact indicator_of_mem hx _
-    
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
     exacts[hx, fun hU => hx <| c.left_U_subset hU]
-    
 #align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_U
 
 theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x := by
   induction' n with n ihn generalizing c
   · exact indicator_nonneg (fun _ _ => zero_le_one) _
-    
   · simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv]
     refine' mul_nonneg (inv_nonneg.2 zero_le_two) (add_nonneg _ _) <;> apply ihn
-    
 #align urysohns.CU.approx_nonneg Urysohns.CU.approx_nonneg
 
 theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 := by
   induction' n with n ihn generalizing c
   · exact indicator_apply_le' (fun _ => le_rfl) fun _ => zero_le_one
-    
   · simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv, smul_eq_mul, ← div_eq_inv_mul]
     refine' Iff.mpr (div_le_one zero_lt_two) (add_le_add _ _) <;> apply ihn
-    
 #align urysohns.CU.approx_le_one Urysohns.CU.approx_le_one
 
 theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.approx n x) :=
@@ -180,41 +174,38 @@ theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.a
 theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x := by
   by_cases hx : x ∈ c₁.U
-  · calc
+  ·
+    calc
       approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)
       _ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
       
-    
-  · calc
+  ·
+    calc
       approx n₂ c₂ x ≤ 1 := approx_le_one _ _ _
       _ = approx n₁ c₁ x := (approx_of_nmem_U _ _ hx).symm
       
-    
 #align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_U_sub_C
 
 theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
     c.approx n x ∈ icc (c.right.approx n x) (c.left.approx n x) := by
   induction' n with n ihn generalizing c
-  · exact
+  ·
+    exact
       ⟨le_rfl,
         indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset)
           (fun _ => zero_le_one) _⟩
-    
   · simp only [approx, mem_Icc]
     refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;>
       apply approx_le_approx_of_U_sub_C
     exacts[subset_closure, subset_closure]
-    
 #align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
 
 theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n + 1) x := by
   induction' n with n ihn generalizing c
   · simp only [approx, right_U, right_le_midpoint]
     exact (approx_mem_Icc_right_left c 0 x).2
-    
   · rw [approx, approx]
     exact midpoint_le_midpoint (ihn _) (ihn _)
-    
 #align urysohns.CU.approx_le_succ Urysohns.CU.approx_le_succ
 
 theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
@@ -244,7 +235,7 @@ theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
 #align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_U
 
 theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
-  by
+  by 
   refine' tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_at_top_iff_nat 1).1 _)
   simp only [approx]
   exact (c.left.tendsto_approx_at_top x).midpoint (c.right.tendsto_approx_at_top x)
@@ -277,7 +268,6 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
   · refine' eventually_of_forall fun y => _
     rw [pow_zero]
     exact Real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
-    
   · by_cases hxl : x ∈ c.left.U
     · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd
       rw [pow_succ, c.lim_eq_midpoint, c.lim_eq_midpoint,
@@ -286,7 +276,6 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
       rw [dist_self, add_zero, div_eq_inv_mul]
       exact mul_le_mul h1234.le hyd dist_nonneg (h0.trans h1234).le
-      
     · replace hxl : x ∈ c.left.right.Cᶜ
       exact compl_subset_compl.2 c.left.right.subset hxl
       filter_upwards [IsOpen.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl,
@@ -310,8 +299,6 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
       generalize (3 / 4 : ℝ) ^ n = r
       field_simp [two_ne_zero' ℝ]
       ring
-      
-    
 #align urysohns.CU.continuous_lim Urysohns.CU.continuous_lim
 
 end CU
@@ -328,7 +315,8 @@ then there exists a continuous function `f : X → ℝ` such that
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
 theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t)
-    (hd : Disjoint s t) : ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 := by
+    (hd : Disjoint s t) : ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 :=
+  by
   -- The actual proof is in the code above. Here we just repack it into the expected format.
   set c : Urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, disjoint_left.1 hd⟩
   exact

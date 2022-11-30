@@ -105,7 +105,8 @@ file.
 
 theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ}
     (hd : DiffContOnCl ℂ f (ball z (dist w z)))
-    (hz : IsMaxOn (norm ∘ f) (closedBall z (dist w z)) z) : ‖f w‖ = ‖f z‖ := by
+    (hz : IsMaxOn (norm ∘ f) (closedBall z (dist w z)) z) : ‖f w‖ = ‖f z‖ :=
+  by
   -- Consider a circle of radius `r = dist w z`.
   set r : ℝ := dist w z
   have hw : w ∈ closed_ball z r := mem_closed_ball.2 le_rfl
@@ -129,16 +130,13 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ}
   · refine'
       ((continuous_on_id.sub continuous_on_const).inv₀ _).smul (hd.continuous_on_ball.mono hsub)
     exact fun ζ hζ => sub_ne_zero.2 (ne_of_mem_sphere hζ hr.ne')
-    
   show ∀ ζ ∈ sphere z r, ‖(ζ - z)⁻¹ • f ζ‖ ≤ ‖f z‖ / r
   · rintro ζ (hζ : abs (ζ - z) = r)
     rw [le_div_iff hr, norm_smul, norm_inv, norm_eq_abs, hζ, mul_comm, mul_inv_cancel_left₀ hr.ne']
     exact hz (hsub hζ)
-    
   show ‖(w - z)⁻¹ • f w‖ < ‖f z‖ / r
   · rw [norm_smul, norm_inv, norm_eq_abs, ← div_eq_inv_mul]
     exact (div_lt_div_right hr).2 hw_lt
-    
 #align complex.norm_max_aux₁ Complex.norm_max_aux₁
 
 /-!
@@ -152,7 +150,6 @@ theorem norm_max_aux₂ {f : ℂ → F} {z w : ℂ} (hd : DiffContOnCl ℂ f (ba
   have he : ∀ x, ‖e x‖ = ‖x‖ := UniformSpace.Completion.norm_coe
   replace hz : IsMaxOn (norm ∘ e ∘ f) (closed_ball z (dist w z)) z
   · simpa only [IsMaxOn, (· ∘ ·), he] using hz
-    
   simpa only [he] using norm_max_aux₁ (e.differentiable.comp_diff_cont_on_cl hd) hz
 #align complex.norm_max_aux₂ Complex.norm_max_aux₂
 
@@ -165,9 +162,7 @@ assumption `is_max_on (norm ∘ f) (ball z r) z`.
 theorem norm_max_aux₃ {f : ℂ → F} {z w : ℂ} {r : ℝ} (hr : dist w z = r)
     (hd : DiffContOnCl ℂ f (ball z r)) (hz : IsMaxOn (norm ∘ f) (ball z r) z) : ‖f w‖ = ‖f z‖ := by
   subst r
-  rcases eq_or_ne w z with (rfl | hne);
-  · rfl
-    
+  rcases eq_or_ne w z with (rfl | hne); · rfl
   rw [← dist_ne_zero] at hne
   exact norm_max_aux₂ hd (closure_ball z hne ▸ hz.closure hd.continuous_on.norm)
 #align complex.norm_max_aux₃ Complex.norm_max_aux₃
@@ -195,7 +190,6 @@ theorem norm_eq_on_closed_ball_of_is_max_on {f : E → F} {z : E} {r : ℝ}
   rw [mem_closed_ball, dist_comm] at hw
   rcases eq_or_ne z w with (rfl | hne)
   · rfl
-    
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
   suffices ‖(f ∘ e) (1 : ℂ)‖ = ‖(f ∘ e) (0 : ℂ)‖ by simpa [e]
@@ -405,7 +399,6 @@ theorem exists_mem_frontier_is_max_on_norm [FiniteDimensional ℂ E] {f : E → 
   cases hwU
   rotate_left
   · exact ⟨w, hwU, hle⟩
-    
   have : interior U ≠ univ := ne_top_of_le_ne_top hc.ne_univ interior_subset_closure
   rcases exists_mem_frontier_inf_dist_compl_eq_dist hwU this with ⟨z, hzU, hzw⟩
   refine' ⟨z, frontier_interior_subset hzU, fun x hx => (mem_set_of_eq.mp <| hle hx).trans_eq _⟩
@@ -422,7 +415,6 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
   rw [closure_eq_self_union_frontier, union_comm, mem_union] at hz
   cases hz
   · exact hC z hz
-    
   /- In case of a finite dimensional domain, one can just apply
     `complex.exists_mem_frontier_is_max_on_norm`. To make it work in any Banach space, we restrict
     the function to a line first. -/
@@ -446,9 +438,7 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
 theorem eq_on_closure_of_eq_on_frontier {f g : E → F} {U : Set E} (hU : Bounded U)
     (hf : DiffContOnCl ℂ f U) (hg : DiffContOnCl ℂ g U) (hfg : EqOn f g (frontier U)) :
     EqOn f g (closure U) := by
-  suffices H : ∀ z ∈ closure U, ‖(f - g) z‖ ≤ 0;
-  · simpa [sub_eq_zero] using H
-    
+  suffices H : ∀ z ∈ closure U, ‖(f - g) z‖ ≤ 0; · simpa [sub_eq_zero] using H
   refine' fun z hz => norm_le_of_forall_mem_frontier_norm_le hU (hf.sub hg) (fun w hw => _) hz
   simp [hfg hw]
 #align complex.eq_on_closure_of_eq_on_frontier Complex.eq_on_closure_of_eq_on_frontier

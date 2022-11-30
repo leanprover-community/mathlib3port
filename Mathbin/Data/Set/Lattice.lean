@@ -274,7 +274,7 @@ end GaloisConnection
 /-! ### Union and intersection over an indexed family of sets -/
 
 
-instance : OrderTop (Set α) where
+instance : OrderTop (Set α) where 
   top := univ
   le_top := by simp
 
@@ -679,17 +679,15 @@ end
 theorem image_projection_prod {ι : Type _} {α : ι → Type _} {v : ∀ i : ι, Set (α i)}
     (hv : (pi univ v).Nonempty) (i : ι) :
     ((fun x : ∀ i : ι, α i => x i) '' ⋂ k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i := by
-  classical
-  apply subset.antisymm
-  · simp [Inter_subset]
-    
-  · intro y y_in
-    simp only [mem_image, mem_Inter, mem_preimage]
-    rcases hv with ⟨z, hz⟩
-    refine' ⟨Function.update z i y, _, update_same i y z⟩
-    rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
-    exact ⟨y_in, fun j hj => by simpa using hz j⟩
-    
+  classical 
+    apply subset.antisymm
+    · simp [Inter_subset]
+    · intro y y_in
+      simp only [mem_image, mem_Inter, mem_preimage]
+      rcases hv with ⟨z, hz⟩
+      refine' ⟨Function.update z i y, _, update_same i y z⟩
+      rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
+      exact ⟨y_in, fun j hj => by simpa using hz j⟩
 #align set.image_projection_prod Set.image_projection_prod
 
 /-! ### Unions and intersections indexed by `Prop` -/
@@ -1325,11 +1323,9 @@ theorem Union_image_preimage_sigma_mk_eq_self {ι : Type _} {σ : ι → Type _}
   constructor
   · rintro ⟨i, a, h, rfl⟩
     exact h
-    
   · intro h
     cases' x with i a
     exact ⟨i, a, h, rfl⟩
-    
 #align set.Union_image_preimage_sigma_mk_eq_self Set.Union_image_preimage_sigma_mk_eq_self
 
 theorem Sigma.univ (X : α → Type _) : (Set.univ : Set (Σa, X a)) = ⋃ a, range (Sigma.mk a) :=
@@ -1425,12 +1421,10 @@ theorem Union_range_eq_sUnion {α β : Type _} (C : Set (Set α)) {f : ∀ s : C
   · rintro ⟨s, ⟨y, rfl⟩, ⟨s, hs⟩, rfl⟩
     refine' ⟨_, hs, _⟩
     exact (f ⟨s, hs⟩ y).2
-    
   · rintro ⟨s, hs, hx⟩
     cases' hf ⟨s, hs⟩ ⟨x, hx⟩ with y hy
     refine' ⟨_, ⟨y, rfl⟩, ⟨s, hs⟩, _⟩
     exact congr_arg Subtype.val hy
-    
 #align set.Union_range_eq_sUnion Set.Union_range_eq_sUnion
 
 theorem Union_range_eq_Union (C : ι → Set α) {f : ∀ x : ι, β → C x}
@@ -1438,11 +1432,9 @@ theorem Union_range_eq_Union (C : ι → Set α) {f : ∀ x : ι, β → C x}
   ext x; rw [mem_Union, mem_Union]; constructor
   · rintro ⟨y, i, rfl⟩
     exact ⟨i, (f i y).2⟩
-    
   · rintro ⟨i, hx⟩
     cases' hf i ⟨x, hx⟩ with y hy
     exact ⟨y, i, congr_arg Subtype.val hy⟩
-    
 #align set.Union_range_eq_Union Set.Union_range_eq_Union
 
 theorem union_distrib_Inter_left (s : ι → Set α) (t : Set α) : (t ∪ ⋂ i, s i) = ⋂ i, t ∪ s i :=
@@ -1574,7 +1566,7 @@ theorem injective_iff_injective_of_Union_eq_univ :
   refine' ⟨fun H i => (U i).restrict_preimage_injective H, fun H x y e => _⟩
   obtain ⟨i, hi⟩ :=
     set.mem_Union.mp
-      (show f x ∈ Set.union U by
+      (show f x ∈ Set.union U by 
         rw [hU]
         triv)
   injection @H i ⟨x, hi⟩ ⟨y, show f y ∈ U i from e ▸ hi⟩ (Subtype.ext e)
@@ -1585,7 +1577,7 @@ theorem surjective_iff_surjective_of_Union_eq_univ :
   refine' ⟨fun H i => (U i).restrict_preimage_surjective H, fun H x => _⟩
   obtain ⟨i, hi⟩ :=
     set.mem_Union.mp
-      (show x ∈ Set.union U by
+      (show x ∈ Set.union U by 
         rw [hU]
         triv)
   exact ⟨_, congr_arg Subtype.val (H i ⟨x, hi⟩).some_spec⟩
@@ -1606,7 +1598,7 @@ theorem InjOn.image_inter {f : α → β} {s t u : Set α} (hf : InjOn f u) (hs 
     f '' (s ∩ t) = f '' s ∩ f '' t := by
   apply subset.antisymm (image_inter_subset _ _ _)
   rintro x ⟨⟨y, ys, hy⟩, ⟨z, zt, hz⟩⟩
-  have : y = z := by
+  have : y = z := by 
     apply hf (hs ys) (ht zt)
     rwa [← hz] at hy
   rw [← this] at zt
@@ -1614,13 +1606,13 @@ theorem InjOn.image_inter {f : α → β} {s t u : Set α} (hf : InjOn f u) (hs 
 #align set.inj_on.image_inter Set.InjOn.image_inter
 
 theorem InjOn.image_Inter_eq [Nonempty ι] {s : ι → Set α} {f : α → β} (h : InjOn f (⋃ i, s i)) :
-    (f '' ⋂ i, s i) = ⋂ i, f '' s i := by
+    (f '' ⋂ i, s i) = ⋂ i, f '' s i := by 
   inhabit ι
   refine' subset.antisymm (image_Inter_subset s f) fun y hy => _
   simp only [mem_Inter, mem_image_iff_bex] at hy
   choose x hx hy using hy
   refine' ⟨x default, mem_Inter.2 fun i => _, hy _⟩
-  suffices x default = x i by
+  suffices x default = x i by 
     rw [this]
     apply hx
   replace hx : ∀ i, x i ∈ ⋃ j, s j := fun i => (subset_Union _ _) (hx i)
@@ -1644,9 +1636,7 @@ theorem image_Inter {f : α → β} (hf : Bijective f) (s : ι → Set α) :
     (f '' ⋂ i, s i) = ⋂ i, f '' s i := by
   cases isEmpty_or_nonempty ι
   · simp_rw [Inter_of_empty, image_univ_of_surjective hf.surjective]
-    
   · exact (hf.injective.inj_on _).image_Inter_eq
-    
 #align set.image_Inter Set.image_Inter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -1899,10 +1889,8 @@ theorem Union_prod_of_monotone [SemilatticeSup α] {s : α → Set β} {t : α �
   ext ⟨z, w⟩; simp only [mem_prod, mem_Union, exists_imp, and_imp, iff_def]; constructor
   · intro x hz hw
     exact ⟨⟨x, hz⟩, x, hw⟩
-    
   · intro x hz x' hw
     exact ⟨x ⊔ x', hs le_sup_left hz, ht le_sup_right hw⟩
-    
 #align set.Union_prod_of_monotone Set.Union_prod_of_monotone
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1928,7 +1916,7 @@ theorem sInter_prod_sInter {S : Set (Set α)} {T : Set (Set β)} (hS : S.Nonempt
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sInter_prod {S : Set (Set α)} (hS : S.Nonempty) (t : Set β) : ⋂₀ S ×ˢ t = ⋂ s ∈ S, s ×ˢ t :=
-  by
+  by 
   rw [← sInter_singleton t, sInter_prod_sInter hS (singleton_nonempty t), sInter_singleton]
   simp_rw [prod_singleton, mem_image, Inter_exists, bInter_and', Inter_Inter_eq_right]
 #align set.sInter_prod Set.sInter_prod
@@ -1936,7 +1924,7 @@ theorem sInter_prod {S : Set (Set α)} (hS : S.Nonempty) (t : Set β) : ⋂₀ S
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_sInter {T : Set (Set β)} (hT : T.Nonempty) (s : Set α) : s ×ˢ ⋂₀ T = ⋂ t ∈ T, s ×ˢ t :=
-  by
+  by 
   rw [← sInter_singleton s, sInter_prod_sInter (singleton_nonempty s) hT, sInter_singleton]
   simp_rw [singleton_prod, mem_image, Inter_exists, bInter_and', Inter_Inter_eq_right]
 #align set.prod_sInter Set.prod_sInter
@@ -2067,10 +2055,8 @@ theorem seq_seq {s : Set (β → γ)} {t : Set (α → β)} {u : Set α} :
   refine' Set.ext fun c => Iff.intro _ _
   · rintro ⟨f, hfs, b, ⟨g, hg, a, hau, rfl⟩, rfl⟩
     exact ⟨f ∘ g, ⟨(· ∘ ·) f, mem_image_of_mem _ hfs, g, hg, rfl⟩, a, hau, rfl⟩
-    
   · rintro ⟨fg, ⟨fc, ⟨f, hfs, rfl⟩, g, hgt, rfl⟩, a, ha, rfl⟩
     exact ⟨f, hfs, g a, ⟨g, hgt, a, ha, rfl⟩, rfl⟩
-    
 #align set.seq_seq Set.seq_seq
 
 theorem image_seq {f : β → γ} {s : Set (α → β)} {t : Set α} :
@@ -2084,11 +2070,9 @@ theorem prod_eq_seq {s : Set α} {t : Set β} : s ×ˢ t = (Prod.mk '' s).seq t 
   constructor
   · rintro ⟨ha, hb⟩
     exact ⟨Prod.mk a, ⟨a, ha, rfl⟩, b, hb, rfl⟩
-    
   · rintro ⟨f, ⟨x, hx, rfl⟩, y, hy, eq⟩
     rw [← Eq]
     exact ⟨hx, hy⟩
-    
 #align set.prod_eq_seq Set.prod_eq_seq
 
 theorem prod_image_seq_comm (s : Set α) (t : Set β) :

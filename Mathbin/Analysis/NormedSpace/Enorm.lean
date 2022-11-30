@@ -57,7 +57,7 @@ theorem coe_fn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → �
   cases e₁ <;> cases e₂ <;> congr <;> exact h
 #align enorm.coe_fn_injective Enorm.coe_fn_injective
 
-@[ext.1]
+@[ext]
 theorem ext {e₁ e₂ : Enorm 𝕜 V} (h : ∀ x, e₁ x = e₂ x) : e₁ = e₂ :=
   coe_fn_injective <| funext h
 #align enorm.ext Enorm.ext
@@ -73,21 +73,18 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 
 @[simp]
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
-  le_antisymm (e.map_smul_le' c x) <| by
-    by_cases hc : c = 0;
-    · simp [hc]
-      
+  le_antisymm (e.map_smul_le' c x) <| by 
+    by_cases hc : c = 0; · simp [hc]
     calc
       (‖c‖₊ : ℝ≥0∞) * e x = ‖c‖₊ * e (c⁻¹ • c • x) := by rw [inv_smul_smul₀ hc]
       _ ≤ ‖c‖₊ * (‖c⁻¹‖₊ * e (c • x)) := _
       _ = e (c • x) := _
       
     · exact Ennreal.mul_le_mul le_rfl (e.map_smul_le' _ _)
-      
-    · rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top,
+    ·
+      rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top,
           one_mul] <;>
         simp [hc]
-      
 #align enorm.map_smul Enorm.map_smul
 
 @[simp]
@@ -124,14 +121,15 @@ theorem map_sub_le (x y : V) : e (x - y) ≤ e x + e y :=
     
 #align enorm.map_sub_le Enorm.map_sub_le
 
-instance : PartialOrder (Enorm 𝕜 V) where
+instance : PartialOrder (Enorm 𝕜
+        V) where 
   le e₁ e₂ := ∀ x, e₁ x ≤ e₂ x
   le_refl e x := le_rfl
   le_trans e₁ e₂ e₃ h₁₂ h₂₃ x := le_trans (h₁₂ x) (h₂₃ x)
   le_antisymm e₁ e₂ h₁₂ h₂₁ := ext fun x => le_antisymm (h₁₂ x) (h₂₁ x)
 
 /-- The `enorm` sending each non-zero vector to infinity. -/
-noncomputable instance : HasTop (Enorm 𝕜 V) :=
+noncomputable instance : Top (Enorm 𝕜 V) :=
   ⟨{ toFun := fun x => if x = 0 then 0 else ⊤, eq_zero' := fun x => by split_ifs <;> simp [*],
       map_add_le' := fun x y => by
         split_ifs with hxy hx hy hy hx hy hy <;> try simp [*]
@@ -139,14 +137,10 @@ noncomputable instance : HasTop (Enorm 𝕜 V) :=
       map_smul_le' := fun c x => by
         split_ifs with hcx hx hx <;> simp only [smul_eq_zero, not_or] at hcx
         · simp only [mul_zero, le_refl]
-          
         · have : c = 0 := by tauto
           simp [this]
-          
         · tauto
-          
-        · simp [hcx.1]
-           }⟩
+        · simp [hcx.1] }⟩
 
 noncomputable instance : Inhabited (Enorm 𝕜 V) :=
   ⟨⊤⟩
@@ -155,7 +149,8 @@ theorem top_map {x : V} (hx : x ≠ 0) : (⊤ : Enorm 𝕜 V) x = ⊤ :=
   if_neg hx
 #align enorm.top_map Enorm.top_map
 
-noncomputable instance : OrderTop (Enorm 𝕜 V) where
+noncomputable instance : OrderTop (Enorm 𝕜
+        V) where 
   top := ⊤
   le_top e x := if h : x = 0 then by simp [h] else by simp [top_map h]
 
@@ -183,7 +178,7 @@ theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁ ⊔ e₂) x = max (e�
 
 /-- Structure of an `emetric_space` defined by an extended norm. -/
 @[reducible]
-def emetricSpace : EmetricSpace V where
+def emetricSpace : EmetricSpace V where 
   edist x y := e (x - y)
   edist_self x := by simp
   eq_of_edist_eq_zero x y := by simp [sub_eq_zero]
@@ -196,7 +191,8 @@ def emetricSpace : EmetricSpace V where
 #align enorm.emetric_space Enorm.emetricSpace
 
 /-- The subspace of vectors with finite enorm. -/
-def finiteSubspace : Subspace 𝕜 V where
+def finiteSubspace : Subspace 𝕜
+      V where 
   carrier := { x | e x < ⊤ }
   zero_mem' := by simp
   add_mem' x y hx hy := lt_of_le_of_lt (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)

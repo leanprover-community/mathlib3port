@@ -127,9 +127,7 @@ def relabel (g : α → β) : L.term α → L.term β
 theorem relabel_id (t : L.term α) : t.relabel id = t := by
   induction' t with _ _ _ _ ih
   · rfl
-    
   · simp [ih]
-    
 #align first_order.language.term.relabel_id FirstOrder.Language.Term.relabel_id
 
 @[simp]
@@ -142,9 +140,7 @@ theorem relabel_relabel (f : α → β) (g : β → γ) (t : L.term α) :
     (t.relabel f).relabel g = t.relabel (g ∘ f) := by
   induction' t with _ _ _ _ ih
   · rfl
-    
   · simp [ih]
-    
 #align first_order.language.term.relabel_relabel FirstOrder.Language.Term.relabel_relabel
 
 @[simp]
@@ -239,34 +235,22 @@ def varsToConstants : L.term (Sum γ α) → L[[γ]].term α
 /-- A bijection between terms with constants and terms with extra variables. -/
 @[simps]
 def constantsVarsEquiv : L[[γ]].term α ≃ L.term (Sum γ α) :=
-  ⟨constantsToVars, varsToConstants, by
+  ⟨constantsToVars, varsToConstants, by 
     intro t
     induction' t with _ n f _ ih
     · rfl
-      
     · cases n
       · cases f
         · simp [constants_to_vars, vars_to_constants, ih]
-          
         · simp [constants_to_vars, vars_to_constants, constants.term]
-          
-        
       · cases f
         · simp [constants_to_vars, vars_to_constants, ih]
-          
-        · exact isEmptyElim f
-          
-        
-      ,
-    by
+        · exact isEmptyElim f,
+    by 
     intro t
     induction' t with x n f _ ih
     · cases x <;> rfl
-      
-    · cases n <;>
-        · simp [vars_to_constants, constants_to_vars, ih]
-          
-      ⟩
+    · cases n <;> · simp [vars_to_constants, constants_to_vars, ih]⟩
 #align first_order.language.term.constants_vars_equiv FirstOrder.Language.Term.constantsVarsEquiv
 
 /-- A bijection between terms with constants and terms with extra variables. -/
@@ -340,10 +324,8 @@ theorem id_on_term : ((LhomCat.id L).onTerm : L.term α → L.term α) = id := b
   ext t
   induction' t with _ _ _ _ ih
   · rfl
-    
   · simp_rw [on_term, ih]
     rfl
-    
 #align first_order.language.Lhom.id_on_term FirstOrder.Language.LhomCat.id_on_term
 
 @[simp]
@@ -352,17 +334,16 @@ theorem comp_on_term {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
   ext t
   induction' t with _ _ _ _ ih
   · rfl
-    
   · simp_rw [on_term, ih]
     rfl
-    
 #align first_order.language.Lhom.comp_on_term FirstOrder.Language.LhomCat.comp_on_term
 
 end LhomCat
 
 /-- Maps a term's symbols along a language equivalence. -/
 @[simps]
-def LequivCat.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α where
+def LequivCat.onTerm (φ : L ≃ᴸ L') :
+    L.term α ≃ L'.term α where 
   toFun := φ.toLhom.onTerm
   invFun := φ.invLhom.onTerm
   left_inv := by
@@ -452,7 +433,7 @@ namespace BoundedFormula
 instance : Inhabited (L.BoundedFormula α n) :=
   ⟨falsum⟩
 
-instance : HasBot (L.BoundedFormula α n) :=
+instance : Bot (L.BoundedFormula α n) :=
   ⟨falsum⟩
 
 /-- The negation of a bounded formula is also a bounded formula. -/
@@ -467,7 +448,7 @@ protected def ex (φ : L.BoundedFormula α (n + 1)) : L.BoundedFormula α n :=
   φ.Not.all.Not
 #align first_order.language.bounded_formula.ex FirstOrder.Language.BoundedFormula.ex
 
-instance : HasTop (L.BoundedFormula α n) :=
+instance : Top (L.BoundedFormula α n) :=
   ⟨BoundedFormula.not ⊥⟩
 
 instance : HasInf (L.BoundedFormula α n) :=
@@ -521,15 +502,10 @@ def castLe : ∀ {m n : ℕ} (h : m ≤ n), L.BoundedFormula α m → L.BoundedF
 theorem cast_le_rfl {n} (h : n ≤ n) (φ : L.BoundedFormula α n) : φ.castLe h = φ := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-    
   · simp [Fin.cast_le_of_eq]
-    
   · simp [Fin.cast_le_of_eq]
-    
   · simp [Fin.cast_le_of_eq, ih1, ih2]
-    
   · simp [Fin.cast_le_of_eq, ih3]
-    
 #align
   first_order.language.bounded_formula.cast_le_rfl FirstOrder.Language.BoundedFormula.cast_le_rfl
 
@@ -539,17 +515,12 @@ theorem cast_le_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) (φ : L.BoundedFor
   revert m n
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 <;> intro m n km mn
   · rfl
-    
   · simp
-    
   · simp only [cast_le, eq_self_iff_true, heq_iff_eq, true_and_iff]
     rw [← Function.comp.assoc, relabel_comp_relabel]
     simp
-    
   · simp [ih1, ih2]
-    
   · simp only [cast_le, ih3]
-    
 #align
   first_order.language.bounded_formula.cast_le_cast_le FirstOrder.Language.BoundedFormula.cast_le_cast_le
 
@@ -642,18 +613,13 @@ theorem map_term_rel_map_term_rel {L'' : Language}
     (fr' : ∀ n, L'.Relations n → L''.Relations n) {n} (φ : L.BoundedFormula α n) :
     ((φ.mapTermRel ft fr fun _ => id).mapTermRel ft' fr' fun _ => id) =
       φ.mapTermRel (fun _ => ft' _ ∘ ft _) (fun _ => fr' _ ∘ fr _) fun _ => id :=
-  by
+  by 
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-    
   · simp [map_term_rel]
-    
   · simp [map_term_rel]
-    
   · simp [map_term_rel, ih1, ih2]
-    
   · simp [map_term_rel, ih3]
-    
 #align
   first_order.language.bounded_formula.map_term_rel_map_term_rel FirstOrder.Language.BoundedFormula.map_term_rel_map_term_rel
 
@@ -662,15 +628,10 @@ theorem map_term_rel_id_id_id {n} (φ : L.BoundedFormula α n) :
     (φ.mapTermRel (fun _ => id) (fun _ => id) fun _ => id) = φ := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-    
   · simp [map_term_rel]
-    
   · simp [map_term_rel]
-    
   · simp [map_term_rel, ih1, ih2]
-    
   · simp [map_term_rel, ih3]
-    
 #align
   first_order.language.bounded_formula.map_term_rel_id_id_id FirstOrder.Language.BoundedFormula.map_term_rel_id_id_id
 
@@ -695,14 +656,12 @@ def relabelAux (g : α → Sum β (Fin n)) (k : ℕ) : Sum α (Fin k) → Sum β
 theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Fin n)} {v : β → M}
     {xs : Fin (n + m) → M} :
     Sum.elim v xs ∘ relabelAux g m = Sum.elim (Sum.elim v (xs ∘ castAdd m) ∘ g) (xs ∘ natAdd n) :=
-  by
+  by 
   ext x
   cases x
   · simp only [bounded_formula.relabel_aux, Function.comp_apply, Sum.map_inl, Sum.elim_inl]
     cases' g x with l r <;> simp
-    
   · simp [bounded_formula.relabel_aux]
-    
 #align
   first_order.language.bounded_formula.sum_elim_comp_relabel_aux FirstOrder.Language.BoundedFormula.sum_elim_comp_relabel_aux
 
@@ -710,9 +669,7 @@ theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Fin n)} {v : β 
 theorem relabel_aux_sum_inl (k : ℕ) :
     relabelAux (Sum.inl : α → Sum α (Fin n)) k = Sum.map id (natAdd n) := by
   ext x
-  cases x <;>
-    · simp [relabel_aux]
-      
+  cases x <;> · simp [relabel_aux]
 #align
   first_order.language.bounded_formula.relabel_aux_sum_inl FirstOrder.Language.BoundedFormula.relabel_aux_sum_inl
 
@@ -767,15 +724,10 @@ theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
   simp only [relabel, relabel_aux_sum_inl]
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-    
   · simp [Fin.nat_add_zero, cast_le_of_eq, map_term_rel]
-    
   · simp [Fin.nat_add_zero, cast_le_of_eq, map_term_rel]
-    
   · simp [map_term_rel, ih1, ih2]
-    
   · simp [map_term_rel, ih3, cast_le]
-    
 #align
   first_order.language.bounded_formula.relabel_sum_inl FirstOrder.Language.BoundedFormula.relabel_sum_inl
 
@@ -895,9 +847,7 @@ theorem not_all_is_qf (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsQf := fun 
 theorem not_ex_is_qf (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsQf := fun con => by
   cases' con with _ con _ _ con
   · exact φ.not_ex_is_atomic con
-    
   · exact not_all_is_qf _ con
-    
 #align
   first_order.language.bounded_formula.not_ex_is_qf FirstOrder.Language.BoundedFormula.not_ex_is_qf
 
@@ -980,11 +930,8 @@ theorem is_prenex_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQ
   induction' hψ with _ _ hψ _ _ _ ih1 _ _ _ ih2
   · rw [hψ.to_prenex_imp_right]
     exact (hφ.imp hψ).IsPrenex
-    
   · exact (ih1 hφ.lift_at).all
-    
   · exact (ih2 hφ.lift_at).ex
-    
 #align
   first_order.language.bounded_formula.is_prenex_to_prenex_imp_right FirstOrder.Language.BoundedFormula.is_prenex_to_prenex_imp_right
 
@@ -1021,11 +968,8 @@ theorem is_prenex_to_prenex_imp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex 
   induction' hφ with _ _ hφ _ _ _ ih1 _ _ _ ih2
   · rw [hφ.to_prenex_imp]
     exact is_prenex_to_prenex_imp_right hφ hψ
-    
   · exact (ih1 hψ.lift_at).ex
-    
   · exact (ih2 hψ.lift_at).all
-    
 #align
   first_order.language.bounded_formula.is_prenex_to_prenex_imp FirstOrder.Language.BoundedFormula.is_prenex_to_prenex_imp
 
@@ -1080,16 +1024,11 @@ theorem id_on_bounded_formula :
   ext f
   induction' f with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-    
   · rw [on_bounded_formula, Lhom.id_on_term, id.def, id.def, id.def, bd_equal]
-    
   · rw [on_bounded_formula, Lhom.id_on_term]
     rfl
-    
   · rw [on_bounded_formula, ih1, ih2, id.def, id.def, id.def]
-    
   · rw [on_bounded_formula, ih3, id.def, id.def]
-    
 #align
   first_order.language.Lhom.id_on_bounded_formula FirstOrder.Language.LhomCat.id_on_bounded_formula
 
@@ -1097,21 +1036,16 @@ theorem id_on_bounded_formula :
 theorem comp_on_bounded_formula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
     ((φ.comp ψ).onBoundedFormula : L.BoundedFormula α n → L''.BoundedFormula α n) =
       φ.onBoundedFormula ∘ ψ.onBoundedFormula :=
-  by
+  by 
   ext f
   induction' f with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-    
   · simp only [on_bounded_formula, comp_on_term, Function.comp_apply]
     rfl
-    
   · simp only [on_bounded_formula, comp_on_relation, comp_on_term, Function.comp_apply]
     rfl
-    
   · simp only [on_bounded_formula, Function.comp_apply, ih1, ih2, eq_self_iff_true, and_self_iff]
-    
   · simp only [ih3, on_bounded_formula, Function.comp_apply]
-    
 #align
   first_order.language.Lhom.comp_on_bounded_formula FirstOrder.Language.LhomCat.comp_on_bounded_formula
 
@@ -1142,7 +1076,9 @@ namespace LequivCat
 
 /-- Maps a bounded formula's symbols along a language equivalence. -/
 @[simps]
-def onBoundedFormula (φ : L ≃ᴸ L') : L.BoundedFormula α n ≃ L'.BoundedFormula α n where
+def onBoundedFormula (φ : L ≃ᴸ L') :
+    L.BoundedFormula α n ≃
+      L'.BoundedFormula α n where 
   toFun := φ.toLhom.onBoundedFormula
   invFun := φ.invLhom.onBoundedFormula
   left_inv := by
@@ -1324,21 +1260,19 @@ theorem distinct_constants_theory_eq_Union (s : Set α) :
     L.distinctConstantsTheory s =
       ⋃ t : Finset s,
         L.distinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
-  by classical
-  simp only [distinct_constants_theory]
-  rw [← image_Union, ← Union_inter]
-  refine' congr rfl (congr (congr rfl _) rfl)
-  ext ⟨i, j⟩
-  simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union,
-    mem_image, Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_right, exists_eq_right]
-  refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
-  · simp
-    
-  · simp
-    
-  · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
-    exact ⟨is, js⟩
-    
+  by
+  classical 
+    simp only [distinct_constants_theory]
+    rw [← image_Union, ← Union_inter]
+    refine' congr rfl (congr (congr rfl _) rfl)
+    ext ⟨i, j⟩
+    simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union,
+      mem_image, Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_right, exists_eq_right]
+    refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
+    · simp
+    · simp
+    · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
+      exact ⟨is, js⟩
 #align
   first_order.language.distinct_constants_theory_eq_Union FirstOrder.Language.distinct_constants_theory_eq_Union
 

@@ -31,7 +31,7 @@ Instances constructed from this result:
 /-- If the algebra map `R →+* A` is injective then `A` has the same characteristic as `R`. -/
 theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
     (h : Function.Injective (algebraMap R A)) (p : ℕ) [CharP R p] : CharP A p :=
-  { cast_eq_zero_iff := fun x => by
+  { cast_eq_zero_iff := fun x => by 
       rw [← CharP.cast_eq_zero_iff R p x]
       change algebraMap ℕ A x = 0 ↔ algebraMap ℕ R x = 0
       rw [IsScalarTower.algebra_map_apply ℕ R A x]

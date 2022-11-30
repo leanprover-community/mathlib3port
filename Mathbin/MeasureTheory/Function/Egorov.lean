@@ -89,7 +89,6 @@ theorem measure_not_convergent_seq_tendsto_zero [SemilatticeSup ι] [Countable �
       simp only [eq_iff_true_of_subsingleton]
     rw [this]
     exact tendsto_const_nhds
-    
   rw [← measure_inter_not_convergent_seq_eq_zero hfg n, inter_Inter]
   refine'
     tendsto_measure_Inter (fun n => hsm.inter <| not_convergent_seq_measurable_set hf hg)
@@ -109,10 +108,8 @@ theorem exists_not_convergent_seq_lt (hε : 0 < ε) (hf : ∀ n, StronglyMeasura
       (measure_not_convergent_seq_tendsto_zero hf hg hsm hs hfg n) (Ennreal.ofReal (ε * 2⁻¹ ^ n)) _
   · rw [zero_add] at hN
     exact ⟨N, (hN N le_rfl).2⟩
-    
   · rw [gt_iff_lt, Ennreal.of_real_pos]
     exact mul_pos hε (pow_pos (by norm_num) n)
-    
 #align
   measure_theory.egorov.exists_not_convergent_seq_lt MeasureTheory.Egorov.exists_not_convergent_seq_lt
 
@@ -167,12 +164,9 @@ theorem measure_Union_not_convergent_seq (hε : 0 < ε) (hf : ∀ n, StronglyMea
   rw [Ennreal.tsum_mul_left, ← Ennreal.of_real_tsum_of_nonneg, inv_eq_one_div, tsum_geometric_two, ←
     Ennreal.of_real_mul (half_pos hε).le, div_mul_cancel ε two_ne_zero]
   · exact le_rfl
-    
   · exact fun n => pow_nonneg (by norm_num) _
-    
   · rw [inv_eq_one_div]
     exact summable_geometric_two
-    
 #align
   measure_theory.egorov.measure_Union_not_convergent_seq MeasureTheory.Egorov.measure_Union_not_convergent_seq
 
@@ -240,9 +234,7 @@ theorem tendsto_uniformly_on_of_ae_tendsto' [IsFiniteMeasure μ] (hf : ∀ n, St
     tendsto_uniformly_on_of_ae_tendsto hf hg MeasurableSet.univ (measure_ne_top μ univ) _ hε
   · refine' ⟨_, ht, _⟩
     rwa [compl_eq_univ_diff]
-    
   · filter_upwards [hfg] with _ htendsto _ using htendsto
-    
 #align
   measure_theory.tendsto_uniformly_on_of_ae_tendsto' MeasureTheory.tendsto_uniformly_on_of_ae_tendsto'
 

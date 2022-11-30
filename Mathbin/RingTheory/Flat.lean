@@ -65,7 +65,7 @@ namespace Flat
 open TensorProduct LinearMap _Root_.Submodule
 
 instance self (R : Type u) [CommRing R] : Flat R R :=
-  ⟨by
+  ⟨by 
     intro I hI
     rw [← Equiv.injective_comp (TensorProduct.rid R I).symm.toEquiv]
     convert Subtype.coe_injective using 1

@@ -53,7 +53,7 @@ theorem closedEmbeddingInclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ 
   { embedding_inclusion h with
     closedRange :=
       is_closed_induced_iff.2
-        ⟨S₁, hS₁, by
+        ⟨S₁, hS₁, by 
           convert (Set.range_subtype_map id _).symm
           rw [Set.image_id]
           rfl⟩ }
@@ -126,7 +126,7 @@ theorem StarAlgHom.ext_topological_closure [T2Space B] {S : StarSubalgebra R A}
     (h :
       φ.comp (inclusion (le_topological_closure S)) =
         ψ.comp (inclusion (le_topological_closure S))) :
-    φ = ψ := by
+    φ = ψ := by 
   rw [FunLike.ext'_iff]
   have : Dense (Set.range <| inclusion (le_topological_closure S)) := by
     refine' embedding_subtype_coe.to_inducing.dense_iff.2 fun x => _
@@ -134,7 +134,7 @@ theorem StarAlgHom.ext_topological_closure [T2Space B] {S : StarSubalgebra R A}
     rw [← Set.range_comp]
     exact
       Set.ext fun y =>
-        ⟨by
+        ⟨by 
           rintro ⟨y, rfl⟩
           exact y.prop, fun hy => ⟨⟨y, hy⟩, rfl⟩⟩
   refine' Continuous.ext_on this hφ hψ _
@@ -212,11 +212,11 @@ theorem le_of_is_closed_of_mem {S : StarSubalgebra R A} (hS : IsClosed (S : Set 
 /-- The coercion from an elemental algebra to the full algebra as a `closed_embedding`. -/
 theorem closedEmbeddingCoe (x : A) : ClosedEmbedding (coe : elementalStarAlgebra R x → A) :=
   { induced := rfl, inj := Subtype.coe_injective,
-    closedRange := by
+    closedRange := by 
       convert elementalStarAlgebra.isClosed R x
       exact
         Set.ext fun y =>
-          ⟨by
+          ⟨by 
             rintro ⟨y, rfl⟩
             exact y.prop, fun hy => ⟨⟨y, hy⟩, rfl⟩⟩ }
 #align elemental_star_algebra.closed_embedding_coe elementalStarAlgebra.closedEmbeddingCoe

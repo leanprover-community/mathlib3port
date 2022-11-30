@@ -110,21 +110,22 @@ instance {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Mono 
   cases n <;> infer_instance
 
 /-- An injective object admits a trivial injective resolution: itself in degree 0. -/
-def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolutionCat Z where
+def self (Z : C) [CategoryTheory.Injective Z] :
+    InjectiveResolutionCat
+      Z where 
   cocomplex := (CochainComplex.single₀ C).obj Z
   ι := 𝟙 ((CochainComplex.single₀ C).obj Z)
   Injective n := by
     cases n <;>
       · dsimp
         infer_instance
-        
-  exact₀ := by
+  exact₀ := by 
     dsimp
     exact exact_epi_zero _
-  exact n := by
+  exact n := by 
     dsimp
     exact exact_of_zero _ _
-  Mono := by
+  Mono := by 
     dsimp
     infer_instance
 #align category_theory.InjectiveResolution.self CategoryTheory.InjectiveResolutionCat.self

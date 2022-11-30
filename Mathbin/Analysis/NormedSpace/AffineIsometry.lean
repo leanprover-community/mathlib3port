@@ -93,7 +93,7 @@ theorem coe_fn_injective : @Injective (P →ᵃⁱ[𝕜] P₂) (P → P₂) coeF
   AffineMap.coe_fn_injective.comp to_affine_map_injective
 #align affine_isometry.coe_fn_injective AffineIsometry.coe_fn_injective
 
-@[ext.1]
+@[ext]
 theorem ext {f g : P →ᵃⁱ[𝕜] P₂} (h : ∀ x, f x = g x) : f = g :=
   coe_fn_injective <| funext h
 #align affine_isometry.ext AffineIsometry.ext
@@ -270,7 +270,7 @@ theorem comp_assoc (f : P₃ →ᵃⁱ[𝕜] P₄) (g : P₂ →ᵃⁱ[𝕜] P�
 
 omit V₂ V₃ V₄
 
-instance : Monoid (P →ᵃⁱ[𝕜] P) where
+instance : Monoid (P →ᵃⁱ[𝕜] P) where 
   one := id
   mul := comp
   mul_assoc := comp_assoc
@@ -374,7 +374,7 @@ theorem to_affine_equiv_injective : Injective (toAffineEquiv : (P ≃ᵃⁱ[𝕜
   | ⟨e, _⟩, ⟨_, _⟩, rfl => rfl
 #align affine_isometry_equiv.to_affine_equiv_injective AffineIsometryEquiv.to_affine_equiv_injective
 
-@[ext.1]
+@[ext]
 theorem ext {e e' : P ≃ᵃⁱ[𝕜] P₂} (h : ∀ x, e x = e' x) : e = e' :=
   to_affine_equiv_injective <| AffineEquiv.ext h
 #align affine_isometry_equiv.ext AffineIsometryEquiv.ext
@@ -407,7 +407,7 @@ theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) : ⇑
 
 @[simp]
 theorem linear_isometry_equiv_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) :
-    (mk' e e' p h).LinearIsometryEquiv = e' := by
+    (mk' e e' p h).LinearIsometryEquiv = e' := by 
   ext
   rfl
 #align affine_isometry_equiv.linear_isometry_equiv_mk' AffineIsometryEquiv.linear_isometry_equiv_mk'
@@ -633,7 +633,7 @@ theorem trans_assoc (ePP₂ : P ≃ᵃⁱ[𝕜] P₂) (eP₂G : P₂ ≃ᵃⁱ[�
 omit V₂ V₃ V₄
 
 /-- The group of affine isometries of a `normed_add_torsor`, `P`. -/
-instance : Group (P ≃ᵃⁱ[𝕜] P) where
+instance : Group (P ≃ᵃⁱ[𝕜] P) where 
   mul e₁ e₂ := e₂.trans e₁
   one := refl _ _
   inv := symm
@@ -783,7 +783,7 @@ theorem coe_const_vsub (p : P) : ⇑(constVsub 𝕜 p) = (· -ᵥ ·) p :=
 theorem symm_const_vsub (p : P) :
     (constVsub 𝕜 p).symm =
       (LinearIsometryEquiv.neg 𝕜).toAffineIsometryEquiv.trans (vaddConst 𝕜 p) :=
-  by
+  by 
   ext
   rfl
 #align affine_isometry_equiv.symm_const_vsub AffineIsometryEquiv.symm_const_vsub
@@ -912,7 +912,7 @@ theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f
     (f.linear : V → V₂) =
       (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
-    by
+    by 
     ext v
     simp
   rw [this]
@@ -926,7 +926,7 @@ theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f
     (f.linear : V → V₂) =
       (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
-    by
+    by 
     ext v
     simp
   rw [this]

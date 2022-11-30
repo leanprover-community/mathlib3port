@@ -81,7 +81,9 @@ include dec_ι
 
 /-- `mk β s x` is the element of `⨁ i, β i` that is zero outside `s`
 and has coefficient `x i` for `i` in `s`. -/
-def mk (s : Finset ι) : (∀ i : (↑s : Set ι), β i.1) →+ ⨁ i, β i where
+def mk (s : Finset ι) :
+    (∀ i : (↑s : Set ι), β i.1) →+
+      ⨁ i, β i where 
   toFun := Dfinsupp.mk s
   map_add' _ _ := Dfinsupp.mk_add
   map_zero' := Dfinsupp.mk_zero
@@ -135,7 +137,7 @@ theorem of_injective (i : ι) : Function.Injective (of β i) :=
 @[elab_as_elim]
 protected theorem induction_on {C : (⨁ i, β i) → Prop} (x : ⨁ i, β i) (H_zero : C 0)
     (H_basic : ∀ (i : ι) (x : β i), C (of β i x)) (H_plus : ∀ x y, C x → C y → C (x + y)) : C x :=
-  by
+  by 
   apply Dfinsupp.induction x H_zero
   intro i b f h1 h2 ih
   solve_by_elim
@@ -152,7 +154,7 @@ theorem add_hom_ext {γ : Type _} [AddMonoid γ] ⦃f g : (⨁ i, β i) →+ γ�
 then they are equal.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem add_hom_ext' {γ : Type _} [AddMonoid γ] ⦃f g : (⨁ i, β i) →+ γ⦄
     (H : ∀ i : ι, f.comp (of _ i) = g.comp (of _ i)) : f = g :=
   add_hom_ext fun i => AddMonoidHom.congr_fun <| H i
@@ -276,7 +278,9 @@ variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMon
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
-noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j where
+noncomputable def sigmaCurry :
+    (⨁ i : Σi, _, δ i.1 i.2) →+
+      ⨁ (i) (j), δ i j where 
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
   map_zero' := Dfinsupp.sigma_curry_zero
   map_add' f g := @Dfinsupp.sigma_curry_add _ _ δ _ f g
@@ -291,7 +295,9 @@ theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
-noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2 where
+noncomputable def sigmaUncurry :
+    (⨁ (i) (j), δ i j) →+
+      ⨁ i : Σi, _, δ i.1 i.2 where 
   toFun := Dfinsupp.sigmaUncurry
   map_zero' := Dfinsupp.sigma_uncurry_zero
   map_add' := Dfinsupp.sigma_uncurry_add
@@ -333,9 +339,7 @@ theorem coe_of_apply {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike 
     (of _ i x j : M) = if i = j then x else 0 := by
   obtain rfl | h := Decidable.eq_or_ne i j
   · rw [DirectSum.of_eq_same, if_pos rfl]
-    
   · rw [DirectSum.of_eq_of_ne _ _ _ _ h, if_neg h, ZeroMemClass.coe_zero]
-    
 #align direct_sum.coe_of_apply DirectSum.coe_of_apply
 
 /-- The `direct_sum` formed by a collection of additive submonoids (or subgroups, or submodules) of

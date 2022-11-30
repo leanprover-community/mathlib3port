@@ -141,7 +141,7 @@ theorem to_pgame_nonneg (a : Ordinal) : 0 ≤ a.toPgame :=
 
 @[simp]
 theorem to_pgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
-  ⟨by
+  ⟨by 
     contrapose
     rw [not_lt, not_lf]
     exact to_pgame_le, to_pgame_lf⟩
@@ -149,7 +149,7 @@ theorem to_pgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
 
 @[simp]
 theorem to_pgame_le_iff {a b : Ordinal} : a.toPgame ≤ b.toPgame ↔ a ≤ b :=
-  ⟨by
+  ⟨by 
     contrapose
     rw [not_le, Pgame.not_le]
     exact to_pgame_lf, to_pgame_le⟩
@@ -157,7 +157,7 @@ theorem to_pgame_le_iff {a b : Ordinal} : a.toPgame ≤ b.toPgame ↔ a ≤ b :=
 
 @[simp]
 theorem to_pgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
-  ⟨by
+  ⟨by 
     contrapose
     rw [not_lt]
     exact fun h => not_lt_of_le (to_pgame_le h), to_pgame_lt⟩
@@ -179,7 +179,8 @@ theorem to_pgame_eq_iff {a b : Ordinal} : a.toPgame = b.toPgame ↔ a = b :=
 
 /-- The order embedding version of `to_pgame`. -/
 @[simps]
-noncomputable def toPgameEmbedding : Ordinal.{u} ↪o Pgame.{u} where
+noncomputable def toPgameEmbedding :
+    Ordinal.{u} ↪o Pgame.{u} where 
   toFun := Ordinal.toPgame
   inj' := to_pgame_injective
   map_rel_iff' := @to_pgame_le_iff
@@ -190,25 +191,18 @@ theorem to_pgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b
   | a, b => by
     refine' ⟨le_of_forall_lf (fun i => _) isEmptyElim, le_of_forall_lf (fun i => _) isEmptyElim⟩
     · apply left_moves_add_cases i <;> intro i <;> let wf := to_left_moves_to_pgame_symm_lt i <;>
-            try rw [add_move_left_inl] <;>
-          try rw [add_move_left_inr] <;>
+            try rw [add_move_left_inl] <;> try rw [add_move_left_inr] <;>
         rw [to_pgame_move_left', lf_congr_left (to_pgame_add _ _), to_pgame_lf_iff]
       · exact nadd_lt_nadd_right wf _
-        
       · exact nadd_lt_nadd_left wf _
-        
-      
     · rw [to_pgame_move_left']
       rcases lt_nadd_iff.1 (to_left_moves_to_pgame_symm_lt i) with (⟨c, hc, hc'⟩ | ⟨c, hc, hc'⟩) <;>
           rw [← to_pgame_le_iff, ← le_congr_right (to_pgame_add _ _)] at hc' <;>
         apply lf_of_le_of_lf hc'
       · apply add_lf_add_right
         rwa [to_pgame_lf_iff]
-        
       · apply add_lf_add_left
-        rwa [to_pgame_lf_iff]
-        
-      decreasing_by
+        rwa [to_pgame_lf_iff]decreasing_by
   solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.to_pgame_add Ordinal.to_pgame_add
 

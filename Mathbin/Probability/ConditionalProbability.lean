@@ -85,7 +85,7 @@ scoped notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
 is a probability measure. -/
 theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) :
     is_probability_measure <| μ[|s] :=
-  ⟨by
+  ⟨by 
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
 #align probability_theory.cond_is_probability_measure ProbabilityTheory.condIsProbabilityMeasure
@@ -114,7 +114,6 @@ theorem cond_inter_self (hms : MeasurableSet s) (t : Set Ω) : μ[s ∩ t|s] = �
 theorem inter_pos_of_cond_ne_zero (hms : MeasurableSet s) (hcst : μ[t|s] ≠ 0) : 0 < μ (s ∩ t) := by
   refine' pos_iff_ne_zero.mpr (right_ne_zero_of_mul _)
   · exact (μ s)⁻¹
-    
   convert hcst
   simp [hms, Set.inter_comm]
 #align probability_theory.inter_pos_of_cond_ne_zero ProbabilityTheory.inter_pos_of_cond_ne_zero
@@ -165,9 +164,7 @@ theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s)
     (hmt : MeasurableSet t) : μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t := by
   by_cases ht : μ t = 0
   · simp [cond, ht, measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
-    
   · rw [mul_assoc, cond_mul_eq_inter μ hmt ht s, Set.inter_comm, cond_apply _ hms]
-    
 #align probability_theory.cond_eq_inv_mul_cond_mul ProbabilityTheory.cond_eq_inv_mul_cond_mul
 
 end Bayes

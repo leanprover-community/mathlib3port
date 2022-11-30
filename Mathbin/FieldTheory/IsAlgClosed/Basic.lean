@@ -83,7 +83,6 @@ theorem exists_pow_nat_eq [IsAlgClosed k] (x : k) {n : ℕ} (hn : 0 < n) : ∃ z
   rcases exists_root (X ^ n - C x) _ with ⟨z, hz⟩; swap
   · rw [degree_X_pow_sub_C hn x]
     exact ne_of_gt (WithBot.coe_lt_coe.2 hn)
-    
   use z
   simp only [eval_C, eval_X, eval_pow, eval_sub, is_root.def] at hz
   exact sub_eq_zero.1 hz
@@ -95,15 +94,13 @@ theorem exists_eq_mul_self [IsAlgClosed k] (x : k) : ∃ z, x = z * z := by
 #align is_alg_closed.exists_eq_mul_self IsAlgClosed.exists_eq_mul_self
 
 theorem roots_eq_zero_iff [IsAlgClosed k] {p : k[X]} : p.roots = 0 ↔ p = Polynomial.c (p.coeff 0) :=
-  by
+  by 
   refine' ⟨fun h => _, fun hp => by rw [hp, roots_C]⟩
   cases' le_or_lt (degree p) 0 with hd hd
   · exact eq_C_of_degree_le_zero hd
-    
   · obtain ⟨z, hz⟩ := IsAlgClosed.exists_root p hd.ne'
     rw [← mem_roots (ne_zero_of_degree_gt hd), h] at hz
     simpa using hz
-    
 #align is_alg_closed.roots_eq_zero_iff IsAlgClosed.roots_eq_zero_iff
 
 theorem exists_eval₂_eq_zero_of_injective {R : Type _} [Ring R] [IsAlgClosed k] (f : R →+* k)
@@ -231,7 +228,8 @@ theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.
   assumption
 #align lift.subfield_with_hom.compat lift.SubfieldWithHom.compat
 
-instance : Preorder (SubfieldWithHom K L M hL) where
+instance : Preorder (SubfieldWithHom K L M
+        hL) where 
   le := (· ≤ ·)
   le_refl E := ⟨le_rfl, by simp⟩
   le_trans E₁ E₂ E₃ h₁₂ h₂₃ :=
@@ -252,22 +250,21 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
               let ⟨k, hik, hjk⟩ := directed_on_iff_directed.1 hc.directed_on i j
               ⟨k, hik.fst, hjk.fst⟩)
             (fun i => (i : subfield_with_hom K L M hL).emb)
-            (by
+            (by 
               intro i j h
               ext x
               cases' hc.total i.prop j.prop with hij hji
               · simp [← hij.snd x]
-                
-              · erw [AlgHom.comp_apply, ← hji.snd (inclusion h x), inclusion_inclusion,
-                  inclusion_self, AlgHom.id_apply x]
-                )
+              ·
+                erw [AlgHom.comp_apply, ← hji.snd (inclusion h x), inclusion_inclusion,
+                  inclusion_self, AlgHom.id_apply x])
             _ rfl }
     ⟨ub, fun N hN =>
       ⟨(le_supr (fun i : c => (i : SubfieldWithHom K L M hL).carrier) ⟨N, hN⟩ : _), by
         intro x
         simp [ub]
         rfl⟩⟩
-  else by
+  else by 
     rw [Set.not_nonempty_iff_eq_empty] at hcn
     simp [hcn]
 #align
@@ -309,7 +306,7 @@ theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).carrier
   let larger_emb :=
     (AdjoinRoot.liftHom (minpoly N x) y hy).comp
       (AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly N x).toAlgHom
-  have hNO : N ≤ O.restrict_scalars K := by
+  have hNO : N ≤ O.restrict_scalars K := by 
     intro z hz
     show algebraMap N L ⟨z, hz⟩ ∈ O
     exact O.algebra_map_mem _
@@ -358,7 +355,7 @@ include hS
 private theorem fraction_ring.is_algebraic :
     letI : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
     Algebra.IsAlgebraic (FractionRing R) (FractionRing S) :=
-  by
+  by 
   intro inst x
   exact
     (IsFractionRing.is_algebraic_iff R (FractionRing R) (FractionRing S)).1
@@ -439,7 +436,7 @@ noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSmulDivisors R S]
     (hRL : Algebra.IsAlgebraic R L) : L ≃ₐ[R] M := by
   letI : NoZeroSmulDivisors R L :=
     NoZeroSmulDivisors.of_algebra_map_injective
-      (by
+      (by 
         rw [IsScalarTower.algebra_map_eq R S L]
         exact
           Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)
@@ -534,7 +531,6 @@ theorem Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly {F K} (A) [Field F] [
   refine' ⟨_, fun ha => _⟩
   · rintro ⟨ψ, rfl⟩
     rw [aeval_alg_hom_apply ψ x, minpoly.aeval, map_zero]
-    
   let Fx := AdjoinRoot (minpoly F x)
   have hx : aeval x (minpoly F x) = 0 := minpoly.aeval F x
   letI : Algebra Fx A := (AdjoinRoot.lift (algebraMap F A) a ha).toAlgebra

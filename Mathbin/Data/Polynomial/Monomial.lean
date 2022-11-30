@@ -43,30 +43,24 @@ theorem card_support_le_one_iff_monomial {f : R[X]} :
     ext i
     by_cases hi : i = n
     · simp [hi, coeff_monomial]
-      
-    · have : f.coeff i = 0 := by
+    · have : f.coeff i = 0 := by 
         rw [← not_mem_support_iff]
         exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
       simp [this, Ne.symm hi, coeff_monomial]
-      
-    
   · rintro ⟨n, a, rfl⟩
     rw [← Finset.card_singleton n]
     apply Finset.card_le_of_subset
     exact support_monomial' _ _
-    
 #align polynomial.card_support_le_one_iff_monomial Polynomial.card_support_le_one_iff_monomial
 
 theorem ring_hom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a) = g (c a))
     (h₂ : f x = g x) : f = g := by
   set f' := f.comp (to_finsupp_iso R).symm.toRingHom with hf'
   set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
-  have A : f' = g' := by
+  have A : f' = g' := by 
     ext
     · simp [h₁, RingEquiv.to_ring_hom_eq_coe]
-      
     · simpa [RingEquiv.to_ring_hom_eq_coe] using h₂
-      
   have B : f = f'.comp (to_finsupp_iso R) := by
     rw [hf', RingHom.comp_assoc]
     ext x
@@ -80,7 +74,7 @@ theorem ring_hom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a
   rw [B, C, A]
 #align polynomial.ring_hom_ext Polynomial.ring_hom_ext
 
-@[ext.1]
+@[ext]
 theorem ring_hom_ext' {S} [Semiring S] {f g : R[X] →+* S} (h₁ : f.comp c = g.comp c)
     (h₂ : f x = g x) : f = g :=
   ring_hom_ext (RingHom.congr_fun h₁) h₂

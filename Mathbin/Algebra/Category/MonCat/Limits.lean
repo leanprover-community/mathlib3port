@@ -40,7 +40,9 @@ instance monoidObj (F : J ⥤ MonCat.{max v u}) (j) : Monoid ((F ⋙ forget MonC
 -/
 @[to_additive
       "The flat sections of a functor into `AddMon` form an additive submonoid of all sections."]
-def sectionsSubmonoid (F : J ⥤ MonCat.{max v u}) : Submonoid (∀ j, F.obj j) where
+def sectionsSubmonoid (F : J ⥤ MonCat.{max v u}) :
+    Submonoid (∀ j, F.obj
+          j) where 
   carrier := (F ⋙ forget MonCat).sections
   one_mem' j j' f := by simp
   mul_mem' a b ah bh j j' f := by
@@ -58,7 +60,9 @@ instance limitMonoid (F : J ⥤ MonCat.{max v u}) :
 /-- `limit.π (F ⋙ forget Mon) j` as a `monoid_hom`. -/
 @[to_additive "`limit.π (F ⋙ forget AddMon) j` as an `add_monoid_hom`."]
 def limitπMonoidHom (F : J ⥤ MonCat.{max v u}) (j) :
-    (Types.limitCone (F ⋙ forget MonCat)).x →* (F ⋙ forget MonCat).obj j where
+    (Types.limitCone (F ⋙ forget MonCat)).x →*
+      (F ⋙ forget MonCat).obj
+        j where 
   toFun := (Types.limitCone (F ⋙ forget MonCat)).π.app j
   map_one' := rfl
   map_mul' x y := rfl
@@ -73,7 +77,8 @@ namespace HasLimits
 (Internal use only; use the limits API.)
 -/
 @[to_additive "(Internal use only; use the limits API.)"]
-def limitCone (F : J ⥤ MonCat.{max v u}) : Cone F where
+def limitCone (F : J ⥤ MonCat.{max v u}) :
+    Cone F where 
   x := MonCat.of (Types.limitCone (F ⋙ forget _)).x
   π :=
     { app := limitπMonoidHom F,

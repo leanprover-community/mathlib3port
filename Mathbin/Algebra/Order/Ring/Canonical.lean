@@ -55,7 +55,7 @@ theorem mul_add_mul_le_mul_add_mul (hab : a ≤ b) (hcd : c ≤ d) : a * d + b *
 
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_le_mul_add_mul' (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d :=
-  by
+  by 
   rw [add_comm (a • d), add_comm (a • c)]
   exact mul_add_mul_le_mul_add_mul hba hdc
 #align mul_add_mul_le_mul_add_mul' mul_add_mul_le_mul_add_mul'
@@ -70,7 +70,7 @@ theorem mul_add_mul_lt_mul_add_mul (hab : a < b) (hcd : c < d) : a * d + b * c <
 
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_lt_mul_add_mul' (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d :=
-  by
+  by 
   rw [add_comm (a • d), add_comm (a • c)]
   exact mul_add_mul_lt_mul_add_mul hba hdc
 #align mul_add_mul_lt_mul_add_mul' mul_add_mul_lt_mul_add_mul'
@@ -117,36 +117,34 @@ section Sub
 
 variable [CanonicallyOrderedCommSemiring α] {a b c : α}
 
-variable [Sub α] [HasOrderedSub α]
+variable [Sub α] [OrderedSub α]
 
 variable [IsTotal α (· ≤ ·)]
 
-namespace AddLeCancellable
+namespace AddLECancellable
 
-protected theorem mul_tsub (h : AddLeCancellable (a * c)) : a * (b - c) = a * b - a * c := by
+protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b - a * c := by
   cases' total_of (· ≤ ·) b c with hbc hcb
   · rw [tsub_eq_zero_iff_le.2 hbc, mul_zero, tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
-    
   · apply h.eq_tsub_of_add_eq
     rw [← mul_add, tsub_add_cancel_of_le hcb]
-    
-#align add_le_cancellable.mul_tsub AddLeCancellable.mul_tsub
+#align add_le_cancellable.mul_tsub AddLECancellable.mul_tsub
 
-protected theorem tsub_mul (h : AddLeCancellable (b * c)) : (a - b) * c = a * c - b * c := by
+protected theorem tsub_mul (h : AddLECancellable (b * c)) : (a - b) * c = a * c - b * c := by
   simp only [mul_comm _ c] at *
   exact h.mul_tsub
-#align add_le_cancellable.tsub_mul AddLeCancellable.tsub_mul
+#align add_le_cancellable.tsub_mul AddLECancellable.tsub_mul
 
-end AddLeCancellable
+end AddLECancellable
 
 variable [ContravariantClass α α (· + ·) (· ≤ ·)]
 
 theorem mul_tsub (a b c : α) : a * (b - c) = a * b - a * c :=
-  Contravariant.AddLeCancellable.mul_tsub
+  Contravariant.AddLECancellable.mul_tsub
 #align mul_tsub mul_tsub
 
 theorem tsub_mul (a b c : α) : (a - b) * c = a * c - b * c :=
-  Contravariant.AddLeCancellable.tsub_mul
+  Contravariant.AddLECancellable.tsub_mul
 #align tsub_mul tsub_mul
 
 end Sub

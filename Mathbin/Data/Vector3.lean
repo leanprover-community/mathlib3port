@@ -186,7 +186,7 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
 @[simp]
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
     insert a (b::v) (fs i) = b::insert a v i :=
-  funext fun j => by
+  funext fun j => by 
     refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
     refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
 #align vector3.insert_fs Vector3.insert_fs
@@ -279,25 +279,21 @@ theorem vector_allp_cons (p : α → Prop) (x : α) (v : Vector3 α n) :
 #align vector_allp_cons vector_allp_cons
 
 theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp p v ↔ ∀ i, p (v i) :=
-  by
+  by 
   refine' v.rec_on _ _
   · exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
-    
   · simp
     refine' fun n a v IH =>
       (and_congr_right fun _ => IH).trans
-        ⟨fun ⟨pa, h⟩ i => by
+        ⟨fun ⟨pa, h⟩ i => by 
           refine' i.cases' _ _
           exacts[pa, h], fun h => ⟨_, fun i => _⟩⟩
     · have h0 := h fz
       simp at h0
       exact h0
-      
     · have hs := h (fs i)
       simp at hs
       exact hs
-      
-    
 #align vector_allp_iff_forall vector_allp_iff_forall
 
 theorem VectorAllp.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n}

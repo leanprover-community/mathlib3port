@@ -21,7 +21,8 @@ import Mathbin.Data.Nat.Factorization.Basic
 
 /-- In a local ring the characteristics is either zero or a prime power. -/
 theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : ℕ)
-    [char_R_q : CharP R q] : q = 0 ∨ IsPrimePow q := by
+    [char_R_q : CharP R q] : q = 0 ∨ IsPrimePow q :=
+  by
   -- Assume `q := char(R)` is not zero.
   apply or_iff_not_imp_left.2
   intro q_pos
@@ -39,7 +40,7 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : 
     rw [mul_comm] at q_eq_a_mul_rn
     have a_dvd_q : a ∣ q := ⟨r ^ n, q_eq_a_mul_rn⟩
     -- ... where `a` is a unit.
-    have a_unit : IsUnit (a : R) := by
+    have a_unit : IsUnit (a : R) := by 
       by_contra g
       rw [← mem_nonunits_iff] at g
       rw [← LocalRing.mem_maximal_ideal] at g
@@ -59,13 +60,11 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : 
       absurd (by simpa [n_zero] using q_eq_rn) (CharP.char_ne_one R q)
     -- Definition of prime power: `∃ r n, prime r ∧ 0 < n ∧ r ^ n = q`.
     exact ⟨r, ⟨n, ⟨r_prime.prime, ⟨pos_iff_ne_zero.mpr n_pos, q_eq_rn.symm⟩⟩⟩⟩
-    
   · haveI K_char_p_0 := ringChar.of_eq r_zero
     haveI K_char_zero : CharZero K := CharP.char_p_to_char_zero K
     haveI R_char_zero := RingHom.char_zero (LocalRing.residue R)
     -- Finally, `r = 0` would lead to a contradiction:
     have q_zero := CharP.eq R char_R_q (CharP.of_char_zero R)
     exact absurd q_zero q_pos
-    
 #align char_p_zero_or_prime_power char_p_zero_or_prime_power
 

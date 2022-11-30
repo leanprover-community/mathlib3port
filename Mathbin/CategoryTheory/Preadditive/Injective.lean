@@ -172,35 +172,30 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                  []
                  (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.rwSeq
-                     "rw"
-                     []
-                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
-                     [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
-                    [])
-                   (group
-                    (Tactic.rwSeq
-                     "rw"
-                     []
-                     (Tactic.rwRuleSeq
-                      "["
-                      [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
-                      "]")
-                     [])
+                  [(Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
+                    [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
+                   []
+                   (Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
+                     "]")
                     [])])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.exact
-                     "exact"
-                     (Term.app
-                      `False.elim
-                      [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))
-                    [])])])))]
+                  [(Tactic.exact
+                    "exact"
+                    (Term.app
+                     `False.elim
+                     [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))])])))]
             "⟩"))))]
        [])
       []
@@ -258,33 +253,30 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
             []
             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group
-               (Tactic.rwSeq
-                "rw"
-                []
-                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
-                [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
-               [])
-              (group
-               (Tactic.rwSeq
-                "rw"
-                []
-                (Tactic.rwRuleSeq
-                 "["
-                 [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
-                 "]")
-                [])
+             [(Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
+              []
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
+                "]")
                [])])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group
-               (Tactic.exact
-                "exact"
-                (Term.app `False.elim [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))
-               [])])])))]
+             [(Tactic.exact
+               "exact"
+               (Term.app
+                `False.elim
+                [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))])])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
@@ -306,42 +298,37 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
           []
           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
-              [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
-             [])
-            (group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
-               "]")
-              [])
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
+              "]")
              [])])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact
-              "exact"
-              (Term.app `False.elim [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))
-             [])])])))
+           [(Tactic.exact
+             "exact"
+             (Term.app
+              `False.elim
+              [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.exact
-          "exact"
-          (Term.app `False.elim [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))
-         [])])
+       [(Tactic.exact
+         "exact"
+         (Term.app `False.elim [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -384,24 +371,21 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.rwSeq
-          "rw"
-          []
-          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
-          [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
-         [])
-        (group
-         (Tactic.rwSeq
-          "rw"
-          []
-          (Tactic.rwRuleSeq
-           "["
-           [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
-           "]")
-          [])
+       [(Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `mono_iff_injective)] "]")
+         [(Tactic.location "at" (Tactic.locationHyp [`mono] []))])
+        []
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule [] (Term.app `mono [(Term.app `Classical.choose_spec [`h])]))]
+          "]")
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
@@ -440,7 +424,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
@@ -701,42 +685,42 @@ instance TypeCat.enough_injectives :
         u₁) where presentation X :=
     Nonempty.intro
       { j := WithBot X, Injective := inferInstance, f := Option.some,
-        Mono := by
+        Mono := by 
           rw [mono_iff_injective]
           exact Option.some_injective X }
 #align
   category_theory.injective.Type.enough_injectives CategoryTheory.Injective.TypeCat.enough_injectives
 
 instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] :
-    Injective (P ⨯ Q) where Factors X Y g f mono := by
+    Injective
+      (P ⨯ Q) where Factors X Y g f mono := by 
     skip
     use limits.prod.lift (factor_thru (g ≫ limits.prod.fst) f) (factor_thru (g ≫ limits.prod.snd) f)
     simp only [prod.comp_lift, comp_factor_thru]
     ext
     · simp only [prod.lift_fst]
-      
     · simp only [prod.lift_snd]
-      
 
 instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] :
-    Injective (∏ c) where Factors X Y g f mono := by
+    Injective (∏
+        c) where Factors X Y g f mono := by 
     skip
     refine' ⟨pi.lift fun b => factor_thru (g ≫ pi.π c _) f, _⟩
     ext ⟨j⟩
     simp only [category.assoc, limit.lift_π, fan.mk_π_app, comp_factor_thru]
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [Injective Q] :
-    Injective (P ⊞ Q) where Factors X Y g f mono := by
+    Injective
+      (P ⊞ Q) where Factors X Y g f mono := by 
     skip
     refine' ⟨biprod.lift (factor_thru (g ≫ biprod.fst) f) (factor_thru (g ≫ biprod.snd) f), _⟩
     ext
     · simp only [category.assoc, biprod.lift_fst, comp_factor_thru]
-      
     · simp only [category.assoc, biprod.lift_snd, comp_factor_thru]
-      
 
 instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] :
-    Injective (⨁ c) where Factors X Y g f mono := by
+    Injective (⨁
+        c) where Factors X Y g f mono := by 
     skip
     refine' ⟨biproduct.lift fun b => factor_thru (g ≫ biproduct.π _ _) f, _⟩
     ext
@@ -807,12 +791,11 @@ theorem injective_iff_preserves_epimorphisms_preadditive_yoneda_obj (J : C) :
     Injective J ↔ (preadditiveYoneda.obj J).PreservesEpimorphisms := by
   rw [injective_iff_preserves_epimorphisms_yoneda_obj]
   refine' ⟨fun h : (preadditive_yoneda.obj J ⋙ forget _).PreservesEpimorphisms => _, _⟩
-  · exact
+  ·
+    exact
       functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda.obj J) (forget _)
-    
   · intro
     exact (inferInstance : (preadditive_yoneda.obj J ⋙ forget _).PreservesEpimorphisms)
-    
 #align
   category_theory.injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj CategoryTheory.Injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj
 
@@ -820,12 +803,11 @@ theorem injective_iff_preserves_epimorphisms_preadditive_yoneda_obj' (J : C) :
     Injective J ↔ (preadditiveYonedaObj J).PreservesEpimorphisms := by
   rw [injective_iff_preserves_epimorphisms_yoneda_obj]
   refine' ⟨fun h : (preadditive_yoneda_obj J ⋙ forget _).PreservesEpimorphisms => _, _⟩
-  · exact
+  ·
+    exact
       functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda_obj J) (forget _)
-    
   · intro
     exact (inferInstance : (preadditive_yoneda_obj J ⋙ forget _).PreservesEpimorphisms)
-    
 #align
   category_theory.injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj' CategoryTheory.Injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj'
 
@@ -936,7 +918,7 @@ variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
 
 theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : Injective I) :
     Injective (G.obj I) :=
-  ⟨fun X Y f g => by
+  ⟨fun X Y f g => by 
     intro
     rcases hI.factors (F.map f ≫ adj.counit.app _) (F.map g) with ⟨⟩
     use adj.unit.app Y ≫ G.map w
@@ -946,7 +928,7 @@ theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : I
 
 theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
     (hI : Injective (G.obj I)) : Injective I :=
-  ⟨fun X Y f g => by
+  ⟨fun X Y f g => by 
     intro
     haveI := adj.right_adjoint_preserves_limits
     rcases hI.factors (G.map f) (G.map g) with ⟨⟩
@@ -959,7 +941,8 @@ theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
 /-- Given an adjunction `F ⊣ G` such that `F` preserves monos, `G` maps an injective presentation
 of `X` to an injective presentation of `G(X)`. -/
 def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D)
-    (I : InjectivePresentation X) : InjectivePresentation (G.obj X) where
+    (I : InjectivePresentation X) :
+    InjectivePresentation (G.obj X) where 
   j := G.obj I.j
   Injective := adj.map_injective _ I.Injective
   f := G.map I.f
@@ -976,7 +959,8 @@ variable {D : Type _} [Category D] (F : C ≌ D)
 /-- Given an equivalence of categories `F`, an injective presentation of `F(X)` induces an
 injective presentation of `X.` -/
 def injectivePresentationOfMapInjectivePresentation (X : C)
-    (I : InjectivePresentation (F.Functor.obj X)) : InjectivePresentation X where
+    (I : InjectivePresentation (F.Functor.obj X)) :
+    InjectivePresentation X where 
   j := F.inverse.obj I.j
   Injective := Adjunction.map_injective F.toAdjunction I.j I.Injective
   f := F.Unit.app _ ≫ F.inverse.map I.f
@@ -987,14 +971,14 @@ def injectivePresentationOfMapInjectivePresentation (X : C)
 theorem enough_injectives_iff (F : C ≌ D) : EnoughInjectives C ↔ EnoughInjectives D := by
   constructor
   all_goals intro H; constructor; intro X; constructor
-  · exact
+  ·
+    exact
       F.symm.injective_presentation_of_map_injective_presentation _
         (Nonempty.some (H.presentation (F.inverse.obj X)))
-    
-  · exact
+  ·
+    exact
       F.injective_presentation_of_map_injective_presentation X
         (Nonempty.some (H.presentation (F.functor.obj X)))
-    
 #align
   category_theory.equivalence.enough_injectives_iff CategoryTheory.Equivalence.enough_injectives_iff
 

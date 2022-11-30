@@ -59,7 +59,6 @@ theorem supr_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendiec
   · refine' supr_le _
     intro f
     exact f.2.1.le
-    
   intro x hxU
   rw [opens.mem_coe, opens.mem_supr]
   obtain ⟨V, iVU, ⟨W, iVW, iWU, hiWU, -⟩, hxV⟩ := hR x hxU

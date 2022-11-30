@@ -33,7 +33,7 @@ theorem zero_pow : ∀ {n : ℕ}, 0 < n → (0 : M) ^ n = 0
 @[simp]
 theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
   | 0, h => absurd rfl h
-  | k + 1, h => by
+  | k + 1, h => by 
     rw [pow_succ]
     exact zero_mul _
 #align zero_pow' zero_pow'
@@ -41,9 +41,7 @@ theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
 theorem zero_pow_eq (n : ℕ) : (0 : M) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
   · rw [h, pow_zero]
-    
   · rw [zero_pow (Nat.pos_of_ne_zero h)]
-    
 #align zero_pow_eq zero_pow_eq
 
 theorem pow_eq_zero_of_le {x : M} {n m : ℕ} (hn : n ≤ m) (hx : x ^ n = 0) : x ^ m = 0 := by
@@ -54,10 +52,8 @@ theorem pow_eq_zero [NoZeroDivisors M] {x : M} {n : ℕ} (H : x ^ n = 0) : x = 0
   induction' n with n ih
   · rw [pow_zero] at H
     rw [← mul_one x, H, mul_zero]
-    
   · rw [pow_succ] at H
     exact Or.cases_on (mul_eq_zero.1 H) id ih
-    
 #align pow_eq_zero pow_eq_zero
 
 @[simp]
@@ -85,7 +81,7 @@ theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 :
 lean 3 declaration is
   forall {M : Type.{u_3}} [_inst_1 : MonoidWithZero.{u_3} M] [_inst_2 : NoZeroDivisors.{u_3} M (MulZeroClass.toHasMul.{u_3} M (MulZeroOneClass.toMulZeroClass.{u_3} M (MonoidWithZero.toMulZeroOneClass.{u_3} M _inst_1))) (MulZeroClass.toHasZero.{u_3} M (MulZeroOneClass.toMulZeroClass.{u_3} M (MonoidWithZero.toMulZeroOneClass.{u_3} M _inst_1)))] {a : M} (n : Nat), (Ne.{succ u_3} M a (OfNat.ofNat.{u_3} M 0 (OfNat.mk.{u_3} M 0 (Zero.zero.{u_3} M (MulZeroClass.toHasZero.{u_3} M (MulZeroOneClass.toMulZeroClass.{u_3} M (MonoidWithZero.toMulZeroOneClass.{u_3} M _inst_1))))))) -> (Ne.{succ u_3} M (HPow.hPow.{u_3, 0, u_3} M Nat M (instHPow.{u_3, 0} M Nat (Monoid.hasPow.{u_3} M (MonoidWithZero.toMonoid.{u_3} M _inst_1))) a n) (OfNat.ofNat.{u_3} M 0 (OfNat.mk.{u_3} M 0 (Zero.zero.{u_3} M (MulZeroClass.toHasZero.{u_3} M (MulZeroOneClass.toMulZeroClass.{u_3} M (MonoidWithZero.toMulZeroOneClass.{u_3} M _inst_1)))))))
 but is expected to have type
-  forall {M : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.773 : MonoidWithZero.{u_1} M] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.776 : NoZeroDivisors.{u_1} M (MulZeroClass.toMul.{u_1} M (MulZeroOneClass.toMulZeroClass.{u_1} M (MonoidWithZero.toMulZeroOneClass.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.773))) (MonoidWithZero.toZero.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.773)] {a : M} (n : Nat), (Ne.{succ u_1} M a (OfNat.ofNat.{u_1} M 0 (Zero.toOfNat0.{u_1} M (MonoidWithZero.toZero.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.773)))) -> (Ne.{succ u_1} M (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M (MonoidWithZero.toMonoid.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.773))) a n) (OfNat.ofNat.{u_1} M 0 (Zero.toOfNat0.{u_1} M (MonoidWithZero.toZero.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.773))))
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.759 : MonoidWithZero.{u_1} M] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.762 : NoZeroDivisors.{u_1} M (MulZeroClass.toMul.{u_1} M (MulZeroOneClass.toMulZeroClass.{u_1} M (MonoidWithZero.toMulZeroOneClass.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.759))) (MonoidWithZero.toZero.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.759)] {a : M} (n : Nat), (Ne.{succ u_1} M a (OfNat.ofNat.{u_1} M 0 (Zero.toOfNat0.{u_1} M (MonoidWithZero.toZero.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.759)))) -> (Ne.{succ u_1} M (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M (MonoidWithZero.toMonoid.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.759))) a n) (OfNat.ofNat.{u_1} M 0 (Zero.toOfNat0.{u_1} M (MonoidWithZero.toZero.{u_1} M inst._@.Mathlib.Tactic.Positivity.Basic._hyg.759))))
 Case conversion may be inaccurate. Consider using '#align pow_ne_zero pow_ne_zeroₓ'. -/
 @[field_simps]
 theorem pow_ne_zero [NoZeroDivisors M] {a : M} (n : ℕ) (h : a ≠ 0) : a ^ n ≠ 0 :=
@@ -106,9 +102,7 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
   · rw [pos_iff_ne_zero]
     rintro rfl
     simpa using h
-    
   · exact zero_pow' n h.ne.symm
-    
 #align zero_pow_eq_zero zero_pow_eq_zero
 
 theorem Ring.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
@@ -149,14 +143,12 @@ theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x
     rw [← not_lt]
     intro hmn
     apply h1
-    have : x ^ m * x ∣ x ^ m * 1 := by
+    have : x ^ m * x ∣ x ^ m * 1 := by 
       rw [← pow_succ', mul_one]
       exact (pow_dvd_pow _ (Nat.succ_le_of_lt hmn)).trans h
     rwa [mul_dvd_mul_iff_left, ← is_unit_iff_dvd_one] at this
     apply pow_ne_zero m h0
-    
   · apply pow_dvd_pow
-    
 #align pow_dvd_pow_iff pow_dvd_pow_iff
 
 section Semiring
@@ -305,7 +297,7 @@ theorem eq_or_eq_neg_of_sq_eq_sq (a b : R) : a ^ 2 = b ^ 2 → a = b ∨ a = -b 
 namespace Units
 
 protected theorem sq_eq_sq_iff_eq_or_eq_neg {a b : Rˣ} : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
-  simp_rw [ext_iff, coe_pow, sq_eq_sq_iff_eq_or_eq_neg, Units.coe_neg]
+  simp_rw [ext_iff, coe_pow, sq_eq_sq_iff_eq_or_eq_neg, Units.val_neg]
 #align units.sq_eq_sq_iff_eq_or_eq_neg Units.sq_eq_sq_iff_eq_or_eq_neg
 
 protected theorem eq_or_eq_neg_of_sq_eq_sq (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b :=

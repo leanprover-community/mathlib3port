@@ -82,7 +82,9 @@ theorem orbit_smul_subset (a : α) (b : β) : orbit α (a • b) ⊆ orbit α b 
 #align mul_action.orbit_smul_subset MulAction.orbit_smul_subset
 
 @[to_additive]
-instance {b : β} : MulAction α (orbit α b) where
+instance {b : β} :
+    MulAction α
+      (orbit α b) where 
   smul a := (maps_to_smul_orbit a b).restrict _ _ _
   one_smul a := Subtype.ext (one_smul α a)
   mul_smul a a' b' := Subtype.ext (mul_smul a a' b')
@@ -135,7 +137,8 @@ variable (α) {β}
 
 /-- The stabilizer of a point `b` as a submonoid of `α`. -/
 @[to_additive "The stabilizer of a point `b` as an additive submonoid of `α`."]
-def Stabilizer.submonoid (b : β) : Submonoid α where
+def Stabilizer.submonoid (b : β) :
+    Submonoid α where 
   carrier := { a | a • b = b }
   one_mem' := one_smul _ b
   mul_mem' a a' (ha : a • b = b) (hb : a' • b = b) :=
@@ -160,14 +163,12 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
   rw [Fintype.card_eq_one_iff, mem_fixed_points]
   constructor
   · exact fun h => ⟨⟨a, mem_orbit_self _⟩, fun ⟨b, ⟨x, hx⟩⟩ => Subtype.eq <| by simp [h x, hx.symm]⟩
-    
   · intro h x
     rcases h with ⟨⟨z, hz⟩, hz₁⟩
     calc
       x • a = z := Subtype.mk.inj (hz₁ ⟨x • a, mem_orbit _ _⟩)
       _ = a := (Subtype.mk.inj (hz₁ ⟨a, mem_orbit_self _⟩)).symm
       
-    
 #align
   mul_action.mem_fixed_points_iff_card_orbit_eq_one MulAction.mem_fixed_points_iff_card_orbit_eq_one
 
@@ -216,7 +217,7 @@ theorem orbit_smul (a : α) (b : β) : orbit α (a • b) = orbit α b :=
 /-- The action of a group on an orbit is transitive. -/
 @[to_additive "The action of an additive group on an orbit is transitive."]
 instance (x : β) : IsPretransitive α (orbit α x) :=
-  ⟨by
+  ⟨by 
     rintro ⟨_, a, rfl⟩ ⟨_, b, rfl⟩
     use b * a⁻¹
     ext1
@@ -243,7 +244,7 @@ variable (α) (β)
 
 /-- The relation 'in the same orbit'. -/
 @[to_additive "The relation 'in the same orbit'."]
-def orbitRel : Setoid β where
+def orbitRel : Setoid β where 
   R a b := a ∈ orbit α b
   iseqv :=
     ⟨mem_orbit_self, fun a b => by simp [orbit_eq_iff.symm, eq_comm], fun a b => by
@@ -267,7 +268,6 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     obtain ⟨a, rfl⟩ := Quotient.exact hxy
     rw [Set.mem_Union]
     exact ⟨a⁻¹, a • x, hy, inv_smul_smul a x⟩
-    
   · intro hx
     rw [Set.mem_Union] at hx
     obtain ⟨a, u, hu₁, hu₂⟩ := hx
@@ -276,7 +276,6 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     rw [← hu₂]
     convert hu₁
     simp only [inv_smul_smul]
-    
 #align
   mul_action.quotient_preimage_image_eq_union_mul MulAction.quotient_preimage_image_eq_union_mul
 
@@ -288,13 +287,11 @@ theorem disjoint_image_image_iff {U V : Set β} :
     ⟨fun h x x_in_U a a_in_V =>
       h.le_bot ⟨⟨x, x_in_U, Quotient.sound ⟨a⁻¹, _⟩⟩, ⟨a • x, a_in_V, rfl⟩⟩, _⟩
   · simp
-    
   · intro h
     rw [Set.disjoint_left]
     rintro x ⟨y, hy₁, hy₂⟩ ⟨z, hz₁, hz₂⟩
     obtain ⟨a, rfl⟩ := Quotient.exact (hz₂.trans hy₂.symm)
     exact h y hy₁ a hz₁
-    
 #align mul_action.disjoint_image_image_iff MulAction.disjoint_image_image_iff
 
 @[to_additive]
@@ -430,7 +427,7 @@ The general theory of such `k` is elaborated by `is_smul_regular`.
 The typeclass that restricts all terms of `M` to have this property is `no_zero_smul_divisors`. -/
 theorem smul_cancel_of_non_zero_divisor {M R : Type _} [Monoid M] [NonUnitalNonAssocRing R]
     [DistribMulAction M R] (k : M) (h : ∀ x : R, k • x = 0 → x = 0) {a b : R} (h' : k • a = k • b) :
-    a = b := by
+    a = b := by 
   rw [← sub_eq_zero]
   refine' h _ _
   rw [smul_sub, h', sub_self]

@@ -74,14 +74,12 @@ include hU
 theorem is_open_iff_inter_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen (s ∩ U i) := by
   constructor
   · exact fun H i => H.inter (U i).2
-    
   · intro H
     have : (⋃ i, (U i : Set β)) = Set.univ := by
       convert congr_arg coe hU
       simp
     rw [← s.inter_univ, ← this, Set.inter_Union]
     exact is_open_Union H
-    
 #align is_open_iff_inter_of_supr_eq_top is_open_iff_inter_of_supr_eq_top
 
 theorem is_open_iff_coe_preimage_of_supr_eq_top (s : Set β) :
@@ -117,18 +115,16 @@ theorem inducing_iff_inducing_of_supr_eq_top (h : Continuous f) :
   constructor
   · intro H i x
     rw [← H, ← inducing_coe.nhds_eq_comap]
-    
   · intro H x
     obtain ⟨i, hi⟩ :=
       opens.mem_supr.mp
-        (show f x ∈ supr U by
+        (show f x ∈ supr U by 
           rw [hU]
           triv)
     erw [← OpenEmbedding.map_nhds_eq (h.1 _ (U i).2).open_embedding_subtype_coe ⟨x, hi⟩]
     rw [(H i) ⟨x, hi⟩, Filter.subtype_coe_map_comap, Function.comp_apply, Subtype.coe_mk,
       inf_eq_left, Filter.le_principal_iff]
     exact Filter.preimage_mem_comap ((U i).2.mem_nhds hi)
-    
 #align inducing_iff_inducing_of_supr_eq_top inducing_iff_inducing_of_supr_eq_top
 
 theorem embedding_iff_embedding_of_supr_eq_top (h : Continuous f) :
@@ -137,11 +133,9 @@ theorem embedding_iff_embedding_of_supr_eq_top (h : Continuous f) :
   rw [forall_and]
   apply and_congr
   · apply inducing_iff_inducing_of_supr_eq_top <;> assumption
-    
   · apply Set.injective_iff_injective_of_Union_eq_univ
     convert congr_arg coe hU
     simp
-    
 #align embedding_iff_embedding_of_supr_eq_top embedding_iff_embedding_of_supr_eq_top
 
 theorem open_embedding_iff_open_embedding_of_supr_eq_top (h : Continuous f) :
@@ -150,10 +144,8 @@ theorem open_embedding_iff_open_embedding_of_supr_eq_top (h : Continuous f) :
   rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
-    
   · simp_rw [Set.range_restrict_preimage]
     apply is_open_iff_coe_preimage_of_supr_eq_top hU
-    
 #align
   open_embedding_iff_open_embedding_of_supr_eq_top open_embedding_iff_open_embedding_of_supr_eq_top
 
@@ -163,10 +155,8 @@ theorem closed_embedding_iff_closed_embedding_of_supr_eq_top (h : Continuous f) 
   rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
-    
   · simp_rw [Set.range_restrict_preimage]
     apply is_closed_iff_coe_preimage_of_supr_eq_top hU
-    
 #align
   closed_embedding_iff_closed_embedding_of_supr_eq_top closed_embedding_iff_closed_embedding_of_supr_eq_top
 

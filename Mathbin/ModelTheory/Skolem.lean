@@ -53,23 +53,20 @@ theorem card_functions_sum_skolem₁ :
     refine' ⟨⟨fun f => (func f default).bdEqual (func f default), fun f g h => _⟩⟩
     rcases h with ⟨rfl, ⟨rfl⟩⟩
     rfl
-    
   · rw [← mk_sigma]
     exact infinite_iff.1 (Infinite.of_injective (fun n => ⟨n, ⊥⟩) fun x y xy => (Sigma.mk.inj xy).1)
-    
 #align
   first_order.language.card_functions_sum_skolem₁ FirstOrder.Language.card_functions_sum_skolem₁
 
 theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
   rw [card_functions_sum_skolem₁]
   trans #Σn, L.bounded_formula Empty n
-  · exact
+  ·
+    exact
       ⟨⟨Sigma.map Nat.succ fun _ => id,
           nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
-    
   · refine' trans bounded_formula.card_le (lift_le.1 _)
     simp only [mk_empty, lift_zero, lift_uzero, zero_add]
-    
 #align
   first_order.language.card_functions_sum_skolem₁_le FirstOrder.Language.card_functions_sum_skolem₁_le
 
@@ -149,7 +146,6 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
   refine' ⟨h1, (mk_union_le _ _).trans _, (lift_le.2 card_functions_sum_skolem₁_le).trans _⟩
   · rw [← lift_le, lift_add, h, add_comm, add_eq_max h1]
     exact max_le le_rfl h2
-    
   · rw [lift_max, lift_aleph_0, max_le_iff, aleph_0_le_lift, and_comm', ← lift_le.{_, w'},
       lift_lift, lift_lift, ← aleph_0_le_lift, h]
     refine' ⟨_, h1⟩
@@ -157,11 +153,9 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
     rw [lift_lift, ← lift_lift.{w', w} L.card]
     refine' trans (lift_le.{_, w}.2 h3) _
     rw [lift_lift, ← lift_lift.{w, max u v}, ← hs', ← h, lift_lift, lift_lift, lift_lift]
-    
   · refine' trans _ (lift_le.2 (mk_le_mk_of_subset (Set.subset_union_right _ _)))
     rw [aleph_0_le_lift, ← aleph_0_le_lift, h]
     exact h1
-    
 #align
   first_order.language.exists_elementary_substructure_card_eq FirstOrder.Language.exists_elementary_substructure_card_eq
 

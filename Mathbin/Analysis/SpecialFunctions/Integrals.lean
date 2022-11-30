@@ -79,16 +79,13 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
     apply integrable_on_deriv_of_nonneg hc _ hderiv
     · intro x hx
       apply rpow_nonneg_of_nonneg hx.1.le
-      
     · refine' (continuous_on_id.rpow_const _).div_const
       intro x hx
       right
       linarith
-      
   intro c
   rcases le_total 0 c with (hc | hc)
   · exact this c hc
-    
   · rw [IntervalIntegrable.iff_comp_neg, neg_zero]
     have m := (this (-c) (by linarith)).smul (cos (r * π))
     rw [interval_integrable_iff] at m⊢
@@ -97,7 +94,6 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
     rw [interval_oc_of_le (by linarith : 0 ≤ -c)] at hx
     simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, log_neg_eq_log, mul_comm,
       rpow_def_of_pos hx.1, rpow_def_of_neg (by linarith [hx.1] : -x < 0)]
-    
 #align interval_integral.interval_integrable_rpow' intervalIntegral.intervalIntegrableRpow'
 
 theorem intervalIntegrableCpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) :
@@ -176,9 +172,7 @@ theorem intervalIntegrableOneDivOneAddSq :
     IntervalIntegrable (fun x : ℝ => 1 / (1 + x ^ 2)) μ a b := by
   refine' (continuous_const.div _ fun x => _).IntervalIntegrable a b
   · continuity
-    
   · nlinarith
-    
 #align
   interval_integral.interval_integrable_one_div_one_add_sq intervalIntegral.intervalIntegrableOneDivOneAddSq
 
@@ -293,15 +287,12 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
       · rw [zero_rpow]
         ring
         linarith
-        
       · apply ContinuousAt.continuous_on
         intro x hx
         refine' (continuous_at_id.rpow_const _).div_const
         right
         linarith
-        
       apply interval_integrable_rpow' h
-      
     · rw [integral_symm]
       symm
       rw [eq_neg_iff_eq_neg]
@@ -309,29 +300,24 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
       · rw [zero_rpow]
         ring
         linarith
-        
       · apply ContinuousAt.continuous_on
         intro x hx
         refine' (continuous_at_id.rpow_const _).div_const
         right
         linarith
-        
       apply interval_integrable_rpow' h
-      
-    
   · have hderiv' :
       ∀ x : ℝ, x ∈ [a, b] → HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x := by
       intro x hx
       apply hderiv x
       exact ne_of_mem_of_not_mem hx h.2
     exact integral_eq_sub_of_has_deriv_at hderiv' (interval_integrable_rpow (Or.inr h.2))
-    
 #align integral_rpow integral_rpow
 
 theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
     (∫ x : ℝ in a..b, (x : ℂ) ^ r) = (b ^ (r + 1) - a ^ (r + 1)) / (r + 1) := by
   suffices ∀ x ∈ Set.interval a b, HasDerivAt (fun x : ℝ => (x : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x
-    by
+    by 
     rw [sub_div]
     exact integral_eq_sub_of_has_deriv_at this (interval_integrable_cpow ha hb)
   intro x hx
@@ -353,9 +339,7 @@ theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
 
 theorem integral_zpow {n : ℤ} (h : 0 ≤ n ∨ n ≠ -1 ∧ (0 : ℝ) ∉ [a, b]) :
     (∫ x in a..b, x ^ n) = (b ^ (n + 1) - a ^ (n + 1)) / (n + 1) := by
-  replace h : -1 < (n : ℝ) ∨ (n : ℝ) ≠ -1 ∧ (0 : ℝ) ∉ [a, b];
-  · exact_mod_cast h
-    
+  replace h : -1 < (n : ℝ) ∨ (n : ℝ) ≠ -1 ∧ (0 : ℝ) ∉ [a, b]; · exact_mod_cast h
   exact_mod_cast integral_rpow h
 #align integral_zpow integral_zpow
 
@@ -369,7 +353,8 @@ Picard-Lindelöf/Cauchy-Lipschitz theorem. -/
 theorem integral_pow_abs_sub_interval_oc :
     (∫ x in Ι a b, |x - a| ^ n) = |b - a| ^ (n + 1) / (n + 1) := by
   cases' le_or_lt a b with hab hab
-  · calc
+  ·
+    calc
       (∫ x in Ι a b, |x - a| ^ n) = ∫ x in a..b, |x - a| ^ n := by
         rw [interval_oc_of_le hab, ← integral_of_le hab]
       _ = ∫ x in 0 ..b - a, x ^ n := by
@@ -379,8 +364,8 @@ theorem integral_pow_abs_sub_interval_oc :
         exact hx.1
       _ = |b - a| ^ (n + 1) / (n + 1) := by simp [abs_of_nonneg (sub_nonneg.2 hab)]
       
-    
-  · calc
+  ·
+    calc
       (∫ x in Ι a b, |x - a| ^ n) = ∫ x in b..a, |x - a| ^ n := by
         rw [interval_oc_of_lt hab, ← integral_of_le hab.le]
       _ = ∫ x in b - a..0, (-x) ^ n := by
@@ -391,7 +376,6 @@ theorem integral_pow_abs_sub_interval_oc :
       _ = |b - a| ^ (n + 1) / (n + 1) := by
         simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
       
-    
 #align integral_pow_abs_sub_interval_oc integral_pow_abs_sub_interval_oc
 
 @[simp]
@@ -445,19 +429,17 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
     (∫ x in a..b, Complex.exp (c * x)) = (Complex.exp (c * b) - Complex.exp (c * a)) / c := by
   have D : ∀ x : ℝ, HasDerivAt (fun y : ℝ => Complex.exp (c * y) / c) (Complex.exp (c * x)) x := by
     intro x
-    conv =>
-    congr
-    skip
-    rw [← mul_div_cancel (Complex.exp (c * x)) hc]
+    conv => 
+      congr
+      skip
+      rw [← mul_div_cancel (Complex.exp (c * x)) hc]
     convert ((Complex.hasDerivAtExp _).comp x _).div_const c using 1
     simpa only [Complex.of_real_clm_apply, Complex.of_real_one, one_mul, mul_one, mul_comm] using
       complex.of_real_clm.has_deriv_at.mul_const c
   rw [integral_deriv_eq_sub' _ (funext fun x => (D x).deriv) fun x hx => (D x).DifferentiableAt]
   · ring_nf
-    
   · apply Continuous.continuous_on
     continuity
-    
 #align integral_exp_mul_complex integral_exp_mul_complex
 
 @[simp]
@@ -507,13 +489,9 @@ theorem integral_inv_one_add_sq : (∫ x : ℝ in a..b, (1 + x ^ 2)⁻¹) = arct
   simp only [← one_div]
   refine' integral_deriv_eq_sub' _ _ _ (continuous_const.div _ fun x => _).ContinuousOn
   · norm_num
-    
   · norm_num
-    
   · continuity
-    
   · nlinarith
-    
 #align integral_inv_one_add_sq integral_inv_one_add_sq
 
 theorem integral_one_div_one_add_sq : (∫ x : ℝ in a..b, 1 / (1 + x ^ 2)) = arctan b - arctan a := by
@@ -527,7 +505,7 @@ theorem integral_sin_pow_aux :
     (∫ x in a..b, sin x ^ (n + 2)) =
       (sin a ^ (n + 1) * cos a - sin b ^ (n + 1) * cos b + (n + 1) * ∫ x in a..b, sin x ^ n) -
         (n + 1) * ∫ x in a..b, sin x ^ (n + 2) :=
-  by
+  by 
   let C := sin a ^ (n + 1) * cos a - sin b ^ (n + 1) * cos b
   have h : ∀ α β γ : ℝ, α * (β * α * γ) = β * (α * α * γ) := fun α β γ => by ring
   have hu : ∀ x ∈ _, HasDerivAt (fun y => sin y ^ (n + 1)) ((n + 1 : ℕ) * cos x * sin x ^ n) x :=
@@ -553,7 +531,7 @@ theorem integral_sin_pow :
     (∫ x in a..b, sin x ^ (n + 2)) =
       (sin a ^ (n + 1) * cos a - sin b ^ (n + 1) * cos b) / (n + 2) +
         (n + 1) / (n + 2) * ∫ x in a..b, sin x ^ n :=
-  by
+  by 
   have : (n : ℝ) + 2 ≠ 0 := by exact_mod_cast succ_ne_zero n.succ
   field_simp
   convert eq_sub_iff_add_eq.mp (integral_sin_pow_aux n)
@@ -567,9 +545,7 @@ theorem integral_sin_sq : (∫ x in a..b, sin x ^ 2) = (sin a * cos a - sin b * 
 
 theorem integral_sin_pow_odd :
     (∫ x in 0 ..π, sin x ^ (2 * n + 1)) = 2 * ∏ i in range n, (2 * i + 2) / (2 * i + 3) := by
-  induction' n with k ih;
-  · norm_num
-    
+  induction' n with k ih; · norm_num
   rw [prod_range_succ_comm, mul_left_comm, ← ih, mul_succ, integral_sin_pow]
   norm_cast
   simp [-cast_add, field_simps]
@@ -577,9 +553,7 @@ theorem integral_sin_pow_odd :
 
 theorem integral_sin_pow_even :
     (∫ x in 0 ..π, sin x ^ (2 * n)) = π * ∏ i in range n, (2 * i + 1) / (2 * i + 2) := by
-  induction' n with k ih;
-  · simp
-    
+  induction' n with k ih; · simp
   rw [prod_range_succ_comm, mul_left_comm, ← ih, mul_succ, integral_sin_pow]
   norm_cast
   simp [-cast_add, field_simps]
@@ -609,7 +583,7 @@ theorem integral_cos_pow_aux :
     (∫ x in a..b, cos x ^ (n + 2)) =
       (cos b ^ (n + 1) * sin b - cos a ^ (n + 1) * sin a + (n + 1) * ∫ x in a..b, cos x ^ n) -
         (n + 1) * ∫ x in a..b, cos x ^ (n + 2) :=
-  by
+  by 
   let C := cos b ^ (n + 1) * sin b - cos a ^ (n + 1) * sin a
   have h : ∀ α β γ : ℝ, α * (β * α * γ) = β * (α * α * γ) := fun α β γ => by ring
   have hu : ∀ x ∈ _, HasDerivAt (fun y => cos y ^ (n + 1)) (-(n + 1 : ℕ) * sin x * cos x ^ n) x :=
@@ -635,7 +609,7 @@ theorem integral_cos_pow :
     (∫ x in a..b, cos x ^ (n + 2)) =
       (cos b ^ (n + 1) * sin b - cos a ^ (n + 1) * sin a) / (n + 2) +
         (n + 1) / (n + 2) * ∫ x in a..b, cos x ^ n :=
-  by
+  by 
   have : (n : ℝ) + 2 ≠ 0 := by exact_mod_cast succ_ne_zero n.succ
   field_simp
   convert eq_sub_iff_add_eq.mp (integral_cos_pow_aux n)

@@ -53,17 +53,13 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCom
     finsuppTensorFinsupp R M N ι κ (f ⊗ₜ g) (i, k) = f i ⊗ₜ g k := by
   apply Finsupp.induction_linear f
   · simp
-    
   · intro f₁ f₂ hf₁ hf₂
     simp [add_tmul, hf₁, hf₂]
-    
   · intro i' m
     apply Finsupp.induction_linear g
     · simp
-      
     · intro g₁ g₂ hg₁ hg₂
       simp [tmul_add, hg₁, hg₂]
-      
     · intro k' n
       simp only [finsupp_tensor_finsupp_single]
       simp only [Finsupp.single_apply]
@@ -71,13 +67,9 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCom
       by_cases h1 : (i', k') = (i, k)
       · simp only [Prod.mk.inj_iff] at h1
         simp [h1]
-        
       · simp only [h1, if_false]
         simp only [Prod.mk.inj_iff, not_and_or] at h1
         cases h1 <;> simp [h1]
-        
-      
-    
 #align finsupp_tensor_finsupp_apply finsupp_tensor_finsupp_apply
 
 @[simp]
@@ -106,7 +98,7 @@ theorem finsupp_tensor_finsupp'_apply_apply (f : α →₀ S) (g : β →₀ S) 
 theorem finsupp_tensor_finsupp'_single_tmul_single (a : α) (b : β) (r₁ r₂ : S) :
     finsuppTensorFinsupp' S α β (Finsupp.single a r₁ ⊗ₜ[S] Finsupp.single b r₂) =
       Finsupp.single (a, b) (r₁ * r₂) :=
-  by
+  by 
   ext ⟨a', b'⟩
   simp [Finsupp.single_apply, ite_and]
 #align finsupp_tensor_finsupp'_single_tmul_single finsupp_tensor_finsupp'_single_tmul_single

@@ -61,7 +61,7 @@ theorem support_scale_roots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤
 theorem support_scale_roots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) :
     (scaleRoots p s).support = p.support :=
   le_antisymm (support_scale_roots_le p s)
-    (by
+    (by 
       intro i
       simp only [coeff_scale_roots, Polynomial.mem_support_iff]
       intro p_ne_zero ps_zero
@@ -74,7 +74,6 @@ theorem degree_scale_roots (p : R[X]) {s : R} : degree (scaleRoots p s) = degree
   haveI := Classical.propDecidable
   by_cases hp : p = 0
   · rw [hp, zero_scale_roots]
-    
   have := scale_roots_ne_zero hp s
   refine' le_antisymm (Finset.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)
   rw [coeff_scale_roots_nat_degree]

@@ -138,7 +138,7 @@ variable {ψ} {ψ' : (⨁ i, M i) →ₗ[R] N}
 /-- Two `linear_map`s out of a direct sum are equal if they agree on the generators.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem linear_map_ext ⦃ψ ψ' : (⨁ i, M i) →ₗ[R] N⦄
     (H : ∀ i, ψ.comp (lof R ι M i) = ψ'.comp (lof R ι M i)) : ψ = ψ' :=
   Dfinsupp.lhom_ext' H
@@ -160,10 +160,10 @@ between `⨁ i, M i` and `Π i, M i`. -/
 @[simps apply]
 def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
   { Dfinsupp.equivFunOnFintype with toFun := coeFn,
-    map_add' := fun f g => by
+    map_add' := fun f g => by 
       ext
       simp only [add_apply, Pi.add_apply],
-    map_smul' := fun c f => by
+    map_smul' := fun c f => by 
       ext
       simp only [Dfinsupp.coe_smul, RingHom.id_apply] }
 #align direct_sum.linear_equiv_fun_on_fintype DirectSum.linearEquivFunOnFintype
@@ -215,7 +215,7 @@ theorem apply_eq_component (f : ⨁ i, M i) (i : ι) : f i = component R ι M i 
   rfl
 #align direct_sum.apply_eq_component DirectSum.apply_eq_component
 
-@[ext.1]
+@[ext]
 theorem ext {f g : ⨁ i, M i} (h : ∀ i, component R ι M i f = component R ι M i g) : f = g :=
   Dfinsupp.ext h
 #align direct_sum.ext DirectSum.ext

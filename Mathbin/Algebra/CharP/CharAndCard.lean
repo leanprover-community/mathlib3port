@@ -25,7 +25,7 @@ theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRing R] 
   constructor
   · rintro h₁ ⟨q, hq⟩
     rcases IsUnit.exists_left_inv h₁ with ⟨a, ha⟩
-    have h₃ : ¬ringChar R ∣ q := by
+    have h₃ : ¬ringChar R ∣ q := by 
       rintro ⟨r, hr⟩
       rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
       nth_rw 0 [← mul_one (ringChar R)]  at hq
@@ -36,14 +36,12 @@ theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRing R] 
     rw [Nat.cast_mul, hch, mul_zero, ← mul_assoc, ha, one_mul] at hq
     norm_cast  at h₄
     exact h₄ h₃ hq.symm
-    
   · intro h
     rcases(hp.coprime_iff_not_dvd.mpr h).IsCoprime with ⟨a, b, hab⟩
     apply_fun (coe : ℤ → R)  at hab
     push_cast at hab
     rw [hch, mul_zero, add_zero, mul_comm] at hab
     exact isUnit_of_mul_eq_one (p : R) a hab
-    
 #align is_unit_iff_not_dvd_char_of_ring_char_ne_zero is_unit_iff_not_dvd_char_of_ring_char_ne_zero
 
 /-- A prime `p` is a unit in a finite commutative ring `R`

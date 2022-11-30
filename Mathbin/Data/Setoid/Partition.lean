@@ -216,7 +216,7 @@ theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃
   Set.eq_univ_of_forall fun x =>
     Set.mem_sUnion.2 <|
       let ⟨t, ht⟩ := hc.2 x
-      ⟨t, by
+      ⟨t, by 
         simp only [exists_unique_iff_exists] at ht
         tauto⟩
 #align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.sUnion_eq_univ
@@ -250,13 +250,15 @@ instance Partition.le : LE (Subtype (@IsPartition α)) :=
 
 /-- Defining a partial order on partitions as the partial order on their induced
     equivalence relations. -/
-instance Partition.partialOrder : PartialOrder (Subtype (@IsPartition α)) where
+instance Partition.partialOrder :
+    PartialOrder (Subtype (@IsPartition
+          α)) where 
   le := (· ≤ ·)
   lt x y := x ≤ y ∧ ¬y ≤ x
   le_refl _ := @le_refl (Setoid α) _ _
   le_trans _ _ _ := @le_trans (Setoid α) _ _ _ _
   lt_iff_le_not_le _ _ := Iff.rfl
-  le_antisymm x y hx hy := by
+  le_antisymm x y hx hy := by 
     let h := @le_antisymm (Setoid α) _ _ _ hx hy
     rw [Subtype.ext_iff_val, ← classes_mk_classes x.1 x.2, ← classes_mk_classes y.1 y.2, h]
 #align setoid.partition.partial_order Setoid.Partition.partialOrder
@@ -265,7 +267,11 @@ variable (α)
 
 /-- The order-preserving bijection between equivalence relations on a type `α`, and
   partitions of `α` into subsets. -/
-protected def Partition.orderIso : Setoid α ≃o { C : Set (Set α) // IsPartition C } where
+protected def Partition.orderIso :
+    Setoid α ≃o
+      { C : Set (Set α) //
+        IsPartition
+          C } where 
   toFun r := ⟨r.classes, empty_not_mem_classes, classes_eqv_classes⟩
   invFun C := mkClasses C.1 C.2.2
   left_inv := mk_classes_classes
@@ -290,7 +296,7 @@ end Partition
 /-- A finite setoid partition furnishes a finpartition -/
 @[simps]
 def IsPartition.finpartition {c : Finset (Set α)} (hc : Setoid.IsPartition (c : Set (Set α))) :
-    Finpartition (Set.univ : Set α) where
+    Finpartition (Set.univ : Set α) where 
   parts := c
   SupIndep := Finset.sup_indep_iff_pairwise_disjoint.mpr <| eqv_classes_disjoint hc.2
   sup_parts := c.sup_id_set_eq_sUnion.trans hc.sUnion_eq_univ
@@ -326,7 +332,9 @@ structure IndexedPartition {ι α : Type _} (s : ι → Set α) where
 /-- The non-constructive constructor for `indexed_partition`. -/
 noncomputable def IndexedPartition.mk' {ι α : Type _} (s : ι → Set α)
     (dis : ∀ i j, i ≠ j → Disjoint (s i) (s j)) (nonempty : ∀ i, (s i).Nonempty)
-    (ex : ∀ x, ∃ i, x ∈ s i) : IndexedPartition s where
+    (ex : ∀ x, ∃ i, x ∈ s i) :
+    IndexedPartition
+      s where 
   eq_of_mem x i j hxi hxj := Classical.by_contradiction fun h => (dis _ _ h).le_bot ⟨hxi, hxj⟩
   some i := (Nonempty i).some
   some_mem i := (Nonempty i).some_spec
@@ -353,7 +361,7 @@ theorem exists_mem (x : α) : ∃ i, x ∈ s i :=
   ⟨hs.index x, hs.mem_index x⟩
 #align indexed_partition.exists_mem IndexedPartition.exists_mem
 
-theorem Union : (⋃ i, s i) = univ := by
+theorem Union : (⋃ i, s i) = univ := by 
   ext x
   simp [hs.exists_mem x]
 #align indexed_partition.Union IndexedPartition.Union
@@ -456,7 +464,7 @@ theorem class_of {x : α} : setOf (hs.Setoid.Rel x) = s (hs.index x) :=
 #align indexed_partition.class_of IndexedPartition.class_of
 
 theorem proj_fiber (x : hs.Quotient) : hs.proj ⁻¹' {x} = s (hs.equivQuotient.symm x) :=
-  (Quotient.inductionOn' x) fun x => by
+  (Quotient.inductionOn' x) fun x => by 
     ext y
     simp only [Set.mem_preimage, Set.mem_singleton_iff, hs.mem_iff_index_eq]
     exact Quotient.eq'

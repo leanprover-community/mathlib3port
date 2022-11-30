@@ -323,7 +323,7 @@ unsafe def refine_one (str : structure_instance_info) :
   tactic.exact e'
   let gs ←
     with_enable_tags
-        (mzipWith
+        (zipWithM
           (fun (n : Name × Name) v => do
             set_goals [v]
             try (dsimp_target simp_lemmas.mk)

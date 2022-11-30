@@ -135,10 +135,12 @@ theorem IntermediateField.fixingSubgroup.antimono {K L : Type _} [Field K] [Fiel
 
 /-- Given a field extension `L/K`, `gal_basis K L` is the filter basis on `L ≃ₐ[K] L` whose sets
 are `Gal(L/E)` for intermediate fields `E` with `E/K` finite dimensional -/
-def galBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : FilterBasis (L ≃ₐ[K] L) where
+def galBasis (K L : Type _) [Field K] [Field L] [Algebra K L] :
+    FilterBasis (L ≃ₐ[K]
+        L) where 
   sets := Subgroup.carrier '' fixedByFinite K L
   Nonempty := ⟨⊤, ⊤, top_fixed_by_finite, rfl⟩
-  inter_sets := by
+  inter_sets := by 
     rintro X Y ⟨H1, ⟨E1, h_E1, rfl⟩, rfl⟩ ⟨H2, ⟨E2, h_E2, rfl⟩, rfl⟩
     use (IntermediateField.fixingSubgroup (E1 ⊔ E2)).carrier
     refine' ⟨⟨_, ⟨_, finiteDimensionalSup E1 E2 h_E1 h_E2, rfl⟩, rfl⟩, _⟩
@@ -158,31 +160,31 @@ theorem mem_gal_basis_iff (K L : Type _) [Field K] [Field L] [Algebra K L] (U : 
 /-- For a field extension `L/K`, `gal_group_basis K L` is the group filter basis on `L ≃ₐ[K] L`
 whose sets are `Gal(L/E)` for finite subextensions `E/K` -/
 def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] :
-    GroupFilterBasis (L ≃ₐ[K] L) where
+    GroupFilterBasis (L ≃ₐ[K]
+        L) where 
   toFilterBasis := galBasis K L
   one' := fun U ⟨H, hH, h2⟩ => h2 ▸ H.one_mem
   mul' U hU :=
-    ⟨U, hU, by
+    ⟨U, hU, by 
       rcases hU with ⟨H, hH, rfl⟩
       rintro x ⟨a, b, haH, hbH, rfl⟩
       exact H.mul_mem haH hbH⟩
   inv' U hU :=
-    ⟨U, hU, by
+    ⟨U, hU, by 
       rcases hU with ⟨H, hH, rfl⟩
       exact fun _ => H.inv_mem'⟩
-  conj' := by
+  conj' := by 
     rintro σ U ⟨H, ⟨E, hE, rfl⟩, rfl⟩
     let F : IntermediateField K L := E.map σ.symm.to_alg_hom
     refine' ⟨F.fixing_subgroup.carrier, ⟨⟨F.fixing_subgroup, ⟨F, _, rfl⟩, rfl⟩, fun g hg => _⟩⟩
     · apply imFiniteDimensional σ.symm
       exact hE
-      
     change σ * g * σ⁻¹ ∈ E.fixing_subgroup
     rw [IntermediateField.mem_fixing_subgroup_iff]
     intro x hx
     change σ (g (σ⁻¹ x)) = x
     have h_in_F : σ⁻¹ x ∈ F :=
-      ⟨x, hx, by
+      ⟨x, hx, by 
         dsimp
         rw [← AlgEquiv.inv_fun_eq_symm]
         rfl⟩
@@ -233,10 +235,10 @@ theorem IntermediateField.fixingSubgroupIsClosed {K L : Type _} [Field K] [Field
 /-- If `L/K` is an algebraic extension, then the Krull topology on `L ≃ₐ[K] L` is Hausdorff. -/
 theorem krullTopologyT2 {K L : Type _} [Field K] [Field L] [Algebra K L]
     (h_int : Algebra.IsIntegral K L) : T2Space (L ≃ₐ[K] L) :=
-  { t2 := fun f g hfg => by
+  { t2 := fun f g hfg => by 
       let φ := f⁻¹ * g
       cases' FunLike.exists_ne hfg with x hx
-      have hφx : φ x ≠ x := by
+      have hφx : φ x ≠ x := by 
         apply ne_of_apply_ne f
         change f (f.symm (g x)) ≠ f x
         rw [AlgEquiv.apply_symm_apply f (g x), ne_comm]
@@ -260,7 +262,7 @@ theorem krullTopologyT2 {K L : Type _} [Field K] [Field L] [Algebra K L]
       change φ ∈ E.fixing_subgroup at h_in_H
       rw [IntermediateField.mem_fixing_subgroup_iff] at h_in_H
       specialize h_in_H x
-      have hxE : x ∈ E := by
+      have hxE : x ∈ E := by 
         apply IntermediateField.subset_adjoin
         apply Set.mem_singleton
       exact hφx (h_in_H hxE) }

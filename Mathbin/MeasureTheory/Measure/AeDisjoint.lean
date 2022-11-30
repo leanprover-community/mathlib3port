@@ -40,13 +40,11 @@ theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α}
       measurable_set_to_measurable _ _, fun i => _, _⟩
   · simp only [measure_to_measurable, inter_Union]
     exact (measure_bUnion_null_iff <| to_countable _).2 fun j hj => hd (Ne.symm hj)
-    
   · simp only [Pairwise, disjoint_left, on_fun, mem_diff, not_and, and_imp, not_not]
     intro i j hne x hi hU hj
     replace hU : x ∉ s i ∩ ⋃ (j) (_ : j ≠ i), s j := fun h => hU (subset_to_measurable _ _ h)
     simp only [mem_inter_iff, mem_Union, not_and, not_exists] at hU
     exact (hU hi j hne.symm hj).elim
-    
 #align
   measure_theory.exists_null_pairwise_disjoint_diff MeasureTheory.exists_null_pairwise_disjoint_diff
 

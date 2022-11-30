@@ -67,7 +67,7 @@ theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) :
   | ⟨a, h⟩ => rfl
 #align mvpfunctor.comp_map Mvpfunctor.comp_map
 
-instance : IsLawfulMvfunctor P.Obj where
+instance : IsLawfulMvfunctor P.Obj where 
   id_map := @id_map _ P
   comp_map := @comp_map _ P
 
@@ -112,7 +112,8 @@ theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x := 
 end Const
 
 /-- Functor composition on polynomial functors -/
-def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m where
+def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) :
+    Mvpfunctor m where 
   A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
   B a i := Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
 #align mvpfunctor.comp Mvpfunctor.comp
@@ -161,7 +162,6 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
     refine' ⟨a, fun i j => (f i j).val, _, fun i j => (f i j).property⟩
     rw [← hy, h, map_eq]
     rfl
-    
   rintro ⟨a, f, xeq, pf⟩
   use ⟨a, fun i j => ⟨f i j, pf i j⟩⟩
   rw [xeq]; rfl
@@ -173,7 +173,6 @@ theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
   · casesm*Exists _, _ ∧ _
     subst_vars
     assumption
-    
   repeat' first |constructor|assumption
 #align mvpfunctor.liftp_iff' Mvpfunctor.liftp_iff'
 
@@ -186,20 +185,16 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     constructor
     · rw [← xeq, h]
       rfl
-      
     constructor
     · rw [← yeq, h]
       rfl
-      
     intro i j
     exact (f i j).property
-    
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
   dsimp; constructor
   · rw [xeq]
     rfl
-    
   rw [yeq]; rfl
 #align mvpfunctor.liftr_iff Mvpfunctor.liftr_iff
 
@@ -213,12 +208,10 @@ theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) (i) :
     rw [liftp_iff']
     intros
     refine' ⟨_, rfl⟩
-    
   · simp only [liftp_iff']
     cases h
     subst x
     tauto
-    
 #align mvpfunctor.supp_eq Mvpfunctor.supp_eq
 
 end Mvpfunctor
@@ -234,14 +227,14 @@ variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
 /-- Split polynomial functor, get a n-ary functor
 from a `n+1`-ary functor -/
-def drop : Mvpfunctor n where
+def drop : Mvpfunctor n where 
   A := P.A
   B a := (P.B a).drop
 #align mvpfunctor.drop Mvpfunctor.drop
 
 /-- Split polynomial functor, get a univariate functor
 from a `n+1`-ary functor -/
-def last : Pfunctor where
+def last : Pfunctor where 
   A := P.A
   B a := (P.B a).last
 #align mvpfunctor.last Mvpfunctor.last

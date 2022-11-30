@@ -110,7 +110,8 @@ def preservesEqualizerOfPreservesKernels [∀ {X Y} (f : X ⟶ Y), PreservesLimi
 -/
 def preservesEqualizersOfPreservesKernels
     [∀ {X Y} (f : X ⟶ Y), PreservesLimit (parallelPair f 0) F] :
-    PreservesLimitsOfShape WalkingParallelPair F where PreservesLimit K := by
+    PreservesLimitsOfShape WalkingParallelPair
+      F where PreservesLimit K := by
     letI :=
       preserves_equalizer_of_preserves_kernels F (K.map walking_parallel_pair_hom.left)
         (K.map walking_parallel_pair_hom.right)
@@ -208,7 +209,8 @@ def preservesCoequalizerOfPreservesCokernels
 -/
 def preservesCoequalizersOfPreservesCokernels
     [∀ {X Y} (f : X ⟶ Y), PreservesColimit (parallelPair f 0) F] :
-    PreservesColimitsOfShape WalkingParallelPair F where PreservesColimit K := by
+    PreservesColimitsOfShape WalkingParallelPair
+      F where PreservesColimit K := by
     letI :=
       preserves_coequalizer_of_preserves_cokernels F (K.map limits.walking_parallel_pair_hom.left)
         (K.map limits.walking_parallel_pair_hom.right)

@@ -118,18 +118,17 @@ variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedAddCommGroup E] [Norm
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ‖f x‖ ≤ M * ‖f‖) :
-    ‖x‖ ≤ M := by classical
-  by_cases h : x = 0
-  · simp only [h, hMp, norm_zero]
-    
-  · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ‖f‖ = 1 ∧ f x = ‖x‖ := exists_dual_vector 𝕜 x h
-    calc
-      ‖x‖ = ‖(‖x‖ : 𝕜)‖ := is_R_or_C.norm_coe_norm.symm
-      _ = ‖f x‖ := by rw [hfx]
-      _ ≤ M * ‖f‖ := hM f
-      _ = M := by rw [hf₁, mul_one]
-      
-    
+    ‖x‖ ≤ M := by
+  classical 
+    by_cases h : x = 0
+    · simp only [h, hMp, norm_zero]
+    · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ‖f‖ = 1 ∧ f x = ‖x‖ := exists_dual_vector 𝕜 x h
+      calc
+        ‖x‖ = ‖(‖x‖ : 𝕜)‖ := is_R_or_C.norm_coe_norm.symm
+        _ = ‖f x‖ := by rw [hfx]
+        _ ≤ M * ‖f‖ := hM f
+        _ = M := by rw [hf₁, mul_one]
+        
 #align normed_space.norm_le_dual_bound NormedSpace.norm_le_dual_bound
 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
@@ -149,11 +148,10 @@ theorem eq_iff_forall_dual_eq {x y : E} : x = y ↔ ∀ g : Dual 𝕜 E, g x = g
 /-- The inclusion of a normed space in its double dual is an isometry onto its image.-/
 def inclusionInDoubleDualLi : E →ₗᵢ[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
   { inclusionInDoubleDual 𝕜 E with
-    norm_map' := by
+    norm_map' := by 
       intro x
       apply le_antisymm
       · exact double_dual_bound 𝕜 E x
-        
       rw [ContinuousLinearMap.norm_def]
       refine' le_cInf ContinuousLinearMap.bounds_nonempty _
       rintro c ⟨hc1, hc2⟩
@@ -209,11 +207,10 @@ variable {𝕜}
 /-- If `x'` is a dual element such that the norms `‖x' z‖` are bounded for `z ∈ s`, then a
 small scalar multiple of `x'` is in `polar 𝕜 s`. -/
 theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z ∈ s → ‖x' z‖ ≤ ‖c‖) :
-    c⁻¹ • x' ∈ polar 𝕜 s := by
+    c⁻¹ • x' ∈ polar 𝕜 s := by 
   by_cases c_zero : c = 0
   · simp only [c_zero, inv_zero, zero_smul]
     exact (dual_pairing 𝕜 E).flip.zero_mem_polar _
-    
   have eq : ∀ z, ‖c⁻¹ • x' z‖ = ‖c⁻¹‖ * ‖x' z‖ := fun z => norm_smul c⁻¹ _
   have le : ∀ z, z ∈ s → ‖c⁻¹ • x' z‖ ≤ ‖c⁻¹‖ * ‖c‖ := by
     intro z hzs

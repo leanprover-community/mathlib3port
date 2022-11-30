@@ -47,8 +47,7 @@ theorem xgcd_aux_rec {r s t r' s' t'} (h : 0 < r) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
   cases r <;> [exact absurd h (lt_irrefl _),
     · simp only [xgcd_aux]
-      rfl
-      ]
+      rfl]
 #align nat.xgcd_aux_rec Nat.xgcd_aux_rec
 
 /-- Use the extended GCD algorithm to generate the `a` and `b` values
@@ -84,9 +83,7 @@ theorem gcd_a_zero_right {s : ℕ} (h : s ≠ 0) : gcdA s 0 = 1 := by
   unfold gcd_a xgcd
   induction s
   · exact absurd rfl h
-    
   · simp [xgcd_aux]
-    
 #align nat.gcd_a_zero_right Nat.gcd_a_zero_right
 
 @[simp]
@@ -94,9 +91,7 @@ theorem gcd_b_zero_right {s : ℕ} (h : s ≠ 0) : gcdB s 0 = 0 := by
   unfold gcd_b xgcd
   induction s
   · exact absurd rfl h
-    
   · simp [xgcd_aux]
-    
 #align nat.gcd_b_zero_right Nat.gcd_b_zero_right
 
 @[simp]
@@ -196,7 +191,6 @@ theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
   cases Nat.eq_zero_or_pos (nat_abs b)
   · rw [eq_zero_of_nat_abs_eq_zero h]
     simp [Int.div_zero]
-    
   calc
     nat_abs (a / b) = nat_abs (a / b) * 1 := by rw [mul_one]
     _ = nat_abs (a / b) * (nat_abs b / nat_abs b) := by rw [Nat.div_self h]
@@ -307,11 +301,9 @@ theorem gcd_eq_zero_iff {i j : ℤ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
     exact
       ⟨nat_abs_eq_zero.mp (Nat.eq_zero_of_gcd_eq_zero_left h),
         nat_abs_eq_zero.mp (Nat.eq_zero_of_gcd_eq_zero_right h)⟩
-    
   · intro h
     rw [nat_abs_eq_zero.mpr h.left, nat_abs_eq_zero.mpr h.right]
     apply Nat.gcd_zero_left
-    
 #align int.gcd_eq_zero_iff Int.gcd_eq_zero_iff
 
 theorem gcd_pos_iff {i j : ℤ} : 0 < gcd i j ↔ i ≠ 0 ∨ j ≠ 0 :=
@@ -391,12 +383,10 @@ theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcd a b ∣ n ↔ ∃ x y : ℤ, ↑
   · intro h
     rw [← Nat.mul_div_cancel' h, Int.ofNat_mul, gcd_eq_gcd_ab, add_mul, mul_assoc, mul_assoc]
     refine' ⟨_, _, rfl⟩
-    
   · rintro ⟨x, y, h⟩
     rw [← Int.coe_nat_dvd, h]
     exact
       dvd_add (dvd_mul_of_dvd_left (gcd_dvd_left a b) _) (dvd_mul_of_dvd_left (gcd_dvd_right a b) y)
-    
 #align int.gcd_dvd_iff Int.gcd_dvd_iff
 
 theorem gcd_greatest {a b d : ℤ} (hd_pos : 0 ≤ d) (hda : d ∣ a) (hdb : d ∣ b)
@@ -409,7 +399,7 @@ theorem gcd_greatest {a b d : ℤ} (hd_pos : 0 ≤ d) (hda : d ∣ a) (hdb : d �
 Compare with `is_coprime.dvd_of_dvd_mul_left` and
 `unique_factorization_monoid.dvd_of_dvd_mul_left_of_no_prime_factors` -/
 theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcd a c = 1) : a ∣ b :=
-  by
+  by 
   have := gcd_eq_gcd_ab a c
   simp only [hab, Int.ofNat_zero, Int.ofNat_succ, zero_add] at this
   have : b * a * gcd_a a c + b * c * gcd_b a c = b := by simp [mul_assoc, ← mul_add, ← this]
@@ -421,7 +411,7 @@ theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab :
 Compare with `is_coprime.dvd_of_dvd_mul_right` and
 `unique_factorization_monoid.dvd_of_dvd_mul_right_of_no_prime_factors` -/
 theorem dvd_of_dvd_mul_right_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcd a b = 1) :
-    a ∣ c := by
+    a ∣ c := by 
   rw [mul_comm] at habc
   exact dvd_of_dvd_mul_left_of_gcd_one habc hab
 #align int.dvd_of_dvd_mul_right_of_gcd_one Int.dvd_of_dvd_mul_right_of_gcd_one
@@ -433,10 +423,8 @@ theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) :
   simp_rw [← gcd_dvd_iff]
   constructor
   · simpa [and_true_iff, dvd_refl, Set.mem_set_of_eq] using gcd_pos_of_non_zero_left b ha
-    
   · simp only [lowerBounds, and_imp, Set.mem_set_of_eq]
     exact fun n hn_pos hn => Nat.le_of_dvd hn_pos hn
-    
 #align int.gcd_least_linear Int.gcd_least_linear
 
 /-! ### lcm -/
@@ -503,10 +491,8 @@ theorem lcm_dvd {i j k : ℤ} : i ∣ k → j ∣ k → (lcm i j : ℤ) ∣ k :=
 end Int
 
 theorem pow_gcd_eq_one {M : Type _} [Monoid M] (x : M) {m n : ℕ} (hm : x ^ m = 1) (hn : x ^ n = 1) :
-    x ^ m.gcd n = 1 := by
-  cases m;
-  · simp only [hn, Nat.gcd_zero_left]
-    
+    x ^ m.gcd n = 1 := by 
+  cases m; · simp only [hn, Nat.gcd_zero_left]
   lift x to Mˣ using is_unit_of_pow_eq_one hm m.succ_ne_zero
   simp only [← Units.coe_pow] at *
   rw [← Units.val_one, ← zpow_coe_nat, ← Units.ext_iff] at *
@@ -537,9 +523,7 @@ theorem int_gcd_helper' {d : ℕ} {x y a b : ℤ} (h₁ : (d : ℤ) ∣ x) (h₂
   rw [← Int.coe_nat_dvd, ← h₃]
   apply dvd_add
   · exact (Int.gcd_dvd_left _ _).mul_right _
-    
   · exact (Int.gcd_dvd_right _ _).mul_right _
-    
 #align tactic.norm_num.int_gcd_helper' Tactic.NormNum.int_gcd_helper'
 
 theorem nat_gcd_helper_dvd_left (x y a : ℕ) (h : x * a = y) : Nat.gcd x y = x :=

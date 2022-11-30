@@ -35,7 +35,7 @@ theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
 #align dmatrix.ext_iff Dmatrix.ext_iff
 
-@[ext.1]
+@[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
   ext_iff.mp
 #align dmatrix.ext Dmatrix.ext
@@ -101,7 +101,7 @@ instance [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
   Pi.inhabited _
 
 instance [∀ i j, Add (α i j)] : Add (Dmatrix m n α) :=
-  Pi.hasAdd
+  Pi.instAdd
 
 instance [∀ i j, AddSemigroup (α i j)] : AddSemigroup (Dmatrix m n α) :=
   Pi.addSemigroup
@@ -110,7 +110,7 @@ instance [∀ i j, AddCommSemigroup (α i j)] : AddCommSemigroup (Dmatrix m n α
   Pi.addCommSemigroup
 
 instance [∀ i j, Zero (α i j)] : Zero (Dmatrix m n α) :=
-  Pi.hasZero
+  Pi.instZero
 
 instance [∀ i j, AddMonoid (α i j)] : AddMonoid (Dmatrix m n α) :=
   Pi.addMonoid
@@ -119,10 +119,10 @@ instance [∀ i j, AddCommMonoid (α i j)] : AddCommMonoid (Dmatrix m n α) :=
   Pi.addCommMonoid
 
 instance [∀ i j, Neg (α i j)] : Neg (Dmatrix m n α) :=
-  Pi.hasNeg
+  Pi.instNeg
 
 instance [∀ i j, Sub (α i j)] : Sub (Dmatrix m n α) :=
-  Pi.hasSub
+  Pi.instSub
 
 instance [∀ i j, AddGroup (α i j)] : AddGroup (Dmatrix m n α) :=
   Pi.addGroup
@@ -159,7 +159,7 @@ theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) (i j) : (M - N)
 @[simp]
 theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)]
     {f : ∀ ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 :=
-  by
+  by 
   ext
   simp [h]
 #align dmatrix.map_zero Dmatrix.map_zero
@@ -179,13 +179,13 @@ theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j,
 #align dmatrix.map_sub Dmatrix.map_sub
 
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Dmatrix m n α) :=
-  ⟨fun M N => by
+  ⟨fun M N => by 
     ext
     exact isEmptyElim i⟩
 #align dmatrix.subsingleton_of_empty_left Dmatrix.subsingleton_of_empty_left
 
 instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Dmatrix m n α) :=
-  ⟨fun M N => by
+  ⟨fun M N => by 
     ext
     exact isEmptyElim j⟩
 #align dmatrix.subsingleton_of_empty_right Dmatrix.subsingleton_of_empty_right
@@ -195,7 +195,9 @@ end Dmatrix
 /-- The `add_monoid_hom` between spaces of dependently typed matrices
 induced by an `add_monoid_hom` between their coefficients. -/
 def AddMonoidHom.mapDmatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type w}
-    [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β where
+    [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) :
+    Dmatrix m n α →+ Dmatrix m n
+        β where 
   toFun M := M.map fun i j => @f i j
   map_zero' := by simp
   map_add' := Dmatrix.map_add f

@@ -129,14 +129,15 @@ theorem mk_le_mk {s t : Set M} (h_mul) (h_mul') : mk s h_mul ≤ mk t h_mul' ↔
 #align subsemigroup.mk_le_mk Subsemigroup.mk_le_mk
 
 /-- Two subsemigroups are equal if they have the same elements. -/
-@[ext.1, to_additive "Two `add_subsemigroup`s are equal if they have the same elements."]
+@[ext, to_additive "Two `add_subsemigroup`s are equal if they have the same elements."]
 theorem ext {S T : Subsemigroup M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align subsemigroup.ext Subsemigroup.ext
 
 /-- Copy a subsemigroup replacing `carrier` with a set that is equal to it. -/
 @[to_additive "Copy an additive subsemigroup replacing `carrier` with a set that is equal to\nit."]
-protected def copy (S : Subsemigroup M) (s : Set M) (hs : s = S) : Subsemigroup M where
+protected def copy (S : Subsemigroup M) (s : Set M) (hs : s = S) :
+    Subsemigroup M where 
   carrier := s
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 #align subsemigroup.copy Subsemigroup.copy
@@ -163,12 +164,12 @@ protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
 
 /-- The subsemigroup `M` of the magma `M`. -/
 @[to_additive "The additive subsemigroup `M` of the magma `M`."]
-instance : HasTop (Subsemigroup M) :=
+instance : Top (Subsemigroup M) :=
   ⟨{ carrier := Set.univ, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
 
 /-- The trivial subsemigroup `∅` of a magma `M`. -/
 @[to_additive "The trivial `add_subsemigroup` `∅` of an additive magma `M`."]
-instance : HasBot (Subsemigroup M) :=
+instance : Bot (Subsemigroup M) :=
   ⟨{ carrier := ∅, mul_mem' := fun a b => by simp }⟩
 
 @[to_additive]
@@ -260,7 +261,7 @@ theorem subsingleton_of_subsingleton [Subsingleton (Subsemigroup M)] : Subsingle
 
 @[to_additive]
 instance [hn : Nonempty M] : Nontrivial (Subsemigroup M) :=
-  ⟨⟨⊥, ⊤, fun h => by
+  ⟨⟨⊥, ⊤, fun h => by 
       obtain ⟨x⟩ := id hn
       refine' absurd (_ : x ∈ ⊥) not_mem_bot
       simp [h]⟩⟩
@@ -327,7 +328,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop}
     (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
     (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) :
-    p x hx := by
+    p x hx := by 
   refine' Exists.elim _ fun (hx : x ∈ closure s) (hc : p x hx) => hc
   exact
     closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ =>
@@ -362,7 +363,9 @@ variable (M)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[to_additive "`closure` forms a Galois insertion with the coercion to set."]
-protected def gi : GaloisInsertion (@closure M _) coe where
+protected def gi :
+    GaloisInsertion (@closure M _)
+      coe where 
   choice s _ := closure s
   gc s t := closure_le
   le_l_u s := subset_closure
@@ -425,7 +428,8 @@ open Subsemigroup
 
 /-- The subsemigroup of elements `x : M` such that `f x = g x` -/
 @[to_additive "The additive subsemigroup of elements `x : M` such that `f x = g x`"]
-def eqMlocus (f g : M →ₙ* N) : Subsemigroup M where
+def eqMlocus (f g : M →ₙ* N) :
+    Subsemigroup M where 
   carrier := { x | f x = g x }
   mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align mul_hom.eq_mlocus MulHom.eqMlocus
@@ -464,7 +468,8 @@ Then `mul_hom.of_mdense` defines a mul homomorphism from `M` asking for a proof
 of `f (x * y) = f x * f y` only for `y ∈ s`. -/
 @[to_additive]
 def ofMdense {M N} [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : closure s = ⊤)
-    (hmul : ∀ (x), ∀ y ∈ s, f (x * y) = f x * f y) : M →ₙ* N where
+    (hmul : ∀ (x), ∀ y ∈ s, f (x * y) = f x * f y) :
+    M →ₙ* N where 
   toFun := f
   map_mul' x y :=
     dense_induction y hs (fun y hy x => hmul x y hy)

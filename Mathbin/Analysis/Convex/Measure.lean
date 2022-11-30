@@ -28,7 +28,8 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpac
 namespace Convex
 
 /-- Haar measure of the frontier of a convex set is zero. -/
-theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 := by
+theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
+  by
   /- If `s` is included in a hyperplane, then `frontier s ⊆ closure s` is included in the same
     hyperplane, hence it has measure zero. -/
   cases' ne_or_eq (affineSpan ℝ s) ⊤ with hspan hspan
@@ -36,7 +37,6 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 := by
     exact
       frontier_subset_closure.trans
         (closure_minimal (subset_affine_span _ _) (affineSpan ℝ s).closedOfFiniteDimensional)
-    
   rw [← hs.interior_nonempty_iff_affine_span_eq_top] at hspan
   rcases hspan with ⟨x, hx⟩
   /- Without loss of generality, `s` is bounded. Indeed, `∂s ⊆ ⋃ n, ∂(s ∩ ball x (n + 1))`, hence it
@@ -54,14 +54,13 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 := by
     clear this
     set N : ℕ := ⌊dist y x⌋₊
     refine' mem_Union.2 ⟨N, _⟩
-    have hN : y ∈ B N := by
+    have hN : y ∈ B N := by 
       simp only [B, N]
       simp [Nat.lt_floor_add_one]
     suffices : y ∈ frontier (s ∩ B N) ∩ B N
     exact this.1
     rw [frontier_inter_open_inter is_open_ball]
     exact ⟨hy, hN⟩
-    
   clear hx hs s
   intro s hs hx hb
   /- Since `s` is bounded, we have `μ (interior s) ≠ ∞`, hence it suffices to prove

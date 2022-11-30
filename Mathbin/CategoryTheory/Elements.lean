@@ -49,7 +49,9 @@ def Functor.Elements (F : C ⥤ Type w) :=
 /-- The category structure on `F.elements`, for `F : C ⥤ Type`.
     A morphism `(X, x) ⟶ (Y, y)` is a morphism `f : X ⟶ Y` in `C`, so `F.map f` takes `x` to `y`.
  -/
-instance categoryOfElements (F : C ⥤ Type w) : Category.{v} F.Elements where
+instance categoryOfElements (F : C ⥤ Type w) :
+    Category.{v}
+      F.Elements where 
   Hom p q := { f : p.1 ⟶ q.1 // (F.map f) p.2 = q.2 }
   id p := ⟨𝟙 p.1, by obviously⟩
   comp p q r f g := ⟨f.val ≫ g.val, by obviously⟩
@@ -57,7 +59,7 @@ instance categoryOfElements (F : C ⥤ Type w) : Category.{v} F.Elements where
 
 namespace CategoryOfElements
 
-@[ext.1]
+@[ext]
 theorem ext (F : C ⥤ Type w) {x y : F.Elements} (f g : x ⟶ y) (w : f.val = g.val) : f = g :=
   Subtype.ext_val w
 #align category_theory.category_of_elements.ext CategoryTheory.categoryOfElements.ext
@@ -76,20 +78,20 @@ theorem id_val {F : C ⥤ Type w} {p : F.Elements} : (𝟙 p : p ⟶ p).val = �
 end CategoryOfElements
 
 noncomputable instance groupoidOfElements {G : Type u} [Groupoid.{v} G] (F : G ⥤ Type w) :
-    Groupoid F.Elements where
+    Groupoid F.Elements where 
   inv p q f :=
     ⟨inv f.val,
       calc
         F.map (inv f.val) q.2 = F.map (inv f.val) (F.map f.val p.2) := by rw [f.2]
         _ = (F.map f.val ≫ F.map (inv f.val)) p.2 := rfl
-        _ = p.2 := by
+        _ = p.2 := by 
           rw [← F.map_comp]
           simp
         ⟩
-  inv_comp' _ _ _ := by
+  inv_comp' _ _ _ := by 
     ext
     simp
-  comp_inv' _ _ _ := by
+  comp_inv' _ _ _ := by 
     ext
     simp
 #align category_theory.groupoid_of_elements CategoryTheory.groupoidOfElements
@@ -100,7 +102,7 @@ variable (F : C ⥤ Type w)
 
 /-- The functor out of the category of elements which forgets the element. -/
 @[simps]
-def π : F.Elements ⥤ C where
+def π : F.Elements ⥤ C where 
   obj X := X.1
   map X Y f := f.val
 #align category_theory.category_of_elements.π CategoryTheory.categoryOfElements.π
@@ -108,7 +110,8 @@ def π : F.Elements ⥤ C where
 /-- A natural transformation between functors induces a functor between the categories of elements.
 -/
 @[simps]
-def map {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : F₁.Elements ⥤ F₂.Elements where
+def map {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) :
+    F₁.Elements ⥤ F₂.Elements where 
   obj t := ⟨t.1, α.app t.1 t.2⟩
   map t₁ t₂ k := ⟨k.1, by simpa [← k.2] using (functor_to_types.naturality _ _ α k.1 t₁.2).symm⟩
 #align category_theory.category_of_elements.map CategoryTheory.categoryOfElements.map
@@ -119,7 +122,10 @@ theorem map_π {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : map α ⋙ π F
 #align category_theory.category_of_elements.map_π CategoryTheory.categoryOfElements.map_π
 
 /-- The forward direction of the equivalence `F.elements ≅ (*, F)`. -/
-def toStructuredArrow : F.Elements ⥤ StructuredArrow PUnit F where
+def toStructuredArrow :
+    F.Elements ⥤
+      StructuredArrow PUnit
+        F where 
   obj X := StructuredArrow.mk fun _ => X.2
   map X Y f := StructuredArrow.homMk f.val (by tidy)
 #align
@@ -139,7 +145,9 @@ theorem to_comma_map_right {X Y} (f : X ⟶ Y) : ((toStructuredArrow F).map f).r
   category_theory.category_of_elements.to_comma_map_right CategoryTheory.categoryOfElements.to_comma_map_right
 
 /-- The reverse direction of the equivalence `F.elements ≅ (*, F)`. -/
-def fromStructuredArrow : StructuredArrow PUnit F ⥤ F.Elements where
+def fromStructuredArrow :
+    StructuredArrow PUnit F ⥤
+      F.Elements where 
   obj X := ⟨X.right, X.Hom PUnit.unit⟩
   map X Y f := ⟨f.right, congr_fun f.w'.symm PUnit.unit⟩
 #align
@@ -175,9 +183,12 @@ open Opposite
 given by `category_theory.yoneda_sections`.
 -/
 @[simps]
-def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ CostructuredArrow yoneda F where
+def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) :
+    F.Elementsᵒᵖ ⥤
+      CostructuredArrow yoneda
+        F where 
   obj X := CostructuredArrow.mk ((yonedaSections (unop (unop X).fst) F).inv (ULift.up (unop X).2))
-  map X Y f := by
+  map X Y f := by 
     fapply costructured_arrow.hom_mk
     exact f.unop.val.unop
     ext y
@@ -193,7 +204,9 @@ def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ Costruct
 given by `category_theory.yoneda_equiv`.
 -/
 @[simps]
-def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F)ᵒᵖ ⥤ F.Elements where
+def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) :
+    (CostructuredArrow yoneda F)ᵒᵖ ⥤
+      F.Elements where 
   obj X := ⟨op (unop X).1, yonedaEquiv.1 (unop X).3⟩
   map X Y f :=
     ⟨f.unop.1.op, by
@@ -225,10 +238,10 @@ theorem from_to_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     ∀ {a b : F.elements} (H : a = b),
       ↑(eq_to_hom H) =
         eq_to_hom
-          (show a.fst = b.fst by
+          (show a.fst = b.fst by 
             cases H
             rfl) :=
-    fun _ _ H => by
+    fun _ _ H => by 
     cases H
     rfl
   ext; simp [this]
@@ -250,7 +263,6 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
     simp only [Quiver.Hom.unop_op, yoneda_obj_map]
     erw [category.comp_id]
-    
   intro X Y f
   rcases X with ⟨X_left, ⟨⟨⟩⟩⟩; rcases Y with ⟨Y_left, ⟨⟨⟩⟩⟩; cases f
   simp [costructured_arrow.hom_mk]
@@ -260,12 +272,10 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
-    
   · ext (x f)
     convert congr_fun (Y_hom.naturality f.op).symm (𝟙 Y_left)
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
-    
   simp
   exact proof_irrel_heq _ _
 #align
@@ -292,21 +302,19 @@ theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ �
     congr
     ext (x f)
     simpa using congr_fun (α.naturality f.op).symm (unop X).snd
-    
   · intro X Y f
     ext
     have :
       ∀ {F : Cᵒᵖ ⥤ Type v} {a b : costructured_arrow yoneda F} (H : a = b),
         comma_morphism.left (eq_to_hom H) =
           eq_to_hom
-            (show a.left = b.left by
+            (show a.left = b.left by 
               cases H
               rfl) :=
-      fun _ _ _ H => by
+      fun _ _ _ H => by 
       cases H
       rfl
     simp [this]
-    
 #align
   category_theory.category_of_elements.costructured_arrow_yoneda_equivalence_naturality CategoryTheory.categoryOfElements.costructured_arrow_yoneda_equivalence_naturality
 

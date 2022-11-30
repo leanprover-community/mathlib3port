@@ -46,7 +46,7 @@ theorem IsLowerSet.member_subfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
 
 theorem IsLowerSet.member_subfamily_subset_non_member_subfamily
     (h : IsLowerSet (𝒜 : Set (Finset α))) : 𝒜.memberSubfamily a ⊆ 𝒜.nonMemberSubfamily a := fun s =>
-  by
+  by 
   rw [mem_member_subfamily, mem_non_member_subfamily]
   exact And.imp_left (h <| subset_insert _ _)
 #align
@@ -60,13 +60,9 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
   · simp_rw [subset_empty, ← subset_singleton_iff', subset_singleton_iff] at h𝒜s hℬs
     obtain rfl | rfl := h𝒜s
     · simp only [card_empty, empty_inter, mul_zero, zero_mul]
-      
     obtain rfl | rfl := hℬs
     · simp only [card_empty, inter_empty, mul_zero, zero_mul]
-      
     · simp only [card_empty, pow_zero, inter_singleton_of_mem, mem_singleton, card_singleton]
-      
-    
   rw [card_insert_of_not_mem hs, ← card_member_subfamily_add_card_non_member_subfamily a 𝒜, ←
     card_member_subfamily_add_card_non_member_subfamily a ℬ, add_mul, mul_add, mul_add,
     add_comm (_ * _), add_add_add_comm]
@@ -84,7 +80,7 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
     rw [mem_non_member_subfamily] at ht
     exact (subset_insert_iff_of_not_mem ht.2).1 (h𝒞 _ ht.1)
   have h₁ : ∀ 𝒞 : Finset (Finset α), (∀ t ∈ 𝒞, t ⊆ insert a s) → ∀ t ∈ 𝒞.memberSubfamily a, t ⊆ s :=
-    by
+    by 
     rintro 𝒞 h𝒞 t ht
     rw [mem_member_subfamily] at ht
     exact (subset_insert_iff_of_not_mem ht.2).1 ((subset_insert _ _).trans <| h𝒞 _ ht.1)
@@ -108,7 +104,7 @@ theorem IsLowerSet.le_card_inter_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset 
 /-- **Harris-Kleitman inequality**: Upper sets and lower sets of finsets anticorrelate. -/
 theorem IsUpperSet.card_inter_le_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset α)))
     (hℬ : IsLowerSet (ℬ : Set (Finset α))) : 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card ≤ 𝒜.card * ℬ.card :=
-  by
+  by 
   rw [← is_lower_set_compl, ← coe_compl] at h𝒜
   have := h𝒜.le_card_inter_finset hℬ
   rwa [card_compl, Fintype.card_finset, tsub_mul, tsub_le_iff_tsub_le, ← mul_tsub, ←
@@ -119,7 +115,7 @@ theorem IsUpperSet.card_inter_le_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset 
 /-- **Harris-Kleitman inequality**: Lower sets and upper sets of finsets anticorrelate. -/
 theorem IsLowerSet.card_inter_le_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset α)))
     (hℬ : IsUpperSet (ℬ : Set (Finset α))) : 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card ≤ 𝒜.card * ℬ.card :=
-  by
+  by 
   rw [inter_comm, mul_comm 𝒜.card]
   exact hℬ.card_inter_le_finset h𝒜
 #align is_lower_set.card_inter_le_finset IsLowerSet.card_inter_le_finset
@@ -127,16 +123,14 @@ theorem IsLowerSet.card_inter_le_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset 
 /-- **Harris-Kleitman inequality**: Any two upper sets of finsets correlate. -/
 theorem IsUpperSet.le_card_inter_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset α)))
     (hℬ : IsUpperSet (ℬ : Set (Finset α))) : 𝒜.card * ℬ.card ≤ 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card :=
-  by
+  by 
   rw [← is_lower_set_compl, ← coe_compl] at h𝒜
   have := h𝒜.card_inter_le_finset hℬ
   rwa [card_compl, Fintype.card_finset, tsub_mul, le_tsub_iff_le_tsub, ← mul_tsub, ←
     card_sdiff (inter_subset_right _ _), sdiff_inter_self_right, sdiff_compl, _root_.inf_comm] at
     this
   · exact mul_le_mul_left' (card_le_of_subset <| inter_subset_right _ _) _
-    
   · rw [← Fintype.card_finset]
     exact mul_le_mul_right' (card_le_univ _) _
-    
 #align is_upper_set.le_card_inter_finset IsUpperSet.le_card_inter_finset
 

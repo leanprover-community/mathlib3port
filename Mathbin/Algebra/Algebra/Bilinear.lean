@@ -116,11 +116,11 @@ variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [Smu
 A weaker version of this for non-unital non-associative algebras exists as `linear_map.mul`. -/
 def NonUnitalAlgHom.lmul : A →ₙₐ[R] EndCat R A :=
   { mul R A with
-    map_mul' := by
+    map_mul' := by 
       intro a b
       ext c
       exact mul_assoc a b c,
-    map_zero' := by
+    map_zero' := by 
       ext a
       exact zero_mul a }
 #align non_unital_alg_hom.lmul NonUnitalAlgHom.lmul
@@ -161,17 +161,17 @@ the algebra.
 A weaker version of this for non-unital algebras exists as `non_unital_alg_hom.mul`. -/
 def Algebra.lmul : A →ₐ[R] EndCat R A :=
   { LinearMap.mul R A with
-    map_one' := by
+    map_one' := by 
       ext a
       exact one_mul a,
-    map_mul' := by
+    map_mul' := by 
       intro a b
       ext c
       exact mul_assoc a b c,
-    map_zero' := by
+    map_zero' := by 
       ext a
       exact zero_mul a,
-    commutes' := by
+    commutes' := by 
       intro r
       ext a
       exact (Algebra.smul_def r a).symm }
@@ -188,20 +188,16 @@ theorem Algebra.coe_lmul_eq_mul : ⇑(Algebra.lmul R A) = mul R A :=
 theorem mul_left_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 := by
   constructor <;> intro h
   · rw [← mul_one a, ← mul_left_apply a 1, h, LinearMap.zero_apply]
-    
   · rw [h]
     exact mul_left_zero_eq_zero
-    
 #align linear_map.mul_left_eq_zero_iff LinearMap.mul_left_eq_zero_iff
 
 @[simp]
 theorem mul_right_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 := by
   constructor <;> intro h
   · rw [← one_mul a, ← mul_right_apply a 1, h, LinearMap.zero_apply]
-    
   · rw [h]
     exact mul_right_zero_eq_zero
-    
 #align linear_map.mul_right_eq_zero_iff LinearMap.mul_right_eq_zero_iff
 
 @[simp]

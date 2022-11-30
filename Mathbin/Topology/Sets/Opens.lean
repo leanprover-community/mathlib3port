@@ -72,12 +72,12 @@ theorem mem_mk {x : α} {U : Set α} {h : IsOpen U} :
   Iff.rfl
 #align topological_space.opens.mem_mk TopologicalSpace.Opens.mem_mk
 
-@[ext.1]
+@[ext]
 theorem ext {U V : Opens α} (h : (U : Set α) = V) : U = V :=
   Subtype.ext h
 #align topological_space.opens.ext TopologicalSpace.Opens.ext
 
-@[ext.1]
+@[ext]
 theorem ext_iff {U V : Opens α} : (U : Set α) = V ↔ U = V :=
   Subtype.ext_iff.symm
 #align topological_space.opens.ext_iff TopologicalSpace.Opens.ext_iff
@@ -97,7 +97,10 @@ theorem gc : GaloisConnection (coe : Opens α → Set α) interior := fun U s =>
 open OrderDual (ofDual toDual)
 
 /-- The galois coinsertion between sets and opens. -/
-def gi : GaloisCoinsertion Subtype.val (@interior α _) where
+def gi :
+    GaloisCoinsertion Subtype.val
+      (@interior α
+        _) where 
   choice s hs := ⟨s, interior_eq_iff_is_open.mp <| le_antisymm interior_subset hs⟩
   gc := gc
   u_l_le _ := interior_subset
@@ -198,7 +201,7 @@ theorem empty_eq : (∅ : Opens α) = ⊥ :=
 #align topological_space.opens.empty_eq TopologicalSpace.Opens.empty_eq
 
 theorem supr_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union fun i => (s i).2⟩ :=
-  by
+  by 
   ext
   simp only [supr, coe_Sup, bUnion_range]
   rfl
@@ -235,7 +238,7 @@ instance : Frame (Opens α) :=
 theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
   { inj := Set.inclusion_injective i,
     induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm,
-    open_range := by
+    open_range := by 
       rw [Set.range_inclusion i]
       exact U.property.preimage continuous_subtype_val }
 #align topological_space.opens.open_embedding_of_le TopologicalSpace.Opens.open_embedding_of_le
@@ -271,16 +274,12 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} :
     dsimp at H₂
     subst H₂
     exact hsV
-    
   · refine' is_topological_basis_of_open_of_nhds _ _
     · rintro sU ⟨U, ⟨H₁, rfl⟩⟩
       exact U.property
-      
     · intro x sU hx hsU
       rcases@h (⟨sU, hsU⟩ : opens α) x hx with ⟨V, hV, H⟩
       exact ⟨V, ⟨V, hV, rfl⟩, H⟩
-      
-    
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.is_basis_iff_nbhd
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
@@ -293,14 +292,12 @@ theorem is_basis_iff_cover {B : Set (Opens α)} :
     rw [coe_Sup, hB.open_eq_sUnion' U.prop]
     simp_rw [sUnion_eq_bUnion, Union, supr_and, supr_image]
     rfl
-    
   · intro h
     rw [is_basis_iff_nbhd]
     intro U x hx
     rcases h U with ⟨Us, hUs, rfl⟩
     rcases mem_Sup.1 hx with ⟨U, Us, xU⟩
     exact ⟨U, hUs Us, xU, le_Sup Us⟩
-    
 #align topological_space.opens.is_basis_iff_cover TopologicalSpace.Opens.is_basis_iff_cover
 
 /-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
@@ -312,9 +309,7 @@ theorem is_compact_open_iff_eq_finite_Union_of_is_basis {ι : Type _} (b : ι �
   · convert hb
     ext
     simp
-    
   · exact hb'
-    
 #align
   topological_space.opens.is_compact_open_iff_eq_finite_Union_of_is_basis TopologicalSpace.Opens.is_compact_open_iff_eq_finite_Union_of_is_basis
 
@@ -328,18 +323,18 @@ theorem is_compact_element_iff (s : Opens α) :
     refine' ⟨t, Set.Subset.trans ht _⟩
     rw [coe_finset_sup, Finset.sup_eq_supr]
     rfl
-    
   · obtain ⟨t, ht⟩ :=
       H (fun i => U i) (fun i => (U i).Prop) (by simpa using show (s : Set α) ⊆ ↑(supr U) from hU)
     refine' ⟨t, Set.Subset.trans ht _⟩
     simp only [Set.Union_subset_iff]
     show ∀ i ∈ t, U i ≤ t.sup U
     exact fun i => Finset.le_sup
-    
 #align topological_space.opens.is_compact_element_iff TopologicalSpace.Opens.is_compact_element_iff
 
 /-- The preimage of an open set, as an open set. -/
-def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α) where
+def comap (f : C(α, β)) :
+    FrameHom (Opens β)
+      (Opens α) where 
   toFun s := ⟨f ⁻¹' s, s.2.Preimage f.Continuous⟩
   map_Sup' s :=
     ext <| by
@@ -389,14 +384,15 @@ theorem comap_injective [T0Space β] : Injective (comap : C(α, β) → FrameHom
 
 /-- A homeomorphism induces an equivalence on open sets, by taking comaps. -/
 @[simp]
-protected def equiv (f : α ≃ₜ β) : Opens α ≃ Opens β where
+protected def equiv (f : α ≃ₜ β) :
+    Opens α ≃ Opens β where 
   toFun := Opens.comap f.symm.toContinuousMap
   invFun := Opens.comap f.toContinuousMap
-  left_inv := by
+  left_inv := by 
     intro U
     ext1
     exact f.to_equiv.preimage_symm_preimage _
-  right_inv := by
+  right_inv := by 
     intro U
     ext1
     exact f.to_equiv.symm_preimage_preimage _
@@ -404,7 +400,8 @@ protected def equiv (f : α ≃ₜ β) : Opens α ≃ Opens β where
 
 /-- A homeomorphism induces an order isomorphism on open sets, by taking comaps. -/
 @[simp]
-protected def orderIso (f : α ≃ₜ β) : Opens α ≃o Opens β where
+protected def orderIso (f : α ≃ₜ β) :
+    Opens α ≃o Opens β where 
   toEquiv := Opens.equiv f
   map_rel_iff' U V := f.symm.Surjective.preimage_subset_preimage_iff
 #align topological_space.opens.order_iso TopologicalSpace.Opens.orderIso

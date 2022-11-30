@@ -58,7 +58,9 @@ from a pair of isometries between the left and right parts. -/
 @[simps toLinearEquiv]
 def Isometry.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₁' : QuadraticForm R N₁}
     {Q₂' : QuadraticForm R N₂} (e₁ : Q₁.Isometry Q₁') (e₂ : Q₂.Isometry Q₂') :
-    (Q₁.Prod Q₂).Isometry (Q₁'.Prod Q₂') where
+    (Q₁.Prod Q₂).Isometry
+      (Q₁'.Prod
+        Q₂') where 
   map_app' x := congr_arg₂ (· + ·) (e₁.map_app x.1) (e₂.map_app x.2)
   toLinearEquiv := LinearEquiv.prod e₁.toLinearEquiv e₂.toLinearEquiv
 #align quadratic_form.isometry.prod QuadraticForm.Isometry.prod
@@ -78,11 +80,9 @@ theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂]
   · intro x hx
     refine' (h x 0 _).1
     rw [hx, zero_add, map_zero]
-    
   · intro x hx
     refine' (h 0 x _).2
     rw [hx, add_zero, map_zero]
-    
 #align quadratic_form.anisotropic_of_prod QuadraticForm.anisotropic_of_prod
 
 theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
@@ -93,14 +93,10 @@ theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
     constructor
     · intro x
       simpa only [add_zero, map_zero] using h x 0
-      
     · intro x
       simpa only [zero_add, map_zero] using h 0 x
-      
-    
   · rintro ⟨h₁, h₂⟩ x₁ x₂
     exact add_nonneg (h₁ x₁) (h₂ x₂)
-    
 #align quadratic_form.nonneg_prod_iff QuadraticForm.nonneg_prod_iff
 
 theorem pos_def_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
@@ -110,13 +106,11 @@ theorem pos_def_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
   · rintro ⟨⟨hle₁, hle₂⟩, ha⟩
     obtain ⟨ha₁, ha₂⟩ := anisotropic_of_prod ha
     refine' ⟨⟨hle₁, ha₁⟩, ⟨hle₂, ha₂⟩⟩
-    
   · rintro ⟨⟨hle₁, ha₁⟩, ⟨hle₂, ha₂⟩⟩
     refine' ⟨⟨hle₁, hle₂⟩, _⟩
     rintro ⟨x₁, x₂⟩ (hx : Q₁ x₁ + Q₂ x₂ = 0)
     rw [add_eq_zero_iff' (hle₁ x₁) (hle₂ x₂), ha₁.eq_zero_iff, ha₂.eq_zero_iff] at hx
     rwa [Prod.mk_eq_zero]
-    
 #align quadratic_form.pos_def_prod_iff QuadraticForm.pos_def_prod_iff
 
 theorem PosDef.prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
@@ -141,7 +135,10 @@ theorem pi_apply [Fintype ι] (Q : ∀ i, QuadraticForm R (Mᵢ i)) (x : ∀ i, 
 from a pair of isometries between the left and right parts. -/
 @[simps toLinearEquiv]
 def Isometry.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : ∀ i, QuadraticForm R (Nᵢ i)}
-    (e : ∀ i, (Q i).Isometry (Q' i)) : (pi Q).Isometry (pi Q') where
+    (e : ∀ i, (Q i).Isometry (Q' i)) :
+    (pi Q).Isometry
+      (pi
+        Q') where 
   map_app' x := by
     simp only [pi_apply, LinearEquiv.Pi_congr_right_apply, LinearEquiv.to_fun_eq_coe,
       isometry.coe_to_linear_equiv, isometry.map_app]
@@ -159,19 +156,16 @@ theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (M�
     {Q : ∀ i, QuadraticForm R (Mᵢ i)} (h : (pi Q).Anisotropic) : ∀ i, (Q i).Anisotropic := by
   simp_rw [anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h
   intro i x hx
-  classical
-  have := h (Pi.single i x) _ i
-  · rw [Pi.single_eq_same] at this
-    exact this
-    
-  apply Finset.sum_eq_zero
-  intro j _
-  by_cases hji : j = i
-  · subst hji
-    rw [Pi.single_eq_same, hx]
-    
-  · rw [Pi.single_eq_of_ne hji, map_zero]
-    
+  classical 
+    have := h (Pi.single i x) _ i
+    · rw [Pi.single_eq_same] at this
+      exact this
+    apply Finset.sum_eq_zero
+    intro j _
+    by_cases hji : j = i
+    · subst hji
+      rw [Pi.single_eq_same, hx]
+    · rw [Pi.single_eq_of_ne hji, map_zero]
 #align quadratic_form.anisotropic_of_pi QuadraticForm.anisotropic_of_pi
 
 theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
@@ -181,14 +175,12 @@ theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)
   constructor
   -- TODO: does this generalize to a useful lemma independent of `quadratic_form`?
   · intro h i x
-    classical
-    convert h (Pi.single i x) using 1
-    rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ _) fun j _ hji => _, Pi.single_eq_same]
-    rw [Pi.single_eq_of_ne hji, map_zero]
-    
+    classical 
+      convert h (Pi.single i x) using 1
+      rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ _) fun j _ hji => _, Pi.single_eq_same]
+      rw [Pi.single_eq_of_ne hji, map_zero]
   · rintro h x
     exact Finset.sum_nonneg fun i hi => h i (x i)
-    
 #align quadratic_form.nonneg_pi_iff QuadraticForm.nonneg_pi_iff
 
 theorem pos_def_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
@@ -198,14 +190,11 @@ theorem pos_def_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i
   · rintro ⟨hle, ha⟩
     intro i
     exact ⟨hle i, anisotropic_of_pi ha i⟩
-    
   · intro h
     refine' ⟨fun i => (h i).1, fun x hx => funext fun i => (h i).2 _ _⟩
     rw [pi_apply, Finset.sum_eq_zero_iff_of_nonneg fun j hj => _] at hx
     · exact hx _ (Finset.mem_univ _)
-      
     exact (h j).1 _
-    
 #align quadratic_form.pos_def_pi_iff QuadraticForm.pos_def_pi_iff
 
 end QuadraticForm

@@ -38,7 +38,10 @@ instance : HasFiniteBiproducts (ModuleCat.{v} R) :=
 /-- Construct limit data for a binary product in `Module R`, using `Module.of R (M × N)`.
 -/
 @[simps cone_X is_limit_lift]
-def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N) where
+def binaryProductLimitCone (M N : ModuleCat.{v} R) :
+    Limits.LimitCone
+      (pair M
+        N) where 
   Cone :=
     { x := ModuleCat.of R (M × N),
       π :=
@@ -53,8 +56,7 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
           · ext x
             simp only [binary_fan.π_app_right, binary_fan.π_app_left, ModuleCat.coe_comp,
               Function.comp_apply, LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.prod_apply,
-              Pi.prod]
-            ,
+              Pi.prod],
       uniq' := fun s m w => by
         ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
@@ -102,12 +104,14 @@ variable {J : Type w} (f : J → ModuleCat.{max w v} R)
 to the cartesian product of those groups.
 -/
 @[simps]
-def lift (s : Fan f) : s.x ⟶ ModuleCat.of R (∀ j, f j) where
+def lift (s : Fan f) :
+    s.x ⟶ ModuleCat.of R (∀ j,
+          f j) where 
   toFun x j := s.π.app ⟨j⟩ x
-  map_add' x y := by
+  map_add' x y := by 
     ext
     simp
-  map_smul' r x := by
+  map_smul' r x := by 
     ext
     simp
 #align Module.has_limit.lift ModuleCat.HasLimit.lift
@@ -115,17 +119,20 @@ def lift (s : Fan f) : s.x ⟶ ModuleCat.of R (∀ j, f j) where
 /-- Construct limit data for a product in `Module R`, using `Module.of R (Π j, F.obj j)`.
 -/
 @[simps]
-def productLimitCone : Limits.LimitCone (Discrete.functor f) where
+def productLimitCone :
+    Limits.LimitCone
+      (Discrete.functor
+        f) where 
   Cone :=
     { x := ModuleCat.of R (∀ j, f j),
       π := Discrete.natTrans fun j => (LinearMap.proj j.as : (∀ j, f j) →ₗ[R] f j.as) }
   IsLimit :=
     { lift := lift f,
-      fac' := fun s j => by
+      fac' := fun s j => by 
         cases j
         ext
         simp,
-      uniq' := fun s m w => by
+      uniq' := fun s m w => by 
         ext (x j)
         dsimp only [has_limit.lift]
         simp only [LinearMap.coe_mk]

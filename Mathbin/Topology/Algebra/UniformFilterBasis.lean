@@ -42,7 +42,7 @@ protected theorem uniform_add_group : @UniformAddGroup G B.UniformSpace _ :=
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔
       F.ne_bot ∧ ∀ U ∈ B, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), y - x ∈ U :=
-  by
+  by 
   letI := B.uniform_space
   haveI := B.uniform_add_group
   suffices F ×ᶠ F ≤ 𝓤 G ↔ ∀ U ∈ B, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), y - x ∈ U by

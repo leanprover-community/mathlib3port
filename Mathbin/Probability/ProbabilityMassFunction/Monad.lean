@@ -63,10 +63,8 @@ theorem to_outer_measure_pure_apply : (pure a).toOuterMeasure s = if a ∈ s the
   split_ifs with ha ha
   · refine' (tsum_congr fun b => _).trans (tsum_ite_eq a 1)
     exact ite_eq_left_iff.2 fun hb => symm (ite_eq_right_iff.2 fun h => (hb <| h.symm ▸ ha).elim)
-    
   · refine' (tsum_congr fun b => _).trans tsum_zero
     exact ite_eq_right_iff.2 fun hb => ite_eq_right_iff.2 fun h => (ha <| h ▸ hb).elim
-    
 #align pmf.to_outer_measure_pure_apply Pmf.to_outer_measure_pure_apply
 
 /-- The measure of a set under `pure a` is `1` for sets containing `a` and `0` otherwise -/
@@ -172,7 +170,7 @@ end Measure
 
 end Bind
 
-instance : Monad Pmf where
+instance : Monad Pmf where 
   pure A a := pure a
   bind A B pa pb := pa.bind pb
 
@@ -183,14 +181,12 @@ section BindOnSupport
 def bindOnSupport (p : Pmf α) (f : ∀ a ∈ p.support, Pmf β) : Pmf β :=
   ⟨fun b => ∑' a, p a * if h : p a = 0 then 0 else f a h b,
     Ennreal.summable.has_sum_iff.2
-      (by
+      (by 
         refine' ennreal.tsum_comm.trans (trans (tsum_congr fun a => _) p.tsum_coe)
         simp_rw [Ennreal.tsum_mul_left]
         split_ifs with h
         · simp only [h, zero_mul]
-          
-        · rw [(f a h).tsum_coe, mul_one]
-          )⟩
+        · rw [(f a h).tsum_coe, mul_one])⟩
 #align pmf.bind_on_support Pmf.bindOnSupport
 
 variable {p : Pmf α} (f : ∀ a ∈ p.support, Pmf β)
@@ -258,7 +254,7 @@ theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀ a ∈ p.support, P
       p.bindOnSupport fun a ha =>
         (f a ha).bindOnSupport fun b hb =>
           g b ((mem_support_bind_on_support_iff f b).mpr ⟨a, ha, hb⟩) :=
-  by
+  by 
   refine' Pmf.ext fun a => _
   simp only [ennreal.coe_eq_coe.symm, bind_on_support_apply, ← tsum_dite_right,
     ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
@@ -270,15 +266,13 @@ theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀ a ∈ p.support, P
   · have := h_1 a'
     simp [h] at this
     contradiction
-    
   · simp [h_2]
-    
 #align pmf.bind_on_support_bind_on_support Pmf.bind_on_support_bind_on_support
 
 theorem bind_on_support_comm (p : Pmf α) (q : Pmf β) (f : ∀ a ∈ p.support, ∀ b ∈ q.support, Pmf γ) :
     (p.bindOnSupport fun a ha => q.bindOnSupport (f a ha)) =
       q.bindOnSupport fun b hb => p.bindOnSupport fun a ha => f a ha b hb :=
-  by
+  by 
   apply Pmf.ext; rintro c
   simp only [ennreal.coe_eq_coe.symm, bind_on_support_apply, ← tsum_dite_right,
     ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
@@ -296,7 +290,7 @@ variable (s : Set β)
 theorem to_outer_measure_bind_on_support_apply :
     (p.bindOnSupport f).toOuterMeasure s =
       ∑' a, p a * if h : p a = 0 then 0 else (f a h).toOuterMeasure s :=
-  by
+  by 
   simp only [to_outer_measure_apply, Set.indicator_apply, bind_on_support_apply]
   calc
     (∑' b, ite (b ∈ s) (∑' a, p a * dite (p a = 0) (fun h => 0) fun h => f a h b) 0) =

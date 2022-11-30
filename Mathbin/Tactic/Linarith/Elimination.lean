@@ -41,6 +41,7 @@ they are not shared with other components of `linarith`.
 -/
 
 
+#print Linarith.CompSource /-
 /-- `comp_source` tracks the source of a comparison.
 The atomic source of a comparison is an assumption, indexed by a natural number.
 Two comparisons can be added to produce a new comparison,
@@ -52,6 +53,7 @@ inductive CompSource : Type
   | scale : ℕ → comp_source → comp_source
   deriving Inhabited
 #align linarith.comp_source Linarith.CompSource
+-/
 
 /-- Given a `comp_source` `cs`, `cs.flatten` maps an assumption index
 to the number of copies of that assumption that appear in the history of `cs`.
@@ -66,12 +68,14 @@ unsafe def comp_source.flatten : CompSource → rb_map ℕ ℕ
   | comp_source.scale n c => (comp_source.flatten c).map fun v => v * n
 #align linarith.comp_source.flatten linarith.comp_source.flatten
 
+#print Linarith.CompSource.toString /-
 /-- Formats a `comp_source` for printing. -/
 def CompSource.toString : CompSource → String
   | comp_source.assump e => toString e
   | comp_source.add c1 c2 => comp_source.to_string c1 ++ " + " ++ comp_source.to_string c2
   | comp_source.scale n c => toString n ++ " * " ++ comp_source.to_string c
 #align linarith.comp_source.to_string Linarith.CompSource.toString
+-/
 
 unsafe instance comp_source.has_to_format : has_to_format CompSource :=
   ⟨fun a => CompSource.toString a⟩

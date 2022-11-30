@@ -31,7 +31,8 @@ section Disjoint
 
 variable [DecidableEq ι] [∀ i, Preorder (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
-instance : LocallyFiniteOrder (Σi, α i) where
+instance : LocallyFiniteOrder
+      (Σi, α i) where 
   finsetIcc := sigmaLift fun _ => icc
   finsetIco := sigmaLift fun _ => ico
   finsetIoc := sigmaLift fun _ => ioc

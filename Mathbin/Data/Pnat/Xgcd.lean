@@ -134,7 +134,6 @@ theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
     rw [← h]
     repeat' rw [Nat.succ_eq_add_one]
     ring
-    
   · apply Nat.succ.inj
     replace h := congr_arg (coe : ℕ+ → ℕ) h
     rw [mul_coe, w, z] at h
@@ -142,7 +141,6 @@ theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
     repeat' rw [Nat.succ_eq_add_one]
     rw [← h]
     ring
-    
 #align pnat.xgcd_type.is_special_iff PNat.XgcdType.is_special_iff
 
 /-- is_reduced holds if the two entries in the vector are the
@@ -161,7 +159,7 @@ theorem is_reduced_iff : u.IsReduced ↔ u.IsReduced' :=
   succ_pnat_inj.symm
 #align pnat.xgcd_type.is_reduced_iff PNat.XgcdType.is_reduced_iff
 
-def flip : XgcdType where
+def flip : XgcdType where 
   wp := u.zp
   x := u.y
   y := u.x
@@ -210,15 +208,13 @@ theorem flip_is_special : (flip u).IsSpecial ↔ u.IsSpecial := by
   rw [mul_comm u.x, mul_comm u.zp, add_comm u.zp]
 #align pnat.xgcd_type.flip_is_special PNat.XgcdType.flip_is_special
 
-theorem flip_v : (flip u).V = u.V.swap := by
+theorem flip_v : (flip u).V = u.V.swap := by 
   dsimp [v]
   ext
   · simp only
     ring
-    
   · simp only
     ring
-    
 #align pnat.xgcd_type.flip_v PNat.XgcdType.flip_v
 
 /-- Properties of division with remainder for a / b.  -/
@@ -231,9 +227,7 @@ theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 := by
   · let h := u.rq_eq
     rw [hr, hq, mul_zero, add_zero] at h
     cases h
-    
   · exact (Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hq)).symm
-    
 #align pnat.xgcd_type.qp_eq PNat.XgcdType.qp_eq
 
 /-- The following function provides the starting point for
@@ -280,11 +274,9 @@ theorem finish_v (hr : u.R = 0) : u.finish.V = u.V := by
     have : u.wp + 1 = u.w := rfl
     rw [this, ← ha, u.qp_eq hr]
     ring
-    
   · change u.y * u.b + (u.y * u.qp + u.z) * u.b = u.y * u.a + u.z * u.b
     rw [← ha, u.qp_eq hr]
     ring
-    
 #align pnat.xgcd_type.finish_v PNat.XgcdType.finish_v
 
 /-- This is the main reduction step, which is used when u.r ≠ 0, or
@@ -317,11 +309,9 @@ theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap := by
   · change ((u.y * u.q + u.z) * u.b + u.y * (u.r - 1 + 1) : ℕ) = u.y * u.a + u.z * u.b
     rw [← ha, hr]
     ring
-    
   · change ((u.w * u.q + u.x) * u.b + u.w * (u.r - 1 + 1) : ℕ) = u.w * u.a + u.x * u.b
     rw [← ha, hr]
     ring
-    
 #align pnat.xgcd_type.step_v PNat.XgcdType.step_v
 
 /-- We can now define the full reduction function, which applies
@@ -353,10 +343,10 @@ theorem reduce_b {u : XgcdType} (h : u.R ≠ 0) : u.reduce = u.step.reduce.flip 
 theorem reduce_reduced : ∀ u : XgcdType, u.reduce.IsReduced
   | u =>
     dite (u.R = 0)
-      (fun h => by
+      (fun h => by 
         rw [reduce_a h]
         exact u.finish_is_reduced)
-      fun h => by
+      fun h => by 
       have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h, flip_is_reduced]
       apply reduce_reduced
@@ -369,10 +359,10 @@ theorem reduce_reduced' (u : XgcdType) : u.reduce.IsReduced' :=
 theorem reduce_special : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
   | u =>
     dite (u.R = 0)
-      (fun h hs => by
+      (fun h hs => by 
         rw [reduce_a h]
         exact u.finish_is_special hs)
-      fun h hs => by
+      fun h hs => by 
       have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h]
       exact (flip_is_special _).mpr (reduce_special _ (u.step_is_special hs))
@@ -450,7 +440,7 @@ theorem gcd_props :
         b = b' * d ∧
           z * a' = succPNat (x * b') ∧
             w * b' = succPNat (y * a') ∧ (z * a : ℕ) = x * b + d ∧ (w * b : ℕ) = y * a + d :=
-  by
+  by 
   intros
   let u := xgcd_type.start a b
   let ur := u.reduce
@@ -481,11 +471,9 @@ theorem gcd_props :
   constructor
   · apply Eq
     rw [succ_pnat_coe, Nat.succ_eq_add_one, mul_coe, hza']
-    
   constructor
   · apply Eq
     rw [succ_pnat_coe, Nat.succ_eq_add_one, mul_coe, hwb']
-    
   rw [ha'', hb'']
   repeat' rw [← mul_assoc]
   rw [hza', hwb']
@@ -498,13 +486,11 @@ theorem gcd_eq : gcdD a b = gcd a b := by
   · apply dvd_gcd
     exact Dvd.intro (gcd_a' a b) (h₁.trans (mul_comm _ _)).symm
     exact Dvd.intro (gcd_b' a b) (h₂.trans (mul_comm _ _)).symm
-    
   · have h₇ : (gcd a b : ℕ) ∣ gcd_z a b * a := (Nat.gcd_dvd_left a b).trans (dvd_mul_left _ _)
     have h₈ : (gcd a b : ℕ) ∣ gcd_x a b * b := (Nat.gcd_dvd_right a b).trans (dvd_mul_left _ _)
     rw [h₅] at h₇
     rw [dvd_iff]
     exact (Nat.dvd_add_iff_right h₈).mpr h₇
-    
 #align pnat.gcd_eq PNat.gcd_eq
 
 theorem gcd_det_eq : gcdW a b * gcdZ a b = succPNat (gcdX a b * gcdY a b) :=

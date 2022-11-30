@@ -57,7 +57,8 @@ theorem coe_of (X : Type _) : ↥(of X) = X :=
 instance : Inhabited PartialFunCat :=
   ⟨Type _⟩
 
-instance largeCategory : LargeCategory.{u} PartialFunCat where
+instance largeCategory :
+    LargeCategory.{u} PartialFunCat where 
   Hom := Pfun
   id := Pfun.id
   comp X Y Z f g := g.comp f
@@ -68,7 +69,8 @@ instance largeCategory : LargeCategory.{u} PartialFunCat where
 
 /-- Constructs a partial function isomorphism between types from an equivalence between them. -/
 @[simps]
-def Iso.mk {α β : PartialFunCat.{u}} (e : α ≃ β) : α ≅ β where
+def Iso.mk {α β : PartialFunCat.{u}} (e : α ≃ β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
   hom_inv_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.symm_comp_self
@@ -78,7 +80,7 @@ def Iso.mk {α β : PartialFunCat.{u}} (e : α ≃ β) : α ≅ β where
 end PartialFunCat
 
 /-- The forgetful functor from `Type` to `PartialFun` which forgets that the maps are total. -/
-def typeToPartialFun : Type u ⥤ PartialFunCat where
+def typeToPartialFun : Type u ⥤ PartialFunCat where 
   obj := id
   map := @Pfun.lift
   map_comp' _ _ _ _ _ := Pfun.coe_comp _ _
@@ -90,7 +92,8 @@ instance : Faithful typeToPartialFun :=
 /-- The functor which deletes the point of a pointed type. In return, this makes the maps partial.
 This the computable part of the equivalence `PartialFun_equiv_Pointed`. -/
 @[simps map]
-def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
+def pointedToPartialFun :
+    PointedCat.{u} ⥤ PartialFunCat where 
   obj X := { x : X // x ≠ X.point }
   map X Y f := Pfun.toSubtype _ f.toFun ∘ Subtype.val
   map_id' X :=
@@ -1429,11 +1432,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                             []
                             [":=" [`b]])
                            []
-                           («tactic___;_»
+                           (tactic___
                             (cdotTk (patternIgnore (token.«·» "·")))
-                            [(group
-                              (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
-                              [])])
+                            [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
                            []
                            (Tactic.dsimp "dsimp" [] [] [] [] [])
                            []
@@ -1568,20 +1569,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                []
                                (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                                []
-                               («tactic___;_»
+                               (tactic___
                                 (cdotTk (patternIgnore (token.«·» "·")))
-                                [(group
-                                  (Tactic.rwSeq
-                                   "rw"
-                                   []
-                                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
-                                   [])
+                                [(Tactic.rwSeq
+                                  "rw"
+                                  []
+                                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
                                   [])
-                                 (group (Tactic.tacticRfl "rfl") [])])
+                                 []
+                                 (Tactic.tacticRfl "rfl")])
                                []
-                               («tactic___;_»
+                               (tactic___
                                 (cdotTk (patternIgnore (token.«·» "·")))
-                                [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                                [(Tactic.tacticRfl "rfl")])]))))))]
                        (Term.optEllipsis [])
                        []
                        "}")
@@ -1640,17 +1640,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                 []
                                 (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                                 []
-                                («tactic___;_»
+                                (tactic___
                                  (cdotTk (patternIgnore (token.«·» "·")))
-                                 [(group (Tactic.tacticRfl "rfl") [])])
+                                 [(Tactic.tacticRfl "rfl")])
                                 []
-                                («tactic___;_»
+                                (tactic___
                                  (cdotTk (patternIgnore (token.«·» "·")))
-                                 [(group
-                                   (Tactic.exact
-                                    "exact"
-                                    (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                                   [])])])))))])))]))))])])))])))
+                                 [(Tactic.exact
+                                   "exact"
+                                   (Term.app
+                                    `Eq.symm
+                                    [(Term.app `of_not_not [`h])]))])])))))])))]))))])])))])))
        [])
       []
       []
@@ -1811,11 +1811,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            []
                            [":=" [`b]])
                           []
-                          («tactic___;_»
+                          (tactic___
                            (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group
-                             (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
-                             [])])
+                           [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
                           []
                           (Tactic.dsimp "dsimp" [] [] [] [] [])
                           []
@@ -1950,20 +1948,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                               []
                               (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                               []
-                              («tactic___;_»
+                              (tactic___
                                (cdotTk (patternIgnore (token.«·» "·")))
-                               [(group
-                                 (Tactic.rwSeq
-                                  "rw"
-                                  []
-                                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
-                                  [])
+                               [(Tactic.rwSeq
+                                 "rw"
+                                 []
+                                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
                                  [])
-                                (group (Tactic.tacticRfl "rfl") [])])
+                                []
+                                (Tactic.tacticRfl "rfl")])
                               []
-                              («tactic___;_»
+                              (tactic___
                                (cdotTk (patternIgnore (token.«·» "·")))
-                               [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                               [(Tactic.tacticRfl "rfl")])]))))))]
                       (Term.optEllipsis [])
                       []
                       "}")
@@ -2019,17 +2016,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                []
                                (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                                []
-                               («tactic___;_»
+                               (tactic___
                                 (cdotTk (patternIgnore (token.«·» "·")))
-                                [(group (Tactic.tacticRfl "rfl") [])])
+                                [(Tactic.tacticRfl "rfl")])
                                []
-                               («tactic___;_»
+                               (tactic___
                                 (cdotTk (patternIgnore (token.«·» "·")))
-                                [(group
-                                  (Tactic.exact
-                                   "exact"
-                                   (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                                  [])])])))))])))]))))])])))])))
+                                [(Tactic.exact
+                                  "exact"
+                                  (Term.app
+                                   `Eq.symm
+                                   [(Term.app `of_not_not [`h])]))])])))))])))]))))])])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -2179,11 +2176,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        []
                        [":=" [`b]])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
-                         [])])
+                       [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
                       []
                       (Tactic.dsimp "dsimp" [] [] [] [] [])
                       []
@@ -2314,20 +2309,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           []
                           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                           []
-                          («tactic___;_»
+                          (tactic___
                            (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group
-                             (Tactic.rwSeq
-                              "rw"
-                              []
-                              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
-                              [])
+                           [(Tactic.rwSeq
+                             "rw"
+                             []
+                             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
                              [])
-                            (group (Tactic.tacticRfl "rfl") [])])
+                            []
+                            (Tactic.tacticRfl "rfl")])
                           []
-                          («tactic___;_»
+                          (tactic___
                            (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                           [(Tactic.tacticRfl "rfl")])]))))))]
                   (Term.optEllipsis [])
                   []
                   "}")
@@ -2383,17 +2377,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            []
                            (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                            []
-                           («tactic___;_»
+                           (tactic___
                             (cdotTk (patternIgnore (token.«·» "·")))
-                            [(group (Tactic.tacticRfl "rfl") [])])
+                            [(Tactic.tacticRfl "rfl")])
                            []
-                           («tactic___;_»
+                           (tactic___
                             (cdotTk (patternIgnore (token.«·» "·")))
-                            [(group
-                              (Tactic.exact
-                               "exact"
-                               (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                              [])])])))))])))]))))])])))
+                            [(Tactic.exact
+                              "exact"
+                              (Term.app
+                               `Eq.symm
+                               [(Term.app `of_not_not [`h])]))])])))))])))]))))])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -2538,11 +2532,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       [":=" [`b]])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
-                        [])])
+                      [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
                      []
                      (Tactic.dsimp "dsimp" [] [] [] [] [])
                      []
@@ -2673,20 +2665,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          []
                          (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                          []
-                         («tactic___;_»
+                         (tactic___
                           (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group
-                            (Tactic.rwSeq
-                             "rw"
-                             []
-                             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
-                             [])
+                          [(Tactic.rwSeq
+                            "rw"
+                            []
+                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
                             [])
-                           (group (Tactic.tacticRfl "rfl") [])])
+                           []
+                           (Tactic.tacticRfl "rfl")])
                          []
-                         («tactic___;_»
+                         (tactic___
                           (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                          [(Tactic.tacticRfl "rfl")])]))))))]
                  (Term.optEllipsis [])
                  []
                  "}")
@@ -2742,17 +2733,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           []
                           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                           []
-                          («tactic___;_»
+                          (tactic___
                            (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group (Tactic.tacticRfl "rfl") [])])
+                           [(Tactic.tacticRfl "rfl")])
                           []
-                          («tactic___;_»
+                          (tactic___
                            (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group
-                             (Tactic.exact
-                              "exact"
-                              (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                             [])])])))))])))]))))])]))
+                           [(Tactic.exact
+                             "exact"
+                             (Term.app
+                              `Eq.symm
+                              [(Term.app `of_not_not [`h])]))])])))))])))]))))])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `equivalence.mk
@@ -2895,11 +2886,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      []
                      [":=" [`b]])
                     []
-                    («tactic___;_»
+                    (tactic___
                      (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
-                       [])])
+                     [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
                     []
                     (Tactic.dsimp "dsimp" [] [] [] [] [])
                     []
@@ -3030,20 +3019,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                         []
                         (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                         []
-                        («tactic___;_»
+                        (tactic___
                          (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group
-                           (Tactic.rwSeq
-                            "rw"
-                            []
-                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
-                            [])
+                         [(Tactic.rwSeq
+                           "rw"
+                           []
+                           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
                            [])
-                          (group (Tactic.tacticRfl "rfl") [])])
+                          []
+                          (Tactic.tacticRfl "rfl")])
                         []
-                        («tactic___;_»
+                        (tactic___
                          (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                         [(Tactic.tacticRfl "rfl")])]))))))]
                 (Term.optEllipsis [])
                 []
                 "}")
@@ -3099,15 +3087,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          []
                          (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                          []
-                         («tactic___;_»
+                         (tactic___
                           (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group (Tactic.tacticRfl "rfl") [])])
+                          [(Tactic.tacticRfl "rfl")])
                          []
-                         («tactic___;_»
+                         (tactic___
                           (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group
-                            (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                            [])])])))))])))]))))])])
+                          [(Tactic.exact
+                            "exact"
+                            (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))])))]))))])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3217,20 +3205,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.rwSeq
-                          "rw"
-                          []
-                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
-                          [])
-                         [])
-                        (group (Tactic.tacticRfl "rfl") [])])
+                       [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                        []
+                        (Tactic.tacticRfl "rfl")])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                       [(Tactic.tacticRfl "rfl")])]))))))]
               (Term.optEllipsis [])
               []
               "}")
@@ -3284,15 +3267,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        []
                        (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                        []
-                       («tactic___;_»
+                       (tactic___
                         (cdotTk (patternIgnore (token.«·» "·")))
-                        [(group (Tactic.tacticRfl "rfl") [])])
+                        [(Tactic.tacticRfl "rfl")])
                        []
-                       («tactic___;_»
+                       (tactic___
                         (cdotTk (patternIgnore (token.«·» "·")))
-                        [(group
-                          (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                          [])])])))))])))]))))])
+                        [(Tactic.exact
+                          "exact"
+                          (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))])))]))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3345,15 +3328,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      []
                      (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                      []
-                     («tactic___;_»
-                      (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.tacticRfl "rfl") [])])
+                     (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                        [])])])))))])))]))))
+                      [(Tactic.exact
+                        "exact"
+                        (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))])))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_»
        (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
@@ -3398,15 +3379,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    []
                    (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                    []
-                   («tactic___;_»
-                    (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group (Tactic.tacticRfl "rfl") [])])
+                   (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
                    []
-                   («tactic___;_»
+                   (tactic___
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group
-                      (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                      [])])])))))])))]))
+                    [(Tactic.exact
+                      "exact"
+                      (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `funext
@@ -3448,15 +3427,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   []
                   (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                   []
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.tacticRfl "rfl") [])])
+                  (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
                   []
-                  («tactic___;_»
+                  (tactic___
                    (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group
-                     (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                     [])])])))))])))])
+                   [(Tactic.exact
+                     "exact"
+                     (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3498,15 +3475,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 []
                 (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
-                («tactic___;_»
-                 (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.tacticRfl "rfl") [])])
+                (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group
-                   (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                   [])])])))))])))
+                 [(Tactic.exact
+                   "exact"
+                   (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.app `Option.recOn [`a `f.map_point.symm])
@@ -3540,15 +3515,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               []
               (Mathlib.Tactic.splitIfs "split_ifs" [] [])
               []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.tacticRfl "rfl") [])])
+              (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
               []
-              («tactic___;_»
+              (tactic___
                (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                 [])])])))))])
+               [(Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3582,15 +3553,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             []
             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_»
-             (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.tacticRfl "rfl") [])])
+            (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group
-               (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-               [])])])))))
+             [(Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -3616,20 +3583,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
           []
           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.tacticRfl "rfl") [])])
+          (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-             [])])])))
+           [(Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])
+       [(Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3659,7 +3622,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+      (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticRfl "rfl")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
@@ -3916,16 +3879,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      []
                      (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
-                        [])
-                       (group (Tactic.tacticRfl "rfl") [])])
+                      [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                       []
+                       (Tactic.tacticRfl "rfl")])
                      []
-                     («tactic___;_»
+                     (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                      [(Tactic.tacticRfl "rfl")])]))))))]
              (Term.optEllipsis [])
              []
              "}")
@@ -4033,16 +3995,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    []
                    (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                    []
-                   («tactic___;_»
+                   (tactic___
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group
-                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
-                      [])
-                     (group (Tactic.tacticRfl "rfl") [])])
+                    [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                     []
+                     (Tactic.tacticRfl "rfl")])
                    []
-                   («tactic___;_»
+                   (tactic___
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                    [(Tactic.tacticRfl "rfl")])]))))))]
            (Term.optEllipsis [])
            []
            "}")
@@ -4142,16 +4103,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  []
                  (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
-                    [])
-                   (group (Tactic.tacticRfl "rfl") [])])
+                  [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                   []
+                   (Tactic.tacticRfl "rfl")])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                  [(Tactic.tacticRfl "rfl")])]))))))]
          (Term.optEllipsis [])
          []
          "}")
@@ -4257,16 +4217,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                []
                (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
-                  [])
-                 (group (Tactic.tacticRfl "rfl") [])])
+                [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                 []
+                 (Tactic.tacticRfl "rfl")])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                [(Tactic.tacticRfl "rfl")])]))))))]
        (Term.optEllipsis [])
        []
        "}")
@@ -4296,16 +4255,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             []
             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group
-               (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
-               [])
-              (group (Tactic.tacticRfl "rfl") [])])
+             [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+              []
+              (Tactic.tacticRfl "rfl")])
             []
-            («tactic___;_»
-             (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.tacticRfl "rfl") [])])])))))
+            (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -4325,30 +4281,30 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
           []
           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
-            (group (Tactic.tacticRfl "rfl") [])])
+           [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+            []
+            (Tactic.tacticRfl "rfl")])
           []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.tacticRfl "rfl") [])])])))
+          (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+      (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.tacticRfl "rfl")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticRfl "rfl")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
-        (group (Tactic.tacticRfl "rfl") [])])
+       [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+        []
+        (Tactic.tacticRfl "rfl")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticRfl "rfl")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
@@ -4924,16 +4880,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     []
                     (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                     []
-                    («tactic___;_»
+                    (tactic___
                      (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
-                       [])
-                      (group (Tactic.tacticRfl "rfl") [])])
+                     [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                      []
+                      (Tactic.tacticRfl "rfl")])
                     []
-                    («tactic___;_»
+                    (tactic___
                      (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                     [(Tactic.tacticRfl "rfl")])]))))))]
             (Term.optEllipsis [])
             []
             "}")
@@ -5056,20 +5011,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.rwSeq
-                          "rw"
-                          []
-                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
-                          [])
-                         [])
-                        (group (Tactic.tacticRfl "rfl") [])])
+                       [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                        []
+                        (Tactic.tacticRfl "rfl")])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                       [(Tactic.tacticRfl "rfl")])]))))))]
               (Term.optEllipsis [])
               []
               "}")
@@ -5124,17 +5074,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.tacticRfl "rfl") [])])
+                       [(Tactic.tacticRfl "rfl")])
                       []
-                      («tactic___;_»
+                      (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.exact
-                          "exact"
-                          (Term.app `Eq.symm [(Term.paren "(" (Term.app `of_not_not [`h]) ")")]))
-                         [])])])))))])))]))))])
+                       [(Tactic.exact
+                         "exact"
+                         (Term.app
+                          `Eq.symm
+                          [(Term.paren "(" (Term.app `of_not_not [`h]) ")")]))])])))))])))]))))])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
@@ -5276,9 +5226,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    []
                    [":=" [`b]])
                   []
-                  («tactic___;_»
+                  (tactic___
                    (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                   [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
                   []
                   (Tactic.dsimp "dsimp" [] [] [] [] [])
                   []
@@ -5359,9 +5309,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  []
                  [":=" [`b]])
                 []
-                («tactic___;_»
+                (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                 [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
                 []
                 (Tactic.dsimp "dsimp" [] [] [] [] [])
                 []
@@ -5434,9 +5384,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                []
                [":=" [`b]])
               []
-              («tactic___;_»
+              (tactic___
                (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+               [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
               []
               (Tactic.dsimp "dsimp" [] [] [] [] [])
               []
@@ -5505,9 +5455,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              []
              [":=" [`b]])
             []
-            («tactic___;_»
+            (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+             [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
             []
             (Tactic.dsimp "dsimp" [] [] [] [] [])
             []
@@ -5564,9 +5514,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            []
            [":=" [`b]])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+           [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
           []
           (Tactic.dsimp "dsimp" [] [] [] [] [])
           []
@@ -5654,9 +5604,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       (Tactic.dsimp "dsimp" [] [] [] [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+       [(Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -6569,13 +6519,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   []
                   [":=" [`b]])
                  []
-                 («tactic___;_»
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.exact
-                     "exact"
-                     (Term.proj (Term.paren "(" (Term.app `hb [`rfl]) ")") "." `elim))
-                    [])])
+                  [(Tactic.exact
+                    "exact"
+                    (Term.proj (Term.paren "(" (Term.app `hb [`rfl]) ")") "." `elim))])
                  []
                  (Tactic.dsimp "dsimp" [] [] [] [] [])
                  []

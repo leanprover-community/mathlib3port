@@ -30,7 +30,7 @@ variable [Fact (finrank ℝ V = 2)] (o : Orientation ℝ V (Fin 2))
 form. -/
 theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) (hxzne : x ≠ z)
     (hxy : ‖x‖ = ‖y‖) (hxz : ‖x‖ = ‖z‖) : o.oangle y z = (2 : ℤ) • o.oangle (y - x) (z - x) := by
-  have hy : y ≠ 0 := by
+  have hy : y ≠ 0 := by 
     rintro rfl
     rw [norm_zero, norm_eq_zero] at hxy
     exact hxyne hxy

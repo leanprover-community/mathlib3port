@@ -84,11 +84,8 @@ theorem coe_eq_zero_of_pos_iff (hp : 0 < p) {x : 𝕜} (hx : 0 < x) :
   · replace hx : 0 < n
     · contrapose! hx
       simpa only [← neg_nonneg, ← zsmul_neg, zsmul_neg'] using zsmul_nonneg hp.le (neg_nonneg.2 hx)
-      
     exact ⟨n.to_nat, by rw [← coe_nat_zsmul, Int.toNat_of_nonneg hx.le]⟩
-    
   · exact ⟨(n : ℤ), by simp⟩
-    
 #align add_circle.coe_eq_zero_of_pos_iff AddCircle.coe_eq_zero_of_pos_iff
 
 @[continuity, nolint unused_arguments]
@@ -104,33 +101,28 @@ include hp
 variable [Archimedean 𝕜]
 
 /-- The natural equivalence between `add_circle p` and the half-open interval `[0, p)`. -/
-def equivIco : AddCircle p ≃ ico 0 p where
-  invFun := QuotientAddGroup.mk' _ ∘ coe
-  toFun x :=
-    ⟨(to_Ico_mod_periodic 0 hp.out).lift x, Quot.induction_on x <| to_Ico_mod_mem_Ico' hp.out⟩
-  right_inv := by
-    rintro ⟨x, hx⟩
-    ext
-    simp [to_Ico_mod_eq_self, hx.1, hx.2]
-  left_inv := by
-    rintro ⟨x⟩
-    change QuotientAddGroup.mk (toIcoMod 0 hp.out x) = QuotientAddGroup.mk x
-    rw [QuotientAddGroup.eq', neg_add_eq_sub, self_sub_to_Ico_mod]
-    apply zsmul_mem_zmultiples
+def equivIco : AddCircle p ≃ ico 0 p :=
+  (QuotientAddGroup.equivIcoMod 0 hp.out).trans <| Equiv.Set.ofEq <| by rw [zero_add]
 #align add_circle.equiv_Ico AddCircle.equivIco
 
 @[continuity]
 theorem continuous_equiv_Ico_symm : Continuous (equivIco p).symm :=
-  continuous_coinduced_rng.comp continuous_induced_dom
+  continuous_quotient_mk.comp continuous_subtype_coe
 #align add_circle.continuous_equiv_Ico_symm AddCircle.continuous_equiv_Ico_symm
+
+/-- The image of the closed-open interval `[0, p)` under the quotient map `𝕜 → add_circle p` is the
+entire space. -/
+@[simp]
+theorem coe_image_Ico_eq : (coe : 𝕜 → AddCircle p) '' ico 0 p = univ := by
+  rw [image_eq_range]
+  exact (equiv_Ico p).symm.range_eq_univ
+#align add_circle.coe_image_Ico_eq AddCircle.coe_image_Ico_eq
 
 /-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
 entire space. -/
 @[simp]
-theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' icc 0 p = univ := by
-  refine' eq_univ_iff_forall.mpr fun x => _
-  let y := equiv_Ico p x
-  exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p).symm_apply_apply x⟩
+theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' icc 0 p = univ :=
+  eq_top_mono (image_subset _ Ico_subset_Icc_self) <| coe_image_Ico_eq _
 #align add_circle.coe_image_Icc_eq AddCircle.coe_image_Icc_eq
 
 end LinearOrderedAddCommGroup
@@ -150,12 +142,12 @@ private def equiv_add_circle_aux (hp : p ≠ 0) : AddCircle p →+ AddCircle q :
 def equivAddCircle (hp : p ≠ 0) (hq : q ≠ 0) : AddCircle p ≃+ AddCircle q :=
   { equivAddCircleAux p q hp with toFun := equivAddCircleAux p q hp,
     invFun := equivAddCircleAux q p hq,
-    left_inv := by
+    left_inv := by 
       rintro ⟨x⟩
       show QuotientAddGroup.mk _ = _
       congr
       field_simp [hp, hq] ,
-    right_inv := by
+    right_inv := by 
       rintro ⟨x⟩
       show QuotientAddGroup.mk _ = _
       congr
@@ -188,14 +180,15 @@ theorem coe_equiv_Ico_mk_apply (x : 𝕜) :
   to_Ico_mod_eq_fract_mul _ x
 #align add_circle.coe_equiv_Ico_mk_apply AddCircle.coe_equiv_Ico_mk_apply
 
-instance : DivisibleBy (AddCircle p) ℤ where
+instance :
+    DivisibleBy (AddCircle p)
+      ℤ where 
   div x n := (↑((n : 𝕜)⁻¹ * (equivIco p x : 𝕜)) : AddCircle p)
   div_zero x := by simp only [algebraMap.coe_zero, QuotientAddGroup.coe_zero, inv_zero, zero_mul]
-  div_cancel n x hn := by
+  div_cancel n x hn := by 
     replace hn : (n : 𝕜) ≠ 0;
     · norm_cast
       assumption
-      
     change n • QuotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p x)) = x
     rw [← map_zsmul, ← smul_mul_assoc, zsmul_eq_mul, mul_inv_cancel hn, one_mul]
     exact (equiv_Ico p).symm_apply_apply x
@@ -211,9 +204,8 @@ theorem add_order_of_div_of_gcd_eq_one {m n : ℕ} (hn : 0 < n) (h : gcd m n = 1
   rcases m.eq_zero_or_pos with (rfl | hm)
   · rw [gcd_zero_left, normalize_eq] at h
     simp [h]
-    
   set x : AddCircle p := ↑(↑m / ↑n * p)
-  have hn₀ : (n : 𝕜) ≠ 0 := by
+  have hn₀ : (n : 𝕜) ≠ 0 := by 
     norm_cast
     exact ne_of_gt hn
   have hnx : n • x = 0 := by
@@ -240,14 +232,12 @@ theorem add_order_of_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : gc
   induction m
   · simp only [Int.ofNat_eq_coe, Int.cast_ofNat, Int.natAbs_ofNat] at h⊢
     exact add_order_of_div_of_gcd_eq_one hn h
-    
   · simp only [Int.cast_negSucc, neg_div, neg_mul, coe_neg, order_of_neg]
     exact add_order_of_div_of_gcd_eq_one hn h
-    
 #align add_circle.add_order_of_div_of_gcd_eq_one' AddCircle.add_order_of_div_of_gcd_eq_one'
 
 theorem add_order_of_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.denom := by
-  have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by
+  have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by 
     norm_cast
     exact q.pos.ne.symm
   rw [← @Rat.num_denom q, Rat.cast_mk_of_ne_zero _ _ this, Int.cast_ofNat, Rat.num_denom,
@@ -261,7 +251,7 @@ theorem gcd_mul_add_order_of_div_eq {n : ℕ} (m : ℕ) (hn : 0 < n) :
     gcd m n * addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n := by
   let n' := n / gcd m n
   let m' := m / gcd m n
-  have h₀ : 0 < gcd m n := by
+  have h₀ : 0 < gcd m n := by 
     rw [zero_lt_iff] at hn⊢
     contrapose! hn
     exact ((gcd_eq_zero_iff m n).mp hn).2
@@ -278,11 +268,10 @@ theorem exists_gcd_eq_one_of_is_of_fin_add_order {u : AddCircle p} (h : IsOfFinA
     ∃ m, gcd m (addOrderOf u) = 1 ∧ m < addOrderOf u ∧ ↑((m : 𝕜) / addOrderOf u * p) = u := by
   rcases eq_or_ne u 0 with (rfl | hu)
   · exact ⟨0, by simp⟩
-    
   set n := addOrderOf u
   change ∃ m, gcd m n = 1 ∧ m < n ∧ ↑(↑m / ↑n * p) = u
   have hn : 0 < n := add_order_of_pos' h
-  have hn₀ : (n : 𝕜) ≠ 0 := by
+  have hn₀ : (n : 𝕜) ≠ 0 := by 
     norm_cast
     exact ne_of_gt hn
   let x := (equiv_Ico p u : 𝕜)
@@ -290,7 +279,7 @@ theorem exists_gcd_eq_one_of_is_of_fin_add_order {u : AddCircle p} (h : IsOfFinA
   have hx₀ : 0 < addOrderOf (x : AddCircle p) := by
     rw [← hxu] at h
     exact add_order_of_pos' h
-  have hx₁ : 0 < x := by
+  have hx₁ : 0 < x := by 
     refine' lt_of_le_of_ne (equiv_Ico p u).2.1 _
     contrapose! hu
     rw [← hxu, ← hu, QuotientAddGroup.coe_zero]
@@ -299,16 +288,13 @@ theorem exists_gcd_eq_one_of_is_of_fin_add_order {u : AddCircle p} (h : IsOfFinA
       (add_order_of_nsmul_eq_zero (x : AddCircle p))
   replace hm : ↑m * p = ↑n * x
   · simpa only [hxu, nsmul_eq_mul] using hm
-    
   have hux : ↑(↑m / ↑n * p) = u := by
     rw [← hxu, ← mul_div_right_comm, hm, mul_comm _ x, mul_div_cancel x hn₀]
   refine' ⟨m, (_ : gcd m n = 1), (_ : m < n), hux⟩
   · have := gcd_mul_add_order_of_div_eq p m hn
     rwa [hux, Nat.mul_left_eq_self_iff hn] at this
-    
   · have : n • x < n • p := smul_lt_smul_of_pos (equiv_Ico p u).2.2 hn
     rwa [nsmul_eq_mul, nsmul_eq_mul, ← hm, mul_lt_mul_right hp.out, Nat.cast_lt] at this
-    
 #align
   add_circle.exists_gcd_eq_one_of_is_of_fin_add_order AddCircle.exists_gcd_eq_one_of_is_of_fin_add_order
 

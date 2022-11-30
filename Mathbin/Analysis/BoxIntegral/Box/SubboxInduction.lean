@@ -42,10 +42,11 @@ variable {ι : Type _} {I J : Box ι}
 /-- For a box `I`, the hyperplanes passing through its center split `I` into `2 ^ card ι` boxes.
 `box_integral.box.split_center_box I s` is one of these boxes. See also
 `box_integral.partition.split_center` for the corresponding `box_integral.partition`. -/
-def splitCenterBox (I : Box ι) (s : Set ι) : Box ι where
+def splitCenterBox (I : Box ι) (s : Set ι) :
+    Box ι where 
   lower := s.piecewise (fun i => (I.lower i + I.upper i) / 2) I.lower
   upper := s.piecewise I.upper fun i => (I.lower i + I.upper i) / 2
-  lower_lt_upper i := by
+  lower_lt_upper i := by 
     dsimp only [Set.piecewise]
     split_ifs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper]
 #align box_integral.box.split_center_box BoxIntegral.Box.splitCenterBox
@@ -130,7 +131,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
             ∀ (m : ℕ),
               z ∈ J.icc →
                 J.icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
-    p I := by
+    p I := by 
   by_contra hpI
   -- First we use `H_ind` to construct a decreasing sequence of boxes such that `∀ m, ¬p (J m)`.
   replace H_ind := fun J hJ => not_imp_not.2 (H_ind J hJ)
@@ -149,7 +150,6 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     intro m i
     induction' m with m ihm
     · simp [J]
-      
     simp only [pow_succ', J_succ, upper_sub_lower_split_center_box, ihm, div_div]
   have h0 : J 0 = I := rfl
   -- Now we clear unneeded assumptions

@@ -40,7 +40,7 @@ essentially lets us commute `fan.mk` with `functor.map_cone`.
 def isLimitMapConeFanMkEquiv {P : C} (g : ∀ j, P ⟶ f j) :
     IsLimit (G.mapCone (Fan.mk P g)) ≃
       IsLimit (Fan.mk _ fun j => G.map (g j) : Fan fun j => G.obj (f j)) :=
-  by
+  by 
   refine' (is_limit.postcompose_hom_equiv _ _).symm.trans (is_limit.equiv_iso_limit _)
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'
@@ -123,7 +123,7 @@ This essentially lets us commute `cofan.mk` with `functor.map_cocone`.
 def isColimitMapCoconeCofanMkEquiv {P : C} (g : ∀ j, f j ⟶ P) :
     IsColimit (G.mapCocone (Cofan.mk P g)) ≃
       IsColimit (Cofan.mk _ fun j => G.map (g j) : Cofan fun j => G.obj (f j)) :=
-  by
+  by 
   refine' (is_colimit.precompose_hom_equiv _ _).symm.trans (is_colimit.equiv_iso_colimit _)
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'

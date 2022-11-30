@@ -65,13 +65,15 @@ instance tensoring_right_linear (X : C) : ((tensoringRight C).obj X).Linear R wh
 ensures that the domain is linear monoidal. -/
 def monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Linear R D]
     [MonoidalCategory D] [MonoidalPreadditive D] (F : MonoidalFunctor D C) [Faithful F.toFunctor]
-    [F.toFunctor.Additive] [F.toFunctor.Linear R] : MonoidalLinear R D where
-  tensor_smul' := by
+    [F.toFunctor.Additive] [F.toFunctor.Linear R] :
+    MonoidalLinear R
+      D where 
+  tensor_smul' := by 
     intros
     apply F.to_functor.map_injective
     simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r g, F.map_tensor,
       monoidal_linear.tensor_smul, linear.smul_comp, linear.comp_smul]
-  smul_tensor' := by
+  smul_tensor' := by 
     intros
     apply F.to_functor.map_injective
     simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r f, F.map_tensor,

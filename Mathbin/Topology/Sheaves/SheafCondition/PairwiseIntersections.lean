@@ -108,7 +108,9 @@ def pairwiseToOpensLeCoverMap :
 of open sets below some `U i`.
 -/
 @[simps]
-def pairwiseToOpensLeCover : Pairwise ι ⥤ OpensLeCover U where
+def pairwiseToOpensLeCover :
+    Pairwise ι ⥤ OpensLeCover
+        U where 
   obj := pairwiseToOpensLeCoverObj U
   map V W i := pairwiseToOpensLeCoverMap U i
 #align
@@ -131,7 +133,6 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
         exact
           List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
             (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩) List.Chain.nil)
-        
       · refine'
           ⟨[{ left := ⟨⟨⟩⟩, right := pair i' i, Hom := (le_inf (b.le.trans inf_le_left) a.le).Hom },
               { left := ⟨⟨⟩⟩, right := single i', Hom := (b.le.trans inf_le_left).Hom }, _],
@@ -140,7 +141,6 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
           List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := right i' i }⟩)
             (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i' i }⟩)
               (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i' j' }⟩) List.Chain.nil))
-        
       · refine'
           ⟨[{ left := ⟨⟨⟩⟩, right := single i, Hom := (a.le.trans inf_le_left).Hom },
               { left := ⟨⟨⟩⟩, right := pair i i',
@@ -151,7 +151,6 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
           List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i j }⟩)
             (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
               (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩) List.Chain.nil))
-        
       · refine'
           ⟨[{ left := ⟨⟨⟩⟩, right := single i, Hom := (a.le.trans inf_le_left).Hom },
               { left := ⟨⟨⟩⟩, right := pair i i',
@@ -162,14 +161,16 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
           List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i j }⟩)
             (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
               (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩)
-                (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i' j' }⟩) List.Chain.nil)))
-        ⟩
+                (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i' j' }⟩) List.Chain.nil)))⟩
 
 /-- The diagram in `opens X` indexed by pairwise intersections from `U` is isomorphic
 (in fact, equal) to the diagram factored through `opens_le_cover U`.
 -/
 def pairwiseDiagramIso :
-    Pairwise.diagram U ≅ pairwiseToOpensLeCover U ⋙ fullSubcategoryInclusion _ where
+    Pairwise.diagram U ≅
+      pairwiseToOpensLeCover U ⋙
+        fullSubcategoryInclusion
+          _ where 
   Hom := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
   inv := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
 #align
@@ -246,11 +247,9 @@ theorem is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections :
   constructor
   · intro h ι U
     exact ⟨preserves_limit_of_preserves_limit_cone (pairwise.cocone_is_colimit U).op (h U).some⟩
-    
   · intro h ι U
     haveI := (h U).some
     exact ⟨preserves_limit.preserves (pairwise.cocone_is_colimit U).op⟩
-    
 #align
   Top.presheaf.is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections TopCat.Presheaf.is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections
 
@@ -268,7 +267,7 @@ def interUnionPullbackCone :
     PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op)
       (F.1.map (homOfLe inf_le_right).op) :=
   PullbackCone.mk (F.1.map (homOfLe le_sup_left).op) (F.1.map (homOfLe le_sup_right).op)
-    (by
+    (by 
       rw [← F.1.map_comp, ← F.1.map_comp]
       congr )
 #align Top.sheaf.inter_union_pullback_cone TopCat.Sheaf.interUnionPullbackCone
@@ -299,16 +298,14 @@ Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through 
 -/
 def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
   let ι : ULift.{w} walking_pair → opens X := fun j => walking_pair.cases_on j.down U V
-  have hι : U ⊔ V = supr ι := by
+  have hι : U ⊔ V = supr ι := by 
     ext
     rw [opens.coe_supr, Set.mem_Union]
     constructor
     · rintro (h | h)
       exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
-      
     · rintro ⟨⟨_ | _⟩, h⟩
       exacts[Or.inl h, Or.inr h]
-      
   refine'
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.lift
         ⟨s.X, { app := _, naturality' := _ }⟩ ≫
@@ -317,7 +314,6 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
     rintro ((_ | _) | (_ | _))
     exacts[s.fst, s.snd, s.fst ≫ F.1.map (hom_of_le inf_le_left).op,
       s.snd ≫ F.1.map (hom_of_le inf_le_left).op]
-    
   rintro i j f
   induction i using Opposite.rec
   induction j using Opposite.rec
@@ -333,7 +329,6 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
       category.assoc]
     erw [← F.1.map_comp, ← F.1.map_comp]
     convert s.condition.symm
-    
 #align Top.sheaf.inter_union_pullback_cone_lift TopCat.Sheaf.interUnionPullbackConeLift
 
 theorem inter_union_pullback_cone_lift_left :
@@ -357,24 +352,20 @@ theorem inter_union_pullback_cone_lift_right :
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
 def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
   let ι : ULift.{w} walking_pair → opens X := fun ⟨j⟩ => walking_pair.cases_on j U V
-  have hι : U ⊔ V = supr ι := by
+  have hι : U ⊔ V = supr ι := by 
     ext
     rw [opens.coe_supr, Set.mem_Union]
     constructor
     · rintro (h | h)
       exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
-      
     · rintro ⟨⟨_ | _⟩, h⟩
       exacts[Or.inl h, Or.inr h]
-      
   apply pullback_cone.is_limit_aux'
   intro s
   use inter_union_pullback_cone_lift F U V s
   refine' ⟨_, _, _⟩
   · apply inter_union_pullback_cone_lift_left
-    
   · apply inter_union_pullback_cone_lift_right
-    
   · intro m h₁ h₂
     rw [← cancel_mono (F.1.map (eq_to_hom hι.symm).op)]
     apply (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.hom_ext
@@ -383,24 +374,19 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
     · erw [← F.1.map_comp]
       convert h₁
       apply inter_union_pullback_cone_lift_left
-      
     · erw [← F.1.map_comp]
       convert h₂
       apply inter_union_pullback_cone_lift_right
-      
     all_goals
-    dsimp only [functor.op, pairwise.cocone_ι_app, functor.map_cone_π_app, cocone.op,
-      pairwise.cocone_ι_app_2, unop_op, op_comp, nat_trans.op]
-    simp_rw [F.1.map_comp, ← category.assoc]
-    congr 1
-    simp_rw [category.assoc, ← F.1.map_comp]
+      dsimp only [functor.op, pairwise.cocone_ι_app, functor.map_cone_π_app, cocone.op,
+        pairwise.cocone_ι_app_2, unop_op, op_comp, nat_trans.op]
+      simp_rw [F.1.map_comp, ← category.assoc]
+      congr 1
+      simp_rw [category.assoc, ← F.1.map_comp]
     · convert h₁
       apply inter_union_pullback_cone_lift_left
-      
     · convert h₂
       apply inter_union_pullback_cone_lift_right
-      
-    
 #align Top.sheaf.is_limit_pullback_cone TopCat.Sheaf.isLimitPullbackCone
 
 /-- If `U, V` are disjoint, then `F(U ⊔ V) = F(U) × F(V)`. -/

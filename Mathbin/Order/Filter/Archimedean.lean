@@ -146,7 +146,7 @@ theorem Tendsto.const_mul_at_top' (hr : 0 < r) (hf : Tendsto f l atTop) :
   rw [nsmul_eq_mul'] at hn
   filter_upwards [tendsto_at_top.1 hf (n * max b 0)] with x hx
   calc
-    b ≤ 1 * max b 0 := by
+    b ≤ 1 * max b 0 := by 
       rw [one_mul]
       exact le_max_left _ _
     _ ≤ r * n * max b 0 := mul_le_mul_of_nonneg_right hn (le_max_right _ _)
@@ -166,7 +166,7 @@ theorem Tendsto.at_top_mul_const' (hr : 0 < r) (hf : Tendsto f l atTop) :
   have hn' : 1 ≤ (n : R) * r := by rwa [nsmul_eq_mul] at hn
   filter_upwards [tendsto_at_top.1 hf (max b 0 * n)] with x hx
   calc
-    b ≤ max b 0 * 1 := by
+    b ≤ max b 0 * 1 := by 
       rw [mul_one]
       exact le_max_left _ _
     _ ≤ max b 0 * (n * r) := mul_le_mul_of_nonneg_left hn' (le_max_right _ _)
@@ -230,9 +230,7 @@ theorem Tendsto.at_top_zsmul_const {f : α → ℤ} (hr : 0 < r) (hf : Tendsto f
     Tendsto (fun x => f x • r) l atTop := by
   refine' tendsto_at_top.mpr fun s => _
   obtain ⟨n : ℕ, hn : s ≤ n • r⟩ := Archimedean.arch s hr
-  replace hn : s ≤ (n : ℤ) • r;
-  · simpa
-    
+  replace hn : s ≤ (n : ℤ) • r; · simpa
   exact (tendsto_at_top.mp hf n).mono fun a ha => hn.trans (zsmul_le_zsmul hr.le ha)
 #align filter.tendsto.at_top_zsmul_const Filter.Tendsto.at_top_zsmul_const
 

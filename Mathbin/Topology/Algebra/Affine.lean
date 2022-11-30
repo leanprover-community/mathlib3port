@@ -39,12 +39,10 @@ theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linea
     rw [decomp' f]
     have := hc.sub continuous_const
     exact this
-    
   · intro hc
     rw [decomp f]
     have := hc.add continuous_const
     exact this
-    
 #align affine_map.continuous_iff AffineMap.continuous_iff
 
 /-- The line map is continuous. -/

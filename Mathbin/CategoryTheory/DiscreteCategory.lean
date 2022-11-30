@@ -43,7 +43,7 @@ universe v₁ v₂ v₃ u₁ u₁' u₂ u₃
 /-- A wrapper for promoting any type to a category,
 with the only morphisms being equalities.
 -/
-@[ext.1]
+@[ext]
 structure Discrete (α : Type u₁) where
   as : α
 #align category_theory.discrete CategoryTheory.Discrete
@@ -56,7 +56,8 @@ theorem Discrete.mk_as {α : Type u₁} (X : Discrete α) : Discrete.mk X.as = X
 
 /-- `discrete α` is equivalent to the original type `α`.-/
 @[simps]
-def discreteEquiv {α : Type u₁} : Discrete α ≃ α where
+def discreteEquiv {α : Type u₁} :
+    Discrete α ≃ α where 
   toFun := Discrete.as
   invFun := Discrete.mk
   left_inv := by tidy
@@ -73,10 +74,12 @@ somewhat annoyingly we have to define `X ⟶ Y` as `ulift (plift (X = Y))`.
 
 See <https://stacks.math.columbia.edu/tag/001A>
 -/
-instance discreteCategory (α : Type u₁) : SmallCategory (Discrete α) where
+instance discreteCategory (α : Type u₁) :
+    SmallCategory (Discrete
+        α) where 
   Hom X Y := ULift (PLift (X.as = Y.as))
   id X := ULift.up (PLift.up rfl)
-  comp X Y Z g f := by
+  comp X Y Z g f := by 
     cases X
     cases Y
     cases Z
@@ -92,7 +95,7 @@ instance [Inhabited α] : Inhabited (Discrete α) :=
   ⟨⟨default⟩⟩
 
 instance [Subsingleton α] : Subsingleton (Discrete α) :=
-  ⟨by
+  ⟨by 
     intros
     ext
     apply Subsingleton.elim⟩
@@ -120,7 +123,7 @@ theorem eq_of_hom {X Y : Discrete α} (i : X ⟶ Y) : X.as = Y.as :=
 in the discrete category. -/
 abbrev eqToHom {X Y : Discrete α} (h : X.as = Y.as) : X ⟶ Y :=
   eqToHom
-    (by
+    (by 
       ext
       exact h)
 #align category_theory.discrete.eq_to_hom CategoryTheory.Discrete.eqToHom
@@ -129,7 +132,7 @@ abbrev eqToHom {X Y : Discrete α} (h : X.as = Y.as) : X ⟶ Y :=
 in the discrete category. -/
 abbrev eqToIso {X Y : Discrete α} (h : X.as = Y.as) : X ≅ Y :=
   eqToIso
-    (by
+    (by 
       ext
       exact h)
 #align category_theory.discrete.eq_to_iso CategoryTheory.Discrete.eqToIso
@@ -157,7 +160,8 @@ instance {I : Type u₁} {i j : Discrete I} (f : i ⟶ j) : IsIso f :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
 /-- Any function `I → C` gives a functor `discrete I ⥤ C`.
 -/
-def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C where
+def functor {I : Type u₁} (F : I → C) :
+    Discrete I ⥤ C where 
   obj := F ∘ discrete.as
   map X Y f := by
     trace
@@ -192,7 +196,7 @@ as the naturality squares are trivial.
 -/
 @[simps]
 def natTrans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ⟶ G.obj i) :
-    F ⟶ G where
+    F ⟶ G where 
   app := f
   naturality' X Y g := by
     trace
@@ -244,7 +248,9 @@ def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : 
 an equivalence between the corresponding `discrete` categories.
 -/
 @[simps]
-def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ Discrete J where
+def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) :
+    Discrete I ≌
+      Discrete J where 
   Functor := Discrete.functor (discrete.mk ∘ (e : I → J))
   inverse := Discrete.functor (discrete.mk ∘ (e.symm : J → I))
   unitIso :=
@@ -265,7 +271,8 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ D
 
 /-- We can convert an equivalence of `discrete` categories to a type-level `equiv`. -/
 @[simps]
-def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) : α ≃ β where
+def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) :
+    α ≃ β where 
   toFun := discrete.as ∘ h.Functor.obj ∘ discrete.mk
   invFun := discrete.as ∘ h.inverse.obj ∘ discrete.mk
   left_inv a := by simpa using eq_of_hom (h.unit_iso.app (discrete.mk a)).2
@@ -310,7 +317,7 @@ variable {C : Type u₂} [Category.{v₂} C]
 @[simp]
 theorem functor_map_id (F : Discrete J ⥤ C) {j : Discrete J} (f : j ⟶ j) : F.map f = 𝟙 (F.obj j) :=
   by
-  have h : f = 𝟙 j := by
+  have h : f = 𝟙 j := by 
     cases f
     cases f
     ext

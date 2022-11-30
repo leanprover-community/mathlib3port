@@ -45,11 +45,9 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
   · intro hj'
     simpa only [hj', hnbq, Fin.coe_zero, zero_add, add_comm b, add_assoc, false_and_iff,
       add_le_iff_nonpos_right, le_zero_iff, add_eq_zero_iff, Nat.one_ne_zero] using hj
-    
   · simp only [Fin.lt_iff_coe_lt_coe, Nat.lt_iff_add_one_le, Fin.succ_mk, Fin.coe_mk, Fin.coe_succ,
       add_le_add_iff_right]
     linarith
-    
 #align
   algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
@@ -59,12 +57,10 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
   · exfalso
     have h := Fin.is_lt i
     linarith
-    
   · by_cases n + 1 ≤ (i : ℕ) + q
     · unfold P
       simp only [HomologicalComplex.comp_f, ← assoc]
       rw [hq i h, zero_comp]
-      
     · have hi' : n = (i : ℕ) + q := by
         cases' le_iff_exists_add.mp hi with j hj
         rw [← Nat.lt_succ_iff, Nat.succ_eq_add_one, add_assoc, hj, not_lt, add_le_iff_nonpos_right,
@@ -88,7 +84,6 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
             (show (0 : Fin 2) ≤ Fin.castSucc 0 by rw [Fin.cast_succ_zero]),
           simplicial_object.δ_comp_σ_self_assoc, simplicial_object.δ_comp_σ_succ_assoc]
         abel
-        
       · rw [← id_comp (X.σ i), ← (P_add_Q_f q n.succ : _ = 𝟙 (X.obj _)), add_comp, add_comp]
         have v : higher_faces_vanish q ((P q).f n.succ ≫ X.σ i) :=
           (higher_faces_vanish.of_P q n).comp_σ hi'
@@ -99,7 +94,6 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
         swap
         · ext
           simp only [Fin.coe_mk, Fin.coe_succ]
-          
         · intro j hj
           simp only [true_and_iff, Finset.mem_univ, Finset.mem_filter] at hj
           simp only [Nat.succ_eq_add_one] at hi'
@@ -118,10 +112,6 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
             comp_zero]
           simp only [Fin.rev_eq j hk.symm, Fin.le_iff_coe_le_coe, Fin.coe_mk]
           linarith
-          
-        
-      
-    
 #align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_P_eq_zero
 
 @[simp, reassoc]
@@ -141,11 +131,9 @@ theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : Simple
     intro x y h
     fin_cases x
     fin_cases y
-    
   · obtain ⟨i, α, h⟩ := SimplexCategory.eq_σ_comp_of_not_injective θ hθ
     rw [h, op_comp, X.map_comp, assoc, show X.map (SimplexCategory.σ i).op = X.σ i by rfl,
       σ_comp_P_infty, comp_zero]
-    
 #align
   algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_P_infty
 

@@ -77,7 +77,7 @@ instance M.Path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] :
 possibly infinite tree whereas, for a given `a : A`, `B a` is a valid
 path in tree `a` so that `Wp.obj α` is made of a tree and a function
 from its valid paths to the values it contains -/
-def mp : Mvpfunctor n where
+def mp : Mvpfunctor n where 
   A := P.last.M
   B := M.Path P
 #align mvpfunctor.Mp Mvpfunctor.mp
@@ -114,7 +114,7 @@ def M.corecContents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A)
     (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α) (g₂ : ∀ b : β, P.last.B (g₀ b) → β) :
     ∀ x b, x = M.corecShape P g₀ g₂ b → M.Path P x ⟹ α
   | _, b, h, _, M.path.root x a f h' i c =>
-    have : a = g₀ b := by
+    have : a = g₀ b := by 
       rw [h, M.corec_shape, Pfunctor.M.dest_corec] at h'
       cases h'
       rfl
@@ -193,9 +193,9 @@ theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.append
   trans; apply M.dest_corec'
   cases' g x with a f; dsimp
   rw [Mvpfunctor.map_eq]; congr
-  conv =>
-  rhs
-  rw [← split_drop_fun_last_fun f, append_fun_comp_split_fun]
+  conv => 
+    rhs
+    rw [← split_drop_fun_last_fun f, append_fun_comp_split_fun]
   rfl
 #align mvpfunctor.M.dest_corec Mvpfunctor.M.dest_corec
 
@@ -205,7 +205,7 @@ theorem M.bisim_lemma {α : Typevec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ �
     ∃ (g₁' : _)(e₁' : Pfunctor.M.dest a₁ = ⟨a', g₁'⟩),
       f' = M.pathDestLeft P e₁' f₁ ∧
         f₁' = fun x : (last P).B a' => ⟨g₁' x, M.pathDestRight P e₁' f₁ x⟩ :=
-  by
+  by 
   generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff at e₁
   cases' e₁' : Pfunctor.M.dest a₁ with a₁' g₁'
   rw [M.dest_eq_dest' _ e₁'] at e₁
@@ -219,7 +219,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
           ∃ a f f₁ f₂,
             M.dest P x = ⟨a, splitFun f f₁⟩ ∧
               M.dest P y = ⟨a, splitFun f f₂⟩ ∧ ∀ i, R (f₁ i) (f₂ i))
-    (x y) (r : R x y) : x = y := by
+    (x y) (r : R x y) : x = y := by 
   cases' x with a₁ f₁
   cases' y with a₂ f₂
   dsimp [Mp] at *
@@ -235,23 +235,22 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     exact ⟨_, _, _, rfl, rfl, fun b => ⟨_, _, h' b, rfl, rfl⟩⟩
   subst this
   congr with (i p)
-  induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;> try
-    rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
-    rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
-    rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
-    cases h'.symm.trans e₁'
-    cases h'.symm.trans e₂'
+  induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;>
+    try 
+      rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
+      rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
+      rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
+      cases h'.symm.trans e₁'
+      cases h'.symm.trans e₂'
   · exact (congr_fun (congr_fun e₃ i) c : _)
-    
   · exact IH _ _ (h'' _)
-    
 #align mvpfunctor.M.bisim Mvpfunctor.M.bisim
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equivalence R)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y)
-    (x y) (r : R x y) : x = y := by
+    (x y) (r : R x y) : x = y := by 
   apply M.bisim P R _ _ _ r
   clear r x y
   introv Hr
@@ -286,27 +285,23 @@ theorem M.bisim' {α : Typevec n} (R : P.M α → P.M α → Prop)
     (x y) (r : R x y) : x = y := by
   have := M.bisim₀ P (EqvGen R) _ _
   · solve_by_elim [EqvGen.rel]
-    
   · apply EqvGen.is_equivalence
-    
   · clear r x y
     introv Hr
     have : ∀ x y, R x y → EqvGen R x y := @EqvGen.rel _ R
     induction Hr
     · rw [← Quot.factor_mk_eq R (EqvGen R) this]
       rwa [append_fun_comp_id, ← Mvfunctor.map_map, ← Mvfunctor.map_map, h]
-      
     all_goals cc
-    
 #align mvpfunctor.M.bisim' Mvpfunctor.M.bisim'
 
 theorem M.dest_map {α β : Typevec n} (g : α ⟹ β) (x : P.M α) :
     M.dest P (g <$$> x) = (appendFun g fun x => g <$$> x) <$$> M.dest P x := by
   cases' x with a f
   rw [map_eq]
-  conv =>
-  rhs
-  rw [M.dest, M.dest', map_eq, append_fun_comp_split_fun]
+  conv => 
+    rhs
+    rw [M.dest, M.dest', map_eq, append_fun_comp_split_fun]
   rfl
 #align mvpfunctor.M.dest_map Mvpfunctor.M.dest_map
 

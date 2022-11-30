@@ -61,9 +61,10 @@ namespace ContinuousOpenMap
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
-instance : ContinuousOpenMapClass (α →CO β) α β where
+instance : ContinuousOpenMapClass (α →CO β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -80,7 +81,7 @@ theorem to_fun_eq_coe {f : α →CO β} : f.toFun = (f : α → β) :=
   rfl
 #align continuous_open_map.to_fun_eq_coe ContinuousOpenMap.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : α →CO β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align continuous_open_map.ext ContinuousOpenMap.ext

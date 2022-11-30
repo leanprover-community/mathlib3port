@@ -53,12 +53,10 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) 
   constructor
   · intro h
     linear_combination -4 * a * h
-    
   · intro h
     have ha : 2 * 2 * a ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha
     apply mul_left_cancel₀ ha
     linear_combination -h
-    
 #align quadratic_eq_zero_iff_discrim_eq_sq quadratic_eq_zero_iff_discrim_eq_sq
 
 /-- A quadratic has no root if its discriminant has no square root. -/
@@ -84,14 +82,12 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   field_simp
   apply or_congr
   · constructor <;> intro h' <;> linear_combination -h'
-    
   · constructor <;> intro h' <;> linear_combination h'
-    
 #align quadratic_eq_zero_iff quadratic_eq_zero_iff
 
 /-- A quadratic has roots if its discriminant has square roots -/
 theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * s) :
-    ∃ x, a * x * x + b * x + c = 0 := by
+    ∃ x, a * x * x + b * x + c = 0 := by 
   rcases h with ⟨s, hs⟩
   use (-b + s) / (2 * a)
   rw [quadratic_eq_zero_iff ha hs]
@@ -122,16 +118,12 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
           tendsto_id)
     rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
     exact False.elim ((h x).not_lt <| by rwa [← add_mul])
-    
   -- if a = 0
   · rcases em (b = 0) with (rfl | hb)
     · simp
-      
     · have := h ((-c - 1) / b)
       rw [mul_div_cancel' _ hb] at this
       linarith
-      
-    
   -- if a > 0
   · have :=
       calc
@@ -146,14 +138,13 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
     have h := mul_nonneg ha' (h (-(b / a) * (1 / 2)))
     rw [this] at h
     rwa [← neg_nonneg]
-    
 #align discrim_le_zero discrim_le_zero
 
 /-- If a polynomial of degree 2 is always positive, then its discriminant is negative,
 at least when the coefficient of the quadratic term is nonzero.
 -/
 theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < a * x * x + b * x + c) : discrim a b c < 0 :=
-  by
+  by 
   have : ∀ x : K, 0 ≤ a * x * x + b * x + c := fun x => le_of_lt (h x)
   refine' lt_of_le_of_ne (discrim_le_zero this) _
   intro h'

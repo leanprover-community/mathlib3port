@@ -46,7 +46,7 @@ variable {ι α β : Type _}
 /-- A **bornology** on a type `α` is a filter of cobounded sets which contains the cofinite filter.
 Such spaces are equivalently specified by their bounded sets, see `bornology.of_bounded`
 and `bornology.ext_iff_is_bounded`-/
-@[ext.1]
+@[ext]
 class Bornology (α : Type _) where
   cobounded : Filter α
   le_cofinite : cobounded ≤ cofinite
@@ -59,12 +59,13 @@ and showing that they satisfy the appropriate conditions. -/
 def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
     (union_mem : ∀ (s₁ s₂) (_ : s₁ ∈ B) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (singleton_mem : ∀ x, {x} ∈ B) :
-    Bornology α where
+    Bornology
+      α where 
   cobounded :=
     { sets := { s : Set α | sᶜ ∈ B }, univ_sets := by rwa [← compl_univ] at empty_mem,
       sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy),
       inter_sets := fun x y hx hy => by simpa [compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
-  le_cofinite := by
+  le_cofinite := by 
     rw [le_cofinite_iff_compl_singleton_mem]
     intro x
     change {x}ᶜᶜ ∈ B
@@ -192,7 +193,7 @@ theorem ext_iff' {t t' : Bornology α} :
 
 theorem ext_iff_is_bounded {t t' : Bornology α} :
     t = t' ↔ ∀ s, @IsBounded α t s ↔ @IsBounded α t' s :=
-  ⟨fun h s => h ▸ Iff.rfl, fun h => by
+  ⟨fun h s => h ▸ Iff.rfl, fun h => by 
     ext
     simpa only [is_bounded_def, compl_compl] using h (sᶜ)⟩
 #align bornology.ext_iff_is_bounded Bornology.ext_iff_is_bounded
@@ -265,7 +266,8 @@ instance : Bornology PUnit :=
 
 /-- The cofinite filter as a bornology -/
 @[reducible]
-def Bornology.cofinite : Bornology α where
+def Bornology.cofinite : Bornology
+      α where 
   cobounded := cofinite
   le_cofinite := le_rfl
 #align bornology.cofinite Bornology.cofinite

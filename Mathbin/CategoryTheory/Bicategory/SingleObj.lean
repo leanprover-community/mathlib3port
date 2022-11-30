@@ -45,7 +45,8 @@ open MonoidalCategory
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance : Bicategory (MonoidalSingleObj C) where
+instance : Bicategory (MonoidalSingleObj
+        C) where 
   Hom _ _ := C
   id _ := 𝟙_ C
   comp _ _ _ X Y := X ⊗ Y
@@ -54,22 +55,22 @@ instance : Bicategory (MonoidalSingleObj C) where
   associator _ _ _ _ X Y Z := α_ X Y Z
   leftUnitor _ _ X := λ_ X
   rightUnitor _ _ X := ρ_ X
-  comp_whisker_left' := by
+  comp_whisker_left' := by 
     intros
     rw [associator_inv_naturality, iso.hom_inv_id_assoc, tensor_id]
-  whisker_assoc' := by
+  whisker_assoc' := by 
     intros
     rw [associator_inv_naturality, iso.hom_inv_id_assoc]
-  whisker_right_comp' := by
+  whisker_right_comp' := by 
     intros
     rw [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
-  id_whisker_left' := by
+  id_whisker_left' := by 
     intros
     rw [left_unitor_inv_naturality, iso.hom_inv_id_assoc]
-  whisker_right_id' := by
+  whisker_right_id' := by 
     intros
     rw [right_unitor_inv_naturality, iso.hom_inv_id_assoc]
-  pentagon' := by
+  pentagon' := by 
     intros
     rw [pentagon]
 
@@ -88,12 +89,14 @@ to the original monoidal category.
 We subsequently show this is an equivalence.
 -/
 @[simps]
-def endMonoidalStarFunctor : MonoidalFunctor (EndMonoidal (MonoidalSingleObj.star C)) C where
+def endMonoidalStarFunctor :
+    MonoidalFunctor (EndMonoidal (MonoidalSingleObj.star C))
+      C where 
   obj X := X
   map X Y f := f
   ε := 𝟙 _
   μ X Y := 𝟙 _
-  μ_natural' X Y X' Y' f g := by
+  μ_natural' X Y X' Y' f g := by 
     dsimp
     simp only [category.id_comp, category.comp_id]
     -- Should we provide further simp lemmas so this goal becomes visible?
@@ -107,7 +110,10 @@ noncomputable section
 when we promote a monoidal category to a single object bicategory,
 and the original monoidal category.
 -/
-def endMonoidalStarFunctorIsEquivalence : IsEquivalence (endMonoidalStarFunctor C).toFunctor where
+def endMonoidalStarFunctorIsEquivalence :
+    IsEquivalence
+      (endMonoidalStarFunctor
+          C).toFunctor where 
   inverse := { obj := fun X => X, map := fun X Y f => f }
   unitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
   counitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)

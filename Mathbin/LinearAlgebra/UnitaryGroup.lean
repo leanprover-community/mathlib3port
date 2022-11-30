@@ -62,24 +62,22 @@ variable {n : Type u} [DecidableEq n] [Fintype n]
 variable {α : Type v} [CommRing α] [StarRing α]
 
 theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 :=
-  by
+  by 
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
   simpa only [mul_eq_mul, mul_eq_one_comm] using hA
 #align matrix.mem_unitary_group_iff Matrix.mem_unitary_group_iff
 
 theorem mem_unitary_group_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 :=
-  by
+  by 
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
   rwa [mul_eq_mul, mul_eq_one_comm] at hA
 #align matrix.mem_unitary_group_iff' Matrix.mem_unitary_group_iff'
 
 theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) :
-    A.det ∈ unitary α := by
+    A.det ∈ unitary α := by 
   constructor
   · simpa [star, det_transpose] using congr_arg det hA.1
-    
   · simpa [star, det_transpose] using congr_arg det hA.2
-    
 #align matrix.det_of_mem_unitary Matrix.det_of_mem_unitary
 
 namespace UnitaryGroup
@@ -104,7 +102,7 @@ theorem ext_iff (A B : unitaryGroup n α) : A = B ↔ ∀ i j, A i j = B i j :=
   Subtype.ext_iff_val.trans ⟨fun h i j => congr_fun (congr_fun h i) j, Matrix.ext⟩
 #align matrix.unitary_group.ext_iff Matrix.unitaryGroup.ext_iff
 
-@[ext.1]
+@[ext]
 theorem ext (A B : unitaryGroup n α) : (∀ i j, A i j = B i j) → A = B :=
   (unitaryGroup.ext_iff A B).mpr
 #align matrix.unitary_group.ext Matrix.unitaryGroup.ext

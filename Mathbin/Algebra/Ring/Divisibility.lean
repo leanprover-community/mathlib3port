@@ -112,11 +112,9 @@ theorem dvd_iff_dvd_of_dvd_sub {a b c : α} (h : a ∣ b - c) : a ∣ b ↔ a �
   · intro h'
     convert dvd_sub h' h
     exact Eq.symm (sub_sub_self b c)
-    
   · intro h'
     convert dvd_add h h'
     exact eq_add_of_sub_eq rfl
-    
 #align dvd_iff_dvd_of_dvd_sub dvd_iff_dvd_of_dvd_sub
 
 end NonUnitalRing
@@ -148,7 +146,7 @@ section NonUnitalCommRing
 variable [NonUnitalCommRing α] {a b c : α}
 
 theorem dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) : k ∣ a * x - b * y :=
-  by
+  by 
   convert dvd_add (hxy.mul_left a) (hab.mul_right y)
   rw [mul_sub_left_distrib, mul_sub_right_distrib]
   simp only [sub_eq_add_neg, add_assoc, neg_add_cancel_left]

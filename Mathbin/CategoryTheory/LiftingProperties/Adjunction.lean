@@ -38,23 +38,26 @@ include sq
 map is of the form `G.map i` and the right map is `p` has an "adjoint" commutative
 square whose left map is `i` and whose right map is `F.map p`. -/
 theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ _ v) :=
-  ⟨by
+  ⟨by 
     simp only [adjunction.hom_equiv_unit, assoc, ← F.map_comp, sq.w]
     rw [F.map_comp, adjunction.unit_naturality_assoc]⟩
 #align category_theory.comm_sq.right_adjoint CategoryTheory.CommSq.right_adjoint
 
 /-- The liftings of a commutative are in bijection with the liftings of its (right)
 adjoint square. -/
-def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftStruct where
+def rightAdjointLiftStructEquiv :
+    sq.LiftStruct ≃
+      (sq.rightAdjoint
+          adj).LiftStruct where 
   toFun l :=
     { l := adj.homEquiv _ _ l.l, fac_left' := by rw [← adj.hom_equiv_naturality_left, l.fac_left],
       fac_right' := by rw [← adjunction.hom_equiv_naturality_right, l.fac_right] }
   invFun l :=
     { l := (adj.homEquiv _ _).symm l.l,
-      fac_left' := by
+      fac_left' := by 
         rw [← adjunction.hom_equiv_naturality_left_symm, l.fac_left]
         apply (adj.hom_equiv _ _).left_inv,
-      fac_right' := by
+      fac_right' := by 
         rw [← adjunction.hom_equiv_naturality_right_symm, l.fac_right]
         apply (adj.hom_equiv _ _).left_inv }
   left_inv := by tidy
@@ -86,24 +89,27 @@ include sq
 map is of the form `i` and the right map is `F.map p` has an "adjoint" commutative
 square whose left map is `G.map i` and whose right map is `p`. -/
 theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homEquiv _ _).symm v) :=
-  ⟨by
+  ⟨by 
     simp only [adjunction.hom_equiv_counit, assoc, ← G.map_comp_assoc, ← sq.w]
     rw [G.map_comp, assoc, adjunction.counit_naturality]⟩
 #align category_theory.comm_sq.left_adjoint CategoryTheory.CommSq.left_adjoint
 
 /-- The liftings of a commutative are in bijection with the liftings of its (left)
 adjoint square. -/
-def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStruct where
+def leftAdjointLiftStructEquiv :
+    sq.LiftStruct ≃
+      (sq.leftAdjoint
+          adj).LiftStruct where 
   toFun l :=
     { l := (adj.homEquiv _ _).symm l.l,
       fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left],
       fac_right' := by rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
   invFun l :=
     { l := (adj.homEquiv _ _) l.l,
-      fac_left' := by
+      fac_left' := by 
         rw [← adj.hom_equiv_naturality_left, l.fac_left]
         apply (adj.hom_equiv _ _).right_inv,
-      fac_right' := by
+      fac_right' := by 
         rw [← adj.hom_equiv_naturality_right, l.fac_right]
         apply (adj.hom_equiv _ _).right_inv }
   left_inv := by tidy
@@ -133,10 +139,8 @@ theorem has_lifting_property_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ 
   constructor <;> intro <;> constructor <;> intro f g sq
   · rw [← sq.left_adjoint_has_lift_iff adj]
     infer_instance
-    
   · rw [← sq.right_adjoint_has_lift_iff adj]
     infer_instance
-    
 #align
   category_theory.adjunction.has_lifting_property_iff CategoryTheory.Adjunction.has_lifting_property_iff
 

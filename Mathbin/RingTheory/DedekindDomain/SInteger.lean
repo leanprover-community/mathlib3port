@@ -107,24 +107,27 @@ theorem unit_valuation_eq_one (x : S.Unit K) {v : HeightOneSpectrum R} (hv : v �
 
 /-- The group of `S`-units is the group of units of the ring of `S`-integers. -/
 @[simps]
-def unitEquivUnitsInteger : S.Unit K ≃* (S.integer K)ˣ where
+def unitEquivUnitsInteger :
+    S.Unit K ≃*
+      (S.integer
+          K)ˣ where 
   toFun x :=
     ⟨⟨x, fun v hv => (x.property v hv).le⟩, ⟨↑x⁻¹, fun v hv => (x⁻¹.property v hv).le⟩,
       Subtype.ext x.val.val_inv, Subtype.ext x.val.inv_val⟩
   invFun x :=
     ⟨(Units.mk0 x) fun hx => x.NeZero ((Subring.coe_eq_zero_iff _).mp hx), fun v hv =>
       eq_one_of_one_le_mul_left (x.val.property v hv) (x.inv.property v hv) <|
-        Eq.ge <| by
+        Eq.ge <| by 
           rw [← map_mul]
           convert v.valuation.map_one
           exact subtype.mk_eq_mk.mp x.val_inv⟩
-  left_inv _ := by
+  left_inv _ := by 
     ext
     rfl
-  right_inv _ := by
+  right_inv _ := by 
     ext
     rfl
-  map_mul' _ _ := by
+  map_mul' _ _ := by 
     ext
     rfl
 #align set.unit_equiv_units_integer Set.unitEquivUnitsInteger

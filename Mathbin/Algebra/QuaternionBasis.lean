@@ -47,7 +47,7 @@ variable {c₁ c₂ : R}
 namespace Basis
 
 /-- Since `k` is redundant, it is not necessary to show `q₁.k = q₂.k` when showing `q₁ = q₂`. -/
-@[ext.1]
+@[ext]
 protected theorem ext ⦃q₁ q₂ : Basis A c₁ c₂⦄ (hi : q₁.i = q₂.i) (hj : q₁.j = q₂.j) : q₁ = q₂ := by
   cases q₁
   cases q₂
@@ -60,7 +60,8 @@ variable (R)
 
 /-- There is a natural quaternionic basis for the `quaternion_algebra`. -/
 @[simps i j k]
-protected def self : Basis ℍ[R,c₁,c₂] c₁ c₂ where
+protected def self : Basis ℍ[R,c₁,c₂] c₁
+      c₂ where 
   i := ⟨0, 1, 0, 0⟩
   i_mul_i := by ext <;> simp
   j := ⟨0, 0, 1, 0⟩
@@ -153,7 +154,8 @@ def liftHom : ℍ[R,c₁,c₂] →ₐ[R] A :=
 
 /-- Transform a `quaternion_algebra.basis` through an `alg_hom`. -/
 @[simps i j k]
-def compHom (F : A →ₐ[R] B) : Basis B c₁ c₂ where
+def compHom (F : A →ₐ[R] B) : Basis B c₁
+      c₂ where 
   i := F q.i
   i_mul_i := by rw [← F.map_mul, q.i_mul_i, F.map_smul, F.map_one]
   j := F q.j
@@ -167,11 +169,12 @@ end Basis
 
 /-- A quaternionic basis on `A` is equivalent to a map from the quaternion algebra to `A`. -/
 @[simps]
-def lift : Basis A c₁ c₂ ≃ (ℍ[R,c₁,c₂] →ₐ[R] A) where
+def lift : Basis A c₁ c₂ ≃
+      (ℍ[R,c₁,c₂] →ₐ[R] A) where 
   toFun := Basis.liftHom
   invFun := (Basis.self R).compHom
   left_inv q := by ext <;> simp [basis.lift]
-  right_inv F := by
+  right_inv F := by 
     ext
     dsimp [basis.lift]
     rw [← F.commutes]

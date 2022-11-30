@@ -82,7 +82,7 @@ theorem snd_mk (r : R) (m : M) : snd (r, m) = m :=
   rfl
 #align triv_sq_zero_ext.snd_mk TrivSqZeroExt.snd_mk
 
-@[ext.1]
+@[ext]
 theorem ext {x y : tsze R M} (h1 : x.fst = y.fst) (h2 : x.snd = y.snd) : x = y :=
   Prod.ext h1 h2
 #align triv_sq_zero_ext.ext TrivSqZeroExt.ext
@@ -464,7 +464,8 @@ variable (R M)
 
 /-- The canonical inclusion of rings `R → triv_sq_zero_ext R M`. -/
 @[simps apply]
-def inlHom [Semiring R] [AddCommMonoid M] [Module R M] : R →+* tsze R M where
+def inlHom [Semiring R] [AddCommMonoid M] [Module R M] :
+    R →+* tsze R M where 
   toFun := inl
   map_one' := inl_one M
   map_mul' := inl_mul M
@@ -508,7 +509,7 @@ theorem algebra_map_eq_inl' (s : S) : algebraMap S (tsze R M) s = inl (algebraMa
 
 /-- The canonical `R`-algebra projection `triv_sq_zero_ext R M → R`. -/
 @[simps]
-def fstHom : tsze R M →ₐ[R] R where
+def fstHom : tsze R M →ₐ[R] R where 
   toFun := fst
   map_one' := fst_one
   map_mul' := fst_mul
@@ -525,7 +526,7 @@ theorem alg_hom_ext {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A
     linear_map_ext (fun r => (f.commutes _).trans (g.commutes _).symm) h
 #align triv_sq_zero_ext.alg_hom_ext TrivSqZeroExt.alg_hom_ext
 
-@[ext.1]
+@[ext]
 theorem alg_hom_ext' {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A⦄
     (h : f.toLinearMap.comp (inrHom R M) = g.toLinearMap.comp (inrHom R M)) : f = g :=
   alg_hom_ext <| LinearMap.congr_fun h
@@ -541,7 +542,7 @@ def liftAux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[
   AlgHom.ofLinearMap ((Algebra.linearMap _ _).comp (fstHom R M).toLinearMap + f.comp (sndHom R M))
     (show algebraMap R _ 1 + f (0 : M) = 1 by rw [map_zero, map_one, add_zero])
     (TrivSqZeroExt.ind fun r₁ m₁ =>
-      TrivSqZeroExt.ind fun r₂ m₂ => by
+      TrivSqZeroExt.ind fun r₂ m₂ => by 
         dsimp
         simp only [add_zero, zero_add, add_mul, mul_add, smul_mul_smul, hf, smul_zero]
         rw [← RingHom.map_mul, LinearMap.map_add, ← Algebra.commutes _ (f _), ← Algebra.smul_def, ←
@@ -572,7 +573,9 @@ products.
 
 This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps]
-def lift : { f : M →ₗ[R] A // ∀ x y, f x * f y = 0 } ≃ (tsze R M →ₐ[R] A) where
+def lift :
+    { f : M →ₗ[R] A // ∀ x y, f x * f y = 0 } ≃
+      (tsze R M →ₐ[R] A) where 
   toFun f := liftAux f f.Prop
   invFun F :=
     ⟨F.toLinearMap.comp (inrHom R M), fun x y =>

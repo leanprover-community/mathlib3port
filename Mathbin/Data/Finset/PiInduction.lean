@@ -38,18 +38,17 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     (step :
       ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i),
         r i x (g i) → p g → p (update g i (insert x (g i)))) :
-    p f := by
+    p f := by 
   cases nonempty_fintype ι
   induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f; subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne
   · convert h0
     simpa [funext_iff] using he
-    
   · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
     set g := update f i ((f i).erase x) with hg
     clear_value g
-    have hx' : x ∉ g i := by
+    have hx' : x ∉ g i := by 
       rw [hg, update_same]
       apply not_mem_erase
     obtain rfl : f = update g i (insert x (g i)) := by
@@ -60,7 +59,6 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     rw [ssubset_iff_of_subset (sigma_mono (subset.refl _) _)]
     exacts[⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp⟩, by simp [hx']⟩,
       (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
-    
 #align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choice
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all

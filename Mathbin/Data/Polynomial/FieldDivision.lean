@@ -33,7 +33,6 @@ theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hp
     p.derivative.rootMultiplicity t = p.rootMultiplicity t - 1 := by
   rcases eq_or_ne p 0 with (rfl | hp)
   · simp
-    
   nth_rw 0 [← p.div_by_monic_mul_pow_root_multiplicity_eq t]
   simp only [derivative_pow, derivative_mul, derivative_sub, derivative_X, derivative_C, sub_zero,
     mul_one]
@@ -46,7 +45,6 @@ theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hp
     rw [mul_add, mul_left_comm <| (X - C t) ^ n, ← pow_succ']
     congr 1
     rw [mul_left_comm <| (X - C t) ^ n, mul_comm <| (X - C t) ^ n]
-    
   have h : (derivative q * (X - C t) + q * ↑(n + 1)).eval t ≠ 0 := by
     suffices eval t q * ↑(n + 1) ≠ 0 by simpa
     refine' mul_ne_zero _ (nat.cast_ne_zero.mpr n.succ_ne_zero)
@@ -63,10 +61,8 @@ theorem root_multiplicity_sub_one_le_derivative_root_multiplicity [CharZero R] (
     p.rootMultiplicity t - 1 ≤ p.derivative.rootMultiplicity t := by
   by_cases p.is_root t
   · exact (derivative_root_multiplicity_of_root h).symm.le
-    
   · rw [root_multiplicity_eq_zero h, zero_tsub]
     exact zero_le _
-    
 #align
   polynomial.root_multiplicity_sub_one_le_derivative_root_multiplicity Polynomial.root_multiplicity_sub_one_le_derivative_root_multiplicity
 
@@ -74,20 +70,22 @@ section NormalizationMonoid
 
 variable [NormalizationMonoid R]
 
-instance : NormalizationMonoid R[X] where
+instance :
+    NormalizationMonoid
+      R[X] where 
   normUnit p :=
     ⟨c ↑(normUnit p.leadingCoeff), c ↑(normUnit p.leadingCoeff)⁻¹, by
       rw [← RingHom.map_mul, Units.mul_inv, C_1], by rw [← RingHom.map_mul, Units.inv_mul, C_1]⟩
   norm_unit_zero := Units.ext (by simp)
   norm_unit_mul p q hp0 hq0 :=
     Units.ext
-      (by
+      (by 
         dsimp
         rw [Ne.def, ← leading_coeff_eq_zero] at *
         rw [leading_coeff_mul, norm_unit_mul hp0 hq0, Units.val_mul, C_mul])
   norm_unit_coe_units u :=
     Units.ext
-      (by
+      (by 
         rw [← mul_one u⁻¹, Units.val_mul, Units.eq_inv_mul_iff_mul_eq]
         dsimp
         rcases Polynomial.is_unit_iff.1 ⟨u, rfl⟩ with ⟨_, ⟨w, rfl⟩, h2⟩
@@ -120,7 +118,7 @@ section DivisionRing
 variable [DivisionRing R] {p q : R[X]}
 
 theorem degree_pos_of_ne_zero_of_nonunit (hp0 : p ≠ 0) (hp : ¬IsUnit p) : 0 < degree p :=
-  lt_of_not_ge fun h => by
+  lt_of_not_ge fun h => by 
     rw [eq_C_of_degree_le_zero h] at hp0 hp
     exact hp (IsUnit.map C (IsUnit.mk0 (coeff p 0) (mt C_inj.2 (by simpa using hp0))))
 #align polynomial.degree_pos_of_ne_zero_of_nonunit Polynomial.degree_pos_of_ne_zero_of_nonunit
@@ -157,7 +155,7 @@ theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
     have hc : coeff p 0 ≠ 0 := fun hc => by
       rw [eq_C_of_degree_le_zero this, hc] at h <;> simpa using h
     is_unit_iff_dvd_one.2
-      ⟨c (coeff p 0)⁻¹, by
+      ⟨c (coeff p 0)⁻¹, by 
         conv in p => rw [eq_C_of_degree_le_zero this]
         rw [← C_mul, _root_.mul_inv_cancel hc, C_1]⟩⟩
 #align polynomial.is_unit_iff_degree_eq_zero Polynomial.is_unit_iff_degree_eq_zero
@@ -175,9 +173,9 @@ def mod (p q : R[X]) :=
 private theorem quotient_mul_add_remainder_eq_aux (p q : R[X]) : q * div p q + mod p q = p :=
   if h : q = 0 then by simp only [h, zero_mul, mod, mod_by_monic_zero, zero_add]
   else by
-    conv =>
-    rhs
-    rw [← mod_by_monic_add_div p (monic_mul_leading_coeff_inv h)]
+    conv => 
+      rhs
+      rw [← mod_by_monic_add_div p (monic_mul_leading_coeff_inv h)]
     rw [div, mod, add_comm, mul_assoc]
 #align polynomial.quotient_mul_add_remainder_eq_aux polynomial.quotient_mul_add_remainder_eq_aux
 
@@ -404,25 +402,22 @@ theorem coeff_inv_units (u : R[X]ˣ) (n : ℕ) : ((↑u : R[X]).coeff n)⁻¹ = 
   rw [eq_C_of_degree_eq_zero (degree_coe_units u), eq_C_of_degree_eq_zero (degree_coe_units u⁻¹),
     coeff_C, coeff_C, inv_eq_one_div]
   split_ifs
-  · rw [div_eq_iff_mul_eq (coeff_coe_units_zero_ne_zero u), coeff_zero_eq_eval_zero,
+  ·
+    rw [div_eq_iff_mul_eq (coeff_coe_units_zero_ne_zero u), coeff_zero_eq_eval_zero,
         coeff_zero_eq_eval_zero, ← eval_mul, ← Units.val_mul, inv_mul_self] <;>
       simp
-    
   · simp
-    
 #align polynomial.coeff_inv_units Polynomial.coeff_inv_units
 
 theorem monic_normalize (hp0 : p ≠ 0) : Monic (normalize p) := by
-  rw [Ne.def, ← leading_coeff_eq_zero, ← Ne.def, ← is_unit_iff_ne_zero] at hp0
+  rw [Ne.def, ← leading_coeff_eq_zero, ← Ne.def, ← isUnit_iff_ne_zero] at hp0
   rw [monic, leading_coeff_normalize, normalize_eq_one]
   apply hp0
 #align polynomial.monic_normalize Polynomial.monic_normalize
 
 theorem leading_coeff_div (hpq : q.degree ≤ p.degree) :
     (p / q).leadingCoeff = p.leadingCoeff / q.leadingCoeff := by
-  by_cases hq : q = 0;
-  · simp [hq]
-    
+  by_cases hq : q = 0; · simp [hq]
   rw [div_def, leading_coeff_mul, leading_coeff_C,
     leading_coeff_div_by_monic_of_monic (monic_mul_leading_coeff_inv hq) _, mul_comm,
     div_eq_mul_inv]
@@ -432,7 +427,6 @@ theorem leading_coeff_div (hpq : q.degree ≤ p.degree) :
 theorem div_C_mul : p / (c a * q) = c a⁻¹ * (p / q) := by
   by_cases ha : a = 0
   · simp [ha]
-    
   simp only [div_def, leading_coeff_mul, mul_inv, leading_coeff_C, C.map_mul, mul_assoc]
   congr 3
   rw [mul_left_comm q, ← mul_assoc, ← C.map_mul, mul_inv_cancel ha, C.map_one, one_mul]
@@ -485,10 +479,10 @@ theorem irreducible_of_degree_eq_one (hp1 : degree p = 1) : Irreducible p :=
 #align polynomial.irreducible_of_degree_eq_one Polynomial.irreducible_of_degree_eq_one
 
 theorem not_irreducible_C (x : R) : ¬Irreducible (c x) :=
-  if H : x = 0 then by
+  if H : x = 0 then by 
     rw [H, C_0]
     exact not_irreducible_zero
-  else fun hx => Irreducible.not_unit hx <| is_unit_C.2 <| is_unit_iff_ne_zero.2 H
+  else fun hx => Irreducible.not_unit hx <| is_unit_C.2 <| isUnit_iff_ne_zero.2 H
 #align polynomial.not_irreducible_C Polynomial.not_irreducible_C
 
 theorem degree_pos_of_irreducible (hp : Irreducible p) : 0 < p.degree :=

@@ -83,7 +83,7 @@ theorem Asymptotics.is_o_pow_pow_at_top_of_lt [OrderTopology 𝕜] {p q : ℕ} (
 
 theorem Asymptotics.IsO.trans_tendsto_norm_at_top {α : Type _} {u v : α → 𝕜} {l : Filter α}
     (huv : u =O[l] v) (hu : Tendsto (fun x => ‖u x‖) l atTop) : Tendsto (fun x => ‖v x‖) l atTop :=
-  by
+  by 
   rcases huv.exists_pos with ⟨c, hc, hcuv⟩
   rw [is_O_with] at hcuv
   convert tendsto.at_top_div_const hc (tendsto_at_top_mono' l hcuv hu)
@@ -123,14 +123,12 @@ theorem Asymptotics.IsO.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ
       apply sum_le_sum_of_subset_of_nonneg
       · rw [range_eq_Ico]
         exact Ico_subset_Ico (zero_le _) le_rfl
-        
       · intro i hi hident
         exact mul_nonneg (half_pos εpos).le (hg i)
-        
     _ ≤ ε / 2 * ‖∑ i in range n, g i‖ + ε / 2 * ∑ i in range n, g i := by
       rw [← mul_sum]
       exact add_le_add hn (mul_le_mul_of_nonneg_left le_rfl (half_pos εpos).le)
-    _ = ε * ‖∑ i in range n, g i‖ := by
+    _ = ε * ‖∑ i in range n, g i‖ := by 
       simp [B]
       ring
     
@@ -154,11 +152,9 @@ theorem Filter.Tendsto.cesaro_smul {E : Type _} [NormedAddCommGroup E] [NormedSp
     have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
     simp only [smul_sub, sum_sub_distrib, sum_const, card_range, sub_right_inj]
     rw [nsmul_eq_smul_cast ℝ, smul_smul, inv_mul_cancel nposℝ.ne', one_smul]
-    
   · filter_upwards [Ici_mem_at_top 1] with n npos
     have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
     rw [Algebra.id.smul_eq_mul, inv_mul_cancel nposℝ.ne']
-    
 #align filter.tendsto.cesaro_smul Filter.Tendsto.cesaro_smul
 
 /-- The Cesaro average of a converging sequence converges to the same limit. -/

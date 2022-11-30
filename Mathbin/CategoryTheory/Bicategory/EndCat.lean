@@ -29,14 +29,16 @@ open MonoidalCategory
 
 open Bicategory
 
-instance (X : C) : MonoidalCategory (EndMonoidal X) where
+instance (X : C) :
+    MonoidalCategory (EndMonoidal
+        X) where 
   tensorObj f g := f ≫ g
   tensorHom f g h i η θ := η ▷ h ≫ g ◁ θ
   tensorUnit := 𝟙 _
   associator f g h := α_ f g h
   leftUnitor f := λ_ f
   rightUnitor f := ρ_ f
-  tensor_comp' := by
+  tensor_comp' := by 
     intros
     rw [bicategory.whisker_left_comp, bicategory.comp_whisker_right, category.assoc, category.assoc,
       bicategory.whisker_exchange_assoc]

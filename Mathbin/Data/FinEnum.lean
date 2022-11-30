@@ -34,7 +34,8 @@ namespace FinEnum
 variable {α : Type u} {β : α → Type v}
 
 /-- transport a `fin_enum` instance across an equivalence -/
-def ofEquiv (α) {β} [FinEnum α] (h : β ≃ α) : FinEnum β where
+def ofEquiv (α) {β} [FinEnum α] (h : β ≃ α) :
+    FinEnum β where 
   card := card α
   Equiv := h.trans (equiv α)
   decEq := (h.trans (equiv _)).DecidableEq
@@ -42,7 +43,7 @@ def ofEquiv (α) {β} [FinEnum α] (h : β ≃ α) : FinEnum β where
 
 /-- create a `fin_enum` instance from an exhaustive list without duplicates -/
 def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' : List.Nodup xs) :
-    FinEnum α where
+    FinEnum α where 
   card := xs.length
   Equiv :=
     ⟨fun x => ⟨xs.indexOf x, by rw [List.index_of_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
@@ -81,7 +82,7 @@ def ofSurjective {β} (f : β → α) [DecidableEq α] [FinEnum β] (h : Surject
 noncomputable def ofInjective {α β} (f : α → β) [DecidableEq α] [FinEnum β] (h : Injective f) :
     FinEnum α :=
   ofList ((toList β).filterMap (partialInv f))
-    (by
+    (by 
       intro x
       simp only [mem_to_list, true_and_iff, List.mem_filter_map]
       use f x
@@ -132,7 +133,6 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
   induction xs generalizing s <;> simp [*, finset.enum]
   · simp [Finset.eq_empty_iff_forall_not_mem, (· ∉ ·)]
     rfl
-    
   · constructor
     rintro ⟨a, h, h'⟩ x hx
     cases h'
@@ -140,14 +140,10 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
       apply h
       subst a
       exact hx
-      
     · simp only [h', mem_union, mem_singleton] at hx⊢
       cases hx
       · exact Or.inl hx
-        
       · exact Or.inr (h _ hx)
-        
-      
     intro h
     exists s \ ({xs_hd} : Finset α)
     simp only [and_imp, mem_sdiff, mem_singleton]
@@ -158,7 +154,6 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
       simp only [HasSubset.Subset, *, forall_eq, mem_singleton]
       simp only [union_sdiff_of_subset this, or_true_iff, Finset.union_sdiff_of_subset,
         eq_self_iff_true]
-      
     · left
       symm
       simp only [sdiff_eq_self]
@@ -166,8 +161,6 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
       simp only [and_imp, mem_inter, mem_singleton]
       rintro h₀ rfl
       apply h h₀
-      
-    
 #align fin_enum.finset.mem_enum FinEnum.Finset.mem_enum
 
 instance Finset.finEnum [FinEnum α] : FinEnum (Finset α) :=
@@ -205,7 +198,8 @@ instance Psigma.finEnumPropProp {α : Prop} {β : α → Prop} [Decidable α] [�
   else ofList [] fun a => (h ⟨a.fst, a.snd⟩).elim
 #align fin_enum.psigma.fin_enum_prop_prop FinEnum.Psigma.finEnumPropProp
 
-instance (priority := 100) [FinEnum α] : Fintype α where
+instance (priority := 100) [FinEnum α] :
+    Fintype α where 
   elems := univ.map (equiv α).symm.toEmbedding
   complete := by intros <;> simp <;> exists Equiv α x <;> simp
 
@@ -233,22 +227,18 @@ theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (
     (f : ∀ a, a ∈ xs → β a) : f ∈ pi xs fun x => toList (β x) := by
   induction xs <;> simp [pi, -List.map_eq_map, monad_norm, functor_norm]
   · ext (a⟨⟩)
-    
   · exists pi.cons xs_hd xs_tl (f _ (List.mem_cons_self _ _))
     constructor
     exact ⟨_, rfl⟩
     exists pi.tail f
     constructor
     · apply xs_ih
-      
     · ext (x h)
       simp [pi.cons]
       split_ifs
       subst x
       rfl
       rfl
-      
-    
 #align fin_enum.mem_pi FinEnum.mem_pi
 
 /-- enumerate all functions whose domain and range are finitely enumerable -/

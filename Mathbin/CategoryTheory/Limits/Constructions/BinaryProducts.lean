@@ -32,7 +32,8 @@ def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : 
       IsLimit
         (PullbackCone.mk (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩ : _) <|
           hX.hom_ext (_ ≫ f) (_ ≫ g))) :
-    IsLimit c where
+    IsLimit
+      c where 
   lift s :=
     hc.lift
       (PullbackCone.mk (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
@@ -72,14 +73,14 @@ def isPullbackOfIsTerminalIsProduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
   apply H₂.hom_ext
   rintro ⟨⟨⟩⟩
   · exact h₁.trans (H₂.fac (binary_fan.mk s.fst s.snd) ⟨walking_pair.left⟩).symm
-    
   · exact h₂.trans (H₂.fac (binary_fan.mk s.fst s.snd) ⟨walking_pair.right⟩).symm
-    
 #align is_pullback_of_is_terminal_is_product isPullbackOfIsTerminalIsProduct
 
 /-- Any category with pullbacks and a terminal object has a limit cone for each walking pair. -/
 noncomputable def limitConeOfTerminalAndPullbacks [HasTerminal C] [HasPullbacks C]
-    (F : Discrete WalkingPair ⥤ C) : LimitCone F where
+    (F : Discrete WalkingPair ⥤ C) :
+    LimitCone
+      F where 
   Cone :=
     { x :=
         pullback (terminal.from (F.obj ⟨WalkingPair.left⟩))
@@ -130,7 +131,8 @@ def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : 
       IsColimit
         (PushoutCocone.mk (c.ι.app ⟨WalkingPair.left⟩) (c.ι.app ⟨WalkingPair.right⟩ : _) <|
           hX.hom_ext (f ≫ _) (g ≫ _))) :
-    IsColimit c where
+    IsColimit
+      c where 
   desc s :=
     hc.desc
       (PushoutCocone.mk (s.ι.app ⟨WalkingPair.left⟩) (s.ι.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
@@ -172,14 +174,14 @@ def isPushoutOfIsInitialIsCoproduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
   apply H₂.hom_ext
   rintro ⟨⟨⟩⟩
   · exact h₁.trans (H₂.fac (binary_cofan.mk s.inl s.inr) ⟨walking_pair.left⟩).symm
-    
   · exact h₂.trans (H₂.fac (binary_cofan.mk s.inl s.inr) ⟨walking_pair.right⟩).symm
-    
 #align is_pushout_of_is_initial_is_coproduct isPushoutOfIsInitialIsCoproduct
 
 /-- Any category with pushouts and an initial object has a colimit cocone for each walking pair. -/
 noncomputable def colimitCoconeOfInitialAndPushouts [HasInitial C] [HasPushouts C]
-    (F : Discrete WalkingPair ⥤ C) : ColimitCocone F where
+    (F : Discrete WalkingPair ⥤ C) :
+    ColimitCocone
+      F where 
   Cocone :=
     { x := pushout (initial.to (F.obj ⟨WalkingPair.left⟩)) (initial.to (F.obj ⟨WalkingPair.right⟩)),
       ι :=

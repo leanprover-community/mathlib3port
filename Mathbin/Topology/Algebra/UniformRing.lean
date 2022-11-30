@@ -156,7 +156,9 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
         rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
 #align uniform_space.completion.extension_hom UniformSpace.Completion.extensionHom
 
-instance top_ring_compl : TopologicalRing (Completion α) where
+instance top_ring_compl :
+    TopologicalRing (Completion
+        α) where 
   continuous_add := continuous_add
   continuous_mul := continuous_mul
 #align uniform_space.completion.top_ring_compl UniformSpace.Completion.top_ring_compl
@@ -177,9 +179,7 @@ theorem map_smul_eq_mul_coe (r : R) :
   ext x
   refine' completion.induction_on x _ fun a => _
   · exact isClosedEq completion.continuous_map (continuous_mul_left _)
-    
   · rw [map_coe (uniform_continuous_const_smul r) a, Algebra.smul_def, coe_mul]
-    
 #align uniform_space.completion.map_smul_eq_mul_coe UniformSpace.Completion.map_smul_eq_mul_coe
 
 instance : Algebra R (Completion A) :=

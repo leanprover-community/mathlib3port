@@ -25,7 +25,7 @@ variable {R : Type u} {Γ₀ : Type v} [Ring R] [LinearOrderedCommGroupWithZero 
 variable (v : Valuation R Γ₀)
 
 /-- The ring of integers under a given valuation is the subring of elements with valuation ≤ 1. -/
-def integer : Subring R where
+def integer : Subring R where 
   carrier := { x | v x ≤ 1 }
   one_mem' := le_of_eq v.map_one
   mul_mem' x y hx hy := trans_rel_right (· ≤ ·) (v.map_mul x y) (mul_le_one' hx hy)

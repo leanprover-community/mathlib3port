@@ -50,7 +50,7 @@ theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
 @[simp]
 theorem range_exp : range exp = {0}ᶜ :=
   Set.ext fun x =>
-    ⟨by
+    ⟨by 
       rintro ⟨x, rfl⟩
       exact exp_ne_zero x, fun hx => ⟨log x, exp_log hx⟩⟩
 #align complex.range_exp Complex.range_exp
@@ -105,7 +105,6 @@ theorem log_conj_eq_ite (x : ℂ) : log (conj x) = if x.arg = π then log x else
   simp_rw [log, abs_conj, arg_conj, map_add, map_mul, conj_of_real]
   split_ifs with hx
   · rw [hx]
-    
   simp_rw [of_real_neg, conj_I, mul_neg, neg_mul]
 #align complex.log_conj_eq_ite Complex.log_conj_eq_ite
 
@@ -116,20 +115,14 @@ theorem log_conj (x : ℂ) (h : x.arg ≠ π) : log (conj x) = conj (log x) := b
 theorem log_inv_eq_ite (x : ℂ) : log x⁻¹ = if x.arg = π then -conj (log x) else -log x := by
   by_cases hx : x = 0
   · simp [hx]
-    
   rw [inv_def, log_mul_of_real, Real.log_inv, of_real_neg, ← sub_eq_neg_add, log_conj_eq_ite]
   · simp_rw [log, map_add, map_mul, conj_of_real, conj_I, norm_sq_eq_abs, Real.log_pow,
       Nat.cast_two, of_real_mul, of_real_bit0, of_real_one, neg_add, mul_neg, two_mul, neg_neg]
     split_ifs
     · rw [add_sub_right_comm, sub_add_cancel']
-      
     · rw [add_sub_right_comm, sub_add_cancel']
-      
-    
   · rwa [inv_pos, Complex.norm_sq_pos]
-    
   · rwa [map_ne_zero]
-    
 #align complex.log_inv_eq_ite Complex.log_inv_eq_ite
 
 theorem log_inv (x : ℂ) (hx : x.arg ≠ π) : log x⁻¹ = -log x := by rw [log_inv_eq_ite, if_neg hx]
@@ -146,10 +139,8 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
     have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
-    
   · rintro ⟨n, rfl⟩
     exact (exp_periodic.int_mul n).Eq.trans exp_zero
-    
 #align complex.exp_eq_one_iff Complex.exp_eq_one_iff
 
 theorem exp_eq_exp_iff_exp_sub_eq_one {x y : ℂ} : exp x = exp y ↔ exp (x - y) = 1 := by
@@ -166,17 +157,13 @@ theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Co
   · refine' ((hs.image exp).insert 0).mono _
     rw [image_preimage_eq_inter_range, range_exp, ← diff_eq, ← union_singleton, diff_union_self]
     exact subset_union_left _ _
-    
   · rw [← bUnion_preimage_singleton]
     refine' hs.bUnion fun z hz => _
     rcases em (∃ w, exp w = z) with (⟨w, rfl⟩ | hne)
     · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
       exact countable_Union fun m => countable_singleton _
-      
     · push_neg  at hne
       simp [preimage, hne]
-      
-    
 #align complex.countable_preimage_exp Complex.countable_preimage_exp
 
 alias countable_preimage_exp ↔ _ _root_.set.countable.preimage_cexp
@@ -191,10 +178,8 @@ theorem tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.r
         tendsto_const_nhds)
   convert this
   · simp [sub_eq_add_neg]
-    
   · lift z to ℝ using him
     simpa using hre.ne
-    
 #align
   complex.tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero Complex.tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero
 
@@ -209,7 +194,6 @@ theorem continuous_within_at_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
   convert this
   · lift z to ℝ using him
     simpa using hre.ne
-    
 #align
   complex.continuous_within_at_log_of_re_neg_of_im_zero Complex.continuous_within_at_log_of_re_neg_of_im_zero
 
@@ -248,11 +232,9 @@ theorem continuous_at_clog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousA
     rw [complex.abs.ne_zero_iff]
     rintro rfl
     simpa using h
-    
   · have h_cont_mul : Continuous fun x : ℂ => x * I := continuous_id'.mul continuous_const
     refine' h_cont_mul.continuous_at.comp (continuous_of_real.continuous_at.comp _)
     exact continuous_at_arg h
-    
 #align continuous_at_clog continuous_at_clog
 
 theorem Filter.Tendsto.clog {l : Filter α} {f : α → ℂ} {x : ℂ} (h : Tendsto f l (𝓝 x))

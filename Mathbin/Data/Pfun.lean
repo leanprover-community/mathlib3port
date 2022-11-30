@@ -219,12 +219,15 @@ theorem bind_apply (f : α →. β) (g : β → α →. γ) (a : α) : f.bind g 
 def map (f : β → γ) (g : α →. β) : α →. γ := fun a => (g a).map f
 #align pfun.map Pfun.map
 
-instance : Monad (Pfun α) where
+instance : Monad (Pfun α) where 
   pure := @Pfun.pure _
   bind := @Pfun.bind _
   map := @Pfun.map _
 
-instance : LawfulMonad (Pfun α) where
+instance :
+    LawfulMonad
+      (Pfun
+        α) where 
   bind_pure_comp_eq_map β γ f x := funext fun a => Part.bind_some_eq_map _ _
   id_map β f := by funext a <;> dsimp [Functor.map, Pfun.map] <;> cases f a <;> rfl
   pure_bind β γ x f := funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
@@ -261,7 +264,7 @@ theorem dom_of_mem_fix {f : α →. Sum β α} {a : α} {b : β} (h : b ∈ f.fi
 
 theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
     b ∈ f.fix a ↔ Sum.inl b ∈ f a ∨ ∃ a', Sum.inr a' ∈ f a ∧ b ∈ f.fix a' :=
-  ⟨fun h => by
+  ⟨fun h => by 
     let ⟨h₁, h₂⟩ := Part.mem_assert_iff.1 h
     rw [WellFounded.fix_F_eq] at h₂
     simp at h₂
@@ -269,30 +272,21 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
     cases' e : (f a).get h₂ with b' a' <;> simp [e] at h₃
     · subst b'
       refine' Or.inl ⟨h₂, e⟩
-      
-    · exact Or.inr ⟨a', ⟨_, e⟩, Part.mem_assert _ h₃⟩
-      ,
-    fun h => by
+    · exact Or.inr ⟨a', ⟨_, e⟩, Part.mem_assert _ h₃⟩, fun h => by
     simp [fix]
     rcases h with (⟨h₁, h₂⟩ | ⟨a', h, h₃⟩)
     · refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique ⟨h₁, h₂⟩ h'
-        
       · rw [WellFounded.fix_F_eq]
         simp [h₁, h₂]
-        
-      
     · simp [fix] at h₃
       cases' h₃ with h₃ h₄
       refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique h h' with e
         exact e ▸ h₃
-        
       · cases' h with h₁ h₂
         rw [WellFounded.fix_F_eq]
-        simp [h₁, h₂, h₄]
-        
-      ⟩
+        simp [h₁, h₂, h₄]⟩
 #align pfun.mem_fix_iff Pfun.mem_fix_iff
 
 /-- If advancing one step from `a` leads to `b : β`, then `f.fix a = b` -/
@@ -307,13 +301,11 @@ theorem fix_fwd_eq {f : α →. Sum β α} {a a' : α} (ha' : Sum.inr a' ∈ f a
   · intro h
     obtain h' | ⟨a, h', e'⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique ha' h'
     exact e'
-    
   · intro h
     rw [Pfun.mem_fix_iff]
     right
     use a'
     exact ⟨ha', h⟩
-    
 #align pfun.fix_fwd_eq Pfun.fix_fwd_eq
 
 theorem fix_fwd {f : α →. Sum β α} {b : β} {a a' : α} (hb : b ∈ f.fix a) (ha' : Sum.inr a' ∈ f a) :
@@ -351,9 +343,7 @@ def fixInduction' {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} 
   · apply hbase
     convert e
     exact Part.mem_unique h (fix_stop e)
-    
   · exact hind _ _ (fix_fwd h e) e (ih _ e)
-    
 #align pfun.fix_induction' Pfun.fixInduction'
 
 theorem fix_induction'_stop {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
@@ -594,7 +584,7 @@ theorem preimage_comp (f : β →. γ) (g : α →. β) (s : Set γ) :
 
 @[simp]
 theorem Part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) :
-    a.bind (f.comp g) = (a.bind g).bind f := by
+    a.bind (f.comp g) = (a.bind g).bind f := by 
   ext c
   simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right, ←
     exists_and_left]
@@ -638,9 +628,7 @@ theorem mem_prod_lift {f : α →. β} {g : α →. γ} {x : α} {y : β × γ} 
     y ∈ f.prodLift g x ↔ y.1 ∈ f x ∧ y.2 ∈ g x := by
   trans ∃ hp hq, (f x).get hp = y.1 ∧ (g x).get hq = y.2
   · simp only [prod_lift, Part.mem_mk_iff, And.exists, Prod.ext_iff]
-    
   · simpa only [exists_and_left, exists_and_right]
-    
 #align pfun.mem_prod_lift Pfun.mem_prod_lift
 
 /-- Product of partial functions. -/
@@ -669,9 +657,7 @@ theorem mem_prod_map {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ ×
     y ∈ f.prod_map g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 := by
   trans ∃ hp hq, (f x.1).get hp = y.1 ∧ (g x.2).get hq = y.2
   · simp only [Prod_map, Part.mem_mk_iff, And.exists, Prod.ext_iff]
-    
   · simpa only [exists_and_left, exists_and_right]
-    
 #align pfun.mem_prod_map Pfun.mem_prod_map
 
 @[simp]

@@ -53,7 +53,8 @@ class SlashInvariantFormClass extends FunLike F ℍ fun _ => ℂ where
 attribute [nolint dangerous_instance] SlashInvariantFormClass.toFunLike
 
 instance (priority := 100) SlashInvariantFormClass.slashInvariantForm :
-    SlashInvariantFormClass (SlashInvariantForm Γ k) Γ k where
+    SlashInvariantFormClass (SlashInvariantForm Γ k) Γ
+      k where 
   coe := SlashInvariantForm.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   slash_action_eq := SlashInvariantForm.slash_action_eq'
@@ -69,7 +70,7 @@ theorem slash_invariant_form_to_fun_eq_coe {f : SlashInvariantForm Γ k} : f.toF
   rfl
 #align slash_invariant_form_to_fun_eq_coe slash_invariant_form_to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem slash_invariant_form_ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align slash_invariant_form_ext slash_invariant_form_ext
@@ -77,7 +78,7 @@ theorem slash_invariant_form_ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x
 /-- Copy of a `slash_invariant_form` with a new `to_fun` equal to the old one.
 Useful to fix definitional equalities. -/
 protected def SlashInvariantForm.copy (f : SlashInvariantForm Γ k) (f' : ℍ → ℂ) (h : f' = ⇑f) :
-    SlashInvariantForm Γ k where
+    SlashInvariantForm Γ k where 
   toFun := f'
   slash_action_eq' := h.symm ▸ f.slash_action_eq'
 #align slash_invariant_form.copy SlashInvariantForm.copy
@@ -147,7 +148,7 @@ theorem coe_zero : ⇑(0 : SlashInvariantForm Γ k) = (0 : ℍ → ℂ) :=
 instance hasCsmul : HasSmul ℂ (SlashInvariantForm Γ k) :=
   ⟨fun c f =>
     { toFun := c • f,
-      slash_action_eq' := by
+      slash_action_eq' := by 
         intro γ
         convert SlashAction.smul_action k γ (⇑f) c
         exact (f.slash_action_eq' γ).symm }⟩
@@ -226,7 +227,8 @@ instance : AddCommGroup (SlashInvariantForm Γ k) :=
   FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_nsmul coe_zsmul
 
 /-- Additive coercion from `slash_invariant_form` to `ℍ → ℂ`.-/
-def coeHom : SlashInvariantForm Γ k →+ ℍ → ℂ where
+def coeHom : SlashInvariantForm Γ k →+
+      ℍ → ℂ where 
   toFun f := f
   map_zero' := rfl
   map_add' _ _ := rfl

@@ -42,7 +42,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 `whisker_left F α : (F ⋙ G) ⟶ (F ⋙ H)` has components `α.app (F.obj X)`.
 -/
 @[simps]
-def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙ H where
+def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) :
+    F ⋙ G ⟶ F ⋙ H where 
   app X := α.app (F.obj X)
   naturality' X Y f := by rw [functor.comp_map, functor.comp_map, α.naturality]
 #align category_theory.whisker_left CategoryTheory.whiskerLeft
@@ -51,7 +52,8 @@ def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙
 `whisker_right α F : (G ⋙ F) ⟶ (G ⋙ F)` has components `F.map (α.app X)`.
 -/
 @[simps]
-def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H ⋙ F where
+def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) :
+    G ⋙ F ⟶ H ⋙ F where 
   app X := F.map (α.app X)
   naturality' X Y f := by
     rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
@@ -65,7 +67,11 @@ variable (C D E)
 `(whiskering_left.obj F).map α` is `whisker_left F α`.
 -/
 @[simps]
-def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
+def whiskeringLeft :
+    (C ⥤ D) ⥤
+      (D ⥤ E) ⥤
+        C ⥤
+          E where 
   obj F := { obj := fun G => F ⋙ G, map := fun G H α => whiskerLeft F α }
   map F G τ :=
     { app := fun H =>
@@ -80,7 +86,11 @@ def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
 `(whiskering_right.obj H).map α` is `whisker_right α H`.
 -/
 @[simps]
-def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
+def whiskeringRight :
+    (D ⥤ E) ⥤
+      (C ⥤ D) ⥤
+        C ⥤
+          E where 
   obj H := { obj := fun F => F ⋙ H, map := fun _ _ α => whiskerRight α H }
   map G H τ :=
     { app := fun F =>
@@ -215,7 +225,8 @@ variable {B : Type u₂} [Category.{v₂} B]
 /-- The left unitor, a natural isomorphism `((𝟭 _) ⋙ F) ≅ F`.
 -/
 @[simps]
-def leftUnitor (F : A ⥤ B) : 𝟭 A ⋙ F ≅ F where
+def leftUnitor (F : A ⥤ B) :
+    𝟭 A ⋙ F ≅ F where 
   Hom := { app := fun X => 𝟙 (F.obj X) }
   inv := { app := fun X => 𝟙 (F.obj X) }
 #align category_theory.functor.left_unitor CategoryTheory.Functor.leftUnitor
@@ -223,7 +234,8 @@ def leftUnitor (F : A ⥤ B) : 𝟭 A ⋙ F ≅ F where
 /-- The right unitor, a natural isomorphism `(F ⋙ (𝟭 B)) ≅ F`.
 -/
 @[simps]
-def rightUnitor (F : A ⥤ B) : F ⋙ 𝟭 B ≅ F where
+def rightUnitor (F : A ⥤ B) :
+    F ⋙ 𝟭 B ≅ F where 
   Hom := { app := fun X => 𝟙 (F.obj X) }
   inv := { app := fun X => 𝟙 (F.obj X) }
 #align category_theory.functor.right_unitor CategoryTheory.Functor.rightUnitor
@@ -238,7 +250,8 @@ variable {D : Type u₄} [Category.{v₄} D]
 and it's usually best to insert explicit associators.)
 -/
 @[simps]
-def associator (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H ≅ F ⋙ G ⋙ H where
+def associator (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) :
+    (F ⋙ G) ⋙ H ≅ F ⋙ G ⋙ H where 
   Hom := { app := fun _ => 𝟙 _ }
   inv := { app := fun _ => 𝟙 _ }
 #align category_theory.functor.associator CategoryTheory.Functor.associator
@@ -251,7 +264,7 @@ theorem assoc (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H = F �
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
     (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom =
       whiskerRight (rightUnitor F).Hom G :=
-  by
+  by 
   ext
   dsimp
   simp
@@ -266,7 +279,7 @@ theorem pentagon :
     whiskerRight (associator F G H).Hom K ≫
         (associator F (G ⋙ H) K).Hom ≫ whiskerLeft F (associator G H K).Hom =
       (associator (F ⋙ G) H K).Hom ≫ (associator F G (H ⋙ K)).Hom :=
-  by
+  by 
   ext
   dsimp
   simp

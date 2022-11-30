@@ -84,7 +84,10 @@ def functorialityCounit :
 #align category_theory.adjunction.functoriality_counit CategoryTheory.Adjunction.functorialityCounit
 
 /-- The functor `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)` is a left adjoint. -/
-def functorialityIsLeftAdjoint : IsLeftAdjoint (Cocones.functoriality K F) where
+def functorialityIsLeftAdjoint :
+    IsLeftAdjoint
+      (Cocones.functoriality K
+        F) where 
   right := functorialityRightAdjoint adj K
   adj := mkOfUnitCounit { Unit := functorialityUnit adj K, counit := functorialityCounit adj K }
 #align
@@ -213,7 +216,10 @@ def functorialityCounit' :
   category_theory.adjunction.functoriality_counit' CategoryTheory.Adjunction.functorialityCounit'
 
 /-- The functor `cones.functoriality K G : cone K ⥤ cone (K ⋙ G)` is a right adjoint. -/
-def functorialityIsRightAdjoint : IsRightAdjoint (Cones.functoriality K G) where
+def functorialityIsRightAdjoint :
+    IsRightAdjoint
+      (Cones.functoriality K
+        G) where 
   left := functorialityLeftAdjoint adj K
   adj := mkOfUnitCounit { Unit := functorialityUnit' adj K, counit := functorialityCounit' adj K }
 #align
@@ -302,9 +308,11 @@ end PreservationLimits
 /-- auxiliary construction for `cocones_iso` -/
 @[simps]
 def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
-    (t : ((cocones J D).obj (op (K ⋙ F))).obj Y) : (G ⋙ (cocones J C).obj (op K)).obj Y where
+    (t : ((cocones J D).obj (op (K ⋙ F))).obj Y) :
+    (G ⋙ (cocones J C).obj (op K)).obj
+      Y where 
   app j := (adj.homEquiv (K.obj j) Y) (t.app j)
-  naturality' j j' f := by
+  naturality' j j' f := by 
     erw [← adj.hom_equiv_naturality_left, t.naturality]
     dsimp
     simp
@@ -314,7 +322,9 @@ def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
 /-- auxiliary construction for `cocones_iso` -/
 @[simps]
 def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
-    (t : (G ⋙ (cocones J C).obj (op K)).obj Y) : ((cocones J D).obj (op (K ⋙ F))).obj Y where
+    (t : (G ⋙ (cocones J C).obj (op K)).obj Y) :
+    ((cocones J D).obj (op (K ⋙ F))).obj
+      Y where 
   app j := (adj.homEquiv (K.obj j) Y).symm (t.app j)
   naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm, t.naturality]
@@ -325,7 +335,9 @@ def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
 /-- auxiliary construction for `cones_iso` -/
 @[simps]
 def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ)
-    (t : (Functor.op F ⋙ (cones J D).obj K).obj X) : ((cones J C).obj (K ⋙ G)).obj X where
+    (t : (Functor.op F ⋙ (cones J D).obj K).obj X) :
+    ((cones J C).obj (K ⋙ G)).obj
+      X where 
   app j := (adj.homEquiv (unop X) (K.obj j)) (t.app j)
   naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_right, ← t.naturality, category.id_comp, category.id_comp]
@@ -336,7 +348,9 @@ def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒ�
 /-- auxiliary construction for `cones_iso` -/
 @[simps]
 def conesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ)
-    (t : ((cones J C).obj (K ⋙ G)).obj X) : (Functor.op F ⋙ (cones J D).obj K).obj X where
+    (t : ((cones J C).obj (K ⋙ G)).obj X) :
+    (Functor.op F ⋙ (cones J D).obj K).obj
+      X where 
   app j := (adj.homEquiv (unop X) (K.obj j)).symm (t.app j)
   naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_right_symm, ← t.naturality, category.id_comp, category.id_comp]

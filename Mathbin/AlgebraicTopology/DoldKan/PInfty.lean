@@ -49,12 +49,10 @@ theorem P_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) :
     ((p (q + 1)).f n : X _[n] ⟶ _) = (p q).f n := by
   cases n
   · simp only [P_f_0_eq]
-    
   · unfold P
     simp only [add_right_eq_self, comp_add, HomologicalComplex.comp_f,
       HomologicalComplex.add_f_apply, comp_id]
     exact (higher_faces_vanish.of_P q n).comp_Hσ_eq_zero (nat.succ_le_iff.mp hqn)
-    
 #align
   algebraic_topology.dold_kan.P_is_eventually_constant AlgebraicTopology.DoldKan.P_is_eventually_constant
 
@@ -177,9 +175,11 @@ variable (C)
 /-- `P_infty` induces a natural transformation, i.e. an endomorphism of
 the functor `alternating_face_map_complex C`. -/
 @[simps]
-def natTransPInfty : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where
+def natTransPInfty :
+    alternatingFaceMapComplex C ⟶
+      alternatingFaceMapComplex C where 
   app _ := pInfty
-  naturality' X Y f := by
+  naturality' X Y f := by 
     ext n
     exact P_infty_f_naturality n f
 #align algebraic_topology.dold_kan.nat_trans_P_infty AlgebraicTopology.DoldKan.natTransPInfty

@@ -136,7 +136,6 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s := by
   · refine' mem_singleton.trans ⟨_, fun _ => Sym.eq_nil_of_card_zero _⟩
     rintro rfl
     exact fun a ha => ha.elim
-    
   refine' mem_sup.trans ⟨_, fun h => _⟩
   · rintro ⟨a, ha, he⟩ b hb
     rw [mem_image] at he
@@ -144,15 +143,11 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s := by
     rw [Sym.mem_cons] at hb
     obtain rfl | hb := hb
     · exact ha
-      
     · exact ih.1 he _ hb
-      
-    
   · obtain ⟨a, m, rfl⟩ := m.exists_eq_cons_of_succ
     exact
       ⟨a, h _ <| Sym.mem_cons_self _ _,
         mem_image_of_mem _ <| ih.2 fun b hb => h _ <| Sym.mem_cons_of_mem hb⟩
-    
 #align finset.mem_sym_iff Finset.mem_sym_iff
 
 @[simp]
@@ -185,11 +180,9 @@ theorem eq_empty_of_sym_eq_empty (h : s.Sym n = ∅) : s = ∅ := by
 theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ := by
   cases n
   · exact iff_of_false (singleton_ne_empty _) fun h => (h.1 rfl).elim
-    
   · refine' ⟨fun h => ⟨n.succ_ne_zero, eq_empty_of_sym_eq_empty h⟩, _⟩
     rintro ⟨_, rfl⟩
     exact sym_empty _
-    
 #align finset.sym_eq_empty Finset.sym_eq_empty
 
 @[simp]
@@ -238,20 +231,20 @@ theorem sym_filter_ne_mem (a : α) (h : m ∈ s.Sym n) :
   in 1-1 correspondence with the disjoint union of the `n - i`th symmetric powers of `s`,
   for `0 ≤ i ≤ n`. -/
 @[simps]
-def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.Sym (n - i) where
+def symInsertEquiv (h : a ∉ s) :
+    (insert a s).Sym n ≃
+      Σi : Fin (n + 1),
+        s.Sym
+          (n -
+            i) where 
   toFun m := ⟨_, (m.1.filter_ne a).2, by convert sym_filter_ne_mem a m.2 <;> rw [erase_insert h]⟩
   invFun m := ⟨m.2.1.fill a m.1, sym_fill_mem a m.2.2⟩
   left_inv m := Subtype.ext <| m.1.fill_filter_ne a
   right_inv := fun ⟨i, m, hm⟩ => by
     refine' (_ : id.injective).sigma_map (fun i => _) _
     · exact fun i => Sym α (n - i)
-      
-    swap;
-    · exact fun _ _ => id
-      
-    swap;
-    · exact Subtype.coe_injective
-      
+    swap; · exact fun _ _ => id
+    swap; · exact Subtype.coe_injective
     refine' Eq.trans _ (Sym.filter_ne_fill a _ _)
     exacts[rfl, h ∘ mem_sym_iff.1 hm a]
 #align finset.sym_insert_equiv Finset.symInsertEquiv

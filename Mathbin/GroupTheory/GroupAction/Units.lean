@@ -49,11 +49,13 @@ instance [Monoid M] [HasSmul M α] [HasFaithfulSmul M α] :
     HasFaithfulSmul Mˣ α where eq_of_smul_eq_smul u₁ u₂ h := Units.ext <| eq_of_smul_eq_smul h
 
 @[to_additive]
-instance [Monoid M] [MulAction M α] : MulAction Mˣ α where
+instance [Monoid M] [MulAction M α] :
+    MulAction Mˣ α where 
   one_smul := (one_smul M : _)
   mul_smul m n := mul_smul (m : M) n
 
-instance [Monoid M] [Zero α] [SmulZeroClass M α] : SmulZeroClass Mˣ α where
+instance [Monoid M] [Zero α] [SmulZeroClass M α] :
+    SmulZeroClass Mˣ α where 
   smul := (· • ·)
   smul_zero m := smul_zero m
 
@@ -63,7 +65,8 @@ instance [Monoid M] [AddZeroClass α] [DistribSmul M α] :
 instance [Monoid M] [AddMonoid α] [DistribMulAction M α] : DistribMulAction Mˣ α :=
   { Units.distribSmul with }
 
-instance [Monoid M] [Monoid α] [MulDistribMulAction M α] : MulDistribMulAction Mˣ α where
+instance [Monoid M] [Monoid α] [MulDistribMulAction M α] :
+    MulDistribMulAction Mˣ α where 
   smul_mul m := smul_mul' (m : M)
   smul_one m := smul_one m
 
@@ -86,7 +89,9 @@ action on `Mˣ`. Notably, this provides `mul_action Mˣ Nˣ` under suitable
 conditions.
 -/
 instance mulAction' [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M]
-    [IsScalarTower G M M] : MulAction G Mˣ where
+    [IsScalarTower G M M] :
+    MulAction G
+      Mˣ where 
   smul g m :=
     ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by rw [smul_mul_smul, Units.mul_inv, mul_right_inv, one_smul], by
       rw [smul_mul_smul, Units.inv_mul, mul_left_inv, one_smul]⟩

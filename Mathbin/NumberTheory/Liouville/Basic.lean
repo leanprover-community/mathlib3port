@@ -33,7 +33,8 @@ def Liouville (x : ℝ) :=
 namespace Liouville
 
 @[protected]
-theorem irrational {x : ℝ} (h : Liouville x) : Irrational x := by
+theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
+  by
   -- By contradiction, `x = a / b`, with `a ∈ ℤ`, `0 < b ∈ ℕ` is a Liouville number,
   rintro ⟨⟨a, b, bN0, cop⟩, rfl⟩
   -- clear up the mess of constructions of rationals
@@ -47,20 +48,20 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x := by
   have bq0 : (0 : ℝ) < b * q := mul_pos (nat.cast_pos.mpr bN0) qR0
   -- At a1, clear denominators...
   replace a1 : |a * q - b * p| * q ^ (b + 1) < b * q;
-  · rwa [div_sub_div _ _ b0 (ne_of_gt qR0), abs_div,
+  ·
+    rwa [div_sub_div _ _ b0 (ne_of_gt qR0), abs_div,
       div_lt_div_iff (abs_pos.mpr (ne_of_gt bq0)) (pow_pos qR0 _), abs_of_pos bq0, one_mul,
       ←-- ... and revert to integers
       Int.cast_pow,
       ← Int.cast_mul, ← Int.cast_ofNat, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ←
       Int.cast_abs, ← Int.cast_mul, Int.cast_lt] at a1
-    
   -- At a0, clear denominators...
   replace a0 : ¬a * q - ↑b * p = 0;
-  · rwa [Ne.def, div_eq_div_iff b0 (ne_of_gt qR0), mul_comm ↑p, ← sub_eq_zero,
+  ·
+    rwa [Ne.def, div_eq_div_iff b0 (ne_of_gt qR0), mul_comm ↑p, ← sub_eq_zero,
       ←-- ... and revert to integers
       Int.cast_ofNat,
       ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, Int.cast_eq_zero] at a0
-    
   -- Actually, `q` is a natural number
   lift q to ℕ using (zero_lt_one.trans q1).le
   -- Looks innocuous, but we now have an integer with non-zero absolute value: this is at
@@ -105,7 +106,8 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
     (B : ∀ ⦃y : R⦄, y ∈ closedBall α ε → dist (f α) (f y) ≤ dist α y * M)
     -- clear denominators
     (L : ∀ ⦃z : Z⦄, ∀ ⦃a : N⦄, j z a ∈ closedBall α ε → 1 ≤ d a * dist (f α) (f (j z a))) :
-    ∃ A : ℝ, 0 < A ∧ ∀ z : Z, ∀ a : N, 1 ≤ d a * (dist α (j z a) * A) := by
+    ∃ A : ℝ, 0 < A ∧ ∀ z : Z, ∀ a : N, 1 ≤ d a * (dist α (j z a) * A) :=
+  by
   -- A useful inequality to keep at hand
   have me0 : 0 < max (1 / ε) M := lt_max_iff.mpr (Or.inl (one_div_pos.mpr e0))
   -- The maximum between `1 / ε` and `M` works
@@ -113,7 +115,6 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
   -- First, let's deal with the easy case in which we are far away from `α`
   by_cases dm1 : 1 ≤ dist α (j z a) * max (1 / ε) M
   · exact one_le_mul_of_one_le_of_one_le (d0 a) dm1
-    
   · -- `j z a = z / (a + 1)`: we prove that this ratio is close to `α`
     have : j z a ∈ closed_ball α ε := by
       refine' mem_closed_ball'.mp (le_trans _ ((one_div_le me0 e0).mpr (le_max_left _ _)))
@@ -123,7 +124,6 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
     -- remove a common factor and use the Lipschitz assumption `B`
     refine' mul_le_mul_of_nonneg_left ((B this).trans _) (zero_le_one.trans (d0 a))
     exact mul_le_mul_of_nonneg_left (le_max_right _ M) dist_nonneg
-    
 #align liouville.exists_one_le_pow_mul_dist Liouville.exists_one_le_pow_mul_dist
 
 theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : ℤ[X]} (f0 : f ≠ 0)
@@ -156,19 +156,17 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
       (fun y hy => _) fun z a hq => _
   -- 1: the denominators are positive -- essentially by definition;
   · exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
-    
   -- 2: the polynomial `fR` is Lipschitz at `α` -- as its derivative continuous;
   · rw [mul_comm]
     rw [Real.closed_ball_eq_Icc] at hy
     -- apply the Mean Value Theorem: the bound on the derivative comes from differentiability.
     refine'
       Convex.norm_image_sub_le_of_norm_deriv_le (fun _ _ => fR.differentiable_at)
-        (fun y h => by
+        (fun y h => by 
           rw [fR.deriv]
           exact hM _ h)
         (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)
     exact @mem_closed_ball_self ℝ _ α ζ (le_of_lt z0)
-    
   -- 3: the weird inequality of Liouville type with powers of the denominators.
   · show 1 ≤ (a + 1 : ℝ) ^ f.nat_degree * |eval α fR - eval (z / (a + 1)) fR|
     rw [fa, zero_sub, abs_neg]
@@ -183,18 +181,17 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     refine' U.subset _
     refine' ⟨hq, finset.mem_coe.mp (multiset.mem_to_finset.mpr _)⟩
     exact (mem_roots fR0).mpr (is_root.def.mpr hy)
-    
 #align liouville.exists_pos_real_of_irrational_root Liouville.exists_pos_real_of_irrational_root
 
 /-- **Liouville's Theorem** -/
-theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
+theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x :=
+  by
   -- Proceed by contradiction: if `x` is algebraic, then `x` is the root (`ef0`) of a
   -- non-zero (`f0`) polynomial `f`
   rintro ⟨f : ℤ[X], f0, ef0⟩
   -- Change `aeval x f = 0` to `eval (map _ f) = 0`, who knew.
   replace ef0 : (f.map (algebraMap ℤ ℝ)).eval x = 0;
   · rwa [aeval_def, ← eval_map] at ef0
-    
   -- There is a "large" real number `A` such that `(b + 1) ^ (deg f) * |f (x - a / (b + 1))| * A`
   -- is at least one.  This is obtained from lemma `exists_pos_real_of_irrational_root`.
   obtain ⟨A, hA, h⟩ :
@@ -208,7 +205,7 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
     ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) := lx (r + f.nat_degree)
   have b0 : (0 : ℝ) < b :=
     zero_lt_one.trans
-      (by
+      (by 
         rw [← Int.cast_one]
         exact int.cast_lt.mpr b1)
   -- Prove that `b ^ f.nat_degree * abs (x - a / b)` is strictly smaller than itself
@@ -225,7 +222,6 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
     refine' hn.le.trans _
     refine' pow_le_pow_of_le_left zero_le_two _ _
     exact int.cast_two.symm.le.trans (int.cast_le.mpr (int.add_one_le_iff.mpr b1))
-    
   -- this branch of the proof exploits the "integrality" of evaluations of polynomials
   -- at ratios of integers.
   · lift b to ℕ using zero_le_one.trans b1.le
@@ -233,7 +229,6 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
     rwa [← Nat.cast_succ, Nat.succ_pred_eq_of_pos (zero_lt_one.trans _), ← mul_assoc, ←
       div_le_iff hA] at h
     exact int.coe_nat_lt.mp b1
-    
 #align liouville.transcendental Liouville.transcendental
 
 end Liouville

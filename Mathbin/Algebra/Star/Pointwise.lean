@@ -101,7 +101,8 @@ theorem compl_star [HasStar α] : (sᶜ)⋆ = s⋆ᶜ :=
 #align set.compl_star Set.compl_star
 
 @[simp]
-instance [HasInvolutiveStar α] : HasInvolutiveStar (Set α) where
+instance [HasInvolutiveStar α] :
+    HasInvolutiveStar (Set α) where 
   star := HasStar.star
   star_involutive s := by simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
 
@@ -135,7 +136,8 @@ protected theorem star_add [AddMonoid α] [StarAddMonoid α] (s t : Set α) : (s
 
 @[simp]
 instance [HasStar α] [HasTrivialStar α] :
-    HasTrivialStar (Set α) where star_trivial s := by
+    HasTrivialStar
+      (Set α) where star_trivial s := by 
     rw [← star_preimage]
     ext1
     simp [star_trivial]

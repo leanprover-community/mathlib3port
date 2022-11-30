@@ -205,7 +205,7 @@ unsafe structure norm_cast_cache where
 #align norm_cast.norm_cast_cache norm_cast.norm_cast_cache
 
 /-- Empty `norm_cast_cache`. -/
-unsafe def empty_cache : norm_cast_cache where
+unsafe def empty_cache : norm_cast_cache where 
   up := simp_lemmas.mk
   down := simp_lemmas.mk
   squash := simp_lemmas.mk
@@ -301,7 +301,9 @@ unsafe def mk_cache (attr : Thunk norm_cast_attr_ty) (names : List Name) : tacti
 /-- The `norm_cast` attribute.
 -/
 @[user_attribute]
-unsafe def norm_cast_attr : user_attribute norm_cast_cache (Option Label) where
+unsafe def norm_cast_attr :
+    user_attribute norm_cast_cache
+      (Option Label) where 
   Name := `norm_cast
   descr := "attribute for norm_cast"
   parser :=

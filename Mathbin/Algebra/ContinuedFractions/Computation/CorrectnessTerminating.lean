@@ -104,7 +104,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     ∀ {ifp_n : IntFractPair K},
       IntFractPair.stream v n = some ifp_n →
         v = compExactValue ((of v).continuantsAux n) ((of v).continuantsAux <| n + 1) ifp_n.fr :=
-  by
+  by 
   let g := of v
   induction' n with n IH
   · intro ifp_zero stream_zero_eq
@@ -120,12 +120,10 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
         v = Int.fract v + ⌊v⌋ := by rw [Int.fract_add_floor]
         _ = ⌊v⌋ := by simp [fract_eq_zero]
         
-      
     -- int.fract v ≠ 0; the claim then easily follows by unfolding a single computation step
-    · field_simp [continuants_aux, next_continuants, next_numerator, next_denominator,
+    ·
+      field_simp [continuants_aux, next_continuants, next_numerator, next_denominator,
         of_h_eq_floor, comp_exact_value, fract_ne_zero]
-      
-    
   · intro ifp_succ_n succ_nth_stream_eq
     -- nat.succ
     obtain ⟨ifp_n, nth_stream_eq, nth_fract_ne_zero, -⟩ :
@@ -153,7 +151,6 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
       suffices v = comp_exact_value ppconts pconts ifp_n.fr by
         simpa [conts, continuants_aux, s_nth_eq, comp_exact_value, nth_fract_ne_zero] using this
       exact IH nth_stream_eq
-      
     -- ifp_succ_n.fr ≠ 0
     · -- use the IH to show that the following equality suffices
       suffices
@@ -198,8 +195,6 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
       field_simp [conts, comp_exact_value, continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq,
         next_continuants, next_numerator, next_denominator, this, tmp_calc, tmp_calc']
       ac_rfl
-      
-    
 #align
   generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some GeneralizedContinuedFraction.comp_exact_value_correctness_of_stream_eq_some
 
@@ -212,29 +207,27 @@ theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : IntFractPair.
   induction' n with n IH
   case zero => contradiction
   -- int_fract_pair.stream v 0 ≠ none
-case succ =>
-  rename' nth_stream_eq_none => succ_nth_stream_eq_none
-  let g := of v
-  change v = g.convergents n
-  have :
-    int_fract_pair.stream v n = none ∨ ∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
-    int_fract_pair.succ_nth_stream_eq_none_iff.elim_left succ_nth_stream_eq_none
-  rcases this with (⟨nth_stream_eq_none⟩ | ⟨ifp_n, nth_stream_eq, nth_stream_fr_eq_zero⟩)
-  · cases' n with n'
-    · contradiction
-      
-    -- int_fract_pair.stream v 0 ≠ none
-    · have : g.terminated_at n' :=
-        of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_right nth_stream_eq_none
-      have : g.convergents (n' + 1) = g.convergents n' :=
-        convergents_stable_of_terminated n'.le_succ this
-      rw [this]
-      exact IH nth_stream_eq_none
-      
-    
-  · simpa [nth_stream_fr_eq_zero, comp_exact_value] using
-      comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
-    
+  case succ => 
+    rename' nth_stream_eq_none => succ_nth_stream_eq_none
+    let g := of v
+    change v = g.convergents n
+    have :
+      int_fract_pair.stream v n = none ∨ ∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
+      int_fract_pair.succ_nth_stream_eq_none_iff.elim_left succ_nth_stream_eq_none
+    rcases this with (⟨nth_stream_eq_none⟩ | ⟨ifp_n, nth_stream_eq, nth_stream_fr_eq_zero⟩)
+    · cases' n with n'
+      · contradiction
+      -- int_fract_pair.stream v 0 ≠ none
+      · have : g.terminated_at n' :=
+          of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_right
+            nth_stream_eq_none
+        have : g.convergents (n' + 1) = g.convergents n' :=
+          convergents_stable_of_terminated n'.le_succ this
+        rw [this]
+        exact IH nth_stream_eq_none
+    ·
+      simpa [nth_stream_fr_eq_zero, comp_exact_value] using
+        comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
 #align
   generalized_continued_fraction.of_correctness_of_nth_stream_eq_none GeneralizedContinuedFraction.of_correctness_of_nth_stream_eq_none
 

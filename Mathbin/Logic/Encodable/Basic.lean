@@ -228,18 +228,22 @@ def decidableRangeEncode (α : Type _) [Encodable α] : DecidablePred (· ∈ Se
 #align encodable.decidable_range_encode Encodable.decidableRangeEncode
 
 /-- An encodable type is equivalent to the range of its encoding function. -/
-def equivRangeEncode (α : Type _) [Encodable α] : α ≃ Set.range (@encode α _) where
+def equivRangeEncode (α : Type _) [Encodable α] :
+    α ≃
+      Set.range
+        (@encode α
+          _) where 
   toFun := fun a : α => ⟨encode a, Set.mem_range_self _⟩
   invFun n :=
     Option.get
       (show isSome (decode₂ α n.1) by cases' n.2 with x hx <;> rw [← hx, encodek₂] <;> exact rfl)
   left_inv a := by dsimp <;> rw [← Option.some_inj, Option.some_get, encodek₂]
-  right_inv := fun ⟨n, x, hx⟩ => by
+  right_inv := fun ⟨n, x, hx⟩ => by 
     apply Subtype.eq
     dsimp
-    conv =>
-    rhs
-    rw [← hx]
+    conv => 
+      rhs
+      rw [← hx]
     rw [encode_injective.eq_iff, ← Option.some_inj, Option.some_get, ← hx, encodek₂]
 #align encodable.equiv_range_encode Encodable.equivRangeEncode
 
@@ -312,11 +316,11 @@ theorem decode_one : decode Bool 1 = some true :=
 #align encodable.decode_one Encodable.decode_one
 
 theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none := by
-  suffices decode_sum n = none by
+  suffices decode_sum n = none by 
     change (decode_sum n).map _ = none
     rw [this]
     rfl
-  have : 1 ≤ div2 n := by
+  have : 1 ≤ div2 n := by 
     rw [div2_val, Nat.le_div_iff_mul_le]
     exacts[h, by decide]
   cases' exists_eq_succ_of_ne_zero (ne_of_gt this) with m e
@@ -518,7 +522,7 @@ theorem down_eq_down {a b : α} : down a = down b ↔ a = b :=
   Equiv.apply_eq_iff_eq _
 #align ulower.down_eq_down Ulower.down_eq_down
 
-@[ext.1]
+@[ext]
 protected theorem ext {a b : Ulower α} : a.up = b.up → a = b :=
   up_eq_up.1
 #align ulower.ext Ulower.ext
@@ -629,9 +633,7 @@ theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directe
   generalize eq : hf.sequence f n = p
   cases' h : decode α n with a
   · exact (Classical.choose_spec (hf p p)).1
-    
   · exact (Classical.choose_spec (hf p a)).1
-    
 #align directed.sequence_mono_nat Directed.sequence_mono_nat
 
 theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f) (a : α) :

@@ -121,12 +121,12 @@ theorem mem_support_seq_iff : b ∈ (seq q p).support ↔ ∃ f ∈ q.support, b
 
 end Seq
 
-instance : IsLawfulFunctor Pmf where
+instance : IsLawfulFunctor Pmf where 
   map_const_eq α β := rfl
   id_map α := bind_pure
   comp_map α β γ g h x := (map_comp _ _ _).symm
 
-instance : LawfulMonad Pmf where
+instance : LawfulMonad Pmf where 
   bind_pure_comp_eq_map α β f x := rfl
   bind_map_eq_seq α β f x := rfl
   pure_bind α β := pure_bind
@@ -309,9 +309,7 @@ theorem support_bernoulli : (bernoulli p h).support = { b | cond b (p ≠ 0) (p 
   induction b
   · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_false, Ne.def, tsub_eq_zero_iff_le, not_le]
     exact ⟨ne_of_lt, lt_of_le_of_ne h⟩
-    
   · simp only [mem_support_iff, bernoulli_apply, Bool.cond_true, Set.mem_set_of_eq]
-    
 #align pmf.support_bernoulli Pmf.support_bernoulli
 
 theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).support ↔ cond b (p ≠ 0) (p ≠ 1) := by simp

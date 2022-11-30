@@ -31,7 +31,7 @@ def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [O
     OrderedCommMonoid β :=
   { PartialOrder.lift f hf, hf.CommMonoid f one mul npow with
     mul_le_mul_left := fun a b ab c =>
-      show f (c * a) ≤ f (c * b) by
+      show f (c * a) ≤ f (c * b) by 
         rw [mul, mul]
         apply mul_le_mul_left'
         exact ab }

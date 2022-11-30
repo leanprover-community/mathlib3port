@@ -70,7 +70,7 @@ variable (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X]
 /-- A constructor for objects of the category `CompHaus`,
 taking a type, and bundling the compact Hausdorff topology
 found by typeclass inference. -/
-def of : CompHausCat where
+def of : CompHausCat where 
   toTop := TopCat.of X
   IsCompact := ‹_›
   isHausdorff := ‹_›
@@ -88,9 +88,9 @@ theorem is_closed_map {X Y : CompHausCat.{u}} (f : X ⟶ Y) : IsClosedMap f := f
 
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
 theorem is_iso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
-    IsIso f := by
+    IsIso f := by 
   let E := Equiv.ofBijective _ bij
-  have hE : Continuous E.symm := by
+  have hE : Continuous E.symm := by 
     rw [continuous_iff_is_closed]
     intro S hS
     rw [← E.image_eq_preimage]
@@ -98,10 +98,8 @@ theorem is_iso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Functio
   refine' ⟨⟨⟨E.symm, hE⟩, _, _⟩⟩
   · ext x
     apply E.symm_apply_apply
-    
   · ext x
     apply E.apply_symm_apply
-    
 #align CompHaus.is_iso_of_bijective CompHausCat.is_iso_of_bijective
 
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
@@ -135,19 +133,22 @@ def stoneCechObj (X : TopCat) : CompHausCat :=
 Hausdorff spaces in topological spaces.
 -/
 noncomputable def stoneCechEquivalence (X : TopCat.{u}) (Y : CompHausCat.{u}) :
-    (stoneCechObj X ⟶ Y) ≃ (X ⟶ compHausToTop.obj Y) where
+    (stoneCechObj X ⟶ Y) ≃
+      (X ⟶
+        compHausToTop.obj
+          Y) where 
   toFun f :=
     { toFun := f ∘ stoneCechUnit, continuous_to_fun := f.2.comp (@continuous_stone_cech_unit X _) }
   invFun f :=
     { toFun := stoneCechExtend f.2, continuous_to_fun := continuous_stone_cech_extend f.2 }
-  left_inv := by
+  left_inv := by 
     rintro ⟨f : StoneCech X ⟶ Y, hf : Continuous f⟩
     ext (x : StoneCech X)
     refine' congr_fun _ x
     apply Continuous.ext_on dense_range_stone_cech_unit (continuous_stone_cech_extend _) hf
     rintro _ ⟨y, rfl⟩
     apply congr_fun (stone_cech_extend_extends (hf.comp _)) y
-  right_inv := by
+  right_inv := by 
     rintro ⟨f : (X : Type _) ⟶ Y, hf : Continuous f⟩
     ext
     exact congr_fun (stone_cech_extend_extends hf) _
@@ -188,7 +189,9 @@ namespace CompHausCat
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
-def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) : Limits.Cone F where
+def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
+    Limits.Cone
+      F where 
   x :=
     { toTop := (TopCat.limitCone (F ⋙ compHausToTop)).x,
       IsCompact := by
@@ -198,7 +201,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
         have :
           { u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j } =
             ⋂ (i : J) (j : J) (f : i ⟶ j), { u | F.map f (u i) = u j } :=
-          by
+          by 
           ext1
           simp only [Set.mem_Inter, Set.mem_set_of_eq]
         rw [this]
@@ -210,15 +213,13 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
         intro f
         apply isClosedEq
         · exact (ContinuousMap.continuous (F.map f)).comp (continuous_apply i)
-          
-        · exact continuous_apply j
-          ,
+        · exact continuous_apply j,
       isHausdorff :=
         show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j } from
           inferInstance }
   π :=
     { app := fun j => (TopCat.limitCone (F ⋙ compHausToTop)).π.app j,
-      naturality' := by
+      naturality' := by 
         intro _ _ _
         ext ⟨x, hx⟩
         simp only [comp_apply, functor.const_obj_map, id_apply]
@@ -227,7 +228,9 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
 
 /-- The limit cone `CompHaus.limit_cone F` is indeed a limit cone. -/
 def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
-    Limits.IsLimit (limitCone F) where
+    Limits.IsLimit
+      (limitCone
+        F) where 
   lift S := (TopCat.limitConeIsLimit (F ⋙ compHausToTop)).lift (compHausToTop.mapCone S)
   uniq' S m h := (TopCat.limitConeIsLimit _).uniq (compHausToTop.mapCone S) _ h
 #align CompHaus.limit_cone_is_limit CompHausCat.limitConeIsLimit
@@ -240,7 +243,7 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
     have hC : IsClosed C := (is_compact_range f.continuous).IsClosed
     let D := {y}
     have hD : IsClosed D := isClosedSingleton
-    have hCD : Disjoint C D := by
+    have hCD : Disjoint C D := by 
       rw [Set.disjoint_singleton_right]
       rintro ⟨y', hy'⟩
       exact hy y' hy'
@@ -253,7 +256,7 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
       ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩,
         continuous_ulift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨⟨0, set.left_mem_Icc.mpr zero_le_one⟩⟩, continuous_const⟩
-    have H : h = g := by
+    have H : h = g := by 
       rw [← cancel_epi f]
       ext x
       dsimp
@@ -263,10 +266,8 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
     dsimp at H
     simp only [Subtype.mk_eq_mk, hφ1 (Set.mem_singleton y), Pi.one_apply] at H
     exact zero_ne_one H
-    
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget CompHausCat).epi_of_epi_map
-    
 #align CompHaus.epi_iff_surjective CompHausCat.epi_iff_surjective
 
 theorem mono_iff_injective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
@@ -274,16 +275,14 @@ theorem mono_iff_injective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Mono f ↔ Fu
   · intro hf x₁ x₂ h
     let g₁ : of PUnit ⟶ X := ⟨fun _ => x₁, continuous_of_discrete_topology⟩
     let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_of_discrete_topology⟩
-    have : g₁ ≫ f = g₂ ≫ f := by
+    have : g₁ ≫ f = g₂ ≫ f := by 
       ext
       exact h
     rw [cancel_mono] at this
     apply_fun fun e => e PUnit.unit  at this
     exact this
-    
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget CompHausCat).mono_of_mono_map
-    
 #align CompHaus.mono_iff_injective CompHausCat.mono_iff_injective
 
 end CompHausCat

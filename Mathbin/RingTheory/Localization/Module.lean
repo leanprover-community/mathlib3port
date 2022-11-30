@@ -40,7 +40,7 @@ section AddCommMonoid
 variable {M : Type _} [AddCommMonoid M] [Module R M] [Module Rₛ M] [IsScalarTower R Rₛ M]
 
 theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : LinearIndependent R b) :
-    LinearIndependent Rₛ b := by
+    LinearIndependent Rₛ b := by 
   rw [linear_independent_iff'] at hli⊢
   intro s g hg i hi
   choose a g' hg' using IsLocalization.exist_integer_multiples S s g
@@ -51,7 +51,6 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
     dsimp only
     rw [dif_pos hi, ← IsScalarTower.algebra_map_smul Rₛ, hg' i hi, smul_assoc]
     infer_instance
-    
   refine' (IsLocalization.map_units Rₛ a).mul_right_eq_zero.mp _
   rw [← Algebra.smul_def, ← map_zero (algebraMap R Rₛ), ← hli]
   simp [hi, hg']

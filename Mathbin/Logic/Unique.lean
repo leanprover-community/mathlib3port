@@ -53,7 +53,7 @@ variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
 This is implemented as a type, rather than a `Prop`-valued predicate,
 for good definitional properties of the default term. -/
-@[ext.1]
+@[ext]
 structure Unique (α : Sort u) extends Inhabited α where
   uniq : ∀ a : α, a = default
 #align unique Unique
@@ -73,7 +73,7 @@ theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) :
     Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
   ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩,
     fun ⟨a, ha, he⟩ =>
-    ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
+    ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by 
         congr
         exact he b hb⟩⟩⟩
 #align unique_subtype_iff_exists_unique unique_subtype_iff_exists_unique
@@ -87,14 +87,16 @@ equivalent by `unique.subsingleton.unique`.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def uniqueOfSubsingleton {α : Sort _} [Subsingleton α] (a : α) : Unique α where
+def uniqueOfSubsingleton {α : Sort _} [Subsingleton α] (a : α) :
+    Unique α where 
   default := a
   uniq _ := Subsingleton.elim _ _
 #align unique_of_subsingleton uniqueOfSubsingleton
 -/
 
 #print PUnit.unique /-
-instance PUnit.unique : Unique PUnit.{u} where
+instance PUnit.unique : Unique
+      PUnit.{u} where 
   default := PUnit.unit
   uniq x := PUnit.subsingleton x _
 #align punit.unique PUnit.unique
@@ -109,7 +111,8 @@ theorem PUnit.default_eq_unit : (default : PUnit) = PUnit.unit :=
 
 #print uniqueProp /-
 /-- Every provable proposition is unique, as all proofs are equal. -/
-def uniqueProp {p : Prop} (h : p) : Unique p where
+def uniqueProp {p : Prop} (h : p) :
+    Unique p where 
   default := h
   uniq x := rfl
 #align unique_prop uniqueProp
@@ -193,7 +196,7 @@ theorem exists_iff {p : α → Prop} : Exists p ↔ p default :=
 end
 
 #print Unique.subsingleton_unique' /-
-@[ext.1]
+@[ext]
 protected theorem subsingleton_unique' : ∀ h₁ h₂ : Unique α, h₁ = h₂
   | ⟨⟨x⟩, h⟩, ⟨⟨y⟩, _⟩ => by congr <;> rw [h x, h y]
 #align unique.subsingleton_unique' Unique.subsingleton_unique'
@@ -220,7 +223,7 @@ end Unique
 theorem unique_iff_subsingleton_and_nonempty (α : Sort u) :
     Nonempty (Unique α) ↔ Subsingleton α ∧ Nonempty α :=
   ⟨fun ⟨u⟩ => by constructor <;> exact inferInstance, fun ⟨hs, hn⟩ =>
-    ⟨by
+    ⟨by 
       skip
       inhabit α
       exact Unique.mk' α⟩⟩
@@ -259,7 +262,8 @@ but is expected to have type
   forall {α : Sort.{u_1}} [inst._@.Mathlib.Logic.Unique._hyg.1051 : IsEmpty.{u_1} α] (β : α -> Sort.{v}), Unique.{imax u_1 v} (forall (a : α), β a)
 Case conversion may be inaccurate. Consider using '#align pi.unique_of_is_empty Pi.uniqueOfIsEmptyₓ'. -/
 /-- There is a unique function on an empty domain. -/
-instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, β a) where
+instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) :
+    Unique (∀ a, β a) where 
   default := isEmptyElim
   uniq f := funext isEmptyElim
 #align pi.unique_of_is_empty Pi.uniqueOfIsEmpty
@@ -364,14 +368,16 @@ end Option
 section Subtype
 
 #print Unique.subtypeEq /-
-instance Unique.subtypeEq (y : α) : Unique { x // x = y } where
+instance Unique.subtypeEq (y : α) :
+    Unique { x // x = y } where 
   default := ⟨y, rfl⟩
   uniq := fun ⟨x, hx⟩ => by simpa using hx
 #align unique.subtype_eq Unique.subtypeEq
 -/
 
 #print Unique.subtypeEq' /-
-instance Unique.subtypeEq' (y : α) : Unique { x // y = x } where
+instance Unique.subtypeEq' (y : α) :
+    Unique { x // y = x } where 
   default := ⟨y, rfl⟩
   uniq := fun ⟨x, hx⟩ => by simpa using hx.symm
 #align unique.subtype_eq' Unique.subtypeEq'

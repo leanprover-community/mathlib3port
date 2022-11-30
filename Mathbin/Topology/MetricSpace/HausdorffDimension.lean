@@ -125,7 +125,7 @@ theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d : ℝ≥0} (h : μH[d
 #align dimH_le_of_hausdorff_measure_ne_top dimH_le_of_hausdorff_measure_ne_top
 
 theorem le_dimH_of_hausdorff_measure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d] s = ∞) : ↑d ≤ dimH s :=
-  by
+  by 
   rw [dimH_def]
   exact le_supr₂ d h
 #align le_dimH_of_hausdorff_measure_eq_top le_dimH_of_hausdorff_measure_eq_top
@@ -239,7 +239,7 @@ variable [SecondCountableTopology X]
 second countable topology, then there exists a point `x ∈ s` such that every neighborhood
 `t` of `x` within `s` has Hausdorff dimension greater than `r`. -/
 theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (h : r < dimH s) :
-    ∃ x ∈ s, ∀ t ∈ 𝓝[s] x, r < dimH t := by
+    ∃ x ∈ s, ∀ t ∈ 𝓝[s] x, r < dimH t := by 
   contrapose! h; choose! t htx htr using h
   rcases countable_cover_nhds_within htx with ⟨S, hSs, hSc, hSU⟩
   calc
@@ -256,7 +256,6 @@ theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup dimH (𝓝[s] x).sm
   refine' le_antisymm (supr₂_le fun x hx => _) _
   · refine' Limsup_le_of_le (by infer_param) (eventually_map.2 _)
     exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
-    
   · refine' le_of_forall_ge_of_dense fun r hr => _
     rcases exists_mem_nhds_within_lt_dimH_of_lt_dimH hr with ⟨x, hxs, hxr⟩
     refine' le_supr₂_of_le x hxs _
@@ -264,7 +263,6 @@ theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup dimH (𝓝[s] x).sm
     refine' le_Inf fun b hb => _
     rcases eventually_small_sets.1 hb with ⟨t, htx, ht⟩
     exact (hxr t htx).le.trans (ht t subset.rfl)
-    
 #align bsupr_limsup_dimH bsupr_limsup_dimH
 
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
@@ -274,10 +272,8 @@ theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsup dimH (𝓝[s] x).smallSets
   refine' le_antisymm (supr_le fun x => _) _
   · refine' Limsup_le_of_le (by infer_param) (eventually_map.2 _)
     exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
-    
   · rw [← bsupr_limsup_dimH]
     exact supr₂_le_supr _ _
-    
 #align supr_limsup_dimH supr_limsup_dimH
 
 end
@@ -291,12 +287,12 @@ variable {C K r : ℝ≥0} {f : X → Y} {s t : Set X}
 
 /-- If `f` is a Hölder continuous map with exponent `r > 0`, then `dimH (f '' s) ≤ dimH s / r`. -/
 theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) :
-    dimH (f '' s) ≤ dimH s / r := by
+    dimH (f '' s) ≤ dimH s / r := by 
   borelize X Y
   refine' dimH_le fun d hd => _
   have := h.hausdorff_measure_image_le hr d.coe_nonneg
   rw [hd, Ennreal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this
-  have Hrd : μH[(r * d : ℝ≥0)] s = ⊤ := by
+  have Hrd : μH[(r * d : ℝ≥0)] s = ⊤ := by 
     contrapose this
     exact Ennreal.mul_ne_top Ennreal.coe_ne_top this
   rw [Ennreal.le_div_iff_mul_le, mul_comm, ← Ennreal.coe_mul]
@@ -328,7 +324,7 @@ but possibly different coefficients, then the Hausdorff dimension of the image `
 the Hausdorff dimension of `s` divided by `r`. -/
 theorem dimH_image_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ≥0} {f : X → Y}
     (hr : 0 < r) {s : Set X} (hf : ∀ x ∈ s, ∃ C : ℝ≥0, ∃ t ∈ 𝓝[s] x, HolderOnWith C r f t) :
-    dimH (f '' s) ≤ dimH s / r := by
+    dimH (f '' s) ≤ dimH s / r := by 
   choose! C t htn hC using hf
   rcases countable_cover_nhds_within htn with ⟨u, hus, huc, huU⟩
   replace huU := inter_eq_self_of_subset_left huU; rw [inter_Union₂] at huU
@@ -471,20 +467,16 @@ namespace Real
 variable {E : Type _} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
 theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.ball x r) = Fintype.card ι :=
-  by
+  by 
   cases isEmpty_or_nonempty ι
   · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
     exact fun x _ y _ => Subsingleton.elim x y
-    
   · rw [← Ennreal.coe_nat]
     have : μH[Fintype.card ι] (Metric.ball x r) = Ennreal.ofReal ((2 * r) ^ Fintype.card ι) := by
       rw [hausdorff_measure_pi_real, Real.volume_pi_ball _ hr]
     refine' dimH_of_hausdorff_measure_ne_zero_ne_top _ _ <;> rw [Nnreal.coe_nat_cast, this]
     · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
-      
     · exact Ennreal.of_real_ne_top
-      
-    
 #align real.dimH_ball_pi Real.dimH_ball_pi
 
 theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) :
@@ -506,13 +498,11 @@ theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finra
   rw [← e.dimH_image]
   refine' le_antisymm _ _
   · exact (dimH_mono (subset_univ _)).trans_eq (dimH_univ_pi_fin _)
-    
-  · have : e '' s ∈ 𝓝 (e x) := by
+  · have : e '' s ∈ 𝓝 (e x) := by 
       rw [← e.map_nhds_eq]
       exact image_mem_map h
     rcases metric.nhds_basis_ball.mem_iff.1 this with ⟨r, hr0, hr⟩
     simpa only [dimH_ball_pi_fin (e x) hr0] using dimH_mono hr
-    
 #align real.dimH_of_mem_nhds Real.dimH_of_mem_nhds
 
 theorem dimH_of_nonempty_interior {s : Set E} (h : (interior s).Nonempty) : dimH s = finrank ℝ E :=

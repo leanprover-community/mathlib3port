@@ -164,24 +164,25 @@ attribute [local instance] specializationOrder
 
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
-    { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α where
+    { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o
+      α where 
   toFun s := s.Prop.1.genericPoint
   invFun x := ⟨closure ({x} : Set α), is_irreducible_singleton.closure, isClosedClosure⟩
   left_inv s :=
     Subtype.eq <| Eq.trans s.Prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
   right_inv x :=
     is_irreducible_singleton.closure.generic_point_spec.Eq
-      (by
+      (by 
         convert is_generic_point_closure using 1
         rw [closure_closure])
-  map_rel_iff' s t := by
+  map_rel_iff' s t := by 
     change _ ⤳ _ ↔ _
     rw [specializes_iff_closure_subset]
     simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
 #align irreducible_set_equiv_points irreducibleSetEquivPoints
 
 theorem ClosedEmbedding.quasiSober {f : α → β} (hf : ClosedEmbedding f) [QuasiSober β] :
-    QuasiSober α := by
+    QuasiSober α := by 
   constructor
   intro S hS hS'
   have hS'' := hS.image f hf.continuous.continuous_on
@@ -194,14 +195,14 @@ theorem ClosedEmbedding.quasiSober {f : α → β} (hf : ClosedEmbedding f) [Qua
 #align closed_embedding.quasi_sober ClosedEmbedding.quasiSober
 
 theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSober β] : QuasiSober α :=
-  by
+  by 
   constructor
   intro S hS hS'
   have hS'' := hS.image f hf.continuous.continuous_on
   obtain ⟨x, hx⟩ := QuasiSober.sober hS''.closure isClosedClosure
   obtain ⟨T, hT, rfl⟩ := hf.to_inducing.is_closed_iff.mp hS'
   rw [Set.image_preimage_eq_inter_range] at hx hS''
-  have hxT : x ∈ T := by
+  have hxT : x ∈ T := by 
     rw [← hT.closure_eq]
     exact closure_mono (Set.inter_subset_left _ _) hx.mem
   have hxU : x ∈ Set.range f := by
@@ -226,7 +227,7 @@ theorem quasiSoberOfOpenCover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Se
   rw [quasi_sober_iff]
   intro t h h'
   obtain ⟨x, hx⟩ := h.1
-  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀S := by
+  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀S := by 
     rw [hS'']
     trivial
   haveI : QuasiSober U := hS' ⟨U, hU⟩
@@ -239,7 +240,6 @@ theorem quasiSoberOfOpenCover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Se
   apply le_antisymm
   · apply h'.closure_subset_iff.mpr
     simpa using this
-    
   rw [← Set.image_singleton, ← closure_closure]
   have := closure_mono (image_closure_subset_closure_image (@continuous_subtype_coe α _ U))
   refine' Set.Subset.trans _ this

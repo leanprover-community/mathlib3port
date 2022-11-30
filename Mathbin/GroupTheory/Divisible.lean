@@ -367,7 +367,9 @@ variable {ι β : Type _} (B : ι → Type _) [∀ i : ι, Pow (B i) β]
 variable [Zero β] [∀ i : ι, Monoid (B i)] [∀ i, RootableBy (B i) β]
 
 @[to_additive]
-instance Pi.rootableBy : RootableBy (∀ i, B i) β where
+instance Pi.rootableBy :
+    RootableBy (∀ i, B i)
+      β where 
   root x n i := RootableBy.root (x i) n
   root_zero x := funext fun i => RootableBy.root_zero _
   root_cancel n x hn := funext fun i => RootableBy.root_cancel _ hn
@@ -382,7 +384,9 @@ variable {β B B' : Type _} [Pow B β] [Pow B' β]
 variable [Zero β] [Monoid B] [Monoid B'] [RootableBy B β] [RootableBy B' β]
 
 @[to_additive]
-instance Prod.rootableBy : RootableBy (B × B') β where
+instance Prod.rootableBy :
+    RootableBy (B × B')
+      β where 
   root p n := (RootableBy.root p.1 n, RootableBy.root p.2 n)
   root_zero p := Prod.ext (RootableBy.root_zero _) (RootableBy.root_zero _)
   root_cancel n p hn := Prod.ext (RootableBy.root_cancel _ hn) (RootableBy.root_cancel _ hn)
@@ -405,11 +409,13 @@ theorem smul_top_eq_top_of_divisible_by_int [DivisibleBy A ℤ] {n : ℤ} (hn : 
 /-- If for all `n ≠ 0 ∈ ℤ`, `n • A = A`, then `A` is divisible.
 -/
 noncomputable def divisibleByIntOfSmulTopEqTop
-    (H : ∀ {n : ℤ} (hn : n ≠ 0), n • (⊤ : AddSubgroup A) = ⊤) : DivisibleBy A ℤ where
+    (H : ∀ {n : ℤ} (hn : n ≠ 0), n • (⊤ : AddSubgroup A) = ⊤) :
+    DivisibleBy A
+      ℤ where 
   div a n :=
     if hn : n = 0 then 0 else show a ∈ n • (⊤ : AddSubgroup A) by rw [H hn] <;> trivial.some
   div_zero a := dif_pos rfl
-  div_cancel n a hn := by
+  div_cancel n a hn := by 
     rw [dif_neg hn]
     generalize_proofs h1
     exact h1.some_spec.2
@@ -418,7 +424,7 @@ noncomputable def divisibleByIntOfSmulTopEqTop
 end AddCommGroup
 
 instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [CharZero 𝕜] :
-    DivisibleBy 𝕜 ℤ where
+    DivisibleBy 𝕜 ℤ where 
   div q n := q / n
   div_zero q := by norm_num
   div_cancel n q hn := by
@@ -433,32 +439,32 @@ variable (A : Type _) [Group A]
 -/
 @[to_additive AddGroup.divisibleByIntOfDivisibleByNat
       "An additive group is `ℤ`-divisible if it is `ℕ`-divisible."]
-def rootableByIntOfRootableByNat [RootableBy A ℕ] : RootableBy A ℤ where
+def rootableByIntOfRootableByNat [RootableBy A ℕ] :
+    RootableBy A ℤ where 
   root a z :=
     match z with
     | (n : ℕ) => RootableBy.root a n
     | -[n+1] => (RootableBy.root a (n + 1))⁻¹
   root_zero a := RootableBy.root_zero a
-  root_cancel n a hn := by
+  root_cancel n a hn := by 
     induction n
     · change RootableBy.root a _ ^ _ = a
       norm_num
       rw [RootableBy.root_cancel]
       rw [Int.ofNat_eq_coe] at hn
       exact_mod_cast hn
-      
     · change (RootableBy.root a _)⁻¹ ^ _ = a
       norm_num
       rw [RootableBy.root_cancel]
       norm_num
-      
 #align group.rootable_by_int_of_rootable_by_nat Group.rootableByIntOfRootableByNat
 
 /-- A group is `ℕ`-rootable if it is `ℤ`-rootable
 -/
 @[to_additive AddGroup.divisibleByNatOfDivisibleByInt
       "An additive group is `ℕ`-divisible if it `ℤ`-divisible."]
-def rootableByNatOfRootableByInt [RootableBy A ℤ] : RootableBy A ℕ where
+def rootableByNatOfRootableByInt [RootableBy A ℤ] :
+    RootableBy A ℕ where 
   root a n := RootableBy.root a (n : ℤ)
   root_zero a := RootableBy.root_zero a
   root_cancel n a hn := by

@@ -83,9 +83,7 @@ theorem f_aux_zero_eq : fAux 0 = expNegInvGlue := by
   ext x
   by_cases h : x ≤ 0
   · simp [expNegInvGlue, f_aux, h]
-    
   · simp [h, expNegInvGlue, f_aux, ne_of_gt (not_le.1 h), P_aux]
-    
 #align exp_neg_inv_glue.f_aux_zero_eq expNegInvGlue.f_aux_zero_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr pow_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
@@ -95,7 +93,7 @@ the polynomial `P_aux (n+1)` was chosen precisely to ensure this. -/
 theorem fAuxDeriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
     HasDerivAt (fun x => (pAux n).eval x * exp (-x⁻¹) / x ^ (2 * n))
       ((pAux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
-  by
+  by 
   simp only [P_aux, eval_add, eval_sub, eval_mul, eval_pow, eval_X, eval_C, eval_one]
   convert
     (((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (hasDerivAtInv hx).neg)).div
@@ -107,11 +105,8 @@ theorem fAuxDeriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
     cases n
     · simp only [mul_zero, Nat.cast_zero, mul_one]
       ring
-      
     · rw [(id rfl : 2 * n.succ - 1 = 2 * n + 1)]
       ring
-      
-    
   all_goals
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr pow_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
@@ -143,16 +138,15 @@ theorem f_aux_limit (n : ℕ) :
 /-- Deduce from the limiting behavior at `0` of its derivative and general differentiability
 extension theorems that the auxiliary function `f_aux n` is differentiable at `0`,
 with derivative `0`. -/
-theorem fAuxDerivZero (n : ℕ) : HasDerivAt (fAux n) 0 0 := by
+theorem fAuxDerivZero (n : ℕ) : HasDerivAt (fAux n) 0 0 :=
+  by
   -- we check separately differentiability on the left and on the right
   have A : HasDerivWithinAt (f_aux n) (0 : ℝ) (Iic 0) 0 := by
     apply (hasDerivAtConst (0 : ℝ) (0 : ℝ)).HasDerivWithinAt.congr
     · intro y hy
       simp at hy
       simp [f_aux, hy]
-      
     · simp [f_aux, le_refl]
-      
   have B : HasDerivWithinAt (f_aux n) (0 : ℝ) (Ici 0) 0 := by
     have diff : DifferentiableOn ℝ (f_aux n) (Ioi 0) := fun x hx =>
       (f_aux_deriv_pos n x hx).DifferentiableAt.DifferentiableWithinAt
@@ -162,20 +156,19 @@ theorem fAuxDerivZero (n : ℕ) : HasDerivAt (fAux n) 0 0 := by
     · refine' (f_aux_limit (n + 1)).congr' _
       apply mem_of_superset self_mem_nhds_within fun x hx => _
       simp [(f_aux_deriv_pos n x hx).deriv]
-      
     · have : f_aux n 0 = 0 := by simp [f_aux, le_refl]
       simp only [ContinuousWithinAt, this]
       refine' (f_aux_limit n).congr' _
       apply mem_of_superset self_mem_nhds_within fun x hx => _
       have : ¬x ≤ 0 := by simpa using hx
       simp [f_aux, this]
-      
   simpa using A.union B
 #align exp_neg_inv_glue.f_aux_deriv_zero expNegInvGlue.fAuxDerivZero
 
 /-- At every point, the auxiliary function `f_aux n` has a derivative which is
 equal to `f_aux (n+1)`. -/
-theorem fAuxHasDerivAt (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 1) x) x := by
+theorem fAuxHasDerivAt (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 1) x) x :=
+  by
   -- check separately the result for `x < 0`, where it is trivial, for `x > 0`, where it is done
   -- in `f_aux_deriv_pos`, and for `x = 0`, done in
   -- `f_aux_deriv_zero`.
@@ -185,16 +178,13 @@ theorem fAuxHasDerivAt (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 1) x
     apply (hasDerivAtConst x (0 : ℝ)).congr_of_eventually_eq
     filter_upwards [gt_mem_nhds hx] with _ hy
     simp [f_aux, hy.le]
-    
   · have : f_aux (n + 1) 0 = 0 := by simp [f_aux, le_refl]
     rw [hx, this]
     exact f_aux_deriv_zero n
-    
   · have : f_aux (n + 1) x = (P_aux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1)) := by
       simp [f_aux, not_le_of_gt hx]
     rw [this]
     exact f_aux_deriv_pos n x hx
-    
 #align exp_neg_inv_glue.f_aux_has_deriv_at expNegInvGlue.fAuxHasDerivAt
 
 /-- The successive derivatives of the auxiliary function `f_aux 0` are the
@@ -202,11 +192,9 @@ functions `f_aux n`, by induction. -/
 theorem f_aux_iterated_deriv (n : ℕ) : iteratedDeriv n (fAux 0) = fAux n := by
   induction' n with n IH
   · simp
-    
   · simp [iterated_deriv_succ, IH]
     ext x
     exact (f_aux_has_deriv_at n x).deriv
-    
 #align exp_neg_inv_glue.f_aux_iterated_deriv expNegInvGlue.f_aux_iterated_deriv
 
 /-- The function `exp_neg_inv_glue` is smooth. -/
@@ -230,9 +218,7 @@ theorem pos_of_pos {x : ℝ} (hx : 0 < x) : 0 < expNegInvGlue x := by
 theorem nonneg (x : ℝ) : 0 ≤ expNegInvGlue x := by
   cases le_or_gt x 0
   · exact ge_of_eq (zero_of_nonpos h)
-    
   · exact le_of_lt (pos_of_pos h)
-    
 #align exp_neg_inv_glue.nonneg expNegInvGlue.nonneg
 
 end expNegInvGlue
@@ -399,9 +385,7 @@ theorem support_eq : support (f : E → ℝ) = Metric.ball c f.r := by
   suffices f x ≠ 0 ↔ dist x c < f.R by simpa [mem_support]
   cases' lt_or_le (dist x c) f.R with hx hx
   · simp [hx, (f.pos_of_mem_ball hx).ne']
-    
   · simp [hx.not_lt, f.zero_of_le_dist hx]
-    
 #align cont_diff_bump_of_inner.support_eq ContDiffBumpOfInner.support_eq
 
 theorem tsupport_eq : tsupport f = closedBall c f.r := by
@@ -434,10 +418,8 @@ protected theorem ContDiffAt.contDiffBump {c g : X → E} {f : ∀ x, ContDiffBu
         ContinuousAt.eventually_lt (hg.continuous_at.dist hc.continuous_at) hr.continuous_at this
       exact eventually_of_mem this fun x hx => (f x).one_of_mem_closed_ball (mem_set_of_eq.mp hx).le
     exact cont_diff_at_const.congr_of_eventually_eq this
-    
   · refine' real.smooth_transition.cont_diff_at.comp x _
     refine' (hR.sub <| hg.dist hc hx).div (hR.sub hr) (sub_pos.mpr (f x).r_lt_R).ne'
-    
 #align cont_diff_at.cont_diff_bump ContDiffAt.contDiffBump
 
 theorem ContDiff.contDiffBump {c g : X → E} {f : ∀ x, ContDiffBumpOfInner (c x)}

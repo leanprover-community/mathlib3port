@@ -61,7 +61,7 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
     [IsScalarTower Fq[X] Fqt F] [IsScalarTower Fq[X] (Ratfunc Fq) F] :
     FunctionField Fq F ↔ FiniteDimensional Fqt F := by
   let e := IsLocalization.algEquiv Fq[X]⁰ (Ratfunc Fq) Fqt
-  have : ∀ (c) (x : F), e c • x = c • x := by
+  have : ∀ (c) (x : F), e c • x = c • x := by 
     intro c x
     rw [Algebra.smul_def, Algebra.smul_def]
     congr
@@ -72,13 +72,11 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
   constructor <;> intro h <;> skip
   · let b := FiniteDimensional.finBasis (Ratfunc Fq) F
     exact FiniteDimensional.ofFintypeBasis (b.map_coeffs e this)
-    
   · let b := FiniteDimensional.finBasis Fqt F
     refine' FiniteDimensional.ofFintypeBasis (b.map_coeffs e.symm _)
     intro c x
     convert (this (e.symm c) x).symm
     simp only [e.apply_symm_apply]
-    
 #align function_field_iff function_field_iff
 
 theorem algebra_map_injective [Algebra Fq[X] F] [Algebra (Ratfunc Fq) F]
@@ -177,14 +175,11 @@ theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
   rw [infty_valuation_def, infty_valuation_def, infty_valuation_def]
   by_cases hx : x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
-    
   · by_cases hy : y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
-      
-    · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
+    ·
+      rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
         of_add_add, Ratfunc.int_degree_mul hx hy]
-      
-    
 #align function_field.infty_valuation.map_mul' FunctionField.InftyValuation.map_mul'
 
 theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
@@ -194,25 +189,19 @@ theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
     conv_rhs => rw [infty_valuation_def, if_pos (Eq.refl _)]
     rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq y))]
     exact le_refl _
-    
   · by_cases hy : y = 0
     · rw [hy, add_zero]
       conv_rhs => rw [max_comm, infty_valuation_def, if_pos (Eq.refl _)]
       rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq x))]
       exact le_refl _
-      
     · by_cases hxy : x + y = 0
       · rw [infty_valuation_def, if_pos hxy]
         exact zero_le'
-        
       · rw [infty_valuation_def, infty_valuation_def, infty_valuation_def, if_neg hx, if_neg hy,
           if_neg hxy]
         rw [le_max_iff, WithZero.coe_le_coe, Multiplicative.of_add_le, WithZero.coe_le_coe,
           Multiplicative.of_add_le, ← le_max_iff]
         exact Ratfunc.int_degree_add_le hy hxy
-        
-      
-    
 #align function_field.infty_valuation.map_add_le_max' FunctionField.InftyValuation.map_add_le_max'
 
 @[simp]
@@ -222,7 +211,8 @@ theorem infty_valuation_of_nonzero {x : Ratfunc Fq} (hx : x ≠ 0) :
 #align function_field.infty_valuation_of_nonzero FunctionField.infty_valuation_of_nonzero
 
 /-- The valuation at infinity on `Fq(t)`. -/
-def inftyValuation : Valuation (Ratfunc Fq) ℤₘ₀ where
+def inftyValuation :
+    Valuation (Ratfunc Fq) ℤₘ₀ where 
   toFun := inftyValuationDef Fq
   map_zero' := InftyValuation.map_zero' Fq
   map_one' := InftyValuation.map_one' Fq

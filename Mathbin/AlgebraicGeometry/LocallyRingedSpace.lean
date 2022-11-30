@@ -74,7 +74,7 @@ def 𝒪 : Sheaf CommRingCat X.toTop :=
 
 /-- A morphism of locally ringed spaces is a morphism of ringed spaces
  such that the morphims induced on stalks are local ring homomorphisms. -/
-@[ext.1]
+@[ext]
 structure Hom (X Y : LocallyRingedSpaceCat.{u}) : Type u where
   val : X.toSheafedSpace ⟶ Y.toSheafedSpace
   Prop : ∀ x, IsLocalRingHom (PresheafedSpaceCat.stalkMap val x)
@@ -110,7 +110,7 @@ instance {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) (x : X) :
 /-- The identity morphism on a locally ringed space. -/
 @[simps]
 def id (X : LocallyRingedSpaceCat) : Hom X X :=
-  ⟨𝟙 _, fun x => by
+  ⟨𝟙 _, fun x => by 
     erw [PresheafedSpace.stalk_map.id]
     apply is_local_ring_hom_id⟩
 #align algebraic_geometry.LocallyRingedSpace.id AlgebraicGeometry.LocallyRingedSpaceCat.id
@@ -120,32 +120,34 @@ instance (X : LocallyRingedSpaceCat) : Inhabited (Hom X X) :=
 
 /-- Composition of morphisms of locally ringed spaces. -/
 def comp {X Y Z : LocallyRingedSpaceCat} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
-  ⟨f.val ≫ g.val, fun x => by
+  ⟨f.val ≫ g.val, fun x => by 
     erw [PresheafedSpace.stalk_map.comp]
     exact @is_local_ring_hom_comp _ _ _ _ _ _ _ _ (f.2 _) (g.2 _)⟩
 #align algebraic_geometry.LocallyRingedSpace.comp AlgebraicGeometry.LocallyRingedSpaceCat.comp
 
 /-- The category of locally ringed spaces. -/
-instance : Category LocallyRingedSpaceCat where
+instance : Category LocallyRingedSpaceCat where 
   Hom := Hom
   id := id
   comp X Y Z f g := comp f g
-  comp_id' := by
+  comp_id' := by 
     intros
     ext1
     simp [comp]
-  id_comp' := by
+  id_comp' := by 
     intros
     ext1
     simp [comp]
-  assoc' := by
+  assoc' := by 
     intros
     ext1
     simp [comp]
 
 /-- The forgetful functor from `LocallyRingedSpace` to `SheafedSpace CommRing`. -/
 @[simps]
-def forgetToSheafedSpace : LocallyRingedSpace ⥤ SheafedSpaceCat CommRingCat where
+def forgetToSheafedSpace :
+    LocallyRingedSpace ⥤
+      SheafedSpaceCat CommRingCat where 
   obj X := X.toSheafedSpace
   map X Y f := f.1
 #align
@@ -206,7 +208,7 @@ In fact, it is slightly stronger as we do not require `f` to come from a morphis
 _locally_ ringed spaces.
 -/
 def isoOfSheafedSpaceIso {X Y : LocallyRingedSpaceCat} (f : X.toSheafedSpace ≅ Y.toSheafedSpace) :
-    X ≅ Y where
+    X ≅ Y where 
   Hom := homOfSheafedSpaceHomOfIsIso f.Hom
   inv := homOfSheafedSpaceHomOfIsIso f.inv
   hom_inv_id' := Hom.ext _ _ f.hom_inv_id
@@ -230,8 +232,8 @@ instance is_SheafedSpace_iso {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) [IsIso 
 -/
 @[simps]
 def restrict {U : TopCat} (X : LocallyRingedSpaceCat) {f : U ⟶ X.toTop} (h : OpenEmbedding f) :
-    LocallyRingedSpaceCat where
-  LocalRing := by
+    LocallyRingedSpaceCat where 
+  LocalRing := by 
     intro x
     dsimp at *
     -- We show that the stalk of the restriction is isomorphic to the original stalk,
@@ -289,19 +291,17 @@ theorem preimage_basic_open {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) {U : Ope
     (s : Y.Presheaf.obj (op U)) :
     (Opens.map f.1.base).obj (Y.toRingedSpace.basicOpen s) =
       @RingedSpaceCat.basicOpen X.toRingedSpace ((Opens.map f.1.base).obj U) (f.1.c.app _ s) :=
-  by
+  by 
   ext
   constructor
   · rintro ⟨⟨y, hyU⟩, hy : IsUnit _, rfl : y = _⟩
     erw [RingedSpace.mem_basic_open _ _ ⟨x, show x ∈ (opens.map f.1.base).obj U from hyU⟩]
     rw [← PresheafedSpace.stalk_map_germ_apply]
     exact (PresheafedSpace.stalk_map f.1 _).is_unit_map hy
-    
   · rintro ⟨y, hy : IsUnit _, rfl⟩
     erw [RingedSpace.mem_basic_open _ _ ⟨f.1.base y.1, y.2⟩]
     rw [← PresheafedSpace.stalk_map_germ_apply] at hy
     exact (is_unit_map_iff (PresheafedSpace.stalk_map f.1 _) _).mp hy
-    
 #align
   algebraic_geometry.LocallyRingedSpace.preimage_basic_open AlgebraicGeometry.LocallyRingedSpaceCat.preimage_basic_open
 
@@ -311,7 +311,7 @@ theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.carrier) :
     X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ := by
   ext
   simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.mem_coe, opens.coe_bot, iff_false_iff,
-    RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
+    RingedSpace.basic_open, isUnit_zero_iff, Set.mem_set_of_eq, map_zero]
   rintro ⟨⟨y, _⟩, h, e⟩
   exact zero_ne_one' (X.presheaf.stalk y) h
 #align

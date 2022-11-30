@@ -64,9 +64,7 @@ theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanS
     H.toLieSubmodule.ucs k = H.toLieSubmodule := by
   induction' k with k ih
   · simp
-    
   · simp [ih]
-    
 #align
   lie_subalgebra.ucs_eq_self_of_is_cartan_subalgebra LieSubalgebra.ucs_eq_self_of_is_cartan_subalgebra
 
@@ -82,21 +80,19 @@ theorem is_cartan_subalgebra_iff_is_ucs_limit :
     refine' ⟨k, fun l hl => _⟩
     rw [← Nat.sub_add_cancel hl, LieSubmodule.ucs_add, ← hk,
       LieSubalgebra.ucs_eq_self_of_is_cartan_subalgebra]
-    
   · rintro ⟨k, hk⟩
     exact
-      { nilpotent := by
+      { nilpotent := by 
           dsimp only [LieAlgebra.IsNilpotent]
           erw [H.to_lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot]
           use k
           rw [_root_.eq_bot_iff, LieSubmodule.lcs_le_iff, hk k (le_refl k)]
           exact le_refl _,
-        self_normalizing := by
+        self_normalizing := by 
           have hk' := hk (k + 1) k.le_succ
           rw [LieSubmodule.ucs_succ, hk k (le_refl k)] at hk'
           rw [← LieSubalgebra.coe_to_submodule_eq_iff, ←
             LieSubalgebra.coe_centralizer_eq_normalizer, hk', LieSubalgebra.coe_to_lie_submodule] }
-    
 #align
   lie_subalgebra.is_cartan_subalgebra_iff_is_ucs_limit LieSubalgebra.is_cartan_subalgebra_iff_is_ucs_limit
 
@@ -114,7 +110,8 @@ open LieIdeal
 
 /-- A nilpotent Lie algebra is its own Cartan subalgebra. -/
 instance LieAlgebra.top_is_cartan_subalgebra_of_nilpotent [LieAlgebra.IsNilpotent R L] :
-    LieSubalgebra.IsCartanSubalgebra (⊤ : LieSubalgebra R L) where
+    LieSubalgebra.IsCartanSubalgebra
+      (⊤ : LieSubalgebra R L) where 
   nilpotent := inferInstance
   self_normalizing := by rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
 #align

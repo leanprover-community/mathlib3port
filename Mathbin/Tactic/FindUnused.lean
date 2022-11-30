@@ -37,7 +37,8 @@ in the current file.  Then, the `#list_unused_decls` command can be used to
 list the declaration present in the file that are not used by the main
 declarations of the file. -/
 @[user_attribute]
-unsafe def main_declaration_attr : user_attribute where
+unsafe def main_declaration_attr :
+    user_attribute where 
   Name := `main_declaration
   descr := "tag essential declarations to help identify unused definitions"
 #align tactic.main_declaration_attr tactic.main_declaration_attr

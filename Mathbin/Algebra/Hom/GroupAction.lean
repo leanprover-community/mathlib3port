@@ -98,7 +98,8 @@ namespace MulActionHom
 instance : CoeFun (X →[M'] Y) fun _ => X → Y :=
   ⟨MulActionHom.toFun⟩
 
-instance : SmulHomClass (X →[M'] Y) M' X Y where
+instance : SmulHomClass (X →[M'] Y) M' X
+      Y where 
   coe := MulActionHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := MulActionHom.map_smul'
@@ -109,7 +110,7 @@ protected theorem map_smul (f : X →[M'] Y) (m : M') (x : X) : f (m • x) = m 
   map_smul _ _ _
 #align mul_action_hom.map_smul MulActionHom.map_smul
 
-@[ext.1]
+@[ext]
 theorem ext : ∀ {f g : X →[M'] Y}, (∀ x, f x = g x) → f = g :=
   FunLike.ext
 #align mul_action_hom.ext MulActionHom.ext
@@ -165,7 +166,8 @@ variable {A B}
 /-- The inverse of a bijective equivariant map is equivariant. -/
 @[simps]
 def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
-    (h₂ : Function.RightInverse g f) : B →[M] A where
+    (h₂ : Function.RightInverse g f) :
+    B →[M] A where 
   toFun := g
   map_smul' m x :=
     calc
@@ -215,7 +217,9 @@ instance hasCoe' : Coe (A →+[M] B) (A →[M] B) :=
 instance : CoeFun (A →+[M] B) fun _ => A → B :=
   ⟨toFun⟩
 
-instance : DistribMulActionHomClass (A →+[M] B) M A B where
+instance :
+    DistribMulActionHomClass (A →+[M] B) M A
+      B where 
   coe := DistribMulActionHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := DistribMulActionHom.map_smul'
@@ -239,7 +243,7 @@ theorem coe_fn_coe' (f : A →+[M] B) : ((f : A →[M] B) : A → B) = f :=
   rfl
 #align distrib_mul_action_hom.coe_fn_coe' DistribMulActionHom.coe_fn_coe'
 
-@[ext.1]
+@[ext]
 theorem ext : ∀ {f g : A →+[M] B}, (∀ x, f x = g x) → f = g :=
   FunLike.ext
 #align distrib_mul_action_hom.ext DistribMulActionHom.ext
@@ -253,14 +257,14 @@ protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x 
 #align distrib_mul_action_hom.congr_fun DistribMulActionHom.congr_fun
 
 theorem to_mul_action_hom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) :
-    f = g := by
+    f = g := by 
   ext a
   exact MulActionHom.congr_fun h a
 #align
   distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.to_mul_action_hom_injective
 
 theorem to_add_monoid_hom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g :=
-  by
+  by 
   ext a
   exact AddMonoidHom.congr_fun h a
 #align
@@ -359,7 +363,7 @@ section Semiring
 
 variable {R M'} [AddMonoid M'] [DistribMulAction R M']
 
-@[ext.1]
+@[ext]
 theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g := by
   ext x
   rw [← mul_one x, ← smul_eq_mul R, f.map_smul, g.map_smul, h]
@@ -412,7 +416,9 @@ instance hasCoe' : Coe (R →+*[M] S) (R →+[M] S) :=
 instance : CoeFun (R →+*[M] S) fun _ => R → S :=
   ⟨fun c => c.toFun⟩
 
-instance : MulSemiringActionHomClass (R →+*[M] S) M R S where
+instance :
+    MulSemiringActionHomClass (R →+*[M] S) M R
+      S where 
   coe := MulSemiringActionHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := MulSemiringActionHom.map_smul'
@@ -433,7 +439,7 @@ theorem coe_fn_coe' (f : R →+*[M] S) : ((f : R →+[M] S) : R → S) = f :=
   rfl
 #align mul_semiring_action_hom.coe_fn_coe' MulSemiringActionHom.coe_fn_coe'
 
-@[ext.1]
+@[ext]
 theorem ext : ∀ {f g : R →+*[M] S}, (∀ x, f x = g x) → f = g :=
   FunLike.ext
 #align mul_semiring_action_hom.ext MulSemiringActionHom.ext

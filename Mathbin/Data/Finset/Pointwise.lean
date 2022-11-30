@@ -142,7 +142,7 @@ theorem singleton_one_hom_apply (a : α) : singletonOneHom a = {a} :=
 /-- Lift a `one_hom` to `finset` via `image`. -/
 @[to_additive "Lift a `zero_hom` to `finset` via `image`", simps]
 def imageOneHom [DecidableEq β] [One β] [OneHomClass F α β] (f : F) :
-    OneHom (Finset α) (Finset β) where
+    OneHom (Finset α) (Finset β) where 
   toFun := Finset.image f
   map_one' := by rw [image_one, map_one, singleton_one]
 #align finset.image_one_hom Finset.imageOneHom
@@ -425,7 +425,8 @@ theorem singleton_mul_hom_apply (a : α) : singletonMulHom a = {a} :=
 
 /-- Lift a `mul_hom` to `finset` via `image`. -/
 @[to_additive "Lift an `add_hom` to `finset` via `image`", simps]
-def imageMulHom : Finset α →ₙ* Finset β where
+def imageMulHom : Finset α →ₙ*
+      Finset β where 
   toFun := Finset.image f
   map_mul' s t := image_mul _
 #align finset.image_mul_hom Finset.imageMulHom
@@ -675,7 +676,7 @@ theorem singleton_monoid_hom_apply (a : α) : singletonMonoidHom a = {a} :=
 
 /-- The coercion from `finset` to `set` as a `monoid_hom`. -/
 @[to_additive "The coercion from `finset` to `set` as an `add_monoid_hom`."]
-def coeMonoidHom : Finset α →* Set α where
+def coeMonoidHom : Finset α →* Set α where 
   toFun := coe
   map_one' := coe_one
   map_mul' := coe_mul
@@ -708,9 +709,7 @@ theorem coe_pow (s : Finset α) (n : ℕ) : ↑(s ^ n) = (s ^ n : Set α) := by
   change ↑(npowRec n s) = _
   induction' n with n ih
   · rw [npowRec, pow_zero, coe_one]
-    
   · rw [npowRec, pow_succ, coe_mul, ih]
-    
 #align finset.coe_pow Finset.coe_pow
 
 /-- `finset α` is a `monoid` under pointwise operations if `α` is. -/
@@ -723,20 +722,20 @@ scoped[Pointwise] attribute [instance] Finset.monoid Finset.addMonoid
 
 @[to_additive]
 theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
-  | 0 => by
+  | 0 => by 
     rw [pow_zero]
     exact one_mem_one
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ]
     exact mul_mem_mul ha (pow_mem_pow _)
 #align finset.pow_mem_pow Finset.pow_mem_pow
 
 @[to_additive]
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
-  | 0 => by
+  | 0 => by 
     rw [pow_zero]
     exact subset.rfl
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ]
     exact mul_subset_mul hst (pow_subset_pow _)
 #align finset.pow_subset_pow Finset.pow_subset_pow
@@ -745,10 +744,8 @@ theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
 theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ s ^ n := by
   refine' Nat.le_induction _ (fun n h ih => _) _
   · exact subset.rfl
-    
   · rw [pow_succ]
     exact ih.trans (subset_mul_right _ hs)
-    
 #align finset.pow_subset_pow_of_one_mem Finset.pow_subset_pow_of_one_mem
 
 @[simp, norm_cast, to_additive]
@@ -831,7 +828,7 @@ variable [DivisionMonoid α] {s t : Finset α}
 @[simp, to_additive]
 theorem coe_zpow (s : Finset α) : ∀ n : ℤ, ↑(s ^ n) = (s ^ n : Set α)
   | Int.ofNat n => coe_pow _ _
-  | Int.negSucc n => by
+  | Int.negSucc n => by 
     refine' (coe_inv _).trans _
     convert congr_arg Inv.inv (coe_pow _ _)
 #align finset.coe_zpow Finset.coe_zpow
@@ -855,10 +852,8 @@ theorem is_unit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a := by
     refine' ⟨a, ha, ⟨a, b, h, singleton_injective _⟩, rfl⟩
     rw [← singleton_mul_singleton, ← ha, ← hb]
     exact u.inv_mul
-    
   · rintro ⟨a, rfl, ha⟩
     exact ha.finset
-    
 #align finset.is_unit_iff Finset.is_unit_iff
 
 @[simp, to_additive]
@@ -1499,7 +1494,8 @@ instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralSc
 @[to_additive
       "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `finset α` on `finset β`"]
 protected def mulAction [DecidableEq α] [Monoid α] [MulAction α β] :
-    MulAction (Finset α) (Finset β) where
+    MulAction (Finset α)
+      (Finset β) where 
   mul_smul _ _ _ := image₂_assoc mul_smul
   one_smul s := image₂_singleton_left.trans <| by simp_rw [one_smul, image_id']
 #align finset.mul_action Finset.mulAction
@@ -1537,7 +1533,7 @@ instance [DecidableEq α] [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisor
 
 instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
     NoZeroSmulDivisors (Finset α) (Finset β) :=
-  ⟨fun s t h => by
+  ⟨fun s t h => by 
     by_contra' H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_smul_left.subset_zero_iff, ← hst.of_smul_right.subset_zero_iff, not_subset,
@@ -1676,14 +1672,14 @@ theorem subset_smul_finset_iff₀ (ha : a ≠ 0) : s ⊆ a • t ↔ a⁻¹ • 
 #align finset.subset_smul_finset_iff₀ Finset.subset_smul_finset_iff₀
 
 theorem smul_univ₀ [Fintype β] {s : Finset α} (hs : ¬s ⊆ 0) : s • (univ : Finset β) = univ :=
-  coe_injective <| by
+  coe_injective <| by 
     rw [← coe_subset] at hs
     push_cast at hs⊢
     exact Set.smul_univ₀ hs
 #align finset.smul_univ₀ Finset.smul_univ₀
 
 theorem smul_finset_univ₀ [Fintype β] (ha : a ≠ 0) : a • (univ : Finset β) = univ :=
-  coe_injective <| by
+  coe_injective <| by 
     push_cast
     exact Set.smul_set_univ₀ ha
 #align finset.smul_finset_univ₀ Finset.smul_finset_univ₀
@@ -1730,7 +1726,7 @@ theorem zero_mem_smul_finset {t : Finset β} {a : α} (h : (0 : β) ∈ t) : (0 
 variable [NoZeroSmulDivisors α β] {a : α}
 
 theorem zero_mem_smul_iff : (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonempty ∨ (0 : β) ∈ t ∧ s.Nonempty :=
-  by
+  by 
   rw [← mem_coe, coe_smul, Set.zero_mem_smul_iff]
   rfl
 #align finset.zero_mem_smul_iff Finset.zero_mem_smul_iff

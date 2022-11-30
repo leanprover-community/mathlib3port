@@ -86,7 +86,6 @@ theorem span_eval_ne_top : spanEval k ≠ ⊤ := by
   replace hv := congr_arg (to_splitting_field k v.support) hv
   rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv
   · exact zero_ne_one hv
-    
   intro j hj
   rw [smul_eq_mul, AlgHom.map_mul, to_splitting_field_eval_X_self k hj, mul_zero]
 #align algebraic_closure.span_eval_ne_top AlgebraicClosure.span_eval_ne_top
@@ -187,27 +186,21 @@ theorem toStepSucc.exists_root {n} {f : Polynomial (Step k n)} (hfm : f.Monic)
 #align algebraic_closure.to_step_succ.exists_root AlgebraicClosure.toStepSucc.exists_root
 
 /-- The canonical ring homomorphism to a step with a greater index. -/
-def toStepOfLe (m n : ℕ) (h : m ≤ n) : Step k m →+* Step k n where
+def toStepOfLe (m n : ℕ) (h : m ≤ n) :
+    Step k m →+* Step k
+        n where 
   toFun := Nat.leRecOn h fun n => toStepSucc k n
-  map_one' := by
-    induction' h with n h ih;
-    · exact Nat.le_rec_on_self 1
-      
+  map_one' := by 
+    induction' h with n h ih; · exact Nat.le_rec_on_self 1
     rw [Nat.le_rec_on_succ h, ih, RingHom.map_one]
-  map_mul' x y := by
-    induction' h with n h ih;
-    · simp_rw [Nat.le_rec_on_self]
-      
+  map_mul' x y := by 
+    induction' h with n h ih; · simp_rw [Nat.le_rec_on_self]
     simp_rw [Nat.le_rec_on_succ h, ih, RingHom.map_mul]
-  map_zero' := by
-    induction' h with n h ih;
-    · exact Nat.le_rec_on_self 0
-      
+  map_zero' := by 
+    induction' h with n h ih; · exact Nat.le_rec_on_self 0
     rw [Nat.le_rec_on_succ h, ih, RingHom.map_zero]
-  map_add' x y := by
-    induction' h with n h ih;
-    · simp_rw [Nat.le_rec_on_self]
-      
+  map_add' x y := by 
+    induction' h with n h ih; · simp_rw [Nat.le_rec_on_self]
     simp_rw [Nat.le_rec_on_succ h, ih, RingHom.map_add]
 #align algebraic_closure.to_step_of_le AlgebraicClosure.toStepOfLe
 

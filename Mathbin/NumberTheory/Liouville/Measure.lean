@@ -38,7 +38,7 @@ theorem set_of_liouville_with_subset_aux :
             { x : ℝ |
               ∃ᶠ b : ℕ in at_top,
                 ∃ a ∈ Finset.icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
-  by
+  by 
   rintro x ⟨p, hp, hxp⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hp) with ⟨n, hn⟩
   rw [lt_sub_iff_add_lt'] at hn
@@ -48,7 +48,7 @@ theorem set_of_liouville_with_subset_aux :
         y ∈ Ico (0 : ℝ) 1 →
           ∃ᶠ b : ℕ in at_top,
             ∃ a ∈ Finset.icc (0 : ℤ) b, |y - a / b| < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
-    by
+    by 
     simp only [mem_Union, mem_preimage]
     have hx : x + ↑(-⌊x⌋) ∈ Ico (0 : ℝ) 1 := by
       simp only [Int.floor_le, Int.lt_floor_add_one, add_neg_lt_iff_le_add', zero_add, and_self_iff,
@@ -70,7 +70,6 @@ theorem set_of_liouville_with_subset_aux :
       _ ≤ b ^ (2 + 1 / (n + 1 : ℕ) : ℝ) := rpow_le_rpow_of_exponent_le hb (one_le_two.trans _)
       
     simpa using n.cast_add_one_pos.le
-    
   rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff,
     sub_lt_iff_lt_add, sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt
   rw [Finset.mem_Icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_comm, ←
@@ -78,13 +77,11 @@ theorem set_of_liouville_with_subset_aux :
   push_cast
   refine' ⟨lt_of_le_of_lt _ hlt.1, hlt.2.trans_le _⟩
   · simp only [mul_nonneg hx01.left b.cast_nonneg, neg_le_sub_iff_le_add, le_add_iff_nonneg_left]
-    
   · rw [add_le_add_iff_left]
     calc
       x * b ≤ 1 * b := mul_le_mul_of_nonneg_right hx01.2.le hb0.le
       _ = b := one_mul b
       
-    
 #align set_of_liouville_with_subset_aux set_of_liouville_with_subset_aux
 
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
@@ -102,7 +99,6 @@ theorem volume_Union_set_of_liouville_with :
   generalize hr : (2 + 1 / n : ℝ) = r
   replace hr : 2 < r
   · simp [← hr, zero_lt_one.trans_le hn]
-    
   clear hn n
   refine' measure_set_of_frequently_eq_zero _
   simp only [set_of_exists, ← Real.dist_eq, ← mem_ball, set_of_mem_eq]
@@ -126,7 +122,7 @@ theorem volume_Union_set_of_liouville_with :
     rw [Ennreal.coe_eq_coe]
     simp [add_mul, div_eq_mul_inv, Nnreal.rpow_neg, Nnreal.rpow_sub' _ this, mul_add, mul_left_comm]
   refine' ne_top_of_le_ne_top (Ennreal.tsum_coe_ne_top_iff_summable.2 _) (Ennreal.tsum_le_tsum this)
-  refine' (Summable.add _ _).mulLeft _ <;> simp only [Nnreal.summable_rpow] <;> linarith
+  refine' (Summable.add _ _).mul_left _ <;> simp only [Nnreal.summable_rpow] <;> linarith
 #align volume_Union_set_of_liouville_with volume_Union_set_of_liouville_with
 
 theorem ae_not_liouville_with : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by

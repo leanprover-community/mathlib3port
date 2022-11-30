@@ -201,7 +201,7 @@ variable [Group G]
 -- Normal subgroup properties
 @[to_additive]
 theorem mem_norm_comm {s : Set G} (hs : IsNormalSubgroup s) {a b : G} (hab : a * b ∈ s) :
-    b * a ∈ s := by
+    b * a ∈ s := by 
   have h : a⁻¹ * (a * b) * a⁻¹⁻¹ ∈ s := hs.Normal (a * b) hab a⁻¹
   simp at h <;> exact h
 #align is_subgroup.mem_norm_comm IsSubgroup.mem_norm_comm
@@ -311,14 +311,14 @@ variable [Group G] [Group H]
 
 @[to_additive]
 theorem one_ker_inv {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a * b⁻¹) = 1) : f a = f b :=
-  by
+  by 
   rw [hf.map_mul, hf.map_inv] at h
   rw [← inv_inv (f b), eq_inv_of_mul_eq_one_left h]
 #align is_group_hom.one_ker_inv IsGroupHom.one_ker_inv
 
 @[to_additive]
 theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ * b) = 1) : f a = f b :=
-  by
+  by 
   rw [hf.map_mul, hf.map_inv] at h
   apply inv_injective
   rw [eq_inv_of_mul_eq_one_left h]
@@ -326,14 +326,14 @@ theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ 
 
 @[to_additive]
 theorem inv_ker_one {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) : f (a * b⁻¹) = 1 :=
-  by
+  by 
   have : f a * (f b)⁻¹ = 1 := by rw [h, mul_right_inv]
   rwa [← hf.map_inv, ← hf.map_mul] at this
 #align is_group_hom.inv_ker_one IsGroupHom.inv_ker_one
 
 @[to_additive]
 theorem inv_ker_one' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) : f (a⁻¹ * b) = 1 :=
-  by
+  by 
   have : (f a)⁻¹ * f b = 1 := by rw [h, mul_left_inv]
   rwa [← hf.map_inv, ← hf.map_mul] at this
 #align is_group_hom.inv_ker_one' IsGroupHom.inv_ker_one'
@@ -365,7 +365,7 @@ theorem image_subgroup {f : G → H} (hf : IsGroupHom f) {s : Set G} (hs : IsSub
       ⟨b₁ * b₂, hs.mul_mem hb₁ hb₂, by simp [eq₁, eq₂, hf.map_mul]⟩,
     one_mem := ⟨1, hs.to_is_submonoid.one_mem, hf.map_one⟩,
     inv_mem := fun a ⟨b, hb, Eq⟩ =>
-      ⟨b⁻¹, hs.inv_mem hb, by
+      ⟨b⁻¹, hs.inv_mem hb, by 
         rw [hf.map_inv]
         simp [*]⟩ }
 #align is_group_hom.image_subgroup IsGroupHom.image_subgroup
@@ -401,7 +401,7 @@ theorem is_normal_subgroup_ker {f : G → H} (hf : IsGroupHom f) : IsNormalSubgr
 
 @[to_additive]
 theorem injective_of_trivial_ker {f : G → H} (hf : IsGroupHom f) (h : ker f = trivial G) :
-    Function.Injective f := by
+    Function.Injective f := by 
   intro a₁ a₂ hfa
   simp [ext_iff, ker, IsSubgroup.trivial] at h
   have ha : a₁ * a₂⁻¹ = 1 := by rw [← h] <;> exact hf.inv_ker_one hfa
@@ -413,7 +413,7 @@ theorem trivial_ker_of_injective {f : G → H} (hf : IsGroupHom f) (h : Function
     ker f = trivial G :=
   Set.ext fun x =>
     Iff.intro
-      (fun hx => by
+      (fun hx => by 
         suffices f x = f 1 by simpa using h this
         simp [hf.map_one] <;> rwa [mem_ker] at hx)
       (by simp (config := { contextual := true }) [mem_ker, hf.map_one])
@@ -528,21 +528,17 @@ theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ closure s) :
 theorem image_closure [Group H] {f : G → H} (hf : IsGroupHom f) (s : Set G) :
     f '' closure s = closure (f '' s) :=
   le_antisymm
-    (by
+    (by 
       rintro _ ⟨x, hx, rfl⟩
       apply in_closure.rec_on hx <;> intros
       · solve_by_elim [subset_closure, Set.mem_image_of_mem]
-        
       · rw [hf.to_is_monoid_hom.map_one]
         apply IsSubmonoid.one_mem (closure.is_subgroup _).to_is_submonoid
-        
       · rw [hf.map_inv]
         apply IsSubgroup.inv_mem (closure.is_subgroup _)
         assumption
-        
       · rw [hf.to_is_monoid_hom.map_mul]
-        solve_by_elim [IsSubmonoid.mul_mem (closure.is_subgroup _).to_is_submonoid]
-        )
+        solve_by_elim [IsSubmonoid.mul_mem (closure.is_subgroup _).to_is_submonoid] )
     (closure_subset (hf.image_subgroup <| closure.is_subgroup _) <|
       Set.image_subset _ subset_closure)
 #align group.image_closure Group.image_closure
@@ -588,11 +584,9 @@ theorem mem_closure_union_iff {G : Type _} [CommGroup G] {s t : Set G} {x : G} :
   · rintro ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, hys, _, hzs, rfl⟩, _, ⟨_, hyt, _, hzt, rfl⟩, _⟩
     rw [mul_assoc, mul_assoc, mul_left_comm zs]
-    
   · rintro ⟨_, ⟨ys, hys, zs, hzs, rfl⟩, _, ⟨yt, hyt, zt, hzt, rfl⟩, rfl⟩
     refine' ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, _⟩
     rw [mul_assoc, mul_assoc, mul_left_comm yt]
-    
 #align group.mem_closure_union_iff Group.mem_closure_union_iff
 
 end Group
@@ -652,15 +646,11 @@ theorem normalClosure.is_normal : IsNormalSubgroup (normalClosure s) :=
     Normal := fun n h g => by
       induction' h with x hx x hx ihx x y hx hy ihx ihy
       · exact conjugates_of_set_subset_normal_closure (conj_mem_conjugates_of_set hx)
-        
       · simpa using (normal_closure.is_subgroup s).one_mem
-        
       · rw [← conj_inv]
         exact (normal_closure.is_subgroup _).inv_mem ihx
-        
       · rw [← conj_mul]
-        exact (normal_closure.is_subgroup _).to_is_submonoid.mul_mem ihx ihy
-         }
+        exact (normal_closure.is_subgroup _).to_is_submonoid.mul_mem ihx ihy }
 #align group.normal_closure.is_normal Group.normalClosure.is_normal
 
 /-- The normal closure of s is the smallest normal subgroup containing s. -/
@@ -668,13 +658,9 @@ theorem normal_closure_subset {s t : Set G} (ht : IsNormalSubgroup t) (h : s ⊆
     normalClosure s ⊆ t := fun a w => by
   induction' w with x hx x hx ihx x y hx hy ihx ihy
   · exact conjugates_of_set_subset' ht h <| hx
-    
   · exact ht.to_is_subgroup.to_is_submonoid.one_mem
-    
   · exact ht.to_is_subgroup.inv_mem ihx
-    
   · exact ht.to_is_subgroup.to_is_submonoid.mul_mem ihx ihy
-    
 #align group.normal_closure_subset Group.normal_closure_subset
 
 theorem normal_closure_subset_iff {s t : Set G} (ht : IsNormalSubgroup t) :
@@ -690,7 +676,8 @@ end Group
 
 /-- Create a bundled subgroup from a set `s` and `[is_subgroup s]`. -/
 @[to_additive "Create a bundled additive subgroup from a set `s` and `[is_add_subgroup s]`."]
-def Subgroup.of [Group G] {s : Set G} (h : IsSubgroup s) : Subgroup G where
+def Subgroup.of [Group G] {s : Set G} (h : IsSubgroup s) :
+    Subgroup G where 
   carrier := s
   one_mem' := h.1.1
   mul_mem' _ _ := h.1.2

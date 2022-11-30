@@ -146,7 +146,7 @@ theorem Step.append_right : ∀ {L₁ L₂ L₃ : List (α × Bool)}, Step L₁ 
 #align free_group.red.step.append_right FreeGroup.Red.Step.append_right
 
 @[to_additive]
-theorem not_step_nil : ¬Step [] L := by
+theorem not_step_nil : ¬Step [] L := by 
   generalize h' : [] = L'
   intro h
   cases' h with L₁ L₂
@@ -166,19 +166,13 @@ theorem Step.cons_left_iff {a : α} {b : Bool} :
     rintro @⟨_ | ⟨p, s'⟩, e, a', b'⟩
     · simp at hL
       simp [*]
-      
     · simp at hL
       rcases hL with ⟨rfl, rfl⟩
       refine' Or.inl ⟨s' ++ e, step.bnot, _⟩
       simp
-      
-    
   · rintro (⟨L, h, rfl⟩ | rfl)
     · exact step.cons h
-      
     · exact step.cons_bnot
-      
-    
 #align free_group.red.step.cons_left_iff FreeGroup.Red.Step.cons_left_iff
 
 @[to_additive]
@@ -267,7 +261,7 @@ theorem cons_cons {p} : Red L₁ L₂ → Red (p::L₁) (p::L₂) :=
 @[to_additive]
 theorem cons_cons_iff (p) : Red (p::L₁) (p::L₂) ↔ Red L₁ L₂ :=
   Iff.intro
-    (by
+    (by 
       generalize eq₁ : (p::L₁ : List _) = LL₁
       generalize eq₂ : (p::L₂ : List _) = LL₂
       intro h
@@ -276,16 +270,12 @@ theorem cons_cons_iff (p) : Red (p::L₁) (p::L₂) ↔ Red L₁ L₂ :=
       · subst_vars
         cases eq₂
         constructor
-        
       · subst_vars
         cases' p with a b
         rw [step.cons_left_iff] at h₁₂
         rcases h₁₂ with (⟨L, h₁₂, rfl⟩ | rfl)
         · exact (ih rfl rfl).head h₁₂
-          
-        · exact (cons_cons h).tail step.cons_bnot_rev
-          
-        )
+        · exact (cons_cons h).tail step.cons_bnot_rev)
     cons_cons
 #align free_group.red.cons_cons_iff FreeGroup.Red.cons_cons_iff
 
@@ -312,23 +302,19 @@ theorem append_append (h₁ : Red L₁ L₃) (h₂ : Red L₂ L₄) : Red (L₁ 
 @[to_additive]
 theorem to_append_iff : Red L (L₁ ++ L₂) ↔ ∃ L₃ L₄, L = L₃ ++ L₄ ∧ Red L₃ L₁ ∧ Red L₄ L₂ :=
   Iff.intro
-    (by
+    (by 
       generalize eq : L₁ ++ L₂ = L₁₂
       intro h
       induction' h with L' L₁₂ hLL' h ih generalizing L₁ L₂
       · exact ⟨_, _, Eq.symm, by rfl, by rfl⟩
-        
       · cases' h with s e a b
         rcases List.append_eq_append_iff.1 Eq with (⟨s', rfl, rfl⟩ | ⟨e', rfl, rfl⟩)
         · have : L₁ ++ (s' ++ (a, b)::(a, not b)::e) = L₁ ++ s' ++ (a, b)::(a, not b)::e := by simp
           rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
           exact ⟨w₁, w₂, rfl, h₁, h₂.tail step.bnot⟩
-          
         · have : (s ++ (a, b)::(a, not b)::e') ++ L₂ = s ++ (a, b)::(a, not b)::e' ++ L₂ := by simp
           rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
-          exact ⟨w₁, w₂, rfl, h₁.tail step.bnot, h₂⟩
-          
-        )
+          exact ⟨w₁, w₂, rfl, h₁.tail step.bnot, h₂⟩)
     fun ⟨L₃, L₄, Eq, h₃, h₄⟩ => Eq.symm ▸ append_append h₃ h₄
 #align free_group.red.to_append_iff FreeGroup.Red.to_append_iff
 
@@ -355,7 +341,7 @@ to `x⁻¹` -/
       "If `x` is a letter and `w` is a word such that `x + w` reduces to the empty word,\nthen `w` reduces to `-x`."]
 theorem cons_nil_iff_singleton {x b} : Red ((x, b)::L) [] ↔ Red L [(x, not b)] :=
   Iff.intro
-    (fun h => by
+    (fun h => by 
       have h₁ : Red ((x, not b)::(x, b)::L) [(x, not b)] := cons_cons h
       have h₂ : Red ((x, not b)::(x, b)::L) L := ReflTransGen.single Step.cons_bnot_rev
       let ⟨L', h₁, h₂⟩ := church_rosser h₁ h₂
@@ -395,7 +381,6 @@ theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2))
   rcases to_append_iff.1 this with ⟨_ | ⟨p, L₃⟩, L₄, eq, h₁, h₂⟩
   · simp [nil_iff] at h₁
     contradiction
-    
   · cases Eq
     show red (L₃ ++ L₄) ([(x1, not b1), (x2, b2)] ++ L₂)
     apply append_append _ h₂
@@ -404,7 +389,6 @@ theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2))
     rcases church_rosser h₁ h₂ with ⟨L', h₁, h₂⟩
     rw [red_iff_irreducible H1] at h₁
     rwa [h₁] at h₂
-    
 #align free_group.red.inv_of_red_of_ne FreeGroup.Red.inv_of_red_of_ne
 
 @[to_additive]
@@ -427,30 +411,28 @@ theorem length_le (h : Red L₁ L₂) : L₂.length ≤ L₁.length :=
 
 @[to_additive]
 theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ → L₂.sizeof < L₁.sizeof
-  | _, _, @step.bnot _ L1 L2 x b => by
+  | _, _, @step.bnot _ L1 L2 x b => by 
     induction' L1 with hd tl ih
-    case nil =>
-    dsimp [List.sizeof]
-    have H :
-      1 + SizeOf.sizeOf (x, b) + (1 + SizeOf.sizeOf (x, not b) + List.sizeof L2) =
-        List.sizeof L2 + 1 + (SizeOf.sizeOf (x, b) + SizeOf.sizeOf (x, not b) + 1) :=
-      by ac_rfl
-    rw [H]
-    exact Nat.le_add_right _ _
-    case cons =>
-    dsimp [List.sizeof]
-    exact Nat.add_lt_add_left ih _
+    case nil => 
+      dsimp [List.sizeof]
+      have H :
+        1 + SizeOf.sizeOf (x, b) + (1 + SizeOf.sizeOf (x, not b) + List.sizeof L2) =
+          List.sizeof L2 + 1 + (SizeOf.sizeOf (x, b) + SizeOf.sizeOf (x, not b) + 1) :=
+        by ac_rfl
+      rw [H]
+      exact Nat.le_add_right _ _
+    case cons => 
+      dsimp [List.sizeof]
+      exact Nat.add_lt_add_left ih _
 #align free_group.red.sizeof_of_step FreeGroup.Red.sizeof_of_step
 
 @[to_additive]
 theorem length (h : Red L₁ L₂) : ∃ n, L₁.length = L₂.length + 2 * n := by
   induction' h with L₂ L₃ h₁₂ h₂₃ ih
   · exact ⟨0, rfl⟩
-    
   · rcases ih with ⟨n, eq⟩
     exists 1 + n
     simp [mul_add, Eq, (step.length h₂₃).symm, add_assoc]
-    
 #align free_group.red.length FreeGroup.Red.length
 
 @[to_additive]
@@ -595,7 +577,7 @@ theorem inv_rev_bijective : Function.Bijective (@invRev α) :=
 @[to_additive]
 instance : Inv (FreeGroup α) :=
   ⟨Quot.map invRev
-      (by
+      (by 
         intro a b h
         cases h
         simp [inv_rev])⟩
@@ -628,7 +610,7 @@ theorem red_inv_rev_iff : Red (invRev L₁) (invRev L₂) ↔ Red L₁ L₂ :=
 #align free_group.red_inv_rev_iff FreeGroup.red_inv_rev_iff
 
 @[to_additive]
-instance : Group (FreeGroup α) where
+instance : Group (FreeGroup α) where 
   mul := (· * ·)
   one := 1
   inv := Inv.inv
@@ -686,26 +668,25 @@ the free group over `α` to `β` -/
 @[to_additive
       "If `β` is an additive group, then any function from `α` to `β`\nextends uniquely to an additive group homomorphism from\nthe free additive group over `α` to `β`",
   simps symmApply]
-def lift : (α → β) ≃ (FreeGroup α →* β) where
+def lift :
+    (α → β) ≃
+      (FreeGroup α →*
+        β) where 
   toFun f :=
     MonoidHom.mk' ((Quot.lift (Lift.aux f)) fun L₁ L₂ => Red.Step.lift) <| by rintro ⟨L₁⟩ ⟨L₂⟩;
       simp [lift.aux]
   invFun g := g ∘ of
   left_inv f := one_mul _
   right_inv g :=
-    MonoidHom.ext <| by
+    MonoidHom.ext <| by 
       rintro ⟨L⟩
       apply List.recOn L
       · exact g.map_one.symm
-        
       · rintro ⟨x, _ | _⟩ t (ih : _ = g (mk t))
         · show _ = g ((of x)⁻¹ * mk t)
           simpa [lift.aux] using ih
-          
         · show _ = g (of x * mk t)
           simpa [lift.aux] using ih
-          
-        
 #align free_group.lift FreeGroup.lift
 
 variable {f}
@@ -728,7 +709,7 @@ theorem lift.unique (g : FreeGroup α →* β) (hg : ∀ x, g (of x) = f x) : �
 /-- Two homomorphisms out of a free group are equal if they are equal on generators.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1,
+@[ext,
   to_additive
       "Two homomorphisms out of a free additive group are equal if they are equal on generators.\n\nSee note [partially-applied ext lemmas]."]
 theorem ext_hom {G : Type _} [Group G] (f g : FreeGroup α →* G) (h : ∀ a, f (of a) = g (of a)) :
@@ -771,7 +752,7 @@ over `α` to the free group over `β`. -/
       "Any function from `α` to `β` extends uniquely to an additive group homomorphism\nfrom the additive free group over `α` to the additive free group over `β`."]
 def map : FreeGroup α →* FreeGroup β :=
   MonoidHom.mk' ((Quot.map (List.map fun x => (f x.1, x.2))) fun L₁ L₂ H => by cases H <;> simp)
-    (by
+    (by 
       rintro ⟨L₁⟩ ⟨L₂⟩
       simp)
 #align free_group.map FreeGroup.map
@@ -826,7 +807,8 @@ as `equiv.of_free_group_equiv`
  -/
 @[to_additive "Equivalent types give rise to additively equivalent additive free groups.",
   simps apply]
-def freeGroupCongr {α β} (e : α ≃ β) : FreeGroup α ≃* FreeGroup β where
+def freeGroupCongr {α β} (e : α ≃ β) :
+    FreeGroup α ≃* FreeGroup β where 
   toFun := map e
   invFun := map e.symm
   left_inv x := by simp [Function.comp, map.comp]
@@ -889,9 +871,7 @@ end Prod
 theorem lift_eq_prod_map {β : Type v} [Group β] {f : α → β} {x} : lift f x = prod (map f x) := by
   rw [← lift.unique (prod.comp (map f))]
   · rfl
-    
   · simp
-    
 #align free_group.lift_eq_prod_map FreeGroup.lift_eq_prod_map
 
 section Sum
@@ -940,7 +920,8 @@ end Sum
 /-- The bijection between the free group on the empty type, and a type with one element. -/
 @[to_additive
       "The bijection between the additive free group on the empty type, and a type with one element."]
-def freeGroupEmptyEquivUnit : FreeGroup Empty ≃ Unit where
+def freeGroupEmptyEquivUnit :
+    FreeGroup Empty ≃ Unit where 
   toFun _ := ()
   invFun _ := 1
   left_inv := by rintro ⟨_ | ⟨⟨⟨⟩, _⟩, _⟩⟩ <;> rfl
@@ -948,14 +929,16 @@ def freeGroupEmptyEquivUnit : FreeGroup Empty ≃ Unit where
 #align free_group.free_group_empty_equiv_unit FreeGroup.freeGroupEmptyEquivUnit
 
 /-- The bijection between the free group on a singleton, and the integers. -/
-def freeGroupUnitEquivInt : FreeGroup Unit ≃ ℤ where
+def freeGroupUnitEquivInt :
+    FreeGroup Unit ≃
+      ℤ where 
   toFun x :=
     sum
-      (by
+      (by 
         revert x; apply MonoidHom.toFun
         apply map fun _ => (1 : ℤ))
   invFun x := of () ^ x
-  left_inv := by
+  left_inv := by 
     rintro ⟨L⟩
     refine' List.recOn L rfl _
     exact fun ⟨⟨⟩, b⟩ tl ih => by cases b <;> simp [zpow_add] at ih⊢ <;> rw [ih] <;> rfl
@@ -969,7 +952,7 @@ section Category
 variable {β : Type u}
 
 @[to_additive]
-instance : Monad FreeGroup.{u} where
+instance : Monad FreeGroup.{u} where 
   pure α := of
   map α β f := map f
   bind α β x f := lift f x
@@ -1023,7 +1006,9 @@ theorem inv_bind (f : α → FreeGroup β) (x : FreeGroup α) : x⁻¹ >>= f = (
 #align free_group.inv_bind FreeGroup.inv_bind
 
 @[to_additive]
-instance : LawfulMonad FreeGroup.{u} where
+instance :
+    LawfulMonad
+      FreeGroup.{u} where 
   id_map α x :=
     FreeGroup.induction_on x (map_one id) (fun x => map_pure id x) (fun x ih => by rw [map_inv, ih])
       fun x y ihx ihy => by rw [map_mul, ihx, ihy]
@@ -1072,29 +1057,25 @@ theorem reduce.cons (x) :
 theorem reduce.red : Red L (reduce L) := by
   induction' L with hd1 tl1 ih
   case nil => constructor
-  case cons =>
-  dsimp
-  revert ih
-  generalize htl : reduce tl1 = TL
-  intro ih
-  cases' TL with hd2 tl2
-  case nil => exact red.cons_cons ih
-  case cons =>
-  dsimp only
-  split_ifs with h
-  · trans
-    · exact red.cons_cons ih
-      
-    · cases hd1
-      cases hd2
-      cases h
-      dsimp at *
-      subst_vars
-      exact red.step.cons_bnot_rev.to_red
-      
-    
-  · exact red.cons_cons ih
-    
+  case cons => 
+    dsimp
+    revert ih
+    generalize htl : reduce tl1 = TL
+    intro ih
+    cases' TL with hd2 tl2
+    case nil => exact red.cons_cons ih
+    case cons => 
+      dsimp only
+      split_ifs with h
+      · trans
+        · exact red.cons_cons ih
+        · cases hd1
+          cases hd2
+          cases h
+          dsimp at *
+          subst_vars
+          exact red.step.cons_bnot_rev.to_red
+      · exact red.cons_cons ih
 #align free_group.reduce.red FreeGroup.reduce.red
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1189,35 +1170,33 @@ theorem reduce.red : Red L (reduce L) := by
                []
                (Tactic.cases "cases" [(Tactic.casesTarget [`r ":"] (Term.app `reduce [`L1]))] [] [])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-                 (group (Tactic.intro "intro" [`h]) [])
-                 (group
-                  (Tactic.tacticHave_
-                   "have"
-                   (Term.haveDecl
-                    (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
-                  [])
-                 (group
-                  (Tactic.simp
-                   "simp"
-                   []
-                   []
-                   []
-                   ["[" [(Tactic.simpErase "-" `add_comm)] "]"]
-                   [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-                  [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app
-                    `absurd
-                    [`this
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.decide "decide")])))]))
-                  [])])
+                [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                 []
+                 (Tactic.intro "intro" [`h])
+                 []
+                 (Tactic.tacticHave_
+                  "have"
+                  (Term.haveDecl
+                   (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
+                 []
+                 (Tactic.simp
+                  "simp"
+                  []
+                  []
+                  []
+                  ["[" [(Tactic.simpErase "-" `add_comm)] "]"]
+                  [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+                 []
+                 (Tactic.exact
+                  "exact"
+                  (Term.app
+                   `absurd
+                   [`this
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.decide "decide")])))]))])
                []
                (Tactic.cases'
                 "cases'"
@@ -1232,27 +1211,24 @@ theorem reduce.red : Red L (reduce L) := by
                 "<;>"
                 (Tactic.intro "intro" [`H]))
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.rwSeq
-                   "rw"
-                   []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `H)] "]")
-                   [(Tactic.location "at" (Tactic.locationHyp [`r] []))])
-                  [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app
-                    (Term.explicit "@" `reduce.not)
-                    [`L1
-                     (Sym.Data.Sym.Basic.sym.cons' (Term.tuple "(" [`y "," [`c]] ")") "::" `L2)
-                     `L3
-                     `x'
-                     `b'
-                     `r]))
-                  [])])
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `H)] "]")
+                  [(Tactic.location "at" (Tactic.locationHyp [`r] []))])
+                 []
+                 (Tactic.exact
+                  "exact"
+                  (Term.app
+                   (Term.explicit "@" `reduce.not)
+                   [`L1
+                    (Sym.Data.Sym.Basic.sym.cons' (Term.tuple "(" [`y "," [`c]] ")") "::" `L2)
+                    `L3
+                    `x'
+                    `b'
+                    `r]))])
                []
                (Std.Tactic.rcases
                 "rcases"
@@ -1280,37 +1256,37 @@ theorem reduce.red : Red L (reduce L) := by
                      ")")])
                   [])])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.injections "injections" []) [])
-                 (group (Tactic.substVars "subst_vars") [])
-                 (group
-                  (Tactic.simp
-                   "simp"
-                   []
-                   []
-                   []
-                   []
-                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-                  [])
-                 (group (Tactic.cc "cc") [])])
+                [(Tactic.injections "injections" [])
+                 []
+                 (Tactic.substVars "subst_vars")
+                 []
+                 (Tactic.simp
+                  "simp"
+                  []
+                  []
+                  []
+                  []
+                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                 []
+                 (Tactic.cc "cc")])
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.refine'
-                   "refine'"
-                   (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
+                [(Tactic.refine'
+                  "refine'"
+                  (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
+                 []
+                 (Tactic.injection "injection" `H ["with" ["_" `H]])
+                 []
+                 (Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]")
                   [])
-                 (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
-                 (group
-                  (Tactic.rwSeq
-                   "rw"
-                   []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]")
-                   [])
-                  [])
-                 (group (Tactic.tacticRfl "rfl") [])])]))))])
+                 []
+                 (Tactic.tacticRfl "rfl")])]))))])
         []))
       []
       []))
@@ -1326,34 +1302,32 @@ theorem reduce.red : Red L (reduce L) := by
           []
           (Tactic.cases "cases" [(Tactic.casesTarget [`r ":"] (Term.app `reduce [`L1]))] [] [])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-            (group (Tactic.intro "intro" [`h]) [])
-            (group
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
-             [])
-            (group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              []
-              ["[" [(Tactic.simpErase "-" `add_comm)] "]"]
-              [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.app
-               `absurd
-               [`this
-                (Term.byTactic
-                 "by"
-                 (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.decide "decide")])))]))
-             [])])
+           [(Tactic.dsimp "dsimp" [] [] [] [] [])
+            []
+            (Tactic.intro "intro" [`h])
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             []
+             ["[" [(Tactic.simpErase "-" `add_comm)] "]"]
+             [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              `absurd
+              [`this
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.decide "decide")])))]))])
           []
           (Tactic.cases'
            "cases'"
@@ -1368,27 +1342,24 @@ theorem reduce.red : Red L (reduce L) := by
            "<;>"
            (Tactic.intro "intro" [`H]))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `H)] "]")
-              [(Tactic.location "at" (Tactic.locationHyp [`r] []))])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.app
-               (Term.explicit "@" `reduce.not)
-               [`L1
-                (Sym.Data.Sym.Basic.sym.cons' (Term.tuple "(" [`y "," [`c]] ")") "::" `L2)
-                `L3
-                `x'
-                `b'
-                `r]))
-             [])])
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `H)] "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`r] []))])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              (Term.explicit "@" `reduce.not)
+              [`L1
+               (Sym.Data.Sym.Basic.sym.cons' (Term.tuple "(" [`y "," [`c]] ")") "::" `L2)
+               `L3
+               `x'
+               `b'
+               `r]))])
           []
           (Std.Tactic.rcases
            "rcases"
@@ -1416,53 +1387,52 @@ theorem reduce.red : Red L (reduce L) := by
                 ")")])
              [])])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.injections "injections" []) [])
-            (group (Tactic.substVars "subst_vars") [])
-            (group
-             (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-             [])
-            (group (Tactic.cc "cc") [])])
+           [(Tactic.injections "injections" [])
+            []
+            (Tactic.substVars "subst_vars")
+            []
+            (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+            []
+            (Tactic.cc "cc")])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.refine'
-              "refine'"
-              (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
+           [(Tactic.refine'
+             "refine'"
+             (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
+            []
+            (Tactic.injection "injection" `H ["with" ["_" `H]])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]")
              [])
-            (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
-            (group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]")
-              [])
-             [])
-            (group (Tactic.tacticRfl "rfl") [])])])))
+            []
+            (Tactic.tacticRfl "rfl")])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.refine'
-          "refine'"
-          (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
+       [(Tactic.refine'
+         "refine'"
+         (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
+        []
+        (Tactic.injection "injection" `H ["with" ["_" `H]])
+        []
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]")
          [])
-        (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
-        (group
-         (Tactic.rwSeq
-          "rw"
-          []
-          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]")
-          [])
-         [])
-        (group (Tactic.tacticRfl "rfl") [])])
+        []
+        (Tactic.tacticRfl "rfl")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticRfl "rfl")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
@@ -1477,7 +1447,7 @@ theorem reduce.red : Red L (reduce L) := by
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.injection "injection" `H ["with" ["_" `H]])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
@@ -1528,10 +1498,8 @@ only reduces to itself. -/
 theorem reduce.min (H : Red (reduce L₁) L₂) : reduce L₁ = L₂ := by
   induction' H with L1 L' L2 H1 H2 ih
   · rfl
-    
   · cases' H1 with L4 L5 x b
     exact reduce.not H2
-    
 #align free_group.reduce.min FreeGroup.reduce.min
 
 /-- `reduce` is idempotent, i.e. the maximal reduction

@@ -102,7 +102,6 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
     dsimp
     rw [← h.fderiv_eq, add_sub_cancel'_right]
     simpa only [edist_eq_coe_nnnorm_sub, Emetric.mem_ball] using hz
-    
   suffices B :
     HasFpowerSeriesOnBall (fun z => p.change_origin (z - x) 1) (p.change_origin_series 1) x r
   exact
@@ -117,7 +116,7 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
 
 /-- If a function is analytic on a set `s`, so is its Fréchet derivative. -/
 theorem AnalyticOn.fderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : AnalyticOn 𝕜 (fderiv 𝕜 f) s :=
-  by
+  by 
   intro y hy
   rcases h y hy with ⟨p, r, hp⟩
   exact hp.fderiv.analytic_at
@@ -129,18 +128,16 @@ theorem AnalyticOn.iteratedFderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n
   induction' n with n IH
   · rw [iterated_fderiv_zero_eq_comp]
     exact ((continuousMultilinearCurryFin0 𝕜 E F).symm : F →L[𝕜] E[×0]→L[𝕜] F).compAnalyticOn h
-    
   · rw [iterated_fderiv_succ_eq_comp_left]
     apply
       (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E)
               F).toContinuousLinearEquiv.toContinuousLinearMap.compAnalyticOn
     exact IH.fderiv
-    
 #align analytic_on.iterated_fderiv AnalyticOn.iteratedFderiv
 
 /-- An analytic function is infinitely differentiable. -/
 theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : ℕ∞} :
-    ContDiffOn 𝕜 n f s := by
+    ContDiffOn 𝕜 n f s := by 
   let t := { x | AnalyticAt 𝕜 f x }
   suffices : ContDiffOn 𝕜 n f t; exact this.mono h
   have H : AnalyticOn 𝕜 f t := fun x hx => hx
@@ -150,12 +147,10 @@ theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : �
     apply (H.iterated_fderiv m).ContinuousOn.congr
     intro x hx
     exact iterated_fderiv_within_of_is_open _ t_open hx
-    
   · intro m hm
     apply (H.iterated_fderiv m).DifferentiableOn.congr
     intro x hx
     exact iterated_fderiv_within_of_is_open _ t_open hx
-    
 #align analytic_on.cont_diff_on AnalyticOn.contDiffOn
 
 end fderiv
@@ -191,9 +186,7 @@ theorem AnalyticOn.iteratedDeriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n 
     AnalyticOn 𝕜 ((deriv^[n]) f) s := by
   induction' n with n IH
   · exact h
-    
   · simpa only [Function.iterate_succ', Function.comp_apply] using IH.deriv
-    
 #align analytic_on.iterated_deriv AnalyticOn.iteratedDeriv
 
 end deriv

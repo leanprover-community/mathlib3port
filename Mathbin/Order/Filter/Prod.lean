@@ -69,10 +69,8 @@ theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
   constructor
   · rintro ⟨t₁, ⟨s₁, hs₁, hts₁⟩, t₂, ⟨s₂, hs₂, hts₂⟩, rfl⟩
     exact ⟨s₁, hs₁, s₂, hs₂, fun p ⟨h, h'⟩ => ⟨hts₁ h, hts₂ h'⟩⟩
-    
   · rintro ⟨t₁, ht₁, t₂, ht₂, h⟩
     exact mem_inf_of_inter (preimage_mem_comap ht₁) (preimage_mem_comap ht₂) h
-    
 #align filter.mem_prod_iff Filter.mem_prod_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -94,10 +92,8 @@ theorem mem_prod_principal {f : Filter α} {s : Set (α × β)} {t : Set β} :
   refine' exists₂_congr fun u u_in => ⟨_, fun h => ⟨t, mem_principal_self t, _⟩⟩
   · rintro ⟨v, v_in, hv⟩ a a_in b b_in
     exact hv (mk_mem_prod a_in <| v_in b_in)
-    
   · rintro ⟨x, y⟩ ⟨hx, hy⟩
     exact h hx y hy
-    
 #align filter.mem_prod_principal Filter.mem_prod_principal
 
 theorem mem_prod_top {f : Filter α} {s : Set (α × β)} :
@@ -422,15 +418,11 @@ theorem prod_eq_bot {f : Filter α} {g : Filter β} : f ×ᶠ g = ⊥ ↔ f = �
     cases' hst with s_eq t_eq
     · left
       exact empty_mem_iff_bot.1 (s_eq ▸ hs)
-      
     · right
       exact empty_mem_iff_bot.1 (t_eq ▸ ht)
-      
-    
   · rintro (rfl | rfl)
     exact bot_prod
     exact prod_bot
-    
 #align filter.prod_eq_bot Filter.prod_eq_bot
 
 theorem prod_ne_bot {f : Filter α} {g : Filter β} : NeBot (f ×ᶠ g) ↔ NeBot f ∧ NeBot g := by
@@ -555,18 +547,16 @@ in the lemma `map_prod_map_coprod_le` can be strict. -/
 theorem map_prod_map_const_id_principal_coprod_principal {α β ι : Type _} (a : α) (b : β) (i : ι) :
     map (Prod.map (fun _ : α => b) id) ((𝓟 {a}).coprod (𝓟 {i})) =
       𝓟 (({b} : Set β) ×ˢ (univ : Set ι)) :=
-  by
+  by 
   rw [principal_coprod_principal, map_principal]
   congr
   ext ⟨b', i'⟩
   constructor
   · rintro ⟨⟨a'', i''⟩, h₁, h₂, h₃⟩
     simp
-    
   · rintro ⟨h₁, h₂⟩
     use (a, i')
     simpa using h₁.symm
-    
 #align
   filter.map_prod_map_const_id_principal_coprod_principal Filter.map_prod_map_const_id_principal_coprod_principal
 

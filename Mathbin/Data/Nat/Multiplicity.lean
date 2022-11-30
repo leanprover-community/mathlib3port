@@ -66,8 +66,6 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
             · rw [zero_pow, zero_dvd_iff] at h
               exact (hn.ne' h.2).elim
               · exact h.1
-                
-              
             exact
               ((pow_le_iff_le_log (succ_lt_succ <| Nat.pos_of_ne_zero <| succ_ne_succ.1 hm) hn).1 <|
                     le_of_dvd hn h.2).trans_lt
@@ -155,12 +153,10 @@ theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.Prime) :
     multiplicity p (p * n)! = multiplicity p n ! + n := by
   induction' n with n ih
   · simp
-    
   · simp only [succ_eq_add_one, multiplicity.mul, hp, prime_iff.mp hp, ih,
       multiplicity_factorial_mul_succ, ← add_assoc, Nat.cast_one, Nat.cast_add, factorial_succ]
     congr 1
     rw [add_comm, add_assoc]
-    
 #align nat.prime.multiplicity_factorial_mul Nat.Prime.multiplicity_factorial_mul
 
 /-- A prime power divides `n!` iff it is at most the sum of the quotients `n / p ^ i`.
@@ -220,7 +216,7 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) :
     ∀ n k : ℕ, multiplicity p n ≤ multiplicity p (choose n k) + multiplicity p k
   | _, 0 => by simp
   | 0, _ + 1 => by simp
-  | n + 1, k + 1 => by
+  | n + 1, k + 1 => by 
     rw [← hp.multiplicity_mul]
     refine' multiplicity_le_multiplicity_of_dvd_right _
     rw [← succ_mul_choose_eq]
@@ -253,13 +249,11 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
   have h2 := prime_iff.mp prime_two
   refine' binary_rec _ _
   · contradiction
-    
   · intro b n ih h
     by_cases hn : n = 0
     · subst hn
       simp at h
       simp [h, one_right h2.not_unit, PartEnat.zero_lt_one]
-      
     have : multiplicity 2 (2 * n)! < (2 * n : ℕ) := by
       rw [prime_two.multiplicity_factorial_mul]
       refine' (PartEnat.add_lt_add_right (ih hn) (PartEnat.coe_ne_top _)).trans_le _
@@ -267,15 +261,12 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
       norm_cast
     cases b
     · simpa [bit0_eq_two_mul n]
-      
     · suffices multiplicity 2 (2 * n + 1) + multiplicity 2 (2 * n)! < ↑(2 * n) + 1 by
         simpa [succ_eq_add_one, multiplicity.mul, h2, prime_two, Nat.bit1_eq_succ_bit0,
           bit0_eq_two_mul n]
       rw [multiplicity_eq_zero_of_not_dvd (two_not_dvd_two_mul_add_one n), zero_add]
       refine' this.trans _
       exact_mod_cast lt_succ_self _
-      
-    
 #align nat.multiplicity_two_factorial_lt Nat.multiplicity_two_factorial_lt
 
 end Nat

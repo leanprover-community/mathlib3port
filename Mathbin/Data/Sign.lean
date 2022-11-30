@@ -76,7 +76,7 @@ instance : DecidableRel Le := fun a b => by
 
 /- We can define a `field` instance on `sign_type`, but it's not mathematically sensible,
 so we only define the `comm_group_with_zero`. -/
-instance : CommGroupWithZero SignType where
+instance : CommGroupWithZero SignType where 
   zero := 0
   one := 1
   mul := (· * ·)
@@ -91,7 +91,7 @@ instance : CommGroupWithZero SignType where
   exists_pair_ne := ⟨0, 1, by rintro ⟨⟩⟩
   inv_zero := rfl
 
-instance : LinearOrder SignType where
+instance : LinearOrder SignType where 
   le := (· ≤ ·)
   le_refl a := by cases a <;> constructor
   le_total a b := by casesm*_ <;> decide
@@ -99,7 +99,7 @@ instance : LinearOrder SignType where
   le_trans a b c hab hbc := by casesm*_ <;> constructor
   decidableLe := Le.decidableRel
 
-instance : BoundedOrder SignType where
+instance : BoundedOrder SignType where 
   top := 1
   le_top := Le.of_pos
   bot := -1
@@ -110,7 +110,8 @@ instance : HasDistribNeg SignType :=
     neg_mul := fun x y => by casesm*_ <;> rfl, mul_neg := fun x y => by casesm*_ <;> rfl }
 
 /-- `sign_type` is equivalent to `fin 3`. -/
-def fin3Equiv : SignType ≃* Fin 3 where
+def fin3Equiv : SignType ≃* Fin
+        3 where 
   toFun a := a.recOn 0 (-1) 1
   invFun a :=
     match a with
@@ -240,7 +241,8 @@ end cast
 
 /-- `sign_type.cast` as a `mul_with_zero_hom`. -/
 @[simps]
-def castHom {α} [MulZeroOneClass α] [HasDistribNeg α] : SignType →*₀ α where
+def castHom {α} [MulZeroOneClass α] [HasDistribNeg α] :
+    SignType →*₀ α where 
   toFun := cast
   map_zero' := rfl
   map_one' := rfl
@@ -268,11 +270,8 @@ def sign : α →o SignType :=
     dsimp
     split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;> try constructor
     · cases lt_irrefl 0 (h₁.trans <| h.trans_lt h₃)
-      
     · cases h₂ (h₁.trans_le h)
-      
-    · cases h₄ (h.trans_lt h₃)
-      ⟩
+    · cases h₄ (h.trans_lt h₃)⟩
 #align sign sign
 
 theorem sign_apply : sign a = ite (0 < a) 1 (ite (a < 0) (-1) 0) :=
@@ -303,11 +302,8 @@ theorem sign_eq_neg_one_iff : sign a = -1 ↔ a < 0 := by
   rw [sign_apply] at h
   split_ifs  at h
   · simpa using h
-    
   · exact h_2
-    
   · simpa using h
-    
 #align sign_eq_neg_one_iff sign_eq_neg_one_iff
 
 end Preorder
@@ -332,22 +328,16 @@ theorem sign_ne_zero : sign a ≠ 0 ↔ a ≠ 0 :=
 theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
   rcases lt_trichotomy 0 a with (h | rfl | h)
   · simp [h, h.le]
-    
   · simp
-    
   · simpa [h, h.not_le]
-    
 #align sign_nonneg_iff sign_nonneg_iff
 
 @[simp]
 theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
   rcases lt_trichotomy 0 a with (h | rfl | h)
   · simp [h, h.not_le]
-    
   · simp
-    
   · simp [h, h.le]
-    
 #align sign_nonpos_iff sign_nonpos_iff
 
 end LinearOrder
@@ -382,7 +372,7 @@ theorem sign_mul (x y : α) : sign (x * y) = sign x * sign y := by
 is required; consider ℂ with the order `z ≤ w` iff they have the same imaginary part and
 `z - w ≤ 0` in the reals; then `1 + i` and `1 - i` are incomparable to zero, and thus we have:
 `0 * 0 = sign (1 + i) * sign (1 - i) ≠ sign 2 = 1`. (`complex.ordered_comm_ring`) -/
-def signHom : α →*₀ SignType where
+def signHom : α →*₀ SignType where 
   toFun := sign
   map_zero' := sign_zero
   map_one' := sign_one
@@ -404,13 +394,9 @@ theorem Left.sign_neg [CovariantClass α α (· + ·) (· < ·)] (a : α) : sign
   simp_rw [sign_apply, Left.neg_pos_iff, Left.neg_neg_iff]
   split_ifs with h h'
   · exact False.elim (lt_asymm h h')
-    
   · simp
-    
   · simp
-    
   · simp
-    
 #align left.sign_neg Left.sign_neg
 
 theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)] (a : α) :
@@ -418,13 +404,9 @@ theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)
   simp_rw [sign_apply, Right.neg_pos_iff, Right.neg_neg_iff]
   split_ifs with h h'
   · exact False.elim (lt_asymm h h')
-    
   · simp
-    
   · simp
-    
   · simp
-    
 #align right.sign_neg Right.sign_neg
 
 end AddGroup
@@ -444,13 +426,10 @@ theorem sign_sum {ι : Type _} {s : Finset ι} {f : ι → α} (hs : s.Nonempty)
   cases t
   · simp_rw [zero_eq_zero, sign_eq_zero_iff] at h⊢
     exact Finset.sum_eq_zero h
-    
   · simp_rw [neg_eq_neg_one, sign_eq_neg_one_iff] at h⊢
     exact Finset.sum_neg h hs
-    
   · simp_rw [pos_eq_one, sign_eq_one_iff] at h⊢
     exact Finset.sum_pos h hs
-    
 #align sign_sum sign_sum
 
 end LinearOrderedAddCommGroup
@@ -460,11 +439,8 @@ namespace Int
 theorem sign_eq_sign (n : ℤ) : n.sign = sign n := by
   obtain (_ | _) | _ := n
   · exact congr_arg coe sign_zero.symm
-    
   · exact congr_arg coe (sign_pos <| Int.succ_coe_nat_pos _).symm
-    
   · exact congr_arg coe (_root_.sign_neg <| neg_succ_lt_zero _).symm
-    
 #align int.sign_eq_sign Int.sign_eq_sign
 
 end Int
@@ -483,11 +459,9 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
     ⟨Σa : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a => sign (f a.1),
       fun a => a.1, fun a => a.1.Prop, _, _⟩
   · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
-    
   · intro x hx
     simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_natAbs, mul_comm ((f _).natAbs : ℤ),
       @sum_attach _ _ _ _ fun a => ∑ j in range (f a).natAbs, if a = x then (f a).sign else 0]
-    
 #align exists_signed_sum_aux exists_signed_sum_aux
 
 /-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
@@ -507,7 +481,7 @@ theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : �
     ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∉ s → sgn b = 0) ∧
         Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
-  by
+  by 
   obtain ⟨β, _, sgn, g, hg, hβ, hf⟩ := exists_signed_sum s f
   skip
   refine'
@@ -515,8 +489,6 @@ theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : �
       Sum.elim g <| Classical.arbitrary _, _, by simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
   rintro (b | b) hb
   · cases hb (hg _)
-    
   · rfl
-    
 #align exists_signed_sum' exists_signed_sum'
 

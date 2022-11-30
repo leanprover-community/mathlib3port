@@ -60,14 +60,16 @@ abbrev Cofan (f : β → C) :=
 
 /-- A fan over `f : β → C` consists of a collection of maps from an object `P` to every `f b`. -/
 @[simps]
-def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) : Fan f where
+def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) :
+    Fan f where 
   x := P
   π := { app := fun X => p X.as }
 #align category_theory.limits.fan.mk CategoryTheory.Limits.Fan.mk
 
 /-- A cofan over `f : β → C` consists of a collection of maps from every `f b` to an object `P`. -/
 @[simps]
-def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) : Cofan f where
+def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) :
+    Cofan f where 
   x := P
   ι := { app := fun X => p X.as }
 #align category_theory.limits.cofan.mk CategoryTheory.Limits.Cofan.mk
@@ -181,7 +183,7 @@ abbrev Pi.map {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶
 instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Mono (p i)] : mono <| Pi.map p :=
   @Limits.lim_map_mono _ _ _ _ _
-    (by
+    (by 
       dsimp
       infer_instance)
 #align category_theory.limits.pi.map_mono CategoryTheory.Limits.Pi.map_mono
@@ -203,7 +205,7 @@ abbrev Sigma.map {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, 
 instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Epi (p i)] : epi <| Sigma.map p :=
   @Limits.colim_map_epi _ _ _ _ _
-    (by
+    (by 
       dsimp
       infer_instance)
 #align category_theory.limits.sigma.map_epi CategoryTheory.Limits.Sigma.map_epi
@@ -318,13 +320,16 @@ variable {C} [Unique β] (f : β → C)
 
 /-- The limit cone for the product over an index type with exactly one term. -/
 @[simps]
-def limitConeOfUnique : LimitCone (Discrete.functor f) where
+def limitConeOfUnique :
+    LimitCone
+      (Discrete.functor
+        f) where 
   Cone :=
     { x := f default,
       π :=
         { app := fun j =>
             eqToHom
-              (by
+              (by 
                 dsimp
                 congr ) } }
   IsLimit :=
@@ -333,7 +338,7 @@ def limitConeOfUnique : LimitCone (Discrete.functor f) where
         have w := (s.π.naturality (eq_to_hom (Unique.default_eq _))).symm
         dsimp at w
         simpa [eq_to_hom_map] using w,
-      uniq' := fun s m w => by
+      uniq' := fun s m w => by 
         specialize w default
         dsimp at w
         simpa using w }
@@ -352,7 +357,10 @@ def productUniqueIso : ∏ f ≅ f default :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
-def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
+def colimitCoconeOfUnique :
+    ColimitCocone
+      (Discrete.functor
+        f) where 
   Cocone :=
     { x := f default,
       ι :=
@@ -369,7 +377,7 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
         have w := s.ι.naturality (eq_to_hom (Unique.eq_default _))
         dsimp at w
         simpa [eq_to_hom_map] using w,
-      uniq' := fun s m w => by
+      uniq' := fun s m w => by 
         specialize w default
         dsimp at w
         simpa using w }

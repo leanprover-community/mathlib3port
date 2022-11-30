@@ -109,14 +109,12 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ
   · rw [is_conj_iff]
     refine' ⟨⟨π, mem_alternating_group.mp h⟩, Subtype.val_injective _⟩
     simpa only [Subtype.val_eq_coe, Subgroup.coe_mul, coe_inv, coe_mk] using hπ
-    
   · have h2 : 2 ≤ σ.supportᶜ.card := by
       rw [Finset.card_compl, le_tsub_iff_left σ.support.card_le_univ]
       exact hσ
     obtain ⟨a, ha, b, hb, ab⟩ := Finset.one_lt_card.1 h2
     refine' is_conj_iff.2 ⟨⟨π * swap a b, _⟩, Subtype.val_injective _⟩
     · rw [mem_alternating_group, MonoidHom.map_mul, h, sign_swap ab, Int.units_mul_self]
-      
     · simp only [← hπ, coe_mk, Subgroup.coe_mul, Subtype.val_eq_coe]
       have hd : Disjoint (swap a b) σ := by
         rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left,
@@ -124,8 +122,6 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ
         exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
       rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
       simp [mul_assoc]
-      
-    
 #align alternating_group.is_conj_of alternatingGroup.is_conj_of
 
 theorem is_three_cycle_is_conj (h5 : 5 ≤ Fintype.card α) {σ τ : alternatingGroup α}
@@ -151,11 +147,9 @@ theorem closure_three_cycles_eq_alternating :
       obtain ⟨n, hn⟩ := (prod_list_swap_mem_alternating_group_iff_even_length hl).1 hσ
       rw [← two_mul] at hn
       exact hind n l hl hn
-      
     intro n
     induction' n with n ih <;> intro l hl hn
     · simp [List.length_eq_zero.1 hn, one_mem]
-      
     rw [Nat.mul_succ] at hn
     obtain ⟨a, l, rfl⟩ := l.exists_of_length_succ hn
     rw [List.length_cons, Nat.succ_inj'] at hn
@@ -175,7 +169,7 @@ theorem IsThreeCycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f 
     (hf : IsThreeCycle f) :
     normalClosure ({⟨f, hf.mem_alternating_group⟩} : Set (alternatingGroup α)) = ⊤ :=
   eq_top_iff.2
-    (by
+    (by 
       have hi : Function.Injective (alternatingGroup α).Subtype := Subtype.coe_injective
       refine' eq_top_iff.1 (map_injective hi (le_antisymm (map_mono le_top) _))
       rw [← MonoidHom.range_eq_map, subtype_range, normal_closure, MonoidHom.map_closure]
@@ -199,7 +193,6 @@ theorem is_three_cycle_sq_of_three_mem_cycle_type_five {g : Perm (Fin 5)} (h : 3
   suffices hg' : orderOf g' ∣ 2
   · rw [← pow_two, order_of_dvd_iff_pow_eq_one.1 hg', one_mul]
     exact (card_support_eq_three_iff.1 h3).is_three_cycle_sq
-    
   rw [← lcm_cycle_type, Multiset.lcm_dvd]
   intro n hn
   rw [le_antisymm (two_le_of_mem_cycle_type hn) (le_trans (le_card_support_of_mem_cycle_type hn) _)]
@@ -225,7 +218,7 @@ theorem nontrivial_of_three_le_card (h3 : 3 ≤ card α) : Nontrivial (alternati
 
 instance {n : ℕ} : Nontrivial (alternatingGroup (Fin (n + 3))) :=
   nontrivial_of_three_le_card
-    (by
+    (by 
       rw [card_fin]
       exact le_add_left (le_refl 3))
 
@@ -294,36 +287,28 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Fin 5)}
   norm_num at ha
   rw [pow_add, pow_mul, Int.units_pow_two, one_mul, Units.ext_iff, Units.val_one, Units.coe_pow,
     Units.coe_neg_one, neg_one_pow_eq_one_iff_even _] at ha
-  swap;
-  · decide
-    
+  swap; · decide
   rw [is_conj_iff_cycle_type_eq, h2]
   interval_cases Multiset.card g.cycle_type
   · exact (h1 (card_cycle_type_eq_zero.1 h_1)).elim
-    
   · contrapose! ha
     simp [h_1]
-    
   · have h04 : (0 : Fin 5) ≠ 4 := by decide
     have h13 : (1 : Fin 5) ≠ 3 := by decide
     rw [h_1, disjoint.cycle_type, (is_cycle_swap h04).cycleType, (is_cycle_swap h13).cycleType,
       card_support_swap h04, card_support_swap h13]
     · rfl
-      
     · rw [disjoint_iff_disjoint_support, support_swap h04, support_swap h13]
       decide
-      
-    
   · contrapose! ha
     simp [h_1]
-    
 #align
   alternating_group.is_conj_swap_mul_swap_of_cycle_type_two alternatingGroup.is_conj_swap_mul_swap_of_cycle_type_two
 
 /-- Shows that $A_5$ is simple by taking an arbitrary non-identity element and showing by casework
   on its cycle type that its normal closure is all of $A_5$.   -/
 instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
-  ⟨exists_pair_ne _, fun H => by
+  ⟨exists_pair_ne _, fun H => by 
     intro Hn
     refine' or_not.imp id fun Hb => _
     rw [eq_bot_iff_forall] at Hb
@@ -340,7 +325,6 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
       exact
         (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normal_closure_eq_top_of
           normal_closure_swap_mul_swap_five
-      
     push_neg  at h2
     obtain ⟨n, ng, n2⟩ : ∃ n : ℕ, n ∈ g.cycle_type ∧ n ≠ 2 := h2
     -- `n` is the size of a non-swap cycle in the decomposition of `g`.
@@ -351,7 +335,6 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
     · obtain ⟨m, hm⟩ := Multiset.exists_cons_of_mem ng
       rw [← sum_cycle_type, hm, Multiset.sum_cons]
       exact le_add_right le_rfl
-      
     interval_cases n
     -- This breaks into cases `n = 3`, `n = 4`, `n = 5`.
     · -- If `n = 3`, then `g` has a 3-cycle in its decomposition, so `g^2` is a 3-cycle.
@@ -363,18 +346,15 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
       rw [Set.singleton_subset_iff, SetLike.mem_coe]
       have h := SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
       exact mul_mem h h
-      
     · -- The case `n = 4` leads to contradiction, as no element of $A_5$ includes a 4-cycle.
       have con := mem_alternating_group.1 gA
       contrapose! con
       rw [sign_of_cycle_type, cycle_type_of_card_le_mem_cycle_type_add_two (by decide) ng]
       decide
-      
     · -- If `n = 5`, then `g` is itself a 5-cycle, conjugate to `fin_rotate 5`.
       refine'
         (is_conj_iff_cycle_type_eq.2 _).normal_closure_eq_top_of normal_closure_fin_rotate_five
-      rw [cycle_type_of_card_le_mem_cycle_type_add_two (by decide) ng, cycle_type_fin_rotate]
-      ⟩
+      rw [cycle_type_of_card_le_mem_cycle_type_add_two (by decide) ng, cycle_type_fin_rotate]⟩
 #align alternating_group.is_simple_group_five alternatingGroup.is_simple_group_five
 
 end alternatingGroup

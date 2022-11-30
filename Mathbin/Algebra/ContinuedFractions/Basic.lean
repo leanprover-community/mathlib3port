@@ -149,7 +149,7 @@ def TerminatedAt (g : GeneralizedContinuedFraction α) (n : ℕ) : Prop :=
 
 /-- It is decidable whether a gcf terminated at a given position. -/
 instance terminatedAtDecidable (g : GeneralizedContinuedFraction α) (n : ℕ) :
-    Decidable (g.TerminatedAt n) := by
+    Decidable (g.TerminatedAt n) := by 
   unfold terminated_at
   infer_instance
 #align
@@ -300,7 +300,7 @@ instance : Inhabited (ContinuedFraction α) :=
 
 /-- Lift a cf to a scf using the inclusion map. -/
 instance hasCoeToSimpleContinuedFraction : Coe (ContinuedFraction α) (SimpleContinuedFraction α) :=
-  by
+  by 
   unfold ContinuedFraction
   infer_instance
 #align
@@ -432,13 +432,13 @@ namespace GeneralizedContinuedFraction
 
 /-- Two gcfs `g` and `g'` are equal if and only if their components are equal. -/
 protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} :
-    g = g' ↔ g.h = g'.h ∧ g.s = g'.s := by
+    g = g' ↔ g.h = g'.h ∧ g.s = g'.s := by 
   cases g
   cases g'
   simp
 #align generalized_continued_fraction.ext_iff GeneralizedContinuedFraction.ext_iff
 
-@[ext.1]
+@[ext]
 protected theorem ext {g g' : GeneralizedContinuedFraction α} (hyp : g.h = g'.h ∧ g.s = g'.s) :
     g = g' :=
   GeneralizedContinuedFraction.ext_iff.elimRight hyp

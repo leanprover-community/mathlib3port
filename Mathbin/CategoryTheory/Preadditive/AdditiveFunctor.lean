@@ -135,7 +135,7 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
     { preserves := fun f =>
         { preserves := fun b hb =>
             is_bilimit_of_total _
-              (by
+              (by 
                 simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
                 dsimp only [map_bicone_X]
                 simp_rw [← F.map_id]

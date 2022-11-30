@@ -71,10 +71,11 @@ end
 /-- The boundary `∂Δ[n]` of the `n`-th standard simplex consists of
 all `m`-simplices of `standard_simplex n` that are not surjective
 (when viewed as monotone function `m → n`). -/
-def boundary (n : ℕ) : SSet where
+def boundary (n : ℕ) :
+    SSet where 
   obj m := { α : Δ[n].obj m // ¬Function.Surjective (asOrderHom α) }
   map m₁ m₂ f α :=
-    ⟨f.unop ≫ (α : Δ[n].obj m₁), by
+    ⟨f.unop ≫ (α : Δ[n].obj m₁), by 
       intro h
       apply α.property
       exact Function.Surjective.of_comp h⟩
@@ -91,10 +92,11 @@ def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where app m (α : { α : Δ
 It consists of all `m`-simplices `α` of `Δ[n]`
 for which the union of `{i}` and the range of `α` is not all of `n`
 (when viewing `α` as monotone function `m → n`). -/
-def horn (n : ℕ) (i : Fin (n + 1)) : SSet where
+def horn (n : ℕ) (i : Fin (n + 1)) :
+    SSet where 
   obj m := { α : Δ[n].obj m // Set.range (asOrderHom α) ∪ {i} ≠ Set.univ }
   map m₁ m₂ f α :=
-    ⟨f.unop ≫ (α : Δ[n].obj m₁), by
+    ⟨f.unop ≫ (α : Δ[n].obj m₁), by 
       intro h; apply α.property
       rw [Set.eq_univ_iff_forall] at h⊢; intro j
       apply Or.imp _ id (h j)
@@ -147,7 +149,9 @@ namespace Augmented
 /-- The functor which sends `[n]` to the simplicial set `Δ[n]` equipped by
 the obvious augmentation towards the terminal object of the category of sets. -/
 @[simps]
-noncomputable def standardSimplex : SimplexCategory ⥤ SSet.Augmented where
+noncomputable def standardSimplex :
+    SimplexCategory ⥤
+      SSet.Augmented where 
   obj Δ :=
     { left := SSet.standardSimplex.obj Δ, right := terminal _,
       hom := { app := fun Δ' => terminal.from _ } }

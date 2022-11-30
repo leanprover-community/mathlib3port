@@ -71,7 +71,8 @@ unsafe def target.to_string : target → String
 
 /-- An auxiliary attribute which is placed on definitions created by the `alias` command. -/
 @[user_attribute]
-unsafe def alias_attr : user_attribute Unit target where
+unsafe def alias_attr : user_attribute Unit
+      target where 
   Name := `alias
   descr := "This definition is an alias of another."
   parser := failed

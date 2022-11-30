@@ -64,7 +64,8 @@ instance (j : ConnectedComponents J) : Inhabited (Component j) :=
   Classical.inhabitedOfNonempty'
 
 /-- Each connected component of the category is connected. -/
-instance (j : ConnectedComponents J) : IsConnected (Component j) := by
+instance (j : ConnectedComponents J) : IsConnected (Component j) :=
+  by
   -- Show it's connected by constructing a zigzag (in `component j`) between any two objects
   apply is_connected_of_zigzag
   rintro ⟨j₁, hj₁⟩ ⟨j₂, rfl⟩
@@ -75,22 +76,18 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
   let f : ∀ x, zigzag x j₂ → component (Quotient.mk' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
-  have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by
+  have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by 
     intro i hi
     apply List.Chain.induction (fun t => zigzag t j₂) _ hl₁ hl₂ _ _ _ (Or.inr hi)
     · intro j k
       apply Relation.ReflTransGen.head
-      
     · apply Relation.ReflTransGen.refl
-      
   -- Now lift the zigzag from `j₁` to `j₂` in `J` to the same thing in `component j`.
   refine' ⟨l.pmap f hf, _, _⟩
   · refine' @List.chain_pmap_of_chain _ _ _ f (fun x y _ _ h => _) hl₁ h₁₂ _
     exact zag_of_zag_obj (component.ι _) h
-    
   · erw [List.last_pmap _ f (j₁ :: l) (by simpa [h₁₂] using hf) (List.cons_ne_nil _ _)]
     exact full_subcategory.ext _ _ hl₂
-    
 
 /-- The disjoint union of `J`s connected components, written explicitly as a sigma-type with the
 category structure.
@@ -121,8 +118,11 @@ theorem inclusion_comp_decomposed_to (j : ConnectedComponents J) :
   rfl
 #align category_theory.inclusion_comp_decomposed_to CategoryTheory.inclusion_comp_decomposed_to
 
-instance : Full (decomposedTo J) where
-  Preimage := by
+instance :
+    Full
+      (decomposedTo
+        J) where 
+  Preimage := by 
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp at f
     have : j' = k'
@@ -130,16 +130,18 @@ instance : Full (decomposedTo J) where
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this
     refine' sigma.sigma_hom.mk f
-  witness' := by
+  witness' := by 
     rintro ⟨j', X, hX⟩ ⟨_, Y, rfl⟩ f
-    have : Quotient.mk' Y = j' := by
+    have : Quotient.mk' Y = j' := by 
       rw [← hX, Quotient.eq']
       exact Relation.ReflTransGen.single (Or.inr ⟨f⟩)
     subst this
     rfl
 
 instance :
-    Faithful (decomposedTo J) where map_injective' := by
+    Faithful
+      (decomposedTo
+        J) where map_injective' := by
     rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨f⟩ ⟨g⟩ e
     change f = g at e
     subst e

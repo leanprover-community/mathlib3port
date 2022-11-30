@@ -137,11 +137,9 @@ theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) := by
   by_cases hf : UniformContinuous f
   · rw [pkg.extend_def hf]
     exact uniform_continuous_uniformly_extend pkg.uniform_inducing pkg.dense hf
-    
   · change UniformContinuous (ite _ _ _)
     rw [if_neg hf]
     exact uniform_continuous_of_const fun a b => by congr
-    
 #align abstract_completion.uniform_continuous_extend AbstractCompletion.uniform_continuous_extend
 
 theorem continuous_extend : Continuous (pkg.extend f) :=
@@ -260,7 +258,8 @@ theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
 #align abstract_completion.inverse_compare AbstractCompletion.inverse_compare
 
 /-- The uniform bijection between two completions of the same uniform space. -/
-def compareEquiv : pkg.Space ≃ᵤ pkg'.Space where
+def compareEquiv : pkg.Space ≃ᵤ
+      pkg'.Space where 
   toFun := pkg.compare pkg'
   invFun := pkg'.compare pkg
   left_inv := congr_fun (pkg'.inverse_compare pkg)
@@ -292,7 +291,8 @@ local notation "hatβ" => pkg'.Space
 local notation "ι'" => pkg'.coe
 
 /-- Products of completions -/
-protected def prod : AbstractCompletion (α × β) where
+protected def prod : AbstractCompletion
+      (α × β) where 
   Space := hatα × hatβ
   coe p := ⟨ι p.1, ι' p.2⟩
   uniformStruct := Prod.uniformSpace

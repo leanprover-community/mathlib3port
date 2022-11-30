@@ -72,10 +72,8 @@ theorem star_convex_iff_segment_subset : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y 
   constructor
   · rintro h y hy z ⟨a, b, ha, hb, hab, rfl⟩
     exact h hy ha hb hab
-    
   · rintro h y hy a b ha hb hab
     exact h hy ⟨a, b, ha, hb, hab, rfl⟩
-    
 #align star_convex_iff_segment_subset star_convex_iff_segment_subset
 
 theorem StarConvex.segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ s) : [x -[𝕜] y] ⊆ s :=
@@ -117,16 +115,14 @@ theorem star_convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, StarConve
 #align star_convex_Inter star_convex_Inter
 
 theorem StarConvex.union (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) : StarConvex 𝕜 x (s ∪ t) :=
-  by
+  by 
   rintro y (hy | hy) a b ha hb hab
   · exact Or.inl (hs hy ha hb hab)
-    
   · exact Or.inr (ht hy ha hb hab)
-    
 #align star_convex.union StarConvex.union
 
 theorem star_convex_Union {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConvex 𝕜 x (s i)) :
-    StarConvex 𝕜 x (⋃ i, s i) := by
+    StarConvex 𝕜 x (⋃ i, s i) := by 
   rintro y hy a b ha hb hab
   rw [mem_Union] at hy⊢
   obtain ⟨i, hy⟩ := hy
@@ -134,7 +130,7 @@ theorem star_convex_Union {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConv
 #align star_convex_Union star_convex_Union
 
 theorem star_convex_sUnion {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 x s) :
-    StarConvex 𝕜 x (⋃₀S) := by
+    StarConvex 𝕜 x (⋃₀S) := by 
   rw [sUnion_eq_Union]
   exact star_convex_Union fun s => hS _ s.2
 #align star_convex_sUnion star_convex_sUnion
@@ -165,37 +161,32 @@ theorem StarConvex.mem (hs : StarConvex 𝕜 x s) (h : s.Nonempty) : x ∈ s := 
 
 theorem star_convex_iff_forall_pos (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s :=
-  by
+  by 
   refine' ⟨fun h y hy a b ha hb hab => h hy ha.le hb.le hab, _⟩
   intro h y hy a b ha hb hab
   obtain rfl | ha := ha.eq_or_lt
   · rw [zero_add] at hab
     rwa [hab, one_smul, zero_smul, zero_add]
-    
   obtain rfl | hb := hb.eq_or_lt
   · rw [add_zero] at hab
     rwa [hab, one_smul, zero_smul, add_zero]
-    
   exact h hy ha hb hab
 #align star_convex_iff_forall_pos star_convex_iff_forall_pos
 
 theorem star_convex_iff_forall_ne_pos (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔
       ∀ ⦃y⦄, y ∈ s → x ≠ y → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s :=
-  by
+  by 
   refine' ⟨fun h y hy _ a b ha hb hab => h hy ha.le hb.le hab, _⟩
   intro h y hy a b ha hb hab
   obtain rfl | ha' := ha.eq_or_lt
   · rw [zero_add] at hab
     rwa [hab, zero_smul, one_smul, zero_add]
-    
   obtain rfl | hb' := hb.eq_or_lt
   · rw [add_zero] at hab
     rwa [hab, zero_smul, one_smul, add_zero]
-    
   obtain rfl | hxy := eq_or_ne x y
   · rwa [Convex.combo_self hab]
-    
   exact h hy hxy ha' hb' hab
 #align star_convex_iff_forall_ne_pos star_convex_iff_forall_ne_pos
 
@@ -235,7 +226,7 @@ theorem StarConvex.is_linear_preimage {s : Set F} {f : E → F} (hs : StarConvex
 #align star_convex.is_linear_preimage StarConvex.is_linear_preimage
 
 theorem StarConvex.add {t : Set E} (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) :
-    StarConvex 𝕜 (x + y) (s + t) := by
+    StarConvex 𝕜 (x + y) (s + t) := by 
   rw [← add_image_prod]
   exact (hs.prod ht).is_linear_image IsLinearMap.is_linear_map_add
 #align star_convex.add StarConvex.add
@@ -327,16 +318,15 @@ theorem star_convex_zero_iff :
     StarConvex 𝕜 0 s ↔ ∀ ⦃x : E⦄, x ∈ s → ∀ ⦃a : 𝕜⦄, 0 ≤ a → a ≤ 1 → a • x ∈ s := by
   refine'
     forall_congr' fun x => forall_congr' fun hx => ⟨fun h a ha₀ ha₁ => _, fun h a b ha hb hab => _⟩
-  · simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_add, smul_zero] using
+  ·
+    simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_add, smul_zero] using
       h (sub_nonneg_of_le ha₁) ha₀
-    
   · rw [smul_zero, zero_add]
     exact
       h hb
-        (by
+        (by 
           rw [← hab]
           exact le_add_of_nonneg_left ha)
-    
 #align star_convex_zero_iff star_convex_zero_iff
 
 end AddCommMonoid
@@ -366,7 +356,7 @@ theorem StarConvex.add_smul_sub_mem (hs : StarConvex 𝕜 x s) (hy : y ∈ s) {t
 
 /-- The preimage of a star-convex set under an affine map is star-convex. -/
 theorem StarConvex.affine_preimage (f : E →ᵃ[𝕜] F) {s : Set F} (hs : StarConvex 𝕜 (f x) s) :
-    StarConvex 𝕜 x (f ⁻¹' s) := by
+    StarConvex 𝕜 x (f ⁻¹' s) := by 
   intro y hy a b ha hb hab
   rw [mem_preimage, Convex.combo_affine_apply hab]
   exact hs hy ha hb hab
@@ -386,7 +376,7 @@ theorem StarConvex.neg (hs : StarConvex 𝕜 x s) : StarConvex 𝕜 (-x) (-s) :=
 #align star_convex.neg StarConvex.neg
 
 theorem StarConvex.sub (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) :
-    StarConvex 𝕜 (x - y) (s - t) := by
+    StarConvex 𝕜 (x - y) (s - t) := by 
   simp_rw [sub_eq_add_neg]
   exact hs.add ht.neg
 #align star_convex.sub StarConvex.sub
@@ -409,25 +399,22 @@ theorem star_convex_iff_div :
       ∀ ⦃y⦄,
         y ∈ s →
           ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → 0 < a + b → (a / (a + b)) • x + (b / (a + b)) • y ∈ s :=
-  ⟨fun h y hy a b ha hb hab => by
+  ⟨fun h y hy a b ha hb hab => by 
     apply h hy
     · have ha' := mul_le_mul_of_nonneg_left ha (inv_pos.2 hab).le
       rwa [mul_zero, ← div_eq_inv_mul] at ha'
-      
     · have hb' := mul_le_mul_of_nonneg_left hb (inv_pos.2 hab).le
       rwa [mul_zero, ← div_eq_inv_mul] at hb'
-      
     · rw [← add_div]
-      exact div_self hab.ne'
-      ,
-    fun h y hy a b ha hb hab => by
+      exact div_self hab.ne',
+    fun h y hy a b ha hb hab => by 
     have h' := h hy ha hb
     rw [hab, div_one, div_one] at h'
     exact h' zero_lt_one⟩
 #align star_convex_iff_div star_convex_iff_div
 
 theorem StarConvex.mem_smul (hs : StarConvex 𝕜 0 s) (hx : x ∈ s) {t : 𝕜} (ht : 1 ≤ t) : x ∈ t • s :=
-  by
+  by 
   rw [mem_smul_set_iff_inv_smul_mem₀ (zero_lt_one.trans_le ht).ne']
   exact hs.smul_mem hx (inv_nonneg.2 <| zero_le_one.trans ht) (inv_le_one ht)
 #align star_convex.mem_smul StarConvex.mem_smul
@@ -459,7 +446,6 @@ theorem Set.OrdConnected.star_convex [OrderedSemiring 𝕜] [OrderedAddCommMonoi
       a • x + b • y ≤ a • y + b • y := add_le_add_right (smul_le_smul_of_nonneg hxy ha) _
       _ = y := Convex.combo_self hab _
       
-    
   · refine' hs.out hy hx (mem_Icc.2 ⟨_, _⟩)
     calc
       y = a • y + b • y := (Convex.combo_self hab _).symm
@@ -469,7 +455,6 @@ theorem Set.OrdConnected.star_convex [OrderedSemiring 𝕜] [OrderedAddCommMonoi
       a • x + b • y ≤ a • x + b • x := add_le_add_left (smul_le_smul_of_nonneg hyx hb) _
       _ = x := Convex.combo_self hab _
       
-    
 #align set.ord_connected.star_convex Set.OrdConnected.star_convex
 
 theorem star_convex_iff_ord_connected [LinearOrderedField 𝕜] {x : 𝕜} {s : Set 𝕜} (hx : x ∈ s) :

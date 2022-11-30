@@ -119,7 +119,7 @@ instance initial_is_iso_to {A : C} (f : A ⟶ ⊥_ C) : IsIso f :=
   initialIsInitial.is_iso_to _
 #align category_theory.limits.initial_is_iso_to CategoryTheory.Limits.initial_is_iso_to
 
-@[ext.1]
+@[ext]
 theorem initial.hom_ext {A : C} (f g : A ⟶ ⊥_ C) : f = g :=
   initialIsInitial.strict_hom_ext _ _
 #align category_theory.limits.initial.hom_ext CategoryTheory.Limits.initial.hom_ext
@@ -212,50 +212,41 @@ variable {J : Type v} [SmallCategory J]
 said object via `limit.π`. -/
 theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     (H : ∀ (j) (_ : j ≠ i), IsTerminal (F.obj j)) [Subsingleton (i ⟶ i)] : IsIso (limit.π F i) := by
-  classical
-  refine' ⟨⟨limit.lift _ ⟨_, ⟨_, _⟩⟩, _, _⟩⟩
-  · exact fun j =>
-      dite (j = i)
-        (fun h =>
-          eq_to_hom
-            (by
-              cases h
-              rfl))
-        fun h => (H _ h).from _
-    
-  · intro j k f
-    split_ifs
-    · cases h
-      cases h_1
-      obtain rfl : f = 𝟙 _ := Subsingleton.elim _ _
+  classical 
+    refine' ⟨⟨limit.lift _ ⟨_, ⟨_, _⟩⟩, _, _⟩⟩
+    ·
+      exact fun j =>
+        dite (j = i)
+          (fun h =>
+            eq_to_hom
+              (by 
+                cases h
+                rfl))
+          fun h => (H _ h).from _
+    · intro j k f
+      split_ifs
+      · cases h
+        cases h_1
+        obtain rfl : f = 𝟙 _ := Subsingleton.elim _ _
+        simpa
+      · cases h
+        erw [category.comp_id]
+        haveI : is_iso (F.map f) := (H _ h_1).is_iso_from _
+        rw [← is_iso.comp_inv_eq]
+        apply (H _ h_1).hom_ext
+      · cases h_1
+        apply (H _ h).hom_ext
+      · apply (H _ h).hom_ext
+    · ext
+      rw [assoc, limit.lift_π]
+      dsimp only
+      split_ifs
+      · cases h
+        rw [id_comp, eq_to_hom_refl]
+        exact comp_id _
+      · apply (H _ h).hom_ext
+    · rw [limit.lift_π]
       simpa
-      
-    · cases h
-      erw [category.comp_id]
-      haveI : is_iso (F.map f) := (H _ h_1).is_iso_from _
-      rw [← is_iso.comp_inv_eq]
-      apply (H _ h_1).hom_ext
-      
-    · cases h_1
-      apply (H _ h).hom_ext
-      
-    · apply (H _ h).hom_ext
-      
-    
-  · ext
-    rw [assoc, limit.lift_π]
-    dsimp only
-    split_ifs
-    · cases h
-      rw [id_comp, eq_to_hom_refl]
-      exact comp_id _
-      
-    · apply (H _ h).hom_ext
-      
-    
-  · rw [limit.lift_π]
-    simpa
-    
 #align
   category_theory.limits.limit_π_is_iso_of_is_strict_terminal CategoryTheory.Limits.limit_π_is_iso_of_is_strict_terminal
 
@@ -265,7 +256,7 @@ instance terminal_is_iso_from {A : C} (f : ⊤_ C ⟶ A) : IsIso f :=
   terminalIsTerminal.is_iso_from _
 #align category_theory.limits.terminal_is_iso_from CategoryTheory.Limits.terminal_is_iso_from
 
-@[ext.1]
+@[ext]
 theorem terminal.hom_ext {A : C} (f g : ⊤_ C ⟶ A) : f = g :=
   terminalIsTerminal.strict_hom_ext _ _
 #align category_theory.limits.terminal.hom_ext CategoryTheory.Limits.terminal.hom_ext

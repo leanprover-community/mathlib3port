@@ -37,7 +37,8 @@ attribute [local tidy] tactic.case_bash
 /-- If `C` has finite coproducts, a functor `discrete α ⥤ C` lifts to a functor
     `finset (discrete α) ⥤ C` by taking coproducts. -/
 @[simps]
-def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) : Finset (Discrete α) ⥤ C where
+def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) :
+    Finset (Discrete α) ⥤ C where 
   obj s := ∐ fun x : s => F.obj x
   map s t h := Sigma.desc fun y => Sigma.ι (fun x : t => F.obj x) ⟨y, h.down.down y.2⟩
 #align
@@ -48,7 +49,9 @@ def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) : Finset (Discr
     type. -/
 @[simps]
 def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize.{w, w} C]
-    [DecidableEq α] (F : Discrete α ⥤ C) : ColimitCocone F where
+    [DecidableEq α] (F : Discrete α ⥤ C) :
+    ColimitCocone
+      F where 
   Cocone :=
     { x := colimit (liftToFinset F),
       ι :=
@@ -59,14 +62,12 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
     { desc := fun s =>
         colimit.desc (liftToFinset F)
           { x := s.x, ι := { app := fun t => Sigma.desc fun x => s.ι.app x } },
-      uniq' := fun s m h => by
+      uniq' := fun s m h => by 
         ext (t⟨⟨j, hj⟩⟩)
         convert h j using 1
         · simp [← colimit.w (lift_to_finset F) ⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩]
           rfl
-          
-        · tidy
-           }
+        · tidy }
 #align
   category_theory.limits.coproducts_from_finite_filtered.lift_to_finset_colimit_cocone CategoryTheory.Limits.CoproductsFromFiniteFiltered.liftToFinsetColimitCocone
 

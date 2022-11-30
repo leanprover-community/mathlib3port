@@ -107,7 +107,8 @@ variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Linear R C] [
   [Linear R D]
 
 instance inverse_linear (e : C ≌ D) [e.Functor.Additive] [e.Functor.Linear R] :
-    e.inverse.Linear R where map_smul' X Y r f := by
+    e.inverse.Linear
+      R where map_smul' X Y r f := by 
     apply e.functor.map_injective
     simp
 #align category_theory.equivalence.inverse_linear CategoryTheory.Equivalence.inverse_linear

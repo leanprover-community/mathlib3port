@@ -104,14 +104,15 @@ theorem mem_carrier {p : SubMulAction R M} {x : M} : x ∈ p.carrier ↔ x ∈ (
   Iff.rfl
 #align sub_mul_action.mem_carrier SubMulAction.mem_carrier
 
-@[ext.1]
+@[ext]
 theorem ext {p q : SubMulAction R M} (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
   SetLike.ext h
 #align sub_mul_action.ext SubMulAction.ext
 
 /-- Copy of a sub_mul_action with a new `carrier` equal to the old one. Useful to fix definitional
 equalities.-/
-protected def copy (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : SubMulAction R M where
+protected def copy (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) :
+    SubMulAction R M where 
   carrier := s
   smul_mem' := hs.symm ▸ p.smul_mem'
 #align sub_mul_action.copy SubMulAction.copy
@@ -125,7 +126,7 @@ theorem copy_eq (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : p.copy s hs
   SetLike.coe_injective hs
 #align sub_mul_action.copy_eq SubMulAction.copy_eq
 
-instance : HasBot (SubMulAction R M) :=
+instance : Bot (SubMulAction R M) :=
   ⟨{ carrier := ∅, smul_mem' := fun c => Set.not_mem_empty }⟩
 
 instance : Inhabited (SubMulAction R M) :=
@@ -252,7 +253,7 @@ variable [Monoid S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
 variable (p : SubMulAction R M)
 
 /-- If the scalar product forms a `mul_action`, then the subset inherits this action -/
-instance mulAction' : MulAction S p where
+instance mulAction' : MulAction S p where 
   smul := (· • ·)
   one_smul x := Subtype.ext <| one_smul _ x
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul c₁ c₂ x
@@ -332,7 +333,7 @@ theorem neg_mem (hx : x ∈ p) : -x ∈ p := by
 
 @[simp]
 theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
-  ⟨fun h => by
+  ⟨fun h => by 
     rw [← neg_neg x]
     exact neg_mem _ h, neg_mem _⟩
 #align sub_mul_action.neg_mem_iff SubMulAction.neg_mem_iff

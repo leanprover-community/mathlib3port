@@ -325,7 +325,7 @@ theorem AeCover.bInterIciAeCover [SemilatticeSup ι] [Nonempty ι] {φ : ι → 
     (hφ : AeCover μ atTop φ) : AeCover μ atTop fun n : ι => ⋂ (k) (h : k ∈ ici n), φ k :=
   { ae_eventually_mem :=
       hφ.ae_eventually_mem.mono
-        (by
+        (by 
           intro x h
           rw [eventually_at_top] at *
           rcases h with ⟨i, hi⟩
@@ -446,7 +446,7 @@ theorem AeCover.integrableOfIntegralNormBounded [l.ne_bot] [l.IsCountablyGenerat
   conv at hbounded in integral _ _ =>
     rw [integral_eq_lintegral_of_nonneg_ae (ae_of_all _ fun x => @norm_nonneg E _ (f x))
         hfm.norm.restrict]
-  conv at hbounded in Ennreal.ofReal _ =>
+  conv at hbounded in Ennreal.ofReal _ => 
     dsimp
     rw [← coe_nnnorm]
     rw [Ennreal.of_real_coe_nnreal]
@@ -616,11 +616,9 @@ theorem integrableOnIocOfIntervalIntegralNormBounded {I a₀ b₀ : ℝ}
   refine' le_trans (set_integral_mono_set (hfi i).norm _ _) hi
   · apply ae_of_all
     simp only [Pi.zero_apply, norm_nonneg, forall_const]
-    
   · apply ae_of_all
     intro c hc
     exact hc.1
-    
 #align
   measure_theory.integrable_on_Ioc_of_interval_integral_norm_bounded MeasureTheory.integrableOnIocOfIntervalIntegralNormBounded
 
@@ -704,7 +702,7 @@ theorem integral_comp_smul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → E} {a : �
     have i1 : Ioo (min a b) (max a b) ⊆ Ioi a := by
       rw [min_eq_left hb.le]
       exact Ioo_subset_Ioi_self
-    have i2 : [a, b] ⊆ Ici a := by
+    have i2 : [a, b] ⊆ Ici a := by 
       rw [interval_of_le hb.le]
       exact Icc_subset_Ici_self
     refine'
@@ -713,10 +711,8 @@ theorem integral_comp_smul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → E} {a : �
         (hg1.mono_set <| image_subset _ _) (hg2.mono_set i2)
     · rw [min_eq_left hb.le]
       exact Ioo_subset_Ioi_self
-      
     · rw [interval_of_le hb.le]
       exact Icc_subset_Ici_self
-      
   rw [integrable_on_Ici_iff_integrable_on_Ioi] at hg2
   have t2 := interval_integral_tendsto_integral_Ioi _ hg2 tendsto_id
   have : Ioi (f a) ⊆ f '' Ici a :=
@@ -751,19 +747,16 @@ theorem integral_comp_rpow_Ioi (g : ℝ → E) {p : ℝ} (hp : p ≠ 0) :
       rw [← inv_lt_inv (rpow_pos_of_pos hx p) (rpow_pos_of_pos hy p), ← rpow_neg (le_of_lt hx), ←
         rpow_neg (le_of_lt hy)]
       exact rpow_lt_rpow (le_of_lt hx) hxy (neg_pos.mpr h)
-      
     exact StrictMonoOn.inj_on fun x hx y hy hxy => rpow_lt_rpow (mem_Ioi.mp hx).le hxy h
-  have a3 : (fun t : ℝ => t ^ p) '' S = S := by
+  have a3 : (fun t : ℝ => t ^ p) '' S = S := by 
     ext1
     rw [mem_image]
     constructor
     · rintro ⟨y, hy, rfl⟩
       exact rpow_pos_of_pos hy p
-      
     · intro hx
       refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
       rw [← rpow_mul (le_of_lt hx), one_div_mul_cancel hp, rpow_one]
-      
   have := integral_image_eq_integral_abs_deriv_smul measurableSetIoi a1 a2 g
   rw [a3] at this
   rw [this]

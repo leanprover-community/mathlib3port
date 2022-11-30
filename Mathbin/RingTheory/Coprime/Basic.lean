@@ -63,7 +63,7 @@ theorem is_coprime_zero_right : IsCoprime x 0 ↔ IsUnit x :=
 #align is_coprime_zero_right is_coprime_zero_right
 
 theorem not_coprime_zero_zero [Nontrivial R] : ¬IsCoprime (0 : R) 0 :=
-  mt is_coprime_zero_right.mp not_is_unit_zero
+  mt is_coprime_zero_right.mp not_isUnit_zero
 #align not_coprime_zero_zero not_coprime_zero_zero
 
 /-- If a 2-vector `p` satisfies `is_coprime (p 0) (p 1)`, then `p ≠ 0`. -/
@@ -115,10 +115,8 @@ theorem IsCoprime.mul_dvd (H : IsCoprime x y) (H1 : x ∣ z) (H2 : y ∣ z) : x 
   apply dvd_add
   · rw [mul_comm z, mul_assoc]
     exact (mul_dvd_mul_left _ H2).mulLeft _
-    
   · rw [mul_comm b, ← mul_assoc]
     exact (mul_dvd_mul_right H1 _).mulRight _
-    
 #align is_coprime.mul_dvd IsCoprime.mul_dvd
 
 theorem IsCoprime.of_mul_left_left (H : IsCoprime (x * y) z) : IsCoprime x z :=
@@ -378,7 +376,7 @@ theorem neg_neg_iff (x y : R) : IsCoprime (-x) (-y) ↔ IsCoprime x y :=
 end CommRing
 
 theorem sq_add_sq_ne_zero {R : Type _} [LinearOrderedCommRing R] {a b : R} (h : IsCoprime a b) :
-    a ^ 2 + b ^ 2 ≠ 0 := by
+    a ^ 2 + b ^ 2 ≠ 0 := by 
   intro h'
   obtain ⟨ha, hb⟩ := (add_eq_zero_iff' (sq_nonneg a) (sq_nonneg b)).mp h'
   obtain rfl := pow_eq_zero ha

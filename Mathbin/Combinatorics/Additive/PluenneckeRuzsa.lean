@@ -49,9 +49,7 @@ theorem card_div_mul_le_card_div_mul_card_div (A B C : Finset α) :
   refine' card_le_card_of_inj_on (fun b => (a / b, b / c)) (fun b hb => _) fun b₁ _ b₂ _ h => _
   · rw [mem_bipartite_above]
     exact ⟨mk_mem_product (div_mem_div ha hb) (div_mem_div hb hc), div_mul_div_cancel' _ _ _⟩
-    
   · exact div_right_injective (Prod.ext_iff.1 h).1
-    
 #align finset.card_div_mul_le_card_div_mul_card_div Finset.card_div_mul_le_card_div_mul_card_div
 
 /-- **Ruzsa's triangle inequality**. Div-mul-mul version. -/
@@ -88,7 +86,6 @@ theorem mul_pluennecke_petridis (C : Finset α)
     (A * B * C).card * A.card ≤ (A * B).card * (A * C).card := by
   induction' C using Finset.induction_on with x C hc ih
   · simp
-    
   set A' := A ∩ (A * C / {x}) with hA'
   set C' := insert x C with hC'
   have h₀ : A' * {x} = A * {x} ∩ (A * C) := by
@@ -125,7 +122,6 @@ private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
   rintro A' hAA'
   obtain rfl | hA' := A'.eq_empty_or_nonempty
   · simp
-    
   have hA₀ : (0 : ℚ≥0) < A.card := cast_pos.2 hA.card_pos
   have hA₀' : (0 : ℚ≥0) < A'.card := cast_pos.2 hA'.card_pos
   exact_mod_cast
@@ -140,7 +136,6 @@ theorem card_mul_mul_card_le_card_mul_mul_card_mul (A B C : Finset α) :
     (A * C).card * B.card ≤ (A * B).card * (B * C).card := by
   obtain rfl | hB := B.eq_empty_or_nonempty
   · simp
-    
   have hB' : B ∈ B.powerset.erase ∅ := mem_erase_of_ne_of_mem hB.ne_empty (mem_powerset_self _)
   obtain ⟨U, hU, hUA⟩ :=
     exists_min_image (B.powerset.erase ∅) (fun U => (U * A).card / U.card : _ → ℚ≥0) ⟨B, hB'⟩
@@ -188,10 +183,8 @@ theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B 
     ((A + n • B).card : ℚ≥0) ≤ ((A + B).card / A.card) ^ n * A.card := by
   obtain rfl | hA := A.eq_empty_or_nonempty
   · simp
-    
   induction' n with n ih
   · simp
-    
   rw [succ_nsmul, ← add_assoc, pow_succ, mul_assoc, ← mul_div_right_comm, le_div_iff, ← cast_mul]
   swap; exact cast_pos.2 hA.card_pos
   refine' (cast_le.2 <| add_pluennecke_petridis _ hAB).trans _
@@ -205,10 +198,8 @@ theorem card_mul_pow_le (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card �
     (n : ℕ) : ((A * B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card := by
   obtain rfl | hA := A.eq_empty_or_nonempty
   · simp
-    
   induction' n with n ih
   · simp
-    
   rw [pow_succ, ← mul_assoc, pow_succ, @mul_assoc ℚ≥0, ← mul_div_right_comm, le_div_iff, ← cast_mul]
   swap; exact cast_pos.2 hA.card_pos
   refine' (cast_le.2 <| mul_pluennecke_petridis _ hAB).trans _

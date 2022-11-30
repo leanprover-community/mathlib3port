@@ -41,13 +41,13 @@ section Basic
 variable [CompleteLattice α] (f : α →o α)
 
 /-- Least fixed point of a monotone function -/
-def lfp : (α →o α) →o α where
+def lfp : (α →o α) →o α where 
   toFun f := inf { a | f a ≤ a }
   monotone' f g hle := Inf_le_Inf fun a ha => (hle a).trans ha
 #align order_hom.lfp OrderHom.lfp
 
 /-- Greatest fixed point of a monotone function -/
-def gfp : (α →o α) →o α where
+def gfp : (α →o α) →o α where 
   toFun f := sup { a | a ≤ f a }
   monotone' f g hle := Sup_le_Sup fun a ha => le_trans ha (hle a)
 #align order_hom.gfp OrderHom.gfp
@@ -163,7 +163,6 @@ theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
   let a := lfp (lfp.comp h)
   refine' (lfp_le _ _).antisymm (lfp_le _ (Eq.le _))
   · exact lfp_le _ h.on_diag.map_lfp.le
-    
   have ha : (lfp ∘ h) a = a := (lfp.comp h).map_lfp
   calc
     h a a = h a (lfp (h a)) := congr_arg (h a) ha.symm

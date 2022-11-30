@@ -63,7 +63,9 @@ theorem Commute.lie_eq {x y : A} (h : Commute x y) : ⁅x, y⁆ = 0 :=
 namespace LieRing
 
 /-- An associative ring gives rise to a Lie ring by taking the bracket to be the ring commutator. -/
-instance (priority := 100) ofAssociativeRing : LieRing A where
+instance (priority := 100) ofAssociativeRing :
+    LieRing
+      A where 
   add_lie := by
     simp only [Ring.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_comm, add_left_comm,
       forall_const, eq_self_iff_true, neg_add_rev]
@@ -71,7 +73,7 @@ instance (priority := 100) ofAssociativeRing : LieRing A where
     simp only [Ring.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_comm, add_left_comm,
       forall_const, eq_self_iff_true, neg_add_rev]
   lie_self := by simp only [Ring.lie_def, forall_const, sub_self]
-  leibniz_lie x y z := by
+  leibniz_lie x y z := by 
     repeat' rw [Ring.lie_def]
     noncomm_ring
 #align lie_ring.of_associative_ring LieRing.ofAssociativeRing
@@ -102,7 +104,8 @@ specifically we can build two mathematically-different `has_bracket A A`s:
 
 See note [reducible non-instances] -/
 @[reducible]
-def LieRingModule.ofAssociativeModule : LieRingModule A M where
+def LieRingModule.ofAssociativeModule :
+    LieRingModule A M where 
   bracket := (· • ·)
   add_lie := add_smul
   lie_add := smul_add
@@ -141,7 +144,8 @@ Lie algebra via the ring commutator.
 
 See the comment at `lie_ring_module.of_associative_module` for why the possibility `M = A` means
 this cannot be a global instance. -/
-def LieModule.ofAssociativeModule : LieModule R A M where
+def LieModule.ofAssociativeModule :
+    LieModule R A M where 
   smul_lie := smul_assoc
   lie_smul := smul_algebra_smul_comm
 #align lie_module.of_associative_module LieModule.ofAssociativeModule
@@ -221,15 +225,18 @@ variable [LieRingModule L M] [LieModule R L M]
 
 See also `lie_module.to_module_hom`. -/
 @[simps]
-def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.EndCat R M where
+def LieModule.toEndomorphism :
+    L →ₗ⁅R⁆
+      Module.EndCat R
+        M where 
   toFun x := { toFun := fun m => ⁅x, m⁆, map_add' := lie_add x, map_smul' := fun t => lie_smul t x }
-  map_add' x y := by
+  map_add' x y := by 
     ext m
     apply add_lie
-  map_smul' t x := by
+  map_smul' t x := by 
     ext m
     apply smul_lie
-  map_lie' x y := by
+  map_lie' x y := by 
     ext m
     apply lie_lie
 #align lie_module.to_endomorphism LieModule.toEndomorphism
@@ -314,7 +321,7 @@ end AdjointAction
 def lieSubalgebraOfSubalgebra (R : Type u) [CommRing R] (A : Type v) [Ring A] [Algebra R A]
     (A' : Subalgebra R A) : LieSubalgebra R A :=
   { A'.toSubmodule with
-    lie_mem' := fun x y hx hy => by
+    lie_mem' := fun x y hx hy => by 
       change ⁅x, y⁆ ∈ A'
       change x ∈ A' at hx
       change y ∈ A' at hy

@@ -107,11 +107,9 @@ theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) :
     ((μ univ).toReal • ⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
   cases' eq_or_ne μ 0 with hμ hμ
   · rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
-    
   · rw [average_eq, smul_inv_smul₀]
     refine' (Ennreal.to_real_pos _ <| measure_ne_top _ _).ne'
     rwa [Ne.def, measure_univ_eq_zero]
-    
 #align measure_theory.measure_smul_average MeasureTheory.measure_smul_average
 
 theorem set_average_eq (f : α → E) (s : Set α) :
@@ -157,7 +155,7 @@ theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht
     (⨍ x in s ∪ t, f x ∂μ) =
       (((μ s).toReal / ((μ s).toReal + (μ t).toReal)) • ⨍ x in s, f x ∂μ) +
         ((μ t).toReal / ((μ s).toReal + (μ t).toReal)) • ⨍ x in t, f x ∂μ :=
-  by
+  by 
   haveI := Fact.mk hsμ.lt_top; haveI := Fact.mk htμ.lt_top
   rw [restrict_union₀ hd ht, average_add_measure hfs hft, restrict_apply_univ, restrict_apply_univ]
 #align measure_theory.average_union MeasureTheory.average_union
@@ -181,7 +179,6 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint
   · rw [← ae_eq_empty] at hse
     rw [restrict_congr_set (hse.union eventually_eq.rfl), empty_union]
     exact right_mem_segment _ _ _
-    
   · refine'
       mem_segment_iff_div.mpr
         ⟨(μ s).toReal, (μ t).toReal, Ennreal.to_real_nonneg, Ennreal.to_real_nonneg, _,
@@ -190,7 +187,6 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint
       0 < (μ s).toReal := Ennreal.to_real_pos hse hsμ
       _ ≤ _ := le_add_of_nonneg_right Ennreal.to_real_nonneg
       
-    
 #align measure_theory.average_union_mem_segment MeasureTheory.average_union_mem_segment
 
 theorem average_mem_open_segment_compl_self [IsFiniteMeasure μ] {f : α → E} {s : Set α}

@@ -56,7 +56,7 @@ def comp : ∀ {X Y Z : Σi, C i}, SigmaHom X Y → SigmaHom Y Z → SigmaHom X 
   | _, _, _, mk f, mk g => mk (f ≫ g)
 #align category_theory.sigma.sigma_hom.comp CategoryTheory.Sigma.SigmaHom.comp
 
-instance : CategoryStruct (Σi, C i) where
+instance : CategoryStruct (Σi, C i) where 
   Hom := SigmaHom
   id := id
   comp X Y Z f g := comp f g
@@ -80,7 +80,8 @@ theorem comp_id : ∀ (X Y : Σi, C i) (f : X ⟶ Y), f ≫ 𝟙 Y = f
 
 end SigmaHom
 
-instance sigma : Category (Σi, C i) where
+instance sigma : Category (Σi,
+        C i) where 
   id_comp' := SigmaHom.id_comp
   comp_id' := SigmaHom.comp_id
   assoc' := SigmaHom.assoc
@@ -88,7 +89,7 @@ instance sigma : Category (Σi, C i) where
 
 /-- The inclusion functor into the disjoint union of categories. -/
 @[simps map]
-def incl (i : I) : C i ⥤ Σi, C i where
+def incl (i : I) : C i ⥤ Σi, C i where 
   obj X := ⟨i, X⟩
   map X Y := SigmaHom.mk
 #align category_theory.sigma.incl CategoryTheory.Sigma.incl
@@ -98,7 +99,9 @@ theorem incl_obj {i : I} (X : C i) : (incl i).obj X = ⟨i, X⟩ :=
   rfl
 #align category_theory.sigma.incl_obj CategoryTheory.Sigma.incl_obj
 
-instance (i : I) : Full (incl i : C i ⥤ Σi, C i) where
+instance (i : I) :
+    Full (incl i : C i ⥤ Σi,
+            C i) where 
   preimage := fun X Y ⟨f⟩ => f
   witness' := fun X Y ⟨f⟩ => rfl
 
@@ -112,9 +115,10 @@ variable {D : Type u₂} [Category.{v₂} D] (F : ∀ i, C i ⥤ D)
 To build a natural transformation over the sigma category, it suffices to specify it restricted to
 each subcategory.
 -/
-def natTrans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G where
+def natTrans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) :
+    F ⟶ G where 
   app := fun ⟨j, X⟩ => (h j).app X
-  naturality' := by
+  naturality' := by 
     rintro ⟨j, X⟩ ⟨_, _⟩ ⟨f⟩
     apply (h j).naturality
 #align category_theory.sigma.nat_trans CategoryTheory.Sigma.natTrans
@@ -145,13 +149,13 @@ this property.
 This witnesses that the sigma-type is the coproduct in Cat.
 -/
 @[simps obj]
-def desc : (Σi, C i) ⥤ D where
+def desc : (Σi, C i) ⥤ D where 
   obj X := (F X.1).obj X.2
   map X Y g := descMap F X Y g
-  map_id' := by
+  map_id' := by 
     rintro ⟨i, X⟩
     apply (F i).map_id
-  map_comp' := by
+  map_comp' := by 
     rintro ⟨i, X⟩ ⟨_, Y⟩ ⟨_, Z⟩ ⟨f⟩ ⟨g⟩
     apply (F i).map_comp
 #align category_theory.sigma.desc CategoryTheory.Sigma.desc
@@ -204,7 +208,8 @@ theorem desc_uniq_inv_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F 
 If `q₁` and `q₂` when restricted to each subcategory `C i` agree, then `q₁` and `q₂` are isomorphic.
 -/
 @[simps]
-def natIso {q₁ q₂ : (Σi, C i) ⥤ D} (h : ∀ i, incl i ⋙ q₁ ≅ incl i ⋙ q₂) : q₁ ≅ q₂ where
+def natIso {q₁ q₂ : (Σi, C i) ⥤ D} (h : ∀ i, incl i ⋙ q₁ ≅ incl i ⋙ q₂) :
+    q₁ ≅ q₂ where 
   Hom := natTrans fun i => (h i).Hom
   inv := natTrans fun i => (h i).inv
 #align category_theory.sigma.nat_iso CategoryTheory.Sigma.natIso
@@ -281,9 +286,11 @@ variable {F G : ∀ i, C i ⥤ D i}
 
 /-- Assemble an `I`-indexed family of natural transformations into a single natural transformation.
 -/
-def sigma (α : ∀ i, F i ⟶ G i) : Functor.sigma F ⟶ Functor.sigma G where
+def sigma (α : ∀ i, F i ⟶ G i) :
+    Functor.sigma F ⟶
+      Functor.sigma G where 
   app f := SigmaHom.mk ((α f.1).app _)
-  naturality' := by
+  naturality' := by 
     rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩
     change sigma_hom.mk _ = sigma_hom.mk _
     rw [(α i).naturality]

@@ -66,7 +66,7 @@ protected def repr ⦃α⦄ : Sigma F α → (Sigma.p F).Obj α
     ⟨⟨a, x.1⟩, x.2⟩
 #align mvqpf.sigma.repr Mvqpf.Sigma.repr
 
-instance : Mvqpf (Sigma F) where
+instance : Mvqpf (Sigma F) where 
   p := Sigma.p F
   abs := Sigma.abs F
   repr := Sigma.repr F
@@ -98,7 +98,7 @@ protected def repr ⦃α⦄ : Pi F α → (Pi.p F).Obj α
   | f => ⟨fun a => (Mvqpf.repr (f a)).1, fun i a => (Mvqpf.repr (f _)).2 _ a.2⟩
 #align mvqpf.pi.repr Mvqpf.Pi.repr
 
-instance : Mvqpf (Pi F) where
+instance : Mvqpf (Pi F) where 
   p := Pi.p F
   abs := Pi.abs F
   repr := Pi.repr F

@@ -114,7 +114,7 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫
           (F.leftDerivedObjIso n Q).inv :=
-  by
+  by 
   dsimp only [functor.left_derived, functor.left_derived_obj_iso]
   dsimp; simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
@@ -126,9 +126,7 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
   exact HomotopyCategory.homotopyOutMap _
   apply ProjectiveResolution.lift_homotopy f
   · simp
-    
   · simp [w]
-    
 #align category_theory.functor.left_derived_map_eq CategoryTheory.Functor.left_derived_map_eq
 
 /-- The natural transformation between left-derived functors induced by a natural transformation. -/
@@ -163,7 +161,7 @@ theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α :
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((NatTrans.mapHomologicalComplex α _).app P.complex) ≫
           (G.leftDerivedObjIso n P).inv :=
-  by
+  by 
   symm
   dsimp [nat_trans.left_derived, functor.left_derived_obj_iso]
   simp only [category.comp_id, category.id_comp]

@@ -204,13 +204,9 @@ theorem sqrt_eq_cases : sqrt x = y ↔ y * y = x ∧ 0 ≤ y ∨ x < 0 ∧ y = 0
   · rintro rfl
     cases' le_or_lt 0 x with hle hlt
     · exact Or.inl ⟨mul_self_sqrt hle, sqrt_nonneg x⟩
-      
     · exact Or.inr ⟨hlt, sqrt_eq_zero_of_nonpos hlt.le⟩
-      
-    
   · rintro (⟨rfl, hy⟩ | ⟨hx, rfl⟩)
     exacts[sqrt_mul_self hy, sqrt_eq_zero_of_nonpos hx.le]
-    
 #align real.sqrt_eq_cases Real.sqrt_eq_cases
 
 theorem sqrt_eq_iff_mul_self_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ y * y = x :=
@@ -314,10 +310,8 @@ theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y := by
 theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y := by
   constructor
   · simpa only [abs_le] using abs_le_sqrt
-    
   · rw [← abs_le, ← sq_abs]
     exact (le_sqrt (abs_nonneg x) h).mp
-    
 #align real.sq_le Real.sq_le
 
 theorem neg_sqrt_le_of_sq_le (h : x ^ 2 ≤ y) : -sqrt y ≤ x :=
@@ -399,9 +393,7 @@ theorem sqrt_div (hx : 0 ≤ x) (y : ℝ) : sqrt (x / y) = sqrt x / sqrt y := by
 theorem div_sqrt : x / sqrt x = sqrt x := by
   cases le_or_lt x 0
   · rw [sqrt_eq_zero'.mpr h, div_zero]
-    
   · rw [div_eq_iff (sqrt_ne_zero'.mpr h), mul_self_sqrt h.le]
-    
 #align real.div_sqrt Real.div_sqrt
 
 theorem sqrt_div_self' : sqrt x / x = 1 / sqrt x := by rw [← div_sqrt, one_div_div, div_sqrt]
@@ -444,10 +436,8 @@ theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1
   constructor
   · norm_cast
     simp
-    
   · norm_cast
     exact le_of_lt (Nat.lt_succ_sqrt' a)
-    
 #align real.real_sqrt_le_nat_sqrt_succ Real.real_sqrt_le_nat_sqrt_succ
 
 instance : StarOrderedRing ℝ :=

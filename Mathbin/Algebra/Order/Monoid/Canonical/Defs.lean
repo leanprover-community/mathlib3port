@@ -88,7 +88,7 @@ end HasExistsMulOfLe
   This is satisfied by the natural numbers, for example, but not
   the integers or other nontrivial `ordered_add_comm_group`s. -/
 @[protect_proj]
-class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α, HasBot α where
+class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α, Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   exists_add_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a + c
   le_self_add : ∀ a b : α, a ≤ a + b
@@ -111,7 +111,7 @@ instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u)
   be more natural that collections of all things ≥ 1).
 -/
 @[protect_proj, to_additive]
-class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, HasBot α where
+class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   exists_mul_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a * c
   le_self_mul : ∀ a b : α, a ≤ a * b
@@ -141,7 +141,7 @@ theorem le_self_mul : a ≤ a * c :=
 #align le_self_mul le_self_mul
 
 @[to_additive]
-theorem le_mul_self : a ≤ b * a := by
+theorem le_mul_self : a ≤ b * a := by 
   rw [mul_comm]
   exact le_self_mul
 #align le_mul_self le_mul_self
@@ -168,7 +168,7 @@ theorem le_of_mul_le_right : a * b ≤ c → b ≤ c :=
 
 @[to_additive]
 theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
-  ⟨exists_mul_of_le, by
+  ⟨exists_mul_of_le, by 
     rintro ⟨c, rfl⟩
     exact le_self_mul⟩
 #align le_iff_exists_mul le_iff_exists_mul
@@ -247,10 +247,8 @@ theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔
     apply mt
     rintro rfl
     rw [mul_one]
-    
   · rw [← (self_le_mul_right a c).lt_iff_ne]
     apply lt_mul_of_one_lt_right'
-    
 #align lt_iff_exists_mul lt_iff_exists_mul
 
 end CanonicallyOrderedMonoid
@@ -311,13 +309,9 @@ instance (priority := 100) CanonicallyLinearOrderedMonoid.semilatticeSup : Semil
 theorem min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) := by
   cases' le_total a b with hb hb
   · simp [hb, le_mul_right]
-    
   · cases' le_total a c with hc hc
     · simp [hc, le_mul_left]
-      
     · simp [hb, hc]
-      
-    
 #align min_mul_distrib min_mul_distrib
 
 @[to_additive]

@@ -61,7 +61,7 @@ This means that the shape consists of some union of lines, rays, intervals, and 
 
 Below we define `c.next` and `c.prev` which provide these related elements.
 -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure ComplexShape (ι : Type _) where
   Rel : ι → ι → Prop
   next_eq : ∀ {i j j'}, rel i j → rel i j' → j = j'
@@ -79,7 +79,8 @@ variable {ι : Type _}
 This is mostly only useful so we can describe the relation of "related in `k` steps" below.
 -/
 @[simps]
-def refl (ι : Type _) : ComplexShape ι where
+def refl (ι : Type _) : ComplexShape
+      ι where 
   Rel i j := i = j
   next_eq i j j' w w' := w.symm.trans w'
   prev_eq i i' j w w' := w.trans w'.symm
@@ -90,7 +91,8 @@ def refl (ι : Type _) : ComplexShape ι where
 /-- The reverse of a `complex_shape`.
 -/
 @[simps]
-def symm (c : ComplexShape ι) : ComplexShape ι where
+def symm (c : ComplexShape ι) :
+    ComplexShape ι where 
   Rel i j := c.Rel j i
   next_eq i j j' w w' := c.prev_eq w w'
   prev_eq i i' j w w' := c.next_eq w w'
@@ -111,14 +113,15 @@ theorem symm_symm (c : ComplexShape ι) : c.symm.symm = c := by
 We need this to define "related in k steps" later.
 -/
 @[simp]
-def trans (c₁ c₂ : ComplexShape ι) : ComplexShape ι where
+def trans (c₁ c₂ : ComplexShape ι) :
+    ComplexShape ι where 
   Rel := Relation.Comp c₁.Rel c₂.Rel
-  next_eq i j j' w w' := by
+  next_eq i j j' w w' := by 
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
     rw [c₁.next_eq w₁ w₁'] at w₂
     exact c₂.next_eq w₂ w₂'
-  prev_eq i i' j w w' := by
+  prev_eq i i' j w w' := by 
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
     rw [c₂.prev_eq w₂ w₂'] at w₁
@@ -185,7 +188,8 @@ theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i
 (For example when `a = 1`, a cohomology theory indexed by `ℕ` or `ℤ`)
 -/
 @[simps]
-def up' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α where
+def up' {α : Type _} [AddRightCancelSemigroup α] (a : α) :
+    ComplexShape α where 
   Rel i j := i + a = j
   next_eq i j k hi hj := hi.symm.trans hj
   prev_eq i j k hi hj := add_right_cancel (hi.trans hj.symm)
@@ -197,7 +201,8 @@ def up' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α wh
 (For example when `a = 1`, a homology theory indexed by `ℕ` or `ℤ`)
 -/
 @[simps]
-def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α where
+def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) :
+    ComplexShape α where 
   Rel i j := j + a = i
   next_eq i j k hi hj := add_right_cancel (hi.trans hj.symm)
   prev_eq i j k hi hj := hi.symm.trans hj
@@ -208,7 +213,7 @@ def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α 
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : AddRightCancelSemigroup.{u_1} α] (a : α) (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toHasAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α _inst_1))) j a) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down'.{u_1} α _inst_1 a) i j)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664 : AddRightCancelSemigroup.{u_1} α] (a : α) (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664))) j a) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down'.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664 a) i j)
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.659 : AddRightCancelSemigroup.{u_1} α] (a : α) (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.659))) j a) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down'.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.659 a) i j)
 Case conversion may be inaccurate. Consider using '#align complex_shape.down'_mk ComplexShape.down'_mkₓ'. -/
 theorem down'_mk {α : Type _} [AddRightCancelSemigroup α] (a : α) (i j : α) (h : j + a = i) :
     (down' a).Rel i j :=
@@ -237,7 +242,7 @@ def down (α : Type _) [AddRightCancelSemigroup α] [One α] : ComplexShape α :
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : AddRightCancelSemigroup.{u_1} α] [_inst_2 : One.{u_1} α] (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toHasAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α _inst_1))) j (OfNat.ofNat.{u_1} α 1 (OfNat.mk.{u_1} α 1 (One.one.{u_1} α _inst_2)))) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down.{u_1} α _inst_1 _inst_2) i j)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714 : AddRightCancelSemigroup.{u_1} α] [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717 : One.{u_1} α] (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714))) j (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717))) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714 inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717) i j)
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.709 : AddRightCancelSemigroup.{u_1} α] [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.712 : One.{u_1} α] (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.709))) j (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.712))) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.709 inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.712) i j)
 Case conversion may be inaccurate. Consider using '#align complex_shape.down_mk ComplexShape.down_mkₓ'. -/
 theorem down_mk {α : Type _} [AddRightCancelSemigroup α] [One α] (i j : α) (h : j + 1 = i) :
     (down α).Rel i j :=

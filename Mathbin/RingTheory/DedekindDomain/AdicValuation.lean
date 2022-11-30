@@ -119,11 +119,9 @@ theorem int_valuation_le_one (x : R) : v.intValuationDef x ≤ 1 := by
   by_cases hx : x = 0
   · rw [if_pos hx]
     exact WithZero.zero_le 1
-    
   · rw [if_neg hx, ← WithZero.coe_one, ← of_add_zero, WithZero.coe_le_coe, of_add_le,
       Right.neg_nonpos_iff]
     exact Int.coe_nat_nonneg _
-    
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation_le_one IsDedekindDomain.HeightOneSpectrum.int_valuation_le_one
 
@@ -133,14 +131,12 @@ theorem int_valuation_lt_one_iff_dvd (r : R) :
   rw [int_valuation_def]
   split_ifs with hr
   · simpa [hr] using WithZero.zero_lt_coe _
-    
   · rw [← WithZero.coe_one, ← of_add_zero, WithZero.coe_lt_coe, of_add_lt, neg_lt_zero, ←
       Int.ofNat_zero, Int.coe_nat_lt, zero_lt_iff]
     have h : (Ideal.span {r} : Ideal R) ≠ 0 := by
       rw [Ne.def, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact hr
     apply Associates.count_ne_zero_iff_dvd h (by apply v.irreducible)
-    
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation_lt_one_iff_dvd IsDedekindDomain.HeightOneSpectrum.int_valuation_lt_one_iff_dvd
 
@@ -151,12 +147,11 @@ theorem int_valuation_le_pow_iff_dvd (r : R) (n : ℕ) :
   rw [int_valuation_def]
   split_ifs with hr
   · simp_rw [hr, Ideal.dvd_span_singleton, zero_le', Submodule.zero_mem]
-    
-  · rw [WithZero.coe_le_coe, of_add_le, neg_le_neg_iff, Int.coe_nat_le, Ideal.dvd_span_singleton, ←
+  ·
+    rw [WithZero.coe_le_coe, of_add_le, neg_le_neg_iff, Int.coe_nat_le, Ideal.dvd_span_singleton, ←
       Associates.le_singleton_iff,
       Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hr)
         (by apply v.associates_irreducible)]
-    
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation_le_pow_iff_dvd IsDedekindDomain.HeightOneSpectrum.int_valuation_le_pow_iff_dvd
 
@@ -181,17 +176,13 @@ theorem IntValuation.map_mul' (x y : R) :
   simp only [int_valuation_def]
   by_cases hx : x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
-    
   · by_cases hy : y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
-      
     · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
         of_add_add, ← Ideal.span_singleton_mul_span_singleton, ← Associates.mk_mul_mk, ← neg_add,
         Associates.count_mul (by apply associates.mk_ne_zero'.mpr hx)
           (by apply associates.mk_ne_zero'.mpr hy) (by apply v.associates_irreducible)]
       rfl
-      
-    
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation.map_mul' IsDedekindDomain.HeightOneSpectrum.IntValuation.map_mul'
 
@@ -213,17 +204,14 @@ theorem IntValuation.map_add_le_max' (x y : R) :
     conv_rhs => rw [int_valuation_def, if_pos (Eq.refl _)]
     rw [max_eq_right (WithZero.zero_le (v.int_valuation_def y))]
     exact le_refl _
-    
   · by_cases hy : y = 0
     · rw [hy, add_zero]
       conv_rhs => rw [max_comm, int_valuation_def, if_pos (Eq.refl _)]
       rw [max_eq_right (WithZero.zero_le (v.int_valuation_def x))]
       exact le_refl _
-      
     · by_cases hxy : x + y = 0
       · rw [int_valuation_def, if_pos hxy]
         exact zero_le'
-        
       · rw [v.int_valuation_def_if_neg hxy, v.int_valuation_def_if_neg hx,
           v.int_valuation_def_if_neg hy, WithZero.le_max_iff, int_valuation.le_max_iff_min_le]
         set nmin :=
@@ -245,14 +233,12 @@ theorem IntValuation.map_add_le_max' (x y : R) :
         rw [Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hxy) _] at h_dvd_xy
         exact h_dvd_xy
         apply v.associates_irreducible
-        
-      
-    
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation.map_add_le_max' IsDedekindDomain.HeightOneSpectrum.IntValuation.map_add_le_max'
 
 /-- The `v`-adic valuation on `R`. -/
-def intValuation : Valuation R ℤₘ₀ where
+def intValuation : Valuation R
+      ℤₘ₀ where 
   toFun := v.intValuationDef
   map_zero' := IntValuation.map_zero' v
   map_one' := IntValuation.map_one' v

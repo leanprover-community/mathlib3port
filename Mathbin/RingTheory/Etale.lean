@@ -99,7 +99,6 @@ theorem FormallyUnramified.lift_unique {B : Type u} [CommRing B] [_RB : Algebra 
   apply Ideal.IsNilpotent.induction_on I hI
   · intro B _ I hI _
     exact formally_unramified.comp_injective I hI
-    
   · intro B _ I J hIJ h₁ h₂ _ g₁ g₂ e
     apply h₁
     apply h₂
@@ -107,7 +106,6 @@ theorem FormallyUnramified.lift_unique {B : Type u} [CommRing B] [_RB : Algebra 
     replace e := AlgHom.congr_fun e x
     dsimp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk] at e⊢
     rwa [Ideal.Quotient.eq, ← map_sub, Ideal.mem_quotient_iff_mem hIJ, ← Ideal.Quotient.eq]
-    
 #align algebra.formally_unramified.lift_unique Algebra.FormallyUnramified.lift_unique
 
 theorem FormallyUnramified.ext [FormallyUnramified R A] (hI : IsNilpotent I) {g₁ g₂ : A →ₐ[R] B}
@@ -119,7 +117,7 @@ theorem FormallyUnramified.lift_unique_of_ring_hom [FormallyUnramified R A] {C :
     [CommRing C] (f : B →+* C) (hf : IsNilpotent f.ker) (g₁ g₂ : A →ₐ[R] B)
     (h : f.comp ↑g₁ = f.comp (g₂ : A →+* B)) : g₁ = g₂ :=
   FormallyUnramified.lift_unique _ hf _ _
-    (by
+    (by 
       ext x
       have := RingHom.congr_fun h x
       simpa only [Ideal.Quotient.eq, Function.comp_apply, AlgHom.coe_comp, Ideal.Quotient.mkₐ_eq_mk,
@@ -147,7 +145,6 @@ theorem FormallySmooth.exists_lift {B : Type u} [CommRing B] [_RB : Algebra R B]
   apply Ideal.IsNilpotent.induction_on I hI
   · intro B _ I hI _
     exact formally_smooth.comp_surjective I hI
-    
   · intro B _ I J hIJ h₁ h₂ _ g
     let this : ((B ⧸ I) ⧸ J.map (Ideal.Quotient.mk I)) ≃ₐ[R] B ⧸ J :=
       { (DoubleQuot.quotQuotEquivQuotSup I J).trans
@@ -160,7 +157,6 @@ theorem FormallySmooth.exists_lift {B : Type u} [CommRing B] [_RB : Algebra R B]
       rw [← AlgHom.comp_assoc, AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.to_alg_hom_eq_coe,
         AlgEquiv.comp_symm, AlgHom.id_comp]
     exact ⟨g', e⟩
-    
 #align algebra.formally_smooth.exists_lift Algebra.FormallySmooth.exists_lift
 
 /-- For a formally smooth `R`-algebra `A` and a map `f : A →ₐ[R] B ⧸ I` with `I` square-zero,
@@ -232,7 +228,7 @@ theorem FormallySmooth.ofEquiv [FormallySmooth R A] (e : A ≃ₐ[R] B) : Formal
 #align algebra.formally_smooth.of_equiv Algebra.FormallySmooth.ofEquiv
 
 theorem FormallyUnramified.ofEquiv [FormallyUnramified R A] (e : A ≃ₐ[R] B) :
-    FormallyUnramified R B := by
+    FormallyUnramified R B := by 
   constructor
   intro C _ _ I hI f₁ f₂ e'
   rw [← f₁.comp_id, ← f₂.comp_id, ← e.comp_symm, ← AlgHom.comp_assoc, ← AlgHom.comp_assoc]
@@ -293,7 +289,7 @@ theorem FormallySmooth.comp [FormallySmooth R A] [FormallySmooth A B] : Formally
 #align algebra.formally_smooth.comp Algebra.FormallySmooth.comp
 
 theorem FormallyUnramified.comp [FormallyUnramified R A] [FormallyUnramified A B] :
-    FormallyUnramified R B := by
+    FormallyUnramified R B := by 
   constructor
   intro C _ _ I hI f₁ f₂ e
   have e' :=
@@ -388,10 +384,8 @@ theorem FormallySmooth.iff_split_surjection [FormallySmooth R P] :
     dsimp at e⊢
     rw [← e]
     rfl
-    
   · rintro ⟨g, hg⟩
     exact formally_smooth.of_split f g hg
-    
 #align algebra.formally_smooth.iff_split_surjection Algebra.FormallySmooth.iff_split_surjection
 
 end OfSurjective
@@ -403,7 +397,7 @@ open TensorProduct
 variable {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
 
 instance FormallyUnramified.subsingleton_kaehler_differential [FormallyUnramified R S] :
-    Subsingleton (Ω[S⁄R]) := by
+    Subsingleton (Ω[S⁄R]) := by 
   rw [← not_nontrivial_iff_subsingleton]
   intro h
   obtain ⟨f₁, f₂, e⟩ := (KaehlerDifferential.endEquiv R S).Injective.Nontrivial
@@ -420,7 +414,6 @@ theorem FormallyUnramified.iff_subsingleton_kaehler_differential :
   constructor
   · intros
     infer_instance
-    
   · intro H
     constructor
     intro B _ _ I hI f₁ f₂ e
@@ -430,7 +423,6 @@ theorem FormallyUnramified.iff_subsingleton_kaehler_differential :
       ((KaehlerDifferential.linearMapEquivDerivation R S).toEquiv.trans
             (derivationToSquareZeroEquivLift I hI)).Surjective.Subsingleton
     exact subtype.ext_iff.mp (@Subsingleton.elim this ⟨f₁, rfl⟩ ⟨f₂, e.symm⟩)
-    
 #align
   algebra.formally_unramified.iff_subsingleton_kaehler_differential Algebra.FormallyUnramified.iff_subsingleton_kaehler_differential
 
@@ -447,7 +439,7 @@ variable {A : Type u} [Semiring A] [Algebra R A]
 variable (B : Type u) [CommSemiring B] [Algebra R B]
 
 instance FormallyUnramified.baseChange [FormallyUnramified R A] : FormallyUnramified B (B ⊗[R] A) :=
-  by
+  by 
   constructor
   intro C _ _ I hI f₁ f₂ e
   letI := ((algebraMap B C).comp (algebraMap R B)).toAlgebra
@@ -475,14 +467,12 @@ instance FormallySmooth.baseChange [FormallySmooth R A] : FormallySmooth B (B �
   haveI : IsScalarTower R B C := IsScalarTower.of_algebra_map_eq' rfl
   refine' ⟨tensor_product.product_left_alg_hom (Algebra.ofId B C) _, _⟩
   · exact formally_smooth.lift I ⟨2, hI⟩ ((f.restrict_scalars R).comp tensor_product.include_right)
-    
   · apply AlgHom.restrict_scalars_injective R
     apply TensorProduct.ext
     any_goals infer_instance
     intro b a
     suffices algebraMap B _ b * f (1 ⊗ₜ[R] a) = f (b ⊗ₜ[R] a) by simpa [Algebra.of_id_apply]
     rw [← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
-    
 #align algebra.formally_smooth.base_change Algebra.FormallySmooth.baseChange
 
 instance FormallyEtale.baseChange [FormallyEtale R A] : FormallyEtale B (B ⊗[R] A) :=

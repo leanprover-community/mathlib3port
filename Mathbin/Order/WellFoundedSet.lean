@@ -79,10 +79,8 @@ theorem well_founded_on_iff :
   · rw [← Subtype.preimage_coe_nonempty] at hst
     rcases h.has_min (coe ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
     exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hm ⟨x, xs⟩ xt xm⟩
-    
   · rcases ht with ⟨m, mt⟩
     exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hst ⟨m, ⟨ms, mt⟩⟩⟩
-    
 #align set.well_founded_on_iff Set.well_founded_on_iff
 
 namespace WellFoundedOn
@@ -96,7 +94,7 @@ protected theorem induction (hs : s.WellFoundedOn r) (hx : x ∈ s) {P : α → 
 #align set.well_founded_on.induction Set.WellFoundedOn.induction
 
 protected theorem mono (h : t.WellFoundedOn r') (hle : r ≤ r') (hst : s ⊆ t) : s.WellFoundedOn r :=
-  by
+  by 
   rw [well_founded_on_iff] at *
   refine' Subrelation.wf (fun x y xy => _) h
   exact ⟨hle _ _ xy.1, hst xy.2.1, hst xy.2.2⟩
@@ -171,147 +169,9 @@ open Relation
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.refine'
-               "refine'"
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`h]
-                 []
-                 "=>"
-                 (Term.anonymousCtor
-                  "⟨"
-                  [(Term.fun "fun" (Term.basicFun [`b] [] "=>" (Term.hole "_")))]
-                  "⟩"))))
-              [])
-             (group (Tactic.apply "apply" `InvImage.accessible) [])
-             (group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `acc_transGen_iff)]
-                "]")
-               [(Tactic.location "at" (Tactic.locationHyp [`h] [(patternIgnore (token.«⊢» "⊢"))]))])
-              [])
-             (group
-              (Std.Tactic.obtain
-               "obtain"
-               [(Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.one `h') "|" (Std.Tactic.RCases.rcasesPat.one `h')])]
-               []
-               [":="
-                [(Term.app
-                  (Term.proj `refl_trans_gen_iff_eq_or_trans_gen "." (fieldIdx "1"))
-                  [(Term.proj `b "." (fieldIdx "2"))])]])
-              [])
-             (group
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Std.Tactic.tacticRwa__
-                  "rwa"
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
-                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-                 [])])
-              [])
-             (group
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.exact "exact" (Term.app `h.inv [`h'])) [])])
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.exact
-               "exact"
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`h]
-                 []
-                 "=>"
-                 (Term.app
-                  (Term.proj `h "." `Subset)
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun [(Term.hole "_")] [] "=>" `trans_gen.to_refl))]))))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.refine'
-               "refine'"
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`h]
-                 []
-                 "=>"
-                 (Term.app
-                  `Acc.intro
-                  [(Term.hole "_")
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`b `hb]
-                     []
-                     "=>"
-                     (Term.app
-                      (Term.proj
-                       (Term.app
-                        (Term.proj `h "." `apply)
-                        [(Term.anonymousCtor "⟨" [`b "," (Term.app `trans_gen.single [`hb])] "⟩")])
-                       "."
-                       `of_fibration)
-                      [`Subtype.val (Term.hole "_")])))]))))
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [(Term.anonymousCtor "⟨" [`c "," `hc] "⟩") `d `h]
-                 []
-                 "=>"
-                 (Term.anonymousCtor
-                  "⟨"
-                  [(Term.anonymousCtor "⟨" [`d "," (Term.app `trans_gen.head [`h `hc])] "⟩")
-                   ","
-                   `h
-                   ","
-                   `rfl]
-                  "⟩"))))
-              [])])
-           []
-           (Tactic.tfaeFinish "tfae_finish")])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.refine'
+            [(Tactic.refine'
               "refine'"
               (Term.fun
                "fun"
@@ -323,9 +183,9 @@ open Relation
                  "⟨"
                  [(Term.fun "fun" (Term.basicFun [`b] [] "=>" (Term.hole "_")))]
                  "⟩"))))
-             [])
-            (group (Tactic.apply "apply" `InvImage.accessible) [])
-            (group
+             []
+             (Tactic.apply "apply" `InvImage.accessible)
+             []
              (Tactic.rwSeq
               "rw"
               []
@@ -334,8 +194,7 @@ open Relation
                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `acc_transGen_iff)]
                "]")
               [(Tactic.location "at" (Tactic.locationHyp [`h] [(patternIgnore (token.«⊢» "⊢"))]))])
-             [])
-            (group
+             []
              (Std.Tactic.obtain
               "obtain"
               [(Std.Tactic.RCases.rcasesPatMed
@@ -345,29 +204,23 @@ open Relation
                [(Term.app
                  (Term.proj `refl_trans_gen_iff_eq_or_trans_gen "." (fieldIdx "1"))
                  [(Term.proj `b "." (fieldIdx "2"))])]])
-             [])
-            (group
-             («tactic___;_»
+             []
+             (tactic___
               (cdotTk (patternIgnore (token.«·» "·")))
-              [(group
-                (Std.Tactic.tacticRwa__
-                 "rwa"
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
-                 [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
-                [])])
-             [])
-            (group
-             («tactic___;_»
+              [(Std.Tactic.tacticRwa__
+                "rwa"
+                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
+                [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])
+             []
+             (tactic___
               (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.exact "exact" (Term.app `h.inv [`h'])) [])])
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact
+              [(Tactic.exact "exact" (Term.app `h.inv [`h']))])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.exact
               "exact"
               (Term.fun
                "fun"
@@ -377,15 +230,15 @@ open Relation
                 "=>"
                 (Term.app
                  (Term.proj `h "." `Subset)
-                 [(Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" `trans_gen.to_refl))]))))
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.refine'
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun [(Term.hole "_")] [] "=>" `trans_gen.to_refl))]))))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.refine'
               "refine'"
               (Term.fun
                "fun"
@@ -410,8 +263,7 @@ open Relation
                       "."
                       `of_fibration)
                      [`Subtype.val (Term.hole "_")])))]))))
-             [])
-            (group
+             []
              (Tactic.exact
               "exact"
               (Term.fun
@@ -427,8 +279,132 @@ open Relation
                   `h
                   ","
                   `rfl]
-                 "⟩"))))
-             [])])
+                 "⟩"))))])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.refine'
+             "refine'"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`h]
+               []
+               "=>"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.fun "fun" (Term.basicFun [`b] [] "=>" (Term.hole "_")))]
+                "⟩"))))
+            []
+            (Tactic.apply "apply" `InvImage.accessible)
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `acc_transGen_iff)]
+              "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`h] [(patternIgnore (token.«⊢» "⊢"))]))])
+            []
+            (Std.Tactic.obtain
+             "obtain"
+             [(Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.one `h') "|" (Std.Tactic.RCases.rcasesPat.one `h')])]
+             []
+             [":="
+              [(Term.app
+                (Term.proj `refl_trans_gen_iff_eq_or_trans_gen "." (fieldIdx "1"))
+                [(Term.proj `b "." (fieldIdx "2"))])]])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Std.Tactic.tacticRwa__
+               "rwa"
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.exact "exact" (Term.app `h.inv [`h']))])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`h]
+               []
+               "=>"
+               (Term.app
+                (Term.proj `h "." `Subset)
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun [(Term.hole "_")] [] "=>" `trans_gen.to_refl))]))))])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.refine'
+             "refine'"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`h]
+               []
+               "=>"
+               (Term.app
+                `Acc.intro
+                [(Term.hole "_")
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`b `hb]
+                   []
+                   "=>"
+                   (Term.app
+                    (Term.proj
+                     (Term.app
+                      (Term.proj `h "." `apply)
+                      [(Term.anonymousCtor "⟨" [`b "," (Term.app `trans_gen.single [`hb])] "⟩")])
+                     "."
+                     `of_fibration)
+                    [`Subtype.val (Term.hole "_")])))]))))
+            []
+            (Tactic.exact
+             "exact"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [(Term.anonymousCtor "⟨" [`c "," `hc] "⟩") `d `h]
+               []
+               "=>"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.anonymousCtor "⟨" [`d "," (Term.app `trans_gen.head [`h `hc])] "⟩")
+                 ","
+                 `h
+                 ","
+                 `rfl]
+                "⟩"))))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -436,53 +412,50 @@ open Relation
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.refine'
-          "refine'"
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`h]
-            []
-            "=>"
-            (Term.app
-             `Acc.intro
-             [(Term.hole "_")
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`b `hb]
-                []
-                "=>"
-                (Term.app
-                 (Term.proj
-                  (Term.app
-                   (Term.proj `h "." `apply)
-                   [(Term.anonymousCtor "⟨" [`b "," (Term.app `trans_gen.single [`hb])] "⟩")])
-                  "."
-                  `of_fibration)
-                 [`Subtype.val (Term.hole "_")])))]))))
-         [])
-        (group
-         (Tactic.exact
-          "exact"
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [(Term.anonymousCtor "⟨" [`c "," `hc] "⟩") `d `h]
-            []
-            "=>"
-            (Term.anonymousCtor
-             "⟨"
-             [(Term.anonymousCtor "⟨" [`d "," (Term.app `trans_gen.head [`h `hc])] "⟩")
-              ","
-              `h
-              ","
-              `rfl]
-             "⟩"))))
-         [])])
+       [(Tactic.refine'
+         "refine'"
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`h]
+           []
+           "=>"
+           (Term.app
+            `Acc.intro
+            [(Term.hole "_")
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`b `hb]
+               []
+               "=>"
+               (Term.app
+                (Term.proj
+                 (Term.app
+                  (Term.proj `h "." `apply)
+                  [(Term.anonymousCtor "⟨" [`b "," (Term.app `trans_gen.single [`hb])] "⟩")])
+                 "."
+                 `of_fibration)
+                [`Subtype.val (Term.hole "_")])))]))))
+        []
+        (Tactic.exact
+         "exact"
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [(Term.anonymousCtor "⟨" [`c "," `hc] "⟩") `d `h]
+           []
+           "=>"
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.anonymousCtor "⟨" [`d "," (Term.app `trans_gen.head [`h `hc])] "⟩")
+             ","
+             `h
+             ","
+             `rfl]
+            "⟩"))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -584,7 +557,7 @@ open Relation
      [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.refine'
        "refine'"
        (Term.fun
@@ -841,7 +814,11 @@ section IsStrictOrder
 
 variable [IsStrictOrder α r] {s t : Set α}
 
-instance IsStrictOrder.subset : IsStrictOrder α fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s where
+instance IsStrictOrder.subset :
+    IsStrictOrder α fun a b : α =>
+      r a b ∧
+        a ∈ s ∧ b ∈
+            s where 
   to_is_irrefl := ⟨fun a con => irrefl_of r a con.1⟩
   to_is_trans := ⟨fun a b c ab bc => ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩
 #align set.is_strict_order.subset Set.IsStrictOrder.subset
@@ -855,11 +832,9 @@ theorem well_founded_on_iff_no_descending_seq :
     have H : ∀ n, f n ∈ s := fun n => (hf.2 n.lt_succ_self).2.2
     refine' ⟨⟨f, _⟩, H⟩
     simpa only [H, and_true_iff] using @hf
-    
   · rintro ⟨⟨f, hf⟩, hfs : ∀ n, f n ∈ s⟩
     refine' ⟨⟨f, _⟩⟩
     simpa only [hfs, and_true_iff] using @hf
-    
 #align set.well_founded_on_iff_no_descending_seq Set.well_founded_on_iff_no_descending_seq
 
 theorem WellFoundedOn.union (hs : s.WellFoundedOn r) (ht : t.WellFoundedOn r) :
@@ -969,10 +944,8 @@ theorem PartiallyWellOrderedOn.union (hs : s.PartiallyWellOrderedOn r)
   rcases Nat.exists_subseq_of_forall_mem_union f hf with ⟨g, hgs | hgt⟩
   · rcases hs _ hgs with ⟨m, n, hlt, hr⟩
     exact ⟨g m, g n, g.strict_mono hlt, hr⟩
-    
   · rcases ht _ hgt with ⟨m, n, hlt, hr⟩
     exact ⟨g m, g n, g.strict_mono hlt, hr⟩
-    
 #align set.partially_well_ordered_on.union Set.PartiallyWellOrderedOn.union
 
 @[simp]
@@ -1008,7 +981,7 @@ section IsRefl
 variable [IsRefl α r]
 
 protected theorem Finite.partially_well_ordered_on (hs : s.Finite) : s.PartiallyWellOrderedOn r :=
-  by
+  by 
   intro f hf
   obtain ⟨m, n, hmn, h⟩ := hs.exists_lt_map_eq_of_forall_mem hf
   exact ⟨m, n, hmn, h.subst <| refl (f m)⟩
@@ -1047,20 +1020,14 @@ theorem partially_well_ordered_on_iff_finite_antichains [IsSymm α r] :
     · refine' (H _ _ h _).elim
       rw [hmn]
       exact refl _
-      
     · exact h
-      
     · refine' (H _ _ h _).elim
       rw [hmn]
       exact refl _
-      
-    
   rintro _ ⟨m, hm, rfl⟩ _ ⟨n, hn, rfl⟩ hmn
   obtain h | h := (ne_of_apply_ne _ hmn).lt_or_lt
   · exact H _ _ h
-    
   · exact mt symm (H _ _ h)
-    
 #align
   set.partially_well_ordered_on_iff_finite_antichains Set.partially_well_ordered_on_iff_finite_antichains
 
@@ -1072,24 +1039,21 @@ theorem PartiallyWellOrderedOn.exists_monotone_subseq (h : s.PartiallyWellOrdere
   · refine' ⟨g, fun m n hle => _⟩
     obtain hlt | rfl := hle.lt_or_eq
     exacts[h1 m n hlt, refl_of r _]
-    
   · exfalso
     obtain ⟨m, n, hlt, hle⟩ := h (f ∘ g) fun n => hf _
     exact h2 m n hlt hle
-    
 #align
   set.partially_well_ordered_on.exists_monotone_subseq Set.PartiallyWellOrderedOn.exists_monotone_subseq
 
 theorem partially_well_ordered_on_iff_exists_monotone_subseq :
     s.PartiallyWellOrderedOn r ↔
       ∀ f : ℕ → α, (∀ n, f n ∈ s) → ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
-  by classical
-  constructor <;> intro h f hf
-  · exact h.exists_monotone_subseq f hf
-    
-  · obtain ⟨g, gmon⟩ := h f hf
-    exact ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
-    
+  by
+  classical 
+    constructor <;> intro h f hf
+    · exact h.exists_monotone_subseq f hf
+    · obtain ⟨g, gmon⟩ := h f hf
+      exact ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
 #align
   set.partially_well_ordered_on_iff_exists_monotone_subseq Set.partially_well_ordered_on_iff_exists_monotone_subseq
 
@@ -1440,13 +1404,13 @@ def IsMinBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ
 noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α)
     (hf : IsBadSeq r s f) :
     { g : ℕ → α // (∀ m : ℕ, m < n → f m = g m) ∧ IsBadSeq r s g ∧ IsMinBadSeq r rk s n g } := by
-  classical
-  have h : ∃ (k : ℕ)(g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
-    ⟨_, f, fun _ _ => rfl, hf, rfl⟩
-  obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
-  refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
-  refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert con, rfl⟩
-  rwa [← h3]
+  classical 
+    have h : ∃ (k : ℕ)(g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
+      ⟨_, f, fun _ _ => rfl, hf, rfl⟩
+    obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
+    refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
+    refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert con, rfl⟩
+    rwa [← h3]
 #align
   set.partially_well_ordered_on.min_bad_seq_of_bad_seq Set.PartiallyWellOrderedOn.minBadSeqOfBadSeq
 
@@ -1455,20 +1419,19 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
   rintro ⟨f0, hf0 : is_bad_seq r s f0⟩
   let fs : ∀ n : ℕ, { f : ℕ → α // is_bad_seq r s f ∧ is_min_bad_seq r rk s n f } := by
     refine' Nat.rec _ _
-    · exact
+    ·
+      exact
         ⟨(min_bad_seq_of_bad_seq r rk s 0 f0 hf0).1, (min_bad_seq_of_bad_seq r rk s 0 f0 hf0).2.2⟩
-      
-    · exact fun n fn =>
+    ·
+      exact fun n fn =>
         ⟨(min_bad_seq_of_bad_seq r rk s (n + 1) fn.1 fn.2.1).1,
           (min_bad_seq_of_bad_seq r rk s (n + 1) fn.1 fn.2.1).2.2⟩
-      
   have h : ∀ m n, m ≤ n → (fs m).1 m = (fs n).1 m := by
     intro m n mn
     obtain ⟨k, rfl⟩ := exists_add_of_le mn
     clear mn
     induction' k with k ih
     · rfl
-      
     rw [ih,
       (min_bad_seq_of_bad_seq r rk s (m + k).succ (fs (m + k)).1 (fs (m + k)).2.1).2.1 m
         (Nat.lt_succ_iff.2 (Nat.add_le_add_left k.zero_le m))]
@@ -1477,10 +1440,8 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
   · dsimp
     rw [← Subtype.val_eq_coe, h m n (le_of_lt mn)]
     convert (fs n).2.1.2 m n mn
-    
   · convert (fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_le hg2 le_rfl)
     rw [← h m n (le_of_lt mn)]
-    
 #align
   set.partially_well_ordered_on.exists_min_bad_of_exists_bad Set.PartiallyWellOrderedOn.exists_min_bad_of_exists_bad
 
@@ -1489,7 +1450,6 @@ theorem iff_not_exists_is_min_bad_seq (rk : α → ℕ) {s : Set α} :
   rw [iff_forall_not_is_bad_seq, ← not_exists, not_congr]
   constructor
   · apply exists_min_bad_of_exists_bad
-    
   rintro ⟨f, hf1, hf2⟩
   exact ⟨f, hf1⟩
 #align
@@ -1507,9 +1467,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
     · intro l hl
       rw [Finset.mem_coe, Finset.mem_singleton, List.eq_nil_iff_forall_not_mem]
       exact hl
-      
     infer_instance
-    
   haveI : Inhabited α := ⟨as⟩
   rw [iff_not_exists_is_min_bad_seq List.length]
   rintro ⟨f, hf1, hf2⟩
@@ -1519,7 +1477,6 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   swap;
   · simp only [Set.range_subset_iff, Function.comp_apply]
     exact fun n => hf1.1 n _ (List.head_mem_self (hnil n))
-    
   have hf' :=
     hf2 (g 0) (fun n => if n < g 0 then f n else List.tail (f (g (n - g 0))))
       (fun m hm => (if_pos hm).symm) _
@@ -1527,7 +1484,6 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   · simp only [if_neg (lt_irrefl (g 0)), tsub_self]
     rw [List.length_tail, ← Nat.pred_eq_sub_one]
     exact Nat.pred_lt fun con => hnil _ (List.length_eq_zero.1 con)
-    
   rw [is_bad_seq] at hf'
   push_neg  at hf'
   obtain ⟨m, n, mn, hmn⟩ := hf' _
@@ -1535,26 +1491,19 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   · rintro n x hx
     split_ifs  at hx with hn hn
     · exact hf1.1 _ _ hx
-      
     · refine' hf1.1 _ _ (List.tail_subset _ hx)
-      
-    
   by_cases hn : n < g 0
   · apply hf1.2 m n mn
     rwa [if_pos hn, if_pos (mn.trans hn)] at hmn
-    
   · obtain ⟨n', rfl⟩ := exists_add_of_le (not_lt.1 hn)
     rw [if_neg hn, add_comm (g 0) n', add_tsub_cancel_right] at hmn
     split_ifs  at hmn with hm hm
     · apply hf1.2 m (g n') (lt_of_lt_of_le hm (g.monotone n'.zero_le))
       exact trans hmn (List.tail_sublist_forall₂_self _)
-      
     · rw [← tsub_lt_iff_left (le_of_not_lt hm)] at mn
       apply hf1.2 _ _ (g.lt_iff_lt.2 mn)
       rw [← List.cons_head_tail (hnil (g (m - g 0))), ← List.cons_head_tail (hnil (g n'))]
       exact List.SublistForall₂.cons (hg _ _ (le_of_lt mn)) hmn
-      
-    
 #align
   set.partially_well_ordered_on.partially_well_ordered_on_sublist_forall₂ Set.PartiallyWellOrderedOn.partially_well_ordered_on_sublist_forall₂
 
@@ -1577,20 +1526,18 @@ theorem Pi.is_pwo {α : ι → Type _} [∀ i, LinearOrder (α i)] [∀ i, IsWel
     ∀ s : Finset ι,
       ∀ f : ℕ → ∀ s, α s,
         ∃ g : ℕ ↪o ℕ, ∀ ⦃a b : ℕ⦄, a ≤ b → ∀ (x : ι) (hs : x ∈ s), (f ∘ g) a x ≤ (f ∘ g) b x
-    by
+    by 
     refine' is_pwo_iff_exists_monotone_subseq.2 fun f hf => _
     simpa only [Finset.mem_univ, true_imp_iff] using this Finset.univ f
   refine' Finset.cons_induction _ _
   · intro f
     exists RelEmbedding.refl (· ≤ ·)
     simp only [IsEmpty.forall_iff, imp_true_iff, forall_const, Finset.not_mem_empty]
-    
   · intro x s hx ih f
     obtain ⟨g, hg⟩ :=
       (is_well_founded.wf.is_wf univ).IsPwo.exists_monotone_subseq (fun n => f n x) mem_univ
     obtain ⟨g', hg'⟩ := ih (f ∘ g)
     refine' ⟨g'.trans g, fun a b hab => (Finset.forall_mem_cons _ _).2 _⟩
     exact ⟨hg (OrderHomClass.mono g' hab), hg' hab⟩
-    
 #align pi.is_pwo Pi.is_pwo
 

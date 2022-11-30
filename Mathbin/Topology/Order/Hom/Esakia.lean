@@ -106,9 +106,10 @@ namespace PseudoEpimorphism
 
 variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ]
 
-instance : PseudoEpimorphismClass (PseudoEpimorphism α β) α β where
+instance : PseudoEpimorphismClass (PseudoEpimorphism α β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -125,7 +126,7 @@ theorem to_fun_eq_coe {f : PseudoEpimorphism α β} : f.toFun = (f : α → β) 
   rfl
 #align pseudo_epimorphism.to_fun_eq_coe PseudoEpimorphism.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : PseudoEpimorphism α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align pseudo_epimorphism.ext PseudoEpimorphism.ext
@@ -239,9 +240,10 @@ def toPseudoEpimorphism (f : EsakiaHom α β) : PseudoEpimorphism α β :=
   { f with }
 #align esakia_hom.to_pseudo_epimorphism EsakiaHom.toPseudoEpimorphism
 
-instance : EsakiaHomClass (EsakiaHom α β) α β where
+instance : EsakiaHomClass (EsakiaHom α β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
     congr
@@ -259,7 +261,7 @@ theorem to_fun_eq_coe {f : EsakiaHom α β} : f.toFun = (f : α → β) :=
   rfl
 #align esakia_hom.to_fun_eq_coe EsakiaHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : EsakiaHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align esakia_hom.ext EsakiaHom.ext

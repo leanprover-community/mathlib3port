@@ -117,7 +117,7 @@ instance Lex.covariant_class_lt_left :
 
 instance Lex.covariant_class_le_left :
     CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (· + ·) (· ≤ ·) :=
-  Add.to_covariant_class_left _
+  Add.to_CovariantClass_left _
 #align finsupp.lex.covariant_class_le_left Finsupp.Lex.covariant_class_le_left
 
 end Left
@@ -134,7 +134,7 @@ instance Lex.covariant_class_lt_right :
 
 instance Lex.covariant_class_le_right :
     CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (Function.swap (· + ·)) (· ≤ ·) :=
-  Add.to_covariant_class_right _
+  Add.to_CovariantClass_right _
 #align finsupp.lex.covariant_class_le_right Finsupp.Lex.covariant_class_le_right
 
 end Right

@@ -92,7 +92,7 @@ theorem mem_part_of_vertex (v : V) : v ∈ P.partOfVertex v := by
 #align simple_graph.partition.mem_part_of_vertex SimpleGraph.Partition.mem_part_of_vertex
 
 theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v ≠ P.partOfVertex w :=
-  by
+  by 
   intro hn
   have hw := P.mem_part_of_vertex w
   rw [← hn] at hw
@@ -123,10 +123,11 @@ variable {G}
 
 /-- Creates a partition from a coloring. -/
 @[simps]
-def Coloring.toPartition {α : Type v} (C : G.Coloring α) : G.partition where
+def Coloring.toPartition {α : Type v} (C : G.Coloring α) :
+    G.partition where 
   parts := C.colorClasses
   IsPartition := C.color_classes_is_partition
-  Independent := by
+  Independent := by 
     rintro s ⟨c, rfl⟩
     apply C.color_classes_independent
 #align simple_graph.coloring.to_partition SimpleGraph.Coloring.toPartition
@@ -142,14 +143,12 @@ theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorabl
     haveI : Fintype P.parts := hf.fintype
     rw [Set.Finite.card_to_finset] at h
     apply P.to_colorable.mono h
-    
   · rintro ⟨C⟩
     refine' ⟨C.to_partition, C.color_classes_finite, le_trans _ (Fintype.card_fin n).le⟩
     generalize_proofs h
     haveI : Fintype C.color_classes := C.color_classes_finite.fintype
     rw [h.card_to_finset]
     exact C.card_color_classes_le
-    
 #align simple_graph.partitionable_iff_colorable SimpleGraph.partitionable_iff_colorable
 
 end SimpleGraph

@@ -65,7 +65,7 @@ theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : closedBall x r = icc ⌈↑x - 
 #align int.closed_ball_eq_Icc Int.closed_ball_eq_Icc
 
 instance : ProperSpace ℤ :=
-  ⟨by
+  ⟨by 
     intro x r
     rw [closed_ball_eq_Icc]
     exact (Set.finite_Icc _ _).IsCompact⟩

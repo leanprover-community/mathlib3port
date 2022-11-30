@@ -121,7 +121,8 @@ The name of the produced lemma can be specified with `@[reassoc other_lemma_name
 `simp` is added first, the generated lemma will also have the `simp` attribute.
 -/
 @[user_attribute]
-unsafe def reassoc_attr : user_attribute Unit (Option Name) where
+unsafe def reassoc_attr :
+    user_attribute Unit (Option Name) where 
   Name := `reassoc
   descr := "create a companion lemma for associativity-aware rewriting"
   parser := optional ident

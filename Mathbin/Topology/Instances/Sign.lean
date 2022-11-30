@@ -48,9 +48,7 @@ variable [LinearOrder α] [OrderTopology α]
 theorem continuous_at_sign_of_ne_zero {a : α} (h : a ≠ 0) : ContinuousAt sign a := by
   rcases h.lt_or_lt with (h_neg | h_pos)
   · exact continuous_at_sign_of_neg h_neg
-    
   · exact continuous_at_sign_of_pos h_pos
-    
 #align continuous_at_sign_of_ne_zero continuous_at_sign_of_ne_zero
 
 end LinearOrder

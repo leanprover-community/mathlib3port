@@ -67,13 +67,15 @@ open Set
 variable [Preorder α] [Preorder β] [Preorder γ]
 
 /-- Order isomorphism between two equal sets. -/
-def setCongr (s t : Set α) (h : s = t) : s ≃o t where
+def setCongr (s t : Set α) (h : s = t) :
+    s ≃o t where 
   toEquiv := Equiv.setCongr h
   map_rel_iff' x y := Iff.rfl
 #align order_iso.set_congr OrderIso.setCongr
 
 /-- Order isomorphism between `univ : set α` and `α`. -/
-def Set.univ : (Set.univ : Set α) ≃o α where
+def Set.univ : (Set.univ : Set α) ≃o
+      α where 
   toEquiv := Equiv.Set.univ α
   map_rel_iff' x y := Iff.rfl
 #align order_iso.set.univ OrderIso.Set.univ
@@ -83,7 +85,8 @@ end OrderIso
 /-- If a function `f` is strictly monotone on a set `s`, then it defines an order isomorphism
 between `s` and its image. -/
 protected noncomputable def StrictMonoOn.orderIso {α β} [LinearOrder α] [Preorder β] (f : α → β)
-    (s : Set α) (hf : StrictMonoOn f s) : s ≃o f '' s where
+    (s : Set α) (hf : StrictMonoOn f s) :
+    s ≃o f '' s where 
   toEquiv := hf.InjOn.bij_on_image.Equiv _
   map_rel_iff' x y := hf.le_iff_le x.2 y.2
 #align strict_mono_on.order_iso StrictMonoOn.orderIso
@@ -97,7 +100,8 @@ variable (f : α → β) (h_mono : StrictMono f) (h_surj : Function.Surjective f
 /-- A strictly monotone function from a linear order is an order isomorphism between its domain and
 its range. -/
 @[simps apply]
-protected noncomputable def orderIso : α ≃o Set.range f where
+protected noncomputable def orderIso :
+    α ≃o Set.range f where 
   toEquiv := Equiv.ofInjective f h_mono.Injective
   map_rel_iff' a b := h_mono.le_iff_le
 #align strict_mono.order_iso StrictMono.orderIso
@@ -133,7 +137,7 @@ variable (α) [BooleanAlgebra α]
 
 /-- Taking complements as an order isomorphism to the order dual. -/
 @[simps]
-def OrderIso.compl : α ≃o αᵒᵈ where
+def OrderIso.compl : α ≃o αᵒᵈ where 
   toFun := OrderDual.toDual ∘ compl
   invFun := compl ∘ OrderDual.ofDual
   left_inv := compl_compl

@@ -123,7 +123,7 @@ theorem range_mkq_cokernel_iso_range_quotient_inv :
   Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernel_iso_range_quotient_inv
 
 theorem cokernel_π_ext {M N : ModuleCat.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :
-    cokernel.π f x = cokernel.π f y := by
+    cokernel.π f x = cokernel.π f y := by 
   subst w
   simp
 #align Module.cokernel_π_ext ModuleCat.cokernel_π_ext

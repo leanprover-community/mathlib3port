@@ -52,10 +52,8 @@ theorem inversion_self (c : P) (R : ℝ) : inversion c R c = c := by simp [inver
 theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x := by
   rcases eq_or_ne x c with (rfl | hne)
   · apply inversion_self
-    
   · rw [inversion, div_self, one_pow, one_smul, vsub_vadd]
     rwa [dist_ne_zero]
-    
 #align euclidean_geometry.inversion_dist_center EuclideanGeometry.inversion_dist_center
 
 theorem inversion_of_mem_sphere (h : x ∈ Metric.sphere c R) : inversion c R x = x :=
@@ -67,7 +65,6 @@ works for `x = c`. -/
 theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R ^ 2 / dist x c := by
   rcases eq_or_ne x c with (rfl | hx)
   · simp
-    
   have : dist x c ≠ 0 := dist_ne_zero.2 hx
   field_simp [inversion, norm_smul, abs_div, ← dist_eq_norm_vsub, sq, mul_assoc]
 #align euclidean_geometry.dist_inversion_center EuclideanGeometry.dist_inversion_center
@@ -83,12 +80,10 @@ theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) :
     inversion c R (inversion c R x) = x := by
   rcases eq_or_ne x c with (rfl | hne)
   · rw [inversion_self, inversion_self]
-    
   · rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_pow,
       div_mul_div_comm, div_mul_cancel _ (dist_ne_zero.2 hne), ← sq, div_self, one_pow, one_smul,
       vsub_vadd]
     exact pow_ne_zero _ hR
-    
 #align euclidean_geometry.inversion_inversion EuclideanGeometry.inversion_inversion
 
 theorem inversion_involutive (c : P) {R : ℝ} (hR : R ≠ 0) : Involutive (inversion c R) :=
@@ -121,19 +116,17 @@ theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
 `ABCD` is a convex cyclic polygon, then this inequality becomes an equality, see
 `euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical`.  -/
 theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
-    dist a c * dist b d ≤ dist a b * dist c d + dist b c * dist a d := by
+    dist a c * dist b d ≤ dist a b * dist c d + dist b c * dist a d :=
+  by
   -- If one of the points `b`, `c`, `d` is equal to `a`, then the inequality is trivial.
   rcases eq_or_ne b a with (rfl | hb)
   · rw [dist_self, zero_mul, zero_add]
-    
   rcases eq_or_ne c a with (rfl | hc)
   · rw [dist_self, zero_mul]
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-    
   rcases eq_or_ne d a with (rfl | hd)
   · rw [dist_self, mul_zero, add_zero, dist_comm d, dist_comm d, mul_comm]
-    
   /- Otherwise, we apply the triangle inequality to `euclidean_geometry.inversion a 1 b`,
     `euclidean_geometry.inversion a 1 c`, and `euclidean_geometry.inversion a 1 d`. -/
   have H := dist_triangle (inversion a 1 b) (inversion a 1 c) (inversion a 1 d)
@@ -144,7 +137,6 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
   convert H <;>
     · field_simp [hb.ne', hc.ne', hd.ne', dist_comm a]
       ring
-      
 #align
   euclidean_geometry.mul_dist_le_mul_dist_add_mul_dist EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist
 

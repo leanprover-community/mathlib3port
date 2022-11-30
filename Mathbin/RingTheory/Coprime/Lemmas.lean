@@ -32,7 +32,7 @@ open Classical
 theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
     Nat.eq_one_of_dvd_one <|
-      Int.coe_nat_dvd.1 <| by
+      Int.coe_nat_dvd.1 <| by 
         rw [Int.ofNat_one, ← H]
         exact
           dvd_add (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left m n) _)
@@ -78,7 +78,7 @@ theorem IsCoprime.of_prod_right (H1 : IsCoprime x (∏ i in t, s i)) (i : I) (hi
 theorem Finset.prod_dvd_of_coprime :
     ∀ (Hs : (t : Set I).Pairwise (IsCoprime on s)) (Hs1 : ∀ i ∈ t, s i ∣ z), (∏ x in t, s x) ∣ z :=
   Finset.induction_on t (fun _ _ => one_dvd z)
-    (by
+    (by 
       intro a r har ih Hs Hs1
       rw [Finset.prod_insert har]
       have aux1 : a ∈ (↑(insert a r) : Set I) := Finset.mem_insert_self a r
@@ -103,14 +103,13 @@ open Finset
 theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
     (∃ μ : I → R, (∑ i in t, μ i * ∏ j in t \ {i}, s j) = 1) ↔
       Pairwise (IsCoprime on fun i : t => s i) :=
-  by
+  by 
   refine' h.cons_induction _ _ <;> clear t h
   · simp only [Pairwise, sum_singleton, Finset.sdiff_self, prod_empty, mul_one,
       exists_apply_eq_apply, Ne.def, true_iff_iff]
     rintro a ⟨i, hi⟩ ⟨j, hj⟩ h
     rw [Finset.mem_singleton] at hi hj
     simpa [hi, hj] using h
-    
   intro a t hat h ih
   rw [pairwise_cons']
   have mem : ∀ x ∈ t, a ∈ insert a t \ {x} := fun x hx => by
@@ -127,28 +126,20 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
       convert @add_mul R _ _ _ _ _ _ using 2
       · by_cases hx : x = h.some
         · rw [hx, Pi.single_eq_same, Pi.single_eq_same]
-          
         · rw [Pi.single_eq_of_ne hx, Pi.single_eq_of_ne hx, zero_mul]
-          
-        
       · convert (mul_assoc _ _ _).symm
         convert prod_eq_mul_prod_diff_singleton (mem x hx) _ using 3
         convert sdiff_sdiff_comm
         rw [sdiff_singleton_eq_erase, erase_insert hat]
-        
-      
     · have : IsCoprime (s b) (s a) :=
         ⟨μ a * ∏ i in t \ {b}, s i, ∑ i in t, μ i * ∏ j in t \ {i}, s j, _⟩
       · exact ⟨this.symm, this⟩
-        
       rw [mul_assoc, ← prod_eq_prod_diff_singleton_mul hb, sum_mul, ← hμ, sum_congr rfl]
       intro x hx
       convert mul_assoc _ _ _
       convert prod_eq_prod_diff_singleton_mul (mem x hx) _ using 3
       convert sdiff_sdiff_comm
       rw [sdiff_singleton_eq_erase, erase_insert hat]
-      
-    
   · rintro ⟨hs, Hb⟩
     obtain ⟨μ, hμ⟩ := ih.mpr hs
     obtain ⟨u, v, huv⟩ := IsCoprime.prod_left fun b hb => (Hb b hb).right
@@ -163,7 +154,6 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
     convert (prod_eq_prod_diff_singleton_mul (mem x hx) _).symm using 3
     convert sdiff_sdiff_comm
     rw [sdiff_singleton_eq_erase, erase_insert hat]
-    
 #align exists_sum_eq_one_iff_pairwise_coprime exists_sum_eq_one_iff_pairwise_coprime
 
 theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
@@ -179,11 +169,9 @@ theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
   · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
     obtain ⟨hj, ji⟩ := hj
     exact @hp ⟨i, hi⟩ ⟨j, hj⟩ fun h => ji (congr_arg coe h).symm
-    
   · rintro ⟨i, hi⟩ ⟨j, hj⟩ h
     apply is_coprime.prod_right_iff.mp (hp i hi)
     exact finset.mem_sdiff.mpr ⟨hj, fun f => h <| Subtype.ext (finset.mem_singleton.mp f).symm⟩
-    
 #align pairwise_coprime_iff_coprime_prod pairwise_coprime_iff_coprime_prod
 
 variable {m n : ℕ}

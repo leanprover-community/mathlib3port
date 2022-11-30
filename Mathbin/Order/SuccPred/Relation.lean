@@ -22,18 +22,15 @@ variable {α : Type _} [PartialOrder α] [SuccOrder α] [IsSuccArchimedean α]
 /-- For `n ≤ m`, `(n, m)` is in the reflexive-transitive closure of `~` if `i ~ succ i`
   for all `i` between `n` and `m`. -/
 theorem refl_trans_gen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ i ∈ ico n m, r i (succ i))
-    (hnm : n ≤ m) : ReflTransGen r n m := by
+    (hnm : n ≤ m) : ReflTransGen r n m := by 
   revert h; refine' Succ.rec _ _ hnm
   · intro h
     exact refl_trans_gen.refl
-    
   · intro m hnm ih h
     have : refl_trans_gen r n m := ih fun i hi => h i ⟨hi.1, hi.2.trans_le <| le_succ m⟩
     cases' (le_succ m).eq_or_lt with hm hm
     · rwa [← hm]
-      
     exact this.tail (h m ⟨hnm, hm⟩)
-    
 #align refl_trans_gen_of_succ_of_le refl_trans_gen_of_succ_of_le
 
 /-- For `m ≤ n`, `(n, m)` is in the reflexive-transitive closure of `~` if `succ i ~ i`
@@ -84,9 +81,7 @@ theorem trans_gen_of_succ_of_ne (r : α → α → Prop) {n m : α} (h1 : ∀ i 
   `succ i ~ i` for all `i` between `n` and `m`. -/
 theorem trans_gen_of_succ_of_reflexive (r : α → α → Prop) {n m : α} (hr : Reflexive r)
     (h1 : ∀ i ∈ ico n m, r i (succ i)) (h2 : ∀ i ∈ ico m n, r (succ i) i) : TransGen r n m := by
-  rcases eq_or_ne m n with (rfl | hmn);
-  · exact trans_gen.single (hr m)
-    
+  rcases eq_or_ne m n with (rfl | hmn); · exact trans_gen.single (hr m)
   exact trans_gen_of_succ_of_ne r h1 h2 hmn.symm
 #align trans_gen_of_succ_of_reflexive trans_gen_of_succ_of_reflexive
 

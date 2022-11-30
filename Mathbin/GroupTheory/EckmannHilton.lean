@@ -77,7 +77,7 @@ theorem one : e₁ = e₂ := by
 then these operations are equal.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
-theorem mul : m₁ = m₂ := by
+theorem mul : m₁ = m₂ := by 
   funext a b
   calc
     m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by

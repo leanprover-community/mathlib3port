@@ -136,13 +136,13 @@ end RingHomInvPair
 namespace RingHomCompTriple
 
 instance ids : RingHomCompTriple (RingHom.id R₁) σ₁₂ σ₁₂ :=
-  ⟨by
+  ⟨by 
     ext
     simp⟩
 #align ring_hom_comp_triple.ids RingHomCompTriple.ids
 
 instance right_ids : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
-  ⟨by
+  ⟨by 
     ext
     simp⟩
 #align ring_hom_comp_triple.right_ids RingHomCompTriple.right_ids
@@ -175,7 +175,7 @@ instance ids : RingHomSurjective (RingHom.id R₁) :=
 /-- This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
 theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective σ₁₂] [RingHomSurjective σ₂₃] :
     RingHomSurjective σ₁₃ :=
-  { is_surjective := by
+  { is_surjective := by 
       have := σ₂₃.is_surjective.comp σ₁₂.is_surjective
       rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this }
 #align ring_hom_surjective.comp RingHomSurjective.comp

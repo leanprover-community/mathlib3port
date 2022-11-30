@@ -98,7 +98,7 @@ theorem IsCountablySpanning.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCoun
   are countably spanning. -/
 theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountablySpanning (C i)) :
     (@MeasurableSpace.pi _ _ fun i => generateFrom (C i)) = generateFrom (pi univ '' pi univ C) :=
-  by
+  by 
   cases nonempty_encodable ι
   apply le_antisymm
   · refine' supr_le _
@@ -113,7 +113,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
     have :
       pi univ (update (fun i' : ι => Union (t i')) i (⋃ i' : ℕ, s)) =
         pi univ fun k => ⋃ j : ℕ, @update ι (fun i' => Set (α i')) _ (fun i' => t i' j) i s k :=
-      by
+      by 
       ext
       simp_rw [mem_univ_pi]
       apply forall_congr'
@@ -121,10 +121,8 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
       by_cases i' = i
       · subst h
         simp
-        
       · rw [← Ne.def] at h
         simp [h]
-        
     rw [this, ← Union_univ_pi]
     apply MeasurableSet.union
     intro n
@@ -137,7 +135,6 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
     rwa [update_same]
     rw [update_noteq h]
     apply h1t
-    
   · apply generate_from_le
     rintro _ ⟨s, hs, rfl⟩
     rw [univ_pi_eq_Inter]
@@ -145,7 +142,6 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
     intro i
     apply measurablePiApply
     exact measurable_set_generate_from (hs i (mem_univ i))
-    
 #align generate_from_pi_eq generate_from_pi_eq
 
 /-- If `C` and `D` generate the σ-algebras on `α` resp. `β`, then rectangles formed by `C` and `D`
@@ -187,15 +183,12 @@ theorem pi_premeasure_pi {s : ∀ i, Set (α i)} (hs : (pi univ s).Nonempty) :
 theorem pi_premeasure_pi' {s : ∀ i, Set (α i)} : piPremeasure m (pi univ s) = ∏ i, m i (s i) := by
   cases isEmpty_or_nonempty ι
   · simp
-    
   cases' (pi univ s).eq_empty_or_nonempty with h h
   · rcases univ_pi_eq_empty_iff.mp h with ⟨i, hi⟩
     have : ∃ i, m i (s i) = 0 := ⟨i, by simp [hi]⟩
     simpa [h, Finset.card_univ, zero_pow (fintype.card_pos_iff.mpr ‹_›), @eq_comm _ (0 : ℝ≥0∞),
       Finset.prod_eq_zero_iff]
-    
   · simp [h]
-    
 #align measure_theory.pi_premeasure_pi' MeasureTheory.pi_premeasure_pi'
 
 theorem pi_premeasure_pi_mono {s t : Set (∀ i, α i)} (h : s ⊆ t) :
@@ -227,15 +220,13 @@ theorem pi_pi_le (m : ∀ i, OuterMeasure (α i)) (s : ∀ i, Set (α i)) :
 theorem le_pi {m : ∀ i, OuterMeasure (α i)} {n : OuterMeasure (∀ i, α i)} :
     n ≤ OuterMeasure.pi m ↔
       ∀ s : ∀ i, Set (α i), (pi univ s).Nonempty → n (pi univ s) ≤ ∏ i, m i (s i) :=
-  by
+  by 
   rw [outer_measure.pi, le_bounded_by']; constructor
   · intro h s hs
     refine' (h _ hs).trans_eq (pi_premeasure_pi hs)
-    
   · intro h s hs
     refine' le_trans (n.mono <| subset_pi_eval_image univ s) (h _ _)
     simp [univ_pi_nonempty_iff, hs]
-    
 #align measure_theory.outer_measure.le_pi MeasureTheory.OuterMeasure.le_pi
 
 end OuterMeasure
@@ -275,19 +266,15 @@ instance sigmaFiniteTprod (l : List δ) (μ : ∀ i, Measure (π i)) [∀ i, Sig
   induction' l with i l ih
   · rw [tprod_nil]
     infer_instance
-    
   · rw [tprod_cons]
     skip
     infer_instance
-    
 #align measure_theory.measure.sigma_finite_tprod MeasureTheory.Measure.sigmaFiniteTprod
 
 theorem tprod_tprod (l : List δ) (μ : ∀ i, Measure (π i)) [∀ i, SigmaFinite (μ i)]
     (s : ∀ i, Set (π i)) : Measure.tprod l μ (Set.tprod l s) = (l.map fun i => (μ i) (s i)).Prod :=
-  by
-  induction' l with i l ih;
-  · simp
-    
+  by 
+  induction' l with i l ih; · simp
   rw [tprod_cons, Set.tprod, prod_prod, map_cons, prod_cons, ih]
 #align measure_theory.measure.tprod_tprod MeasureTheory.Measure.tprod_tprod
 
@@ -327,17 +314,14 @@ theorem pi_caratheodory :
   simp_rw [pi_premeasure]
   refine' Finset.prod_add_prod_le' (Finset.mem_univ i) _ _ _
   · simp [image_inter_preimage, image_diff_preimage, measure_inter_add_diff _ hs, le_refl]
-    
   · rintro j - hj
     apply mono'
     apply image_subset
     apply inter_subset_left
-    
   · rintro j - hj
     apply mono'
     apply image_subset
     apply diff_subset
-    
 #align measure_theory.measure.pi_caratheodory MeasureTheory.Measure.pi_caratheodory
 
 /-- `measure.pi μ` is the finite product of the measures `{μ i | i : ι}`.
@@ -351,7 +335,6 @@ theorem pi_pi_aux [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) (hs : ∀ 
   refine' le_antisymm _ _
   · rw [measure.pi, to_measure_apply _ _ (MeasurableSet.pi countable_univ fun i _ => hs i)]
     apply outer_measure.pi_pi_le
-    
   · haveI : Encodable ι := Fintype.toEncodable ι
     rw [← pi'_pi μ s]
     simp_rw [← pi'_pi μ s, measure.pi,
@@ -363,7 +346,6 @@ theorem pi_pi_aux [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) (hs : ∀ 
     intro s hs
     simp_rw [to_outer_measure_apply]
     exact (pi'_pi μ s).le
-    
 #align measure_theory.measure.pi_pi_aux MeasureTheory.Measure.pi_pi_aux
 
 variable {μ}
@@ -382,8 +364,8 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
     -- is insert `noncomputable` for you when necessary.
     let e : ℕ → ι → ℕ := fun n => (decode (ι → ℕ) n).iget
   · refine' mem_image_of_mem _ fun i _ => (hμ i).set_mem _
-    
-  · calc
+  ·
+    calc
       measure.pi μ (pi univ fun i => (hμ i).Set (e n i)) ≤
           measure.pi μ (pi univ fun i => to_measurable (μ i) ((hμ i).Set (e n i))) :=
         measure_mono (pi_mono fun i hi => subset_to_measurable _ _)
@@ -392,10 +374,9 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
       _ = ∏ i, μ i ((hμ i).Set (e n i)) := by simp only [measure_to_measurable]
       _ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
       
-    
-  · simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => (hμ i).Set (x i),
+  ·
+    simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => (hμ i).Set (x i),
       Union_univ_pi fun i => (hμ i).Set, (hμ _).spanning, Set.pi_univ]
-    
 #align
   measure_theory.measure.finite_spanning_sets_in.pi MeasureTheory.Measure.FiniteSpanningSetsIn.pi
 
@@ -467,7 +448,8 @@ theorem pi_of_empty {α : Type _} [IsEmpty α] {β : α → Type _} {m : ∀ a, 
 #align measure_theory.measure.pi_of_empty MeasureTheory.Measure.pi_of_empty
 
 theorem pi_eval_preimage_null {i : ι} {s : Set (α i)} (hs : μ i s = 0) :
-    Measure.pi μ (eval i ⁻¹' s) = 0 := by
+    Measure.pi μ (eval i ⁻¹' s) = 0 :=
+  by
   -- WLOG, `s` is measurable
   rcases exists_measurable_superset_of_null hs with ⟨t, hst, htm, hμt⟩
   suffices : measure.pi μ (eval i ⁻¹' t) = 0
@@ -702,7 +684,7 @@ theorem measurePreservingPiEquivPiSubtypeProd {ι : Type u} {α : ι → Type v}
     (p : ι → Prop) [DecidablePred p] :
     MeasurePreserving (MeasurableEquiv.piEquivPiSubtypeProd α p) (Measure.pi μ)
       ((measure.pi fun i : Subtype p => μ i).Prod (measure.pi fun i => μ i)) :=
-  by
+  by 
   set e := (MeasurableEquiv.piEquivPiSubtypeProd α p).symm
   refine' measure_preserving.symm e _
   refine' ⟨e.measurable, (pi_eq fun s hs => _).symm⟩
@@ -727,7 +709,7 @@ theorem measurePreservingPiFinSuccAboveEquiv {n : ℕ} {α : Fin (n + 1) → Typ
     (i : Fin (n + 1)) :
     MeasurePreserving (MeasurableEquiv.piFinSuccAboveEquiv α i) (Measure.pi μ)
       ((μ i).Prod <| measure.pi fun j => μ (i.succAbove j)) :=
-  by
+  by 
   set e := (MeasurableEquiv.piFinSuccAboveEquiv α i).symm
   refine' measure_preserving.symm e _
   refine' ⟨e.measurable, (pi_eq fun s hs => _).symm⟩
@@ -746,7 +728,7 @@ theorem volumePreservingPiFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type
 
 theorem measurePreservingFunUnique {β : Type u} {m : MeasurableSpace β} (μ : Measure β) (α : Type v)
     [Unique α] : MeasurePreserving (MeasurableEquiv.funUnique α β) (Measure.pi fun a : α => μ) μ :=
-  by
+  by 
   set e := MeasurableEquiv.funUnique α β
   have : (pi_premeasure fun _ : α => μ.to_outer_measure) = measure.map e.symm μ := by
     ext1 s
@@ -802,7 +784,7 @@ theorem measurePreservingPiEmpty {ι : Type u} {α : ι → Type v} [IsEmpty ι]
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) :
     MeasurePreserving (MeasurableEquiv.ofUniqueOfUnique (∀ i, α i) Unit) (Measure.pi μ)
       (Measure.dirac ()) :=
-  by
+  by 
   set e := MeasurableEquiv.ofUniqueOfUnique (∀ i, α i) Unit
   refine' ⟨e.measurable, _⟩
   rw [measure.pi_of_empty, measure.map_dirac e.measurable]; rfl

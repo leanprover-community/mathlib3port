@@ -29,7 +29,10 @@ variable {C : Type v₂} [Category.{v₁} C]
 
 section CartesianClosed
 
-instance (X : Type v₁) : IsLeftAdjoint (Types.binaryProductFunctor.obj X) where
+instance (X : Type v₁) :
+    IsLeftAdjoint
+      (Types.binaryProductFunctor.obj
+        X) where 
   right := { obj := fun Y => X ⟶ Y, map := fun Y₁ Y₂ f g => g ≫ f }
   adj :=
     Adjunction.mkOfUnitCounit
@@ -48,8 +51,11 @@ instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u�
   has_finite_products_of_has_products.{u₁} _
 
 instance {C : Type v₁} [SmallCategory C] :
-    CartesianClosed (C ⥤ Type v₁) where closed' F :=
-    { isAdj := by
+    CartesianClosed
+      (C ⥤
+        Type
+          v₁) where closed' F :=
+    { isAdj := by 
         letI := functor_category.prod_preserves_colimits F
         apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) }
 

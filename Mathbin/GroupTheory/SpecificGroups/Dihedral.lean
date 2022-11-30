@@ -58,20 +58,20 @@ private def inv : DihedralGroup n → DihedralGroup n
 
 /-- The group structure on `dihedral_group n`.
 -/
-instance : Group (DihedralGroup n) where
+instance : Group (DihedralGroup n) where 
   mul := mul
   mul_assoc := by rintro (a | a) (b | b) (c | c) <;> simp only [mul] <;> ring
   one := one
-  one_mul := by
+  one_mul := by 
     rintro (a | a)
     exact congr_arg r (zero_add a)
     exact congr_arg sr (sub_zero a)
-  mul_one := by
+  mul_one := by 
     rintro (a | a)
     exact congr_arg r (add_zero a)
     exact congr_arg sr (add_zero a)
   inv := inv
-  mul_left_inv := by
+  mul_left_inv := by 
     rintro (a | a)
     exact congr_arg r (neg_add_self a)
     exact congr_arg r (sub_self a)
@@ -100,7 +100,9 @@ theorem one_def : (1 : DihedralGroup n) = r 0 :=
   rfl
 #align dihedral_group.one_def DihedralGroup.one_def
 
-private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
+private def fintype_helper :
+    Sum (Zmod n) (Zmod n) ≃
+      DihedralGroup n where 
   invFun i :=
     match i with
     | r j => Sum.inl j
@@ -132,12 +134,10 @@ theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
   induction' k with k IH
   · rw [Nat.cast_zero]
     rfl
-    
   · rw [pow_succ, IH, r_mul_r]
     congr 1
     norm_cast
     rw [Nat.one_add]
-    
 #align dihedral_group.r_one_pow DihedralGroup.r_one_pow
 
 @[simp]
@@ -157,7 +157,6 @@ theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by rw [sr_mul_sr, sub_self
 theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 := by
   rw [order_of_eq_prime _ _]
   · exact ⟨Nat.prime_two⟩
-    
   rw [sq, sr_mul_self]
   decide
 #align dihedral_group.order_of_sr DihedralGroup.order_of_sr
@@ -172,7 +171,6 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
     rw [r_one_pow, one_def]
     apply mt r.inj
     simpa using hn.ne'
-    
   · skip
     apply
       (Nat.le_of_dvd (NeZero.pos n) <|
@@ -183,7 +181,6 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
     injection h1 with h2
     rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
     exact absurd h2.symm (order_of_pos _).Ne
-    
 #align dihedral_group.order_of_r_one DihedralGroup.order_of_r_one
 
 /-- If `0 < n`, then `i : zmod n` has order `n / gcd n i`.
@@ -196,7 +193,6 @@ theorem order_of_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val
 theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 := by
   rcases eq_zero_or_neZero n with (rfl | hn)
   · exact Monoid.exponent_eq_zero_of_order_zero order_of_r_one
-    
   skip
   apply Nat.dvd_antisymm
   · apply Monoid.exponent_dvd_of_forall_pow_eq_one
@@ -204,20 +200,13 @@ theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 := by
     · rw [← order_of_dvd_iff_pow_eq_one, order_of_r]
       refine' Nat.dvd_trans ⟨gcd n m.val, _⟩ (dvd_lcm_left n 2)
       · exact (Nat.div_mul_cancel (Nat.gcd_dvd_left n m.val)).symm
-        
-      
     · rw [← order_of_dvd_iff_pow_eq_one, order_of_sr]
       exact dvd_lcm_right n 2
-      
-    
   · apply lcm_dvd
     · convert Monoid.order_dvd_exponent (r 1)
       exact order_of_r_one.symm
-      
     · convert Monoid.order_dvd_exponent (sr 0)
       exact (order_of_sr 0).symm
-      
-    
 #align dihedral_group.exponent DihedralGroup.exponent
 
 end DihedralGroup

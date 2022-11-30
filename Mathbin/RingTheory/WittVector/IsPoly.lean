@@ -225,7 +225,7 @@ class IsPoly (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R) : Prop wh
 
 /-- The identity function on Witt vectors is a polynomial function. -/
 instance id_is_poly : IsPoly p fun _ _ => id :=
-  ⟨⟨x, by
+  ⟨⟨x, by 
       intros
       simp only [aeval_X, id]⟩⟩
 #align witt_vector.id_is_poly WittVector.id_is_poly
@@ -262,13 +262,13 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
   convert h using 1
-  all_goals
-  funext i
-  simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
-  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-  ext1
-  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-  simp only [coeff_mk]; rfl
+  all_goals 
+    funext i
+    simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    ext1
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    simp only [coeff_mk]; rfl
 #align witt_vector.is_poly.ext WittVector.IsPoly.ext
 
 omit hp
@@ -448,7 +448,7 @@ The user-written lemmas are not instances. Users should be able to assemble `is_
 "as normal" if the tactic fails.
 -/
 @[user_attribute]
-unsafe def is_poly_attr : user_attribute where
+unsafe def is_poly_attr : user_attribute where 
   Name := `is_poly
   descr := "Lemmas with this attribute describe the polynomial structure of functions"
   after_set := some fun n _ _ => mk_comp_lemmas n
@@ -470,7 +470,7 @@ Users are expected to use the non-instance versions manually.
 /-- The additive negation is a polynomial function on Witt vectors. -/
 @[is_poly]
 theorem neg_is_poly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
-  ⟨⟨fun n => rename Prod.snd (wittNeg p n), by
+  ⟨⟨fun n => rename Prod.snd (wittNeg p n), by 
       intros ; funext n
       rw [neg_coeff, aeval_eq_eval₂_hom, eval₂_hom_rename]
       apply eval₂_hom_congr rfl _ rfl
@@ -483,7 +483,7 @@ section ZeroOne
 we model them as constant unary functions. -/
 /-- The function that is constantly zero on Witt vectors is a polynomial function. -/
 instance zero_is_poly : IsPoly p fun _ _ _ => 0 :=
-  ⟨⟨0, by
+  ⟨⟨0, by 
       intros
       funext n
       simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
@@ -507,27 +507,24 @@ include hp
 @[simp]
 theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolynomial p ℤ n) = 1 := by
   rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
-  · simp only [one_poly, one_pow, one_mul, AlgHom.map_pow, C_1, pow_zero, bind₁_X_right, if_true,
+  ·
+    simp only [one_poly, one_pow, one_mul, AlgHom.map_pow, C_1, pow_zero, bind₁_X_right, if_true,
       eq_self_iff_true]
-    
   · intro i hi hi0
     simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.Pos _), mul_zero, AlgHom.map_pow,
       bind₁_X_right, AlgHom.map_mul]
-    
   · rw [Finset.mem_range]
     decide
-    
 #align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_one_poly_witt_polynomial
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
 instance one_is_poly : IsPoly p fun _ _ _ => 1 :=
-  ⟨⟨onePoly, by
+  ⟨⟨onePoly, by 
       intros ; funext n; cases n
       · simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, AlgHom.map_one]
-        
-      · simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero,
-          AlgHom.map_zero]
-        ⟩⟩
+      ·
+        simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero,
+          AlgHom.map_zero]⟩⟩
 #align witt_vector.one_is_poly WittVector.one_is_poly
 
 end ZeroOne
@@ -537,7 +534,7 @@ omit hp
 /-- Addition of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
-  ⟨⟨wittAdd p, by
+  ⟨⟨wittAdd p, by 
       intros
       dsimp only [WittVector.hasAdd]
       simp [eval]⟩⟩
@@ -546,7 +543,7 @@ theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
-  ⟨⟨wittMul p, by
+  ⟨⟨wittMul p, by 
       intros
       dsimp only [WittVector.hasMul]
       simp [eval]⟩⟩
@@ -555,7 +552,8 @@ theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
 include hp
 
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
-theorem IsPoly.map {f} (hf : IsPoly p f) (g : R →+* S) (x : 𝕎 R) : map g (f x) = f (map g x) := by
+theorem IsPoly.map {f} (hf : IsPoly p f) (g : R →+* S) (x : 𝕎 R) : map g (f x) = f (map g x) :=
+  by
   -- this could be turned into a tactic “macro” (taking `hf` as parameter)
   -- so that applications do not have to worry about the universe issue
   -- see `is_poly₂.map` for a slightly more general proof strategy
@@ -611,19 +609,20 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
   convert h using 1
-  all_goals
-  funext i
-  simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
-  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-  ext1
-  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-  ext ⟨b, _⟩
-  fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
+  all_goals 
+    funext i
+    simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    ext1
+    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    ext ⟨b, _⟩
+    fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 #align witt_vector.is_poly₂.ext WittVector.IsPoly₂.ext
 
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) :
-    map g (f x y) = f (map g x) (map g y) := by
+    map g (f x y) = f (map g x) (map g y) :=
+  by
   -- this could be turned into a tactic “macro” (taking `hf` as parameter)
   -- so that applications do not have to worry about the universe issue
   obtain ⟨φ, hf⟩ := hf

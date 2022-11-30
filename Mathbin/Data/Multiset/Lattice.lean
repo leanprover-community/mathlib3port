@@ -92,10 +92,8 @@ theorem nodup_sup_iff {α : Type _} [DecidableEq α] {m : Multiset (Multiset α)
     m.sup.Nodup ↔ ∀ a : Multiset α, a ∈ m → a.Nodup := by
   apply m.induction_on
   · simp
-    
   · intro a s h
     simp [h]
-    
 #align multiset.nodup_sup_iff Multiset.nodup_sup_iff
 
 end Sup

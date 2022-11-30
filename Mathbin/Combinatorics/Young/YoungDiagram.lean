@@ -56,7 +56,7 @@ is a cell in row `i` and column `j`, where rows are enumerated downward and colu
 
 Young diagrams are modeled as finite sets in `ℕ × ℕ` that are lower sets with respect to the
 standard order on products. -/
-@[ext.1]
+@[ext]
 structure YoungDiagram where
   cells : Finset (ℕ × ℕ)
   IsLowerSet : IsLowerSet (cells : Set (ℕ × ℕ))
@@ -64,7 +64,8 @@ structure YoungDiagram where
 
 namespace YoungDiagram
 
-instance : SetLike YoungDiagram (ℕ × ℕ) where
+instance : SetLike YoungDiagram
+      (ℕ × ℕ) where 
   coe := coe YoungDiagram.cells
   coe_injective' μ ν h := by rwa [YoungDiagram.ext_iff, ← Finset.coe_inj]
 
@@ -103,9 +104,10 @@ theorem cells_ssubset_iff {μ ν : YoungDiagram} : μ.cells ⊂ ν.cells ↔ μ 
 #align young_diagram.cells_ssubset_iff YoungDiagram.cells_ssubset_iff
 
 instance :
-    HasSup YoungDiagram where sup μ ν :=
+    HasSup
+      YoungDiagram where sup μ ν :=
     { cells := μ.cells ∪ ν.cells,
-      IsLowerSet := by
+      IsLowerSet := by 
         rw [Finset.coe_union]
         exact μ.is_lower_set.union ν.is_lower_set }
 
@@ -125,9 +127,10 @@ theorem mem_sup {μ ν : YoungDiagram} {x : ℕ × ℕ} : x ∈ μ ⊔ ν ↔ x 
 #align young_diagram.mem_sup YoungDiagram.mem_sup
 
 instance :
-    HasInf YoungDiagram where inf μ ν :=
+    HasInf
+      YoungDiagram where inf μ ν :=
     { cells := μ.cells ∩ ν.cells,
-      IsLowerSet := by
+      IsLowerSet := by 
         rw [Finset.coe_inter]
         exact μ.is_lower_set.inter ν.is_lower_set }
 
@@ -147,7 +150,9 @@ theorem mem_inf {μ ν : YoungDiagram} {x : ℕ × ℕ} : x ∈ μ ⊓ ν ↔ x 
 #align young_diagram.mem_inf YoungDiagram.mem_inf
 
 /-- The empty Young diagram is (⊥ : young_diagram). -/
-instance : OrderBot YoungDiagram where
+instance :
+    OrderBot
+      YoungDiagram where 
   bot := { cells := ∅, IsLowerSet := fun _ _ _ => False.elim }
   bot_le _ _ := False.elim
 
@@ -184,7 +189,8 @@ protected def card (μ : YoungDiagram) : ℕ :=
 section Transpose
 
 /-- The `transpose` of a Young diagram is obtained by swapping i's with j's. -/
-def transpose (μ : YoungDiagram) : YoungDiagram where
+def transpose (μ : YoungDiagram) :
+    YoungDiagram where 
   cells := (Equiv.prodComm _ _).finsetCongr μ.cells
   IsLowerSet _ _ h := by
     simp only [Finset.mem_coe, Equiv.finset_congr_apply, Finset.mem_map_equiv]
@@ -208,7 +214,6 @@ theorem transpose_eq_iff_eq_transpose {μ ν : YoungDiagram} : μ.transpose = ν
   constructor <;>
     · rintro rfl
       simp
-      
 #align young_diagram.transpose_eq_iff_eq_transpose YoungDiagram.transpose_eq_iff_eq_transpose
 
 @[simp]
@@ -219,7 +224,7 @@ theorem transpose_eq_iff {μ ν : YoungDiagram} : μ.transpose = ν.transpose �
 
 -- This is effectively both directions of `transpose_le_iff` below.
 protected theorem le_of_transpose_le {μ ν : YoungDiagram} (h_le : μ.transpose ≤ ν) :
-    μ ≤ ν.transpose := fun c hc => by
+    μ ≤ ν.transpose := fun c hc => by 
   simp only [mem_transpose]
   apply h_le
   simpa
@@ -227,9 +232,9 @@ protected theorem le_of_transpose_le {μ ν : YoungDiagram} (h_le : μ.transpose
 
 @[simp]
 theorem transpose_le_iff {μ ν : YoungDiagram} : μ.transpose ≤ ν.transpose ↔ μ ≤ ν :=
-  ⟨fun h => by
+  ⟨fun h => by 
     convert YoungDiagram.le_of_transpose_le h
-    simp, fun h => by
+    simp, fun h => by 
     convert @YoungDiagram.le_of_transpose_le _ _ _
     simpa⟩
 #align young_diagram.transpose_le_iff YoungDiagram.transpose_le_iff
@@ -448,19 +453,16 @@ protected theorem mem_cells_of_row_lens {w : List ℕ} {c : ℕ × ℕ} :
     c ∈ YoungDiagram.cellsOfRowLens w ↔ ∃ h : c.fst < w.length, c.snd < w.nthLe c.fst h := by
   induction w generalizing c <;> rw [YoungDiagram.cellsOfRowLens]
   · simp [YoungDiagram.cellsOfRowLens]
-    
   · rcases c with ⟨⟨_, _⟩, _⟩
     · simp
-      
     · simpa [w_ih, -Finset.singleton_product, Nat.succ_lt_succ_iff]
-      
-    
 #align young_diagram.mem_cells_of_row_lens YoungDiagram.mem_cells_of_row_lens
 
 /-- Young diagram from a sorted list -/
-def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram where
+def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) :
+    YoungDiagram where 
   cells := YoungDiagram.cellsOfRowLens w
-  IsLowerSet := by
+  IsLowerSet := by 
     rintro ⟨i2, j2⟩ ⟨i1, j1⟩ ⟨hi : i1 ≤ i2, hj : j1 ≤ j2⟩ hcell
     rw [Finset.mem_coe, YoungDiagram.mem_cells_of_row_lens] at hcell⊢
     obtain ⟨h1, h2⟩ := hcell
@@ -472,9 +474,7 @@ def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram where
       
     obtain rfl | h := eq_or_lt_of_le hi
     · rfl
-      
     · apply list.pairwise_iff_nth_le.mp hw _ _ _ h
-      
 #align young_diagram.of_row_lens YoungDiagram.ofRowLens
 
 theorem mem_of_row_lens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} {c : ℕ × ℕ} :
@@ -498,7 +498,7 @@ theorem row_len_of_row_lens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (i : ℕ)
 
 /-- The left_inv direction of the equivalence -/
 theorem of_row_lens_to_row_lens_eq_self {μ : YoungDiagram} : ofRowLens _ (row_lens_sorted μ) = μ :=
-  by
+  by 
   ext ⟨i, j⟩
   simp only [mem_cells, mem_of_row_lens, length_row_lens, nth_le_row_lens]
   simpa [← mem_iff_lt_col_len, mem_iff_lt_row_len] using j.zero_le.trans_lt
@@ -506,22 +506,26 @@ theorem of_row_lens_to_row_lens_eq_self {μ : YoungDiagram} : ofRowLens _ (row_l
 
 /-- The right_inv direction of the equivalence -/
 theorem row_lens_of_row_lens_eq_self {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hpos : ∀ x ∈ w, 0 < x) :
-    (ofRowLens w hw).rowLens = w := by
+    (ofRowLens w hw).rowLens = w := by 
   ext (i r)
   cases lt_or_ge i w.length
   · simp only [Option.mem_def, ← List.nth_le_eq_iff, h, row_lens_length_of_row_lens hpos]
     revert r
     simpa only [eq_iff_eq_cancel_right, nth_le_row_lens] using row_len_of_row_lens _ h
-    
   · rw [list.nth_eq_none_iff.mpr h, list.nth_eq_none_iff.mpr]
     rwa [row_lens_length_of_row_lens hpos]
-    
 #align young_diagram.row_lens_of_row_lens_eq_self YoungDiagram.row_lens_of_row_lens_eq_self
 
 /-- Equivalence between Young diagrams and weakly decreasing lists of positive natural numbers.
 A Young diagram `μ` is equivalent to a list of row lengths. -/
 @[simps]
-def equivListRowLens : YoungDiagram ≃ { w : List ℕ // w.Sorted (· ≥ ·) ∧ ∀ x ∈ w, 0 < x } where
+def equivListRowLens :
+    YoungDiagram ≃
+      { w : List ℕ //
+        w.Sorted (· ≥ ·) ∧
+          ∀ x ∈ w,
+            0 <
+              x } where 
   toFun μ := ⟨μ.rowLens, μ.row_lens_sorted, μ.pos_of_mem_row_lens⟩
   invFun ww := ofRowLens ww.1 ww.2.1
   left_inv μ := of_row_lens_to_row_lens_eq_self

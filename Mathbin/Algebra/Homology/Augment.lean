@@ -28,10 +28,13 @@ namespace ChainComplex
 deleting the object at `0` and shifting everything else down.
 -/
 @[simps]
-def truncate [HasZeroMorphisms V] : ChainComplex V ℕ ⥤ ChainComplex V ℕ where
+def truncate [HasZeroMorphisms V] :
+    ChainComplex V ℕ ⥤
+      ChainComplex V
+        ℕ where 
   obj C :=
     { x := fun i => C.x (i + 1), d := fun i j => C.d (i + 1) (j + 1),
-      shape' := fun i j w => by
+      shape' := fun i j w => by 
         apply C.shape
         simpa }
   map C D f := { f := fun i => f.f (i + 1) }
@@ -54,7 +57,7 @@ variable [HasZeroMorphisms V]
 (shifting everything else up), along with a suitable differential.
 -/
 def augment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) :
-    ChainComplex V ℕ where
+    ChainComplex V ℕ where 
   x i :=
     match i with
     | 0 => X
@@ -64,22 +67,18 @@ def augment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ 
     | 1, 0 => f
     | i + 1, j + 1 => C.d i j
     | _, _ => 0
-  shape' i j s := by
+  shape' i j s := by 
     simp at s
     rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;> try simp
     · simpa using s
-      
     · rw [C.shape]
       simpa [← Ne.def, Nat.succ_ne_succ] using s
-      
   d_comp_d' i j k hij hjk := by
     rcases i with (_ | _ | i) <;> rcases j with (_ | _ | j) <;> cases k <;> unfold_aux <;> try simp
     cases i
     · exact w
-      
     · rw [C.shape, zero_comp]
       simpa using i.succ_succ_ne_one.symm
-      
 #align chain_complex.augment ChainComplex.augment
 
 @[simp]
@@ -113,27 +112,25 @@ theorem augment_d_succ_succ (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (
 to the original complex.
 -/
 def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) :
-    truncate.obj (augment C f w) ≅ C where
+    truncate.obj (augment C f w) ≅
+      C where 
   Hom := { f := fun i => 𝟙 _ }
   inv :=
     { f := fun i => 𝟙 _,
       comm' := fun i j => by
         cases j <;>
           · dsimp
-            simp
-             }
-  hom_inv_id' := by
+            simp }
+  hom_inv_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
 #align chain_complex.truncate_augment ChainComplex.truncateAugment
 
 @[simp]
@@ -158,33 +155,30 @@ theorem chain_complex_d_succ_succ_zero (C : ChainComplex V ℕ) (i : ℕ) : C.d 
 (with components the identity) to the original complex.
 -/
 def augmentTruncate (C : ChainComplex V ℕ) :
-    augment (truncate.obj C) (C.d 1 0) (C.d_comp_d _ _ _) ≅ C where
+    augment (truncate.obj C) (C.d 1 0) (C.d_comp_d _ _ _) ≅
+      C where 
   Hom :=
     { f := fun i => by cases i <;> exact 𝟙 _,
       comm' := fun i j => by
         rcases i with (_ | _ | i) <;> cases j <;>
           · dsimp
-            simp
-             }
+            simp }
   inv :=
     { f := fun i => by cases i <;> exact 𝟙 _,
       comm' := fun i j => by
         rcases i with (_ | _ | i) <;> cases j <;>
           · dsimp
-            simp
-             }
-  hom_inv_id' := by
+            simp }
+  hom_inv_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
 #align chain_complex.augment_truncate ChainComplex.augmentTruncate
 
 @[simp]
@@ -230,10 +224,13 @@ namespace CochainComplex
 deleting the object at `0` and shifting everything else down.
 -/
 @[simps]
-def truncate [HasZeroMorphisms V] : CochainComplex V ℕ ⥤ CochainComplex V ℕ where
+def truncate [HasZeroMorphisms V] :
+    CochainComplex V ℕ ⥤
+      CochainComplex V
+        ℕ where 
   obj C :=
     { x := fun i => C.x (i + 1), d := fun i j => C.d (i + 1) (j + 1),
-      shape' := fun i j w => by
+      shape' := fun i j w => by 
         apply C.shape
         simpa }
   map C D f := { f := fun i => f.f (i + 1) }
@@ -254,7 +251,7 @@ variable [HasZeroMorphisms V]
 (shifting everything else up), along with a suitable differential.
 -/
 def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) :
-    CochainComplex V ℕ where
+    CochainComplex V ℕ where 
   x i :=
     match i with
     | 0 => X
@@ -264,25 +261,21 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
     | 0, 1 => f
     | i + 1, j + 1 => C.d i j
     | _, _ => 0
-  shape' i j s := by
+  shape' i j s := by 
     simp at s
     rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> try simp
     · simpa using s
-      
     · rw [C.shape]
       simp only [ComplexShape.up_rel]
       contrapose! s
       rw [← s]
-      
   d_comp_d' i j k hij hjk := by
     rcases k with (_ | _ | k) <;> rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> try simp
     cases k
     · exact w
-      
     · rw [C.shape, comp_zero]
       simp only [Nat.zero_eq, ComplexShape.up_rel, zero_add]
       exact (Nat.one_lt_succ_succ _).Ne
-      
 #align cochain_complex.augment CochainComplex.augment
 
 @[simp]
@@ -313,27 +306,25 @@ theorem augment_d_succ_succ (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0)
 to the original complex.
 -/
 def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) :
-    truncate.obj (augment C f w) ≅ C where
+    truncate.obj (augment C f w) ≅
+      C where 
   Hom := { f := fun i => 𝟙 _ }
   inv :=
     { f := fun i => 𝟙 _,
       comm' := fun i j => by
         cases j <;>
           · dsimp
-            simp
-             }
-  hom_inv_id' := by
+            simp }
+  hom_inv_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
 #align cochain_complex.truncate_augment CochainComplex.truncateAugment
 
 @[simp]
@@ -361,33 +352,30 @@ theorem cochain_complex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : 
 (with components the identity) to the original complex.
 -/
 def augmentTruncate (C : CochainComplex V ℕ) :
-    augment (truncate.obj C) (C.d 0 1) (C.d_comp_d _ _ _) ≅ C where
+    augment (truncate.obj C) (C.d 0 1) (C.d_comp_d _ _ _) ≅
+      C where 
   Hom :=
     { f := fun i => by cases i <;> exact 𝟙 _,
       comm' := fun i j => by
         rcases j with (_ | _ | j) <;> cases i <;>
           · dsimp
-            simp
-             }
+            simp }
   inv :=
     { f := fun i => by cases i <;> exact 𝟙 _,
       comm' := fun i j => by
         rcases j with (_ | _ | j) <;> cases i <;>
           · dsimp
-            simp
-             }
-  hom_inv_id' := by
+            simp }
+  hom_inv_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext i
     cases i <;>
       · dsimp
         simp
-        
 #align cochain_complex.augment_truncate CochainComplex.augmentTruncate
 
 @[simp]

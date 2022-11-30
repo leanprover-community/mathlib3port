@@ -102,17 +102,11 @@ theorem member_subfamily_union_non_member_subfamily (a : α) (𝒜 : Finset (Fin
   constructor
   · rintro (h | h)
     · exact ⟨_, h.1, erase_insert h.2⟩
-      
     · exact ⟨_, h.1, erase_eq_of_not_mem h.2⟩
-      
-    
   · rintro ⟨s, hs, rfl⟩
     by_cases ha : a ∈ s
     · exact Or.inl ⟨by rwa [insert_erase ha], not_mem_erase _ _⟩
-      
     · exact Or.inr ⟨by rwa [erase_eq_of_not_mem ha], not_mem_erase _ _⟩
-      
-    
 #align
   finset.member_subfamily_union_non_member_subfamily Finset.member_subfamily_union_non_member_subfamily
 
@@ -189,10 +183,8 @@ theorem erase_mem_compression_of_mem_compression : s ∈ 𝓓 a 𝒜 → s.erase
 theorem mem_compression_of_insert_mem_compression (h : insert a s ∈ 𝓓 a 𝒜) : s ∈ 𝓓 a 𝒜 := by
   by_cases ha : a ∈ s
   · rwa [insert_eq_of_mem ha] at h
-    
   · rw [← erase_insert ha]
     exact erase_mem_compression_of_mem_compression h
-    
 #align down.mem_compression_of_insert_mem_compression Down.mem_compression_of_insert_mem_compression
 
 /-- Down-compressing a family is idempotent. -/
@@ -202,9 +194,7 @@ theorem compression_idem (a : α) (𝒜 : Finset (Finset α)) : 𝓓 a (𝓓 a �
   refine' mem_compression.trans ⟨_, fun h => Or.inl ⟨h, erase_mem_compression_of_mem_compression h⟩⟩
   rintro (h | h)
   · exact h.1
-    
   · cases h.1 (mem_compression_of_insert_mem_compression h.2)
-    
 #align down.compression_idem Down.compression_idem
 
 /-- Down-compressing a family doesn't change its size. -/
@@ -214,7 +204,6 @@ theorem card_compression (a : α) (𝒜 : Finset (Finset α)) : (𝓓 a 𝒜).ca
     card_image_of_inj_on ((erase_inj_on' _).mono fun s hs => _), ← card_disjoint_union,
     filter_union_filter_neg_eq]
   · exact disjoint_filter_filter_neg _ _ _
-    
   rw [mem_coe, mem_filter] at hs
   exact not_imp_comm.1 erase_eq_of_not_mem (ne_of_mem_of_not_mem hs.1 hs.2).symm
 #align down.card_compression Down.card_compression

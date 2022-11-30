@@ -74,14 +74,14 @@ noncomputable def Ideal.toCharacterSpace : characterSpace ℂ A :=
   characterSpace.equivAlgHom.symm <|
     ((@NormedRing.algEquivComplexOfComplete (A ⧸ I) _ _
               (letI := quotient.field I
-              @is_unit_iff_ne_zero (A ⧸ I) _)
+              @isUnit_iff_ne_zero (A ⧸ I) _)
               _).symm :
           A ⧸ I →ₐ[ℂ] ℂ).comp
       (Quotient.mkₐ ℂ I)
 #align ideal.to_character_space Ideal.toCharacterSpace
 
 theorem Ideal.to_character_space_apply_eq_zero_of_mem {a : A} (ha : a ∈ I) :
-    I.toCharacterSpace a = 0 := by
+    I.toCharacterSpace a = 0 := by 
   unfold Ideal.toCharacterSpace
   simpa only [character_space.equiv_alg_hom_symm_coe, AlgHom.coe_comp, AlgEquiv.coe_alg_hom,
     quotient.mkₐ_eq_mk, Function.comp_apply, quotient.eq_zero_iff_mem.mpr ha, spectrum.zero_eq,
@@ -170,14 +170,12 @@ theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A
       Subtype.ext
         (ContinuousLinearMap.ext fun a =>
           h (gelfand_transform ℂ A a) ⟨gelfand_transform ℂ A a, ⟨a, rfl⟩, rfl⟩)
-    
   /- If `f = gelfand_transform ℂ A a`, then `star f` is also in the range of `gelfand_transform ℂ A`
     using the argument `star a`. The key lemma below may be hard to spot; it's `map_star` coming from
     `weak_dual.star_hom_class`, which is a nontrivial result. -/
   · obtain ⟨f, ⟨a, rfl⟩, rfl⟩ := subalgebra.mem_map.mp hf
     refine' ⟨star a, ContinuousMap.ext fun ψ => _⟩
     simpa only [gelfand_transform_map_star a, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom]
-    
 #align gelfand_transform_bijective gelfand_transform_bijective
 
 /-- The Gelfand transform as a `star_alg_equiv` between a commutative unital C⋆-algebra over `ℂ`
@@ -210,7 +208,9 @@ variable [NormedRing C] [NormedAlgebra ℂ C] [CompleteSpace C] [StarRing C]
 `character_space ℂ B → character_space ℂ A` obtained by pre-composition with `ψ`. -/
 @[simps]
 noncomputable def compContinuousMap (ψ : A →⋆ₐ[ℂ] B) :
-    C(characterSpace ℂ B, characterSpace ℂ A) where
+    C(characterSpace ℂ B,
+      characterSpace ℂ
+        A) where 
   toFun φ := equivAlgHom.symm ((equivAlgHom φ).comp ψ.toAlgHom)
   continuous_to_fun :=
     Continuous.subtype_mk

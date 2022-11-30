@@ -319,7 +319,7 @@ theorem differentiable_euclidean : Differentiable 𝕜 f ↔ ∀ i, Differentiab
 theorem has_strict_fderiv_at_euclidean :
     HasStrictFderivAt f f' y ↔
       ∀ i, HasStrictFderivAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') y :=
-  by
+  by 
   rw [← (EuclideanSpace.equiv ι 𝕜).comp_has_strict_fderiv_at_iff, has_strict_fderiv_at_pi']
   rfl
 #align has_strict_fderiv_at_euclidean has_strict_fderiv_at_euclidean
@@ -327,7 +327,7 @@ theorem has_strict_fderiv_at_euclidean :
 theorem has_fderiv_within_at_euclidean :
     HasFderivWithinAt f f' t y ↔
       ∀ i, HasFderivWithinAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') t y :=
-  by
+  by 
   rw [← (EuclideanSpace.equiv ι 𝕜).comp_has_fderiv_within_at_iff, has_fderiv_within_at_pi']
   rfl
 #align has_fderiv_within_at_euclidean has_fderiv_within_at_euclidean
@@ -372,7 +372,7 @@ theorem contDiffHomeomorphUnitBall : (ContDiff ℝ n) fun x : E => (homeomorphUn
 
 theorem contDiffOnHomeomorphUnitBallSymm {f : E → E}
     (h : ∀ (y) (hy : y ∈ ball (0 : E) 1), f y = homeomorphUnitBall.symm ⟨y, hy⟩) :
-    ContDiffOn ℝ n f <| ball 0 1 := by
+    ContDiffOn ℝ n f <| ball 0 1 := by 
   intro y hy
   apply ContDiffAt.contDiffWithinAt
   have hf : f =ᶠ[𝓝 y] fun y => (1 - ‖(y : E)‖ ^ 2).sqrt⁻¹ • (y : E) := by

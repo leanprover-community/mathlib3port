@@ -39,7 +39,8 @@ class IsFreeGroup (G : Type u) [Group G] where
   MulEquiv : FreeGroup generators ≃* G
 #align is_free_group IsFreeGroup
 
-instance (X : Type _) : IsFreeGroup (FreeGroup X) where
+instance (X : Type _) : IsFreeGroup
+      (FreeGroup X) where 
   Generators := X
   MulEquiv := MulEquiv.refl _
 
@@ -73,10 +74,10 @@ def lift : (Generators G → H) ≃ (G →* H) :=
   FreeGroup.lift.trans
     { toFun := fun f => f.comp (mulEquiv G).symm.toMonoidHom,
       invFun := fun f => f.comp (mulEquiv G).toMonoidHom,
-      left_inv := fun f => by
+      left_inv := fun f => by 
         ext
         simp,
-      right_inv := fun f => by
+      right_inv := fun f => by 
         ext
         simp }
 #align is_free_group.lift IsFreeGroup.lift
@@ -96,7 +97,7 @@ theorem lift_symm_apply (f : G →* H) (a : Generators G) : (lift.symm f) a = f 
   rfl
 #align is_free_group.lift_symm_apply IsFreeGroup.lift_symm_apply
 
-@[ext.1]
+@[ext]
 theorem ext_hom ⦃f g : G →* H⦄ (h : ∀ a : Generators G, f (of a) = g (of a)) : f = g :=
   lift.symm.Injective (funext h)
 #align is_free_group.ext_hom IsFreeGroup.ext_hom
@@ -115,11 +116,11 @@ the universal property is expressed as in `is_free_group.lift` and its propertie
 def ofLift {G : Type u} [Group G] (X : Type u) (of : X → G)
     (lift : ∀ {H : Type u} [Group H], (X → H) ≃ (G →* H))
     (lift_of : ∀ {H : Type u} [Group H], ∀ (f : X → H) (a), lift f (of a) = f a) :
-    IsFreeGroup G where
+    IsFreeGroup G where 
   Generators := X
   MulEquiv :=
     MonoidHom.toMulEquiv (FreeGroup.lift of) (lift FreeGroup.of)
-      (by
+      (by 
         apply FreeGroup.ext_hom; intro x
         simp only [MonoidHom.coe_comp, Function.comp_apply, MonoidHom.id_apply, FreeGroup.lift.of,
           lift_of])
@@ -146,7 +147,8 @@ noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G
 #align is_free_group.of_unique_lift IsFreeGroup.ofUniqueLift
 
 /-- Being a free group transports across group isomorphisms. -/
-def ofMulEquiv {H : Type _} [Group H] (h : G ≃* H) : IsFreeGroup H where
+def ofMulEquiv {H : Type _} [Group H] (h : G ≃* H) :
+    IsFreeGroup H where 
   Generators := Generators G
   MulEquiv := (mulEquiv G).trans h
 #align is_free_group.of_mul_equiv IsFreeGroup.ofMulEquiv

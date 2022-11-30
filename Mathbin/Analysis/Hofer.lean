@@ -36,7 +36,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     {ϕ : X → ℝ} (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) :
     ∃ ε' > 0,
       ∃ x' : X, ε' ≤ ε ∧ d x' x ≤ 2 * ε ∧ ε * ϕ x ≤ ε' * ϕ x' ∧ ∀ y, d x' y ≤ ε' → ϕ y ≤ 2 * ϕ x' :=
-  by
+  by 
   by_contra H
   have reformulation : ∀ (x') (k : ℕ), ε * ϕ x ≤ ε / 2 ^ k * ϕ x' ↔ 2 ^ k * ϕ x ≤ ϕ x' := by
     intro x' k
@@ -48,7 +48,6 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   · intro k x'
     push_neg  at H
     simpa [reformulation] using H (ε / 2 ^ k) (by simp [ε_pos]) x' (by simp [ε_pos.le, one_le_two])
-    
   clear reformulation
   haveI : Nonempty X := ⟨x⟩
   choose! F hF using H
@@ -61,7 +60,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     ∀ n,
       d (u n) x ≤ 2 * ε ∧ 2 ^ n * ϕ x ≤ ϕ (u n) →
         d (u n) (u <| n + 1) ≤ ε / 2 ^ n ∧ 2 * ϕ (u n) < ϕ (u <| n + 1) :=
-    by
+    by 
     intro n
     exact hF n (u n)
   clear hF
@@ -71,8 +70,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     induction' n using Nat.case_strong_induction_on with n IH
     · specialize hu 0
       simpa [hu0, mul_nonneg_iff, zero_le_one, ε_pos.le, le_refl] using hu
-      
-    have A : d (u (n + 1)) x ≤ 2 * ε := by
+    have A : d (u (n + 1)) x ≤ 2 * ε := by 
       rw [dist_comm]
       let r := range (n + 1)
       -- range (n+1) = {0, ..., n}
@@ -80,7 +78,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
         d (u 0) (u (n + 1)) ≤ ∑ i in r, d (u i) (u <| i + 1) := dist_le_range_sum_dist u (n + 1)
         _ ≤ ∑ i in r, ε / 2 ^ i :=
           sum_le_sum fun i i_in => (IH i <| nat.lt_succ_iff.mp <| finset.mem_range.mp i_in).1
-        _ = ∑ i in r, (1 / 2) ^ i * ε := by
+        _ = ∑ i in r, (1 / 2) ^ i * ε := by 
           congr with i
           field_simp
         _ = (∑ i in r, (1 / 2) ^ i) * ε := finset.sum_mul.symm
@@ -94,7 +92,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   clear hu key
   -- Hence u is Cauchy
   have cauchy_u : CauchySeq u := by
-    refine' cauchySeqOfLeGeometric _ ε one_half_lt_one fun n => _
+    refine' cauchy_seq_of_le_geometric _ ε one_half_lt_one fun n => _
     simpa only [one_div, inv_pow] using key₁ n
   -- So u converges to some y
   obtain ⟨y, limy⟩ : ∃ y, tendsto u at_top (𝓝 y)
@@ -103,7 +101,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   have lim_top : tendsto (ϕ ∘ u) at_top at_top := by
     let v n := (ϕ ∘ u) (n + 1)
     suffices tendsto v at_top at_top by rwa [tendsto_add_at_top_iff_nat] at this
-    have hv₀ : 0 < v 0 := by
+    have hv₀ : 0 < v 0 := by 
       have : 0 ≤ ϕ (u 0) := nonneg x
       calc
         0 ≤ 2 * ϕ (u 0) := by linarith

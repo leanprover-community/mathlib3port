@@ -54,7 +54,7 @@ theorem finrank_eq_card_choose_basis_index :
     finrank R M =
       @card (ChooseBasisIndex R M)
         (@ChooseBasisIndex.fintype R M _ _ _ _ (nontrivial_of_invariant_basis_number R) _) :=
-  by
+  by 
   letI := nontrivial_of_invariant_basis_number R
   simp [finrank, rank_eq_card_choose_basis_index]
 #align module.free.finrank_eq_card_choose_basis_index Module.Free.finrank_eq_card_choose_basis_index

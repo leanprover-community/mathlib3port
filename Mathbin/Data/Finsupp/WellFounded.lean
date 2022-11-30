@@ -35,11 +35,11 @@ include hbot hs
 /-- Transferred from `dfinsupp.lex.acc`. See the top of that file for an explanation for the
   appearance of the relation `rᶜ ⊓ (≠)`. -/
 theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) a) :
-    Acc (Finsupp.Lex r s) x := by
+    Acc (Finsupp.Lex r s) x := by 
   rw [lex_eq_inv_image_dfinsupp_lex]
-  classical
-  refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
-  simpa only [to_dfinsupp_support] using h
+  classical 
+    refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
+    simpa only [to_dfinsupp_support] using h
 #align finsupp.lex.acc Finsupp.Lex.acc
 
 theorem Lex.well_founded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded (Finsupp.Lex r s) :=

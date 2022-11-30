@@ -61,7 +61,8 @@ local notation:max R "<" x ">" => adjoin R ({x} : Set S)
 
 /-- Let `S / R` be a ring extension and `x : S`, then the conductor of `R<x>` is the
     biggest ideal of `S` contained in `R<x>`. -/
-def conductor (x : S) : Ideal S where
+def conductor (x : S) :
+    Ideal S where 
   carrier := { a | ∀ b : S, a * b ∈ R<x> }
   zero_mem' b := by simpa only [zero_mul] using Subalgebra.zero_mem _
   add_mem' a b ha hb c := by simpa only [add_mul] using Subalgebra.add_mem _ (ha c) (hb c)
@@ -98,7 +99,7 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
       a ∈ I →
         l a • algebraMap R S a * algebraMap R S p ∈
           algebraMap R<x> S '' I.map (algebraMap R R<x>) :=
-    by
+    by 
     intro a ha
     rw [Algebra.id.smul_eq_mul, mul_assoc, mul_comm, mul_assoc, Set.mem_image]
     refine'
@@ -107,7 +108,6 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
         _
     · rw [mul_comm]
       exact mem_conductor_iff.mp (ideal.mem_comap.mp hp) _
-      
     refine' ⟨_, by simpa only [RingHom.map_mul, mul_comm (algebraMap R S p) (l a)] ⟩
     rw [mul_comm]
     apply Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ ha)
@@ -118,10 +118,8 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
   rw [← RingHom.map_add]
   exact ⟨z + y, Ideal.add_mem _ (set_like.mem_coe.mp hz) hy, rfl⟩
   · refine' ⟨0, set_like.mem_coe.mpr <| Ideal.zero_mem _, RingHom.map_zero _⟩
-    
   · intro y hy
     exact lem ((Finsupp.mem_supported _ l).mp H hy)
-    
 #align prod_mem_ideal_map_of_mem_conductor prod_mem_ideal_map_of_mem_conductor
 
 /-- A technical result telling us that `(I * S) ∩ R<x> = I * R<x>` for any ideal `I` of `R`. -/
@@ -141,7 +139,7 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
     suffices
       z ∈ algebraMap R<x> S '' I.map (algebraMap R R<x>) ↔
         (⟨z, hz⟩ : R<x>) ∈ I.map (algebraMap R R<x>)
-      by
+      by 
       rw [← this, ← temp]
       obtain ⟨a, ha⟩ :=
         (Set.mem_image _ _ _).mp
@@ -156,19 +154,16 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
     refine'
       ⟨fun h => _, fun h => (Set.mem_image _ _ _).mpr (Exists.intro ⟨z, hz⟩ ⟨by simp [h], rfl⟩)⟩
     · obtain ⟨x₁, hx₁, hx₂⟩ := (Set.mem_image _ _ _).mp h
-      have : x₁ = ⟨z, hz⟩ := by
+      have : x₁ = ⟨z, hz⟩ := by 
         apply h_alg
         simpa [hx₂]
       rwa [← this]
-      
-    
   · -- The converse inclusion is trivial
     have : algebraMap R S = (algebraMap _ S).comp (algebraMap R R<x>) := by
       ext
       rfl
     rw [this, ← Ideal.map_map]
     apply Ideal.le_comap_map
-    
 #align comap_map_eq_map_adjoin_of_coprime_conductor comap_map_eq_map_adjoin_of_coprime_conductor
 
 /-- The canonical morphism of rings from `R<x> ⧸ (I*R<x>)` to `S ⧸ (I*S)` is an isomorphism
@@ -184,14 +179,13 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
         rfl
       rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem, this, ← Ideal.map_map]
       exact Ideal.mem_map_of_mem _ hr)
-    (by
+    (by 
       constructor
       · --the kernel of the map is clearly `(I * S) ∩ R<x>`. To get injectivity, we need to show that
         --this is contained in `I * R<x>`, which is the content of the previous lemma.
         refine' RingHom.lift_injective_of_ker_le_ideal _ _ fun u hu => _
         rwa [RingHom.mem_ker, RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem, ← Ideal.mem_comap,
           comap_map_eq_map_adjoin_of_coprime_conductor hx h_alg] at hu
-        
       · -- Surjectivity follows from the surjectivity of the canonical map `R<x> → S ⧸ (I * S)`,
         -- which in turn follows from the fact that `I * S + (conductor R x) = S`.
         refine' Ideal.Quotient.lift_surjective_of_surjective _ _ fun y => _
@@ -211,9 +205,7 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
         obtain ⟨u, hu, hu'⟩ := this
         use ⟨u, conductor_subset_adjoin hu⟩
         simpa only [← hu']
-        · exact Ideal.Quotient.mk_surjective
-          
-        )
+        · exact Ideal.Quotient.mk_surjective)
 #align quot_adjoin_equiv_quot_map quotAdjoinEquivQuotMap
 
 @[simp]
@@ -246,7 +238,7 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
         (↑(pb.quotientEquivQuotientMinpolyMap I))
         (show I.map (algebraMap R S) ≠ ⊥ by
           rwa [Ne.def, map_eq_bot_iff_of_injective pb.basis.algebra_map_injective, ← Ne.def])
-        (by
+        (by 
           by_contra
           exact
             (show map I (minpoly R pb.gen) ≠ 0 from
@@ -281,7 +273,7 @@ theorem normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map (hI :
         (fun f =>
           ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk pb hI hI').symm f : Ideal S))
         (normalizedFactors (Polynomial.map I (minpoly R pb.gen))).attach :=
-  by
+  by 
   ext J
   -- WLOG, assume J is a normalized factor
   by_cases hJ : J ∈ normalized_factors (I.map (algebraMap R S))
@@ -290,7 +282,6 @@ theorem normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map (hI :
     simp only [Multiset.mem_attach, true_and_iff, not_exists]
     rintro J' rfl
     exact hJ ((normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI').symm J').Prop
-    
   -- Then we just have to compare the multiplicities, which we already proved are equal.
   have := multiplicity_factors_map_eq_multiplicity pb hI hI' hJ
   rw [multiplicity_eq_count_normalized_factors, multiplicity_eq_count_normalized_factors,
@@ -310,19 +301,14 @@ theorem normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map (hI :
       ((normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI').symm f : Ideal S),
     Multiset.attach_count_eq_count_coe]
   · exact subtype.coe_injective.comp (Equiv.injective _)
-    
   · exact (normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI' _).Prop
-    
-  · exact
+  ·
+    exact
       irreducible_of_normalized_factor _
         (normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI' _).Prop
-    
   · exact Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen)
-    
   · exact irreducible_of_normalized_factor _ hJ
-    
   · rwa [← bot_eq_zero, Ne.def, map_eq_bot_iff_of_injective pb.basis.algebra_map_injective]
-    
 #align
   kummer_dedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map KummerDedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map
 

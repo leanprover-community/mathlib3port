@@ -33,9 +33,7 @@ open AffineMap
 
 theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
     IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) := by
-  rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩);
-  · simp [isClosedSingleton]
-    
+  rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩); · simp [isClosedSingleton]
   rw [← (Isometric.vaddConst x).toHomeomorph.symm.is_closed_image,
     AffineSubspace.coe_direction_eq_vsub_set_right hx]
   rfl
@@ -153,7 +151,6 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
   cases' eq_or_ne y x with h h
   · use 1
     simp [h.symm, interior_subset hy]
-    
   have hxy : 0 < ‖y -ᵥ x‖ := by rwa [norm_pos_iff, vsub_ne_zero]
   obtain ⟨u, hu₁, hu₂, hu₃⟩ := mem_interior.mp hy
   obtain ⟨ε, hε, hyε⟩ := metric.is_open_iff.mp hu₂ y hu₃

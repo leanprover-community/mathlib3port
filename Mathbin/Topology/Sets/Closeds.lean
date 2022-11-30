@@ -37,9 +37,9 @@ namespace Closeds
 
 variable {α}
 
-instance : SetLike (Closeds α) α where
+instance : SetLike (Closeds α) α where 
   coe := Closeds.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     cases s
     cases t
     congr
@@ -48,7 +48,7 @@ theorem closed (s : Closeds α) : IsClosed (s : Set α) :=
   s.closed'
 #align topological_space.closeds.closed TopologicalSpace.Closeds.closed
 
-@[ext.1]
+@[ext]
 protected theorem ext {s t : Closeds α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 #align topological_space.closeds.ext TopologicalSpace.Closeds.ext
@@ -68,7 +68,9 @@ theorem gc : GaloisConnection Closeds.closure (coe : Closeds α → Set α) := f
 #align topological_space.closeds.gc TopologicalSpace.Closeds.gc
 
 /-- The galois coinsertion between sets and opens. -/
-def gi : GaloisInsertion (@Closeds.closure α _) coe where
+def gi :
+    GaloisInsertion (@Closeds.closure α _)
+      coe where 
   choice s hs := ⟨s, closure_eq_iff_is_closed.1 <| hs.antisymm subset_closure⟩
   gc := gc
   le_l_u _ := subset_closure
@@ -209,7 +211,9 @@ variable (α)
 
 /-- `closeds.compl` as an `order_iso` to the order dual of `opens α`. -/
 @[simps]
-def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ where
+def Closeds.complOrderIso :
+    Closeds α ≃o (Opens
+          α)ᵒᵈ where 
   toFun := OrderDual.toDual ∘ closeds.compl
   invFun := opens.compl ∘ OrderDual.ofDual
   left_inv s := by simp [closeds.compl_compl]
@@ -221,7 +225,9 @@ def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ where
 
 /-- `opens.compl` as an `order_iso` to the order dual of `closeds α`. -/
 @[simps]
-def Opens.complOrderIso : Opens α ≃o (Closeds α)ᵒᵈ where
+def Opens.complOrderIso :
+    Opens α ≃o (Closeds
+          α)ᵒᵈ where 
   toFun := OrderDual.toDual ∘ opens.compl
   invFun := closeds.compl ∘ OrderDual.ofDual
   left_inv s := by simp [opens.compl_compl]
@@ -267,9 +273,9 @@ structure Clopens (α : Type _) [TopologicalSpace α] where
 
 namespace Clopens
 
-instance : SetLike (Clopens α) α where
+instance : SetLike (Clopens α) α where 
   coe s := s.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     cases s
     cases t
     congr
@@ -284,7 +290,7 @@ def toOpens (s : Clopens α) : Opens α :=
   ⟨s, s.clopen.IsOpen⟩
 #align topological_space.clopens.to_opens TopologicalSpace.Clopens.toOpens
 
-@[ext.1]
+@[ext]
 protected theorem ext {s t : Clopens α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 #align topological_space.clopens.ext TopologicalSpace.Clopens.ext
@@ -300,10 +306,10 @@ instance : HasSup (Clopens α) :=
 instance : HasInf (Clopens α) :=
   ⟨fun s t => ⟨s ∩ t, s.clopen.inter t.clopen⟩⟩
 
-instance : HasTop (Clopens α) :=
+instance : Top (Clopens α) :=
   ⟨⟨⊤, is_clopen_univ⟩⟩
 
-instance : HasBot (Clopens α) :=
+instance : Bot (Clopens α) :=
   ⟨⟨⊥, is_clopen_empty⟩⟩
 
 instance : SDiff (Clopens α) :=

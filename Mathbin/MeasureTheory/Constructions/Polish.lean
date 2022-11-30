@@ -80,13 +80,11 @@ theorem analytic_set_range_of_polish_space {β : Type _} [TopologicalSpace β] [
   cases isEmpty_or_nonempty β
   · rw [range_eq_empty]
     exact analytic_set_empty
-    
   · rw [analytic_set]
     obtain ⟨g, g_cont, hg⟩ : ∃ g : (ℕ → ℕ) → β, Continuous g ∧ surjective g :=
       exists_nat_nat_continuous_surjective β
     refine' Or.inr ⟨f ∘ g, f_cont.comp g_cont, _⟩
     rwa [hg.range_comp]
-    
 #align
   measure_theory.analytic_set_range_of_polish_space MeasureTheory.analytic_set_range_of_polish_space
 
@@ -103,7 +101,7 @@ theorem analytic_set_iff_exists_polish_space_range {s : Set α} :
     AnalyticSet s ↔
       ∃ (β : Type)(h : TopologicalSpace β)(h' : @PolishSpace β h)(f : β → α),
         @Continuous _ _ h _ f ∧ range f = s :=
-  by
+  by 
   constructor
   · intro h
     rw [analytic_set] at h
@@ -111,15 +109,11 @@ theorem analytic_set_iff_exists_polish_space_range {s : Set α} :
     · refine' ⟨Empty, by infer_instance, by infer_instance, Empty.elim, continuous_bot, _⟩
       rw [h]
       exact range_eq_empty _
-      
     · exact ⟨ℕ → ℕ, by infer_instance, by infer_instance, h⟩
-      
-    
   · rintro ⟨β, h, h', f, f_cont, f_range⟩
     skip
     rw [← f_range]
     exact analytic_set_range_of_polish_space f_cont
-    
 #align
   measure_theory.analytic_set_iff_exists_polish_space_range MeasureTheory.analytic_set_iff_exists_polish_space_range
 
@@ -155,7 +149,7 @@ theorem AnalyticSet.Inter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : �
   skip
   let γ := ∀ n, β n
   let t : Set γ := ⋂ n, { x | f n (x n) = f i₀ (x i₀) }
-  have t_closed : IsClosed t := by
+  have t_closed : IsClosed t := by 
     apply isClosedInter
     intro n
     exact isClosedEq ((f_cont n).comp (continuous_apply n)) ((f_cont i₀).comp (continuous_apply i₀))
@@ -169,26 +163,25 @@ theorem AnalyticSet.Inter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : �
       have : f n ((x : γ) n) = F x := (mem_Inter.1 x.2 n : _)
       rw [← this, ← f_range n]
       exact mem_range_self _
-      
     · intro y hy
-      have A : ∀ n, ∃ x : β n, f n x = y := by
+      have A : ∀ n, ∃ x : β n, f n x = y := by 
         intro n
         rw [← mem_range, f_range n]
         exact mem_Inter.1 hy n
       choose x hx using A
-      have xt : x ∈ t := by
+      have xt : x ∈ t := by 
         apply mem_Inter.2 fun n => _
         simp [hx]
       refine' ⟨⟨x, xt⟩, _⟩
       exact hx i₀
-      
   rw [← F_range]
   exact analytic_set_range_of_polish_space F_cont
 #align measure_theory.analytic_set.Inter MeasureTheory.AnalyticSet.Inter
 
 /-- A countable union of analytic sets is analytic. -/
 theorem AnalyticSet.Union [Countable ι] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) :
-    AnalyticSet (⋃ n, s n) := by
+    AnalyticSet (⋃ n, s n) :=
+  by
   /- For the proof, write each `s n` as the continuous image under a map `f n` of a
     Polish space `β n`. The union space `γ = Σ n, β n` is also Polish, and the map `F : γ → α` which
     coincides with `f n` on `β n` sends it to `⋃ n, s n`. -/
@@ -196,7 +189,7 @@ theorem AnalyticSet.Union [Countable ι] {s : ι → Set α} (hs : ∀ n, Analyt
     analytic_set_iff_exists_polish_space_range.1 (hs n)
   skip
   let γ := Σn, β n
-  let F : γ → α := by
+  let F : γ → α := by 
     rintro ⟨n, x⟩
     exact f n x
   have F_cont : Continuous F := continuous_sigma f_cont
@@ -222,15 +215,13 @@ theorem MeasurableSet.is_clopenable [PolishSpace α] [MeasurableSpace α] [Borel
   revert s
   apply MeasurableSet.inductionOnOpen
   · exact fun u hu => hu.IsClopenable
-    
   · exact fun u hu h'u => h'u.compl
-    
   · exact fun f f_disj f_meas hf => is_clopenable.Union hf
-    
 #align measurable_set.is_clopenable MeasurableSet.is_clopenable
 
 theorem MeasurableSet.analytic_set {α : Type _} [t : TopologicalSpace α] [PolishSpace α]
-    [MeasurableSpace α] [BorelSpace α] {s : Set α} (hs : MeasurableSet s) : AnalyticSet s := by
+    [MeasurableSpace α] [BorelSpace α] {s : Set α} (hs : MeasurableSet s) : AnalyticSet s :=
+  by
   /- For a short proof (avoiding measurable induction), one sees `s` as a closed set for a finer
     topology `t'`. It is analytic for this topology. As the identity from `t'` to `t` is continuous
     and the image of an analytic set is analytic, it follows that `s` is also analytic for `t`. -/
@@ -251,7 +242,7 @@ theorem Measurable.exists_continuous {α β : Type _} [t : TopologicalSpace α] 
   obtain ⟨b, b_count, -, hb⟩ : ∃ b : Set (Set β), b.Countable ∧ ∅ ∉ b ∧ is_topological_basis b :=
     exists_countable_basis β
   haveI : Encodable b := b_count.to_encodable
-  have : ∀ s : b, is_clopenable (f ⁻¹' s) := by
+  have : ∀ s : b, is_clopenable (f ⁻¹' s) := by 
     intro s
     apply MeasurableSet.is_clopenable
     exact hf (hb.is_open s.2).MeasurableSet
@@ -280,15 +271,12 @@ theorem MeasurablySeparable.union [Countable ι] {α : Type _} [MeasurableSpace 
   refine' ⟨⋃ m, ⋂ n, u m n, _, _, _⟩
   · refine' Union_subset fun m => subset_Union_of_subset m _
     exact subset_Inter fun n => hsu m n
-    
   · simp_rw [disjoint_Union_left, disjoint_Union_right]
     intro n m
     apply Disjoint.mono_right _ (htu m n)
     apply Inter_subset
-    
   · refine' MeasurableSet.union fun m => _
     exact MeasurableSet.inter fun n => hu m n
-    
 #align measure_theory.measurably_separable.Union MeasureTheory.MeasurablySeparable.union
 
 /-- The hard part of the Lusin separation theorem saying that two disjoint analytic sets are
@@ -297,7 +285,8 @@ Here, we prove this when our analytic sets are the ranges of functions from `ℕ
 -/
 theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [BorelSpace α]
     {f g : (ℕ → ℕ) → α} (hf : Continuous f) (hg : Continuous g) (h : Disjoint (range f) (range g)) :
-    MeasurablySeparable (range f) (range g) := by
+    MeasurablySeparable (range f) (range g) :=
+  by
   /- We follow [Kechris, *Classical Descriptive Set Theory* (Theorem 14.7)][kechris1995].
     If the ranges are not Borel-separated, then one can find two cylinders of length one whose images
     are not Borel-separated, and then two smaller cylinders of length two whose images are not
@@ -314,7 +303,7 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
           x' ∈ cylinder x n ∧
             y' ∈ cylinder y n ∧
               ¬measurably_separable (f '' cylinder x' (n + 1)) (g '' cylinder y' (n + 1)) :=
-    by
+    by 
     intro n x y
     contrapose!
     intro H
@@ -330,7 +319,7 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
     ∀ p : A,
       ∃ q : A,
         q.1.1 = p.1.1 + 1 ∧ q.1.2.1 ∈ cylinder p.1.2.1 p.1.1 ∧ q.1.2.2 ∈ cylinder p.1.2.2 p.1.1 :=
-    by
+    by 
     rintro ⟨⟨n, x, y⟩, hp⟩
     rcases I n x y hp with ⟨x', y', hx', hy', h'⟩
     exact ⟨⟨⟨n + 1, x', y'⟩, h'⟩, rfl, hx', hy'⟩
@@ -340,20 +329,17 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
   let p : ℕ → A := fun n => (F^[n]) p0
   have prec : ∀ n, p (n + 1) = F (p n) := fun n => by simp only [p, iterate_succ']
   -- check that at the `n`-th step we deal with cylinders of length `n`
-  have pn_fst : ∀ n, (p n).1.1 = n := by
+  have pn_fst : ∀ n, (p n).1.1 = n := by 
     intro n
     induction' n with n IH
     · rfl
-      
     · simp only [prec, hFn, IH]
-      
   -- check that the cylinders we construct are indeed decreasing, by checking that the coordinates
   -- are stationary.
   have Ix : ∀ m n, m + 1 ≤ n → (p n).1.2.1 m = (p (m + 1)).1.2.1 m := by
     intro m
     apply Nat.le_induction
     · rfl
-      
     intro n hmn IH
     have I : (F (p n)).val.snd.fst m = (p n).val.snd.fst m := by
       apply hFx (p n) m
@@ -364,7 +350,6 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
     intro m
     apply Nat.le_induction
     · rfl
-      
     intro n hmn IH
     have I : (F (p n)).val.snd.snd m = (p n).val.snd.snd m := by
       apply hFy (p n) m
@@ -382,12 +367,10 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
       intro i hi
       rw [hx]
       exact (Ix i n hi).symm
-      
     · rw [pn_fst, ← mem_cylinder_iff_eq, mem_cylinder_iff]
       intro i hi
       rw [hy]
       exact (Iy i n hi).symm
-      
   -- consider two open sets separating `f x` and `g y`.
   obtain ⟨u, v, u_open, v_open, xu, yv, huv⟩ :
     ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ f x ∈ u ∧ g y ∈ v ∧ Disjoint u v := by
@@ -410,7 +393,6 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
       intro z hz
       rw [mem_cylinder_iff_dist_le] at hz
       exact hz.trans_lt (hn.trans_le (min_le_left _ _))
-      
     · refine' Disjoint.mono_left _ huv.symm
       change g '' cylinder y n ⊆ v
       rw [image_subset_iff]
@@ -418,7 +400,6 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
       intro z hz
       rw [mem_cylinder_iff_dist_le] at hz
       exact hz.trans_lt (hn.trans_le (min_le_right _ _))
-      
   -- this is a contradiction.
   exact M n B
 #align
@@ -431,10 +412,8 @@ theorem AnalyticSet.measurablySeparable [T2Space α] [MeasurableSpace α] [Borel
   rw [analytic_set] at hs ht
   rcases hs with (rfl | ⟨f, f_cont, rfl⟩)
   · refine' ⟨∅, subset.refl _, by simp, MeasurableSet.empty⟩
-    
   rcases ht with (rfl | ⟨g, g_cont, rfl⟩)
   · exact ⟨univ, subset_univ _, by simp, MeasurableSet.univ⟩
-    
   exact measurably_separable_range_of_disjoint f_cont g_cont h
 #align
   measure_theory.analytic_set.measurably_separable MeasureTheory.AnalyticSet.measurablySeparable
@@ -450,7 +429,8 @@ include tγ
 space is Borel-measurable. -/
 theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace β] [T2Space β]
     [MeasurableSpace β] [BorelSpace β] {f : γ → β} (f_cont : Continuous f) (f_inj : Injective f) :
-    MeasurableSet (range f) := by
+    MeasurableSet (range f) :=
+  by
   /- We follow [Fremlin, *Measure Theory* (volume 4, 423I)][fremlin_vol4].
     Let `b = {s i}` be a countable basis for `α`. When `s i` and `s j` are disjoint, their images are
     disjoint analytic sets, hence by the separation theorem one can find a Borel-measurable set
@@ -480,7 +460,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
   have :
     ∀ p : A,
       ∃ q : Set β, f '' (p.1.1 : Set γ) ⊆ q ∧ Disjoint (f '' (p.1.2 : Set γ)) q ∧ MeasurableSet q :=
-    by
+    by 
     intro p
     apply
       analytic_set.measurably_separable ((hb.is_open p.1.1.2).analytic_set_image f_cont)
@@ -501,7 +481,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
       refine' is_closed_closure.measurable_set.inter _
       refine' MeasurableSet.inter fun s => _
       exact MeasurableSet.inter fun hs => (q_meas _).diff (q_meas _)
-    have F_meas : ∀ n, MeasurableSet (F n) := by
+    have F_meas : ∀ n, MeasurableSet (F n) := by 
       intro n
       refine' MeasurableSet.union fun s => _
       exact MeasurableSet.union fun hs => E_meas _
@@ -525,18 +505,15 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
     refine' mem_Inter.2 fun t => mem_Inter.2 fun ht => ⟨_, _⟩
     · apply hq1
       exact mem_image_of_mem _ ys
-      
     · apply disjoint_left.1 (hq2 ⟨(t, ⟨s, sb⟩), ht.symm⟩)
       exact mem_image_of_mem _ ys
-      
-    
   -- Now, let us prove the harder inclusion `⋂ F n ⊆ range f`.
   · intro x hx
     -- pick for each `n` a good set `s n` of small diameter for which `x ∈ E (s n)`.
     have C1 : ∀ n, ∃ (s : b)(hs : bounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
       simpa only [mem_Union] using mem_Inter.1 hx n
     choose s hs hxs using C1
-    have C2 : ∀ n, (s n).1.Nonempty := by
+    have C2 : ∀ n, (s n).1.Nonempty := by 
       intro n
       rw [← ne_empty_iff_nonempty]
       intro hn
@@ -560,7 +537,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
     have cauchy_y : CauchySeq y := by
       have : tendsto (fun n => 2 * u n) at_top (𝓝 0) := by
         simpa only [mul_zero] using u_lim.const_mul 2
-      apply cauchySeqOfLeTendsto0' (fun n => 2 * u n) (fun m n hmn => _) this
+      apply cauchy_seq_of_le_tendsto_0' (fun n => 2 * u n) (fun m n hmn => _) this
       rcases I m n with ⟨z, zsm, zsn⟩
       calc
         dist (y m) (y n) ≤ dist (y m) z + dist z (y n) := dist_triangle _ _ _
@@ -573,7 +550,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
     -- let `z` be its limit.
     let z := lim at_top y
     have y_lim : tendsto y at_top (𝓝 z) := cauchy_y.tendsto_lim
-    suffices f z = x by
+    suffices f z = x by 
       rw [← this]
       exact mem_range_self _
     -- assume for a contradiction that `f z ≠ x`.
@@ -588,7 +565,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
         simpa only [add_zero] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
       ((tendsto_order.1 this).2 _ δpos).exists
     -- for large enough `n`, the image of `s n` is contained in `v`, by continuity of `f`.
-    have fsnv : f '' s n ⊆ v := by
+    have fsnv : f '' s n ⊆ v := by 
       rw [image_subset_iff]
       apply subset.trans _ hδ
       intro a ha
@@ -603,7 +580,6 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
     -- this is a contradiction, as `x` is supposed to belong to `w`, which is disjoint from
     -- the closure of `v`.
     exact disjoint_left.1 (hvw.closure_left w_open) this xw
-    
 #align
   measure_theory.measurable_set_range_of_continuous_injective MeasureTheory.measurableSetRangeOfContinuousInjective
 
@@ -614,9 +590,7 @@ theorem IsClosed.measurableSetImageOfContinuousOnInjOn {β : Type _} [Topologica
   haveI : PolishSpace s := IsClosed.polishSpace hs
   apply measurable_set_range_of_continuous_injective
   · rwa [continuous_on_iff_continuous_restrict] at f_cont
-    
   · rwa [inj_on_iff_injective] at f_inj
-    
 #align
   is_closed.measurable_set_image_of_continuous_on_inj_on IsClosed.measurableSetImageOfContinuousOnInjOn
 
@@ -641,7 +615,8 @@ theorem MeasurableSet.imageOfContinuousOnInjOn (hs : MeasurableSet s) (f_cont : 
 a measurable injective map taking values in a second-countable topological space
 is also Borel-measurable. -/
 theorem MeasurableSet.imageOfMeasurableInjOn [SecondCountableTopology β] (hs : MeasurableSet s)
-    (f_meas : Measurable f) (f_inj : InjOn f s) : MeasurableSet (f '' s) := by
+    (f_meas : Measurable f) (f_inj : InjOn f s) : MeasurableSet (f '' s) :=
+  by
   -- for a finer Polish topology, `f` is continuous. Therefore, one may apply the corresponding
   -- result for continuous maps.
   obtain ⟨t', t't, f_cont, t'_polish⟩ :
@@ -650,13 +625,13 @@ theorem MeasurableSet.imageOfMeasurableInjOn [SecondCountableTopology β] (hs : 
   have M : measurable_set[@borel γ t'] s :=
     @Continuous.measurable γ γ t' (@borel γ t')
       (@BorelSpace.opensMeasurable γ t' (@borel γ t')
-        (by
+        (by 
           constructor
           rfl))
       tγ _ _ _ (continuous_id_of_le t't) s hs
   exact
     @MeasurableSet.imageOfContinuousOnInjOn γ t' t'_polish (@borel γ t')
-      (by
+      (by 
         constructor
         rfl)
       β _ _ _ _ s f M (@Continuous.continuous_on γ β t' tβ f s f_cont) f_inj
@@ -676,7 +651,7 @@ theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : Contin
     (f_inj : InjOn f s) : MeasurableEmbedding (s.restrict f) :=
   { Injective := inj_on_iff_injective.1 f_inj,
     Measurable := (continuous_on_iff_continuous_restrict.1 f_cont).Measurable,
-    measurableSetImage' := by
+    measurableSetImage' := by 
       intro u hu
       have A : MeasurableSet ((coe : s → γ) '' u) :=
         (MeasurableEmbedding.subtypeCoe hs).measurable_set_image.2 hu
@@ -697,7 +672,8 @@ theorem Measurable.measurableEmbedding [SecondCountableTopology β] (f_meas : Me
 omit tβ
 
 /-- In a Polish space, a set is clopenable if and only if it is Borel-measurable. -/
-theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s := by
+theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s :=
+  by
   -- we already know that a measurable set is clopenable. Conversely, assume that `s` is clopenable.
   refine' ⟨fun hs => _, fun hs => hs.IsClopenable⟩
   -- consider a finer topology `t'` in which `s` is open and closed.
@@ -708,7 +684,7 @@ theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s :=
   -- therefore, it is also a measurable embedding, by the Lusin-Souslin theorem
   have E :=
     @Continuous.measurableEmbedding γ t' t'_polish (@borel γ t')
-      (by
+      (by 
         constructor
         rfl)
       γ tγ (PolishSpace.t2Space γ) _ _ id C injective_id
@@ -716,7 +692,7 @@ theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s :=
   have M : @MeasurableSet γ (@borel γ t') s :=
     @IsClosed.measurableSet γ s t' (@borel γ t')
       (@BorelSpace.opensMeasurable γ t' (@borel γ t')
-        (by
+        (by 
           constructor
           rfl))
       s_closed
@@ -738,7 +714,6 @@ theorem measurableSetExistsTendsto [hγ : OpensMeasurableSpace γ] [Countable ι
   swap;
   · rw [not_ne_bot] at hl
     simp [hl]
-    
   letI := upgradePolishSpace γ
   rcases l.exists_antitone_basis with ⟨u, hu⟩
   simp_rw [← cauchy_map_iff_exists_tendsto]

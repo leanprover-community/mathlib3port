@@ -40,6 +40,7 @@ unsafe def linarith_trace_proofs (s : String := "") (l : List expr) : tactic Uni
 /-! ### Linear expressions -/
 
 
+#print Linarith.Linexp /-
 /-- A linear expression is a list of pairs of variable indices and coefficients,
 representing the sum of the products of each coefficient with its corresponding variable.
 
@@ -51,6 +52,7 @@ This is not enforced by the type but the operations here preserve it.
 def Linexp : Type :=
   List (ℕ × ℤ)
 #align linarith.linexp Linarith.Linexp
+-/
 
 namespace Linexp
 
@@ -69,11 +71,14 @@ unsafe def add : Linexp → Linexp → Linexp
         if Sum = 0 then add t1 t2 else (n1, Sum) :: add t1 t2
 #align linarith.linexp.add linarith.linexp.add
 
+#print Linarith.Linexp.scale /-
 /-- `l.scale c` scales the values in `l` by `c` without modifying the order or keys. -/
 def scale (c : ℤ) (l : Linexp) : Linexp :=
   if c = 0 then [] else if c = 1 then l else l.map fun ⟨n, z⟩ => (n, z * c)
 #align linarith.linexp.scale Linarith.Linexp.scale
+-/
 
+#print Linarith.Linexp.get /-
 /-- `l.get n` returns the value in `l` associated with key `n`, if it exists, and `none` otherwise.
 This function assumes that `l` is sorted in decreasing order of the first argument,
 that is, it will return `none` as soon as it finds a key smaller than `n`.
@@ -82,13 +87,17 @@ def get (n : ℕ) : Linexp → Option ℤ
   | [] => none
   | (a, b) :: t => if a < n then none else if a = n then some b else get t
 #align linarith.linexp.get Linarith.Linexp.get
+-/
 
+#print Linarith.Linexp.contains /-
 /-- `l.contains n` is true iff `n` is the first element of a pair in `l`.
 -/
 def contains (n : ℕ) : Linexp → Bool :=
   Option.isSome ∘ get n
 #align linarith.linexp.contains Linarith.Linexp.contains
+-/
 
+#print Linarith.Linexp.zfind /-
 /-- `l.zfind n` returns the value associated with key `n` if there is one, and 0 otherwise.
 -/
 def zfind (n : ℕ) (l : Linexp) : ℤ :=
@@ -96,12 +105,16 @@ def zfind (n : ℕ) (l : Linexp) : ℤ :=
   | none => 0
   | some v => v
 #align linarith.linexp.zfind Linarith.Linexp.zfind
+-/
 
+#print Linarith.Linexp.vars /-
 /-- `l.vars` returns the list of variables that occur in `l`. -/
 def vars (l : Linexp) : List ℕ :=
   l.map Prod.fst
 #align linarith.linexp.vars Linarith.Linexp.vars
+-/
 
+#print Linarith.Linexp.cmp /-
 /-- Defines a lex ordering on `linexp`. This function is performance critical.
 -/
 def cmp : Linexp → Linexp → Ordering
@@ -114,12 +127,14 @@ def cmp : Linexp → Linexp → Ordering
       if n2 < n1 then Ordering.gt
       else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else cmp t1 t2
 #align linarith.linexp.cmp Linarith.Linexp.cmp
+-/
 
 end Linexp
 
 /-! ### Inequalities -/
 
 
+#print Linarith.Ineq /-
 /-- The three-element type `ineq` is used to represent the strength of a comparison between
 terms. -/
 inductive Ineq : Type
@@ -128,9 +143,11 @@ inductive Ineq : Type
   | lt
   deriving DecidableEq, Inhabited
 #align linarith.ineq Linarith.Ineq
+-/
 
 namespace Ineq
 
+#print Linarith.Ineq.max /-
 /-- `max R1 R2` computes the strength of the sum of two inequalities. If `t1 R1 0` and `t2 R2 0`,
 then `t1 + t2 (max R1 R2) 0`.
 -/
@@ -141,7 +158,9 @@ def max : Ineq → Ineq → Ineq
   | a, le => le
   | Eq, Eq => eq
 #align linarith.ineq.max Linarith.Ineq.max
+-/
 
+#print Linarith.Ineq.cmp /-
 /-- `ineq` is ordered `eq < le < lt`. -/
 def cmp : Ineq → Ineq → Ordering
   | Eq, Eq => Ordering.eq
@@ -151,13 +170,16 @@ def cmp : Ineq → Ineq → Ordering
   | lt, lt => Ordering.eq
   | _, _ => Ordering.gt
 #align linarith.ineq.cmp Linarith.Ineq.cmp
+-/
 
+#print Linarith.Ineq.toString /-
 /-- Prints an `ineq` as the corresponding infix symbol. -/
 def toString : Ineq → String
   | Eq => "="
   | le => "≤"
   | lt => "<"
 #align linarith.ineq.to_string Linarith.Ineq.toString
+-/
 
 /-- Finds the name of a multiplicative lemma corresponding to an inequality strength. -/
 unsafe def to_const_mul_nm : Ineq → Name
@@ -177,6 +199,7 @@ end Ineq
 /-! ### Comparisons with 0 -/
 
 
+#print Linarith.Comp /-
 /-- The main datatype for FM elimination.
 Variables are represented by natural numbers, each of which has an integer coefficient.
 Index 0 is reserved for constants, i.e. `coeffs.find 0` is the coefficient of 1.
@@ -188,21 +211,28 @@ structure Comp : Type where
   coeffs : Linexp
   deriving Inhabited
 #align linarith.comp Linarith.Comp
+-/
 
+#print Linarith.Comp.vars /-
 /-- `c.vars` returns the list of variables that appear in the linear expression contained in `c`. -/
 def Comp.vars : Comp → List ℕ :=
   linexp.vars ∘ comp.coeffs
 #align linarith.comp.vars Linarith.Comp.vars
+-/
 
+#print Linarith.Comp.coeffOf /-
 /-- `comp.coeff_of c a` projects the coefficient of variable `a` out of `c`. -/
 def Comp.coeffOf (c : Comp) (a : ℕ) : ℤ :=
   c.coeffs.zfind a
 #align linarith.comp.coeff_of Linarith.Comp.coeffOf
+-/
 
+#print Linarith.Comp.scale /-
 /-- `comp.scale c n` scales the coefficients of `c` by `n`. -/
 def Comp.scale (c : Comp) (n : ℕ) : Comp :=
   { c with coeffs := c.coeffs.scale n }
 #align linarith.comp.scale Linarith.Comp.scale
+-/
 
 /-- `comp.add c1 c2` adds the expressions represented by `c1` and `c2`.
 The coefficient of variable `a` in `c1.add c2`
@@ -280,7 +310,8 @@ unsafe structure global_branching_preprocessor : Type where
 
 /-- A `preprocessor` lifts to a `global_preprocessor` by folding it over the input list.
 -/
-unsafe def preprocessor.globalize (pp : preprocessor) : global_preprocessor where
+unsafe def preprocessor.globalize (pp : preprocessor) :
+    global_preprocessor where 
   Name := pp.Name
   transform :=
     List.foldlM
@@ -293,7 +324,7 @@ unsafe def preprocessor.globalize (pp : preprocessor) : global_preprocessor wher
 /-- A `global_preprocessor` lifts to a `global_branching_preprocessor` by producing only one branch.
 -/
 unsafe def global_preprocessor.branching (pp : global_preprocessor) :
-    global_branching_preprocessor where
+    global_branching_preprocessor where 
   Name := pp.Name
   transform l := do
     let g ← tactic.get_goal

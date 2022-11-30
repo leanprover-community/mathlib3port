@@ -65,9 +65,7 @@ an equivalence between `α` and `fin (nat.card α)`. See also `finite.equiv_fin`
 def equivFinOfCardPos {α : Type _} (h : Nat.card α ≠ 0) : α ≃ Fin (Nat.card α) := by
   cases fintypeOrInfinite α
   · simpa using Fintype.equivFin α
-    
   · simpa using h
-    
 #align nat.equiv_fin_of_card_pos Nat.equivFinOfCardPos
 
 theorem card_of_subsingleton (a : α) [Subsingleton α] : Nat.card α = 1 := by
@@ -123,9 +121,7 @@ theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α 
 theorem card_zmod (n : ℕ) : Nat.card (Zmod n) = n := by
   cases n
   · exact Nat.card_eq_zero_of_infinite
-    
   · rw [Nat.card_eq_fintype_card, Zmod.card]
-    
 #align nat.card_zmod Nat.card_zmod
 
 end Nat

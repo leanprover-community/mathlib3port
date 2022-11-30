@@ -31,7 +31,7 @@ theorem add_self_eq_zero (x : R) : x + x = 0 := by rw [← two_smul R x, two_eq_
 #align char_two.add_self_eq_zero CharTwo.add_self_eq_zero
 
 @[simp]
-theorem bit0_eq_zero : (bit0 : R → R) = 0 := by
+theorem bit0_eq_zero : (bit0 : R → R) = 0 := by 
   funext
   exact add_self_eq_zero _
 #align char_two.bit0_eq_zero CharTwo.bit0_eq_zero
@@ -40,7 +40,7 @@ theorem bit0_apply_eq_zero (x : R) : (bit0 x : R) = 0 := by simp
 #align char_two.bit0_apply_eq_zero CharTwo.bit0_apply_eq_zero
 
 @[simp]
-theorem bit1_eq_one : (bit1 : R → R) = 1 := by
+theorem bit1_eq_one : (bit1 : R → R) = 1 := by 
   funext
   simp [bit1]
 #align char_two.bit1_eq_one CharTwo.bit1_eq_one
@@ -129,10 +129,8 @@ theorem neg_one_eq_one_iff [Nontrivial R] : (-1 : R) = 1 ↔ ringChar R = 2 := b
 theorem order_of_neg_one [Nontrivial R] : orderOf (-1 : R) = if ringChar R = 2 then 1 else 2 := by
   split_ifs
   · rw [neg_one_eq_one_iff.2 h, order_of_one]
-    
   apply order_of_eq_prime
   · simp
-    
   simpa [neg_one_eq_one_iff] using h
 #align order_of_neg_one order_of_neg_one
 

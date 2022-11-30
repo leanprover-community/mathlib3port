@@ -198,7 +198,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       have : dist (Φ p) (Φ q) ≤ dist (Ψ p) (Ψ q) + 2 * ε := by
         have := le_trans (le_abs_self _) (H p q)
         · linarith
-          
       calc
         dist x z ≤ dist x (Φ p) + dist (Φ p) (Φ q) + dist (Φ q) z := dist_triangle4 _ _ _ _
         _ ≤ dist x (Φ p) + dist (Ψ p) (Ψ q) + dist z (Φ q) + 2 * ε := by
@@ -217,7 +216,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       have : dist (Ψ p) (Ψ q) ≤ dist (Φ p) (Φ q) + 2 * ε := by
         have := le_trans (neg_le_abs_self _) (H p q)
         · linarith
-          
       calc
         dist x z ≤ dist x (Ψ p) + dist (Ψ p) (Ψ q) + dist (Ψ q) z := dist_triangle4 _ _ _ _
         _ ≤ dist x (Ψ p) + dist (Φ p) (Φ q) + dist z (Ψ q) + 2 * ε := by
@@ -253,7 +251,8 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
 glue the two spaces `X` and `Y` along the images of `Φ` and `Ψ`, so that `Φ p` and `Ψ p` are
 at distance `ε`. -/
 def glueMetricApprox (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε)
-    (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) : MetricSpace (Sum X Y) where
+    (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) :
+    MetricSpace (Sum X Y) where 
   dist := glueDist Φ Ψ ε
   dist_self := glue_dist_self Φ Ψ ε
   dist_comm := glue_dist_comm Φ Ψ ε
@@ -321,65 +320,48 @@ private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
     refine' ⟨min (min εX εY) 1, lt_min (lt_min εX0 εY0) zero_lt_one, _⟩
     rintro (a | a) (b | b) h
     · exact hX (lt_of_lt_of_le h (le_trans (min_le_left _ _) (min_le_left _ _)))
-      
     · cases not_le_of_lt (lt_of_lt_of_le h (min_le_right _ _)) sum.one_dist_le
-      
     · cases not_le_of_lt (lt_of_lt_of_le h (min_le_right _ _)) sum.one_dist_le'
-      
     · exact hY (lt_of_lt_of_le h (le_trans (min_le_left _ _) (min_le_right _ _)))
-      
-    
   · rintro ⟨ε, ε0, H⟩
     constructor <;> rw [Filter.mem_sets, Filter.mem_map, mem_uniformity_dist] <;>
       exact ⟨ε, ε0, fun x y h => H _ _ h⟩
-    
 #align metric.sum.mem_uniformity metric.sum.mem_uniformity
 
 /-- The distance on the disjoint union indeed defines a metric space. All the distance properties
 follow from our choice of the distance. The harder work is to show that the uniform structure
 defined by the distance coincides with the disjoint union uniform structure. -/
-def metricSpaceSum : MetricSpace (Sum X Y) where
+def metricSpaceSum : MetricSpace
+      (Sum X Y) where 
   dist := Sum.dist
   dist_self x := by cases x <;> simp only [sum.dist, dist_self]
   dist_comm := Sum.dist_comm
-  dist_triangle p q r := by
+  dist_triangle p q r := by 
     cases p <;> cases q <;> cases r
     · exact dist_triangle _ _ _
-      
     · simp only [dist, sum.dist_eq_glue_dist p r]
       exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
-      
     · simp only [dist, sum.dist_eq_glue_dist p q]
       exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
-      
     · simp only [dist, sum.dist_eq_glue_dist p q]
       exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
-      
     · simp only [dist, sum.dist_eq_glue_dist q p]
       exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
-      
     · simp only [dist, sum.dist_eq_glue_dist q p]
       exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
-      
     · simp only [dist, sum.dist_eq_glue_dist r p]
       exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
-      
     · exact dist_triangle _ _ _
-      
-  eq_of_dist_eq_zero p q := by
+  eq_of_dist_eq_zero p q := by 
     cases p <;> cases q
     · simp only [sum.dist, dist_eq_zero, imp_self]
-      
     · intro h
       simp only [dist, sum.dist_eq_glue_dist p q] at h
       exact glue_eq_of_dist_eq_zero _ _ _ zero_lt_one _ _ h
-      
     · intro h
       simp only [dist, sum.dist_eq_glue_dist q p] at h
       exact glue_eq_of_dist_eq_zero _ _ _ zero_lt_one _ _ h
-      
     · simp only [sum.dist, dist_eq_zero, imp_self]
-      
   toUniformSpace := Sum.uniformSpace
   uniformity_dist := uniformity_dist_of_mem_uniformity _ _ Sum.mem_uniformity
 #align metric.metric_space_sum Metric.metricSpaceSum
@@ -469,7 +451,6 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
   rcases eq_or_ne i k with (rfl | hik)
   · rcases eq_or_ne i j with (rfl | hij)
     · simpa using dist_triangle x y z
-      
     · simp only [hij, hij.symm, sigma.dist_same, sigma.dist_ne, Ne.def, not_false_iff]
       calc
         dist x z ≤ dist x (Nonempty.some ⟨x⟩) + 0 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
@@ -478,8 +459,6 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_nonneg, \",\", expr zero_le_one, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         
-      
-    
   · rcases eq_or_ne i j with (rfl | hij)
     · simp only [hik, sigma.dist_ne, Ne.def, not_false_iff, sigma.dist_same]
       calc
@@ -490,7 +469,6 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         _ = _ := by abel
         
-      
     · rcases eq_or_ne j k with (rfl | hjk)
       · simp only [hij, sigma.dist_ne, Ne.def, not_false_iff, sigma.dist_same]
         calc
@@ -501,7 +479,6 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
               "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
           _ = _ := by abel
           
-        
       · simp only [hik, hij, hjk, sigma.dist_ne, Ne.def, not_false_iff]
         calc
           dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z =
@@ -511,9 +488,6 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
             trace
               "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr zero_le_one, \",\", expr dist_nonneg, \",\", expr le_rfl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
           
-        
-      
-    
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
 
 protected theorem is_open_iff (s : Set (Σi, E i)) :
@@ -527,14 +501,11 @@ protected theorem is_open_iff (s : Set (Σi, E i)) :
     rcases eq_or_ne i j with (rfl | hij)
     · simp only [sigma.dist_same, lt_min_iff] at hy
       exact hε (mem_ball'.2 hy.1)
-      
     · apply (lt_irrefl (1 : ℝ) _).elim
       calc
         1 ≤ sigma.dist ⟨i, x⟩ ⟨j, y⟩ := sigma.one_le_dist_of_ne hij _ _
         _ < 1 := hy.trans_le (min_le_right _ _)
         
-      
-    
   · intro H
     apply is_open_sigma_iff.2 fun i => _
     apply Metric.is_open_iff.2 fun x hx => _
@@ -544,7 +515,6 @@ protected theorem is_open_iff (s : Set (Σi, E i)) :
     apply hε ⟨i, y⟩
     rw [sigma.dist_same]
     exact mem_ball'.1 hy
-    
 #align metric.sigma.is_open_iff Metric.Sigma.is_open_iff
 
 /-- A metric space structure on the disjoint union `Σ i, E i`.
@@ -556,29 +526,22 @@ protected def metricSpace : MetricSpace (Σi, E i) := by
   refine' MetricSpace.ofMetrizable sigma.dist _ _ sigma.dist_triangle sigma.is_open_iff _
   · rintro ⟨i, x⟩
     simp [sigma.dist]
-    
   · rintro ⟨i, x⟩ ⟨j, y⟩
     rcases eq_or_ne i j with (rfl | h)
     · simp [sigma.dist, dist_comm]
-      
     · simp only [sigma.dist, dist_comm, h, h.symm, not_false_iff, dif_neg]
       abel
-      
-    
   · rintro ⟨i, x⟩ ⟨j, y⟩
     rcases eq_or_ne i j with (rfl | hij)
     · simp [sigma.dist]
-      
     · intro h
       apply (lt_irrefl (1 : ℝ) _).elim
       calc
         1 ≤ sigma.dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ := sigma.one_le_dist_of_ne hij _ _
-        _ < 1 := by
+        _ < 1 := by 
           rw [h]
           exact zero_lt_one
         
-      
-    
 #align metric.sigma.metric_space Metric.Sigma.metricSpace
 
 attribute [local instance] sigma.metric_space
@@ -596,7 +559,7 @@ theorem isometryMk (i : ι) : Isometry (Sigma.mk i : E i → Σk, E k) :=
 protected theorem complete_space [∀ i, CompleteSpace (E i)] : CompleteSpace (Σi, E i) := by
   set s : ι → Set (Σi, E i) := fun i => Sigma.fst ⁻¹' {i}
   set U := { p : (Σk, E k) × Σk, E k | dist p.1 p.2 < 1 }
-  have hc : ∀ i, IsComplete (s i) := by
+  have hc : ∀ i, IsComplete (s i) := by 
     intro i
     simp only [s, ← range_sigma_mk]
     exact (isometry_mk i).UniformInducing.is_complete_range
@@ -623,7 +586,8 @@ attribute [local instance] PseudoMetric.distSetoid
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a pseudo metric space
 structure on `X ⊕ Y` by declaring that `Φ x` and `Ψ x` are at distance `0`. -/
-def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (Sum X Y) where
+def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
+    PseudoMetricSpace (Sum X Y) where 
   dist := glueDist Φ Ψ 0
   dist_self := glue_dist_self Φ Ψ 0
   dist_comm := glue_dist_comm Φ Ψ 0
@@ -707,7 +671,7 @@ theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n
     ∀ hx : x.1 ≤ m,
       ∀ hy : y.1 ≤ m,
         inductiveLimitDist f x y = dist (leRecOn hx f x.2 : X m) (leRecOn hy f y.2 : X m) :=
-  by
+  by 
   induction' m with m hm
   · intro hx hy
     have A : max x.1 y.1 = 0 := by
@@ -715,34 +679,31 @@ theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n
       simp
     unfold inductive_limit_dist
     congr <;> simp only [A]
-    
   · intro hx hy
     by_cases h : max x.1 y.1 = m.succ
     · unfold inductive_limit_dist
       congr <;> simp only [h]
-      
     · have : max x.1 y.1 ≤ succ m := by simp [hx, hy]
       have : max x.1 y.1 ≤ m := by simpa [h] using of_le_succ this
       have xm : x.1 ≤ m := le_trans (le_max_left _ _) this
       have ym : y.1 ≤ m := le_trans (le_max_right _ _) this
       rw [le_rec_on_succ xm, le_rec_on_succ ym, (I m).dist_eq]
       exact hm xm ym
-      
-    
 #align metric.inductive_limit_dist_eq_dist Metric.inductive_limit_dist_eq_dist
 
 /-- Premetric space structure on `Σ n, X n`.-/
-def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n) where
+def inductivePremetric (I : ∀ n, Isometry (f n)) :
+    PseudoMetricSpace (Σn, X n) where 
   dist := inductiveLimitDist f
   dist_self x := by simp [dist, inductive_limit_dist]
-  dist_comm x y := by
+  dist_comm x y := by 
     let m := max x.1 y.1
     have hx : x.1 ≤ m := le_max_left _ _
     have hy : y.1 ≤ m := le_max_right _ _
     unfold dist
     rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y x m hy hx,
       dist_comm]
-  dist_triangle x y z := by
+  dist_triangle x y z := by 
     let m := max (max x.1 y.1) z.1
     have hx : x.1 ≤ m := le_trans (le_max_left _ _) (le_max_left _ _)
     have hy : y.1 ≤ m := le_trans (le_max_right _ _) (le_max_left _ _)
@@ -800,7 +761,6 @@ theorem to_inductive_limit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
     exact le_rfl
     exact le_rfl
     exact le_succ _
-    
 #align metric.to_inductive_limit_commute Metric.to_inductive_limit_commute
 
 end InductiveLimit

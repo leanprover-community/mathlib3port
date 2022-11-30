@@ -80,7 +80,7 @@ theorem cantor_function_aux_eq (h : f n = g n) :
 theorem cantor_function_aux_succ (f : ℕ → Bool) :
     (fun n => cantorFunctionAux c f (n + 1)) = fun n =>
       c * cantorFunctionAux c (fun n => f (n + 1)) n :=
-  by
+  by 
   ext n
   cases h : f (n + 1) <;> simp [h, pow_succ]
 #align cardinal.cantor_function_aux_succ Cardinal.cantor_function_aux_succ
@@ -117,19 +117,19 @@ explicitly write out what it means. -/
 theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g : ℕ → Bool}
     (hn : ∀ k < n, f k = g k) (fn : f n = ff) (gn : g n = tt) :
     cantorFunction c f < cantorFunction c g := by
-  have h3 : c < 1 := by
+  have h3 : c < 1 := by 
     apply h2.trans
     norm_num
   induction' n with n ih generalizing f g
   · let f_max : ℕ → Bool := fun n => Nat.rec ff (fun _ _ => tt) n
-    have hf_max : ∀ n, f n → f_max n := by
+    have hf_max : ∀ n, f n → f_max n := by 
       intro n hn
       cases n
       rw [fn] at hn
       contradiction
       apply rfl
     let g_min : ℕ → Bool := fun n => Nat.rec tt (fun _ _ => ff) n
-    have hg_min : ∀ n, g_min n → g n := by
+    have hg_min : ∀ n, g_min n → g n := by 
       intro n hn
       cases n
       rw [gn]
@@ -137,27 +137,21 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
       contradiction
     apply (cantor_function_le (le_of_lt h1) h3 hf_max).trans_lt
     refine' lt_of_lt_of_le _ (cantor_function_le (le_of_lt h1) h3 hg_min)
-    have : c / (1 - c) < 1 := by
+    have : c / (1 - c) < 1 := by 
       rw [div_lt_one, lt_sub_iff_add_lt]
       · convert add_lt_add h2 h2
         norm_num
-        
       rwa [sub_pos]
     convert this
     · rw [cantor_function_succ _ (le_of_lt h1) h3, div_eq_mul_inv, ←
         tsum_geometric_of_lt_1 (le_of_lt h1) h3]
       apply zero_add
-      
     · convert tsum_eq_single 0 _
       · infer_instance
-        
       · intro n hn
         cases n
         contradiction
         rfl
-        
-      
-    
   rw [cantor_function_succ f (le_of_lt h1) h3, cantor_function_succ g (le_of_lt h1) h3]
   rw [hn 0 <| zero_lt_succ n]
   apply add_lt_add_left
@@ -169,51 +163,47 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
 theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) :
     Function.Injective (cantorFunction c) := by
   intro f g hfg
-  classical
-  by_contra h
-  revert hfg
-  have : ∃ n, f n ≠ g n := by
-    rw [← not_forall]
-    intro h'
-    apply h
-    ext
-    apply h'
-  let n := Nat.find this
-  have hn : ∀ k : ℕ, k < n → f k = g k := by
-    intro k hk
-    apply of_not_not
-    exact Nat.find_min this hk
-  cases fn : f n
-  · apply ne_of_lt
-    refine' increasing_cantor_function h1 h2 hn fn _
-    apply Bool.eq_true_of_not_eq_false
-    rw [← fn]
-    apply Ne.symm
-    exact Nat.find_spec this
-    
-  · apply ne_of_gt
-    refine' increasing_cantor_function h1 h2 (fun k hk => (hn k hk).symm) _ fn
-    apply Bool.eq_false_of_not_eq_true
-    rw [← fn]
-    apply Ne.symm
-    exact Nat.find_spec this
-    
+  classical 
+    by_contra h
+    revert hfg
+    have : ∃ n, f n ≠ g n := by 
+      rw [← not_forall]
+      intro h'
+      apply h
+      ext
+      apply h'
+    let n := Nat.find this
+    have hn : ∀ k : ℕ, k < n → f k = g k := by 
+      intro k hk
+      apply of_not_not
+      exact Nat.find_min this hk
+    cases fn : f n
+    · apply ne_of_lt
+      refine' increasing_cantor_function h1 h2 hn fn _
+      apply Bool.eq_true_of_not_eq_false
+      rw [← fn]
+      apply Ne.symm
+      exact Nat.find_spec this
+    · apply ne_of_gt
+      refine' increasing_cantor_function h1 h2 (fun k hk => (hn k hk).symm) _ fn
+      apply Bool.eq_false_of_not_eq_true
+      rw [← fn]
+      apply Ne.symm
+      exact Nat.find_spec this
 #align cardinal.cantor_function_injective Cardinal.cantor_function_injective
 
 /-- The cardinality of the reals, as a type. -/
-theorem mk_real : (#ℝ) = 𝔠 := by
+theorem mk_real : (#ℝ) = 𝔠 := by 
   apply le_antisymm
   · rw [real.equiv_Cauchy.cardinal_eq]
     apply mk_quotient_le.trans
     apply (mk_subtype_le _).trans_eq
     rw [← power_def, mk_nat, mk_rat, aleph_0_power_aleph_0]
-    
   · convert mk_le_of_injective (cantor_function_injective _ _)
     rw [← power_def, mk_bool, mk_nat, two_power_aleph_0]
     exact 1 / 3
     norm_num
     norm_num
-    
 #align cardinal.mk_real Cardinal.mk_real
 
 /-- The cardinality of the reals, as a set. -/

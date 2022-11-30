@@ -92,11 +92,10 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
       (Function.funext_iff.1 (@subset_Sup_def α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
-        Subtype.eq <| by
+        Subtype.eq <| by 
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
           · simp [h2.not_le]
-            
           simp [h2] }
 #align nonneg.conditionally_complete_linear_order_bot Nonneg.conditionallyCompleteLinearOrderBot
 
@@ -376,8 +375,8 @@ theorem mk_sub_mk [Sub α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) :
 
 end LinearOrder
 
-instance hasOrderedSub [LinearOrderedRing α] : HasOrderedSub { x : α // 0 ≤ x } :=
-  ⟨by
+instance hasOrderedSub [LinearOrderedRing α] : OrderedSub { x : α // 0 ≤ x } :=
+  ⟨by 
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
     simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, to_nonneg_le,
       Subtype.coe_mk]⟩

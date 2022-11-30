@@ -102,17 +102,14 @@ theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiring R] [Ring S] [Li
   · rintro c - hc
     rw [leading_coeff_mul_X, leading_coeff_C] at hc
     simpa [abv_mul abv] using hz.const_mul_at_top ((abv_pos abv).2 hc)
-    
   · intro p hpd ihp hf
     rw [leading_coeff_mul_X] at hf
     simpa [abv_mul abv] using (ihp hf).at_top_mul_at_top hz
-    
   · intro p a hd ihp hf
     rw [add_comm, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
     refine' tendsto_at_top_of_add_const_right (abv (-f a)) _
     refine' tendsto_at_top_mono (fun _ => abv_add abv _ _) _
     simpa using ihp hf
-    
 #align polynomial.tendsto_abv_eval₂_at_top Polynomial.tendsto_abv_eval₂_at_top
 
 theorem tendsto_abv_at_top {R k α : Type _} [Ring R] [LinearOrderedField k] (abv : R → k)
@@ -152,7 +149,7 @@ open Multiset
 theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1 : p.Monic)
     (h2 : Splits f p) (h3 : ∀ z ∈ (map f p).roots, ‖z‖ ≤ B) : p = 1 :=
   h1.nat_degree_eq_zero_iff_eq_one.mp
-    (by
+    (by 
       contrapose! hB
       rw [← h1.nat_degree_map f, nat_degree_eq_card_roots' h2] at hB
       obtain ⟨z, hz⟩ := card_pos_iff_exists_mem.mp (zero_lt_iff.mpr hB)
@@ -166,18 +163,16 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   · rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, nat_degree_one, zero_tsub, pow_zero,
       one_mul, coeff_one]
     split_ifs <;> norm_num [h]
-    
   rw [← h1.nat_degree_map f]
   obtain hi | hi := lt_or_le (map f p).natDegree i
   · rw [coeff_eq_zero_of_nat_degree_lt hi, norm_zero]
     positivity
-    
   rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff,
     one_mul, norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul]
   apply ((norm_multiset_sum_le _).trans <| (sum_le_card_nsmul _ _) fun r hr => _).trans
-  · rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2,
+  ·
+    rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2,
       Nat.choose_symm hi, mul_comm, nsmul_eq_mul]
-    
   simp_rw [Multiset.mem_map] at hr
   obtain ⟨_, ⟨s, hs, rfl⟩, rfl⟩ := hr
   rw [mem_powerset_len] at hs
@@ -206,14 +201,10 @@ theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1
           (nat.cast_le.mpr ((i.choose_mono h3).trans (i.choose_le_middle d))) _
       
     all_goals positivity
-    
   · rw [eq_one_of_roots_le hB h1 h2 h4, Polynomial.map_one, coeff_one]
     refine' trans _ (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_right B 1) d) _)
     · split_ifs <;> norm_num
-      
     · exact_mod_cast nat.succ_le_iff.mpr (Nat.choose_pos (d.div_le_self 2))
-      
-    
 #align polynomial.coeff_bdd_of_roots_le Polynomial.coeff_bdd_of_roots_le
 
 end Roots

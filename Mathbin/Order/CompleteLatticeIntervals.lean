@@ -103,19 +103,19 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
       subsetHasSup
       s,
     subsetHasInf s, DistribLattice.toLattice s, (inferInstance : LinearOrder s) with
-    le_cSup := by
+    le_cSup := by 
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).le_cSup_image hct h_bdd
       rwa [subset_Sup_of_within s (h_Sup ⟨c, hct⟩ h_bdd)] at this,
-    cSup_le := by
+    cSup_le := by 
       rintro t B ht hB
       have := (Subtype.mono_coe s).cSup_image_le ht hB
       rwa [subset_Sup_of_within s (h_Sup ht ⟨B, hB⟩)] at this,
-    le_cInf := by
+    le_cInf := by 
       intro t B ht hB
       have := (Subtype.mono_coe s).le_cInf_image ht hB
       rwa [subset_Inf_of_within s (h_Inf ht ⟨B, hB⟩)] at this,
-    cInf_le := by
+    cInf_le := by 
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).cInf_image_le hct h_bdd
       rwa [subset_Inf_of_within s (h_Inf ⟨c, hct⟩ h_bdd)] at this }
@@ -131,9 +131,7 @@ theorem Sup_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Se
   obtain ⟨B, hB⟩ : ∃ B, B ∈ upperBounds t := h_bdd
   refine' hs.out c.2 B.2 ⟨_, _⟩
   · exact (Subtype.mono_coe s).le_cSup_image hct ⟨B, hB⟩
-    
   · exact (Subtype.mono_coe s).cSup_image_le ⟨c, hct⟩ hB
-    
 #align Sup_within_of_ord_connected Sup_within_of_ord_connected
 
 /-- The `Inf` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
@@ -144,9 +142,7 @@ theorem Inf_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Se
   obtain ⟨B, hB⟩ : ∃ B, B ∈ lowerBounds t := h_bdd
   refine' hs.out B.2 c.2 ⟨_, _⟩
   · exact (Subtype.mono_coe s).le_cInf_image ⟨c, hct⟩ hB
-    
   · exact (Subtype.mono_coe s).cInf_image_le hct ⟨B, hB⟩
-    
 #align Inf_within_of_ord_connected Inf_within_of_ord_connected
 
 /-- A nonempty `ord_connected` set in a conditionally complete linear order is naturally a

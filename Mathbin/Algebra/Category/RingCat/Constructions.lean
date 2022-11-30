@@ -46,14 +46,12 @@ def pushoutCocone : Limits.PushoutCocone f g := by
   ext r
   trans algebraMap R (A ⊗[R] B) r
   · exact algebra.tensor_product.include_left.commutes r
-    
   · exact (algebra.tensor_product.include_right.commutes r).symm
-    
 #align CommRing.pushout_cocone CommRingCat.pushoutCocone
 
 @[simp]
 theorem pushout_cocone_inl :
-    (pushoutCocone f g).inl = by
+    (pushoutCocone f g).inl = by 
       letI := f.to_algebra
       letI := g.to_algebra
       exact algebra.tensor_product.include_left.to_ring_hom :=
@@ -62,7 +60,7 @@ theorem pushout_cocone_inl :
 
 @[simp]
 theorem pushout_cocone_inr :
-    (pushoutCocone f g).inr = by
+    (pushoutCocone f g).inr = by 
       letI := f.to_algebra
       letI := g.to_algebra
       exact algebra.tensor_product.include_right.to_ring_hom :=
@@ -71,7 +69,7 @@ theorem pushout_cocone_inr :
 
 @[simp]
 theorem pushout_cocone_X :
-    (pushoutCocone f g).x = by
+    (pushoutCocone f g).x = by 
       letI := f.to_algebra
       letI := g.to_algebra
       exact CommRingCat.of (A ⊗[R] B) :=
@@ -86,12 +84,12 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
     letI := RingHom.toAlgebra (f ≫ s.inl)
     let f' : A →ₐ[R] s.X :=
       { s.inl with
-        commutes' := fun r => by
+        commutes' := fun r => by 
           change s.inl.to_fun (f r) = (f ≫ s.inl) r
           rfl }
     let g' : B →ₐ[R] s.X :=
       { s.inr with
-        commutes' := fun r => by
+        commutes' := fun r => by 
           change (g ≫ s.inr) r = (f ≫ s.inl) r
           congr 1
           exact
@@ -103,15 +101,13 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
     constructor
     · ext x
       exact Algebra.TensorProduct.product_map_left_apply _ _ x
-      
     constructor
     · ext x
       exact Algebra.TensorProduct.product_map_right_apply _ _ x
-      
     intro h eq1 eq2
     let h' : A ⊗[R] B →ₐ[R] s.X :=
       { h with
-        commutes' := fun r => by
+        commutes' := fun r => by 
           change h (f r ⊗ₜ[R] 1) = s.inl (f r)
           rw [← eq1]
           simp }
@@ -139,7 +135,7 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   intro X f
   refine' ⟨⟨by tidy, by ext, _⟩⟩
   ext
-  have e : (0 : X) = 1 := by
+  have e : (0 : X) = 1 := by 
     rw [← f.map_one, ← f.map_zero]
     congr
   replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
@@ -172,18 +168,19 @@ def prodFan : BinaryFan A B :=
 #align CommRing.prod_fan CommRingCat.prodFan
 
 /-- The product in `CommRing` is the cartesian product. -/
-def prodFanIsLimit : IsLimit (prodFan A B) where
+def prodFanIsLimit :
+    IsLimit
+      (prodFan A
+        B) where 
   lift c := RingHom.prod (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩)
-  fac' c j := by
+  fac' c j := by 
     ext
     rcases j with ⟨⟨⟩⟩ <;>
       simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
-  uniq' s m h := by
+  uniq' s m h := by 
     ext
     · simpa using congr_hom (h ⟨walking_pair.left⟩) x
-      
     · simpa using congr_hom (h ⟨walking_pair.right⟩) x
-      
 #align CommRing.prod_fan_is_limit CommRingCat.prodFanIsLimit
 
 end Product
@@ -195,7 +192,7 @@ variable {A B : CommRingCat.{u}} (f g : A ⟶ B)
 /-- The equalizer in `CommRing` is the equalizer as sets. This is the equalizer fork. -/
 def equalizerFork : Fork f g :=
   Fork.ofι (CommRingCat.ofHom (RingHom.eqLocus f g).Subtype)
-    (by
+    (by 
       ext ⟨x, e⟩
       simpa using e)
 #align CommRing.equalizer_fork CommRingCat.equalizerFork
@@ -208,11 +205,9 @@ def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
   constructor
   · ext
     rfl
-    
   · intro m hm
     ext x
     exact concrete_category.congr_hom hm x
-    
 #align CommRing.equalizer_fork_is_limit CommRingCat.equalizerForkIsLimit
 
 instance : IsLocalRingHom (equalizerFork f g).ι := by
@@ -270,7 +265,7 @@ def pullbackCone {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : Pullbac
     (CommRingCat.ofHom <|
       (RingHom.snd A B).comp
         (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
-    (by
+    (by 
       ext ⟨x, e⟩
       simpa [CommRingCat.ofHom] using e)
 #align CommRing.pullback_cone CommRingCat.pullbackCone
@@ -283,22 +278,16 @@ def pullbackConeIsLimit {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) :
     apply (s.fst.prod s.snd).codRestrict
     intro x
     exact congr_arg (fun f : s.X →+* C => f x) s.condition
-    
   · intro s
     ext x
     rfl
-    
   · intro s
     ext x
     rfl
-    
   · intro s m e₁ e₂
     ext
     · exact (congr_arg (fun f : s.X →+* A => f x) e₁ : _)
-      
     · exact (congr_arg (fun f : s.X →+* B => f x) e₂ : _)
-      
-    
 #align CommRing.pullback_cone_is_limit CommRingCat.pullbackConeIsLimit
 
 end Pullback

@@ -31,13 +31,11 @@ theorem IsProjective.iff_projective {R : Type u} [Ring R] {P : Type max u v} [Ad
     exact
       ⟨fun E X f e epi =>
         Module.projective_lifting_property _ _ ((ModuleCat.epi_iff_surjective _).mp epi)⟩
-    
   · refine' Module.projectiveOfLiftingProperty _
     intro E X mE mX sE sX f g s
     haveI : epi (↟f) := (ModuleCat.epi_iff_surjective (↟f)).mpr s
     letI : projective (ModuleCat.of R P) := h
     exact ⟨projective.factor_thru (↟g) (↟f), projective.factor_thru_comp (↟g) (↟f)⟩
-    
 #align is_projective.iff_projective IsProjective.iff_projective
 
 namespace ModuleCat

@@ -88,20 +88,14 @@ theorem num_derangements_succ (n : ℕ) :
     (numDerangements (n + 1) : ℤ) = (n + 1) * (numDerangements n : ℤ) - (-1) ^ n := by
   induction' n with n hn
   · rfl
-    
   · simp only [num_derangements_add_two, hn, pow_succ, Int.ofNat_mul, Int.ofNat_add, Int.ofNat_succ]
     ring
-    
 #align num_derangements_succ num_derangements_succ
 
 theorem card_derangements_fin_eq_num_derangements {n : ℕ} :
     card (derangements (Fin n)) = numDerangements n := by
   induction' n using Nat.strong_induction_on with n hyp
-  obtain _ | _ | n := n;
-  · rfl
-    ;
-  · rfl
-    
+  obtain _ | _ | n := n; · rfl; · rfl
   -- knock out cases 0 and 1
   -- now we have n ≥ 2. rewrite everything in terms of card_derangements, so that we can use
   -- `card_derangements_fin_add_two`
@@ -118,10 +112,8 @@ theorem card_derangements_eq_num_derangements (α : Type _) [Fintype α] [Decida
 theorem num_derangements_sum (n : ℕ) :
     (numDerangements n : ℤ) =
       ∑ k in Finset.range (n + 1), (-1 : ℤ) ^ k * Nat.ascFactorial k (n - k) :=
-  by
-  induction' n with n hn;
-  · rfl
-    
+  by 
+  induction' n with n hn; · rfl
   rw [Finset.sum_range_succ, num_derangements_succ, hn, Finset.mul_sum, tsub_self,
     Nat.asc_factorial_zero, Int.ofNat_one, mul_one, pow_succ, neg_one_mul, sub_eq_add_neg,
     add_left_inj, Finset.sum_congr rfl]

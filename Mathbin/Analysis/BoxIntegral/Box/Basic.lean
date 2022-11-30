@@ -193,28 +193,27 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`h]) [])
-             (group
-              (Std.Tactic.simpa
-               "simpa"
+            [(Tactic.intro "intro" [`h])
+             []
+             (Std.Tactic.simpa
+              "simpa"
+              []
+              []
+              (Std.Tactic.simpaArgsRest
                []
                []
-               (Std.Tactic.simpaArgsRest
-                []
-                []
-                []
-                [(Tactic.simpArgs
-                  "["
-                  [(Tactic.simpLemma [] [] `coe_eq_pi)
-                   ","
-                   (Tactic.simpLemma [] [] `closure_pi_set)
-                   ","
-                   (Tactic.simpLemma [] [] `lower_ne_upper)]
-                  "]")]
-                ["using" (Term.app `closure_mono [`h])]))
-              [])])
+               []
+               [(Tactic.simpArgs
+                 "["
+                 [(Tactic.simpLemma [] [] `coe_eq_pi)
+                  ","
+                  (Tactic.simpLemma [] [] `closure_pi_set)
+                  ","
+                  (Tactic.simpLemma [] [] `lower_ne_upper)]
+                 "]")]
+               ["using" (Term.app `closure_mono [`h])]))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "↔" (num "4"))
            ";"
@@ -253,28 +252,27 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`h]) [])
-            (group
-             (Std.Tactic.simpa
-              "simpa"
+           [(Tactic.intro "intro" [`h])
+            []
+            (Std.Tactic.simpa
+             "simpa"
+             []
+             []
+             (Std.Tactic.simpaArgsRest
               []
               []
-              (Std.Tactic.simpaArgsRest
-               []
-               []
-               []
-               [(Tactic.simpArgs
-                 "["
-                 [(Tactic.simpLemma [] [] `coe_eq_pi)
-                  ","
-                  (Tactic.simpLemma [] [] `closure_pi_set)
-                  ","
-                  (Tactic.simpLemma [] [] `lower_ne_upper)]
-                 "]")]
-               ["using" (Term.app `closure_mono [`h])]))
-             [])])
+              []
+              [(Tactic.simpArgs
+                "["
+                [(Tactic.simpLemma [] [] `coe_eq_pi)
+                 ","
+                 (Tactic.simpLemma [] [] `closure_pi_set)
+                 ","
+                 (Tactic.simpLemma [] [] `lower_ne_upper)]
+                "]")]
+              ["using" (Term.app `closure_mono [`h])]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "↔" (num "4"))
           ";"
@@ -497,7 +495,7 @@ theorem coe_inj : (I : Set (ι → ℝ)) = J ↔ I = J :=
   injective_coe.eq_iff
 #align box_integral.box.coe_inj BoxIntegral.Box.coe_inj
 
-@[ext.1]
+@[ext]
 theorem ext (H : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
   injective_coe <| Set.ext H
 #align box_integral.box.ext BoxIntegral.Box.ext
@@ -592,10 +590,10 @@ theorem coe_coe : ((I : WithBot (Box ι)) : Set (ι → ℝ)) = I :=
 #align box_integral.box.coe_coe BoxIntegral.Box.coe_coe
 
 theorem is_some_iff : ∀ {I : WithBot (Box ι)}, I.isSome ↔ (I : Set (ι → ℝ)).Nonempty
-  | ⊥ => by
+  | ⊥ => by 
     erw [Option.isSome]
     simp
-  | (I : box ι) => by
+  | (I : box ι) => by 
     erw [Option.isSome]
     simp [I.nonempty_coe]
 #align box_integral.box.is_some_iff BoxIntegral.Box.is_some_iff
@@ -607,12 +605,8 @@ theorem bUnion_coe_eq_coe (I : WithBot (Box ι)) :
 
 @[simp, norm_cast]
 theorem with_bot_coe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J := by
-  induction I using WithBot.recBotCoe;
-  · simp
-    
-  induction J using WithBot.recBotCoe;
-  · simp [subset_empty_iff]
-    
+  induction I using WithBot.recBotCoe; · simp
+  induction J using WithBot.recBotCoe; · simp [subset_empty_iff]
   simp
 #align box_integral.box.with_bot_coe_subset_iff BoxIntegral.Box.with_bot_coe_subset_iff
 
@@ -638,22 +632,18 @@ theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i := 
 theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.upper := by
   cases' I with lI uI hI; rw [mk']; split_ifs
   · simp [WithBot.coe_eq_coe]
-    
   · suffices l = lI → u ≠ uI by simpa
     rintro rfl rfl
     exact h hI
-    
 #align box_integral.box.mk'_eq_coe BoxIntegral.Box.mk'_eq_coe
 
 @[simp]
 theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun i => ioc (l i) (u i) := by
   rw [mk']; split_ifs
   · exact coe_eq_pi _
-    
   · rcases not_forall.mp h with ⟨i, hi⟩
     rw [coe_bot, univ_pi_eq_empty]
     exact Ioc_eq_empty hi
-    
 #align box_integral.box.coe_mk' BoxIntegral.Box.coe_mk'
 
 instance : HasInf (WithBot (Box ι)) :=
@@ -666,11 +656,9 @@ theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I
   induction I using WithBot.recBotCoe;
   · change ∅ = _
     simp
-    
   induction J using WithBot.recBotCoe;
   · change ∅ = _
     simp
-    
   change ↑(mk' _ _) = _
   simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk',
     coe_coe]
@@ -678,10 +666,10 @@ theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I
 
 instance : Lattice (WithBot (Box ι)) :=
   { WithBot.semilatticeSup, Box.WithBot.hasInf with
-    inf_le_left := fun I J => by
+    inf_le_left := fun I J => by 
       rw [← with_bot_coe_subset_iff, coe_inf]
       exact inter_subset_left _ _,
-    inf_le_right := fun I J => by
+    inf_le_right := fun I J => by 
       rw [← with_bot_coe_subset_iff, coe_inf]
       exact inter_subset_right _ _,
     le_inf := fun I J₁ J₂ h₁ h₂ => by
@@ -756,7 +744,9 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) �
 
 
 /-- The interior of a box. -/
-protected def ioo : Box ι →o Set (ι → ℝ) where
+protected def ioo :
+    Box ι →o
+      Set (ι → ℝ) where 
   toFun I := pi univ fun i => ioo (I.lower i) (I.upper i)
   monotone' I J h :=
     pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
@@ -814,10 +804,10 @@ def distortion (I : Box ι) : ℝ≥0 :=
 
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J :=
-  by
+  by 
   simp only [distortion, nndist_pi_def, Real.nndist_eq', h, map_div₀]
   congr 1 with i
-  have : 0 < r := by
+  have : 0 < r := by 
     by_contra hr
     have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_lt.1 hr)
     rw [← h] at this

@@ -81,7 +81,7 @@ theorem head_drop {α} (a : Stream α) (n : ℕ) : (a.drop n).head = a.nth n := 
   simp only [drop, head, Nat.zero_add, Stream.nth]
 #align stream.head_drop Stream.head_drop
 
-@[ext.1]
+@[ext]
 protected theorem ext {s₁ s₂ : Stream α} : (∀ n, nth s₁ n = nth s₂ n) → s₁ = s₂ := fun h => funext h
 #align stream.ext Stream.ext
 
@@ -118,15 +118,13 @@ theorem mem_cons_of_mem {a : α} {s : Stream α} (b : α) : a ∈ s → a ∈ b:
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem eq_or_mem_of_mem_cons {a b : α} {s : Stream α} : (a ∈ b::s) → a = b ∨ a ∈ s := fun ⟨n, h⟩ =>
-  by
+  by 
   cases' n with n'
   · left
     exact h
-    
   · right
     rw [nth_succ, tail_cons] at h
     exact ⟨n', h⟩
-    
 #align stream.eq_or_mem_of_mem_cons Stream.eq_or_mem_of_mem_cons
 
 theorem mem_of_nth_eq {n : Nat} {s : Stream α} {a : α} : a = nth s n → a ∈ s := fun h =>
@@ -261,7 +259,6 @@ theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (
   funext n
   induction' n with n' ih
   · rfl
-    
   · unfold tail iterate
     unfold tail iterate at ih
     rw [add_one] at ih
@@ -269,7 +266,6 @@ theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (
     rw [add_one]
     dsimp
     rw [ih]
-    
 #align stream.tail_iterate Stream.tail_iterate
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -349,13 +345,11 @@ theorem map_iterate (f : α → α) (a : α) : iterate f (f a) = map f (iterate 
   funext n
   induction' n with n' ih
   · rfl
-    
   · unfold map iterate nth
     dsimp
     unfold map iterate nth at ih
     dsimp at ih
     rw [ih]
-    
 #align stream.map_iterate Stream.map_iterate
 
 section Corec
@@ -394,14 +388,12 @@ theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g 
 #align stream.unfolds_eq Stream.unfolds_eq
 
 theorem nth_unfolds_head_tail : ∀ (n : Nat) (s : Stream α), nth (unfolds head tail s) n = nth s n :=
-  by
+  by 
   intro n; induction' n with n' ih
   · intro s
     rfl
-    
   · intro s
     rw [nth_succ, nth_succ, unfolds_eq, tail_cons, ih]
-    
 #align stream.nth_unfolds_head_tail Stream.nth_unfolds_head_tail
 
 theorem unfolds_head_eq : ∀ s : Stream α, unfolds head tail s = s := fun s =>
@@ -471,30 +463,26 @@ theorem even_tail (s : Stream α) : even (tail s) = odd s :=
 
 theorem even_interleave (s₁ s₂ : Stream α) : even (s₁ ⋈ s₂) = s₁ :=
   eq_of_bisim (fun s₁' s₁ => ∃ s₂, s₁' = even (s₁ ⋈ s₂))
-    (fun s₁' s₁ ⟨s₂, h₁⟩ => by
+    (fun s₁' s₁ ⟨s₂, h₁⟩ => by 
       rw [h₁]
       constructor
       · rfl
-        
-      · exact ⟨tail s₂, by rw [interleave_eq, even_cons_cons, tail_cons]⟩
-        )
+      · exact ⟨tail s₂, by rw [interleave_eq, even_cons_cons, tail_cons]⟩)
     (Exists.intro s₂ rfl)
 #align stream.even_interleave Stream.even_interleave
 
 theorem interleave_even_odd (s₁ : Stream α) : even s₁ ⋈ odd s₁ = s₁ :=
   eq_of_bisim (fun s' s => s' = even s ⋈ odd s)
-    (fun s' s (h : s' = even s ⋈ odd s) => by
+    (fun s' s (h : s' = even s ⋈ odd s) => by 
       rw [h]; constructor
       · rfl
-        
-      · simp [odd_eq, odd_eq, tail_interleave, tail_even]
-        )
+      · simp [odd_eq, odd_eq, tail_interleave, tail_even])
     rfl
 #align stream.interleave_even_odd Stream.interleave_even_odd
 
 theorem nth_even : ∀ (n : Nat) (s : Stream α), nth (even s) n = nth s (2 * n)
   | 0, s => rfl
-  | succ n, s => by
+  | succ n, s => by 
     change nth (even s) (succ n) = nth s (succ (succ (2 * n)))
     rw [nth_succ, nth_succ, tail_even, nth_even]; rfl
 #align stream.nth_even Stream.nth_even
@@ -585,10 +573,8 @@ theorem append_take_drop : ∀ (n : Nat) (s : Stream α), appendStream (take n s
   induction' n with n' ih
   · intro s
     rfl
-    
   · intro s
     rw [take_succ, drop_succ, cons_append_stream, ih (tail s), Stream.eta]
-    
 #align stream.append_take_drop Stream.append_take_drop
 
 -- Take theorem reduces a proof of equality of infinite streams to an
@@ -599,11 +585,9 @@ theorem take_theorem (s₁ s₂ : Stream α) : (∀ n : Nat, take n s₁ = take 
   · have aux := h 1
     simp [take] at aux
     exact aux
-    
   · have h₁ : some (nth s₁ (succ n)) = some (nth s₂ (succ n)) := by
       rw [← nth_take_succ, ← nth_take_succ, h (succ (succ n))]
     injection h₁
-    
 #align stream.take_theorem Stream.take_theorem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -620,17 +604,15 @@ theorem cycle_eq : ∀ (l : List α) (h : l ≠ []), cycle l h = l ++ₛ cycle l
       ∀ l' a',
         corec Stream.cycleF Stream.cycleG (a', l', a, l) =
           (a'::l') ++ₛ corec Stream.cycleF Stream.cycleG (a, l, a, l) :=
-      by
+      by 
       intro l'
       induction' l' with a₁ l₁ ih
       · intros
         rw [corec_eq]
         rfl
-        
       · intros
         rw [corec_eq, Stream.cycle_g_cons, ih a₁]
         rfl
-        
     gen l a
 #align stream.cycle_eq Stream.cycle_eq
 
@@ -651,10 +633,8 @@ theorem nth_tails : ∀ (n : Nat) (s : Stream α), nth (tails s) n = drop n (tai
   intro n; induction' n with n' ih
   · intros
     rfl
-    
   · intro s
     rw [nth_succ, drop_succ, tails_eq, tail_cons, ih]
-    
 #align stream.nth_tails Stream.nth_tails
 
 theorem tails_eq_iterate (s : Stream α) : tails s = iterate tail (tail s) :=
@@ -682,38 +662,32 @@ theorem inits_tail (s : Stream α) : inits (tail s) = initsCore [head (tail s)] 
 theorem cons_nth_inits_core :
     ∀ (a : α) (n : Nat) (l : List α) (s : Stream α),
       (a::nth (initsCore l s) n) = nth (initsCore (a::l) s) n :=
-  by
+  by 
   intro a n
   induction' n with n' ih
   · intros
     rfl
-    
   · intro l s
     rw [nth_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a::l) s]
     rfl
-    
 #align stream.cons_nth_inits_core Stream.cons_nth_inits_core
 
 theorem nth_inits : ∀ (n : Nat) (s : Stream α), nth (inits s) n = take (succ n) s := by
   intro n; induction' n with n' ih
   · intros
     rfl
-    
   · intros
     rw [nth_succ, take_succ, ← ih, tail_inits, inits_tail, cons_nth_inits_core]
-    
 #align stream.nth_inits Stream.nth_inits
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem inits_eq (s : Stream α) : inits s = [head s]::map (List.cons (head s)) (inits (tail s)) :=
-  by
+  by 
   apply Stream.ext; intro n
   cases n
   · rfl
-    
   · rw [nth_inits, nth_succ, tail_cons, nth_map, nth_inits]
     rfl
-    
 #align stream.inits_eq Stream.inits_eq
 
 theorem zip_inits_tails (s : Stream α) : zip appendStream (inits s) (tails s) = const s := by

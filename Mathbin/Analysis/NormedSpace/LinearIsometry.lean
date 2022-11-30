@@ -143,7 +143,8 @@ theorem to_linear_map_inj {f g : E →ₛₗᵢ[σ₁₂] E₂} : f.toLinearMap 
   to_linear_map_injective.eq_iff
 #align linear_isometry.to_linear_map_inj LinearIsometry.to_linear_map_inj
 
-instance : SemilinearIsometryClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂ where
+instance : SemilinearIsometryClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E
+      E₂ where 
   coe f := f.toFun
   coe_injective' f g h := to_linear_map_injective (FunLike.coe_injective h)
   map_add f := map_add f.toLinearMap
@@ -179,7 +180,7 @@ def Simps.apply (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SeminormedAddCommGr
 
 initialize_simps_projections LinearIsometry (to_linear_map_to_fun → apply)
 
-@[ext.1]
+@[ext]
 theorem ext {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, f x = g x) : f = g :=
   coe_injective <| funext h
 #align linear_isometry.ext LinearIsometry.ext
@@ -421,7 +422,7 @@ theorem comp_assoc (f : E₃ →ₛₗᵢ[σ₃₄] E₄) (g : E₂ →ₛₗᵢ
 
 omit σ₁₃ σ₂₄ σ₁₄
 
-instance : Monoid (E →ₗᵢ[R] E) where
+instance : Monoid (E →ₗᵢ[R] E) where 
   one := id
   mul := comp
   mul_assoc := comp_assoc
@@ -451,7 +452,7 @@ end LinearIsometry
 /-- Construct a `linear_isometry` from a `linear_map` satisfying `isometry`. -/
 def LinearMap.toLinearIsometry (f : E →ₛₗ[σ₁₂] E₂) (hf : Isometry f) : E →ₛₗᵢ[σ₁₂] E₂ :=
   { f with
-    norm_map' := by
+    norm_map' := by 
       simp_rw [← dist_zero_right, ← f.map_zero]
       exact fun x => hf.dist_eq x _ }
 #align linear_map.to_linear_isometry LinearMap.toLinearIsometry
@@ -555,10 +556,12 @@ theorem to_linear_equiv_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.toLinearEq
   to_linear_equiv_injective.eq_iff
 #align linear_isometry_equiv.to_linear_equiv_inj LinearIsometryEquiv.to_linear_equiv_inj
 
-instance : SemilinearIsometryEquivClass (E ≃ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂ where
+instance :
+    SemilinearIsometryEquivClass (E ≃ₛₗᵢ[σ₁₂] E₂) σ₁₂ E
+      E₂ where 
   coe e := e.toFun
   inv e := e.invFun
-  coe_injective' f g h₁ h₂ := by
+  coe_injective' f g h₁ h₂ := by 
     cases' f with f' _
     cases' g with g' _
     cases f'
@@ -590,7 +593,7 @@ theorem coe_to_linear_equiv (e : E ≃ₛₗᵢ[σ₁₂] E₂) : ⇑e.toLinearE
   rfl
 #align linear_isometry_equiv.coe_to_linear_equiv LinearIsometryEquiv.coe_to_linear_equiv
 
-@[ext.1]
+@[ext]
 theorem ext {e e' : E ≃ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, e x = e' x) : e = e' :=
   to_linear_equiv_injective <| LinearEquiv.ext h
 #align linear_isometry_equiv.ext LinearIsometryEquiv.ext
@@ -881,7 +884,7 @@ theorem trans_assoc (eEE₂ : E ≃ₛₗᵢ[σ₁₂] E₂) (eE₂E₃ : E₂ �
 
 omit σ₂₁ σ₃₁ σ₄₁ σ₃₂ σ₄₂ σ₄₃ σ₁₃ σ₂₄ σ₁₄
 
-instance : Group (E ≃ₗᵢ[R] E) where
+instance : Group (E ≃ₗᵢ[R] E) where 
   mul e₁ e₂ := e₂.trans e₁
   one := refl _ _
   inv := symm
@@ -1169,7 +1172,7 @@ variable (R E E₂ E₃)
 def prodAssoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=
   { Equiv.prodAssoc E E₂ E₃ with toFun := Equiv.prodAssoc E E₂ E₃,
     invFun := (Equiv.prodAssoc E E₂ E₃).symm, map_add' := by simp, map_smul' := by simp,
-    norm_map' := by
+    norm_map' := by 
       rintro ⟨⟨e, f⟩, g⟩
       simp only [LinearEquiv.coe_mk, Equiv.prod_assoc_apply, Prod.norm_def, max_assoc] }
 #align linear_isometry_equiv.prod_assoc LinearIsometryEquiv.prodAssoc

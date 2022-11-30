@@ -14,7 +14,7 @@ namespace Tidy
 /-- Tag interactive tactics (locally) with `[tidy]` to add them to the list of default tactics
 called by `tidy`. -/
 @[user_attribute]
-unsafe def tidy_attribute : user_attribute where
+unsafe def tidy_attribute : user_attribute where 
   Name := `tidy
   descr := "A tactic that should be called by `tidy`."
 #align tactic.tidy.tidy_attribute tactic.tidy.tidy_attribute
@@ -111,7 +111,7 @@ add_tactic_doc
 the same name, replacing the hole with the tactic script `tidy` produces.
 -/
 @[hole_command]
-unsafe def tidy_hole_cmd : hole_command where
+unsafe def tidy_hole_cmd : hole_command where 
   Name := "tidy"
   descr := "Use `tidy` to complete the goal."
   action _ := do

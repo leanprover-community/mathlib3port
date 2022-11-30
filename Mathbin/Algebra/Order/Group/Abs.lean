@@ -86,11 +86,10 @@ theorem eq_or_eq_neg_of_abs_eq {a b : α} (h : |a| = b) : a = b ∨ a = -b := by
 
 theorem abs_eq_abs {a b : α} : |a| = |b| ↔ a = b ∨ a = -b := by
   refine' ⟨fun h => _, fun h => _⟩
-  · obtain rfl | rfl := eq_or_eq_neg_of_abs_eq h <;>
+  ·
+    obtain rfl | rfl := eq_or_eq_neg_of_abs_eq h <;>
       simpa only [neg_eq_iff_neg_eq, neg_inj, or_comm, @eq_comm _ (-b)] using abs_choice b
-    
   · cases h <;> simp only [h, abs_neg]
-    
 #align abs_eq_abs abs_eq_abs
 
 theorem abs_sub_comm (a b : α) : |a - b| = |b - a| :=
@@ -131,11 +130,8 @@ theorem abs_zero : |0| = (0 : α) :=
 theorem abs_pos : 0 < |a| ↔ a ≠ 0 := by
   rcases lt_trichotomy a 0 with (ha | rfl | ha)
   · simp [abs_of_neg ha, neg_pos, ha.ne, ha]
-    
   · simp
-    
   · simp [abs_of_pos ha, ha, ha.ne.symm]
-    
 #align abs_pos abs_pos
 
 theorem abs_pos_of_pos (h : 0 < a) : 0 < |a| :=
@@ -148,17 +144,17 @@ theorem abs_pos_of_neg (h : a < 0) : 0 < |a| :=
 
 theorem neg_abs_le_self (a : α) : -|a| ≤ a := by
   cases' le_total 0 a with h h
-  · calc
+  ·
+    calc
       -|a| = -a := congr_arg Neg.neg (abs_of_nonneg h)
       _ ≤ 0 := neg_nonpos.mpr h
       _ ≤ a := h
       
-    
-  · calc
+  ·
+    calc
       -|a| = - -a := congr_arg Neg.neg (abs_of_nonpos h)
       _ ≤ a := (neg_neg a).le
       
-    
 #align neg_abs_le_self neg_abs_le_self
 
 theorem add_abs_nonneg (a : α) : 0 ≤ a + |a| := by
@@ -214,10 +210,8 @@ theorem max_sub_min_eq_abs' (a b : α) : max a b - min a b = |a - b| := by
   cases' le_total a b with ab ba
   · rw [max_eq_right ab, min_eq_left ab, abs_of_nonpos, neg_sub]
     rwa [sub_nonpos]
-    
   · rw [max_eq_left ba, min_eq_right ba, abs_of_nonneg]
     rwa [sub_nonneg]
-    
 #align max_sub_min_eq_abs' max_sub_min_eq_abs'
 
 theorem max_sub_min_eq_abs (a b : α) : max a b - min a b = |b - a| := by

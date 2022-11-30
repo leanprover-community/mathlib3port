@@ -45,7 +45,7 @@ theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ‖(‖x‖⁻¹ : 𝕜) •
 
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to length `r`. -/
 theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) :
-    ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r := by
+    ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r := by 
   have : ‖x‖ ≠ 0 := by simp [hx]
   field_simp [norm_smul, IsROrC.norm_eq_abs, r_nonneg, is_R_or_C_simps]
 #align norm_smul_inv_norm' norm_smul_inv_norm'
@@ -55,9 +55,8 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
   by_cases z_zero : z = 0
   · rw [z_zero]
     simp only [LinearMap.map_zero, norm_zero, mul_zero]
-    
   set z₁ := (r * ‖z‖⁻¹ : 𝕜) • z with hz₁
-  have norm_f_z₁ : ‖f z₁‖ ≤ c := by
+  have norm_f_z₁ : ‖f z₁‖ ≤ c := by 
     apply h
     rw [mem_sphere_zero_iff_norm]
     exact norm_smul_inv_norm' r_pos.le z_zero
@@ -70,7 +69,6 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
     div_mul_eq_mul_div, div_mul_eq_mul_div, mul_comm]
   apply div_le_div _ _ r_pos rfl.ge
   · exact mul_nonneg ((norm_nonneg _).trans norm_f_z₁) (norm_nonneg z)
-    
   apply mul_le_mul norm_f_z₁ rfl.le (norm_nonneg z) ((norm_nonneg _).trans norm_f_z₁)
 #align linear_map.bound_of_sphere_bound LinearMap.bound_of_sphere_bound
 
@@ -88,7 +86,6 @@ theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r
     exact
       (norm_nonneg _).trans
         (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le]))
-    
   apply LinearMap.bound_of_ball_bound' r_pos
   exact fun z hz => h z hz
 #align

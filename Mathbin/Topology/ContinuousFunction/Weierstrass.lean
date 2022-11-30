@@ -72,7 +72,6 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) :
     rw [polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I] at p
     -- 🎉
     exact p
-    
   · -- Otherwise, `b ≤ a`, and the interval is a subsingleton,
     -- so all subalgebras are the same anyway.
     haveI : Subsingleton (Set.icc a b) :=
@@ -80,7 +79,6 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) :
         le_antisymm ((x.2.2.trans (not_lt.mp h)).trans y.2.1)
           ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
     apply Subsingleton.elim
-    
 #align polynomial_functions_closure_eq_top polynomial_functions_closure_eq_top
 
 /-- An alternative statement of Weierstrass' theorem.

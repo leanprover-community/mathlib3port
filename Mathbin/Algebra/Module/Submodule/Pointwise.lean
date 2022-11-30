@@ -77,7 +77,8 @@ theorem mem_neg {g : M} {S : Submodule R M} : g ∈ -S ↔ -g ∈ S :=
 /-- `submodule.has_pointwise_neg` is involutive.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def hasInvolutivePointwiseNeg : HasInvolutiveNeg (Submodule R M) where
+protected def hasInvolutivePointwiseNeg :
+    HasInvolutiveNeg (Submodule R M) where 
   neg := Neg.neg
   neg_neg S := SetLike.coe_injective <| neg_neg _
 #align submodule.has_involutive_pointwise_neg Submodule.hasInvolutivePointwiseNeg
@@ -94,7 +95,8 @@ theorem neg_le (S T : Submodule R M) : -S ≤ T ↔ S ≤ -T :=
 #align submodule.neg_le Submodule.neg_le
 
 /-- `submodule.has_pointwise_neg` as an order isomorphism. -/
-def negOrderIso : Submodule R M ≃o Submodule R M where
+def negOrderIso : Submodule R M ≃o
+      Submodule R M where 
   toEquiv := Equiv.neg _
   map_rel_iff' := neg_le_neg
 #align submodule.neg_order_iso Submodule.negOrderIso
@@ -103,10 +105,8 @@ theorem closure_neg (s : Set M) : span R (-s) = -span R s := by
   apply le_antisymm
   · rw [span_le, coe_set_neg, ← Set.neg_subset, neg_neg]
     exact subset_span
-    
   · rw [neg_le, span_le, coe_set_neg, ← Set.neg_subset]
     exact subset_span
-    
 #align submodule.closure_neg Submodule.closure_neg
 
 @[simp]
@@ -152,7 +152,8 @@ end Neg
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
-instance pointwiseAddCommMonoid : AddCommMonoid (Submodule R M) where
+instance pointwiseAddCommMonoid :
+    AddCommMonoid (Submodule R M) where 
   add := (· ⊔ ·)
   add_assoc _ _ _ := sup_assoc
   zero := ⊥
@@ -184,7 +185,10 @@ variable [Monoid α] [DistribMulAction α M] [SmulCommClass α R M]
 /-- The action on a submodule corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwiseDistribMulAction : DistribMulAction α (Submodule R M) where
+protected def pointwiseDistribMulAction :
+    DistribMulAction α
+      (Submodule R
+        M) where 
   smul a S := S.map (DistribMulAction.toLinearMap R M a : M →ₗ[R] M)
   one_smul S :=
     (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id

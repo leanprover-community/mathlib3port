@@ -54,13 +54,14 @@ instance functor_thin : Quiver.IsThin (D ⥤ C) := fun _ _ =>
 #align category_theory.functor_thin CategoryTheory.functor_thin
 
 /-- To show `X ≅ Y` in a thin category, it suffices to just give any morphism in each direction. -/
-def isoOfBothWays {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≅ Y where
+def isoOfBothWays {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) :
+    X ≅ Y where 
   Hom := f
   inv := g
 #align category_theory.iso_of_both_ways CategoryTheory.isoOfBothWays
 
 instance subsingleton_iso {X Y : C} : Subsingleton (X ≅ Y) :=
-  ⟨by
+  ⟨by 
     intro i₁ i₂
     ext1
     apply Subsingleton.elim⟩

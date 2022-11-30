@@ -29,7 +29,8 @@ variable {α β : Type _}
 namespace Nat
 
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
-def castAddMonoidHom (α : Type _) [AddMonoidWithOne α] : ℕ →+ α where
+def castAddMonoidHom (α : Type _) [AddMonoidWithOne α] :
+    ℕ →+ α where 
   toFun := coe
   map_add' := cast_add
   map_zero' := cast_zero
@@ -44,7 +45,7 @@ theorem coe_cast_add_monoid_hom [AddMonoidWithOne α] : (castAddMonoidHom α : �
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : NonAssocSemiring.{u_1} α] (m : Nat) (n : Nat), Eq.{succ u_1} α ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1, succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u_1} Nat α (CoeTCₓ.coe.{1, succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (HMul.hMul.{u_1, u_1, u_1} α α α (instHMul.{u_1} α (Distrib.toHasMul.{u_1} α (NonUnitalNonAssocSemiring.toDistrib.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α _inst_1)))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1, succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u_1} Nat α (CoeTCₓ.coe.{1, succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) m) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1, succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u_1} Nat α (CoeTCₓ.coe.{1, succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) n))
 but is expected to have type
-  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.133 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.133) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.133)))) (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.133) m) (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.133) n))
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.13 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.13) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.13)))) (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.13) m) (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.13) n))
 Case conversion may be inaccurate. Consider using '#align nat.cast_mul Nat.cast_mulₓ'. -/
 @[simp, norm_cast]
 theorem cast_mul [NonAssocSemiring α] (m n : ℕ) : ((m * n : ℕ) : α) = m * n := by
@@ -65,7 +66,7 @@ theorem coe_cast_ring_hom [NonAssocSemiring α] : (castRingHom α : ℕ → α) 
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : NonAssocSemiring.{u_1} α] (n : Nat) (x : α), Commute.{u_1} α (Distrib.toHasMul.{u_1} α (NonUnitalNonAssocSemiring.toDistrib.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α _inst_1))) ((fun (a : Type) (b : Type.{u_1}) [self : HasLiftT.{1, succ u_1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u_1} Nat α (CoeTCₓ.coe.{1, succ u_1} Nat α (Nat.castCoe.{u_1} α (AddMonoidWithOne.toNatCast.{u_1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} α _inst_1)))))) n) x
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.249 : Semiring.{u_1} α] (n : Nat) (x : α), Commute.{u_1} α (NonUnitalNonAssocSemiring.toMul.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.249))) (Nat.cast.{u_1} α (Semiring.toNatCast.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.249) n) x
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.129 : Semiring.{u_1} α] (n : Nat) (x : α), Commute.{u_1} α (NonUnitalNonAssocSemiring.toMul.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.129))) (Nat.cast.{u_1} α (Semiring.toNatCast.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.129) n) x
 Case conversion may be inaccurate. Consider using '#align nat.cast_commute Nat.cast_commuteₓ'. -/
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
   (Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x)) fun n ihn => by
@@ -153,15 +154,13 @@ end OrderedSemiring
 /-- A version of `nat.cast_sub` that works for `ℝ≥0` and `ℚ≥0`. Note that this proof doesn't work
 for `ℕ∞` and `ℝ≥0∞`, so we use type-specific lemmas for these types. -/
 @[simp, norm_cast]
-theorem cast_tsub [CanonicallyOrderedCommSemiring α] [Sub α] [HasOrderedSub α]
+theorem cast_tsub [CanonicallyOrderedCommSemiring α] [Sub α] [OrderedSub α]
     [ContravariantClass α α (· + ·) (· ≤ ·)] (m n : ℕ) : ↑(m - n) = (m - n : α) := by
   cases' le_total m n with h h
   · rw [tsub_eq_zero_of_le h, cast_zero, tsub_eq_zero_of_le]
     exact mono_cast h
-    
   · rcases le_iff_exists_add'.mp h with ⟨m, rfl⟩
     rw [add_tsub_cancel_right, cast_add, add_tsub_cancel_right]
-    
 #align nat.cast_tsub Nat.cast_tsub
 
 @[simp, norm_cast]
@@ -192,14 +191,13 @@ section AddMonoidHomClass
 variable {A B F : Type _} [AddMonoidWithOne B]
 
 theorem ext_nat' [AddMonoid A] [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
-  FunLike.ext f g <| by
+  FunLike.ext f g <| by 
     apply Nat.rec
     · simp only [Nat.zero_eq, map_zero]
-      
     simp (config := { contextual := true }) [Nat.succ_eq_add_one, h]
 #align ext_nat' ext_nat'
 
-@[ext.1]
+@[ext]
 theorem AddMonoidHom.ext_nat [AddMonoid A] : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
   ext_nat'
 #align add_monoid_hom.ext_nat AddMonoidHom.ext_nat
@@ -227,15 +225,14 @@ variable {A F : Type _} [MulZeroOneClass A]
 
 /-- If two `monoid_with_zero_hom`s agree on the positive naturals they are equal. -/
 theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : ℕ}, 0 < n → f n = g n) :
-    f = g := by
+    f = g := by 
   apply FunLike.ext
   rintro (_ | n)
   · simp
-    
   exact h_pos n.succ_pos
 #align ext_nat'' ext_nat''
 
-@[ext.1]
+@[ext]
 theorem MonoidWithZeroHom.ext_nat : ∀ {f g : ℕ →*₀ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g :=
   ext_nat''
 #align monoid_with_zero_hom.ext_nat MonoidWithZeroHom.ext_nat
@@ -299,7 +296,8 @@ theorem Nat.cast_ring_hom_nat : Nat.castRingHom ℕ = RingHom.id ℕ :=
 #align nat.cast_ring_hom_nat Nat.cast_ring_hom_nat
 
 -- I don't think `ring_hom_class` is good here, because of the `subsingleton` TC slowness
-instance Nat.uniqueRingHom {R : Type _} [NonAssocSemiring R] : Unique (ℕ →+* R) where
+instance Nat.uniqueRingHom {R : Type _} [NonAssocSemiring R] :
+    Unique (ℕ →+* R) where 
   default := Nat.castRingHom R
   uniq := RingHom.eq_nat_cast'
 #align nat.unique_ring_hom Nat.uniqueRingHom

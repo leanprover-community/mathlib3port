@@ -50,17 +50,17 @@ open TopologicalSpace Pointwise
 namespace Ideal
 
 theorem adicBasis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • ⊤ : Ideal R) :=
-  { inter := by
+  { inter := by 
       suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by simpa
       intro i j
       exact ⟨max i j, pow_le_pow (le_max_left i j), pow_le_pow (le_max_right i j)⟩,
-    leftMul := by
+    leftMul := by 
       suffices ∀ (a : R) (i : ℕ), ∃ j : ℕ, a • I ^ j ≤ I ^ i by simpa
       intro r n
       use n
       rintro a ⟨x, hx, rfl⟩
       exact (I ^ n).smul_mem r hx,
-    mul := by
+    mul := by 
       suffices ∀ i : ℕ, ∃ j : ℕ, ↑(I ^ j) * ↑(I ^ j) ⊆ ↑(I ^ i) by simpa
       intro n
       use n
@@ -87,23 +87,21 @@ theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
 theorem has_basis_nhds_zero_adic (I : Ideal R) :
     HasBasis (@nhds R I.adicTopology (0 : R)) (fun n : ℕ => True) fun n =>
       ((I ^ n : Ideal R) : Set R) :=
-  ⟨by
+  ⟨by 
     intro U
     rw [I.ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
     constructor
     · rintro ⟨-, ⟨i, rfl⟩, h⟩
       replace h : ↑(I ^ i) ⊆ U := by simpa using h
       use i, trivial, h
-      
     · rintro ⟨i, -, h⟩
-      exact ⟨(I ^ i : Ideal R), ⟨i, by simp⟩, h⟩
-      ⟩
+      exact ⟨(I ^ i : Ideal R), ⟨i, by simp⟩, h⟩⟩
 #align ideal.has_basis_nhds_zero_adic Ideal.has_basis_nhds_zero_adic
 
 theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
     HasBasis (@nhds R I.adicTopology x) (fun n : ℕ => True) fun n =>
       (fun y => x + y) '' (I ^ n : Ideal R) :=
-  by
+  by 
   letI := I.adic_topology
   have := I.has_basis_nhds_zero_adic.map fun y => x + y
   rwa [map_add_left_nhds_zero x] at this
@@ -135,7 +133,7 @@ def adicModuleTopology : TopologicalSpace M :=
 on a `R`-module `M`, seen as open additive subgroups of `M`. -/
 def openAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
   { (I ^ n).toAddSubgroup with
-    is_open' := by
+    is_open' := by 
       letI := I.adic_topology
       convert (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).IsOpen
       simp }
@@ -157,7 +155,7 @@ theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R}
     IsAdic J ↔
       (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧
         ∀ s ∈ 𝓝 (0 : R), ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s :=
-  by
+  by 
   constructor
   · intro H
     change _ = _ at H
@@ -166,30 +164,21 @@ theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R}
     constructor
     · intro n
       exact (J.open_add_subgroup n).is_open'
-      
     · intro s hs
       simpa using J.has_basis_nhds_zero_adic.mem_iff.mp hs
-      
-    
   · rintro ⟨H₁, H₂⟩
     apply TopologicalAddGroup.ext
     · apply @TopologicalRing.to_topological_add_group
-      
     · apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.is_topological_add_group
-      
     · ext s
       letI := Ideal.adicBasis J
       rw [J.has_basis_nhds_zero_adic.mem_iff]
       constructor <;> intro H
       · rcases H₂ s H with ⟨n, h⟩
         use n, trivial, h
-        
       · rcases H with ⟨n, -, hn⟩
         rw [mem_nhds_iff]
         refine' ⟨_, hn, H₁ n, (J ^ n).zero_mem⟩
-        
-      
-    
 #align is_adic_iff is_adic_iff
 
 variable [TopologicalSpace R] [TopologicalRing R]
@@ -200,7 +189,6 @@ theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : 
   · intro m
     rw [← pow_mul]
     apply h.left
-    
   · intro V hV
     cases' h.right V hV with m hm
     use m
@@ -208,11 +196,9 @@ theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : 
     cases n
     · exfalso
       exact Nat.not_succ_le_zero 0 hn
-      
     rw [← pow_mul, Nat.succ_mul]
     apply Ideal.pow_le_pow
     apply Nat.le_add_left
-    
 #align is_ideal_adic_pow is_ideal_adic_pow
 
 theorem is_bot_adic_iff {A : Type _} [CommRing A] [TopologicalSpace A] [TopologicalRing A] :
@@ -222,16 +208,12 @@ theorem is_bot_adic_iff {A : Type _} [CommRing A] [TopologicalSpace A] [Topologi
   · rintro ⟨h, h'⟩
     rw [discrete_topology_iff_open_singleton_zero]
     simpa using h 1
-    
   · intros
     constructor
     · simp
-      
     · intro U U_nhds
       use 1
       simp [mem_of_mem_nhds U_nhds]
-      
-    
 #align is_bot_adic_iff is_bot_adic_iff
 
 end IsAdic

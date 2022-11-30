@@ -35,15 +35,13 @@ inductive Short : Pgame.{u} → Type (u + 1)
 
 instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
   | mk xl xr xL xR =>
-    ⟨fun a b => by
+    ⟨fun a b => by 
       cases a; cases b
       congr
       · funext
         apply @Subsingleton.elim _ (subsingleton_short (xL x))
-        
       · funext
-        apply @Subsingleton.elim _ (subsingleton_short (xR x))
-        ⟩decreasing_by
+        apply @Subsingleton.elim _ (subsingleton_short (xR x))⟩decreasing_by
   pgame_wf_tac
 #align pgame.subsingleton_short Pgame.subsingleton_short
 
@@ -60,7 +58,7 @@ attribute [class] short
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
 def fintypeLeft {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] :
-    Fintype α := by
+    Fintype α := by 
   cases' S with _ _ _ _ _ _ F _
   exact F
 #align pgame.fintype_left Pgame.fintypeLeft
@@ -77,7 +75,7 @@ instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
 def fintypeRight {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] :
-    Fintype β := by
+    Fintype β := by 
   cases' S with _ _ _ _ _ _ _ F
   exact F
 #align pgame.fintype_right Pgame.fintypeRight
@@ -123,21 +121,20 @@ def moveRightShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (j : xr) : Shor
 attribute [local instance] move_right_short'
 
 theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.omega
-  | ⟨xl, xr, xL, xR⟩, hs => by
+  | ⟨xl, xr, xL, xR⟩, hs => by 
     haveI := hs
     rcases hs with ⟨sL, sR⟩
     rw [birthday, max_lt_iff]
-    constructor; all_goals
-    rw [← Cardinal.ord_aleph_0]
-    refine'
-      Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0
-        (Cardinal.lt_aleph_0_of_finite _) fun i => _
-    rw [Cardinal.ord_aleph_0]
-    apply short_birthday _
+    constructor;
+    all_goals 
+      rw [← Cardinal.ord_aleph_0]
+      refine'
+        Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0
+          (Cardinal.lt_aleph_0_of_finite _) fun i => _
+      rw [Cardinal.ord_aleph_0]
+      apply short_birthday _
     · exact move_left_short' xL xR i
-      
     · exact move_right_short' xL xR i
-      
 #align pgame.short_birthday Pgame.short_birthday
 
 /-- This leads to infinite loops if made into an instance. -/
@@ -175,48 +172,45 @@ instance listShortNthLe :
 #align pgame.list_short_nth_le Pgame.listShortNthLe
 
 instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
-  | L, R, _, _ => by
+  | L, R, _, _ => by 
     skip
     apply short.mk
     · intros
       infer_instance
-      
     · intros
       apply Pgame.listShortNthLe
-      
 #align pgame.short_of_lists Pgame.shortOfLists
 
 -- where does the subtype.val come from?
 /-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
 def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short x), Short y
-  | x, y, ⟨L, R, rL, rR⟩, S => by
+  | x, y, ⟨L, R, rL, rR⟩, S => by 
     skip
     haveI := Fintype.ofEquiv _ L
     haveI := Fintype.ofEquiv _ R
     exact
       short.mk'
-        (fun i => by
+        (fun i => by 
           rw [← L.right_inv i]
           apply short_of_relabelling (rL (L.symm i)) inferInstance)
         fun j => by simpa using short_of_relabelling (rR (R.symm j)) inferInstance
 #align pgame.short_of_relabelling Pgame.shortOfRelabelling
 
 instance shortNeg : ∀ (x : Pgame.{u}) [Short x], Short (-x)
-  | mk xl xr xL xR, _ => by
+  | mk xl xr xL xR, _ => by 
     skip
     exact short.mk (fun i => short_neg _) fun i => short_neg _ decreasing_by pgame_wf_tac
 #align pgame.short_neg Pgame.shortNeg
 
 instance shortAdd : ∀ (x y : Pgame.{u}) [Short x] [Short y], Short (x + y)
-  | mk xl xr xL xR, mk yl yr yL yR, _, _ => by
+  | mk xl xr xL xR, mk yl yr yL yR, _, _ => by 
     skip
-    apply short.mk; all_goals
-    rintro ⟨i⟩
-    · apply short_add
-      
-    · change short (mk xl xr xL xR + _)
-      apply short_add
-      decreasing_by
+    apply short.mk;
+    all_goals 
+      rintro ⟨i⟩
+      · apply short_add
+      · change short (mk xl xr xL xR + _)
+        apply short_add decreasing_by
   pgame_wf_tac
 #align pgame.short_add Pgame.shortAdd
 
@@ -248,23 +242,17 @@ def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ 
       · apply @Fintype.decidableForallFintype xl _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
-        
       · apply @Fintype.decidableForallFintype yr _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
-        
-      
     · refine' @decidable_of_iff' _ _ mk_lf_mk (id _)
       apply @Or.decidable _ _ _ _
       · apply @Fintype.decidableExistsFintype yl _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
-        
       · apply @Fintype.decidableExistsFintype xr _ _ (by infer_instance)
         intro i
-        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
-        
-      decreasing_by
+        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance decreasing_by
   pgame_wf_tac
 #align pgame.le_lf_decidable Pgame.leLfDecidable
 

@@ -88,7 +88,7 @@ theorem IsTorsion.subgroup (tG : IsTorsion G) (H : Subgroup G) : IsTorsion H := 
 @[to_additive AddIsTorsion.of_surjective
       "The image of a surjective additive torsion group homomorphism is torsion."]
 theorem IsTorsion.of_surjective {f : G →* H} (hf : Function.Surjective f) (tG : IsTorsion G) :
-    IsTorsion H := fun h => by
+    IsTorsion H := fun h => by 
   obtain ⟨g, hg⟩ := hf h
   rw [← hg]
   exact f.is_of_fin_order (tG g)
@@ -176,7 +176,7 @@ namespace CommMonoid
 (Note that by `monoid.is_torsion.group` torsion monoids are truthfully groups.)
 -/
 @[to_additive add_torsion "The torsion submonoid of an additive commutative monoid."]
-def torsion : Submonoid G where
+def torsion : Submonoid G where 
   carrier := { x | IsOfFinOrder x }
   one_mem' := is_of_fin_order_one
   mul_mem' _ _ hx hy := hx.mul hy
@@ -201,7 +201,8 @@ include hp
 @[to_additive
       "The `p`-primary component is the submonoid of elements with additive order prime-power of `p`.",
   simps]
-def primaryComponent : Submonoid G where
+def primaryComponent :
+    Submonoid G where 
   carrier := { g | ∃ n : ℕ, orderOf g = p ^ n }
   one_mem' := ⟨0, by rw [pow_zero, order_of_one]⟩
   mul_mem' g₁ g₂ hg₁ hg₂ :=
@@ -227,13 +228,12 @@ theorem primaryComponent.exists_order_of_eq_prime_pow (g : CommMonoid.primaryCom
 @[to_additive "The `p`- and `q`-primary components are disjoint for `p ≠ q`."]
 theorem primaryComponent.disjoint {p' : ℕ} [hp' : Fact p'.Prime] (hne : p ≠ p') :
     Disjoint (CommMonoid.primaryComponent G p) (CommMonoid.primaryComponent G p') :=
-  Submonoid.disjoint_def.mpr <| by
+  Submonoid.disjoint_def.mpr <| by 
     rintro g ⟨_ | n, hn⟩ ⟨n', hn'⟩
     · rwa [pow_zero, order_of_eq_one_iff] at hn
-      
-    · exact
+    ·
+      exact
         absurd (eq_of_prime_pow_eq hp.out.prime hp'.out.prime n.succ_pos (hn.symm.trans hn')) hne
-      
 #align comm_monoid.primary_component.disjoint CommMonoid.primaryComponent.disjoint
 
 end CommMonoid
@@ -384,7 +384,7 @@ variable (G) [CommGroup G]
 @[to_additive AddIsTorsionFree.quotient_torsion
       "Quotienting a group by its additive torsion subgroup yields an additive torsion free group."]
 theorem IsTorsionFree.quotient_torsion : is_torsion_free <| G ⧸ torsion G := fun g hne hfin =>
-  hne <| by
+  hne <| by 
     induction g using QuotientGroup.induction_on'
     obtain ⟨m, mpos, hm⟩ := (is_of_fin_order_iff_pow_eq_one _).mp hfin
     obtain ⟨n, npos, hn⟩ :=

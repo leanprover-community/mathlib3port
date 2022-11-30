@@ -165,13 +165,11 @@ theorem is_algebraic_algebra_map_iff {a : S} (h : Function.Injective (algebraMap
 #align is_algebraic_algebra_map_iff is_algebraic_algebra_map_iff
 
 theorem is_algebraic_of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^ n)) :
-    IsAlgebraic R r := by
+    IsAlgebraic R r := by 
   obtain ⟨p, p_nonzero, hp⟩ := ht
   refine' ⟨Polynomial.expand _ n p, _, _⟩
   · rwa [Polynomial.expand_ne_zero hn]
-    
   · rwa [Polynomial.expand_aeval n p r]
-    
 #align is_algebraic_of_pow is_algebraic_of_pow
 
 theorem Transcendental.pow {r : A} (ht : Transcendental R r) {n : ℕ} (hn : 0 < n) :
@@ -213,7 +211,7 @@ variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 /-- If L is an algebraic field extension of K and A is an algebraic algebra over L,
 then A is algebraic over K. -/
 theorem is_algebraic_trans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) : IsAlgebraic K A :=
-  by
+  by 
   simp only [IsAlgebraic, is_algebraic_iff_is_integral] at L_alg A_alg⊢
   exact is_integral_trans L_alg A_alg
 #align algebra.is_algebraic_trans Algebra.is_algebraic_trans
@@ -283,13 +281,13 @@ variable (K L)
 /-- Bijection between algebra equivalences and algebra homomorphisms -/
 @[simps]
 noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L) :
-    (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where
+    (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where 
   toFun ϕ := ϕ.toAlgHom
   invFun ϕ := AlgEquiv.ofBijective ϕ (ha.alg_hom_bijective ϕ)
-  left_inv _ := by
+  left_inv _ := by 
     ext
     rfl
-  right_inv _ := by
+  right_inv _ := by 
     ext
     rfl
   map_mul' _ _ := rfl
@@ -353,7 +351,6 @@ theorem inv_eq_of_root_of_coeff_zero_ne_zero {x : L} {p : K[X]} (aeval_eq : aeva
     (coeff_zero_ne : p.coeff 0 ≠ 0) : x⁻¹ = -(aeval x (divX p) / algebraMap _ _ (p.coeff 0)) := by
   convert inv_eq_of_aeval_div_X_ne_zero (mt (fun h => (algebraMap K L).Injective _) coeff_zero_ne)
   · rw [aeval_eq, zero_sub, div_neg]
-    
   rw [RingHom.map_zero]
   convert aeval_eq
   conv_rhs => rw [← div_X_mul_X_add p]
@@ -378,20 +375,15 @@ theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (
   refine' p.rec_on_horner _ _ _
   · intro h
     contradiction
-    
   · intro p a hp ha ih ne_zero aeval_eq
     refine' A.inv_mem_of_root_of_coeff_zero_ne_zero aeval_eq _
     rwa [coeff_add, hp, zero_add, coeff_C, if_pos rfl]
-    
   · intro p hp ih ne_zero aeval_eq
     rw [AlgHom.map_mul, aeval_X, mul_eq_zero] at aeval_eq
     cases' aeval_eq with aeval_eq x_eq
     · exact ih hp aeval_eq
-      
     · rw [x_eq, Subalgebra.coe_zero, inv_zero]
       exact A.zero_mem
-      
-    
 #align subalgebra.inv_mem_of_algebraic Subalgebra.inv_mem_of_algebraic
 
 /-- In an algebraic extension L/K, an intermediate subalgebra is a field. -/

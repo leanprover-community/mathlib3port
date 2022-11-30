@@ -172,7 +172,9 @@ theorem prod_assoc_symm_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} 
 #align equiv.prod_assoc_symm_image Equiv.prod_assoc_symm_image
 
 /-- A set `s` in `α × β` is equivalent to the sigma-type `Σ x, {y | (x, y) ∈ s}`. -/
-def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σx : α, { y | (x, y) ∈ s } where
+def setProdEquivSigma {α β : Type _} (s : Set (α × β)) :
+    s ≃ Σx : α, { y |
+          (x, y) ∈ s } where 
   toFun x := ⟨x.1.1, x.1.2, by simp⟩
   invFun x := ⟨(x.1, x.2.1), x.2.2⟩
   left_inv := fun ⟨⟨x, y⟩, h⟩ => rfl
@@ -190,10 +192,11 @@ def setCongr {α : Type _} {s t : Set α} (h : s = t) : s ≃ t :=
 /-- A set is equivalent to its image under an equivalence.
 -/
 @[simps]
-def image {α β : Type _} (e : α ≃ β) (s : Set α) : s ≃ e '' s where
+def image {α β : Type _} (e : α ≃ β) (s : Set α) :
+    s ≃ e '' s where 
   toFun x := ⟨e x.1, by simp⟩
   invFun y :=
-    ⟨e.symm y.1, by
+    ⟨e.symm y.1, by 
       rcases y with ⟨-, ⟨a, ⟨m, rfl⟩⟩⟩
       simpa using m⟩
   left_inv x := by simp
@@ -221,7 +224,10 @@ protected def pempty (α) : (∅ : Set α) ≃ PEmpty :=
 /-- If sets `s` and `t` are separated by a decidable predicate, then `s ∪ t` is equivalent to
 `s ⊕ t`. -/
 protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs : ∀ x ∈ s, p x)
-    (ht : ∀ x ∈ t, ¬p x) : (s ∪ t : Set α) ≃ Sum s t where
+    (ht : ∀ x ∈ t, ¬p x) :
+    (s ∪ t : Set α) ≃
+      Sum s
+        t where 
   toFun x :=
     if hp : p x then Sum.inl ⟨_, x.2.resolve_right fun xt => ht _ xt hp⟩
     else Sum.inr ⟨_, x.2.resolve_left fun xs => hp (hs _ xs)⟩
@@ -408,10 +414,10 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
     _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := sumAssoc _ _ _
     _ ≃ Sum s (t \ s ∪ s ∩ t : Set α) :=
       sumCongr (Equiv.refl _)
-        (by
+        (by 
           refine' (set.union' (· ∉ s) _ _).symm
           exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1])
-    _ ≃ Sum s t := by
+    _ ≃ Sum s t := by 
       rw [(_ : t \ s ∪ s ∩ t = t)]
       rw [union_comm, inter_comm, inter_union_diff]
     
@@ -422,7 +428,11 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
 between `sᶜ` and `tᶜ`. -/
 protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [DecidablePred (· ∈ s)]
     [DecidablePred (· ∈ t)] (e₀ : s ≃ t) :
-    { e : α ≃ β // ∀ x : s, e x = e₀ x } ≃ ((sᶜ : Set α) ≃ (tᶜ : Set β)) where
+    { e : α ≃ β // ∀ x : s, e x = e₀ x } ≃
+      ((sᶜ : Set α) ≃
+        (tᶜ :
+          Set
+            β)) where 
   toFun e :=
     subtypeEquiv e fun a =>
       not_congr <|
@@ -441,15 +451,15 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
       fun x => by
       simp only [Sum.map_inl, trans_apply, sum_congr_apply, set.sum_compl_apply_inl,
         set.sum_compl_symm_apply]
-  left_inv e := by
+  left_inv e := by 
     ext x
     by_cases hx : x ∈ s
-    · simp only [set.sum_compl_symm_apply_of_mem hx, ← e.prop ⟨x, hx⟩, Sum.map_inl, sum_congr_apply,
+    ·
+      simp only [set.sum_compl_symm_apply_of_mem hx, ← e.prop ⟨x, hx⟩, Sum.map_inl, sum_congr_apply,
         trans_apply, Subtype.coe_mk, set.sum_compl_apply_inl]
-      
-    · simp only [set.sum_compl_symm_apply_of_not_mem hx, Sum.map_inr, subtype_equiv_apply,
+    ·
+      simp only [set.sum_compl_symm_apply_of_not_mem hx, Sum.map_inr, subtype_equiv_apply,
         set.sum_compl_apply_inr, trans_apply, sum_congr_apply, Subtype.coe_mk]
-      
   right_inv e :=
     Equiv.ext fun x => by
       simp only [Sum.map_inr, subtype_equiv_apply, set.sum_compl_apply_inr, Function.comp_apply,
@@ -465,13 +475,15 @@ protected def prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t 
 
 /-- The set `set.pi set.univ s` is equivalent to `Π a, s a`. -/
 @[simps]
-protected def univPi {α : Type _} {β : α → Type _} (s : ∀ a, Set (β a)) : pi univ s ≃ ∀ a, s a where
+protected def univPi {α : Type _} {β : α → Type _} (s : ∀ a, Set (β a)) :
+    pi univ s ≃
+      ∀ a, s a where 
   toFun f a := ⟨(f : ∀ a, β a) a, f.2 a (mem_univ a)⟩
   invFun f := ⟨fun a => f a, fun a ha => (f a).2⟩
-  left_inv := fun ⟨f, hf⟩ => by
+  left_inv := fun ⟨f, hf⟩ => by 
     ext a
     rfl
-  right_inv f := by
+  right_inv f := by 
     ext a
     rfl
 #align equiv.set.univ_pi Equiv.Set.univPi
@@ -520,7 +532,8 @@ protected def sep {α : Type u} (s : Set α) (t : α → Prop) :
 #align equiv.set.sep Equiv.Set.sep
 
 /-- The set `𝒫 S := {x | x ⊆ S}` is equivalent to the type `set S`. -/
-protected def powerset {α} (S : Set α) : 𝒫 S ≃ Set S where
+protected def powerset {α} (S : Set α) :
+    𝒫 S ≃ Set S where 
   toFun := fun x : 𝒫 S => coe ⁻¹' (x : Set α)
   invFun := fun x : Set S => ⟨coe '' x, by rintro _ ⟨a : S, _, rfl⟩ <;> exact a.2⟩
   left_inv x := by ext y <;> exact ⟨fun ⟨⟨_, _⟩, h, rfl⟩ => h, fun h => ⟨⟨_, x.2 h⟩, h, rfl⟩⟩
@@ -532,13 +545,14 @@ then its image under `range_splitting f` is in bijection (via `f`) with `s`.
 -/
 @[simps]
 noncomputable def rangeSplittingImageEquiv {α β : Type _} (f : α → β) (s : Set (range f)) :
-    rangeSplitting f '' s ≃ s where
+    rangeSplitting f '' s ≃
+      s where 
   toFun x :=
-    ⟨⟨f x, by simp⟩, by
+    ⟨⟨f x, by simp⟩, by 
       rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
       simpa [apply_range_splitting f] using m⟩
   invFun x := ⟨rangeSplitting f x, ⟨x, ⟨x.2, rfl⟩⟩⟩
-  left_inv x := by
+  left_inv x := by 
     rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
     simp [apply_range_splitting f]
   right_inv x := by simp [apply_range_splitting f]
@@ -555,7 +569,8 @@ empty too. This hypothesis is absent on analogous definitions on stronger `equiv
 are already sufficient to ensure non-emptiness. -/
 @[simps]
 def ofLeftInverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β → α)
-    (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) : α ≃ range f where
+    (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) :
+    α ≃ range f where 
   toFun a := ⟨f a, a, rfl⟩
   invFun b := f_inv (nonempty_of_exists b.2) b
   left_inv a := hf ⟨a⟩ a
@@ -610,7 +625,7 @@ theorem of_left_inverse_eq_of_injective {α β : Type _} (f : α → β) (f_inv 
         ((em (Nonempty α)).elim (fun h => (hf h).Injective) fun h _ _ _ => by
           haveI : Subsingleton α := subsingleton_of_not_nonempty h
           simp) :=
-  by
+  by 
   ext
   simp
 #align equiv.of_left_inverse_eq_of_injective Equiv.of_left_inverse_eq_of_injective
@@ -631,7 +646,7 @@ theorem preimage_pi_equiv_pi_subtype_prod_symm_pi {α : Type _} {β : α → Typ
     [DecidablePred p] (s : ∀ i, Set (β i)) :
     (piEquivPiSubtypeProd p β).symm ⁻¹' pi univ s =
       (pi univ fun i : { i // p i } => s i) ×ˢ pi univ fun i : { i // ¬p i } => s i :=
-  by
+  by 
   ext ⟨f, g⟩
   simp only [mem_preimage, mem_univ_pi, prod_mk_mem_set_prod_eq, Subtype.forall, ← forall_and]
   refine' forall_congr' fun i => _
@@ -676,19 +691,17 @@ theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Se
     [∀ j, Decidable (j ∈ s)] :
     (fun i : α => if h : i ∈ s then (Function.update v j x) (e.symm ⟨i, h⟩) else w i) =
       Function.update (fun i : α => if h : i ∈ s then v (e.symm ⟨i, h⟩) else w i) (e j) x :=
-  by
+  by 
   ext i
   by_cases h : i ∈ s
   · rw [dif_pos h, Function.update_apply_equiv_apply, Equiv.symm_symm, Function.comp,
       Function.update_apply, Function.update_apply, dif_pos h]
     have h_coe : (⟨i, h⟩ : s) = e j ↔ i = e j := subtype.ext_iff.trans (by rw [Subtype.coe_mk])
     simp_rw [h_coe]
-    
-  · have : i ≠ e j := by
+  · have : i ≠ e j := by 
       contrapose! h
       have : (e j : α) ∈ s := (e j).2
       rwa [← h] at this
     simp [h, this]
-    
 #align dite_comp_equiv_update dite_comp_equiv_update
 

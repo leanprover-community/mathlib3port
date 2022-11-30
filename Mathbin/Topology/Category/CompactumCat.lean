@@ -151,7 +151,9 @@ theorem join_distrib (X : CompactumCat) (uux : Ultrafilter (Ultrafilter X)) :
   rfl
 #align Compactum.join_distrib CompactumCat.join_distrib
 
-instance {X : CompactumCat} : TopologicalSpace X where
+instance {X : CompactumCat} :
+    TopologicalSpace
+      X where 
   IsOpen U := ∀ F : Ultrafilter X, X.str F ∈ U → U ∈ F
   is_open_univ _ _ := Filter.univ_sets _
   is_open_inter S T h3 h4 h5 h6 := Filter.inter_sets _ (h3 _ h6.1) (h4 _ h6.2)
@@ -167,12 +169,10 @@ theorem is_closed_iff {X : CompactumCat} (S : Set X) :
     specialize cond F c
     rw [compl_mem_iff_not_mem] at cond
     contradiction
-    
   · intro h1 F h2
     specialize h1 F
     cases F.mem_or_compl_mem S
     exacts[absurd (h1 h) h2, h]
-    
 #align Compactum.is_closed_iff CompactumCat.is_closed_iff
 
 instance {X : CompactumCat} : CompactSpace X := by
@@ -195,16 +195,14 @@ private def cl {X : CompactumCat} (A : Set X) : Set X :=
 #align Compactum.cl Compactum.cl
 
 private theorem basic_inter {X : CompactumCat} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B :=
-  by
+  by 
   ext G
   constructor
   · intro hG
     constructor <;> filter_upwards [hG] with _
     exacts[And.left, And.right]
-    
   · rintro ⟨h1, h2⟩
     exact inter_mem h1 h2
-    
 #align Compactum.basic_inter Compactum.basic_inter
 
 private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a ha =>
@@ -259,10 +257,8 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
       intro P hP
       cases this P hP
       · exact claim2 _ h
-        
       · rcases h with ⟨Q, hQ, rfl⟩
         exact claim3 _ hQ
-        
     intro P hP
     exact claim5.finite_inter_closure_insert _ hP
   intro T hT
@@ -323,10 +319,8 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
       intro S hS
       cases' this _ hS with h h
       · exact claim5 S h
-        
       · rcases h with ⟨Q, hQ, rfl⟩
         exact claim4 Q hQ
-        
     intro S hS
     apply finite_inter_closure_insert
     · constructor
@@ -336,13 +330,8 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
         refine' ⟨_, by tauto⟩
         · intro
           apply Filter.univ_sets
-          
-        
       · exact claim3
-        
-      
     · exact hS
-      
   -- It suffices to show that the intersection of any finite subset of T1 is nonempty.
   suffices ∀ F : fsu, ↑F ⊆ T1 → (⋂₀ ι F).Nonempty by
     obtain ⟨G, h1⟩ := Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this
@@ -382,10 +371,8 @@ theorem cl_eq_closure {X : CompactumCat} (A : Set X) : cl A = closure A := by
   constructor
   · rintro ⟨F, h1, h2⟩
     exact ⟨F, h1, le_nhds_of_str_eq _ _ h2⟩
-    
   · rintro ⟨F, h1, h2⟩
     exact ⟨F, h1, str_eq_of_le_nhds _ _ h2⟩
-    
 #align Compactum.cl_eq_closure CompactumCat.cl_eq_closure
 
 /-- Any morphism of compacta is continuous. -/
@@ -399,13 +386,13 @@ theorem continuous_of_hom {X Y : CompactumCat} (f : X ⟶ Y) : Continuous f := b
 
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
 noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X]
-    [T2Space X] : CompactumCat where
+    [T2Space X] : CompactumCat where 
   a := X
   a := Ultrafilter.lim
-  unit' := by
+  unit' := by 
     ext x
     exact Lim_eq (pure_le_nhds _)
-  assoc' := by
+  assoc' := by 
     ext FF
     change Ultrafilter (Ultrafilter X) at FF
     set x := (Ultrafilter.map Ultrafilter.lim FF).lim with c1
@@ -431,7 +418,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
 /-- Any continuous map between Compacta is a morphism of compacta. -/
 def homOfContinuous {X Y : CompactumCat} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
   { f,
-    h' := by
+    h' := by 
       rw [continuous_iff_ultrafilter] at cont
       ext (F : Ultrafilter X)
       specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
@@ -442,7 +429,8 @@ def homOfContinuous {X Y : CompactumCat} (f : X → Y) (cont : Continuous f) : X
 end CompactumCat
 
 /-- The functor functor from Compactum to CompHaus. -/
-def compactumToCompHaus : CompactumCat ⥤ CompHausCat where
+def compactumToCompHaus :
+    CompactumCat ⥤ CompHausCat where 
   obj X := { toTop := { α := X } }
   map X Y f := { toFun := f, continuous_to_fun := CompactumCat.continuous_of_hom _ }
 #align Compactum_to_CompHaus compactumToCompHaus
@@ -460,7 +448,8 @@ theorem faithful : Faithful compactumToCompHaus :=
 
 /-- This definition is used to prove essential surjectivity of Compactum_to_CompHaus. -/
 def isoOfTopologicalSpace {D : CompHausCat} :
-    compactumToCompHaus.obj (CompactumCat.ofTopologicalSpace D) ≅ D where
+    compactumToCompHaus.obj (CompactumCat.ofTopologicalSpace D) ≅
+      D where 
   Hom :=
     { toFun := id,
       continuous_to_fun :=
@@ -470,7 +459,7 @@ def isoOfTopologicalSpace {D : CompHausCat} :
   inv :=
     { toFun := id,
       continuous_to_fun :=
-        continuous_def.2 fun _ h1 => by
+        continuous_def.2 fun _ h1 => by 
           rw [is_open_iff_ultrafilter']
           intro _ h2
           exact h1 _ h2 }

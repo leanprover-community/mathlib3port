@@ -199,7 +199,8 @@ class Gmonoid [AddMonoid ι] extends GhasMul A, GhasOne A where
 #align graded_monoid.gmonoid GradedMonoid.Gmonoid
 
 /-- `gmonoid` implies a `monoid (graded_monoid A)`. -/
-instance Gmonoid.toMonoid [AddMonoid ι] [Gmonoid A] : Monoid (GradedMonoid A) where
+instance Gmonoid.toMonoid [AddMonoid ι] [Gmonoid A] :
+    Monoid (GradedMonoid A) where 
   one := 1
   mul := (· * ·)
   npow n a := GradedMonoid.mk _ (Gmonoid.gnpow n a.snd)
@@ -215,10 +216,8 @@ theorem mk_pow [AddMonoid ι] [Gmonoid A] {i} (a : A i) (n : ℕ) :
   induction' n with n
   · rw [pow_zero]
     exact (gmonoid.gnpow_zero' ⟨_, a⟩).symm
-    
   · rw [pow_succ, n_ih, mk_mul_mk]
     exact (gmonoid.gnpow_succ' n ⟨_, a⟩).symm
-    
 #align graded_monoid.mk_pow GradedMonoid.mk_pow
 
 /-- A graded version of `comm_monoid`. -/
@@ -327,7 +326,8 @@ variable [AddMonoid ι] [Gmonoid A]
 
 /-- `graded_monoid.mk 0` is a `monoid_hom`, using the `graded_monoid.grade_zero.monoid` structure.
 -/
-def mkZeroMonoidHom : A 0 →* GradedMonoid A where
+def mkZeroMonoidHom : A 0 →* GradedMonoid
+        A where 
   toFun := mk 0
   map_one' := rfl
   map_mul' := mk_zero_smul
@@ -370,13 +370,11 @@ theorem List.dprod_index_cons (a : α) (l : List α) (fι : α → ι) :
 #align list.dprod_index_cons List.dprod_index_cons
 
 theorem List.dprod_index_eq_map_sum (l : List α) (fι : α → ι) : l.dprodIndex fι = (l.map fι).Sum :=
-  by
+  by 
   dsimp only [List.dprodIndex]
   induction l
   · simp
-    
   · simp [l_ih]
-    
 #align list.dprod_index_eq_map_sum List.dprod_index_eq_map_sum
 
 /-- A dependent product for graded monoids represented by the indexed family of types `A i`.
@@ -407,10 +405,8 @@ theorem GradedMonoid.mk_list_dprod (l : List α) (fι : α → ι) (fA : ∀ a, 
   induction l
   · simp
     rfl
-    
   · simp [← l_ih, GradedMonoid.mk_mul_mk, List.prod_cons]
     rfl
-    
 #align graded_monoid.mk_list_dprod GradedMonoid.mk_list_dprod
 
 /-- A variant of `graded_monoid.mk_list_dprod` for rewriting in the other direction. -/
@@ -471,10 +467,8 @@ theorem List.dprod_monoid {α} [AddMonoid ι] [Monoid R] (l : List α) (fι : α
   induction l
   · rw [List.dprod_nil, List.map_nil, List.prod_nil]
     rfl
-    
   · rw [List.dprod_cons, List.map_cons, List.prod_cons, l_ih]
     rfl
-    
 #align list.dprod_monoid List.dprod_monoid
 
 end
@@ -545,10 +539,8 @@ theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A 
   induction n
   · rw [pow_zero, zero_nsmul]
     exact one_mem_graded _
-    
   · rw [pow_succ', succ_nsmul']
     exact mul_mem_graded n_ih h
-    
 #align set_like.pow_mem_graded SetLike.pow_mem_graded
 
 theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R)
@@ -556,12 +548,10 @@ theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' 
   induction l
   · rw [List.map_nil, List.map_nil, List.prod_nil, List.sum_nil]
     exact one_mem_graded _
-    
   · rw [List.map_cons, List.map_cons, List.prod_cons, List.sum_cons]
     exact
       mul_mem_graded (h _ <| List.mem_cons_self _ _)
         (l_ih fun j hj => h _ <| List.mem_cons_of_mem _ hj)
-    
 #align set_like.list_prod_map_mem_graded SetLike.list_prod_map_mem_graded
 
 theorem list_prod_of_fn_mem_graded {n} (i : Fin n → ι) (r : Fin n → R) (h : ∀ j, r j ∈ A (i j)) :
@@ -613,9 +603,7 @@ theorem SetLike.coe_list_dprod (A : ι → S) [SetLike.GradedMonoid A] (fι : α
     ↑(l.dprod fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) := by
   induction l
   · rw [List.dprod_nil, coe_ghas_one, List.map_nil, List.prod_nil]
-    
   · rw [List.dprod_cons, coe_ghas_mul, List.map_cons, List.prod_cons, l_ih]
-    
 #align set_like.coe_list_dprod SetLike.coe_list_dprod
 
 include R
@@ -660,7 +648,7 @@ theorem SetLike.IsHomogeneous.mul [Add ι] [Mul R] {A : ι → S} [SetLike.HasGr
 
 /-- When `A` is a `set_like.graded_monoid A`, then the homogeneous elements forms a submonoid. -/
 def SetLike.homogeneousSubmonoid [AddMonoid ι] [Monoid R] (A : ι → S) [SetLike.GradedMonoid A] :
-    Submonoid R where
+    Submonoid R where 
   carrier := { a | SetLike.IsHomogeneous A a }
   one_mem' := SetLike.is_homogeneous_one A
   mul_mem' a b := SetLike.IsHomogeneous.mul

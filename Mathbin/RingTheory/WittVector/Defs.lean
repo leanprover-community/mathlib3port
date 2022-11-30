@@ -72,7 +72,7 @@ This concept does not have a standard name in the literature.
 -/
 add_decl_doc WittVector.coeff
 
-@[ext.1]
+@[ext]
 theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y := by
   cases x
   cases y
@@ -90,11 +90,13 @@ theorem coeff_mk (x : ℕ → R) : (mk p x).coeff = x :=
 
 /- These instances are not needed for the rest of the development,
 but it is interesting to establish early on that `witt_vector p` is a lawful functor. -/
-instance : Functor (WittVector p) where
+instance : Functor (WittVector
+        p) where 
   map α β f v := mk p (f ∘ v.coeff)
   mapConst α β a v := mk p fun _ => a
 
-instance : IsLawfulFunctor (WittVector p) where
+instance : IsLawfulFunctor
+      (WittVector p) where 
   map_const_eq α β := rfl
   id_map := fun α ⟨v, _⟩ => rfl
   comp_map α β γ f g v := rfl
@@ -250,15 +252,12 @@ theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
   rw [Finset.sum_eq_single 0]
   · simp only [inv_of_eq_inv, one_mul, inv_pow, tsub_zero, RingHom.map_one, pow_zero]
     simp only [one_pow, one_mul, X_in_terms_of_W_zero, sub_self, bind₁_X_right]
-    
   · intro i hin hi0
     rw [Finset.mem_range] at hin
     rw [IH _ hin (Nat.pos_of_ne_zero hi0), zero_pow (pow_pos hp.1.Pos _), mul_zero]
-    
   · rw [Finset.mem_range]
     intro
     contradiction
-    
 #align witt_vector.witt_one_pos_eq_zero WittVector.witt_one_pos_eq_zero
 
 @[simp]

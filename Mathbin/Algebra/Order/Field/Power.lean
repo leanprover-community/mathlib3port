@@ -93,9 +93,7 @@ theorem div_pow_le (ha : 0 ≤ a) (hb : 1 ≤ b) (k : ℕ) : a / b ^ k ≤ a :=
 theorem zpow_injective (h₀ : 0 < a) (h₁ : a ≠ 1) : Injective ((· ^ ·) a : ℤ → α) := by
   rcases h₁.lt_or_lt with (H | H)
   · exact (zpow_strict_anti h₀ H).Injective
-    
   · exact (zpow_strict_mono H).Injective
-    
 #align zpow_injective zpow_injective
 
 @[simp]
@@ -141,7 +139,7 @@ theorem zpow_two_pos_of_ne_zero (h : a ≠ 0) : 0 < a ^ (2 : ℤ) :=
 
 @[simp]
 theorem zpow_bit0_pos_iff (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 :=
-  ⟨by
+  ⟨by 
     rintro h rfl
     refine' (zero_zpow _ _).not_gt h
     rwa [bit0_ne_zero], fun h => zpow_bit0_pos h _⟩

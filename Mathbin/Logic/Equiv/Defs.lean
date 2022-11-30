@@ -90,12 +90,12 @@ def Equiv.Perm (α : Sort _) :=
 
 namespace Equiv
 
-instance : EquivLike (α ≃ β) α β where
+instance : EquivLike (α ≃ β) α β where 
   coe := toFun
   inv := invFun
   left_inv := left_inv
   right_inv := right_inv
-  coe_injective' e₁ e₂ h₁ h₂ := by
+  coe_injective' e₁ e₂ h₁ h₂ := by 
     cases e₁
     cases e₂
     congr
@@ -124,7 +124,7 @@ protected theorem coe_inj {e₁ e₂ : α ≃ β} : (e₁ : α → β) = e₂ �
 -/
 
 #print Equiv.ext /-
-@[ext.1]
+@[ext]
 theorem ext {f g : Equiv α β} (H : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g H
 #align equiv.ext Equiv.ext
@@ -157,7 +157,7 @@ theorem ext_iff {f g : Equiv α β} : f = g ↔ ∀ x, f x = g x :=
 #align equiv.ext_iff Equiv.ext_iff
 
 #print Equiv.Perm.ext /-
-@[ext.1]
+@[ext]
 theorem Perm.ext {σ τ : Equiv.Perm α} (H : ∀ x, σ x = τ x) : σ = τ :=
   Equiv.ext H
 #align equiv.perm.ext Equiv.Perm.ext
@@ -270,7 +270,7 @@ theorem subsingleton_congr (e : α ≃ β) : Subsingleton α ↔ Subsingleton β
 lean 3 declaration is
   forall {α : Sort.{u}} {β : Sort.{v}} [_inst_1 : Subsingleton.{v} β], Subsingleton.{max 1 (imax u v) (imax v u)} (Equiv.{u, v} α β)
 but is expected to have type
-  forall {α : Sort.{u}} {β : Sort.{v}} [inst._@.Mathlib.Logic.Equiv.Defs._hyg.1490 : Subsingleton.{v} β], Subsingleton.{max (max 1 v) u} (Equiv.{u, v} α β)
+  forall {α : Sort.{u}} {β : Sort.{v}} [inst._@.Mathlib.Logic.Equiv.Defs._hyg.1491 : Subsingleton.{v} β], Subsingleton.{max (max 1 v) u} (Equiv.{u, v} α β)
 Case conversion may be inaccurate. Consider using '#align equiv.equiv_subsingleton_cod Equiv.equiv_subsingleton_codₓ'. -/
 instance equiv_subsingleton_cod [Subsingleton β] : Subsingleton (α ≃ β) :=
   FunLike.subsingleton_cod
@@ -280,7 +280,7 @@ instance equiv_subsingleton_cod [Subsingleton β] : Subsingleton (α ≃ β) :=
 lean 3 declaration is
   forall {α : Sort.{u}} {β : Sort.{v}} [_inst_1 : Subsingleton.{u} α], Subsingleton.{max 1 (imax u v) (imax v u)} (Equiv.{u, v} α β)
 but is expected to have type
-  forall {α : Sort.{u}} {β : Sort.{v}} [inst._@.Mathlib.Logic.Equiv.Defs._hyg.1521 : Subsingleton.{u} α], Subsingleton.{max (max 1 v) u} (Equiv.{u, v} α β)
+  forall {α : Sort.{u}} {β : Sort.{v}} [inst._@.Mathlib.Logic.Equiv.Defs._hyg.1522 : Subsingleton.{u} α], Subsingleton.{max (max 1 v) u} (Equiv.{u, v} α β)
 Case conversion may be inaccurate. Consider using '#align equiv.equiv_subsingleton_dom Equiv.equiv_subsingleton_domₓ'. -/
 instance equiv_subsingleton_dom [Subsingleton α] : Subsingleton (α ≃ β) :=
   EquivLike.subsingleton_dom
@@ -334,9 +334,9 @@ protected def unique [Unique β] (e : α ≃ β) : Unique α :=
 #print Equiv.cast /-
 /-- Equivalence between equal types. -/
 protected def cast {α β : Sort _} (h : α = β) : α ≃ β :=
-  ⟨cast h, cast h.symm, fun x => by
+  ⟨cast h, cast h.symm, fun x => by 
     cases h
-    rfl, fun x => by
+    rfl, fun x => by 
     cases h
     rfl⟩
 #align equiv.cast Equiv.cast
@@ -470,7 +470,7 @@ theorem cast_refl {α} (h : α = α := rfl) : Equiv.cast h = Equiv.refl α :=
 @[simp]
 theorem cast_trans {α β γ} (h : α = β) (h2 : β = γ) :
     (Equiv.cast h).trans (Equiv.cast h2) = Equiv.cast (h.trans h2) :=
-  ext fun x => by
+  ext fun x => by 
     substs h h2
     rfl
 #align equiv.cast_trans Equiv.cast_trans
@@ -630,7 +630,7 @@ is equivalent to the type of equivalences `β ≃ δ`. -/
 def equivCongr {δ} (ab : α ≃ β) (cd : γ ≃ δ) : α ≃ γ ≃ (β ≃ δ) :=
   ⟨fun ac => (ab.symm.trans ac).trans cd, fun bd => ab.trans <| bd.trans <| cd.symm, fun ac => by
     ext x
-    simp, fun ac => by
+    simp, fun ac => by 
     ext x
     simp⟩
 #align equiv.equiv_congr Equiv.equivCongr
@@ -819,7 +819,8 @@ def propEquivPEmpty {p : Prop} (h : ¬p) : p ≃ PEmpty :=
 
 #print Equiv.equivOfUnique /-
 /-- If both `α` and `β` have a unique element, then `α ≃ β`. -/
-def equivOfUnique (α β : Sort _) [Unique α] [Unique β] : α ≃ β where
+def equivOfUnique (α β : Sort _) [Unique α] [Unique β] :
+    α ≃ β where 
   toFun := default
   invFun := default
   left_inv _ := Subsingleton.elim _ _
@@ -831,7 +832,7 @@ def equivOfUnique (α β : Sort _) [Unique α] [Unique β] : α ≃ β where
 lean 3 declaration is
   forall (α : Sort.{u_1}) [_inst_1 : Unique.{u_1} α], Equiv.{u_1, v} α PUnit.{v}
 but is expected to have type
-  forall (α : Sort.{u}) [inst._@.Mathlib.Logic.Equiv.Defs._hyg.3517 : Unique.{u} α], Equiv.{u, v} α PUnit.{v}
+  forall (α : Sort.{u}) [inst._@.Mathlib.Logic.Equiv.Defs._hyg.3516 : Unique.{u} α], Equiv.{u, v} α PUnit.{v}
 Case conversion may be inaccurate. Consider using '#align equiv.equiv_punit Equiv.equivPUnitₓ'. -/
 /-- If `α` has a unique element, then it is equivalent to any `punit`. -/
 def equivPUnit (α : Sort _) [Unique α] : α ≃ PUnit.{v} :=
@@ -867,7 +868,8 @@ protected def plift : PLift α ≃ α :=
 
 #print Equiv.ofIff /-
 /-- equivalence of propositions is the same as iff -/
-def ofIff {P Q : Prop} (h : P ↔ Q) : P ≃ Q where
+def ofIff {P Q : Prop} (h : P ↔ Q) :
+    P ≃ Q where 
   toFun := h.mp
   invFun := h.mpr
   left_inv x := rfl
@@ -879,7 +881,8 @@ def ofIff {P Q : Prop} (h : P ↔ Q) : P ≃ Q where
 /-- If `α₁` is equivalent to `α₂` and `β₁` is equivalent to `β₂`, then the type of maps `α₁ → β₁`
 is equivalent to the type of maps `α₂ → β₂`. -/
 @[congr, simps apply]
-def arrowCongr {α₁ β₁ α₂ β₂ : Sort _} (e₁ : α₁ ≃ α₂) (e₂ : β₁ ≃ β₂) : (α₁ → β₁) ≃ (α₂ → β₂) where
+def arrowCongr {α₁ β₁ α₂ β₂ : Sort _} (e₁ : α₁ ≃ α₂) (e₂ : β₁ ≃ β₂) :
+    (α₁ → β₁) ≃ (α₂ → β₂) where 
   toFun f := e₂ ∘ f ∘ e₁.symm
   invFun f := e₂.symm ∘ f ∘ e₁
   left_inv f := funext fun x => by simp
@@ -1077,7 +1080,7 @@ theorem symm_comp_eq {α β γ} (e : α ≃ β) (f : γ → α) (g : γ → β) 
 def punitEquivPUnit : PUnit.{v} ≃ PUnit.{w} :=
   ⟨fun _ => PUnit.unit, fun _ => PUnit.unit, fun u => by
     cases u
-    rfl, fun u => by
+    rfl, fun u => by 
     cases u
     rfl⟩
 #align equiv.punit_equiv_punit Equiv.punitEquivPUnit
@@ -1098,7 +1101,7 @@ def arrowPUnitEquivPUnit (α : Sort _) : (α → PUnit.{v}) ≃ PUnit.{w} :=
   ⟨fun f => PUnit.unit, fun u f => PUnit.unit, fun f => by
     funext x
     cases f x
-    rfl, fun u => by
+    rfl, fun u => by 
     cases u
     rfl⟩
 #align equiv.arrow_punit_equiv_punit Equiv.arrowPUnitEquivPUnit
@@ -1108,11 +1111,12 @@ def arrowPUnitEquivPUnit (α : Sort _) : (α → PUnit.{v}) ≃ PUnit.{w} :=
 /-- If `α` is `subsingleton` and `a : α`, then the type of dependent functions `Π (i : α), β
 i` is equivalent to `β i`. -/
 @[simps]
-def piSubsingleton {α} (β : α → Sort _) [Subsingleton α] (a : α) : (∀ a', β a') ≃ β a where
+def piSubsingleton {α} (β : α → Sort _) [Subsingleton α] (a : α) :
+    (∀ a', β a') ≃ β a where 
   toFun := eval a
   invFun x b := cast (congr_arg β <| Subsingleton.elim a b) x
   left_inv f :=
-    funext fun b => by
+    funext fun b => by 
       rw [Subsingleton.elim b a]
       rfl
   right_inv b := rfl
@@ -1211,7 +1215,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.psigma_congr_rig
 theorem psigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a)
     (G : ∀ a, β₂ a ≃ β₃ a) :
     (psigmaCongrRight F).trans (psigmaCongrRight G) = psigmaCongrRight fun a => (F a).trans (G a) :=
-  by
+  by 
   ext1 x
   cases x
   rfl
@@ -1295,13 +1299,14 @@ theorem sigmaCongrRight_refl {α} {β : α → Type _} :
 
 #print Equiv.psigmaEquivSubtype /-
 /-- A `psigma` with `Prop` fibers is equivalent to the subtype.  -/
-def psigmaEquivSubtype {α : Type v} (P : α → Prop) : (Σ'i, P i) ≃ Subtype P where
+def psigmaEquivSubtype {α : Type v} (P : α → Prop) :
+    (Σ'i, P i) ≃ Subtype P where 
   toFun x := ⟨x.1, x.2⟩
   invFun x := ⟨x.1, x.2⟩
-  left_inv x := by
+  left_inv x := by 
     cases x
     rfl
-  right_inv x := by
+  right_inv x := by 
     cases x
     rfl
 #align equiv.psigma_equiv_subtype Equiv.psigmaEquivSubtype
@@ -1430,7 +1435,8 @@ def sigmaEquivProdOfEquiv {α β} {β₁ : α → Sort _} (F : ∀ a, β₁ a �
 #print Equiv.sigmaAssoc /-
 /-- Dependent product of types is associative up to an equivalence. -/
 def sigmaAssoc {α : Type _} {β : α → Type _} (γ : ∀ a : α, β a → Type _) :
-    (Σab : Σa : α, β a, γ ab.1 ab.2) ≃ Σa : α, Σb : β a, γ a b where
+    (Σab : Σa : α, β a, γ ab.1 ab.2) ≃
+      Σa : α, Σb : β a, γ a b where 
   toFun x := ⟨x.1.1, ⟨x.1.2, x.2⟩⟩
   invFun x := ⟨⟨x.1, x.2.1⟩, x.2.2⟩
   left_inv := fun ⟨⟨a, b⟩, c⟩ => rfl
@@ -1446,10 +1452,8 @@ protected theorem exists_unique_congr {p : α → Prop} {q : β → Prop} (f : �
   constructor
   · rintro ⟨a, ha₁, ha₂⟩
     exact ⟨f a, h.1 ha₁, fun b hb => f.symm_apply_eq.1 (ha₂ (f.symm b) (h.2 (by simpa using hb)))⟩
-    
   · rintro ⟨b, hb₁, hb₂⟩
     exact ⟨f.symm b, h.2 (by simpa using hb₁), fun y hy => (eq_symm_apply f).2 (hb₂ _ (h.1 hy))⟩
-    
 #align equiv.exists_unique_congr Equiv.exists_unique_congr
 -/
 
@@ -1474,7 +1478,6 @@ protected theorem forall_congr {p : α → Prop} {q : β → Prop} (f : α ≃ �
   · rw [← f.right_inv x]
     apply h.mp
     apply h₂
-    
   apply h.mpr; apply h₂
 #align equiv.forall_congr Equiv.forall_congr
 -/
@@ -1583,17 +1586,18 @@ namespace Quot
 /-- An equivalence `e : α ≃ β` generates an equivalence between quotient spaces,
 if `ra a₁ a₂ ↔ rb (e a₁) (e a₂). -/
 protected def congr {ra : α → α → Prop} {rb : β → β → Prop} (e : α ≃ β)
-    (eq : ∀ a₁ a₂, ra a₁ a₂ ↔ rb (e a₁) (e a₂)) : Quot ra ≃ Quot rb where
+    (eq : ∀ a₁ a₂, ra a₁ a₂ ↔ rb (e a₁) (e a₂)) :
+    Quot ra ≃ Quot rb where 
   toFun := Quot.map e fun a₁ a₂ => (Eq a₁ a₂).1
   invFun :=
     Quot.map e.symm fun b₁ b₂ h =>
       (Eq (e.symm b₁) (e.symm b₂)).2
         ((e.apply_symm_apply b₁).symm ▸ (e.apply_symm_apply b₂).symm ▸ h)
-  left_inv := by
+  left_inv := by 
     rintro ⟨a⟩
     dsimp only [Quot.map]
     simp only [Equiv.symm_apply_apply]
-  right_inv := by
+  right_inv := by 
     rintro ⟨a⟩
     dsimp only [Quot.map]
     simp only [Equiv.apply_symm_apply]

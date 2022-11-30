@@ -131,11 +131,11 @@ theorem degree_mod_by_monic_lt [Nontrivial R] :
       exact this
     else
       Or.cases_on (not_and_or.1 h)
-        (by
+        (by 
           unfold mod_by_monic div_mod_by_monic_aux
           rw [dif_pos hq, if_neg h]
           exact lt_of_not_ge)
-        (by
+        (by 
           intro hp
           unfold mod_by_monic div_mod_by_monic_aux
           rw [dif_pos hq, if_neg h, not_not.1 hp]
@@ -147,9 +147,7 @@ theorem zero_mod_by_monic (p : R[X]) : 0 %ₘ p = 0 := by
   unfold mod_by_monic div_mod_by_monic_aux
   by_cases hp : monic p
   · rw [dif_pos hp, if_neg (mt And.right (not_not_intro rfl))]
-    
   · rw [dif_neg hp]
-    
 #align polynomial.zero_mod_by_monic Polynomial.zero_mod_by_monic
 
 @[simp]
@@ -157,9 +155,7 @@ theorem zero_div_by_monic (p : R[X]) : 0 /ₘ p = 0 := by
   unfold div_by_monic div_mod_by_monic_aux
   by_cases hp : monic p
   · rw [dif_pos hp, if_neg (mt And.right (not_not_intro rfl))]
-    
   · rw [dif_neg hp]
-    
 #align polynomial.zero_div_by_monic Polynomial.zero_div_by_monic
 
 @[simp]
@@ -193,7 +189,7 @@ theorem mod_by_monic_eq_self_iff [Nontrivial R] (hq : Monic q) : p %ₘ q = p �
 #align polynomial.mod_by_monic_eq_self_iff Polynomial.mod_by_monic_eq_self_iff
 
 theorem degree_mod_by_monic_le (p : R[X]) {q : R[X]} (hq : Monic q) : degree (p %ₘ q) ≤ degree q :=
-  by
+  by 
   nontriviality R
   exact (degree_mod_by_monic_lt _ hq).le
 #align polynomial.degree_mod_by_monic_le Polynomial.degree_mod_by_monic_le
@@ -218,7 +214,7 @@ theorem mod_by_monic_eq_sub_mul_div :
       refine' ih.trans _
       unfold div_by_monic
       rw [dif_pos hq, dif_pos hq, if_pos h, mul_add, sub_add_eq_sub_sub, mul_comm]
-    else by
+    else by 
       unfold mod_by_monic div_by_monic div_mod_by_monic_aux
       rw [dif_pos hq, if_neg h, dif_pos hq, if_neg h, mul_zero, sub_zero]
 #align polynomial.mod_by_monic_eq_sub_mul_div Polynomial.mod_by_monic_eq_sub_mul_div
@@ -231,7 +227,7 @@ theorem div_by_monic_eq_zero_iff [Nontrivial R] (hq : Monic q) : p /ₘ q = 0 �
   ⟨fun h => by
     have := mod_by_monic_add_div p hq <;>
       rwa [h, mul_zero, add_zero, mod_by_monic_eq_self_iff hq] at this,
-    fun h => by
+    fun h => by 
     have : ¬degree q ≤ degree p := not_le_of_gt h
     unfold div_by_monic div_mod_by_monic_aux <;> rw [dif_pos hq, if_neg (mt And.left this)]⟩
 #align polynomial.div_by_monic_eq_zero_iff Polynomial.div_by_monic_eq_zero_iff
@@ -278,7 +274,7 @@ theorem degree_div_by_monic_lt (p : R[X]) {q : R[X]} (hq : Monic q) (hp0 : p ≠
     haveI := nontrivial.of_polynomial_ne hp0
     rw [(div_by_monic_eq_zero_iff hq).2 hpq, degree_eq_nat_degree hp0]
     exact WithBot.bot_lt_coe _
-  else by
+  else by 
     haveI := nontrivial.of_polynomial_ne hp0
     rw [← degree_add_div_by_monic hq (not_lt.1 hpq), degree_eq_nat_degree hq.ne_zero,
       degree_eq_nat_degree (mt (div_by_monic_eq_zero_iff hq).1 hpq)]
@@ -294,12 +290,11 @@ theorem nat_degree_div_by_monic {R : Type u} [CommRing R] (f : R[X]) {g : R[X]} 
   · rw [hfg, nat_degree_zero]
     rw [div_by_monic_eq_zero_iff hg] at hfg
     rw [tsub_eq_zero_iff_le.mpr (nat_degree_le_nat_degree <| le_of_lt hfg)]
-    
   have hgf := hfg
   rw [div_by_monic_eq_zero_iff hg] at hgf
   push_neg  at hgf
   have := degree_add_div_by_monic hg hgf
-  have hf : f ≠ 0 := by
+  have hf : f ≠ 0 := by 
     intro hf
     apply hfg
     rw [hf, zero_div_by_monic]
@@ -364,7 +359,7 @@ theorem map_mod_by_monic [CommRing S] (f : R →+* S) (hq : Monic q) :
 
 theorem dvd_iff_mod_by_monic_eq_zero (hq : Monic q) : p %ₘ q = 0 ↔ q ∣ p :=
   ⟨fun h => by rw [← mod_by_monic_add_div p hq, h, zero_add] <;> exact dvd_mul_right _ _, fun h =>
-    by
+    by 
     nontriviality R
     obtain ⟨r, hr⟩ := exists_eq_mul_right_of_dvd h
     by_contra hpq0
@@ -410,9 +405,7 @@ theorem mod_by_monic_X_sub_C_eq_C_eval (p : R[X]) (a : R) : p %ₘ (X - c a) = c
   have : degree (p %ₘ (X - C a)) ≤ 0 := by
     cases degree (p %ₘ (X - C a))
     · exact bot_le
-      
     · exact WithBot.some_le_some.2 (Nat.le_of_lt_succ (WithBot.some_lt_some.1 this))
-      
   rw [eq_C_of_degree_le_zero this, eval_C] at h
   rw [eq_C_of_degree_le_zero this, h]
 #align polynomial.mod_by_monic_X_sub_C_eq_C_eval Polynomial.mod_by_monic_X_sub_C_eq_C_eval
@@ -420,9 +413,9 @@ theorem mod_by_monic_X_sub_C_eq_C_eval (p : R[X]) (a : R) : p %ₘ (X - c a) = c
 theorem mul_div_by_monic_eq_iff_is_root : (X - c a) * (p /ₘ (X - c a)) = p ↔ IsRoot p a :=
   ⟨fun h => by rw [← h, is_root.def, eval_mul, eval_sub, eval_X, eval_C, sub_self, zero_mul],
     fun h : p.eval a = 0 => by
-    conv =>
-      rhs
-      rw [← mod_by_monic_add_div p (monic_X_sub_C a)] <;>
+    conv => 
+        rhs
+        rw [← mod_by_monic_add_div p (monic_X_sub_C a)] <;>
       rw [mod_by_monic_X_sub_C_eq_C_eval, h, C_0, zero_add]⟩
 #align polynomial.mul_div_by_monic_eq_iff_is_root Polynomial.mul_div_by_monic_eq_iff_is_root
 
@@ -457,7 +450,7 @@ theorem sub_dvd_eval_sub (a b : R) (p : R[X]) : a - b ∣ p.eval a - p.eval b :=
 #align polynomial.sub_dvd_eval_sub Polynomial.sub_dvd_eval_sub
 
 theorem mul_div_mod_by_monic_cancel_left (p : R[X]) {q : R[X]} (hmo : q.Monic) : q * p /ₘ q = p :=
-  by
+  by 
   nontriviality R
   refine' (div_mod_by_monic_unique _ 0 hmo ⟨by rw [zero_add], _⟩).1
   rw [degree_zero]
@@ -466,18 +459,16 @@ theorem mul_div_mod_by_monic_cancel_left (p : R[X]) {q : R[X]} (hmo : q.Monic) :
 
 variable (R)
 
-theorem not_is_field : ¬IsField R[X] := by
+theorem not_is_field : ¬IsField R[X] := by 
   nontriviality R
   rw [Ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top]
   use Ideal.span {Polynomial.x}
   constructor
   · rw [bot_lt_iff_ne_bot, Ne.def, Ideal.span_singleton_eq_bot]
     exact Polynomial.X_ne_zero
-    
   · rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, Ideal.mem_span_singleton,
       Polynomial.X_dvd_iff, Polynomial.coeff_one_zero]
     exact one_ne_zero
-    
 #align polynomial.not_is_field Polynomial.not_is_field
 
 variable {R}
@@ -523,11 +514,9 @@ theorem root_multiplicity_zero {x : R} : rootMultiplicity x 0 = 0 :=
 #align polynomial.root_multiplicity_zero Polynomial.root_multiplicity_zero
 
 theorem root_multiplicity_eq_zero {p : R[X]} {x : R} (h : ¬IsRoot p x) : rootMultiplicity x p = 0 :=
-  by
+  by 
   rw [root_multiplicity_eq_multiplicity]
-  split_ifs;
-  · rfl
-    
+  split_ifs; · rfl
   rw [← PartEnat.coe_inj, PartEnat.coe_get, multiplicity.multiplicity_eq_zero_of_not_dvd,
     Nat.cast_zero]
   intro hdvd
@@ -545,9 +534,7 @@ theorem root_multiplicity_pos {p : R[X]} (hp : p ≠ 0) {x : R} :
 theorem root_multiplicity_C (r a : R) : rootMultiplicity a (c r) = 0 := by
   rcases eq_or_ne r 0 with (rfl | hr)
   · simp
-    
   · exact root_multiplicity_eq_zero (not_is_root_C _ _ hr)
-    
 #align polynomial.root_multiplicity_C Polynomial.root_multiplicity_C
 
 theorem pow_root_multiplicity_dvd (p : R[X]) (a : R) : (X - c a) ^ rootMultiplicity a p ∣ p :=

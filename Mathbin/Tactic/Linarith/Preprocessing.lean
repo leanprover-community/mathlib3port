@@ -165,7 +165,8 @@ private unsafe def filter_comparisons_aux : expr → Bool
 
 /-- Removes any expressions that are not proofs of inequalities, equalities, or negations thereof.
 -/
-unsafe def filter_comparisons : preprocessor where
+unsafe def filter_comparisons :
+    preprocessor where 
   Name := "filter terms that are not proofs of comparisons"
   transform h :=
     (do
@@ -179,7 +180,8 @@ unsafe def filter_comparisons : preprocessor where
 /-- Replaces proofs of negations of comparisons with proofs of the reversed comparisons.
 For example, a proof of `¬ a < b` will become a proof of `a ≥ b`.
 -/
-unsafe def remove_negations : preprocessor where
+unsafe def remove_negations :
+    preprocessor where 
   Name := "replace negations of comparisons"
   transform h := do
     let tp ← infer_type h
@@ -193,7 +195,8 @@ unsafe def remove_negations : preprocessor where
 It also adds the facts that the integers involved are nonnegative.
 To avoid adding the same nonnegativity facts many times, it is a global preprocessor.
  -/
-unsafe def nat_to_int : global_preprocessor where
+unsafe def nat_to_int :
+    global_preprocessor where 
   Name := "move nats to ints"
   transform l :=-- we lock the tactic state here because a `simplify` call inside of
   -- `zify_proof` corrupts the tactic state when run under `io.run_tactic`.
@@ -212,7 +215,8 @@ unsafe def nat_to_int : global_preprocessor where
 
 /-- `strengthen_strict_int h` turns a proof `h` of a strict integer inequality `t1 < t2`
 into a proof of `t1 ≤ t2 + 1`. -/
-unsafe def strengthen_strict_int : preprocessor where
+unsafe def strengthen_strict_int :
+    preprocessor where 
   Name := "strengthen strict inequalities over int"
   transform h := do
     let tp ← infer_type h
@@ -223,7 +227,8 @@ unsafe def strengthen_strict_int : preprocessor where
 /-- `mk_comp_with_zero h` takes a proof `h` of an equality, inequality, or negation thereof,
 and turns it into a proof of a comparison `_ R 0`, where `R ∈ {=, ≤, <}`.
  -/
-unsafe def make_comp_with_zero : preprocessor where
+unsafe def make_comp_with_zero :
+    preprocessor where 
   Name := "make comparisons with zero"
   transform e := singleton <$> rearr_comp e <|> return []
 #align linarith.make_comp_with_zero linarith.make_comp_with_zero
@@ -243,7 +248,8 @@ unsafe def normalize_denominators_in_lhs (h lhs : expr) : tactic expr := do
 /-- `cancel_denoms pf` assumes `pf` is a proof of `t R 0`. If `t` contains the division symbol `/`,
 it tries to scale `t` to cancel out division by numerals.
 -/
-unsafe def cancel_denoms : preprocessor where
+unsafe def cancel_denoms :
+    preprocessor where 
   Name := "cancel denominators"
   transform pf :=
     (do
@@ -284,7 +290,8 @@ unsafe def cancel_denoms : preprocessor where
 
 This preprocessor is typically run last, after all inputs have been canonized.
 -/
-unsafe def nlinarith_extras : global_preprocessor where
+unsafe def nlinarith_extras :
+    global_preprocessor where 
   Name := "nonlinear arithmetic extras"
   transform ls := do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
@@ -347,7 +354,8 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
 by calling `linarith.remove_ne_aux`.
 This produces `2^n` branches when there are `n` such hypotheses in the input.
 -/
-unsafe def remove_ne : global_branching_preprocessor where
+unsafe def remove_ne :
+    global_branching_preprocessor where 
   Name := "remove_ne"
   transform := remove_ne_aux
 #align linarith.remove_ne linarith.remove_ne

@@ -73,30 +73,24 @@ theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i 
   ext ⟨j⟩
   · rw [verschiebung_coeff_zero, shift_coeff, h]
     apply Nat.lt_succ_self
-    
   · simp only [verschiebung_coeff_succ, shift]
     congr 1
     rw [Nat.add_succ, add_comm, Nat.add_succ, add_comm]
-    
 #align witt_vector.verschiebung_shift WittVector.verschiebung_shift
 
 theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i = 0) :
     x = (verschiebung^[n]) (x.shift n) := by
   induction' n with k ih
   · cases x <;> simp [shift]
-    
   · dsimp
     rw [verschiebung_shift]
     · exact ih fun i hi => h _ (hi.trans (Nat.lt_succ_self _))
-      
     · exact h
-      
-    
 #align witt_vector.eq_iterate_verschiebung WittVector.eq_iterate_verschiebung
 
 theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) :
     ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n]) x' := by
-  have hex : ∃ k : ℕ, x.coeff k ≠ 0 := by
+  have hex : ∃ k : ℕ, x.coeff k ≠ 0 := by 
     by_contra' hall
     apply hx
     ext i
@@ -117,7 +111,7 @@ This argument is adapted from
 
 
 instance [CharP R p] [NoZeroDivisors R] : NoZeroDivisors (𝕎 R) :=
-  ⟨fun x y => by
+  ⟨fun x y => by 
     contrapose!
     rintro ⟨ha, hb⟩
     rcases verschiebung_nonzero ha with ⟨na, wa, hwa0, rfl⟩

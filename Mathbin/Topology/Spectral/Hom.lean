@@ -102,9 +102,10 @@ def toContinuousMap (f : SpectralMap α β) : ContinuousMap α β :=
   ⟨_, f.spectral'.Continuous⟩
 #align spectral_map.to_continuous_map SpectralMap.toContinuousMap
 
-instance : SpectralMapClass (SpectralMap α β) α β where
+instance : SpectralMapClass (SpectralMap α β) α
+      β where 
   coe := SpectralMap.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     cases f
     cases g
     congr
@@ -120,7 +121,7 @@ theorem to_fun_eq_coe {f : SpectralMap α β} : f.toFun = (f : α → β) :=
   rfl
 #align spectral_map.to_fun_eq_coe SpectralMap.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : SpectralMap α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align spectral_map.ext SpectralMap.ext

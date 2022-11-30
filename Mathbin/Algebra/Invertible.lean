@@ -112,19 +112,19 @@ theorem inv_of_eq_left_inv [Monoid α] {a b : α} [Invertible a] (hac : b * a = 
 #align inv_of_eq_left_inv inv_of_eq_left_inv
 
 theorem invertible_unique {α : Type u} [Monoid α] (a b : α) [Invertible a] [Invertible b]
-    (h : a = b) : ⅟ a = ⅟ b := by
+    (h : a = b) : ⅟ a = ⅟ b := by 
   apply inv_of_eq_right_inv
   rw [h, mul_inv_of_self]
 #align invertible_unique invertible_unique
 
 instance [Monoid α] (a : α) : Subsingleton (Invertible a) :=
-  ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ => by
+  ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ => by 
     congr
     exact left_inv_eq_right_inv hba hac⟩
 
 /-- If `r` is invertible and `s = r`, then `s` is invertible. -/
 def Invertible.copy [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (hs : s = r) :
-    Invertible s where
+    Invertible s where 
   invOf := ⅟ r
   inv_of_mul_self := by rw [hs, inv_of_mul_self]
   mul_inv_of_self := by rw [hs, mul_inv_of_self]
@@ -132,7 +132,8 @@ def Invertible.copy [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (hs :
 
 /-- An `invertible` element is a unit. -/
 @[simps]
-def unitOfInvertible [Monoid α] (a : α) [Invertible a] : αˣ where
+def unitOfInvertible [Monoid α] (a : α) [Invertible a] :
+    αˣ where 
   val := a
   inv := ⅟ a
   val_inv := by simp
@@ -144,7 +145,8 @@ theorem is_unit_of_invertible [Monoid α] (a : α) [Invertible a] : IsUnit a :=
 #align is_unit_of_invertible is_unit_of_invertible
 
 /-- Units are invertible in their associated monoid. -/
-def Units.invertible [Monoid α] (u : αˣ) : Invertible (u : α) where
+def Units.invertible [Monoid α] (u : αˣ) :
+    Invertible (u : α) where 
   invOf := ↑u⁻¹
   inv_of_mul_self := u.inv_mul
   mul_inv_of_self := u.mul_inv
@@ -350,7 +352,8 @@ end GroupWithZero
 
 /-- Monoid homs preserve invertibility. -/
 def Invertible.map {R : Type _} {S : Type _} {F : Type _} [MulOneClass R] [MulOneClass S]
-    [MonoidHomClass F R S] (f : F) (r : R) [Invertible r] : Invertible (f r) where
+    [MonoidHomClass F R S] (f : F) (r : R) [Invertible r] :
+    Invertible (f r) where 
   invOf := f (⅟ r)
   inv_of_mul_self := by rw [← map_mul, inv_of_mul_self, map_one]
   mul_inv_of_self := by rw [← map_mul, mul_inv_of_self, map_one]
@@ -360,7 +363,7 @@ def Invertible.map {R : Type _} {S : Type _} {F : Type _} [MulOneClass R] [MulOn
 before applying this lemma. -/
 theorem map_inv_of {R : Type _} {S : Type _} {F : Type _} [MulOneClass R] [Monoid S]
     [MonoidHomClass F R S] (f : F) (r : R) [Invertible r] [Invertible (f r)] : f (⅟ r) = ⅟ (f r) :=
-  by
+  by 
   letI := Invertible.map f r
   convert rfl
 #align map_inv_of map_inv_of
@@ -380,7 +383,9 @@ def Invertible.ofLeftInverse {R : Type _} {S : Type _} {G : Type _} [MulOneClass
 @[simps]
 def invertibleEquivOfLeftInverse {R : Type _} {S : Type _} {F G : Type _} [Monoid R] [Monoid S]
     [MonoidHomClass F R S] [MonoidHomClass G S R] (f : F) (g : G) (r : R)
-    (h : Function.LeftInverse g f) : Invertible (f r) ≃ Invertible r where
+    (h : Function.LeftInverse g f) :
+    Invertible (f r) ≃
+      Invertible r where 
   toFun _ := Invertible.ofLeftInverse f _ _ h
   invFun _ := Invertible.map f _
   left_inv x := Subsingleton.elim _ _

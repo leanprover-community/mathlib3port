@@ -82,7 +82,9 @@ variable (𝒜)
 The predicate `is_fraction` is "prelocal", in the sense that if it holds on `U` it holds on any open
 subset `V` of `U`.
 -/
-def isFractionPrelocal : PrelocalPredicate fun x : ProjectiveSpectrum.top 𝒜 => at x where
+def isFractionPrelocal :
+    PrelocalPredicate fun x : ProjectiveSpectrum.top 𝒜 =>
+      at x where 
   pred U f := IsFraction f
   res := by rintro V U i f ⟨j, r, s, w⟩ <;> exact ⟨j, r, s, fun y => w (i y)⟩
 #align
@@ -128,18 +130,14 @@ theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   · cases' (y : ProjectiveSpectrum.top 𝒜).IsPrime.mem_or_mem h with h h
     · obtain ⟨nin, -⟩ := wa ⟨y, (opens.inf_le_left Va Vb y).2⟩
       exact nin h
-      
     · obtain ⟨nin, -⟩ := wb ⟨y, (opens.inf_le_right Va Vb y).2⟩
       exact nin h
-      
-    
   · simp only [add_mul, map_add, Pi.add_apply, RingHom.map_mul, ext_iff_val, add_val]
     obtain ⟨nin1, hy1⟩ := wa (opens.inf_le_left Va Vb y)
     obtain ⟨nin2, hy2⟩ := wb (opens.inf_le_right Va Vb y)
     dsimp only at hy1 hy2
     erw [hy1, hy2]
     simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_comm, mul_comm sa sb]
-    
 #align
   algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.add_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.add_mem'
 
@@ -165,18 +163,14 @@ theorem mul_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   · cases' (y : ProjectiveSpectrum.top 𝒜).IsPrime.mem_or_mem h with h h
     · choose nin hy using wa ⟨y, (opens.inf_le_left Va Vb y).2⟩
       exact nin h
-      
     · choose nin hy using wb ⟨y, (opens.inf_le_right Va Vb y).2⟩
       exact nin h
-      
-    
   · simp only [Pi.mul_apply, RingHom.map_mul]
     choose nin1 hy1 using wa (opens.inf_le_left Va Vb y)
     choose nin2 hy2 using wb (opens.inf_le_right Va Vb y)
     rw [ext_iff_val] at hy1 hy2⊢
     erw [mul_val, hy1, hy2]
     simpa only [val_mk', mk_mul, ← Subtype.val_eq_coe]
-    
 #align
   algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.mul_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.mul_mem'
 
@@ -191,7 +185,9 @@ variable {𝒜}
 /-- The functions satisfying `is_locally_fraction` form a subring of all dependent functions
 `Π x : U, homogeneous_localization 𝒜 x`.-/
 def sectionsSubring (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) :
-    Subring (∀ x : unop U, at x.1) where
+    Subring
+      (∀ x : unop U,
+        at x.1) where 
   carrier := { f | (isLocallyFraction 𝒜).pred f }
   zero_mem' := zero_mem' U
   one_mem' := one_mem' U
@@ -219,7 +215,10 @@ instance commRingStructureSheafInTypeObj (U : (Opens (ProjectiveSpectrum.top �
 /-- The structure presheaf, valued in `CommRing`, constructed by dressing up the `Type` valued
 structure presheaf.-/
 @[simps]
-def structurePresheafInCommRing : Presheaf CommRingCat (ProjectiveSpectrum.top 𝒜) where
+def structurePresheafInCommRing :
+    Presheaf CommRingCat
+      (ProjectiveSpectrum.top
+        𝒜) where 
   obj U := CommRingCat.of ((structureSheafInType 𝒜).1.obj U)
   map U V i :=
     { toFun := (structureSheafInType 𝒜).1.map i, map_zero' := rfl, map_add' := fun x y => rfl,
@@ -265,7 +264,9 @@ theorem res_apply (U V : Opens (ProjectiveSpectrum.top 𝒜)) (i : V ⟶ U)
 #align algebraic_geometry.res_apply AlgebraicGeometry.res_apply
 
 /-- `Proj` of a graded ring as a `SheafedSpace`-/
-def ProjCat.toSheafedSpace : SheafedSpaceCat CommRingCat where
+def ProjCat.toSheafedSpace :
+    SheafedSpaceCat
+      CommRingCat where 
   carrier := TopCat.of (ProjectiveSpectrum 𝒜)
   Presheaf := (ProjCat.structureSheaf 𝒜).1
   IsSheaf := (ProjCat.structureSheaf 𝒜).2
@@ -275,7 +276,9 @@ def ProjCat.toSheafedSpace : SheafedSpaceCat CommRingCat where
 implemented as a subtype of dependent functions to localizations at homogeneous prime ideals, and
 evaluates the section on the point corresponding to a given homogeneous prime ideal. -/
 def openToLocalization (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : ProjectiveSpectrum.top 𝒜)
-    (hx : x ∈ U) : (ProjCat.structureSheaf 𝒜).1.obj (op U) ⟶ CommRingCat.of (at x) where
+    (hx : x ∈ U) :
+    (ProjCat.structureSheaf 𝒜).1.obj (op U) ⟶
+      CommRingCat.of (at x) where 
   toFun s := (s.1 ⟨x, hx⟩ : _)
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -390,7 +393,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
                 show b2 ∉ y.asHomogeneousIdeal by
                   rw [← ProjectiveSpectrum.mem_basic_open] <;>
                     exact le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_right _ _) hy⟩ :=
-        by
+        by 
         intro y hy
         rw [Localization.mk_eq_mk', IsLocalization.eq]
         exact

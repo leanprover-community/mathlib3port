@@ -50,7 +50,7 @@ theorem PiCat.uniform_continuous_proj (i : ι) : UniformContinuous fun a : ∀ i
 #align Pi.uniform_continuous_proj PiCat.uniform_continuous_proj
 
 instance PiCat.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i) :=
-  ⟨by
+  ⟨by 
     intro f hf
     haveI := hf.1
     have : ∀ i, ∃ x : α i, Filter.map (fun a : ∀ i, α i => a i) f ≤ 𝓝 x := by
@@ -64,7 +64,7 @@ instance PiCat.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α
 #align Pi.complete PiCat.complete
 
 instance PiCat.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=
-  separated_def.2 fun x y H => by
+  separated_def.2 fun x y H => by 
     ext i
     apply eq_of_separated_of_uniform_continuous (PiCat.uniform_continuous_proj α i)
     apply H

@@ -71,7 +71,7 @@ protected theorem StrictConvex.eq (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hy 
 #align strict_convex.eq StrictConvex.eq
 
 protected theorem StrictConvex.inter {t : Set E} (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
-    StrictConvex 𝕜 (s ∩ t) := by
+    StrictConvex 𝕜 (s ∩ t) := by 
   intro x hx y hy hxy a b ha hb hab
   rw [interior_inter]
   exact ⟨hs hx.1 hy.1 hxy ha hb hab, ht hx.2 hy.2 hxy ha hb hab⟩
@@ -239,7 +239,7 @@ section continuous_add
 variable [HasContinuousAdd E] {s t : Set E}
 
 theorem StrictConvex.add (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) : StrictConvex 𝕜 (s + t) :=
-  by
+  by 
   rintro _ ⟨v, w, hv, hw, rfl⟩ _ ⟨x, y, hx, hy, rfl⟩ h a b ha hb hab
   rw [smul_add, smul_add, add_add_add_comm]
   obtain rfl | hvx := eq_or_ne v x
@@ -248,7 +248,6 @@ theorem StrictConvex.add (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
     exact
       (is_open_map_add_left _).image_interior_subset _
         (mem_image_of_mem _ <| ht hw hy (ne_of_apply_ne _ h) ha hb hab)
-    
   exact
     subset_interior_add_left
       (add_mem_add (hs hv hx hvx ha hb hab) <| ht.convex hw hy ha.le hb.le hab)
@@ -278,9 +277,7 @@ variable [LinearOrderedField 𝕝] [Module 𝕝 E] [HasContinuousConstSmul 𝕝 
 theorem StrictConvex.smul (hs : StrictConvex 𝕜 s) (c : 𝕝) : StrictConvex 𝕜 (c • s) := by
   obtain rfl | hc := eq_or_ne c 0
   · exact (subsingleton_zero_smul_set _).StrictConvex
-    
   · exact hs.linear_image (LinearMap.lsmul _ _ c) (is_open_map_smul₀ hc)
-    
 #align strict_convex.smul StrictConvex.smul
 
 theorem StrictConvex.affinity [HasContinuousAdd E] (hs : StrictConvex 𝕜 s) (z : E) (c : 𝕝) :
@@ -304,18 +301,16 @@ variable [AddCommGroup E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContin
   {s : Set E}
 
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) :
-    StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by classical
-  obtain rfl | hc := eq_or_ne c 0
-  · simp_rw [zero_smul, preimage_const]
-    split_ifs
-    · exact strict_convex_univ
-      
-    · exact strict_convex_empty
-      
-    
-  refine' hs.linear_preimage (LinearMap.lsmul _ _ c) _ (smul_right_injective E hc)
-  unfold LinearMap.lsmul LinearMap.mk₂ LinearMap.mk₂' LinearMap.mk₂'ₛₗ
-  exact continuous_const_smul _
+    StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by
+  classical 
+    obtain rfl | hc := eq_or_ne c 0
+    · simp_rw [zero_smul, preimage_const]
+      split_ifs
+      · exact strict_convex_univ
+      · exact strict_convex_empty
+    refine' hs.linear_preimage (LinearMap.lsmul _ _ c) _ (smul_right_injective E hc)
+    unfold LinearMap.lsmul LinearMap.mk₂ LinearMap.mk₂' LinearMap.mk₂'ₛₗ
+    exact continuous_const_smul _
 #align strict_convex.preimage_smul StrictConvex.preimage_smul
 
 end AddCommGroup
@@ -332,13 +327,13 @@ variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] {s t 
 
 theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [DenselyOrdered 𝕜]
     (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hy : y ∈ s) (h : openSegment 𝕜 x y ⊆ frontier s) :
-    x = y := by
+    x = y := by 
   obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one
-  classical
-  by_contra hxy
-  exact
-    (h ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, rfl⟩).2
-      (hs hx hy hxy ha₀ (sub_pos_of_lt ha₁) <| add_sub_cancel'_right _ _)
+  classical 
+    by_contra hxy
+    exact
+      (h ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, rfl⟩).2
+        (hs hx hy hxy ha₀ (sub_pos_of_lt ha₁) <| add_sub_cancel'_right _ _)
 #align
   strict_convex.eq_of_open_segment_subset_frontier StrictConvex.eq_of_open_segment_subset_frontier
 

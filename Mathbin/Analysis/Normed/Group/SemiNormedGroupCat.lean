@@ -82,10 +82,8 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroupCat) [Subsingleton V] : Limi
   · ext
     have : x = 0 := Subsingleton.elim _ _
     simp only [this, map_zero]
-    
   · ext
     apply Subsingleton.elim
-    
 #align SemiNormedGroup.is_zero_of_subsingleton SemiNormedGroupCat.is_zero_of_subsingleton
 
 instance has_zero_object : Limits.HasZeroObject SemiNormedGroupCat.{u} :=
@@ -117,17 +115,21 @@ namespace SemiNormedGroup₁Cat
 instance : CoeSort SemiNormedGroup₁Cat (Type u) :=
   bundled.has_coe_to_sort
 
-instance : LargeCategory.{u} SemiNormedGroup₁Cat where
+instance :
+    LargeCategory.{u}
+      SemiNormedGroup₁Cat where 
   hom X Y := { f : NormedAddGroupHom X Y // f.NormNoninc }
   id X := ⟨NormedAddGroupHom.id X, NormedAddGroupHom.NormNoninc.id⟩
   comp X Y Z f g := ⟨(g : NormedAddGroupHom Y Z).comp (f : NormedAddGroupHom X Y), g.2.comp f.2⟩
 
-@[ext.1]
+@[ext]
 theorem hom_ext {M N : SemiNormedGroup₁Cat} (f g : M ⟶ N) (w : (f : M → N) = (g : M → N)) : f = g :=
   Subtype.eq (NormedAddGroupHom.ext (congr_fun w))
 #align SemiNormedGroup₁.hom_ext SemiNormedGroup₁Cat.hom_ext
 
-instance : ConcreteCategory.{u} SemiNormedGroup₁Cat where
+instance :
+    ConcreteCategory.{u}
+      SemiNormedGroup₁Cat where 
   forget := { obj := fun X => X, map := fun X Y f => f }
   forget_faithful := {  }
 
@@ -154,13 +156,14 @@ theorem mk_hom_apply {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc)
 /-- Promote an isomorphism in `SemiNormedGroup` to an isomorphism in `SemiNormedGroup₁`. -/
 @[simps]
 def mkIso {M N : SemiNormedGroupCat} (f : M ≅ N) (i : f.hom.NormNoninc) (i' : f.inv.NormNoninc) :
-    SemiNormedGroup₁Cat.of M ≅ SemiNormedGroup₁Cat.of N where
+    SemiNormedGroup₁Cat.of M ≅
+      SemiNormedGroup₁Cat.of N where 
   hom := mkHom f.hom i
   inv := mkHom f.inv i'
-  hom_inv_id' := by
+  hom_inv_id' := by 
     apply Subtype.eq
     exact f.hom_inv_id
-  inv_hom_id' := by
+  inv_hom_id' := by 
     apply Subtype.eq
     exact f.inv_hom_id
 #align SemiNormedGroup₁.mk_iso SemiNormedGroup₁Cat.mkIso
@@ -199,12 +202,14 @@ instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] :
   i
 #align SemiNormedGroup₁.of_unique SemiNormedGroup₁Cat.ofUnique
 
-instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁Cat where
+instance :
+    Limits.HasZeroMorphisms.{u, u + 1}
+      SemiNormedGroup₁Cat where 
   HasZero X Y := { zero := ⟨0, NormedAddGroupHom.NormNoninc.zero⟩ }
-  comp_zero' X Y f Z := by
+  comp_zero' X Y f Z := by 
     ext
     rfl
-  zero_comp' X Y Z f := by
+  zero_comp' X Y Z f := by 
     ext
     simp [coe_fn_coe_base']
 
@@ -219,10 +224,8 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroup₁Cat) [Subsingleton V] : L
     have : x = 0 := Subsingleton.elim _ _
     simp only [this, map_zero]
     exact map_zero f.1
-    
   · ext
     apply Subsingleton.elim
-    
 #align SemiNormedGroup₁.is_zero_of_subsingleton SemiNormedGroup₁Cat.is_zero_of_subsingleton
 
 instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁Cat.{u} :=

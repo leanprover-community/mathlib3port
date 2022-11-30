@@ -74,7 +74,7 @@ def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
 #align pgame.domineering.move_right Pgame.Domineering.moveRight
 
 theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    (m.1 - 1, m.2) ∈ b.erase m := by
+    (m.1 - 1, m.2) ∈ b.erase m := by 
   rw [mem_right] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
@@ -82,7 +82,7 @@ theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ 
   pgame.domineering.fst_pred_mem_erase_of_mem_right Pgame.Domineering.fst_pred_mem_erase_of_mem_right
 
 theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    (m.1, m.2 - 1) ∈ b.erase m := by
+    (m.1, m.2 - 1) ∈ b.erase m := by 
   rw [mem_left] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
@@ -130,15 +130,15 @@ theorem move_right_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
 #align pgame.domineering.move_right_smaller Pgame.Domineering.move_right_smaller
 
 /-- The instance describing allowed moves on a Domineering board. -/
-instance state : State Board where
+instance state : State Board where 
   turnBound s := s.card / 2
   l s := (left s).image (moveLeft s)
   r s := (right s).image (moveRight s)
-  left_bound s t m := by
+  left_bound s t m := by 
     simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_left_smaller h
-  right_bound s t m := by
+  right_bound s t m := by 
     simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h

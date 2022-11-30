@@ -283,14 +283,11 @@ theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s
   rcases em (∃ (t : _)(_ : t ⊂ s), t.Nonempty ∧ IsOpen (t : Set α)) with (⟨t, hts, htne, hto⟩ | ht)
   · rcases ihs t hts htne hto with ⟨x, hxt, hxo⟩
     exact ⟨x, hts.1 hxt, hxo⟩
-    
   · rcases minimal_nonempty_open_eq_singleton ho hne _ with ⟨x, hx⟩
     · exact ⟨x, hx.symm ▸ rfl, hx ▸ ho⟩
-      
     refine' fun t hts htne hto => of_not_not fun hts' => ht _
     lift t to Finset α using s.finite_to_set.subset hts
     exact ⟨t, ssubset_iff_subset_ne.2 ⟨hts, mt Finset.coe_inj.2 hts'⟩, htne, hto⟩
-    
 #align exists_open_singleton_of_open_finite exists_open_singleton_of_open_finite
 
 theorem exists_open_singleton_of_fintype [T0Space α] [Finite α] [Nonempty α] :
@@ -326,7 +323,7 @@ instance {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [�
   ⟨fun x y h => funext fun i => (h.map (continuous_apply i)).Eq⟩
 
 theorem T0Space.of_cover (h : ∀ x y, Inseparable x y → ∃ s : Set α, x ∈ s ∧ y ∈ s ∧ T0Space s) :
-    T0Space α := by
+    T0Space α := by 
   refine' ⟨fun x y hxy => _⟩
   rcases h x y hxy with ⟨s, hxs, hys, hs⟩; skip
   lift x to s using hxs; lift y to s using hys
@@ -382,10 +379,8 @@ theorem is_open_set_of_eventually_nhds_within [T1Space α] {p : α → Prop} :
   by_cases a = b
   · subst h
     exact hb
-    
   · rw [(Ne.symm h).nhds_within_compl_singleton] at hb
     exact hb.filter_mono nhds_within_le_nhds
-    
 #align is_open_set_of_eventually_nhds_within is_open_set_of_eventually_nhds_within
 
 protected theorem Set.Finite.isClosed [T1Space α] {s : Set α} (hs : Set.Finite s) : IsClosed s := by
@@ -410,7 +405,8 @@ variable (α)
 /-- In a `t1_space`, relatively compact sets form a bornology. Its cobounded filter is
 `filter.coclosed_compact`. See also `bornology.in_compact` the bornology of sets contained
 in a compact set. -/
-def Bornology.relativelyCompact [T1Space α] : Bornology α where
+def Bornology.relativelyCompact [T1Space α] :
+    Bornology α where 
   cobounded := Filter.coclosedCompact α
   le_cofinite := Filter.coclosed_compact_le_cofinite
 #align bornology.relatively_compact Bornology.relativelyCompact
@@ -425,10 +421,8 @@ theorem Bornology.relativelyCompact.is_bounded_iff [T1Space α] {s : Set α} :
   · rintro ⟨t, ht₁, ht₂, hst⟩
     rw [compl_subset_compl] at hst
     exact is_compact_of_is_closed_subset ht₂ isClosedClosure (closure_minimal hst ht₁)
-    
   · intro h
     exact ⟨closure s, isClosedClosure, h, compl_subset_compl.mpr subset_closure⟩
-    
 #align bornology.relatively_compact.is_bounded_iff Bornology.relativelyCompact.is_bounded_iff
 
 protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : Set α) :=
@@ -581,103 +575,91 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "↔" (num "3"))
            ";"
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["[" [(Tactic.simpLemma [] [] `is_open_compl_iff)] "]"]
-               [])
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["[" [(Tactic.simpLemma [] [] `is_open_compl_iff)] "]"]
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "3"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.refine' "refine'" (Term.app `forall_swap.trans [(Term.hole "_")])) [])
-             (group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [] `is_open_iff_mem_nhds)
-                 ","
-                 (Tactic.simpLemma [] [] `mem_compl_iff)
-                 ","
-                 (Tactic.simpLemma [] [] `mem_singleton_iff)]
-                "]"]
-               [])
+            [(Tactic.refine' "refine'" (Term.app `forall_swap.trans [(Term.hole "_")]))
+             []
+             (Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `is_open_iff_mem_nhds)
+                ","
+                (Tactic.simpLemma [] [] `mem_compl_iff)
+                ","
+                (Tactic.simpLemma [] [] `mem_singleton_iff)]
+               "]"]
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "6"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma
-                  []
-                  [(patternIgnore (token.«← » "←"))]
-                  `subset_compl_singleton_iff)
-                 ","
-                 (Tactic.simpLemma [] [] `exists_mem_subset_iff)]
-                "]"]
-               [])
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `subset_compl_singleton_iff)
+                ","
+                (Tactic.simpLemma [] [] `exists_mem_subset_iff)]
+               "]"]
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "7"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma
-                  []
-                  []
-                  (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `mem_iff))
-                 ","
-                 (Tactic.simpLemma [] [] `subset_compl_singleton_iff)
-                 ","
-                 (Tactic.simpLemma [] [] `exists_prop)
-                 ","
-                 (Tactic.simpLemma [] [] `and_assoc)
-                 ","
-                 (Tactic.simpLemma [] [] `and_left_comm)]
-                "]"]
-               [])
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma
+                 []
+                 []
+                 (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `mem_iff))
+                ","
+                (Tactic.simpLemma [] [] `subset_compl_singleton_iff)
+                ","
+                (Tactic.simpLemma [] [] `exists_prop)
+                ","
+                (Tactic.simpLemma [] [] `and_assoc)
+                ","
+                (Tactic.simpLemma [] [] `and_left_comm)]
+               "]"]
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "8"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `principal_singleton)
-                 ","
-                 (Tactic.simpLemma [] [] `disjoint_principal_right)]
-                "]"]
-               [])
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `principal_singleton)
+                ","
+                (Tactic.simpLemma [] [] `disjoint_principal_right)]
+               "]"]
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "8") "↔" (num "9"))
@@ -702,55 +684,51 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [] `continuous_def)
-                 ","
-                 (Tactic.simpLemma [] [] `CofiniteTopology.is_open_iff')]
-                "]"]
-               [])
-              [])
-             (group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `H))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
-                (Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.paren
-                  "("
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed
-                    [(Std.Tactic.RCases.rcasesPat.one `rfl)
-                     "|"
-                     (Std.Tactic.RCases.rcasesPat.one `hs)])
-                   [])
-                  ")"))]
-               [])
-              [])
-             (group
-              (Std.Tactic.exacts
-               "exacts"
-               "["
-               [`is_open_empty
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `continuous_def)
                 ","
-                (Term.subst
-                 (Term.app `compl_compl [`s])
-                 "▸"
-                 [(Term.proj
-                   (Term.app
-                    (Term.explicit "@" `Set.Finite.isClosed)
-                    [(Term.hole "_") (Term.hole "_") `H (Term.hole "_") `hs])
-                   "."
-                   `is_open_compl)])]
-               "]")
-              [])])
+                (Tactic.simpLemma [] [] `CofiniteTopology.is_open_iff')]
+               "]"]
+              [])
+             []
+             (Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `H))
+               (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
+               (Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.paren
+                 "("
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                    "|"
+                    (Std.Tactic.RCases.rcasesPat.one `hs)])
+                  [])
+                 ")"))]
+              [])
+             []
+             (Std.Tactic.exacts
+              "exacts"
+              "["
+              [`is_open_empty
+               ","
+               (Term.subst
+                (Term.app `compl_compl [`s])
+                "▸"
+                [(Term.proj
+                  (Term.app
+                   (Term.explicit "@" `Set.Finite.isClosed)
+                   [(Term.hole "_") (Term.hole "_") `H (Term.hole "_") `hs])
+                  "."
+                  `is_open_compl)])]
+              "]")])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
            []
@@ -774,29 +752,27 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "↔" (num "10"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma
-                  []
-                  [(patternIgnore (token.«← » "←"))]
-                  `closure_subset_iff_is_closed)
-                 ","
-                 (Tactic.simpLemma [] [] `specializes_iff_mem_closure)
-                 ","
-                 (Tactic.simpLemma [] [] `subset_def)
-                 ","
-                 (Tactic.simpLemma [] [] `mem_singleton_iff)
-                 ","
-                 (Tactic.simpLemma [] [] `eq_comm)]
-                "]"]
-               [])
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma
+                 []
+                 [(patternIgnore (token.«← » "←"))]
+                 `closure_subset_iff_is_closed)
+                ","
+                (Tactic.simpLemma [] [] `specializes_iff_mem_closure)
+                ","
+                (Tactic.simpLemma [] [] `subset_def)
+                ","
+                (Tactic.simpLemma [] [] `mem_singleton_iff)
+                ","
+                (Tactic.simpLemma [] [] `eq_comm)]
+               "]"]
               [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
@@ -823,100 +799,91 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "↔" (num "3"))
           ";"
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["[" [(Tactic.simpLemma [] [] `is_open_compl_iff)] "]"]
-              [])
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["[" [(Tactic.simpLemma [] [] `is_open_compl_iff)] "]"]
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "3"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.refine' "refine'" (Term.app `forall_swap.trans [(Term.hole "_")])) [])
-            (group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma [] [] `is_open_iff_mem_nhds)
-                ","
-                (Tactic.simpLemma [] [] `mem_compl_iff)
-                ","
-                (Tactic.simpLemma [] [] `mem_singleton_iff)]
-               "]"]
-              [])
+           [(Tactic.refine' "refine'" (Term.app `forall_swap.trans [(Term.hole "_")]))
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `is_open_iff_mem_nhds)
+               ","
+               (Tactic.simpLemma [] [] `mem_compl_iff)
+               ","
+               (Tactic.simpLemma [] [] `mem_singleton_iff)]
+              "]"]
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "6"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `subset_compl_singleton_iff)
-                ","
-                (Tactic.simpLemma [] [] `exists_mem_subset_iff)]
-               "]"]
-              [])
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `subset_compl_singleton_iff)
+               ","
+               (Tactic.simpLemma [] [] `exists_mem_subset_iff)]
+              "]"]
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "7"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma
-                 []
-                 []
-                 (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `mem_iff))
-                ","
-                (Tactic.simpLemma [] [] `subset_compl_singleton_iff)
-                ","
-                (Tactic.simpLemma [] [] `exists_prop)
-                ","
-                (Tactic.simpLemma [] [] `and_assoc)
-                ","
-                (Tactic.simpLemma [] [] `and_left_comm)]
-               "]"]
-              [])
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma
+                []
+                []
+                (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `mem_iff))
+               ","
+               (Tactic.simpLemma [] [] `subset_compl_singleton_iff)
+               ","
+               (Tactic.simpLemma [] [] `exists_prop)
+               ","
+               (Tactic.simpLemma [] [] `and_assoc)
+               ","
+               (Tactic.simpLemma [] [] `and_left_comm)]
+              "]"]
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "↔" (num "8"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `principal_singleton)
-                ","
-                (Tactic.simpLemma [] [] `disjoint_principal_right)]
-               "]"]
-              [])
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `principal_singleton)
+               ","
+               (Tactic.simpLemma [] [] `disjoint_principal_right)]
+              "]"]
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "8") "↔" (num "9"))
@@ -941,55 +908,51 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma [] [] `continuous_def)
-                ","
-                (Tactic.simpLemma [] [] `CofiniteTopology.is_open_iff')]
-               "]"]
-              [])
-             [])
-            (group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `H))
-               (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
-               (Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.paren
-                 "("
-                 (Std.Tactic.RCases.rcasesPatLo
-                  (Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.one `rfl)
-                    "|"
-                    (Std.Tactic.RCases.rcasesPat.one `hs)])
-                  [])
-                 ")"))]
-              [])
-             [])
-            (group
-             (Std.Tactic.exacts
-              "exacts"
-              "["
-              [`is_open_empty
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `continuous_def)
                ","
-               (Term.subst
-                (Term.app `compl_compl [`s])
-                "▸"
-                [(Term.proj
-                  (Term.app
-                   (Term.explicit "@" `Set.Finite.isClosed)
-                   [(Term.hole "_") (Term.hole "_") `H (Term.hole "_") `hs])
-                  "."
-                  `is_open_compl)])]
-              "]")
-             [])])
+               (Tactic.simpLemma [] [] `CofiniteTopology.is_open_iff')]
+              "]"]
+             [])
+            []
+            (Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `H))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `s))
+              (Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.paren
+                "("
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed
+                  [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                   "|"
+                   (Std.Tactic.RCases.rcasesPat.one `hs)])
+                 [])
+                ")"))]
+             [])
+            []
+            (Std.Tactic.exacts
+             "exacts"
+             "["
+             [`is_open_empty
+              ","
+              (Term.subst
+               (Term.app `compl_compl [`s])
+               "▸"
+               [(Term.proj
+                 (Term.app
+                  (Term.explicit "@" `Set.Finite.isClosed)
+                  [(Term.hole "_") (Term.hole "_") `H (Term.hole "_") `hs])
+                 "."
+                 `is_open_compl)])]
+             "]")])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
           []
@@ -1013,29 +976,27 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "↔" (num "10"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["["
-               [(Tactic.simpLemma
-                 []
-                 [(patternIgnore (token.«← » "←"))]
-                 `closure_subset_iff_is_closed)
-                ","
-                (Tactic.simpLemma [] [] `specializes_iff_mem_closure)
-                ","
-                (Tactic.simpLemma [] [] `subset_def)
-                ","
-                (Tactic.simpLemma [] [] `mem_singleton_iff)
-                ","
-                (Tactic.simpLemma [] [] `eq_comm)]
-               "]"]
-              [])
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma
+                []
+                [(patternIgnore (token.«← » "←"))]
+                `closure_subset_iff_is_closed)
+               ","
+               (Tactic.simpLemma [] [] `specializes_iff_mem_closure)
+               ","
+               (Tactic.simpLemma [] [] `subset_def)
+               ","
+               (Tactic.simpLemma [] [] `mem_singleton_iff)
+               ","
+               (Tactic.simpLemma [] [] `eq_comm)]
+              "]"]
              [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
@@ -1044,26 +1005,24 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.simp
-          "simp"
-          []
-          []
-          ["only"]
-          ["["
-           [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `closure_subset_iff_is_closed)
-            ","
-            (Tactic.simpLemma [] [] `specializes_iff_mem_closure)
-            ","
-            (Tactic.simpLemma [] [] `subset_def)
-            ","
-            (Tactic.simpLemma [] [] `mem_singleton_iff)
-            ","
-            (Tactic.simpLemma [] [] `eq_comm)]
-           "]"]
-          [])
+       [(Tactic.simp
+         "simp"
+         []
+         []
+         ["only"]
+         ["["
+          [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `closure_subset_iff_is_closed)
+           ","
+           (Tactic.simpLemma [] [] `specializes_iff_mem_closure)
+           ","
+           (Tactic.simpLemma [] [] `subset_def)
+           ","
+           (Tactic.simpLemma [] [] `mem_singleton_iff)
+           ","
+           (Tactic.simpLemma [] [] `eq_comm)]
+          "]"]
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp
@@ -1303,19 +1262,16 @@ theorem continuous_on_update_iff [T1Space α] [DecidableEq α] [TopologicalSpace
     {s : Set α} {x : α} {y : β} :
     ContinuousOn (Function.update f x y) s ↔
       ContinuousOn f (s \ {x}) ∧ (x ∈ s → Tendsto f (𝓝[s \ {x}] x) (𝓝 y)) :=
-  by
+  by 
   rw [ContinuousOn, ← and_forall_ne x, and_comm']
   refine' and_congr ⟨fun H z hz => _, fun H z hzx hzs => _⟩ (forall_congr' fun hxs => _)
   · specialize H z hz.2 hz.1
     rw [continuous_within_at_update_of_ne hz.2] at H
     exact H.mono (diff_subset _ _)
-    
   · rw [continuous_within_at_update_of_ne hzx]
     refine' (H z ⟨hzs, hzx⟩).mono_of_mem (inter_mem_nhds_within _ _)
     exact is_open_ne.mem_nhds hzx
-    
   · exact continuous_within_at_update_same
-    
 #align continuous_on_update_iff continuous_on_update_iff
 
 theorem t1SpaceOfInjectiveOfContinuous [TopologicalSpace β] {f : α → β} (hf : Function.Injective f)
@@ -1389,7 +1345,6 @@ theorem insert_mem_nhds_within_of_subset_insert [T1Space α] {x y : α} {s t : S
     (hu : t ⊆ insert y s) : insert x s ∈ 𝓝[t] x := by
   rcases eq_or_ne x y with (rfl | h)
   · exact mem_of_superset self_mem_nhds_within hu
-    
   refine' nhds_within_mono x hu _
   rw [nhds_within_insert_of_ne h]
   exact mem_of_superset self_mem_nhds_within (subset_insert x s)
@@ -1450,10 +1405,8 @@ theorem Dense.diff_finset [T1Space α] [∀ x : α, NeBot (𝓝[≠] x)] {s : Se
     (t : Finset α) : Dense (s \ t) := by
   induction' t using Finset.induction_on with x s hxs ih hd
   · simpa using hs
-    
   · rw [Finset.coe_insert, ← union_singleton, ← diff_diff]
     exact ih.diff_singleton _
-    
 #align dense.diff_finset Dense.diff_finset
 
 /-- Removing a finite set from a dense set in a space without isolated points, one still
@@ -1508,7 +1461,7 @@ theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [h
 #align infinite_of_mem_nhds infinite_of_mem_nhds
 
 theorem discreteOfT1OfFinite {X : Type _} [TopologicalSpace X] [T1Space X] [Finite X] :
-    DiscreteTopology X := by
+    DiscreteTopology X := by 
   apply singletons_open_iff_discrete.mp
   intro x
   rw [← is_closed_compl_iff]
@@ -1516,7 +1469,7 @@ theorem discreteOfT1OfFinite {X : Type _} [TopologicalSpace X] [T1Space X] [Fini
 #align discrete_of_t1_of_finite discreteOfT1OfFinite
 
 theorem PreconnectedSpace.trivial_of_discrete [PreconnectedSpace α] [DiscreteTopology α] :
-    Subsingleton α := by
+    Subsingleton α := by 
   rw [← not_nontrivial_iff_subsingleton]
   rintro ⟨x, y, hxy⟩
   rw [Ne.def, ← mem_singleton_iff, (is_clopen_discrete _).eq_univ <| singleton_nonempty y] at hxy
@@ -1605,10 +1558,7 @@ theorem induced_bot {X Y : Type _} {f : X → Y} (hf : Function.Injective f) :
 is the discrete topology on `X`. -/
 theorem discreteTopologyInduced {X Y : Type _} [tY : TopologicalSpace Y] [DiscreteTopology Y]
     {f : X → Y} (hf : Function.Injective f) : @DiscreteTopology X (TopologicalSpace.induced f tY) :=
-  by
-  apply DiscreteTopology.mk <;>
-    · rw [DiscreteTopology.eq_bot Y, induced_bot hf]
-      
+  by apply DiscreteTopology.mk <;> · rw [DiscreteTopology.eq_bot Y, induced_bot hf]
 #align discrete_topology_induced discreteTopologyInduced
 
 theorem Embedding.discreteTopology {X Y : Type _} [TopologicalSpace X] [tY : TopologicalSpace Y]
@@ -1729,11 +1679,9 @@ theorem finset_disjoint_finset_opens_of_t2 [T2Space α] :
       (fun a b ab => _) _
   · obtain ⟨U, V, oU, oV, aU, bV, UV⟩ := t2_separation (Finset.disjoint_singleton.1 ab)
     refine' ⟨U, V, oU, oV, _, _, UV⟩ <;> exact singleton_subset_set_iff.mpr ‹_›
-    
   · intro a b c ac bc d
     apply_mod_cast union_left (ac (disjoint_of_subset_left (a.subset_union_left b) d)) (bc _)
     exact disjoint_of_subset_left (a.subset_union_right b) d
-    
 #align finset_disjoint_finset_opens_of_t2 finset_disjoint_finset_opens_of_t2
 
 theorem point_disjoint_finset_opens_of_t2 [T2Space α] {x : α} {s : Finset α} (h : x ∉ s) :
@@ -1926,23 +1874,21 @@ theorem Embedding.t2Space [TopologicalSpace β] [T2Space β] {f : α → β} (hf
 #align embedding.t2_space Embedding.t2Space
 
 instance {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [t₂ : TopologicalSpace β]
-    [T2Space β] : T2Space (Sum α β) := by
+    [T2Space β] : T2Space (Sum α β) := by 
   constructor
   rintro (x | x) (y | y) h
   · replace h : x ≠ y := fun c => (c.subst h) rfl
     exact separated_by_open_embedding open_embedding_inl h
-    
-  · exact
+  ·
+    exact
       ⟨_, _, is_open_range_inl, is_open_range_inr, ⟨x, rfl⟩, ⟨y, rfl⟩,
         is_compl_range_inl_range_inr.disjoint⟩
-    
-  · exact
+  ·
+    exact
       ⟨_, _, is_open_range_inr, is_open_range_inl, ⟨x, rfl⟩, ⟨y, rfl⟩,
         is_compl_range_inl_range_inr.disjoint.symm⟩
-    
   · replace h : x ≠ y := fun c => (c.subst h) rfl
     exact separated_by_open_embedding open_embedding_inr h
-    
 
 instance PiCat.t2Space {α : Type _} {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)]
     [∀ a, T2Space (β a)] : T2Space (∀ a, β a) :=
@@ -1958,11 +1904,10 @@ instance Sigma.t2Space {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpa
   rcases em (i = j) with (rfl | h)
   · replace neq : x ≠ y := fun c => (c.subst neq) rfl
     exact separated_by_open_embedding open_embedding_sigma_mk neq
-    
-  · exact
+  ·
+    exact
       ⟨_, _, is_open_range_sigma_mk, is_open_range_sigma_mk, ⟨x, rfl⟩, ⟨y, rfl⟩,
         set.disjoint_left.mpr <| by tidy⟩
-    
 #align sigma.t2_space Sigma.t2Space
 
 variable {γ : Type _} [TopologicalSpace β] [TopologicalSpace γ]
@@ -2010,7 +1955,7 @@ theorem eq_on_closure₂ [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ
 `f x = g x` for all `x ∈ t`. See also `set.eq_on.closure`. -/
 theorem Set.EqOn.of_subset_closure [T2Space α] {s t : Set β} {f g : β → α} (h : EqOn f g s)
     (hf : ContinuousOn f t) (hg : ContinuousOn g t) (hst : s ⊆ t) (hts : t ⊆ closure s) :
-    EqOn f g t := by
+    EqOn f g t := by 
   intro x hx
   have : (𝓝[s] x).ne_bot := mem_closure_iff_cluster_pt.mp (hts hx)
   exact
@@ -2125,36 +2070,29 @@ open Finset Function
 /-- For every finite open cover `Uᵢ` of a compact set, there exists a compact cover `Kᵢ ⊆ Uᵢ`. -/
 theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact s) {ι} (t : Finset ι)
     (U : ι → Set α) (hU : ∀ i ∈ t, IsOpen (U i)) (hsC : s ⊆ ⋃ i ∈ t, U i) :
-    ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃ i ∈ t, K i := by classical
-  induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
-  · refine' ⟨fun _ => ∅, fun i => is_compact_empty, fun i => empty_subset _, _⟩
-    simpa only [subset_empty_iff, Union_false, Union_empty] using hsC
-    
-  simp only [Finset.set_bUnion_insert] at hsC
-  simp only [Finset.mem_insert] at hU
-  have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
-  rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (is_open_bUnion hU') hsC with
-    ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
-  rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
-  refine' ⟨update K x K₁, _, _, _⟩
-  · intro i
-    by_cases hi : i = x
-    · simp only [update_same, hi, h1K₁]
-      
-    · rw [← Ne.def] at hi
-      simp only [update_noteq hi, h1K]
-      
-    
-  · intro i
-    by_cases hi : i = x
-    · simp only [update_same, hi, h2K₁]
-      
-    · rw [← Ne.def] at hi
-      simp only [update_noteq hi, h2K]
-      
-    
-  · simp only [set_bUnion_insert_update _ hx, hK, h3K]
-    
+    ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃ i ∈ t, K i := by
+  classical 
+    induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
+    · refine' ⟨fun _ => ∅, fun i => is_compact_empty, fun i => empty_subset _, _⟩
+      simpa only [subset_empty_iff, Union_false, Union_empty] using hsC
+    simp only [Finset.set_bUnion_insert] at hsC
+    simp only [Finset.mem_insert] at hU
+    have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
+    rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (is_open_bUnion hU') hsC with
+      ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
+    rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
+    refine' ⟨update K x K₁, _, _, _⟩
+    · intro i
+      by_cases hi : i = x
+      · simp only [update_same, hi, h1K₁]
+      · rw [← Ne.def] at hi
+        simp only [update_noteq hi, h1K]
+    · intro i
+      by_cases hi : i = x
+      · simp only [update_same, hi, h2K₁]
+      · rw [← Ne.def] at hi
+        simp only [update_noteq hi, h2K]
+    · simp only [set_bUnion_insert_update _ hx, hK, h3K]
 #align is_compact.finite_compact_cover IsCompact.finite_compact_cover
 
 end
@@ -2344,329 +2282,9 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule [] `regular_space_iff)
-                 ","
-                 (Tactic.rwRule
-                  []
-                  (Term.proj
-                   (Term.app
-                    (Term.explicit "@" `compl_surjective)
-                    [(Term.app `Set [`X]) (Term.hole "_")])
-                   "."
-                   `forall))
-                 ","
-                 (Tactic.rwRule [] `forall_swap)]
-                "]")
-               [])
-              [])
-             (group
-              (Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [] `is_closed_compl_iff)
-                 ","
-                 (Tactic.simpLemma [] [] `mem_compl_iff)
-                 ","
-                 (Tactic.simpLemma [] [] `not_not)
-                 ","
-                 (Tactic.simpLemma
-                  []
-                  []
-                  (Term.app
-                   (Term.explicit "@" `and_comm')
-                   [(«term_∈_» (Term.hole "_") "∈" (Term.hole "_"))]))
-                 ","
-                 (Tactic.simpLemma
-                  []
-                  []
-                  (Term.app
-                   (Term.proj
-                    (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `lift'_closure)
-                    "."
-                    `le_basis_iff)
-                   [(Term.app `nhds_basis_opens [(Term.hole "_")])]))
-                 ","
-                 (Tactic.simpLemma [] [] `and_imp)
-                 ","
-                 (Tactic.simpLemma
-                  []
-                  []
-                  (Term.proj
-                   (Term.app `nhds_basis_opens [(Term.hole "_")])
-                   "."
-                   `disjoint_iff_right))
-                 ","
-                 (Tactic.simpLemma [] [] `exists_prop)
-                 ","
-                 (Tactic.simpLemma
-                  []
-                  [(patternIgnore (token.«← » "←"))]
-                  `subset_interior_iff_mem_nhds_set)
-                 ","
-                 (Tactic.simpLemma [] [] `interior_compl)
-                 ","
-                 (Tactic.simpLemma [] [] `compl_subset_compl)]
-                "]"]
-               [])
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
-           ";"
-           (Tactic.exact
-            "exact"
-            (Term.fun
-             "fun"
-             (Term.basicFun
-              [`h `a]
-              []
-              "=>"
-              (Term.app
-               (Term.proj (Term.app `h [`a]) "." `antisymm)
-               [(Term.proj
-                 (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
-                 "."
-                 `le_lift'_closure)]))))
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "4"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H `a `s `hs]) [])
-             (group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `H)] "]")
-               [(Tactic.location "at" (Tactic.locationHyp [`hs] []))])
-              [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget
-                 []
-                 (Term.app
-                  (Term.proj
-                   (Term.proj
-                    (Term.proj
-                     (Term.proj
-                      (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])
-                      "."
-                      `basis_sets)
-                     "."
-                     `lift'_closure)
-                    "."
-                    `mem_iff)
-                   "."
-                   `mp)
-                  [`hs]))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hUs)])
-                      [])]
-                    "⟩")])
-                 [])])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.anonymousCtor
-                "⟨"
-                [(Term.app `closure [`U])
-                 ","
-                 (Term.app `mem_of_superset [`hU `subset_closure])
-                 ","
-                 `isClosedClosure
-                 ","
-                 `hUs]
-                "⟩"))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H `s `a `ha]) [])
-             (group
-              (Tactic.tacticHave_
-               "have"
-               (Term.haveDecl
-                (Term.haveIdDecl
-                 [`ha' []]
-                 [(Term.typeSpec
-                   ":"
-                   («term_∈_»
-                    (Order.Basic.«term_ᶜ» `s "ᶜ")
-                    "∈"
-                    (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])))]
-                 ":="
-                 (Term.byTactic
-                  "by"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented
-                    [(Std.Tactic.tacticRwa__
-                      "rwa"
-                      (Tactic.rwRuleSeq
-                       "["
-                       [(Tactic.rwRule
-                         [(patternIgnore (token.«← » "←"))]
-                         `mem_interior_iff_mem_nhds)
-                        ","
-                        (Tactic.rwRule [] `interior_compl)]
-                       "]")
-                      [])]))))))
-              [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget [] (Term.app `H [(Term.hole "_") (Term.hole "_") `ha']))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hUc)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hUs)])
-                      [])]
-                    "⟩")])
-                 [])])
-              [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.app `disjoint_of_disjoint_of_mem [`disjoint_compl_left (Term.hole "_") `hU]))
-              [])
-             (group
-              (Std.Tactic.tacticRwa__
-               "rwa"
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule
-                  [(patternIgnore (token.«← » "←"))]
-                  `subset_interior_iff_mem_nhds_set)
-                 ","
-                 (Tactic.rwRule [] `hUc.is_open_compl.interior_eq)
-                 ","
-                 (Tactic.rwRule [] `subset_compl_comm)]
-                "]")
-               [])
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.refine'
-               "refine'"
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`H `a `s]
-                 []
-                 "=>"
-                 (Term.anonymousCtor
-                  "⟨"
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`hd `has]
-                     []
-                     "=>"
-                     (Term.app `mem_closure_iff_nhds_ne_bot.mp [`has (Term.hole "_")])))
-                   ","
-                   (Term.app `H [`s `a])]
-                  "⟩"))))
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.proj
-                («term_<|_»
-                 `hd.symm.mono_right
-                 "<|"
-                 (Term.app
-                  (Term.explicit "@" `principal_le_nhds_set)
-                  [(Term.hole "_") (Term.hole "_") `s]))
-                "."
-                `eq_bot))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
-           ";"
-           (Tactic.exact
-            "exact"
-            (Term.fun
-             "fun"
-             (Term.basicFun
-              [`H]
-              []
-              "=>"
-              (Term.anonymousCtor
-               "⟨"
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`s `a `hs `ha]
-                  []
-                  "=>"
-                  («term_<|_»
-                   (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_")]) "." `mpr)
-                   "<|"
-                   (Term.subst `hs.closure_eq.symm "▸" [`ha]))))]
-               "⟩"))))
-           []
-           (Tactic.tfaeFinish "tfae_finish")])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.rwSeq
+            [(Tactic.rwSeq
               "rw"
               []
               (Tactic.rwRuleSeq
@@ -2685,8 +2303,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                 (Tactic.rwRule [] `forall_swap)]
                "]")
               [])
-             [])
-            (group
+             []
              (Tactic.simp
               "simp"
               []
@@ -2734,39 +2351,37 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                 ","
                 (Tactic.simpLemma [] [] `compl_subset_compl)]
                "]"]
-              [])
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
-          ";"
-          (Tactic.exact
-           "exact"
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`h `a]
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
+           ";"
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`h `a]
+              []
+              "=>"
+              (Term.app
+               (Term.proj (Term.app `h [`a]) "." `antisymm)
+               [(Term.proj
+                 (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
+                 "."
+                 `le_lift'_closure)]))))
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "4"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.intro "intro" [`H `a `s `hs])
              []
-             "=>"
-             (Term.app
-              (Term.proj (Term.app `h [`a]) "." `antisymm)
-              [(Term.proj
-                (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
-                "."
-                `le_lift'_closure)]))))
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "4"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H `a `s `hs]) [])
-            (group
              (Tactic.rwSeq
               "rw"
               []
               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `H)] "]")
               [(Tactic.location "at" (Tactic.locationHyp [`hs] []))])
-             [])
-            (group
+             []
              (Std.Tactic.rcases
               "rcases"
               [(Tactic.casesTarget
@@ -2804,8 +2419,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                      [])]
                    "⟩")])
                 [])])
-             [])
-            (group
+             []
              (Tactic.exact
               "exact"
               (Term.anonymousCtor
@@ -2817,15 +2431,14 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                 `isClosedClosure
                 ","
                 `hUs]
-               "⟩"))
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H `s `a `ha]) [])
-            (group
+               "⟩"))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.intro "intro" [`H `s `a `ha])
+             []
              (Tactic.tacticHave_
               "have"
               (Term.haveDecl
@@ -2851,8 +2464,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                        (Tactic.rwRule [] `interior_compl)]
                       "]")
                      [])]))))))
-             [])
-            (group
+             []
              (Std.Tactic.rcases
               "rcases"
               [(Tactic.casesTarget [] (Term.app `H [(Term.hole "_") (Term.hole "_") `ha']))]
@@ -2878,13 +2490,11 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                      [])]
                    "⟩")])
                 [])])
-             [])
-            (group
+             []
              (Tactic.refine'
               "refine'"
               (Term.app `disjoint_of_disjoint_of_mem [`disjoint_compl_left (Term.hole "_") `hU]))
-             [])
-            (group
+             []
              (Std.Tactic.tacticRwa__
               "rwa"
               (Tactic.rwRuleSeq
@@ -2895,15 +2505,13 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                 ","
                 (Tactic.rwRule [] `subset_compl_comm)]
                "]")
-              [])
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.refine'
+              [])])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.refine'
               "refine'"
               (Term.fun
                "fun"
@@ -2923,8 +2531,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                   ","
                   (Term.app `H [`s `a])]
                  "⟩"))))
-             [])
-            (group
+             []
              (Tactic.exact
               "exact"
               (Term.proj
@@ -2935,8 +2542,306 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                  (Term.explicit "@" `principal_le_nhds_set)
                  [(Term.hole "_") (Term.hole "_") `s]))
                "."
-               `eq_bot))
+               `eq_bot))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+           ";"
+           (Tactic.exact
+            "exact"
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`H]
+              []
+              "=>"
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`s `a `hs `ha]
+                  []
+                  "=>"
+                  («term_<|_»
+                   (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_")]) "." `mpr)
+                   "<|"
+                   (Term.subst `hs.closure_eq.symm "▸" [`ha]))))]
+               "⟩"))))
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "5"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `regular_space_iff)
+               ","
+               (Tactic.rwRule
+                []
+                (Term.proj
+                 (Term.app
+                  (Term.explicit "@" `compl_surjective)
+                  [(Term.app `Set [`X]) (Term.hole "_")])
+                 "."
+                 `forall))
+               ","
+               (Tactic.rwRule [] `forall_swap)]
+              "]")
+             [])
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `is_closed_compl_iff)
+               ","
+               (Tactic.simpLemma [] [] `mem_compl_iff)
+               ","
+               (Tactic.simpLemma [] [] `not_not)
+               ","
+               (Tactic.simpLemma
+                []
+                []
+                (Term.app
+                 (Term.explicit "@" `and_comm')
+                 [(«term_∈_» (Term.hole "_") "∈" (Term.hole "_"))]))
+               ","
+               (Tactic.simpLemma
+                []
+                []
+                (Term.app
+                 (Term.proj
+                  (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `lift'_closure)
+                  "."
+                  `le_basis_iff)
+                 [(Term.app `nhds_basis_opens [(Term.hole "_")])]))
+               ","
+               (Tactic.simpLemma [] [] `and_imp)
+               ","
+               (Tactic.simpLemma
+                []
+                []
+                (Term.proj (Term.app `nhds_basis_opens [(Term.hole "_")]) "." `disjoint_iff_right))
+               ","
+               (Tactic.simpLemma [] [] `exists_prop)
+               ","
+               (Tactic.simpLemma
+                []
+                [(patternIgnore (token.«← » "←"))]
+                `subset_interior_iff_mem_nhds_set)
+               ","
+               (Tactic.simpLemma [] [] `interior_compl)
+               ","
+               (Tactic.simpLemma [] [] `compl_subset_compl)]
+              "]"]
              [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
+          ";"
+          (Tactic.exact
+           "exact"
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`h `a]
+             []
+             "=>"
+             (Term.app
+              (Term.proj (Term.app `h [`a]) "." `antisymm)
+              [(Term.proj
+                (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
+                "."
+                `le_lift'_closure)]))))
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "4"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H `a `s `hs])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `H)] "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`hs] []))])
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget
+               []
+               (Term.app
+                (Term.proj
+                 (Term.proj
+                  (Term.proj
+                   (Term.proj
+                    (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])
+                    "."
+                    `basis_sets)
+                   "."
+                   `lift'_closure)
+                  "."
+                  `mem_iff)
+                 "."
+                 `mp)
+                [`hs]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hUs)])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.app `closure [`U])
+               ","
+               (Term.app `mem_of_superset [`hU `subset_closure])
+               ","
+               `isClosedClosure
+               ","
+               `hUs]
+              "⟩"))])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H `s `a `ha])
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               [`ha' []]
+               [(Term.typeSpec
+                 ":"
+                 («term_∈_»
+                  (Order.Basic.«term_ᶜ» `s "ᶜ")
+                  "∈"
+                  (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])))]
+               ":="
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Std.Tactic.tacticRwa__
+                    "rwa"
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_interior_iff_mem_nhds)
+                      ","
+                      (Tactic.rwRule [] `interior_compl)]
+                     "]")
+                    [])]))))))
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget [] (Term.app `H [(Term.hole "_") (Term.hole "_") `ha']))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hUc)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hUs)])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.app `disjoint_of_disjoint_of_mem [`disjoint_compl_left (Term.hole "_") `hU]))
+            []
+            (Std.Tactic.tacticRwa__
+             "rwa"
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `subset_interior_iff_mem_nhds_set)
+               ","
+               (Tactic.rwRule [] `hUc.is_open_compl.interior_eq)
+               ","
+               (Tactic.rwRule [] `subset_compl_comm)]
+              "]")
+             [])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.refine'
+             "refine'"
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`H `a `s]
+               []
+               "=>"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`hd `has]
+                   []
+                   "=>"
+                   (Term.app `mem_closure_iff_nhds_ne_bot.mp [`has (Term.hole "_")])))
+                 ","
+                 (Term.app `H [`s `a])]
+                "⟩"))))
+            []
+            (Tactic.exact
+             "exact"
+             (Term.proj
+              («term_<|_»
+               `hd.symm.mono_right
+               "<|"
+               (Term.app
+                (Term.explicit "@" `principal_le_nhds_set)
+                [(Term.hole "_") (Term.hole "_") `s]))
+              "."
+              `eq_bot))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
           ";"
@@ -3301,7 +3206,7 @@ theorem isClosedSetOfInseparable : IsClosed { p : α × α | Inseparable p.1 p.2
 
 protected theorem Inducing.regularSpace [TopologicalSpace β] {f : β → α} (hf : Inducing f) :
     RegularSpace β :=
-  (RegularSpace.ofBasis fun b => by
+  (RegularSpace.ofBasis fun b => by 
       rw [hf.nhds_eq_comap b]
       exact (closed_nhds_basis _).comap _)
     fun b s hs => hs.2.Preimage hf.Continuous
@@ -3313,7 +3218,7 @@ theorem regularSpaceInduced (f : β → α) : @RegularSpace β (induced f ‹_�
 #align regular_space_induced regularSpaceInduced
 
 theorem regularSpaceInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @RegularSpace X t) :
-    @RegularSpace X (inf T) := by
+    @RegularSpace X (inf T) := by 
   letI := Inf T
   have :
     ∀ a,
@@ -3321,7 +3226,7 @@ theorem regularSpaceInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @Re
         (fun If : ΣI : Set T, I → Set X =>
           If.1.Finite ∧ ∀ i : If.1, If.2 i ∈ @nhds X i a ∧ @IsClosed X i (If.2 i))
         fun If => ⋂ i : If.1, If.snd i :=
-    by
+    by 
     intro a
     rw [nhds_Inf, ← infi_subtype'']
     exact has_basis_infi fun t : T => @closed_nhds_basis X t (h t t.2) a
@@ -3367,9 +3272,7 @@ instance (priority := 100) T3Space.t25Space [T3Space α] : T25Space α := by
     (t0_space_iff_or_not_mem_closure α).mp inferInstance x y hne
   wlog (discharger := tactic.skip) H : x ∉ closure {y} := this using x y, y x
   · rwa [← disjoint_nhds_nhds_set, nhds_set_singleton] at H
-    
   · exact fun h => (this h.symm).symm
-    
 #align t3_space.t2_5_space T3Space.t25Space
 
 protected theorem Embedding.t3Space [TopologicalSpace β] [T3Space β] {f : α → β}
@@ -3395,7 +3298,7 @@ with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -
 theorem disjoint_nested_nhds [T3Space α] {x y : α} (h : x ≠ y) :
     ∃ (U₁ V₁ : _)(_ : U₁ ∈ 𝓝 x)(_ : V₁ ∈ 𝓝 x)(U₂ V₂ : _)(_ : U₂ ∈ 𝓝 y)(_ : V₂ ∈ 𝓝 y),
       IsClosed V₁ ∧ IsClosed V₂ ∧ IsOpen U₁ ∧ IsOpen U₂ ∧ V₁ ⊆ U₁ ∧ V₂ ⊆ U₂ ∧ Disjoint U₁ U₂ :=
-  by
+  by 
   rcases t2_separation h with ⟨U₁, U₂, U₁_op, U₂_op, x_in, y_in, H⟩
   rcases exists_mem_nhds_is_closed_subset (U₁_op.mem_nhds x_in) with ⟨V₁, V₁_in, V₁_closed, h₁⟩
   rcases exists_mem_nhds_is_closed_subset (U₂_op.mem_nhds y_in) with ⟨V₂, V₂_in, V₂_closed, h₂⟩
@@ -3408,7 +3311,9 @@ open SeparationQuotient
 
 /-- The `separation_quotient` of a regular space is a T₃ space. -/
 instance [RegularSpace α] :
-    T3Space (SeparationQuotient α) where regular s :=
+    T3Space
+      (SeparationQuotient
+        α) where regular s :=
     surjective_mk.forall.2 fun a hs ha => by
       rw [← disjoint_comap_iff surjective_mk, comap_mk_nhds_mk, comap_mk_nhds_set]
       exact RegularSpace.regular (hs.preimage continuous_mk) ha
@@ -3457,7 +3362,7 @@ theorem normalOfCompactT2 [CompactSpace α] [T2Space α] : NormalSpace α :=
 protected theorem ClosedEmbedding.normalSpace [TopologicalSpace β] [NormalSpace β] {f : α → β}
     (hf : ClosedEmbedding f) : NormalSpace α :=
   { toT1Space := hf.toEmbedding.T1Space,
-    normal := by
+    normal := by 
       intro s t hs ht hst
       have H : SeparatedNhds (f '' s) (f '' t) :=
         NormalSpace.normal (f '' s) (f '' t) (hf.is_closed_map s hs) (hf.is_closed_map t ht)
@@ -3476,7 +3381,8 @@ One can prove this using a homeomorphism between `α` and `separation_quotient �
 alternative proof that works without assuming that `α` is a T₁ space. -/
 instance [NormalSpace α] :
     NormalSpace
-      (SeparationQuotient α) where normal s t hs ht hd :=
+      (SeparationQuotient
+        α) where normal s t hs ht hd :=
     separated_nhds_iff_disjoint.2 <| by
       rw [← disjoint_comap_iff surjective_mk, comap_mk_nhds_set, comap_mk_nhds_set]
       exact
@@ -3499,7 +3405,7 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
             (s ⊆ ⋃ u ∈ U, ↑u) ∧
               (∀ u ∈ U, Disjoint (closure ↑u) t) ∧
                 ∀ n : ℕ, IsClosed (⋃ (u ∈ U) (h : Encodable.encode u ≤ n), closure (u : Set α)) :=
-    by
+    by 
     intro s t hc hd
     rw [disjoint_left] at hd
     have : ∀ x ∈ s, ∃ U ∈ countable_basis α, x ∈ U ∧ Disjoint (closure U) t := by
@@ -3513,14 +3419,12 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
     refine' ⟨range V, _, forall_range_iff.2 <| Subtype.forall.2 hd, fun n => _⟩
     · rw [bUnion_range]
       exact fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu x hx⟩
-      
     · simp only [← supr_eq_Union, supr_and']
       exact
         isClosedBUnion
           (((finite_le_nat n).preimage_embedding (Encodable.encode' _)).Subset <|
             inter_subset_right _ _)
           fun u hu => isClosedClosure
-      
   refine' ⟨fun s t hs ht hd => _⟩
   rcases key ht hd with ⟨U, hsU, hUd, hUc⟩
   rcases key hs hd.symm with ⟨V, htV, hVd, hVc⟩
@@ -3535,18 +3439,15 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
     simp only [mem_Union]
     rintro ⟨v, hvV, -, hxv⟩
     exact (hVd v hvV).le_bot ⟨hxv, hx⟩
-    
   · rcases mem_Union₂.1 (htV hx) with ⟨v, hvV, hxv⟩
     refine' mem_bUnion hvV ⟨hxv, _⟩
     simp only [mem_Union]
     rintro ⟨u, huU, -, hxu⟩
     exact (hUd u huU).le_bot ⟨hxu, hx⟩
-    
   · simp only [disjoint_left, mem_Union, mem_diff, not_exists, not_and, not_forall, not_not]
     rintro a ⟨u, huU, hau, haV⟩ v hvV hav
     cases' le_total (Encodable.encode u) (Encodable.encode v) with hle hle
     exacts[⟨u, huU, hle, subset_closure hau⟩, (haV _ hvV hle <| subset_closure hav).elim]
-    
 #align normal_space_of_t3_second_countable normalSpaceOfT3SecondCountable
 
 end Normality
@@ -3565,17 +3466,17 @@ class T5Space (α : Type u) [TopologicalSpace α] extends T1Space α : Prop wher
 export T5Space (completely_normal)
 
 theorem Embedding.t5Space [TopologicalSpace β] [T5Space β] {e : α → β} (he : Embedding e) :
-    T5Space α := by
+    T5Space α := by 
   haveI := he.t1_space
   refine' ⟨fun s t hd₁ hd₂ => _⟩
   simp only [he.to_inducing.nhds_set_eq_comap]
   refine' disjoint_comap (completely_normal _ _)
-  · rwa [← subset_compl_iff_disjoint_left, image_subset_iff, preimage_compl, ←
+  ·
+    rwa [← subset_compl_iff_disjoint_left, image_subset_iff, preimage_compl, ←
       he.closure_eq_preimage_closure_image, subset_compl_iff_disjoint_left]
-    
-  · rwa [← subset_compl_iff_disjoint_right, image_subset_iff, preimage_compl, ←
+  ·
+    rwa [← subset_compl_iff_disjoint_right, image_subset_iff, preimage_compl, ←
       he.closure_eq_preimage_closure_image, subset_compl_iff_disjoint_right]
-    
 #align embedding.t5_space Embedding.t5Space
 
 /-- A subspace of a `T₅` space is a `T₅` space. -/
@@ -3599,7 +3500,9 @@ class for assumption and for conclusion.
 One can prove this using a homeomorphism between `α` and `separation_quotient α`. We give an
 alternative proof that works without assuming that `α` is a T₁ space. -/
 instance [T5Space α] :
-    T5Space (SeparationQuotient α) where completely_normal s t hd₁ hd₂ := by
+    T5Space
+      (SeparationQuotient
+        α) where completely_normal s t hd₁ hd₂ := by
     rw [← disjoint_comap_iff surjective_mk, comap_mk_nhds_set, comap_mk_nhds_set]
     apply T5Space.completely_normal <;> rw [← preimage_mk_closure]
     exacts[hd₁.preimage mk, hd₂.preimage mk]
@@ -3643,8 +3546,6 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
         apply
           Inter_subset (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => ↑Z)
             ⟨Z ∩ u, H1, mem_inter H.2.1 h⟩
-        
-      
     -- If x ∉ u, we get x ∈ v since x ∈ u ∪ v. The rest is then like the x ∈ u case.
     have h1 : x ∈ v := by
       cases'
@@ -3654,9 +3555,7 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
         h1 h1
       · exfalso
         exact h h1
-        
       · exact h1
-        
     right
     suffices (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, ↑Z) ⊆ v by
       replace this : (⋂ Z : { Z // IsClopen Z ∧ x ∈ Z }, ↑Z) ≤ v := this
@@ -3665,8 +3564,6 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
       apply
         Inter_subset (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => ↑Z)
           ⟨Z ∩ v, H2, mem_inter H.2.1 h1⟩
-      
-    
   -- Now we find the required Z. We utilize the fact that X \ u ∪ v will be compact,
   -- so there must be some finite intersection of clopen neighbourhoods of X disjoint to it,
   -- but a finite intersection of clopen sets is clopen so we let this be our Z.
@@ -3677,11 +3574,8 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
   cases' H1 (disjoint_compl_left_iff_subset.2 <| hab.trans <| union_subset_union hau hbv) with Zi H2
   refine' ⟨⋂ U ∈ Zi, Subtype.val U, _, _, _⟩
   · exact is_clopen_bInter_finset fun Z hZ => Z.2.1
-    
   · exact mem_Inter₂.2 fun Z hZ => Z.2.2
-    
   · rwa [← disjoint_compl_left_iff_subset, disjoint_iff_inter_eq_empty, ← not_nonempty_iff_eq_empty]
-    
 #align connected_component_eq_Inter_clopen connected_component_eq_Inter_clopen
 
 section Profinite
@@ -3716,14 +3610,13 @@ theorem compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace α ↔ Totall
     exact
       hyp (wᶜ) w hw.2.is_open_compl hw.1 hx hy (@is_compl_compl _ w _).symm.Codisjoint.top_le
         disjoint_compl_left
-    
   apply TotallySeparatedSpace.totally_disconnected_space
 #align compact_t2_tot_disc_iff_tot_sep compact_t2_tot_disc_iff_tot_sep
 
 variable [TotallyDisconnectedSpace α]
 
 theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ s ∧ IsClopen s) id :=
-  ⟨fun U => by
+  ⟨fun U => by 
     constructor
     · have : connectedComponent x = {x} :=
         totally_disconnected_space_iff_connected_component_singleton.mp ‹_› x
@@ -3732,7 +3625,6 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
       let N := { Z // IsClopen Z ∧ x ∈ Z }
       rsuffices ⟨⟨s, hs, hs'⟩, hs''⟩ : ∃ Z : N, Z.val ⊆ U
       · exact ⟨s, ⟨hs', hs⟩, hs''⟩
-        
       haveI : Nonempty N := ⟨⟨univ, is_clopen_univ, mem_univ x⟩⟩
       have hNcl : ∀ Z : N, IsClosed Z.val := fun Z => Z.property.1.2
       have hdir : Directed Superset fun Z : N => Z.val := by
@@ -3743,11 +3635,9 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
         erw [this, mem_singleton_iff] at y_in
         rwa [y_in]
       exact exists_subset_nhds_of_compact_space hdir hNcl h_nhd
-      
     · rintro ⟨V, ⟨hxV, V_op, -⟩, hUV : V ⊆ U⟩
       rw [mem_nhds_iff]
-      exact ⟨V, hUV, V_op, hxV⟩
-      ⟩
+      exact ⟨V, hUV, V_op, hxV⟩⟩
 #align nhds_basis_clopen nhds_basis_clopen
 
 theorem is_topological_basis_clopen : IsTopologicalBasis { s : Set α | IsClopen s } := by
@@ -3797,7 +3687,6 @@ theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
           apply Set.inter_eq_self_of_subset_left interior_subset
         rw [this]
         apply is_open_interior
-        
     have f2 : IsOpen v := clopen_in_s.1.Preimage continuous_subtype_coe
     have f3 : (coe : s → H) '' V = (coe : u → H) '' v := by
       rw [this, image_comp coe coe, Subtype.image_preimage_coe, inter_eq_self_of_subset_left V_sub]
@@ -3806,7 +3695,6 @@ theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
   refine' ⟨coe '' V, V_clopen, by simp [Vx, h xt], _⟩
   trans s
   · simp
-    
   assumption
 #align loc_compact_Haus_tot_disc_of_zero_dim loc_compact_Haus_tot_disc_of_zero_dim
 
@@ -3817,14 +3705,14 @@ theorem loc_compact_t2_tot_disc_iff_tot_sep :
   constructor
   · intro h
     exact totally_separated_space_of_t1_of_basis_clopen loc_compact_Haus_tot_disc_of_zero_dim
-    
   apply TotallySeparatedSpace.totally_disconnected_space
 #align loc_compact_t2_tot_disc_iff_tot_sep loc_compact_t2_tot_disc_iff_tot_sep
 
 end LocallyCompact
 
 /-- `connected_components α` is Hausdorff when `α` is Hausdorff and compact -/
-instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (ConnectedComponents α) := by
+instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (ConnectedComponents α) :=
+  by
   -- Proof follows that of: https://stacks.math.columbia.edu/tag/0900
   -- Fix 2 distinct connected components, with points a and b
   refine' ⟨connected_components.surjective_coe.forall₂.2 fun a b ne => _⟩
@@ -3840,7 +3728,6 @@ instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (Connec
     cases' is_closed_connected_component.is_compact.elim_finite_subfamily_closed _ _ h with fin_a ha
     swap
     · exact fun Z => Z.2.1.2
-      
     -- This clopen and its complement will separate the connected components of `a` and `b`
     set U : Set α := ⋂ (i : { Z // IsClopen Z ∧ b ∈ Z }) (H : i ∈ fin_a), i
     have hU : IsClopen U := is_clopen_bInter_finset fun i j => i.2.1

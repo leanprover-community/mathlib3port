@@ -82,7 +82,7 @@ theorem eps_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε :=
 theorem hundred_div_ε_pow_five_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
     (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 100 / ε ^ 5 ≤ m :=
   (div_le_of_nonneg_of_le_mul (eps_pow_five_pos hPε).le (by positivity) hPε).trans
-    (by
+    (by 
       norm_cast
       rwa [Nat.le_div_iff_mul_le'
           (step_bound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos),
@@ -124,7 +124,7 @@ theorem card_aux₂ (hP : P.IsEquipartition) (hu : u ∈ P.parts)
 #align szemeredi_regularity.card_aux₂ SzemerediRegularity.card_aux₂
 
 theorem pow_mul_m_le_card_part (hP : P.IsEquipartition) (hu : u ∈ P.parts) :
-    (4 : ℝ) ^ P.parts.card * m ≤ u.card := by
+    (4 : ℝ) ^ P.parts.card * m ≤ u.card := by 
   norm_cast
   rw [step_bound, ← Nat.div_div_eq_div_mul]
   exact (Nat.mul_div_le _ _).trans (hP.average_le_card_part hu)
@@ -156,11 +156,8 @@ theorem hundred_lt_pow_initial_bound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
     div_lt_iff, initial_bound, Nat.cast_max, Nat.cast_max]
   · push_cast
     exact lt_max_of_lt_right (lt_max_of_lt_right <| Nat.lt_floor_add_one _)
-    
   · exact log_pos (by norm_num)
-    
   · exact div_pos (by norm_num) (pow_pos hε 5)
-    
 #align
   szemeredi_regularity.hundred_lt_pow_initial_bound_mul SzemerediRegularity.hundred_lt_pow_initial_bound_mul
 

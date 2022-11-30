@@ -88,10 +88,8 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
     (_root_.bernoulli _).mul_comm, sum_bernoulli, one_pow, mul_one, eval_C, eval_monomial]
   by_cases h : n = 1
   · norm_num [h]
-    
   · simp [h]
     exact bernoulli_eq_bernoulli'_of_ne_one h
-    
 #align polynomial.bernoulli_eval_one Polynomial.bernoulli_eval_one
 
 end Examples
@@ -113,9 +111,7 @@ theorem derivative_bernoulli_add_one (k : ℕ) :
 theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoulli (k - 1) := by
   cases k
   · rw [Nat.cast_zero, zero_mul, bernoulli_zero, derivative_one]
-    
   · exact_mod_cast derivative_bernoulli_add_one k
-    
 #align polynomial.derivative_bernoulli Polynomial.derivative_bernoulli
 
 @[simp]
@@ -125,23 +121,23 @@ theorem sum_bernoulli (n : ℕ) :
     Finset.sum_Ico_eq_sum_range]
   simp only [add_tsub_cancel_left, tsub_zero, zero_add, LinearMap.map_add]
   simp_rw [smul_monomial, mul_comm (_root_.bernoulli _) _, smul_eq_mul, ← mul_assoc]
-  conv_lhs =>
-  apply_congr
-  skip
-  conv =>
-  apply_congr
-  skip
-  rw [← Nat.cast_mul,
-    choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl),
-    Nat.cast_mul, add_comm x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ←
-    smul_monomial]
-  rw [← sum_smul]
+  conv_lhs => 
+    apply_congr
+    skip
+    conv => 
+      apply_congr
+      skip
+      rw [← Nat.cast_mul,
+        choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl),
+        Nat.cast_mul, add_comm x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ←
+        smul_monomial]
+    rw [← sum_smul]
   rw [sum_range_succ_comm]
   simp only [add_right_eq_self, mul_one, cast_one, cast_add, add_tsub_cancel_left,
     choose_succ_self_right, one_smul, _root_.bernoulli_zero, sum_singleton, zero_add,
     LinearMap.map_add, range_one]
   apply sum_eq_zero fun x hx => _
-  have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by
+  have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by 
     rintro x H
     rw [mem_range] at H
     rw [eq_comm]
@@ -175,13 +171,9 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
     apply sum_congr rfl fun x hx => _
     apply congr_arg₂ _ (congr_arg₂ _ _ _) rfl
     · rw [Nat.sub_sub_self (mem_range_le hx)]
-      
     · rw [← choose_symm (mem_range_le hx)]
-      
-    
   · norm_cast
     apply succ_ne_zero _
-    
 #align polynomial.sum_range_pow_eq_bernoulli_sub Polynomial.sum_range_pow_eq_bernoulli_sub
 
 /-- Rearrangement of `polynomial.sum_range_pow_eq_bernoulli_sub`. -/
@@ -194,26 +186,26 @@ theorem bernoulli_succ_eval (n p : ℕ) :
 theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
     (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) := by
   apply Nat.strong_induction_on n fun d hd => _
-  have nz : ((d.succ : ℕ) : ℚ) ≠ 0 := by
+  have nz : ((d.succ : ℕ) : ℚ) ≠ 0 := by 
     norm_cast
     exact d.succ_ne_zero
   apply (mul_right_inj' nz).1
   rw [← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum, mul_add, ← smul_eq_mul, ← eval_smul,
     bernoulli_eq_sub_sum, eval_sub, eval_finset_sum]
-  conv_lhs =>
-  congr
-  skip
-  apply_congr
-  skip
-  rw [eval_smul, hd x_1 (mem_range.1 H)]
+  conv_lhs => 
+    congr
+    skip
+    apply_congr
+    skip
+    rw [eval_smul, hd x_1 (mem_range.1 H)]
   rw [eval_sub, eval_finset_sum]
   simp_rw [eval_smul, smul_add]
   rw [sum_add_distrib, sub_add, sub_eq_sub_iff_sub_eq_sub, _root_.add_sub_sub_cancel]
-  conv_rhs =>
-  congr
-  skip
-  congr
-  rw [succ_eq_add_one, ← choose_succ_self_right d]
+  conv_rhs => 
+    congr
+    skip
+    congr
+    rw [succ_eq_add_one, ← choose_succ_self_right d]
   rw [Nat.cast_succ, ← smul_eq_mul, ← sum_range_succ _ d, eval_monomial_one_add_sub]
   simp_rw [smul_eq_mul]
 #align polynomial.bernoulli_eval_one_add Polynomial.bernoulli_eval_one_add
@@ -234,7 +226,6 @@ theorem bernoulli_generating_function (t : A) :
   -- n = 0 case solved by `simp`
   cases n;
   · simp
-    
   -- n ≥ 1, the coefficients is a sum to n+2, so use `sum_range_succ` to write as
   -- last term plus sum to n+1
   rw [coeff_succ_X_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul,

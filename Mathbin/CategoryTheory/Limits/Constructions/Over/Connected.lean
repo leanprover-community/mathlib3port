@@ -46,7 +46,9 @@ attribute [local tidy] tactic.case_bash
 where the connected assumption is used.
 -/
 @[simps]
-def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) : Cone F where
+def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) :
+    Cone
+      F where 
   x := Over.mk (c.π.app (Classical.arbitrary J) ≫ (F.obj (Classical.arbitrary J)).Hom)
   π :=
     { app := fun j =>
@@ -61,13 +63,16 @@ theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B
 
 /-- (Impl) Show that the raised cone is a limit. -/
 def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)}
-    (t : IsLimit c) : IsLimit (raiseCone c) where
+    (t : IsLimit c) :
+    IsLimit
+      (raiseCone
+        c) where 
   lift s :=
     Over.homMk (t.lift ((forget B).mapCone s))
-      (by
+      (by 
         dsimp
         simp)
-  uniq' s m K := by
+  uniq' s m K := by 
     ext1
     apply t.hom_ext
     intro j

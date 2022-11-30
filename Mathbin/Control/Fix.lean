@@ -87,7 +87,6 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     rfl
     rw [Nat.zero_add] at this
     simpa only [not_not, Subtype.val_eq_coe]
-    
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
     congr
     ext : 1
@@ -98,7 +97,6 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
       apply Nat.le_add_left
     rw [succ_add_eq_succ_add] at this hk
     rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
-    
 #align part.fix_def Part.fix_def
 
 theorem fix_def' {x : α} (h' : ¬∃ i, (Fix.approx f i x).Dom) : Part.fix f x = none := by

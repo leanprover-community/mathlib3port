@@ -57,41 +57,35 @@ instance {V : Type u} [Quiver V] [Arborescence V] (b : V) : Unique (Path (root V
 noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V → ℕ)
     (height_lt : ∀ ⦃a b⦄, (a ⟶ b) → height a < height b)
     (unique_arrow : ∀ ⦃a b c : V⦄ (e : a ⟶ c) (f : b ⟶ c), a = b ∧ HEq e f)
-    (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) : Arborescence V where
+    (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) :
+    Arborescence V where 
   root := r
   uniquePath b :=
     ⟨Classical.inhabited_of_nonempty
-        (by
+        (by 
           rcases show ∃ n, height b < n from ⟨_, Nat.lt.base _⟩ with ⟨n, hn⟩
           induction' n with n ih generalizing b
           · exact False.elim (Nat.not_lt_zero _ hn)
-            
           rcases root_or_arrow b with (⟨⟨⟩⟩ | ⟨a, ⟨e⟩⟩)
           · exact ⟨path.nil⟩
-            
           · rcases ih a (lt_of_lt_of_le (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
-            exact ⟨p.cons e⟩
-            ),
+            exact ⟨p.cons e⟩),
       by
       have height_le : ∀ {a b}, path a b → height a ≤ height b := by
         intro a b p
         induction' p with b c p e ih
         rfl
         exact le_of_lt (lt_of_le_of_lt ih (height_lt e))
-      suffices ∀ p q : path r b, p = q by
+      suffices ∀ p q : path r b, p = q by 
         intro p
         apply this
       intro p q
       induction' p with a c p e ih <;> cases' q with b _ q f
       · rfl
-        
       · exact False.elim (lt_irrefl _ (lt_of_le_of_lt (height_le q) (height_lt f)))
-        
       · exact False.elim (lt_irrefl _ (lt_of_le_of_lt (height_le p) (height_lt e)))
-        
       · rcases unique_arrow e f with ⟨⟨⟩, ⟨⟩⟩
-        rw [ih]
-        ⟩
+        rw [ih]⟩
 #align quiver.arborescence_mk Quiver.arborescenceMk
 
 /-- `rooted_connected r` means that there is a path from `r` to any other vertex. -/
@@ -122,21 +116,19 @@ def geodesicSubtree : WideSubquiver V := fun a b =>
 
 noncomputable instance geodesicArborescence : Arborescence (geodesicSubtree r) :=
   arborescenceMk r (fun a => (shortestPath r a).length)
-    (by
+    (by 
       rintro a b ⟨e, p, h⟩
       rw [h, path.length_cons, Nat.lt_succ_iff]
       apply shortest_path_spec)
-    (by
+    (by 
       rintro a b c ⟨e, p, h⟩ ⟨f, q, j⟩
       cases h.symm.trans j
       constructor <;> rfl)
-    (by
+    (by 
       intro b
       rcases hp : shortest_path r b with (_ | ⟨p, e⟩)
       · exact Or.inl rfl
-        
-      · exact Or.inr ⟨_, ⟨⟨e, p, hp⟩⟩⟩
-        )
+      · exact Or.inr ⟨_, ⟨⟨e, p, hp⟩⟩⟩)
 #align quiver.geodesic_arborescence Quiver.geodesicArborescence
 
 end GeodesicSubtree

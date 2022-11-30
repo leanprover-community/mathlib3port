@@ -40,21 +40,18 @@ instance span_pair_is_principal [IsBezout R] (x y : R) :
 #align is_bezout.span_pair_is_principal IsBezout.span_pair_is_principal
 
 theorem iff_span_pair_is_principal :
-    IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by classical
-  constructor
-  · intro H x y
-    infer_instance
-    
-  · intro H
+    IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
+  classical 
     constructor
-    apply Submodule.fg_induction
-    · exact fun _ => ⟨⟨_, rfl⟩⟩
-      
-    · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩
-      rw [← Submodule.span_insert]
-      exact H _ _
-      
-    
+    · intro H x y
+      infer_instance
+    · intro H
+      constructor
+      apply Submodule.fg_induction
+      · exact fun _ => ⟨⟨_, rfl⟩⟩
+      · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩
+        rw [← Submodule.span_insert]
+        exact H _ _
 #align is_bezout.iff_span_pair_is_principal IsBezout.iff_span_pair_is_principal
 
 section Gcd
@@ -86,7 +83,7 @@ theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y := by
 
 theorem gcd_eq_sum (x y : R) : ∃ a b : R, a * x + b * y = gcd x y :=
   Ideal.mem_span_pair.mp
-    (by
+    (by 
       rw [← span_gcd]
       apply Ideal.subset_span
       simp)
@@ -117,10 +114,8 @@ theorem Function.Surjective.is_bezout {S : Type v} [CommRing S] (f : R →+* S)
   use f (gcd x y)
   trans Ideal.map f (Ideal.span {gcd x y})
   · rw [span_gcd, Ideal.map_span, Set.image_insert_eq, Set.image_singleton]
-    
   · rw [Ideal.map_span, Set.image_singleton]
     rfl
-    
 #align function.surjective.is_bezout Function.Surjective.is_bezout
 
 instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] : IsBezout R :=
@@ -162,213 +157,10 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
              (Tactic.tacticSeq1Indented
               [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.intro "intro" [`H]) [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.anonymousCtor
-                    "⟨"
-                    [(Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`I]
-                       []
-                       "=>"
-                       (Term.app
-                        `is_principal_of_fg
-                        [(Term.hole "_") (Term.app `IsNoetherian.noetherian [(Term.hole "_")])])))]
-                    "⟩"))
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.intro "intro" []) [])
-                 (group (Tactic.tacticInfer_instance "infer_instance") [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.intro "intro" []) [])
-                 (group (Tactic.tacticInfer_instance "infer_instance") [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Std.Tactic.rintro
-                   "rintro"
-                   [(Std.Tactic.RCases.rintroPat.one
-                     (Std.Tactic.RCases.rcasesPat.tuple
-                      "⟨"
-                      [(Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
-                        [])]
-                      "⟩"))]
-                   [])
-                  [])
-                 (group
-                  (Tactic.rwSeq
-                   "rw"
-                   []
-                   (Tactic.rwRuleSeq
-                    "["
-                    [(Tactic.rwRule [] `is_noetherian_ring_iff)
-                     ","
-                     (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
-                    "]")
-                   [])
-                  [])
-                 (group
-                  (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
-                  [])
-                 (group
-                  (Tactic.tacticHave_
-                   "have"
-                   (Term.haveDecl
-                    (Term.haveIdDecl
-                     []
-                     [(Term.typeSpec
-                       ":"
-                       (Term.forall
-                        "∀"
-                        [`I]
-                        [(Term.typeSpec
-                          ":"
-                          («term{_:_//_}»
-                           "{"
-                           `J
-                           [":" (Term.app `Ideal [`R])]
-                           "//"
-                           (Term.proj `J "." `Fg)
-                           "}"))]
-                        ","
-                        («term∃_,_»
-                         "∃"
-                         (Lean.explicitBinders
-                          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
-                         ","
-                         («term_=_»
-                          (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-                          "="
-                          (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
-                     ":="
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
-                       []
-                       "=>"
-                       (Term.proj
-                        (Term.app `IsBezout.is_principal_of_fg [`I `hI])
-                        "."
-                        (fieldIdx "1")))))))
-                  [])
-                 (group
-                  (Mathlib.Tactic.Choose.choose
-                   "choose"
-                   []
-                   [(Lean.binderIdent `f) (Lean.binderIdent `hf)]
-                   [])
-                  [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.structInst
-                    "{"
-                    []
-                    [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-                     ","
-                     (Term.structInstField
-                      (Term.structInstLVal `inj' [])
-                      ":="
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`x `y `e]
-                        []
-                        "=>"
-                        (Term.byTactic
-                         "by"
-                         (Tactic.tacticSeq
-                          (Tactic.tacticSeq1Indented
-                           [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
-                            []
-                            (Tactic.rwSeq
-                             "rw"
-                             []
-                             (Tactic.rwRuleSeq
-                              "["
-                              [(Tactic.rwRule [] `hf)
-                               ","
-                               (Tactic.rwRule [] `hf)
-                               ","
-                               (Tactic.rwRule [] `e)]
-                              "]")
-                             [])]))))))
-                     ","
-                     (Term.structInstField
-                      (Term.structInstLVal `map_rel_iff' [])
-                      ":="
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`x `y]
-                        []
-                        "=>"
-                        (Term.byTactic
-                         "by"
-                         (Tactic.tacticSeq
-                          (Tactic.tacticSeq1Indented
-                           [(Tactic.dsimp "dsimp" [] [] [] [] [])
-                            []
-                            (Tactic.rwSeq
-                             "rw"
-                             []
-                             (Tactic.rwRuleSeq
-                              "["
-                              [(Tactic.rwRule
-                                [(patternIgnore (token.«← » "←"))]
-                                `Ideal.span_singleton_lt_span_singleton)
-                               ","
-                               (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)
-                               ","
-                               (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)]
-                              "]")
-                             [])
-                            []
-                            (Tactic.tacticRfl "rfl")]))))))]
-                    (Term.optEllipsis [])
-                    []
-                    "}"))
-                  [])])
-               []
-               (Tactic.tfaeFinish "tfae_finish")])))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Mathlib.Tactic.tacticClassical_
-           "classical"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" [`H]) [])
-                (group
+                [(Tactic.intro "intro" [`H])
+                 []
                  (Tactic.exact
                   "exact"
                   (Term.anonymousCtor
@@ -382,29 +174,25 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                       (Term.app
                        `is_principal_of_fg
                        [(Term.hole "_") (Term.app `IsNoetherian.noetherian [(Term.hole "_")])])))]
-                   "⟩"))
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" []) [])
-                (group (Tactic.tacticInfer_instance "infer_instance") [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" []) [])
-                (group (Tactic.tacticInfer_instance "infer_instance") [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Std.Tactic.rintro
+                   "⟩"))])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
                     (Std.Tactic.RCases.rcasesPat.tuple
@@ -414,8 +202,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                        [])]
                      "⟩"))]
                   [])
-                 [])
-                (group
+                 []
                  (Tactic.rwSeq
                   "rw"
                   []
@@ -426,11 +213,9 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                     (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
                    "]")
                   [])
-                 [])
-                (group
+                 []
                  (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
-                 [])
-                (group
+                 []
                  (Tactic.tacticHave_
                   "have"
                   (Term.haveDecl
@@ -471,15 +256,13 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                        (Term.app `IsBezout.is_principal_of_fg [`I `hI])
                        "."
                        (fieldIdx "1")))))))
-                 [])
-                (group
+                 []
                  (Mathlib.Tactic.Choose.choose
                   "choose"
                   []
                   [(Lean.binderIdent `f) (Lean.binderIdent `hf)]
                   [])
-                 [])
-                (group
+                 []
                  (Tactic.exact
                   "exact"
                   (Term.structInst
@@ -548,8 +331,200 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                            (Tactic.tacticRfl "rfl")]))))))]
                    (Term.optEllipsis [])
                    []
-                   "}"))
-                 [])])
+                   "}"))])
+               []
+               (Tactic.tfaeFinish "tfae_finish")])))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticClassical_
+           "classical"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.intro "intro" [`H])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.anonymousCtor
+                  "⟨"
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`I]
+                     []
+                     "=>"
+                     (Term.app
+                      `is_principal_of_fg
+                      [(Term.hole "_") (Term.app `IsNoetherian.noetherian [(Term.hole "_")])])))]
+                  "⟩"))])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Std.Tactic.rintro
+                 "rintro"
+                 [(Std.Tactic.RCases.rintroPat.one
+                   (Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+                      [])]
+                    "⟩"))]
+                 [])
+                []
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] `is_noetherian_ring_iff)
+                   ","
+                   (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+                  "]")
+                 [])
+                []
+                (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+                []
+                (Tactic.tacticHave_
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   []
+                   [(Term.typeSpec
+                     ":"
+                     (Term.forall
+                      "∀"
+                      [`I]
+                      [(Term.typeSpec
+                        ":"
+                        («term{_:_//_}»
+                         "{"
+                         `J
+                         [":" (Term.app `Ideal [`R])]
+                         "//"
+                         (Term.proj `J "." `Fg)
+                         "}"))]
+                      ","
+                      («term∃_,_»
+                       "∃"
+                       (Lean.explicitBinders
+                        (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+                       ","
+                       («term_=_»
+                        (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
+                        "="
+                        (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
+                   ":="
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
+                     []
+                     "=>"
+                     (Term.proj
+                      (Term.app `IsBezout.is_principal_of_fg [`I `hI])
+                      "."
+                      (fieldIdx "1")))))))
+                []
+                (Mathlib.Tactic.Choose.choose
+                 "choose"
+                 []
+                 [(Lean.binderIdent `f) (Lean.binderIdent `hf)]
+                 [])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.structInst
+                  "{"
+                  []
+                  [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
+                   ","
+                   (Term.structInstField
+                    (Term.structInstLVal `inj' [])
+                    ":="
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`x `y `e]
+                      []
+                      "=>"
+                      (Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq
+                        (Tactic.tacticSeq1Indented
+                         [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+                          []
+                          (Tactic.rwSeq
+                           "rw"
+                           []
+                           (Tactic.rwRuleSeq
+                            "["
+                            [(Tactic.rwRule [] `hf)
+                             ","
+                             (Tactic.rwRule [] `hf)
+                             ","
+                             (Tactic.rwRule [] `e)]
+                            "]")
+                           [])]))))))
+                   ","
+                   (Term.structInstField
+                    (Term.structInstLVal `map_rel_iff' [])
+                    ":="
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`x `y]
+                      []
+                      "=>"
+                      (Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq
+                        (Tactic.tacticSeq1Indented
+                         [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                          []
+                          (Tactic.rwSeq
+                           "rw"
+                           []
+                           (Tactic.rwRuleSeq
+                            "["
+                            [(Tactic.rwRule
+                              [(patternIgnore (token.«← » "←"))]
+                              `Ideal.span_singleton_lt_span_singleton)
+                             ","
+                             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)
+                             ","
+                             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)]
+                            "]")
+                           [])
+                          []
+                          (Tactic.tacticRfl "rfl")]))))))]
+                  (Term.optEllipsis [])
+                  []
+                  "}"))])
               []
               (Tactic.tfaeFinish "tfae_finish")])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -560,191 +535,181 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H]) [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.anonymousCtor
-               "⟨"
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`I]
-                  []
-                  "=>"
-                  (Term.app
-                   `is_principal_of_fg
-                   [(Term.hole "_") (Term.app `IsNoetherian.noetherian [(Term.hole "_")])])))]
-               "⟩"))
-             [])])
+           [(Tactic.intro "intro" [`H])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`I]
+                 []
+                 "=>"
+                 (Term.app
+                  `is_principal_of_fg
+                  [(Term.hole "_") (Term.app `IsNoetherian.noetherian [(Term.hole "_")])])))]
+              "⟩"))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" []) [])
-            (group (Tactic.tacticInfer_instance "infer_instance") [])])
+           [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" []) [])
-            (group (Tactic.tacticInfer_instance "infer_instance") [])])
+           [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [] `is_noetherian_ring_iff)
-                ","
-                (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
-               "]")
-              [])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `is_noetherian_ring_iff)
+               ","
+               (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+              "]")
              [])
-            (group
-             (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
-             [])
-            (group
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                []
-                [(Term.typeSpec
-                  ":"
-                  (Term.forall
-                   "∀"
-                   [`I]
-                   [(Term.typeSpec
-                     ":"
-                     («term{_:_//_}»
-                      "{"
-                      `J
-                      [":" (Term.app `Ideal [`R])]
-                      "//"
-                      (Term.proj `J "." `Fg)
-                      "}"))]
+            []
+            (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec
+                 ":"
+                 (Term.forall
+                  "∀"
+                  [`I]
+                  [(Term.typeSpec
+                    ":"
+                    («term{_:_//_}»
+                     "{"
+                     `J
+                     [":" (Term.app `Ideal [`R])]
+                     "//"
+                     (Term.proj `J "." `Fg)
+                     "}"))]
+                  ","
+                  («term∃_,_»
+                   "∃"
+                   (Lean.explicitBinders
+                    (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
                    ","
-                   («term∃_,_»
-                    "∃"
-                    (Lean.explicitBinders
-                     (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
-                    ","
-                    («term_=_»
-                     (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-                     "="
-                     (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
+                   («term_=_»
+                    (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
+                    "="
+                    (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
+               ":="
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
+                 []
+                 "=>"
+                 (Term.proj
+                  (Term.app `IsBezout.is_principal_of_fg [`I `hI])
+                  "."
+                  (fieldIdx "1")))))))
+            []
+            (Mathlib.Tactic.Choose.choose
+             "choose"
+             []
+             [(Lean.binderIdent `f) (Lean.binderIdent `hf)]
+             [])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.structInst
+              "{"
+              []
+              [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
+               ","
+               (Term.structInstField
+                (Term.structInstLVal `inj' [])
                 ":="
                 (Term.fun
                  "fun"
                  (Term.basicFun
-                  [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
+                  [`x `y `e]
                   []
                   "=>"
-                  (Term.proj
-                   (Term.app `IsBezout.is_principal_of_fg [`I `hI])
-                   "."
-                   (fieldIdx "1")))))))
-             [])
-            (group
-             (Mathlib.Tactic.Choose.choose
-              "choose"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+                      []
+                      (Tactic.rwSeq
+                       "rw"
+                       []
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [] `hf)
+                         ","
+                         (Tactic.rwRule [] `hf)
+                         ","
+                         (Tactic.rwRule [] `e)]
+                        "]")
+                       [])]))))))
+               ","
+               (Term.structInstField
+                (Term.structInstLVal `map_rel_iff' [])
+                ":="
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`x `y]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                      []
+                      (Tactic.rwSeq
+                       "rw"
+                       []
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule
+                          [(patternIgnore (token.«← » "←"))]
+                          `Ideal.span_singleton_lt_span_singleton)
+                         ","
+                         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)
+                         ","
+                         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)]
+                        "]")
+                       [])
+                      []
+                      (Tactic.tacticRfl "rfl")]))))))]
+              (Term.optEllipsis [])
               []
-              [(Lean.binderIdent `f) (Lean.binderIdent `hf)]
-              [])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.structInst
-               "{"
-               []
-               [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-                ","
-                (Term.structInstField
-                 (Term.structInstLVal `inj' [])
-                 ":="
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`x `y `e]
-                   []
-                   "=>"
-                   (Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
-                       []
-                       (Tactic.rwSeq
-                        "rw"
-                        []
-                        (Tactic.rwRuleSeq
-                         "["
-                         [(Tactic.rwRule [] `hf)
-                          ","
-                          (Tactic.rwRule [] `hf)
-                          ","
-                          (Tactic.rwRule [] `e)]
-                         "]")
-                        [])]))))))
-                ","
-                (Term.structInstField
-                 (Term.structInstLVal `map_rel_iff' [])
-                 ":="
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`x `y]
-                   []
-                   "=>"
-                   (Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(Tactic.dsimp "dsimp" [] [] [] [] [])
-                       []
-                       (Tactic.rwSeq
-                        "rw"
-                        []
-                        (Tactic.rwRuleSeq
-                         "["
-                         [(Tactic.rwRule
-                           [(patternIgnore (token.«← » "←"))]
-                           `Ideal.span_singleton_lt_span_singleton)
-                          ","
-                          (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)
-                          ","
-                          (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)]
-                         "]")
-                        [])
-                       []
-                       (Tactic.tacticRfl "rfl")]))))))]
-               (Term.optEllipsis [])
-               []
-               "}"))
-             [])])
+              "}"))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -752,146 +717,137 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Std.Tactic.rintro
-          "rintro"
-          [(Std.Tactic.RCases.rintroPat.one
-            (Std.Tactic.RCases.rcasesPat.tuple
-             "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
-               [])]
-             "⟩"))]
-          [])
+       [(Std.Tactic.rintro
+         "rintro"
+         [(Std.Tactic.RCases.rintroPat.one
+           (Std.Tactic.RCases.rcasesPat.tuple
+            "⟨"
+            [(Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+              [])]
+            "⟩"))]
          [])
-        (group
-         (Tactic.rwSeq
-          "rw"
-          []
-          (Tactic.rwRuleSeq
-           "["
-           [(Tactic.rwRule [] `is_noetherian_ring_iff)
-            ","
-            (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
-           "]")
-          [])
+        []
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule [] `is_noetherian_ring_iff)
+           ","
+           (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+          "]")
          [])
-        (group (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h])) [])
-        (group
-         (Tactic.tacticHave_
-          "have"
-          (Term.haveDecl
-           (Term.haveIdDecl
-            []
-            [(Term.typeSpec
-              ":"
-              (Term.forall
-               "∀"
-               [`I]
-               [(Term.typeSpec
-                 ":"
-                 («term{_:_//_}»
-                  "{"
-                  `J
-                  [":" (Term.app `Ideal [`R])]
-                  "//"
-                  (Term.proj `J "." `Fg)
-                  "}"))]
+        []
+        (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
+        []
+        (Tactic.tacticHave_
+         "have"
+         (Term.haveDecl
+          (Term.haveIdDecl
+           []
+           [(Term.typeSpec
+             ":"
+             (Term.forall
+              "∀"
+              [`I]
+              [(Term.typeSpec
+                ":"
+                («term{_:_//_}»
+                 "{"
+                 `J
+                 [":" (Term.app `Ideal [`R])]
+                 "//"
+                 (Term.proj `J "." `Fg)
+                 "}"))]
+              ","
+              («term∃_,_»
+               "∃"
+               (Lean.explicitBinders
+                (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
                ","
-               («term∃_,_»
-                "∃"
-                (Lean.explicitBinders
-                 (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
-                ","
-                («term_=_»
-                 (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-                 "="
-                 (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
+               («term_=_»
+                (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
+                "="
+                (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
+           ":="
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
+             []
+             "=>"
+             (Term.proj (Term.app `IsBezout.is_principal_of_fg [`I `hI]) "." (fieldIdx "1")))))))
+        []
+        (Mathlib.Tactic.Choose.choose "choose" [] [(Lean.binderIdent `f) (Lean.binderIdent `hf)] [])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.structInst
+          "{"
+          []
+          [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
+           ","
+           (Term.structInstField
+            (Term.structInstLVal `inj' [])
             ":="
             (Term.fun
              "fun"
              (Term.basicFun
-              [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
+              [`x `y `e]
               []
               "=>"
-              (Term.proj (Term.app `IsBezout.is_principal_of_fg [`I `hI]) "." (fieldIdx "1")))))))
-         [])
-        (group
-         (Mathlib.Tactic.Choose.choose
-          "choose"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+                  []
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `e)]
+                    "]")
+                   [])]))))))
+           ","
+           (Term.structInstField
+            (Term.structInstLVal `map_rel_iff' [])
+            ":="
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`x `y]
+              []
+              "=>"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                  []
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule
+                      [(patternIgnore (token.«← » "←"))]
+                      `Ideal.span_singleton_lt_span_singleton)
+                     ","
+                     (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)
+                     ","
+                     (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)]
+                    "]")
+                   [])
+                  []
+                  (Tactic.tacticRfl "rfl")]))))))]
+          (Term.optEllipsis [])
           []
-          [(Lean.binderIdent `f) (Lean.binderIdent `hf)]
-          [])
-         [])
-        (group
-         (Tactic.exact
-          "exact"
-          (Term.structInst
-           "{"
-           []
-           [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-            ","
-            (Term.structInstField
-             (Term.structInstLVal `inj' [])
-             ":="
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`x `y `e]
-               []
-               "=>"
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
-                   []
-                   (Tactic.rwSeq
-                    "rw"
-                    []
-                    (Tactic.rwRuleSeq
-                     "["
-                     [(Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `e)]
-                     "]")
-                    [])]))))))
-            ","
-            (Term.structInstField
-             (Term.structInstLVal `map_rel_iff' [])
-             ":="
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`x `y]
-               []
-               "=>"
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Tactic.dsimp "dsimp" [] [] [] [] [])
-                   []
-                   (Tactic.rwSeq
-                    "rw"
-                    []
-                    (Tactic.rwRuleSeq
-                     "["
-                     [(Tactic.rwRule
-                       [(patternIgnore (token.«← » "←"))]
-                       `Ideal.span_singleton_lt_span_singleton)
-                      ","
-                      (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)
-                      ","
-                      (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `hf)]
-                     "]")
-                    [])
-                   []
-                   (Tactic.tacticRfl "rfl")]))))))]
-           (Term.optEllipsis [])
-           []
-           "}"))
-         [])])
+          "}"))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -1218,10 +1174,10 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Mathlib.Tactic.Choose.choose "choose" [] [(Lean.binderIdent `f) (Lean.binderIdent `hf)] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticHave_
        "have"
        (Term.haveDecl
@@ -1405,7 +1361,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `RelEmbedding.well_founded [(Term.hole "_") `h])
@@ -1427,7 +1383,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
@@ -1447,7 +1403,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rintro
        "rintro"
        [(Std.Tactic.RCases.rintroPat.one

@@ -51,16 +51,18 @@ instance [Lattice β] : Lattice (α →o β) :=
   { (_ : SemilatticeSup (α →o β)), (_ : SemilatticeInf (α →o β)) with }
 
 @[simps]
-instance [Preorder β] [OrderBot β] : HasBot (α →o β) where bot := const α ⊥
+instance [Preorder β] [OrderBot β] : Bot (α →o β) where bot := const α ⊥
 
-instance [Preorder β] [OrderBot β] : OrderBot (α →o β) where
+instance [Preorder β] [OrderBot β] :
+    OrderBot (α →o β) where 
   bot := ⊥
   bot_le a x := bot_le
 
 @[simps]
-instance [Preorder β] [OrderTop β] : HasTop (α →o β) where top := const α ⊤
+instance [Preorder β] [OrderTop β] : Top (α →o β) where top := const α ⊤
 
-instance [Preorder β] [OrderTop β] : OrderTop (α →o β) where
+instance [Preorder β] [OrderTop β] :
+    OrderTop (α →o β) where 
   top := ⊤
   le_top a x := le_top
 
@@ -116,23 +118,21 @@ instance [CompleteLattice β] : CompleteLattice (α →o β) :=
 theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α) :
     (∀ n₁ n₂ a₁ a₂, (f^[n₁ + n₂]) (a₁ ⊔ a₂) ≤ (f^[n₁]) a₁ ⊔ (f^[n₂]) a₂) ↔
       ∀ a₁ a₂, f (a₁ ⊔ a₂) ≤ f a₁ ⊔ a₂ :=
-  by
+  by 
   constructor <;> intro h
   · exact h 1 0
-    
   · intro n₁ n₂ a₁ a₂
     have h' : ∀ n a₁ a₂, (f^[n]) (a₁ ⊔ a₂) ≤ (f^[n]) a₁ ⊔ a₂ := by
       intro n
       induction' n with n ih <;> intro a₁ a₂
       · rfl
-        
-      · calc
+      ·
+        calc
           (f^[n + 1]) (a₁ ⊔ a₂) = (f^[n]) (f (a₁ ⊔ a₂)) := Function.iterate_succ_apply f n _
           _ ≤ (f^[n]) (f a₁ ⊔ a₂) := f.mono.iterate n (h a₁ a₂)
           _ ≤ (f^[n]) (f a₁) ⊔ a₂ := ih _ _
           _ = (f^[n + 1]) a₁ ⊔ a₂ := by rw [← Function.iterate_succ_apply]
           
-        
     calc
       (f^[n₁ + n₂]) (a₁ ⊔ a₂) = (f^[n₁]) ((f^[n₂]) (a₁ ⊔ a₂)) :=
         Function.iterate_add_apply f n₁ n₂ _
@@ -141,7 +141,6 @@ theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α
       _ = (f^[n₁]) (a₁ ⊔ (f^[n₂]) a₂) := by rw [sup_comm]
       _ ≤ (f^[n₁]) a₁ ⊔ (f^[n₂]) a₂ := h' n₁ a₁ _
       
-    
 #align order_hom.iterate_sup_le_sup_iff OrderHom.iterate_sup_le_sup_iff
 
 end Preorder

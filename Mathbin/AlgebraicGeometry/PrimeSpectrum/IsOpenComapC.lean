@@ -58,15 +58,12 @@ theorem image_of_Df_eq_comap_C_compl_zero_locus :
   · rw [mem_compl_iff, mem_zero_locus, singleton_subset_iff]
     cases' hx with i hi
     exact fun a => hi (mem_map_C_iff.mp a i)
-    
   · ext x
     refine' ⟨fun h => _, fun h => subset_span (mem_image_of_mem C.1 h)⟩
     rw [← @coeff_C_zero R x _]
     exact mem_map_C_iff.mp h 0
-    
   · rintro ⟨xli, complement, rfl⟩
     exact comap_C_mem_image_of_Df complement
-    
 #align
   algebraic_geometry.polynomial.image_of_Df_eq_comap_C_compl_zero_locus AlgebraicGeometry.Polynomial.image_of_Df_eq_comap_C_compl_zero_locus
 

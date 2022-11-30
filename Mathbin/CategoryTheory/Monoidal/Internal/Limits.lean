@@ -46,11 +46,11 @@ def limit (F : J ⥤ Mon_ C) : Mon_ C :=
 /-- Implementation of `Mon_.has_limits`: a limiting cone over a functor `F : J ⥤ Mon_ C`.
 -/
 @[simps]
-def limitCone (F : J ⥤ Mon_ C) : Cone F where
+def limitCone (F : J ⥤ Mon_ C) : Cone F where 
   x := limit F
   π :=
     { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j },
-      naturality' := fun j j' f => by
+      naturality' := fun j j' f => by 
         ext
         exact (limit.cone (F ⋙ Mon_.forget C)).π.naturality f }
 #align Mon_.limit_cone Mon_.limitCone
@@ -67,18 +67,21 @@ def forgetMapConeLimitConeIso (F : J ⥤ Mon_ C) :
 the proposed cone over a functor `F : J ⥤ Mon_ C` is a limit cone.
 -/
 @[simps]
-def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
+def limitConeIsLimit (F : J ⥤ Mon_ C) :
+    IsLimit
+      (limitCone
+        F) where 
   lift s :=
     { Hom := limit.lift (F ⋙ Mon_.forget C) ((Mon_.forget C).mapCone s),
-      mul_hom' := by
+      mul_hom' := by 
         ext; dsimp; simp; dsimp
-        slice_rhs 1 2 =>
-        rw [← monoidal_category.tensor_comp, limit.lift_π]
-        dsimp }
-  fac' s h := by
+        slice_rhs 1 2 => 
+          rw [← monoidal_category.tensor_comp, limit.lift_π]
+          dsimp }
+  fac' s h := by 
     ext
     simp
-  uniq' s m w := by
+  uniq' s m w := by 
     ext
     dsimp; simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
     exact congr_arg Mon_.Hom.hom (w j)

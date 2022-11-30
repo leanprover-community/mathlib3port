@@ -92,19 +92,19 @@ theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorb
 #align absorbs_union absorbs_union
 
 theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
-    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by classical
-  induction' t using Finset.induction_on with i t ht hi
-  · simp only [Finset.not_mem_empty, Set.Union_false, Set.Union_empty, absorbsEmpty,
-      IsEmpty.forall_iff, imp_true_iff]
-    
-  rw [Finset.set_bUnion_insert, absorbs_union, hi]
-  constructor <;> intro h
-  · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
-    exact fun hi'' => by
-      rw [hi'']
-      exact h.1
-    
-  exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
+    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
+  classical 
+    induction' t using Finset.induction_on with i t ht hi
+    ·
+      simp only [Finset.not_mem_empty, Set.Union_false, Set.Union_empty, absorbsEmpty,
+        IsEmpty.forall_iff, imp_true_iff]
+    rw [Finset.set_bUnion_insert, absorbs_union, hi]
+    constructor <;> intro h
+    · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
+      exact fun hi'' => by 
+        rw [hi'']
+        exact h.1
+    exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
 #align absorbs_Union_finset absorbs_Union_finset
 
 theorem Set.Finite.absorbs_Union {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E}
@@ -145,7 +145,7 @@ theorem absorbent_iff_nonneg_lt :
 #align absorbent_iff_nonneg_lt absorbent_iff_nonneg_lt
 
 theorem Absorbent.absorbsFinite {s : Set E} (hs : Absorbent 𝕜 s) {v : Set E} (hv : v.Finite) :
-    Absorbs 𝕜 s v := by
+    Absorbs 𝕜 s v := by 
   rw [← Set.bUnion_of_singleton v]
   exact hv.absorbs_Union.mpr fun _ _ => hs.absorbs
 #align absorbent.absorbs_finite Absorbent.absorbsFinite
@@ -234,7 +234,7 @@ theorem Balanced.add (hs : Balanced 𝕜 s) (ht : Balanced 𝕜 t) : Balanced �
 #align balanced.add Balanced.add
 
 theorem Absorbs.sub (h₁ : Absorbs 𝕜 s₁ t₁) (h₂ : Absorbs 𝕜 s₂ t₂) : Absorbs 𝕜 (s₁ - s₂) (t₁ - t₂) :=
-  by
+  by 
   simp_rw [sub_eq_add_neg]
   exact h₁.add h₂.neg
 #align absorbs.sub Absorbs.sub
@@ -263,10 +263,7 @@ theorem Balanced.smul_mono (hs : Balanced 𝕝 s) {a : 𝕝} {b : 𝕜} (h : ‖
     rw [norm_eq_zero.1 (h.antisymm <| norm_nonneg _)]
     obtain rfl | h := s.eq_empty_or_nonempty
     · simp_rw [smul_set_empty]
-      
     · simp_rw [zero_smul_set h]
-      
-    
   rintro _ ⟨x, hx, rfl⟩
   refine' ⟨b⁻¹ • a • x, _, smul_inv_smul₀ hb _⟩
   rw [← smul_assoc]
@@ -289,10 +286,8 @@ theorem Balanced.subset_smul (hA : Balanced 𝕜 A) (ha : 1 ≤ ‖a‖) : A ⊆
   · rintro rfl
     rw [norm_zero] at ha
     exact zero_lt_one.not_le ha
-    
   · rw [norm_inv]
     exact inv_le_one ha
-    
 #align balanced.subset_smul Balanced.subset_smul
 
 theorem Balanced.smul_eq (hA : Balanced 𝕜 A) (ha : ‖a‖ = 1) : a • A = A :=
@@ -303,14 +298,12 @@ theorem Balanced.mem_smul_iff (hs : Balanced 𝕜 s) (h : ‖a‖ = ‖b‖) : a
   obtain rfl | hb := eq_or_ne b 0
   · rw [norm_zero, norm_eq_zero] at h
     rw [h]
-    
   have ha : a ≠ 0 := norm_ne_zero_iff.1 (ne_of_eq_of_ne h <| norm_ne_zero_iff.2 hb)
   constructor <;> intro h' <;> [rw [← inv_mul_cancel_right₀ ha b],
       rw [← inv_mul_cancel_right₀ hb a]] <;>
     · rw [← smul_eq_mul, smul_assoc]
       refine' hs.smul_mem _ h'
       simp [← h, ha]
-      
 #align balanced.mem_smul_iff Balanced.mem_smul_iff
 
 theorem Balanced.neg_mem_iff (hs : Balanced 𝕜 s) : -x ∈ s ↔ x ∈ s := by
@@ -364,18 +357,15 @@ theorem balancedZeroUnionInterior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : S
   obtain rfl | h := eq_or_ne a 0
   · rw [zero_smul_set]
     exacts[subset_union_left _ _, ⟨0, Or.inl rfl⟩]
-    
   · rw [← image_smul, image_union]
     apply union_subset_union
     · rw [image_zero, smul_zero]
       rfl
-      
-    · calc
+    ·
+      calc
         a • interior A ⊆ interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A
         _ ⊆ interior A := interior_mono (hA _ ha)
         
-      
-    
 #align balanced_zero_union_interior balancedZeroUnionInterior
 
 /-- The interior of a balanced set is balanced if it contains the origin. -/

@@ -29,13 +29,13 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
-  have hy : a • x + b • z = y := by
+  have hy : a • x + b • z = y := by 
     field_simp
     rw [div_eq_iff] <;> [ring, linarith]
   have key :=
     hf.2 hx hz (show 0 ≤ a by apply div_nonneg <;> linarith)
       (show 0 ≤ b by apply div_nonneg <;> linarith)
-      (show a + b = 1 by
+      (show a + b = 1 by 
         field_simp
         rw [div_eq_iff] <;> [ring, linarith])
   rw [hy] at key
@@ -43,9 +43,7 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
   field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
   rw [div_le_div_right]
   · linarith
-    
   · nlinarith
-    
 #align convex_on.slope_mono_adjacent ConvexOn.slope_mono_adjacent
 
 /-- If `f : 𝕜 → 𝕜` is concave, then for any three points `x < y < z` the slope of the secant line of
@@ -71,12 +69,12 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
-  have hy : a • x + b • z = y := by
+  have hy : a • x + b • z = y := by 
     field_simp
     rw [div_eq_iff] <;> [ring, linarith]
   have key :=
     hf.2 hx hz hxz' (div_pos hyz hxz) (div_pos hxy hxz)
-      (show a + b = 1 by
+      (show a + b = 1 by 
         field_simp
         rw [div_eq_iff] <;> [ring, linarith])
   rw [hy] at key
@@ -84,9 +82,7 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
   field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
   rw [div_lt_div_right]
   · linarith
-    
   · nlinarith
-    
 #align strict_convex_on.slope_strict_mono_adjacent StrictConvexOn.slope_strict_mono_adjacent
 
 /-- If `f : 𝕜 → 𝕜` is strictly concave, then for any three points `x < y < z` the slope of the
@@ -108,10 +104,10 @@ theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
     ConvexOn 𝕜 s f :=
   (LinearOrder.convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
-    have hxy : x < y := by
+    have hxy : x < y := by 
       rw [← one_mul x, ← hab, add_mul]
       exact add_lt_add_left ((mul_lt_mul_left hb).2 hxz) _
-    have hyz : y < z := by
+    have hyz : y < z := by 
       rw [← one_mul z, ← hab, add_mul]
       exact add_lt_add_right ((mul_lt_mul_left ha).2 hxz) _
     have : (f y - f x) * (z - y) ≤ (f z - f y) * (y - x) :=
@@ -136,7 +132,7 @@ theorem concave_on_of_slope_anti_adjacent (hs : Convex 𝕜 s)
     (hf :
       ∀ {x y z : 𝕜},
         x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) ≤ (f y - f x) / (y - x)) :
-    ConcaveOn 𝕜 s f := by
+    ConcaveOn 𝕜 s f := by 
   rw [← neg_convex_on_iff]
   refine' convex_on_of_slope_mono_adjacent hs fun x y z hx hz hxy hyz => _
   rw [← neg_le_neg_iff]
@@ -153,10 +149,10 @@ theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
     StrictConvexOn 𝕜 s f :=
   (LinearOrder.strict_convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
-    have hxy : x < y := by
+    have hxy : x < y := by 
       rw [← one_mul x, ← hab, add_mul]
       exact add_lt_add_left ((mul_lt_mul_left hb).2 hxz) _
-    have hyz : y < z := by
+    have hyz : y < z := by 
       rw [← one_mul z, ← hab, add_mul]
       exact add_lt_add_right ((mul_lt_mul_left ha).2 hxz) _
     have : (f y - f x) * (z - y) < (f z - f y) * (y - x) :=
@@ -182,7 +178,7 @@ theorem strict_concave_on_of_slope_strict_anti_adjacent (hs : Convex 𝕜 s)
     (hf :
       ∀ {x y z : 𝕜},
         x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) < (f y - f x) / (y - x)) :
-    StrictConcaveOn 𝕜 s f := by
+    StrictConcaveOn 𝕜 s f := by 
   rw [← neg_strict_convex_on_iff]
   refine' strict_convex_on_of_slope_strict_mono_adjacent hs fun x y z hx hz hxy hyz => _
   rw [← neg_lt_neg_iff]

@@ -45,10 +45,12 @@ structure SubmonoidPresheaf [∀ X : C, MulOneClass X] [∀ X Y : C, MonoidHomCl
 variable {F : X.Presheaf CommRingCat.{w}} (G : F.SubmonoidPresheaf)
 
 /-- The localization of a presheaf of `CommRing`s with respect to a `submonoid_presheaf`. -/
-protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf CommRingCat where
+protected noncomputable def SubmonoidPresheaf.localizationPresheaf :
+    X.Presheaf
+      CommRingCat where 
   obj U := CommRingCat.of <| Localization (G.obj U)
   map U V i := CommRingCat.ofHom <| IsLocalization.map _ (F.map i) (G.map i)
-  map_id' U := by
+  map_id' U := by 
     apply IsLocalization.ring_hom_ext (G.obj U)
     any_goals dsimp; infer_instance
     refine' (IsLocalization.map_comp _).trans _
@@ -65,7 +67,9 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
   Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
 
 /-- The map into the localization presheaf. -/
-def SubmonoidPresheaf.toLocalizationPresheaf : F ⟶ G.localizationPresheaf where
+def SubmonoidPresheaf.toLocalizationPresheaf :
+    F ⟶
+      G.localizationPresheaf where 
   app U := CommRingCat.ofHom <| algebraMap (F.obj U) (Localization <| G.obj U)
   naturality' U V i := (IsLocalization.map_comp (G.map i)).symm
 #align
@@ -80,9 +84,9 @@ variable (F)
 sections whose restriction onto each stalk falls in the given submonoid. -/
 @[simps]
 noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)) :
-    F.SubmonoidPresheaf where
+    F.SubmonoidPresheaf where 
   obj U := ⨅ x : unop U, Submonoid.comap (F.germ x) (S x)
-  map U V i := by
+  map U V i := by 
     intro s hs
     simp only [Submonoid.mem_comap, Submonoid.mem_infi] at hs⊢
     intro x
@@ -109,9 +113,7 @@ instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf
   intro U
   apply concrete_category.mono_of_injective
   apply IsLocalization.injective _
-  pick_goal 3;
-  · exact Localization.is_localization
-    
+  pick_goal 3; · exact Localization.is_localization
   intro s hs t e
   apply section_ext F (unop U)
   intro x

@@ -74,7 +74,6 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁)
     rw [closure_ball c hr₀.ne']
     exact
       ((differentiable_on_dslope <| ball_mem_nhds _ hR₁).mpr hd).mono (closed_ball_subset_ball hr.2)
-    
   refine' norm_le_of_forall_mem_frontier_norm_le bounded_ball hd _ _
   · rw [frontier_ball c hr₀.ne']
     intro z hz
@@ -85,13 +84,11 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁)
       le_of_lt
         (h_maps
           (mem_ball.2
-            (by
+            (by 
               rw [mem_sphere.1 hz]
               exact hr.2)))
-    
   · rw [closure_ball c hr₀.ne', mem_closed_ball]
     exact hr.1.le
-    
 #align complex.schwarz_aux Complex.schwarz_aux
 
 /-- Two cases of the **Schwarz Lemma** (derivative and distance), merged together. -/
@@ -103,7 +100,6 @@ theorem norm_dslope_le_div_of_maps_to_ball (hd : DifferentiableOn ℂ f (ball c 
   cases' eq_or_ne (dslope f c z) 0 with hc hc
   · rw [hc, norm_zero]
     exact div_nonneg hR₂.le hR₁.le
-    
   rcases exists_dual_vector ℂ _ hc with ⟨g, hg, hgf⟩
   have hg' : ‖g‖₊ = 1 := Nnreal.eq hg
   have hg₀ : ‖g‖₊ ≠ 0 := by simpa only [hg'] using one_ne_zero
@@ -128,7 +124,6 @@ theorem affine_of_maps_to_ball_of_exists_norm_dslope_eq_div [CompleteSpace E]
   rintro z hz
   by_cases z = c
   · simp [h]
-    
   have h_R₁ : 0 < R₁ := nonempty_ball.mp ⟨_, h_z₀⟩
   have g_le_div : ∀ z ∈ ball c R₁, ‖g z‖ ≤ R₂ / R₁ := fun z hz =>
     norm_dslope_le_div_of_maps_to_ball hd h_maps hz
@@ -167,9 +162,7 @@ open ball with center `f c` and radius `R₂`, then for any `z` in the former di
 theorem dist_le_div_mul_dist_of_maps_to_ball (hd : DifferentiableOn ℂ f (ball c R₁))
     (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (hz : z ∈ ball c R₁) :
     dist (f z) (f c) ≤ R₂ / R₁ * dist z c := by
-  rcases eq_or_ne z c with (rfl | hne);
-  · simp only [dist_self, mul_zero]
-    
+  rcases eq_or_ne z c with (rfl | hne); · simp only [dist_self, mul_zero]
   simpa only [dslope_of_ne _ hne, slope_def_module, norm_smul, norm_inv, ← div_eq_inv_mul, ←
     dist_eq_norm, div_le_iff (dist_pos.2 hne)] using norm_dslope_le_div_of_maps_to_ball hd h_maps hz
 #align complex.dist_le_div_mul_dist_of_maps_to_ball Complex.dist_le_div_mul_dist_of_maps_to_ball
@@ -208,7 +201,7 @@ theorem dist_le_dist_of_maps_to_ball_self (hd : DifferentiableOn ℂ f (ball c R
 point `z` of this disk we have `abs (f z) ≤ abs z`. -/
 theorem abs_le_abs_of_maps_to_ball_self (hd : DifferentiableOn ℂ f (ball 0 R))
     (h_maps : MapsTo f (ball 0 R) (ball 0 R)) (h₀ : f 0 = 0) (hz : abs z < R) : abs (f z) ≤ abs z :=
-  by
+  by 
   replace hz : z ∈ ball (0 : ℂ) R; exact mem_ball_zero_iff.2 hz
   simpa only [dist_zero_right] using dist_le_dist_of_maps_to_ball_self hd h_maps h₀ hz
 #align complex.abs_le_abs_of_maps_to_ball_self Complex.abs_le_abs_of_maps_to_ball_self

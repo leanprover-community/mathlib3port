@@ -72,15 +72,12 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣
     · obtain ⟨u, hu⟩ := (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree
       rw [← hu] at this
       exact units.dvd_mul_right.mp this
-      
     · refine' dvd_of_dvd_mul_left_of_no_prime_factors hr _ this
       intro q dvd_num dvd_denom_pow hq
       apply hq.not_unit
       exact num_denom_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
-      
   convert dvd_term_of_is_root_of_dvd_terms 0 (num_is_root_scale_roots_of_aeval_eq_zero hr) _
   · rw [pow_zero, mul_one]
-    
   intro j hj
   apply dvd_mul_of_dvd_right
   convert pow_dvd_pow (Num A r) (Nat.succ_le_of_lt (bot_lt_iff_ne_bot.mpr hj))
@@ -107,9 +104,7 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
     refine' (dvd_mul_of_dvd_right _ _).mul_right _
     convert pow_dvd_pow _ (nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))
     · exact (pow_one _).symm
-      
     simpa using h
-    
   rw [← nat_degree_scale_roots p (denom A r)] at *
   rw [coeff_eq_zero_of_nat_degree_lt (lt_of_le_of_ne (le_of_not_gt h) hj.symm), zero_mul]
   exact dvd_zero _

@@ -87,7 +87,7 @@ variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 
 instance (priority := 100) UniformSpace.toRegularSpace : RegularSpace α :=
   RegularSpace.ofBasis
-    (fun a => by
+    (fun a => by 
       rw [nhds_eq_comap_uniformity]
       exact uniformity_has_basis_closed.comap _)
     fun a V hV => hV.2.Preimage <| continuous_const.prod_mk continuous_id
@@ -172,7 +172,7 @@ theorem id_rel_sub_separation_relation (α : Type _) [UniformSpace α] : idRel �
 
 theorem separation_rel_comap {f : α → β}
     (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) : 𝓢 α = Prod.map f f ⁻¹' 𝓢 β :=
-  by
+  by 
   dsimp [separationRel]
   simp_rw [uniformity_comap h, (Filter.comap_has_basis (Prod.map f f) (𝓤 β)).sInter_sets, ←
     preimage_Inter, sInter_eq_bInter]
@@ -196,17 +196,16 @@ theorem isClosedSeparationRel : IsClosed (𝓢 α) := by
   exact isClosedClosure
 #align is_closed_separation_rel isClosedSeparationRel
 
-theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by classical
-  constructor <;> intro h
-  · rw [t2_iff_is_closed_diagonal, ← show 𝓢 α = diagonal α from h.1]
-    exact isClosedSeparationRel
-    
-  · rw [separated_def']
-    intro x y hxy
-    rcases t2_separation hxy with ⟨u, v, uo, vo, hx, hy, h⟩
-    rcases is_open_iff_ball_subset.1 uo x hx with ⟨r, hrU, hr⟩
-    exact ⟨r, hrU, fun H => h.le_bot ⟨hr H, hy⟩⟩
-    
+theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
+  classical 
+    constructor <;> intro h
+    · rw [t2_iff_is_closed_diagonal, ← show 𝓢 α = diagonal α from h.1]
+      exact isClosedSeparationRel
+    · rw [separated_def']
+      intro x y hxy
+      rcases t2_separation hxy with ⟨u, v, uo, vo, hx, hy, h⟩
+      rcases is_open_iff_ball_subset.1 uo x hx with ⟨r, hrU, hr⟩
+      exact ⟨r, hrU, fun H => h.le_bot ⟨hr H, hy⟩⟩
 #align separated_iff_t2 separated_iff_t2
 
 -- see Note [lower instance priority]
@@ -230,7 +229,7 @@ theorem isClosedOfSpacedOut [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in
   apply eq_of_forall_symmetric
   intro V V_in V_symm
   rcases hx (inter_mem V₁_in V_in) with ⟨z, hz, hz'⟩
-  obtain rfl : z = y := by
+  obtain rfl : z = y := by 
     by_contra hzy
     exact hs hz' hy' hzy (h_comp <| mem_comp_of_mem_ball V₁_symm (ball_inter_left x _ _ hz) hy)
   exact ball_inter_right x _ _ hz
@@ -238,7 +237,7 @@ theorem isClosedOfSpacedOut [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in
 
 theorem isClosedRangeOfSpacedOut {ι} [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α)
     {f : ι → α} (hf : Pairwise fun x y => (f x, f y) ∉ V₀) : IsClosed (range f) :=
-  isClosedOfSpacedOut V₀_in <| by
+  isClosedOfSpacedOut V₀_in <| by 
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ h
     exact hf (ne_of_apply_ne f h)
 #align is_closed_range_of_spaced_out isClosedRangeOfSpacedOut
@@ -258,7 +257,10 @@ def separationSetoid (α : Type u) [UniformSpace α] : Setoid α :=
 attribute [local instance] separation_setoid
 
 instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
-    UniformSpace (Quotient (separationSetoid α)) where
+    UniformSpace
+      (Quotient
+        (separationSetoid
+          α)) where 
   toTopologicalSpace := u.toTopologicalSpace.coinduced fun x => ⟦x⟧
   uniformity := map (fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) u.uniformity
   refl := le_trans (by simp [Quotient.exists_rep]) (Filter.map_mono refl_le_uniformity)
@@ -409,10 +411,8 @@ theorem uniform_continuous_lift [SeparatedSpace β] (f : α → β) : UniformCon
   by_cases hf : UniformContinuous f
   · rw [lift, dif_pos hf]
     exact uniform_continuous_quotient_lift hf
-    
   · rw [lift, dif_neg hf]
     exact uniform_continuous_of_const fun a b => rfl
-    
 #align
   uniform_space.separation_quotient.uniform_continuous_lift UniformSpace.SeparationQuotient.uniform_continuous_lift
 
@@ -457,7 +457,6 @@ theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a�
     exact
       ⟨separated_of_uniform_continuous uniform_continuous_fst h,
         separated_of_uniform_continuous uniform_continuous_snd h⟩
-    
   · rintro ⟨eqv_α, eqv_β⟩ r r_in
     rw [uniformity_prod] at r_in
     rcases r_in with ⟨t_α, ⟨r_α, r_α_in, h_α⟩, t_β, ⟨r_β, r_β_in, h_β⟩, rfl⟩
@@ -466,7 +465,6 @@ theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a�
     have key_α : p_α ((a₁, b₁), (a₂, b₂)) ∈ r_α := by simp [p_α, eqv_α r_α r_α_in]
     have key_β : p_β ((a₁, b₁), (a₂, b₂)) ∈ r_β := by simp [p_β, eqv_β r_β r_β_in]
     exact ⟨h_α key_α, h_β key_β⟩
-    
 #align uniform_space.separation_prod UniformSpace.separation_prod
 
 instance Separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace (α × β) :=

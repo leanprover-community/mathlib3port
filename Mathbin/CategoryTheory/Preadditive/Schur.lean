@@ -50,7 +50,7 @@ any morphism between simple objects is (exclusively) either an isomorphism or ze
 -/
 theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X ⟶ Y) :
     IsIso f ↔ f ≠ 0 :=
-  ⟨fun I => by
+  ⟨fun I => by 
     intro h
     apply id_nonzero X
     simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => is_iso_of_hom_simple w⟩
@@ -829,12 +829,11 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
   have id_nonzero := (is_iso_iff_nonzero (𝟙 X)).mp (by infer_instance)
   apply finrank_eq_one (𝟙 X)
   · exact id_nonzero
-    
   · intro f
     haveI : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero
     obtain ⟨c, nu⟩ :=
       @spectrum.nonempty_of_is_alg_closed_of_finite_dimensional 𝕜 (End X) _ _ _ _ _
-        (by
+        (by 
           convert I
           ext
           rfl
@@ -845,7 +844,6 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
     rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not,
       sub_eq_zero, Algebra.algebra_map_eq_smul_one] at nu
     exact nu.symm
-    
 #align category_theory.finrank_endomorphism_eq_one CategoryTheory.finrank_endomorphism_eq_one
 
 variable [HasKernels C]
@@ -1594,14 +1592,12 @@ theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X �
   · skip
     rw [finrank_zero_of_subsingleton]
     exact zero_le_one
-    
   · obtain ⟨f, nz⟩ := (nontrivial_iff_exists_ne 0).mp h
     haveI fi := (is_iso_iff_nonzero f).mpr nz
     apply finrank_le_one f
     intro g
     obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
     exact ⟨c, by simpa using w =≫ f⟩
-    
 #align
   category_theory.finrank_hom_simple_simple_le_one CategoryTheory.finrank_hom_simple_simple_le_one
 
@@ -1614,30 +1610,26 @@ theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (
     obtain ⟨f, nz, -⟩ := h
     rw [← is_iso_iff_nonzero] at nz
     exact ⟨as_iso f⟩
-    
   · rintro ⟨f⟩
     have le_one := finrank_hom_simple_simple_le_one 𝕜 X Y
     have zero_lt : 0 < finrank 𝕜 (X ⟶ Y) :=
       finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (is_iso_iff_nonzero f.hom).mp inferInstance⟩
     linarith
-    
 #align
   category_theory.finrank_hom_simple_simple_eq_one_iff CategoryTheory.finrank_hom_simple_simple_eq_one_iff
 
 theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)]
     [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) :=
-  by
+  by 
   rw [← not_nonempty_iff, ← not_congr (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y)]
   refine'
-    ⟨fun h => by
+    ⟨fun h => by 
       rw [h]
       simp, fun h => _⟩
   have := finrank_hom_simple_simple_le_one 𝕜 X Y
   interval_cases finrank 𝕜 (X ⟶ Y) with h'
   · exact h'
-    
   · exact False.elim (h h')
-    
 #align
   category_theory.finrank_hom_simple_simple_eq_zero_iff CategoryTheory.finrank_hom_simple_simple_eq_zero_iff
 

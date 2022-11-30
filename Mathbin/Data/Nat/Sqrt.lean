@@ -95,18 +95,15 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) (m')
   cases' lt_or_ge n ((r + 2 ^ m) * (r + 2 ^ m)) with hl hl
   · rw [sqrt_aux_2 b0 (lb.2 hl), hm, re]
     apply H1 hl
-    
   · cases' le.dest hl with n' e
     rw [@sqrt_aux_1 (2 * r * 2 ^ m) (n - r * r) (2 ^ m * 2 ^ m) b0 (n - (r + 2 ^ m) * (r + 2 ^ m)),
       hm, re, ← right_distrib]
     · apply H2 hl
-      
     apply Eq.symm
     apply tsub_eq_of_eq_add_rev
     rw [← add_assoc, (_ : r * r + _ = _)]
     exact (add_tsub_cancel_of_le hl).symm
     simp [left_distrib, right_distrib, two_mul, mul_comm, mul_assoc, add_assoc]
-    
 #align nat.sqrt_aux_is_sqrt_lemma nat.sqrt_aux_is_sqrt_lemma
 
 private theorem sqrt_aux_is_sqrt (n) :
@@ -126,19 +123,16 @@ private theorem sqrt_aux_is_sqrt (n) :
       intro h
     · have := sqrt_aux_is_sqrt m r h₁ h
       simpa [pow_succ, mul_comm, mul_assoc]
-      
     · rw [pow_succ', mul_two, ← add_assoc] at h₂
       have := sqrt_aux_is_sqrt m (r + 2 ^ (m + 1)) h h₂
       rwa [show (r + 2 ^ (m + 1)) * 2 ^ (m + 1) = 2 * (r + 2 ^ (m + 1)) * 2 ^ m by
           simp [pow_succ, mul_comm, mul_left_comm]]
-      
 #align nat.sqrt_aux_is_sqrt nat.sqrt_aux_is_sqrt
 
 private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) := by
   generalize e : size n = s; cases' s with s <;> simp [e, sqrt]
   · rw [size_eq_zero.1 e, is_sqrt]
     exact by decide
-    
   · have := sqrt_aux_is_sqrt n (div2 s) 0 (zero_le _)
     simp [show 2 ^ div2 s * 2 ^ div2 s = shiftl 1 (bit0 (div2 s)) by
         generalize div2 s = x
@@ -152,7 +146,6 @@ private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) := by
     apply (@div_lt_iff_lt_mul _ _ 2 (by decide)).1
     rw [div2_val]
     apply lt_succ_self
-    
 #align nat.sqrt_is_sqrt nat.sqrt_is_sqrt
 
 theorem sqrt_le (n : ℕ) : sqrt n * sqrt n ≤ n :=
@@ -293,7 +286,7 @@ theorem succ_le_succ_sqrt' (n : ℕ) : n + 1 ≤ (sqrt n + 1) ^ 2 :=
 
 /-- There are no perfect squares strictly between m² and (m+1)² -/
 theorem not_exists_sq {n m : ℕ} (hl : m * m < n) (hr : n < (m + 1) * (m + 1)) : ¬∃ t, t * t = n :=
-  by
+  by 
   rintro ⟨t, rfl⟩
   have h1 : m < t := nat.mul_self_lt_mul_self_iff.mpr hl
   have h2 : t < m + 1 := nat.mul_self_lt_mul_self_iff.mpr hr

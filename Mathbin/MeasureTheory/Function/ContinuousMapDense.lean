@@ -72,15 +72,12 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ⊤),
       (Lp.simple_func.indicator_const p hs hμs.Ne c : Lp E p μ) ∈
         (BoundedContinuousFunction E p μ).topologicalClosure
-    by
+    by 
     rw [AddSubgroup.eq_top_iff']
     refine' Lp.induction hp _ _ _ _
     · exact this
-      
     · exact fun f g hf hg hfg' => AddSubgroup.add_mem _
-      
     · exact AddSubgroup.isClosedTopologicalClosure _
-      
   -- Let `s` be a finite-measure measurable set, let's approximate `c` times its indicator function
   intro c s hs hsμ
   refine' mem_closure_iff_frequently.mpr _
@@ -118,7 +115,6 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     convert this.le using 1
     · rw [add_comm, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
       exacts[disjoint_sdiff_self_left, F_closed.measurable_set]
-      
     have : (2 : ℝ≥0∞) * η = η + η := by simpa using add_mul (1 : ℝ≥0∞) 1 η
     rw [this]
     abel
@@ -141,18 +137,14 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
           nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
         have h₁ : (2 : ℝ) * ‖c‖ = bit0 ‖c‖ := by simpa using add_mul (1 : ℝ) 1 ‖c‖
         simp [hFu, norm_smul, h₀, ← h₁, g_norm x]
-        
       · simp [hgF hF, Fs hF]
-        
-      
     · have : x ∉ s := fun h => hu (su h)
       simp [hgu hu, this]
-      
   -- The rest is basically just `ennreal`-arithmetic
   have gc_snorm :
     snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤
       (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) :=
-    by
+    by 
     refine' (snorm_mono_ae (Filter.eventually_of_forall gc_bd)).trans _
     rw [snorm_indicator_const (u_open.sdiff F_closed).MeasurableSet hp₀.ne' hp]
     push_cast [← Ennreal.coe_rpow_of_nonneg _ hp₀']
@@ -169,13 +161,11 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     refine' le_trans _ hη_le
     rw [simple_func.coe_indicator_const, indicator_const_Lp, ← mem_ℒp.to_Lp_sub, Lp.norm_to_Lp]
     exact Ennreal.to_real_le_coe_of_le_coe gc_snorm
-    
   · rw [SetLike.mem_coe, mem_bounded_continuous_function_iff]
     refine' ⟨BoundedContinuousFunction.ofNormedAddCommGroup _ gc_cont ‖c‖ _, rfl⟩
     intro x
     have h₀ : g x * ‖c‖ ≤ ‖c‖ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
     simp [norm_smul, g_norm x, h₀]
-    
 #align
   measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.lp.bounded_continuous_function_dense
 

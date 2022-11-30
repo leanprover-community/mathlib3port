@@ -41,7 +41,7 @@ such that `f ≫ retraction f = 𝟙 X`.
 
 Every split monomorphism is a monomorphism.
 -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure SplitMono {X Y : C} (f : X ⟶ Y) where
   retraction : Y ⟶ X
   id' : f ≫ retraction = 𝟙 X := by obviously
@@ -67,7 +67,7 @@ such that `section_ f ≫ f = 𝟙 Y`.
 
 Every split epimorphism is an epimorphism.
 -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure SplitEpi {X Y : C} (f : X ⟶ Y) where
   section_ : Y ⟶ X
   id' : section_ ≫ f = 𝟙 Y := by obviously
@@ -239,14 +239,16 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 /-- Split monomorphisms are also absolute monomorphisms. -/
 @[simps]
-def SplitMono.map {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) (F : C ⥤ D) : SplitMono (F.map f) where
+def SplitMono.map {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) (F : C ⥤ D) :
+    SplitMono (F.map f) where 
   retraction := F.map sm.retraction
   id' := by rw [← functor.map_comp, split_mono.id, Functor.map_id]
 #align category_theory.split_mono.map CategoryTheory.SplitMono.map
 
 /-- Split epimorphisms are also absolute epimorphisms. -/
 @[simps]
-def SplitEpi.map {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) (F : C ⥤ D) : SplitEpi (F.map f) where
+def SplitEpi.map {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) (F : C ⥤ D) :
+    SplitEpi (F.map f) where 
   section_ := F.map se.section_
   id' := by rw [← functor.map_comp, split_epi.id, Functor.map_id]
 #align category_theory.split_epi.map CategoryTheory.SplitEpi.map

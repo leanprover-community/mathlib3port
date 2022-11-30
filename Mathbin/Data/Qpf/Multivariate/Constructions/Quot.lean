@@ -39,7 +39,7 @@ construct `mvqpf` instances by transporting them across
 surjective functions -/
 def quotientQpf (FG_abs_repr : ∀ {α} (x : G α), FG_abs (FG_repr x) = x)
     (FG_abs_map : ∀ {α β} (f : α ⟹ β) (x : F α), FG_abs (f <$$> x) = f <$$> FG_abs x) :
-    Mvqpf G where
+    Mvqpf G where 
   p := q.p
   abs α p := FG_abs (abs p)
   repr α x := repr (FG_repr x)

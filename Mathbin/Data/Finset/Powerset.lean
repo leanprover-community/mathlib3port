@@ -86,7 +86,7 @@ theorem card_powerset (s : Finset α) : card (powerset s) = 2 ^ card s :=
 #align finset.card_powerset Finset.card_powerset
 
 theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t ∈ s.powerset)
-    (h : a ∉ s) : a ∉ t := by
+    (h : a ∉ s) : a ∉ t := by 
   apply mt _ h
   apply mem_powerset.1 ht
 #align finset.not_mem_of_mem_powerset_of_not_mem Finset.not_mem_of_mem_powerset_of_not_mem
@@ -98,20 +98,14 @@ theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
   by_cases h : a ∈ t
   · constructor
     · exact fun H => Or.inr ⟨_, H, insert_erase h⟩
-      
     · intro H
       cases H
       · exact subset.trans (erase_subset a t) H
-        
       · rcases H with ⟨u, hu⟩
         rw [← hu.2]
         exact subset.trans (erase_insert_subset a u) hu.1
-        
-      
-    
   · have : ¬∃ u : Finset α, u ⊆ s ∧ insert a u = t := by simp [Ne.symm (ne_insert_of_not_mem _ _ h)]
     simp [Finset.erase_eq_of_not_mem h, this]
-    
 #align finset.powerset_insert Finset.powerset_insert
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -226,7 +220,7 @@ theorem card_powerset_len (n : ℕ) (s : Finset α) : card (powersetLen n s) = N
 theorem powerset_len_zero (s : Finset α) : Finset.powersetLen 0 s = {∅} := by
   ext; rw [mem_powerset_len, mem_singleton, card_eq_zero]
   refine'
-    ⟨fun h => h.2, fun h => by
+    ⟨fun h => h.2, fun h => by 
       rw [h]
       exact ⟨empty_subset s, rfl⟩⟩
 #align finset.powerset_len_zero Finset.powerset_len_zero
@@ -244,7 +238,7 @@ theorem powerset_len_eq_filter {n} {s : Finset α} :
 
 theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : x ∉ s) (n : ℕ) :
     powersetLen n.succ (insert x s) = powersetLen n.succ s ∪ (powersetLen n s).image (insert x) :=
-  by
+  by 
   rw [powerset_len_eq_filter, powerset_insert, filter_union, ← powerset_len_eq_filter]
   congr
   rw [powerset_len_eq_filter, image_filter]
@@ -257,21 +251,18 @@ theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : 
 #align finset.powerset_len_succ_insert Finset.powerset_len_succ_insert
 
 theorem powerset_len_nonempty {n : ℕ} {s : Finset α} (h : n ≤ s.card) :
-    (powersetLen n s).Nonempty := by classical
-  induction' s using Finset.induction_on with x s hx IH generalizing n
-  · rw [card_empty, le_zero_iff] at h
-    rw [h, powerset_len_zero]
-    exact Finset.singleton_nonempty _
-    
-  · cases n
-    · simp
-      
-    · rw [card_insert_of_not_mem hx, Nat.succ_le_succ_iff] at h
-      rw [powerset_len_succ_insert hx]
-      refine' nonempty.mono _ ((IH h).image (insert x))
-      convert subset_union_right _ _
-      
-    
+    (powersetLen n s).Nonempty := by
+  classical 
+    induction' s using Finset.induction_on with x s hx IH generalizing n
+    · rw [card_empty, le_zero_iff] at h
+      rw [h, powerset_len_zero]
+      exact Finset.singleton_nonempty _
+    · cases n
+      · simp
+      · rw [card_insert_of_not_mem hx, Nat.succ_le_succ_iff] at h
+        rw [powerset_len_succ_insert hx]
+        refine' nonempty.mono _ ((IH h).image (insert x))
+        convert subset_union_right _ _
 #align finset.powerset_len_nonempty Finset.powerset_len_nonempty
 
 @[simp]
@@ -280,10 +271,8 @@ theorem powerset_len_self (s : Finset α) : powersetLen s.card s = {s} := by
   rw [mem_powerset_len, mem_singleton]
   constructor
   · exact fun ⟨hs, hc⟩ => eq_of_subset_of_card_le hs hc.ge
-    
   · rintro rfl
     simp
-    
 #align finset.powerset_len_self Finset.powerset_len_self
 
 theorem powerset_card_bUnion [DecidableEq (Finset α)] (s : Finset α) :
@@ -293,10 +282,8 @@ theorem powerset_card_bUnion [DecidableEq (Finset α)] (s : Finset α) :
     exact
       ⟨a.card, mem_range.mpr (Nat.lt_succ_of_le (card_le_of_subset (mem_powerset.mp ha))),
         mem_powerset_len.mpr ⟨mem_powerset.mp ha, rfl⟩⟩
-    
   · rcases mem_bUnion.mp ha with ⟨i, hi, ha⟩
     exact mem_powerset.mpr (mem_powerset_len.mp ha).1
-    
 #align finset.powerset_card_bUnion Finset.powerset_card_bUnion
 
 theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) :
@@ -305,23 +292,17 @@ theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.
   · simp_rw [Finset.sup_le_iff, mem_powerset_len]
     rintro x ⟨h, -⟩
     exact h
-    
   · rw [sup_eq_bUnion, le_iff_subset, subset_iff]
     cases' (Nat.succ_le_of_lt hn).eq_or_lt with h' h'
     · simp [h']
-      
     · intro x hx
       simp only [mem_bUnion, exists_prop, id.def]
       obtain ⟨t, ht⟩ : ∃ t, t ∈ powerset_len n (u.erase x) := powerset_len_nonempty _
       · refine' ⟨insert x t, _, mem_insert_self _ _⟩
         rw [← insert_erase hx, powerset_len_succ_insert (not_mem_erase _ _)]
         exact mem_union_right _ (mem_image_of_mem _ ht)
-        
       · rw [card_erase_of_mem hx]
         exact Nat.le_pred_of_lt hn
-        
-      
-    
 #align finset.powerset_len_sup Finset.powerset_len_sup
 
 @[simp]

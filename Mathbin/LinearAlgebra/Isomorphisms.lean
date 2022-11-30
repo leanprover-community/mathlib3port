@@ -67,7 +67,7 @@ to `x + p'`, where `p` and `p'` are submodules of an ambient module.
 def quotientInfToSupQuotient (p p' : Submodule R M) :
     p ⧸ comap p.Subtype (p ⊓ p') →ₗ[R] _ ⧸ comap (p ⊔ p').Subtype p' :=
   (comap p.subtype (p ⊓ p')).liftq ((comap (p ⊔ p').Subtype p').mkq.comp (of_le le_sup_left))
-    (by
+    (by 
       rw [ker_comp, of_le, comap_cod_restrict, ker_mkq, map_comap_subtype]
       exact comap_mono (inf_le_inf_right _ le_sup_left))
 #align linear_map.quotient_inf_to_sup_quotient LinearMap.quotientInfToSupQuotient
@@ -78,11 +78,11 @@ Second Isomorphism Law : the canonical map from `p/(p ∩ p')` to `(p+p')/p'` as
 noncomputable def quotientInfEquivSupQuotient (p p' : Submodule R M) :
     (p ⧸ comap p.Subtype (p ⊓ p')) ≃ₗ[R] _ ⧸ comap (p ⊔ p').Subtype p' :=
   LinearEquiv.ofBijective (quotient_inf_to_sup_quotient p p')
-    (by
+    (by 
       rw [← ker_eq_bot, quotient_inf_to_sup_quotient, ker_liftq_eq_bot]
       rw [ker_comp, ker_mkq]
       exact fun ⟨x, hx1⟩ hx2 => ⟨hx1, hx2⟩)
-    (by
+    (by 
       rw [← range_eq_top, quotient_inf_to_sup_quotient, range_liftq, eq_top_iff']
       rintro ⟨x, hx⟩; rcases mem_sup.1 hx with ⟨y, hy, z, hz, rfl⟩
       use ⟨y, hy⟩; apply (Submodule.Quotient.eq _).2
@@ -139,7 +139,7 @@ variable (S T : Submodule R M) (h : S ≤ T)
 /-- The map from the third isomorphism theorem for modules: `(M / S) / (T / S) → M / T`. -/
 def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkq →ₗ[R] M ⧸ T :=
   liftq _ (mapq S T LinearMap.id h)
-    (by
+    (by 
       rintro _ ⟨x, hx, rfl⟩
       rw [LinearMap.mem_ker, mkq_apply, mapq_apply]
       exact (quotient.mk_eq_zero _).mpr hx)

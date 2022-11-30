@@ -52,7 +52,7 @@ theorem Quotient.eq_rel {r : Setoid α} {x y} :
 
 namespace Setoid
 
-@[ext.1]
+@[ext]
 theorem ext' {r s : Setoid α} (H : ∀ a b, r.Rel a b ↔ s.Rel a b) : r = s :=
   ext H
 #align setoid.ext' Setoid.ext'
@@ -123,7 +123,8 @@ theorem ker_def {f : α → β} {x y : α} : (ker f).Rel x y ↔ f x = f y :=
 /-- Given types `α`, `β`, the product of two equivalence relations `r` on `α` and `s` on `β`:
     `(x₁, x₂), (y₁, y₂) ∈ α × β` are related by `r.prod s` iff `x₁` is related to `y₁`
     by `r` and `x₂` is related to `y₂` by `s`. -/
-protected def prod (r : Setoid α) (s : Setoid β) : Setoid (α × β) where
+protected def prod (r : Setoid α) (s : Setoid β) :
+    Setoid (α × β) where 
   R x y := r.Rel x.1 y.1 ∧ s.Rel x.2 y.2
   iseqv :=
     ⟨fun x => ⟨r.refl' x.1, s.refl' x.2⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩,
@@ -162,7 +163,7 @@ theorem Inf_def {s : Set (Setoid α)} : (inf s).Rel = inf (rel '' s) := by
   rfl
 #align setoid.Inf_def Setoid.Inf_def
 
-instance : PartialOrder (Setoid α) where
+instance : PartialOrder (Setoid α) where 
   le := (· ≤ ·)
   lt r s := r ≤ s ∧ ¬s ≤ r
   le_refl _ _ _ := id
@@ -211,7 +212,7 @@ theorem eqv_gen_eq (r : α → α → Prop) :
 /-- The supremum of two equivalence relations r and s is the equivalence closure of the binary
     relation `x is related to y by r or s`. -/
 theorem sup_eq_eqv_gen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.Rel x y ∨ s.Rel x y :=
-  by
+  by 
   rw [eqv_gen_eq]
   apply congr_arg Inf
   simp only [le_def, or_imp, ← forall_and]
@@ -268,7 +269,9 @@ theorem eqv_gen_mono {r s : α → α → Prop} (h : ∀ x y, r x y → s x y) :
 
 /-- There is a Galois insertion of equivalence relations on α into binary relations
     on α, with equivalence closure the lower adjoint. -/
-def gi : @GaloisInsertion (α → α → Prop) (Setoid α) _ _ EqvGen.Setoid Rel where
+def gi :
+    @GaloisInsertion (α → α → Prop) (Setoid α) _ _ EqvGen.Setoid
+      Rel where 
   choice r h := EqvGen.Setoid r
   gc r s := ⟨fun H _ _ h => H <| EqvGen.rel _ _ h, fun H => eqv_gen_of_setoid s ▸ eqv_gen_mono H⟩
   le_l_u x := (eqv_gen_of_setoid x).symm ▸ le_refl x
@@ -290,7 +293,9 @@ theorem ker_iff_mem_preimage {f : α → β} {x y} : (ker f).Rel x y ↔ x ∈ f
 
 /-- Equivalence between functions `α → β` such that `r x y → f x = f y` and functions
 `quotient r → β`. -/
-def liftEquiv (r : Setoid α) : { f : α → β // r ≤ ker f } ≃ (Quotient r → β) where
+def liftEquiv (r : Setoid α) :
+    { f : α → β // r ≤ ker f } ≃
+      (Quotient r → β) where 
   toFun f := Quotient.lift (f : α → β) f.2
   invFun f := ⟨f ∘ Quotient.mk'', fun x y h => by simp [ker_def, Quotient.sound h]⟩
   left_inv := fun ⟨f, hf⟩ => Subtype.eq <| funext fun x => rfl
@@ -338,7 +343,8 @@ noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.range f :=
 domain. -/
 @[simps]
 def quotientKerEquivOfRightInverse (g : β → α) (hf : Function.RightInverse g f) :
-    Quotient (ker f) ≃ β where
+    Quotient (ker f) ≃
+      β where 
   toFun a := (Quotient.liftOn' a f) fun _ _ => id
   invFun b := Quotient.mk' (g b)
   left_inv a := (Quotient.inductionOn' a) fun a => Quotient.sound' <| hf (f a)
@@ -410,7 +416,9 @@ variable (r f)
 
 /-- The third isomorphism theorem for sets. -/
 def quotientQuotientEquivQuotient (s : Setoid α) (h : r ≤ s) :
-    Quotient (ker (Quot.mapRight h)) ≃ Quotient s where
+    Quotient (ker (Quot.mapRight h)) ≃
+      Quotient
+        s where 
   toFun x :=
     (Quotient.liftOn' x fun w =>
         (Quotient.liftOn' w (@Quotient.mk'' _ s)) fun x y H => Quotient.sound <| h H)
@@ -430,7 +438,11 @@ open Quotient
 
 /-- Given an equivalence relation `r` on `α`, the order-preserving bijection between the set of
 equivalence relations containing `r` and the equivalence relations on the quotient of `α` by `r`. -/
-def correspondence (r : Setoid α) : { s // r ≤ s } ≃o Setoid (Quotient r) where
+def correspondence (r : Setoid α) :
+    { s // r ≤ s } ≃o
+      Setoid
+        (Quotient
+          r) where 
   toFun s := mapOfSurjective s.1 Quotient.mk'' ((ker_mk_eq r).symm ▸ s.2) exists_rep
   invFun s := ⟨comap Quotient.mk' s, fun x y h => by rw [comap_rel, eq_rel.2 h]⟩
   left_inv s :=

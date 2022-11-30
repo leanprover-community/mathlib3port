@@ -34,7 +34,7 @@ theorem IsSmulRegular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α}
 
 instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] :
     SmulWithZero α (∀ i, f i) :=
-  { Pi.hasSmul with smul_zero := fun _ => funext fun _ => smul_zero _,
+  { Pi.instSMul with smul_zero := fun _ => funext fun _ => smul_zero _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero Pi.smulWithZero
 
@@ -80,12 +80,15 @@ instance Function.module (α β : Type _) [Semiring α] [AddCommMonoid β] [Modu
 variable {I f}
 
 instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddCommMonoid (g i)}
-    [∀ i, Module (f i) (g i)] : Module (∀ i, f i) (∀ i, g i) where
-  add_smul := by
+    [∀ i, Module (f i) (g i)] :
+    Module (∀ i, f i)
+      (∀ i,
+        g i) where 
+  add_smul := by 
     intros
     ext1
     apply add_smul
-  zero_smul := by
+  zero_smul := by 
     intros
     ext1
     apply zero_smul

@@ -40,7 +40,8 @@ variable [Zero α] {f : ι →₀ α} {i : ι} {a : α}
 
 /-- Pointwise `finset.singleton` bundled as a `finsupp`. -/
 @[simps]
-def rangeSingleton (f : ι →₀ α) : ι →₀ Finset α where
+def rangeSingleton (f : ι →₀ α) :
+    ι →₀ Finset α where 
   toFun i := {f i}
   support := f.support
   mem_support_to_fun i := by
@@ -60,7 +61,8 @@ variable [Zero α] [PartialOrder α] [LocallyFiniteOrder α] {f g : ι →₀ α
 
 /-- Pointwise `finset.Icc` bundled as a `finsupp`. -/
 @[simps toFun]
-def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α where
+def rangeIcc (f g : ι →₀ α) :
+    ι →₀ Finset α where 
   toFun i := icc (f i) (g i)
   support := f.support ∪ g.support
   mem_support_to_fun i := by

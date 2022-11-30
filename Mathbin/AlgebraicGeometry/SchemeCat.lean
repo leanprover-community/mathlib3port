@@ -95,7 +95,7 @@ theorem id_app {X : SchemeCat} (U : (Opens X.carrier)ᵒᵖ) :
     (𝟙 X : _).val.c.app U =
       X.Presheaf.map
         (eqToHom
-          (by
+          (by 
             induction U using Opposite.rec
             cases U
             rfl)) :=
@@ -151,13 +151,13 @@ instance is_LocallyRingedSpace_iso {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] :
 theorem inv_val_c_app {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
     (inv f).val.c.app (op U) =
       X.Presheaf.map
-          (eq_to_hom <| by
+          (eq_to_hom <| by 
                 rw [is_iso.hom_inv_id]
                 ext1
                 rfl :
               (Opens.map (f ≫ inv f).1.base).obj U ⟶ U).op ≫
         inv (f.val.c.app (op <| (Opens.map _).obj U)) :=
-  by
+  by 
   rw [is_iso.eq_comp_inv]
   erw [← Scheme.comp_val_c_app]
   rw [Scheme.congr_app (is_iso.hom_inv_id f), Scheme.id_app, ← functor.map_comp, eq_to_hom_trans,
@@ -174,7 +174,8 @@ abbrev Hom.appLe {X Y : SchemeCat} (f : X ⟶ Y) {V : Opens X.carrier} {U : Open
 
 /-- The spectrum of a commutative ring, as a scheme.
 -/
-def specObj (R : CommRingCat) : SchemeCat where
+def specObj (R : CommRingCat) :
+    SchemeCat where 
   local_affine x := ⟨⟨⊤, trivial⟩, R, ⟨(SpecCat.toLocallyRingedSpace.obj (op R)).restrictTopIso⟩⟩
   toLocallyRingedSpace := SpecCat.locallyRingedSpaceObj R
 #align algebraic_geometry.Scheme.Spec_obj AlgebraicGeometry.SchemeCat.specObj
@@ -206,7 +207,7 @@ theorem Spec_map_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
 /-- The spectrum, as a contravariant functor from commutative rings to schemes.
 -/
 @[simps]
-def spec : CommRingCatᵒᵖ ⥤ Scheme where
+def spec : CommRingCatᵒᵖ ⥤ Scheme where 
   obj R := specObj (unop R)
   map R S f := specMap f.unop
   map_id' R := by rw [unop_id, Spec_map_id]
@@ -216,7 +217,7 @@ def spec : CommRingCatᵒᵖ ⥤ Scheme where
 /-- The empty scheme.
 -/
 @[simps]
-def empty.{u} : SchemeCat.{u} where
+def empty.{u} : SchemeCat.{u} where 
   carrier := TopCat.of PEmpty
   Presheaf := (CategoryTheory.Functor.const _).obj (CommRingCat.of PUnit)
   IsSheaf := Presheaf.isSheafOfIsTerminal _ CommRingCat.punitIsTerminal
@@ -325,7 +326,7 @@ end SchemeCat
 theorem basic_open_eq_of_affine {R : CommRingCat} (f : R) :
     (SchemeCat.spec.obj <| op R).basicOpen ((specΓIdentity.app R).inv f) =
       PrimeSpectrum.basicOpen f :=
-  by
+  by 
   ext
   erw [Scheme.mem_basic_open_top]
   suffices IsUnit (structure_sheaf.to_stalk R x f) ↔ f ∉ PrimeSpectrum.asIdeal x by exact this
@@ -342,7 +343,7 @@ theorem basic_open_eq_of_affine' {R : CommRingCat}
     (f : (SpecCat.toSheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
     (SchemeCat.spec.obj <| op R).basicOpen f =
       PrimeSpectrum.basicOpen ((specΓIdentity.app R).Hom f) :=
-  by
+  by 
   convert basic_open_eq_of_affine ((Spec_Γ_identity.app R).Hom f)
   exact (iso.hom_inv_id_apply _ _).symm
 #align algebraic_geometry.basic_open_eq_of_affine' AlgebraicGeometry.basic_open_eq_of_affine'

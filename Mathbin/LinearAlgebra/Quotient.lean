@@ -36,7 +36,7 @@ def quotientRel : Setoid M :=
 
 theorem quotient_rel_r_def {x y : M} : @Setoid.r _ p.quotientRel x y ↔ x - y ∈ p :=
   Iff.trans
-    (by
+    (by 
       rw [left_rel_apply, sub_eq_add_neg, neg_add, neg_neg]
       rfl)
     neg_mem_iff
@@ -246,7 +246,8 @@ instance QuotientBot.infinite [Infinite M] : Infinite (M ⧸ (⊥ : Submodule R 
     sub_eq_zero.mp <| (Submodule.Quotient.eq ⊥).mp h
 #align submodule.quotient_bot.infinite Submodule.QuotientBot.infinite
 
-instance QuotientTop.unique : Unique (M ⧸ (⊤ : Submodule R M)) where
+instance QuotientTop.unique :
+    Unique (M ⧸ (⊤ : Submodule R M)) where 
   default := 0
   uniq x := (Quotient.inductionOn' x) fun x => (Submodule.Quotient.eq ⊤).mpr Submodule.mem_top
 #align submodule.quotient_top.unique Submodule.QuotientTop.unique
@@ -263,10 +264,8 @@ theorem subsingleton_quotient_iff_eq_top : Subsingleton (M ⧸ p) ↔ p = ⊤ :=
     refine' eq_top_iff.mpr fun x _ => _
     have : x - 0 ∈ p := (Submodule.Quotient.eq p).mp (Subsingleton.elim _ _)
     rwa [sub_zero] at this
-    
   · rintro rfl
     infer_instance
-    
 #align submodule.subsingleton_quotient_iff_eq_top Submodule.subsingleton_quotient_iff_eq_top
 
 theorem unique_quotient_iff_eq_top : Nonempty (Unique (M ⧸ p)) ↔ p = ⊤ :=
@@ -297,7 +296,7 @@ theorem quot_hom_ext ⦃f g : M ⧸ p →ₗ[R] M₂⦄ (h : ∀ x, f (Quotient.
 #align submodule.quot_hom_ext Submodule.quot_hom_ext
 
 /-- The map from a module `M` to the quotient of `M` by a submodule `p` as a linear map. -/
-def mkq : M →ₗ[R] M ⧸ p where
+def mkq : M →ₗ[R] M ⧸ p where 
   toFun := Quotient.mk
   map_add' := by simp
   map_smul' := by simp
@@ -320,7 +319,7 @@ variable {R₂ M₂ : Type _} [Ring R₂] [AddCommGroup M₂] [Module R₂ M₂]
 `submodule.mkq` are equal.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem linear_map_qext ⦃f g : M ⧸ p →ₛₗ[τ₁₂] M₂⦄ (h : f.comp p.mkq = g.comp p.mkq) : f = g :=
   LinearMap.ext fun x => Quotient.inductionOn' x <| (LinearMap.congr_fun h : _)
 #align submodule.linear_map_qext Submodule.linear_map_qext
@@ -400,7 +399,7 @@ theorem mapq_mkq (f : M →ₛₗ[τ₁₂] M₂) {h} : (mapq p q f h).comp p.mk
 
 @[simp]
 theorem mapq_zero (h : p ≤ q.comap (0 : M →ₛₗ[τ₁₂] M₂) := by simp) :
-    p.mapq q (0 : M →ₛₗ[τ₁₂] M₂) h = 0 := by
+    p.mapq q (0 : M →ₛₗ[τ₁₂] M₂) h = 0 := by 
   ext
   simp
 #align submodule.mapq_zero Submodule.mapq_zero
@@ -419,10 +418,10 @@ theorem mapq_comp {R₃ M₃ : Type _} [Ring R₃] [AddCommGroup M₃] [Module R
 
 @[simp]
 theorem mapq_id
-    (h : p ≤ p.comap LinearMap.id := by
+    (h : p ≤ p.comap LinearMap.id := by 
       rw [comap_id]
       exact le_refl _) :
-    p.mapq p LinearMap.id h = LinearMap.id := by
+    p.mapq p LinearMap.id h = LinearMap.id := by 
   ext
   simp
 #align submodule.mapq_id Submodule.mapq_id
@@ -432,10 +431,8 @@ theorem mapq_pow {f : M →ₗ[R] M} (h : p ≤ p.comap f) (k : ℕ)
     p.mapq p (f ^ k) h' = p.mapq p f h ^ k := by
   induction' k with k ih
   · simp [LinearMap.one_eq_id]
-    
   · simp only [LinearMap.iterate_succ, ← ih]
     apply p.mapq_comp
-    
 #align submodule.mapq_pow Submodule.mapq_pow
 
 theorem comap_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : q.comap (p.liftq f h) = (q.comap f).map (mkq p) :=
@@ -463,7 +460,10 @@ theorem ker_liftq_eq_bot (f : M →ₛₗ[τ₁₂] M₂) (h) (h' : ker f ≤ p)
 
 /-- The correspondence theorem for modules: there is an order isomorphism between submodules of the
 quotient of `M` by `p`, and submodules of `M` larger than `p`. -/
-def ComapMkq.relIso : Submodule R (M ⧸ p) ≃o { p' : Submodule R M // p ≤ p' } where
+def ComapMkq.relIso :
+    Submodule R (M ⧸ p) ≃o
+      { p' : Submodule R M //
+        p ≤ p' } where 
   toFun p' := ⟨comap p.mkq p', le_comap_mkq p _⟩
   invFun q := map p.mkq q
   left_inv p' := map_comap_eq_self <| by simp
@@ -530,7 +530,7 @@ theorem Quotient.equiv_trans {N O : Type _} [AddCommGroup N] [Module R N] [AddCo
     (f : N ≃ₗ[R] O) (he : P.map e = Q) (hf : Q.map f = S) (hef : P.map (e.trans f) = S) :
     Quotient.equiv P S (e.trans f) hef =
       (Quotient.equiv P Q e he).trans (Quotient.equiv Q S f hf) :=
-  by
+  by 
   ext
   -- `simp` can deal with `hef` depending on `e` and `f`
   simp only [quotient.equiv_apply, LinearEquiv.trans_apply, LinearEquiv.coe_trans]
@@ -616,10 +616,10 @@ def quotEquivOfEq (h : p = p') : (M ⧸ p) ≃ₗ[R] M ⧸ p' :=
   { (@Quotient.congr _ _ (quotientRel p) (quotientRel p') (Equiv.refl _)) fun a b => by
       subst h
       rfl with
-    map_add' := by
+    map_add' := by 
       rintro ⟨x⟩ ⟨y⟩
       rfl,
-    map_smul' := by
+    map_smul' := by 
       rintro x ⟨y⟩
       rfl }
 #align submodule.quot_equiv_of_eq Submodule.quotEquivOfEq
@@ -650,12 +650,14 @@ namespace Submodule
 
 /-- Given modules `M`, `M₂` over a commutative ring, together with submodules `p ⊆ M`, `q ⊆ M₂`,
 the natural map $\{f ∈ Hom(M, M₂) | f(p) ⊆ q \} \to Hom(M/p, M₂/q)$ is linear. -/
-def mapqLinear : compatibleMaps p q →ₗ[R] M ⧸ p →ₗ[R] M₂ ⧸ q where
+def mapqLinear :
+    compatibleMaps p q →ₗ[R]
+      M ⧸ p →ₗ[R] M₂ ⧸ q where 
   toFun f := mapq _ _ f.val f.property
-  map_add' x y := by
+  map_add' x y := by 
     ext
     rfl
-  map_smul' c f := by
+  map_smul' c f := by 
     ext
     rfl
 #align submodule.mapq_linear Submodule.mapqLinear

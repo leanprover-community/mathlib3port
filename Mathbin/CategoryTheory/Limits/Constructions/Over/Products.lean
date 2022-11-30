@@ -46,39 +46,38 @@ def widePullbackDiagramOfDiagramOver (B : C) {J : Type w} (F : Discrete J ⥤ Ov
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
 def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : Cone F) :
-    Cone (widePullbackDiagramOfDiagramOver B F) where
+    Cone (widePullbackDiagramOfDiagramOver B
+        F) where 
   x := c.x.left
   π :=
     { app := fun X =>
         Option.casesOn X c.x.Hom fun j : J =>
           (c.π.app
               ⟨j⟩).left,-- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
-      naturality' := fun X Y f => by
+      naturality' := fun X Y f => by 
         dsimp; cases X <;> cases Y <;> cases f
         · rw [category.id_comp, category.comp_id]
-          
         · rw [over.w, category.id_comp]
-          
-        · rw [category.id_comp, category.comp_id]
-           }
+        · rw [category.id_comp, category.comp_id] }
 #align
   category_theory.over.construct_products.cones_equiv_inverse_obj CategoryTheory.Over.ConstructProducts.conesEquivInverseObj
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
 def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
-    Cone F ⥤ Cone (widePullbackDiagramOfDiagramOver B F) where
+    Cone F ⥤
+      Cone
+        (widePullbackDiagramOfDiagramOver B
+          F) where 
   obj := conesEquivInverseObj B F
   map c₁ c₂ f :=
     { Hom := f.Hom.left,
-      w' := fun j => by
+      w' := fun j => by 
         cases j
         · simp
-          
         · dsimp
           rw [← f.w ⟨j⟩]
-          rfl
-           }
+          rfl }
 #align
   category_theory.over.construct_products.cones_equiv_inverse CategoryTheory.Over.ConstructProducts.conesEquivInverse
 
@@ -87,7 +86,9 @@ attribute [local tidy] tactic.discrete_cases
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
 def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
-    Cone (widePullbackDiagramOfDiagramOver B F) ⥤ Cone F where
+    Cone (widePullbackDiagramOfDiagramOver B F) ⥤
+      Cone
+        F where 
   obj c :=
     { x := Over.mk (c.π.app none),
       π :=
@@ -123,7 +124,8 @@ def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
 -/
 @[simps]
 def conesEquiv (B : C) (F : Discrete J ⥤ Over B) :
-    Cone (widePullbackDiagramOfDiagramOver B F) ≌ Cone F where
+    Cone (widePullbackDiagramOfDiagramOver B F) ≌
+      Cone F where 
   Functor := conesEquivFunctor B F
   inverse := conesEquivInverse B F
   unitIso := conesEquivUnitIso B F
@@ -183,7 +185,7 @@ theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
         { Cone := { x := Over.mk (𝟙 _), π := { app := fun p => p.as.elim } },
           IsLimit :=
             { lift := fun s => Over.homMk _, fac' := fun _ j => j.as.elim,
-              uniq' := fun s m _ => by
+              uniq' := fun s m _ => by 
                 ext
                 rw [over.hom_mk_left]
                 have := m.w

@@ -104,10 +104,8 @@ theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
     exact
       ⟨t • ⁅x, n⁆, Submodule.subset_span ⟨t • n, N.smul_mem' t hn, lie_smul t x n⟩, ⁅z, n⁆,
         Submodule.subset_span ⟨z, hz, n, hn, rfl⟩, by simp⟩
-    
   · rcases hz with (⟨m, hm, rfl⟩ | ⟨y, hy, m, hm, rfl⟩)
     exacts[⟨x, m, hm, rfl⟩, ⟨y, m, hm, rfl⟩]
-    
 #align lie_submodule.lie_top_eq_of_span_sup_eq_top LieSubmodule.lie_top_eq_of_span_sup_eq_top
 
 theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
@@ -123,17 +121,13 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
   induction' l with l ih
   · simp only [add_zero, LieIdeal.lcs_succ, pow_zero, LinearMap.one_eq_id, Submodule.map_id]
     exact le_sup_of_le_left hIM
-    
   · simp only [LieIdeal.lcs_succ, i.add_succ l, lie_top_eq_of_span_sup_eq_top hxI, sup_le_iff]
     refine' ⟨(Submodule.map_mono ih).trans _, le_sup_of_le_right _⟩
     · rw [Submodule.map_sup, ← Submodule.map_comp, ← LinearMap.mul_eq_comp, ← pow_succ, ←
         I.lcs_succ]
       exact sup_le_sup_left coe_map_to_endomorphism_le _
-      
     · refine' le_trans (mono_lie_right _ _ I _) (mono_lie_right _ _ I hIM)
       exact antitone_lower_central_series R L M le_self_add
-      
-    
 #align
   lie_submodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top LieSubmodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top
 
@@ -149,9 +143,7 @@ theorem is_nilpotent_of_is_nilpotent_span_sup_eq_top (hnp : IsNilpotent <| toEnd
   intro l
   induction' l with l ih
   · simp
-    
   · exact (l.succ_mul n).symm ▸ lcs_le_lcs_of_is_nilpotent_span_sup_eq_top hxI hn ih
-    
 #align
   lie_submodule.is_nilpotent_of_is_nilpotent_span_sup_eq_top LieSubmodule.is_nilpotent_of_is_nilpotent_span_sup_eq_top
 
@@ -246,11 +238,10 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
   replace h : ∀ y : L', IsNilpotent (y : Module.EndCat R M)
   · rintro ⟨-, ⟨y, rfl⟩⟩
     simp [h]
-    
   change LieModule.IsNilpotent R L' M
   let s := { K : LieSubalgebra R L' | LieAlgebra.IsEngelian R K }
   have hs : s.nonempty := ⟨⊥, LieAlgebra.is_engelian_of_subsingleton⟩
-  suffices ⊤ ∈ s by
+  suffices ⊤ ∈ s by 
     rw [← is_nilpotent_of_top_iff]
     apply this M
     simp [LieSubalgebra.to_endomorphism_eq, h]
@@ -275,7 +266,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
     is_noetherian_of_surjective L _ (LinearMap.range_range_restrict (to_endomorphism R L M))
   obtain ⟨K, hK₁, hK₂⟩ :=
     well_founded.well_founded_iff_has_max'.mp (LieSubalgebra.well_founded_of_noetherian R L') s hs
-  have hK₃ : K = ⊤ := by
+  have hK₃ : K = ⊤ := by 
     by_contra contra
     obtain ⟨K', hK'₁, hK'₂⟩ := this K hK₁ contra
     specialize hK₂ K' hK'₁ (le_of_lt hK'₂)
@@ -287,7 +278,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
 /-- Engel's theorem. -/
 theorem LieModule.is_nilpotent_iff_forall :
     LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEndomorphism R L M x :=
-  ⟨by
+  ⟨by 
     intro h
     obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
     exact fun x => ⟨k, hk x⟩, fun h => LieAlgebra.is_engelian_of_is_noetherian M h⟩

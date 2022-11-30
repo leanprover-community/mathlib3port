@@ -156,7 +156,9 @@ open UniformSpace
 open CpltSepUniformSpaceCat
 
 /-- The functor turning uniform spaces into complete separated uniform spaces. -/
-noncomputable def completionFunctor : UniformSpaceCat ⥤ CpltSepUniformSpaceCat where
+noncomputable def completionFunctor :
+    UniformSpaceCat ⥤
+      CpltSepUniformSpaceCat where 
   obj X := CpltSepUniformSpaceCat.of (Completion X)
   map X Y f := ⟨Completion.map f.1, Completion.uniform_continuous_map⟩
   map_id' X := Subtype.eq Completion.map_id
@@ -165,7 +167,10 @@ noncomputable def completionFunctor : UniformSpaceCat ⥤ CpltSepUniformSpaceCat
 
 /-- The inclusion of a uniform space into its completion. -/
 def completionHom (X : UniformSpaceCat) :
-    X ⟶ (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj (completionFunctor.obj X) where
+    X ⟶
+      (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj
+        (completionFunctor.obj
+          X) where 
   val := (coe : X → Completion X)
   property := Completion.uniform_continuous_coe X
 #align UniformSpace.completion_hom UniformSpaceCat.completionHom
@@ -178,7 +183,8 @@ theorem completion_hom_val (X : UniformSpaceCat) (x) : (completionHom X) x = (x 
 /-- The mate of a morphism from a `UniformSpace` to a `CpltSepUniformSpace`. -/
 noncomputable def extensionHom {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
     (f : X ⟶ (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj Y) :
-    completionFunctor.obj X ⟶ Y where
+    completionFunctor.obj X ⟶
+      Y where 
   val := Completion.extension f
   property := Completion.uniform_continuous_extension
 #align UniformSpace.extension_hom UniformSpaceCat.extensionHom
@@ -203,10 +209,10 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpaceCat 
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f => completionHom X ≫ f, invFun := fun f => extensionHom f,
-          left_inv := fun f => by
+          left_inv := fun f => by 
             dsimp
             erw [extension_comp_coe],
-          right_inv := fun f => by
+          right_inv := fun f => by 
             apply Subtype.eq; funext x; cases f
             exact
               @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpaceCat.separated_space _)

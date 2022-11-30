@@ -49,7 +49,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
         
   HasLimit.mk
     { Cone :=
-        PullbackCone.mk a' b' <| by
+        PullbackCone.mk a' b' <| by 
           simp at ha' hb'
           rw [ha', hb'],
       IsLimit :=
@@ -73,11 +73,11 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
                   _ = 0 ≫ limits.prod.snd := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_mono a).1 <| by
+            (cancel_mono a).1 <| by 
               rw [kernel_fork.ι_of_ι] at ha'
               simp [ha', pullback_cone.condition s])
           (fun s =>
-            (cancel_mono b).1 <| by
+            (cancel_mono b).1 <| by 
               rw [kernel_fork.ι_of_ι] at hb'
               simp [hb'])
           fun s m h₁ h₂ =>
@@ -214,7 +214,7 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
         
   HasColimit.mk
     { Cocone :=
-        PushoutCocone.mk a' b' <| by
+        PushoutCocone.mk a' b' <| by 
           simp only [cofork.π_of_π] at ha' hb'
           rw [ha', hb'],
       IsColimit :=
@@ -238,11 +238,11 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
                   _ = coprod.inr ≫ 0 := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_epi a).1 <| by
+            (cancel_epi a).1 <| by 
               rw [cokernel_cofork.π_of_π] at ha'
               simp [reassoc_of ha', pushout_cocone.condition s])
           (fun s =>
-            (cancel_epi b).1 <| by
+            (cancel_epi b).1 <| by 
               rw [cokernel_cofork.π_of_π] at hb'
               simp [reassoc_of hb'])
           fun s m h₁ h₂ =>

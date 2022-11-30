@@ -29,19 +29,15 @@ theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) :
   · simp only [tsub_le_iff_right]
     rw [neg_div b (exp (-b * a)), neg_div b (exp (-b * X)), add_neg_self, neg_le, neg_zero]
     exact (div_pos (exp_pos _) h2).le
-    
   -- goal 2/4: the derivative of F is exp(-b x)
   · ext1
     simp [h2.ne']
-    
   -- goal 3/4: F is differentiable
   · intro x hx
     simp [h2.ne']
-    
   -- goal 4/4: exp(-b x) is continuous
   · apply Continuous.continuous_on
     continuity
-    
 #align integral_exp_neg_le integral_exp_neg_le
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
@@ -74,7 +70,6 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
   -- now show integrable on `(v, ∞)` from asymptotic
   constructor
   · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurableSetIoi
-    
   have : has_finite_integral (fun x : ℝ => c * exp (-b * x)) (volume.restrict (Ioi v)) :=
     (expNegIntegrableOnIoi v h0).HasFiniteIntegral.const_mul c
   apply this.mono

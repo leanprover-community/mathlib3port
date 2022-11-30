@@ -47,19 +47,15 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
       rw [ker_lsingle]
       exact disjoint_bot_right
     apply (hf i).map h_disjoint
-    
   · intro i t ht hit
     refine' (disjoint_lsingle_lsingle {i} t (disjoint_singleton_left.2 hit)).mono _ _
     · rw [span_le]
       simp only [supr_singleton]
       rw [range_coe]
       apply range_comp_subset_range
-      
     · refine' supr₂_mono fun i hi => _
       rw [span_le, range_coe]
       apply range_comp_subset_range
-      
-    
 #align finsupp.linear_independent_single Finsupp.linear_independent_single
 
 end Ring
@@ -91,18 +87,18 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
             simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply,
               exists_and_right, mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image,
               not_forall] },
-      left_inv := fun g => by
+      left_inv := fun g => by 
         ext i
         rw [← (b i).repr.Injective.eq_iff]
         ext x
         simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply],
-      right_inv := fun g => by
+      right_inv := fun g => by 
         ext ⟨i, x⟩
         simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply],
-      map_add' := fun g h => by
+      map_add' := fun g h => by 
         ext ⟨i, x⟩
         simp only [coe_mk, add_apply, LinearEquiv.map_add],
-      map_smul' := fun c h => by
+      map_smul' := fun c h => by 
         ext ⟨i, x⟩
         simp only [coe_mk, smul_apply, LinearEquiv.map_smul, RingHom.id_apply] }
 #align finsupp.basis Finsupp.basis
@@ -117,13 +113,12 @@ theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι �
 theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
     ⇑(Finsupp.basis b) = fun ix : Σi, φ i => single ix.1 (b ix.1 ix.2) :=
   funext fun ⟨i, x⟩ =>
-    Basis.apply_eq_iff.mpr <| by
+    Basis.apply_eq_iff.mpr <| by 
       ext ⟨j, y⟩
       by_cases h : i = j
       · cases h
         simp only [basis_repr, single_eq_same, Basis.repr_self,
           Finsupp.single_apply_left sigma_mk_injective]
-        
       simp only [basis_repr, single_apply, h, false_and_iff, if_false, LinearEquiv.map_zero,
         zero_apply]
 #align finsupp.coe_basis Finsupp.coe_basis
@@ -176,7 +171,7 @@ open Module
 
 theorem equiv_of_dim_eq_lift_dim
     (h : Cardinal.lift.{w} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
-    Nonempty (V ≃ₗ[K] V') := by
+    Nonempty (V ≃ₗ[K] V') := by 
   haveI := Classical.decEq V
   haveI := Classical.decEq V'
   let m := Basis.ofVectorSpace K V
@@ -216,13 +211,11 @@ theorem Finset.sum_single_ite (a : R) (i : n) :
   rw [Finset.sum_congr_set {i} (fun x : n => Finsupp.single x (ite (i = x) a 0)) fun _ =>
       Finsupp.single i a]
   · simp
-    
   · intro x hx
     rw [Set.mem_singleton_iff] at hx
     simp [hx]
-    
   intro x hx
-  have hx' : ¬i = x := by
+  have hx' : ¬i = x := by 
     refine' ne_comm.mp _
     rwa [mem_singleton_iff] at hx
   simp [hx']

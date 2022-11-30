@@ -51,7 +51,8 @@ The list of ancestors should be in the order they appear in the `extends` clause
 contain only the names of the ancestor structures, without any arguments.
 -/
 @[user_attribute]
-unsafe def ancestor_attr : user_attribute Unit (List Name) where
+unsafe def ancestor_attr :
+    user_attribute Unit (List Name) where 
   Name := `ancestor
   descr := "ancestor of old structures"
   parser := many ident

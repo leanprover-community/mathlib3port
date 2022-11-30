@@ -91,10 +91,8 @@ theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       intro p succ_k_le_p p_lt_n p_prime
       constructor
       · exact ⟨succ_k_le_p, p_lt_n⟩
-        
       · rw [coprime_comm]
         exact coprime_of_lt_prime h0 (gt_of_ge_of_gt succ_k_le_p h1) p_prime
-        
     _ ≤ π' k + totient a * (n / a + 1) := by
       rw [add_le_add_iff_left]
       exact Ico_filter_coprime_le k n h0

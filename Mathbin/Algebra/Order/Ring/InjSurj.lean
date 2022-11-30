@@ -33,12 +33,12 @@ protected def orderedSemiring [OrderedSemiring α] [Zero β] [One β] [Add β] [
     hf.Semiring f zero one add mul nsmul npow nat_cast with
     zero_le_one := show f 0 ≤ f 1 by simp only [zero, one, zero_le_one],
     mul_le_mul_of_nonneg_left := fun a b c h hc =>
-      show f (c * a) ≤ f (c * b) by
+      show f (c * a) ≤ f (c * b) by 
         rw [mul, mul]
         refine' mul_le_mul_of_nonneg_left h _
         rwa [← zero],
     mul_le_mul_of_nonneg_right := fun a b c h hc =>
-      show f (a * c) ≤ f (b * c) by
+      show f (a * c) ≤ f (b * c) by 
         rw [mul, mul]
         refine' mul_le_mul_of_nonneg_right h _
         rwa [← zero] }
@@ -69,7 +69,7 @@ protected def orderedRing [OrderedRing α] [Zero β] [One β] [Add β] [Mul β] 
   { hf.OrderedSemiring f zero one add mul nsmul npow nat_cast,
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
     mul_nonneg := fun a b ha hb =>
-      show f 0 ≤ f (a * b) by
+      show f 0 ≤ f (a * b) by 
         rw [zero, mul]
         apply mul_nonneg <;> rwa [← zero] }
 #align function.injective.ordered_ring Function.Injective.orderedRing
@@ -131,7 +131,7 @@ protected def strictOrderedRing [StrictOrderedRing α] [Zero β] [One β] [Add �
   { hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast,
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
     mul_pos := fun a b a0 b0 =>
-      show f 0 < f (a * b) by
+      show f 0 < f (a * b) by 
         rw [zero, mul]
         apply mul_pos <;> rwa [← zero] }
 #align function.injective.strict_ordered_ring Function.Injective.strictOrderedRing

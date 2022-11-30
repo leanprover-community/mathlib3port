@@ -41,12 +41,10 @@ theorem has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair {C : Type 
                 rw [← category.assoc, limit.lift_π, ← category.assoc, limit.lift_π] <;>
                   exact pullback_cone.condition _)
             (by simp) (by simp))
-          fun s m h₁ h₂ => by
+          fun s m h₁ h₂ => by 
           ext
           · simpa using h₁
-            
-          · simpa using h₂
-             }
+          · simpa using h₂ }
 #align
   category_theory.limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair CategoryTheory.Limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair
 
@@ -86,12 +84,10 @@ theorem has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair {C : T
                 rw [category.assoc, colimit.ι_desc, category.assoc, colimit.ι_desc] <;>
                   exact pushout_cocone.condition _)
             (by simp) (by simp))
-          fun s m h₁ h₂ => by
+          fun s m h₁ h₂ => by 
           ext
           · simpa using h₁
-            
-          · simpa using h₂
-             }
+          · simpa using h₂ }
 #align
   category_theory.limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair CategoryTheory.Limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair
 

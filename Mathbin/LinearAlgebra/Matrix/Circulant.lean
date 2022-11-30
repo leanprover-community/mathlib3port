@@ -140,10 +140,8 @@ theorem circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] [Fintype n] [Ad
   intro x
   congr 2
   · simp
-    
   · simp only [Equiv.coe_add_right, Function.comp_apply, Equiv.coe_trans, Equiv.sub_left_apply]
     abel
-    
 #align matrix.circulant_mul_comm Matrix.circulant_mul_comm
 
 theorem Fin.circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] :
@@ -176,7 +174,7 @@ This means that we cannot state this with `pi.single` as we did with `matrix.cir
 theorem Fin.circulant_ite (α) [Zero α] [One α] :
     ∀ n, circulant (fun i => ite (↑i = 0) 1 0 : Fin n → α) = 1
   | 0 => by decide
-  | n + 1 => by
+  | n + 1 => by 
     rw [← circulant_single_one]
     congr with j
     simp only [Pi.single_apply, Fin.ext_iff]

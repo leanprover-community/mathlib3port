@@ -78,7 +78,8 @@ theorem riesz_content_aux_le {K : Compacts X} {f : X →ᵇ ℝ≥0} (h : ∀ x 
 functional on test functions: for any `ε > 0`, there exists a bounded continuous nonnegative
 function f on X such that `f ≥ 1` on K and such that `λ(K) ≤ Λ f < λ(K) + ε`. -/
 theorem exists_lt_riesz_content_aux_add_pos (K : Compacts X) {ε : ℝ≥0} (εpos : 0 < ε) :
-    ∃ f : X →ᵇ ℝ≥0, (∀ x ∈ K, (1 : ℝ≥0) ≤ f x) ∧ Λ f < rieszContentAux Λ K + ε := by
+    ∃ f : X →ᵇ ℝ≥0, (∀ x ∈ K, (1 : ℝ≥0) ≤ f x) ∧ Λ f < rieszContentAux Λ K + ε :=
+  by
   --choose a test function `f` s.t. `Λf = α < λ(K) + ε`
   obtain ⟨α, ⟨⟨f, f_hyp⟩, α_hyp⟩⟩ :=
     exists_lt_of_cInf_lt (riesz_content_aux_image_nonempty Λ K)
@@ -101,9 +102,7 @@ theorem riesz_content_aux_sup_le (K1 K2 : Compacts X) :
   have f_test_function_union : ∀ x ∈ K1 ⊔ K2, (1 : ℝ≥0) ≤ (f1 + f2) x := by
     rintro x (x_in_K1 | x_in_K2)
     · exact le_add_right (f_test_function_K1.left x x_in_K1)
-      
     · exact le_add_left (f_test_function_K2.left x x_in_K2)
-      
   --use that `Λf` is an upper bound for `λ(K1⊔K2)`
   apply (riesz_content_aux_le Λ f_test_function_union).trans (le_of_lt _)
   rw [map_add]

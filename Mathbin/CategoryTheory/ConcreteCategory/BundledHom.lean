@@ -68,7 +68,10 @@ instance category : Category (Bundled c) := by
 This instance generates the type-class problem `bundled_hom ?m` (which is why this is marked as
 `[nolint]`). Currently that is not a problem, as there are almost no instances of `bundled_hom`. -/
 @[nolint dangerous_instance]
-instance concreteCategory : ConcreteCategory.{u} (Bundled c) where
+instance concreteCategory :
+    ConcreteCategory.{u}
+      (Bundled
+        c) where 
   forget :=
     { obj := fun X => X, map := fun X Y f => 𝒞.toFun X.str Y.str f,
       map_id' := fun X => 𝒞.id_to_fun X.str,
@@ -112,7 +115,9 @@ end
 /-- Construct the `bundled_hom` induced by a map between type classes.
 This is useful for building categories such as `CommMon` from `Mon`.
 -/
-def map (F : ∀ {α}, d α → c α) : BundledHom (MapHom hom @F) where
+def map (F : ∀ {α}, d α → c α) :
+    BundledHom (MapHom hom
+        @F) where 
   toFun α β iα iβ f := 𝒞.toFun (F iα) (F iβ) f
   id α iα := 𝒞.id (F iα)
   comp α β γ iα iβ iγ f g := 𝒞.comp (F iα) (F iβ) (F iγ) f g

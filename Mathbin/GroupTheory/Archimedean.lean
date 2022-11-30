@@ -43,14 +43,12 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G}
   intro g g_in
   obtain ⟨k, ⟨nonneg, lt⟩, _⟩ : ∃! k, 0 ≤ g - k • a ∧ g - k • a < a :=
     exists_unique_zsmul_near_of_pos' a_pos g
-  have h_zero : g - k • a = 0 := by
+  have h_zero : g - k • a = 0 := by 
     by_contra h
-    have h : a ≤ g - k • a := by
+    have h : a ≤ g - k • a := by 
       refine' a_min ⟨_, _⟩
       · exact AddSubgroup.sub_mem H g_in (AddSubgroup.zsmul_mem H a_in k)
-        
       · exact lt_of_le_of_ne nonneg (Ne.symm h)
-        
     have h' : ¬a ≤ g - k • a := not_le.mpr lt
     contradiction
   simp [sub_eq_zero.mp h_zero, AddSubgroup.mem_closure_singleton]
@@ -62,16 +60,13 @@ theorem Int.subgroup_cyclic (H : AddSubgroup ℤ) : ∃ a, H = AddSubgroup.closu
   · use 0
     rw [h]
     exact add_subgroup.closure_singleton_zero.symm
-    
   let s := { g : ℤ | g ∈ H ∧ 0 < g }
   have h_bdd : ∀ g ∈ s, (0 : ℤ) ≤ g := fun _ h => le_of_lt h.2
   obtain ⟨g₀, g₀_in, g₀_ne⟩ := h
   obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℤ, g₁ ∈ H ∧ 0 < g₁ := by
     cases' lt_or_gt_of_ne g₀_ne with Hg₀ Hg₀
     · exact ⟨-g₀, H.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
-      
     · exact ⟨g₀, g₀_in, Hg₀⟩
-      
   obtain ⟨a, ha, ha'⟩ := Int.exists_least_of_bdd ⟨(0 : ℤ), h_bdd⟩ ⟨g₁, g₁_in, g₁_pos⟩
   exact ⟨a, AddSubgroup.cyclic_of_min ⟨ha, ha'⟩⟩
 #align int.subgroup_cyclic Int.subgroup_cyclic

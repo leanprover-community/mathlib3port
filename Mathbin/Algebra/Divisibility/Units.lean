@@ -73,7 +73,7 @@ include hu
 
 /-- Units of a monoid divide any element of the monoid. -/
 @[simp]
-theorem dvd : u ∣ a := by
+theorem dvd : u ∣ a := by 
   rcases hu with ⟨u, rfl⟩
   apply Units.coe_dvd
 #align is_unit.dvd IsUnit.dvd

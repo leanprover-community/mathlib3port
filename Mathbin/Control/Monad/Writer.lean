@@ -37,7 +37,7 @@ variable {α β : Type u}
 
 open Function
 
-@[ext.1]
+@[ext]
 protected theorem ext (x x' : WriterT ω m α) (h : x.run = x'.run) : x = x' := by
   cases x <;> cases x' <;> congr <;> apply h
 #align writer_t.ext WriterTₓ.ext
@@ -70,20 +70,24 @@ protected def bind [Mul ω] (x : WriterT ω m α) (f : α → WriterT ω m β) :
     pure (x'.1, x.2 * x'.2)⟩
 #align writer_t.bind WriterTₓ.bind
 
-instance [One ω] [Mul ω] : Monad (WriterT ω m) where
+instance [One ω] [Mul ω] :
+    Monad (WriterT ω m) where 
   pure α := WriterT.pure
   bind α β := WriterT.bind
 
-instance [Monoid ω] [LawfulMonad m] : LawfulMonad (WriterT ω m) where
-  id_map := by
+instance [Monoid ω] [LawfulMonad m] :
+    LawfulMonad
+      (WriterT ω
+        m) where 
+  id_map := by 
     intros
     cases x
     simp [(· <$> ·), WriterT.bind, WriterT.pure]
-  pure_bind := by
+  pure_bind := by 
     intros
     simp [Pure.pure, WriterT.pure, (· >>= ·), WriterT.bind]
     ext <;> rfl
-  bind_assoc := by
+  bind_assoc := by 
     intros
     simp [(· >>= ·), WriterT.bind, mul_assoc, functor_norm]
 
@@ -108,7 +112,9 @@ protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterT ω m
   fun x => ⟨Prod.map id f <$> x.run⟩
 #align writer_t.adapt WriterTₓ.adapt
 
-instance (ε) [One ω] [Monad m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) where
+instance (ε) [One ω] [Monad m] [MonadExcept ε m] :
+    MonadExcept ε (WriterT ω
+        m) where 
   throw α := WriterT.lift ∘ throw
   catch α x c := ⟨catch x.run fun e => (c e).run⟩
 
@@ -137,13 +143,15 @@ class MonadWriter (ω : outParam (Type u)) (m : Type u → Type v) where
 
 export MonadWriter ()
 
-instance {ω : Type u} {m : Type u → Type v} [Monad m] : MonadWriter ω (WriterT ω m) where
+instance {ω : Type u} {m : Type u → Type v} [Monad m] :
+    MonadWriter ω (WriterT ω m) where 
   tell := WriterT.tell
   listen α := WriterT.listen
   pass α := WriterT.pass
 
 instance {ω ρ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
-    MonadWriter ω (ReaderT ρ m) where
+    MonadWriter ω (ReaderT ρ
+        m) where 
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨fun r => listen (cmd r)⟩
   pass := fun α ⟨cmd⟩ => ⟨fun r => pass (cmd r)⟩
@@ -153,7 +161,8 @@ def swapRight {α β γ} : (α × β) × γ → (α × γ) × β
 #align swap_right swapRight
 
 instance {ω σ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
-    MonadWriter ω (StateT σ m) where
+    MonadWriter ω (StateT σ
+        m) where 
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨fun r => swapRight <$> listen (cmd r)⟩
   pass := fun α ⟨cmd⟩ => ⟨fun r => pass (swapRight <$> cmd r)⟩
@@ -166,7 +175,8 @@ def ExceptT.passAux {ε α ω} : Except ε (α × (ω → ω)) → Except ε α 
 #align except_t.pass_aux ExceptTₓ.passAux
 
 instance {ω ε : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
-    MonadWriter ω (ExceptT ε m) where
+    MonadWriter ω (ExceptT ε
+        m) where 
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
   pass := fun α ⟨cmd⟩ => ⟨pass (ExceptT.passAux <$> cmd)⟩
@@ -177,7 +187,8 @@ def OptionT.passAux {α ω} : Option (α × (ω → ω)) → Option α × (ω �
 #align option_t.pass_aux OptionTₓ.passAux
 
 instance {ω : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
-    MonadWriter ω (OptionT m) where
+    MonadWriter ω (OptionT
+        m) where 
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
   pass := fun α ⟨cmd⟩ => ⟨pass (OptionT.passAux <$> cmd)⟩
@@ -231,7 +242,9 @@ instance (ω : Type u) (m out) [MonadRun out m] : MonadRun (fun α => out (α ×
 /-- reduce the equivalence between two writer monads to the equivalence between
 their underlying monad -/
 def WriterT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ω₁ : Type u₀}
-    {α₂ ω₂ : Type u₁} (F : m₁ (α₁ × ω₁) ≃ m₂ (α₂ × ω₂)) : WriterT ω₁ m₁ α₁ ≃ WriterT ω₂ m₂ α₂ where
+    {α₂ ω₂ : Type u₁} (F : m₁ (α₁ × ω₁) ≃ m₂ (α₂ × ω₂)) :
+    WriterT ω₁ m₁ α₁ ≃ WriterT ω₂ m₂
+        α₂ where 
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg WriterT.mk <| F.left_inv _

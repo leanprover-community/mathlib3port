@@ -31,9 +31,10 @@ namespace OplaxNatTrans
 
 /-- Left whiskering of an oplax natural transformation and a modification. -/
 @[simps]
-def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ ⟶ η ≫ ι where
+def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) :
+    η ≫ θ ⟶ η ≫ ι where 
   app a := η.app a ◁ Γ.app a
-  naturality' a b f := by
+  naturality' a b f := by 
     dsimp
     rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc]
     simp
@@ -41,9 +42,10 @@ def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ �
 
 /-- Right whiskering of an oplax natural transformation and a modification. -/
 @[simps]
-def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) : η ≫ ι ⟶ θ ≫ ι where
+def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) :
+    η ≫ ι ⟶ θ ≫ ι where 
   app a := Γ.app a ▷ ι.app a
-  naturality' a b f := by
+  naturality' a b f := by 
     dsimp
     simp_rw [assoc, ← associator_inv_naturality_left, whisker_exchange_assoc]
     simp
@@ -73,13 +75,16 @@ variable (B C)
 
 /-- A bicategory structure on the oplax functors between bicategories. -/
 @[simps]
-instance OplaxFunctor.bicategory : Bicategory (OplaxFunctor B C) where
+instance OplaxFunctor.bicategory :
+    Bicategory
+      (OplaxFunctor B
+        C) where 
   whiskerLeft F G H η _ _ Γ := OplaxNatTrans.whiskerLeft η Γ
   whiskerRight F G H _ _ Γ η := OplaxNatTrans.whiskerRight Γ η
   associator F G H I := OplaxNatTrans.associator
   leftUnitor F G := OplaxNatTrans.leftUnitor
   rightUnitor F G := OplaxNatTrans.rightUnitor
-  whisker_exchange' := by
+  whisker_exchange' := by 
     intros
     ext
     apply whisker_exchange

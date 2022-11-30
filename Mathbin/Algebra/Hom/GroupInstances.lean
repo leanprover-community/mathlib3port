@@ -27,7 +27,8 @@ variable {M : Type uM} {N : Type uN} {P : Type uP} {Q : Type uQ}
 
 /-- `(M →* N)` is a `comm_monoid` if `N` is commutative. -/
 @[to_additive "`(M →+ N)` is an `add_comm_monoid` if `N` is commutative."]
-instance [MulOneClass M] [CommMonoid N] : CommMonoid (M →* N) where
+instance [MulOneClass M] [CommMonoid N] :
+    CommMonoid (M →* N) where 
   mul := (· * ·)
   mul_assoc := by intros <;> ext <;> apply mul_assoc
   one := 1
@@ -36,10 +37,10 @@ instance [MulOneClass M] [CommMonoid N] : CommMonoid (M →* N) where
   mul_comm := by intros <;> ext <;> apply mul_comm
   npow n f :=
     { toFun := fun x => f x ^ n, map_one' := by simp, map_mul' := fun x y => by simp [mul_pow] }
-  npow_zero' f := by
+  npow_zero' f := by 
     ext x
     simp
-  npow_succ' n f := by
+  npow_succ' n f := by 
     ext x
     simp [pow_succ]
 
@@ -48,20 +49,20 @@ instance [MulOneClass M] [CommMonoid N] : CommMonoid (M →* N) where
       "If `G` is an additive commutative group, then `M →+ G` is an additive commutative\ngroup too."]
 instance {M G} [MulOneClass M] [CommGroup G] : CommGroup (M →* G) :=
   { MonoidHom.commMonoid with inv := Inv.inv, div := Div.div,
-    div_eq_mul_inv := by
+    div_eq_mul_inv := by 
       intros
       ext
       apply div_eq_mul_inv,
     mul_left_inv := by intros <;> ext <;> apply mul_left_inv,
     zpow := fun n f =>
       { toFun := fun x => f x ^ n, map_one' := by simp, map_mul' := fun x y => by simp [mul_zpow] },
-    zpow_zero' := fun f => by
+    zpow_zero' := fun f => by 
       ext x
       simp,
-    zpow_succ' := fun n f => by
+    zpow_succ' := fun n f => by 
       ext x
       simp [zpow_of_nat, pow_succ],
-    zpow_neg' := fun n f => by
+    zpow_neg' := fun n f => by 
       ext x
       simp }
 
@@ -117,7 +118,9 @@ theorem ext_iff₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
 /-- `flip` arguments of `f : M →* N →* P` -/
 @[to_additive "`flip` arguments of `f : M →+ N →+ P`"]
 def flip {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M →* N →* P) :
-    N →* M →* P where
+    N →*
+      M →*
+        P where 
   toFun y :=
     ⟨fun x => f x y, by rw [f.map_one, one_apply], fun x₁ x₂ => by rw [f.map_mul, mul_apply]⟩
   map_one' := ext fun x => (f x).map_one
@@ -178,12 +181,16 @@ Note that unlike `monoid_hom.comp_hom'` this requires commutativity of `N`. -/
 @[to_additive
       "Composition of additive monoid morphisms (`add_monoid_hom.comp`) as an additive\nmonoid morphism.\n\nNote that unlike `add_monoid_hom.comp_hom'` this requires commutativity of `N`.\n\nThis also exists in a `linear_map` version, `linear_map.llcomp`.",
   simps]
-def compHom [MulOneClass M] [CommMonoid N] [CommMonoid P] : (N →* P) →* (M →* N) →* M →* P where
+def compHom [MulOneClass M] [CommMonoid N] [CommMonoid P] :
+    (N →* P) →*
+      (M →* N) →*
+        M →*
+          P where 
   toFun g := { toFun := g.comp, map_one' := comp_one g, map_mul' := comp_mul g }
-  map_one' := by
+  map_one' := by 
     ext1 f
     exact one_comp f
-  map_mul' g₁ g₂ := by
+  map_mul' g₁ g₂ := by 
     ext1 f
     exact mul_comp g₁ g₂ f
 #align monoid_hom.comp_hom MonoidHom.compHom
@@ -193,7 +200,7 @@ def compHom [MulOneClass M] [CommMonoid N] [CommMonoid P] : (N →* P) →* (M �
       "Flipping arguments of additive monoid morphisms (`add_monoid_hom.flip`)\nas an additive monoid morphism.",
   simps]
 def flipHom {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} :
-    (M →* N →* P) →* N →* M →* P where
+    (M →* N →* P) →* N →* M →* P where 
   toFun := MonoidHom.flip
   map_one' := rfl
   map_mul' f g := rfl
@@ -251,7 +258,8 @@ This is a more-strongly bundled version of `add_monoid_hom.mul_left` and `add_mo
 Stronger versions of this exists for algebras as `linear_map.mul`, `non_unital_alg_hom.mul`
 and `algebra.lmul`.
 -/
-def AddMonoidHom.mul : R →+ R →+ R where
+def AddMonoidHom.mul : R →+
+      R →+ R where 
   toFun := AddMonoidHom.mulLeft
   map_zero' := AddMonoidHom.ext <| zero_mul
   map_add' a b := AddMonoidHom.ext <| add_mul a b

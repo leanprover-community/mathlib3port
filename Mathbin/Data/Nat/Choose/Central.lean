@@ -89,9 +89,7 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
   rcases lt_trichotomy n 4 with (hn | rfl | hn)
   · clear IH
     decide!
-    
   · norm_num [central_binom, choose]
-    
   obtain ⟨n, rfl⟩ : ∃ m, n = m + 1 := Nat.exists_eq_succ_of_ne_zero (zero_lt_four.trans hn).ne'
   calc
     4 ^ (n + 1) < 4 * (n * central_binom n) :=
@@ -116,7 +114,7 @@ theorem four_pow_le_two_mul_self_mul_central_binom :
   | n@(m + 4), _ =>
     calc
       4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_central_binom _ le_add_self).le
-      _ ≤ 2 * n * centralBinom n := by
+      _ ≤ 2 * n * centralBinom n := by 
         rw [mul_assoc]
         refine' le_mul_of_pos_left zero_lt_two
       

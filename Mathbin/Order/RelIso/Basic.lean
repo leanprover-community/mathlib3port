@@ -96,9 +96,9 @@ end RelHomClass
 
 namespace RelHom
 
-instance : RelHomClass (r →r s) r s where
+instance : RelHomClass (r →r s) r s where 
   coe o := o.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     cases f
     cases g
     congr
@@ -129,7 +129,7 @@ theorem coe_fn_injective : @Function.Injective (r →r s) (α → β) coeFn :=
   FunLike.coe_injective
 #align rel_hom.coe_fn_injective RelHom.coe_fn_injective
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : r →r s⦄ (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align rel_hom.ext RelHom.ext
@@ -182,10 +182,9 @@ theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f 
 theorem Surjective.well_founded_iff {f : α → β} (hf : Surjective f)
     (o : ∀ {a b}, r a b ↔ s (f a) (f b)) : WellFounded r ↔ WellFounded s :=
   Iff.intro
-    (by
+    (by 
       refine' RelHomClass.well_founded (RelHom.mk _ _ : s →r r)
       · exact Classical.choose hf.has_right_inverse
-        
       intro a b h; apply o.2; convert h
       iterate 2 apply Classical.choose_spec hf.has_right_inverse)
     (RelHomClass.well_founded (⟨f, fun _ _ => o.1⟩ : r →r s))
@@ -214,7 +213,8 @@ theorem preimage_equivalence {α β} (f : α → β) {s : β → β → Prop} (h
 namespace RelEmbedding
 
 /-- A relation embedding is also a relation homomorphism -/
-def toRelHom (f : r ↪r s) : r →r s where
+def toRelHom (f : r ↪r s) :
+    r →r s where 
   toFun := f.toEmbedding.toFun
   map_rel' x y := (map_rel_iff' f).mpr
 #align rel_embedding.to_rel_hom RelEmbedding.toRelHom
@@ -227,9 +227,9 @@ instance : CoeFun (r ↪r s) fun _ => α → β :=
   ⟨fun o => o.toEmbedding⟩
 
 -- TODO: define and instantiate a `rel_embedding_class` when `embedding_like` is defined
-instance : RelHomClass (r ↪r s) r s where
+instance : RelHomClass (r ↪r s) r s where 
   coe := coeFn
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     rcases f with ⟨⟨⟩⟩
     rcases g with ⟨⟨⟩⟩
     congr
@@ -281,7 +281,7 @@ theorem coe_fn_injective : @Function.Injective (r ↪r s) (α → β) coeFn :=
   FunLike.coe_injective
 #align rel_embedding.coe_fn_injective RelEmbedding.coe_fn_injective
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : r ↪r s⦄ (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align rel_embedding.ext RelEmbedding.ext
@@ -414,8 +414,7 @@ theorem well_founded_lift₂_iff [s : Setoid α] {r : α → α → Prop} {H} :
     suffices ∀ {x : Quotient s} {a : α}, ⟦a⟧ = x → Acc r a by exact ⟨fun a => this rfl⟩
     · refine' fun x => hr.induction x _
       rintro x IH a rfl
-      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩
-      ,
+      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩,
     (Quotient.outRelEmbedding H).WellFounded⟩
 #align well_founded_lift₂_iff well_founded_lift₂_iff
 
@@ -427,7 +426,7 @@ To define an relation embedding from an antisymmetric relation `r` to a reflexiv
 suffices to give a function together with a proof that it satisfies `s (f a) (f b) ↔ r a b`.
 -/
 def ofMapRelIff (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf : ∀ a b, s (f a) (f b) ↔ r a b) :
-    r ↪r s where
+    r ↪r s where 
   toFun := f
   inj' x y h := antisymm ((hf _ _).1 (h ▸ refl _)) ((hf _ _).1 (h ▸ refl _))
   map_rel_iff' := hf
@@ -442,19 +441,16 @@ theorem of_map_rel_iff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s]
 /-- It suffices to prove `f` is monotone between strict relations
   to show it is a relation embedding. -/
 def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b, r a b → s (f a) (f b)) :
-    r ↪r s := by
+    r ↪r s := by 
   haveI := @IsAsymm.is_irrefl β s _
   refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
-  · refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
+  ·
+    refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
       exact fun h => @irrefl _ s _ _ (by simpa [e] using H _ _ h)
-    
   · refine' (@trichotomous _ r _ a b).resolve_right (Or.ndrec (fun e => _) fun h' => _)
     · subst e
       exact irrefl _ h
-      
     · exact asymm (H _ _ h') h
-      
-    
 #align rel_embedding.of_monotone RelEmbedding.ofMonotone
 
 @[simp]
@@ -470,7 +466,8 @@ def ofIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] : r
 
 /-- `sum.inl` as a relation embedding into `sum.lift_rel r s`. -/
 @[simps]
-def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.LiftRel r s where
+def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) :
+    r ↪r Sum.LiftRel r s where 
   toFun := Sum.inl
   inj' := Sum.inl_injective
   map_rel_iff' a b := Sum.liftRel_inl_inl
@@ -478,7 +475,8 @@ def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum
 
 /-- `sum.inr` as a relation embedding into `sum.lift_rel r s`. -/
 @[simps]
-def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.LiftRel r s where
+def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) :
+    s ↪r Sum.LiftRel r s where 
   toFun := Sum.inr
   inj' := Sum.inr_injective
   map_rel_iff' a b := Sum.liftRel_inr_inr
@@ -486,7 +484,9 @@ def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum
 
 /-- `sum.map` as a relation embedding between `sum.lift_rel` relations. -/
 @[simps]
-def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) : Sum.LiftRel r t ↪r Sum.LiftRel s u where
+def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) :
+    Sum.LiftRel r t ↪r Sum.LiftRel s
+        u where 
   toFun := Sum.map f g
   inj' := f.Injective.sum_map g.Injective
   map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
@@ -494,7 +494,8 @@ def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) : Sum.LiftRel r t ↪r Sum.LiftR
 
 /-- `sum.inl` as a relation embedding into `sum.lex r s`. -/
 @[simps]
-def sumLexInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.Lex r s where
+def sumLexInl (r : α → α → Prop) (s : β → β → Prop) :
+    r ↪r Sum.Lex r s where 
   toFun := Sum.inl
   inj' := Sum.inl_injective
   map_rel_iff' a b := Sum.lex_inl_inl
@@ -502,7 +503,8 @@ def sumLexInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.Lex
 
 /-- `sum.inr` as a relation embedding into `sum.lex r s`. -/
 @[simps]
-def sumLexInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.Lex r s where
+def sumLexInr (r : α → α → Prop) (s : β → β → Prop) :
+    s ↪r Sum.Lex r s where 
   toFun := Sum.inr
   inj' := Sum.inr_injective
   map_rel_iff' a b := Sum.lex_inr_inr
@@ -510,7 +512,8 @@ def sumLexInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.Lex
 
 /-- `sum.map` as a relation embedding between `sum.lex` relations. -/
 @[simps]
-def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u where
+def sumLexMap (f : r ↪r s) (g : t ↪r u) :
+    Sum.Lex r t ↪r Sum.Lex s u where 
   toFun := Sum.map f g
   inj' := f.Injective.sum_map g.Injective
   map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
@@ -518,7 +521,8 @@ def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u where
 
 /-- `λ b, prod.mk a b` as a relation embedding. -/
 @[simps]
-def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) : s ↪r Prod.Lex r s where
+def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) :
+    s ↪r Prod.Lex r s where 
   toFun := Prod.mk a
   inj' := Prod.mk.inj_left a
   map_rel_iff' b₁ b₂ := by simp [Prod.lex_def, h]
@@ -526,7 +530,8 @@ def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) : s ↪r Prod.
 
 /-- `λ a, prod.mk a b` as a relation embedding. -/
 @[simps]
-def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod.Lex r s where
+def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) :
+    r ↪r Prod.Lex r s where 
   toFun a := (a, b)
   inj' := Prod.mk.inj_right b
   map_rel_iff' a₁ a₂ := by simp [Prod.lex_def, h]
@@ -534,7 +539,8 @@ def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod
 
 /-- `prod.map` as a relation embedding. -/
 @[simps]
-def prodLexMap (f : r ↪r s) (g : t ↪r u) : Prod.Lex r t ↪r Prod.Lex s u where
+def prodLexMap (f : r ↪r s) (g : t ↪r u) :
+    Prod.Lex r t ↪r Prod.Lex s u where 
   toFun := Prod.map f g
   inj' := f.Injective.prod_map g.Injective
   map_rel_iff' a b := by simp [Prod.lex_def, f.map_rel_iff, g.map_rel_iff]
@@ -560,7 +566,7 @@ def toRelEmbedding (f : r ≃r s) : r ↪r s :=
 #align rel_iso.to_rel_embedding RelIso.toRelEmbedding
 
 theorem to_equiv_injective : Injective (toEquiv : r ≃r s → α ≃ β)
-  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by
+  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by 
     congr
     exact h
 #align rel_iso.to_equiv_injective RelIso.to_equiv_injective
@@ -573,7 +579,7 @@ instance : CoeFun (r ≃r s) fun _ => α → β :=
   ⟨fun f => f⟩
 
 -- TODO: define and instantiate a `rel_iso_class` when `equiv_like` is defined
-instance : RelHomClass (r ≃r s) r s where
+instance : RelHomClass (r ≃r s) r s where 
   coe := coeFn
   coe_injective' := Equiv.coe_fn_injective.comp to_equiv_injective
   map_rel f a b := Iff.mpr (map_rel_iff' f)
@@ -608,7 +614,7 @@ theorem coe_fn_injective : @Function.Injective (r ≃r s) (α → β) coeFn :=
   FunLike.coe_injective
 #align rel_iso.coe_fn_injective RelIso.coe_fn_injective
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : r ≃r s⦄ (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align rel_iso.ext RelIso.ext
@@ -661,7 +667,7 @@ theorem default_def (r : α → α → Prop) : default = RelIso.refl r :=
 @[simps toEquiv apply]
 protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β)
     (h₂ : HEq r s) : r ≃r s :=
-  ⟨Equiv.cast h₁, fun a b => by
+  ⟨Equiv.cast h₁, fun a b => by 
     subst h₁
     rw [eq_of_heq h₂]
     rfl⟩
@@ -683,7 +689,7 @@ protected theorem cast_refl {α : Type u} {r : α → α → Prop} (h₁ : α = 
 protected theorem cast_trans {α β γ : Type u} {r : α → α → Prop} {s : β → β → Prop}
     {t : γ → γ → Prop} (h₁ : α = β) (h₁' : β = γ) (h₂ : HEq r s) (h₂' : HEq s t) :
     (RelIso.cast h₁ h₂).trans (RelIso.cast h₁' h₂') = RelIso.cast (h₁.trans h₁') (h₂.trans h₂') :=
-  ext fun x => by
+  ext fun x => by 
     subst h₁
     rfl
 #align rel_iso.cast_trans RelIso.cast_trans

@@ -75,22 +75,26 @@ This can be seen as a bijection of the 2-cells:
 
 Note that if one of the transformations is an iso, it does not imply the other is an iso.
 -/
-def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R₂) where
+def transferNatTrans :
+    (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃
+      (R₁ ⋙ G ⟶
+        H ⋙
+          R₂) where 
   toFun h :=
     { app := fun X => adj₂.Unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _)),
-      naturality' := fun X Y f => by
+      naturality' := fun X Y f => by 
         dsimp
         rw [assoc, ← R₂.map_comp, assoc, ← H.map_comp, ← adj₁.counit_naturality, H.map_comp, ←
           functor.comp_map L₁, ← h.naturality_assoc]
         simp }
   invFun h :=
     { app := fun X => L₂.map (G.map (adj₁.Unit.app _) ≫ h.app _) ≫ adj₂.counit.app _,
-      naturality' := fun X Y f => by
+      naturality' := fun X Y f => by 
         dsimp
         rw [← L₂.map_comp_assoc, ← G.map_comp_assoc, ← adj₁.unit_naturality, G.map_comp_assoc, ←
           functor.comp_map, h.naturality]
         simp }
-  left_inv h := by
+  left_inv h := by 
     ext X
     dsimp
     simp only [L₂.map_comp, assoc, adj₂.counit_naturality, adj₂.left_triangle_components_assoc, ←
@@ -99,7 +103,7 @@ def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R�
     dsimp
     simp
   -- See library note [dsimp, simp].
-  right_inv h := by
+  right_inv h := by 
     ext X
     dsimp
     simp [-functor.comp_map, ← functor.comp_map H, functor.comp_map R₁, -nat_trans.naturality, ←
@@ -109,7 +113,7 @@ def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R�
 theorem transfer_nat_trans_counit (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (Y : D) :
     L₂.map ((transferNatTrans adj₁ adj₂ f).app _) ≫ adj₂.counit.app _ =
       f.app _ ≫ H.map (adj₁.counit.app Y) :=
-  by
+  by 
   erw [functor.map_comp]
   simp
 #align category_theory.transfer_nat_trans_counit CategoryTheory.transfer_nat_trans_counit
@@ -117,7 +121,7 @@ theorem transfer_nat_trans_counit (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (Y : D) :
 theorem unit_transfer_nat_trans (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (X : C) :
     G.map (adj₁.Unit.app X) ≫ (transferNatTrans adj₁ adj₂ f).app _ =
       adj₂.Unit.app _ ≫ R₂.map (f.app _) :=
-  by
+  by 
   dsimp [transfer_nat_trans]
   rw [← adj₂.unit_naturality_assoc, ← R₂.map_comp, ← functor.comp_map G L₂, f.naturality_assoc,
     functor.comp_map, ← H.map_comp]
@@ -155,7 +159,7 @@ def transferNatTransSelf : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
 theorem transfer_nat_trans_self_counit (f : L₂ ⟶ L₁) (X) :
     L₂.map ((transferNatTransSelf adj₁ adj₂ f).app _) ≫ adj₂.counit.app X =
       f.app _ ≫ adj₁.counit.app X :=
-  by
+  by 
   dsimp [transfer_nat_trans_self]
   rw [id_comp, comp_id]
   have := transfer_nat_trans_counit adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
@@ -167,7 +171,7 @@ theorem transfer_nat_trans_self_counit (f : L₂ ⟶ L₁) (X) :
 theorem unit_transfer_nat_trans_self (f : L₂ ⟶ L₁) (X) :
     adj₁.Unit.app _ ≫ (transferNatTransSelf adj₁ adj₂ f).app _ =
       adj₂.Unit.app X ≫ Functor.map _ (f.app _) :=
-  by
+  by 
   dsimp [transfer_nat_trans_self]
   rw [id_comp, comp_id]
   have := unit_transfer_nat_trans adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
@@ -194,7 +198,7 @@ theorem transfer_nat_trans_self_symm_id : (transferNatTransSelf adj₁ adj₁).s
 theorem transfer_nat_trans_self_comp (f g) :
     transferNatTransSelf adj₁ adj₂ f ≫ transferNatTransSelf adj₂ adj₃ g =
       transferNatTransSelf adj₁ adj₃ (g ≫ f) :=
-  by
+  by 
   ext
   dsimp [transfer_nat_trans_self, transfer_nat_trans]
   simp only [id_comp, comp_id]
@@ -220,7 +224,7 @@ theorem transfer_nat_trans_self_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ 
 theorem transfer_nat_trans_self_symm_comp (f g) :
     (transferNatTransSelf adj₂ adj₁).symm f ≫ (transferNatTransSelf adj₃ adj₂).symm g =
       (transferNatTransSelf adj₃ adj₁).symm (g ≫ f) :=
-  by
+  by 
   rw [Equiv.eq_symm_apply, ← transfer_nat_trans_self_comp _ adj₂]
   simp
 #align

@@ -95,7 +95,7 @@ protected theorem trans {ρ : Measure δ} {h : δ → γ} (h₁ : IdentDistrib f
 protected theorem compOfAeMeasurable {u : γ → δ} (h : IdentDistrib f g μ ν)
     (hu : AeMeasurable u (Measure.map f μ)) : IdentDistrib (u ∘ f) (u ∘ g) μ ν :=
   { aeMeasurableFst := hu.compAeMeasurable h.aeMeasurableFst,
-    aeMeasurableSnd := by
+    aeMeasurableSnd := by 
       rw [h.map_eq] at hu
       exact hu.comp_ae_measurable h.ae_measurable_snd,
     map_eq := by
@@ -185,31 +185,25 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
       refine' ⟨aeMeasurableId, ⟨closure t, t_sep.closure, _⟩⟩
       rw [ae_map_iff h.ae_measurable_fst]
       · filter_upwards [ht] with x hx using subset_closure hx
-        
       · exact is_closed_closure.measurable_set
-        
     change (∫ x, id (f x) ∂μ) = ∫ x, id (g x) ∂ν
     rw [← integral_map h.ae_measurable_fst A]
     rw [h.map_eq] at A
     rw [← integral_map h.ae_measurable_snd A, h.map_eq]
-    
   · rw [integral_non_ae_strongly_measurable hf]
     rw [h.ae_strongly_measurable_iff] at hf
     rw [integral_non_ae_strongly_measurable hf]
-    
 #align probability_theory.ident_distrib.integral_eq ProbabilityTheory.IdentDistrib.integral_eq
 
 theorem snorm_eq [NormedAddCommGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν)
     (p : ℝ≥0∞) : snorm f p μ = snorm g p ν := by
   by_cases h0 : p = 0
   · simp [h0]
-    
   by_cases h_top : p = ∞
   · simp only [h_top, snorm, snorm_ess_sup, Ennreal.top_ne_zero, eq_self_iff_true, if_true,
       if_false]
     apply ess_sup_eq
     exact h.comp (measurable_coe_nnreal_ennreal.comp measurableNnnorm)
-    
   simp only [snorm_eq_snorm' h0 h_top, snorm', one_div]
   congr 1
   apply lintegral_eq
@@ -320,7 +314,6 @@ theorem Memℒp.uniformIntegrableOfIdentDistribAux {ι : Type _} {f : ι → α 
   by_cases hι : Nonempty ι
   swap
   · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
-    
   obtain ⟨C, hC₁, hC₂⟩ := hℒp.snorm_indicator_norm_ge_pos_le μ (hfmeas _) hε
   have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊ } := fun i =>
     measurableSetLe measurableConst (hfmeas _).Measurable.nnnorm
@@ -328,14 +321,13 @@ theorem Memℒp.uniformIntegrableOfIdentDistribAux {ι : Type _} {f : ι → α 
   have :
     { x : α | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊ }.indicator (f i) =
       (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖x‖₊ then x else 0) ∘ f i :=
-    by
+    by 
     ext x
     simp only [Set.indicator, Set.mem_set_of_eq]
   simp_rw [coe_nnnorm, this]
   rw [← snorm_map_measure _ (hf i).aeMeasurableFst, (hf i).map_eq,
     snorm_map_measure _ (hf j).aeMeasurableFst]
   · rfl
-    
   all_goals
     exact ae_strongly_measurable_id.indicator (measurableSetLe measurableConst measurableNnnorm)
 #align

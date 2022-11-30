@@ -90,7 +90,7 @@ variable {A B X Y : C} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
 
 /-- The datum of a lift in a commutative square, i.e. a up-right-diagonal
 morphism which makes both triangles commute. -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure LiftStruct (sq : CommSq f i p g) where
   l : B ⟶ X
   fac_left' : i ≫ l = f
@@ -106,7 +106,8 @@ restate_axiom fac_right'
 /-- A `lift_struct` for a commutative square gives a `lift_struct` for the
 corresponding square in the opposite category. -/
 @[simps]
-def op {sq : CommSq f i p g} (l : LiftStruct sq) : LiftStruct sq.op where
+def op {sq : CommSq f i p g} (l : LiftStruct sq) :
+    LiftStruct sq.op where 
   l := l.l.op
   fac_left' := by rw [← op_comp, l.fac_right]
   fac_right' := by rw [← op_comp, l.fac_left]
@@ -116,7 +117,8 @@ def op {sq : CommSq f i p g} (l : LiftStruct sq) : LiftStruct sq.op where
 gives a `lift_struct` for the corresponding square in the original category. -/
 @[simps]
 def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} {sq : CommSq f i p g}
-    (l : LiftStruct sq) : LiftStruct sq.unop where
+    (l : LiftStruct sq) : LiftStruct
+      sq.unop where 
   l := l.l.unop
   fac_left' := by rw [← unop_comp, l.fac_right]
   fac_right' := by rw [← unop_comp, l.fac_left]
@@ -125,7 +127,8 @@ def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B �
 /-- Equivalences of `lift_struct` for a square and the corresponding square
 in the opposite category. -/
 @[simps]
-def opEquiv (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.op where
+def opEquiv (sq : CommSq f i p g) :
+    LiftStruct sq ≃ LiftStruct sq.op where 
   toFun := op
   invFun := unop
   left_inv := by tidy
@@ -135,7 +138,8 @@ def opEquiv (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.op where
 /-- Equivalences of `lift_struct` for a square in the oppositive category and
 the corresponding square in the original category. -/
 def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
-    (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.unop where
+    (sq : CommSq f i p g) :
+    LiftStruct sq ≃ LiftStruct sq.unop where 
   toFun := unop
   invFun := op
   left_inv := by tidy
@@ -146,7 +150,7 @@ end LiftStruct
 
 instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] :
     Subsingleton (LiftStruct sq) :=
-  ⟨fun l₁ l₂ => by
+  ⟨fun l₁ l₂ => by 
     ext
     simp only [← cancel_epi i, lift_struct.fac_left]⟩
 #align
@@ -154,7 +158,7 @@ instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] :
 
 instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] :
     Subsingleton (LiftStruct sq) :=
-  ⟨fun l₁ l₂ => by
+  ⟨fun l₁ l₂ => by 
     ext
     simp only [← cancel_mono p, lift_struct.fac_right]⟩
 #align

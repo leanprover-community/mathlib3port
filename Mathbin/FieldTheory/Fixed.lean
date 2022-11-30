@@ -41,7 +41,7 @@ variable (G : Type u) [Group G]
 variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] (m : M)
 
 /-- The subfield of F fixed by the field endomorphism `m`. -/
-def FixedBy.subfield : Subfield F where
+def FixedBy.subfield : Subfield F where 
   carrier := fixedBy M F m
   zero_mem' := smul_zero m
   add_mem' x y hx hy := (smul_add m x y).trans <| congr_arg₂ _ hx hy
@@ -63,7 +63,8 @@ class IsInvariantSubfield (S : Subfield F) : Prop where
 variable (S : Subfield F)
 
 instance IsInvariantSubfield.toMulSemiringAction [IsInvariantSubfield M S] :
-    MulSemiringAction M S where
+    MulSemiringAction M
+      S where 
   smul m x := ⟨m • x, IsInvariantSubfield.smul_mem m x.2⟩
   one_smul s := Subtype.eq <| one_smul M s
   mul_smul m₁ m₂ s := Subtype.eq <| mul_smul m₁ m₂ s
@@ -86,7 +87,7 @@ variable (M)
 /-- The subfield of fixed points by a monoid action. -/
 def subfield : Subfield F :=
   Subfield.copy (⨅ m : M, FixedBy.subfield F m) (fixedPoints M F)
-    (by
+    (by 
       ext z
       simp [fixed_points, FixedBy.subfield, infi, Subfield.mem_Inf])
 #align fixed_points.subfield FixedPoints.subfield
@@ -125,7 +126,7 @@ theorem coe_algebra_map :
 theorem linear_independent_smul_of_linear_independent {s : Finset F} :
     (LinearIndependent (FixedPoints.subfield G F) fun i : (s : Set F) => (i : F)) →
       LinearIndependent F fun i : (s : Set F) => MulAction.toFun G F i :=
-  by
+  by 
   haveI : IsEmpty ((∅ : Finset F) : Set F) := ⟨Subtype.prop⟩
   refine' Finset.induction_on s (fun _ => linear_independent_empty_type) fun a s has ih hs => _
   rw [coe_insert] at hs⊢
@@ -150,18 +151,18 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
   refine' (@sum_attach _ _ s _ fun i => (g • l i - l i) • MulAction.toFun G F i).trans _
   ext g'
   dsimp only
-  conv_lhs =>
-  rw [sum_apply]
-  congr
-  skip
-  ext
-  rw [Pi.smul_apply, sub_smul, smul_eq_mul]
+  conv_lhs => 
+    rw [sum_apply]
+    congr
+    skip
+    ext
+    rw [Pi.smul_apply, sub_smul, smul_eq_mul]
   rw [sum_sub_distrib, Pi.zero_apply, sub_eq_zero]
-  conv_lhs =>
-  congr
-  skip
-  ext
-  rw [to_fun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← to_fun_apply _ x]
+  conv_lhs => 
+    congr
+    skip
+    ext
+    rw [to_fun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← to_fun_apply _ x]
   show
     (∑ x in s, g • (fun y => l y • MulAction.toFun G F y) x (g⁻¹ * g')) =
       ∑ x in s, (fun y => l y • MulAction.toFun G F y) x g'
@@ -193,7 +194,7 @@ theorem monic : (minpoly G F x).Monic := by
 theorem eval₂ :
     Polynomial.eval₂ (Subring.subtype <| (FixedPoints.subfield G F).toSubring) x (minpoly G F x) =
       0 :=
-  by
+  by 
   rw [← prodXSubSmul.eval G F x, Polynomial.eval₂_eq_eval_map]
   simp only [minpoly, Polynomial.map_to_subring]
 #align fixed_points.minpoly.eval₂ FixedPoints.minpoly.eval₂
@@ -228,10 +229,10 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
 -- Why is this so slow?
 theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Monic) (hg : g.Monic)
     (hfg : f * g = minpoly G F x) : f = 1 ∨ g = 1 := by
-  have hf2 : f ∣ minpoly G F x := by
+  have hf2 : f ∣ minpoly G F x := by 
     rw [← hfg]
     exact dvd_mul_right _ _
-  have hg2 : g ∣ minpoly G F x := by
+  have hg2 : g ∣ minpoly G F x := by 
     rw [← hfg]
     exact dvd_mul_left _ _
   have := eval₂ G F x
@@ -242,13 +243,11 @@ theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Mo
       Polynomial.eq_of_monic_of_associated hf (monic G F x)
         (associated_of_dvd_dvd hf2 <| @of_eval₂ G _ F _ _ _ x f this)
     rwa [← mul_one (minpoly G F x), hf3, mul_right_inj' (monic G F x).NeZero] at hfg
-    
   · left
     have hg3 : g = minpoly G F x :=
       Polynomial.eq_of_monic_of_associated hg (monic G F x)
         (associated_of_dvd_dvd hg2 <| @of_eval₂ G _ F _ _ _ x g this)
     rwa [← one_mul (minpoly G F x), hg3, mul_left_inj' (monic G F x).NeZero] at hfg
-    
 #align fixed_points.minpoly.irreducible_aux FixedPoints.minpoly.irreducible_aux
 
 theorem irreducible : Irreducible (minpoly G F x) :=
@@ -297,7 +296,7 @@ instance normal : Normal (FixedPoints.subfield G F) F :=
 #align fixed_points.normal FixedPoints.normal
 
 instance separable : IsSeparable (FixedPoints.subfield G F) F :=
-  ⟨is_integral G F, fun x => by
+  ⟨is_integral G F, fun x => by 
     cases nonempty_fintype G
     -- this was a plain rw when we were using unbundled subrings
     erw [← minpoly_eq_minpoly, ← Polynomial.separable_map (FixedPoints.subfield G F).Subtype,
@@ -368,14 +367,10 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Group G] [Field F] [Fini
   rw [Fintype.bijective_iff_injective_and_card]
   constructor
   · exact MulSemiringAction.to_alg_hom_injective _ F
-    
   · apply le_antisymm
     · exact Fintype.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
-      
     · rw [← finrank_eq_card G F]
       exact LE.le.trans_eq (finrank_alg_hom _ F) (finrank_linear_map' _ _ _)
-      
-    
 #align fixed_points.to_alg_hom_bijective FixedPoints.to_alg_hom_bijective
 
 /-- Bijection between G and algebra homomorphisms that fix the fixed points -/

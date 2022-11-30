@@ -63,7 +63,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
     [DecidableEq ι] (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
       Submodule.span A (Set.range <| (traceForm K L).dualBasis (trace_form_nondegenerate K L) b) :=
-  by
+  by 
   let db := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
   rintro _ ⟨x, rfl⟩
   simp only [LinearMap.coe_restrict_scalars_eq_coe, Algebra.linear_map_apply]
@@ -73,7 +73,6 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
     refine' Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span _)
     rw [Set.mem_range]
     exact ⟨i, rfl⟩
-    
   suffices ∃ c : ι → K, (∀ i, IsIntegral A (c i)) ∧ algebraMap C L x = ∑ i, c i • db i by
     obtain ⟨c, hc, hx⟩ := this
     have hc' : ∀ i, IsLocalization.IsInteger A (c i) := fun i =>
@@ -110,7 +109,6 @@ theorem exists_integral_multiples (s : Finset L) :
   refine' s.induction _ _
   · use 1, one_ne_zero
     rintro x ⟨⟩
-    
   · rintro x s hx ⟨y, hy, hs⟩
     obtain ⟨x', y', hy', hx'⟩ :=
       exists_integral_multiple
@@ -120,15 +118,11 @@ theorem exists_integral_multiples (s : Finset L) :
     rcases finset.mem_insert.mp hx'' with (rfl | hx'')
     · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
       exact is_integral_mul is_integral_algebra_map x'.2
-      
     · rw [mul_comm, mul_smul, Algebra.smul_def]
       exact is_integral_mul is_integral_algebra_map (hs _ hx'')
-      
     · rw [IsScalarTower.algebra_map_eq A K L]
       apply (algebraMap K L).Injective.comp
       exact IsFractionRing.injective _ _
-      
-    
 #align exists_integral_multiples exists_integral_multiples
 
 variable (L)
@@ -154,16 +148,13 @@ theorem FiniteDimensional.exists_is_basis_integral :
       _⟩
   · intro x
     simp only [inv_mul_cancel_left₀ hy']
-    
   · intro x
     simp only [mul_inv_cancel_left₀ hy']
-    
   · rintro ⟨x', hx'⟩
     simp only [Algebra.smul_def, Finset.mem_image, exists_prop, Finset.mem_univ, true_and_iff] at
       his'
     simp only [Basis.map_apply, LinearEquiv.coe_mk]
     exact his' _ ⟨_, rfl⟩
-    
 #align finite_dimensional.exists_is_basis_integral FiniteDimensional.exists_is_basis_integral
 
 variable (A K L) [IsSeparable K L]
@@ -174,7 +165,7 @@ include L
 integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
 Noetherian over `A`. -/
 theorem IsIntegralClosure.is_noetherian [IsIntegrallyClosed A] [IsNoetherianRing A] :
-    IsNoetherian A C := by
+    IsNoetherian A C := by 
   haveI := Classical.decEq L
   obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L
   let b' := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b

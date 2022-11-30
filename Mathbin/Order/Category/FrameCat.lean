@@ -70,13 +70,14 @@ instance hasForgetToLattice :
 
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : FrameCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : FrameCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align Frame.iso.mk FrameCat.Iso.mk
@@ -85,7 +86,8 @@ end FrameCat
 
 /-- The forgetful functor from `Topᵒᵖ` to `Frame`. -/
 @[simps]
-def topOpToFrame : TopCatᵒᵖ ⥤ FrameCat where
+def topOpToFrame :
+    TopCatᵒᵖ ⥤ FrameCat where 
   obj X := FrameCat.of (Opens (unop X : TopCat))
   map X Y f := opens.comap <| Quiver.Hom.unop f
   map_id' X := Opens.comap_id

@@ -55,7 +55,7 @@ include i
 
 /-- No point making this an instance, as it requires `i`. -/
 theorem has_kernels [PreservesFiniteLimits G] : HasKernels C :=
-  { HasLimit := fun X Y f => by
+  { HasLimit := fun X Y f => by 
       have := nat_iso.naturality_1 i f
       simp at this
       rw [← this]
@@ -81,7 +81,8 @@ theorem has_cokernels : HasCokernels C :=
 variable [Limits.HasCokernels C]
 
 /-- Auxiliary construction for `coimage_iso_image` -/
-def cokernelIso {X Y : C} (f : X ⟶ Y) : G.obj (cokernel (F.map f)) ≅ cokernel f := by
+def cokernelIso {X Y : C} (f : X ⟶ Y) : G.obj (cokernel (F.map f)) ≅ cokernel f :=
+  by
   -- We have to write an explicit `preserves_colimits` type here,
   -- as `left_adjoint_preserves_colimits` has universe variables.
   haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
@@ -180,7 +181,7 @@ See <https://stacks.math.columbia.edu/tag/03A3>
 def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFiniteProducts C]
     {D : Type u₂} [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F]
     (G : D ⥤ C) [Functor.PreservesZeroMorphisms G] [PreservesFiniteLimits G] (i : F ⋙ G ≅ 𝟭 C)
-    (adj : G ⊣ F) : Abelian C := by
+    (adj : G ⊣ F) : Abelian C := by 
   haveI := has_kernels F G i
   haveI := has_cokernels F G i adj
   have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) := by

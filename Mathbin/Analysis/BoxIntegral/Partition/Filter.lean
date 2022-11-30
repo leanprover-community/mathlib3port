@@ -190,7 +190,7 @@ used in the definition of a box-integrable function.
   divergence theorem only for the filter
   `box_integral.integration_params.GP = ⊥ = {bRiemann := ff, bHenstock := tt, bDistortion := tt}`.
 -/
-@[ext.1]
+@[ext]
 structure IntegrationParams : Type where
   (bRiemann bHenstock bDistortion : Bool)
 #align box_integral.integration_params BoxIntegral.IntegrationParams
@@ -200,7 +200,11 @@ variable {l l₁ l₂ : IntegrationParams}
 namespace IntegrationParams
 
 /-- Auxiliary equivalence with a product type used to lift an order. -/
-def equivProd : integration_params ≃ Bool × Boolᵒᵈ × Boolᵒᵈ where
+def equivProd :
+    integration_params ≃
+      Bool ×
+        Boolᵒᵈ ×
+          Boolᵒᵈ where 
   toFun l := ⟨l.1, OrderDual.toDual l.2, OrderDual.toDual l.3⟩
   invFun l := ⟨l.1, OrderDual.ofDual l.2.1, OrderDual.ofDual l.2.2⟩
   left_inv := fun ⟨a, b, c⟩ => rfl
@@ -234,7 +238,7 @@ instance : DecidableEq IntegrationParams := fun x y => decidable_of_iff _ (ext_i
 corresponding filter, we require that the diameters of all boxes `J` of a tagged partition are
 bounded from above by a constant upper estimate that may not depend on the geometry of `J`, and each
 tag belongs to the corresponding closed box. -/
-def riemann : IntegrationParams where
+def riemann : IntegrationParams where 
   bRiemann := true
   bHenstock := true
   bDistortion := false
@@ -373,15 +377,12 @@ theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (
   · by_cases hD : (l.bDistortion : Prop)
     · rcases h₁.4 hD with ⟨π, hπU, hπc⟩
       exact ⟨π, hπU, fun _ => hπc, fun _ => hπc.trans hc⟩
-      
-    · exact
+    ·
+      exact
         ⟨π₁.to_prepartition.compl, π₁.to_prepartition.Union_compl, fun h => (hD h).elim, fun h =>
           (hD h).elim⟩
-      
-    
   · intro h₁ h₂ hU
     simpa [hU, and_comm'] using this h₂ h₁ hU.symm
-    
 #align
   box_integral.integration_params.mem_base_set.exists_common_compl BoxIntegral.IntegrationParams.MemBaseSet.exists_common_compl
 
@@ -412,15 +413,11 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
     fconstructor
     · rintro (⟨hxI, hxπ⟩ | ⟨hxπ, hxp⟩)
       exacts[⟨hxI, mt (@this x) hxπ⟩, ⟨π.Union_subset hxπ, hxp⟩]
-      
     · rintro ⟨hxI, hxp⟩
       by_cases hxπ : x ∈ π.Union
       exacts[Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
-      
-    
   · have : (π.filter fun J => ¬p J).distortion ≤ c := (distortion_filter_le _ _).trans (hπ.3 hD)
     simpa [hc]
-    
 #align
   box_integral.integration_params.mem_base_set.filter BoxIntegral.IntegrationParams.MemBaseSet.filter
 
@@ -433,11 +430,9 @@ theorem bUnionTaggedMemBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepart
       fun hD => _⟩
   · rw [prepartition.distortion_bUnion_tagged, Finset.sup_le_iff]
     exact fun J hJ => (h J hJ).3 hD
-    
   · refine' ⟨_, _, hc hD⟩
     rw [π.Union_compl, ← π.Union_bUnion_partition hp]
     rfl
-    
 #align
   box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.bUnionTaggedMemBaseSet
 
@@ -499,7 +494,7 @@ theorem has_basis_to_filter_distortion_Union (l : IntegrationParams) (I : Box ι
 theorem has_basis_to_filter_Union (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
     (l.toFilterUnion I π₀).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → ioi (0 : ℝ) => ∀ c, l.RCond (r c))
       fun r => { π | ∃ c, l.MemBaseSet I c (r c) π ∧ π.union = π₀.union } :=
-  by
+  by 
   have := fun c => l.has_basis_to_filter_distortion_Union I c π₀
   simpa only [set_of_and, set_of_exists] using has_basis_supr this
 #align
@@ -524,7 +519,7 @@ theorem has_basis_to_filter (l : IntegrationParams) (I : Box ι) :
 theorem tendsto_embed_box_to_filter_Union_top (l : IntegrationParams) (h : I ≤ J) :
     Tendsto (TaggedPrepartition.embedBox I J h) (l.toFilterUnion I ⊤)
       (l.toFilterUnion J (Prepartition.single J I h)) :=
-  by
+  by 
   simp only [to_filter_Union, tendsto_supr]; intro c
   set π₀ := prepartition.single J I h
   refine' le_supr_of_le (max c π₀.compl.distortion) _
@@ -538,9 +533,7 @@ theorem tendsto_embed_box_to_filter_Union_top (l : IntegrationParams) (h : I ≤
   · refine' ⟨_, π₀.Union_compl.trans _, le_max_right _ _⟩
     congr 1
     exact (prepartition.Union_single h).trans hπ.2.symm
-    
   · exact hπ.2.trans (prepartition.Union_single _).symm
-    
 #align
   box_integral.integration_params.tendsto_embed_box_to_filter_Union_top BoxIntegral.IntegrationParams.tendsto_embed_box_to_filter_Union_top
 

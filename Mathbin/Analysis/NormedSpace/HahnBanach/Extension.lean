@@ -50,11 +50,8 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
       dsimp at g_eq
       rw [← g_eq]
       apply g'.le_op_norm
-      
-    
   · simp only [← mul_add]
     exact mul_le_mul_of_nonneg_left (norm_add_le x y) (norm_nonneg f)
-    
 #align real.exists_extension_norm_eq Real.exists_extension_norm_eq
 
 end Real
@@ -73,7 +70,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   letI : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
   -- Let `fr: p →L[ℝ] ℝ` be the real part of `f`.
   let fr := re_clm.comp (f.restrict_scalars ℝ)
-  have fr_apply : ∀ x, fr x = re (f x) := by
+  have fr_apply : ∀ x, fr x = re (f x) := by 
     intro x
     rfl
   -- Use the real version to get a norm-preserving extension of `fr`, which
@@ -82,32 +79,31 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   -- Now `g` can be extended to the `F →L[𝕜] 𝕜` we need.
   refine' ⟨g.extend_to_𝕜, _⟩
   -- It is an extension of `f`.
-  have h : ∀ x : p, g.extend_to_𝕜 x = f x := by
+  have h : ∀ x : p, g.extend_to_𝕜 x = f x := by 
     intro x
     rw [ContinuousLinearMap.extend_to_𝕜_apply, ← Submodule.coe_smul, hextends, hextends]
     have : (fr x : 𝕜) - I * ↑(fr (I • x)) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by
       rfl
     rw [this]
     apply ext
-    · simp only [add_zero, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub,
+    ·
+      simp only [add_zero, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub,
         I_im', zero_mul, of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re,
         mul_zero, sub_neg_eq_add, ContinuousLinearMap.map_smul]
-      
-    · simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im',
+    ·
+      simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im',
         zero_mul, of_real_re, mul_neg, mul_im, zero_add, of_real_neg, mul_re, sub_neg_eq_add,
         ContinuousLinearMap.map_smul]
-      
   -- And we derive the equality of the norms by bounding on both sides.
   refine' ⟨h, le_antisymm _ _⟩
-  · calc
+  ·
+    calc
       ‖g.extend_to_𝕜‖ ≤ ‖g‖ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
       _ = ‖fr‖ := hnormeq
       _ ≤ ‖re_clm‖ * ‖f‖ := ContinuousLinearMap.op_norm_comp_le _ _
       _ = ‖f‖ := by rw [re_clm_norm, one_mul]
       
-    
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
-    
 #align exists_extension_norm_eq exists_extension_norm_eq
 
 end IsROrC
@@ -134,13 +130,12 @@ theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, �
   obtain ⟨g, hg⟩ := exists_extension_norm_eq p f
   refine' ⟨g, _, _⟩
   · rw [hg.2, coord_norm']
-    
-  · calc
+  ·
+    calc
       g x = g (⟨x, mem_span_singleton_self x⟩ : 𝕜 ∙ x) := by rw [coe_mk]
       _ = ((‖x‖ : 𝕜) • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜 ∙ x) := by rw [← hg.1]
       _ = ‖x‖ := by simp
       
-    
 #align exists_dual_vector exists_dual_vector
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, and choosing
@@ -151,9 +146,7 @@ theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, 
     obtain ⟨g, hg⟩ : ∃ g : E →L[𝕜] 𝕜, ‖g‖ = 1 ∧ g y = ‖y‖ := exists_dual_vector 𝕜 y hy
     refine' ⟨g, hg.left, _⟩
     simp [hx]
-    
   · exact exists_dual_vector 𝕜 x hx
-    
 #align exists_dual_vector' exists_dual_vector'
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, but only ensuring that
@@ -164,10 +157,8 @@ theorem exists_dual_vector'' (x : E) : ∃ g : E →L[𝕜] 𝕜, ‖g‖ ≤ 1 
   · refine' ⟨0, by simp, _⟩
     symm
     simp [hx]
-    
   · rcases exists_dual_vector 𝕜 x hx with ⟨g, g_norm, g_eq⟩
     exact ⟨g, g_norm.le, g_eq⟩
-    
 #align exists_dual_vector'' exists_dual_vector''
 
 end DualVector

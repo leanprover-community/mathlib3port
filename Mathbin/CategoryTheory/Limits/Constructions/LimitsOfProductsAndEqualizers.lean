@@ -57,11 +57,11 @@ include hs ht
 limiting if the given cones are also.
 -/
 @[simps]
-def buildLimit : Cone F where
+def buildLimit : Cone F where 
   x := i.x
   π :=
     { app := fun j => i.ι ≫ c₁.π.app ⟨_⟩,
-      naturality' := fun j₁ j₂ f => by
+      naturality' := fun j₁ j₂ f => by 
         dsimp
         rw [category.id_comp, category.assoc, ← hs ⟨⟨_, _⟩, f⟩, i.condition_assoc, ht] }
 #align
@@ -75,22 +75,22 @@ variable {i}
 its construction are.
 -/
 def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) :
-    IsLimit (buildLimit s t hs ht i) where
-  lift q := by
+    IsLimit
+      (buildLimit s t hs ht
+        i) where 
+  lift q := by 
     refine' hi.lift (fork.of_ι _ _)
     · refine' t₁.lift (fan.mk _ fun j => _)
       apply q.π.app j
-      
     · apply t₂.hom_ext
       intro j
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
       simp [hs, ht]
-      
   uniq' q m w :=
     hi.hom_ext
       (i.equalizer_ext
-        (t₁.hom_ext fun j => by
+        (t₁.hom_ext fun j => by 
           cases j
           simpa using w j))
 #align
@@ -106,7 +106,7 @@ we can construct a limit cone for `F`.
 -/
 noncomputable def limitConeOfEqualizerAndProduct (F : J ⥤ C) [HasLimit (Discrete.functor F.obj)]
     [HasLimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] :
-    LimitCone F where
+    LimitCone F where 
   Cone := _
   IsLimit :=
     buildIsLimit (Pi.lift fun f => limit.π (Discrete.functor F.obj) ⟨_⟩ ≫ F.map f.2)
@@ -174,7 +174,8 @@ variable (G : C ⥤ D) [PreservesLimitsOfShape WalkingParallelPair G]
 
 /-- If a functor preserves equalizers and the appropriate products, it preserves limits. -/
 def preservesLimitOfPreservesEqualizersAndProduct :
-    PreservesLimitsOfShape J G where PreservesLimit K := by
+    PreservesLimitsOfShape J
+      G where PreservesLimit K := by 
     let P := ∏ K.obj
     let Q := ∏ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.2
     let s : P ⟶ Q := pi.lift fun f => limit.π (discrete.functor K.obj) ⟨_⟩ ≫ K.map f.2
@@ -187,31 +188,21 @@ def preservesLimitOfPreservesEqualizersAndProduct :
           (limit.is_limit _))
     refine' is_limit.of_iso_limit (build_is_limit _ _ _ _ _ _ _) _
     · exact fan.mk _ fun j => G.map (pi.π _ j)
-      
     · exact fan.mk (G.obj Q) fun f => G.map (pi.π _ f)
-      
     · apply G.map s
-      
     · apply G.map t
-      
     · intro f
       dsimp
       simp only [← G.map_comp, limit.lift_π, fan.mk_π_app]
-      
     · intro f
       dsimp
       simp only [← G.map_comp, limit.lift_π, fan.mk_π_app]
-      
     · apply fork.of_ι (G.map i) _
       simp only [← G.map_comp, equalizer.condition]
-      
     · apply is_limit_of_has_product_of_preserves_limit
-      
     · apply is_limit_of_has_product_of_preserves_limit
-      
     · apply is_limit_fork_map_of_is_limit
       apply equalizer_is_equalizer
-      
     refine' cones.ext (iso.refl _) _
     intro j
     dsimp
@@ -282,11 +273,11 @@ include hs ht
 build the cocone for `F` which is colimiting if the given cocones are also.
 -/
 @[simps]
-def buildColimit : Cocone F where
+def buildColimit : Cocone F where 
   x := i.x
   ι :=
     { app := fun j => c₂.ι.app ⟨_⟩ ≫ i.π,
-      naturality' := fun j₁ j₂ f => by
+      naturality' := fun j₁ j₂ f => by 
         dsimp
         rw [category.comp_id, ← reassoc_of (hs ⟨⟨_, _⟩, f⟩), i.condition, ← category.assoc, ht] }
 #align
@@ -299,22 +290,22 @@ variable {i}
 provided the cocones used in its construction are.
 -/
 def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColimit i) :
-    IsColimit (buildColimit s t hs ht i) where
-  desc q := by
+    IsColimit
+      (buildColimit s t hs ht
+        i) where 
+  desc q := by 
     refine' hi.desc (cofork.of_π _ _)
     · refine' t₂.desc (cofan.mk _ fun j => _)
       apply q.ι.app j
-      
     · apply t₁.hom_ext
       intro j
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
       simp [reassoc_of hs, reassoc_of ht]
-      
   uniq' q m w :=
     hi.hom_ext
       (i.coequalizer_ext
-        (t₂.hom_ext fun j => by
+        (t₂.hom_ext fun j => by 
           cases j
           simpa using w j))
 #align
@@ -331,7 +322,8 @@ we can construct a colimit cocone for `F`.
 noncomputable def colimitCoconeOfCoequalizerAndCoproduct (F : J ⥤ C)
     [HasColimit (Discrete.functor F.obj)]
     [HasColimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1)]
-    [HasCoequalizers C] : ColimitCocone F where
+    [HasCoequalizers C] : ColimitCocone
+      F where 
   Cocone := _
   IsColimit :=
     buildIsColimit (Sigma.desc fun f => F.map f.2 ≫ colimit.ι (Discrete.functor F.obj) ⟨f.1.2⟩)
@@ -398,7 +390,8 @@ variable (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair G]
 
 /-- If a functor preserves coequalizers and the appropriate coproducts, it preserves colimits. -/
 def preservesColimitOfPreservesCoequalizersAndCoproduct :
-    PreservesColimitsOfShape J G where PreservesColimit K := by
+    PreservesColimitsOfShape J
+      G where PreservesColimit K := by 
     let P := ∐ K.obj
     let Q := ∐ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.1
     let s : Q ⟶ P := sigma.desc fun f => K.map f.2 ≫ colimit.ι (discrete.functor K.obj) ⟨_⟩
@@ -411,31 +404,21 @@ def preservesColimitOfPreservesCoequalizersAndCoproduct :
           (colimit.is_colimit _))
     refine' is_colimit.of_iso_colimit (build_is_colimit _ _ _ _ _ _ _) _
     · exact cofan.mk (G.obj Q) fun j => G.map (sigma.ι _ j)
-      
     · exact cofan.mk _ fun f => G.map (sigma.ι _ f)
-      
     · apply G.map s
-      
     · apply G.map t
-      
     · intro f
       dsimp
       simp only [← G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
-      
     · intro f
       dsimp
       simp only [← G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
-      
     · apply cofork.of_π (G.map i) _
       simp only [← G.map_comp, coequalizer.condition]
-      
     · apply is_colimit_of_has_coproduct_of_preserves_colimit
-      
     · apply is_colimit_of_has_coproduct_of_preserves_colimit
-      
     · apply is_colimit_cofork_map_of_is_colimit
       apply coequalizer_is_coequalizer
-      
     refine' cocones.ext (iso.refl _) _
     intro j
     dsimp

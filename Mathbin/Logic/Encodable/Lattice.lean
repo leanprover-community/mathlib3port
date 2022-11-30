@@ -39,10 +39,10 @@ theorem Union_decode₂ (f : β → Set α) : (⋃ (i : ℕ) (b ∈ decode₂ β
 theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C ∅) (H1 : ∀ b, C (f b)) {n} :
     C (⋃ b ∈ decode₂ β n, f b) :=
   match decode₂ β n with
-  | none => by
+  | none => by 
     simp
     apply H0
-  | some b => by
+  | some b => by 
     convert H1 b
     simp [ext_iff]
 #align encodable.Union_decode₂_cases Encodable.Union_decode₂_cases

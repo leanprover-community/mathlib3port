@@ -75,7 +75,8 @@ instance (priority := 100) NormedLinearOrderedGroup.toNormedOrderedGroup
   normed_linear_ordered_group.to_normed_ordered_group NormedLinearOrderedGroup.toNormedOrderedGroup
 
 instance (priority := 100) NormedLinearOrderedField.toNormedField (α : Type _)
-    [NormedLinearOrderedField α] : NormedField α where
+    [NormedLinearOrderedField α] :
+    NormedField α where 
   dist_eq := NormedLinearOrderedField.dist_eq
   norm_mul' := NormedLinearOrderedField.norm_mul'
 #align normed_linear_ordered_field.to_normed_field NormedLinearOrderedField.toNormedField

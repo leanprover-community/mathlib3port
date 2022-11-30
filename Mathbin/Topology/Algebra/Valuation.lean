@@ -32,11 +32,11 @@ variable (v : Valuation R Γ₀)
 
 /-- The basis of open subgroups for the topology on a ring determined by a valuation. -/
 theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup γ : AddSubgroup R) :=
-  { inter := by
+  { inter := by 
       rintro γ₀ γ₁
       use min γ₀ γ₁
       simp [Valuation.ltAddSubgroup] <;> tauto,
-    mul := by
+    mul := by 
       rintro γ
       cases' exists_square_le γ with γ₀ h
       use γ₀
@@ -46,7 +46,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         _ < γ₀ * γ₀ := mul_lt_mul₀ r_in s_in
         _ ≤ γ := by exact_mod_cast h
         ,
-    leftMul := by
+    leftMul := by 
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
       · use (1 : Γ₀ˣ)
@@ -54,16 +54,14 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         change v (x * y) < _
         rw [Valuation.map_mul, Hx, zero_mul]
         exact Units.zero_lt γ
-        
       · simp only [image_subset_iff, set_of_subset_set_of, preimage_set_of_eq, Valuation.map_mul]
         use γx⁻¹ * γ
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (x * y) : Γ₀) < γ
         rw [Valuation.map_mul, Hx, mul_comm]
         rw [Units.val_mul, mul_comm] at vy_lt
-        simpa using mul_inv_lt_of_lt_mul₀ vy_lt
-        ,
-    rightMul := by
+        simpa using mul_inv_lt_of_lt_mul₀ vy_lt,
+    rightMul := by 
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
       · use 1
@@ -71,14 +69,12 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         change v (y * x) < _
         rw [Valuation.map_mul, Hx, mul_zero]
         exact Units.zero_lt γ
-        
       · use γx⁻¹ * γ
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (y * x) : Γ₀) < γ
         rw [Valuation.map_mul, Hx]
         rw [Units.val_mul, mul_comm] at vy_lt
-        simpa using mul_inv_lt_of_lt_mul₀ vy_lt
-         }
+        simpa using mul_inv_lt_of_lt_mul₀ vy_lt }
 #align valuation.subgroups_basis Valuation.subgroups_basis
 
 end Valuation
@@ -160,17 +156,15 @@ instance (priority := 100) : TopologicalRing R :=
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔
       F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ :=
-  by
+  by 
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
   apply and_congr Iff.rfl
   simp_rw [valued.v.subgroups_basis.mem_add_group_filter_basis_iff]
   constructor
   · intro h γ
     exact h _ (valued.v.subgroups_basis.mem_add_group_filter_basis _)
-    
   · rintro h - ⟨γ, rfl⟩
     exact h γ
-    
 #align valued.cauchy_iff Valued.cauchy_iff
 
 end Valued

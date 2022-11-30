@@ -38,7 +38,8 @@ variable {C : Type u} [Groupoid C]
 
 /-- The vertex group at `c`. -/
 @[simps]
-instance vertexGroup (c : C) : Group (c ⟶ c) where
+instance vertexGroup (c : C) :
+    Group (c ⟶ c) where 
   mul := fun x y : c ⟶ c => x ≫ y
   mul_assoc := Category.assoc
   one := 𝟙 c
@@ -58,7 +59,8 @@ theorem vertexGroup.inv_eq_inv (c : C) (γ : c ⟶ c) : γ⁻¹ = CategoryTheory
 its endpoints.
 -/
 @[simps]
-def vertexGroupIsomOfMap {c d : C} (f : c ⟶ d) : (c ⟶ c) ≃* (d ⟶ d) where
+def vertexGroupIsomOfMap {c d : C} (f : c ⟶ d) :
+    (c ⟶ c) ≃* (d ⟶ d) where 
   toFun γ := inv f ≫ γ ≫ f
   invFun δ := f ≫ δ ≫ inv f
   left_inv γ := by
@@ -82,7 +84,7 @@ def vertexGroupIsomOfPath {c d : C} (p : Quiver.Path c d) : (c ⟶ c) ≃* (d �
 /-- A functor defines a morphism of vertex group. -/
 @[simps]
 def CategoryTheory.Functor.mapVertexGroup {D : Type v} [Groupoid D] (φ : C ⥤ D) (c : C) :
-    (c ⟶ c) →* (φ.obj c ⟶ φ.obj c) where
+    (c ⟶ c) →* (φ.obj c ⟶ φ.obj c) where 
   toFun := φ.map
   map_one' := φ.map_id c
   map_mul' := φ.map_comp

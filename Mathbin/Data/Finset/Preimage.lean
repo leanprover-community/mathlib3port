@@ -220,20 +220,19 @@ theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
-    s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by classical
-  refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
-  · rw [map_eq_image, image_preimage, filter_true_of_mem fun x hx => _]
-    exact coe_map_subset_range _ _ (h hx)
-    
-  · rintro ⟨u, hut, rfl⟩
-    exact map_subset_map.2 hut
-    
+    s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by
+  classical 
+    refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
+    · rw [map_eq_image, image_preimage, filter_true_of_mem fun x hx => _]
+      exact coe_map_subset_range _ _ (h hx)
+    · rintro ⟨u, hut, rfl⟩
+      exact map_subset_map.2 hut
 #align finset.subset_map_iff Finset.subset_map_iff
 
 theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) (t : Finset α) :
     (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) =
       s.filter fun a => a.1 ∈ t :=
-  by
+  by 
   ext x
   simp [and_comm']
 #align finset.sigma_preimage_mk Finset.sigma_preimage_mk
@@ -267,9 +266,10 @@ theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x
 @[to_additive]
 theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s))
     (g : γ → β) (hg : ∀ x ∈ s, x ∉ Set.range f → g x = 1) :
-    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by classical
-  rw [prod_preimage', prod_filter_of_ne]
-  exact fun x hx => Not.imp_symm (hg x hx)
+    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by
+  classical 
+    rw [prod_preimage', prod_filter_of_ne]
+    exact fun x hx => Not.imp_symm (hg x hx)
 #align finset.prod_preimage Finset.prod_preimage
 
 @[to_additive]

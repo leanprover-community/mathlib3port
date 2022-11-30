@@ -293,7 +293,8 @@ variable (α)
 
 /-- `x ↦ x⁻¹` as an order-reversing equivalence. -/
 @[to_additive "`x ↦ -x` as an order-reversing equivalence.", simps]
-def OrderIso.inv : α ≃o αᵒᵈ where
+def OrderIso.inv :
+    α ≃o αᵒᵈ where 
   toEquiv := (Equiv.inv α).trans OrderDual.toDual
   map_rel_iff' a b := @inv_le_inv_iff α _ _ _ _ _ _
 #align order_iso.inv OrderIso.inv
@@ -637,14 +638,15 @@ theorem div_le_iff_le_mul : a / c ≤ b ↔ a ≤ b * c := by
 -- (a renamed version of) `tsub_le_iff_right`?
 -- see Note [lower instance priority]
 instance (priority := 100) AddGroup.toHasOrderedSub {α : Type _} [AddGroup α] [LE α]
-    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] : HasOrderedSub α :=
+    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] : OrderedSub α :=
   ⟨fun a b c => sub_le_iff_le_add⟩
 #align add_group.to_has_ordered_sub AddGroup.toHasOrderedSub
 
 /-- `equiv.mul_right` as an `order_iso`. See also `order_embedding.mul_right`. -/
 @[to_additive "`equiv.add_right` as an `order_iso`. See also `order_embedding.add_right`.",
   simps (config := { simpRhs := true }) toEquiv apply]
-def OrderIso.mulRight (a : α) : α ≃o α where
+def OrderIso.mulRight (a : α) :
+    α ≃o α where 
   map_rel_iff' _ _ := mul_le_mul_iff_right a
   toEquiv := Equiv.mulRight a
 #align order_iso.mul_right OrderIso.mulRight
@@ -664,7 +666,8 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)]
 /-- `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
 @[to_additive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
   simps (config := { simpRhs := true }) toEquiv apply]
-def OrderIso.mulLeft (a : α) : α ≃o α where
+def OrderIso.mulLeft (a : α) :
+    α ≃o α where 
   map_rel_iff' _ _ := mul_le_mul_iff_left a
   toEquiv := Equiv.mulLeft a
 #align order_iso.mul_left OrderIso.mulLeft
@@ -920,7 +923,7 @@ theorem le_iff_forall_one_lt_lt_mul : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε 
 `div_le_div_flip` below.  Now I wonder what is the point of either of these lemmas... -/
 @[to_additive]
 theorem div_le_inv_mul_iff [CovariantClass α α (swap (· * ·)) (· ≤ ·)] : a / b ≤ a⁻¹ * b ↔ a ≤ b :=
-  by
+  by 
   rw [div_eq_mul_inv, mul_inv_le_inv_mul_iff]
   exact
     ⟨fun h => not_lt.mp fun k => not_lt.mpr h (mul_lt_mul_of_lt_of_lt k k), fun h =>
@@ -995,15 +998,13 @@ theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a := by
   obtain ⟨y, hy⟩ := Decidable.exists_ne (1 : α)
   cases hy.lt_or_lt
   · exact ⟨y⁻¹, one_lt_inv'.mpr h⟩
-    
   · exact ⟨y, h⟩
-    
 #align exists_one_lt' exists_one_lt'
 
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_no_max_order [Nontrivial α] : NoMaxOrder α :=
-  ⟨by
+  ⟨by 
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a * y, lt_mul_of_one_lt_right' a hy⟩⟩
 #align linear_ordered_comm_group.to_no_max_order LinearOrderedCommGroup.to_no_max_order
@@ -1011,7 +1012,7 @@ instance (priority := 100) LinearOrderedCommGroup.to_no_max_order [Nontrivial α
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_no_min_order [Nontrivial α] : NoMinOrder α :=
-  ⟨by
+  ⟨by 
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩
 #align linear_ordered_comm_group.to_no_min_order LinearOrderedCommGroup.to_no_min_order
@@ -1078,7 +1079,7 @@ such that for every `a`, either `a` or `-a` is non-negative. -/
 def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : TotalPositiveCone α) :
     LinearOrderedAddCommGroup α :=
   { OrderedAddCommGroup.mkOfPositiveCone C.toPositiveCone with
-    le_total := fun a b => by
+    le_total := fun a b => by 
       convert C.nonneg_total (b - a)
       change C.nonneg _ = _
       congr

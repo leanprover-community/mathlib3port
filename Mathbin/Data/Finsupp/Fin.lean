@@ -54,13 +54,11 @@ theorem tail_cons : tail (cons y s) = s :=
 #align finsupp.tail_cons Finsupp.tail_cons
 
 @[simp]
-theorem cons_tail : cons (t 0) (tail t) = t := by
+theorem cons_tail : cons (t 0) (tail t) = t := by 
   ext
   by_cases c_a : a = 0
   · rw [c_a, cons_zero]
-    
   · rw [← Fin.succ_pred a c_a, cons_succ, ← tail_apply]
-    
 #align finsupp.cons_tail Finsupp.cons_tail
 
 @[simp]
@@ -68,10 +66,8 @@ theorem cons_zero_zero : cons 0 (0 : Fin n →₀ M) = 0 := by
   ext
   by_cases c : a = 0
   · simp [c]
-    
   · rw [← Fin.succ_pred a c, cons_succ]
     simp
-    
 #align finsupp.cons_zero_zero Finsupp.cons_zero_zero
 
 variable {s} {y}

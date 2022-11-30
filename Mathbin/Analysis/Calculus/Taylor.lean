@@ -75,7 +75,7 @@ theorem taylor_within_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) 
       taylorWithin f n s x₀ +
         PolynomialModule.comp (Polynomial.x - Polynomial.c x₀)
           (PolynomialModule.single ℝ (n + 1) (taylorCoeffWithin f (n + 1) s x₀)) :=
-  by
+  by 
   dsimp only [taylorWithin]
   rw [Finset.sum_range_succ]
 #align taylor_within_succ taylor_within_succ
@@ -85,7 +85,7 @@ theorem taylor_within_eval_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x 
     taylorWithinEval f (n + 1) s x₀ x =
       taylorWithinEval f n s x₀ x +
         (((n + 1 : ℝ) * n !)⁻¹ * (x - x₀) ^ (n + 1)) • iteratedDerivWithin (n + 1) f s x₀ :=
-  by
+  by 
   simp_rw [taylorWithinEval, taylor_within_succ, LinearMap.map_add, PolynomialModule.comp_eval]
   congr
   simp only [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C,
@@ -111,17 +111,15 @@ theorem taylor_within_eval_self (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : 
     taylorWithinEval f n s x₀ x₀ = f x₀ := by
   induction' n with k hk
   · exact taylor_within_zero_eval _ _ _ _
-    
   simp [hk]
 #align taylor_within_eval_self taylor_within_eval_self
 
 theorem taylor_within_apply (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : ℝ) :
     taylorWithinEval f n s x₀ x =
       ∑ k in Finset.range (n + 1), ((k ! : ℝ)⁻¹ * (x - x₀) ^ k) • iteratedDerivWithin k f s x₀ :=
-  by
+  by 
   induction' n with k hk
   · simp
-    
   rw [taylor_within_eval_succ, Finset.sum_range_succ, hk]
   simp
 #align taylor_within_apply taylor_within_apply
@@ -164,7 +162,7 @@ theorem hasDerivWithinAtTaylorCoeffWithin {f : ℝ → E} {x y : ℝ} {k : ℕ} 
   have hf'' :
     HasDerivWithinAt (fun t => iteratedDerivWithin (k + 1) f s t)
       (iteratedDerivWithin (k + 2) f s y) s' y :=
-    by
+    by 
     convert (hf' y hy).HasDerivWithinAt
     rw [iterated_deriv_within_succ (hs'_unique.mono h)]
     refine' (deriv_within_subset h hs'_unique _).symm
@@ -193,7 +191,7 @@ theorem hasDerivWithinAtTaylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} {
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f s) s') :
     HasDerivWithinAt (fun t => taylorWithinEval f n s t x)
       (((n ! : ℝ)⁻¹ * (x - y) ^ n) • iteratedDerivWithin (n + 1) f s y) s' y :=
-  by
+  by 
   induction' n with k hk
   · simp only [taylor_within_zero_eval, Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero,
       mul_one, zero_add, one_smul]
@@ -202,7 +200,6 @@ theorem hasDerivWithinAtTaylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} {
     refine' HasDerivWithinAt.mono _ h
     refine' DifferentiableWithinAt.hasDerivWithinAt _
     exact (hf' y hy).antimono h hs'
-    
   simp_rw [Nat.add_succ, taylor_within_eval_succ]
   simp only [add_zero, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
   have hdiff : DifferentiableOn ℝ (iteratedDerivWithin k f s) s' := by
@@ -325,7 +322,7 @@ theorem taylor_mean_remainder_cauchy {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ} 
     ∃ (x' : ℝ)(hx' : x' ∈ ioo x₀ x),
       f x - taylorWithinEval f n (icc x₀ x) x₀ x =
         iteratedDerivWithin (n + 1) f (icc x₀ x) x' * (x - x') ^ n / n ! * (x - x₀) :=
-  by
+  by 
   have gcont : ContinuousOn id (Icc x₀ x) := Continuous.continuous_on (by continuity)
   have gdiff : ∀ x_1 : ℝ, x_1 ∈ Ioo x₀ x → HasDerivAt id ((fun t : ℝ => (1 : ℝ)) x_1) x_1 :=
     fun _ _ => hasDerivAtId _
@@ -349,7 +346,6 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
   rcases eq_or_lt_of_le hab with (rfl | h)
   · rw [Icc_self, mem_singleton_iff] at hx
     simp [hx]
-    
   -- The nth iterated derivative is differentiable
   have hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (Icc a b)) (Icc a b) :=
     hf.differentiable_on_iterated_deriv_within (with_top.coe_lt_coe.mpr n.lt_succ_self)
@@ -359,7 +355,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
     ∀ (y : ℝ) (hy : y ∈ Ico a x),
       ‖((n ! : ℝ)⁻¹ * (x - y) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) y‖ ≤
         (n ! : ℝ)⁻¹ * |x - a| ^ n * C :=
-    by
+    by 
     rintro y ⟨hay, hyx⟩
     rw [norm_smul, Real.norm_eq_abs]
     -- Estimate the iterated derivative by `C`
@@ -374,7 +370,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
     ∀ t ∈ Icc a x,
       HasDerivWithinAt (fun y => taylorWithinEval f n (Icc a b) y x)
         (((↑n !)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) (Icc a x) t :=
-    by
+    by 
     intro t ht
     have I : Icc a x ⊆ Icc a b := Icc_subset_Icc_right hx.2
     exact (hasDerivWithinTaylorWithinEvalAtIcc x h (I ht) hf.of_succ hf').mono I
@@ -398,7 +394,6 @@ theorem exists_taylor_mean_remainder_bound {f : ℝ → E} {a b : ℝ} {n : ℕ}
   · refine' ⟨0, fun x hx => _⟩
     have : a = x := by simpa [← le_antisymm_iff] using hx
     simp [← this]
-    
   -- We estimate by the supremum of the norm of the iterated derivative
   let g : ℝ → ℝ := fun y => ‖iteratedDerivWithin (n + 1) f (Icc a b) y‖
   use HasSup.sup (g '' Icc a b) / n !

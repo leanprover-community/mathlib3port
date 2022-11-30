@@ -45,9 +45,7 @@ theorem constant_coeff_inv_units_sub (u : Rˣ) : constantCoeff R (invUnitsSub u)
 theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 := by
   ext (_ | n)
   · simp
-    
   · simp [n.succ_ne_zero, pow_succ]
-    
 #align power_series.inv_units_sub_mul_X PowerSeries.inv_units_sub_mul_X
 
 @[simp]
@@ -125,13 +123,13 @@ theorem map_exp : map (f : A →+* A') (exp A) = exp A' := by
 #align power_series.map_exp PowerSeries.map_exp
 
 @[simp]
-theorem map_sin : map f (sin A) = sin A' := by
+theorem map_sin : map f (sin A) = sin A' := by 
   ext
   simp [sin, apply_ite f]
 #align power_series.map_sin PowerSeries.map_sin
 
 @[simp]
-theorem map_cos : map f (cos A) = cos A' := by
+theorem map_cos : map f (cos A) = cos A' := by 
   ext
   simp [cos, apply_ite f]
 #align power_series.map_cos PowerSeries.map_cos
@@ -166,13 +164,10 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   norm_cast
   rw [cast_div_char_zero]
   · apply factorial_mul_factorial_dvd_factorial (mem_range_succ_iff.1 hx)
-    
   · apply mem_range_succ_iff.1 hx
-    
   · rintro h
     apply factorial_ne_zero n
     rw [cast_eq_zero.1 h]
-    
 #align power_series.exp_mul_exp_eq_exp_add PowerSeries.exp_mul_exp_eq_exp_add
 
 /-- Shows that $e^{x} * e^{-x} = 1$ -/
@@ -183,9 +178,9 @@ theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * evalNegHom (exp A) = 1 
 /-- Shows that $(e^{X})^k = e^{kX}$. -/
 theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (k : A) (exp A) := by
   induction' k with k h
-  · simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
+  ·
+    simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
       coe_comp]
-    
   simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one, id_apply,
     rescale_one] using pow_succ' (exp A) k
 #align power_series.exp_pow_eq_rescale_exp PowerSeries.exp_pow_eq_rescale_exp
@@ -195,7 +190,7 @@ $\sum_{k = 0}^{n - 1} (e^{X})^k = \sum_{p = 0}^{\infty} \sum_{k = 0}^{n - 1} \fr
 theorem exp_pow_sum [Algebra ℚ A] (n : ℕ) :
     ((Finset.range n).Sum fun k => exp A ^ k) =
       PowerSeries.mk fun p => (Finset.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
-  by
+  by 
   simp only [exp_pow_eq_rescale_exp, rescale]
   ext
   simp only [one_div, coeff_mk, coe_mk, coeff_exp, factorial, LinearMap.map_sum]

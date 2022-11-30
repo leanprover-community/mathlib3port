@@ -81,7 +81,8 @@ instance [SemilatticeSup α] {a : α} : SemilatticeSup (iic a) :=
 instance [Lattice α] {a : α} : Lattice (iic a) :=
   { iic.semilatticeInf, iic.semilatticeSup with }
 
-instance [Preorder α] {a : α} : OrderTop (iic a) where
+instance [Preorder α] {a : α} :
+    OrderTop (iic a) where 
   top := ⟨a, le_refl a⟩
   le_top x := x.Prop
 
@@ -90,7 +91,8 @@ theorem coe_top [Preorder α] {a : α} : ↑(⊤ : iic a) = a :=
   rfl
 #align set.Iic.coe_top Set.iic.coe_top
 
-instance [Preorder α] [OrderBot α] {a : α} : OrderBot (iic a) where
+instance [Preorder α] [OrderBot α] {a : α} :
+    OrderBot (iic a) where 
   bot := ⟨⊥, bot_le⟩
   bot_le := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 bot_le
 
@@ -118,7 +120,8 @@ instance [Lattice α] {a : α} : Lattice (ici a) :=
 instance [DistribLattice α] {a : α} : DistribLattice (ici a) :=
   { ici.lattice with le_sup_inf := fun a b c => le_sup_inf }
 
-instance [Preorder α] {a : α} : OrderBot (ici a) where
+instance [Preorder α] {a : α} :
+    OrderBot (ici a) where 
   bot := ⟨a, le_refl a⟩
   bot_le x := x.Prop
 
@@ -127,7 +130,8 @@ theorem coe_bot [Preorder α] {a : α} : ↑(⊥ : ici a) = a :=
   rfl
 #align set.Ici.coe_bot Set.ici.coe_bot
 
-instance [Preorder α] [OrderTop α] {a : α} : OrderTop (ici a) where
+instance [Preorder α] [OrderTop α] {a : α} :
+    OrderTop (ici a) where 
   top := ⟨⊤, le_top⟩
   le_top := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 le_top
 

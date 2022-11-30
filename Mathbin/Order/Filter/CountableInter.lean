@@ -125,7 +125,8 @@ theorem EventuallyEq.countable_bInter {ι : Type _} {S : Set ι} (hS : S.Countab
 `filter.univ_sets` and `filter.inter_sets` from the countable intersection property. -/
 def Filter.ofCountableInter (l : Set (Set α))
     (hp : ∀ S : Set (Set α), S.Countable → S ⊆ l → ⋂₀ S ∈ l)
-    (h_mono : ∀ s t, s ∈ l → s ⊆ t → t ∈ l) : Filter α where
+    (h_mono : ∀ s t, s ∈ l → s ⊆ t → t ∈ l) :
+    Filter α where 
   sets := l
   univ_sets := @sInter_empty α ▸ hp _ countable_empty (empty_subset _)
   sets_of_superset := h_mono
@@ -163,7 +164,7 @@ instance countable_Inter_filter_top : CountableInterFilter (⊤ : Filter α) := 
 #align countable_Inter_filter_top countable_Inter_filter_top
 
 instance (l : Filter β) [CountableInterFilter l] (f : α → β) : CountableInterFilter (comap f l) :=
-  by
+  by 
   refine' ⟨fun S hSc hS => _⟩
   choose! t htl ht using hS
   have : (⋂ s ∈ S, t s) ∈ l := (countable_bInter_mem hSc).2 htl

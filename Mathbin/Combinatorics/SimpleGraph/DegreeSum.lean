@@ -57,10 +57,8 @@ theorem dart_fst_fiber [DecidableEq V] (v : V) :
   constructor
   · rintro rfl
     exact ⟨_, d.is_adj, by ext <;> rfl⟩
-    
   · rintro ⟨e, he, rfl⟩
     rfl
-    
 #align simple_graph.dart_fst_fiber SimpleGraph.dart_fst_fiber
 
 theorem dart_fst_fiber_card_eq_degree [DecidableEq V] (v : V) :
@@ -115,22 +113,21 @@ end DegreeSum
 
 /-- The handshaking lemma.  See also `simple_graph.sum_degrees_eq_twice_card_edges`. -/
 theorem even_card_odd_degree_vertices [Fintype V] [DecidableRel G.Adj] :
-    Even (univ.filter fun v => Odd (G.degree v)).card := by classical
-  have h := congr_arg (fun n => ↑n : ℕ → Zmod 2) G.sum_degrees_eq_twice_card_edges
-  simp only [Zmod.nat_cast_self, zero_mul, Nat.cast_mul] at h
-  rw [Nat.cast_sum, ← sum_filter_ne_zero] at h
-  rw [@sum_congr _ _ _ _ (fun v => (G.degree v : Zmod 2)) (fun v => (1 : Zmod 2)) _ rfl] at h
-  · simp only [filter_congr_decidable, mul_one, nsmul_eq_mul, sum_const, Ne.def] at h
-    rw [← Zmod.eq_zero_iff_even]
-    convert h
-    ext v
-    rw [← Zmod.ne_zero_iff_odd]
-    
-  · intro v
-    simp only [true_and_iff, mem_filter, mem_univ, Ne.def]
-    rw [Zmod.eq_zero_iff_even, Zmod.eq_one_iff_odd, Nat.odd_iff_not_even, imp_self]
-    trivial
-    
+    Even (univ.filter fun v => Odd (G.degree v)).card := by
+  classical 
+    have h := congr_arg (fun n => ↑n : ℕ → Zmod 2) G.sum_degrees_eq_twice_card_edges
+    simp only [Zmod.nat_cast_self, zero_mul, Nat.cast_mul] at h
+    rw [Nat.cast_sum, ← sum_filter_ne_zero] at h
+    rw [@sum_congr _ _ _ _ (fun v => (G.degree v : Zmod 2)) (fun v => (1 : Zmod 2)) _ rfl] at h
+    · simp only [filter_congr_decidable, mul_one, nsmul_eq_mul, sum_const, Ne.def] at h
+      rw [← Zmod.eq_zero_iff_even]
+      convert h
+      ext v
+      rw [← Zmod.ne_zero_iff_odd]
+    · intro v
+      simp only [true_and_iff, mem_filter, mem_univ, Ne.def]
+      rw [Zmod.eq_zero_iff_even, Zmod.eq_one_iff_odd, Nat.odd_iff_not_even, imp_self]
+      trivial
 #align simple_graph.even_card_odd_degree_vertices SimpleGraph.even_card_odd_degree_vertices
 
 theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRel G.Adj] (v : V)
@@ -152,9 +149,7 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
     rw [add_assoc, one_add_one_eq_two, ← Nat.mul_succ, ← two_mul]
     congr
     exact (tsub_add_cancel_of_le <| Nat.succ_le_iff.2 hk).symm
-    
   · simpa only [true_and_iff, mem_filter, mem_univ]
-    
 #align simple_graph.odd_card_odd_degree_vertices_ne SimpleGraph.odd_card_odd_degree_vertices_ne
 
 theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Adj] (v : V)

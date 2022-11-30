@@ -113,7 +113,7 @@ def coimageImageComparison : Abelian.coimage f ⟶ Abelian.image f :=
 -/
 def coimageImageComparison' : Abelian.coimage f ⟶ Abelian.image f :=
   kernel.lift (cokernel.π f) (cokernel.desc (kernel.ι f) f (by simp))
-    (by
+    (by 
       ext
       simp)
 #align

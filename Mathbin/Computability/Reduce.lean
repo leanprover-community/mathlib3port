@@ -394,7 +394,7 @@ protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ)
 protected def liftOn₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
     (h : ∀ p₁ p₂ q₁ q₂, ManyOneEquiv p₁ p₂ → ManyOneEquiv q₁ q₂ → f p₁ q₁ = f p₂ q₂) : φ :=
   d₁.liftOn (fun p => d₂.liftOn (f p) fun q₁ q₂ hq => h _ _ _ _ (by rfl) hq)
-    (by
+    (by 
       intro p₁ p₂ hp
       induction d₂ using ManyOneDegree.ind_on
       apply h
@@ -448,7 +448,7 @@ private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d�
   apply ManyOneReducible.trans
 #align many_one_degree.le_trans many_one_degree.le_trans
 
-instance : PartialOrder ManyOneDegree where
+instance : PartialOrder ManyOneDegree where 
   le := (· ≤ ·)
   le_refl := le_refl
   le_trans _ _ _ := le_trans
@@ -458,7 +458,7 @@ instance : PartialOrder ManyOneDegree where
 instance : Add ManyOneDegree :=
   ⟨fun d₁ d₂ =>
     d₁.liftOn₂ d₂ (fun a b => of (a ⊕' b))
-      (by
+      (by 
         rintro a b c d ⟨hl₁, hr₁⟩ ⟨hl₂, hr₂⟩
         rw [of_eq_of]
         exact

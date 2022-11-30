@@ -62,7 +62,7 @@ theorem einfsep_zero :
 theorem einfsep_pos :
     0 < s.einfsep ↔
       ∃ (C : _)(hC : 0 < C), ∀ (x y) (_ : x ∈ s) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y :=
-  by
+  by 
   rw [pos_iff_ne_zero, Ne.def, einfsep_zero]
   simp only [not_forall, not_exists, not_lt]
 #align set.einfsep_pos Set.einfsep_pos
@@ -198,13 +198,14 @@ theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.einfsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
-    ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.einfsep = edist x y := by classical
-  cases nonempty_fintype s
-  simp_rw [einfsep_of_fintype]
-  rcases@Finset.exists_mem_eq_inf _ _ _ _ s.off_diag.to_finset (by simpa) (uncurry edist) with
-    ⟨_, hxy, hed⟩
-  simp_rw [mem_to_finset] at hxy
-  refine' ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
+    ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.einfsep = edist x y := by
+  classical 
+    cases nonempty_fintype s
+    simp_rw [einfsep_of_fintype]
+    rcases@Finset.exists_mem_eq_inf _ _ _ _ s.off_diag.to_finset (by simpa) (uncurry edist) with
+      ⟨_, hxy, hed⟩
+    simp_rw [mem_to_finset] at hxy
+    refine' ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 #align set.nontrivial.einfsep_exists_of_finite Set.Nontrivial.einfsep_exists_of_finite
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
@@ -227,19 +228,15 @@ theorem einfsep_pair (hxy : x ≠ y) : ({x, y} : Set α).einfsep = edist x y := 
 #align set.einfsep_pair Set.einfsep_pair
 
 theorem einfsep_insert : einfsep (insert x s) = (⨅ (y ∈ s) (hxy : x ≠ y), edist x y) ⊓ s.einfsep :=
-  by
+  by 
   refine' le_antisymm (le_min einfsep_insert_le (einfsep_anti (subset_insert _ _))) _
   simp_rw [le_einfsep_iff, inf_le_iff, mem_insert_iff]
   rintro y (rfl | hy) z (rfl | hz) hyz
   · exact False.elim (hyz rfl)
-    
   · exact Or.inl (infi_le_of_le _ (infi₂_le hz hyz))
-    
   · rw [edist_comm]
     exact Or.inl (infi_le_of_le _ (infi₂_le hy hyz.symm))
-    
   · exact Or.inr (einfsep_le_edist_of_mem hy hz hyz)
-    
 #align set.einfsep_insert Set.einfsep_insert
 
 theorem einfsep_triple (hxy : x ≠ y) (hyz : y ≠ z) (hxz : x ≠ z) :
@@ -310,10 +307,8 @@ theorem einfsep_pos_of_finite [Finite s] : 0 < s.einfsep := by
   by_cases hs : s.nontrivial
   · rcases hs.einfsep_exists_of_finite with ⟨x, hx, y, hy, hxy, hxy'⟩
     exact hxy'.symm ▸ edist_pos.2 hxy
-    
   · rw [not_nontrivial_iff] at hs
     exact hs.einfsep.symm ▸ WithTop.zero_lt_top
-    
 #align set.einfsep_pos_of_finite Set.einfsep_pos_of_finite
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
@@ -401,9 +396,7 @@ theorem infsep_pair_eq_to_real : ({x, y} : Set α).infsep = (edist x y).toReal :
   by_cases hxy : x = y
   · rw [hxy]
     simp only [infsep_singleton, pair_eq_singleton, edist_self, Ennreal.zero_to_real]
-    
   · rw [infsep, einfsep_pair hxy]
-    
 #align set.infsep_pair_eq_to_real Set.infsep_pair_eq_to_real
 
 end PseudoEmetricSpace
@@ -437,11 +430,9 @@ theorem le_edist_of_le_infsep {d x} (hx : x ∈ s) {y} (hy : y ∈ s) (hxy : x �
     (hd : d ≤ s.infsep) : d ≤ dist x y := by
   by_cases hs : s.nontrivial
   · exact hs.le_infsep_iff.1 hd x hx y hy hxy
-    
   · rw [not_nontrivial_iff] at hs
     rw [hs.infsep_zero] at hd
     exact le_trans hd dist_nonneg
-    
 #align set.le_edist_of_le_infsep Set.le_edist_of_le_infsep
 
 theorem infsep_le_dist_of_mem (hx : x ∈ s) (hy : y ∈ s) (hxy : x ≠ y) : s.infsep ≤ dist x y :=
@@ -480,9 +471,7 @@ theorem infsep_eq_infi [Decidable s.Nontrivial] :
     refine' eq_of_forall_le_iff fun _ => _
     simp_rw [hs.le_infsep_iff, le_cinfi_set_iff (off_diag_nonempty.mpr hs) hb, imp_forall_iff,
       mem_off_diag, Prod.forall, uncurry_apply_pair, and_imp]
-    
   · exact (not_nontrivial_iff.mp hs).infsep_zero
-    
 #align set.infsep_eq_infi Set.infsep_eq_infi
 
 theorem Nontrivial.infsep_eq_infi (hs : s.Nontrivial) :
@@ -492,15 +481,13 @@ theorem Nontrivial.infsep_eq_infi (hs : s.Nontrivial) :
 
 theorem infsep_of_fintype [Decidable s.Nontrivial] [DecidableEq α] [Fintype s] :
     s.infsep = if hs : s.Nontrivial then s.offDiag.toFinset.inf' (by simpa) (uncurry dist) else 0 :=
-  by
+  by 
   split_ifs with hs
   · refine' eq_of_forall_le_iff fun _ => _
     simp_rw [hs.le_infsep_iff, imp_forall_iff, Finset.le_inf'_iff, mem_to_finset, mem_off_diag,
       Prod.forall, uncurry_apply_pair, and_imp]
-    
   · rw [not_nontrivial_iff] at hs
     exact hs.infsep_zero
-    
 #align set.infsep_of_fintype Set.infsep_of_fintype
 
 theorem Nontrivial.infsep_of_fintype [DecidableEq α] [Fintype s] (hs : s.Nontrivial) :
@@ -511,15 +498,13 @@ theorem Nontrivial.infsep_of_fintype [DecidableEq α] [Fintype s] (hs : s.Nontri
 theorem Finite.infsep [Decidable s.Nontrivial] (hsf : s.Finite) :
     s.infsep =
       if hs : s.Nontrivial then hsf.offDiag.toFinset.inf' (by simpa) (uncurry dist) else 0 :=
-  by
+  by 
   split_ifs with hs
   · refine' eq_of_forall_le_iff fun _ => _
     simp_rw [hs.le_infsep_iff, imp_forall_iff, Finset.le_inf'_iff, finite.mem_to_finset,
       mem_off_diag, Prod.forall, uncurry_apply_pair, and_imp]
-    
   · rw [not_nontrivial_iff] at hs
     exact hs.infsep_zero
-    
 #align set.finite.infsep Set.Finite.infsep
 
 theorem Finite.infsep_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial) :
@@ -534,9 +519,7 @@ theorem Finset.coe_infsep [DecidableEq α] (s : Finset α) :
     rwa [← Set.off_diag_nonempty, ← Finset.coe_off_diag, Finset.coe_nonempty]
   split_ifs with hs
   · simp_rw [(H.mpr hs).infsep_of_fintype, ← Finset.coe_off_diag, Finset.to_finset_coe]
-    
   · exact (not_nontrivial_iff.mp (H.mp.mt hs)).infsep_zero
-    
 #align finset.coe_infsep Finset.coe_infsep
 
 theorem Finset.coe_infsep_of_off_diag_nonempty [DecidableEq α] {s : Finset α}
@@ -552,13 +535,14 @@ theorem Finset.coe_infsep_of_off_diag_empty [DecidableEq α] {s : Finset α} (hs
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.infsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
-    ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.infsep = dist x y := by classical
-  cases nonempty_fintype s
-  simp_rw [hs.infsep_of_fintype]
-  rcases@Finset.exists_mem_eq_inf' _ _ _ s.off_diag.to_finset (by simpa) (uncurry dist) with
-    ⟨_, hxy, hed⟩
-  simp_rw [mem_to_finset] at hxy
-  exact ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
+    ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s)(hxy : x ≠ y), s.infsep = dist x y := by
+  classical 
+    cases nonempty_fintype s
+    simp_rw [hs.infsep_of_fintype]
+    rcases@Finset.exists_mem_eq_inf' _ _ _ s.off_diag.to_finset (by simpa) (uncurry dist) with
+      ⟨_, hxy, hed⟩
+    simp_rw [mem_to_finset] at hxy
+    exact ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 #align set.nontrivial.infsep_exists_of_finite Set.Nontrivial.infsep_exists_of_finite
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/

@@ -42,21 +42,17 @@ protected irreducible_def lim :=
 #align subadditive.lim Subadditive.lim
 
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :
-    h.lim ≤ u n / n := by
+    h.lim ≤ u n / n := by 
   rw [Subadditive.lim]
   apply cInf_le _ _
   · rcases hbdd with ⟨c, hc⟩
     exact ⟨c, fun x hx => hc (image_subset_range _ _ hx)⟩
-    
   · apply mem_image_of_mem
     exact zero_lt_iff.2 hn
-    
 #align subadditive.lim_le_div Subadditive.lim_le_div
 
 theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
-  induction' k with k IH;
-  · simp only [Nat.cast_zero, zero_mul, zero_add]
-    
+  induction' k with k IH; · simp only [Nat.cast_zero, zero_mul, zero_add]
   calc
     u ((k + 1) * n + r) = u (n + (k * n + r)) := by
       congr 1
@@ -69,7 +65,7 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
 
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) :
     ∀ᶠ p in at_top, u p / p < L := by
-  have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0 := by
+  have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0 := by 
     intro i hi
     simp only [hi.ne', Ne.def, Nat.cast_eq_zero, not_false_iff]
   obtain ⟨w, nw, wL⟩ : ∃ w, u n / n < w ∧ w < L := exists_between hL
@@ -80,7 +76,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     simp only [upperBounds, mem_image, and_imp, forall_exists_index, mem_set_of_eq,
       forall_apply_eq_imp_iff₂, Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx
     exact hx _ hi
-  have A : ∀ p : ℕ, u p ≤ p * w + x := by
+  have A : ∀ p : ℕ, u p ≤ p * w + x := by 
     intro p
     let s := p / n
     let r := p % n
@@ -88,14 +84,14 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     calc
       u p = u (s * n + r) := by rw [hp]
       _ ≤ s * u n + u r := h.apply_mul_add_le _ _ _
-      _ = s * n * (u n / n) + u r := by
+      _ = s * n * (u n / n) + u r := by 
         field_simp [I _ hn.bot_lt]
         ring
       _ ≤ s * n * w + u r :=
         add_le_add_right
           (mul_le_mul_of_nonneg_left nw.le (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _))) _
       _ = (s * n + r) * w + (u r - r * w) := by ring
-      _ = p * w + (u r - r * w) := by
+      _ = p * w + (u r - r * w) := by 
         rw [hp]
         simp only [Nat.cast_add, Nat.cast_mul]
       _ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_lt _ hn.bot_lt)) _
@@ -118,17 +114,16 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
     Tendsto (fun n => u n / n) atTop (𝓝 h.lim) := by
   refine' tendsto_order.2 ⟨fun l hl => _, fun L hL => _⟩
-  · refine'
+  ·
+    refine'
       eventually_at_top.2
         ⟨1, fun n hn => hl.trans_le (h.lim_le_div hbdd (zero_lt_one.trans_le hn).ne')⟩
-    
   · obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ u n / n < L := by
       rw [Subadditive.lim] at hL
       rcases exists_lt_of_cInf_lt (by simp) hL with ⟨x, hx, xL⟩
       rcases(mem_image _ _ _).1 hx with ⟨n, hn, rfl⟩
       exact ⟨n, zero_lt_one.trans_le hn, xL⟩
     exact h.eventually_div_lt_of_div_lt npos.ne' hn
-    
 #align subadditive.tendsto_lim Subadditive.tendsto_lim
 
 end Subadditive

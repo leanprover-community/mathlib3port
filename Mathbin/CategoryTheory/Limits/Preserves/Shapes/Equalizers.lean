@@ -198,7 +198,7 @@ instance : IsIso (coequalizerComparison f g G) := by
   infer_instance
 
 instance map_π_epi : Epi (G.map (coequalizer.π f g)) :=
-  ⟨fun W h k => by
+  ⟨fun W h k => by 
     rw [← ι_comp_coequalizer_comparison]
     apply (cancel_epi _).1
     apply epi_comp⟩
@@ -242,7 +242,7 @@ theorem map_π_preserves_coequalizer_inv_colim_map_desc {X' Y' : D} (f' g' : X' 
         (PreservesCoequalizer.iso G f g).inv ≫
           colimMap (parallelPairHom (G.map f) (G.map g) f' g' p q wf wg) ≫ coequalizer.desc h wh =
       q ≫ h :=
-  by
+  by 
   slice_lhs 1 3 => rw [map_π_preserves_coequalizer_inv_colim_map]
   slice_lhs 2 3 => rw [coequalizer.π_desc]
 #align

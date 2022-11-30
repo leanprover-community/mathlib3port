@@ -141,10 +141,8 @@ theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) :
   cases' lt_or_le x y with h' h'
   · use x
     simp [*, not_le.2 h']
-    
   · use max x (x + dy)
     simp [*, le_refl]
-    
 #align set.nonempty_Ico_sdiff Set.nonempty_Ico_sdiff
 
 end LinearOrderedAddCommGroup

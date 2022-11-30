@@ -79,20 +79,21 @@ end
 
 /-- Constructs an equivalence between Boolean algebras from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : BoolAlgCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : BoolAlgCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align BoolAlg.iso.mk BoolAlgCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : BoolAlgCat ⥤ BoolAlgCat where
+def dual : BoolAlgCat ⥤ BoolAlgCat where 
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
 #align BoolAlg.dual BoolAlgCat.dual

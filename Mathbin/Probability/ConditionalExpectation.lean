@@ -41,7 +41,6 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
   swap;
   · rw [condexp_undef hfint, integral_undef hfint]
     rfl
-    
   have hfint₁ := hfint.trim hle₁ hf
   refine'
     (ae_eq_condexp_of_forall_set_integral_eq hle₂ hfint
@@ -54,40 +53,33 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
     rw [integral_indicator (hle₁ _ hmt), set_integral_const, smul_smul, ← Ennreal.to_real_mul,
       mul_comm, ← hindp _ _ hmt hms, set_integral_indicator (hle₁ _ hmt), set_integral_const,
       Set.inter_comm]
-    
   · intro u v hdisj huint hvint hu hv hu_eq hv_eq
     rw [mem_ℒp_one_iff_integrable] at huint hvint
     rw [integral_add' huint hvint, smul_add, hu_eq, hv_eq,
       integral_add' huint.integrable_on hvint.integrable_on]
-    
   · have heq₁ :
       (fun f : Lp_meas E ℝ m₁ 1 μ => ∫ x, f x ∂μ) =
         (fun f : Lp E 1 μ => ∫ x, f x ∂μ) ∘ Submodule.subtypeL _ :=
-      by
+      by 
       refine' funext fun f => integral_congr_ae _
       simp_rw [Submodule.coe_subtypeL', Submodule.coe_subtype, ← coe_fn_coe_base]
     have heq₂ :
       (fun f : Lp_meas E ℝ m₁ 1 μ => ∫ x in s, f x ∂μ) =
         (fun f : Lp E 1 μ => ∫ x in s, f x ∂μ) ∘ Submodule.subtypeL _ :=
-      by
+      by 
       refine' funext fun f => integral_congr_ae (ae_restrict_of_ae _)
       simp_rw [Submodule.coe_subtypeL', Submodule.coe_subtype, ← coe_fn_coe_base]
       exact eventually_of_forall fun _ => rfl
     refine' isClosedEq (Continuous.const_smul _ _) _
     · rw [heq₁]
       exact continuous_integral.comp (ContinuousLinearMap.continuous _)
-      
     · rw [heq₂]
       exact (continuous_set_integral _).comp (ContinuousLinearMap.continuous _)
-      
-    
   · intro u v huv huint hueq
     rwa [← integral_congr_ae huv, ←
       (set_integral_congr_ae (hle₂ _ hms) _ : (∫ x in s, u x ∂μ) = ∫ x in s, v x ∂μ)]
     filter_upwards [huv] with x hx _ using hx
-    
   · exact ⟨f, hf, eventually_eq.rfl⟩
-    
 #align measure_theory.condexp_indep_eq MeasureTheory.condexp_indep_eq
 
 end MeasureTheory

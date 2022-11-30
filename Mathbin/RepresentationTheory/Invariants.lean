@@ -74,7 +74,8 @@ variable (ρ : Representation k G V)
 
 /-- The subspace of invariants, consisting of the vectors fixed by all elements of `G`.
 -/
-def invariants : Submodule k V where
+def invariants :
+    Submodule k V where 
   carrier := setOf fun v => ∀ g : G, ρ g v = v
   zero_mem' g := by simp only [map_zero]
   add_mem' v w hv hw g := by simp only [hv g, hw g, map_add]
@@ -141,15 +142,18 @@ theorem mem_invariants_iff_comm {X Y : RepCat k G} (f : X.V →ₗ[k] Y.V) (g : 
 /-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
 homomorphisms from `X` to `Y` -/
 @[simps]
-def invariantsEquivRepHom (X Y : RepCat k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y where
+def invariantsEquivRepHom (X Y : RepCat k G) :
+    (linHom X.ρ Y.ρ).invariants ≃ₗ[k]
+      X ⟶
+        Y where 
   toFun f := ⟨f.val, fun g => (mem_invariants_iff_comm _ g).1 (f.property g)⟩
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := ⟨f.hom, fun g => (mem_invariants_iff_comm _ g).2 (f.comm g)⟩
-  left_inv _ := by
+  left_inv _ := by 
     ext
     rfl
-  right_inv _ := by
+  right_inv _ := by 
     ext
     rfl
 #align representation.lin_hom.invariants_equiv_Rep_hom Representation.linHom.invariantsEquivRepHom

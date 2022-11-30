@@ -24,7 +24,8 @@ instance PropCat.distribLattice : DistribLattice Prop :=
 #align Prop.distrib_lattice PropCat.distribLattice
 
 /-- Propositions form a bounded order. -/
-instance PropCat.boundedOrder : BoundedOrder Prop where
+instance PropCat.boundedOrder :
+    BoundedOrder Prop where 
   top := True
   le_top a Ha := True.intro
   bot := False
@@ -40,7 +41,7 @@ theorem PropCat.top_eq_true : (⊤ : Prop) = True :=
 #align Prop.top_eq_true PropCat.top_eq_true
 
 instance PropCat.le_is_total : IsTotal Prop (· ≤ ·) :=
-  ⟨fun p q => by
+  ⟨fun p q => by 
     change (p → q) ∨ (q → p)
     tauto!⟩
 #align Prop.le_is_total PropCat.le_is_total
@@ -139,15 +140,10 @@ theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
             h
             (update_le_iff.mpr ⟨hf, fun _ _ => _⟩) (update_le_iff.mpr ⟨hg, fun _ _ => _⟩)).1
     · exact ⊥
-      
     · exact bot_le
-      
     · exact bot_le
-      
-    
   · intro h x hf hg i
     apply h i (hf i) (hg i)
-    
 #align pi.disjoint_iff Pi.disjoint_iff
 
 theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} :
@@ -157,7 +153,7 @@ theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} :
 
 theorem is_compl_iff [∀ i, BoundedOrder (α' i)] {f g : ∀ i, α' i} :
     IsCompl f g ↔ ∀ i, IsCompl (f i) (g i) := by
-  simp_rw [is_compl_iff, disjoint_iff, codisjoint_iff, forall_and]
+  simp_rw [isCompl_iff, disjoint_iff, codisjoint_iff, forall_and]
 #align pi.is_compl_iff Pi.is_compl_iff
 
 end Pi
@@ -174,7 +170,7 @@ theorem PropCat.codisjoint_iff {P Q : Prop} : Codisjoint P Q ↔ P ∨ Q :=
 
 @[simp]
 theorem PropCat.is_compl_iff {P Q : Prop} : IsCompl P Q ↔ ¬(P ↔ Q) := by
-  rw [is_compl_iff, PropCat.disjoint_iff, PropCat.codisjoint_iff, not_iff]
+  rw [isCompl_iff, PropCat.disjoint_iff, PropCat.codisjoint_iff, not_iff]
   tauto
 #align Prop.is_compl_iff PropCat.is_compl_iff
 

@@ -154,7 +154,12 @@ open AddMonoidHom (flip_apply coe_comp comp_hom_apply_apply)
 
 /-- The piecewise multiplication from the `has_mul` instance, as a bundled homomorphism. -/
 @[simps]
-def gmulHom {i j} : A i →+ A j →+ A (i + j) where
+def gmulHom {i j} :
+    A i →+
+      A j →+
+        A
+          (i +
+            j) where 
   toFun a :=
     { toFun := fun b => GradedMonoid.GhasMul.mul a b,
       map_zero' := GnonUnitalNonAssocSemiring.mul_zero _,
@@ -202,8 +207,7 @@ open AddMonoidHom (flipHom coe_comp comp_hom_apply_apply flip_apply flip_hom_app
 
 private theorem one_mul (x : ⨁ i, A i) : 1 * x = x := by
   suffices mulHom A 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x
-  apply add_hom_ext
-  intro i xi
+  apply add_hom_ext; intro i xi
   unfold One.one
   rw [mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (one_mul <| GradedMonoid.mk i xi)
@@ -211,8 +215,7 @@ private theorem one_mul (x : ⨁ i, A i) : 1 * x = x := by
 
 private theorem mul_one (x : ⨁ i, A i) : x * 1 = x := by
   suffices (mulHom A).flip 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x
-  apply add_hom_ext
-  intro i xi
+  apply add_hom_ext; intro i xi
   unfold One.one
   rw [flip_apply, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (mul_one <| GradedMonoid.mk i xi)
@@ -242,7 +245,7 @@ instance semiring : Semiring (⨁ i, A i) :=
     one_mul := one_mul A, mul_one := mul_one A, mul_assoc := mul_assoc A,
     natCast := fun n => of _ _ (Gsemiring.natCast n),
     nat_cast_zero := by rw [gsemiring.nat_cast_zero, map_zero],
-    nat_cast_succ := fun n => by
+    nat_cast_succ := fun n => by 
       rw [gsemiring.nat_cast_succ, map_add]
       rfl }
 #align direct_sum.semiring DirectSum.semiring
@@ -251,10 +254,8 @@ theorem of_pow {i} (a : A i) (n : ℕ) :
     of _ i a ^ n = of _ (n • i) (GradedMonoid.Gmonoid.gnpow _ a) := by
   induction' n with n
   · exact of_eq_of_graded_monoid_eq (pow_zero <| GradedMonoid.mk _ a).symm
-    
   · rw [pow_succ, n_ih, of_mul_of]
     exact of_eq_of_graded_monoid_eq (pow_succ (GradedMonoid.mk _ a) n).symm
-    
 #align direct_sum.of_pow DirectSum.of_pow
 
 theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
@@ -262,10 +263,8 @@ theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a
   induction l
   · simp only [List.map_nil, List.prod_nil, List.dprod_nil]
     rfl
-    
   · simp only [List.map_cons, List.prod_cons, List.dprod_cons, ← l_ih, DirectSum.of_mul_of]
     rfl
-    
 #align direct_sum.of_list_dprod DirectSum.of_list_dprod
 
 theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Fin n → ι) (fA : ∀ a, A (fι a)) :
@@ -278,7 +277,7 @@ open BigOperators
 theorem mul_eq_dfinsupp_sum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
     a * a' =
       a.Sum fun i ai => a'.Sum fun j aj => DirectSum.of _ _ <| GradedMonoid.GhasMul.mul ai aj :=
-  by
+  by 
   change MulHom _ a a' = _
   simpa only [MulHom, to_add_monoid, Dfinsupp.lift_add_hom_apply, Dfinsupp.sum_add_hom_apply,
     AddMonoidHom.dfinsupp_sum_apply, flip_apply, AddMonoidHom.dfinsupp_sum_add_hom_apply]
@@ -301,10 +300,7 @@ variable [∀ i, AddCommMonoid (A i)] [AddCommMonoid ι] [GcommSemiring A]
 
 private theorem mul_comm (a b : ⨁ i, A i) : a * b = b * a := by
   suffices mulHom A = (mulHom A).flip from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b
-  apply add_hom_ext
-  intro ai ax
-  apply add_hom_ext
-  intro bi bx
+  apply add_hom_ext; intro ai ax; apply add_hom_ext; intro bi bx
   rw [AddMonoidHom.flip_apply, mul_hom_of_of, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (gcomm_semiring.mul_comm ⟨ai, ax⟩ ⟨bi, bx⟩)
 #align direct_sum.mul_comm direct_sum.mul_comm
@@ -532,7 +528,7 @@ variable {A}
 then they are equal.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem ring_hom_ext' ⦃F G : (⨁ i, A i) →+* R⦄
     (h : ∀ i, (↑F : _ →+ R).comp (of A i) = (↑G : _ →+ R).comp (of A i)) : F = G :=
   RingHom.coe_add_monoid_hom_injective <| DirectSum.add_hom_ext' h
@@ -555,11 +551,11 @@ def toSemiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GhasOne.one = 1)
     (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj) :
     (⨁ i, A i) →+* R :=
   { toAddMonoid f with toFun := toAddMonoid f,
-    map_one' := by
+    map_one' := by 
       change (to_add_monoid f) (of _ 0 _) = 1
       rw [to_add_monoid_of]
       exact hone,
-    map_mul' := by
+    map_mul' := by 
       rw [(to_add_monoid f).map_mul_iff]
       ext (xi xv yi yv) : 4
       show
@@ -589,7 +585,8 @@ def liftRingHom :
     { f : ∀ {i}, A i →+ R //
         f GradedMonoid.GhasOne.one = 1 ∧
           ∀ {i j} (ai : A i) (aj : A j), f (GradedMonoid.GhasMul.mul ai aj) = f ai * f aj } ≃
-      ((⨁ i, A i) →+* R) where
+      ((⨁ i, A i) →+*
+        R) where 
   toFun f := toSemiring (fun _ => f.1) f.2.1 fun _ _ => f.2.2
   invFun F :=
     ⟨fun i => (F : (⨁ i, A i) →+ R).comp (of _ i), by
@@ -598,10 +595,10 @@ def liftRingHom :
       rfl, fun i j ai aj => by
       simp only [AddMonoidHom.comp_apply, RingHom.coe_add_monoid_hom]
       rw [← F.map_mul, of_mul_of]⟩
-  left_inv f := by
+  left_inv f := by 
     ext (xi xv)
     exact to_add_monoid_of (fun _ => f.1) xi xv
-  right_inv F := by
+  right_inv F := by 
     apply RingHom.coe_add_monoid_hom_injective
     ext (xi xv)
     simp only [RingHom.coe_add_monoid_hom_mk, DirectSum.to_add_monoid_of, AddMonoidHom.mk_coe,

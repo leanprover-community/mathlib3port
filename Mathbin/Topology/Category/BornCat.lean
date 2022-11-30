@@ -38,7 +38,7 @@ def of (α : Type _) [Bornology α] : BornCat :=
 instance : Inhabited BornCat :=
   ⟨of PUnit⟩
 
-instance : BundledHom @LocallyBoundedMap where
+instance : BundledHom @LocallyBoundedMap where 
   toFun _ _ _ _ := coeFn
   id := @LocallyBoundedMap.id
   comp := @LocallyBoundedMap.comp

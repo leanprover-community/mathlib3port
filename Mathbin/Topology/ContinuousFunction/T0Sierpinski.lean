@@ -28,13 +28,11 @@ theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
   apply le_antisymm
   · rw [le_infi_iff]
     exact fun u => Continuous.le_induced (is_open_iff_continuous_mem.mp u.2)
-    
   · intro u h
     rw [← generate_from_Union_is_open]
     apply is_open_generate_from_of_mem
     simp only [Set.mem_Union, Set.mem_set_of_eq, is_open_induced_iff']
     exact ⟨⟨u, h⟩, {True}, is_open_singleton_true, by simp [Set.preimage]⟩
-    
 #align
   topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski
 
@@ -43,7 +41,8 @@ variable (X : Type _) [TopologicalSpace X]
 /-- The continuous map from `X` to the product of copies of the Sierpinski space, (one copy for each
 open subset `u` of `X`). The `u` coordinate of `product_of_mem_opens x` is given by `x ∈ u`.
 -/
-def productOfMemOpens : ContinuousMap X (Opens X → Prop) where
+def productOfMemOpens :
+    ContinuousMap X (Opens X → Prop) where 
   toFun x u := x ∈ u
   continuous_to_fun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property
 #align topological_space.product_of_mem_opens TopologicalSpace.productOfMemOpens

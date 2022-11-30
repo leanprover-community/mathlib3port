@@ -81,14 +81,12 @@ theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
   ext; constructor
   · rintro rfl
     rfl
-    
   · intro h
     simp only [← mul_assoc] at h
     refine' mul_left_cancel₀ (mul_ne_zero _ _) h
     apply mul_ne_zero
     apply div_ne_zero
     all_goals apply ne_of_gt <;> first |assumption|exact zero_lt_one
-    
 #align cancel_factors.cancel_factors_eq CancelFactors.cancel_factors_eq
 
 open Tactic Expr

@@ -264,7 +264,7 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : 
 #align category_theory.mono_of_mono CategoryTheory.mono_of_mono
 
 theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [Mono h] (w : f ≫ g = h) :
-    Mono f := by
+    Mono f := by 
   subst h
   exact mono_of_mono f g
 #align category_theory.mono_of_mono_fac CategoryTheory.mono_of_mono_fac
@@ -291,7 +291,8 @@ variable [Category.{v} C]
 
 universe u'
 
-instance uliftCategory : Category.{v} (ULift.{u'} C) where
+instance uliftCategory :
+    Category.{v} (ULift.{u'} C) where 
   Hom X Y := X.down ⟶ Y.down
   id X := 𝟙 X.down
   comp _ _ _ f g := f ≫ g

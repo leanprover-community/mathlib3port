@@ -213,12 +213,10 @@ theorem chain'_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) :
   rw [range_succ]
   induction' n with n hn
   · simp
-    
   · rw [range_succ]
     simp only [append_assoc, singleton_append, chain'_append_cons_cons, chain'_singleton,
       and_true_iff]
     rw [hn, forall_lt_succ]
-    
 #align list.chain'_range_succ List.chain'_range_succ
 
 theorem chain_range_succ (r : ℕ → ℕ → Prop) (n a : ℕ) :
@@ -380,17 +378,15 @@ theorem map_nth_le (l : List α) : ((finRange l.length).map fun n => l.nthLe n n
     congr
     · rw [nth_le_fin_range]
       rfl
-      
     · rw [length_fin_range]
       exact h
-      
 #align list.map_nth_le List.map_nth_le
 
 theorem of_fn_eq_pmap {α n} {f : Fin n → α} :
     ofFn f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 := by
   rw [pmap_eq_map_attach] <;>
     exact
-      ext_le (by simp) fun i hi1 hi2 => by
+      ext_le (by simp) fun i hi1 hi2 => by 
         simp at hi1
         simp [nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
 #align list.of_fn_eq_pmap List.of_fn_eq_pmap

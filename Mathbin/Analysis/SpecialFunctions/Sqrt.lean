@@ -25,7 +25,8 @@ namespace Real
 
 /-- Local homeomorph between `(0, +∞)` and `(0, +∞)` with `to_fun = λ x, x ^ 2` and
 `inv_fun = sqrt`. -/
-noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ where
+noncomputable def sqLocalHomeomorph :
+    LocalHomeomorph ℝ ℝ where 
   toFun x := x ^ 2
   invFun := sqrt
   source := ioi 0
@@ -48,16 +49,13 @@ theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
     exact
       ⟨(hasStrictDerivAtConst x (0 : ℝ)).congr_of_eventually_eq this.symm, fun n =>
         cont_diff_at_const.congr_of_eventually_eq this⟩
-    
   · have : ↑2 * sqrt x ^ (2 - 1) ≠ 0 := by simp [(sqrt_pos.2 hx).ne', @two_ne_zero ℝ]
     constructor
     · simpa using sq_local_homeomorph.has_strict_deriv_at_symm hx this (hasStrictDerivAtPow 2 _)
-      
-    · exact fun n =>
+    ·
+      exact fun n =>
         sq_local_homeomorph.cont_diff_at_symm_deriv this hx (hasDerivAtPow 2 (sqrt x))
           (cont_diff_at_id.pow 2)
-      
-    
 #align real.deriv_sqrt_aux Real.deriv_sqrt_aux
 
 theorem hasStrictDerivAtSqrt {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x :=

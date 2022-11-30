@@ -29,7 +29,7 @@ where `forget C` reflects isomorphisms, itself reflects isomorphisms.
 -/
 theorem reflects_isomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms (forget C)] :
     ReflectsIsomorphisms (forget₂ C D) :=
-  { reflects := fun X Y f i => by
+  { reflects := fun X Y f i => by 
       skip
       haveI i' : is_iso ((forget D).map ((forget₂ C D).map f)) := functor.map_is_iso (forget D) _
       haveI : is_iso ((forget C).map f) := by

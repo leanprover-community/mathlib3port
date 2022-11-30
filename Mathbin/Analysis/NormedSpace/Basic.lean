@@ -50,7 +50,9 @@ end Prio
 variable [NormedField α] [SeminormedAddCommGroup β]
 
 -- see Note [lower instance priority]
-instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] : HasBoundedSmul α β where
+instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] :
+    HasBoundedSmul α
+      β where 
   dist_smul_pair' x y₁ y₂ := by
     simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
   dist_pair_smul' x₁ x₂ y := by
@@ -64,7 +66,6 @@ instance NormedField.toNormedSpace :
 theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖ = ‖s‖ * ‖x‖ := by
   by_cases h : s = 0
   · simp [h]
-    
   · refine' le_antisymm (NormedSpace.norm_smul_le s x) _
     calc
       ‖s‖ * ‖x‖ = ‖s‖ * ‖s⁻¹ • s • x‖ := by rw [inv_smul_smul₀ h]
@@ -72,7 +73,6 @@ theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖ = ‖s�
         mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _)
       _ = ‖s • x‖ := by rw [norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mul]
       
-    
 #align norm_smul norm_smul
 
 theorem norm_zsmul (α) [NormedField α] [NormedSpace α β] (n : ℤ) (x : β) :
@@ -142,9 +142,7 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
   convert this.mem_closure _ _
   · rw [one_smul, sub_add_cancel]
-    
   · simp [closure_Ico zero_ne_one, zero_le_one]
-    
   · rintro c ⟨hc0, hc1⟩
     rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
       mul_comm, ← mul_one r]
@@ -152,7 +150,6 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     replace hr : 0 < r
     exact ((norm_nonneg _).trans hy).lt_of_ne hr.symm
     apply mul_lt_mul' <;> assumption
-    
 #align closure_ball closure_ball
 
 theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
@@ -165,12 +162,10 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
     interior (closedBall x r) = ball x r := by
   cases' hr.lt_or_lt with hr hr
   · rw [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
-    
   refine' subset.antisymm _ ball_subset_interior_closed_ball
   intro y hy
   rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
   · exact hr
-    
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
   suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1 by
     have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
@@ -194,7 +189,6 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
   rcases eq_or_ne e 0 with (rfl | he)
   · rw [AddSubgroup.zmultiples_zero_eq_bot]
     infer_instance
-    
   · rw [discrete_topology_iff_open_singleton_zero, is_open_induced_iff]
     refine' ⟨Metric.ball 0 ‖e‖, Metric.is_open_ball, _⟩
     ext ⟨x, hx⟩
@@ -203,7 +197,6 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
       AddSubgroup.coe_mk, AddSubgroup.coe_zero, norm_zsmul ℚ k e, Int.norm_cast_rat,
       Int.norm_eq_abs, ← Int.cast_abs, mul_lt_iff_lt_one_left (norm_pos_iff.mpr he), ←
       @Int.cast_one ℝ _, Int.cast_lt, Int.abs_lt_one_iff, smul_eq_zero, or_iff_left he]
-    
 
 /-- A (semi) normed real vector space is homeomorphic to the unit ball in the same space.
 This homeomorphism sends `x : E` to `(1 + ‖x‖²)^(- ½) • x`.
@@ -214,9 +207,12 @@ In many cases the actual implementation is not important, so we don't mark the p
 See also `cont_diff_homeomorph_unit_ball` and `cont_diff_on_homeomorph_unit_ball_symm` for
 smoothness properties that hold when `E` is an inner-product space. -/
 @[simps (config := { attrs := [] })]
-def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1 where
+def homeomorphUnitBall [NormedSpace ℝ E] :
+    E ≃ₜ
+      ball (0 : E)
+        1 where 
   toFun x :=
-    ⟨(1 + ‖x‖ ^ 2).sqrt⁻¹ • x, by
+    ⟨(1 + ‖x‖ ^ 2).sqrt⁻¹ • x, by 
       have : 0 < 1 + ‖x‖ ^ 2 := by positivity
       rw [mem_ball_zero_iff, norm_smul, Real.norm_eq_abs, abs_inv, ← div_eq_inv_mul,
         div_lt_one (abs_pos.mpr <| real.sqrt_ne_zero'.mpr this), ← abs_norm_eq_norm x, ← sq_lt_sq,
@@ -230,7 +226,7 @@ def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1 where
     have : 0 < 1 - ‖(y : E)‖ ^ 2 := by
       nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ‖(y : E)‖ < 1)]
     field_simp [norm_smul, smul_smul, this.ne', Real.sq_sqrt this.le, ← Real.sqrt_div this.le]
-  continuous_to_fun := by
+  continuous_to_fun := by 
     suffices : Continuous fun x => (1 + ‖x‖ ^ 2).sqrt⁻¹;
     exact (this.smul continuous_id).subtype_mk _
     refine' Continuous.inv₀ _ fun x => real.sqrt_ne_zero'.mpr (by positivity)
@@ -284,32 +280,28 @@ moved by scalar multiplication to any shell of width `‖c‖`. Also recap infor
 the rescaling element that shows up in applications. -/
 theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ‖c‖) {ε : ℝ} (εpos : 0 < ε) {x : E}
     (hx : ‖x‖ ≠ 0) : ∃ d : α, d ≠ 0 ∧ ‖d • x‖ < ε ∧ ε / ‖c‖ ≤ ‖d • x‖ ∧ ‖d‖⁻¹ ≤ ε⁻¹ * ‖c‖ * ‖x‖ :=
-  by
+  by 
   have xεpos : 0 < ‖x‖ / ε := div_pos ((Ne.symm hx).le_iff_lt.1 (norm_nonneg x)) εpos
   rcases exists_mem_Ico_zpow xεpos hc with ⟨n, hn⟩
   have cpos : 0 < ‖c‖ := lt_trans (zero_lt_one : (0 : ℝ) < 1) hc
-  have cnpos : 0 < ‖c ^ (n + 1)‖ := by
+  have cnpos : 0 < ‖c ^ (n + 1)‖ := by 
     rw [norm_zpow]
     exact lt_trans xεpos hn.2
   refine' ⟨(c ^ (n + 1))⁻¹, _, _, _, _⟩
   show (c ^ (n + 1))⁻¹ ≠ 0
   · rwa [Ne.def, inv_eq_zero, ← Ne.def, ← norm_pos_iff]
-    
   show ‖(c ^ (n + 1))⁻¹ • x‖ < ε
   · rw [norm_smul, norm_inv, ← div_eq_inv_mul, div_lt_iff cnpos, mul_comm, norm_zpow]
     exact (div_lt_iff εpos).1 hn.2
-    
   show ε / ‖c‖ ≤ ‖(c ^ (n + 1))⁻¹ • x‖
   · rw [div_le_iff cpos, norm_smul, norm_inv, norm_zpow, zpow_add₀ (ne_of_gt cpos), zpow_one,
       mul_inv_rev, mul_comm, ← mul_assoc, ← mul_assoc, mul_inv_cancel (ne_of_gt cpos), one_mul, ←
       div_eq_inv_mul, le_div_iff (zpow_pos_of_pos cpos _), mul_comm]
     exact (le_div_iff εpos).1 hn.1
-    
   show ‖(c ^ (n + 1))⁻¹‖⁻¹ ≤ ε⁻¹ * ‖c‖ * ‖x‖
   · have : ε⁻¹ * ‖c‖ * ‖x‖ = ε⁻¹ * ‖x‖ * ‖c‖ := by ring
     rw [norm_inv, inv_inv, norm_zpow, zpow_add₀ (ne_of_gt cpos), zpow_one, this, ← div_eq_inv_mul]
     exact mul_le_mul_of_nonneg_right hn.1 (norm_nonneg _)
-    
 #align rescale_to_shell_semi_normed rescale_to_shell_semi_normed
 
 end SeminormedAddCommGroup
@@ -321,7 +313,9 @@ See note [reducible non-instances] -/
 @[reducible]
 def NormedSpace.induced {F : Type _} (α β γ : Type _) [NormedField α] [AddCommGroup β] [Module α β]
     [SeminormedAddCommGroup γ] [NormedSpace α γ] [LinearMapClass F α β γ] (f : F) :
-    @NormedSpace α β _ (SeminormedAddCommGroup.induced β γ f) where norm_smul_le a b := by
+    @NormedSpace α β _
+      (SeminormedAddCommGroup.induced β γ
+        f) where norm_smul_le a b := by 
     unfold norm
     exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
 #align normed_space.induced NormedSpace.induced
@@ -385,9 +379,7 @@ theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : �
     interior (closedBall x r) = ball x r := by
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero, ball_zero, interior_singleton]
-    
   · exact interior_closed_ball x hr
-    
 #align interior_closed_ball' interior_closed_ball'
 
 theorem frontier_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
@@ -573,7 +565,9 @@ See note [reducible non-instances] -/
 @[reducible]
 def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Ring β] [Algebra α β]
     [SemiNormedRing γ] [NormedAlgebra α γ] [NonUnitalAlgHomClass F α β γ] (f : F) :
-    @NormedAlgebra α β _ (SemiNormedRing.induced β γ f) where norm_smul_le a b := by
+    @NormedAlgebra α β _
+      (SemiNormedRing.induced β γ
+        f) where norm_smul_le a b := by 
     unfold norm
     exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
 #align normed_algebra.induced NormedAlgebra.induced

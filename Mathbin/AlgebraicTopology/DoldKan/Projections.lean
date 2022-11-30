@@ -54,11 +54,9 @@ noncomputable def p : ℕ → (K[X] ⟶ K[X])
 theorem P_f_0_eq (q : ℕ) : ((p q).f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ := by
   induction' q with q hq
   · rfl
-    
   · unfold P
     simp only [HomologicalComplex.add_f_apply, HomologicalComplex.comp_f, HomologicalComplex.id_f,
       id_comp, hq, Hσ_eq_zero, add_zero]
-    
 #align algebraic_topology.dold_kan.P_f_0_eq AlgebraicTopology.DoldKan.P_f_0_eq
 
 /-- `Q q` is the complement projection associated to `P q` -/
@@ -97,11 +95,11 @@ namespace HigherFacesVanish
 /-- This lemma expresses the vanishing of
 `(P q).f (n+1) ≫ X.δ k : X _[n+1] ⟶ X _[n]` when `k≠0` and `k≥n-q+2` -/
 theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1])
-  | 0 => fun n j hj₁ => by
+  | 0 => fun n j hj₁ => by 
     exfalso
     have hj₂ := Fin.is_lt j
     linarith
-  | q + 1 => fun n => by
+  | q + 1 => fun n => by 
     unfold P
     exact (of_P q n).induction
 #align
@@ -109,17 +107,15 @@ theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] 
 
 @[reassoc]
 theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
-    φ ≫ (p q).f (n + 1) = φ := by
+    φ ≫ (p q).f (n + 1) = φ := by 
   induction' q with q hq
   · unfold P
     apply comp_id
-    
   · unfold P
     simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id, ←
       assoc, hq v.of_succ, add_right_eq_self]
     by_cases hqn : n < q
     · exact v.of_succ.comp_Hσ_eq_zero hqn
-      
     · cases' Nat.le.dest (not_lt.mp hqn) with a ha
       have hnaq : n = a + q := by linarith
       simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
@@ -127,8 +123,6 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
         v ⟨a, by linarith⟩ (by simp only [hnaq, Fin.coe_mk, Nat.succ_eq_add_one, add_assoc])
       simp only [Fin.succ_mk] at eq
       simp only [Eq, zero_comp]
-      
-    
 #align
   algebraic_topology.dold_kan.higher_faces_vanish.comp_P_eq_self AlgebraicTopology.DoldKan.HigherFacesVanish.comp_P_eq_self
 
@@ -141,18 +135,14 @@ theorem comp_P_eq_self_iff {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} :
     rw [← hφ]
     apply higher_faces_vanish.of_comp
     apply higher_faces_vanish.of_P
-    
   · exact higher_faces_vanish.comp_P_eq_self
-    
 #align algebraic_topology.dold_kan.comp_P_eq_self_iff AlgebraicTopology.DoldKan.comp_P_eq_self_iff
 
 @[simp, reassoc]
 theorem P_f_idem (q n : ℕ) : ((p q).f n : X _[n] ⟶ _) ≫ (p q).f n = (p q).f n := by
   cases n
   · rw [P_f_0_eq q, comp_id]
-    
   · exact (higher_faces_vanish.of_P q n).comp_P_eq_self
-    
 #align algebraic_topology.dold_kan.P_f_idem AlgebraicTopology.DoldKan.P_f_idem
 
 @[simp, reassoc]
@@ -174,21 +164,21 @@ theorem Q_idem (q : ℕ) : (q q : K[X] ⟶ K[X]) ≫ q q = q q := by
 
 /-- For each `q`, `P q` is a natural transformation. -/
 @[simps]
-def natTransP (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where
+def natTransP (q : ℕ) :
+    alternatingFaceMapComplex C ⟶
+      alternatingFaceMapComplex C where 
   app X := p q
-  naturality' X Y f := by
+  naturality' X Y f := by 
     induction' q with q hq
     · unfold P
       dsimp only [alternating_face_map_complex]
       rw [id_comp, comp_id]
-      
     · unfold P
       simp only [add_comp, comp_add, assoc, comp_id, hq]
       congr 1
       rw [← assoc, hq, assoc]
       congr 1
       exact (nat_trans_Hσ q).naturality' f
-      
 #align algebraic_topology.dold_kan.nat_trans_P AlgebraicTopology.DoldKan.natTransP
 
 @[simp, reassoc]
@@ -217,11 +207,9 @@ theorem map_P {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additiv
   induction' q with q hq
   · unfold P
     apply G.map_id
-    
   · unfold P
     simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id,
       functor.map_add, functor.map_comp, hq, map_Hσ]
-    
 #align algebraic_topology.dold_kan.map_P AlgebraicTopology.DoldKan.map_P
 
 theorem map_Q {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]

@@ -77,12 +77,8 @@ theorem bind_eq_nil {l : List α} {f : α → List β} : List.bind l f = [] ↔ 
 first `i` sublists, is the same as taking the join of the first `i` sublists. -/
 theorem take_sum_join (L : List (List α)) (i : ℕ) :
     L.join.take ((L.map length).take i).Sum = (L.take i).join := by
-  induction L generalizing i;
-  · simp
-    
-  cases i;
-  · simp
-    
+  induction L generalizing i; · simp
+  cases i; · simp
   simp [take_append, L_ih]
 #align list.take_sum_join List.take_sum_join
 
@@ -90,12 +86,8 @@ theorem take_sum_join (L : List (List α)) (i : ℕ) :
 first `i` sublists, is the same as taking the join after dropping the first `i` sublists. -/
 theorem drop_sum_join (L : List (List α)) (i : ℕ) :
     L.join.drop ((L.map length).take i).Sum = (L.drop i).join := by
-  induction L generalizing i;
-  · simp
-    
-  cases i;
-  · simp
-    
+  induction L generalizing i; · simp
+  cases i; · simp
   simp [drop_append, L_ih]
 #align list.drop_sum_join List.drop_sum_join
 
@@ -106,11 +98,9 @@ theorem drop_take_succ_eq_cons_nth_le (L : List α) {i : ℕ} (hi : i < L.length
   induction L generalizing i
   · simp only [length] at hi
     exact (Nat.not_succ_le_zero i hi).elim
-    
   cases i
   · simp
-    
-  have : i < L_tl.length := by
+  have : i < L_tl.length := by 
     simp at hi
     exact Nat.lt_of_succ_lt_succ hi
   simp [L_ih this]
@@ -165,19 +155,15 @@ theorem eq_iff_join_eq (L L' : List (List α)) :
   apply ext_le
   · have : length (map length L) = length (map length L') := by rw [length_eq]
     simpa using this
-    
   · intro n h₁ h₂
     rw [← drop_take_succ_join_eq_nth_le, ← drop_take_succ_join_eq_nth_le, join_eq, length_eq]
-    
 #align list.eq_iff_join_eq List.eq_iff_join_eq
 
 theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) :
     (L.drop (L.length - 1)).join = L.last h := by
   induction L using List.reverseRecOn
   · cases h rfl
-    
   · simp
-    
 #align list.join_drop_length_sub_one List.join_drop_length_sub_one
 
 /-- We can rebracket `x ++ (l₁ ++ x) ++ (l₂ ++ x) ++ ... ++ (lₙ ++ x)` to
@@ -186,9 +172,7 @@ theorem append_join_map_append (L : List (List α)) (x : List α) :
     x ++ (List.map (fun l => l ++ x) L).join = (List.map (fun l => x ++ l) L).join ++ x := by
   induction L
   · rw [map_nil, join, append_nil, map_nil, join, nil_append]
-    
   · rw [map_cons, join, map_cons, join, append_assoc, L_ih, append_assoc, append_assoc]
-    
 #align list.append_join_map_append List.append_join_map_append
 
 /-- Reversing a join is the same as reversing the order of parts and reversing all parts. -/
@@ -196,9 +180,7 @@ theorem reverse_join (L : List (List α)) :
     L.join.reverse = (List.map List.reverse L).reverse.join := by
   induction L
   · rfl
-    
   · rw [join, reverse_append, L_ih, map_cons, reverse_cons', join_concat]
-    
 #align list.reverse_join List.reverse_join
 
 /-- Joining a reverse is the same as reversing all parts and reversing the joined result. -/

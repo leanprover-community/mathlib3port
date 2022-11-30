@@ -42,12 +42,12 @@ variable {R M}
 instance gradedAlgebra :
     GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlgebra R M).range : ℕ → Submodule R _) :=
   GradedAlgebra.ofAlgHom _ (lift R <| GradedAlgebra.ι R M)
-    (by
+    (by 
       ext m
       dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
         AlgHom.id_apply]
       rw [lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
-    fun i x => by
+    fun i x => by 
     cases' x with x hx
     dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
     refine'
@@ -55,14 +55,11 @@ instance gradedAlgebra :
         (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl
-      
     · rw [AlgHom.map_add, ihx, ihy, ← map_add]
       rfl
-      
     · obtain ⟨_, rfl⟩ := hm
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
       exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
-      
 #align tensor_algebra.graded_algebra TensorAlgebra.gradedAlgebra
 
 end TensorAlgebra

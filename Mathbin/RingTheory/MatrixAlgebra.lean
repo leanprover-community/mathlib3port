@@ -61,14 +61,14 @@ variable [DecidableEq n] [Fintype n]
 -/
 def toFunAlgHom : A ⊗[R] Matrix n n R →ₐ[R] Matrix n n A :=
   algHomOfLinearMapTensorProduct (toFunLinear R A n)
-    (by
+    (by 
       intros
       simp_rw [to_fun_linear, lift.tmul, to_fun_bilinear_apply, mul_eq_mul, Matrix.map_mul]
       ext
       dsimp
       simp_rw [Matrix.mul_apply, Pi.smul_apply, Matrix.map_apply, smul_eq_mul, Finset.mul_sum,
         _root_.mul_assoc, Algebra.left_comm])
-    (by
+    (by 
       intros
       simp_rw [to_fun_linear, lift.tmul, to_fun_bilinear_apply,
         Matrix.map_one (algebraMap R A) (map_zero _) (map_one _), algebra_map_smul,
@@ -106,7 +106,7 @@ theorem inv_fun_smul (a : A) (M : Matrix n n A) : invFun R A n (a • M) = a ⊗
 
 @[simp]
 theorem inv_fun_algebra_map (M : Matrix n n R) : invFun R A n (M.map (algebraMap R A)) = 1 ⊗ₜ M :=
-  by
+  by 
   dsimp [inv_fun]
   simp only [Algebra.algebra_map_eq_smul_one, smul_tmul, ← tmul_sum, mul_boole]
   congr
@@ -124,18 +124,16 @@ theorem right_inv (M : Matrix n n A) : (toFunAlgHom R A n) (invFun R A n M) = M 
 theorem left_inv (M : A ⊗[R] Matrix n n R) : invFun R A n (toFunAlgHom R A n M) = M := by
   induction' M using TensorProduct.induction_on with a m x y hx hy
   · simp
-    
   · simp
-    
   · simp [AlgHom.map_sum, hx, hy]
-    
 #align matrix_equiv_tensor.left_inv MatrixEquivTensor.left_inv
 
 /-- (Implementation detail)
 
 The equivalence, ignoring the algebra structure, `(A ⊗[R] matrix n n R) ≃ matrix n n A`.
 -/
-def equiv : A ⊗[R] Matrix n n R ≃ Matrix n n A where
+def equiv : A ⊗[R] Matrix n n R ≃
+      Matrix n n A where 
   toFun := toFunAlgHom R A n
   invFun := invFun R A n
   left_inv := left_inv R A n

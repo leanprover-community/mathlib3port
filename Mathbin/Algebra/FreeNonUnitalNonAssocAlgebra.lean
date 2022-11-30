@@ -95,7 +95,7 @@ theorem lift_comp_of (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : lif
   (lift R).apply_symm_apply F
 #align free_non_unital_non_assoc_algebra.lift_comp_of FreeNonUnitalNonAssocAlgebra.lift_comp_of
 
-@[ext.1]
+@[ext]
 theorem hom_ext {F₁ F₂ : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A}
     (h : ∀ x, F₁ (of R x) = F₂ (of R x)) : F₁ = F₂ :=
   (lift R).symm.Injective <| funext h

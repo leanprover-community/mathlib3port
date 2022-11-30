@@ -20,7 +20,6 @@ theorem Pi.exists_forall_pos_add_lt [HasExistsAddOfLe α] [Finite ι] {x y : ι 
   cases nonempty_fintype ι
   cases isEmpty_or_nonempty ι
   · exact ⟨1, zero_lt_one, isEmptyElim⟩
-    
   choose ε hε hxε using fun i => exists_pos_add_of_lt' (h i)
   obtain rfl : x + ε = y := funext hxε
   have hε : 0 < finset.univ.inf' Finset.univ_nonempty ε := (Finset.lt_inf'_iff _).2 fun i _ => hε _

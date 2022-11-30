@@ -38,7 +38,8 @@ variable {F α β A B M N P Q G H : Type _}
 /-- Makes a multiplicative inverse from a bijection which preserves multiplication. -/
 @[to_additive "Makes an additive inverse from a bijection which preserves addition."]
 def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M) (h₁ : Function.LeftInverse g f)
-    (h₂ : Function.RightInverse g f) : N →ₙ* M where
+    (h₂ : Function.RightInverse g f) :
+    N →ₙ* M where 
   toFun := g
   map_mul' x y :=
     calc
@@ -124,7 +125,7 @@ instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOne
     map_zero := fun e =>
       calc
         e 0 = e 0 * e (EquivLike.inv e 0) := by rw [← map_mul, zero_mul]
-        _ = 0 := by
+        _ = 0 := by 
           convert mul_zero _
           exact EquivLike.right_inv e _
          }
@@ -159,12 +160,13 @@ instance [Mul M] [Mul N] : CoeFun (M ≃* N) fun _ => M → N :=
   ⟨MulEquiv.toFun⟩
 
 @[to_additive]
-instance [Mul M] [Mul N] : MulEquivClass (M ≃* N) M N where
+instance [Mul M] [Mul N] :
+    MulEquivClass (M ≃* N) M N where 
   coe := toFun
   inv := invFun
   left_inv := left_inv
   right_inv := right_inv
-  coe_injective' f g h₁ h₂ := by
+  coe_injective' f g h₁ h₂ := by 
     cases f
     cases g
     congr
@@ -414,7 +416,7 @@ theorem coe_monoid_hom_trans {M N P} [MulOneClass M] [MulOneClass N] [MulOneClas
 
 /-- Two multiplicative isomorphisms agree if they are defined by the
     same underlying function. -/
-@[ext.1,
+@[ext,
   to_additive
       "Two additive isomorphisms agree if they are defined by the same underlying function."]
 theorem ext {f g : MulEquiv M N} (h : ∀ x, f x = g x) : f = g :=
@@ -455,7 +457,8 @@ def mulEquivOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
 /-- There is a unique monoid homomorphism between two monoids with a unique element. -/
 @[to_additive
       "There is a unique additive monoid homomorphism between two additive monoids with\na unique element."]
-instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) where
+instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] :
+    Unique (M ≃* N) where 
   default := mulEquivOfUnique
   uniq _ := ext fun x => Subsingleton.elim _ _
 
@@ -523,16 +526,16 @@ where the equivalence between the targets is multiplicative.
       "An additive analogue of `equiv.arrow_congr`,\nwhere the equivalence between the targets is additive.",
   simps apply]
 def arrowCongr {M N P Q : Type _} [Mul P] [Mul Q] (f : M ≃ N) (g : P ≃* Q) :
-    (M → P) ≃* (N → Q) where
+    (M → P) ≃* (N → Q) where 
   toFun h n := g (h (f.symm n))
   invFun k m := g.symm (k (f m))
-  left_inv h := by
+  left_inv h := by 
     ext
     simp
-  right_inv k := by
+  right_inv k := by 
     ext
     simp
-  map_mul' h k := by
+  map_mul' h k := by 
     ext
     simp
 #align mul_equiv.arrow_congr MulEquiv.arrowCongr
@@ -544,16 +547,18 @@ for multiplicative maps from a monoid to a commutative monoid.
       "An additive analogue of `equiv.arrow_congr`,\nfor additive maps from an additive monoid to a commutative additive monoid.",
   simps apply]
 def monoidHomCongr {M N P Q} [MulOneClass M] [MulOneClass N] [CommMonoid P] [CommMonoid Q]
-    (f : M ≃* N) (g : P ≃* Q) : (M →* P) ≃* (N →* Q) where
+    (f : M ≃* N) (g : P ≃* Q) :
+    (M →* P) ≃*
+      (N →* Q) where 
   toFun h := g.toMonoidHom.comp (h.comp f.symm.toMonoidHom)
   invFun k := g.symm.toMonoidHom.comp (k.comp f.toMonoidHom)
-  left_inv h := by
+  left_inv h := by 
     ext
     simp
-  right_inv k := by
+  right_inv k := by 
     ext
     simp
-  map_mul' h k := by
+  map_mul' h k := by 
     ext
     simp
 #align mul_equiv.monoid_hom_congr MulEquiv.monoidHomCongr
@@ -631,7 +636,8 @@ homomorphisms. -/
       "Given a pair of additive homomorphisms `f`, `g` such that `g.comp f = id` and\n`f.comp g = id`, returns an additive equivalence with `to_fun = f` and `inv_fun = g`.  This\nconstructor is useful if the underlying type(s) have specialized `ext` lemmas for additive\nhomomorphisms.",
   simps (config := { fullyApplied := false })]
 def MulHom.toMulEquiv [Mul M] [Mul N] (f : M →ₙ* N) (g : N →ₙ* M) (h₁ : g.comp f = MulHom.id _)
-    (h₂ : f.comp g = MulHom.id _) : M ≃* N where
+    (h₂ : f.comp g = MulHom.id _) : M ≃*
+      N where 
   toFun := f
   invFun := g
   left_inv := MulHom.congr_fun h₁
@@ -646,7 +652,8 @@ useful if the underlying type(s) have specialized `ext` lemmas for monoid homomo
       "Given a pair of additive monoid homomorphisms `f`, `g` such that `g.comp f = id`\nand `f.comp g = id`, returns an additive equivalence with `to_fun = f` and `inv_fun = g`.  This\nconstructor is useful if the underlying type(s) have specialized `ext` lemmas for additive\nmonoid homomorphisms.",
   simps (config := { fullyApplied := false })]
 def MonoidHom.toMulEquiv [MulOneClass M] [MulOneClass N] (f : M →* N) (g : N →* M)
-    (h₁ : g.comp f = MonoidHom.id _) (h₂ : f.comp g = MonoidHom.id _) : M ≃* N where
+    (h₁ : g.comp f = MonoidHom.id _) (h₂ : f.comp g = MonoidHom.id _) :
+    M ≃* N where 
   toFun := f
   invFun := g
   left_inv := MonoidHom.congr_fun h₁

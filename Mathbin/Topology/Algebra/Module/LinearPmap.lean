@@ -77,7 +77,7 @@ theorem IsClosed.is_closable {f : E →ₗ.[R] F} (hf : f.IsClosed) : f.IsClosab
 
 /-- If `g` has a closable extension `f`, then `g` itself is closable. -/
 theorem IsClosable.le_is_closable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hfg : g ≤ f) :
-    g.IsClosable := by
+    g.IsClosable := by 
   cases' hf with f' hf
   have : g.graph.topological_closure ≤ f'.graph := by
     rw [← hf]
@@ -86,7 +86,6 @@ theorem IsClosable.le_is_closable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hf
   · intro x hx hx'
     cases x
     exact f'.graph_fst_eq_zero_snd (this hx) hx'
-    
   rw [Submodule.to_linear_pmap_graph_eq]
 #align linear_pmap.is_closable.le_is_closable LinearPmap.IsClosable.le_is_closable
 
@@ -127,12 +126,11 @@ theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure := by
   · refine' le_of_le_graph _
     rw [← hf.graph_closure_eq_closure_graph]
     exact (graph f).submodule_topological_closure
-    
   rw [closure_def' hf]
 #align linear_pmap.le_closure LinearPmap.le_closure
 
 theorem IsClosable.closure_mono {f g : E →ₗ.[R] F} (hg : g.IsClosable) (h : f ≤ g) :
-    f.closure ≤ g.closure := by
+    f.closure ≤ g.closure := by 
   refine' le_of_le_graph _
   rw [← (hg.le_is_closable h).graph_closure_eq_closure_graph]
   rw [← hg.graph_closure_eq_closure_graph]
@@ -182,7 +180,6 @@ theorem closure_has_core (f : E →ₗ.[R] F) : f.closure.HasCore f.domain := by
   · simp only [dom_restrict_domain, Submodule.mem_inf, and_iff_left_iff_imp]
     intro hx
     exact f.le_closure.1 hx
-    
   intro x y hxy
   let z : f.closure.domain := ⟨y.1, f.le_closure.1 y.2⟩
   have hyz : (y : E) = z := by simp

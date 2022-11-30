@@ -130,7 +130,7 @@ theorem strongTopology.has_basis_nhds_zero_of_basis [TopologicalSpace F] [Topolo
     {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
     (@nhds (E →SL[σ] F) (strongTopology σ F 𝔖) 0).HasBasis (fun Si : Set E × ι => Si.1 ∈ 𝔖 ∧ p Si.2)
       fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
-  by
+  by 
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := topological_add_comm_group_is_uniform
   rw [nhds_induced]

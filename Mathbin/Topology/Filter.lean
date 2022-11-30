@@ -56,7 +56,7 @@ theorem is_open_set_of_mem {s : Set α} : IsOpen { l : Filter α | s ∈ l } := 
 
 theorem is_topological_basis_Iic_principal :
     IsTopologicalBasis (range (Iic ∘ 𝓟 : Set α → Set (Filter α))) :=
-  { exists_subset_inter := by
+  { exists_subset_inter := by 
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl
       exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩,
     sUnion_eq :=

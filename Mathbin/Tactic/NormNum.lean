@@ -1703,7 +1703,9 @@ Propositions are treated like any other term. The normal form for propositions i
 used to help here.
 -/
 @[user_attribute]
-protected unsafe def attr : user_attribute (expr → tactic (expr × expr)) Unit where
+protected unsafe def attr :
+    user_attribute (expr → tactic (expr × expr))
+      Unit where 
   Name := `norm_num
   descr := "Add norm_num derivers"
   cache_cfg :=

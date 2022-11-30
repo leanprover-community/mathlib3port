@@ -108,7 +108,9 @@ section NonUnitalRing
 
 variable [NonUnitalRing R]
 
-instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R where
+instance ringSeminormClass :
+    RingSeminormClass (RingSeminorm R)
+      R where 
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -126,7 +128,7 @@ theorem to_fun_eq_coe (p : RingSeminorm R) : p.toFun = p :=
   rfl
 #align ring_seminorm.to_fun_eq_coe RingSeminorm.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {p q : RingSeminorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align ring_seminorm.ext RingSeminorm.ext
@@ -148,17 +150,15 @@ instance : Inhabited (RingSeminorm R) :=
 every other element. -/
 instance [DecidableEq R] : One (RingSeminorm R) :=
   ⟨{ (1 : AddGroupSeminorm R) with
-      mul_le' := fun x y => by
+      mul_le' := fun x y => by 
         by_cases h : x * y = 0
-        · refine' (if_pos h).trans_le (mul_nonneg _ _) <;>
+        ·
+          refine' (if_pos h).trans_le (mul_nonneg _ _) <;>
             · change _ ≤ ite _ _ _
               split_ifs
               exacts[le_rfl, zero_le_one]
-              
-          
         · change ite _ _ _ ≤ ite _ _ _ * ite _ _ _
-          simp only [if_false, h, left_ne_zero_of_mul h, right_ne_zero_of_mul h, mul_one]
-           }⟩
+          simp only [if_false, h, left_ne_zero_of_mul h, right_ne_zero_of_mul h, mul_one] }⟩
 
 @[simp]
 theorem apply_one [DecidableEq R] (x : R) : (1 : RingSeminorm R) x = if x = 0 then 0 else 1 :=
@@ -175,17 +175,15 @@ theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :
   refine'
     ⟨fun h =>
       ne_zero_iff.mpr
-        ⟨1, by
+        ⟨1, by 
           rw [h]
           exact one_ne_zero⟩,
       fun h => _⟩
   obtain hp0 | hp0 := (map_nonneg p (1 : R)).eq_or_gt
   · cases h (ext fun x => (map_nonneg _ _).antisymm' _)
     simpa only [hp0, mul_one, mul_zero] using map_mul_le_mul p x 1
-    
   · refine' hp.antisymm ((le_mul_iff_one_le_left hp0).1 _)
     simpa only [one_mul] using map_mul_le_mul p (1 : R) _
-    
 #align ring_seminorm.seminorm_one_eq_one_iff_ne_zero RingSeminorm.seminorm_one_eq_one_iff_ne_zero
 
 end Ring
@@ -201,7 +199,8 @@ namespace RingNorm
 
 variable [NonUnitalRing R]
 
-instance ringNormClass : RingNormClass (RingNorm R) R where
+instance ringNormClass :
+    RingNormClass (RingNorm R) R where 
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -220,7 +219,7 @@ theorem to_fun_eq_coe (p : RingNorm R) : p.toFun = p :=
   rfl
 #align ring_norm.to_fun_eq_coe RingNorm.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {p q : RingNorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align ring_norm.ext RingNorm.ext
@@ -246,7 +245,9 @@ namespace MulRingSeminorm
 
 variable [NonAssocRing R]
 
-instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R where
+instance mulRingSeminormClass :
+    MulRingSeminormClass (MulRingSeminorm R)
+      R where 
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -265,7 +266,7 @@ theorem to_fun_eq_coe (p : MulRingSeminorm R) : p.toFun = p :=
   rfl
 #align mul_ring_seminorm.to_fun_eq_coe MulRingSeminorm.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {p q : MulRingSeminorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align mul_ring_seminorm.ext MulRingSeminorm.ext
@@ -276,15 +277,12 @@ variable [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 every other element. -/
 instance : One (MulRingSeminorm R) :=
   ⟨{ (1 : AddGroupSeminorm R) with map_one' := if_neg one_ne_zero,
-      map_mul' := fun x y => by
+      map_mul' := fun x y => by 
         obtain rfl | hx := eq_or_ne x 0
         · simp
-          
         obtain rfl | hy := eq_or_ne y 0
         · simp
-          
-        · simp [hx, hy]
-           }⟩
+        · simp [hx, hy] }⟩
 
 @[simp]
 theorem apply_one (x : R) : (1 : MulRingSeminorm R) x = if x = 0 then 0 else 1 :=
@@ -300,7 +298,9 @@ namespace MulRingNorm
 
 variable [NonAssocRing R]
 
-instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R where
+instance mulRingNormClass :
+    MulRingNormClass (MulRingNorm R)
+      R where 
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -320,7 +320,7 @@ theorem to_fun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
   rfl
 #align mul_ring_norm.to_fun_eq_coe MulRingNorm.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {p q : MulRingNorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align mul_ring_norm.ext MulRingNorm.ext

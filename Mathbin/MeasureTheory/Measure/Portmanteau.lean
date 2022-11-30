@@ -104,9 +104,9 @@ theorem le_measure_compl_liminf_of_limsup_measure_le {ι : Type _} {L : Filter �
     (E_mble : MeasurableSet E) (h : (L.limsup fun i => μs i E) ≤ μ E) :
     μ (Eᶜ) ≤ L.liminf fun i => μs i (Eᶜ) := by
   by_cases L_bot : L = ⊥
-  · simp only [L_bot, le_top,
+  ·
+    simp only [L_bot, le_top,
       show liminf (fun i => μs i (Eᶜ)) ⊥ = ⊤ by simp only [liminf, Filter.map_bot, Liminf_bot]]
-    
   have : L.ne_bot := { ne' := L_bot }
   have meas_Ec : μ (Eᶜ) = 1 - μ E := by
     simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).Ne
@@ -137,9 +137,9 @@ theorem limsup_measure_compl_le_of_le_liminf_measure {ι : Type _} {L : Filter �
     (E_mble : MeasurableSet E) (h : μ E ≤ L.liminf fun i => μs i E) :
     (L.limsup fun i => μs i (Eᶜ)) ≤ μ (Eᶜ) := by
   by_cases L_bot : L = ⊥
-  · simp only [L_bot, bot_le,
+  ·
+    simp only [L_bot, bot_le,
       show limsup (fun i => μs i (Eᶜ)) ⊥ = ⊥ by simp only [limsup, Filter.map_bot, Limsup_bot]]
-    
   have : L.ne_bot := { ne' := L_bot }
   have meas_Ec : μ (Eᶜ) = 1 - μ E := by
     simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).Ne
@@ -181,18 +181,16 @@ theorem limsup_measure_closed_le_iff_liminf_measure_open_ge {ι : Type _} {L : F
     [∀ i, IsProbabilityMeasure (μs i)] :
     (∀ F, IsClosed F → (L.limsup fun i => μs i F) ≤ μ F) ↔
       ∀ G, IsOpen G → μ G ≤ L.liminf fun i => μs i G :=
-  by
+  by 
   constructor
   · intro h G G_open
     exact
       le_measure_liminf_of_limsup_measure_compl_le G_open.measurable_set
         (h (Gᶜ) (is_closed_compl_iff.mpr G_open))
-    
   · intro h F F_closed
     exact
       limsup_measure_le_of_le_liminf_measure_compl F_closed.measurable_set
         (h (Fᶜ) (is_open_compl_iff.mpr F_closed))
-    
 #align
   measure_theory.limsup_measure_closed_le_iff_liminf_measure_open_ge MeasureTheory.limsup_measure_closed_le_iff_liminf_measure_open_ge
 
@@ -233,8 +231,6 @@ theorem tendsto_measure_of_le_liminf_measure_of_limsup_measure_le {ι : Type _} 
       
     · refine' liminf_le_liminf (eventually_of_forall fun _ => measure_mono E₀_subset) _
       infer_param
-      
-    
   · have E_ae_eq_E₁ : E =ᵐ[μ] E₁ :=
       eventually_le.antisymm subset_E₁.eventually_le
         ((ae_le_set.mpr nulldiff).trans E₀_subset.eventually_le)
@@ -245,8 +241,6 @@ theorem tendsto_measure_of_le_liminf_measure_of_limsup_measure_le {ι : Type _} 
       
     · refine' limsup_le_limsup (eventually_of_forall fun _ => measure_mono subset_E₁) _
       infer_param
-      
-    
 #align
   measure_theory.tendsto_measure_of_le_liminf_measure_of_limsup_measure_le MeasureTheory.tendsto_measure_of_le_liminf_measure_of_limsup_measure_le
 
@@ -367,7 +361,6 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
     (L.limsup fun i => (μs i : Measure Ω) F) ≤ (μ : Measure Ω) F := by
   by_cases L = ⊥
   · simp only [h, limsup, Filter.map_bot, Limsup_bot, Ennreal.bot_eq_zero, zero_le]
-    
   apply Ennreal.le_of_forall_pos_le_add
   intro ε ε_pos μ_F_finite
   set δs := fun n : ℕ => (1 : ℝ) / (n + 1) with def_δs

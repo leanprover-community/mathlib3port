@@ -84,11 +84,11 @@ theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i)
   rw [← rpow_le_rpow_iff _ _ this, ← rpow_mul, one_div_mul_cancel (ne_of_gt this), rpow_one]
   exact rpow_arith_mean_le_arith_mean_rpow s w z hw hw' hz hp
   all_goals
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr sum_nonneg, \",\", expr rpow_nonneg_of_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-  intro i hi
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr rpow_nonneg_of_nonneg, \",\", expr hw i hi, \",\", expr hz i hi, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr sum_nonneg, \",\", expr rpow_nonneg_of_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    intro i hi
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr rpow_nonneg_of_nonneg, \",\", expr hw i hi, \",\", expr hz i hi, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align real.arith_mean_le_rpow_mean Real.arith_mean_le_rpow_mean
 
 end Real
@@ -118,9 +118,7 @@ theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0) (hw'
     (hp : 1 ≤ p) : (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
   have h := rpow_arith_mean_le_arith_mean_rpow univ ![w₁, w₂] ![z₁, z₂] _ hp
   · simpa [Fin.sum_univ_succ] using h
-    
   · simp [hw', Fin.sum_univ_succ]
-    
 #align nnreal.rpow_arith_mean_le_arith_mean2_rpow Nnreal.rpow_arith_mean_le_arith_mean2_rpow
 
 /-- Weighted generalized mean inequality, version for sums over finite sets, with `ℝ≥0`-valued
@@ -148,7 +146,6 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : a ^ p +
   have hp_pos : 0 < p := by positivity
   by_cases h_zero : a + b = 0
   · simp [add_eq_zero_iff.mp h_zero, hp_pos.ne']
-    
   have h_nonzero : ¬(a = 0 ∧ b = 0) := by rwa [add_eq_zero_iff] at h_zero
   have h_add : a / (a + b) + b / (a + b) = 1 := by rw [div_add_div_same, div_self h_zero]
   have h := add_rpow_le_one_of_add_le_one (a / (a + b)) (b / (a + b)) h_add.le hp1
@@ -187,7 +184,6 @@ theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0) (hp : 0 ≤ p) (hp1 : p �
     (a + b) ^ p ≤ a ^ p + b ^ p := by
   rcases hp.eq_or_lt with (rfl | hp_pos)
   · simp
-    
   have h := rpow_add_rpow_le a b hp_pos hp1
   rw [one_div_one] at h
   repeat' rw [Nnreal.rpow_one] at h
@@ -218,7 +214,6 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
     rcases h.left with ⟨a, H, ha⟩
     use a, H
     rwa [← h_top_iff_rpow_top a H]
-    
   · -- second, suppose both `(∑ i in s, w i * z i) ^ p ≠ ⊤` and `∑ i in s, (w i * z i ^ p) ≠ ⊤`,
     -- and prove `((∑ i in s, w i * z i) ^ p).to_nnreal ≤ (∑ i in s, (w i * z i ^ p)).to_nnreal`,
     -- by using `nnreal.rpow_arith_mean_le_arith_mean_rpow`.
@@ -248,7 +243,6 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
       refine' (lt_top_of_sum_ne_top _ hi).Ne
       exact hw'.symm ▸ Ennreal.one_ne_top
     rwa [← coe_eq_coe, ← h_sum_nnreal]
-    
 #align ennreal.rpow_arith_mean_le_arith_mean_rpow Ennreal.rpow_arith_mean_le_arith_mean_rpow
 
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0∞` and real
@@ -257,9 +251,7 @@ theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0∞) (
     (hp : 1 ≤ p) : (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
   have h := rpow_arith_mean_le_arith_mean_rpow univ ![w₁, w₂] ![z₁, z₂] _ hp
   · simpa [Fin.sum_univ_succ] using h
-    
   · simp [hw', Fin.sum_univ_succ]
-    
 #align ennreal.rpow_arith_mean_le_arith_mean2_rpow Ennreal.rpow_arith_mean_le_arith_mean2_rpow
 
 end Ennreal
@@ -272,7 +264,6 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ 
   · rw [← @Ennreal.rpow_eq_top_iff_of_pos (a + b) p hp_pos] at h_top
     rw [h_top]
     exact le_top
-    
   obtain ⟨ha_top, hb_top⟩ := add_ne_top.mp h_top
   lift a to ℝ≥0 using ha_top
   lift b to ℝ≥0 using hb_top
@@ -306,7 +297,6 @@ theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0∞) (hp : 0 ≤ p) (hp1 : 
   · suffices (1 : ℝ≥0∞) ≤ 1 + 1 by simpa using this
     norm_cast
     norm_num
-    
   have h := rpow_add_rpow_le a b hp_pos hp1
   rw [one_div_one] at h
   repeat' rw [Ennreal.rpow_one] at h

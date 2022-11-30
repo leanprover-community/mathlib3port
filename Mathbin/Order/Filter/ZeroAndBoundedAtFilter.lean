@@ -38,13 +38,14 @@ theorem zero_is_zero_at_filter [Zero β] [TopologicalSpace β] (l : Filter α) :
 /-- `zero_at_filter_submodule l` is the submodule of `f : α → β` which
 tend to zero along `l`. -/
 def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd β]
-    [HasContinuousMul β] (l : Filter α) : Submodule β (α → β) where
+    [HasContinuousMul β] (l : Filter α) :
+    Submodule β (α → β) where 
   carrier := ZeroAtFilter l
   zero_mem' := zero_is_zero_at_filter l
-  add_mem' := by
+  add_mem' := by 
     intro a b ha hb
     simpa using ha.add hb
-  smul_mem' := by
+  smul_mem' := by 
     intro c f hf
     simpa using hf.const_mul c
 #align filter.zero_at_filter_submodule Filter.zeroAtFilterSubmodule
@@ -52,9 +53,10 @@ def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd 
 /-- `zero_at_filter_add_submonoid l` is the additive submonoid of `f : α → β`
 which tend to zero along `l`. -/
 def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [HasContinuousAdd β]
-    (l : Filter α) : AddSubmonoid (α → β) where
+    (l : Filter α) : AddSubmonoid
+      (α → β) where 
   carrier := ZeroAtFilter l
-  add_mem' := by
+  add_mem' := by 
     intro a b ha hb
     simpa using ha.add hb
   zero_mem' := zero_is_zero_at_filter l
@@ -69,7 +71,7 @@ def BoundedAtFilter [HasNorm β] [One (α → β)] (l : Filter α) (f : α → �
 theorem ZeroAtFilter.bounded_at_filter [NormedField β] {l : Filter α} {f : α → β}
     (hf : ZeroAtFilter l f) : BoundedAtFilter l f :=
   Asymptotics.is_O_of_div_tendsto_nhds (by simp) _
-    (by
+    (by 
       convert hf
       ext1
       simp)
@@ -80,13 +82,14 @@ theorem zero_is_bounded_at_filter [NormedField β] (l : Filter α) : BoundedAtFi
 #align filter.zero_is_bounded_at_filter Filter.zero_is_bounded_at_filter
 
 /-- The submodule of functions that are bounded along a filter `l`. -/
-def boundedFilterSubmodule [NormedField β] (l : Filter α) : Submodule β (α → β) where
+def boundedFilterSubmodule [NormedField β] (l : Filter α) :
+    Submodule β (α → β) where 
   carrier := BoundedAtFilter l
   zero_mem' := zero_is_bounded_at_filter l
-  add_mem' := by
+  add_mem' := by 
     intro f g hf hg
     simpa using hf.add hg
-  smul_mem' := by
+  smul_mem' := by 
     intro c f hf
     simpa using hf.const_mul_left c
 #align filter.bounded_filter_submodule Filter.boundedFilterSubmodule
@@ -95,9 +98,7 @@ def boundedFilterSubmodule [NormedField β] (l : Filter α) : Submodule β (α �
 def boundedFilterSubalgebra [NormedField β] (l : Filter α) : Subalgebra β (α → β) := by
   refine' Submodule.toSubalgebra (bounded_filter_submodule l) _ fun f g hf hg => _
   · simpa using Asymptotics.is_O_const_mul_self (1 : β) (1 : α → β) l
-    
   · simpa only [Pi.one_apply, mul_one, norm_mul] using hf.mul hg
-    
 #align filter.bounded_filter_subalgebra Filter.boundedFilterSubalgebra
 
 end Filter

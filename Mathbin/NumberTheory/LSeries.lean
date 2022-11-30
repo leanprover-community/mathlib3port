@@ -64,20 +64,16 @@ theorem l_series_summable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ}
       arithmetic_function.ext fun n =>
         complex.abs.eq_zero.1 (le_antisymm (h n) (complex.abs.nonneg _))
     simp [hf]
-    
   refine' summable_of_norm_bounded (fun n : ℕ => m / n ^ z) _ _
   · simp_rw [div_eq_mul_inv]
     exact (summable_mul_left_iff h0).1 (Real.summable_nat_rpow_inv.2 hz)
-    
   · intro n
     have hm : 0 ≤ m := le_trans (complex.abs.nonneg _) (h 0)
     cases n
     · simp [hm, Real.zero_rpow (ne_of_gt (lt_trans Real.zero_lt_one hz))]
-      
     simp only [map_div₀, Complex.norm_eq_abs]
     apply div_le_div hm (h _) (Real.rpow_pos_of_pos (Nat.cast_pos.2 n.succ_pos) _) (le_of_eq _)
     rw [Complex.abs_cpow_real, Complex.abs_cast_nat]
-    
 #align
   nat.arithmetic_function.l_series_summable_of_bounded_of_one_lt_real Nat.ArithmeticFunction.l_series_summable_of_bounded_of_one_lt_real
 
@@ -86,13 +82,11 @@ theorem l_series_summable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : �
   suffices h :
     ∀ n : ℕ, Complex.abs (f n) / Complex.abs (↑n ^ w) = Complex.abs (f n) / Complex.abs (↑n ^ z)
   · simp [l_series_summable, ← summable_norm_iff, h, Complex.norm_eq_abs]
-    
   intro n
   cases n
   · simp
-    
   apply congr rfl
-  have h0 : (n.succ : ℂ) ≠ 0 := by
+  have h0 : (n.succ : ℂ) ≠ 0 := by 
     rw [Ne.def, Nat.cast_eq_zero]
     apply n.succ_ne_zero
   rw [Complex.cpow_def, Complex.cpow_def, if_neg h0, if_neg h0, Complex.abs_exp_eq_iff_re_eq]
@@ -120,19 +114,15 @@ theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z �
   · rw [h0, ← summable_nat_add_iff 1]
     swap
     · infer_instance
-      
     apply congr rfl
     ext n
     simp [n.succ_ne_zero]
-    
   · apply congr rfl
     ext ⟨- | n⟩
     · simp [h0]
-      
     simp only [cast_zero, nat_coe_apply, zeta_apply, succ_ne_zero, if_false, cast_succ, one_div,
       Complex.norm_eq_abs, map_inv₀, Complex.abs_cpow_real, inv_inj, zero_add]
     rw [← cast_one, ← cast_add, Complex.abs_of_nat, cast_add, cast_one]
-    
 #align
   nat.arithmetic_function.zeta_l_series_summable_iff_one_lt_re Nat.ArithmeticFunction.zeta_l_series_summable_iff_one_lt_re
 

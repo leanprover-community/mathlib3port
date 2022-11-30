@@ -135,9 +135,7 @@ theorem le_mul_inv_of_mul_le (h : c ≠ 0) (hab : a * c ≤ b) : a ≤ b * c⁻�
 theorem mul_inv_le_of_le_mul (hab : a ≤ b * c) : a * c⁻¹ ≤ b := by
   by_cases h : c = 0
   · simp [h]
-    
   · exact le_of_le_mul_right h (by simpa [h] using hab)
-    
 #align mul_inv_le_of_le_mul mul_inv_le_of_le_mul
 
 theorem inv_le_one₀ (ha : a ≠ 0) : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
@@ -174,11 +172,11 @@ theorem Units.zero_lt (u : αˣ) : (0 : α) < u :=
 
 theorem mul_lt_mul_of_lt_of_le₀ (hab : a ≤ b) (hb : b ≠ 0) (hcd : c < d) : a * c < b * d :=
   have hd : d ≠ 0 := ne_zero_of_lt hcd
-  if ha : a = 0 then by
+  if ha : a = 0 then by 
     rw [ha, zero_mul, zero_lt_iff]
     exact mul_ne_zero hb hd
   else
-    if hc : c = 0 then by
+    if hc : c = 0 then by 
       rw [hc, mul_zero, zero_lt_iff]
       exact mul_ne_zero hb hd
     else

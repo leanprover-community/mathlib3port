@@ -72,15 +72,13 @@ padding with `fill : bool`. If `x.length < i` then this will return the constant
 bitvector. -/
 def fillShr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
   Bitvec.cong
-      (by
+      (by 
         by_cases i ≤ n
         · have h₁ := Nat.sub_le n i
           rw [min_eq_right h]
           rw [min_eq_left h₁, ← add_tsub_assoc_of_le h, Nat.add_comm, add_tsub_cancel_right]
-          
         · have h₁ := le_of_not_ge h
-          rw [min_eq_left h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]
-          ) <|
+          rw [min_eq_left h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]) <|
     repeat fill (min n i)++ₜtake (n - i) x
 #align bitvec.fill_shr Bitvec.fillShr
 
@@ -319,10 +317,8 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
   · simp
     unfold List.foldl add_lsb
     simp [Nat.mul_succ]
-    
   · simp
     apply xs_ih
-    
 #align bitvec.to_nat_append Bitvec.to_nat_append
 
 theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 := by
@@ -340,9 +336,7 @@ theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k 
   induction' k with k ih generalizing n
   · simp [Nat.mod_one]
     rfl
-    
   · rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ, Nat.mul_comm]
-    
 #align bitvec.to_nat_of_nat Bitvec.to_nat_of_nat
 
 /-- Return the integer encoded by the input bitvector -/

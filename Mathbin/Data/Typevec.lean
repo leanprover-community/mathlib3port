@@ -352,7 +352,7 @@ def typevecCasesNil₃ {β : ∀ v v' : Typevec 0, v ⟹ v' → Sort _}
 def typevecCasesCons₃ (n : ℕ) {β : ∀ v v' : Typevec (n + 1), v ⟹ v' → Sort _}
     (F :
       ∀ (t t') (f : t → t') (v v' : Typevec n) (fs : v ⟹ v'), β (v ::: t) (v' ::: t') (fs ::: f)) :
-    ∀ v v' fs, β v v' fs := by
+    ∀ v v' fs, β v v' fs := by 
   intro v v'
   rw [← append1_drop_last v, ← append1_drop_last v']
   intro fs
@@ -372,7 +372,7 @@ def typevecCasesNil₂ {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nilFu
 /-- specialized cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevecCasesCons₂ (n : ℕ) (t t' : Type _) (v v' : Typevec n)
     {β : (v ::: t) ⟹ (v' ::: t') → Sort _} (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) :
-    ∀ fs, β fs := by
+    ∀ fs, β fs := by 
   intro fs
   rw [← split_drop_fun_last_fun fs]
   apply F
@@ -658,9 +658,7 @@ theorem prod_id : ∀ {n} {α β : Typevec.{u} n}, (id ⊗' id) = (id : α ⊗ �
   intros ; ext (i a); induction i
   · cases a
     rfl
-    
   · apply i_ih
-    
 #align typevec.prod_id Typevec.prod_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -694,28 +692,28 @@ theorem last_fun_subtype_val {α} (p : α ⟹ repeat (n + 1) Prop) :
 
 @[simp]
 theorem drop_fun_to_subtype {α} (p : α ⟹ repeat (n + 1) Prop) :
-    dropFun (toSubtype p) = toSubtype _ := by
+    dropFun (toSubtype p) = toSubtype _ := by 
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_to_subtype Typevec.drop_fun_to_subtype
 
 @[simp]
 theorem last_fun_to_subtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (toSubtype p) = _root_.id :=
-  by
+  by 
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.last_fun_to_subtype Typevec.last_fun_to_subtype
 
 @[simp]
 theorem drop_fun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) :
-    dropFun (ofSubtype p) = ofSubtype _ := by
+    dropFun (ofSubtype p) = ofSubtype _ := by 
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_of_subtype Typevec.drop_fun_of_subtype
 
 @[simp]
 theorem last_fun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (ofSubtype p) = _root_.id :=
-  by
+  by 
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.last_fun_of_subtype Typevec.last_fun_of_subtype

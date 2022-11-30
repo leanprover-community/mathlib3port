@@ -74,7 +74,7 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
   let measure_sub : Measure α :=
     @MeasureTheory.Measure.ofMeasurable α _
       (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t) (by simp)
-      (by
+      (by 
         intro g h_meas h_disj; simp only; rw [Ennreal.tsum_sub]
         repeat' rw [← MeasureTheory.measure_Union h_disj h_meas]
         exacts[MeasureTheory.measure_ne_top _ _, fun i => h₂ _ (h_meas _)])
@@ -89,14 +89,12 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
       apply le_antisymm
       · apply @Inf_le (Measure α) measure.complete_semilattice_Inf
         simp [le_refl, add_comm, h_measure_sub_add]
-        
       apply @le_Inf (Measure α) measure.complete_semilattice_Inf
       intro d h_d
       rw [← h_measure_sub_add, mem_set_of_eq, add_comm d] at h_d
       apply measure.le_of_add_le_add_left h_d
     rw [h_measure_sub_eq]
     apply measure.of_measurable_apply _ h₁
-    
 #align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_apply
 
 theorem sub_add_cancel_of_le [IsFiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ := by
@@ -124,22 +122,16 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
         rw [← restrict_eq_self μ (inter_subset_right _ _), ←
           restrict_eq_self ν (inter_subset_right _ _)]
         apply h_ν'_in _ (h_meas_t.inter h_meas_s)
-        
       · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self, ←
           add_apply]
         have h_mu_le_add_top : μ ≤ ν' + ν + ⊤ := by simp only [add_top, le_top]
         exact measure.le_iff'.1 h_mu_le_add_top _
-        
-      
     · ext1 t h_meas_t
       simp [restrict_apply h_meas_t, restrict_apply (h_meas_t.inter h_meas_s), inter_assoc]
-      
-    
   · refine' Inf_le_Inf_of_forall_exists_le _
     refine' ball_image_iff.2 fun t h_t_in => ⟨t.restrict s, _, le_rfl⟩
     rw [Set.mem_set_of_eq, ← restrict_add]
     exact restrict_mono subset.rfl h_t_in
-    
 #align
   measure_theory.measure.restrict_sub_eq_restrict_sub_restrict MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict
 

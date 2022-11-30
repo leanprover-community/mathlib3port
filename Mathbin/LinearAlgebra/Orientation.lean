@@ -281,10 +281,8 @@ theorem orientation_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basi
   rw [adjust_to_orientation]
   split_ifs with h
   · exact h
-    
   · rw [orientation_neg_single, eq_comm, ← orientation_ne_iff_eq_neg, ne_comm]
     exact h
-    
 #align basis.orientation_adjust_to_orientation Basis.orientation_adjust_to_orientation
 
 /-- Every basis vector from `adjust_to_orientation` is either that from the original basis or its
@@ -295,9 +293,7 @@ theorem adjust_to_orientation_apply_eq_or_eq_neg [Nontrivial R] [Nonempty ι] (e
   rw [adjust_to_orientation]
   split_ifs with h
   · simp
-    
   · by_cases hi : i = Classical.arbitrary ι <;> simp [units_smul_apply, hi]
-    
 #align basis.adjust_to_orientation_apply_eq_or_eq_neg Basis.adjust_to_orientation_apply_eq_or_eq_neg
 
 theorem det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M)
@@ -307,10 +303,8 @@ theorem det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M
   split_ifs
   · left
     rfl
-    
   · right
     simp [e.det_units_smul, ← Units.coe_prod, Finset.prod_update_of_mem]
-    
 #align basis.det_adjust_to_orientation Basis.det_adjust_to_orientation
 
 @[simp]
@@ -373,13 +367,12 @@ determinant is positive. -/
 theorem map_eq_iff_det_pos (x : Orientation R M ι) (f : M ≃ₗ[R] M)
     (h : Fintype.card ι = finrank R M) : Orientation.map ι f x = x ↔ 0 < (f : M →ₗ[R] M).det := by
   cases isEmpty_or_nonempty ι
-  · have H : finrank R M = 0 := by
+  · have H : finrank R M = 0 := by 
       refine' h.symm.trans _
       convert Fintype.card_of_is_empty
       infer_instance
     simp [LinearMap.det_eq_one_of_finrank_eq_zero H]
-    
-  have H : 0 < finrank R M := by
+  have H : 0 < finrank R M := by 
     rw [← h]
     exact Fintype.card_pos
   haveI : FiniteDimensional R M := finite_dimensional_of_finrank H
@@ -392,13 +385,12 @@ only if the determinant is negative. -/
 theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M)
     (h : Fintype.card ι = finrank R M) : Orientation.map ι f x = -x ↔ (f : M →ₗ[R] M).det < 0 := by
   cases isEmpty_or_nonempty ι
-  · have H : finrank R M = 0 := by
+  · have H : finrank R M = 0 := by 
       refine' h.symm.trans _
       convert Fintype.card_of_is_empty
       infer_instance
     simp [LinearMap.det_eq_one_of_finrank_eq_zero H, Module.Ray.ne_neg_self x]
-    
-  have H : 0 < finrank R M := by
+  have H : 0 < finrank R M := by 
     rw [← h]
     exact Fintype.card_pos
   haveI : FiniteDimensional R M := finite_dimensional_of_finrank H

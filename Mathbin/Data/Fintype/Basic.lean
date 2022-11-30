@@ -276,7 +276,7 @@ theorem piecewise_univ [∀ i : α, Decidable (i ∈ (univ : Finset α))] {δ : 
 
 theorem piecewise_compl [DecidableEq α] (s : Finset α) [∀ i : α, Decidable (i ∈ s)]
     [∀ i : α, Decidable (i ∈ sᶜ)] {δ : α → Sort _} (f g : ∀ i, δ i) :
-    sᶜ.piecewise f g = s.piecewise g f := by
+    sᶜ.piecewise f g = s.piecewise g f := by 
   ext i
   simp [piecewise]
 #align finset.piecewise_compl Finset.piecewise_compl
@@ -666,7 +666,7 @@ theorem to_finset_ne_eq_erase {α : Type _} [DecidableEq α] [Fintype α] (a : �
 #align set.to_finset_ne_eq_erase Set.to_finset_ne_eq_erase
 
 theorem to_finset_compl [DecidableEq α] [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
-    sᶜ.toFinset = s.toFinsetᶜ := by
+    sᶜ.toFinset = s.toFinsetᶜ := by 
   ext
   simp
 #align set.to_finset_compl Set.to_finset_compl
@@ -712,7 +712,7 @@ theorem to_finset_insert [DecidableEq α] {a : α} {s : Set α} [Fintype ↥(ins
 #align set.to_finset_insert Set.to_finset_insert
 
 theorem filter_mem_univ_eq_to_finset [Fintype α] (s : Set α) [Fintype s] [DecidablePred (· ∈ s)] :
-    Finset.univ.filter (· ∈ s) = s.toFinset := by
+    Finset.univ.filter (· ∈ s) = s.toFinset := by 
   ext
   simp only [mem_filter, Finset.mem_univ, true_and_iff, mem_to_finset]
 #align set.filter_mem_univ_eq_to_finset Set.filter_mem_univ_eq_to_finset
@@ -933,7 +933,12 @@ variable (α)
 
 /-- The `αˣ` type is equivalent to a subtype of `α × α`. -/
 @[simps]
-def unitsEquivProdSubtype [Monoid α] : αˣ ≃ { p : α × α // p.1 * p.2 = 1 ∧ p.2 * p.1 = 1 } where
+def unitsEquivProdSubtype [Monoid α] :
+    αˣ ≃
+      { p : α × α //
+        p.1 * p.2 = 1 ∧
+          p.2 * p.1 =
+            1 } where 
   toFun u := ⟨(u, ↑u⁻¹), u.val_inv, u.inv_val⟩
   invFun p := Units.mk (p : α × α).1 (p : α × α).2 p.Prop.1 p.Prop.2
   left_inv u := Units.ext rfl
@@ -954,7 +959,8 @@ namespace Fintype
 
 /-- Given `fintype α`, `finset_equiv_set` is the equiv between `finset α` and `set α`. (All
 sets on a finite type are finite.) -/
-noncomputable def finsetEquivSet [Fintype α] : Finset α ≃ Set α where
+noncomputable def finsetEquivSet [Fintype α] :
+    Finset α ≃ Set α where 
   toFun := coe
   invFun := by classical exact fun s => s.toFinset
   left_inv s := by convert Finset.to_finset_coe s
@@ -1023,16 +1029,14 @@ def Quotient.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S
     by_cases e : j = i <;> simp [e]
     · subst j
       exact h₁
-      
     · exact h₂ _ _
-      
 #align quotient.fin_choice_aux Quotient.finChoiceAux
 
 theorem Quotient.fin_choice_aux_eq {ι : Type _} [DecidableEq ι] {α : ι → Type _}
     [S : ∀ i, Setoid (α i)] :
     ∀ (l : List ι) (f : ∀ i ∈ l, α i), (Quotient.finChoiceAux l fun i h => ⟦f i h⟧) = ⟦f⟧
   | [], f => Quotient.sound fun i h => h.elim
-  | i :: l, f => by
+  | i :: l, f => by 
     simp [Quotient.finChoiceAux, Quotient.fin_choice_aux_eq l]
     refine' Quotient.sound fun j h => _
     by_cases e : j = i <;> simp [e]
@@ -1062,7 +1066,7 @@ theorem Quotient.fin_choice_eq {ι : Type _} [DecidableEq ι] [Fintype ι] {α :
   let q
   swap
   change Quotient.liftOn q _ _ = _
-  have : q = ⟦fun i h => f i⟧ := by
+  have : q = ⟦fun i h => f i⟧ := by 
     dsimp [q]
     exact Quotient.induction_on (@Finset.univ ι _).1 fun l => Quotient.fin_choice_aux_eq _ _
   simp [this]
@@ -1114,7 +1118,7 @@ variable [Fintype α] [DecidableEq β] {f : α → β}
   as a computable alternative to `function.inv_fun`. -/
 def bijInv (f_bij : Bijective f) (b : β) : α :=
   Fintype.choose (fun a => f a = b)
-    (by
+    (by 
       rcases f_bij.right b with ⟨a', fa_eq_b⟩
       rw [← fa_eq_b]
       exact ⟨a', ⟨rfl, fun a h => f_bij.left h⟩⟩)
@@ -1194,29 +1198,30 @@ function `f : ℕ → α` such that `r (f m) (f n)` holds whenever `m < n`.
 We also ensure that all constructed points satisfy a given predicate `P`. -/
 theorem exists_seq_of_forall_finset_exists {α : Type _} (P : α → Prop) (r : α → α → Prop)
     (h : ∀ s : Finset α, (∀ x ∈ s, P x) → ∃ y, P y ∧ ∀ x ∈ s, r x y) :
-    ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m < n → r (f m) (f n) := by classical
-  have : Nonempty α := by
-    rcases h ∅ (by simp) with ⟨y, hy⟩
-    exact ⟨y⟩
-  choose! F hF using h
-  have h' : ∀ s : Finset α, ∃ y, (∀ x ∈ s, P x) → P y ∧ ∀ x ∈ s, r x y := fun s => ⟨F s, hF s⟩
-  set f := seqOfForallFinsetExistsAux P r h' with hf
-  have A : ∀ n : ℕ, P (f n) := by
-    intro n
-    induction' n using Nat.strong_induction_on with n IH
-    have IH' : ∀ x : Fin n, P (f x) := fun n => IH n.1 n.2
-    rw [hf, seqOfForallFinsetExistsAux]
-    exact
+    ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m < n → r (f m) (f n) := by
+  classical 
+    have : Nonempty α := by 
+      rcases h ∅ (by simp) with ⟨y, hy⟩
+      exact ⟨y⟩
+    choose! F hF using h
+    have h' : ∀ s : Finset α, ∃ y, (∀ x ∈ s, P x) → P y ∧ ∀ x ∈ s, r x y := fun s => ⟨F s, hF s⟩
+    set f := seqOfForallFinsetExistsAux P r h' with hf
+    have A : ∀ n : ℕ, P (f n) := by 
+      intro n
+      induction' n using Nat.strong_induction_on with n IH
+      have IH' : ∀ x : Fin n, P (f x) := fun n => IH n.1 n.2
+      rw [hf, seqOfForallFinsetExistsAux]
+      exact
+        (Classical.choose_spec
+            (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
+            (by simp [IH'])).1
+    refine' ⟨f, A, fun m n hmn => _⟩
+    nth_rw 1 [hf]
+    rw [seqOfForallFinsetExistsAux]
+    apply
       (Classical.choose_spec
-          (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
-          (by simp [IH'])).1
-  refine' ⟨f, A, fun m n hmn => _⟩
-  nth_rw 1 [hf]
-  rw [seqOfForallFinsetExistsAux]
-  apply
-    (Classical.choose_spec (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
-        (by simp [A])).2
-  exact Finset.mem_image.2 ⟨⟨m, hmn⟩, Finset.mem_univ _, rfl⟩
+          (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n)))) (by simp [A])).2
+    exact Finset.mem_image.2 ⟨⟨m, hmn⟩, Finset.mem_univ _, rfl⟩
 #align exists_seq_of_forall_finset_exists exists_seq_of_forall_finset_exists
 
 /-- Induction principle to build a sequence, by adding one point at a time satisfying a given
@@ -1233,11 +1238,8 @@ theorem exists_seq_of_forall_finset_exists' {α : Type _} (P : α → Prop) (r :
   refine' ⟨f, hf, fun m n hmn => _⟩
   rcases lt_trichotomy m n with (h | rfl | h)
   · exact hf' m n h
-    
   · exact (hmn rfl).elim
-    
   · apply symm
     exact hf' n m h
-    
 #align exists_seq_of_forall_finset_exists' exists_seq_of_forall_finset_exists'
 

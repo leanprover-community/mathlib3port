@@ -105,17 +105,16 @@ variable (𝕜) (E) [CompleteSpace E]
 -/
 def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
   LinearIsometryEquiv.ofSurjective (toDualMap 𝕜 E)
-    (by
+    (by 
       intro ℓ
       set Y := LinearMap.ker ℓ with hY
       by_cases htriv : Y = ⊤
-      · have hℓ : ℓ = 0 := by
+      · have hℓ : ℓ = 0 := by 
           have h' := linear_map.ker_eq_top.mp htriv
           rw [← coe_zero] at h'
           apply coe_injective
           exact h'
         exact ⟨0, by simp [hℓ]⟩
-        
       · rw [← Submodule.orthogonal_eq_bot_iff] at htriv
         change Yᗮ ≠ ⊥ at htriv
         rw [Submodule.ne_bot_iff] at htriv
@@ -142,13 +141,12 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
             _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by rw [← div_mul_eq_mul_div]
             _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by rw [h₂]
             _ = ℓ x := by
-              have : ⟪z, z⟫ ≠ 0 := by
+              have : ⟪z, z⟫ ≠ 0 := by 
                 change z = 0 → False at z_ne_0
                 rwa [← inner_self_eq_zero] at z_ne_0
               field_simp [this]
             
-        exact h₄
-        )
+        exact h₄)
 #align inner_product_space.to_dual InnerProductSpace.toDual
 
 variable {𝕜} {E}
@@ -187,7 +185,7 @@ theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w
   inner_product_space.continuous_linear_map_of_bilin_apply InnerProductSpace.continuous_linear_map_of_bilin_apply
 
 theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) :
-    f = B♯ v := by
+    f = B♯ v := by 
   refine' ext_inner_right 𝕜 _
   intro w
   rw [continuous_linear_map_of_bilin_apply]

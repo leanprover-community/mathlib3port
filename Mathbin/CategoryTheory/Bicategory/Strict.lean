@@ -62,7 +62,8 @@ attribute [simp]
 
 -- see Note [lower instance priority]
 /-- Category structure on a strict bicategory -/
-instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Category B where
+instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] :
+    Category B where 
   id_comp' a b := Bicategory.Strict.id_comp
   comp_id' a b := Bicategory.Strict.comp_id
   assoc' a b c d := Bicategory.Strict.assoc

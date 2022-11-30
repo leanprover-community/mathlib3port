@@ -30,7 +30,7 @@ unsafe def desugar :=
 
 theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) :
     Clauses.Unsat (dnf (¬* p)) → UnivClose p (fun x => 0) m
-  | h1 => by
+  | h1 => by 
     apply univ_close_of_valid
     apply valid_of_unsat_not
     apply unsat_of_clauses_unsat

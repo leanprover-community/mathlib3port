@@ -46,9 +46,7 @@ def Measure.withDensityᵥ {m : MeasurableSpace α} (μ : Measure α) (f : α �
         convert has_sum_integral_Union hs₁ hs₂ hf.integrable_on
         · ext n
           rw [if_pos (hs₁ n)]
-          
-        · rw [if_pos (MeasurableSet.union hs₁)]
-           }
+        · rw [if_pos (MeasurableSet.union hs₁)] }
   else 0
 #align measure_theory.measure.with_densityᵥ MeasureTheory.Measure.withDensityᵥ
 
@@ -78,10 +76,8 @@ theorem with_densityᵥ_neg : μ.withDensityᵥ (-f) = -μ.withDensityᵥ f := b
     rw [vector_measure.neg_apply, with_densityᵥ_apply hf hi, ← integral_neg,
       with_densityᵥ_apply hf.neg hi]
     rfl
-    
   · rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg, neg_zero]
     rwa [integrable_neg_iff]
-    
 #align measure_theory.with_densityᵥ_neg MeasureTheory.with_densityᵥ_neg
 
 theorem with_densityᵥ_neg' : (μ.withDensityᵥ fun x => -f x) = -μ.withDensityᵥ f :=
@@ -97,9 +93,7 @@ theorem with_densityᵥ_add (hf : Integrable f μ) (hg : Integrable g μ) :
   simp_rw [Pi.add_apply]
   rw [integral_add] <;> rw [← integrable_on_univ]
   · exact hf.integrable_on.restrict MeasurableSet.univ
-    
   · exact hg.integrable_on.restrict MeasurableSet.univ
-    
 #align measure_theory.with_densityᵥ_add MeasureTheory.with_densityᵥ_add
 
 theorem with_densityᵥ_add' (hf : Integrable f μ) (hg : Integrable g μ) :
@@ -126,14 +120,10 @@ theorem with_densityᵥ_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [Nor
     rw [with_densityᵥ_apply (hf.smul r) hi, vector_measure.smul_apply, with_densityᵥ_apply hf hi, ←
       integral_smul r f]
     rfl
-    
   · by_cases hr : r = 0
     · rw [hr, zero_smul, zero_smul, with_densityᵥ_zero]
-      
     · rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg, smul_zero]
       rwa [integrable_smul_iff hr f]
-      
-    
 #align measure_theory.with_densityᵥ_smul MeasureTheory.with_densityᵥ_smul
 
 theorem with_densityᵥ_smul' {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
@@ -148,10 +138,8 @@ theorem Measure.withDensityᵥAbsolutelyContinuous (μ : Measure α) (f : α →
   · refine' vector_measure.absolutely_continuous.mk fun i hi₁ hi₂ => _
     rw [to_ennreal_vector_measure_apply_measurable hi₁] at hi₂
     rw [with_densityᵥ_apply hf hi₁, measure.restrict_zero_set hi₂, integral_zero_measure]
-    
   · rw [with_densityᵥ, dif_neg hf]
     exact vector_measure.absolutely_continuous.zero _
-    
 #align
   measure_theory.measure.with_densityᵥ_absolutely_continuous MeasureTheory.Measure.withDensityᵥAbsolutelyContinuous
 
@@ -169,12 +157,10 @@ theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) :
   · ext (i hi)
     rw [with_densityᵥ_apply hf hi, with_densityᵥ_apply (hf.congr h) hi]
     exact integral_congr_ae (ae_restrict_of_ae h)
-    
-  · have hg : ¬integrable g μ := by
+  · have hg : ¬integrable g μ := by 
       intro hg
       exact hf (hg.congr h.symm)
     rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg hg]
-    
 #align measure_theory.with_densityᵥ_eq.congr_ae MeasureTheory.WithDensityᵥEq.congr_ae
 
 theorem Integrable.with_densityᵥ_eq_iff {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) :
@@ -187,7 +173,7 @@ section SignedMeasure
 theorem with_densityᵥ_to_real {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hf : (∫⁻ x, f x ∂μ) ≠ ∞) :
     (μ.withDensityᵥ fun x => (f x).toReal) =
       @toSignedMeasure α _ (μ.withDensity f) (isFiniteMeasureWithDensity hf) :=
-  by
+  by 
   have hfi := integrable_to_real_of_lintegral_ne_top hfm hf
   ext (i hi)
   rw [with_densityᵥ_apply hfi hi, to_signed_measure_apply_measurable hi, with_density_apply _ hi,
@@ -204,7 +190,7 @@ theorem with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part {f : 
           (isFiniteMeasureWithDensityOfReal hfi.2) -
         @toSignedMeasure α _ (μ.withDensity fun x => Ennreal.ofReal <| -f x)
           (isFiniteMeasureWithDensityOfReal hfi.neg.2) :=
-  by
+  by 
   ext (i hi)
   rw [with_densityᵥ_apply hfi hi,
     integral_eq_lintegral_pos_part_sub_lintegral_neg_part hfi.integrable_on,

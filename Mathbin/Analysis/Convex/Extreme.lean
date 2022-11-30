@@ -86,13 +86,14 @@ protected theorem IsExtreme.antisymm : AntiSymmetric (IsExtreme 𝕜 : Set E →
   fun A B hAB hBA => Subset.antisymm hBA.1 hAB.1
 #align is_extreme.antisymm IsExtreme.antisymm
 
-instance : IsPartialOrder (Set E) (IsExtreme 𝕜) where
+instance : IsPartialOrder (Set E)
+      (IsExtreme 𝕜) where 
   refl := IsExtreme.refl 𝕜
   trans A B C := IsExtreme.trans
   antisymm := IsExtreme.antisymm
 
 theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : IsExtreme 𝕜 A (B ∩ C) :=
-  by
+  by 
   use subset.trans (inter_subset_left _ _) hAB.1
   rintro x₁ hx₁A x₂ hx₂A x ⟨hxB, hxC⟩ hx
   obtain ⟨hx₁B, hx₂B⟩ := hAB.2 hx₁A hx₂A hxB hx
@@ -115,7 +116,7 @@ theorem is_extreme_Inter {ι : Type _} [Nonempty ι] {F : ι → Set E}
 #align is_extreme_Inter is_extreme_Inter
 
 theorem is_extreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
-    IsExtreme 𝕜 A (⋂ B ∈ F, B) := by
+    IsExtreme 𝕜 A (⋂ B ∈ F, B) := by 
   obtain ⟨B, hB⟩ := hF
   refine' ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
   simp_rw [mem_Inter₂] at hxF⊢
@@ -124,7 +125,7 @@ theorem is_extreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F
 #align is_extreme_bInter is_extreme_bInter
 
 theorem is_extreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
-    IsExtreme 𝕜 A (⋂₀ F) := by
+    IsExtreme 𝕜 A (⋂₀ F) := by 
   obtain ⟨B, hB⟩ := hF
   refine' ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
   simp_rw [mem_sInter] at hxF⊢
@@ -206,17 +207,15 @@ that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment :
     x ∈ A.extremePoints 𝕜 ↔
       x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x :=
-  by
+  by 
   refine' and_congr_right fun hxA => forall₄_congr fun x₁ h₁ x₂ h₂ => _
   constructor
   · rw [← insert_endpoints_open_segment]
     rintro H (rfl | rfl | hx)
     exacts[Or.inl rfl, Or.inr rfl, Or.inl <| (H hx).1]
-    
   · intro H hx
     rcases H (open_segment_subset_segment _ _ _ hx) with (rfl | rfl)
     exacts[⟨rfl, (left_mem_open_segment_iff.1 hx).symm⟩, ⟨right_mem_open_segment_iff.1 hx, rfl⟩]
-    
 #align mem_extreme_points_iff_forall_segment mem_extreme_points_iff_forall_segment
 
 theorem Convex.mem_extreme_points_iff_convex_diff (hA : Convex 𝕜 A) :

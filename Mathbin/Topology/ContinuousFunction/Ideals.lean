@@ -82,7 +82,8 @@ variable (R)
 
 /-- Given a topological ring `R` and `s : set X`, construct the ideal in `C(X, R)` of functions
 which vanish on the complement of `s`. -/
-def idealOfSet (s : Set X) : Ideal C(X, R) where
+def idealOfSet (s : Set X) :
+    Ideal C(X, R) where 
   carrier := { f : C(X, R) | ∀ x ∈ sᶜ, f x = 0 }
   add_mem' f g hf hg x hx := by simp only [hf x hx, hg x hx, coe_add, Pi.add_apply, add_zero]
   zero_mem' _ _ := rfl
@@ -105,7 +106,7 @@ theorem mem_ideal_of_set {s : Set X} {f : C(X, R)} :
 #align continuous_map.mem_ideal_of_set ContinuousMap.mem_ideal_of_set
 
 theorem not_mem_ideal_of_set {s : Set X} {f : C(X, R)} : f ∉ idealOfSet R s ↔ ∃ x ∈ sᶜ, f x ≠ 0 :=
-  by
+  by 
   simp_rw [mem_ideal_of_set, exists_prop]
   push_neg
 #align continuous_map.not_mem_ideal_of_set ContinuousMap.not_mem_ideal_of_set
@@ -165,11 +166,9 @@ theorem ideal_gc : GaloisConnection (setOfIdeal : Ideal C(X, R) → Set X) (idea
   · by_contra h'
     rcases not_mem_ideal_of_set.mp h' with ⟨x, hx, hfx⟩
     exact hfx (not_mem_set_of_ideal.mp (mt (@h x) hx) hf)
-    
   · obtain ⟨f, hf, hfx⟩ := mem_set_of_ideal.mp hx
     by_contra hx'
     exact not_mem_ideal_of_set.mpr ⟨x, hx', hfx⟩ (h hf)
-    
 #align continuous_map.ideal_gc ContinuousMap.ideal_gc
 
 end TopologicalRing
@@ -199,7 +198,8 @@ variable [CompactSpace X] [T2Space X]
 
 @[simp]
 theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
-    idealOfSet 𝕜 (setOfIdeal I) = I.closure := by
+    idealOfSet 𝕜 (setOfIdeal I) = I.closure :=
+  by
   /- Since `ideal_of_set 𝕜 (set_of_ideal I)` is closed and contains `I`, it contains `I.closure`.
     For the reverse inclusion, given `f ∈ ideal_of_set 𝕜 (set_of_ideal I)` and `(ε : ℝ≥0) > 0` it
     suffices to show that `f` is within `ε` of `I`.-/
@@ -230,9 +230,9 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
     refine' (nnnorm_lt_iff _ hε).2 fun x => _
     simp only [coe_sub, coe_mul, Pi.sub_apply, Pi.mul_apply]
     by_cases hx : x ∈ t
-    · simpa only [hgt hx, comp_apply, Pi.one_apply, ContinuousMap.coe_coe, algebra_map_clm_apply,
+    ·
+      simpa only [hgt hx, comp_apply, Pi.one_apply, ContinuousMap.coe_coe, algebra_map_clm_apply,
         map_one, mul_one, sub_self, nnnorm_zero] using hε
-      
     · refine' lt_of_le_of_lt _ (half_lt_self hε)
       have :=
         calc
@@ -255,7 +255,6 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
             (mul_le_mul_right' (not_le.mp <| show ¬ε / 2 ≤ ‖f x‖₊ from hx).le _)
         _ ≤ ε / 2 := by simpa only [mul_one] using mul_le_mul_left' this _
         
-      
   /- There is some `g' : C(X, ℝ≥0)` which is strictly positive on `t` such that the composition
     `↑g` with the natural embedding of `ℝ≥0` into `𝕜` lies in `I`. This follows from compactness of
     `t` and that we can do it in any neighborhood of a point `x ∈ t`. Indeed, since `x ∈ t`, then
@@ -273,22 +272,17 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
       ext
       simp only [coe_zero, Pi.zero_apply, ContinuousMap.coe_coe, ContinuousMap.coe_comp, map_zero,
         Pi.comp_zero]
-      
     · rintro s₁ s₂ hs ⟨g, hI, hgt⟩
       exact ⟨g, hI, fun x hx => hgt x (hs hx)⟩
-      
     · rintro s₁ s₂ ⟨g₁, hI₁, hgt₁⟩ ⟨g₂, hI₂, hgt₂⟩
       refine' ⟨g₁ + g₂, _, fun x hx => _⟩
       · convert I.add_mem hI₁ hI₂
         ext y
         simp only [coe_add, Pi.add_apply, map_add, coe_comp, Function.comp_apply,
           ContinuousMap.coe_coe]
-        
       · rcases hx with (hx | hx)
         simpa only [zero_add] using add_lt_add_of_lt_of_le (hgt₁ x hx) zero_le'
         simpa only [zero_add] using add_lt_add_of_le_of_lt zero_le' (hgt₂ x hx)
-        
-      
     · intro x hx
       replace hx := htI.subset_compl_right hx
       rw [compl_compl, mem_set_of_ideal] at hx
@@ -304,7 +298,6 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
       simp only [comp_apply, coe_mk, algebra_map_clm_coe, map_pow, coe_mul, coe_star, Pi.mul_apply,
         Pi.star_apply, star_def, ContinuousMap.coe_coe]
       simpa only [norm_sq_eq_def', conj_mul_eq_norm_sq_left, of_real_pow]
-      
   /- Get the function `g'` which is guaranteed to exist above. By the extreme value theorem and
     compactness of `t`, there is some `0 < c` such that `c ≤ g' x` for all `x ∈ t`. Then by
     `main_lemma_aux` there is some `g` for which `g * g'` is the desired function. -/
@@ -364,7 +357,8 @@ variable (X)
 `λ s, continuous_map.ideal_of_set ↑s`. -/
 @[simps]
 def idealOpensGi :
-    GaloisInsertion (opensOfIdeal : Ideal C(X, 𝕜) → Opens X) fun s => idealOfSet 𝕜 s where
+    GaloisInsertion (opensOfIdeal : Ideal C(X, 𝕜) → Opens X) fun s =>
+      idealOfSet 𝕜 s where 
   choice I hI := opensOfIdeal I.closure
   gc I s := ideal_gc X 𝕜 I s
   le_l_u s := (set_of_ideal_of_set_of_is_open 𝕜 s.Prop).ge
@@ -437,11 +431,15 @@ variable [Nontrivial 𝕜] [NoZeroDivisors 𝕜]
 
 /-- The natural continuous map from a locally compact topological space `X` to the
 `character_space 𝕜 C(X, 𝕜)` which sends `x : X` to point evaluation at `x`. -/
-def continuousMapEval : C(X, characterSpace 𝕜 C(X, 𝕜)) where
+def continuousMapEval :
+    C(X,
+      characterSpace 𝕜
+        C(X,
+          𝕜)) where 
   toFun x :=
     ⟨{ toFun := fun f => f x, map_add' := fun f g => rfl, map_smul' := fun z f => rfl,
         cont := continuous_eval_const' x },
-      by
+      by 
       rw [character_space.eq_set_map_one_map_mul]
       exact ⟨rfl, fun f g => rfl⟩⟩
   continuous_to_fun := Continuous.subtype_mk (continuous_of_continuous_eval map_continuous) _
@@ -469,12 +467,10 @@ theorem continuous_map_eval_bijective : Bijective (continuousMapEval X 𝕜) := 
     simpa only [continuous_map_eval_apply_apply, ContinuousMap.comp_apply, coe_mk, Ne.def,
       IsROrC.of_real_inj] using
       ((fx (Set.mem_singleton x)).symm ▸ (fy (Set.mem_singleton y)).symm ▸ zero_ne_one : f x ≠ f y)
-    
   · obtain ⟨x, hx⟩ := (ideal_is_maximal_iff (RingHom.ker φ)).mp inferInstance
     refine' ⟨x, ext_ker <| Ideal.ext fun f => _⟩
     simpa only [RingHom.mem_ker, continuous_map_eval_apply_apply, mem_ideal_of_set_compl_singleton,
       RingHom.mem_ker] using set_like.ext_iff.mp hx f
-    
 #align
   weak_dual.character_space.continuous_map_eval_bijective WeakDual.characterSpace.continuous_map_eval_bijective
 

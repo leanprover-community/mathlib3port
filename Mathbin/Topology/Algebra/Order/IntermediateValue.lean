@@ -292,44 +292,31 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
       ({icc (inf s) (sup s), ico (inf s) (sup s), ioc (inf s) (sup s), ioo (inf s) (sup s),
           ici (inf s), ioi (inf s), iic (sup s), iio (sup s), univ, ∅} :
         Set (Set α)) :=
-  by
+  by 
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · trace
+  ·
+    trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr or.inr, \",\", expr mem_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-    
   have hs' : IsConnected s := ⟨hne, hs⟩
   by_cases hb : BddBelow s <;> by_cases ha : BddAbove s
   · rcases mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset (hs'.Ioo_cInf_cSup_subset hb ha)
-        (subset_Icc_cInf_cSup hb ha) with
-      (hs | hs | hs | hs)
+        (subset_Icc_cInf_cSup hb ha) with (hs | hs | hs | hs)
     · exact Or.inl hs
-      
     · exact Or.inr <| Or.inl hs
-      
     · exact Or.inr <| Or.inr <| Or.inl hs
-      
     · exact Or.inr <| Or.inr <| Or.inr <| Or.inl hs
-      
-    
   · refine' Or.inr <| Or.inr <| Or.inr <| Or.inr _
     cases' mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_cInf_subset hb ha) fun x hx => cInf_le hb hx with
       hs hs
     · exact Or.inl hs
-      
     · exact Or.inr (Or.inl hs)
-      
-    
   · iterate 6 apply Or.inr
     cases' mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) fun x hx => le_cSup ha hx with
       hs hs
     · exact Or.inl hs
-      
     · exact Or.inr (Or.inl hs)
-      
-    
   · iterate 8 apply Or.inr
     exact Or.inl (hs.eq_univ_of_unbounded hb ha)
-    
 #align is_preconnected.mem_intervals IsPreconnected.mem_intervals
 
 /-- A preconnected set is either one of the intervals `Icc`, `Ico`, `Ioc`, `Ioo`, `Ici`, `Ioi`,
@@ -350,29 +337,19 @@ theorem set_of_is_preconnected_subset_of_ordered :
               range iic ∪
             range iio ∪
           {univ, ∅}) :=
-  by
+  by 
   intro s hs
   rcases hs.mem_intervals with (hs | hs | hs | hs | hs | hs | hs | hs | hs | hs)
   · exact Or.inl <| Or.inl <| Or.inl <| Or.inl ⟨(Inf s, Sup s), hs.symm⟩
-    
   · exact Or.inl <| Or.inl <| Or.inl <| Or.inr ⟨(Inf s, Sup s), hs.symm⟩
-    
   · exact Or.inl <| Or.inl <| Or.inr ⟨(Inf s, Sup s), hs.symm⟩
-    
   · exact Or.inl <| Or.inr ⟨(Inf s, Sup s), hs.symm⟩
-    
   · exact Or.inr <| Or.inl <| Or.inl <| Or.inl <| Or.inl ⟨Inf s, hs.symm⟩
-    
   · exact Or.inr <| Or.inl <| Or.inl <| Or.inl <| Or.inr ⟨Inf s, hs.symm⟩
-    
   · exact Or.inr <| Or.inl <| Or.inl <| Or.inr ⟨Sup s, hs.symm⟩
-    
   · exact Or.inr <| Or.inl <| Or.inr ⟨Sup s, hs.symm⟩
-    
   · exact Or.inr <| Or.inr <| Or.inl hs
-    
   · exact Or.inr <| Or.inr <| Or.inr hs
-    
 #align set_of_is_preconnected_subset_of_ordered set_of_is_preconnected_subset_of_ordered
 
 /-!
@@ -426,7 +403,7 @@ on a closed subset, contains `a`, and for any `x ∈ s ∩ [a, b)` the set `s` i
 neighborhood of `x` within `(x, +∞)`, then `[a, b] ⊆ s`. -/
 theorem IsClosed.Icc_subset_of_forall_mem_nhds_within {a b : α} {s : Set α}
     (hs : IsClosed (s ∩ icc a b)) (ha : a ∈ s) (hgt : ∀ x ∈ s ∩ ico a b, s ∈ 𝓝[>] x) :
-    icc a b ⊆ s := by
+    icc a b ⊆ s := by 
   apply hs.Icc_subset_of_forall_exists_gt ha
   rintro x ⟨hxs, hxab⟩ y hyxb
   have : s ∩ Ioc x y ∈ 𝓝[>] x :=
@@ -455,16 +432,14 @@ theorem is_preconnected_Icc_aux (x y : α) (s t : Set α) (hxy : x ≤ y) (hs : 
 /-- A closed interval in a densely ordered conditionally complete linear order is preconnected. -/
 theorem is_preconnected_Icc : IsPreconnected (icc a b) :=
   is_preconnected_closed_iff.2
-    (by
+    (by 
       rintro s t hs ht hab ⟨x, hx⟩ ⟨y, hy⟩
       -- This used to use `wlog`, but it was causing timeouts.
       cases le_total x y
       · exact is_preconnected_Icc_aux x y s t h hs ht hab hx hy
-        
       · rw [inter_comm s t]
         rw [union_comm s t] at hab
-        exact is_preconnected_Icc_aux y x t s h ht hs hab hy hx
-        )
+        exact is_preconnected_Icc_aux y x t s h ht hs hab hy hx)
 #align is_preconnected_Icc is_preconnected_Icc
 
 theorem is_preconnected_interval : IsPreconnected (interval a b) :=
@@ -563,7 +538,7 @@ theorem set_of_is_preconnected_eq_of_ordered :
               range iic ∪
             range iio ∪
           {univ, ∅}) :=
-  by
+  by 
   refine' subset.antisymm set_of_is_preconnected_subset_of_ordered _
   simp only [subset_def, -mem_range, forall_range_iff, uncurry, or_imp, forall_and, mem_union,
     mem_set_of_eq, insert_eq, mem_singleton_iff, forall_eq, forall_true_iff, and_true_iff,

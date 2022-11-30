@@ -135,7 +135,7 @@ theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃
     (ep : p ≃ p') (M : Matrix l m α) (N : Matrix n p β) :
     kroneckerMap f (reindex el em M) (reindex en ep N) =
       reindex (el.prodCongr en) (em.prodCongr ep) (kroneckerMap f M N) :=
-  by
+  by 
   ext (⟨i, i'⟩⟨j, j'⟩)
   rfl
 #align matrix.kronecker_map_reindex Matrix.kronecker_map_reindex
@@ -193,7 +193,7 @@ theorem kronecker_map_bilinear_mul_mul [CommSemiring R] [Fintype m] [Fintype m']
     (B : Matrix m n α) (A' : Matrix l' m' β) (B' : Matrix m' n' β) :
     kroneckerMapBilinear f (A ⬝ B) (A' ⬝ B') =
       kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' :=
-  by
+  by 
   ext (⟨i, i'⟩⟨j, j'⟩)
   simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ,
     Finset.sum_product, kronecker_map]

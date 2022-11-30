@@ -87,10 +87,8 @@ theorem sum_smul_index_linear_map' {α : Type _} {R : Type _} {M : Type _} {M₂
     {h : α → M →ₗ[R] M₂} : ((c • v).Sum fun a => h a) = c • v.Sum fun a => h a := by
   rw [Finsupp.sum_smul_index', Finsupp.smul_sum]
   · simp only [map_smul]
-    
   · intro i
     exact (h i).map_zero
-    
 #align finsupp.sum_smul_index_linear_map' Finsupp.sum_smul_index_linear_map'
 
 variable (α : Type _) [Finite α]
@@ -268,14 +266,16 @@ instance uniqueOfRight [Subsingleton M₂] : Unique (M →ₛₗ[σ₁₂] M₂)
 #align linear_map.unique_of_right LinearMap.uniqueOfRight
 
 /-- Evaluation of a `σ₁₂`-linear map at a fixed `a`, as an `add_monoid_hom`. -/
-def evalAddMonoidHom (a : M) : (M →ₛₗ[σ₁₂] M₂) →+ M₂ where
+def evalAddMonoidHom (a : M) :
+    (M →ₛₗ[σ₁₂] M₂) →+ M₂ where 
   toFun f := f a
   map_add' f g := LinearMap.add_apply f g a
   map_zero' := rfl
 #align linear_map.eval_add_monoid_hom LinearMap.evalAddMonoidHom
 
 /-- `linear_map.to_add_monoid_hom` promoted to an `add_monoid_hom` -/
-def toAddMonoidHom' : (M →ₛₗ[σ₁₂] M₂) →+ M →+ M₂ where
+def toAddMonoidHom' :
+    (M →ₛₗ[σ₁₂] M₂) →+ M →+ M₂ where 
   toFun := toAddMonoidHom
   map_zero' := by ext <;> rfl
   map_add' := by intros <;> ext <;> rfl
@@ -291,7 +291,8 @@ section SmulRight
 variable [Semiring S] [Module R S] [Module S M] [IsScalarTower R S M]
 
 /-- When `f` is an `R`-linear map taking values in `S`, then `λb, f b • x` is an `R`-linear map. -/
-def smulRight (f : M₁ →ₗ[R] S) (x : M) : M₁ →ₗ[R] M where
+def smulRight (f : M₁ →ₗ[R] S) (x : M) :
+    M₁ →ₗ[R] M where 
   toFun b := f b • x
   map_add' x y := by rw [f.map_add, add_smul]
   map_smul' b y := by dsimp <;> rw [map_smul, smul_assoc]
@@ -322,10 +323,8 @@ theorem coe_fn_sum {ι : Type _} (t : Finset ι) (f : ι → M →ₛₗ[σ₁�
 theorem pow_apply (f : M →ₗ[R] M) (n : ℕ) (m : M) : (f ^ n) m = (f^[n]) m := by
   induction' n with n ih
   · rfl
-    
   · simp only [Function.comp_apply, Function.iterate_succ, LinearMap.mul_apply, pow_succ, ih]
     exact (Function.Commute.iterate_self _ _ m).symm
-    
 #align linear_map.pow_apply LinearMap.pow_apply
 
 theorem pow_map_zero_of_le {f : Module.EndCat R M} {m : M} {k l : ℕ} (hk : k ≤ l)
@@ -338,15 +337,14 @@ theorem commute_pow_left_of_commute {f : M →ₛₗ[σ₁₂] M₂} {g : Module
     (g₂ ^ k).comp f = f.comp (g ^ k) := by
   induction' k with k ih
   · simpa only [pow_zero]
-    
-  · rw [pow_succ, pow_succ, LinearMap.mul_eq_comp, LinearMap.comp_assoc, ih, ← LinearMap.comp_assoc,
+  ·
+    rw [pow_succ, pow_succ, LinearMap.mul_eq_comp, LinearMap.comp_assoc, ih, ← LinearMap.comp_assoc,
       h, LinearMap.comp_assoc, LinearMap.mul_eq_comp]
-    
 #align linear_map.commute_pow_left_of_commute LinearMap.commute_pow_left_of_commute
 
 theorem submodule_pow_eq_zero_of_pow_eq_zero {N : Submodule R M} {g : Module.EndCat R N}
     {G : Module.EndCat R M} (h : G.comp N.Subtype = N.Subtype.comp g) {k : ℕ} (hG : G ^ k = 0) :
-    g ^ k = 0 := by
+    g ^ k = 0 := by 
   ext m
   have hg : N.subtype.comp (g ^ k) m = 0 := by
     rw [← commute_pow_left_of_commute h, hG, zero_comp, zero_apply]
@@ -374,21 +372,21 @@ theorem iterate_succ (n : ℕ) : f' ^ (n + 1) = comp (f' ^ n) f' := by rw [pow_s
 
 theorem iterate_surjective (h : Surjective f') : ∀ n : ℕ, Surjective ⇑(f' ^ n)
   | 0 => surjective_id
-  | n + 1 => by
+  | n + 1 => by 
     rw [iterate_succ]
     exact surjective.comp (iterate_surjective n) h
 #align linear_map.iterate_surjective LinearMap.iterate_surjective
 
 theorem iterate_injective (h : Injective f') : ∀ n : ℕ, Injective ⇑(f' ^ n)
   | 0 => injective_id
-  | n + 1 => by
+  | n + 1 => by 
     rw [iterate_succ]
     exact injective.comp (iterate_injective n) h
 #align linear_map.iterate_injective LinearMap.iterate_injective
 
 theorem iterate_bijective (h : Bijective f') : ∀ n : ℕ, Bijective ⇑(f' ^ n)
   | 0 => bijective_id
-  | n + 1 => by
+  | n + 1 => by 
     rw [iterate_succ]
     exact bijective.comp (iterate_bijective n) h
 #align linear_map.iterate_bijective LinearMap.iterate_bijective
@@ -408,9 +406,7 @@ theorem surjective_of_iterate_surjective {n : ℕ} (hn : n ≠ 0) (h : Surjectiv
 
 theorem pow_apply_mem_of_forall_mem {p : Submodule R M} (n : ℕ) (h : ∀ x ∈ p, f' x ∈ p) (x : M)
     (hx : x ∈ p) : (f' ^ n) x ∈ p := by
-  induction' n with n ih generalizing x;
-  · simpa
-    
+  induction' n with n ih generalizing x; · simpa
   simpa only [iterate_succ, coe_comp, Function.comp_apply, restrict_apply] using ih _ (h _ hx)
 #align linear_map.pow_apply_mem_of_forall_mem LinearMap.pow_apply_mem_of_forall_mem
 
@@ -418,9 +414,7 @@ theorem pow_restrict {p : Submodule R M} (n : ℕ) (h : ∀ x ∈ p, f' x ∈ p)
     (h' := pow_apply_mem_of_forall_mem n h) : f'.restrict h ^ n = (f' ^ n).restrict h' := by
   induction' n with n ih <;> ext
   · simp [restrict_apply]
-    
   · simp [restrict_apply, LinearMap.iterate_succ, -LinearMap.pow_apply, ih]
-    
 #align linear_map.pow_restrict LinearMap.pow_restrict
 
 end
@@ -448,7 +442,10 @@ variable (S)
 
  See `linear_map.applyₗ` for a version where `S = R`. -/
 @[simps]
-def applyₗ' : M →+ (M →ₗ[R] M₂) →ₗ[S] M₂ where
+def applyₗ' :
+    M →+
+      (M →ₗ[R] M₂) →ₗ[S]
+        M₂ where 
   toFun v :=
     { toFun := fun f => f v, map_add' := fun f g => f.add_apply g v,
       map_smul' := fun x f => f.smul_apply x v }
@@ -471,7 +468,7 @@ See note [bundled maps over different rings].
 @[simps]
 def ringLmapEquivSelf [Module S M] [SmulCommClass R S M] : (R →ₗ[R] M) ≃ₗ[S] M :=
   { applyₗ' S (1 : R) with toFun := fun f => f 1, invFun := smulRight (1 : R →ₗ[R] R),
-    left_inv := fun f => by
+    left_inv := fun f => by 
       ext
       simp,
     right_inv := fun x => by simp }
@@ -493,7 +490,8 @@ include R
 
 /-- Composition by `f : M₂ → M₃` is a linear map from the space of linear maps `M → M₂`
 to the space of linear maps `M₂ → M₃`. -/
-def compRight (f : M₂ →ₗ[R] M₃) : (M →ₗ[R] M₂) →ₗ[R] M →ₗ[R] M₃ where
+def compRight (f : M₂ →ₗ[R] M₃) :
+    (M →ₗ[R] M₂) →ₗ[R] M →ₗ[R] M₃ where 
   toFun := f.comp
   map_add' _ _ := LinearMap.ext fun _ => map_add f _ _
   map_smul' _ _ := LinearMap.ext fun _ => map_smul f _ _
@@ -515,7 +513,9 @@ def applyₗ : M →ₗ[R] (M →ₗ[R] M₂) →ₗ[R] M₂ :=
 #align linear_map.applyₗ LinearMap.applyₗ
 
 /-- Alternative version of `dom_restrict` as a linear map. -/
-def domRestrict' (p : Submodule R M) : (M →ₗ[R] M₂) →ₗ[R] p →ₗ[R] M₂ where
+def domRestrict' (p : Submodule R M) :
+    (M →ₗ[R] M₂) →ₗ[R] p →ₗ[R]
+        M₂ where 
   toFun φ := φ.domRestrict p
   map_add' := by simp [LinearMap.ext_iff]
   map_smul' := by simp [LinearMap.ext_iff]
@@ -530,19 +530,23 @@ theorem dom_restrict'_apply (f : M →ₗ[R] M₂) (p : Submodule R M) (x : p) :
 /--
 The family of linear maps `M₂ → M` parameterised by `f ∈ M₂ → R`, `x ∈ M`, is linear in `f`, `x`.
 -/
-def smulRightₗ : (M₂ →ₗ[R] R) →ₗ[R] M →ₗ[R] M₂ →ₗ[R] M where
+def smulRightₗ :
+    (M₂ →ₗ[R] R) →ₗ[R]
+      M →ₗ[R]
+        M₂ →ₗ[R]
+          M where 
   toFun f :=
     { toFun := LinearMap.smulRight f,
-      map_add' := fun m m' => by
+      map_add' := fun m m' => by 
         ext
         apply smul_add,
-      map_smul' := fun c m => by
+      map_smul' := fun c m => by 
         ext
         apply smul_comm }
-  map_add' f f' := by
+  map_add' f f' := by 
     ext
     apply add_smul
-  map_smul' c f := by
+  map_smul' c f := by 
     ext
     apply mul_smul
 #align linear_map.smul_rightₗ LinearMap.smulRightₗ
@@ -562,22 +566,24 @@ The `R`-linear equivalence between additive morphisms `A →+ B` and `ℕ`-linea
 -/
 @[simps]
 def addMonoidHomLequivNat {A B : Type _} (R : Type _) [Semiring R] [AddCommMonoid A]
-    [AddCommMonoid B] [Module R B] : (A →+ B) ≃ₗ[R] A →ₗ[ℕ] B where
+    [AddCommMonoid B] [Module R B] :
+    (A →+ B) ≃ₗ[R] A →ₗ[ℕ]
+        B where 
   toFun := AddMonoidHom.toNatLinearMap
   invFun := LinearMap.toAddMonoidHom
-  map_add' := by
+  map_add' := by 
     intros
     ext
     rfl
-  map_smul' := by
+  map_smul' := by 
     intros
     ext
     rfl
-  left_inv := by
+  left_inv := by 
     intro f
     ext
     rfl
-  right_inv := by
+  right_inv := by 
     intro f
     ext
     rfl
@@ -588,22 +594,24 @@ The `R`-linear equivalence between additive morphisms `A →+ B` and `ℤ`-linea
 -/
 @[simps]
 def addMonoidHomLequivInt {A B : Type _} (R : Type _) [Semiring R] [AddCommGroup A] [AddCommGroup B]
-    [Module R B] : (A →+ B) ≃ₗ[R] A →ₗ[ℤ] B where
+    [Module R B] :
+    (A →+ B) ≃ₗ[R] A →ₗ[ℤ]
+        B where 
   toFun := AddMonoidHom.toIntLinearMap
   invFun := LinearMap.toAddMonoidHom
-  map_add' := by
+  map_add' := by 
     intros
     ext
     rfl
-  map_smul' := by
+  map_smul' := by 
     intros
     ext
     rfl
-  left_inv := by
+  left_inv := by 
     intro f
     ext
     rfl
-  right_inv := by
+  right_inv := by 
     intro f
     ext
     rfl
@@ -662,7 +670,7 @@ theorem of_le_injective (h : p ≤ p') : Function.Injective (ofLe h) := fun x y 
 variable (p p')
 
 theorem subtype_comp_of_le (p q : Submodule R M) (h : p ≤ q) :
-    q.Subtype.comp (ofLe h) = p.Subtype := by
+    q.Subtype.comp (ofLe h) = p.Subtype := by 
   ext ⟨b, hb⟩
   rfl
 #align submodule.subtype_comp_of_le Submodule.subtype_comp_of_le
@@ -715,7 +723,7 @@ include sc
 /-- The pushforward of a submodule `p ⊆ M` by `f : M → M₂` -/
 def map (f : F) (p : Submodule R M) : Submodule R₂ M₂ :=
   { p.toAddSubmonoid.map f with carrier := f '' p,
-    smul_mem' := by
+    smul_mem' := by 
       rintro c x ⟨y, hy, rfl⟩
       obtain ⟨a, rfl⟩ := σ₁₂.is_surjective c
       exact ⟨_, p.smul_mem a hy, map_smulₛₗ f _ _⟩ }
@@ -801,11 +809,11 @@ computable version when `f` has an explicit inverse. -/
 noncomputable def equivMapOfInjective (f : F) (i : Injective f) (p : Submodule R M) :
     p ≃ₛₗ[σ₁₂] p.map f :=
   { Equiv.Set.image f p i with
-    map_add' := by
+    map_add' := by 
       intros
       simp only [coe_add, map_add, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
       rfl,
-    map_smul' := by
+    map_smul' := by 
       intros
       simp only [coe_smul_of_tower, map_smulₛₗ, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
       rfl }
@@ -856,12 +864,10 @@ theorem comap_mono {f : F} {q q' : Submodule R₂ M₂} : q ≤ q' → comap f q
 omit sc
 
 theorem le_comap_pow_of_le_comap (p : Submodule R M) {f : M →ₗ[R] M} (h : p ≤ p.comap f) (k : ℕ) :
-    p ≤ p.comap (f ^ k) := by
+    p ≤ p.comap (f ^ k) := by 
   induction' k with k ih
   · simp [LinearMap.one_eq_id]
-    
   · simp [LinearMap.iterate_succ, comap_comp, h.trans (comap_mono ih)]
-    
 #align submodule.le_comap_pow_of_le_comap Submodule.le_comap_pow_of_le_comap
 
 section
@@ -1052,7 +1058,8 @@ variable [SemilinearEquivClass F σ₁₂ M M₂]
 
 /-- A linear isomorphism induces an order isomorphism of submodules. -/
 @[simps symmApply apply]
-def orderIsoMapComap (f : F) : Submodule R M ≃o Submodule R₂ M₂ where
+def orderIsoMapComap (f : F) :
+    Submodule R M ≃o Submodule R₂ M₂ where 
   toFun := map f
   invFun := comap f
   left_inv := comap_map_eq_of_injective <| EquivLike.injective f
@@ -1083,7 +1090,7 @@ theorem eq_zero_of_bot_submodule : ∀ b : (⊥ : Submodule R M), b = 0
 submodule. -/
 theorem LinearMap.infi_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : Sort _} (f : M →ₛₗ[σ] M)
     {p : ι → Submodule R M} (hf : ∀ i, ∀ v ∈ p i, f v ∈ p i) : ∀ v ∈ infi p, f v ∈ infi p := by
-  have : ∀ i, (p i).map f ≤ p i := by
+  have : ∀ i, (p i).map f ≤ p i := by 
     rintro i - ⟨v, hv, rfl⟩
     exact hf i v hv
   suffices (infi p).map f ≤ infi p by exact fun v hv => this ⟨v, hv, rfl⟩
@@ -1783,7 +1790,7 @@ end
 include sc
 
 theorem ker_eq_bot_of_injective {f : F} (hf : Injective f) : ker f = ⊥ := by
-  have : Disjoint ⊤ (ker f) := by
+  have : Disjoint ⊤ (ker f) := by 
     rw [disjoint_ker, ← map_zero f]
     exact fun x hx H => hf H
   simpa [disjoint_iff_inf_le]
@@ -1874,7 +1881,6 @@ theorem ker_le_iff [RingHomSurjective τ₁₂] {p : Submodule R M} :
     use 0
     rw [← SetLike.mem_coe, range_coe]
     exact ⟨⟨0, map_zero f⟩, h⟩
-    
   · rintro ⟨y, h₁, h₂⟩
     rw [SetLike.le_def]
     intro z hz
@@ -1882,12 +1888,11 @@ theorem ker_le_iff [RingHomSurjective τ₁₂] {p : Submodule R M} :
     rw [← SetLike.mem_coe, range_coe, Set.mem_range] at h₁
     obtain ⟨x, hx⟩ := h₁
     have hx' : x ∈ p := h₂ hx
-    have hxz : z + x ∈ p := by
+    have hxz : z + x ∈ p := by 
       apply h₂
       simp [hx, hz]
     suffices z + x - x ∈ p by simpa only [this, add_sub_cancel]
     exact p.sub_mem hxz hx'
-    
 #align linear_map.ker_le_iff LinearMap.ker_le_iff
 
 omit sc
@@ -1930,10 +1935,8 @@ theorem is_linear_map_add [Semiring R] [AddCommMonoid M] [Module R M] :
   · intro x y
     simp only [Prod.fst_add, Prod.snd_add]
     cc
-    
   · intro x y
     simp [smul_add]
-    
 #align is_linear_map.is_linear_map_add IsLinearMap.is_linear_map_add
 
 theorem is_linear_map_sub {R M : Type _} [Semiring R] [AddCommGroup M] [Module R M] :
@@ -1941,10 +1944,8 @@ theorem is_linear_map_sub {R M : Type _} [Semiring R] [AddCommGroup M] [Module R
   apply IsLinearMap.mk
   · intro x y
     simp [add_comm, add_left_comm, sub_eq_add_neg]
-    
   · intro x y
     simp [smul_sub]
-    
 #align is_linear_map.is_linear_map_sub IsLinearMap.is_linear_map_sub
 
 end IsLinearMap
@@ -2028,14 +2029,17 @@ theorem disjoint_iff_comap_eq_bot {p q : Submodule R M} : Disjoint p q ↔ comap
 #align submodule.disjoint_iff_comap_eq_bot Submodule.disjoint_iff_comap_eq_bot
 
 /-- If `N ⊆ M` then submodules of `N` are the same as submodules of `M` contained in `N` -/
-def MapSubtype.relIso : Submodule R p ≃o { p' : Submodule R M // p' ≤ p } where
+def MapSubtype.relIso :
+    Submodule R p ≃o
+      { p' : Submodule R M //
+        p' ≤ p } where 
   toFun p' := ⟨map p.Subtype p', map_subtype_le p _⟩
   invFun q := comap p.Subtype q
   left_inv p' := comap_map_eq_of_injective Subtype.coe_injective p'
   right_inv := fun ⟨q, hq⟩ => Subtype.ext_val <| by simp [map_comap_subtype p, inf_of_le_right hq]
   map_rel_iff' p₁ p₂ :=
     Subtype.coe_le_coe.symm.trans
-      (by
+      (by 
         dsimp
         rw [map_le_iff_le_comap,
           comap_map_eq_of_injective (show injective p.subtype from Subtype.coe_injective) p₂])
@@ -2104,10 +2108,8 @@ theorem mem_submodule_image {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : 
   refine' submodule.mem_map.trans ⟨_, _⟩ <;> simp_rw [Submodule.mem_comap]
   · rintro ⟨⟨y, yO⟩, yN : y ∈ N, h⟩
     exact ⟨y, yO, yN, h⟩
-    
   · rintro ⟨y, yO, yN, h⟩
     exact ⟨⟨y, yO⟩, yN, h⟩
-    
 #align linear_map.mem_submodule_image LinearMap.mem_submodule_image
 
 theorem mem_submodule_image_of_le {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : Submodule R M}
@@ -2116,10 +2118,8 @@ theorem mem_submodule_image_of_le {M' : Type _} [AddCommMonoid M'] [Module R M']
   refine' mem_submodule_image.trans ⟨_, _⟩
   · rintro ⟨y, yO, yN, h⟩
     exact ⟨y, yN, h⟩
-    
   · rintro ⟨y, yN, h⟩
     exact ⟨y, hNO yN, yN, h⟩
-    
 #align linear_map.mem_submodule_image_of_le LinearMap.mem_submodule_image_of_le
 
 theorem submodule_image_apply_of_le {M' : Type _} [AddCommGroup M'] [Module R M']
@@ -2189,7 +2189,10 @@ theorem zero_apply (x : M) : (0 : M ≃ₛₗ[σ₁₂] M₂) x = 0 :=
 #align linear_equiv.zero_apply LinearEquiv.zero_apply
 
 /-- Between two zero modules, the zero map is the only equivalence. -/
-instance : Unique (M ≃ₛₗ[σ₁₂] M₂) where
+instance :
+    Unique
+      (M ≃ₛₗ[σ₁₂]
+        M₂) where 
   uniq f := to_linear_map_injective (Subsingleton.elim _ _)
   default := 0
 
@@ -2228,7 +2231,7 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
         simp only [LinearMap.dom_restrict_apply, eq_self_iff_true, and_true_iff, SetLike.coe_mem,
           SetLike.mem_coe]⟩ with
     invFun := fun y =>
-      ⟨(e.symm : M₂ →ₛₗ[σ₂₁] M) y, by
+      ⟨(e.symm : M₂ →ₛₗ[σ₂₁] M) y, by 
         rcases y with ⟨y', hy⟩
         rw [Submodule.mem_map] at hy
         rcases hy with ⟨x, hx, hxy⟩
@@ -2237,7 +2240,7 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
     left_inv := fun x => by
       simp only [LinearMap.dom_restrict_apply, LinearMap.cod_restrict_apply,
         LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta],
-    right_inv := fun y => by
+    right_inv := fun y => by 
       apply SetCoe.ext
       simp only [LinearMap.dom_restrict_apply, LinearMap.cod_restrict_apply,
         LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, SetLike.coe_mk,
@@ -2332,10 +2335,10 @@ variable (V V₂ R)
   Differs from `tensor_product.curry`. -/
 protected def curry : (V × V₂ → R) ≃ₗ[R] V → V₂ → R :=
   { Equiv.curry _ _ _ with
-    map_add' := fun _ _ => by
+    map_add' := fun _ _ => by 
       ext
       rfl,
-    map_smul' := fun _ _ => by
+    map_smul' := fun _ _ => by 
       ext
       rfl }
 #align linear_equiv.curry LinearEquiv.curry
@@ -2683,19 +2686,22 @@ def smulOfUnit (a : Rˣ) : M ≃ₗ[R] M :=
 linear isomorphism between the two function spaces. -/
 def arrowCongr {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiring R] [AddCommMonoid M₁] [AddCommMonoid M₂]
     [AddCommMonoid M₂₁] [AddCommMonoid M₂₂] [Module R M₁] [Module R M₂] [Module R M₂₁]
-    [Module R M₂₂] (e₁ : M₁ ≃ₗ[R] M₂) (e₂ : M₂₁ ≃ₗ[R] M₂₂) : (M₁ →ₗ[R] M₂₁) ≃ₗ[R] M₂ →ₗ[R] M₂₂ where
+    [Module R M₂₂] (e₁ : M₁ ≃ₗ[R] M₂) (e₂ : M₂₁ ≃ₗ[R] M₂₂) :
+    (M₁ →ₗ[R] M₂₁) ≃ₗ[R]
+      M₂ →ₗ[R]
+        M₂₂ where 
   toFun := fun f : M₁ →ₗ[R] M₂₁ => (e₂ : M₂₁ →ₗ[R] M₂₂).comp <| f.comp (e₁.symm : M₂ →ₗ[R] M₁)
   invFun f := (e₂.symm : M₂₂ →ₗ[R] M₂₁).comp <| f.comp (e₁ : M₁ →ₗ[R] M₂)
-  left_inv f := by
+  left_inv f := by 
     ext x
     simp only [symm_apply_apply, comp_app, coe_comp, coe_coe]
-  right_inv f := by
+  right_inv f := by 
     ext x
     simp only [comp_app, apply_symm_apply, coe_comp, coe_coe]
-  map_add' f g := by
+  map_add' f g := by 
     ext x
     simp only [map_add, add_apply, comp_app, coe_comp, coe_coe]
-  map_smul' c f := by
+  map_smul' c f := by 
     ext x
     simp only [smul_apply, comp_app, coe_comp, map_smulₛₗ e₂, coe_coe]
 #align linear_equiv.arrow_congr LinearEquiv.arrowCongr
@@ -2808,10 +2814,10 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 is the natural `linear_equiv` between `q` and `q.map p.subtype`. -/
 def equivSubtypeMap (p : Submodule R M) (q : Submodule R p) : q ≃ₗ[R] q.map p.Subtype :=
   { (p.Subtype.domRestrict q).codRestrict _
-      (by
+      (by 
         rintro ⟨x, hx⟩
         refine' ⟨x, hx, rfl⟩) with
-    invFun := by
+    invFun := by 
       rintro ⟨x, hx⟩
       refine' ⟨⟨x, _⟩, _⟩ <;> rcases hx with ⟨⟨_, h⟩, _, rfl⟩ <;> assumption,
     left_inv := fun ⟨⟨_, _⟩, _⟩ => rfl, right_inv := fun ⟨x, ⟨_, h⟩, _, rfl⟩ => rfl }
@@ -2833,7 +2839,8 @@ theorem equiv_subtype_map_symm_apply {p : Submodule R M} {q : Submodule R p} (x 
 /-- If `s ≤ t`, then we can view `s` as a submodule of `t` by taking the comap
 of `t.subtype`. -/
 @[simps]
-def comapSubtypeEquivOfLe {p q : Submodule R M} (hpq : p ≤ q) : comap q.Subtype p ≃ₗ[R] p where
+def comapSubtypeEquivOfLe {p q : Submodule R M} (hpq : p ≤ q) :
+    comap q.Subtype p ≃ₗ[R] p where 
   toFun x := ⟨x, x.2⟩
   invFun x := ⟨⟨x, hpq x.2⟩, x.2⟩
   left_inv x := by simp only [coe_mk, SetLike.eta, coe_coe]
@@ -2866,14 +2873,12 @@ include τ₂₁
 
 @[simp]
 theorem mem_map_equiv {e : M ≃ₛₗ[τ₁₂] M₂} {x : M₂} : x ∈ p.map (e : M →ₛₗ[τ₁₂] M₂) ↔ e.symm x ∈ p :=
-  by
+  by 
   rw [Submodule.mem_map]; constructor
   · rintro ⟨y, hy, hx⟩
     simp [← hx, hy]
-    
   · intro hx
     refine' ⟨e.symm x, hx, by simp⟩
-    
 #align submodule.mem_map_equiv Submodule.mem_map_equiv
 
 omit τ₂₁
@@ -2895,16 +2900,16 @@ include τ₂₁
 theorem map_symm_eq_iff (e : M ≃ₛₗ[τ₁₂] M₂) {K : Submodule R₂ M₂} :
     K.map e.symm = p ↔ p.map e = K := by
   constructor <;> rintro rfl
-  · calc
+  ·
+    calc
       map e (map e.symm K) = comap e.symm (map e.symm K) := map_equiv_eq_comap_symm _ _
       _ = K := comap_map_eq_of_injective e.symm.injective _
       
-    
-  · calc
+  ·
+    calc
       map e.symm (map e p) = comap e (map e p) := (comap_equiv_eq_map_symm _ _).symm
       _ = p := comap_map_eq_of_injective e.injective _
       
-    
 #align submodule.map_symm_eq_iff Submodule.map_symm_eq_iff
 
 theorem order_iso_map_comap_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R M) :
@@ -2938,9 +2943,10 @@ theorem inf_comap_le_comap_add (f₁ f₂ : M →ₛₗ[τ₁₂] M₂) :
 
 /-- Given modules `M`, `M₂` over a commutative ring, together with submodules `p ⊆ M`, `q ⊆ M₂`,
 the set of maps $\{f ∈ Hom(M, M₂) | f(p) ⊆ q \}$ is a submodule of `Hom(M, M₂)`. -/
-def compatibleMaps : Submodule R (N →ₗ[R] N₂) where
+def compatibleMaps :
+    Submodule R (N →ₗ[R] N₂) where 
   carrier := { fₗ | pₗ ≤ comap fₗ qₗ }
-  zero_mem' := by
+  zero_mem' := by 
     change pₗ ≤ comap (0 : N →ₗ[R] N₂) qₗ
     rw [comap_zero]
     refine' le_top
@@ -2974,7 +2980,8 @@ namespace LinearMap
 
 /-- Given an `R`-module `M` and a function `m → n` between arbitrary types,
 construct a linear map `(n → M) →ₗ[R] (m → M)` -/
-def funLeft (f : m → n) : (n → M) →ₗ[R] m → M where
+def funLeft (f : m → n) : (n → M) →ₗ[R]
+      m → M where 
   toFun := (· ∘ f)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -2996,18 +3003,16 @@ theorem fun_left_comp (f₁ : n → p) (f₂ : m → n) :
 #align linear_map.fun_left_comp LinearMap.fun_left_comp
 
 theorem fun_left_surjective_of_injective (f : m → n) (hf : Injective f) :
-    Surjective (funLeft R M f) := by classical
-  intro g
-  refine' ⟨fun x => if h : ∃ y, f y = x then g h.some else 0, _⟩
-  · ext
-    dsimp only [fun_left_apply]
-    split_ifs with w
-    · congr
-      exact hf w.some_spec
-      
-    · simpa only [not_true, exists_apply_eq_apply] using w
-      
-    
+    Surjective (funLeft R M f) := by
+  classical 
+    intro g
+    refine' ⟨fun x => if h : ∃ y, f y = x then g h.some else 0, _⟩
+    · ext
+      dsimp only [fun_left_apply]
+      split_ifs with w
+      · congr
+        exact hf w.some_spec
+      · simpa only [not_true, exists_apply_eq_apply] using w
 #align linear_map.fun_left_surjective_of_injective LinearMap.fun_left_surjective_of_injective
 
 theorem fun_left_injective_of_surjective (f : m → n) (hf : Surjective f) :
@@ -3086,7 +3091,8 @@ def toLinearEquiv (f : GeneralLinearGroup R M) : M ≃ₗ[R] M :=
 #align linear_map.general_linear_group.to_linear_equiv LinearMap.GeneralLinearGroup.toLinearEquiv
 
 /-- An equivalence from `M` to itself determines an invertible linear map. -/
-def ofLinearEquiv (f : M ≃ₗ[R] M) : GeneralLinearGroup R M where
+def ofLinearEquiv (f : M ≃ₗ[R] M) :
+    GeneralLinearGroup R M where 
   val := f
   inv := (f.symm : M →ₗ[R] M)
   val_inv := LinearMap.ext fun _ => f.apply_symm_apply _
@@ -3097,16 +3103,18 @@ variable (R M)
 
 /-- The general linear group on `R` and `M` is multiplicatively equivalent to the type of linear
 equivalences between `M` and itself. -/
-def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M where
+def generalLinearEquiv :
+    GeneralLinearGroup R M ≃*
+      M ≃ₗ[R] M where 
   toFun := toLinearEquiv
   invFun := ofLinearEquiv
-  left_inv f := by
+  left_inv f := by 
     ext
     rfl
-  right_inv f := by
+  right_inv f := by 
     ext
     rfl
-  map_mul' x y := by
+  map_mul' x y := by 
     ext
     rfl
 #align

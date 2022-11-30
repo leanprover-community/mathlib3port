@@ -23,20 +23,38 @@ useful for append-heavy uses such as logging and pretty printing.
 -/
 
 
+/- warning: dlist.join -> Std.DList.join is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}}, (List.{u_1} (Dlist.{u_1} α)) -> (Dlist.{u_1} α)
+but is expected to have type
+  forall {α : Type.{u_1}}, (List.{u_1} (Std.DList.{u_1} α)) -> (Std.DList.{u_1} α)
+Case conversion may be inaccurate. Consider using '#align dlist.join Std.DList.joinₓ'. -/
 /-- Concatenates a list of difference lists to form a single difference list. Similar to
 `list.join`. -/
-def Dlist.join {α : Type _} : List (Dlist α) → Dlist α
+def Std.DList.join {α : Type _} : List (Dlist α) → Dlist α
   | [] => Dlist.empty
-  | x :: xs => x ++ Dlist.join xs
-#align dlist.join Dlist.join
+  | x :: xs => x ++ Std.DList.join xs
+#align dlist.join Std.DList.join
 
+/- warning: dlist_singleton -> Std.DList_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {a : α}, Eq.{succ u_1} (Dlist.{u_1} α) (Dlist.singleton.{u_1} α a) (Std.DList.lazy_ofList.{u_1} α (fun (_ : Unit) => List.cons.{u_1} α a (List.nil.{u_1} α)))
+but is expected to have type
+  forall {α : Type.{u_1}} {a : α}, Eq.{succ u_1} (Std.DList.{u_1} α) (Std.DList.singleton.{u_1} α a) (Std.DList.lazy_ofList.{u_1} α (Thunk.mk.{u_1} (List.{u_1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => List.cons.{u_1} α a (List.nil.{u_1} α))))
+Case conversion may be inaccurate. Consider using '#align dlist_singleton Std.DList_singletonₓ'. -/
 @[simp]
-theorem dlist_singleton {α : Type _} {a : α} : Dlist.singleton a = Dlist.lazyOfList [a] :=
+theorem Std.DList_singleton {α : Type _} {a : α} : Dlist.singleton a = Std.DList.lazy_ofList [a] :=
   rfl
-#align dlist_singleton dlist_singleton
+#align dlist_singleton Std.DList_singleton
 
+/- warning: dlist_lazy -> Std.DList_lazy is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {l : List.{u_1} α}, Eq.{succ u_1} (Dlist.{u_1} α) (Std.DList.lazy_ofList.{u_1} α (fun (_ : Unit) => l)) (Dlist.ofList.{u_1} α l)
+but is expected to have type
+  forall {α : Type.{u_1}} {l : List.{u_1} α}, Eq.{succ u_1} (Std.DList.{u_1} α) (Std.DList.lazy_ofList.{u_1} α (Thunk.mk.{u_1} (List.{u_1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => l))) (Std.DList.ofList.{u_1} α l)
+Case conversion may be inaccurate. Consider using '#align dlist_lazy Std.DList_lazyₓ'. -/
 @[simp]
-theorem dlist_lazy {α : Type _} {l : List α} : Dlist.lazyOfList l = Dlist.ofList l :=
+theorem Std.DList_lazy {α : Type _} {l : List α} : Std.DList.lazy_ofList l = Dlist.ofList l :=
   rfl
-#align dlist_lazy dlist_lazy
+#align dlist_lazy Std.DList_lazy
 

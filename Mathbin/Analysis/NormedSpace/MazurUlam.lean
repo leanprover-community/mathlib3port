@@ -70,19 +70,18 @@ theorem midpoint_fixed {x y : PE} :
     rw [dist_point_reflection_fixed, ← e.dist_eq, e.apply_symm_apply,
       dist_point_reflection_self_real, dist_comm]
   -- Also note that `f` maps `s` to itself
-  have hf_maps_to : maps_to f s s := by
+  have hf_maps_to : maps_to f s s := by 
     rintro e ⟨hx, hy⟩
     constructor <;> simp [hx, hy, e.symm_apply_eq.2 hx.symm, e.symm_apply_eq.2 hy.symm]
   -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
   set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z
-  have : c ≤ c / 2 := by
+  have : c ≤ c / 2 := by 
     apply csupr_le
     rintro ⟨e, he⟩
     simp only [Subtype.coe_mk, le_div_iff' (@zero_lt_two ℝ _ _), ← hf_dist]
     exact le_csupr h_bdd ⟨f e, hf_maps_to he⟩
   replace : c ≤ 0
   · linarith
-    
   refine' fun e hx hy => dist_le_zero.1 (le_trans _ this)
   exact le_csupr h_bdd ⟨e, hx, hy⟩
 #align isometric.midpoint_fixed Isometric.midpoint_fixed

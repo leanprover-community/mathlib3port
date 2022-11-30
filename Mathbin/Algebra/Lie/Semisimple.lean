@@ -71,12 +71,10 @@ theorem is_semisimple_iff_no_abelian_ideals :
   · haveI : IsLieAbelian I := h₂
     apply h₁
     exact LieAlgebra.of_abelian_is_solvable R I
-    
   · haveI : is_solvable R I := h₂
     rw [← abelian_of_solvable_ideal_eq_bot_iff]
     apply h₁
     exact abelian_derived_abelian_of_ideal I
-    
 #align
   lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.is_semisimple_iff_no_abelian_ideals
 
@@ -121,11 +119,9 @@ theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
   · rintro h₁ I h₂
     rw [lie_ideal.solvable_iff_le_radical] at h₂
     exact (LieIdeal.hom_of_le_injective h₂).IsLieAbelian h₁
-    
   · intro h
     apply h
     infer_instance
-    
 #align
   lie_algebra.abelian_radical_iff_solvable_is_abelian LieAlgebra.abelian_radical_iff_solvable_is_abelian
 

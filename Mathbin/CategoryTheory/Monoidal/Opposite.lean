@@ -70,7 +70,8 @@ theorem unmop_mop (X : C) : unmop (mop X) = X :=
   rfl
 #align category_theory.monoidal_opposite.unmop_mop CategoryTheory.MonoidalOpposite.unmop_mop
 
-instance monoidalOppositeCategory [I : Category.{v₁} C] : Category Cᴹᵒᵖ where
+instance monoidalOppositeCategory [I : Category.{v₁} C] :
+    Category Cᴹᵒᵖ where 
   Hom X Y := unmop X ⟶ unmop Y
   id X := 𝟙 (unmop X)
   comp X Y Z f g := f ≫ g
@@ -154,7 +155,7 @@ variable {X Y : C}
 
 /-- An isomorphism in `C` gives an isomorphism in `Cᴹᵒᵖ`. -/
 @[simps]
-def mop (f : X ≅ Y) : mop X ≅ mop Y where
+def mop (f : X ≅ Y) : mop X ≅ mop Y where 
   Hom := f.Hom.mop
   inv := f.inv.mop
   hom_inv_id' := unmop_inj f.hom_inv_id
@@ -169,30 +170,31 @@ open Opposite MonoidalCategory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
+instance monoidalCategoryOp :
+    MonoidalCategory Cᵒᵖ where 
   tensorObj X Y := op (unop X ⊗ unop Y)
   tensorHom X₁ Y₁ X₂ Y₂ f g := (f.unop ⊗ g.unop).op
   tensorUnit := op (𝟙_ C)
   associator X Y Z := (α_ (unop X) (unop Y) (unop Z)).symm.op
   leftUnitor X := (λ_ (unop X)).symm.op
   rightUnitor X := (ρ_ (unop X)).symm.op
-  associator_naturality' := by
+  associator_naturality' := by 
     intros
     apply Quiver.Hom.unop_inj
     simp
-  left_unitor_naturality' := by
+  left_unitor_naturality' := by 
     intros
     apply Quiver.Hom.unop_inj
     simp
-  right_unitor_naturality' := by
+  right_unitor_naturality' := by 
     intros
     apply Quiver.Hom.unop_inj
     simp
-  triangle' := by
+  triangle' := by 
     intros
     apply Quiver.Hom.unop_inj
     coherence
-  pentagon' := by
+  pentagon' := by 
     intros
     apply Quiver.Hom.unop_inj
     coherence
@@ -210,30 +212,31 @@ theorem op_tensor_unit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
+instance monoidalCategoryMop :
+    MonoidalCategory Cᴹᵒᵖ where 
   tensorObj X Y := mop (unmop Y ⊗ unmop X)
   tensorHom X₁ Y₁ X₂ Y₂ f g := (g.unmop ⊗ f.unmop).mop
   tensorUnit := mop (𝟙_ C)
   associator X Y Z := (α_ (unmop Z) (unmop Y) (unmop X)).symm.mop
   leftUnitor X := (ρ_ (unmop X)).mop
   rightUnitor X := (λ_ (unmop X)).mop
-  associator_naturality' := by
+  associator_naturality' := by 
     intros
     apply unmop_inj
     simp
-  left_unitor_naturality' := by
+  left_unitor_naturality' := by 
     intros
     apply unmop_inj
     simp
-  right_unitor_naturality' := by
+  right_unitor_naturality' := by 
     intros
     apply unmop_inj
     simp
-  triangle' := by
+  triangle' := by 
     intros
     apply unmop_inj
     coherence
-  pentagon' := by
+  pentagon' := by 
     intros
     apply unmop_inj
     coherence

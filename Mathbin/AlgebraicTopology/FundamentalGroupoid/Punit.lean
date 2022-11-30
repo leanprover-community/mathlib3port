@@ -31,7 +31,6 @@ namespace FundamentalGroupoid
 instance {x y : FundamentalGroupoid PUnit} : Subsingleton (x ⟶ y) := by
   convert_to Subsingleton (Path.Homotopic.Quotient PUnit.unit PUnit.unit)
   · congr <;> apply PUnit.eq_punit
-    
   apply Quotient.subsingleton
 
 /-- Equivalence of groupoids between fundamental groupoid of punit and punit -/

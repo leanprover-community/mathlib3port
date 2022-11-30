@@ -119,13 +119,11 @@ instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
     D.t' j k i ≫ D.t' k i j =
       (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom :=
-  by
+  by 
   trans inv (D.t' i j k)
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
-    
   · rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
     simp [t_fac, t_fac_assoc]
-    
 #align
   category_theory.glue_data.t'_comp_eq_pullback_symmetry CategoryTheory.GlueData.t'_comp_eq_pullback_symmetry
 
@@ -135,7 +133,7 @@ def sigmaOpens [HasCoproduct D.U] : C :=
 #align category_theory.glue_data.sigma_opens CategoryTheory.GlueData.sigmaOpens
 
 /-- (Implementation) The diagram to take colimit of. -/
-def diagram : MultispanIndex C where
+def diagram : MultispanIndex C where 
   L := D.J × D.J
   R := D.J
   fstFrom := Prod.fst
@@ -218,7 +216,7 @@ def π : D.sigmaOpens ⟶ D.glued :=
   multicoequalizer.sigmaπ D.diagram
 #align category_theory.glue_data.π CategoryTheory.GlueData.π
 
-instance π_epi : Epi D.π := by
+instance π_epi : Epi D.π := by 
   unfold π
   infer_instance
 #align category_theory.glue_data.π_epi CategoryTheory.GlueData.π_epi
@@ -253,7 +251,7 @@ instance (i j k : D.J) : HasPullback (F.map (D.f i j)) (F.map (D.f i k)) :=
 
 /-- A functor that preserves the pullbacks of `f i j` and `f i k` can map a family of glue data. -/
 @[simps]
-def mapGlueData : GlueData C' where
+def mapGlueData : GlueData C' where 
   J := D.J
   U i := F.obj (D.U i)
   V i := F.obj (D.V i)
@@ -261,7 +259,7 @@ def mapGlueData : GlueData C' where
   f_mono i j := preserves_mono_of_preserves_limit _ _
   f_id i := inferInstance
   t i j := F.map (D.t i j)
-  t_id i := by
+  t_id i := by 
     rw [D.t_id i]
     simp
   t' i j k :=
@@ -282,20 +280,16 @@ def diagramIso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multisp
       match x with
       | walking_multispan.left a => Iso.refl _
       | walking_multispan.right b => Iso.refl _)
-    (by
+    (by 
       rintro (⟨_, _⟩ | _) _ (_ | _ | _)
       · erw [category.comp_id, category.id_comp, Functor.map_id]
         rfl
-        
       · erw [category.comp_id, category.id_comp]
         rfl
-        
       · erw [category.comp_id, category.id_comp, functor.map_comp]
         rfl
-        
       · erw [category.comp_id, category.id_comp, Functor.map_id]
-        rfl
-        )
+        rfl)
 #align category_theory.glue_data.diagram_iso CategoryTheory.GlueData.diagramIso
 
 @[simp]
@@ -387,7 +381,7 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
       cospan ((D.map_glue_data F).ι i) ((D.map_glue_data F).ι j)
   exact
     nat_iso.of_components
-      (fun x => by
+      (fun x => by 
         cases x
         exacts[D.glued_iso F, iso.refl _])
       (by rintro (_ | _) (_ | _) (_ | _ | _) <;> simp)
@@ -397,7 +391,6 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
   · rintro (_ | _ | _)
     change _ = _ ≫ (_ ≫ _) ≫ _
     all_goals change _ = 𝟙 _ ≫ _ ≫ _; simpa
-    
 #align
   category_theory.glue_data.V_pullback_cone_is_limit_of_map CategoryTheory.GlueData.vPullbackConeIsLimitOfMap
 

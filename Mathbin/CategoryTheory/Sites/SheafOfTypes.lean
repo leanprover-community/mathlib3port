@@ -160,16 +160,14 @@ def FamilyOfElements.PullbackCompatible (x : FamilyOfElements P R) [HasPullbacks
   category_theory.presieve.family_of_elements.pullback_compatible CategoryTheory.Presieve.FamilyOfElements.PullbackCompatible
 
 theorem pullback_compatible_iff (x : FamilyOfElements P R) [HasPullbacks C] :
-    x.Compatible ↔ x.PullbackCompatible := by
+    x.Compatible ↔ x.PullbackCompatible := by 
   constructor
   · intro t Y₁ Y₂ f₁ f₂ hf₁ hf₂
     apply t
     apply pullback.condition
-    
   · intro t Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ comm
     rw [← pullback.lift_fst _ _ comm, op_comp, functor_to_types.map_comp_apply, t hf₁ hf₂, ←
       functor_to_types.map_comp_apply, ← op_comp, pullback.lift_snd]
-    
 #align
   category_theory.presieve.pullback_compatible_iff CategoryTheory.Presieve.pullback_compatible_iff
 
@@ -191,7 +189,7 @@ noncomputable def FamilyOfElements.sieveExtend (x : FamilyOfElements P R) :
 
 /-- The extension of a compatible family to the generated sieve is compatible. -/
 theorem FamilyOfElements.Compatible.sieve_extend {x : FamilyOfElements P R} (hx : x.Compatible) :
-    x.sieveExtend.Compatible := by
+    x.sieveExtend.Compatible := by 
   intro _ _ _ _ _ _ _ h₁ h₂ comm
   iterate 2 erw [← functor_to_types.map_comp_apply]; rw [← op_comp]; apply hx
   simp [comm, h₁.some_spec.some_spec.some_spec.2, h₂.some_spec.some_spec.some_spec.2]
@@ -204,11 +202,9 @@ theorem extend_agrees {x : FamilyOfElements P R} (t : x.Compatible) {f : Y ⟶ X
   have h := (le_generate R Y hf).some_spec
   unfold family_of_elements.sieve_extend
   rw [t h.some (𝟙 _) _ hf _]
-  · simp
-    ;
+  · simp;
   · rw [id_comp]
     exact h.some_spec.some_spec.2
-    
 #align category_theory.presieve.extend_agrees CategoryTheory.Presieve.extend_agrees
 
 /-- The restriction of an extension is the original. -/
@@ -234,14 +230,12 @@ def FamilyOfElements.SieveCompatible (x : FamilyOfElements P S) : Prop :=
   category_theory.presieve.family_of_elements.sieve_compatible CategoryTheory.Presieve.FamilyOfElements.SieveCompatible
 
 theorem compatible_iff_sieve_compatible (x : FamilyOfElements P S) :
-    x.Compatible ↔ x.SieveCompatible := by
+    x.Compatible ↔ x.SieveCompatible := by 
   constructor
   · intro h Y Z f g hf
     simpa using h (𝟙 _) g (S.downward_closed hf g) hf (id_comp _)
-    
   · intro h Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ k
     simp_rw [← h f₁ g₁ h₁, k, h f₂ g₂ h₂]
-    
 #align
   category_theory.presieve.compatible_iff_sieve_compatible CategoryTheory.Presieve.compatible_iff_sieve_compatible
 
@@ -269,7 +263,7 @@ equal when restricted to `R`.
 -/
 theorem restrict_inj {x₁ x₂ : FamilyOfElements P (generate R)} (t₁ : x₁.Compatible)
     (t₂ : x₂.Compatible) : x₁.restrict (le_generate R) = x₂.restrict (le_generate R) → x₁ = x₂ :=
-  fun h => by
+  fun h => by 
   rw [← extend_restrict t₁, ← extend_restrict t₂]
   congr
   exact h
@@ -281,7 +275,8 @@ theorem restrict_inj {x₁ x₂ : FamilyOfElements P (generate R)} (t₁ : x₁.
 @[simps]
 noncomputable def compatibleEquivGenerateSieveCompatible :
     { x : FamilyOfElements P R // x.Compatible } ≃
-      { x : FamilyOfElements P (generate R) // x.Compatible } where
+      { x : FamilyOfElements P (generate R) //
+        x.Compatible } where 
   toFun x := ⟨x.1.sieveExtend, x.2.sieveExtend⟩
   invFun x := ⟨x.1.restrict (le_generate R), x.2.restrict _⟩
   left_inv x := Subtype.ext (restrict_extend x.2)
@@ -444,22 +439,16 @@ theorem is_separated_for_iff_generate : IsSeparatedFor P R ↔ IsSeparatedFor P 
   · intro h x t₁ t₂ ht₁ ht₂
     apply h (x.restrict (le_generate R)) t₁ t₂ _ _
     · exact is_amalgamation_restrict _ x t₁ ht₁
-      
     · exact is_amalgamation_restrict _ x t₂ ht₂
-      
-    
   · intro h x t₁ t₂ ht₁ ht₂
     apply h x.sieve_extend
     · exact is_amalgamation_sieve_extend x t₁ ht₁
-      
     · exact is_amalgamation_sieve_extend x t₂ ht₂
-      
-    
 #align
   category_theory.presieve.is_separated_for_iff_generate CategoryTheory.Presieve.is_separated_for_iff_generate
 
 theorem is_separated_for_top (P : Cᵒᵖ ⥤ Type w) : IsSeparatedFor P (⊤ : Presieve X) :=
-  fun x t₁ t₂ h₁ h₂ => by
+  fun x t₁ t₂ h₁ h₂ => by 
   have q₁ := h₁ (𝟙 X) (by simp)
   have q₂ := h₂ (𝟙 X) (by simp)
   simp only [op_id, functor_to_types.map_id_apply] at q₁ q₂
@@ -500,26 +489,26 @@ Cf the discussion after Lemma 7.47.10 in <https://stacks.math.columbia.edu/tag/0
 the proof of C2.1.4 of [Elephant], and the discussion in [MM92], Chapter III, Section 4.
 -/
 def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
-    (S.Functor ⟶ P) ≃ { x : FamilyOfElements P S // x.Compatible } where
-  toFun α := by
+    (S.Functor ⟶ P) ≃
+      { x : FamilyOfElements P S //
+        x.Compatible } where 
+  toFun α := by 
     refine' ⟨fun Y f hf => _, _⟩
     · apply α.app (op Y) ⟨_, hf⟩
-      
     · rw [compatible_iff_sieve_compatible]
       intro Y Z f g hf
       dsimp
       rw [← functor_to_types.naturality _ _ α g.op]
       rfl
-      
   invFun t :=
     { app := fun Y f => t.1 _ f.2,
-      naturality' := fun Y Z g => by
+      naturality' := fun Y Z g => by 
         ext ⟨f, hf⟩
         apply t.2.to_sieve_compatible _ }
-  left_inv α := by
+  left_inv α := by 
     ext (X⟨_, _⟩)
     rfl
-  right_inv := by
+  right_inv := by 
     rintro ⟨x, hx⟩
     rfl
 #align
@@ -529,14 +518,13 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
 theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor ⟶ P) (g : yoneda.obj X ⟶ P) :
     S.functorInclusion ≫ g = x ↔
       (natTransEquivCompatibleFamily x).1.IsAmalgamation (yonedaEquiv g) :=
-  by
+  by 
   change _ ↔ ∀ ⦃Y : C⦄ (f : Y ⟶ X) (h : S f), P.map f.op (yoneda_equiv g) = x.app (op Y) ⟨f, h⟩
   constructor
   · rintro rfl Y f hf
     rw [yoneda_equiv_naturality]
     dsimp
     simp
-    
   -- See note [dsimp, simp].
   · intro h
     ext (Y⟨f, hf⟩)
@@ -545,7 +533,6 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
     rw [← this]
     dsimp
     simp
-    
 #align
   category_theory.presieve.extension_iff_amalgamation CategoryTheory.Presieve.extension_iff_amalgamation
 
@@ -619,20 +606,18 @@ theorem IsSheafFor.hom_ext {P : Cᵒᵖ ⥤ Type v₁} (h : IsSheafFor P S) (t�
 theorem is_separated_for_and_exists_is_amalgamation_iff_sheaf_for :
     (IsSeparatedFor P R ∧ ∀ x : FamilyOfElements P R, x.Compatible → ∃ t, x.IsAmalgamation t) ↔
       IsSheafFor P R :=
-  by
+  by 
   rw [is_separated_for, ← forall_and]
   apply forall_congr'
   intro x
   constructor
   · intro z hx
     exact exists_unique_of_exists_of_unique (z.2 hx) z.1
-    
   · intro h
     refine' ⟨_, ExistsUnique.exists ∘ h⟩
     intro t₁ t₂ ht₁ ht₂
     apply (h _).unique ht₁ ht₂
     exact is_compatible_of_exists_amalgamation x ⟨_, ht₂⟩
-    
 #align
   category_theory.presieve.is_separated_for_and_exists_is_amalgamation_iff_sheaf_for CategoryTheory.Presieve.is_separated_for_and_exists_is_amalgamation_iff_sheaf_for
 
@@ -673,7 +658,7 @@ theorem IsSheafFor.valid_glue (t : IsSheafFor P R) {x : FamilyOfElements P R} (h
 
 /-- C2.1.3 in [Elephant] -/
 theorem is_sheaf_for_iff_generate (R : Presieve X) : IsSheafFor P R ↔ IsSheafFor P (generate R) :=
-  by
+  by 
   rw [← is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
   rw [← is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
   rw [← is_separated_for_iff_generate]
@@ -683,12 +668,10 @@ theorem is_sheaf_for_iff_generate (R : Presieve X) : IsSheafFor P R ↔ IsSheafF
     apply Exists.imp _ (q _ (hx.restrict (le_generate R)))
     intro t ht
     simpa [hx] using is_amalgamation_sieve_extend _ _ ht
-    
   · intro q x hx
     apply Exists.imp _ (q _ hx.sieve_extend)
     intro t ht
     simpa [hx] using is_amalgamation_restrict (le_generate R) _ _ ht
-    
 #align
   category_theory.presieve.is_sheaf_for_iff_generate CategoryTheory.Presieve.is_sheaf_for_iff_generate
 
@@ -697,15 +680,13 @@ theorem is_sheaf_for_iff_generate (R : Presieve X) : IsSheafFor P R ↔ IsSheafF
 [Elephant] C2.1.5(i)
 -/
 theorem is_sheaf_for_singleton_iso (P : Cᵒᵖ ⥤ Type w) : IsSheafFor P (Presieve.singleton (𝟙 X)) :=
-  by
+  by 
   intro x hx
   refine' ⟨x _ (presieve.singleton_self _), _, _⟩
   · rintro _ _ ⟨rfl, rfl⟩
     simp
-    
   · intro t ht
     simpa using ht _ (presieve.singleton_self _)
-    
 #align
   category_theory.presieve.is_sheaf_for_singleton_iso CategoryTheory.Presieve.is_sheaf_for_singleton_iso
 
@@ -733,11 +714,9 @@ theorem is_sheaf_for_iso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') : IsSheafFor P
   · convert family_of_elements.is_amalgamation.comp_presheaf_map i.hom ht1
     dsimp [x']
     simp
-    
   · intro y hy
     rw [show y = (i.inv.app (op X) ≫ i.hom.app (op X)) y by simp]
     simp [ht2 (i.inv.app _ y) (family_of_elements.is_amalgamation.comp_presheaf_map i.inv hy)]
-    
 #align category_theory.presieve.is_sheaf_for_iso CategoryTheory.Presieve.is_sheaf_for_iso
 
 /-- If a presieve `R` on `X` has a subsieve `S` such that:
@@ -758,7 +737,6 @@ theorem is_sheaf_for_subsieve_aux (P : Cᵒᵖ ⥤ Type w) {S : Sieve X} {R : Pr
     exact
       hS.is_separated_for _ _ _ (is_amalgamation_restrict h x t₁ ht₁)
         (is_amalgamation_restrict h x t₂ ht₂)
-    
   · intro x hx
     use hS.amalgamate _ (hx.restrict h)
     intro W j hj
@@ -767,7 +745,6 @@ theorem is_sheaf_for_subsieve_aux (P : Cᵒᵖ ⥤ Type w) {S : Sieve X} {R : Pr
     rw [← functor_to_types.map_comp_apply, ← op_comp, hS.valid_glue (hx.restrict h) _ hf,
       family_of_elements.restrict, ← hx (𝟙 _) f _ _ (id_comp _)]
     simp
-    
 #align
   category_theory.presieve.is_sheaf_for_subsieve_aux CategoryTheory.Presieve.is_sheaf_for_subsieve_aux
 
@@ -829,7 +806,6 @@ theorem is_sheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
   · intro PJ X R hR
     rw [is_sheaf_for_iff_generate]
     apply PJ (sieve.generate R) ⟨_, hR, le_generate R⟩
-    
   · rintro PK X S ⟨R, hR, RS⟩
     have gRS : ⇑(generate R) ≤ S := by
       apply gi_generate.gc.monotone_u
@@ -838,7 +814,6 @@ theorem is_sheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
     intro Y f
     rw [← pullback_arrows_comm, ← is_sheaf_for_iff_generate]
     exact PK (pullback_arrows f R) (K.pullbacks f R hR)
-    
 #align category_theory.presieve.is_sheaf_pretopology CategoryTheory.Presieve.is_sheaf_pretopology
 
 /-- Any presheaf is a sheaf for the bottom (trivial) grothendieck topology. -/
@@ -865,13 +840,16 @@ def FirstObj : Type max v₁ u₁ :=
 
 /-- Show that `first_obj` is isomorphic to `family_of_elements`. -/
 @[simps]
-def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P where
+def firstObjEqFamily :
+    FirstObj P R ≅
+      R.FamilyOfElements
+        P where 
   Hom t Y f hf := Pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
   inv := Pi.lift fun f x => x _ f.2.2
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext (⟨Y, f, hf⟩p)
     simpa
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext (x Y f hf)
     apply limits.types.limit.lift_π_apply'
 #align category_theory.equalizer.first_obj_eq_family CategoryTheory.Equalizer.firstObjEqFamily
@@ -933,11 +911,9 @@ theorem compatible_iff (x : FirstObj P S) :
   · intro t
     ext ⟨Y, Z, g, f, hf⟩
     simpa [first_map, second_map] using t _ g hf
-    
   · intro t Y Z f g hf
     rw [types.limit_ext_iff'] at t
     simpa [first_map, second_map] using t ⟨⟨Y, Z, g, f, hf⟩⟩
-    
 #align category_theory.equalizer.sieve.compatible_iff CategoryTheory.Equalizer.Sieve.compatible_iff
 
 /-- `P` is a sheaf for `S`, iff the fork given by `w` is an equalizer. -/
@@ -957,11 +933,9 @@ theorem equalizer_sheaf_condition :
   · intro q
     ext (Y f hf)
     simpa [first_obj_eq_family, fork_map] using q _ _
-    
   · intro q Y f hf
     rw [← q]
     simp [first_obj_eq_family, fork_map]
-    
 #align
   category_theory.equalizer.sieve.equalizer_sheaf_condition CategoryTheory.Equalizer.Sieve.equalizer_sheaf_condition
 
@@ -1019,11 +993,9 @@ theorem compatible_iff (x : FirstObj P R) :
   · intro t
     ext ⟨⟨Y, f, hf⟩, Z, g, hg⟩
     simpa [first_map, second_map] using t hf hg
-    
   · intro t Y Z f g hf hg
     rw [types.limit_ext_iff'] at t
     simpa [first_map, second_map] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
-    
 #align
   category_theory.equalizer.presieve.compatible_iff CategoryTheory.Equalizer.Presieve.compatible_iff
 
@@ -1043,11 +1015,9 @@ theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P
   · intro q
     ext (Y f hf)
     simpa [fork_map] using q _ _
-    
   · intro q Y f hf
     rw [← q]
     simp [fork_map]
-    
 #align
   category_theory.equalizer.presieve.sheaf_condition CategoryTheory.Equalizer.Presieve.sheaf_condition
 
@@ -1070,13 +1040,13 @@ namespace SheafOfTypesCat
 variable {J}
 
 /-- Morphisms between sheaves of types are just morphisms between the underlying presheaves. -/
-@[ext.1]
+@[ext]
 structure Hom (X Y : SheafOfTypesCat J) where
   val : X.val ⟶ Y.val
 #align category_theory.SheafOfTypes.hom CategoryTheory.SheafOfTypesCat.Hom
 
 @[simps]
-instance : Category (SheafOfTypesCat J) where
+instance : Category (SheafOfTypesCat J) where 
   Hom := Hom
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.val ≫ g.val⟩
@@ -1092,7 +1062,9 @@ end SheafOfTypesCat
 
 /-- The inclusion functor from sheaves to presheaves. -/
 @[simps]
-def sheafOfTypesToPresheaf : SheafOfTypesCat J ⥤ Cᵒᵖ ⥤ Type w where
+def sheafOfTypesToPresheaf :
+    SheafOfTypesCat J ⥤ Cᵒᵖ ⥤
+        Type w where 
   obj := SheafOfTypesCat.val
   map X Y f := f.val
   map_id' X := rfl
@@ -1108,7 +1080,9 @@ The category of sheaves on the bottom (trivial) grothendieck topology is equival
 of presheaves.
 -/
 @[simps]
-def sheafOfTypesBotEquiv : SheafOfTypesCat (⊥ : GrothendieckTopology C) ≌ Cᵒᵖ ⥤ Type w where
+def sheafOfTypesBotEquiv :
+    SheafOfTypesCat (⊥ : GrothendieckTopology C) ≌
+      Cᵒᵖ ⥤ Type w where 
   Functor := sheafOfTypesToPresheaf _
   inverse :=
     { obj := fun P => ⟨P, Presieve.isSheafBot⟩,

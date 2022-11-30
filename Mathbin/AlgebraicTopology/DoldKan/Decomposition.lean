@@ -50,11 +50,11 @@ theorem decomposition_Q (n q : ℕ) :
     ((q q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1]) =
       ∑ i : Fin (n + 1) in Finset.filter (fun i : Fin (n + 1) => (i : ℕ) < q) Finset.univ,
         (p i).f (n + 1) ≫ X.δ i.rev.succ ≫ X.σ i.rev :=
-  by
+  by 
   induction' q with q hq
-  · simp only [Q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_false,
+  ·
+    simp only [Q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_false,
       Finset.sum_empty]
-    
   · by_cases hqn : q + 1 ≤ n + 1
     swap
     · rw [Q_is_eventually_constant (show n + 1 ≤ q by linarith), hq]
@@ -63,7 +63,6 @@ theorem decomposition_Q (n q : ℕ) :
       have hx := x.is_lt
       simp only [Nat.succ_eq_add_one]
       constructor <;> intro h <;> linarith
-      
     · cases' Nat.le.dest (nat.succ_le_succ_iff.mp hqn) with a ha
       rw [Q_eq, HomologicalComplex.sub_f_apply, HomologicalComplex.comp_f, hq]
       symm
@@ -74,15 +73,10 @@ theorem decomposition_Q (n q : ℕ) :
         simp only [Finset.mem_insert, Finset.mem_filter, Finset.mem_univ, true_and_iff,
           Nat.lt_succ_iff_lt_or_eq, Fin.ext_iff]
         tauto
-        
       · have hnaq' : n = a + q := by linarith
         simpa only [Fin.coe_mk, (higher_faces_vanish.of_P q n).comp_Hσ_eq hnaq', q'.rev_eq hnaq',
           neg_neg]
-        
       · simp only [Finset.mem_filter, Fin.coe_mk, lt_self_iff_false, and_false_iff, not_false_iff]
-        
-      
-    
 #align algebraic_topology.dold_kan.decomposition_Q AlgebraicTopology.DoldKan.decomposition_Q
 
 variable (X)
@@ -92,7 +86,7 @@ the proof that `N₁ : simplicial_object C ⥤ karoubi (chain_complex C ℕ))`
 reflects isomorphisms. The fields are the data that are needed in order to
 construct a morphism `X _[n+1] ⟶ Z` (see `φ`) using the decomposition of the
 identity given by `decomposition_Q n (n+1)`. -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure MorphComponents (n : ℕ) (Z : C) where
   a : X _[n + 1] ⟶ Z
   b : Fin (n + 1) → (X _[n] ⟶ Z)
@@ -112,7 +106,8 @@ variable (X n)
 /-- the canonical `morph_components` whose associated morphism is the identity
 (see `F_id`) thanks to `decomposition_Q n (n+1)` -/
 @[simps]
-def id : MorphComponents X n (X _[n + 1]) where
+def id : MorphComponents X n
+      (X _[n + 1]) where 
   a := pInfty.f (n + 1)
   b i := X.σ i
 #align algebraic_topology.dold_kan.morph_components.id AlgebraicTopology.DoldKan.MorphComponents.id
@@ -122,11 +117,9 @@ theorem id_φ : (id X n).φ = 𝟙 _ := by
   simp only [← P_add_Q_f (n + 1) (n + 1), φ]
   congr 1
   · simp only [id, P_infty_f, P_f_idem]
-    
   · convert (decomposition_Q n (n + 1)).symm
     ext i
     simpa only [Finset.mem_univ, Finset.mem_filter, true_and_iff, true_iff_iff] using Fin.is_lt i
-    
 #align
   algebraic_topology.dold_kan.morph_components.id_φ AlgebraicTopology.DoldKan.MorphComponents.id_φ
 
@@ -134,7 +127,7 @@ variable {X n}
 
 /-- A `morph_components` can be postcomposed with a morphism. -/
 @[simps]
-def postComp : MorphComponents X n Z' where
+def postComp : MorphComponents X n Z' where 
   a := f.a ≫ h
   b i := f.b i ≫ h
 #align
@@ -149,7 +142,8 @@ theorem post_comp_φ : (f.postComp h).φ = f.φ ≫ h := by
 
 /-- A `morph_components` can be precomposed with a morphism of simplicial objects. -/
 @[simps]
-def preComp : MorphComponents X' n Z where
+def preComp : MorphComponents X' n
+      Z where 
   a := g.app (op [n + 1]) ≫ f.a
   b i := g.app (op [n]) ≫ f.b i
 #align
@@ -161,9 +155,7 @@ theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ := by
   simp only [P_infty_f, comp_add]
   congr 1
   · simp only [P_f_naturality_assoc]
-    
   · simp only [comp_sum, P_f_naturality_assoc, simplicial_object.δ_naturality_assoc]
-    
 #align
   algebraic_topology.dold_kan.morph_components.pre_comp_φ AlgebraicTopology.DoldKan.MorphComponents.pre_comp_φ
 

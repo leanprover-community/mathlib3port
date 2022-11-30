@@ -85,12 +85,11 @@ theorem RespectsIso.of_restrict_morphism_restrict_iff (hP : RingHom.RespectsIso 
           ((X.restrict ((Opens.map f.1.base).obj _).OpenEmbedding).of_restrict V.OpenEmbedding ≫
               f ∣_ Y.basicOpen r).op) ↔
       P (Localization.awayMap (SchemeCat.Γ.map (X.of_restrict U.OpenEmbedding ≫ f).op) r) :=
-  by
+  by 
   subst e
   convert (hP.is_localization_away_iff _ _ _ _).symm
   rotate_left
   · infer_instance
-    
   · apply RingHom.toAlgebra
     refine'
       X.presheaf.map
@@ -100,9 +99,7 @@ theorem RespectsIso.of_restrict_morphism_restrict_iff (hP : RingHom.RespectsIso 
     change coe '' (coe '' Set.univ) ⊆ coe '' Set.univ
     rw [Subtype.coe_image_univ, Subtype.coe_image_univ]
     exact Set.image_preimage_subset _ _
-    
   · exact AlgebraicGeometry.Γ_restrict_is_localization Y r
-    
   · rw [← U.open_embedding_obj_top] at hU
     dsimp [Scheme.Γ_obj_op, Scheme.Γ_map_op, Scheme.restrict]
     apply AlgebraicGeometry.is_localization_of_eq_basic_open _ hU
@@ -110,11 +107,9 @@ theorem RespectsIso.of_restrict_morphism_restrict_iff (hP : RingHom.RespectsIso 
     convert (X.basic_open_res (Scheme.Γ.map f.op r) (hom_of_le le_top).op).symm using 1
     rw [opens.open_embedding_obj_top, opens.open_embedding_obj_top, inf_comm, Scheme.Γ_map_op, ←
       Scheme.preimage_basic_open]
-    
   · apply IsLocalization.ring_hom_ext (Submonoid.powers r) _
     swap
     · exact AlgebraicGeometry.Γ_restrict_is_localization Y r
-      
     rw [IsLocalization.Away.map, IsLocalization.map_comp, RingHom.algebra_map_to_algebra,
       RingHom.algebra_map_to_algebra, op_comp, functor.map_comp, op_comp, functor.map_comp]
     refine' (@category.assoc CommRingCat _ _ _ _ _ _ _ _).symm.trans _
@@ -124,7 +119,6 @@ theorem RespectsIso.of_restrict_morphism_restrict_iff (hP : RingHom.RespectsIso 
     erw [f.1.c.naturality_assoc, ← X.presheaf.map_comp, ← X.presheaf.map_comp, ←
       X.presheaf.map_comp]
     congr
-    
 #align
   ring_hom.respects_iso.of_restrict_morphism_restrict_iff RingHom.RespectsIso.of_restrict_morphism_restrict_iff
 
@@ -178,11 +172,9 @@ theorem source_affine_locally_respects_iso (h₁ : RingHom.RespectsIso @P) :
     rw [is_open_immersion.iso_of_range_eq_hom, is_open_immersion.lift_fac_assoc, category.assoc,
       e.inv_hom_id_assoc]
     rfl
-    
   · introv H U
     rw [← category.assoc, op_comp, functor.map_comp, h₁.cancel_left_is_iso]
     exact H U
-    
 #align
   algebraic_geometry.source_affine_locally_respects_iso AlgebraicGeometry.source_affine_locally_respects_iso
 
@@ -195,7 +187,7 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
     affineLocally (@P) f ↔
       ∀ (U : Y.affineOpens) (V : X.affineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1),
         P (f.appLe e) :=
-  by
+  by 
   apply forall_congr'
   intro U
   delta source_affine_locally
@@ -205,7 +197,7 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
   · intro H V e
     let U' := (opens.map f.val.base).obj U.1
     have e' : U'.open_embedding.is_open_map.functor.obj ((opens.map U'.inclusion).obj V.1) = V.1 :=
-      by
+      by 
       ext1
       refine' set.image_preimage_eq_inter_range.trans (set.inter_eq_left_iff_subset.mpr _)
       convert e
@@ -219,14 +211,10 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
       rw [opens.open_embedding_obj_top]
       congr 1
       exact e'.symm
-      
     · infer_instance
-      
     · apply (is_affine_open_iff_of_is_open_immersion (X.of_restrict _) _).mp
       convert V.2
       infer_instance
-      
-    
   · intro H V
     specialize H ⟨_, V.2.image_is_open_immersion (X.of_restrict _)⟩ (Subtype.coe_image_subset _ _)
     erw [← X.presheaf.map_comp]
@@ -236,10 +224,7 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
     · dsimp only [functor.op, unop_op]
       rw [opens.open_embedding_obj_top]
       rfl
-      
     · infer_instance
-      
-    
 #align
   algebraic_geometry.affine_locally_iff_affine_opens_le AlgebraicGeometry.affine_locally_iff_affine_opens_le
 
@@ -252,32 +237,26 @@ theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsI
         ((X.restrict ((Opens.map f.1.base).obj <| Y.basicOpen r).OpenEmbedding).of_restrict
               U.1.OpenEmbedding ≫
             f ∣_ Y.basicOpen r).op) :=
-  by
+  by 
   specialize H ⟨_, U.2.image_is_open_immersion (X.of_restrict _)⟩
   convert (h₁.of_restrict_morphism_restrict_iff _ _ _ _ _).mpr _ using 1
   pick_goal 5
   · exact h₂.away r H
-    
   · infer_instance
-    
   · exact U.2.image_is_open_immersion _
-    
   · ext1
     exact (Set.preimage_image_eq _ Subtype.coe_injective).symm
-    
 #align
   algebraic_geometry.Scheme_restrict_basic_open_of_localization_preserves AlgebraicGeometry.schemeRestrictBasicOpenOfLocalizationPreserves
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
 theorem sourceAffineLocallyIsLocal (h₁ : RingHom.RespectsIso @P)
     (h₂ : RingHom.LocalizationPreserves @P) (h₃ : RingHom.OfLocalizationSpan @P) :
-    (sourceAffineLocally @P).IsLocal := by
+    (sourceAffineLocally @P).IsLocal := by 
   constructor
   · exact source_affine_locally_respects_iso h₁
-    
   · introv H U
     apply Scheme_restrict_basic_open_of_localization_preserves h₁ h₂ <;> assumption
-    
   · introv hs hs' U
     skip
     apply h₃ _ _ hs
@@ -285,11 +264,8 @@ theorem sourceAffineLocallyIsLocal (h₁ : RingHom.RespectsIso @P)
     have := hs' r ⟨(opens.map (X.of_restrict _).1.base).obj U.1, _⟩
     rwa [h₁.of_restrict_morphism_restrict_iff] at this
     · exact U.2
-      
     · rfl
-      
     · infer_instance
-      
     · suffices
         ∀ (V) (_ : V = (opens.map f.val.base).obj (Y.basic_open r.val)),
           is_affine_open ((opens.map (X.of_restrict V.OpenEmbedding).1.base).obj U.1)
@@ -298,8 +274,6 @@ theorem sourceAffineLocallyIsLocal (h₁ : RingHom.RespectsIso @P)
       rw [Scheme.preimage_basic_open] at hV
       subst hV
       exact U.2.map_restrict_basic_open (Scheme.Γ.map f.op r.1)
-      
-    
 #align
   algebraic_geometry.source_affine_locally_is_local AlgebraicGeometry.sourceAffineLocallyIsLocal
 
@@ -335,16 +309,13 @@ theorem source_affine_locally_of_source_open_cover_aux (h₁ : RingHom.RespectsI
   · erw [category.assoc]
     rw [← X.presheaf.map_comp, op_comp, Scheme.Γ.map_comp, Scheme.Γ_map_op, Scheme.Γ_map_op]
     congr
-    
   · dsimp [functor.op]
     conv_lhs => rw [opens.open_embedding_obj_top]
     conv_rhs => rw [opens.open_embedding_obj_top]
     erw [Scheme.image_basic_open (X.of_restrict U.1.OpenEmbedding)]
     erw [PresheafedSpace.is_open_immersion.of_restrict_inv_app_apply]
     rw [Scheme.basic_open_res_eq]
-    
   · infer_instance
-    
 #align
   algebraic_geometry.source_affine_locally_of_source_open_cover_aux AlgebraicGeometry.source_affine_locally_of_source_open_cover_aux
 
@@ -357,13 +328,9 @@ theorem isOpenImmersionCompOfSourceAffineLocally (h₁ : RingHom.RespectsIso @P)
     ← functor.map_comp, ← op_comp]
   convert h₂ ⟨_, range_is_affine_open_of_open_immersion f⟩ using 3
   · rw [is_open_immersion.iso_of_range_eq_hom, is_open_immersion.lift_fac_assoc]
-    
   · infer_instance
-    
   · exact Subtype.range_coe
-    
   · infer_instance
-    
 #align
   algebraic_geometry.is_open_immersion_comp_of_source_affine_locally AlgebraicGeometry.isOpenImmersionCompOfSourceAffineLocally
 
@@ -386,9 +353,7 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
       X.affine_opens)
   intro U
   apply of_affine_open_cover U
-  pick_goal 5;
-  · exact Set.range S
-    
+  pick_goal 5; · exact Set.range S
   · intro U r H
     convert hP.stable_under_composition _ _ H _ using 1
     swap
@@ -397,33 +362,26 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
           (@hom_of_le _ _ ((IsOpenMap.functor _).obj _) ((IsOpenMap.functor _).obj _) _).op
       rw [unop_op, unop_op, opens.open_embedding_obj_top, opens.open_embedding_obj_top]
       exact X.basic_open_le _
-      
     · rw [op_comp, op_comp, functor.map_comp, functor.map_comp]
       refine' (Eq.trans _ (category.assoc _ _ _).symm : _)
       congr 1
       refine' Eq.trans _ (X.presheaf.map_comp _ _)
       change X.presheaf.map _ = _
       congr
-      
     convert
       hP.holds_for_localization_away _ (X.presheaf.map (eq_to_hom U.1.open_embedding_obj_top).op r)
     · exact (RingHom.algebra_map_to_algebra _).symm
-      
     · dsimp [Scheme.Γ]
       have := U.2
       rw [← U.1.open_embedding_obj_top] at this
       convert is_localization_basic_open this _ using 6 <;> rw [opens.open_embedding_obj_top] <;>
         exact (Scheme.basic_open_res_eq _ _ _).symm
-      
-    
   · introv hs hs'
     exact source_affine_locally_of_source_open_cover_aux hP.respects_iso hP.2 _ _ _ hs hs'
-    
   · rw [Set.eq_univ_iff_forall]
     intro x
     rw [Set.mem_Union]
     exact ⟨⟨_, 𝒰.f x, rfl⟩, 𝒰.covers x⟩
-    
   · rintro ⟨_, i, rfl⟩
     specialize H i
     rw [←
@@ -434,7 +392,6 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
       H
     rwa [← Scheme.Γ.map_comp, ← op_comp, is_open_immersion.iso_of_range_eq_inv,
       is_open_immersion.lift_fac_assoc] at H
-    
 #align
   ring_hom.property_is_local.source_affine_locally_of_source_open_cover RingHom.PropertyIsLocal.sourceAffineLocallyOfSourceOpenCover
 
@@ -562,140 +519,12 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg]) [])
-             (group (Tactic.skip "skip") [])
-             (group
-              (Tactic.specialize
-               "specialize"
-               (Term.app
-                `H
-                [(Term.anonymousCtor
-                  "⟨"
-                  [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `hg.base_open.open_range] "⟩")
-                   ","
-                   (Term.app `range_is_affine_open_of_open_immersion [`g])]
-                  "⟩")]))
-              [])
-             (group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule
-                  [(patternIgnore (token.«← » "←"))]
-                  (Term.app
-                   `hP.respects_iso.cancel_right_is_iso
-                   [(Term.hole "_")
-                    (Term.app
-                     `Scheme.Γ.map
-                     [(Term.proj
-                       (Term.proj
-                        (Term.app
-                         `is_open_immersion.iso_of_range_eq
-                         [`g
-                          (Term.app
-                           `X.of_restrict
-                           [(Term.app
-                             `opens.open_embedding
-                             [(Term.anonymousCtor
-                               "⟨"
-                               [(Term.hole "_") "," `hg.base_open.open_range]
-                               "⟩")])])
-                          `subtype.range_coe.symm])
-                        "."
-                        `Hom)
-                       "."
-                       `op)])]))
-                 ","
-                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Scheme.Γ.map_comp)
-                 ","
-                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `op_comp)
-                 ","
-                 (Tactic.rwRule [] `is_open_immersion.iso_of_range_eq_hom)]
-                "]")
-               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
-              [])
-             (group
-              (Tactic.tacticErw__
-               "erw"
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_open_immersion.lift_fac_assoc)] "]")
-               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
-              [])
-             (group (Tactic.exact "exact" `H) [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
-             (group (Tactic.skip "skip") [])
-             (group (Tactic.apply "apply" `H) [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H]) [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.anonymousCtor
-                "⟨"
-                [`X.affine_cover "," `inferInstance "," (Term.app `H [(Term.hole "_")])]
-                "⟩"))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
-                    [])]
-                  "⟩"))]
-               [])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))
-              [])])
-           []
-           (Tactic.tfaeFinish "tfae_finish")])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg]) [])
-            (group (Tactic.skip "skip") [])
-            (group
+            [(Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg])
+             []
+             (Tactic.skip "skip")
+             []
              (Tactic.specialize
               "specialize"
               (Term.app
@@ -706,8 +535,7 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
                   ","
                   (Term.app `range_is_affine_open_of_open_immersion [`g])]
                  "⟩")]))
-             [])
-            (group
+             []
              (Tactic.rwSeq
               "rw"
               []
@@ -746,43 +574,42 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
                 (Tactic.rwRule [] `is_open_immersion.iso_of_range_eq_hom)]
                "]")
               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
-             [])
-            (group
+             []
              (Tactic.tacticErw__
               "erw"
               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_open_immersion.lift_fac_assoc)] "]")
               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
-             [])
-            (group (Tactic.exact "exact" `H) [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
-            (group (Tactic.skip "skip") [])
-            (group (Tactic.apply "apply" `H) [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H]) [])
-            (group
+             []
+             (Tactic.exact "exact" `H)])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
+             []
+             (Tactic.skip "skip")
+             []
+             (Tactic.apply "apply" `H)])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.intro "intro" [`H])
+             []
              (Tactic.refine'
               "refine'"
               (Term.anonymousCtor
                "⟨"
                [`X.affine_cover "," `inferInstance "," (Term.app `H [(Term.hole "_")])]
-               "⟩"))
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
+               "⟩"))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
                 (Std.Tactic.RCases.rcasesPat.tuple
@@ -800,12 +627,136 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
                    [])]
                  "⟩"))]
               [])
-             [])
-            (group
+             []
              (Tactic.exact
               "exact"
-              (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))
-             [])])
+              (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg])
+            []
+            (Tactic.skip "skip")
+            []
+            (Tactic.specialize
+             "specialize"
+             (Term.app
+              `H
+              [(Term.anonymousCtor
+                "⟨"
+                [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `hg.base_open.open_range] "⟩")
+                 ","
+                 (Term.app `range_is_affine_open_of_open_immersion [`g])]
+                "⟩")]))
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule
+                [(patternIgnore (token.«← » "←"))]
+                (Term.app
+                 `hP.respects_iso.cancel_right_is_iso
+                 [(Term.hole "_")
+                  (Term.app
+                   `Scheme.Γ.map
+                   [(Term.proj
+                     (Term.proj
+                      (Term.app
+                       `is_open_immersion.iso_of_range_eq
+                       [`g
+                        (Term.app
+                         `X.of_restrict
+                         [(Term.app
+                           `opens.open_embedding
+                           [(Term.anonymousCtor
+                             "⟨"
+                             [(Term.hole "_") "," `hg.base_open.open_range]
+                             "⟩")])])
+                        `subtype.range_coe.symm])
+                      "."
+                      `Hom)
+                     "."
+                     `op)])]))
+               ","
+               (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Scheme.Γ.map_comp)
+               ","
+               (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `op_comp)
+               ","
+               (Tactic.rwRule [] `is_open_immersion.iso_of_range_eq_hom)]
+              "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+            []
+            (Tactic.tacticErw__
+             "erw"
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_open_immersion.lift_fac_assoc)] "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+            []
+            (Tactic.exact "exact" `H)])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
+            []
+            (Tactic.skip "skip")
+            []
+            (Tactic.apply "apply" `H)])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor
+              "⟨"
+              [`X.affine_cover "," `inferInstance "," (Term.app `H [(Term.hole "_")])]
+              "⟩"))])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+                  [])]
+                "⟩"))]
+             [])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -813,33 +764,30 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Std.Tactic.rintro
-          "rintro"
-          [(Std.Tactic.RCases.rintroPat.one
-            (Std.Tactic.RCases.rcasesPat.tuple
-             "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
-               [])
-              ","
-              (Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
-               [])
-              ","
-              (Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
-               [])]
-             "⟩"))]
-          [])
+       [(Std.Tactic.rintro
+         "rintro"
+         [(Std.Tactic.RCases.rintroPat.one
+           (Std.Tactic.RCases.rcasesPat.tuple
+            "⟨"
+            [(Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+              [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
+              [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+              [])]
+            "⟩"))]
          [])
-        (group
-         (Tactic.exact
-          "exact"
-          (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))
-         [])])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `hP.source_affine_locally_of_source_open_cover [`f `𝒰 `h𝒰]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -868,7 +816,7 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rintro
        "rintro"
        [(Std.Tactic.RCases.rintroPat.one
@@ -1055,191 +1003,12 @@ theorem
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H `U `g `hg `V]) [])
-             (group (Tactic.skip "skip") [])
-             (group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule
-                  []
-                  (Term.app
-                   (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out)
-                   [(num "0") (num "3")]))]
-                "]")
-               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
-              [])
-             (group
-              (Std.Tactic.tacticHaveI_
-               "haveI"
-               (Term.haveDecl
-                (Term.haveIdDecl
-                 []
-                 [(Term.typeSpec ":" (Term.app `is_affine [(Term.hole "_")]))]
-                 ":="
-                 (Term.proj `V "." (fieldIdx "2")))))
-              [])
-             (group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
-                "]")
-               [])
-              [])
-             (group (Tactic.apply "apply" `H) [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
-             (group (Tactic.skip "skip") [])
-             (group (Tactic.apply "apply" `H) [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intro "intro" [`H]) [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.anonymousCtor "⟨" [`X.affine_cover "," (Term.app `H [(Term.hole "_")])] "⟩"))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
-                    [])]
-                  "⟩"))]
-               [])
-              [])
-             (group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule
-                  []
-                  (Term.app
-                   (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out)
-                   [(num "0") (num "1")]))]
-                "]")
-               [])
-              [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.anonymousCtor
-                "⟨"
-                [(Term.app
-                  `𝒰.bind
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [(Term.hole "_")]
-                     []
-                     "=>"
-                     (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
-                 ","
-                 (Term.hole "_")
-                 ","
-                 (Term.hole "_")]
-                "⟩"))
-              [])
-             (group
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" [`i]) [])
-                (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-                (group (Tactic.tacticInfer_instance "infer_instance") [])])
-              [])
-             (group
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" [`i]) [])
-                (group
-                 (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
-                 [])
-                (group
-                 (Tactic.rwSeq
-                  "rw"
-                  []
-                  (Tactic.rwRuleSeq
-                   "["
-                   [(Tactic.rwRule
-                     []
-                     (Term.app
-                      (Term.proj
-                       (Term.app
-                        `hP.affine_open_cover_tfae
-                        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                          (Term.app `𝒰.map [`i.fst])
-                          " ≫ "
-                          `f)])
-                       "."
-                       `out)
-                      [(num "0") (num "3")]))]
-                   "]")
-                  [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
-                 [])
-                (group
-                 (Tactic.tacticErw__
-                  "erw"
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
-                  [])
-                 [])
-                (group
-                 (Tactic.apply
-                  "apply"
-                  (Term.app
-                   (Term.explicit "@" `h𝒰)
-                   [(Term.hole "_")
-                    (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
-                 [])
-                (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-                (group (Tactic.tacticInfer_instance "infer_instance") [])])
-              [])])
-           []
-           (Tactic.tfaeFinish "tfae_finish")])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H `U `g `hg `V]) [])
-            (group (Tactic.skip "skip") [])
-            (group
+            [(Tactic.intro "intro" [`H `U `g `hg `V])
+             []
+             (Tactic.skip "skip")
+             []
              (Tactic.rwSeq
               "rw"
               []
@@ -1252,8 +1021,7 @@ theorem
                   [(num "0") (num "3")]))]
                "]")
               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
-             [])
-            (group
+             []
              (Std.Tactic.tacticHaveI_
               "haveI"
               (Term.haveDecl
@@ -1262,8 +1030,7 @@ theorem
                 [(Term.typeSpec ":" (Term.app `is_affine [(Term.hole "_")]))]
                 ":="
                 (Term.proj `V "." (fieldIdx "2")))))
-             [])
-            (group
+             []
              (Tactic.rwSeq
               "rw"
               []
@@ -1272,34 +1039,34 @@ theorem
                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
                "]")
               [])
-             [])
-            (group (Tactic.apply "apply" `H) [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i]) [])
-            (group (Tactic.skip "skip") [])
-            (group (Tactic.apply "apply" `H) [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H]) [])
-            (group
+             []
+             (Tactic.apply "apply" `H)])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
+             []
+             (Tactic.skip "skip")
+             []
+             (Tactic.apply "apply" `H)])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.intro "intro" [`H])
+             []
              (Tactic.refine'
               "refine'"
-              (Term.anonymousCtor "⟨" [`X.affine_cover "," (Term.app `H [(Term.hole "_")])] "⟩"))
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
+              (Term.anonymousCtor "⟨" [`X.affine_cover "," (Term.app `H [(Term.hole "_")])] "⟩"))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
                 (Std.Tactic.RCases.rcasesPat.tuple
@@ -1313,8 +1080,7 @@ theorem
                    [])]
                  "⟩"))]
               [])
-             [])
-            (group
+             []
              (Tactic.rwSeq
               "rw"
               []
@@ -1327,8 +1093,7 @@ theorem
                   [(num "0") (num "1")]))]
                "]")
               [])
-             [])
-            (group
+             []
              (Tactic.refine'
               "refine'"
               (Term.anonymousCtor
@@ -1347,134 +1112,77 @@ theorem
                 ","
                 (Term.hole "_")]
                "⟩"))
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.intro "intro" [`i]) [])
-               (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-               (group (Tactic.tacticInfer_instance "infer_instance") [])])
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.intro "intro" [`i]) [])
-               (group
-                (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
-                [])
-               (group
-                (Tactic.rwSeq
-                 "rw"
-                 []
-                 (Tactic.rwRuleSeq
-                  "["
-                  [(Tactic.rwRule
-                    []
-                    (Term.app
-                     (Term.proj
-                      (Term.app
-                       `hP.affine_open_cover_tfae
-                       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                         (Term.app `𝒰.map [`i.fst])
-                         " ≫ "
-                         `f)])
-                      "."
-                      `out)
-                     [(num "0") (num "3")]))]
-                  "]")
-                 [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
-                [])
-               (group
-                (Tactic.tacticErw__
-                 "erw"
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
-                 [])
-                [])
-               (group
-                (Tactic.apply
-                 "apply"
-                 (Term.app
-                  (Term.explicit "@" `h𝒰)
-                  [(Term.hole "_")
-                   (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
-                [])
-               (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-               (group (Tactic.tacticInfer_instance "infer_instance") [])])
-             [])])
-          []
-          (Tactic.tfaeFinish "tfae_finish")])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.tfaeFinish "tfae_finish")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
-       (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Std.Tactic.rintro
-          "rintro"
-          [(Std.Tactic.RCases.rintroPat.one
-            (Std.Tactic.RCases.rcasesPat.tuple
-             "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
-               [])
-              ","
-              (Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
-               [])]
-             "⟩"))]
-          [])
-         [])
-        (group
-         (Tactic.rwSeq
-          "rw"
-          []
-          (Tactic.rwRuleSeq
-           "["
-           [(Tactic.rwRule
              []
-             (Term.app
-              (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out)
-              [(num "0") (num "1")]))]
-           "]")
-          [])
-         [])
-        (group
-         (Tactic.refine'
-          "refine'"
-          (Term.anonymousCtor
-           "⟨"
-           [(Term.app
-             `𝒰.bind
-             [(Term.fun
-               "fun"
-               (Term.basicFun
-                [(Term.hole "_")]
+             (tactic___
+              (cdotTk (patternIgnore (token.«·» "·")))
+              [(Tactic.intro "intro" [`i])
+               []
+               (Tactic.dsimp "dsimp" [] [] [] [] [])
+               []
+               (Tactic.tacticInfer_instance "infer_instance")])
+             []
+             (tactic___
+              (cdotTk (patternIgnore (token.«·» "·")))
+              [(Tactic.intro "intro" [`i])
+               []
+               (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
+               []
+               (Tactic.rwSeq
+                "rw"
                 []
-                "=>"
-                (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
-            ","
-            (Term.hole "_")
-            ","
-            (Term.hole "_")]
-           "⟩"))
-         [])
-        (group
-         («tactic___;_»
-          (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Tactic.intro "intro" [`i]) [])
-           (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-           (group (Tactic.tacticInfer_instance "infer_instance") [])])
-         [])
-        (group
-         («tactic___;_»
-          (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Tactic.intro "intro" [`i]) [])
-           (group
-            (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
-            [])
-           (group
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule
+                   []
+                   (Term.app
+                    (Term.proj
+                     (Term.app
+                      `hP.affine_open_cover_tfae
+                      [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                        (Term.app `𝒰.map [`i.fst])
+                        " ≫ "
+                        `f)])
+                     "."
+                     `out)
+                    [(num "0") (num "3")]))]
+                 "]")
+                [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+               []
+               (Tactic.tacticErw__
+                "erw"
+                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
+                [])
+               []
+               (Tactic.apply
+                "apply"
+                (Term.app
+                 (Term.explicit "@" `h𝒰)
+                 [(Term.hole "_")
+                  (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+               []
+               (Tactic.dsimp "dsimp" [] [] [] [] [])
+               []
+               (Tactic.tacticInfer_instance "infer_instance")])])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H `U `g `hg `V])
+            []
+            (Tactic.skip "skip")
+            []
             (Tactic.rwSeq
              "rw"
              []
@@ -1483,88 +1191,308 @@ theorem
               [(Tactic.rwRule
                 []
                 (Term.app
-                 (Term.proj
-                  (Term.app
-                   `hP.affine_open_cover_tfae
-                   [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                     (Term.app `𝒰.map [`i.fst])
-                     " ≫ "
-                     `f)])
-                  "."
-                  `out)
+                 (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out)
                  [(num "0") (num "3")]))]
               "]")
-             [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
-            [])
-           (group
-            (Tactic.tacticErw__
-             "erw"
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
-             [])
-            [])
-           (group
-            (Tactic.apply
-             "apply"
-             (Term.app
-              (Term.explicit "@" `h𝒰)
-              [(Term.hole "_")
-               (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
-            [])
-           (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-           (group (Tactic.tacticInfer_instance "infer_instance") [])])
-         [])])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
-       (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.intro "intro" [`i]) [])
-        (group
-         (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
-         [])
-        (group
-         (Tactic.rwSeq
-          "rw"
-          []
-          (Tactic.rwRuleSeq
-           "["
-           [(Tactic.rwRule
+             [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+            []
+            (Std.Tactic.tacticHaveI_
+             "haveI"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec ":" (Term.app `is_affine [(Term.hole "_")]))]
+               ":="
+               (Term.proj `V "." (fieldIdx "2")))))
+            []
+            (Tactic.rwSeq
+             "rw"
              []
-             (Term.app
-              (Term.proj
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+              "]")
+             [])
+            []
+            (Tactic.apply "apply" `H)])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
+            []
+            (Tactic.skip "skip")
+            []
+            (Tactic.apply "apply" `H)])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.intro "intro" [`H])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor "⟨" [`X.affine_cover "," (Term.app `H [(Term.hole "_")])] "⟩"))])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+                  [])]
+                "⟩"))]
+             [])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule
+                []
+                (Term.app
+                 (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out)
+                 [(num "0") (num "1")]))]
+              "]")
+             [])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.app
+                `𝒰.bind
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [(Term.hole "_")]
+                   []
+                   "=>"
+                   (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+               ","
+               (Term.hole "_")
+               ","
+               (Term.hole "_")]
+              "⟩"))
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.intro "intro" [`i])
+              []
+              (Tactic.dsimp "dsimp" [] [] [] [] [])
+              []
+              (Tactic.tacticInfer_instance "infer_instance")])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.intro "intro" [`i])
+              []
+              (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
+              []
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule
+                  []
+                  (Term.app
+                   (Term.proj
+                    (Term.app
+                     `hP.affine_open_cover_tfae
+                     [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                       (Term.app `𝒰.map [`i.fst])
+                       " ≫ "
+                       `f)])
+                    "."
+                    `out)
+                   [(num "0") (num "3")]))]
+                "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+              []
+              (Tactic.tacticErw__
+               "erw"
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
+               [])
+              []
+              (Tactic.apply
+               "apply"
                (Term.app
-                `hP.affine_open_cover_tfae
-                [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                  (Term.app `𝒰.map [`i.fst])
-                  " ≫ "
-                  `f)])
-               "."
-               `out)
-              [(num "0") (num "3")]))]
-           "]")
-          [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+                (Term.explicit "@" `h𝒰)
+                [(Term.hole "_")
+                 (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+              []
+              (Tactic.dsimp "dsimp" [] [] [] [] [])
+              []
+              (Tactic.tacticInfer_instance "infer_instance")])])
+          []
+          (Tactic.tfaeFinish "tfae_finish")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tfaeFinish "tfae_finish")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic___
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(Std.Tactic.rintro
+         "rintro"
+         [(Std.Tactic.RCases.rintroPat.one
+           (Std.Tactic.RCases.rcasesPat.tuple
+            "⟨"
+            [(Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+              [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h𝒰)])
+              [])]
+            "⟩"))]
          [])
-        (group
-         (Tactic.tacticErw__
-          "erw"
-          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
-          [])
+        []
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule
+            []
+            (Term.app
+             (Term.proj (Term.app `hP.affine_open_cover_tfae [`f]) "." `out)
+             [(num "0") (num "1")]))]
+          "]")
          [])
-        (group
-         (Tactic.apply
-          "apply"
-          (Term.app
-           (Term.explicit "@" `h𝒰)
-           [(Term.hole "_")
-            (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+        []
+        (Tactic.refine'
+         "refine'"
+         (Term.anonymousCtor
+          "⟨"
+          [(Term.app
+            `𝒰.bind
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [(Term.hole "_")]
+               []
+               "=>"
+               (Term.app `Scheme.affine_cover [(Term.hole "_")])))])
+           ","
+           (Term.hole "_")
+           ","
+           (Term.hole "_")]
+          "⟩"))
+        []
+        (tactic___
+         (cdotTk (patternIgnore (token.«·» "·")))
+         [(Tactic.intro "intro" [`i])
+          []
+          (Tactic.dsimp "dsimp" [] [] [] [] [])
+          []
+          (Tactic.tacticInfer_instance "infer_instance")])
+        []
+        (tactic___
+         (cdotTk (patternIgnore (token.«·» "·")))
+         [(Tactic.intro "intro" [`i])
+          []
+          (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule
+              []
+              (Term.app
+               (Term.proj
+                (Term.app
+                 `hP.affine_open_cover_tfae
+                 [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                   (Term.app `𝒰.map [`i.fst])
+                   " ≫ "
+                   `f)])
+                "."
+                `out)
+               [(num "0") (num "3")]))]
+            "]")
+           [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+          []
+          (Tactic.tacticErw__
+           "erw"
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
+           [])
+          []
+          (Tactic.apply
+           "apply"
+           (Term.app
+            (Term.explicit "@" `h𝒰)
+            [(Term.hole "_")
+             (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+          []
+          (Tactic.dsimp "dsimp" [] [] [] [] [])
+          []
+          (Tactic.tacticInfer_instance "infer_instance")])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic___
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(Tactic.intro "intro" [`i])
+        []
+        (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
+        []
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule
+            []
+            (Term.app
+             (Term.proj
+              (Term.app
+               `hP.affine_open_cover_tfae
+               [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (Term.app `𝒰.map [`i.fst])
+                 " ≫ "
+                 `f)])
+              "."
+              `out)
+             [(num "0") (num "3")]))]
+          "]")
+         [(Tactic.location "at" (Tactic.locationHyp [`h𝒰] []))])
+        []
+        (Tactic.tacticErw__
+         "erw"
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]")
          [])
-        (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-        (group (Tactic.tacticInfer_instance "infer_instance") [])])
+        []
+        (Tactic.apply
+         "apply"
+         (Term.app
+          (Term.explicit "@" `h𝒰)
+          [(Term.hole "_")
+           (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))]))
+        []
+        (Tactic.dsimp "dsimp" [] [] [] [] [])
+        []
+        (Tactic.tacticInfer_instance "infer_instance")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticInfer_instance "infer_instance")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.dsimp "dsimp" [] [] [] [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply
        "apply"
        (Term.app
@@ -1608,14 +1536,14 @@ theorem
      term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `category.assoc)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `category.assoc
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
@@ -1726,7 +1654,7 @@ theorem
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))])
@@ -1745,7 +1673,7 @@ theorem
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.intro "intro" [`i])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
@@ -1753,19 +1681,21 @@ theorem
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      («tactic___;_»
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.intro "intro" [`i]) [])
-        (group (Tactic.dsimp "dsimp" [] [] [] [] []) [])
-        (group (Tactic.tacticInfer_instance "infer_instance") [])])
+       [(Tactic.intro "intro" [`i])
+        []
+        (Tactic.dsimp "dsimp" [] [] [] [] [])
+        []
+        (Tactic.tacticInfer_instance "infer_instance")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticInfer_instance "infer_instance")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.dsimp "dsimp" [] [] [] [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.intro "intro" [`i])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
@@ -1773,7 +1703,7 @@ theorem
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.refine'
        "refine'"
        (Term.anonymousCtor
@@ -1862,7 +1792,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
@@ -1914,7 +1844,7 @@ theorem
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rintro
        "rintro"
        [(Std.Tactic.RCases.rintroPat.one
@@ -2039,7 +1969,6 @@ theorem source_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : Scheme
     delta morphism_restrict
     apply hP.source_affine_locally_comp_of_is_open_immersion
     apply H
-    
   · intro H U
     haveI : is_affine _ := U.2
     apply ((hP.open_cover_tfae (f ∣_ U.1)).out 1 0).mp
@@ -2053,7 +1982,6 @@ theorem source_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : Scheme
       affine_cancel_left_is_iso this (pullback_symmetry _ _).Hom,
       pullback_symmetry_hom_comp_snd_assoc] at H
     exact H
-    
 #align
   ring_hom.property_is_local.source_open_cover_iff RingHom.PropertyIsLocal.source_open_cover_iff
 
@@ -2068,15 +1996,10 @@ theorem affine_locally_of_is_open_immersion (hP : RingHom.PropertyIsLocal @P) {X
     erw [category.id_comp, op_id, Scheme.Γ.map_id]
     convert hP.holds_for_localization_away _ (1 : Scheme.Γ.obj _)
     · exact (RingHom.algebra_map_to_algebra _).symm
-      
     · infer_instance
-      
     · refine' IsLocalization.away_of_is_unit_of_bijective _ isUnit_one Function.bijective_id
-      
-    
   · intro i
     exact H
-    
 #align
   ring_hom.property_is_local.affine_locally_of_is_open_immersion RingHom.PropertyIsLocal.affine_locally_of_is_open_immersion
 
@@ -2094,11 +2017,11 @@ theorem affine_locally_of_comp
         (pullback_right_pullback_fst_iso g (Z.affine_cover.map i) f).Hom
     apply Scheme.pullback.open_cover_of_right
     exact (pullback g (Z.affine_cover.map i)).affineCover
-  have h𝒰 : ∀ i j, is_affine ((𝒰 i).obj j) := by
+  have h𝒰 : ∀ i j, is_affine ((𝒰 i).obj j) := by 
     dsimp
     infer_instance
   let 𝒰' := (Z.affine_cover.pullback_cover g).bind fun i => Scheme.affine_cover _
-  have h𝒰' : ∀ i, is_affine (𝒰'.obj i) := by
+  have h𝒰' : ∀ i, is_affine (𝒰'.obj i) := by 
     dsimp
     infer_instance
   rw [hP.affine_open_cover_iff f 𝒰' fun i => Scheme.affine_cover _]
@@ -2129,11 +2052,9 @@ theorem affine_locally_stable_under_composition : (affineLocally @P).StableUnder
   rw [hP.affine_open_cover_iff (f ≫ g) S.affine_cover _]
   rotate_left
   · exact 𝒰
-    
   · intro i j
     dsimp at *
     infer_instance
-    
   · rintro i ⟨j, k⟩
     dsimp at i j k
     dsimp only [Scheme.open_cover.bind_map, Scheme.open_cover.pushforward_iso_obj,
@@ -2143,7 +2064,6 @@ theorem affine_locally_stable_under_composition : (affineLocally @P).StableUnder
       pullback.lift_snd_assoc, category.assoc, ← category.assoc, op_comp, functor.map_comp]
     apply hP.stable_under_composition
     · exact (hP.affine_open_cover_iff _ _ _).mp hg _ _
-      
     · delta affine_locally at hf
       rw [(hP.is_local_source_affine_locally.affine_open_cover_tfae f).out 0 3] at hf
       specialize hf ((pullback g (S.affine_cover.map i)).affineCover.map j ≫ pullback.fst)
@@ -2154,8 +2074,6 @@ theorem affine_locally_stable_under_composition : (affineLocally @P).StableUnder
           0 3] at
         hf
       apply hf
-      
-    
 #align
   ring_hom.property_is_local.affine_locally_stable_under_composition RingHom.PropertyIsLocal.affine_locally_stable_under_composition
 

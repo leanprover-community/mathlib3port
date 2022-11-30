@@ -56,7 +56,8 @@ attribute [nolint dangerous_instance] AddTorsor.toHasVsub
 
 /-- An `add_group G` is a torsor for itself. -/
 @[nolint instance_priority]
-instance addGroupIsAddTorsor (G : Type _) [AddGroup G] : AddTorsor G G where
+instance addGroupIsAddTorsor (G : Type _) [AddGroup G] :
+    AddTorsor G G where 
   vsub := Sub.sub
   vsub_vadd' := sub_add_cancel
   vadd_vsub' := add_sub_cancel
@@ -274,7 +275,8 @@ namespace Prod
 variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroup G] [AddGroup G']
   [AddTorsor G P] [AddTorsor G' P']
 
-instance : AddTorsor (G × G') (P × P') where
+instance : AddTorsor (G × G')
+      (P × P') where 
   vadd v p := (v.1 +ᵥ p.1, v.2 +ᵥ p.2)
   zero_vadd p := by simp
   add_vadd := by simp [add_vadd]
@@ -325,7 +327,9 @@ variable {I : Type u} {fg : I → Type v} [∀ i, AddGroup (fg i)] {fp : I → T
 open AddAction AddTorsor
 
 /-- A product of `add_torsor`s is an `add_torsor`. -/
-instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, fp i) where
+instance [T : ∀ i, AddTorsor (fg i) (fp i)] :
+    AddTorsor (∀ i, fg i) (∀ i,
+        fp i) where 
   vadd g p i := g i +ᵥ p i
   zero_vadd p := funext fun i => zero_vadd (fg i) (p i)
   add_vadd g₁ g₂ p := funext fun i => add_vadd (g₁ i) (g₂ i) (p i)
@@ -343,7 +347,7 @@ variable {G : Type _} {P : Type _} [AddGroup G] [AddTorsor G P]
 include G
 
 /-- `v ↦ v +ᵥ p` as an equivalence. -/
-def vaddConst (p : P) : G ≃ P where
+def vaddConst (p : P) : G ≃ P where 
   toFun v := v +ᵥ p
   invFun p' := p' -ᵥ p
   left_inv v := vadd_vsub _ _
@@ -361,7 +365,7 @@ theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ 
 #align equiv.coe_vadd_const_symm Equiv.coe_vadd_const_symm
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
-def constVsub (p : P) : P ≃ G where
+def constVsub (p : P) : P ≃ G where 
   toFun := (· -ᵥ ·) p
   invFun v := -v +ᵥ p
   left_inv p' := by simp
@@ -381,7 +385,8 @@ theorem coe_const_vsub_symm (p : P) : ⇑(constVsub p).symm = fun v => -v +ᵥ p
 variable (P)
 
 /-- The permutation given by `p ↦ v +ᵥ p`. -/
-def constVadd (v : G) : Equiv.Perm P where
+def constVadd (v : G) : Equiv.Perm
+      P where 
   toFun := (· +ᵥ ·) v
   invFun := (· +ᵥ ·) (-v)
   left_inv p := by simp [vadd_vadd]
@@ -408,7 +413,9 @@ theorem const_vadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P
 #align equiv.const_vadd_add Equiv.const_vadd_add
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
-def constVaddHom : Multiplicative G →* Equiv.Perm P where
+def constVaddHom :
+    Multiplicative G →*
+      Equiv.Perm P where 
   toFun v := constVadd P v.toAdd
   map_one' := const_vadd_zero G P
   map_mul' := const_vadd_add P
@@ -465,7 +472,7 @@ theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCom
 end Equiv
 
 theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroup G] [AddTorsor G P] :
-    Subsingleton G ↔ Subsingleton P := by
+    Subsingleton G ↔ Subsingleton P := by 
   inhabit P
   exact (Equiv.vaddConst default).subsingleton_congr
 #align add_torsor.subsingleton_iff AddTorsor.subsingleton_iff

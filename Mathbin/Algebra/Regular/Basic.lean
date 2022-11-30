@@ -32,6 +32,7 @@ section Mul
 
 variable [Mul R]
 
+#print IsLeftRegular /-
 /-- A left-regular element is an element `c` such that multiplication on the left by `c`
 is injective. -/
 @[to_additive
@@ -39,7 +40,9 @@ is injective. -/
 def IsLeftRegular (c : R) :=
   ((· * ·) c).Injective
 #align is_left_regular IsLeftRegular
+-/
 
+#print IsRightRegular /-
 /-- A right-regular element is an element `c` such that multiplication on the right by `c`
 is injective. -/
 @[to_additive
@@ -47,36 +50,47 @@ is injective. -/
 def IsRightRegular (c : R) :=
   (· * c).Injective
 #align is_right_regular IsRightRegular
+-/
 
+#print IsAddRegular /-
 /-- An add-regular element is an element `c` such that addition by `c` both on the left and
 on the right is injective. -/
 structure IsAddRegular {R : Type _} [Add R] (c : R) : Prop where
   left : IsAddLeftRegular c
   right : IsAddRightRegular c
 #align is_add_regular IsAddRegular
+-/
 
+#print IsRegular /-
 /-- A regular element is an element `c` such that multiplication by `c` both on the left and
 on the right is injective. -/
 structure IsRegular (c : R) : Prop where
   left : IsLeftRegular c
   right : IsRightRegular c
 #align is_regular IsRegular
+-/
 
 attribute [to_additive] IsRegular
 
+#print MulLECancellable.isLeftRegular /-
 @[to_additive]
-protected theorem MulLeCancellable.is_left_regular [PartialOrder R] {a : R}
-    (ha : MulLeCancellable a) : IsLeftRegular a :=
+protected theorem MulLECancellable.isLeftRegular [PartialOrder R] {a : R}
+    (ha : MulLECancellable a) : IsLeftRegular a :=
   ha.Injective
-#align mul_le_cancellable.is_left_regular MulLeCancellable.is_left_regular
+#align mul_le_cancellable.is_left_regular MulLECancellable.isLeftRegular
+-/
 
+#print IsLeftRegular.right_of_commute /-
 theorem IsLeftRegular.right_of_commute {a : R} (ca : ∀ b, Commute a b) (h : IsLeftRegular a) :
     IsRightRegular a := fun x y xy => h <| (ca x).trans <| xy.trans <| (ca y).symm
 #align is_left_regular.right_of_commute IsLeftRegular.right_of_commute
+-/
 
-theorem Commute.is_regular_iff {a : R} (ca : ∀ b, Commute a b) : IsRegular a ↔ IsLeftRegular a :=
+#print Commute.isRegular_iff /-
+theorem Commute.isRegular_iff {a : R} (ca : ∀ b, Commute a b) : IsRegular a ↔ IsLeftRegular a :=
   ⟨fun h => h.left, fun h => ⟨h, h.right_of_commute ca⟩⟩
-#align commute.is_regular_iff Commute.is_regular_iff
+#align commute.is_regular_iff Commute.isRegular_iff
+-/
 
 end Mul
 
@@ -84,12 +98,24 @@ section Semigroup
 
 variable [Semigroup R] {a b : R}
 
+/- warning: is_left_regular.mul -> IsLeftRegular.mul is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} {b : R}, (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) a) -> (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b) -> (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) a b))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.213 : Semigroup.{u_1} R] {a : R} {b : R}, (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.213) a) -> (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.213) b) -> (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.213) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.213)) a b))
+Case conversion may be inaccurate. Consider using '#align is_left_regular.mul IsLeftRegular.mulₓ'. -/
 /-- In a semigroup, the product of left-regular elements is left-regular. -/
 @[to_additive "In an additive semigroup, the sum of add-left-regular elements is add-left.regular."]
 theorem IsLeftRegular.mul (lra : IsLeftRegular a) (lrb : IsLeftRegular b) : IsLeftRegular (a * b) :=
   show Function.Injective ((· * ·) (a * b)) from comp_mul_left a b ▸ lra.comp lrb
 #align is_left_regular.mul IsLeftRegular.mul
 
+/- warning: is_right_regular.mul -> IsRightRegular.mul is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} {b : R}, (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) a) -> (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b) -> (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) a b))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.267 : Semigroup.{u_1} R] {a : R} {b : R}, (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.267) a) -> (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.267) b) -> (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.267) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.267)) a b))
+Case conversion may be inaccurate. Consider using '#align is_right_regular.mul IsRightRegular.mulₓ'. -/
 /-- In a semigroup, the product of right-regular elements is right-regular. -/
 @[to_additive
       "In an additive semigroup, the sum of add-right-regular elements is add-right-regular."]
@@ -98,6 +124,12 @@ theorem IsRightRegular.mul (rra : IsRightRegular a) (rrb : IsRightRegular b) :
   show Function.Injective (· * (a * b)) from comp_mul_right b a ▸ rrb.comp rra
 #align is_right_regular.mul IsRightRegular.mul
 
+/- warning: is_left_regular.of_mul -> IsLeftRegular.of_mul is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} {b : R}, (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) a b)) -> (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.319 : Semigroup.{u_1} R] {a : R} {b : R}, (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.319) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.319)) a b)) -> (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.319) b)
+Case conversion may be inaccurate. Consider using '#align is_left_regular.of_mul IsLeftRegular.of_mulₓ'. -/
 /-- If an element `b` becomes left-regular after multiplying it on the left by a left-regular
 element, then `b` is left-regular. -/
 @[to_additive
@@ -106,16 +138,28 @@ theorem IsLeftRegular.of_mul (ab : IsLeftRegular (a * b)) : IsLeftRegular b :=
   Function.Injective.of_comp (by rwa [comp_mul_left a b])
 #align is_left_regular.of_mul IsLeftRegular.of_mul
 
+/- warning: mul_is_left_regular_iff -> mul_isLeftRegular_iff is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} (b : R), (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) a) -> (Iff (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) a b)) (IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.381 : Semigroup.{u_1} R] {a : R} (b : R), (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.381) a) -> (Iff (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.381) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.381)) a b)) (IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.381) b))
+Case conversion may be inaccurate. Consider using '#align mul_is_left_regular_iff mul_isLeftRegular_iffₓ'. -/
 /-- An element is left-regular if and only if multiplying it on the left by a left-regular element
 is left-regular. -/
 @[simp,
   to_additive
       "An element is add-left-regular if and only if adding to it on the left a\nadd-left-regular element is add-left-regular."]
-theorem mul_is_left_regular_iff (b : R) (ha : IsLeftRegular a) :
+theorem mul_isLeftRegular_iff (b : R) (ha : IsLeftRegular a) :
     IsLeftRegular (a * b) ↔ IsLeftRegular b :=
   ⟨fun ab => IsLeftRegular.of_mul ab, fun ab => IsLeftRegular.mul ha ab⟩
-#align mul_is_left_regular_iff mul_is_left_regular_iff
+#align mul_is_left_regular_iff mul_isLeftRegular_iff
 
+/- warning: is_right_regular.of_mul -> IsRightRegular.of_mul is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} {b : R}, (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) b a)) -> (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.422 : Semigroup.{u_1} R] {a : R} {b : R}, (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.422) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.422)) b a)) -> (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.422) b)
+Case conversion may be inaccurate. Consider using '#align is_right_regular.of_mul IsRightRegular.of_mulₓ'. -/
 /-- If an element `b` becomes right-regular after multiplying it on the right by a right-regular
 element, then `b` is right-regular. -/
 @[to_additive
@@ -126,43 +170,59 @@ theorem IsRightRegular.of_mul (ab : IsRightRegular (b * a)) : IsRightRegular b :
   exact congr_fun (congr_arg (· * ·) xy) a
 #align is_right_regular.of_mul IsRightRegular.of_mul
 
+/- warning: mul_is_right_regular_iff -> mul_isRightRegular_iff is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} (b : R), (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) a) -> (Iff (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) b a)) (IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.520 : Semigroup.{u_1} R] {a : R} (b : R), (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.520) a) -> (Iff (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.520) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.520)) b a)) (IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.520) b))
+Case conversion may be inaccurate. Consider using '#align mul_is_right_regular_iff mul_isRightRegular_iffₓ'. -/
 /-- An element is right-regular if and only if multiplying it on the right with a right-regular
 element is right-regular. -/
 @[simp,
   to_additive
       "An element is add-right-regular if and only if adding it on the right to a\nadd-right-regular element is add-right-regular."]
-theorem mul_is_right_regular_iff (b : R) (ha : IsRightRegular a) :
+theorem mul_isRightRegular_iff (b : R) (ha : IsRightRegular a) :
     IsRightRegular (b * a) ↔ IsRightRegular b :=
   ⟨fun ab => IsRightRegular.of_mul ab, fun ab => IsRightRegular.mul ab ha⟩
-#align mul_is_right_regular_iff mul_is_right_regular_iff
+#align mul_is_right_regular_iff mul_isRightRegular_iff
 
+/- warning: is_regular_mul_and_mul_iff -> isRegular_mul_and_mul_iff is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} {b : R}, Iff (And (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) a b)) (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) b a))) (And (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) a) (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.558 : Semigroup.{u_1} R] {a : R} {b : R}, Iff (And (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.558) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.558)) a b)) (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.558) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.558)) b a))) (And (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.558) a) (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.558) b))
+Case conversion may be inaccurate. Consider using '#align is_regular_mul_and_mul_iff isRegular_mul_and_mul_iffₓ'. -/
 /-- Two elements `a` and `b` are regular if and only if both products `a * b` and `b * a`
 are regular. -/
 @[to_additive
       "Two elements `a` and `b` are add-regular if and only if both sums `a + b` and `b + a`\nare add-regular."]
-theorem is_regular_mul_and_mul_iff :
+theorem isRegular_mul_and_mul_iff :
     IsRegular (a * b) ∧ IsRegular (b * a) ↔ IsRegular a ∧ IsRegular b := by
   refine' ⟨_, _⟩
   · rintro ⟨ab, ba⟩
     exact
       ⟨⟨IsLeftRegular.of_mul ba.left, IsRightRegular.of_mul ab.right⟩,
         ⟨IsLeftRegular.of_mul ab.left, IsRightRegular.of_mul ba.right⟩⟩
-    
   · rintro ⟨ha, hb⟩
     exact
-      ⟨⟨(mul_is_left_regular_iff _ ha.left).mpr hb.left,
-          (mul_is_right_regular_iff _ hb.right).mpr ha.right⟩,
-        ⟨(mul_is_left_regular_iff _ hb.left).mpr ha.left,
-          (mul_is_right_regular_iff _ ha.right).mpr hb.right⟩⟩
-    
-#align is_regular_mul_and_mul_iff is_regular_mul_and_mul_iff
+      ⟨⟨(mul_isLeftRegular_iff _ ha.left).mpr hb.left,
+          (mul_isRightRegular_iff _ hb.right).mpr ha.right⟩,
+        ⟨(mul_isLeftRegular_iff _ hb.left).mpr ha.left,
+          (mul_isRightRegular_iff _ ha.right).mpr hb.right⟩⟩
+#align is_regular_mul_and_mul_iff isRegular_mul_and_mul_iff
 
+/- warning: is_regular.and_of_mul_of_mul -> IsRegular.and_of_mul_of_mul is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Semigroup.{u_1} R] {a : R} {b : R}, (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) a b)) -> (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1)) b a)) -> (And (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) a) (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R _inst_1) b))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.665 : Semigroup.{u_1} R] {a : R} {b : R}, (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.665) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.665)) a b)) -> (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.665) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.665)) b a)) -> (And (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.665) a) (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.665) b))
+Case conversion may be inaccurate. Consider using '#align is_regular.and_of_mul_of_mul IsRegular.and_of_mul_of_mulₓ'. -/
 /-- The "most used" implication of `mul_and_mul_iff`, with split hypotheses, instead of `∧`. -/
 @[to_additive
       "The \"most used\" implication of `add_and_add_iff`, with split hypotheses,\ninstead of `∧`."]
 theorem IsRegular.and_of_mul_of_mul (ab : IsRegular (a * b)) (ba : IsRegular (b * a)) :
     IsRegular a ∧ IsRegular b :=
-  is_regular_mul_and_mul_iff.mp ⟨ab, ba⟩
+  isRegular_mul_and_mul_iff.mp ⟨ab, ba⟩
 #align is_regular.and_of_mul_of_mul IsRegular.and_of_mul_of_mul
 
 end Semigroup
@@ -171,51 +231,105 @@ section MulZeroClass
 
 variable [MulZeroClass R] {a b : R}
 
+/- warning: is_left_regular.subsingleton -> IsLeftRegular.subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], (IsLeftRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1))))) -> (Subsingleton.{succ u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.718 : MulZeroClass.{u_1} R], (IsLeftRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.718) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.718)))) -> (Subsingleton.{succ u_1} R)
+Case conversion may be inaccurate. Consider using '#align is_left_regular.subsingleton IsLeftRegular.subsingletonₓ'. -/
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
   ⟨fun a b => h <| Eq.trans (zero_mul a) (zero_mul b).symm⟩
 #align is_left_regular.subsingleton IsLeftRegular.subsingleton
 
+/- warning: is_right_regular.subsingleton -> IsRightRegular.subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], (IsRightRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1))))) -> (Subsingleton.{succ u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.756 : MulZeroClass.{u_1} R], (IsRightRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.756) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.756)))) -> (Subsingleton.{succ u_1} R)
+Case conversion may be inaccurate. Consider using '#align is_right_regular.subsingleton IsRightRegular.subsingletonₓ'. -/
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
 theorem IsRightRegular.subsingleton (h : IsRightRegular (0 : R)) : Subsingleton R :=
   ⟨fun a b => h <| Eq.trans (mul_zero a) (mul_zero b).symm⟩
 #align is_right_regular.subsingleton IsRightRegular.subsingleton
 
+/- warning: is_regular.subsingleton -> IsRegular.subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], (IsRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1))))) -> (Subsingleton.{succ u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.794 : MulZeroClass.{u_1} R], (IsRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.794) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.794)))) -> (Subsingleton.{succ u_1} R)
+Case conversion may be inaccurate. Consider using '#align is_regular.subsingleton IsRegular.subsingletonₓ'. -/
 /-- The element `0` is regular if and only if `R` is trivial. -/
 theorem IsRegular.subsingleton (h : IsRegular (0 : R)) : Subsingleton R :=
   h.left.Subsingleton
 #align is_regular.subsingleton IsRegular.subsingleton
 
+/- warning: is_left_regular_zero_iff_subsingleton -> isLeftRegular_zero_iff_subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], Iff (IsLeftRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1))))) (Subsingleton.{succ u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.811 : MulZeroClass.{u_1} R], Iff (IsLeftRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.811) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.811)))) (Subsingleton.{succ u_1} R)
+Case conversion may be inaccurate. Consider using '#align is_left_regular_zero_iff_subsingleton isLeftRegular_zero_iff_subsingletonₓ'. -/
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
-theorem is_left_regular_zero_iff_subsingleton : IsLeftRegular (0 : R) ↔ Subsingleton R :=
+theorem isLeftRegular_zero_iff_subsingleton : IsLeftRegular (0 : R) ↔ Subsingleton R :=
   ⟨fun h => h.Subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
-#align is_left_regular_zero_iff_subsingleton is_left_regular_zero_iff_subsingleton
+#align is_left_regular_zero_iff_subsingleton isLeftRegular_zero_iff_subsingleton
 
+/- warning: not_is_left_regular_zero_iff -> not_isLeftRegular_zero_iff is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], Iff (Not (IsLeftRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))) (Nontrivial.{u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.847 : MulZeroClass.{u_1} R], Iff (Not (IsLeftRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.847) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.847))))) (Nontrivial.{u_1} R)
+Case conversion may be inaccurate. Consider using '#align not_is_left_regular_zero_iff not_isLeftRegular_zero_iffₓ'. -/
 /-- In a non-trivial `mul_zero_class`, the `0` element is not left-regular. -/
-theorem not_is_left_regular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R := by
-  rw [nontrivial_iff, not_iff_comm, is_left_regular_zero_iff_subsingleton, subsingleton_iff]
+theorem not_isLeftRegular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R := by
+  rw [nontrivial_iff, not_iff_comm, isLeftRegular_zero_iff_subsingleton, subsingleton_iff]
   push_neg
   exact Iff.rfl
-#align not_is_left_regular_zero_iff not_is_left_regular_zero_iff
+#align not_is_left_regular_zero_iff not_isLeftRegular_zero_iff
 
+/- warning: is_right_regular_zero_iff_subsingleton -> isRightRegular_zero_iff_subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], Iff (IsRightRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1))))) (Subsingleton.{succ u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.906 : MulZeroClass.{u_1} R], Iff (IsRightRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.906) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.906)))) (Subsingleton.{succ u_1} R)
+Case conversion may be inaccurate. Consider using '#align is_right_regular_zero_iff_subsingleton isRightRegular_zero_iff_subsingletonₓ'. -/
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
-theorem is_right_regular_zero_iff_subsingleton : IsRightRegular (0 : R) ↔ Subsingleton R :=
+theorem isRightRegular_zero_iff_subsingleton : IsRightRegular (0 : R) ↔ Subsingleton R :=
   ⟨fun h => h.Subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
-#align is_right_regular_zero_iff_subsingleton is_right_regular_zero_iff_subsingleton
+#align is_right_regular_zero_iff_subsingleton isRightRegular_zero_iff_subsingleton
 
+/- warning: not_is_right_regular_zero_iff -> not_isRightRegular_zero_iff is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], Iff (Not (IsRightRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))) (Nontrivial.{u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.942 : MulZeroClass.{u_1} R], Iff (Not (IsRightRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.942) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.942))))) (Nontrivial.{u_1} R)
+Case conversion may be inaccurate. Consider using '#align not_is_right_regular_zero_iff not_isRightRegular_zero_iffₓ'. -/
 /-- In a non-trivial `mul_zero_class`, the `0` element is not right-regular. -/
-theorem not_is_right_regular_zero_iff : ¬IsRightRegular (0 : R) ↔ Nontrivial R := by
-  rw [nontrivial_iff, not_iff_comm, is_right_regular_zero_iff_subsingleton, subsingleton_iff]
+theorem not_isRightRegular_zero_iff : ¬IsRightRegular (0 : R) ↔ Nontrivial R := by
+  rw [nontrivial_iff, not_iff_comm, isRightRegular_zero_iff_subsingleton, subsingleton_iff]
   push_neg
   exact Iff.rfl
-#align not_is_right_regular_zero_iff not_is_right_regular_zero_iff
+#align not_is_right_regular_zero_iff not_isRightRegular_zero_iff
 
+/- warning: is_regular_iff_subsingleton -> isRegular_iff_subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R], Iff (IsRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1))))) (Subsingleton.{succ u_1} R)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1001 : MulZeroClass.{u_1} R], Iff (IsRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1001) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1001)))) (Subsingleton.{succ u_1} R)
+Case conversion may be inaccurate. Consider using '#align is_regular_iff_subsingleton isRegular_iff_subsingletonₓ'. -/
 /-- The element `0` is regular if and only if `R` is trivial. -/
-theorem is_regular_iff_subsingleton : IsRegular (0 : R) ↔ Subsingleton R :=
+theorem isRegular_iff_subsingleton : IsRegular (0 : R) ↔ Subsingleton R :=
   ⟨fun h => h.left.Subsingleton, fun h =>
-    ⟨is_left_regular_zero_iff_subsingleton.mpr h, is_right_regular_zero_iff_subsingleton.mpr h⟩⟩
-#align is_regular_iff_subsingleton is_regular_iff_subsingleton
+    ⟨isLeftRegular_zero_iff_subsingleton.mpr h, isRightRegular_zero_iff_subsingleton.mpr h⟩⟩
+#align is_regular_iff_subsingleton isRegular_iff_subsingleton
 
+/- warning: is_left_regular.ne_zero -> IsLeftRegular.ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R] {a : R} [_inst_2 : Nontrivial.{u_1} R], (IsLeftRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) a) -> (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1037 : MulZeroClass.{u_1} R] {a : R} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1042 : Nontrivial.{u_1} R], (IsLeftRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1037) a) -> (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1037))))
+Case conversion may be inaccurate. Consider using '#align is_left_regular.ne_zero IsLeftRegular.ne_zeroₓ'. -/
 /-- A left-regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
 theorem IsLeftRegular.ne_zero [Nontrivial R] (la : IsLeftRegular a) : a ≠ 0 := by
   rintro rfl
@@ -224,6 +338,12 @@ theorem IsLeftRegular.ne_zero [Nontrivial R] (la : IsLeftRegular a) : a ≠ 0 :=
   rw [zero_mul, zero_mul]
 #align is_left_regular.ne_zero IsLeftRegular.ne_zero
 
+/- warning: is_right_regular.ne_zero -> IsRightRegular.ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R] {a : R} [_inst_2 : Nontrivial.{u_1} R], (IsRightRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) a) -> (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1113 : MulZeroClass.{u_1} R] {a : R} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1118 : Nontrivial.{u_1} R], (IsRightRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1113) a) -> (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1113))))
+Case conversion may be inaccurate. Consider using '#align is_right_regular.ne_zero IsRightRegular.ne_zeroₓ'. -/
 /-- A right-regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
 theorem IsRightRegular.ne_zero [Nontrivial R] (ra : IsRightRegular a) : a ≠ 0 := by
   rintro rfl
@@ -232,24 +352,48 @@ theorem IsRightRegular.ne_zero [Nontrivial R] (ra : IsRightRegular a) : a ≠ 0 
   rw [mul_zero, mul_zero]
 #align is_right_regular.ne_zero IsRightRegular.ne_zero
 
+/- warning: is_regular.ne_zero -> IsRegular.ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R] {a : R} [_inst_2 : Nontrivial.{u_1} R], (IsRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) a) -> (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1189 : MulZeroClass.{u_1} R] {a : R} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1194 : Nontrivial.{u_1} R], (IsRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1189) a) -> (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1189))))
+Case conversion may be inaccurate. Consider using '#align is_regular.ne_zero IsRegular.ne_zeroₓ'. -/
 /-- A regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
 theorem IsRegular.ne_zero [Nontrivial R] (la : IsRegular a) : a ≠ 0 :=
   la.left.NeZero
 #align is_regular.ne_zero IsRegular.ne_zero
 
+/- warning: not_is_left_regular_zero -> not_isLeftRegular_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R] [nR : Nontrivial.{u_1} R], Not (IsLeftRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1209 : MulZeroClass.{u_1} R] [nR : Nontrivial.{u_1} R], Not (IsLeftRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1209) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1209))))
+Case conversion may be inaccurate. Consider using '#align not_is_left_regular_zero not_isLeftRegular_zeroₓ'. -/
 /-- In a non-trivial ring, the element `0` is not left-regular -- with typeclasses. -/
-theorem not_is_left_regular_zero [nR : Nontrivial R] : ¬IsLeftRegular (0 : R) :=
-  not_is_left_regular_zero_iff.mpr nR
-#align not_is_left_regular_zero not_is_left_regular_zero
+theorem not_isLeftRegular_zero [nR : Nontrivial R] : ¬IsLeftRegular (0 : R) :=
+  not_isLeftRegular_zero_iff.mpr nR
+#align not_is_left_regular_zero not_isLeftRegular_zero
 
+/- warning: not_is_right_regular_zero -> not_isRightRegular_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R] [nR : Nontrivial.{u_1} R], Not (IsRightRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1229 : MulZeroClass.{u_1} R] [nR : Nontrivial.{u_1} R], Not (IsRightRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1229) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1229))))
+Case conversion may be inaccurate. Consider using '#align not_is_right_regular_zero not_isRightRegular_zeroₓ'. -/
 /-- In a non-trivial ring, the element `0` is not right-regular -- with typeclasses. -/
-theorem not_is_right_regular_zero [nR : Nontrivial R] : ¬IsRightRegular (0 : R) :=
-  not_is_right_regular_zero_iff.mpr nR
-#align not_is_right_regular_zero not_is_right_regular_zero
+theorem not_isRightRegular_zero [nR : Nontrivial R] : ¬IsRightRegular (0 : R) :=
+  not_isRightRegular_zero_iff.mpr nR
+#align not_is_right_regular_zero not_isRightRegular_zero
 
+/- warning: not_is_regular_zero -> not_isRegular_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} R] [_inst_2 : Nontrivial.{u_1} R], Not (IsRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R _inst_1)))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1249 : MulZeroClass.{u_1} R] [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1254 : Nontrivial.{u_1} R], Not (IsRegular.{u_1} R (MulZeroClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1249) (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MulZeroClass.toZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1249))))
+Case conversion may be inaccurate. Consider using '#align not_is_regular_zero not_isRegular_zeroₓ'. -/
 /-- In a non-trivial ring, the element `0` is not regular -- with typeclasses. -/
-theorem not_is_regular_zero [Nontrivial R] : ¬IsRegular (0 : R) := fun h => IsRegular.ne_zero h rfl
-#align not_is_regular_zero not_is_regular_zero
+theorem not_isRegular_zero [Nontrivial R] : ¬IsRegular (0 : R) := fun h => IsRegular.ne_zero h rfl
+#align not_is_regular_zero not_isRegular_zero
 
 end MulZeroClass
 
@@ -257,12 +401,18 @@ section MulOneClass
 
 variable [MulOneClass R]
 
+/- warning: is_regular_one -> isRegular_one is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : MulOneClass.{u_1} R], IsRegular.{u_1} R (MulOneClass.toHasMul.{u_1} R _inst_1) (OfNat.ofNat.{u_1} R 1 (OfNat.mk.{u_1} R 1 (One.one.{u_1} R (MulOneClass.toHasOne.{u_1} R _inst_1))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1282 : MulOneClass.{u_1} R], IsRegular.{u_1} R (MulOneClass.toMul.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1282) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (MulOneClass.toOne.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1282)))
+Case conversion may be inaccurate. Consider using '#align is_regular_one isRegular_oneₓ'. -/
 /-- If multiplying by `1` on either side is the identity, `1` is regular. -/
 @[to_additive "If adding `0` on either side is the identity, `0` is regular."]
-theorem is_regular_one : IsRegular (1 : R) :=
+theorem isRegular_one : IsRegular (1 : R) :=
   ⟨fun a b ab => (one_mul a).symm.trans (Eq.trans ab (one_mul b)), fun a b ab =>
     (mul_one a).symm.trans (Eq.trans ab (mul_one b))⟩
-#align is_regular_one is_regular_one
+#align is_regular_one isRegular_one
 
 end MulOneClass
 
@@ -270,12 +420,18 @@ section CommSemigroup
 
 variable [CommSemigroup R] {a b : R}
 
+/- warning: is_regular_mul_iff -> isRegular_mul_iff is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : CommSemigroup.{u_1} R] {a : R} {b : R}, Iff (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R _inst_1)) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toHasMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R _inst_1))) a b)) (And (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R _inst_1)) a) (IsRegular.{u_1} R (Semigroup.toHasMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R _inst_1)) b))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1344 : CommSemigroup.{u_1} R] {a : R} {b : R}, Iff (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1344)) (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (Semigroup.toMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1344))) a b)) (And (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1344)) a) (IsRegular.{u_1} R (Semigroup.toMul.{u_1} R (CommSemigroup.toSemigroup.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1344)) b))
+Case conversion may be inaccurate. Consider using '#align is_regular_mul_iff isRegular_mul_iffₓ'. -/
 /-- A product is regular if and only if the factors are. -/
 @[to_additive "A sum is add-regular if and only if the summands are."]
-theorem is_regular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b := by
-  refine' Iff.trans _ is_regular_mul_and_mul_iff
+theorem isRegular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b := by
+  refine' Iff.trans _ isRegular_mul_and_mul_iff
   refine' ⟨fun ab => ⟨ab, by rwa [mul_comm]⟩, fun rab => rab.1⟩
-#align is_regular_mul_iff is_regular_mul_iff
+#align is_regular_mul_iff isRegular_mul_iff
 
 end CommSemigroup
 
@@ -283,63 +439,104 @@ section Monoid
 
 variable [Monoid R] {a b : R}
 
+/- warning: is_left_regular_of_mul_eq_one -> isLeftRegular_of_mul_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Monoid.{u_1} R] {a : R} {b : R}, (Eq.{succ u_1} R (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (MulOneClass.toHasMul.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1))) b a) (OfNat.ofNat.{u_1} R 1 (OfNat.mk.{u_1} R 1 (One.one.{u_1} R (MulOneClass.toHasOne.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1)))))) -> (IsLeftRegular.{u_1} R (MulOneClass.toHasMul.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1)) a)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1440 : Monoid.{u_1} R] {a : R} {b : R}, (Eq.{succ u_1} R (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (MulOneClass.toMul.{u_1} R (Monoid.toMulOneClass.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1440))) b a) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (Monoid.toOne.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1440)))) -> (IsLeftRegular.{u_1} R (MulOneClass.toMul.{u_1} R (Monoid.toMulOneClass.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1440)) a)
+Case conversion may be inaccurate. Consider using '#align is_left_regular_of_mul_eq_one isLeftRegular_of_mul_eq_oneₓ'. -/
 /-- An element admitting a left inverse is left-regular. -/
 @[to_additive "An element admitting a left additive opposite is add-left-regular."]
-theorem is_left_regular_of_mul_eq_one (h : b * a = 1) : IsLeftRegular a :=
+theorem isLeftRegular_of_mul_eq_one (h : b * a = 1) : IsLeftRegular a :=
   @IsLeftRegular.of_mul R _ _ _
-    (by
+    (by 
       rw [h]
       exact is_regular_one.left)
-#align is_left_regular_of_mul_eq_one is_left_regular_of_mul_eq_one
+#align is_left_regular_of_mul_eq_one isLeftRegular_of_mul_eq_one
 
+/- warning: is_right_regular_of_mul_eq_one -> isRightRegular_of_mul_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Monoid.{u_1} R] {a : R} {b : R}, (Eq.{succ u_1} R (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (MulOneClass.toHasMul.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1))) a b) (OfNat.ofNat.{u_1} R 1 (OfNat.mk.{u_1} R 1 (One.one.{u_1} R (MulOneClass.toHasOne.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1)))))) -> (IsRightRegular.{u_1} R (MulOneClass.toHasMul.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1)) a)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1498 : Monoid.{u_1} R] {a : R} {b : R}, (Eq.{succ u_1} R (HMul.hMul.{u_1, u_1, u_1} R R R (instHMul.{u_1} R (MulOneClass.toMul.{u_1} R (Monoid.toMulOneClass.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1498))) a b) (OfNat.ofNat.{u_1} R 1 (One.toOfNat1.{u_1} R (Monoid.toOne.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1498)))) -> (IsRightRegular.{u_1} R (MulOneClass.toMul.{u_1} R (Monoid.toMulOneClass.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1498)) a)
+Case conversion may be inaccurate. Consider using '#align is_right_regular_of_mul_eq_one isRightRegular_of_mul_eq_oneₓ'. -/
 /-- An element admitting a right inverse is right-regular. -/
 @[to_additive "An element admitting a right additive opposite is add-right-regular."]
-theorem is_right_regular_of_mul_eq_one (h : a * b = 1) : IsRightRegular a :=
+theorem isRightRegular_of_mul_eq_one (h : a * b = 1) : IsRightRegular a :=
   IsRightRegular.of_mul
-    (by
+    (by 
       rw [h]
       exact is_regular_one.right)
-#align is_right_regular_of_mul_eq_one is_right_regular_of_mul_eq_one
+#align is_right_regular_of_mul_eq_one isRightRegular_of_mul_eq_one
 
+/- warning: units.is_regular -> Units.isRegular is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Monoid.{u_1} R] (a : Units.{u_1} R _inst_1), IsRegular.{u_1} R (MulOneClass.toHasMul.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1)) ((fun (a : Type.{u_1}) (b : Type.{u_1}) [self : HasLiftT.{succ u_1, succ u_1} a b] => self.0) (Units.{u_1} R _inst_1) R (HasLiftT.mk.{succ u_1, succ u_1} (Units.{u_1} R _inst_1) R (CoeTCₓ.coe.{succ u_1, succ u_1} (Units.{u_1} R _inst_1) R (CoeTCₓ.mk.{succ u_1, succ u_1} (Units.{u_1} R _inst_1) R (Units.val.{u_1} R _inst_1)))) a)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1556 : Monoid.{u_1} R] (a : Units.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1556), IsRegular.{u_1} R (MulOneClass.toMul.{u_1} R (Monoid.toMulOneClass.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1556)) (Units.val.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1556 a)
+Case conversion may be inaccurate. Consider using '#align units.is_regular Units.isRegularₓ'. -/
 /-- If `R` is a monoid, an element in `Rˣ` is regular. -/
 @[to_additive "If `R` is an additive monoid, an element in `add_units R` is add-regular."]
-theorem Units.is_regular (a : Rˣ) : IsRegular (a : R) :=
-  ⟨is_left_regular_of_mul_eq_one a.inv_mul, is_right_regular_of_mul_eq_one a.mul_inv⟩
-#align units.is_regular Units.is_regular
+theorem Units.isRegular (a : Rˣ) : IsRegular (a : R) :=
+  ⟨isLeftRegular_of_mul_eq_one a.inv_mul, isRightRegular_of_mul_eq_one a.mul_inv⟩
+#align units.is_regular Units.isRegular
 
+/- warning: is_unit.is_regular -> IsUnit.isRegular is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : Monoid.{u_1} R] {a : R}, (IsUnit.{u_1} R _inst_1 a) -> (IsRegular.{u_1} R (MulOneClass.toHasMul.{u_1} R (Monoid.toMulOneClass.{u_1} R _inst_1)) a)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1584 : Monoid.{u_1} R] {a : R}, (IsUnit.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1584 a) -> (IsRegular.{u_1} R (MulOneClass.toMul.{u_1} R (Monoid.toMulOneClass.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1584)) a)
+Case conversion may be inaccurate. Consider using '#align is_unit.is_regular IsUnit.isRegularₓ'. -/
 /-- A unit in a monoid is regular. -/
 @[to_additive "An additive unit in an additive monoid is add-regular."]
-theorem IsUnit.is_regular (ua : IsUnit a) : IsRegular a := by
+theorem IsUnit.isRegular (ua : IsUnit a) : IsRegular a := by
   rcases ua with ⟨a, rfl⟩
-  exact Units.is_regular a
-#align is_unit.is_regular IsUnit.is_regular
+  exact Units.isRegular a
+#align is_unit.is_regular IsUnit.isRegular
 
 end Monoid
 
+/- warning: is_left_regular_of_left_cancel_semigroup -> isLeftRegular_of_leftCancelSemigroup is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : LeftCancelSemigroup.{u_1} R] (g : R), IsLeftRegular.{u_1} R (Semigroup.toHasMul.{u_1} R (LeftCancelSemigroup.toSemigroup.{u_1} R _inst_1)) g
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1608 : LeftCancelSemigroup.{u_1} R] (g : R), IsLeftRegular.{u_1} R (Semigroup.toMul.{u_1} R (LeftCancelSemigroup.toSemigroup.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1608)) g
+Case conversion may be inaccurate. Consider using '#align is_left_regular_of_left_cancel_semigroup isLeftRegular_of_leftCancelSemigroupₓ'. -/
 /-- Elements of a left cancel semigroup are left regular. -/
 @[to_additive "Elements of an add left cancel semigroup are add-left-regular."]
-theorem is_left_regular_of_left_cancel_semigroup [LeftCancelSemigroup R] (g : R) :
-    IsLeftRegular g :=
+theorem isLeftRegular_of_leftCancelSemigroup [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=
   mul_right_injective g
-#align is_left_regular_of_left_cancel_semigroup is_left_regular_of_left_cancel_semigroup
+#align is_left_regular_of_left_cancel_semigroup isLeftRegular_of_leftCancelSemigroup
 
+/- warning: is_right_regular_of_right_cancel_semigroup -> isRightRegular_of_rightCancelSemigroup is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : RightCancelSemigroup.{u_1} R] (g : R), IsRightRegular.{u_1} R (Semigroup.toHasMul.{u_1} R (RightCancelSemigroup.toSemigroup.{u_1} R _inst_1)) g
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1620 : RightCancelSemigroup.{u_1} R] (g : R), IsRightRegular.{u_1} R (Semigroup.toMul.{u_1} R (RightCancelSemigroup.toSemigroup.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1620)) g
+Case conversion may be inaccurate. Consider using '#align is_right_regular_of_right_cancel_semigroup isRightRegular_of_rightCancelSemigroupₓ'. -/
 /-- Elements of a right cancel semigroup are right regular. -/
 @[to_additive "Elements of an add right cancel semigroup are add-right-regular"]
-theorem is_right_regular_of_right_cancel_semigroup [RightCancelSemigroup R] (g : R) :
+theorem isRightRegular_of_rightCancelSemigroup [RightCancelSemigroup R] (g : R) :
     IsRightRegular g :=
   mul_left_injective g
-#align is_right_regular_of_right_cancel_semigroup is_right_regular_of_right_cancel_semigroup
+#align is_right_regular_of_right_cancel_semigroup isRightRegular_of_rightCancelSemigroup
 
 section CancelMonoid
 
 variable [CancelMonoid R]
 
+/- warning: is_regular_of_cancel_monoid -> isRegular_of_cancelMonoid is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : CancelMonoid.{u_1} R] (g : R), IsRegular.{u_1} R (MulOneClass.toHasMul.{u_1} R (Monoid.toMulOneClass.{u_1} R (RightCancelMonoid.toMonoid.{u_1} R (CancelMonoid.toRightCancelMonoid.{u_1} R _inst_1)))) g
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1639 : CancelMonoid.{u_1} R] (g : R), IsRegular.{u_1} R (MulOneClass.toMul.{u_1} R (Monoid.toMulOneClass.{u_1} R (RightCancelMonoid.toMonoid.{u_1} R (CancelMonoid.toRightCancelMonoid.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1639)))) g
+Case conversion may be inaccurate. Consider using '#align is_regular_of_cancel_monoid isRegular_of_cancelMonoidₓ'. -/
 /-- Elements of a cancel monoid are regular.  Cancel semigroups do not appear to exist. -/
 @[to_additive
       "Elements of an add cancel monoid are regular.  Add cancel semigroups do not appear to exist."]
-theorem is_regular_of_cancel_monoid (g : R) : IsRegular g :=
+theorem isRegular_of_cancelMonoid (g : R) : IsRegular g :=
   ⟨mul_right_injective g, mul_left_injective g⟩
-#align is_regular_of_cancel_monoid is_regular_of_cancel_monoid
+#align is_regular_of_cancel_monoid isRegular_of_cancelMonoid
 
 end CancelMonoid
 
@@ -347,15 +544,27 @@ section CancelMonoidWithZero
 
 variable [CancelMonoidWithZero R] {a : R}
 
+/- warning: is_regular_of_ne_zero -> isRegular_of_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : CancelMonoidWithZero.{u_1} R] {a : R}, (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R (MulZeroOneClass.toMulZeroClass.{u_1} R (MonoidWithZero.toMulZeroOneClass.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R _inst_1)))))))) -> (IsRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R (MulZeroOneClass.toMulZeroClass.{u_1} R (MonoidWithZero.toMulZeroOneClass.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R _inst_1)))) a)
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1665 : CancelMonoidWithZero.{u_1} R] {a : R}, (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MonoidWithZero.toZero.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1665))))) -> (IsRegular.{u_1} R (MulZeroClass.toMul.{u_1} R (MulZeroOneClass.toMulZeroClass.{u_1} R (MonoidWithZero.toMulZeroOneClass.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1665)))) a)
+Case conversion may be inaccurate. Consider using '#align is_regular_of_ne_zero isRegular_of_ne_zeroₓ'. -/
 /-- Non-zero elements of an integral domain are regular. -/
-theorem is_regular_of_ne_zero (a0 : a ≠ 0) : IsRegular a :=
+theorem isRegular_of_ne_zero (a0 : a ≠ 0) : IsRegular a :=
   ⟨fun b c => (mul_right_inj' a0).mp, fun b c => (mul_left_inj' a0).mp⟩
-#align is_regular_of_ne_zero is_regular_of_ne_zero
+#align is_regular_of_ne_zero isRegular_of_ne_zero
 
+/- warning: is_regular_iff_ne_zero -> isRegular_iff_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} [_inst_1 : CancelMonoidWithZero.{u_1} R] {a : R} [_inst_2 : Nontrivial.{u_1} R], Iff (IsRegular.{u_1} R (MulZeroClass.toHasMul.{u_1} R (MulZeroOneClass.toMulZeroClass.{u_1} R (MonoidWithZero.toMulZeroOneClass.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R _inst_1)))) a) (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R (MulZeroOneClass.toMulZeroClass.{u_1} R (MonoidWithZero.toMulZeroOneClass.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R _inst_1))))))))
+but is expected to have type
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1703 : CancelMonoidWithZero.{u_1} R] {a : R} [inst._@.Mathlib.Algebra.Regular.Basic._hyg.1707 : Nontrivial.{u_1} R], Iff (IsRegular.{u_1} R (MulZeroClass.toMul.{u_1} R (MulZeroOneClass.toMulZeroClass.{u_1} R (MonoidWithZero.toMulZeroOneClass.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1703)))) a) (Ne.{succ u_1} R a (OfNat.ofNat.{u_1} R 0 (Zero.toOfNat0.{u_1} R (MonoidWithZero.toZero.{u_1} R (CancelMonoidWithZero.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Regular.Basic._hyg.1703)))))
+Case conversion may be inaccurate. Consider using '#align is_regular_iff_ne_zero isRegular_iff_ne_zeroₓ'. -/
 /-- In a non-trivial integral domain, an element is regular iff it is non-zero. -/
-theorem is_regular_iff_ne_zero [Nontrivial R] : IsRegular a ↔ a ≠ 0 :=
-  ⟨IsRegular.ne_zero, is_regular_of_ne_zero⟩
-#align is_regular_iff_ne_zero is_regular_iff_ne_zero
+theorem isRegular_iff_ne_zero [Nontrivial R] : IsRegular a ↔ a ≠ 0 :=
+  ⟨IsRegular.ne_zero, isRegular_of_ne_zero⟩
+#align is_regular_iff_ne_zero isRegular_iff_ne_zero
 
 end CancelMonoidWithZero
 

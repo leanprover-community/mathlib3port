@@ -118,7 +118,9 @@ def Foldl.get (x : Foldl α) : α → α :=
 #align monoid.foldl.get Monoid.Foldl.get
 
 @[simps]
-def Foldl.ofFreeMonoid (f : β → α → β) : FreeMonoid α →* Monoid.Foldl β where
+def Foldl.ofFreeMonoid (f : β → α → β) :
+    FreeMonoid α →*
+      Monoid.Foldl β where 
   toFun xs := op <| flip (List.foldl f) xs.toList
   map_one' := rfl
   map_mul' := by
@@ -139,7 +141,9 @@ def Foldr.get (x : Foldr α) : α → α :=
 #align monoid.foldr.get Monoid.Foldr.get
 
 @[simps]
-def Foldr.ofFreeMonoid (f : α → β → β) : FreeMonoid α →* Monoid.Foldr β where
+def Foldr.ofFreeMonoid (f : α → β → β) :
+    FreeMonoid α →*
+      Monoid.Foldr β where 
   toFun xs := flip (List.foldr f) xs.toList
   map_one' := rfl
   map_mul' xs ys := funext fun z => List.foldr_append _ _ _ _
@@ -159,7 +163,10 @@ def Mfoldl.get (x : Mfoldl m α) : α → m α :=
 #align monoid.mfoldl.get Monoid.Mfoldl.get
 
 @[simps]
-def Mfoldl.ofFreeMonoid [LawfulMonad m] (f : β → α → m β) : FreeMonoid α →* Monoid.Mfoldl m β where
+def Mfoldl.ofFreeMonoid [LawfulMonad m] (f : β → α → m β) :
+    FreeMonoid α →*
+      Monoid.Mfoldl m
+        β where 
   toFun xs := op <| flip (List.foldlM f) xs.toList
   map_one' := rfl
   map_mul' := by intros <;> apply unop_injective <;> ext <;> apply List.mfoldl_append
@@ -179,7 +186,9 @@ def Mfoldr.get (x : Mfoldr m α) : α → m α :=
 #align monoid.mfoldr.get Monoid.Mfoldr.get
 
 @[simps]
-def Mfoldr.ofFreeMonoid [LawfulMonad m] (f : α → β → m β) : FreeMonoid α →* Monoid.Mfoldr m β where
+def Mfoldr.ofFreeMonoid [LawfulMonad m] (f : α → β → m β) :
+    FreeMonoid α →*
+      Monoid.Mfoldr m β where 
   toFun xs := flip (List.foldrM f) xs.toList
   map_one' := rfl
   map_mul' := by intros <;> ext <;> apply List.mfoldr_append
@@ -249,12 +258,14 @@ variable {α β γ : Type u}
 
 open Function hiding const
 
-def mapFold [Monoid α] [Monoid β] (f : α →* β) : ApplicativeTransformation (Const α) (Const β) where
+def mapFold [Monoid α] [Monoid β] (f : α →* β) :
+    ApplicativeTransformation (Const α)
+      (Const β) where 
   app x := f
-  preserves_seq' := by
+  preserves_seq' := by 
     intros
     simp only [f.map_mul, (· <*> ·)]
-  preserves_pure' := by
+  preserves_pure' := by 
     intros
     simp only [f.map_one, pure]
 #align traversable.map_fold Traversable.mapFold
@@ -342,9 +353,7 @@ theorem to_list_spec (xs : t α) : toList xs = FreeMonoid.toList (foldMap FreeMo
       _ = toList xs := by
         rw [fold_map_hom_free (foldl.of_free_monoid (flip <| @cons α))]
         · simp only [to_list, foldl, List.reverse_inj, foldl.get, foldl.of_free_monoid_comp_of]
-          
         · infer_instance
-          
       
 #align traversable.to_list_spec Traversable.to_list_spec
 
@@ -402,18 +411,12 @@ theorem length_to_list {xs : t α} : length xs = List.length (toList xs) := by
   · generalize 0 = n
     induction' ys with _ _ ih generalizing n
     · simp only [List.foldl_nil]
-      
     · simp only [List.foldl, ih (n + 1)]
-      
-    
   · induction' ys with _ tl ih
     · simp only [List.length, List.foldl_nil]
-      
     · simp only [List.foldl, List.length]
       rw [← ih]
       exact tl.foldl_hom (fun x => x + 1) f f 0 fun n x => rfl
-      
-    
 #align traversable.length_to_list Traversable.length_to_list
 
 variable {m : Type u → Type u} [Monad m] [LawfulMonad m]

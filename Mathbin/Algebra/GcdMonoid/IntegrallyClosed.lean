@@ -27,9 +27,7 @@ theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A]
   convert IsLocalization.mk'_mul_cancel_left _ _ using 2
   · rw [Subtype.coe_mk, hy', ← mul_comm y', mul_assoc]
     conv_lhs => rw [hx']
-    
   · infer_instance
-    
 #align is_localization.surj_of_gcd_domain IsLocalization.surj_of_gcd_domain
 
 instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=
@@ -38,7 +36,7 @@ instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R
     have :=
       Polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero (IsFractionRing.injective R <| FractionRing R)
         hp₁ y x _ hp₂ (by rw [mul_comm, he])
-    have : IsUnit y := by
+    have : IsUnit y := by 
       rw [is_unit_iff_dvd_one, ← one_pow]
       exact
         (dvd_gcd this <| dvd_refl y).trans

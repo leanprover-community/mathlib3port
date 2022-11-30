@@ -181,7 +181,7 @@ theorem map_comp_some (f : α → β) : Option.map f ∘ some = some ∘ f :=
 #align option.map_comp_some Option.map_comp_some
 
 #print Option.ext /-
-@[ext.1]
+@[ext]
 theorem ext : ∀ {o₁ o₂ : Option α}, (∀ a, a ∈ o₁ ↔ a ∈ o₂) → o₁ = o₂
   | none, none, H => rfl
   | some a, o, H => ((H _).1 rfl).symm
@@ -563,7 +563,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.map_comp_map Option.map_comp_mapₓ'. -/
 @[simp]
 theorem map_comp_map (f : α → β) (g : β → γ) : Option.map g ∘ Option.map f = Option.map (g ∘ f) :=
-  by
+  by 
   ext x
   rw [comp_map]
 #align option.map_comp_map Option.map_comp_map
@@ -771,14 +771,12 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {x : Option.{u_1} α} {f : forall (a : α), (Membership.mem.{u_1, u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a x) -> (Option.{u_2} β)}, (forall (a : α) (H : Membership.mem.{u_1, u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a x), (Eq.{succ u_2} (Option.{u_2} β) (f a H) (Option.none.{u_2} β)) -> (Eq.{succ u_1} (Option.{u_1} α) x (Option.none.{u_1} α))) -> (Iff (Eq.{succ u_2} (Option.{u_2} β) (Option.pbind.{u_1, u_2} α β x f) (Option.none.{u_2} β)) (Eq.{succ u_1} (Option.{u_1} α) x (Option.none.{u_1} α)))
 Case conversion may be inaccurate. Consider using '#align option.pbind_eq_none Option.pbind_eq_noneₓ'. -/
 theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a ∈ x, f a H = none → x = none) :
-    x.pbind f = none ↔ x = none := by
+    x.pbind f = none ↔ x = none := by 
   cases x
   · simp
-    
   · simp only [pbind, iff_false_iff]
     intro h
     cases h' x rfl h
-    
 #align option.pbind_eq_none Option.pbind_eq_none
 
 /- warning: option.pbind_eq_some -> Option.pbind_eq_some is a dubious translation:
@@ -791,18 +789,14 @@ theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
     x.pbind f = some y ↔ ∃ z ∈ x, f z H = some y := by
   cases x
   · simp
-    
   · simp only [pbind]
     constructor
     · intro h
       use x
       simpa only [mem_def, exists_prop_of_true] using h
-      
     · rintro ⟨z, H, hz⟩
       simp only [mem_def] at H
       simpa only [H] using hz
-      
-    
 #align option.pbind_eq_some Option.pbind_eq_some
 
 /- warning: option.pmap_eq_none_iff -> Option.pmap_eq_none_iff is a dubious translation:
@@ -826,17 +820,13 @@ theorem pmap_eq_some_iff {hf} {y : β} :
     pmap f x hf = some y ↔ ∃ (a : α)(H : x = some a), f a (hf a H) = y := by
   cases x
   · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
-    
   · constructor
     · intro h
       simp only [pmap] at h
       exact ⟨x, rfl, h⟩
-      
     · rintro ⟨a, H, rfl⟩
       simp only [mem_def] at H
       simp only [H, pmap]
-      
-    
 #align option.pmap_eq_some_iff Option.pmap_eq_some_iff
 
 /- warning: option.join_pmap_eq_pmap_join -> Option.join_pmap_eq_pmap_join is a dubious translation:
@@ -857,7 +847,7 @@ end Pmap
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_1}} {a : α} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Seq.seq.{u_1, u_1} Option.{u_1} (Applicative.toHasSeq.{u_1, u_1} Option.{u_1} (Monad.toApplicative.{u_1, u_1} Option.{u_1} Option.monad.{u_1})) α β (Option.some.{u_1} (α -> β) f) (Option.some.{u_1} α a)) (Option.some.{u_1} β (f a))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_1}} {a : α} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Seq.seq.{u_1, u_1} Option.{u_1} (Applicative.toSeq.{u_1, u_1} Option.{u_1} (Alternative.toApplicative.{u_1, u_1} Option.{u_1} instAlternativeOption.{u_1})) α β (Option.some.{u_1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2322 : Unit) => Option.some.{u_1} α a)) (Option.some.{u_1} β (f a))
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {a : α} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Seq.seq.{u_1, u_1} Option.{u_1} (Applicative.toSeq.{u_1, u_1} Option.{u_1} (Alternative.toApplicative.{u_1, u_1} Option.{u_1} instAlternativeOption.{u_1})) α β (Option.some.{u_1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2306 : Unit) => Option.some.{u_1} α a)) (Option.some.{u_1} β (f a))
 Case conversion may be inaccurate. Consider using '#align option.seq_some Option.seq_someₓ'. -/
 @[simp]
 theorem seq_some {α β} {a : α} {f : α → β} : some f <*> some a = some (f a) :=
@@ -886,7 +876,7 @@ theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
 lean 3 declaration is
   forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Option.orelse.{u_1} α (Option.none.{u_1} α) x) x
 but is expected to have type
-  forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Option.orElse.{u_1} α (Option.none.{u_1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2379 : Unit) => x)) x
+  forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Option.orElse.{u_1} α (Option.none.{u_1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2363 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse' Option.none_orElse'ₓ'. -/
 @[simp]
 theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
@@ -1037,7 +1027,7 @@ theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} :
 lean 3 declaration is
   forall {p : Prop} [_inst_1 : Decidable p] (u : Unit), Iff (Eq.{1} (Option.{0} Unit) (guard.{0} Option.{0} Option.alternative.{0} p _inst_1) (Option.some.{0} Unit u)) p
 but is expected to have type
-  forall {p : Prop} [inst._@.Mathlib.Data.Option.Basic._hyg.2655 : Decidable p] (u : Unit), Iff (Eq.{1} (Option.{0} Unit) (guard.{0} Option.{0} instAlternativeOption.{0} p inst._@.Mathlib.Data.Option.Basic._hyg.2655) (Option.some.{0} Unit u)) p
+  forall {p : Prop} [inst._@.Mathlib.Data.Option.Basic._hyg.2639 : Decidable p] (u : Unit), Iff (Eq.{1} (Option.{0} Unit) (guard.{0} Option.{0} instAlternativeOption.{0} p inst._@.Mathlib.Data.Option.Basic._hyg.2639) (Option.some.{0} Unit u)) p
 Case conversion may be inaccurate. Consider using '#align option.guard_eq_some' Option.guard_eq_some'ₓ'. -/
 @[simp]
 theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guard p = some u ↔ p := by
@@ -1112,9 +1102,7 @@ theorem orelse_eq_some (o o' : Option α) (x : α) :
     (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x := by
   cases o
   · simp only [true_and_iff, false_or_iff, eq_self_iff_true, none_orelse]
-    
   · simp only [some_orelse, or_false_iff, false_and_iff]
-    
 #align option.orelse_eq_some Option.orelse_eq_some
 
 theorem orelse_eq_some' (o o' : Option α) (x : α) :
@@ -1126,9 +1114,7 @@ theorem orelse_eq_some' (o o' : Option α) (x : α) :
 theorem orelse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none := by
   cases o
   · simp only [true_and_iff, none_orelse, eq_self_iff_true]
-    
   · simp only [some_orelse, false_and_iff]
-    
 #align option.orelse_eq_none Option.orelse_eq_none
 
 @[simp]
@@ -1166,12 +1152,10 @@ theorem choice_isSome_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonemp
   fconstructor
   · intro h
     exact ⟨Option.get h⟩
-    
   · intro h
     dsimp only [choice]
     rw [dif_pos h]
     exact is_some_some
-    
 #align option.choice_is_some_iff_nonempty Option.choice_isSome_iff_nonempty
 -/
 

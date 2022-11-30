@@ -146,7 +146,7 @@ theorem DifferentiableAt.conformalAt (h : DifferentiableAt ℂ f z) (hf' : deriv
 theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : ℂ → ℂ} {z : ℂ} :
     ConformalAt f z ↔
       (DifferentiableAt ℂ f z ∨ DifferentiableAt ℂ (f ∘ conj) (conj z)) ∧ fderiv ℝ f z ≠ 0 :=
-  by
+  by 
   rw [conformal_at_iff_is_conformal_map_fderiv]
   rw [is_conformal_map_iff_is_complex_or_conj_linear]
   apply and_congr_left
@@ -154,7 +154,6 @@ theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : �
   have h_diff := h.imp_symm fderiv_zero_of_not_differentiable_at
   apply or_congr
   · rw [differentiable_at_iff_restrict_scalars ℝ h_diff]
-    
   rw [← conj_conj z] at h_diff
   rw [differentiable_at_iff_restrict_scalars ℝ (h_diff.comp _ conj_cle.differentiable_at)]
   refine' exists_congr fun g => rfl.congr _

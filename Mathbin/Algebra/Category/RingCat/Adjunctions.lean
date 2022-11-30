@@ -27,7 +27,7 @@ open Classical
 /-- The free functor `Type u ⥤ CommRing` sending a type `X` to the multivariable (commutative)
 polynomials with variables `x : X`.
 -/
-def free : Type u ⥤ CommRingCat.{u} where
+def free : Type u ⥤ CommRingCat.{u} where 
   obj α := of (MvPolynomial α ℤ)
   map X Y f := (↑(rename f : _ →ₐ[ℤ] _) : MvPolynomial X ℤ →+* MvPolynomial Y ℤ)
   -- TODO these next two fields can be done by `tidy`, but the calls in `dsimp` and `simp` it

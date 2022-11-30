@@ -46,18 +46,15 @@ variable {α : Type _} {E : α → Type _} [∀ i, NormedAddCommGroup (E i)] {p 
 theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p := by
   rcases p.trichotomy with (rfl | rfl | h)
   · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.to_finite
-    
   · exact mem_ℓp_infty_iff.mpr (Set.Finite.bdd_above (Set.range fun i : α => ‖f i‖).to_finite)
-    
   · cases nonempty_fintype α
     exact memℓpGen ⟨finset.univ.sum _, has_sum_fintype _⟩
-    
 #align mem_ℓp.all Memℓp.all
 
 variable [Fintype α]
 
 /-- The canonical `equiv` between `lp E p ≃ pi_Lp p E` when `E : α → Type u` with `[fintype α]`. -/
-def Equiv.lpPiLp : lp E p ≃ PiLp p E where
+def Equiv.lpPiLp : lp E p ≃ PiLp p E where 
   toFun f := f
   invFun f := ⟨f, Memℓp.all f⟩
   left_inv f := lp.ext <| funext fun x => rfl
@@ -76,13 +73,10 @@ theorem equiv_lp_pi_Lp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ := by
   rcases p.trichotomy with (rfl | rfl | h)
   · rw [PiLp.norm_eq_card, lp.norm_eq_card_dsupport]
     rfl
-    
   · rw [PiLp.norm_eq_csupr, lp.norm_eq_csupr]
     rfl
-    
   · rw [PiLp.norm_eq_sum h, lp.norm_eq_tsum_rpow h, tsum_fintype]
     rfl
-    
 #align equiv_lp_pi_Lp_norm equiv_lp_pi_Lp_norm
 
 /-- The canonical `add_equiv` between `lp E p` and `pi_Lp p E` when `E : α → Type u` with
@@ -140,7 +134,10 @@ variable [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NonUnitalNormedRing R]
 section NormedAddCommGroup
 
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as an `add_equiv`. -/
-noncomputable def AddEquiv.lpBcf : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E) where
+noncomputable def AddEquiv.lpBcf :
+    lp (fun _ : α => E) ∞ ≃+
+      (α →ᵇ
+        E) where 
   toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupr (mem_ℓp_infty_iff.mp f.Prop)
   invFun f := ⟨f, f.bdd_above_range_norm_comp⟩
   left_inv f := lp.ext rfl
@@ -159,7 +156,7 @@ theorem coe_add_equiv_lp_bcf_symm (f : α →ᵇ E) : (AddEquiv.lpBcf.symm f : �
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as a `linear_isometry_equiv`. -/
 noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →ᵇ E :=
   { AddEquiv.lpBcf with map_smul' := fun k f => rfl,
-    norm_map' := fun f => by
+    norm_map' := fun f => by 
       simp only [norm_eq_supr_norm, lp.norm_eq_csupr]
       rfl }
 #align lp_bcfₗᵢ lpBcfₗᵢ

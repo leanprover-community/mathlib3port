@@ -57,19 +57,13 @@ theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
     · exact Or.inl hij
-      
     · exact Or.inr ⟨rfl, hab⟩
-      
-    
   · obtain ⟨i, a⟩ := a
     obtain ⟨j, b⟩ := b
     dsimp only
     rintro (h | ⟨rfl, h⟩)
     · exact lex.left _ _ h
-      
     · exact lex.right _ _ h
-      
-    
 #align sigma.lex_iff Sigma.lex_iff
 
 #print Sigma.Lex.decidable /-
@@ -89,9 +83,7 @@ theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a
     (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨a, b, hij⟩ | ⟨a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
-    
   · exact lex.right _ _ (hs _ _ _ hab)
-    
 #align sigma.lex.mono Sigma.Lex.mono
 
 /- warning: sigma.lex.mono_left -> Sigma.Lex.mono_left is a dubious translation:
@@ -126,85 +118,61 @@ theorem lex_swap : Lex r.swap s a b ↔ Lex r (fun i => (s i).swap) b a := by
   constructor <;>
     · rintro (⟨a, b, h⟩ | ⟨a, b, h⟩)
       exacts[lex.left _ _ h, lex.right _ _ h]
-      
 #align sigma.lex_swap Sigma.lex_swap
 
 instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
   ⟨fun ⟨i, a⟩ => Lex.right _ _ <| refl _⟩
 
 instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (Lex r s) :=
-  ⟨by
+  ⟨by 
     rintro _ (⟨a, b, hi⟩ | ⟨a, b, ha⟩)
     · exact irrefl _ hi
-      
-    · exact irrefl _ ha
-      ⟩
+    · exact irrefl _ ha⟩
 
 instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (Lex r s) :=
-  ⟨by
+  ⟨by 
     rintro _ _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩) (⟨_, c, hk⟩ | ⟨_, c, hc⟩)
     · exact lex.left _ _ (trans hij hk)
-      
     · exact lex.left _ _ hij
-      
     · exact lex.left _ _ hk
-      
-    · exact lex.right _ _ (trans hab hc)
-      ⟩
+    · exact lex.right _ _ (trans hab hc)⟩
 
 instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (Lex r s) :=
-  ⟨by
+  ⟨by 
     rintro _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
     · exact lex.left _ _ (symm hij)
-      
-    · exact lex.right _ _ (symm hab)
-      ⟩
+    · exact lex.right _ _ (symm hab)⟩
 
 attribute [local instance] IsAsymm.is_irrefl
 
 instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s) :=
-  ⟨by
+  ⟨by 
     rintro _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩) (⟨_, _, hji⟩ | ⟨_, _, hba⟩)
     · exact (asymm hij hji).elim
-      
     · exact (irrefl _ hij).elim
-      
     · exact (irrefl _ hji).elim
-      
-    · exact ext rfl (heq_of_eq <| antisymm hab hba)
-      ⟩
+    · exact ext rfl (heq_of_eq <| antisymm hab hba)⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (Lex r s) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
-      
     · obtain hab | hba := total_of (s i) a b
       · exact Or.inl (lex.right _ _ hab)
-        
       · exact Or.inr (lex.right _ _ hba)
-        
-      
-    · exact Or.inr (lex.left _ _ hji)
-      ⟩
+    · exact Or.inr (lex.left _ _ hji)⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTrichotomous (α i) (s i)] : IsTrichotomous _ (Lex r s) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
-      
     · obtain hab | rfl | hba := trichotomous_of (s i) a b
       · exact Or.inl (lex.right _ _ hab)
-        
       · exact Or.inr (Or.inl rfl)
-        
       · exact Or.inr (Or.inr <| lex.right _ _ hba)
-        
-      
-    · exact Or.inr (Or.inr <| lex.left _ _ hji)
-      ⟩
+    · exact Or.inr (Or.inr <| lex.left _ _ hji)⟩
 
 end Sigma
 
@@ -219,26 +187,20 @@ variable {ι : Sort _} {α : ι → Sort _} {r r₁ r₂ : ι → ι → Prop} {
 lean 3 declaration is
   forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s a b) (Or (r (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) => s (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) (Eq.ndrec.{u_2, u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) α (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) h) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) b))))
 but is expected to have type
-  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r s a b) (Or (r (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) => s (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) (Eq.rec.{u_2, u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.2478 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.2477 : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.2478) => α x._@.Mathlib.Data.Sigma.Lex._hyg.2478) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) h) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) b))))
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r s a b) (Or (r (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) => s (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) (Eq.rec.{u_2, u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.2412 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.2411 : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.2412) => α x._@.Mathlib.Data.Sigma.Lex._hyg.2412) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) h) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) b))))
 Case conversion may be inaccurate. Consider using '#align psigma.lex_iff PSigma.lex_iffₓ'. -/
 theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
-  by
+  by 
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨i, hab⟩)
     · exact Or.inl hij
-      
     · exact Or.inr ⟨rfl, hab⟩
-      
-    
   · obtain ⟨i, a⟩ := a
     obtain ⟨j, b⟩ := b
     dsimp only
     rintro (h | ⟨rfl, h⟩)
     · exact lex.left _ _ h
-      
     · exact lex.right _ h
-      
-    
 #align psigma.lex_iff PSigma.lex_iff
 
 #print PSigma.Lex.decidable /-
@@ -259,9 +221,7 @@ theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
     (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨a, b, hij⟩ | ⟨i, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
-    
   · exact lex.right _ (hs _ _ _ hab)
-    
 #align psigma.lex.mono PSigma.Lex.mono
 
 /- warning: psigma.lex.mono_left -> PSigma.Lex.mono_left is a dubious translation:

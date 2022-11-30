@@ -58,7 +58,8 @@ theorem homeomorph_mk_coe (a : Equiv α β) (b c) : (Homeomorph.mk a b c : α �
 #align homeomorph.homeomorph_mk_coe Homeomorph.homeomorph_mk_coe
 
 /-- Inverse of a homeomorphism. -/
-protected def symm (h : α ≃ₜ β) : β ≃ₜ α where
+protected def symm (h : α ≃ₜ β) :
+    β ≃ₜ α where 
   continuous_to_fun := h.continuous_inv_fun
   continuous_inv_fun := h.continuous_to_fun
   toEquiv := h.toEquiv.symm
@@ -92,21 +93,23 @@ theorem to_equiv_injective : Function.Injective (toEquiv : α ≃ₜ β → α �
   | ⟨e, h₁, h₂⟩, ⟨e', h₁', h₂'⟩, rfl => rfl
 #align homeomorph.to_equiv_injective Homeomorph.to_equiv_injective
 
-@[ext.1]
+@[ext]
 theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
   to_equiv_injective <| Equiv.ext H
 #align homeomorph.ext Homeomorph.ext
 
 /-- Identity map as a homeomorphism. -/
 @[simps (config := { fullyApplied := false }) apply]
-protected def refl (α : Type _) [TopologicalSpace α] : α ≃ₜ α where
+protected def refl (α : Type _) [TopologicalSpace α] :
+    α ≃ₜ α where 
   continuous_to_fun := continuous_id
   continuous_inv_fun := continuous_id
   toEquiv := Equiv.refl α
 #align homeomorph.refl Homeomorph.refl
 
 /-- Composition of two homeomorphisms. -/
-protected def trans (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) : α ≃ₜ γ where
+protected def trans (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) :
+    α ≃ₜ γ where 
   continuous_to_fun := h₂.continuous_to_fun.comp h₁.continuous_to_fun
   continuous_inv_fun := h₁.continuous_inv_fun.comp h₂.continuous_inv_fun
   toEquiv := Equiv.trans h₁.toEquiv h₂.toEquiv
@@ -241,7 +244,8 @@ protected theorem embedding (h : α ≃ₜ β) : Embedding h :=
 #align homeomorph.embedding Homeomorph.embedding
 
 /-- Homeomorphism given an embedding. -/
-noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.range f where
+noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) :
+    α ≃ₜ Set.range f where 
   continuous_to_fun := hf.Continuous.subtype_mk _
   continuous_inv_fun := by simp [hf.continuous_iff, continuous_subtype_coe]
   toEquiv := Equiv.ofInjective f hf.inj
@@ -381,9 +385,10 @@ theorem comap_nhds_eq (h : α ≃ₜ β) (y : β) : comap h (𝓝 y) = 𝓝 (h.s
 #align homeomorph.comap_nhds_eq Homeomorph.comap_nhds_eq
 
 /-- If an bijective map `e : α ≃ β` is continuous and open, then it is a homeomorphism. -/
-def homeomorphOfContinuousOpen (e : α ≃ β) (h₁ : Continuous e) (h₂ : IsOpenMap e) : α ≃ₜ β where
+def homeomorphOfContinuousOpen (e : α ≃ β) (h₁ : Continuous e) (h₂ : IsOpenMap e) :
+    α ≃ₜ β where 
   continuous_to_fun := h₁
-  continuous_inv_fun := by
+  continuous_inv_fun := by 
     rw [continuous_def]
     intro s hs
     convert ← h₂ s hs using 1
@@ -439,21 +444,27 @@ theorem comp_is_open_map_iff' (h : α ≃ₜ β) {f : β → γ} : IsOpenMap (f 
 #align homeomorph.comp_is_open_map_iff' Homeomorph.comp_is_open_map_iff'
 
 /-- If two sets are equal, then they are homeomorphic. -/
-def setCongr {s t : Set α} (h : s = t) : s ≃ₜ t where
+def setCongr {s t : Set α} (h : s = t) :
+    s ≃ₜ t where 
   continuous_to_fun := continuous_inclusion h.Subset
   continuous_inv_fun := continuous_inclusion h.symm.Subset
   toEquiv := Equiv.setCongr h
 #align homeomorph.set_congr Homeomorph.setCongr
 
 /-- Sum of two homeomorphisms. -/
-def sumCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum β δ where
+def sumCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) :
+    Sum α γ ≃ₜ
+      Sum β δ where 
   continuous_to_fun := h₁.Continuous.sum_map h₂.Continuous
   continuous_inv_fun := h₁.symm.Continuous.sum_map h₂.symm.Continuous
   toEquiv := h₁.toEquiv.sumCongr h₂.toEquiv
 #align homeomorph.sum_congr Homeomorph.sumCongr
 
 /-- Product of two homeomorphisms. -/
-def prodCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : α × γ ≃ₜ β × δ where
+def prodCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) :
+    α × γ ≃ₜ
+      β ×
+        δ where 
   continuous_to_fun :=
     (h₁.Continuous.comp continuous_fst).prod_mk (h₂.Continuous.comp continuous_snd)
   continuous_inv_fun :=
@@ -477,7 +488,9 @@ section
 variable (α β γ)
 
 /-- `α × β` is homeomorphic to `β × α`. -/
-def prodComm : α × β ≃ₜ β × α where
+def prodComm :
+    α × β ≃ₜ β ×
+        α where 
   continuous_to_fun := continuous_snd.prod_mk continuous_fst
   continuous_inv_fun := continuous_snd.prod_mk continuous_fst
   toEquiv := Equiv.prodComm α β
@@ -494,7 +507,11 @@ theorem coe_prod_comm : ⇑(prodComm α β) = Prod.swap :=
 #align homeomorph.coe_prod_comm Homeomorph.coe_prod_comm
 
 /-- `(α × β) × γ` is homeomorphic to `α × (β × γ)`. -/
-def prodAssoc : (α × β) × γ ≃ₜ α × β × γ where
+def prodAssoc :
+    (α × β) × γ ≃ₜ
+      α ×
+        β ×
+          γ where 
   continuous_to_fun :=
     (continuous_fst.comp continuous_fst).prod_mk
       ((continuous_snd.comp continuous_fst).prod_mk continuous_snd)
@@ -506,7 +523,7 @@ def prodAssoc : (α × β) × γ ≃ₜ α × β × γ where
 
 /-- `α × {*}` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := false }) apply]
-def prodPunit : α × PUnit ≃ₜ α where
+def prodPunit : α × PUnit ≃ₜ α where 
   toEquiv := Equiv.prodPUnit α
   continuous_to_fun := continuous_fst
   continuous_inv_fun := continuous_id.prod_mk continuous_const
@@ -534,7 +551,11 @@ end
 /-- If each `β₁ i` is homeomorphic to `β₂ i`, then `Π i, β₁ i` is homeomorphic to `Π i, β₂ i`. -/
 @[simps apply toEquiv]
 def piCongrRight {ι : Type _} {β₁ β₂ : ι → Type _} [∀ i, TopologicalSpace (β₁ i)]
-    [∀ i, TopologicalSpace (β₂ i)] (F : ∀ i, β₁ i ≃ₜ β₂ i) : (∀ i, β₁ i) ≃ₜ ∀ i, β₂ i where
+    [∀ i, TopologicalSpace (β₂ i)] (F : ∀ i, β₁ i ≃ₜ β₂ i) :
+    (∀ i, β₁ i) ≃ₜ
+      ∀ i,
+        β₂
+          i where 
   continuous_to_fun := continuous_pi fun i => (F i).Continuous.comp <| continuous_apply i
   continuous_inv_fun := continuous_pi fun i => (F i).symm.Continuous.comp <| continuous_apply i
   toEquiv := Equiv.piCongrRight fun i => (F i).toEquiv
@@ -548,7 +569,8 @@ theorem Pi_congr_right_symm {ι : Type _} {β₁ β₂ : ι → Type _} [∀ i, 
 #align homeomorph.Pi_congr_right_symm Homeomorph.Pi_congr_right_symm
 
 /-- `ulift α` is homeomorphic to `α`. -/
-def ulift.{u, v} {α : Type u} [TopologicalSpace α] : ULift.{v, u} α ≃ₜ α where
+def ulift.{u, v} {α : Type u} [TopologicalSpace α] :
+    ULift.{v, u} α ≃ₜ α where 
   continuous_to_fun := continuous_ulift_down
   continuous_inv_fun := continuous_ulift_up
   toEquiv := Equiv.ulift
@@ -584,7 +606,8 @@ end Distrib
 
 /-- If `ι` has a unique element, then `ι → α` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := false })]
-def funUnique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) ≃ₜ α where
+def funUnique (ι α : Type _) [Unique ι] [TopologicalSpace α] :
+    (ι → α) ≃ₜ α where 
   toEquiv := Equiv.funUnique ι α
   continuous_to_fun := continuous_apply _
   continuous_inv_fun := continuous_pi fun _ => continuous_id
@@ -592,7 +615,8 @@ def funUnique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) �
 
 /-- Homeomorphism between dependent functions `Π i : fin 2, α i` and `α 0 × α 1`. -/
 @[simps (config := { fullyApplied := false })]
-def piFinTwo.{u} (α : Fin 2 → Type u) [∀ i, TopologicalSpace (α i)] : (∀ i, α i) ≃ₜ α 0 × α 1 where
+def piFinTwo.{u} (α : Fin 2 → Type u) [∀ i, TopologicalSpace (α i)] :
+    (∀ i, α i) ≃ₜ α 0 × α 1 where 
   toEquiv := piFinTwoEquiv α
   continuous_to_fun := (continuous_apply 0).prod_mk (continuous_apply 1)
   continuous_inv_fun := continuous_pi <| Fin.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩
@@ -607,7 +631,8 @@ def finTwoArrow : (Fin 2 → α) ≃ₜ α × α :=
 /-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/
 @[simps]
-def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s where
+def image (e : α ≃ₜ β) (s : Set α) :
+    s ≃ₜ e '' s where 
   continuous_to_fun := by continuity!
   continuous_inv_fun := by continuity!
   toEquiv := e.toEquiv.image s
@@ -615,7 +640,8 @@ def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s where
 
 /-- `set.univ α` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := false })]
-def Set.univ (α : Type _) [TopologicalSpace α] : (univ : Set α) ≃ₜ α where
+def Set.univ (α : Type _) [TopologicalSpace α] :
+    (univ : Set α) ≃ₜ α where 
   toEquiv := Equiv.Set.univ α
   continuous_to_fun := continuous_subtype_coe
   continuous_inv_fun := continuous_id.subtype_mk _
@@ -624,7 +650,8 @@ def Set.univ (α : Type _) [TopologicalSpace α] : (univ : Set α) ≃ₜ α whe
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `s ×ˢ t` is homeomorphic to `s × t`. -/
 @[simps]
-def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ₜ s × t where
+def Set.prod (s : Set α) (t : Set β) :
+    ↥(s ×ˢ t) ≃ₜ s × t where 
   toEquiv := Equiv.Set.prod s t
   continuous_to_fun :=
     (continuous_subtype_coe.fst.subtype_mk _).prod_mk (continuous_subtype_coe.snd.subtype_mk _)
@@ -640,12 +667,16 @@ variable {ι : Type _}
   depending on whether they satisfy a predicate p or not.-/
 @[simps]
 def piEquivPiSubtypeProd (p : ι → Prop) (β : ι → Type _) [∀ i, TopologicalSpace (β i)]
-    [DecidablePred p] : (∀ i, β i) ≃ₜ (∀ i : { x // p x }, β i) × ∀ i : { x // ¬p x }, β i where
+    [DecidablePred p] :
+    (∀ i, β i) ≃ₜ
+      (∀ i : { x // p x }, β i) ×
+        ∀ i : { x // ¬p x },
+          β i where 
   toEquiv := Equiv.piEquivPiSubtypeProd p β
   continuous_to_fun := by
     apply Continuous.prod_mk <;> exact continuous_pi fun j => continuous_apply j
   continuous_inv_fun :=
-    continuous_pi fun j => by
+    continuous_pi fun j => by 
       dsimp only [Equiv.piEquivPiSubtypeProd]; split_ifs
       exacts[(continuous_apply _).comp continuous_fst, (continuous_apply _).comp continuous_snd]
 #align homeomorph.pi_equiv_pi_subtype_prod Homeomorph.piEquivPiSubtypeProd
@@ -656,11 +687,13 @@ variable [DecidableEq ι] (i : ι)
   the product of all the remaining spaces. -/
 @[simps]
 def piSplitAt (β : ι → Type _) [∀ j, TopologicalSpace (β j)] :
-    (∀ j, β j) ≃ₜ β i × ∀ j : { j // j ≠ i }, β j where
+    (∀ j, β j) ≃ₜ
+      β i × ∀ j : { j // j ≠ i },
+          β j where 
   toEquiv := Equiv.piSplitAt i β
   continuous_to_fun := (continuous_apply i).prod_mk (continuous_pi fun j => continuous_apply j)
   continuous_inv_fun :=
-    continuous_pi fun j => by
+    continuous_pi fun j => by 
       dsimp only [Equiv.piSplitAt]
       split_ifs
       subst h

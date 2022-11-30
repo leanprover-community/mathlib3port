@@ -158,10 +158,8 @@ theorem gcd_eq_zero_iff {i j : ℕ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
   constructor
   · intro h
     exact ⟨eq_zero_of_gcd_eq_zero_left h, eq_zero_of_gcd_eq_zero_right h⟩
-    
   · rintro ⟨rfl, rfl⟩
     exact Nat.gcd_zero_right 0
-    
 #align nat.gcd_eq_zero_iff Nat.gcd_eq_zero_iff
 -/
 
@@ -640,16 +638,14 @@ theorem Coprime.coprime_mul_right_right {k m n : ℕ} (H : Coprime m (n * k)) : 
 #align nat.coprime.coprime_mul_right_right Nat.Coprime.coprime_mul_right_right
 
 theorem Coprime.coprime_div_left {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ m) :
-    Coprime (m / a) n := by
+    Coprime (m / a) n := by 
   by_cases a_split : a = 0
   · subst a_split
     rw [zero_dvd_iff] at dvd
     simpa [dvd] using cmn
-    
   · rcases dvd with ⟨k, rfl⟩
     rw [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero a_split)]
     exact coprime.coprime_mul_left cmn
-    
 #align nat.coprime.coprime_div_left Nat.Coprime.coprime_div_left
 
 theorem Coprime.coprime_div_right {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ n) :
@@ -784,17 +780,17 @@ See `exists_dvd_and_dvd_of_dvd_mul` for the more general but less constructive v
 def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) :
     { d : { m' // m' ∣ m } × { n' // n' ∣ n } // k = d.1 * d.2 } := by
   cases h0 : gcd k m
-  case zero =>
-  obtain rfl : k = 0 := eq_zero_of_gcd_eq_zero_left h0
-  obtain rfl : m = 0 := eq_zero_of_gcd_eq_zero_right h0
-  exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩
+  case zero => 
+    obtain rfl : k = 0 := eq_zero_of_gcd_eq_zero_left h0
+    obtain rfl : m = 0 := eq_zero_of_gcd_eq_zero_right h0
+    exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩
   case succ tmp =>
-  have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succ _ <;> clear h0 tmp
-  have hd : gcd k m * (k / gcd k m) = k := Nat.mul_div_cancel' (gcd_dvd_left k m)
-  refine' ⟨⟨⟨gcd k m, gcd_dvd_right k m⟩, ⟨k / gcd k m, _⟩⟩, hd.symm⟩
-  apply dvd_of_mul_dvd_mul_left hpos
-  rw [hd, ← gcd_mul_right]
-  exact dvd_gcd (dvd_mul_right _ _) H
+    have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succ _ <;> clear h0 tmp
+    have hd : gcd k m * (k / gcd k m) = k := Nat.mul_div_cancel' (gcd_dvd_left k m)
+    refine' ⟨⟨⟨gcd k m, gcd_dvd_right k m⟩, ⟨k / gcd k m, _⟩⟩, hd.symm⟩
+    apply dvd_of_mul_dvd_mul_left hpos
+    rw [hd, ← gcd_mul_right]
+    exact dvd_gcd (dvd_mul_right _ _) H
 #align nat.prod_dvd_and_dvd_of_dvd_prod Nat.prodDvdAndDvdOfDvdProd
 
 theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧ y * z = x := by
@@ -802,10 +798,8 @@ theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧
   · intro h
     obtain ⟨⟨⟨y, hy⟩, ⟨z, hz⟩⟩, rfl⟩ := prod_dvd_and_dvd_of_dvd_prod h
     exact ⟨y, z, hy, hz, rfl⟩
-    
   · rintro ⟨y, z, hy, hz, rfl⟩
     exact mul_dvd_mul hy hz
-    
 #align nat.dvd_mul Nat.dvd_mul
 
 #print Nat.gcd_mul_dvd_mul_gcd /-
@@ -817,10 +811,8 @@ theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m * n) ∣ gcd k m * gcd k n 
   apply mul_dvd_mul
   · have hm'k : m' ∣ k := (dvd_mul_right m' n').trans hm'n'
     exact dvd_gcd hm'k hm'
-    
   · have hn'k : n' ∣ k := (dvd_mul_left n' m').trans hm'n'
     exact dvd_gcd hn'k hn'
-    
 #align nat.gcd_mul_dvd_mul_gcd Nat.gcd_mul_dvd_mul_gcd
 -/
 
@@ -834,7 +826,6 @@ theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : 0 < n) : a ^ n ∣ b ^ n ↔ a ∣ b
   refine' ⟨fun h => _, fun h => pow_dvd_pow_of_dvd h _⟩
   cases' Nat.eq_zero_or_pos (gcd a b) with g0 g0
   · simp [eq_zero_of_gcd_eq_zero_right g0]
-    
   rcases exists_coprime' g0 with ⟨g, a', b', g0', co, rfl, rfl⟩
   rw [mul_pow, mul_pow] at h
   replace h := dvd_of_mul_dvd_mul_right (pow_pos g0' _) h
@@ -850,17 +841,15 @@ but is expected to have type
   forall {c : Nat} {d : Nat} {a : Nat} {b : Nat}, (Nat.coprime c d) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) c d)) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.gcd a c) (Nat.gcd b c)) c)
 Case conversion may be inaccurate. Consider using '#align nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ'. -/
 theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.Coprime d) (h : a * b = c * d) :
-    a.gcd c * b.gcd c = c := by
+    a.gcd c * b.gcd c = c := by 
   apply dvd_antisymm
   · apply Nat.Coprime.dvd_of_dvd_mul_right (Nat.Coprime.mul (cop.gcd_left _) (cop.gcd_left _))
     rw [← h]
     apply mul_dvd_mul (gcd_dvd _ _).1 (gcd_dvd _ _).1
-    
   · rw [gcd_comm a _, gcd_comm b _]
     trans c.gcd (a * b)
     rw [h, gcd_mul_right_right d c]
     apply gcd_mul_dvd_mul_gcd
-    
 #align nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul
 
 /-- If `k:ℕ` divides coprime `a` and `b` then `k = 1` -/
@@ -873,7 +862,7 @@ theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : Coprime a b) (hka :
 #align nat.eq_one_of_dvd_coprimes Nat.eq_one_of_dvd_coprimes
 
 theorem Coprime.mul_add_mul_ne_mul {m n a b : ℕ} (cop : Coprime m n) (ha : a ≠ 0) (hb : b ≠ 0) :
-    a * m + b * n ≠ m * n := by
+    a * m + b * n ≠ m * n := by 
   intro h
   obtain ⟨x, rfl⟩ : n ∣ a :=
     cop.symm.dvd_of_dvd_mul_right

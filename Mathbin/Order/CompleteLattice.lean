@@ -224,7 +224,7 @@ theorem infi_le_iff {s : ι → α} : infi s ≤ a ↔ ∀ b, (∀ i, b ≤ s i)
 
 theorem Inf_le_Inf_of_forall_exists_le (h : ∀ x ∈ s, ∃ y ∈ t, y ≤ x) : inf t ≤ inf s :=
   le_of_forall_le
-    (by
+    (by 
       simp only [le_Inf_iff]
       introv h₀ h₁
       rcases h _ h₁ with ⟨y, hy, hy'⟩
@@ -241,7 +241,7 @@ end
 /-- A complete lattice is a bounded lattice which has suprema and infima for every subset. -/
 @[protect_proj]
 class CompleteLattice (α : Type _) extends Lattice α, CompleteSemilatticeSup α,
-  CompleteSemilatticeInf α, HasTop α, HasBot α where
+  CompleteSemilatticeInf α, Top α, Bot α where
   le_top : ∀ x : α, x ≤ ⊤
   bot_le : ∀ x : α, ⊥ ≤ x
 #align complete_lattice CompleteLattice
@@ -272,7 +272,7 @@ def completeLatticeOfInf (α : Type _) [H1 : PartialOrder α] [H2 : HasInf α]
   { H1, H2 with bot := inf univ, bot_le := fun x => (is_glb_Inf univ).1 trivial, top := inf ∅,
     le_top := fun a => (is_glb_Inf ∅).2 <| by simp, sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
     inf := fun a b => inf {a, b},
-    le_inf := fun a b c hab hac => by
+    le_inf := fun a b c hab hac => by 
       apply (is_glb_Inf _).2
       simp [*],
     inf_le_right := fun a b => (is_glb_Inf _).1 <| mem_insert_of_mem _ <| mem_singleton _,
@@ -985,7 +985,7 @@ theorem Monotone.map_infi₂_le [CompleteLattice β] {f : α → β} (hf : Monot
 #align monotone.map_infi₂_le Monotone.map_infi₂_le
 
 theorem Antitone.map_Sup_le [CompleteLattice β] {s : Set α} {f : α → β} (hf : Antitone f) :
-    f (sup s) ≤ ⨅ a ∈ s, f a := by
+    f (sup s) ≤ ⨅ a ∈ s, f a := by 
   rw [Sup_eq_supr]
   exact hf.map_supr₂_le _
 #align antitone.map_Sup_le Antitone.map_Sup_le
@@ -1143,7 +1143,7 @@ end
 theorem supr_supr_eq_left {b : β} {f : ∀ x : β, x = b → α} : (⨆ x, ⨆ h : x = b, f x h) = f b rfl :=
   (@le_supr₂ _ _ _ _ f b rfl).antisymm'
     (supr_le fun c =>
-      supr_le <| by
+      supr_le <| by 
         rintro rfl
         rfl)
 #align supr_supr_eq_left supr_supr_eq_left
@@ -1156,7 +1156,7 @@ theorem infi_infi_eq_left {b : β} {f : ∀ x : β, x = b → α} : (⨅ x, ⨅ 
 @[simp]
 theorem supr_supr_eq_right {b : β} {f : ∀ x : β, b = x → α} : (⨆ x, ⨆ h : b = x, f x h) = f b rfl :=
   (le_supr₂ b rfl).antisymm'
-    (supr₂_le fun c => by
+    (supr₂_le fun c => by 
       rintro rfl
       rfl)
 #align supr_supr_eq_right supr_supr_eq_right
@@ -1336,7 +1336,7 @@ variable (p : ι → Prop) [DecidablePred p]
 
 theorem supr_dite (f : ∀ i, p i → α) (g : ∀ i, ¬p i → α) :
     (⨆ i, if h : p i then f i h else g i h) = (⨆ (i) (h : p i), f i h) ⊔ ⨆ (i) (h : ¬p i), g i h :=
-  by
+  by 
   rw [← supr_sup_eq]
   congr 1 with i
   split_ifs with h <;> simp [h]
@@ -1578,15 +1578,12 @@ dropped, without changing the result. -/
 theorem supr_ne_bot_subtype (f : ι → α) : (⨆ i : { i // f i ≠ ⊥ }, f i) = ⨆ i, f i := by
   by_cases htriv : ∀ i, f i = ⊥
   · simp only [supr_bot, (funext htriv : f = _)]
-    
   refine' (supr_comp_le f _).antisymm (supr_mono' fun i => _)
   by_cases hi : f i = ⊥
   · rw [hi]
     obtain ⟨i₀, hi₀⟩ := not_forall.mp htriv
     exact ⟨⟨i₀, hi₀⟩, bot_le⟩
-    
   · exact ⟨⟨i, hi⟩, rfl.le⟩
-    
 #align supr_ne_bot_subtype supr_ne_bot_subtype
 
 /-- When taking the infimum of `f : ι → α`, the elements of `ι` on which `f` gives `⊤` can be
@@ -1610,14 +1607,13 @@ theorem Inf_image2 {f : β → γ → α} {s : Set β} {t : Set γ} :
 
 theorem supr_ge_eq_supr_nat_add (u : ℕ → α) (n : ℕ) : (⨆ i ≥ n, u i) = ⨆ i, u (i + n) := by
   apply le_antisymm <;> simp only [supr_le_iff]
-  · exact fun i hi =>
+  ·
+    exact fun i hi =>
       le_Sup
-        ⟨i - n, by
+        ⟨i - n, by 
           dsimp only
           rw [Nat.sub_add_cancel hi]⟩
-    
   · exact fun i => le_Sup ⟨i + n, supr_pos (Nat.le_add_left _ _)⟩
-    
 #align supr_ge_eq_supr_nat_add supr_ge_eq_supr_nat_add
 
 theorem infi_ge_eq_infi_nat_add (u : ℕ → α) (n : ℕ) : (⨅ i ≥ n, u i) = ⨅ i, u (i + n) :=
@@ -1634,11 +1630,10 @@ theorem Antitone.infi_nat_add {f : ℕ → α} (hf : Antitone f) (k : ℕ) : (�
 
 @[simp]
 theorem supr_infi_ge_nat_add (f : ℕ → α) (k : ℕ) : (⨆ n, ⨅ i ≥ n, f (i + k)) = ⨆ n, ⨅ i ≥ n, f i :=
-  by
+  by 
   have hf : Monotone fun n => ⨅ i ≥ n, f i := fun n m h => binfi_mono fun i => h.trans
   rw [← Monotone.supr_nat_add hf k]
   · simp_rw [infi_ge_eq_infi_nat_add, ← Nat.add_assoc]
-    
 #align supr_infi_ge_nat_add supr_infi_ge_nat_add
 
 @[simp]
@@ -1877,8 +1872,8 @@ end CompleteLattice
 -- See note [reducible non-instances]
 /-- Pullback a `complete_lattice` along an injection. -/
 @[reducible]
-protected def Function.Injective.completeLattice [HasSup α] [HasInf α] [HasSup α] [HasInf α]
-    [HasTop α] [HasBot α] [CompleteLattice β] (f : α → β) (hf : Function.Injective f)
+protected def Function.Injective.completeLattice [HasSup α] [HasInf α] [HasSup α] [HasInf α] [Top α]
+    [Bot α] [CompleteLattice β] (f : α → β) (hf : Function.Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a)
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : CompleteLattice α :=

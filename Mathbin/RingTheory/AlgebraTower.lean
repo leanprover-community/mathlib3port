@@ -124,7 +124,6 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
     rw [Finset.sum_product_right] at h1
     simp_rw [← smul_assoc, ← Finset.sum_smul] at h1
     exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
-    
   exact hg _ hik
 #align linear_independent_smul linear_independent_smul
 
@@ -151,7 +150,7 @@ theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S)
 
 @[simp]
 theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (ij) :
-    (b.smul c) ij = b ij.1 • c ij.2 := by
+    (b.smul c) ij = b ij.1 • c ij.2 := by 
   obtain ⟨i, j⟩ := ij
   rw [Basis.apply_eq_iff]
   ext ⟨i', j'⟩
@@ -160,9 +159,7 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
   dsimp only
   split_ifs with hi
   · simp [hi, Finsupp.single_apply]
-    
   · simp [hi]
-    
 #align basis.smul_apply Basis.smul_apply
 
 end Semiring
@@ -202,16 +199,19 @@ variable {B}
 
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
 def algHomEquivSigma :
-    (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra where
+    (C →ₐ[A] D) ≃
+      Σf : B →ₐ[A] D,
+        @AlgHom B C D _ _ _ _
+          f.toRingHom.toAlgebra where 
   toFun f := ⟨f.restrictDomain B, f.extendScalars B⟩
   invFun fg :=
     let alg := fg.1.toRingHom.toAlgebra
     fg.2.restrictScalars A
-  left_inv f := by
+  left_inv f := by 
     dsimp only
     ext
     rfl
-  right_inv := by
+  right_inv := by 
     rintro ⟨⟨f, _, _, _, _, _⟩, g, _, _, _, _, hg⟩
     obtain rfl : f = fun x => g (algebraMap B C x) := by
       ext

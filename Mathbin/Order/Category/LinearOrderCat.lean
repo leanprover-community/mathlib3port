@@ -56,20 +56,21 @@ instance hasForgetToLattice :
 
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : LinearOrderCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : LinearOrderCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply x
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply x
 #align LinearOrder.iso.mk LinearOrderCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : LinearOrderCat ⥤ LinearOrderCat where
+def dual : LinearOrderCat ⥤ LinearOrderCat where 
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
 #align LinearOrder.dual LinearOrderCat.dual

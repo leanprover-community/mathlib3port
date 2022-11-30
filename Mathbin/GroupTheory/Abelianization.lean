@@ -102,7 +102,7 @@ instance [Finite G] : Finite (Abelianization G) :=
 variable {G}
 
 /-- `of` is the canonical projection from G to its abelianization. -/
-def of : G →* Abelianization G where
+def of : G →* Abelianization G where 
   toFun := QuotientGroup.mk
   map_one' := rfl
   map_mul' x y := rfl
@@ -128,7 +128,10 @@ theorem commutator_subset_ker : commutator G ≤ f.ker := by
 
 /-- If `f : G → A` is a group homomorphism to an abelian group, then `lift f` is the unique map from
   the abelianization of a `G` to `A` that factors through `f`. -/
-def lift : (G →* A) ≃ (Abelianization G →* A) where
+def lift :
+    (G →* A) ≃
+      (Abelianization G →*
+        A) where 
   toFun f := QuotientGroup.lift _ f fun x h => f.mem_ker.2 <| commutator_subset_ker _ h
   invFun F := F.comp of
   left_inv f := MonoidHom.ext fun x => rfl
@@ -157,7 +160,7 @@ end lift
 variable {A : Type v} [Monoid A]
 
 /-- See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem hom_ext (φ ψ : Abelianization G →* A) (h : φ.comp of = ψ.comp of) : φ = ψ :=
   MonoidHom.ext fun x => QuotientGroup.induction_on x <| MonoidHom.congr_fun h
 #align abelianization.hom_ext Abelianization.hom_ext
@@ -201,13 +204,15 @@ section AbelianizationCongr
 variable {G} {H : Type v} [Group H] (e : G ≃* H)
 
 /-- Equivalent groups have equivalent abelianizations -/
-def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H where
+def MulEquiv.abelianizationCongr :
+    Abelianization G ≃*
+      Abelianization H where 
   toFun := Abelianization.map e.toMonoidHom
   invFun := Abelianization.map e.symm.toMonoidHom
-  left_inv := by
+  left_inv := by 
     rintro ⟨a⟩
     simp
-  right_inv := by
+  right_inv := by 
     rintro ⟨a⟩
     simp
   map_mul' := MonoidHom.map_mul _
@@ -243,7 +248,7 @@ end AbelianizationCongr
 def Abelianization.equivOfComm {H : Type _} [CommGroup H] : H ≃* Abelianization H :=
   { Abelianization.of with toFun := Abelianization.of,
     invFun := Abelianization.lift (MonoidHom.id H), left_inv := fun a => rfl,
-    right_inv := by
+    right_inv := by 
       rintro ⟨a⟩
       rfl }
 #align abelianization.equiv_of_comm Abelianization.equivOfComm
@@ -284,17 +289,16 @@ theorem image_commutator_set_closure_commutator_representatives :
     (closureCommutatorRepresentatives G).Subtype ''
         commutatorSet (closureCommutatorRepresentatives G) =
       commutatorSet G :=
-  by
+  by 
   apply Set.Subset.antisymm
   · rintro - ⟨-, ⟨g₁, g₂, rfl⟩, rfl⟩
     exact ⟨g₁, g₂, rfl⟩
-    
-  · exact fun g hg =>
+  ·
+    exact fun g hg =>
       ⟨_,
         ⟨⟨_, subset_closure (Or.inl ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩,
           ⟨_, subset_closure (Or.inr ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩, rfl⟩,
         hg.some_spec.some_spec⟩
-    
 #align
   image_commutator_set_closure_commutator_representatives image_commutator_set_closure_commutator_representatives
 
@@ -314,7 +318,7 @@ theorem card_commutator_closure_commutator_representatives :
   card_commutator_closure_commutator_representatives card_commutator_closure_commutator_representatives
 
 instance [Finite (commutatorSet G)] : Finite (commutatorSet (closureCommutatorRepresentatives G)) :=
-  by
+  by 
   apply Nat.finite_of_card_ne_zero
   rw [card_commutator_set_closure_commutator_representatives]
   exact finite.card_pos.ne'

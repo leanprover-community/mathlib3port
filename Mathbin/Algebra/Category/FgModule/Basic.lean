@@ -63,7 +63,7 @@ instance : Inhabited (FgModule R) :=
 
 /-- Lift an unbundled finitely generated module to `fgModule R`. -/
 def of (V : Type u) [AddCommGroup V] [Module R V] [Module.Finite R V] : FgModule R :=
-  ⟨ModuleCat.of R V, by
+  ⟨ModuleCat.of R V, by 
     change Module.Finite R V
     infer_instance⟩
 #align fgModule.of FgModule.of
@@ -89,13 +89,14 @@ def isoToLinearEquiv {V W : FgModule R} (i : V ≅ W) : V.obj ≃ₗ[R] W.obj :=
 @[simps]
 def LinearEquiv.toFgModuleIso {V W : Type u} [AddCommGroup V] [Module R V] [Module.Finite R V]
     [AddCommGroup W] [Module R W] [Module.Finite R W] (e : V ≃ₗ[R] W) :
-    FgModule.of R V ≅ FgModule.of R W where
+    FgModule.of R V ≅ FgModule.of R
+        W where 
   Hom := e.toLinearMap
   inv := e.symm.toLinearMap
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.left_inv x
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.right_inv x
 #align linear_equiv.to_fgModule_iso LinearEquiv.toFgModuleIso
@@ -109,7 +110,8 @@ variable (R : Type u) [CommRing R]
 instance : Linear R (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
 instance monoidal_predicate_module_finite :
-    MonoidalCategory.MonoidalPredicate fun V : ModuleCat.{u} R => Module.Finite R V where
+    MonoidalCategory.MonoidalPredicate fun V : ModuleCat.{u} R =>
+      Module.Finite R V where 
   prop_id' := Module.Finite.self R
   prop_tensor' X Y hX hY := Module.Finite.tensor_product R X Y
 #align fgModule.monoidal_predicate_module_finite FgModule.monoidal_predicate_module_finite
@@ -218,7 +220,9 @@ private theorem evaluation_coevaluation :
   by apply contract_left_assoc_coevaluation' K V.obj
 #align fgModule.evaluation_coevaluation fgModule.evaluation_coevaluation
 
-instance exactPairing : ExactPairing V (fgModuleDual K V) where
+instance exactPairing :
+    ExactPairing V
+      (fgModuleDual K V) where 
   coevaluation := fgModuleCoevaluation K V
   evaluation := fgModuleEvaluation K V
   coevaluation_evaluation' := coevaluation_evaluation K V

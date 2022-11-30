@@ -61,9 +61,7 @@ it suffices to show it holds when `x ≠ y`. -/
 theorem Reflexive.rel_of_ne_imp (h : Reflexive r) {x y : α} (hr : x ≠ y → r x y) : r x y := by
   by_cases hxy : x = y
   · exact hxy ▸ h x
-    
   · exact hr hxy
-    
 #align reflexive.rel_of_ne_imp Reflexive.rel_of_ne_imp
 -/
 
@@ -166,7 +164,7 @@ local infixr:80 " ∘r " => Relation.Comp
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{max (succ u_1) (succ u_2) 1} (α -> β -> Prop) (Relation.Comp.{u_1, u_2, u_2} α β β r (Eq.{succ u_2} β)) r
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{max (succ u_1) (succ u_2)} (α -> β -> Prop) (Relation.Comp.{u_1, u_2, u_2} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1359 : β) (x._@.Mathlib.Logic.Relation._hyg.1361 : β) => Eq.{succ u_2} β x._@.Mathlib.Logic.Relation._hyg.1359 x._@.Mathlib.Logic.Relation._hyg.1361)) r
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{max (succ u_1) (succ u_2)} (α -> β -> Prop) (Relation.Comp.{u_1, u_2, u_2} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1355 : β) (x._@.Mathlib.Logic.Relation._hyg.1357 : β) => Eq.{succ u_2} β x._@.Mathlib.Logic.Relation._hyg.1355 x._@.Mathlib.Logic.Relation._hyg.1357)) r
 Case conversion may be inaccurate. Consider using '#align relation.comp_eq Relation.comp_eqₓ'. -/
 theorem comp_eq : r ∘r (· = ·) = r :=
   funext fun a =>
@@ -177,7 +175,7 @@ theorem comp_eq : r ∘r (· = ·) = r :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{max (succ u_1) (succ u_2) 1} (α -> β -> Prop) (Relation.Comp.{u_1, u_1, u_2} α α β (Eq.{succ u_1} α) r) r
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{max (succ u_1) (succ u_2)} (α -> β -> Prop) (Relation.Comp.{u_1, u_1, u_2} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1467 : α) (x._@.Mathlib.Logic.Relation._hyg.1469 : α) => Eq.{succ u_1} α x._@.Mathlib.Logic.Relation._hyg.1467 x._@.Mathlib.Logic.Relation._hyg.1469) r) r
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{max (succ u_1) (succ u_2)} (α -> β -> Prop) (Relation.Comp.{u_1, u_1, u_2} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1463 : α) (x._@.Mathlib.Logic.Relation._hyg.1465 : α) => Eq.{succ u_1} α x._@.Mathlib.Logic.Relation._hyg.1463 x._@.Mathlib.Logic.Relation._hyg.1465) r) r
 Case conversion may be inaccurate. Consider using '#align relation.eq_comp Relation.eq_compₓ'. -/
 theorem eq_comp : (· = ·) ∘r r = r :=
   funext fun a =>
@@ -366,9 +364,7 @@ theorem symmetric (h : Symmetric r) : Symmetric (ReflTransGen r) := by
   intro x y h
   induction' h with z w a b c
   · rfl
-    
   · apply Relation.ReflTransGen.head (h b) c
-    
 #align relation.refl_trans_gen.symmetric Relation.ReflTransGen.symmetric
 -/
 
@@ -385,11 +381,11 @@ theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α}
     (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.head h')) : P a h := by
   induction h generalizing P
   case refl => exact refl
-  case tail b c hab hbc ih =>
-  apply ih
-  show P b _; exact head hbc _ refl
-  show ∀ a a', r a a' → refl_trans_gen r a' b → P a' _ → P a _
-  exact fun a a' hab hbc => head hab _
+  case tail b c hab hbc ih => 
+    apply ih
+    show P b _; exact head hbc _ refl
+    show ∀ a a', r a a' → refl_trans_gen r a' b → P a' _ → P a _
+    exact fun a a' hab hbc => head hab _
 #align relation.refl_trans_gen.head_induction_on Relation.ReflTransGen.head_induction_on
 -/
 
@@ -400,7 +396,7 @@ theorem trans_induction_on {P : ∀ {a b : α}, ReflTransGen r a b → Prop} {a 
     (ih₃ :
       ∀ {a b c} (h₁ : ReflTransGen r a b) (h₂ : ReflTransGen r b c),
         P h₁ → P h₂ → P (h₁.trans h₂)) :
-    P h := by
+    P h := by 
   induction h
   case refl => exact ih₁ a
   case tail b c hab hbc ih => exact ih₃ hab (single hbc) ih (ih₂ hbc)
@@ -412,11 +408,9 @@ theorem cases_head (h : ReflTransGen r a b) : a = b ∨ ∃ c, r a c ∧ ReflTra
   induction h using Relation.ReflTransGen.head_induction_on
   · left
     rfl
-    
   · right
     exists _
     constructor <;> assumption
-    
 #align relation.refl_trans_gen.cases_head Relation.ReflTransGen.cases_head
 -/
 
@@ -425,9 +419,7 @@ theorem cases_head_iff : ReflTransGen r a b ↔ a = b ∨ ∃ c, r a c ∧ ReflT
   use cases_head
   rintro (rfl | ⟨c, hac, hcb⟩)
   · rfl
-    
   · exact head hac hcb
-    
 #align relation.refl_trans_gen.cases_head_iff Relation.ReflTransGen.cases_head_iff
 -/
 
@@ -436,18 +428,12 @@ theorem total_of_right_unique (U : Relator.RightUnique r) (ab : ReflTransGen r a
     (ac : ReflTransGen r a c) : ReflTransGen r b c ∨ ReflTransGen r c b := by
   induction' ab with b d ab bd IH
   · exact Or.inl ac
-    
   · rcases IH with (IH | IH)
     · rcases cases_head IH with (rfl | ⟨e, be, ec⟩)
       · exact Or.inr (single bd)
-        
       · cases U bd be
         exact Or.inl ec
-        
-      
     · exact Or.inr (IH.tail bd)
-      
-    
 #align relation.refl_trans_gen.total_of_right_unique Relation.ReflTransGen.total_of_right_unique
 -/
 
@@ -506,10 +492,10 @@ theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h 
     (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.head h')) : P a h := by
   induction h generalizing P
   case single a h => exact base h
-  case tail b c hab hbc h_ih =>
-  apply h_ih
-  show ∀ a, r a b → P a _; exact fun a h => ih h (single hbc) (base hbc)
-  show ∀ a a', r a a' → trans_gen r a' b → P a' _ → P a _; exact fun a a' hab hbc => ih hab _
+  case tail b c hab hbc h_ih => 
+    apply h_ih
+    show ∀ a, r a b → P a _; exact fun a h => ih h (single hbc) (base hbc)
+    show ∀ a a', r a a' → trans_gen r a' b → P a' _ → P a _; exact fun a a' hab hbc => ih hab _
 #align relation.trans_gen.head_induction_on Relation.TransGen.head_induction_on
 -/
 
@@ -518,7 +504,7 @@ theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h 
 theorem trans_induction_on {P : ∀ {a b : α}, TransGen r a b → Prop} {a b : α} (h : TransGen r a b)
     (base : ∀ {a b} (h : r a b), P (single h))
     (ih : ∀ {a b c} (h₁ : TransGen r a b) (h₂ : TransGen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) :
-    P h := by
+    P h := by 
   induction h
   case single a h => exact base h
   case tail b c hab hbc h_ih => exact ih hab (single hbc) h_ih (base hbc)
@@ -539,9 +525,7 @@ theorem tail'_iff : TransGen r a c ↔ ∃ b, ReflTransGen r a b ∧ r b c := by
   refine' ⟨fun h => _, fun ⟨b, hab, hbc⟩ => tail' hab hbc⟩
   cases' h with _ hac b _ hab hbc
   · exact ⟨_, by rfl, hac⟩
-    
   · exact ⟨_, hab.to_refl, hbc⟩
-    
 #align relation.trans_gen.tail'_iff Relation.TransGen.tail'_iff
 -/
 
@@ -582,7 +566,7 @@ theorem transGen_eq_self (trans : Transitive r) : TransGen r = r :=
   funext fun a =>
     funext fun b =>
       propext <|
-        ⟨fun h => by
+        ⟨fun h => by 
           induction h
           case single c hc => exact hc
           case tail c d hac hcd hac => exact trans hac hcd, TransGen.single⟩
@@ -641,7 +625,6 @@ theorem TransGen.mono {p : α → α → Prop} :
 theorem TransGen.swap (h : TransGen r b a) : TransGen (swap r) a b := by
   induction' h with b h b c hab hbc ih
   · exact trans_gen.single h
-    
   exact ih.head hbc
 #align relation.trans_gen.swap Relation.TransGen.swap
 -/
@@ -669,16 +652,10 @@ theorem reflTransGen_iff_eq_or_transGen : ReflTransGen r a b ↔ b = a ∨ Trans
   refine' ⟨fun h => _, fun h => _⟩
   · cases' h with c _ hac hcb
     · exact Or.inl rfl
-      
     · exact Or.inr (trans_gen.tail' hac hcb)
-      
-    
   · rcases h with (rfl | h)
     · rfl
-      
     · exact h.to_refl
-      
-    
 #align relation.refl_trans_gen_iff_eq_or_trans_gen Relation.reflTransGen_iff_eq_or_transGen
 -/
 
@@ -706,10 +683,8 @@ theorem reflTransGen_eq_self (refl : Reflexive r) (trans : Transitive r) : ReflT
   funext fun a =>
     funext fun b =>
       propext <|
-        ⟨fun h => by
-          induction' h with b c h₁ h₂ IH;
-          · apply refl
-            
+        ⟨fun h => by 
+          induction' h with b c h₁ h₂ IH; · apply refl
           exact trans IH h₂, single⟩
 #align relation.refl_trans_gen_eq_self Relation.reflTransGen_eq_self
 -/
@@ -754,7 +729,6 @@ theorem reflTransGen_closed {p : α → α → Prop} :
 theorem ReflTransGen.swap (h : ReflTransGen r b a) : ReflTransGen (swap r) a b := by
   induction' h with b c hab hbc ih
   · rfl
-    
   exact ih.head hbc
 #align relation.refl_trans_gen.swap Relation.ReflTransGen.swap
 -/
@@ -789,27 +763,23 @@ theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d �
     (hab : ReflTransGen r a b) (hac : ReflTransGen r a c) : Join (ReflTransGen r) b c := by
   induction hab
   case refl => exact ⟨c, hac, refl⟩
-  case tail d e had hde ih =>
-  clear hac had a
-  rcases ih with ⟨b, hdb, hcb⟩
-  have : ∃ a, refl_trans_gen r e a ∧ refl_gen r b a := by
-    clear hcb
-    induction hdb
-    case refl => exact ⟨e, refl, refl_gen.single hde⟩
-    case tail f b hdf hfb ih =>
-    rcases ih with ⟨a, hea, hfa⟩
-    cases' hfa with _ hfa
-    · exact ⟨b, hea.tail hfb, refl_gen.refl⟩
-      
-    · rcases h _ _ _ hfb hfa with ⟨c, hbc, hac⟩
-      exact ⟨c, hea.trans hac, hbc⟩
-      
-  rcases this with ⟨a, hea, hba⟩
-  cases' hba with _ hba
-  · exact ⟨b, hea, hcb⟩
-    
-  · exact ⟨a, hea, hcb.tail hba⟩
-    
+  case tail d e had hde ih => 
+    clear hac had a
+    rcases ih with ⟨b, hdb, hcb⟩
+    have : ∃ a, refl_trans_gen r e a ∧ refl_gen r b a := by
+      clear hcb
+      induction hdb
+      case refl => exact ⟨e, refl, refl_gen.single hde⟩
+      case tail f b hdf hfb ih => 
+        rcases ih with ⟨a, hea, hfa⟩
+        cases' hfa with _ hfa
+        · exact ⟨b, hea.tail hfb, refl_gen.refl⟩
+        · rcases h _ _ _ hfb hfa with ⟨c, hbc, hac⟩
+          exact ⟨c, hea.trans hac, hbc⟩
+    rcases this with ⟨a, hea, hba⟩
+    cases' hba with _ hba
+    · exact ⟨b, hea, hcb⟩
+    · exact ⟨a, hea, hcb.tail hba⟩
 #align relation.church_rosser Relation.church_rosser
 -/
 
@@ -864,9 +834,7 @@ theorem reflTransGen_of_transitive_reflexive {r' : α → α → Prop} (hr : Ref
     (ht : Transitive r) (h : ∀ a b, r' a b → r a b) (h' : ReflTransGen r' a b) : r a b := by
   induction' h' with b c hab hbc ih
   · exact hr _
-    
   · exact ht ih (h _ _ hbc)
-    
 #align relation.refl_trans_gen_of_transitive_reflexive Relation.reflTransGen_of_transitive_reflexive
 -/
 
@@ -888,7 +856,7 @@ variable {r : α → α → Prop} {a b : α}
 #print Equivalence.eqvGen_iff /-
 theorem Equivalence.eqvGen_iff (h : Equivalence r) : EqvGen r a b ↔ r a b :=
   Iff.intro
-    (by
+    (by 
       intro h
       induction h
       case rel => assumption
@@ -907,7 +875,7 @@ theorem Equivalence.eqvGen_eq (h : Equivalence r) : EqvGen r = r :=
 
 #print EqvGen.mono /-
 theorem EqvGen.mono {r p : α → α → Prop} (hrp : ∀ a b, r a b → p a b) (h : EqvGen r a b) :
-    EqvGen p a b := by
+    EqvGen p a b := by 
   induction h
   case rel a b h => exact EqvGen.rel _ _ (hrp _ _ h)
   case refl => exact EqvGen.refl _

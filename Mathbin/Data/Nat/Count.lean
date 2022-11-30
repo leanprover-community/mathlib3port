@@ -127,9 +127,7 @@ theorem count_injective {m n : ℕ} (hm : p m) (hn : p n) (heq : count p m = cou
   by_contra
   wlog hmn : m < n
   · exact Ne.lt_or_lt h
-    
   · simpa [HEq] using count_strict_mono hm hmn
-    
 #align nat.count_injective Nat.count_injective
 
 theorem count_le_card (hp : (setOf p).Finite) (n : ℕ) : count p n ≤ hp.toFinset.card := by

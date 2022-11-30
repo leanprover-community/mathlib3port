@@ -84,7 +84,8 @@ variable {l m n : Type _}
 
 /-- `matrix.vec_mul M` is a linear map. -/
 @[simps]
-def Matrix.vecMulLinear [Fintype m] (M : Matrix m n R) : (m → R) →ₗ[R] n → R where
+def Matrix.vecMulLinear [Fintype m] (M : Matrix m n R) :
+    (m → R) →ₗ[R] n → R where 
   toFun x := M.vecMul x
   map_add' v w := funext fun i => add_dot_product _ _ _
   map_smul' c v := funext fun i => smul_dot_product _ _ _
@@ -101,28 +102,28 @@ theorem Matrix.vec_mul_std_basis (M : Matrix m n R) (i j) :
   ext
   split_ifs with h <;> simp only [std_basis_apply]
   · rw [h, Function.update_same]
-    
   · rw [Function.update_noteq (Ne.symm h), Pi.zero_apply]
-    
 #align matrix.vec_mul_std_basis Matrix.vec_mul_std_basis
 
 /-- Linear maps `(m → R) →ₗ[R] (n → R)` are linearly equivalent over `Rᵐᵒᵖ` to `matrix m n R`,
 by having matrices act by right multiplication.
  -/
-def LinearMap.toMatrixRight' : ((m → R) →ₗ[R] n → R) ≃ₗ[Rᵐᵒᵖ] Matrix m n R where
+def LinearMap.toMatrixRight' :
+    ((m → R) →ₗ[R] n → R) ≃ₗ[Rᵐᵒᵖ]
+      Matrix m n R where 
   toFun f i j := f (stdBasis R (fun _ => R) i 1) j
   invFun := Matrix.vecMulLinear
-  right_inv M := by
+  right_inv M := by 
     ext (i j)
     simp only [Matrix.vec_mul_std_basis, Matrix.vec_mul_linear_apply]
-  left_inv f := by
+  left_inv f := by 
     apply (Pi.basisFun R m).ext
     intro j; ext i
     simp only [Pi.basis_fun_apply, Matrix.vec_mul_std_basis, Matrix.vec_mul_linear_apply]
-  map_add' f g := by
+  map_add' f g := by 
     ext (i j)
     simp only [Pi.add_apply, LinearMap.add_apply]
-  map_smul' c f := by
+  map_smul' c f := by 
     ext (i j)
     simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply]
 #align linear_map.to_matrix_right' LinearMap.toMatrixRight'
@@ -191,7 +192,8 @@ variable {l m n : Type _}
 
 /-- `matrix.mul_vec M` is a linear map. -/
 @[simps]
-def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → R where
+def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) :
+    (n → R) →ₗ[R] m → R where 
   toFun := M.mulVec
   map_add' v w := funext fun i => dot_product_add _ _ _
   map_smul' c v := funext fun i => dot_product_smul _ _ _
@@ -211,20 +213,23 @@ theorem Matrix.mul_vec_std_basis_apply (M : Matrix m n R) (j) :
 #align matrix.mul_vec_std_basis_apply Matrix.mul_vec_std_basis_apply
 
 /-- Linear maps `(n → R) →ₗ[R] (m → R)` are linearly equivalent to `matrix m n R`. -/
-def LinearMap.toMatrix' : ((n → R) →ₗ[R] m → R) ≃ₗ[R] Matrix m n R where
+def LinearMap.toMatrix' :
+    ((n → R) →ₗ[R] m → R) ≃ₗ[R]
+      Matrix m n
+        R where 
   toFun f := of fun i j => f (stdBasis R (fun _ => R) j 1) i
   invFun := Matrix.mulVecLin
-  right_inv M := by
+  right_inv M := by 
     ext (i j)
     simp only [Matrix.mul_vec_std_basis, Matrix.mul_vec_lin_apply, of_apply]
-  left_inv f := by
+  left_inv f := by 
     apply (Pi.basisFun R n).ext
     intro j; ext i
     simp only [Pi.basis_fun_apply, Matrix.mul_vec_std_basis, Matrix.mul_vec_lin_apply, of_apply]
-  map_add' f g := by
+  map_add' f g := by 
     ext (i j)
     simp only [Pi.add_apply, LinearMap.add_apply, of_apply]
-  map_smul' c f := by
+  map_smul' c f := by 
     ext (i j)
     simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply, of_apply]
 #align linear_map.to_matrix' LinearMap.toMatrix'
@@ -266,7 +271,6 @@ theorem LinearMap.to_matrix'_apply (f : (n → R) →ₗ[R] m → R) (i j) :
   ext j'
   split_ifs with h
   · rw [h, std_basis_same]
-    
   apply std_basis_ne _ _ _ _ h
 #align linear_map.to_matrix'_apply LinearMap.to_matrix'_apply
 
@@ -487,11 +491,9 @@ theorem LinearMap.to_matrix_apply (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
     one_smul, Basis.equiv_fun_apply]
   · intro j' _ hj'
     rw [if_neg hj', zero_smul]
-    
   · intro hj
     have := Finset.mem_univ j
     contradiction
-    
 #align linear_map.to_matrix_apply LinearMap.to_matrix_apply
 
 theorem LinearMap.to_matrix_transpose_apply (f : M₁ →ₗ[R] M₂) (j : n) :
@@ -523,11 +525,9 @@ theorem Matrix.to_lin_self (M : Matrix m n R) (i : n) :
     mul_one]
   · intro i' _ i'_ne
     rw [Finsupp.single_eq_of_ne i'_ne.symm, mul_zero]
-    
   · intros
     have := Finset.mem_univ i
     contradiction
-    
 #align matrix.to_lin_self Matrix.to_lin_self
 
 /-- This will be a special case of `linear_map.to_matrix_id_eq_basis_to_matrix`. -/
@@ -586,7 +586,7 @@ theorem LinearMap.to_matrix_mul_vec_repr (f : M₁ →ₗ[R] M₂) (x : M₁) :
 @[simp]
 theorem LinearMap.to_matrix_basis_equiv [Fintype l] [DecidableEq l] (b : Basis l R M₁)
     (b' : Basis l R M₂) : LinearMap.toMatrix b' b (b'.Equiv b (Equiv.refl l) : M₂ →ₗ[R] M₁) = 1 :=
-  by
+  by 
   ext (i j)
   simp [LinearMap.to_matrix_apply, Matrix.one_apply, Finsupp.single_apply, eq_comm]
 #align linear_map.to_matrix_basis_equiv LinearMap.to_matrix_basis_equiv
@@ -748,7 +748,7 @@ theorem Matrix.to_lin_fin_two_prod (a b c d : R) :
 @[simp]
 theorem to_matrix_distrib_mul_action_to_linear_map (x : R) :
     LinearMap.toMatrix v₁ v₁ (DistribMulAction.toLinearMap R M₁ x) = Matrix.diagonal fun _ => x :=
-  by
+  by 
   ext
   rw [LinearMap.to_matrix_apply, DistribMulAction.to_linear_map_apply, LinearEquiv.map_smul,
     Basis.repr_self, Finsupp.smul_single_one, Finsupp.single_eq_pi_single, Matrix.diagonal,
@@ -789,13 +789,15 @@ theorem to_matrix_lsmul (x : R) :
 This definition is useful for doing (more) explicit computations with `linear_map.mul_left`,
 such as the trace form or norm map for algebras.
 -/
-noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R where
+noncomputable def leftMulMatrix :
+    S →ₐ[R]
+      Matrix m m R where 
   toFun x := LinearMap.toMatrix b b (Algebra.lmul R S x)
   map_zero' := by rw [AlgHom.map_zero, LinearEquiv.map_zero]
   map_one' := by rw [AlgHom.map_one, LinearMap.to_matrix_one]
   map_add' x y := by rw [AlgHom.map_add, LinearEquiv.map_add]
   map_mul' x y := by rw [AlgHom.map_mul, LinearMap.to_matrix_mul, Matrix.mul_eq_mul]
-  commutes' r := by
+  commutes' r := by 
     ext
     rw [lmul_algebra_map, to_matrix_lsmul, algebra_map_eq_diagonal, Pi.algebra_map_def,
       Algebra.id.map_eq_self]
@@ -897,7 +899,7 @@ domain and codomain.
 theorem finrank_linear_map :
     FiniteDimensional.finrank K (V →ₗ[K] W) =
       FiniteDimensional.finrank K V * FiniteDimensional.finrank K W :=
-  by
+  by 
   let hbV := Basis.ofVectorSpace K V
   let hbW := Basis.ofVectorSpace K W
   rw [LinearEquiv.finrank_eq (LinearMap.toMatrix hbV hbW), Matrix.finrank_matrix,

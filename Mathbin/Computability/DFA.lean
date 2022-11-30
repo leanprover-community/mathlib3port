@@ -105,11 +105,9 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
     ⟨M.eval_from s ((x.take m).take n), (x.take m).take n, (x.take m).drop n, x.drop m, _, _, _, by
       rfl, _⟩
   · rw [List.take_append_drop, List.take_append_drop]
-    
   · simp only [List.length_drop, List.length_take]
     rw [min_eq_left (hm.trans hlen), min_eq_left hle, add_tsub_cancel_of_le hle]
     exact hm
-    
   · intro h
     have hlen' := congr_arg List.length h
     simp only [List.length_drop, List.length, List.length_take] at hlen'
@@ -117,9 +115,7 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
     · apply hneq
       apply le_antisymm
       assumption'
-      
     exact hm.trans hlen
-    
   have hq :
     M.eval_from (M.eval_from s ((x.take m).take n)) ((x.take m).drop n) =
       M.eval_from s ((x.take m).take n) :=
@@ -137,14 +133,12 @@ theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s)
   rcases hy with ⟨S, rfl, hS⟩
   induction' S with a S ih
   · rfl
-    
   · have ha := hS a (List.mem_cons_self _ _)
     rw [Set.mem_singleton_iff] at ha
     rw [List.join, eval_from_of_append, ha, hx]
     apply ih
     intro z hz
     exact hS z (List.mem_cons_of_mem a hz)
-    
 #align DFA.eval_from_of_pow DFA.eval_from_of_pow
 
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
@@ -152,7 +146,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     ∃ a b c,
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
-  by
+  by 
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil
   intro y hy

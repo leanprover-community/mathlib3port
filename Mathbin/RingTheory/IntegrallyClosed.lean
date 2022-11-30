@@ -51,12 +51,10 @@ theorem is_integrally_closed_iff :
     refine' fun x hx => _
     obtain ⟨y, hy⟩ := cl ((is_integral_alg_equiv e).mpr hx)
     exact ⟨y, e.algebra_map_eq_apply.mp hy⟩
-    
   · rintro cl
     refine' ⟨fun x hx => _⟩
     obtain ⟨y, hy⟩ := cl ((is_integral_alg_equiv e.symm).mpr hx)
     exact ⟨y, e.symm.algebra_map_eq_apply.mp hy⟩
-    
 #align is_integrally_closed_iff is_integrally_closed_iff
 
 /-- `R` is integrally closed iff it is the integral closure of itself in its field of fractions. -/
@@ -70,10 +68,8 @@ theorem is_integrally_closed_iff_is_integral_closure :
       rintro ⟨y, y_eq⟩
       rw [← y_eq]
       exact is_integral_algebra_map
-      
     · rintro ⟨-, cl⟩ x hx
       exact cl.mp hx
-      
 #align is_integrally_closed_iff_is_integral_closure is_integrally_closed_iff_is_integral_closure
 
 end Iff
@@ -119,11 +115,9 @@ theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrally
     intro h x hx
     exact set.mem_range.mp (algebra.mem_bot.mp (h hx))
     assumption
-    
   · intro h x hx
     rw [Algebra.mem_bot, Set.mem_range]
     exact is_integral_iff.mp hx
-    
 #align
   is_integrally_closed.integral_closure_eq_bot_iff IsIntegrallyClosed.integral_closure_eq_bot_iff
 

@@ -47,13 +47,11 @@ limit.
 def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i.succ)
     (c₂ : BinaryFan (f 0) c₁.x) : Fan f :=
   Fan.mk c₂.x
-    (by
+    (by 
       refine' Fin.cases _ _
       · apply c₂.fst
-        
       · intro i
-        apply c₂.snd ≫ c₁.π.app ⟨i⟩
-        )
+        apply c₂.snd ≫ c₁.π.app ⟨i⟩)
 #align category_theory.extend_fan CategoryTheory.extendFan
 
 /-- Show that if the two given fans in `extend_fan` are limits, then the constructed fan is also a
@@ -61,24 +59,23 @@ limit.
 -/
 def extendFanIsLimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Fan fun i : Fin n => f i.succ}
     {c₂ : BinaryFan (f 0) c₁.x} (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) :
-    IsLimit (extendFan c₁ c₂) where
-  lift s := by
+    IsLimit
+      (extendFan c₁
+        c₂) where 
+  lift s := by 
     apply (binary_fan.is_limit.lift' t₂ (s.π.app ⟨0⟩) _).1
     apply t₁.lift ⟨_, discrete.nat_trans fun ⟨i⟩ => s.π.app ⟨i.succ⟩⟩
-  fac' := fun s ⟨j⟩ => by
+  fac' := fun s ⟨j⟩ => by 
     apply Fin.inductionOn j
     · apply (binary_fan.is_limit.lift' t₂ _ _).2.1
-      
     · rintro i -
       dsimp only [extend_fan_π_app]
       rw [Fin.cases_succ, ← assoc, (binary_fan.is_limit.lift' t₂ _ _).2.2, t₁.fac]
       rfl
-      
-  uniq' s m w := by
+  uniq' s m w := by 
     apply binary_fan.is_limit.hom_ext t₂
     · rw [(binary_fan.is_limit.lift' t₂ _ _).2.1]
       apply w ⟨0⟩
-      
     · rw [(binary_fan.is_limit.lift' t₂ _ _).2.2]
       apply t₁.uniq ⟨_, _⟩
       rintro ⟨j⟩
@@ -87,7 +84,6 @@ def extendFanIsLimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Fan fun i : Fin n
       rw [← w ⟨j.succ⟩]
       dsimp only [extend_fan_π_app]
       rw [Fin.cases_succ]
-      
 #align category_theory.extend_fan_is_limit CategoryTheory.extendFanIsLimit
 
 section
@@ -104,7 +100,7 @@ private theorem has_product_fin : ∀ (n : ℕ) (f : Fin n → C), HasProduct f
     letI : has_limits_of_shape (discrete (Fin 0)) C :=
       has_limits_of_shape_of_equivalence (Discrete.equivalence.{0} fin_zero_equiv'.symm)
     infer_instance
-  | n + 1 => fun f => by
+  | n + 1 => fun f => by 
     haveI := has_product_fin n
     apply has_limit.mk ⟨_, extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)⟩
 #align category_theory.has_product_fin category_theory.has_product_fin
@@ -145,7 +141,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminal :
     letI : preserves_limits_of_shape (discrete (Fin 0)) F :=
       preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence fin_zero_equiv'.symm) _
     infer_instance
-  | n + 1 => by
+  | n + 1 => by 
     haveI := preserves_fin_of_preserves_binary_and_terminal n
     intro f
     refine'
@@ -161,14 +157,12 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminal :
     rintro ⟨j⟩
     apply Fin.inductionOn j
     · apply (category.id_comp _).symm
-      
     · rintro i -
       dsimp only [extend_fan_π_app, iso.refl_hom, fan.mk_π_app]
       rw [Fin.cases_succ, Fin.cases_succ]
       change F.map _ ≫ _ = 𝟙 _ ≫ _
       rw [id_comp, ← F.map_comp]
       rfl
-      
 #align
   category_theory.preserves_fin_of_preserves_binary_and_terminal CategoryTheory.preservesFinOfPreservesBinaryAndTerminal
 
@@ -176,7 +170,8 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminal :
 `discrete (fin n)`.
 -/
 def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
-    PreservesLimitsOfShape (Discrete (Fin n)) F where PreservesLimit K := by
+    PreservesLimitsOfShape (Discrete (Fin n))
+      F where PreservesLimit K := by
     let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
     haveI := preserves_fin_of_preserves_binary_and_terminal F n fun n => K.obj ⟨n⟩
     apply preserves_limit_of_iso_diagram F this
@@ -185,10 +180,11 @@ def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
 
 /-- If `F` preserves the terminal object and binary products then it preserves finite products. -/
 def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
-    PreservesLimitsOfShape (Discrete J) F := by classical
-  let e := Fintype.equivFin J
-  haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
-  apply preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
+    PreservesLimitsOfShape (Discrete J) F := by
+  classical 
+    let e := Fintype.equivFin J
+    haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
+    apply preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 #align
   category_theory.preserves_finite_products_of_preserves_binary_and_terminal CategoryTheory.preservesFiniteProductsOfPreservesBinaryAndTerminal
 
@@ -204,13 +200,11 @@ then this cofan is also a colimit.
 def extendCofan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Cofan fun i : Fin n => f i.succ)
     (c₂ : BinaryCofan (f 0) c₁.x) : Cofan f :=
   Cofan.mk c₂.x
-    (by
+    (by 
       refine' Fin.cases _ _
       · apply c₂.inl
-        
       · intro i
-        apply c₁.ι.app ⟨i⟩ ≫ c₂.inr
-        )
+        apply c₁.ι.app ⟨i⟩ ≫ c₂.inr)
 #align category_theory.extend_cofan CategoryTheory.extendCofan
 
 /-- Show that if the two given cofans in `extend_cofan` are colimits,
@@ -218,25 +212,24 @@ then the constructed cofan is also a colimit.
 -/
 def extendCofanIsColimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Cofan fun i : Fin n => f i.succ}
     {c₂ : BinaryCofan (f 0) c₁.x} (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) :
-    IsColimit (extendCofan c₁ c₂) where
-  desc s := by
+    IsColimit
+      (extendCofan c₁
+        c₂) where 
+  desc s := by 
     apply (binary_cofan.is_colimit.desc' t₂ (s.ι.app ⟨0⟩) _).1
     apply t₁.desc ⟨_, discrete.nat_trans fun i => s.ι.app ⟨i.as.succ⟩⟩
-  fac' s := by
+  fac' s := by 
     rintro ⟨j⟩
     apply Fin.inductionOn j
     · apply (binary_cofan.is_colimit.desc' t₂ _ _).2.1
-      
     · rintro i -
       dsimp only [extend_cofan_ι_app]
       rw [Fin.cases_succ, assoc, (binary_cofan.is_colimit.desc' t₂ _ _).2.2, t₁.fac]
       rfl
-      
-  uniq' s m w := by
+  uniq' s m w := by 
     apply binary_cofan.is_colimit.hom_ext t₂
     · rw [(binary_cofan.is_colimit.desc' t₂ _ _).2.1]
       apply w ⟨0⟩
-      
     · rw [(binary_cofan.is_colimit.desc' t₂ _ _).2.2]
       apply t₁.uniq ⟨_, _⟩
       rintro ⟨j⟩
@@ -244,7 +237,6 @@ def extendCofanIsColimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Cofan fun i :
       rw [← w ⟨j.succ⟩]
       dsimp only [extend_cofan_ι_app]
       rw [Fin.cases_succ, assoc]
-      
 #align category_theory.extend_cofan_is_colimit CategoryTheory.extendCofanIsColimit
 
 section
@@ -262,7 +254,7 @@ private theorem has_coproduct_fin : ∀ (n : ℕ) (f : Fin n → C), HasCoproduc
     letI : has_colimits_of_shape (discrete (Fin 0)) C :=
       has_colimits_of_shape_of_equivalence (Discrete.equivalence.{0} fin_zero_equiv'.symm)
     infer_instance
-  | n + 1 => fun f => by
+  | n + 1 => fun f => by 
     haveI := has_coproduct_fin n
     apply
       has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)⟩
@@ -304,7 +296,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitial :
     letI : preserves_colimits_of_shape (discrete (Fin 0)) F :=
       preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence fin_zero_equiv'.symm) _
     infer_instance
-  | n + 1 => by
+  | n + 1 => by 
     haveI := preserves_fin_of_preserves_binary_and_initial n
     intro f
     refine'
@@ -321,13 +313,11 @@ noncomputable def preservesFinOfPreservesBinaryAndInitial :
     rintro ⟨j⟩
     apply Fin.inductionOn j
     · apply category.comp_id
-      
     · rintro i -
       dsimp only [extend_cofan_ι_app, iso.refl_hom, cofan.mk_ι_app]
       rw [Fin.cases_succ, Fin.cases_succ]
       erw [comp_id, ← F.map_comp]
       rfl
-      
 #align
   category_theory.preserves_fin_of_preserves_binary_and_initial CategoryTheory.preservesFinOfPreservesBinaryAndInitial
 
@@ -335,7 +325,8 @@ noncomputable def preservesFinOfPreservesBinaryAndInitial :
 `discrete (fin n)`.
 -/
 def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
-    PreservesColimitsOfShape (Discrete (Fin n)) F where PreservesColimit K := by
+    PreservesColimitsOfShape (Discrete (Fin n))
+      F where PreservesColimit K := by
     let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
     haveI := preserves_fin_of_preserves_binary_and_initial F n fun n => K.obj ⟨n⟩
     apply preserves_colimit_of_iso_diagram F this
@@ -344,10 +335,11 @@ def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
 
 /-- If `F` preserves the initial object and binary coproducts then it preserves finite products. -/
 def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintype J] :
-    PreservesColimitsOfShape (Discrete J) F := by classical
-  let e := Fintype.equivFin J
-  haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
-  apply preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
+    PreservesColimitsOfShape (Discrete J) F := by
+  classical 
+    let e := Fintype.equivFin J
+    haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
+    apply preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 #align
   category_theory.preserves_finite_coproducts_of_preserves_binary_and_initial CategoryTheory.preservesFiniteCoproductsOfPreservesBinaryAndInitial
 

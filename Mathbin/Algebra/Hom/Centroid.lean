@@ -80,9 +80,10 @@ section NonUnitalNonAssocSemiring
 
 variable [NonUnitalNonAssocSemiring α]
 
-instance : CentroidHomClass (CentroidHom α) α where
+instance : CentroidHomClass (CentroidHom α)
+      α where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     cases f
     cases g
     congr
@@ -101,7 +102,7 @@ theorem to_fun_eq_coe {f : CentroidHom α} : f.toFun = (f : α → α) :=
   rfl
 #align centroid_hom.to_fun_eq_coe CentroidHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : CentroidHom α} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align centroid_hom.ext CentroidHom.ext
@@ -241,7 +242,7 @@ instance : Mul (CentroidHom α) :=
 instance hasNsmul : HasSmul ℕ (CentroidHom α) :=
   ⟨fun n f =>
     { (n • f : α →+ α) with
-      map_mul_left' := fun a b => by
+      map_mul_left' := fun a b => by 
         change n • f (a * b) = a * n • f b
         rw [map_mul_left f, ← mul_smul_comm],
       map_mul_right' := fun a b => by
@@ -252,20 +253,16 @@ instance hasNsmul : HasSmul ℕ (CentroidHom α) :=
 instance hasNpowNat : Pow (CentroidHom α) ℕ :=
   ⟨fun f n =>
     { (f.toEnd ^ n : AddMonoid.EndCat α) with
-      map_mul_left' := fun a b => by
+      map_mul_left' := fun a b => by 
         induction' n with n ih
         · simp
-          
         · rw [pow_succ]
-          exact (congr_arg f.to_End ih).trans (f.map_mul_left' _ _)
-          ,
-      map_mul_right' := fun a b => by
+          exact (congr_arg f.to_End ih).trans (f.map_mul_left' _ _),
+      map_mul_right' := fun a b => by 
         induction' n with n ih
         · simp
-          
         · rw [pow_succ]
-          exact (congr_arg f.to_End ih).trans (f.map_mul_right' _ _)
-           }⟩
+          exact (congr_arg f.to_End ih).trans (f.map_mul_right' _ _) }⟩
 #align centroid_hom.has_npow_nat CentroidHom.hasNpowNat
 
 @[simp, norm_cast]
@@ -399,7 +396,7 @@ instance : Sub (CentroidHom α) :=
 instance hasZsmul : HasSmul ℤ (CentroidHom α) :=
   ⟨fun n f =>
     { (n • f : α →+ α) with
-      map_mul_left' := fun a b => by
+      map_mul_left' := fun a b => by 
         change n • f (a * b) = a * n • f b
         rw [map_mul_left f, ← mul_smul_comm],
       map_mul_right' := fun a b => by
@@ -476,7 +473,7 @@ variable [NonUnitalRing α]
 @[reducible]
 def commRing (h : ∀ a b : α, (∀ r : α, a * r * b = 0) → a = 0 ∨ b = 0) : CommRing (CentroidHom α) :=
   { CentroidHom.ring with
-    mul_comm := fun f g => by
+    mul_comm := fun f g => by 
       ext
       refine' sub_eq_zero.1 ((or_self_iff _).1 <| (h _ _) fun r => _)
       rw [mul_assoc, sub_mul, sub_eq_zero, ← map_mul_right, ← map_mul_right, coe_mul, coe_mul,

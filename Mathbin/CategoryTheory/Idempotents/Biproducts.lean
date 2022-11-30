@@ -44,10 +44,12 @@ namespace Biproducts
 /-- The `bicone` used in order to obtain the existence of
 the biproduct of a functor `J ⥤ karoubi C` when the category `C` is additive. -/
 @[simps]
-def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) : Bicone F where
+def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) :
+    Bicone
+      F where 
   x :=
     { x := biproduct fun j => (F j).x, p := biproduct.map fun j => (F j).p,
-      idem := by
+      idem := by 
         ext j
         simp only [biproduct.ι_map_assoc, biproduct.ι_map]
         slice_lhs 1 2 => rw [(F j).idem] }
@@ -60,15 +62,14 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
       comm := by
         rw [biproduct.ι_map, ← assoc, ← assoc, (F j).idem, assoc, biproduct.ι_map, ← assoc,
           (F j).idem] }
-  ι_π j j' := by
+  ι_π j j' := by 
     split_ifs
     · subst h
       simp only [biproduct.bicone_ι, biproduct.ι_map, biproduct.bicone_π, biproduct.ι_π_self_assoc,
         comp, category.assoc, eq_to_hom_refl, id_eq, biproduct.map_π, (F j).idem]
-      
-    · simpa only [hom_ext, biproduct.ι_π_ne_assoc _ h, assoc, biproduct.map_π,
+    ·
+      simpa only [hom_ext, biproduct.ι_π_ne_assoc _ h, assoc, biproduct.map_π,
         biproduct.map_π_assoc, zero_comp, comp]
-      
 #align
   category_theory.idempotents.karoubi.biproducts.bicone CategoryTheory.Idempotents.Karoubi.Biproducts.bicone
 
@@ -76,49 +77,47 @@ end Biproducts
 
 theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
   { out := fun n =>
-      { HasBiproduct := fun F => by classical
-          apply has_biproduct_of_total (biproducts.bicone F)
-          ext1
-          ext1
-          simp only [id_eq, comp_id, biproducts.bicone_X_p, biproduct.ι_map]
-          rw [sum_hom, comp_sum, Finset.sum_eq_single j]
-          rotate_left
-          · intro j' h1 h2
-            simp only [biproduct.ι_map, biproducts.bicone_ι_f, biproducts.bicone_π_f, assoc, comp,
-              biproduct.map_π]
-            slice_lhs 1 2 => rw [biproduct.ι_π]
-            split_ifs
-            · exfalso
-              exact h2 h.symm
-              
-            · simp only [zero_comp]
-              
-            
-          · intro h
-            exfalso
-            simpa only [Finset.mem_univ, not_true] using h
-            
-          · simp only [biproducts.bicone_π_f, comp, biproduct.ι_map, assoc, biproducts.bicone_ι_f,
-              biproduct.map_π]
-            slice_lhs 1 2 => rw [biproduct.ι_π]
-            split_ifs
-            swap
-            · exfalso
-              exact h rfl
-              
-            simp only [eq_to_hom_refl, id_comp, (F j).idem]
-             } }
+      { HasBiproduct := fun F => by
+          classical 
+            apply has_biproduct_of_total (biproducts.bicone F)
+            ext1
+            ext1
+            simp only [id_eq, comp_id, biproducts.bicone_X_p, biproduct.ι_map]
+            rw [sum_hom, comp_sum, Finset.sum_eq_single j]
+            rotate_left
+            · intro j' h1 h2
+              simp only [biproduct.ι_map, biproducts.bicone_ι_f, biproducts.bicone_π_f, assoc, comp,
+                biproduct.map_π]
+              slice_lhs 1 2 => rw [biproduct.ι_π]
+              split_ifs
+              · exfalso
+                exact h2 h.symm
+              · simp only [zero_comp]
+            · intro h
+              exfalso
+              simpa only [Finset.mem_univ, not_true] using h
+            · simp only [biproducts.bicone_π_f, comp, biproduct.ι_map, assoc, biproducts.bicone_ι_f,
+                biproduct.map_π]
+              slice_lhs 1 2 => rw [biproduct.ι_π]
+              split_ifs
+              swap
+              · exfalso
+                exact h rfl
+              simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
 #align
   category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubi_has_finite_biproducts
 
-instance {D : Type _} [Category D] [AdditiveCategory D] : AdditiveCategory (Karoubi D) where
+instance {D : Type _} [Category D] [AdditiveCategory D] :
+    AdditiveCategory (Karoubi
+        D) where 
   toPreadditive := inferInstance
   to_has_finite_biproducts := karoubi_has_finite_biproducts
 
 /-- `P.complement` is the formal direct factor of `P.X` given by the idempotent
 endomorphism `𝟙 P.X - P.p` -/
 @[simps]
-def complement (P : Karoubi C) : Karoubi C where
+def complement (P : Karoubi C) : Karoubi
+      C where 
   x := P.x
   p := 𝟙 _ - P.p
   idem := idem_of_id_sub_idem P.p P.idem
@@ -144,10 +143,13 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
 /-- A formal direct factor `P : karoubi C` of an object `P.X : C` in a
 preadditive category is actually a direct factor of the image `(to_karoubi C).obj P.X`
 of `P.X` in the category `karoubi C` -/
-def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x where
+def decomposition (P : Karoubi C) :
+    P ⊞ P.complement ≅
+      (toKaroubi _).obj
+        P.x where 
   Hom := biprod.desc P.decompIdI P.complement.decompIdI
   inv := biprod.lift P.decompIdP P.complement.decompIdP
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext1
     · simp only [← assoc, biprod.inl_desc, comp_id, biprod.lift_eq, comp_add, ← decomp_id, id_comp,
         add_right_eq_self]
@@ -156,7 +158,6 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
       simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp,
         quiver.hom.add_comm_group_zero_f, P.idem]
       erw [comp_id, sub_self]
-      
     · simp only [← assoc, biprod.inr_desc, biprod.lift_eq, comp_add, ← decomp_id, comp_id, id_comp,
         add_left_eq_self]
       convert zero_comp
@@ -164,8 +165,7 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
       simp only [decomp_id_i_f, decomp_id_p_f, complement_p, sub_comp, comp,
         quiver.hom.add_comm_group_zero_f, P.idem]
       erw [id_comp, sub_self]
-      
-  inv_hom_id' := by
+  inv_hom_id' := by 
     rw [biprod.lift_desc]
     simp only [← decomp_p]
     ext

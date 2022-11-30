@@ -61,9 +61,7 @@ theorem slope_def_module (f : k → E) (a b : k) : slope f a b = (b - a)⁻¹ �
 theorem sub_smul_slope (f : k → PE) (a b : k) : (b - a) • slope f a b = f b -ᵥ f a := by
   rcases eq_or_ne a b with (rfl | hne)
   · rw [sub_self, zero_smul, vsub_self]
-    
   · rw [slope, smul_inv_smul₀ (sub_ne_zero.2 hne.symm)]
-    
 #align sub_smul_slope sub_smul_slope
 
 theorem sub_smul_slope_vadd (f : k → PE) (a b : k) : (b - a) • slope f a b +ᵥ f a = f b := by
@@ -110,14 +108,10 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
     rw [sub_self, zero_div, zero_smul, zero_add]
     by_cases hac : a = c
     · simp [hac]
-      
     · rw [div_self (sub_ne_zero.2 <| Ne.symm hac), one_smul]
-      
-    
   by_cases hbc : b = c;
   · subst hbc
     simp [sub_ne_zero.2 (Ne.symm hab)]
-    
   rw [add_comm]
   simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add,
     smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab), smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hbc),
@@ -137,9 +131,7 @@ theorem line_map_slope_slope_sub_div_sub (f : k → PE) (a b c : k) (h : a ≠ c
 `slope f (line_map a b r) b`. We use `line_map` to express this property. -/
 theorem line_map_slope_line_map_slope_line_map (f : k → PE) (a b r : k) :
     lineMap (slope f (lineMap a b r) b) (slope f a (lineMap a b r)) r = slope f a b := by
-  obtain rfl | hab : a = b ∨ a ≠ b := Classical.em _;
-  · simp
-    
+  obtain rfl | hab : a = b ∨ a ≠ b := Classical.em _; · simp
   rw [slope_comm _ a, slope_comm _ a, slope_comm _ _ b]
   convert line_map_slope_slope_sub_div_sub f b (line_map a b r) a hab.symm using 2
   rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mul, mul_sub, ← sub_sub,

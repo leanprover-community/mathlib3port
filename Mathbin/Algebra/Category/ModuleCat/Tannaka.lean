@@ -23,17 +23,21 @@ A ring `R` is equivalent to
 the endomorphisms of the additive forgetful functor `Module R ⥤ AddCommGroup`.
 -/
 def ringEquivEndForget₂ (R : Type u) [Ring R] :
-    R ≃+* EndCat (AdditiveFunctorCat.of (forget₂ (ModuleCat.{u} R) AddCommGroupCat.{u})) where
+    R ≃+*
+      EndCat
+        (AdditiveFunctorCat.of
+          (forget₂ (ModuleCat.{u} R)
+            AddCommGroupCat.{u})) where 
   toFun r :=
     { app := fun M => by apply DistribMulAction.toAddMonoidHom M r,
-      naturality' := fun M N f => by
+      naturality' := fun M N f => by 
         ext
         exact (f.map_smul _ _).symm }
   invFun φ := φ.app (ModuleCat.of R R) (1 : R)
-  left_inv := by
+  left_inv := by 
     intro r
     simp
-  right_inv := by
+  right_inv := by 
     intro φ; ext (M x)
     simp only [DistribMulAction.to_add_monoid_hom_apply]
     have w :=
@@ -41,11 +45,11 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
         (1 : R)
     convert w.symm
     exact (one_smul _ _).symm
-  map_add' := by
+  map_add' := by 
     intros
     ext
     simp [add_smul]
-  map_mul' := by
+  map_mul' := by 
     intros
     ext
     simpa using mul_smul _ _ _

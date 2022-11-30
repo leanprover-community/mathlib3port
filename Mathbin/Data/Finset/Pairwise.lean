@@ -55,9 +55,7 @@ theorem PairwiseDisjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f 
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
   · exact hg d hd (by rwa [hcd] at ha) hb hab
-    
   · exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
-    
 #align set.pairwise_disjoint.bUnion_finset Set.PairwiseDisjoint.bUnion_finset
 
 end Set
@@ -67,7 +65,7 @@ namespace List
 variable {β : Type _} [DecidableEq α] {r : α → α → Prop} {l : List α}
 
 theorem pairwise_of_coe_to_finset_pairwise (hl : (l.toFinset : Set α).Pairwise r) (hn : l.Nodup) :
-    l.Pairwise r := by
+    l.Pairwise r := by 
   rw [coe_to_finset] at hl
   exact hn.pairwise_of_set_pairwise hl
 #align list.pairwise_of_coe_to_finset_pairwise List.pairwise_of_coe_to_finset_pairwise

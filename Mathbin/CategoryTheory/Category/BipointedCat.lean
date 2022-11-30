@@ -51,7 +51,7 @@ instance : Inhabited BipointedCat :=
   ⟨of ((), ())⟩
 
 /-- Morphisms in `Bipointed`. -/
-@[ext.1]
+@[ext]
 protected structure Hom (X Y : BipointedCat.{u}) : Type u where
   toFun : X → Y
   map_fst : to_fun X.toProd.1 = Y.toProd.1
@@ -78,7 +78,8 @@ def comp {X Y Z : BipointedCat.{u}} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
 
 end Hom
 
-instance largeCategory : LargeCategory BipointedCat where
+instance largeCategory : LargeCategory
+      BipointedCat where 
   Hom := Hom
   id := Hom.id
   comp := @Hom.comp
@@ -87,14 +88,17 @@ instance largeCategory : LargeCategory BipointedCat where
   assoc' _ _ _ _ _ _ _ := Hom.ext _ _ rfl
 #align Bipointed.large_category BipointedCat.largeCategory
 
-instance concreteCategory : ConcreteCategory BipointedCat where
+instance concreteCategory :
+    ConcreteCategory
+      BipointedCat where 
   forget := { obj := BipointedCat.X, map := @Hom.toFun }
   forget_faithful := ⟨@Hom.ext⟩
 #align Bipointed.concrete_category BipointedCat.concreteCategory
 
 /-- Swaps the pointed elements of a bipointed type. `prod.swap` as a functor. -/
 @[simps]
-def swap : BipointedCat ⥤ BipointedCat where
+def swap : BipointedCat ⥤
+      BipointedCat where 
   obj X := ⟨X, X.toProd.swap⟩
   map X Y f := ⟨f.toFun, f.map_snd, f.map_fst⟩
 #align Bipointed.swap BipointedCat.swap
@@ -117,13 +121,15 @@ theorem swap_equiv_symm : swapEquiv.symm = swap_equiv :=
 end BipointedCat
 
 /-- The forgetful functor from `Bipointed` to `Pointed` which forgets about the second point. -/
-def bipointedToPointedFst : BipointedCat ⥤ PointedCat where
+def bipointedToPointedFst :
+    BipointedCat ⥤ PointedCat where 
   obj X := ⟨X, X.toProd.1⟩
   map X Y f := ⟨f.toFun, f.map_fst⟩
 #align Bipointed_to_Pointed_fst bipointedToPointedFst
 
 /-- The forgetful functor from `Bipointed` to `Pointed` which forgets about the first point. -/
-def bipointedToPointedSnd : BipointedCat ⥤ PointedCat where
+def bipointedToPointedSnd :
+    BipointedCat ⥤ PointedCat where 
   obj X := ⟨X, X.toProd.2⟩
   map X Y f := ⟨f.toFun, f.map_snd⟩
 #align Bipointed_to_Pointed_snd bipointedToPointedSnd
@@ -153,13 +159,15 @@ theorem swap_comp_Bipointed_to_Pointed_snd :
 #align swap_comp_Bipointed_to_Pointed_snd swap_comp_Bipointed_to_Pointed_snd
 
 /-- The functor from `Pointed` to `Bipointed` which bipoints the point. -/
-def pointedToBipointed : PointedCat.{u} ⥤ BipointedCat where
+def pointedToBipointed :
+    PointedCat.{u} ⥤ BipointedCat where 
   obj X := ⟨X, X.point, X.point⟩
   map X Y f := ⟨f.toFun, f.map_point, f.map_point⟩
 #align Pointed_to_Bipointed pointedToBipointed
 
 /-- The functor from `Pointed` to `Bipointed` which adds a second point. -/
-def pointedToBipointedFst : PointedCat.{u} ⥤ BipointedCat where
+def pointedToBipointedFst :
+    PointedCat.{u} ⥤ BipointedCat where 
   obj X := ⟨Option X, X.point, none⟩
   map X Y f := ⟨Option.map f.toFun, congr_arg _ f.map_point, rfl⟩
   map_id' X := BipointedCat.Hom.ext _ _ Option.map_id
@@ -167,7 +175,8 @@ def pointedToBipointedFst : PointedCat.{u} ⥤ BipointedCat where
 #align Pointed_to_Bipointed_fst pointedToBipointedFst
 
 /-- The functor from `Pointed` to `Bipointed` which adds a first point. -/
-def pointedToBipointedSnd : PointedCat.{u} ⥤ BipointedCat where
+def pointedToBipointedSnd :
+    PointedCat.{u} ⥤ BipointedCat where 
   obj X := ⟨Option X, none, X.point⟩
   map X Y f := ⟨Option.map f.toFun, rfl, congr_arg _ f.map_point⟩
   map_id' X := BipointedCat.Hom.ext _ _ Option.map_id
@@ -210,7 +219,7 @@ def pointedToBipointedFstBipointedToPointedFstAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩,
           invFun := fun f => ⟨fun o => o.elim Y.toProd.2 f.toFun, f.map_point, rfl⟩,
-          left_inv := fun f => by
+          left_inv := fun f => by 
             ext
             cases x
             exact f.map_snd.symm
@@ -230,7 +239,7 @@ def pointedToBipointedSndBipointedToPointedSndAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩,
           invFun := fun f => ⟨fun o => o.elim Y.toProd.1 f.toFun, rfl, f.map_point⟩,
-          left_inv := fun f => by
+          left_inv := fun f => by 
             ext
             cases x
             exact f.map_fst.symm

@@ -103,11 +103,11 @@ variable {R}
 
 @[simp]
 theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
-  | 0 => by
+  | 0 => by 
     simp only [dickson_zero, pow_zero]
     norm_num
   | 1 => by simp only [dickson_one, pow_one]
-  | n + 2 => by
+  | n + 2 => by 
     simp only [dickson_add_two, C_0, zero_mul, sub_zero]
     rw [dickson_two_zero, pow_add X (n + 1) 1, mul_comm, pow_one]
 #align polynomial.dickson_two_zero Polynomial.dickson_two_zero
@@ -130,7 +130,7 @@ variable {R}
 
 theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
     ∀ n, (dickson 1 (1 : R) n).eval (x + y) = x ^ n + y ^ n
-  | 0 => by
+  | 0 => by 
     simp only [bit0, eval_one, eval_add, pow_zero, dickson_zero]
     norm_num
   | 1 => by simp only [eval_X, dickson_one, pow_one]
@@ -145,7 +145,7 @@ variable (R)
 
 theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (c (⅟ 2) * X)
-  | 0 => by
+  | 0 => by 
     simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
     norm_num
   | 1 => by
@@ -191,7 +191,8 @@ theorem dickson_one_one_comp_comm (m n : ℕ) :
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 #align polynomial.dickson_one_one_comp_comm Polynomial.dickson_one_one_comp_comm
 
-theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p) p = X ^ p := by
+theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p) p = X ^ p :=
+  by
   -- Recall that `dickson_eval_add_inv` characterises `dickson 1 1 p`
   -- as a polynomial that maps `x + x⁻¹` to `x ^ p + (x⁻¹) ^ p`.
   -- Since `X ^ p` also satisfies this property in characteristic `p`,
@@ -200,7 +201,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K := by
     let K := FractionRing (Polynomial (Zmod p))
     let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C
-    have : CharP K p := by
+    have : CharP K p := by 
       rw [← f.char_p_iff_char_p]
       infer_instance
     haveI : Infinite K :=
@@ -217,7 +218,6 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     simp only [eval_X, eval_pow, Set.mem_set_of_eq, @add_pow_char K _ p,
       dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, Zmod.cast_hom_apply,
       Zmod.cast_one']
-    
   -- Now we need to show that the set of such `x` is infinite.
   -- If the set is finite, then we will show that `K` is also finite.
   · intro h
@@ -230,30 +230,29 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     suffices
       (Set.univ : Set K) =
         { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 } >>= fun x => { y | x = y + y⁻¹ ∨ y = 0 }
-      by
+      by 
       rw [this]
       clear this
       refine' h.bUnion fun x hx => _
       -- The following quadratic polynomial has as solutions the `y` for which `x = y + y⁻¹`.
       let φ : K[X] := X ^ 2 - C x * X + 1
-      have hφ : φ ≠ 0 := by
+      have hφ : φ ≠ 0 := by 
         intro H
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq,
           zero_add, one_ne_zero]
-      classical
-      convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
-      ext1 y
-      simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union,
-        mem_roots hφ, is_root, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
-        Multiset.mem_singleton]
-      by_cases hy : y = 0
-      · simp only [hy, eq_self_iff_true, or_true_iff]
-        
-      apply or_congr _ Iff.rfl
-      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
-      apply eq_iff_eq_cancel_right.mpr
-      ring
+      classical 
+        convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
+        ext1 y
+        simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union,
+          mem_roots hφ, is_root, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
+          Multiset.mem_singleton]
+        by_cases hy : y = 0
+        · simp only [hy, eq_self_iff_true, or_true_iff]
+        apply or_congr _ Iff.rfl
+        rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
+        apply eq_iff_eq_cancel_right.mpr
+        ring
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x
@@ -261,16 +260,12 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       by_cases hx : x = 0
       · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
         exact ⟨_, 1, rfl, one_ne_zero⟩
-        
       · simp only [hx, or_false_iff, exists_eq_right]
         exact ⟨_, rfl, hx⟩
-        
-      
-    
 #align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zmod_p
 
 theorem dickson_one_one_char_p (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p :=
-  by
+  by 
   have h : (1 : R) = Zmod.castHom (dvd_refl p) R 1
   simp only [Zmod.cast_hom_apply, Zmod.cast_one']
   rw [h, ← map_dickson (Zmod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow,

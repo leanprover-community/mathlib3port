@@ -31,7 +31,7 @@ theorem smul_eq_map [MulSemiringAction M R] (m : M) :
   suffices
     DistribMulAction.toAddMonoidHom R[X] m =
       (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom
-    by
+    by 
     ext1 r
     exact AddMonoidHom.congr_fun this r
   ext (n r) : 2
@@ -127,7 +127,8 @@ variable {Q : Type _} [CommSemiring Q] [MulSemiringAction M Q]
 open Polynomial
 
 /-- An equivariant map induces an equivariant map on polynomials. -/
-protected noncomputable def polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X] where
+protected noncomputable def polynomial (g : P →+*[M] Q) :
+    P[X] →+*[M] Q[X] where 
   toFun := map g
   map_smul' m p :=
     Polynomial.induction_on p

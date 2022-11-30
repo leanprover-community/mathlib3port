@@ -59,10 +59,8 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
   constructor
   · rintro rfl
     exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
-    
   · rintro ⟨h, rfl⟩
     exact add_tsub_cancel_of_le h
-    
 #align finsupp.antidiagonal_filter_fst_eq Finsupp.antidiagonal_filter_fst_eq
 
 theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
@@ -75,10 +73,8 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
   constructor
   · rintro rfl
     exact ⟨le_add_left le_rfl, (add_tsub_cancel_right _ _).symm⟩
-    
   · rintro ⟨h, rfl⟩
     exact tsub_add_cancel_of_le h
-    
 #align finsupp.antidiagonal_filter_snd_eq Finsupp.antidiagonal_filter_snd_eq
 
 @[simp]

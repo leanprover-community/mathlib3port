@@ -83,17 +83,15 @@ non-empty. As a result, we can translate between the two.
 namespace Finset
 
 theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
-    s.sup' H f = sup (f '' s) := by
+    s.sup' H f = sup (f '' s) := by 
   apply le_antisymm
   · refine' (Finset.sup'_le _ _) fun a ha => _
     refine' le_cSup ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩
     rintro i ⟨j, hj, rfl⟩
     exact Finset.le_sup' _ hj
-    
   · apply cSup_le ((coe_nonempty.mpr H).image _)
     rintro _ ⟨a, ha, rfl⟩
     exact Finset.le_sup' _ ha
-    
 #align finset.sup'_eq_cSup_image Finset.sup'_eq_cSup_image
 
 theorem inf'_eq_cInf_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :

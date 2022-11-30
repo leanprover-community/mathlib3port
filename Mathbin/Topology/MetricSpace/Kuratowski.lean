@@ -104,7 +104,6 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
   · use fun _ => 0
     intro x
     exact absurd h (nonempty.ne_empty ⟨x, mem_univ x⟩)
-    
   · -- We construct a map x : ℕ → α with dense image
     rcases h with ⟨basepoint⟩
     haveI : Inhabited α := ⟨basepoint⟩
@@ -113,7 +112,6 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
     rcases Set.countable_iff_exists_subset_range.1 S_countable with ⟨x, x_range⟩
     -- Use embedding_of_subset to construct the desired isometry
     exact ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩
-    
 #align
   Kuratowski_embedding.exists_isometric_embedding KuratowskiEmbedding.exists_isometric_embedding
 
@@ -134,7 +132,9 @@ protected theorem kuratowskiEmbedding.isometry (α : Type u) [MetricSpace α] [S
 
 /-- Version of the Kuratowski embedding for nonempty compacts -/
 def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α]
-    [Nonempty α] : NonemptyCompacts ℓ_infty_ℝ where
+    [Nonempty α] :
+    NonemptyCompacts
+      ℓ_infty_ℝ where 
   carrier := range (kuratowskiEmbedding α)
   is_compact' := is_compact_range (kuratowskiEmbedding.isometry α).Continuous
   nonempty' := range_nonempty _

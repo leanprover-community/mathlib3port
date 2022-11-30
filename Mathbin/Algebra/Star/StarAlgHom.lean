@@ -101,7 +101,8 @@ variable [NonUnitalNonAssocSemiring C] [DistribMulAction R C] [HasStar C]
 
 variable [NonUnitalNonAssocSemiring D] [DistribMulAction R D] [HasStar D]
 
-instance : NonUnitalStarAlgHomClass (A →⋆ₙₐ[R] B) R A B where
+instance : NonUnitalStarAlgHomClass (A →⋆ₙₐ[R] B) R A
+      B where 
   coe := toFun
   coe_injective' := by rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
   map_smul f := f.map_smul'
@@ -128,14 +129,15 @@ theorem coe_to_non_unital_alg_hom {f : A →⋆ₙₐ[R] B} : (f.toNonUnitalAlgH
 #align
   non_unital_star_alg_hom.coe_to_non_unital_alg_hom NonUnitalStarAlgHom.coe_to_non_unital_alg_hom
 
-@[ext.1]
+@[ext]
 theorem ext {f g : A →⋆ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align non_unital_star_alg_hom.ext NonUnitalStarAlgHom.ext
 
 /-- Copy of a `non_unital_star_alg_hom` with a new `to_fun` equal to the old one. Useful
 to fix definitional equalities. -/
-protected def copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : A →⋆ₙₐ[R] B where
+protected def copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) :
+    A →⋆ₙₐ[R] B where 
   toFun := f'
   map_smul' := h.symm ▸ map_smul f
   map_zero' := h.symm ▸ map_zero f
@@ -161,7 +163,7 @@ theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅) :
 
 @[simp]
 theorem mk_coe (f : A →⋆ₙₐ[R] B) (h₁ h₂ h₃ h₄ h₅) : (⟨f, h₁, h₂, h₃, h₄, h₅⟩ : A →⋆ₙₐ[R] B) = f :=
-  by
+  by 
   ext
   rfl
 #align non_unital_star_alg_hom.mk_coe NonUnitalStarAlgHom.mk_coe
@@ -217,7 +219,7 @@ theorem comp_id (f : A →⋆ₙₐ[R] B) : f.comp (NonUnitalStarAlgHom.id _ _) 
   ext fun _ => rfl
 #align non_unital_star_alg_hom.comp_id NonUnitalStarAlgHom.comp_id
 
-instance : Monoid (A →⋆ₙₐ[R] A) where
+instance : Monoid (A →⋆ₙₐ[R] A) where 
   mul := comp
   mul_assoc := comp_assoc
   one := NonUnitalStarAlgHom.id R A
@@ -326,7 +328,8 @@ variable {F R A B C D : Type _} [CommSemiring R] [Semiring A] [Algebra R A] [Has
   [Algebra R B] [HasStar B] [Semiring C] [Algebra R C] [HasStar C] [Semiring D] [Algebra R D]
   [HasStar D]
 
-instance : StarAlgHomClass (A →⋆ₐ[R] B) R A B where
+instance : StarAlgHomClass (A →⋆ₐ[R] B) R A
+      B where 
   coe f := f.toFun
   coe_injective' f g h := by
     obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
@@ -354,14 +357,15 @@ theorem coe_to_alg_hom {f : A →⋆ₐ[R] B} : (f.toAlgHom : A → B) = f :=
   rfl
 #align star_alg_hom.coe_to_alg_hom StarAlgHom.coe_to_alg_hom
 
-@[ext.1]
+@[ext]
 theorem ext {f g : A →⋆ₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align star_alg_hom.ext StarAlgHom.ext
 
 /-- Copy of a `star_alg_hom` with a new `to_fun` equal to the old one. Useful
 to fix definitional equalities. -/
-protected def copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : A →⋆ₐ[R] B where
+protected def copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) :
+    A →⋆ₐ[R] B where 
   toFun := f'
   map_one' := h.symm ▸ map_one f
   map_mul' := h.symm ▸ map_mul f
@@ -446,7 +450,7 @@ theorem comp_id (f : A →⋆ₐ[R] B) : f.comp (StarAlgHom.id _ _) = f :=
   ext fun _ => rfl
 #align star_alg_hom.comp_id StarAlgHom.comp_id
 
-instance : Monoid (A →⋆ₐ[R] A) where
+instance : Monoid (A →⋆ₐ[R] A) where 
   mul := comp
   mul_assoc := comp_assoc
   one := StarAlgHom.id R A
@@ -523,7 +527,9 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 /-- Taking the product of two maps with the same domain is equivalent to taking the product of
 their codomains. -/
 @[simps]
-def prodEquiv : (A →⋆ₙₐ[R] B) × (A →⋆ₙₐ[R] C) ≃ (A →⋆ₙₐ[R] B × C) where
+def prodEquiv :
+    (A →⋆ₙₐ[R] B) × (A →⋆ₙₐ[R] C) ≃
+      (A →⋆ₙₐ[R] B × C) where 
   toFun f := f.1.Prod f.2
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   left_inv f := by ext <;> rfl
@@ -619,7 +625,9 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 /-- Taking the product of two maps with the same domain is equivalent to taking the product of
 their codomains. -/
 @[simps]
-def prodEquiv : (A →⋆ₐ[R] B) × (A →⋆ₐ[R] C) ≃ (A →⋆ₐ[R] B × C) where
+def prodEquiv :
+    (A →⋆ₐ[R] B) × (A →⋆ₐ[R] C) ≃
+      (A →⋆ₐ[R] B × C) where 
   toFun f := f.1.Prod f.2
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   left_inv f := by ext <;> rfl
@@ -706,12 +714,13 @@ section Basic
 variable {F R A B C : Type _} [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B]
   [HasSmul R B] [HasStar B] [Add C] [Mul C] [HasSmul R C] [HasStar C]
 
-instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A B where
+instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A
+      B where 
   coe := toFun
   inv := invFun
   left_inv := left_inv
   right_inv := right_inv
-  coe_injective' f g h₁ h₂ := by
+  coe_injective' f g h₁ h₂ := by 
     cases f
     cases g
     congr
@@ -725,7 +734,7 @@ instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A B where
 instance : CoeFun (A ≃⋆ₐ[R] B) fun _ => A → B :=
   ⟨StarAlgEquiv.toFun⟩
 
-@[ext.1]
+@[ext]
 theorem ext {f g : A ≃⋆ₐ[R] B} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align star_alg_equiv.ext StarAlgEquiv.ext
@@ -873,7 +882,8 @@ include hF
 /-- If a (unital or non-unital) star algebra morphism has an inverse, it is an isomorphism of
 star algebras. -/
 @[simps]
-def ofStarAlgHom (f : F) (g : G) (h₁ : ∀ x, g (f x) = x) (h₂ : ∀ x, f (g x) = x) : A ≃⋆ₐ[R] B where
+def ofStarAlgHom (f : F) (g : G) (h₁ : ∀ x, g (f x) = x) (h₂ : ∀ x, f (g x) = x) :
+    A ≃⋆ₐ[R] B where 
   toFun := f
   invFun := g
   left_inv := h₁

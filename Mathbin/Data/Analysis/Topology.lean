@@ -265,7 +265,7 @@ def Compact.Realizer [TopologicalSpace α] (s : Set α) :=
 #align compact.realizer Compact.Realizer
 
 instance [TopologicalSpace α] : Inhabited (Compact.Realizer (∅ : Set α)) :=
-  ⟨fun f F x h hF => by
+  ⟨fun f F x h hF => by 
     cases h _
     rw [← F.eq, eq_bot_iff]
     exact fun s _ => ⟨x, hF.trans s.empty_subset⟩⟩

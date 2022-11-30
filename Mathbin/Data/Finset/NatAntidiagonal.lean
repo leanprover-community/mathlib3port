@@ -52,11 +52,10 @@ theorem antidiagonal_succ (n : ℕ) :
         ((antidiagonal n).map
           (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ (Function.Embedding.refl _)))
         (by simp) :=
-  by
+  by 
   apply eq_of_veq
   rw [cons_val, map_val]
   · apply Multiset.Nat.antidiagonal_succ
-    
 #align finset.nat.antidiagonal_succ Finset.Nat.antidiagonal_succ
 
 theorem antidiagonal_succ' (n : ℕ) :
@@ -65,7 +64,7 @@ theorem antidiagonal_succ' (n : ℕ) :
         ((antidiagonal n).map
           (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩))
         (by simp) :=
-  by
+  by 
   apply eq_of_veq
   rw [cons_val, map_val]
   exact Multiset.Nat.antidiagonal_succ'
@@ -80,7 +79,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
                 ⟨Nat.succ, Nat.succ_injective⟩)) <|
           by simp)
         (by simp) :=
-  by
+  by 
   simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', Finset.map_cons, map_map]
   rfl
 #align finset.nat.antidiagonal_succ_succ' Finset.Nat.antidiagonal_succ_succ'
@@ -116,11 +115,9 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
   simp only [mem_filter, nat.mem_antidiagonal]
   split_ifs with h h
   · simp (config := { contextual := true }) [and_comm', eq_tsub_iff_add_eq_of_le h, add_comm]
-    
   · rw [not_le] at h
     simp only [not_mem_empty, iff_false_iff, not_and]
     exact fun hn => ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h)
-    
 #align finset.nat.filter_fst_eq_antidiagonal Finset.Nat.filter_fst_eq_antidiagonal
 
 theorem filter_snd_eq_antidiagonal (n m : ℕ) :
@@ -137,10 +134,11 @@ section EquivProd
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
     `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps]
-def sigmaAntidiagonalEquivProd : (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ where
+def sigmaAntidiagonalEquivProd :
+    (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ where 
   toFun x := x.2
   invFun x := ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩
-  left_inv := by
+  left_inv := by 
     rintro ⟨n, ⟨k, l⟩, h⟩
     rw [mem_antidiagonal] at h
     exact Sigma.subtype_ext h rfl

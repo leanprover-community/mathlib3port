@@ -83,7 +83,8 @@ noncomputable def resolvent (a : A) (r : R) : A :=
 
 /-- The unit `1 - r⁻¹ • a` constructed from `r • 1 - a` when the latter is a unit. -/
 @[simps]
-noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) : Aˣ where
+noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) :
+    Aˣ where 
   val := ↑ₐ s - r⁻¹ • a
   inv := r • ↑h.Unit⁻¹
   val_inv := by rw [mul_smul_comm, ← smul_mul_assoc, smul_sub, smul_inv_smul, h.mul_coe_inv]
@@ -161,14 +162,12 @@ theorem units_smul_resolvent {r : Rˣ} {s : R} {a : A} :
     have h' : ¬IsUnit (r⁻¹ • (s • 1 - a)) := fun hu =>
       h (by simpa only [smul_inv_smul] using IsUnit.smul r hu)
     simp only [Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ h', smul_zero]
-    
   · simp only [resolvent]
     have h' : IsUnit (r • algebraMap R A (r⁻¹ • s) - a) := by
       simpa [Algebra.algebra_map_eq_smul_one, smul_assoc] using not_mem_iff.mp h
     rw [← h'.coe_sub_inv_smul, ← (not_mem_iff.mp h).unit_spec, Ring.inverse_unit, Ring.inverse_unit,
       h'.coe_inv_sub_inv_smul]
     simp only [Algebra.algebra_map_eq_smul_one, smul_assoc, smul_inv_smul]
-    
 #align spectrum.units_smul_resolvent spectrum.units_smul_resolvent
 
 theorem units_smul_resolvent_self {r : Rˣ} {a : A} :
@@ -179,7 +178,7 @@ theorem units_smul_resolvent_self {r : Rˣ} {a : A} :
 
 /-- The resolvent is a unit when the argument is in the resolvent set. -/
 theorem is_unit_resolvent {r : R} {a : A} : r ∈ resolventSet R a ↔ IsUnit (resolvent a r) :=
-  is_unit_ring_inverse.symm
+  isUnit_ring_inverse.symm
 #align spectrum.is_unit_resolvent spectrum.is_unit_resolvent
 
 theorem inv_mem_resolvent_set {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ resolventSet R (a : A)) :
@@ -228,10 +227,8 @@ theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
   rw [smul_mem_smul_iff]
   constructor
   · exact fun h => ⟨r⁻¹ • x, ⟨h, by simp⟩⟩
-    
   · rintro ⟨_, _, x'_eq⟩
     simpa [← x'_eq]
-    
 #align spectrum.unit_smul_eq_smul spectrum.unit_smul_eq_smul
 
 -- `r ∈ σ(a*b) ↔ r ∈ σ(b*a)` for any `r : Rˣ`
@@ -383,22 +380,18 @@ theorem one_eq [Nontrivial A] : σ (1 : A) = {1} :=
 /-- the assumption `(σ a).nonempty` is necessary and cannot be removed without
     further conditions on the algebra `A` and scalar field `𝕜`. -/
 theorem smul_eq_smul [Nontrivial A] (k : 𝕜) (a : A) (ha : (σ a).Nonempty) : σ (k • a) = k • σ a :=
-  by
+  by 
   rcases eq_or_ne k 0 with (rfl | h)
   · simpa [ha, zero_smul_set]
-    
   · exact unit_smul_eq_smul a (Units.mk0 k h)
-    
 #align spectrum.smul_eq_smul spectrum.smul_eq_smul
 
 theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} := by
   suffices h : ∀ x y : A, σ (x * y) \ {0} ⊆ σ (y * x) \ {0}
   · exact Set.eq_of_subset_of_subset (h a b) (h b a)
-    
   · rintro _ _ k ⟨k_mem, k_neq⟩
     change k with ↑(Units.mk0 k k_neq) at k_mem
     exact ⟨unit_mem_mul_iff_mem_swap_mul.mp k_mem, k_neq⟩
-    
 #align spectrum.nonzero_mul_eq_swap_mul spectrum.nonzero_mul_eq_swap_mul
 
 protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) := by
@@ -408,10 +401,8 @@ protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) := 
     lift k to 𝕜ˣ using is_unit_iff_ne_zero.mpr this
     rw [← Units.val_inv_eq_inv_val k] at hk
     exact inv_mem_iff.mp hk
-    
   · lift k to 𝕜ˣ using is_unit_iff_ne_zero.mpr (ne_zero_of_mem_of_unit hk)
     simpa only [Units.val_inv_eq_inv_val] using inv_mem_iff.mp hk
-    
 #align spectrum.map_inv spectrum.map_inv
 
 open Polynomial
@@ -420,7 +411,7 @@ open Polynomial
 because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degree_pos` and
 `spectrum.map_polynomial_aeval_of_nonempty` need the field to be algebraically closed. -/
 theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (fun k => eval k p) '' σ a ⊆ σ (aeval a p) :=
-  by
+  by 
   rintro _ ⟨k, hk, rfl⟩
   let q := C (eval k p) - p
   have hroot : is_root q k := by simp only [eval_C, eval_sub, sub_self, is_root.def]
@@ -437,7 +428,8 @@ theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (fun k => eval k p) '' �
 is necessary in case `σ a = ∅`, for then the left-hand side is `∅` and the right-hand side,
 assuming `[nontrivial A]`, is `{k}` where `p = polynomial.C k`. -/
 theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X])
-    (hdeg : 0 < degree p) : σ (aeval a p) = (fun k => eval k p) '' σ a := by
+    (hdeg : 0 < degree p) : σ (aeval a p) = (fun k => eval k p) '' σ a :=
+  by
   -- handle the easy direction via `spectrum.subset_polynomial_aeval`
   refine' Set.eq_of_subset_of_subset (fun k hk => _) (subset_polynomial_aeval a p)
   -- write `C k - p` product of linear factors and a constant; show `C k - p ≠ 0`.
@@ -466,7 +458,6 @@ theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X]
   refine' Or.elim (le_or_gt (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
   · rw [eq_C_of_degree_le_zero h]
     simp only [Set.image_congr, eval_C, aeval_C, scalar_eq, Set.Nonempty.image_const hnon]
-    
 #align spectrum.map_polynomial_aeval_of_nonempty spectrum.map_polynomial_aeval_of_nonempty
 
 /-- A specialization of `spectrum.subset_polynomial_aeval` to monic monomials for convenience. -/
@@ -480,7 +471,7 @@ theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
     σ (a ^ n) = (fun x => x ^ n) '' σ a := by
   simpa only [aeval_X_pow, eval_pow, eval_X] using
     map_polynomial_aeval_of_degree_pos a (X ^ n : 𝕜[X])
-      (by
+      (by 
         rw_mod_cast [degree_X_pow]
         exact hn)
 #align spectrum.map_pow_of_pos spectrum.map_pow_of_pos
@@ -500,7 +491,7 @@ over an algebraically closed field `𝕜` has non-empty spectrum. -/
 theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nontrivial A]
     [I : FiniteDimensional 𝕜 A] (a : A) : ∃ k : 𝕜, k ∈ σ a := by
   obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) a
-  have nu : ¬IsUnit (aeval a p) := by
+  have nu : ¬IsUnit (aeval a p) := by 
     rw [← aeval_def] at h_eval_p
     rw [h_eval_p]
     simp

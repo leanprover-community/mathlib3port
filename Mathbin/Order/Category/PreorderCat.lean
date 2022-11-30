@@ -26,7 +26,7 @@ def PreorderCat :=
 
 namespace PreorderCat
 
-instance : BundledHom @OrderHom where
+instance : BundledHom @OrderHom where 
   toFun := @OrderHom.toFun
   id := @OrderHom.id
   comp := @OrderHom.comp
@@ -55,20 +55,21 @@ instance (α : PreorderCat) : Preorder α :=
 
 /-- Constructs an equivalence between preorders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : PreorderCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : PreorderCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply x
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply x
 #align Preorder.iso.mk PreorderCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : PreorderCat ⥤ PreorderCat where
+def dual : PreorderCat ⥤ PreorderCat where 
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
 #align Preorder.dual PreorderCat.dual
@@ -86,7 +87,8 @@ end PreorderCat
 /-- The embedding of `Preorder` into `Cat`.
 -/
 @[simps]
-def preorderToCat : PreorderCat.{u} ⥤ Cat where
+def preorderToCat : PreorderCat.{u} ⥤
+      Cat where 
   obj X := CatCat.of X.1
   map X Y f := f.Monotone.Functor
   map_id' X := by apply CategoryTheory.Functor.ext; tidy
@@ -97,7 +99,7 @@ instance :
     Faithful
       preorderToCat.{u} where map_injective' X Y f g h := by ext x; exact functor.congr_obj h x
 
-instance : Full preorderToCat.{u} where
+instance : Full preorderToCat.{u} where 
   preimage X Y f := ⟨f.obj, f.Monotone⟩
   witness' X Y f := by apply CategoryTheory.Functor.ext; tidy
 

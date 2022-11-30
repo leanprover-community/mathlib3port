@@ -24,7 +24,7 @@ instance RelCat.inhabited : Inhabited RelCat := by unfold Rel <;> infer_instance
 #align category_theory.Rel.inhabited CategoryTheory.RelCat.inhabited
 
 /-- The category of types with binary relations as morphisms. -/
-instance rel : LargeCategory RelCat where
+instance rel : LargeCategory RelCat where 
   Hom X Y := X → Y → Prop
   id X x y := x = y
   comp X Y Z f g x z := ∃ y, f x y ∧ g y z

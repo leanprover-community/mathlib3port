@@ -77,7 +77,7 @@ instance (priority := 100) : Infinite α :=
   Infinite.of_surjective _ (eqv α).Surjective
 
 /-- A type equivalent to `ℕ` is denumerable. -/
-def mk' {α} (e : α ≃ ℕ) : Denumerable α where
+def mk' {α} (e : α ≃ ℕ) : Denumerable α where 
   encode := e
   decode := some ∘ e.symm
   encodek a := congr_arg some (e.symm_apply_apply _)
@@ -112,14 +112,12 @@ theorem of_nat_nat (n) : ofNat ℕ n = n :=
 
 /-- If `α` is denumerable, then so is `option α`. -/
 instance option : Denumerable (Option α) :=
-  ⟨fun n => by
+  ⟨fun n => by 
     cases n
     · refine' ⟨none, _, encode_none⟩
       rw [decode_option_zero, Option.mem_def]
-      
     refine' ⟨some (of_nat α n), _, _⟩
     · rw [decode_option_succ, decode_eq_of_nat, Option.map_some', Option.mem_def]
-      
     rw [encode_some, encode_of_nat]⟩
 #align denumerable.option Denumerable.option
 
@@ -268,12 +266,12 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n =
     have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by
       simpa [hmt] using List.maximum_mem hmax
     cases' hmax : List.maximum t with m
-    · exact
+    ·
+      exact
         ⟨0,
           le_antisymm bot_le
             (le_of_not_gt fun h =>
               List.not_mem_nil (⊥ : s) <| by rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
-      
     cases' of_nat_surjective_aux m.2 with a ha
     exact
       ⟨a + 1,
@@ -309,18 +307,18 @@ private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filter (�
 open Finset
 
 private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
-  | 0 => by
+  | 0 => by 
     rw [to_fun_aux_eq, card_eq_zero, eq_empty_iff_forall_not_mem]
     rintro n hn
     rw [mem_filter, of_nat, mem_range] at hn
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
-  | n + 1 => by
+  | n + 1 => by 
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
     have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by simp
     have h₂ :
       (range (succ (ofNat s n))).filter (· ∈ s) =
         insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) :=
-      by
+      by 
       simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>
         ⟨fun h => by
@@ -330,9 +328,9 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
           h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h =>
             ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
     simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
-    conv =>
-    rhs
-    rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
+    conv => 
+      rhs
+      rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
 #align nat.subtype.right_inverse_aux nat.subtype.right_inverse_aux
 
 /-- Any infinite set of naturals is denumerable. -/

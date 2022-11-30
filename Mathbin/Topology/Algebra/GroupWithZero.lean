@@ -201,9 +201,7 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
   · rw [ContinuousAt]
     simp_rw [comp_app, hga, div_zero]
     exact (h2h hga).comp (continuous_at_id.prod_mk tendsto_top)
-    
   · exact ContinuousAt.comp (hh hga) (continuous_at_id.prod (hf.div hg hga))
-    
 #align continuous_at.comp_div_cases ContinuousAt.comp_div_cases
 
 /-- `h x (f x / g x)` is continuous under certain conditions, even if the denominator is sometimes
@@ -268,14 +266,12 @@ section Zpow
 variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀]
 
 theorem continuous_at_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) :
-    ContinuousAt (fun x => x ^ m) x := by
+    ContinuousAt (fun x => x ^ m) x := by 
   cases m
   · simpa only [zpow_of_nat] using continuous_at_pow x m
-    
   · simp only [zpow_neg_succ_of_nat]
     have hx : x ≠ 0 := h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le
     exact (continuous_at_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
-    
 #align continuous_at_zpow₀ continuous_at_zpow₀
 
 theorem continuous_on_zpow₀ (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) ({0}ᶜ) := fun x hx =>

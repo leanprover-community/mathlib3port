@@ -35,16 +35,14 @@ theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFin
     rintro g hg hgf a
     rw [← hgf]
     exact hg a
-    
   · simp only [pi_finset, mem_map, forall_prop_of_true, exists_prop, mem_univ, mem_pi]
     exact fun hf => ⟨fun a ha => f a, hf, rfl⟩
-    
 #align fintype.mem_pi_finset Fintype.mem_pi_finset
 
 @[simp]
 theorem coe_pi_finset (t : ∀ a, Finset (δ a)) :
     (piFinset t : Set (∀ a, δ a)) = Set.pi Set.univ fun a => t a :=
-  Set.ext fun x => by
+  Set.ext fun x => by 
     rw [Set.mem_univ_pi]
     exact Fintype.mem_pi_finset
 #align fintype.coe_pi_finset Fintype.coe_pi_finset

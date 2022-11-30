@@ -80,18 +80,23 @@ instance [HasSmul R ℝ] [HasSmul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] :
     IsCentralScalar R
       ℂ where op_smul_eq_smul r x := by ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
 
-instance [Monoid R] [MulAction R ℝ] : MulAction R ℂ where
+instance [Monoid R] [MulAction R ℝ] :
+    MulAction R
+      ℂ where 
   one_smul x := by ext <;> simp [smul_re, smul_im, one_smul]
   mul_smul r s x := by ext <;> simp [smul_re, smul_im, mul_smul]
 
-instance [DistribSmul R ℝ] : DistribSmul R ℂ where
+instance [DistribSmul R ℝ] :
+    DistribSmul R
+      ℂ where 
   smul_add r x y := by ext <;> simp [smul_re, smul_im, smul_add]
   smul_zero r := by ext <;> simp [smul_re, smul_im, smul_zero]
 
 instance [Semiring R] [DistribMulAction R ℝ] : DistribMulAction R ℂ :=
   { Complex.distribSmul with }
 
-instance [Semiring R] [Module R ℝ] : Module R ℂ where
+instance [Semiring R] [Module R ℝ] :
+    Module R ℂ where 
   add_smul r s x := by ext <;> simp [smul_re, smul_im, add_smul]
   zero_smul r := by ext <;> simp [smul_re, smul_im, zero_smul]
 
@@ -120,7 +125,7 @@ theorem AlgHom.map_coe_real_complex (f : ℂ →ₐ[ℝ] A) (x : ℝ) : f x = al
 #align alg_hom.map_coe_real_complex AlgHom.map_coe_real_complex
 
 /-- Two `ℝ`-algebra homomorphisms from ℂ are equal if they agree on `complex.I`. -/
-@[ext.1]
+@[ext]
 theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f i = g i) : f = g := by
   ext ⟨x, y⟩
   simp only [mk_eq_add_mul_I, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
@@ -147,7 +152,7 @@ noncomputable def basisOneI : Basis (Fin 2) ℝ ℂ :=
   Basis.ofEquivFun
     { toFun := fun z => ![z.re, z.im], invFun := fun c => c 0 + c 1 • I,
       left_inv := fun z => by simp,
-      right_inv := fun c => by
+      right_inv := fun c => by 
         ext i
         fin_cases i <;> simp,
       map_add' := fun z z' => by
@@ -255,7 +260,7 @@ namespace Complex
 open ComplexConjugate
 
 /-- Linear map version of the real part function, from `ℂ` to `ℝ`. -/
-def reLm : ℂ →ₗ[ℝ] ℝ where
+def reLm : ℂ →ₗ[ℝ] ℝ where 
   toFun x := x.re
   map_add' := add_re
   map_smul' := by simp
@@ -267,7 +272,7 @@ theorem re_lm_coe : ⇑re_lm = re :=
 #align complex.re_lm_coe Complex.re_lm_coe
 
 /-- Linear map version of the imaginary part function, from `ℂ` to `ℝ`. -/
-def imLm : ℂ →ₗ[ℝ] ℝ where
+def imLm : ℂ →ₗ[ℝ] ℝ where 
   toFun x := x.im
   map_add' := add_im
   map_smul' := by simp
@@ -307,7 +312,7 @@ theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
-  by
+  by 
   ext (i j)
   simp [LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp
@@ -336,16 +341,16 @@ def liftAux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
     show
       algebraMap ℝ A (x₁ * x₂ - y₁ * y₂) + (x₁ * y₂ + y₁ * x₂) • I' =
         (algebraMap ℝ A x₁ + y₁ • I') * (algebraMap ℝ A x₂ + y₂ • I')
-      by
+      by 
       rw [add_mul, mul_add, mul_add, add_comm _ (y₁ • I' * y₂ • I'), add_add_add_comm]
       congr 1
       -- equate "real" and "imaginary" parts
-      · rw [smul_mul_smul, hf, smul_neg, ← Algebra.algebra_map_eq_smul_one, ← sub_eq_add_neg, ←
+      ·
+        rw [smul_mul_smul, hf, smul_neg, ← Algebra.algebra_map_eq_smul_one, ← sub_eq_add_neg, ←
           RingHom.map_mul, ← RingHom.map_sub]
-        
-      · rw [Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, ← Algebra.right_comm _ x₂, ←
+      ·
+        rw [Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, ← Algebra.right_comm _ x₂, ←
           mul_assoc, ← add_mul, ← RingHom.map_mul, ← RingHom.map_mul, ← RingHom.map_add]
-        
 #align complex.lift_aux Complex.liftAux
 
 @[simp]
@@ -364,7 +369,9 @@ This can be used to embed the complex numbers in the `quaternion`s.
 
 This isomorphism is named to match the very similar `zsqrtd.lift`. -/
 @[simps (config := { simpRhs := true })]
-def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A) where
+def lift :
+    { I' : A // I' * I' = -1 } ≃
+      (ℂ →ₐ[ℝ] A) where 
   toFun I' := liftAux I' I'.Prop
   invFun F := ⟨F i, by rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
   left_inv I' := Subtype.ext <| lift_aux_apply_I I' I'.Prop
@@ -396,15 +403,18 @@ variable {A : Type _} [AddCommGroup A] [Module ℂ A] [StarAddMonoid A] [StarMod
 /-- Create a `self_adjoint` element from a `skew_adjoint` element by multiplying by the scalar
 `-complex.I`. -/
 @[simps]
-def skewAdjoint.negISmul : skewAdjoint A →ₗ[ℝ] selfAdjoint A where
+def skewAdjoint.negISmul :
+    skewAdjoint A →ₗ[ℝ]
+      selfAdjoint
+        A where 
   toFun a :=
     ⟨-I • a, by
       simp only [selfAdjoint.mem_iff, neg_smul, star_neg, star_smul, star_def, conj_I,
         skewAdjoint.star_coe_eq, neg_smul_neg]⟩
-  map_add' a b := by
+  map_add' a b := by 
     ext
     simp only [AddSubgroup.coe_add, smul_add, AddMemClass.mk_add_mk]
-  map_smul' a b := by
+  map_smul' a b := by 
     ext
     simp only [neg_smul, skewAdjoint.coe_smul, AddSubgroup.coe_mk, RingHom.id_apply,
       selfAdjoint.coe_smul, smul_neg, neg_inj]

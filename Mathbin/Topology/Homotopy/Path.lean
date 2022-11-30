@@ -77,7 +77,8 @@ theorem target (F : Homotopy p₀ p₁) (t : I) : F (t, 1) = x₁ := by
 
 /-- Evaluating a path homotopy at an intermediate point, giving us a `path`.
 -/
-def eval (F : Homotopy p₀ p₁) (t : I) : Path x₀ x₁ where
+def eval (F : Homotopy p₀ p₁) (t : I) :
+    Path x₀ x₁ where 
   toFun := F.toHomotopy.curry t
   source' := by simp
   target' := by simp
@@ -160,7 +161,10 @@ variable {p₀ q₀ : Path x₀ x₁} {p₁ q₁ : Path x₁ x₂}
 Furthermore, suppose `F : homotopy p₀ q₀` and `G : homotopy p₁ q₁`. Then we can define a homotopy
 from `p₀.trans p₁` to `q₀.trans q₁`.
 -/
-def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.trans p₁) (q₀.trans q₁) where
+def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) :
+    Homotopy (p₀.trans p₁)
+      (q₀.trans
+        q₁) where 
   toFun x :=
     if (x.2 : ℝ) ≤ 1 / 2 then (F.eval x.1).extend (2 * x.2) else (G.eval x.1).extend (2 * x.2 - 1)
   continuous_to_fun := by
@@ -172,16 +176,14 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
     norm_num [hx]
   map_zero_left' x := by norm_num [Path.trans]
   map_one_left' x := by norm_num [Path.trans]
-  prop' := by
+  prop' := by 
     rintro x t ht
     cases ht
     · rw [ht]
       simp
-      
     · rw [Set.mem_singleton_iff] at ht
       rw [ht]
       norm_num
-      
 #align path.homotopy.hcomp Path.Homotopy.hcomp
 
 theorem hcomp_apply (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (x : I × I) :
@@ -205,7 +207,9 @@ end
 Suppose `p` is a path, then we have a homotopy from `p` to `p.reparam f` by the convexity of `I`.
 -/
 def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-    Homotopy p (p.reparam f hf hf₀ hf₁) where
+    Homotopy p
+      (p.reparam f hf hf₀
+        hf₁) where 
   toFun x :=
     p
       ⟨σ x.1 * x.2 + x.1 * f x.2,
@@ -213,34 +217,31 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
           convex_Icc _ _ x.2.2 (f x.2).2 (by unit_interval) (by unit_interval) (by simp)⟩
   map_zero_left' x := by norm_num
   map_one_left' x := by norm_num
-  prop' t x hx := by
+  prop' t x hx := by 
     cases hx
     · rw [hx]
       norm_num [hf₀]
-      
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
       norm_num [hf₁]
-      
 #align path.homotopy.reparam Path.Homotopy.reparam
 
 /-- Suppose `F : homotopy p q`. Then we have a `homotopy p.symm q.symm` by reversing the second
 argument.
 -/
 @[simps]
-def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm where
+def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) :
+    p.symm.Homotopy q.symm where 
   toFun x := F ⟨x.1, σ x.2⟩
   map_zero_left' := by simp [Path.symm]
   map_one_left' := by simp [Path.symm]
-  prop' t x hx := by
+  prop' t x hx := by 
     cases hx
     · rw [hx]
       simp
-      
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
       simp
-      
 #align path.homotopy.symm₂ Path.Homotopy.symm₂
 
 /--
@@ -249,17 +250,16 @@ Given `F : homotopy p q`, and `f : C(X, Y)`, we can define a homotopy from `p.ma
 -/
 @[simps]
 def map {p q : Path x₀ x₁} (F : p.Homotopy q) (f : C(X, Y)) :
-    Homotopy (p.map f.Continuous) (q.map f.Continuous) where
+    Homotopy (p.map f.Continuous)
+      (q.map f.Continuous) where 
   toFun := f ∘ F
   map_zero_left' := by simp
   map_one_left' := by simp
-  prop' t x hx := by
+  prop' t x hx := by 
     cases hx
     · simp [hx]
-      
     · rw [Set.mem_singleton_iff] at hx
       simp [hx]
-      
 #align path.homotopy.map Path.Homotopy.map
 
 end Homotopy
@@ -359,7 +359,8 @@ namespace ContinuousMap.Homotopy
 `f x` to `g x`
 -/
 def evalAt {X : Type _} {Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {f g : C(X, Y)}
-    (H : ContinuousMap.Homotopy f g) (x : X) : Path (f x) (g x) where
+    (H : ContinuousMap.Homotopy f g) (x : X) :
+    Path (f x) (g x) where 
   toFun t := H (t, x)
   source' := H.apply_zero x
   target' := H.apply_one x

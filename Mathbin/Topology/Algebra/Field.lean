@@ -56,7 +56,7 @@ theorem units_embedding [InducedUnits R] : Embedding (coe : Rˣ → R) :=
 #align topological_ring.units_embedding TopologicalRing.units_embedding
 
 instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuousMul Rˣ :=
-  ⟨by
+  ⟨by 
     let mulR := fun p : R × R => p.1 * p.2
     let mulRx := fun p : Rˣ × Rˣ => p.1 * p.2
     have key : coe ∘ mulRx = mulR ∘ fun p => (p.1.val, p.2.val) := rfl
@@ -118,7 +118,7 @@ variable [TopologicalDivisionRing K]
 
 theorem units_top_group : TopologicalGroup Kˣ :=
   { TopologicalRing.top_monoid_units K with
-    continuous_inv := by
+    continuous_inv := by 
       rw [continuous_iff_continuous_at]
       intro x
       rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, ←
@@ -151,10 +151,11 @@ variable {𝕜 : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalRing �
 The map `λ x, a * x + b`, as a homeomorphism from `𝕜` (a topological field) to itself, when `a ≠ 0`.
 -/
 @[simps]
-def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜 where
+def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) :
+    𝕜 ≃ₜ 𝕜 where 
   toFun x := a * x + b
   invFun y := (y - b) / a
-  left_inv x := by
+  left_inv x := by 
     simp only [add_sub_cancel]
     exact mul_div_cancel_left x h
   right_inv y := by simp [mul_div_cancel' _ h]

@@ -191,7 +191,7 @@ end
 `mul_action.is_scalar_tower.left`. -/
 instance (priority := 100) CompatibleSmul.isScalarTower [HasSmul R' R] [IsScalarTower R' R M]
     [DistribMulAction R' N] [IsScalarTower R' R N] : CompatibleSmul R R' M N :=
-  ⟨fun r m n => by
+  ⟨fun r m n => by 
     conv_lhs => rw [← one_smul R m]
     conv_rhs => rw [← one_smul R n]
     rw [← smul_assoc, ← smul_assoc]
@@ -394,21 +394,19 @@ section
 open BigOperators
 
 theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) :
-    (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by classical
-  induction' s using Finset.induction with a s has ih h
-  · simp
-    
-  · simp [Finset.sum_insert has, add_tmul, ih]
-    
+    (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
+  classical 
+    induction' s using Finset.induction with a s has ih h
+    · simp
+    · simp [Finset.sum_insert has, add_tmul, ih]
 #align tensor_product.sum_tmul TensorProduct.sum_tmul
 
 theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) :
-    (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a := by classical
-  induction' s using Finset.induction with a s has ih h
-  · simp
-    
-  · simp [Finset.sum_insert has, tmul_add, ih]
-    
+    (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a := by
+  classical 
+    induction' s using Finset.induction with a s has ih h
+    · simp
+    · simp [Finset.sum_insert has, tmul_add, ih]
 #align tensor_product.tmul_sum TensorProduct.tmul_sum
 
 end
@@ -420,14 +418,11 @@ theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ
   ext t; simp only [Submodule.mem_top, iff_true_iff]
   apply t.induction_on
   · exact Submodule.zero_mem _
-    
   · intro m n
     apply Submodule.subset_span
     use m, n
-    
   · intro t₁ t₂ ht₁ ht₂
     exact Submodule.add_mem _ ht₁ ht₂
-    
 #align tensor_product.span_tmul_eq_top TensorProduct.span_tmul_eq_top
 
 @[simp]
@@ -536,7 +531,7 @@ theorem ext {g h : M ⊗ N →ₗ[R] P} (H : (mk R M N).compr₂ g = (mk R M N).
   rw [← lift_mk_compr₂ g, H, lift_mk_compr₂]
 #align tensor_product.ext TensorProduct.ext
 
-attribute [local ext.1] ext
+attribute [local ext] ext
 
 example : M → N → (M → N → P) → P := fun m => flip fun f => f m
 
@@ -753,11 +748,9 @@ theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
   · rintro ⟨_, ⟨⟨m, n, rfl⟩, rfl⟩⟩
     use m, n
     simp only [map_tmul]
-    
   · rintro ⟨m, n, rfl⟩
     use m ⊗ₜ n, m, n
     simp only [map_tmul]
-    
 #align tensor_product.map_range_eq_span_tmul TensorProduct.map_range_eq_span_tmul
 
 /-- Given submodules `p ⊆ P` and `q ⊆ Q`, this is the natural map: `p ⊗ q → P ⊗ Q`. -/
@@ -784,7 +777,7 @@ theorem lift_comp_map (i : P →ₗ[R] Q →ₗ[R] Q') (f : M →ₗ[R] P) (g : 
   ext' fun _ _ => by simp only [lift.tmul, map_tmul, LinearMap.compl₂_apply, LinearMap.comp_apply]
 #align tensor_product.lift_comp_map TensorProduct.lift_comp_map
 
-attribute [local ext.1] ext
+attribute [local ext] ext
 
 @[simp]
 theorem map_id : map (id : M →ₗ[R] M) (id : N →ₗ[R] N) = id := by
@@ -807,19 +800,17 @@ protected theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) :
     map f g ^ n = map (f ^ n) (g ^ n) := by
   induction' n with n ih
   · simp only [pow_zero, map_one]
-    
   · simp only [pow_succ', ih, map_mul]
-    
 #align tensor_product.map_pow TensorProduct.map_pow
 
 theorem map_add_left (f₁ f₂ : M →ₗ[R] P) (g : N →ₗ[R] Q) : map (f₁ + f₂) g = map f₁ g + map f₂ g :=
-  by
+  by 
   ext
   simp only [add_tmul, compr₂_apply, mk_apply, map_tmul, add_apply]
 #align tensor_product.map_add_left TensorProduct.map_add_left
 
 theorem map_add_right (f : M →ₗ[R] P) (g₁ g₂ : N →ₗ[R] Q) : map f (g₁ + g₂) = map f g₁ + map f g₂ :=
-  by
+  by 
   ext
   simp only [tmul_add, compr₂_apply, mk_apply, map_tmul, add_apply]
 #align tensor_product.map_add_right TensorProduct.map_add_right
@@ -1023,27 +1014,31 @@ theorem rtensor_tmul (m : M) (n : N) : f.rtensor M (n ⊗ₜ m) = f n ⊗ₜ m :
 
 open TensorProduct
 
-attribute [local ext.1] TensorProduct.ext
+attribute [local ext] TensorProduct.ext
 
 /-- `ltensor_hom M` is the natural linear map that sends a linear map `f : N →ₗ P` to `M ⊗ f`. -/
-def ltensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P where
+def ltensorHom :
+    (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R]
+        M ⊗[R] P where 
   toFun := ltensor M
-  map_add' f g := by
+  map_add' f g := by 
     ext (x y)
     simp only [compr₂_apply, mk_apply, add_apply, ltensor_tmul, tmul_add]
-  map_smul' r f := by
+  map_smul' r f := by 
     dsimp
     ext (x y)
     simp only [compr₂_apply, mk_apply, tmul_smul, smul_apply, ltensor_tmul]
 #align linear_map.ltensor_hom LinearMap.ltensorHom
 
 /-- `rtensor_hom M` is the natural linear map that sends a linear map `f : N →ₗ P` to `M ⊗ f`. -/
-def rtensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M where
+def rtensorHom :
+    (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R]
+        P ⊗[R] M where 
   toFun f := f.rtensor M
-  map_add' f g := by
+  map_add' f g := by 
     ext (x y)
     simp only [compr₂_apply, mk_apply, add_apply, rtensor_tmul, add_tmul]
-  map_smul' r f := by
+  map_smul' r f := by 
     dsimp
     ext (x y)
     simp only [compr₂_apply, mk_apply, smul_tmul, tmul_smul, smul_apply, rtensor_tmul]
@@ -1245,13 +1240,13 @@ instance :
 
 protected theorem add_left_neg (x : M ⊗[R] N) : -x + x = 0 :=
   TensorProduct.induction_on x
-    (by
+    (by 
       rw [add_zero]
       apply (neg.aux R).map_zero)
-    (fun x y => by
+    (fun x y => by 
       convert (add_tmul (-x) x y).symm
       rw [add_left_neg, zero_tmul])
-    fun x y hx hy => by
+    fun x y hx hy => by 
     unfold Neg.neg SubNegMonoid.neg
     rw [AddMonoidHom.map_add]
     ac_change -x + x + (-y + y) = 0

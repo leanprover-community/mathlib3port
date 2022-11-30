@@ -39,34 +39,26 @@ protected theorem StrictMonoOn.union {s t : Set α} {c : α} (h₁ : StrictMonoO
     intro x hx hxc
     cases hx
     · exact hx
-      
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
     · exact hs.1
-      
     exact (lt_irrefl _ (h'x.trans_le (ht.2 hx))).elim
   have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t := by
     intro x hx hxc
     cases hx
     swap
     · exact hx
-      
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
     · exact ht.1
-      
     exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)
   · have xs : x ∈ s := A _ hx hxc.le
     rcases lt_or_le y c with (hyc | hcy)
     · exact h₁ xs (A _ hy hyc.le) hxy
-      
     · exact (h₁ xs hs.1 hxc).trans_le (h₂.monotone_on ht.1 (B _ hy hcy) hcy)
-      
-    
   · have xt : x ∈ t := B _ hx hcx
     have yt : y ∈ t := B _ hy (hcx.trans hxy.le)
     exact h₂ xt yt hxy
-    
 #align strict_mono_on.union StrictMonoOn.union
 
 /-- If `f` is strictly monotone both on `(-∞, a]` and `[a, ∞)`, then it is strictly monotone on the
@@ -99,39 +91,31 @@ protected theorem MonotoneOn.union_right {s t : Set α} {c : α} (h₁ : Monoton
     intro x hx hxc
     cases hx
     · exact hx
-      
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
     · exact hs.1
-      
     exact (lt_irrefl _ (h'x.trans_le (ht.2 hx))).elim
   have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t := by
     intro x hx hxc
     cases hx
     swap
     · exact hx
-      
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
     · exact ht.1
-      
     exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)
   · have xs : x ∈ s := A _ hx hxc.le
     rcases lt_or_le y c with (hyc | hcy)
     · exact h₁ xs (A _ hy hyc.le) hxy
-      
     · exact (h₁ xs hs.1 hxc.le).trans (h₂ ht.1 (B _ hy hcy) hcy)
-      
-    
   · have xt : x ∈ t := B _ hx hcx
     have yt : y ∈ t := B _ hy (hcx.trans hxy)
     exact h₂ xt yt hxy
-    
 #align monotone_on.union_right MonotoneOn.union_right
 
 /-- If `f` is monotone both on `(-∞, a]` and `[a, ∞)`, then it is monotone on the whole line. -/
 protected theorem MonotoneOn.Iic_union_Ici (h₁ : MonotoneOn f (iic a)) (h₂ : MonotoneOn f (ici a)) :
-    Monotone f := by
+    Monotone f := by 
   rw [← monotoneOn_univ, ← @Iic_union_Ici _ _ a]
   exact MonotoneOn.union_right h₁ h₂ is_greatest_Iic is_least_Ici
 #align monotone_on.Iic_union_Ici MonotoneOn.Iic_union_Ici
@@ -153,7 +137,8 @@ protected theorem AntitoneOn.Iic_union_Ici (h₁ : AntitoneOn f (iic a)) (h₂ :
 provided `s` has a least element `a` and a greatest element `b`. -/
 theorem MonotoneOn.exists_monotone_extension {β : Type _} [ConditionallyCompleteLinearOrder β]
     {f : α → β} {s : Set α} (h : MonotoneOn f s) {a b : α} (ha : IsLeast s a)
-    (hb : IsGreatest s b) : ∃ g : α → β, Monotone g ∧ EqOn f g s := by
+    (hb : IsGreatest s b) : ∃ g : α → β, Monotone g ∧ EqOn f g s :=
+  by
   /- The extension is defined by `f x = f a` for `x ≤ a`, and `f x` is the supremum of the values
     of `f`  to the left of `x` for `x ≥ a`. -/
   have aleb : a ≤ b := hb.2 ha.1
@@ -165,17 +150,14 @@ theorem MonotoneOn.exists_monotone_extension {β : Type _} [ConditionallyComplet
       exact h zs xs zx
     apply le_antisymm
     · exact le_cSup ⟨f x, H⟩ (mem_image_of_mem _ xmem)
-      
     · exact cSup_le (nonempty_image_iff.2 ⟨x, xmem⟩) H
-      
   let g x := if x ≤ a then f a else Sup (f '' (Icc a x ∩ s))
-  have hfg : eq_on f g s := by
+  have hfg : eq_on f g s := by 
     intro x xs
     dsimp only [g]
     by_cases hxa : x ≤ a
     · have : x = a := le_antisymm hxa (ha.2 xs)
       simp only [if_true, this, le_refl]
-      
     rw [if_neg hxa]
     exact H x xs
   have M1 : MonotoneOn g (Iic a) := by
@@ -188,22 +170,18 @@ theorem MonotoneOn.exists_monotone_extension {β : Type _} [ConditionallyComplet
     by_cases hxa : x ≤ a
     · have : x = a := le_antisymm hxa ax
       simp_rw [hxa, if_true, H a ha.1, this]
-      
     simp only [hxa, if_false]
-  have M2 : MonotoneOn g (Ici a) := by
+  have M2 : MonotoneOn g (Ici a) := by 
     rintro x ax y ay hxy
     rw [g_eq x ax, g_eq y ay]
     apply cSup_le_cSup
     · refine' ⟨f b, _⟩
       rintro _ ⟨z, ⟨⟨az, zy⟩, zs⟩, rfl⟩
       exact h zs hb.1 (hb.2 zs)
-      
     · exact ⟨f a, mem_image_of_mem _ ⟨⟨le_rfl, ax⟩, ha.1⟩⟩
-      
     · apply image_subset
       apply inter_subset_inter_left
       exact Icc_subset_Icc le_rfl hxy
-      
   exact ⟨g, M1.Iic_union_Ici M2, hfg⟩
 #align monotone_on.exists_monotone_extension MonotoneOn.exists_monotone_extension
 
@@ -248,20 +226,15 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
       |x / (1 + |x|)| = |x| / (1 + |x|) := by rw [abs_div, abs_of_pos H]
       _ < 1 := (div_lt_one H).2 (lt_one_add _)
       
-    
   · refine' (strict_mono_of_odd_strict_mono_on_nonneg _ _).codRestrict _
     · intro x
       simp only [abs_neg, neg_div]
-      
     · rintro x (hx : 0 ≤ x) y (hy : 0 ≤ y) hxy
       simp [abs_of_nonneg, mul_add, mul_comm x y, div_lt_div_iff, hx.trans_lt (lt_one_add _),
         hy.trans_lt (lt_one_add _), *]
-      
-    
   · refine' fun x => Subtype.ext _
     have : 0 < 1 - |(x : k)| := sub_pos.2 (abs_lt.2 x.2)
     field_simp [abs_div, this.ne', abs_of_pos this]
-    
 #align order_iso_Ioo_neg_one_one orderIsoIooNegOneOne
 
 section IxxCat
@@ -457,15 +430,12 @@ theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot �
   by_cases hk : IsMax k
   · rw [succ_eq_iff_is_max.2 hk] at hm
     exact ih (hφ.mono <| Iic_subset_Iic.2 (le_succ _)) _ hm
-    
   obtain rfl | h := le_succ_iff_eq_or_le.1 hm
   · specialize ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) k le_rfl
     refine' le_trans (succ_mono ih) (succ_le_of_lt (hφ (le_succ _) le_rfl _))
     rw [lt_succ_iff_eq_or_lt_of_not_is_max hk]
     exact Or.inl rfl
-    
   · exact ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) _ h
-    
 #align strict_mono_on.Iic_id_le StrictMonoOn.Iic_id_le
 
 theorem StrictMonoOn.Iic_le_id [PredOrder α] [IsPredArchimedean α] [OrderTop α] {n : α} {φ : α → α}
@@ -483,20 +453,16 @@ theorem strict_mono_on_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n :
   obtain ⟨i, rfl⟩ := hxy.le.exists_succ_iterate
   induction' i with k ih
   · simpa using hxy
-    
   cases k
   · exact hψ _ (lt_of_lt_of_le hxy hy)
-    
   rw [Set.mem_Iic] at *
   simp only [Function.iterate_succ', Function.comp_apply] at ih hxy hy⊢
   by_cases hmax : IsMax ((succ^[k]) x)
   · rw [succ_eq_iff_is_max.2 hmax] at hxy⊢
     exact ih (le_trans (le_succ _) hy) hxy
-    
   by_cases hmax' : IsMax (succ ((succ^[k]) x))
   · rw [succ_eq_iff_is_max.2 hmax'] at hxy⊢
     exact ih (le_trans (le_succ _) hy) hxy
-    
   refine'
     lt_trans
       (ih (le_trans (le_succ _) hy)

@@ -86,7 +86,7 @@ instance [Inhabited R] : Inhabited (MvPowerSeries σ R) :=
   ⟨fun _ => default⟩
 
 instance [Zero R] : Zero (MvPowerSeries σ R) :=
-  Pi.hasZero
+  Pi.instZero
 
 instance [AddMonoid R] : AddMonoid (MvPowerSeries σ R) :=
   Pi.addMonoid
@@ -127,7 +127,7 @@ def coeff (n : σ →₀ ℕ) : MvPowerSeries σ R →ₗ[R] R :=
 variable {R}
 
 /-- Two multivariate formal power series are equal if all their coefficients are equal.-/
-@[ext.1]
+@[ext]
 theorem ext {φ ψ} (h : ∀ n : σ →₀ ℕ, coeff R n φ = coeff R n ψ) : φ = ψ :=
   funext h
 #align mv_power_series.ext MvPowerSeries.ext
@@ -232,13 +232,13 @@ theorem coeff_mul_monomial (a : R) :
 #align mv_power_series.coeff_mul_monomial MvPowerSeries.coeff_mul_monomial
 
 theorem coeff_add_monomial_mul (a : R) : coeff R (m + n) (monomial R m a * φ) = a * coeff R n φ :=
-  by
+  by 
   rw [coeff_monomial_mul, if_pos, add_tsub_cancel_left]
   exact le_add_right le_rfl
 #align mv_power_series.coeff_add_monomial_mul MvPowerSeries.coeff_add_monomial_mul
 
 theorem coeff_add_mul_monomial (a : R) : coeff R (m + n) (φ * monomial R n a) = coeff R m φ * a :=
-  by
+  by 
   rw [coeff_mul_monomial, if_pos, add_tsub_cancel_right]
   exact le_add_left le_rfl
 #align mv_power_series.coeff_add_mul_monomial MvPowerSeries.coeff_add_mul_monomial
@@ -269,22 +269,18 @@ protected theorem mul_assoc (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ * �
     dsimp only
     rintro rfl rfl
     simp [add_assoc]
-    
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩
     dsimp only
     rintro rfl rfl
     apply mul_assoc
-    
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩
     dsimp only
     rintro rfl rfl - rfl rfl - rfl rfl
     rfl
-    
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩
     dsimp only
     rintro rfl rfl
     refine' ⟨⟨(i + k, l), (i, k)⟩, _, _⟩ <;> simp [add_assoc]
-    
 #align mv_power_series.mul_assoc MvPowerSeries.mul_assoc
 
 instance : Semiring (MvPowerSeries σ R) :=
@@ -320,15 +316,11 @@ theorem monomial_mul_monomial (m n : σ →₀ ℕ) (a b : R) :
   split_ifs with h₁ h₂ h₃ h₃ h₂ <;> try rfl
   · rw [← h₂, tsub_add_cancel_of_le h₁] at h₃
     exact (h₃ rfl).elim
-    
   · rw [h₃, add_tsub_cancel_right] at h₂
     exact (h₂ rfl).elim
-    
   · exact zero_mul b
-    
   · rw [h₂] at h₁
     exact (h₁ <| le_add_left le_rfl).elim
-    
 #align mv_power_series.monomial_mul_monomial MvPowerSeries.monomial_mul_monomial
 
 variable (σ) (R)
@@ -393,9 +385,7 @@ theorem X_def (s : σ) : x s = monomial R (single s 1) 1 :=
 theorem X_pow_eq (s : σ) (n : ℕ) : (x s : MvPowerSeries σ R) ^ n = monomial R (single s n) 1 := by
   induction' n with n ih
   · rw [pow_zero, Finsupp.single_zero, monomial_zero_one]
-    
   · rw [pow_succ', ih, Nat.succ_eq_add_one, Finsupp.single_add, X, monomial_mul_monomial, one_mul]
-    
 #align mv_power_series.X_pow_eq MvPowerSeries.X_pow_eq
 
 theorem coeff_X_pow [DecidableEq σ] (m : σ →₀ ℕ) (s : σ) (n : ℕ) :
@@ -488,20 +478,16 @@ theorem smul_eq_C_mul (f : MvPowerSeries σ R) (a : R) : a • f = c σ R a * f 
 #align mv_power_series.smul_eq_C_mul MvPowerSeries.smul_eq_C_mul
 
 theorem X_inj [Nontrivial R] {s t : σ} : (x s : MvPowerSeries σ R) = x t ↔ s = t :=
-  ⟨by
+  ⟨by 
     intro h; replace h := congr_arg (coeff R (single s 1)) h; rw [coeff_X, if_pos rfl, coeff_X] at h
     split_ifs  at h with H
     · rw [Finsupp.single_eq_single_iff] at H
       cases H
       · exact H.1
-        
       · exfalso
         exact one_ne_zero H.1
-        
-      
     · exfalso
-      exact one_ne_zero h
-      ,
+      exact one_ne_zero h,
     congr_arg x⟩
 #align mv_power_series.X_inj MvPowerSeries.X_inj
 
@@ -516,7 +502,8 @@ variable (f : R →+* S) (g : S →+* T)
 variable (σ)
 
 /-- The map between multivariate formal power series induced by a map on the coefficients.-/
-def map : MvPowerSeries σ R →+* MvPowerSeries σ S where
+def map : MvPowerSeries σ R →+*
+      MvPowerSeries σ S where 
   toFun φ n := f <| coeff R n φ
   map_zero' := ext fun n => f.map_zero
   map_one' :=
@@ -528,7 +515,7 @@ def map : MvPowerSeries σ R →+* MvPowerSeries σ S where
     ext fun n => show f ((coeff R n) (φ + ψ)) = f ((coeff R n) φ) + f ((coeff R n) ψ) by simp
   map_mul' φ ψ :=
     ext fun n =>
-      show f _ = _ by
+      show f _ = _ by 
         rw [coeff_mul, f.map_sum, coeff_mul, Finset.sum_congr rfl]
         rintro ⟨i, j⟩ hij; rw [f.map_mul]; rfl
 #align mv_power_series.map MvPowerSeries.map
@@ -578,10 +565,10 @@ variable {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
 instance : Algebra R (MvPowerSeries σ A) :=
   { MvPowerSeries.module with
-    commutes' := fun a φ => by
+    commutes' := fun a φ => by 
       ext n
       simp [Algebra.commutes],
-    smul_def' := fun a σ => by
+    smul_def' := fun a σ => by 
       ext n
       simp [(coeff A n).map_smul_of_tower a, Algebra.smul_def],
     toRingHom := (MvPowerSeries.map σ (algebraMap R A)).comp (c σ R) }
@@ -591,13 +578,13 @@ theorem C_eq_algebra_map : c σ R = algebraMap R (MvPowerSeries σ R) :=
 #align mv_power_series.C_eq_algebra_map MvPowerSeries.C_eq_algebra_map
 
 theorem algebra_map_apply {r : R} : algebraMap R (MvPowerSeries σ A) r = c σ A (algebraMap R A r) :=
-  by
+  by 
   change (MvPowerSeries.map σ (algebraMap R A)).comp (C σ R) r = _
   simp
 #align mv_power_series.algebra_map_apply MvPowerSeries.algebra_map_apply
 
 instance [Nonempty σ] [Nontrivial R] : Nontrivial (Subalgebra R (MvPowerSeries σ R)) :=
-  ⟨⟨⊥, ⊤, by
+  ⟨⟨⊥, ⊤, by 
       rw [Ne.def, SetLike.ext_iff, not_forall]
       inhabit σ
       refine' ⟨X default, _⟩
@@ -626,12 +613,13 @@ theorem coeff_trunc_fun (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
 variable (R)
 
 /-- The `n`th truncation of a multivariate formal power series to a multivariate polynomial -/
-def trunc : MvPowerSeries σ R →+ MvPolynomial σ R where
+def trunc : MvPowerSeries σ R →+
+      MvPolynomial σ R where 
   toFun := truncFun n
-  map_zero' := by
+  map_zero' := by 
     ext
     simp [coeff_trunc_fun]
-  map_add' := by
+  map_add' := by 
     intros
     ext
     simp [coeff_trunc_fun, ite_add]
@@ -646,23 +634,20 @@ theorem coeff_trunc (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
 
 @[simp]
 theorem trunc_one (hnn : n ≠ 0) : trunc R n 1 = 1 :=
-  (MvPolynomial.ext _ _) fun m => by
+  (MvPolynomial.ext _ _) fun m => by 
     rw [coeff_trunc, coeff_one]
     split_ifs with H H' H'
     · subst m
       simp
-      
     · symm
       rw [MvPolynomial.coeff_one]
       exact if_neg (Ne.symm H')
-      
     · symm
       rw [MvPolynomial.coeff_one]
       refine' if_neg _
       rintro rfl
       apply H
       exact Ne.bot_lt hnn
-      
 #align mv_power_series.trunc_one MvPowerSeries.trunc_one
 
 @[simp]
@@ -691,7 +676,6 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
     rw [Finsupp.mem_antidiagonal] at hij
     rw [← hij, Finsupp.add_apply, Finsupp.single_eq_same]
     exact Nat.le_add_right n _
-    
   · intro h
     refine' ⟨fun m => coeff R (m + single s n) φ, _⟩
     ext m
@@ -699,7 +683,6 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
     · rw [coeff_mul, Finset.sum_eq_single (single s n, m - single s n)]
       · rw [coeff_X_pow, if_pos rfl, one_mul]
         simpa using congr_arg (fun m : σ →₀ ℕ => coeff R m φ) H.symm
-        
       · rintro ⟨i, j⟩ hij hne
         rw [Finsupp.mem_antidiagonal] at hij
         rw [coeff_X_pow]
@@ -710,16 +693,11 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
           refine' ⟨rfl, _⟩
           ext t
           simp only [add_tsub_cancel_left, Finsupp.add_apply, Finsupp.tsub_apply]
-          
         · exact zero_mul _
-          
-        
       · intro hni
         exfalso
         apply hni
         rwa [Finsupp.mem_antidiagonal, add_comm]
-        
-      
     · rw [h, coeff_mul, Finset.sum_eq_zero]
       · rintro ⟨i, j⟩ hij
         rw [Finsupp.mem_antidiagonal] at hij
@@ -730,22 +708,15 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
           rw [← hij, hi]
           ext
           rw [coe_add, coe_add, Pi.add_apply, Pi.add_apply, add_tsub_cancel_left, add_comm]
-          
         · exact zero_mul _
-          
-        
-      · classical
-        contrapose! H
-        ext t
-        by_cases hst : s = t
-        · subst t
-          simpa using tsub_add_cancel_of_le H
-          
-        · simp [Finsupp.single_apply, hst]
-          
-        
-      
-    
+      ·
+        classical 
+          contrapose! H
+          ext t
+          by_cases hst : s = t
+          · subst t
+            simpa using tsub_add_cancel_of_le H
+          · simp [Finsupp.single_apply, hst]
 #align mv_power_series.X_pow_dvd_iff MvPowerSeries.X_pow_dvd_iff
 
 theorem X_dvd_iff {s : σ} {φ : MvPowerSeries σ R} :
@@ -753,9 +724,7 @@ theorem X_dvd_iff {s : σ} {φ : MvPowerSeries σ R} :
   rw [← pow_one (X s : MvPowerSeries σ R), X_pow_dvd_iff]
   constructor <;> intro h m hm
   · exact h m (hm.symm ▸ zero_lt_one)
-    
   · exact h m (Nat.eq_zero_of_le_zero <| Nat.le_of_succ_le_succ hm)
-    
 #align mv_power_series.X_dvd_iff MvPowerSeries.X_dvd_iff
 
 end CommSemiring
@@ -787,7 +756,7 @@ theorem coeff_inv_aux [DecidableEq σ] (n : σ →₀ ℕ) (a : R) (φ : MvPower
       else
         -a *
           ∑ x in n.antidiagonal, if x.2 < n then coeff R x.1 φ * coeff R x.2 (Inv.aux a φ) else 0 :=
-  show Inv.aux a φ n = _ by
+  show Inv.aux a φ n = _ by 
     rw [inv.aux]
     convert rfl
 #align mv_power_series.coeff_inv_aux MvPowerSeries.coeff_inv_aux
@@ -817,7 +786,7 @@ theorem constant_coeff_inv_of_unit (φ : MvPowerSeries σ R) (u : Rˣ) :
 theorem mul_inv_of_unit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ R φ = u) :
     φ * invOfUnit φ u = 1 :=
   ext fun n =>
-    if H : n = 0 then by
+    if H : n = 0 then by 
       rw [H]
       simp [coeff_mul, support_single_ne_zero, h]
     else by
@@ -838,13 +807,11 @@ theorem mul_inv_of_unit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff �
       constructor
       · intro s
         exact Nat.zero_le _
-        
       · intro H
         apply h₁
         suffices i = 0 by simp [this]
         ext1 s
         exact Nat.eq_zero_of_le_zero (H s)
-        
 #align mv_power_series.mul_inv_of_unit MvPowerSeries.mul_inv_of_unit
 
 end Ring
@@ -862,7 +829,6 @@ instance [LocalRing R] : LocalRing (MvPowerSeries σ R) :=
         [left, right] <;>
       · refine' isUnit_of_mul_eq_one _ _ (mul_inv_of_unit _ u _)
         simpa using h.symm
-        
 
 -- TODO(jmc): once adic topology lands, show that this is complete
 end CommRing
@@ -875,7 +841,7 @@ variable {S : Type _} [CommRing R] [CommRing S] (f : R →+* S) [IsLocalRingHom 
 -- not actually need R and S to be local rings!
 /-- The map `A[[X]] → B[[X]]` induced by a local ring hom `A → B` is local -/
 instance map.is_local_ring_hom : IsLocalRingHom (map σ f) :=
-  ⟨by
+  ⟨by 
     rintro φ ⟨ψ, h⟩
     replace h := congr_arg (constant_coeff σ S) h
     rw [constant_coeff_map] at h
@@ -916,7 +882,7 @@ theorem constant_coeff_inv (φ : MvPowerSeries σ k) :
 
 theorem inv_eq_zero {φ : MvPowerSeries σ k} : φ⁻¹ = 0 ↔ constantCoeff σ k φ = 0 :=
   ⟨fun h => by simpa using congr_arg (constant_coeff σ k) h, fun h =>
-    ext fun n => by
+    ext fun n => by 
       rw [coeff_inv]
       split_ifs <;> simp only [h, MvPowerSeries.coeff_zero, zero_mul, inv_zero, neg_zero]⟩
 #align mv_power_series.inv_eq_zero MvPowerSeries.inv_eq_zero
@@ -970,17 +936,15 @@ protected theorem mul_inv_rev (φ ψ : MvPowerSeries σ k) : (φ * ψ)⁻¹ = ψ
     -- we don't have `no_zero_divisors (mw_power_series σ k)` yet,
       cases h <;>
       simp [inv_eq_zero.mpr h]
-    
   · rw [MvPowerSeries.inv_eq_iff_mul_eq_one h]
     simp only [not_or, map_mul, mul_eq_zero] at h
     rw [← mul_assoc, mul_assoc _⁻¹, MvPowerSeries.inv_mul_cancel _ h.left, mul_one,
       MvPowerSeries.inv_mul_cancel _ h.right]
-    
 #align mv_power_series.mul_inv_rev MvPowerSeries.mul_inv_rev
 
 instance : InvOneClass (MvPowerSeries σ k) :=
   { MvPowerSeries.hasOne, MvPowerSeries.hasInv with
-    inv_one := by
+    inv_one := by 
       rw [MvPowerSeries.inv_eq_iff_mul_eq_one, mul_one]
       simp }
 
@@ -988,7 +952,6 @@ instance : InvOneClass (MvPowerSeries σ k) :=
 theorem C_inv (r : k) : (c σ k r)⁻¹ = c σ k r⁻¹ := by
   rcases eq_or_ne r 0 with (rfl | hr)
   · simp
-    
   rw [MvPowerSeries.inv_eq_iff_mul_eq_one, ← map_mul, inv_mul_cancel hr, map_one]
   simpa using hr
 #align mv_power_series.C_inv MvPowerSeries.C_inv
@@ -1079,7 +1042,7 @@ theorem coe_X (s : σ) : ((x s : MvPolynomial σ R) : MvPowerSeries σ R) = MvPo
 variable (σ R)
 
 theorem coe_injective : Function.Injective (coe : MvPolynomial σ R → MvPowerSeries σ R) :=
-  fun x y h => by
+  fun x y h => by 
   ext
   simp_rw [← coeff_coe, h]
 #align mv_polynomial.coe_injective MvPolynomial.coe_injective
@@ -1102,7 +1065,10 @@ theorem coe_eq_one_iff : (φ : MvPowerSeries σ R) = 1 ↔ φ = 1 := by rw [← 
 /-- The coercion from multivariable polynomials to multivariable power series
 as a ring homomorphism.
 -/
-def coeToMvPowerSeries.ringHom : MvPolynomial σ R →+* MvPowerSeries σ R where
+def coeToMvPowerSeries.ringHom :
+    MvPolynomial σ R →+*
+      MvPowerSeries σ
+        R where 
   toFun := (coe : MvPolynomial σ R → MvPowerSeries σ R)
   map_zero' := coe_zero
   map_one' := coe_one
@@ -1245,12 +1211,11 @@ theorem coeff_def {s : Unit →₀ ℕ} {n : ℕ} (h : s () = n) : coeff R n = M
 #align power_series.coeff_def PowerSeries.coeff_def
 
 /-- Two formal power series are equal if all their coefficients are equal.-/
-@[ext.1]
+@[ext]
 theorem ext {φ ψ : PowerSeries R} (h : ∀ n, coeff R n φ = coeff R n ψ) : φ = ψ :=
-  MvPowerSeries.ext fun n => by
+  MvPowerSeries.ext fun n => by 
     rw [← coeff_def]
     · apply h
-      
     rfl
 #align power_series.ext PowerSeries.ext
 
@@ -1387,23 +1352,17 @@ theorem coeff_mul (n : ℕ) (φ ψ : PowerSeries R) :
   · rintro ⟨i, j⟩ hij
     rw [Finset.Nat.mem_antidiagonal] at hij
     rw [Finsupp.mem_antidiagonal, ← Finsupp.single_add, hij]
-    
   · rintro ⟨i, j⟩ hij
     rfl
-    
   · rintro ⟨i, j⟩ ⟨k, l⟩ hij hkl
     simpa only [Prod.mk.inj_iff, Finsupp.unique_single_eq_iff] using id
-    
   · rintro ⟨f, g⟩ hfg
     refine' ⟨(f (), g ()), _, _⟩
     · rw [Finsupp.mem_antidiagonal] at hfg
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
-      
     · rw [Prod.mk.inj_iff]
       dsimp
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
-      
-    
 #align power_series.coeff_mul PowerSeries.coeff_mul
 
 @[simp]
@@ -1483,7 +1442,7 @@ theorem coeff_C_mul_X_pow (x : R) (k n : ℕ) :
 
 @[simp]
 theorem coeff_mul_X_pow (p : PowerSeries R) (n d : ℕ) : coeff R (d + n) (p * X ^ n) = coeff R d p :=
-  by
+  by 
   rw [coeff_mul, Finset.sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
   · rintro ⟨i, j⟩ h1 h2
     rw [coeff_X_pow, if_neg, mul_zero]
@@ -1491,14 +1450,12 @@ theorem coeff_mul_X_pow (p : PowerSeries R) (n d : ℕ) : coeff R (d + n) (p * X
     apply h2
     rw [Finset.Nat.mem_antidiagonal, add_right_cancel_iff] at h1
     subst h1
-    
   · exact fun h1 => (h1 (Finset.Nat.mem_antidiagonal.2 rfl)).elim
-    
 #align power_series.coeff_mul_X_pow PowerSeries.coeff_mul_X_pow
 
 @[simp]
 theorem coeff_X_pow_mul (p : PowerSeries R) (n d : ℕ) : coeff R (d + n) (X ^ n * p) = coeff R d p :=
-  by
+  by 
   rw [coeff_mul, Finset.sum_eq_single (n, d), coeff_X_pow, if_pos rfl, one_mul]
   · rintro ⟨i, j⟩ h1 h2
     rw [coeff_X_pow, if_neg, zero_mul]
@@ -1506,21 +1463,17 @@ theorem coeff_X_pow_mul (p : PowerSeries R) (n d : ℕ) : coeff R (d + n) (X ^ n
     apply h2
     rw [Finset.Nat.mem_antidiagonal, add_comm, add_right_cancel_iff] at h1
     subst h1
-    
   · rw [add_comm]
     exact fun h1 => (h1 (Finset.Nat.mem_antidiagonal.2 rfl)).elim
-    
 #align power_series.coeff_X_pow_mul PowerSeries.coeff_X_pow_mul
 
 theorem coeff_mul_X_pow' (p : PowerSeries R) (n d : ℕ) :
     coeff R d (p * X ^ n) = ite (n ≤ d) (coeff R (d - n) p) 0 := by
   split_ifs
   · rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
-    
   · refine' (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => _)
     rw [coeff_X_pow, if_neg, mul_zero]
     exact ((le_of_add_le_right (finset.nat.mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).Ne
-    
 #align power_series.coeff_mul_X_pow' PowerSeries.coeff_mul_X_pow'
 
 theorem coeff_X_pow_mul' (p : PowerSeries R) (n d : ℕ) :
@@ -1528,13 +1481,11 @@ theorem coeff_X_pow_mul' (p : PowerSeries R) (n d : ℕ) :
   split_ifs
   · rw [← tsub_add_cancel_of_le h, coeff_X_pow_mul]
     simp
-    
   · refine' (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => _)
     rw [coeff_X_pow, if_neg, zero_mul]
     have := finset.nat.mem_antidiagonal.mp hx
     rw [add_comm] at this
     exact ((le_of_add_le_right this.le).trans_lt <| not_le.mp h).Ne
-    
 #align power_series.coeff_X_pow_mul' PowerSeries.coeff_X_pow_mul'
 
 end
@@ -1548,24 +1499,24 @@ theorem is_unit_constant_coeff (φ : PowerSeries R) (h : IsUnit φ) : IsUnit (co
 theorem eq_shift_mul_X_add_const (φ : PowerSeries R) :
     φ = (mk fun p => coeff R (p + 1) φ) * X + c R (constantCoeff R φ) := by
   ext (_ | n)
-  · simp only [RingHom.map_add, constant_coeff_C, constant_coeff_X, coeff_zero_eq_constant_coeff,
+  ·
+    simp only [RingHom.map_add, constant_coeff_C, constant_coeff_X, coeff_zero_eq_constant_coeff,
       zero_add, mul_zero, RingHom.map_mul]
-    
-  · simp only [coeff_succ_mul_X, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
+  ·
+    simp only [coeff_succ_mul_X, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
       if_false, add_zero]
-    
 #align power_series.eq_shift_mul_X_add_const PowerSeries.eq_shift_mul_X_add_const
 
 /-- Split off the constant coefficient. -/
 theorem eq_X_mul_shift_add_const (φ : PowerSeries R) :
     φ = (X * mk fun p => coeff R (p + 1) φ) + c R (constantCoeff R φ) := by
   ext (_ | n)
-  · simp only [RingHom.map_add, constant_coeff_C, constant_coeff_X, coeff_zero_eq_constant_coeff,
+  ·
+    simp only [RingHom.map_add, constant_coeff_C, constant_coeff_X, coeff_zero_eq_constant_coeff,
       zero_add, zero_mul, RingHom.map_mul]
-    
-  · simp only [coeff_succ_X_mul, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
+  ·
+    simp only [coeff_succ_X_mul, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
       if_false, add_zero]
-    
 #align power_series.eq_X_mul_shift_add_const PowerSeries.eq_X_mul_shift_add_const
 
 section Map
@@ -1600,7 +1551,7 @@ theorem map_C (r : R) : map f (c _ r) = c _ (f r) := by
 #align power_series.map_C PowerSeries.map_C
 
 @[simp]
-theorem map_X : map f x = X := by
+theorem map_X : map f x = X := by 
   ext
   simp [coeff_X, apply_ite f]
 #align power_series.map_X PowerSeries.map_X
@@ -1616,46 +1567,44 @@ variable [CommSemiring R]
 theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} :
     (x : PowerSeries R) ^ n ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 := by
   convert @MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ; apply propext
-  classical
-  constructor <;> intro h m hm
-  · rw [Finsupp.unique_single m]
-    convert h _ hm
-    
-  · apply h
-    simpa only [Finsupp.single_eq_same] using hm
-    
+  classical 
+    constructor <;> intro h m hm
+    · rw [Finsupp.unique_single m]
+      convert h _ hm
+    · apply h
+      simpa only [Finsupp.single_eq_same] using hm
 #align power_series.X_pow_dvd_iff PowerSeries.X_pow_dvd_iff
 
 theorem X_dvd_iff {φ : PowerSeries R} : (x : PowerSeries R) ∣ φ ↔ constantCoeff R φ = 0 := by
   rw [← pow_one (X : PowerSeries R), X_pow_dvd_iff, ← coeff_zero_eq_constant_coeff_apply]
   constructor <;> intro h
   · exact h 0 zero_lt_one
-    
   · intro m hm
     rwa [Nat.eq_zero_of_le_zero (Nat.le_of_succ_le_succ hm)]
-    
 #align power_series.X_dvd_iff PowerSeries.X_dvd_iff
 
 open Finset Nat
 
 /-- The ring homomorphism taking a power series `f(X)` to `f(aX)`. -/
-noncomputable def rescale (a : R) : PowerSeries R →+* PowerSeries R where
+noncomputable def rescale (a : R) :
+    PowerSeries R →+*
+      PowerSeries
+        R where 
   toFun f := PowerSeries.mk fun n => a ^ n * PowerSeries.coeff R n f
-  map_zero' := by
+  map_zero' := by 
     ext
     simp only [LinearMap.map_zero, PowerSeries.coeff_mk, mul_zero]
-  map_one' := by
+  map_one' := by 
     ext1
     simp only [mul_boole, PowerSeries.coeff_mk, PowerSeries.coeff_one]
     split_ifs
     · rw [h, pow_zero]
-      
     rfl
-  map_add' := by
+  map_add' := by 
     intros
     ext
     exact mul_add _ _ _
-  map_mul' f g := by
+  map_mul' f g := by 
     ext
     rw [PowerSeries.coeff_mul, PowerSeries.coeff_mk, PowerSeries.coeff_mul, Finset.mul_sum]
     apply sum_congr rfl
@@ -1677,9 +1626,7 @@ theorem rescale_zero : rescale 0 = (c R).comp (constantCoeff R) := by
     PowerSeries.coeff_mk _ _, coeff_C]
   split_ifs
   · simp only [h, one_mul, coeff_zero_eq_constant_coeff, pow_zero]
-    
   · rw [zero_pow' n h, zero_mul]
-    
 #align power_series.rescale_zero PowerSeries.rescale_zero
 
 theorem rescale_zero_apply : rescale 0 x = c R (constantCoeff R x) := by simp
@@ -1729,26 +1676,23 @@ theorem trunc_zero (n) : trunc n (0 : PowerSeries R) = 0 :=
 
 @[simp]
 theorem trunc_one (n) : trunc (n + 1) (1 : PowerSeries R) = 1 :=
-  Polynomial.ext fun m => by
+  Polynomial.ext fun m => by 
     rw [coeff_trunc, coeff_one]
     split_ifs with H H' H' <;> rw [Polynomial.coeff_one]
     · subst m
       rw [if_pos rfl]
-      
     · symm
       exact if_neg (Ne.elim (Ne.symm H'))
-      
     · symm
       refine' if_neg _
       rintro rfl
       apply H
       exact Nat.zero_lt_succ _
-      
 #align power_series.trunc_one PowerSeries.trunc_one
 
 @[simp]
 theorem trunc_C (n) (a : R) : trunc (n + 1) (c R a) = Polynomial.c a :=
-  Polynomial.ext fun m => by
+  Polynomial.ext fun m => by 
     rw [coeff_trunc, coeff_C, Polynomial.coeff_C]
     split_ifs with H <;> first |rfl|try simp_all
 #align power_series.trunc_C PowerSeries.trunc_C
@@ -1757,11 +1701,7 @@ theorem trunc_C (n) (a : R) : trunc (n + 1) (c R a) = Polynomial.c a :=
 theorem trunc_add (n) (φ ψ : PowerSeries R) : trunc n (φ + ψ) = trunc n φ + trunc n ψ :=
   Polynomial.ext fun m => by
     simp only [coeff_trunc, AddMonoidHom.map_add, Polynomial.coeff_add]
-    split_ifs with H;
-    · rfl
-      ;
-    · rw [zero_add]
-      
+    split_ifs with H; · rfl; · rw [zero_add]
 #align power_series.trunc_add PowerSeries.trunc_add
 
 end Trunc
@@ -1784,54 +1724,41 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
         -a *
           ∑ x in Finset.Nat.antidiagonal n,
             if x.2 < n then coeff R x.1 φ * coeff R x.2 (Inv.aux a φ) else 0 :=
-  by
+  by 
   rw [coeff, inv.aux, MvPowerSeries.coeff_inv_aux]
   simp only [Finsupp.single_eq_zero]
-  split_ifs;
-  · rfl
-    
+  split_ifs; · rfl
   congr 1
   symm
   apply Finset.sum_bij fun (p : ℕ × ℕ) h => (single () p.1, single () p.2)
   · rintro ⟨i, j⟩ hij
     rw [Finset.Nat.mem_antidiagonal] at hij
     rw [Finsupp.mem_antidiagonal, ← Finsupp.single_add, hij]
-    
   · rintro ⟨i, j⟩ hij
     by_cases H : j < n
     · rw [if_pos H, if_pos]
       · rfl
-        
       constructor
       · rintro ⟨⟩
         simpa [Finsupp.single_eq_same] using le_of_lt H
-        
       · intro hh
         rw [lt_iff_not_ge] at H
         apply H
         simpa [Finsupp.single_eq_same] using hh ()
-        
-      
     · rw [if_neg H, if_neg]
       rintro ⟨h₁, h₂⟩
       apply h₂
       rintro ⟨⟩
       simpa [Finsupp.single_eq_same] using not_lt.1 H
-      
-    
   · rintro ⟨i, j⟩ ⟨k, l⟩ hij hkl
     simpa only [Prod.mk.inj_iff, Finsupp.unique_single_eq_iff] using id
-    
   · rintro ⟨f, g⟩ hfg
     refine' ⟨(f (), g ()), _, _⟩
     · rw [Finsupp.mem_antidiagonal] at hfg
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
-      
     · rw [Prod.mk.inj_iff]
       dsimp
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
-      
-    
 #align power_series.coeff_inv_aux PowerSeries.coeff_inv_aux
 
 /-- A formal power series is invertible if the constant coefficient is invertible.-/
@@ -1905,10 +1832,10 @@ section Domain
 variable [Ring R] [IsDomain R]
 
 theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : φ * ψ = 0) : φ = 0 ∨ ψ = 0 :=
-  by
+  by 
   rw [or_iff_not_imp_left]
   intro H
-  have ex : ∃ m, coeff R m φ ≠ 0 := by
+  have ex : ∃ m, coeff R m φ ≠ 0 := by 
     contrapose! H
     exact ext H
   let m := Nat.find ex
@@ -1924,30 +1851,25 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : φ * ψ =
   · replace h := eq_zero_or_eq_zero_of_mul_eq_zero h
     rw [or_iff_not_imp_left] at h
     exact h hm₁
-    
   · rintro ⟨i, j⟩ hij hne
     by_cases hj : j < n
     · rw [ih j hj, mul_zero]
-      
     by_cases hi : i < m
     · specialize hm₂ _ hi
       push_neg  at hm₂
       rw [hm₂, zero_mul]
-      
     rw [Finset.Nat.mem_antidiagonal] at hij
     push_neg  at hi hj
-    suffices m < i by
+    suffices m < i by 
       have : m + n < i + j := add_lt_add_of_lt_of_le this hj
       exfalso
       exact ne_of_lt this hij.symm
     contrapose! hne
     obtain rfl := le_antisymm hi hne
     simpa [Ne.def, Prod.mk.inj_iff] using (add_right_inj m).mp hij
-    
   · contrapose!
     intro h
     rw [Finset.Nat.mem_antidiagonal]
-    
 #align power_series.eq_zero_or_eq_zero_of_mul_eq_zero PowerSeries.eq_zero_or_eq_zero_of_mul_eq_zero
 
 instance : IsDomain (PowerSeries R) :=
@@ -1975,10 +1897,8 @@ theorem span_X_is_prime : (Ideal.span ({x} : Set (PowerSeries R))).IsPrime := by
 theorem X_prime : Prime (x : PowerSeries R) := by
   rw [← Ideal.span_singleton_prime]
   · exact span_X_is_prime
-    
   · intro h
     simpa using congr_arg (coeff R 1) h
-    
 #align power_series.X_prime PowerSeries.X_prime
 
 theorem rescale_injective {a : R} (ha : a ≠ 0) : Function.Injective (rescale a) := by
@@ -2168,13 +2088,9 @@ theorem order_finite_iff_ne_zero : (order φ).Dom ↔ φ ≠ 0 := by
   · split_ifs with h h <;> intro H
     · contrapose! H
       simpa [← Part.eq_none_iff']
-      
     · exact h
-      
-    
   · intro h
     simp [h]
-    
 #align power_series.order_finite_iff_ne_zero PowerSeries.order_finite_iff_ne_zero
 
 /-- If the order of a formal power series is finite,
@@ -2192,9 +2108,7 @@ theorem order_le (n : ℕ) (h : coeff R n φ ≠ 0) : order φ ≤ n := by
   rw [order, dif_neg]
   · simp only [PartEnat.coe_le_coe, Nat.find_le_iff]
     exact ⟨n, le_rfl, h⟩
-    
   · exact exists_coeff_ne_zero_iff_ne_zero.mp ⟨n, h⟩
-    
 #align power_series.order_le PowerSeries.order_le
 
 /-- The `n`th coefficient of a formal power series is `0` if `n` is strictly
@@ -2212,10 +2126,8 @@ theorem order_eq_top {φ : PowerSeries R} : φ.order = ⊤ ↔ φ = 0 := by
     ext n
     rw [(coeff R n).map_zero, coeff_of_lt_order]
     simp [h]
-    
   · rintro rfl
     exact order_zero
-    
 #align power_series.order_eq_top PowerSeries.order_eq_top
 
 /-- The order of a formal power series is at least `n` if
@@ -2230,16 +2142,14 @@ theorem nat_le_order (φ : PowerSeries R) (n : ℕ) (h : ∀ i < n, coeff R i φ
 /-- The order of a formal power series is at least `n` if
 the `i`th coefficient is `0` for all `i < n`.-/
 theorem le_order (φ : PowerSeries R) (n : PartEnat) (h : ∀ i : ℕ, ↑i < n → coeff R i φ = 0) :
-    n ≤ order φ := by
+    n ≤ order φ := by 
   induction n using PartEnat.cases_on
   · show _ ≤ _
     rw [top_le_iff, order_eq_top]
     ext i
     exact h _ (PartEnat.coe_lt_top i)
-    
   · apply nat_le_order
     simpa only [PartEnat.coe_lt_coe] using h
-    
 #align power_series.le_order PowerSeries.le_order
 
 /-- The order of a formal power series is exactly `n` if the `n`th coefficient is nonzero,
@@ -2248,7 +2158,6 @@ theorem order_eq_nat {φ : PowerSeries R} {n : ℕ} :
     order φ = n ↔ coeff R n φ ≠ 0 ∧ ∀ i, i < n → coeff R i φ = 0 := by
   rcases eq_or_ne φ 0 with (rfl | hφ)
   · simpa using (PartEnat.coe_ne_top _).symm
-    
   simp [order, dif_neg hφ, Nat.find_eq_iff]
 #align power_series.order_eq_nat PowerSeries.order_eq_nat
 
@@ -2263,17 +2172,11 @@ theorem order_eq {φ : PowerSeries R} {n : PartEnat} :
       constructor <;> intros
       · exfalso
         exact PartEnat.coe_ne_top ‹_› ‹_›
-        
       · exact (coeff _ _).map_zero
-        
-      
     · rintro ⟨h₁, h₂⟩
       ext i
       exact h₂ i (PartEnat.coe_lt_top i)
-      
-    
   · simpa [PartEnat.coe_inj] using order_eq_nat
-    
 #align power_series.order_eq PowerSeries.order_eq
 
 /-- The order of the sum of two formal power series
@@ -2285,7 +2188,7 @@ theorem le_order_add (φ ψ : PowerSeries R) : min (order φ) (order ψ) ≤ ord
 
 private theorem order_add_of_order_eq.aux (φ ψ : PowerSeries R) (h : order φ ≠ order ψ)
     (H : order φ < order ψ) : order (φ + ψ) ≤ order φ ⊓ order ψ := by
-  suffices order (φ + ψ) = order φ by
+  suffices order (φ + ψ) = order φ by 
     rw [le_inf_iff, this]
     exact ⟨le_rfl, le_of_lt H⟩
   · rw [order_eq]
@@ -2294,12 +2197,9 @@ private theorem order_add_of_order_eq.aux (φ ψ : PowerSeries R) (h : order φ 
       rw [← hi] at H
       rw [(coeff _ _).map_add, coeff_of_lt_order i H, add_zero]
       exact (order_eq_nat.1 hi.symm).1
-      
     · intro i hi
       rw [(coeff _ _).map_add, coeff_of_lt_order i hi, coeff_of_lt_order i (lt_trans hi H),
         zero_add]
-      
-    
 #align power_series.order_add_of_order_eq.aux power_series.order_add_of_order_eq.aux
 
 /-- The order of the sum of two formal power series
@@ -2309,10 +2209,8 @@ theorem order_add_of_order_eq (φ ψ : PowerSeries R) (h : order φ ≠ order ψ
   refine' le_antisymm _ (le_order_add _ _)
   by_cases H₁ : order φ < order ψ
   · apply order_add_of_order_eq.aux _ _ h H₁
-    
   by_cases H₂ : order ψ < order φ
   · simpa only [add_comm, inf_comm] using order_add_of_order_eq.aux _ _ h.symm H₂
-    
   exfalso; exact h (le_antisymm (not_lt.1 H₂) (not_lt.1 H₁))
 #align power_series.order_add_of_order_eq PowerSeries.order_add_of_order_eq
 
@@ -2324,10 +2222,8 @@ theorem order_mul_ge (φ ψ : PowerSeries R) : order φ + order ψ ≤ order (φ
   rintro ⟨i, j⟩ hij
   by_cases hi : ↑i < order φ
   · rw [coeff_of_lt_order i hi, zero_mul]
-    
   by_cases hj : ↑j < order ψ
   · rw [coeff_of_lt_order j hj, mul_zero]
-    
   rw [not_lt] at hi hj; rw [Finset.Nat.mem_antidiagonal] at hij
   exfalso
   apply ne_of_lt (lt_of_lt_of_le hn <| add_le_add hi hj)
@@ -2339,17 +2235,13 @@ theorem order_monomial (n : ℕ) (a : R) [Decidable (a = 0)] :
     order (monomial R n a) = if a = 0 then ⊤ else n := by
   split_ifs with h
   · rw [h, order_eq_top, LinearMap.map_zero]
-    
   · rw [order_eq]
     constructor <;> intro i hi
     · rw [PartEnat.coe_inj] at hi
       rwa [hi, coeff_monomial_same]
-      
     · rw [PartEnat.coe_lt_coe] at hi
       rw [coeff_monomial, if_neg]
       exact ne_of_lt hi
-      
-    
 #align power_series.order_monomial PowerSeries.order_monomial
 
 /-- The order of the monomial `a*X^n` is `n` if `a ≠ 0`.-/
@@ -2381,12 +2273,10 @@ theorem coeff_mul_prod_one_sub_of_lt_order {R ι : Type _} [CommRing R] (k : ℕ
     (∀ i ∈ s, ↑k < (f i).order) → coeff R k (φ * ∏ i in s, 1 - f i) = coeff R k φ := by
   apply Finset.induction_on s
   · simp
-    
   · intro a s ha ih t
     simp only [Finset.mem_insert, forall_eq_or_imp] at t
     rw [Finset.prod_insert ha, ← mul_assoc, mul_right_comm, coeff_mul_one_sub_of_lt_order _ t.1]
     exact ih t.2
-    
 #align
   power_series.coeff_mul_prod_one_sub_of_lt_order PowerSeries.coeff_mul_prod_one_sub_of_lt_order
 
@@ -2398,21 +2288,17 @@ theorem X_pow_order_dvd (h : (order φ).Dom) : X ^ (order φ).get h ∣ φ := by
     Finset.Nat.filter_fst_eq_antidiagonal, Finset.sum_const_zero, add_zero]
   split_ifs with hn hn
   · simp [tsub_add_cancel_of_le hn]
-    
   · simp only [Finset.sum_empty]
     refine' coeff_of_lt_order _ _
     simpa [PartEnat.coe_lt_iff] using fun _ => hn
-    
 #align power_series.X_pow_order_dvd PowerSeries.X_pow_order_dvd
 
 theorem order_eq_multiplicity_X {R : Type _} [CommSemiring R] (φ : PowerSeries R) :
     order φ = multiplicity x φ := by
   rcases eq_or_ne φ 0 with (rfl | hφ)
   · simp
-    
   induction' ho : order φ using PartEnat.cases_on with n
   · simpa [hφ] using ho
-    
   have hn : φ.order.get (order_finite_iff_ne_zero.mpr hφ) = n := by simp [ho]
   rw [← hn]
   refine'
@@ -2422,15 +2308,11 @@ theorem order_eq_multiplicity_X {R : Type _} [CommSemiring R] (φ : PowerSeries 
   have := congr_arg (coeff R n) H
   rw [mul_comm, coeff_mul_of_lt_order, ← hn] at this
   · exact coeff_order _ this
-    
   · rw [X_pow_eq, order_monomial]
     split_ifs
     · exact PartEnat.coe_lt_top _
-      
     · rw [← hn, PartEnat.coe_lt_coe]
       exact Nat.lt_succ_self _
-      
-    
 #align power_series.order_eq_multiplicity_X PowerSeries.order_eq_multiplicity_X
 
 end OrderBasic
@@ -2578,7 +2460,8 @@ variable (φ ψ)
 /-- The coercion from polynomials to power series
 as a ring homomorphism.
 -/
-def coeToPowerSeries.ringHom : R[X] →+* PowerSeries R where
+def coeToPowerSeries.ringHom :
+    R[X] →+* PowerSeries R where 
   toFun := (coe : R[X] → PowerSeries R)
   map_zero' := coe_zero
   map_one' := coe_one

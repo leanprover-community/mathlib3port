@@ -27,9 +27,9 @@ open Int
 in each set are close together. -/
 theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb : b ≠ 0) (A : Fin n → ℤ) :
     ∃ t : Fin n → Fin ⌈1 / ε⌉₊, ∀ i₀ i₁, t i₀ = t i₁ → ↑(abs (A i₁ % b - A i₀ % b)) < abs b • ε :=
-  by
+  by 
   have hb' : (0 : ℝ) < ↑(abs b) := int.cast_pos.mpr (abs_pos.mpr hb)
-  have hbε : 0 < abs b • ε := by
+  have hbε : 0 < abs b • ε := by 
     rw [Algebra.smul_def]
     exact mul_pos hb' hε
   have hfloor : ∀ i, 0 ≤ floor ((A i % b : ℤ) / abs b • ε : ℝ) := by
@@ -41,7 +41,6 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
     rw [Algebra.smul_def, eq_int_cast, ← div_div, div_lt_div_right hε, div_lt_iff hb', one_mul,
       cast_lt]
     exact Int.mod_lt _ hb
-    
   intro i₀ i₁ hi
   have hi : (⌊↑(A i₀ % b) / abs b • ε⌋.natAbs : ℤ) = ⌊↑(A i₁ % b) / abs b • ε⌋.natAbs :=
     congr_arg (coe : ℕ → ℤ) (fin.mk_eq_mk.mp hi)

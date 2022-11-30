@@ -33,7 +33,8 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
 /-- `sum C D` gives the direct sum of two categories.
 -/
-instance sum : Category.{v₁} (Sum C D) where
+instance sum :
+    Category.{v₁} (Sum C D) where 
   Hom X Y :=
     match X, Y with
     | inl X, inl Y => X ⟶ Y
@@ -73,20 +74,21 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 -- Unfortunate naming here, suggestions welcome.
 /-- `inl_` is the functor `X ↦ inl X`. -/
 @[simps]
-def inl_ : C ⥤ Sum C D where
+def inl_ : C ⥤ Sum C D where 
   obj X := inl X
   map X Y f := f
 #align category_theory.sum.inl_ CategoryTheory.sum.inl_
 
 /-- `inr_` is the functor `X ↦ inr X`. -/
 @[simps]
-def inr_ : D ⥤ Sum C D where
+def inr_ : D ⥤ Sum C D where 
   obj X := inr X
   map X Y f := f
 #align category_theory.sum.inr_ CategoryTheory.sum.inr_
 
 /-- The functor exchanging two direct summand categories. -/
-def swap : Sum C D ⥤ Sum D C where
+def swap :
+    Sum C D ⥤ Sum D C where 
   obj X :=
     match X with
     | inl X => inr X
@@ -145,7 +147,8 @@ variable {A : Type u₁} [Category.{v₁} A] {B : Type u₁} [Category.{v₁} B]
 namespace Functor
 
 /-- The sum of two functors. -/
-def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
+def sum (F : A ⥤ B) (G : C ⥤ D) :
+    Sum A C ⥤ Sum B D where 
   obj X :=
     match X with
     | inl X => inl (F.obj X)
@@ -157,11 +160,11 @@ def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
   map_id' X := by cases X <;> unfold_aux; erw [F.map_id]; rfl; erw [G.map_id]; rfl
   map_comp' X Y Z f g :=
     match X, Y, Z, f, g with
-    | inl X, inl Y, inl Z, f, g => by
+    | inl X, inl Y, inl Z, f, g => by 
       unfold_aux
       erw [F.map_comp]
       rfl
-    | inr X, inr Y, inr Z, f, g => by
+    | inr X, inr Y, inr Z, f, g => by 
       unfold_aux
       erw [G.map_comp]
       rfl
@@ -194,7 +197,8 @@ end Functor
 namespace NatTrans
 
 /-- The sum of two natural transformations. -/
-def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H ⟶ G.Sum I where
+def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) :
+    F.Sum H ⟶ G.Sum I where 
   app X :=
     match X with
     | inl X => α.app X

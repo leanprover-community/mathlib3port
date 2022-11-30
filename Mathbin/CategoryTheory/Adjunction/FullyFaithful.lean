@@ -49,10 +49,10 @@ instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjuncti
   (@NatIso.is_iso_of_is_iso_app _ _ _ _ _ _ (Adjunction.unit h)) fun X =>
     @yoneda.is_iso _ _ _ _ ((Adjunction.unit h).app X)
       ⟨⟨{ app := fun Y f => L.preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
-          ⟨by
+          ⟨by 
             ext (x f); dsimp
             apply L.map_injective
-            simp, by
+            simp, by 
             ext (x f); dsimp
             simp only [adjunction.hom_equiv_counit, preimage_comp, preimage_map, category.assoc]
             rw [← h.unit_naturality]
@@ -69,10 +69,10 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
     @is_iso_of_op _ _ _ _ _ <|
       @coyoneda.is_iso _ _ _ _ ((Adjunction.counit h).app X).op
         ⟨⟨{ app := fun Y f => R.preimage ((h.homEquiv (R.obj X) Y) f) },
-            ⟨by
+            ⟨by 
               ext (x f); dsimp
               apply R.map_injective
-              simp, by
+              simp, by 
               ext (x f); dsimp
               simp only [adjunction.hom_equiv_unit, preimage_comp, preimage_map]
               rw [← h.counit_naturality]
@@ -153,7 +153,7 @@ instance whisker_right_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
   category_theory.whisker_right_counit_iso_of_L_fully_faithful CategoryTheory.whisker_right_counit_iso_of_L_fully_faithful
 
 instance whisker_left_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
-    IsIso (whiskerLeft R h.Unit) := by
+    IsIso (whiskerLeft R h.Unit) := by 
   have := h.right_triangle
   rw [← is_iso.eq_comp_inv] at this
   rw [this]
@@ -162,7 +162,7 @@ instance whisker_left_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
   category_theory.whisker_left_unit_iso_of_R_fully_faithful CategoryTheory.whisker_left_unit_iso_of_R_fully_faithful
 
 instance whisker_right_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
-    IsIso (whiskerRight h.Unit L) := by
+    IsIso (whiskerRight h.Unit L) := by 
   have := h.left_triangle
   rw [← is_iso.eq_comp_inv] at this
   rw [this]

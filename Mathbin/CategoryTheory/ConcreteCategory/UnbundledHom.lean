@@ -37,7 +37,9 @@ variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α �
 
 include 𝒞
 
-instance bundledHom : BundledHom fun α β (Iα : c α) (Iβ : c β) => Subtype (hom Iα Iβ) where
+instance bundledHom :
+    BundledHom fun α β (Iα : c α) (Iβ : c β) =>
+      Subtype (hom Iα Iβ) where 
   toFun _ _ _ _ := Subtype.val
   id α Iα := ⟨id, hom_id hom Iα⟩
   id_to_fun := by intros <;> rfl

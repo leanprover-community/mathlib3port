@@ -80,7 +80,9 @@ end OpensLeCover
 
 (In fact this is a colimit cocone.)
 -/
-def opensLeCoverCocone : Cocone (fullSubcategoryInclusion _ : OpensLeCover U ⥤ Opens X) where
+def opensLeCoverCocone :
+    Cocone (fullSubcategoryInclusion _ :
+        OpensLeCover U ⥤ Opens X) where 
   x := supr U
   ι := { app := fun V : OpensLeCover U => V.homToIndex ≫ Opens.leSupr U _ }
 #align
@@ -114,7 +116,8 @@ variable {Y : Opens X} (hY : Y = supr U)
 @[simps]
 def generateEquivalenceOpensLe :
     (FullSubcategory fun f : Over Y => (Sieve.generate (presieveOfCoveringAux U Y)).arrows f.Hom) ≌
-      OpensLeCover U where
+      OpensLeCover
+        U where 
   Functor :=
     { obj := fun f =>
         ⟨f.1.left,
@@ -133,21 +136,21 @@ def generateEquivalenceOpensLe :
   unitIso :=
     eq_to_iso <|
       CategoryTheory.Functor.ext
-        (by
+        (by 
           rintro ⟨⟨_, _⟩, _⟩
           dsimp
           congr <;> ext)
-        (by
+        (by 
           intros
           ext)
   counitIso :=
     eq_to_iso <|
       CategoryTheory.Functor.hext
-        (by
+        (by 
           intro
           ext
           rfl)
-        (by
+        (by 
           intros
           rfl)
 #align Top.presheaf.generate_equivalence_opens_le TopCat.Presheaf.generateEquivalenceOpensLe
@@ -158,21 +161,24 @@ def generateEquivalenceOpensLe :
 @[simps]
 def whiskerIsoMapGenerateCocone :
     (F.mapCone (opensLeCoverCocone U).op).whisker (generateEquivalenceOpensLe U hY).op.Functor ≅
-      F.mapCone (Sieve.generate (presieveOfCoveringAux U Y)).arrows.Cocone.op where
+      F.mapCone
+        (Sieve.generate
+                (presieveOfCoveringAux U
+                  Y)).arrows.Cocone.op where 
   Hom :=
     { Hom := F.map (eqToHom (congr_arg op hY.symm)),
-      w' := fun j => by
+      w' := fun j => by 
         erw [← F.map_comp]
         congr }
   inv :=
     { Hom := F.map (eqToHom (congr_arg op hY)),
-      w' := fun j => by
+      w' := fun j => by 
         erw [← F.map_comp]
         congr }
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     simp [eq_to_hom_map]
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     simp [eq_to_hom_map]
 #align Top.presheaf.whisker_iso_map_generate_cocone TopCat.Presheaf.whiskerIsoMapGenerateCocone
@@ -218,13 +224,11 @@ theorem is_sheaf_iff_is_sheaf_opens_le_cover : F.IsSheaf ↔ F.IsSheafOpensLeCov
     rw [(is_limit_opens_le_equiv_generate₁ F U rfl).nonempty_congr]
     apply h
     apply presieve_of_covering.mem_grothendieck_topology
-    
   · intro h Y S
     rw [← sieve.generate_sieve S]
     intro hS
     rw [← (is_limit_opens_le_equiv_generate₂ F S hS).nonempty_congr]
     apply h
-    
 #align
   Top.presheaf.is_sheaf_iff_is_sheaf_opens_le_cover TopCat.Presheaf.is_sheaf_iff_is_sheaf_opens_le_cover
 

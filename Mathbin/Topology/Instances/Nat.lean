@@ -64,23 +64,21 @@ theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = icc ⌈↑x - 
   rcases le_or_lt 0 r with (hr | hr)
   · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr
-    
   · rw [closed_ball_eq_empty.2 hr]
     apply (Icc_eq_empty _).symm
     rw [not_le]
     calc
-      ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by
+      ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by 
         apply floor_mono
         linarith
-      _ < ⌈↑x - r⌉₊ := by
+      _ < ⌈↑x - r⌉₊ := by 
         rw [floor_coe, Nat.lt_ceil]
         linarith
       
-    
 #align nat.closed_ball_eq_Icc Nat.closed_ball_eq_Icc
 
 instance : ProperSpace ℕ :=
-  ⟨by
+  ⟨by 
     intro x r
     rw [closed_ball_eq_Icc]
     exact (Set.finite_Icc _ _).IsCompact⟩

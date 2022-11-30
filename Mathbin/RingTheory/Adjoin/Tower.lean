@@ -41,7 +41,7 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring 
   suffices
     Set.range (algebraMap D E) =
       Set.range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E)
-    by
+    by 
     ext x
     change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S)
     rw [this]
@@ -49,10 +49,8 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring 
   constructor
   · rintro ⟨y, hy⟩
     exact ⟨⟨algebraMap D E y, ⟨y, ⟨Algebra.mem_top, rfl⟩⟩⟩, hy⟩
-    
   · rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
     exact ⟨z, Eq.trans h1 h2⟩
-    
 #align algebra.adjoin_restrict_scalars Algebra.adjoin_restrict_scalars
 
 theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D]
@@ -121,18 +119,15 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
     span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) *
         span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) ≤
       span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
-    by
+    by 
     rw [span_mul_span, span_le, coe_insert]
     rintro _ ⟨yi, yj, rfl | hyi, rfl | hyj, rfl⟩
     · rw [mul_one]
       exact subset_span (Set.mem_insert _ _)
-      
     · rw [one_mul]
       exact subset_span (Set.mem_insert_of_mem _ hyj)
-      
     · rw [mul_one]
       exact subset_span (Set.mem_insert_of_mem _ hyi)
-      
     · rw [← hf (yi * yj)]
       exact
         SetLike.mem_coe.2
@@ -142,7 +137,6 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
                 Algebra.subset_adjoin <|
                   mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
-      
   refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
   refine' restrict_scalars_injective A _ _ _
   rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_to_submodule, ← hx, Algebra.adjoin_eq_span,

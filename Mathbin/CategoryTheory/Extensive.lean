@@ -137,12 +137,10 @@ theorem FinitaryExtensive.van_kampen [FinitaryExtensive C] {F : Discrete Walking
     (c : Cocone F) (hc : IsColimit c) : IsVanKampenColimit c := by
   let X := F.obj ⟨walking_pair.left⟩
   let Y := F.obj ⟨walking_pair.right⟩
-  have : F = pair X Y := by
+  have : F = pair X Y := by 
     apply functor.hext
     · rintro ⟨⟨⟩⟩ <;> rfl
-      
     · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simpa
-      
   clear_value X Y
   subst this
   exact finitary_extensive.van_kampen' c hc
@@ -150,9 +148,9 @@ theorem FinitaryExtensive.van_kampen [FinitaryExtensive C] {F : Discrete Walking
 
 theorem map_pair_equifibered {F F' : Discrete WalkingPair ⥤ C} (α : F ⟶ F') : α.Equifibered := by
   rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩
-  all_goals
-  dsimp; simp only [discrete.functor_map_id]
-  exact is_pullback.of_horiz_is_iso ⟨by simp only [category.comp_id, category.id_comp]⟩
+  all_goals 
+    dsimp; simp only [discrete.functor_map_id]
+    exact is_pullback.of_horiz_is_iso ⟨by simp only [category.comp_id, category.id_comp]⟩
 #align category_theory.map_pair_equifibered CategoryTheory.map_pair_equifibered
 
 theorem BinaryCofan.is_van_kampen_iff (c : BinaryCofan X Y) :
@@ -160,27 +158,22 @@ theorem BinaryCofan.is_van_kampen_iff (c : BinaryCofan X Y) :
       ∀ {X' Y' : C} (c' : BinaryCofan X' Y') (αX : X' ⟶ X) (αY : Y' ⟶ Y) (f : c'.x ⟶ c.x)
         (hαX : αX ≫ c.inl = c'.inl ≫ f) (hαY : αY ≫ c.inr = c'.inr ≫ f),
         Nonempty (IsColimit c') ↔ IsPullback c'.inl αX f c.inl ∧ IsPullback c'.inr αY f c.inr :=
-  by
+  by 
   constructor
   · introv H hαX hαY
     rw [H c' (map_pair αX αY) f (by ext ⟨⟨⟩⟩ <;> dsimp <;> assumption) (map_pair_equifibered _)]
     constructor
     · intro H
       exact ⟨H _, H _⟩
-      
     · rintro H ⟨⟨⟩⟩
       exacts[H.1, H.2]
-      
-    
   · introv H F' hα h
     let X' := F'.obj ⟨walking_pair.left⟩
     let Y' := F'.obj ⟨walking_pair.right⟩
-    have : F' = pair X' Y' := by
+    have : F' = pair X' Y' := by 
       apply functor.hext
       · rintro ⟨⟨⟩⟩ <;> rfl
-        
       · rintro ⟨⟨⟩⟩ ⟨j⟩ ⟨⟨rfl : _ = j⟩⟩ <;> simpa
-        
     clear_value X' Y'
     subst this
     change binary_cofan X' Y' at c'
@@ -189,11 +182,8 @@ theorem BinaryCofan.is_van_kampen_iff (c : BinaryCofan X Y) :
     constructor
     · rintro H ⟨⟨⟩⟩
       exacts[H.1, H.2]
-      
     · intro H
       exact ⟨H _, H _⟩
-      
-    
 #align category_theory.binary_cofan.is_van_kampen_iff CategoryTheory.BinaryCofan.is_van_kampen_iff
 
 theorem BinaryCofan.is_van_kampen_mk {X Y : C} (c : BinaryCofan X Y)
@@ -206,7 +196,7 @@ theorem BinaryCofan.is_van_kampen_mk {X Y : C} (c : BinaryCofan X Y)
         IsPullback (cofans X' Y').inl αX f c.inl ∧ IsPullback (cofans X' Y').inr αY f c.inr)
     (h₂ :
       ∀ {Z : C} (f : Z ⟶ c.x), IsColimit (BinaryCofan.mk (cones f c.inl).fst (cones f c.inr).fst)) :
-    IsVanKampenColimit c := by
+    IsVanKampenColimit c := by 
   rw [binary_cofan.is_van_kampen_iff]
   introv hX hY
   constructor
@@ -220,15 +210,12 @@ theorem BinaryCofan.is_van_kampen_mk {X Y : C} (c : BinaryCofan X Y)
         simp
       haveI : is_iso (𝟙 X') := inferInstance
       exact (is_pullback.of_vert_is_iso ⟨this⟩).paste_vert hl
-      
     · rw [← category.id_comp αY, ← iso.hom_inv_id_assoc e f]
       have : c'.inr ≫ e.hom = 𝟙 Y' ≫ (cofans X' Y').inr := by
         dsimp
         simp
       haveI : is_iso (𝟙 Y') := inferInstance
       exact (is_pullback.of_vert_is_iso ⟨this⟩).paste_vert hr
-      
-    
   · rintro ⟨H₁, H₂⟩
     refine' ⟨is_colimit.of_iso_colimit _ <| (iso_binary_cofan_mk _).symm⟩
     let e₁ : X' ≅ _ := H₁.is_limit.cone_point_unique_up_to_iso (limits _ _)
@@ -239,7 +226,6 @@ theorem BinaryCofan.is_van_kampen_mk {X Y : C} (c : BinaryCofan X Y)
     apply binary_cofan.is_colimit_comp_right_iso (binary_cofan.mk _ _)
     apply binary_cofan.is_colimit_comp_left_iso (binary_cofan.mk _ _)
     exact h₂ f
-    
 #align category_theory.binary_cofan.is_van_kampen_mk CategoryTheory.BinaryCofan.is_van_kampen_mk
 
 theorem BinaryCofan.mono_inr_of_is_van_kampen [HasInitial C] {X Y : C} {c : BinaryCofan X Y}
@@ -250,13 +236,12 @@ theorem BinaryCofan.mono_inr_of_is_van_kampen [HasInitial C] {X Y : C} {c : Bina
           (map_pair_equifibered _)).mp
       ⟨_⟩ ⟨walking_pair.right⟩
   · ext ⟨⟨⟩⟩ <;> dsimp <;> simp
-    
-  · exact
+  ·
+    exact
       ((binary_cofan.is_colimit_iff_is_iso_inr initial_is_initial _).mpr
-          (by
+          (by 
             dsimp
             infer_instance)).some
-    
 #align
   category_theory.binary_cofan.mono_inr_of_is_van_kampen CategoryTheory.BinaryCofan.mono_inr_of_is_van_kampen
 
@@ -285,13 +270,12 @@ theorem BinaryCofan.is_pullback_initial_to_of_is_van_kampen [HasInitial C] {c : 
             (map_pair_equifibered _)).mp
         ⟨_⟩ ⟨walking_pair.left⟩).flip
   · ext ⟨⟨⟩⟩ <;> dsimp <;> simp
-    
-  · exact
+  ·
+    exact
       ((binary_cofan.is_colimit_iff_is_iso_inr initial_is_initial _).mpr
-          (by
+          (by 
             dsimp
             infer_instance)).some
-    
 #align
   category_theory.binary_cofan.is_pullback_initial_to_of_is_van_kampen CategoryTheory.BinaryCofan.is_pullback_initial_to_of_is_van_kampen
 
@@ -305,7 +289,7 @@ theorem FinitaryExtensive.is_pullback_initial_to_binary_cofan [FinitaryExtensive
 theorem has_strict_initial_of_is_universal [HasInitial C]
     (H : IsUniversalColimit (BinaryCofan.mk (𝟙 (⊥_ C)) (𝟙 (⊥_ C)))) : HasStrictInitialObjects C :=
   has_strict_initial_objects_of_initial_is_strict
-    (by
+    (by 
       intro A f
       suffices is_colimit (binary_cofan.mk (𝟙 A) (𝟙 A)) by
         obtain ⟨l, h₁, h₂⟩ := limits.binary_cofan.is_colimit.desc' this (f ≫ initial.to A) (𝟙 A)
@@ -324,7 +308,7 @@ instance (priority := 100) has_strict_initial_objects_of_finitary_extensive [Fin
   has_strict_initial_of_is_universal
     (FinitaryExtensive.van_kampen _
         ((BinaryCofan.is_colimit_iff_is_iso_inr initialIsInitial _).mpr
-            (by
+            (by 
               dsimp
               infer_instance)).some).is_universal
 #align
@@ -356,40 +340,33 @@ instance types.finitary_extensive : FinitaryExtensive (Type u) := by
     constructor
     · refine' ⟨⟨hαX.symm⟩, ⟨pullback_cone.is_limit_aux' _ _⟩⟩
       intro s
-      have : ∀ x, ∃! y, s.fst x = Sum.inl y := by
+      have : ∀ x, ∃! y, s.fst x = Sum.inl y := by 
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]
           exact exists_unique_eq'
-          
         · apply_fun f  at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαY val : _).symm
-          
       delta ExistsUnique at this
       choose l hl hl'
       exact
         ⟨l, (funext hl).symm, types.is_terminal_punit.hom_ext _ _, fun l' h₁ h₂ =>
           funext fun x => hl' x (l' x) (congr_fun h₁ x).symm⟩
-      
     · refine' ⟨⟨hαY.symm⟩, ⟨pullback_cone.is_limit_aux' _ _⟩⟩
       intro s
       dsimp
-      have : ∀ x, ∃! y, s.fst x = Sum.inr y := by
+      have : ∀ x, ∃! y, s.fst x = Sum.inr y := by 
         intro x
         cases h : s.fst x
         · apply_fun f  at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαX val : _).symm
-          
         · simp_rw [sum.inr_injective.eq_iff]
           exact exists_unique_eq'
-          
       delta ExistsUnique at this
       choose l hl hl'
       exact
         ⟨l, (funext hl).symm, types.is_terminal_punit.hom_ext _ _, fun l' h₁ h₂ =>
           funext fun x => hl' x (l' x) (congr_fun h₁ x).symm⟩
-      
-    
   · intro Z f
     dsimp [limits.types.binary_coproduct_cocone]
     delta types.pullback_obj
@@ -404,35 +381,27 @@ instance types.finitary_extensive : FinitaryExtensive (Type u) := by
       ⟨fun p => ⟨p.1.1, p.2.trans (congr_arg Sum.inr <| Subsingleton.elim _ _)⟩, fun x =>
         ⟨⟨_, _⟩, x.2⟩, fun _ => by ext <;> rfl, fun _ => by ext <;> rfl⟩
     fapply binary_cofan.is_colimit_mk
-    · exact fun s x =>
+    ·
+      exact fun s x =>
         dite _ (fun h => s.inl <| eX.symm ⟨x, h⟩) fun h =>
           s.inr <| eY.symm ⟨x, (this x).resolve_left h⟩
-      
     · intro s
       ext ⟨⟨x, ⟨⟩⟩, _⟩
       dsimp
       split_ifs <;> rfl
-      
     · intro s
       ext ⟨⟨x, ⟨⟩⟩, hx⟩
       dsimp
       split_ifs
       · cases h.symm.trans hx
-        
       · rfl
-        
-      
     · intro s m e₁ e₂
       ext x
       split_ifs
       · rw [← e₁]
         rfl
-        
       · rw [← e₂]
         rfl
-        
-      
-    
 #align category_theory.types.finitary_extensive CategoryTheory.types.finitary_extensive
 
 section TopCat
@@ -470,16 +439,12 @@ def finitaryExtensiveTopAux (Z : TopCat.{u}) (f : Z ⟶ TopCat.of (Sum PUnit.{u 
           Continuous fun x : { x | f x = Sum.inl PUnit.unit } => s.inl ⟨(x, PUnit.unit), x.2⟩
         · ext ⟨x, hx⟩
           exact dif_pos hx
-          
         continuity
-        
       · convert f.2.1 _ open_embedding_inl.open_range
         ext x
         exact
           ⟨fun h => ⟨_, h.symm⟩, fun ⟨e, h⟩ =>
             h.symm.trans (congr_arg Sum.inl <| Subsingleton.elim _ _)⟩
-        
-      
     · revert h x
       apply (IsOpen.continuous_on_iff _).mp
       · rw [continuous_on_iff_continuous_restrict]
@@ -488,48 +453,36 @@ def finitaryExtensiveTopAux (Z : TopCat.{u}) (f : Z ⟶ TopCat.of (Sum PUnit.{u 
             s.inr ⟨(x, PUnit.unit), (this _).resolve_left x.2⟩
         · ext ⟨x, hx⟩
           exact dif_neg hx
-          
         continuity
-        
       · convert f.2.1 _ open_embedding_inr.open_range
         ext x
         change f x ≠ Sum.inl PUnit.unit ↔ f x ∈ Set.range Sum.inr
         trans f x = Sum.inr PUnit.unit
-        · rcases f x with (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;>
+        ·
+          rcases f x with (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;>
             simp only [iff_self_iff, eq_self_iff_true, not_true, Ne.def, not_false_iff]
-          
-        · exact
+        ·
+          exact
             ⟨fun h => ⟨_, h.symm⟩, fun ⟨e, h⟩ =>
               h.symm.trans (congr_arg Sum.inr <| Subsingleton.elim _ _)⟩
-          
-        
-      
-    
   · intro s
     ext ⟨⟨x, ⟨⟩⟩, _⟩
     change dite _ _ _ = _
     split_ifs <;> rfl
-    
   · intro s
     ext ⟨⟨x, ⟨⟩⟩, hx⟩
     change dite _ _ _ = _
     split_ifs
     · cases h.symm.trans hx
-      
     · rfl
-      
-    
   · intro s m e₁ e₂
     ext x
     change m x = dite _ _ _
     split_ifs
     · rw [← e₁]
       rfl
-      
     · rw [← e₂]
       rfl
-      
-    
 #align category_theory.finitary_extensive_Top_aux CategoryTheory.finitaryExtensiveTopAux
 
 instance : FinitaryExtensive TopCat.{u} := by
@@ -542,17 +495,15 @@ instance : FinitaryExtensive TopCat.{u} := by
     constructor
     · refine' ⟨⟨hαX.symm⟩, ⟨pullback_cone.is_limit_aux' _ _⟩⟩
       intro s
-      have : ∀ x, ∃! y, s.fst x = Sum.inl y := by
+      have : ∀ x, ∃! y, s.fst x = Sum.inl y := by 
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]
           exact exists_unique_eq'
-          
         · apply_fun f  at h
           cases
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
               (concrete_category.congr_hom hαY val : _).symm
-          
       delta ExistsUnique at this
       choose l hl hl'
       refine'
@@ -562,21 +513,18 @@ instance : FinitaryExtensive TopCat.{u} := by
       apply embedding_inl.to_inducing.continuous_iff.mpr
       convert s.fst.2 using 1
       exact (funext hl).symm
-      
     · refine' ⟨⟨hαY.symm⟩, ⟨pullback_cone.is_limit_aux' _ _⟩⟩
       intro s
       dsimp
-      have : ∀ x, ∃! y, s.fst x = Sum.inr y := by
+      have : ∀ x, ∃! y, s.fst x = Sum.inr y := by 
         intro x
         cases h : s.fst x
         · apply_fun f  at h
           cases
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
               (concrete_category.congr_hom hαX val : _).symm
-          
         · simp_rw [sum.inr_injective.eq_iff]
           exact exists_unique_eq'
-          
       delta ExistsUnique at this
       choose l hl hl'
       refine'
@@ -586,11 +534,8 @@ instance : FinitaryExtensive TopCat.{u} := by
       apply embedding_inr.to_inducing.continuous_iff.mpr
       convert s.fst.2 using 1
       exact (funext hl).symm
-      
-    
   · intro Z f
     exact finitary_extensive_Top_aux Z f
-    
 
 end TopCat
 
@@ -628,26 +573,24 @@ theorem IsVanKampenColimit.of_map {D : Type _} [Category D] (G : C ⥤ D) {F : J
   refine'
     (Iff.trans _
           (H (G.map_cocone c') (whisker_right α G) (G.map f)
-            (by
+            (by 
               ext j
               simpa using G.congr_map (nat_trans.congr_app h j))
             (hα.whisker_right G))).trans
       (forall_congr' fun j => _)
   · exact ⟨fun h => ⟨is_colimit_of_preserves G h.some⟩, fun h => ⟨is_colimit_of_reflects G h.some⟩⟩
-    
   · exact is_pullback.map_iff G (nat_trans.congr_app h.symm j)
-    
 #align category_theory.is_van_kampen_colimit.of_map CategoryTheory.IsVanKampenColimit.of_map
 
 theorem is_van_kampen_colimit_of_evaluation [HasPullbacks D] [HasColimitsOfShape J D]
     (F : J ⥤ C ⥤ D) (c : Cocone F)
     (hc : ∀ x : C, IsVanKampenColimit (((evaluation C D).obj x).mapCocone c)) :
-    IsVanKampenColimit c := by
+    IsVanKampenColimit c := by 
   intro F' c' α f e hα
   have := fun x =>
     hc x (((evaluation C D).obj x).mapCocone c') (whisker_right α _)
       (((evaluation C D).obj x).map f)
-      (by
+      (by 
         ext y
         dsimp
         exact nat_trans.congr_app (nat_trans.congr_app e y) x)
@@ -657,11 +600,10 @@ theorem is_van_kampen_colimit_of_evaluation [HasPullbacks D] [HasColimitsOfShape
     refine' ⟨⟨(nat_trans.congr_app e j).symm⟩, ⟨evaluation_jointly_reflects_limits _ _⟩⟩
     refine' fun x => (is_limit_map_cone_pullback_cone_equiv _ _).symm _
     exact ((this x).mp ⟨preserves_colimit.preserves hc'⟩ _).IsLimit
-    
-  · exact fun H =>
+  ·
+    exact fun H =>
       ⟨evaluation_jointly_reflects_colimits _ fun x =>
           ((this x).mpr fun j => (H j).map ((evaluation C D).obj x)).some⟩
-    
 #align
   category_theory.is_van_kampen_colimit_of_evaluation CategoryTheory.is_van_kampen_colimit_of_evaluation
 

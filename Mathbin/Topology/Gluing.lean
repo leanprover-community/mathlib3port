@@ -105,11 +105,9 @@ theorem is_open_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i
   constructor
   · intro h j
     exact h ⟨j⟩
-    
   · intro h j
     cases j
     exact h j
-    
 #align Top.glue_data.is_open_iff TopCat.GlueData.is_open_iff
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
@@ -124,7 +122,7 @@ def Rel (a b : Σi, ((D.U i : TopCat) : Type _)) : Prop :=
 #align Top.glue_data.rel TopCat.GlueData.Rel
 
 theorem rel_equiv : Equivalence D.Rel :=
-  ⟨fun x => Or.inl (refl x), by
+  ⟨fun x => Or.inl (refl x), by 
     rintro a b (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
     exacts[Or.inl rfl, Or.inr ⟨D.t _ _ x, by simp [e₁, e₂]⟩], by
     rintro ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
@@ -203,29 +201,25 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) :
     erw [sigma_iso_sigma_hom_ι_apply, sigma_iso_sigma_hom_ι_apply]
     exact
       Or.inr
-        ⟨y, by
+        ⟨y, by 
           dsimp [glue_data.diagram]
           simp⟩
-    
   · rintro (⟨⟨⟩⟩ | ⟨z, e₁, e₂⟩)
     rfl
     dsimp only at *
     subst e₁
     subst e₂
     simp
-    
 #align Top.glue_data.ι_eq_iff_rel TopCat.GlueData.ι_eq_iff_rel
 
 theorem ι_injective (i : D.J) : Function.Injective (𝖣.ι i) := by
   intro x y h
   rcases(D.ι_eq_iff_rel _ _ _ _).mp h with (⟨⟨⟩⟩ | ⟨_, e₁, e₂⟩)
   · rfl
-    
   · dsimp only at *
     cases e₁
     cases e₂
     simp
-    
 #align Top.glue_data.ι_injective TopCat.GlueData.ι_injective
 
 instance ι_mono (i : D.J) : Mono (𝖣.ι i) :=
@@ -239,15 +233,11 @@ theorem image_inter (i j : D.J) :
   · rintro ⟨⟨x₁, eq₁⟩, ⟨x₂, eq₂⟩⟩
     obtain ⟨⟨⟩⟩ | ⟨y, e₁, e₂⟩ := (D.ι_eq_iff_rel _ _ _ _).mp (eq₁.trans eq₂.symm)
     · exact ⟨inv (D.f i i) x₁, by simp [eq₁]⟩
-      
     · dsimp only at *
       substs e₁ eq₁
       exact ⟨y, by simp⟩
-      
-    
   · rintro ⟨x, hx⟩
     exact ⟨⟨D.f i j x, hx⟩, ⟨D.f j i (D.t _ _ x), by simp [← hx]⟩⟩
-    
 #align Top.glue_data.image_inter TopCat.GlueData.image_inter
 
 theorem preimage_range (i j : D.J) : 𝖣.ι j ⁻¹' Set.range (𝖣.ι i) = Set.range (D.f j i) := by
@@ -329,7 +319,6 @@ theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i)
   convert Subtype.eq this
   · ext
     rfl
-    
   all_goals rw [h.V_id]; trivial
 #align Top.glue_data.mk_core.t_inv TopCat.GlueData.MkCore.t_inv
 
@@ -342,20 +331,19 @@ instance (h : MkCore.{u}) (i j : h.J) : IsIso (h.t i j) := by
 def MkCore.t' (h : MkCore.{u}) (i j k : h.J) :
     pullback (h.V i j).inclusion (h.V i k).inclusion ⟶
       pullback (h.V j k).inclusion (h.V j i).inclusion :=
-  by
+  by 
   refine' (pullback_iso_prod_subtype _ _).Hom ≫ ⟨_, _⟩ ≫ (pullback_iso_prod_subtype _ _).inv
   · intro x
     refine' ⟨⟨⟨(h.t i j x.1.1).1, _⟩, h.t i j x.1.1⟩, rfl⟩
     rcases x with ⟨⟨⟨x, hx⟩, ⟨x', hx'⟩⟩, rfl : x = x'⟩
     exact h.t_inter _ ⟨x, hx⟩ hx'
-    
   continuity
 #align Top.glue_data.mk_core.t' TopCat.GlueData.MkCore.t'
 
 /-- This is a constructor of `Top.glue_data` whose arguments are in terms of elements and
 intersections rather than subobjects and pullbacks. Please refer to `Top.glue_data.mk_core` for
 details. -/
-def mk' (h : MkCore.{u}) : TopCat.GlueData where
+def mk' (h : MkCore.{u}) : TopCat.GlueData where 
   J := h.J
   U := h.U
   V i := (Opens.toTop _).obj (h.V i.1 i.2)
@@ -363,18 +351,18 @@ def mk' (h : MkCore.{u}) : TopCat.GlueData where
   f_id i := (h.V_id i).symm ▸ IsIso.of_iso (Opens.inclusionTopIso (h.U i))
   f_open := fun i j : h.J => (h.V i j).OpenEmbedding
   t := h.t
-  t_id i := by
+  t_id i := by 
     ext
     rw [h.t_id]
     rfl
   t' := h.t'
-  t_fac i j k := by
+  t_fac i j k := by 
     delta mk_core.t'
     rw [category.assoc, category.assoc, pullback_iso_prod_subtype_inv_snd, ← iso.eq_inv_comp,
       pullback_iso_prod_subtype_inv_fst_assoc]
     ext ⟨⟨⟨x, hx⟩, ⟨x', hx'⟩⟩, rfl : x = x'⟩
     rfl
-  cocycle i j k := by
+  cocycle i j k := by 
     delta mk_core.t'
     simp_rw [← category.assoc]
     rw [iso.comp_inv_eq]
@@ -400,11 +388,11 @@ def ofOpenSubsets : TopCat.GlueData.{u} :=
     { J, U := fun i => (opens.to_Top <| TopCat.of α).obj (U i),
       V := fun i j => (opens.map <| Opens.inclusion _).obj (U j),
       t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩,
-      V_id := fun i => by
+      V_id := fun i => by 
         ext
         cases U i
         simp,
-      t_id := fun i => by
+      t_id := fun i => by 
         ext
         rfl,
       t_inter := fun i j k x hx => hx, cocycle := fun i j k x h => rfl }
@@ -416,7 +404,7 @@ and its range is `⋃ i, (U i : set α)` (`range_from_open_subsets_glue`).
 -/
 def fromOpenSubsetsGlue : (ofOpenSubsets U).toGlueData.glued ⟶ TopCat.of α :=
   multicoequalizer.desc _ _ (fun x => Opens.inclusion _)
-    (by
+    (by 
       rintro ⟨i, j⟩
       ext x
       rfl)
@@ -456,11 +444,9 @@ theorem from_open_subsets_glue_is_open_map : IsOpenMap (fromOpenSubsetsGlue U) :
     rw [← ι_from_open_subsets_glue, coe_comp, Set.preimage_comp]
     congr 1
     refine' Set.preimage_image_eq _ (from_open_subsets_glue_injective U)
-    
   · refine' ⟨Set.mem_image_of_mem _ hx, _⟩
     rw [ι_from_open_subsets_glue_apply]
     exact Set.mem_range_self _
-    
 #align
   Top.glue_data.from_open_subsets_glue_is_open_map TopCat.GlueData.from_open_subsets_glue_is_open_map
 
@@ -477,10 +463,8 @@ theorem range_from_open_subsets_glue : Set.range (fromOpenSubsetsGlue U) = ⋃ i
     obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
     rw [ι_from_open_subsets_glue_apply]
     exact Set.subset_Union _ i hx'
-    
   · rintro ⟨_, ⟨i, rfl⟩, hx⟩
     refine' ⟨(of_open_subsets U).toGlueData.ι i ⟨x, hx⟩, ι_from_open_subsets_glue_apply _ _ _⟩
-    
 #align Top.glue_data.range_from_open_subsets_glue TopCat.GlueData.range_from_open_subsets_glue
 
 /-- The gluing of an open cover is homeomomorphic to the original space. -/

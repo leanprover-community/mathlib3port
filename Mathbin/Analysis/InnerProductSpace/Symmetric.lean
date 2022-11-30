@@ -87,7 +87,7 @@ theorem isSymmetricId : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y
 #align linear_map.is_symmetric_id LinearMap.isSymmetricId
 
 theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) :
-    (T + S).IsSymmetric := by
+    (T + S).IsSymmetric := by 
   intro x y
   rw [LinearMap.add_apply, inner_add_left, hT x y, hS x y, ← inner_add_right]
   rfl
@@ -96,7 +96,8 @@ theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.Is
 /-- The **Hellinger--Toeplitz theorem**: if a symmetric operator is defined on a complete space,
   then it is automatically continuous. -/
 theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) :
-    Continuous T := by
+    Continuous T :=
+  by
   -- We prove it by using the closed graph theorem
   refine' T.continuous_of_seq_closed_graph fun u x y hu hTu => _
   rw [← sub_eq_zero, ← inner_self_eq_zero]
@@ -117,7 +118,6 @@ theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsS
     (x : E) : (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
   rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ⟪T x, x⟫ = r
   · simp [hr, T.re_apply_inner_self_apply]
-    
   rw [← eq_conj_iff_real]
   exact hT.conj_inner_sym x x
 #align
@@ -147,7 +147,6 @@ theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
   constructor
   · intro hT v
     apply is_symmetric.conj_inner_sym hT
-    
   · intro h x y
     nth_rw 1 [← inner_conj_sym]
     nth_rw 1 [inner_map_polarization]
@@ -158,7 +157,6 @@ theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
     rw [inner_map_polarization']
     norm_num
     ring
-    
 #align
   linear_map.is_symmetric_iff_inner_map_self_real LinearMap.is_symmetric_iff_inner_map_self_real
 

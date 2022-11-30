@@ -103,7 +103,7 @@ theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V
 #align smodeq.comap Smodeq.comap
 
 theorem eval {R : Type _} [CommRing R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :
-    f.eval x ≡ f.eval y [SMOD I] := by
+    f.eval x ≡ f.eval y [SMOD I] := by 
   rw [Smodeq.def] at h⊢
   show Ideal.Quotient.mk I (f.eval x) = Ideal.Quotient.mk I (f.eval y)
   change Ideal.Quotient.mk I x = Ideal.Quotient.mk I y at h

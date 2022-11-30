@@ -86,7 +86,7 @@ theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : R[ε])
 #align dual_number.inr_eq_smul_eps DualNumber.inr_eq_smul_eps
 
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
-@[ext.1]
+@[ext]
 theorem alg_hom_ext {A} [CommSemiring R] [Semiring A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄
     (h : f ε = g ε) : f = g :=
   alg_hom_ext' <| LinearMap.ext_ring <| h

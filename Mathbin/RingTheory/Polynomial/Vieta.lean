@@ -39,14 +39,15 @@ variable {R : Type _} [CommSemiring R]
 theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
     (s.map fun r => X + c r).Prod =
       ∑ j in Finset.range (s.card + 1), c (s.esymm j) * X ^ (s.card - j) :=
-  by classical
-  rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp,
-    map_bind, sum_bind, Finset.sum_eq_multiset_sum, Finset.range_coe, map_congr (Eq.refl _)]
-  intro _ _
-  rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
-  intro _ ht
-  rw [mem_powerset_len] at ht
-  simp [ht, map_const, prod_repeat, prod_hom', map_id', card_sub]
+  by
+  classical 
+    rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp,
+      map_bind, sum_bind, Finset.sum_eq_multiset_sum, Finset.range_coe, map_congr (Eq.refl _)]
+    intro _ _
+    rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
+    intro _ ht
+    rw [mem_powerset_len] at ht
+    simp [ht, map_const, prod_repeat, prod_hom', map_id', card_sub]
 #align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_X_add_C_eq_sum_esymm
 
 /-- Vieta's formula for the coefficients of the product of linear terms `X + λ` where `λ` runs
@@ -57,17 +58,13 @@ theorem prod_X_add_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
   simp_rw [finset_sum_coeff, coeff_C_mul_X_pow]
   rw [Finset.sum_eq_single_of_mem (s.card - k) _]
   · rw [if_pos (Nat.sub_sub_self h).symm]
-    
   · intro j hj1 hj2
     suffices k ≠ card s - j by rw [if_neg this]
     · intro hn
       rw [hn, Nat.sub_sub_self (nat.lt_succ_iff.mp (finset.mem_range.mp hj1))] at hj2
       exact Ne.irrefl hj2
-      
-    
   · rw [Finset.mem_range]
     exact Nat.sub_lt_succ s.card k
-    
 #align multiset.prod_X_add_C_coeff Multiset.prod_X_add_C_coeff
 
 theorem prod_X_add_C_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
@@ -101,35 +98,30 @@ theorem prod_X_sub_C_eq_sum_esymm (s : Multiset R) :
     (s.map fun t => X - c t).Prod =
       ∑ j in Finset.range (s.card + 1), (-1) ^ j * (c (s.esymm j) * X ^ (s.card - j)) :=
   by
-  conv_lhs =>
-  congr
-  congr
-  ext
-  rw [sub_eq_add_neg]
-  rw [← map_neg C _]
+  conv_lhs => 
+    congr
+    congr
+    ext
+    rw [sub_eq_add_neg]
+    rw [← map_neg C _]
   convert prod_X_add_C_eq_sum_esymm (map (fun t => -t) s) using 1
   · rwa [map_map]
-    
   · simp only [esymm_neg, card_map, mul_assoc, map_mul, map_pow, map_neg, map_one]
-    
 #align multiset.prod_X_sub_C_eq_sum_esymm Multiset.prod_X_sub_C_eq_sum_esymm
 
 theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
     (s.map fun t => X - c t).Prod.coeff k = (-1) ^ (s.card - k) * s.esymm (s.card - k) := by
-  conv_lhs =>
-  congr
-  congr
-  congr
-  ext
-  rw [sub_eq_add_neg]
-  rw [← map_neg C _]
+  conv_lhs => 
+    congr
+    congr
+    congr
+    ext
+    rw [sub_eq_add_neg]
+    rw [← map_neg C _]
   convert prod_X_add_C_coeff (map (fun t => -t) s) _ using 1
   · rwa [map_map]
-    
   · rwa [esymm_neg, card_map]
-    
   · rwa [card_map]
-    
 #align multiset.prod_X_sub_C_coeff Multiset.prod_X_sub_C_coeff
 
 /-- Vieta's formula for the coefficients and the roots of a polynomial over an integral domain
@@ -165,16 +157,14 @@ the symmetric polynomials `esymm σ R j`. -/
 theorem MvPolynomial.prod_C_add_X_eq_sum_esymm :
     (∏ i : σ, X + c (MvPolynomial.x i)) =
       ∑ j in range (card σ + 1), c (MvPolynomial.esymm σ R j) * X ^ (card σ - j) :=
-  by
+  by 
   let s := finset.univ.val.map fun i : σ => MvPolynomial.x i
   rw [(_ : card σ = s.card)]
   · simp_rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
     convert Multiset.prod_X_add_C_eq_sum_esymm s
     rwa [Multiset.map_map]
-    
   · rw [Multiset.card_map]
     rfl
-    
 #align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_C_add_X_eq_sum_esymm
 
 theorem MvPolynomial.prod_X_add_C_coeff (k : ℕ) (h : k ≤ card σ) :
@@ -184,7 +174,6 @@ theorem MvPolynomial.prod_X_add_C_coeff (k : ℕ) (h : k ≤ card σ) :
   · rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
     convert Multiset.prod_X_add_C_coeff s h
     rwa [Multiset.map_map]
-    
   repeat' rw [Multiset.card_map]; rfl
 #align mv_polynomial.prod_X_add_C_coeff MvPolynomial.prod_X_add_C_coeff
 

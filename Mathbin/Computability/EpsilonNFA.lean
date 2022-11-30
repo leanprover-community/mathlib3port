@@ -103,9 +103,7 @@ theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
 theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
   induction' x using List.reverseRecOn with x a ih
   · rw [eval_from_nil, ε_closure_empty]
-    
   · rw [eval_from_append_singleton, ih, step_set_empty]
-    
 #align ε_NFA.eval_from_empty εNFA.eval_from_empty
 
 /-- `M.eval x` computes all possible paths through `M` with input `x` starting at an element of
@@ -138,7 +136,7 @@ def accepts : Language α :=
 
 
 /-- `M.to_NFA` is an `NFA` constructed from an `ε_NFA` `M`. -/
-def toNFA : NFA α σ where
+def toNFA : NFA α σ where 
   step S a := M.εClosure (M.step S a)
   start := M.εClosure M.start
   accept := M.accept
@@ -163,7 +161,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧
           b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
-  by
+  by 
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
 #align ε_NFA.pumping_lemma εNFA.pumping_lemma
@@ -174,7 +172,8 @@ namespace NFA
 
 /-- `M.to_ε_NFA` is an `ε_NFA` constructed from an `NFA` `M` by using the same start and accept
   states and transition functions. -/
-def toεNFA (M : NFA α σ) : εNFA α σ where
+def toεNFA (M : NFA α σ) :
+    εNFA α σ where 
   step s a := a.casesOn' ∅ fun a => M.step s a
   start := M.start
   accept := M.accept
@@ -186,9 +185,7 @@ theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure 
   refine' ⟨_, εNFA.εClosure.base _⟩
   rintro (⟨_, h⟩ | ⟨_, _, h, _⟩)
   · exact h
-    
   · cases h
-    
 #align NFA.to_ε_NFA_ε_closure NFA.to_ε_NFA_ε_closure
 
 @[simp]

@@ -58,7 +58,6 @@ theorem equiv_free_prod_direct_sum_zmod [hG : AddGroup.Fg G] :
   refine' ⟨n, ι, fι, fun i => (p i).natAbs, fun i => _, e, ⟨_⟩⟩
   · rw [← Int.prime_iff_nat_abs_prime, ← GcdMonoid.irreducible_iff_prime]
     exact hp i
-    
   exact
     f.to_add_equiv.trans
       ((AddEquiv.refl _).prodCongr <|
@@ -72,17 +71,15 @@ some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
 theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
     ∃ (ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
       Nonempty <| G ≃+ ⨁ i : ι, Zmod (p i ^ e i) :=
-  by
+  by 
   cases nonempty_fintype G
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ := equiv_free_prod_direct_sum_zmod G
   cases n
   · exact ⟨ι, fι, p, hp, e, ⟨f.trans AddEquiv.uniqueProd⟩⟩
-    
   · haveI := @Fintype.prodLeft _ _ _ (Fintype.ofEquiv G f.to_equiv) _
     exact
       ((Fintype.ofSurjective fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
-    
 #align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_direct_sum_zmod_of_fintype
 
 theorem finite_of_fg_torsion [hG' : AddGroup.Fg G] (hG : AddMonoid.IsTorsion G) : Finite G :=

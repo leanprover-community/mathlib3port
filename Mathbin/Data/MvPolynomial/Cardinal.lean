@@ -42,15 +42,12 @@ theorem cardinal_mk_eq_lift [IsEmpty σ] : (#MvPolynomial σ R) = Cardinal.lift.
 
 theorem cardinal_lift_mk_le_max {σ : Type u} {R : Type v} [CommSemiring R] :
     (#MvPolynomial σ R) ≤ max (max (Cardinal.lift.{u} <| (#R)) <| Cardinal.lift.{v} <| (#σ)) ℵ₀ :=
-  by
+  by 
   cases subsingleton_or_nontrivial R
   · exact (mk_eq_one _).trans_le (le_max_of_le_right one_le_aleph_0)
-    
   cases isEmpty_or_nonempty σ
   · exact cardinal_mk_eq_lift.trans_le (le_max_of_le_left <| le_max_left _ _)
-    
   · exact cardinal_mk_eq_max_lift.le
-    
 #align mv_polynomial.cardinal_lift_mk_le_max MvPolynomial.cardinal_lift_mk_le_max
 
 end TwoUniverses

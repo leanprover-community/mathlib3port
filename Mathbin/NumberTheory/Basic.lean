@@ -28,7 +28,6 @@ theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRing R] {p : ℕ} {a b : R} (h 
     (k : ℕ) : (p ^ (k + 1) : R) ∣ a ^ p ^ k - b ^ p ^ k := by
   induction' k with k ih
   · rwa [pow_one, pow_zero, pow_one, pow_one]
-    
   rw [pow_succ' p k, pow_mul, pow_mul, ← geom_sum₂_mul, pow_succ]
   refine' mul_dvd_mul _ ih
   let I : Ideal R := span {p}

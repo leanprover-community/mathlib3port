@@ -85,20 +85,22 @@ instance hasForgetToLinearOrder : HasForget₂ NonemptyFinLinOrdCat LinearOrderC
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
 between them. -/
 @[simps]
-def Iso.mk {α β : NonemptyFinLinOrdCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : NonemptyFinLinOrdCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply x
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply x
 #align NonemptyFinLinOrd.iso.mk NonemptyFinLinOrdCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : NonemptyFinLinOrdCat ⥤ NonemptyFinLinOrdCat where
+def dual : NonemptyFinLinOrdCat ⥤
+      NonemptyFinLinOrdCat where 
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
 #align NonemptyFinLinOrd.dual NonemptyFinLinOrdCat.dual
@@ -120,7 +122,7 @@ theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
   let g₁ : X ⟶ A := ⟨fun x => a₁, fun x₁ x₂ h => by rfl⟩
   let g₂ : X ⟶ A := ⟨fun x => a₂, fun x₁ x₂ h => by rfl⟩
   change g₁ (ULift.up (0 : Fin 1)) = g₂ (ULift.up (0 : Fin 1))
-  have eq : g₁ ≫ f = g₂ ≫ f := by
+  have eq : g₁ ≫ f = g₂ ≫ f := by 
     ext x
     exact h
   rw [cancel_mono] at eq
@@ -128,7 +130,7 @@ theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
 #align NonemptyFinLinOrd.mono_iff_injective NonemptyFinLinOrdCat.mono_iff_injective
 
 theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
-    Epi f ↔ Function.Surjective f := by
+    Epi f ↔ Function.Surjective f := by 
   constructor
   · intro
     by_contra' hf'
@@ -141,9 +143,7 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
         any_goals apply Fin.zero_le
         · exfalso
           exact h₁ (lt_of_le_of_lt h h₂)
-          
-        · rfl
-          ⟩
+        · rfl⟩
     let p₂ : B ⟶ Y :=
       ⟨fun b => if b ≤ m then ULift.up 0 else ULift.up 1, fun x₁ x₂ h => by
         simp only
@@ -151,10 +151,8 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
         any_goals apply Fin.zero_le
         · exfalso
           exact h₁ (h.trans h₂)
-          
-        · rfl
-          ⟩
-    have h : p₁ m = p₂ m := by
+        · rfl⟩
+    have h : p₁ m = p₂ m := by 
       congr
       rw [← cancel_epi f]
       ext a : 2
@@ -163,16 +161,12 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
       any_goals rfl
       · exfalso
         exact h₂ (le_of_lt h₁)
-        
       · exfalso
         exact hm a (eq_of_le_of_not_lt h₂ h₁)
-        
     simpa only [OrderHom.coe_fun_mk, lt_self_iff_false, if_false, le_refl, if_true, ULift.up_inj,
       Fin.one_eq_zero_iff] using h
-    
   · intro h
     exact concrete_category.epi_of_surjective f h
-    
 #align NonemptyFinLinOrd.epi_iff_surjective NonemptyFinLinOrdCat.epi_iff_surjective
 
 instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
@@ -187,25 +181,23 @@ instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
     swap
     · ext b
       apply hφ
-      
     · intro a b
       contrapose
       intro h
       simp only [not_le] at h⊢
-      suffices b ≤ a by
+      suffices b ≤ a by 
         apply lt_of_le_of_ne this
         intro h'
         exfalso
         simpa only [h', lt_self_iff_false] using h
-      simpa only [hφ] using f.monotone (le_of_lt h)
-      ⟩
+      simpa only [hφ] using f.monotone (le_of_lt h)⟩
 
 instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
-  ⟨fun X Y f => by
+  ⟨fun X Y f => by 
     let I : NonemptyFinLinOrdCat.{u} := ⟨Set.image (coeFn f) ⊤, ⟨⟩⟩
     let e : X ⟶ I := ⟨fun x => ⟨f x, ⟨x, by tidy⟩⟩, fun x₁ x₂ h => f.monotone h⟩
     let m : I ⟶ Y := ⟨fun y => y, by tidy⟩
-    haveI : epi e := by
+    haveI : epi e := by 
       rw [epi_iff_surjective]
       tidy
     haveI : strong_epi e := strong_epi_of_epi e

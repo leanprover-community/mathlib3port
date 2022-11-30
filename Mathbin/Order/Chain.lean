@@ -154,7 +154,7 @@ def succChain (r : α → α → Prop) (s : Set α) : Set α :=
 #align succ_chain succChain
 
 theorem succ_chain_spec (h : ∃ t, IsChain r s ∧ SuperChain r s t) :
-    SuperChain r s (succChain r s) := by
+    SuperChain r s (succChain r s) := by 
   let ⟨t, hc'⟩ := h
   have : IsChain r s ∧ SuperChain r s (choose h) :=
     @choose_spec _ (fun t => IsChain r s ∧ SuperChain r s t) _
@@ -163,7 +163,7 @@ theorem succ_chain_spec (h : ∃ t, IsChain r s ∧ SuperChain r s t) :
 
 theorem IsChain.succ (hs : IsChain r s) : IsChain r (succChain r s) :=
   if h : ∃ t, IsChain r s ∧ SuperChain r s t then (succ_chain_spec h).1
-  else by
+  else by 
     simp [succChain, dif_neg, h]
     exact hs
 #align is_chain.succ IsChain.succ
@@ -203,42 +203,35 @@ theorem chain_closure_max_chain : ChainClosure r (maxChain r) :=
 
 private theorem chain_closure_succ_total_aux (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)
     (h : ∀ ⦃c₃⦄, ChainClosure r c₃ → c₃ ⊆ c₂ → c₂ = c₃ ∨ succChain r c₃ ⊆ c₂) :
-    succChain r c₂ ⊆ c₁ ∨ c₁ ⊆ c₂ := by
+    succChain r c₂ ⊆ c₁ ∨ c₁ ⊆ c₂ := by 
   induction hc₁
-  case succ c₃ hc₃ ih =>
-  cases' ih with ih ih
-  · exact Or.inl (ih.trans subset_succ_chain)
-    
-  · exact (h hc₃ ih).imp_left fun h => h ▸ subset.rfl
-    
+  case succ c₃ hc₃ ih => 
+    cases' ih with ih ih
+    · exact Or.inl (ih.trans subset_succ_chain)
+    · exact (h hc₃ ih).imp_left fun h => h ▸ subset.rfl
   case union s hs ih =>
-  refine' or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => _
-  exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
+    refine' or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => _
+    exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
 #align chain_closure_succ_total_aux chain_closure_succ_total_aux
 
 private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)
     (h : c₁ ⊆ c₂) : c₂ = c₁ ∨ succChain r c₁ ⊆ c₂ := by
   induction hc₂ generalizing c₁ hc₁ h
   case succ c₂ hc₂ ih =>
-  refine' ((chain_closure_succ_total_aux hc₁ hc₂) fun c₁ => ih).imp h.antisymm' fun h₁ => _
-  obtain rfl | h₂ := ih hc₁ h₁
-  · exact subset.rfl
-    
-  · exact h₂.trans subset_succ_chain
-    
-  case union s hs ih =>
-  apply Or.imp_left h.antisymm'
-  apply Classical.by_contradiction
-  simp [not_or, sUnion_subset_iff, not_forall]
-  intro c₃ hc₃ h₁ h₂
-  obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃
-  · exact h₁ (subset_succ_chain.trans h)
-    
-  obtain h' | h' := ih c₃ hc₃ hc₁ h
-  · exact h₁ h'.subset
-    
-  · exact h₂ (h'.trans <| subset_sUnion_of_mem hc₃)
-    
+    refine' ((chain_closure_succ_total_aux hc₁ hc₂) fun c₁ => ih).imp h.antisymm' fun h₁ => _
+    obtain rfl | h₂ := ih hc₁ h₁
+    · exact subset.rfl
+    · exact h₂.trans subset_succ_chain
+  case union s hs ih => 
+    apply Or.imp_left h.antisymm'
+    apply Classical.by_contradiction
+    simp [not_or, sUnion_subset_iff, not_forall]
+    intro c₃ hc₃ h₁ h₂
+    obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃
+    · exact h₁ (subset_succ_chain.trans h)
+    obtain h' | h' := ih c₃ hc₃ hc₁ h
+    · exact h₁ h'.subset
+    · exact h₂ (h'.trans <| subset_sUnion_of_mem hc₃)
 #align chain_closure_succ_total chain_closure_succ_total
 
 theorem ChainClosure.total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) :
@@ -263,11 +256,11 @@ theorem ChainClosure.succ_fixpoint_iff (hc : ChainClosure r c) :
 theorem ChainClosure.is_chain (hc : ChainClosure r c) : IsChain r c := by
   induction hc
   case succ c hc h => exact h.succ
-  case union s hs h =>
-  change ∀ c ∈ s, IsChain r c at h
-  exact fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
-    ((hs _ ht₁).Total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht =>
-      h t₁ ht₁ hc₁ (ht hc₂) hneq
+  case union s hs h => 
+    change ∀ c ∈ s, IsChain r c at h
+    exact fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
+      ((hs _ ht₁).Total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht =>
+        h t₁ ht₁ hc₁ (ht hc₂) hneq
 #align chain_closure.is_chain ChainClosure.is_chain
 
 /-- **Hausdorff's maximality principle**
@@ -298,14 +291,14 @@ section LE
 
 variable [LE α] {s t : Flag α} {a : α}
 
-instance : SetLike (Flag α) α where
+instance : SetLike (Flag α) α where 
   coe := carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     cases s
     cases t
     congr
 
-@[ext.1]
+@[ext]
 theorem ext : (s : Set α) = t → s = t :=
   SetLike.ext'
 #align flag.ext Flag.ext
@@ -378,7 +371,10 @@ instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· <
 
 end PartialOrder
 
-instance [LinearOrder α] : Unique (Flag α) where
+instance [LinearOrder α] :
+    Unique
+      (Flag
+        α) where 
   default := ⟨univ, is_chain_of_trichotomous _, fun s _ => s.subset_univ.antisymm'⟩
   uniq s := SetLike.coe_injective <| s.3 (is_chain_of_trichotomous _) <| subset_univ _
 

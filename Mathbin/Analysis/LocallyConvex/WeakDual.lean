@@ -124,11 +124,9 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
       have hp : p y ≤ U'.sup p := Finset.le_sup hyU'
       refine' lt_of_le_of_lt (hp x) (lt_of_lt_of_le hx _)
       exact Finset.inf'_le _ hyU'
-      
     rw [set.not_nonempty_iff_eq_empty.mp hU₃]
     simp only [Set.empty_pi, Set.preimage_univ, Set.subset_univ, and_true_iff]
     exact Exists.intro ((p 0).ball 0 1) (p.basis_sets_singleton_mem 0 one_pos)
-    
   rintro U (hU : U ∈ p.basis_sets)
   rw [SeminormFamily.basis_sets_iff] at hU
   rcases hU with ⟨s, r, hr, hU⟩

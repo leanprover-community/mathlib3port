@@ -67,7 +67,7 @@ protected theorem is_lawful_functor' [F : Functor t']
     (h₀ : ∀ {α β} (f : α → β), Functor.map f = Equiv.map f)
     (h₁ : ∀ {α β} (f : β), Functor.mapConst f = (Equiv.map ∘ Function.const α) f) :
     IsLawfulFunctor t' := by
-  have : F = Equiv.functor := by
+  have : F = Equiv.functor := by 
     cases F
     dsimp [Equiv.functor]
     congr <;> ext <;> [rw [← h₀], rw [← h₁]]
@@ -98,7 +98,8 @@ protected def traverse (f : α → m β) (x : t' α) : m (t' β) :=
 
 /-- The function `equiv.traverse` transfers a traversable functor
 instance across the equivalences `eqv`. -/
-protected def traversable : Traversable t' where
+protected def traversable :
+    Traversable t' where 
   toFunctor := Equiv.functor eqv
   traverse := @Equiv.traverse _
 #align equiv.traversable Equiv.traversable
@@ -146,7 +147,10 @@ protected theorem naturality (f : α → F β) (x : t' α) :
 /-- The fact that `t` is a lawful traversable functor carries over the
 equivalences to `t'`, with the traversable functor structure given by
 `equiv.traversable`. -/
-protected def isLawfulTraversable : @IsLawfulTraversable t' (Equiv.traversable eqv) where
+protected def isLawfulTraversable :
+    @IsLawfulTraversable t'
+      (Equiv.traversable
+        eqv) where 
   to_is_lawful_functor := @Equiv.is_lawful_functor _ _ eqv _ _
   id_traverse := @Equiv.id_traverse _ _
   comp_traverse := @Equiv.comp_traverse _ _
@@ -165,23 +169,20 @@ protected def isLawfulTraversable' [_i : Traversable t']
     (h₂ :
       ∀ {F : Type u → Type u} [Applicative F],
         ∀ [LawfulApplicative F] {α β} (f : α → F β), traverse f = Equiv.traverse eqv f) :
-    IsLawfulTraversable t' := by
+    IsLawfulTraversable t' :=
+  by
   -- we can't use the same approach as for `is_lawful_functor'` because
     -- h₂ needs a `is_lawful_applicative` assumption
     refine' { to_is_lawful_functor := Equiv.is_lawful_functor' eqv @h₀ @h₁.. } <;>
     intros
   · rw [h₂, Equiv.id_traverse]
     infer_instance
-    
   · rw [h₂, Equiv.comp_traverse f g x, h₂]
     congr
     rw [h₂]
     all_goals infer_instance
-    
   · rw [h₂, Equiv.traverse_eq_map_id, h₀] <;> infer_instance
-    
   · rw [h₂, Equiv.naturality, h₂] <;> infer_instance
-    
 #align equiv.is_lawful_traversable' Equiv.isLawfulTraversable'
 
 end Equiv

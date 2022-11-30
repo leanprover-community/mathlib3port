@@ -34,7 +34,7 @@ def toTopObj (x : SimplexCategory) :=
 instance (x : SimplexCategory) : CoeFun x.toTopObj fun _ => x → ℝ≥0 :=
   ⟨fun f => (f : x → ℝ≥0)⟩
 
-@[ext.1]
+@[ext]
 theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ≥0) = g → f = g :=
   Subtype.ext
 #align simplex_category.to_Top_obj.ext SimplexCategory.toTopObj.ext
@@ -49,15 +49,13 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
       intro i
       rw [Finset.mem_bUnion]
       exact ⟨f i, by simp, by simp⟩
-      
     · intro i hi j hj h
       rw [Function.onFun, disjoint_iff_inf_le]
       intro e he
       apply h
       simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter,
         Finset.mem_inter] at he
-      rw [← he.1, ← he.2]
-      ⟩
+      rw [← he.1, ← he.2]⟩
 #align simplex_category.to_Top_map SimplexCategory.toTopMap
 
 @[simp]
@@ -76,24 +74,23 @@ theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous
 
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
 @[simps]
-def toTop : SimplexCategory ⥤ TopCat where
+def toTop : SimplexCategory ⥤
+      TopCat where 
   obj x := TopCat.of x.toTopObj
   map x y f := ⟨toTopMap f⟩
-  map_id' := by
+  map_id' := by 
     intro x
     ext (f i) : 3
     change (finset.univ.filter fun k => k = i).Sum _ = _
     simp [Finset.sum_filter]
-  map_comp' := by
+  map_comp' := by 
     intro x y z f g
     ext (h i) : 3
     dsimp
     erw [← Finset.sum_bUnion]
     apply Finset.sum_congr
     · exact Finset.ext fun j => ⟨fun hj => by simpa using hj, fun hj => by simpa using hj⟩
-      
     · tauto
-      
     · intro j hj k hk h
       rw [Function.onFun, disjoint_iff_inf_le]
       intro e he
@@ -101,7 +98,6 @@ def toTop : SimplexCategory ⥤ TopCat where
       simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter,
         Finset.mem_inter] at he
       rw [← he.1, ← he.2]
-      
 #align simplex_category.to_Top SimplexCategory.toTop
 
 end SimplexCategory

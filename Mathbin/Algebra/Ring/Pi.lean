@@ -115,7 +115,8 @@ homomorphism `pi.non_unital_ring_hom f : γ →+* Π a, β a` given by
 `pi.non_unital_ring_hom f x b = f b x`. -/
 @[simps]
 protected def nonUnitalRingHom {γ : Type w} [∀ i, NonUnitalNonAssocSemiring (f i)]
-    [NonUnitalNonAssocSemiring γ] (g : ∀ i, γ →ₙ+* f i) : γ →ₙ+* ∀ i, f i where
+    [NonUnitalNonAssocSemiring γ] (g : ∀ i, γ →ₙ+* f i) :
+    γ →ₙ+* ∀ i, f i where 
   toFun x b := g b x
   map_add' x y := funext fun z => map_add (g z) x y
   map_mul' x y := funext fun z => map_mul (g z) x y
@@ -134,7 +135,8 @@ theorem non_unital_ring_hom_injective {γ : Type w} [Nonempty I]
 `pi.ring_hom f : γ →+* Π a, β a` given by `pi.ring_hom f x b = f b x`. -/
 @[simps]
 protected def ringHom {γ : Type w} [∀ i, NonAssocSemiring (f i)] [NonAssocSemiring γ]
-    (g : ∀ i, γ →+* f i) : γ →+* ∀ i, f i where
+    (g : ∀ i, γ →+* f i) : γ →+*
+      ∀ i, f i where 
   toFun x b := g b x
   map_add' x y := funext fun z => (g z).map_add x y
   map_mul' x y := funext fun z => (g z).map_mul x y

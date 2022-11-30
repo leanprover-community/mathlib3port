@@ -265,7 +265,7 @@ instance {R : Type _} [Semiring R] [AddCommMonoid α] [Module R α] : Module R �
   Function.Injective.module R ⟨unsym, unsym_zero, unsym_add⟩ unsym_injective unsym_smul
 
 instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] :
-    Invertible (sym a) where
+    Invertible (sym a) where 
   invOf := sym (⅟ a)
   inv_of_mul_self := by
     rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ← bit0, inv_of_mul_self, sym_one]
@@ -319,9 +319,11 @@ theorem mul_comm [Mul α] [AddCommSemigroup α] [One α] [Invertible (2 : α)] (
     a * b = b * a := by rw [mul_def, mul_def, add_comm]
 #align sym_alg.mul_comm SymAlg.mul_comm
 
-instance [Ring α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ where
+instance [Ring α] [Invertible (2 : α)] :
+    IsCommJordan αˢʸᵐ where 
   mul_comm := SymAlg.mul_comm
-  lmul_comm_rmul_rmul a b := by
+  lmul_comm_rmul_rmul a b :=
+    by
     -- Rearrange LHS
     have commute_half_left := fun a : α => (Commute.one_left a).bit0_left.inv_of_left.Eq
     rw [mul_def, mul_def a b, unsym_sym, ← mul_assoc, ← commute_half_left (unsym (a * a)),

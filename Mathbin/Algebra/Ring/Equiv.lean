@@ -96,10 +96,10 @@ section Basic
 
 variable [Mul R] [Add R] [Mul S] [Add S] [Mul S'] [Add S']
 
-instance : RingEquivClass (R ≃+* S) R S where
+instance : RingEquivClass (R ≃+* S) R S where 
   coe := toFun
   inv := invFun
-  coe_injective' e f h₁ h₂ := by
+  coe_injective' e f h₁ h₂ := by 
     cases e
     cases f
     congr
@@ -138,7 +138,7 @@ protected theorem map_add (e : R ≃+* S) (x y : R) : e (x + y) = e x + e y :=
 
 /-- Two ring isomorphisms agree if they are defined by the
     same underlying function. -/
-@[ext.1]
+@[ext]
 theorem ext {f g : R ≃+* S} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align ring_equiv.ext RingEquiv.ext
@@ -190,7 +190,8 @@ def ringEquivOfUnique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N
   { AddEquiv.addEquivOfUnique, MulEquiv.mulEquivOfUnique with }
 #align ring_equiv.ring_equiv_of_unique RingEquiv.ringEquivOfUnique
 
-instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) where
+instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] :
+    Unique (M ≃+* N) where 
   default := ringEquivOfUnique
   uniq _ := ext fun x => Subsingleton.elim _ _
 
@@ -337,13 +338,16 @@ open MulOpposite
 
 /-- A ring iso `α ≃+* β` can equivalently be viewed as a ring iso `αᵐᵒᵖ ≃+* βᵐᵒᵖ`. -/
 @[simps]
-protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] : α ≃+* β ≃ (αᵐᵒᵖ ≃+* βᵐᵒᵖ) where
+protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] :
+    α ≃+* β ≃
+      (αᵐᵒᵖ ≃+*
+        βᵐᵒᵖ) where 
   toFun f := { f.toAddEquiv.mulOp, f.toMulEquiv.op with }
   invFun f := { AddEquiv.mulOp.symm f.toAddEquiv, MulEquiv.op.symm f.toMulEquiv with }
-  left_inv f := by
+  left_inv f := by 
     ext
     rfl
-  right_inv f := by
+  right_inv f := by 
     ext
     rfl
 #align ring_equiv.op RingEquiv.op
@@ -745,7 +749,8 @@ theorem symm_to_ring_hom_comp_to_ring_hom (e : R ≃+* S) :
 def ofHomInv' {R S F G : Type _} [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
     [NonUnitalRingHomClass F R S] [NonUnitalRingHomClass G S R] (hom : F) (inv : G)
     (hom_inv_id : (inv : S →ₙ+* R).comp (hom : R →ₙ+* S) = NonUnitalRingHom.id R)
-    (inv_hom_id : (hom : R →ₙ+* S).comp (inv : S →ₙ+* R) = NonUnitalRingHom.id S) : R ≃+* S where
+    (inv_hom_id : (hom : R →ₙ+* S).comp (inv : S →ₙ+* R) = NonUnitalRingHom.id S) :
+    R ≃+* S where 
   toFun := hom
   invFun := inv
   left_inv := FunLike.congr_fun hom_inv_id
@@ -761,7 +766,8 @@ Construct an equivalence of rings from unital homomorphisms in both directions, 
 def ofHomInv {R S F G : Type _} [NonAssocSemiring R] [NonAssocSemiring S] [RingHomClass F R S]
     [RingHomClass G S R] (hom : F) (inv : G)
     (hom_inv_id : (inv : S →+* R).comp (hom : R →+* S) = RingHom.id R)
-    (inv_hom_id : (hom : R →+* S).comp (inv : S →+* R) = RingHom.id S) : R ≃+* S where
+    (inv_hom_id : (hom : R →+* S).comp (inv : S →+* R) = RingHom.id S) :
+    R ≃+* S where 
   toFun := hom
   invFun := inv
   left_inv := FunLike.congr_fun hom_inv_id

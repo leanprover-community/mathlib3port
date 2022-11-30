@@ -112,11 +112,11 @@ theorem id_c (X : SheafedSpaceCat C) :
 theorem id_c_app (X : SheafedSpaceCat C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
       eqToHom
-        (by
+        (by 
           induction U using Opposite.rec
           cases U
           rfl) :=
-  by
+  by 
   induction U using Opposite.rec
   cases U
   simp only [id_c]
@@ -149,7 +149,8 @@ theorem congr_app {X Y : SheafedSpaceCat C} {α β : X ⟶ Y} (h : α = β) (U) 
 variable (C)
 
 /-- The forgetful functor from `SheafedSpace` to `Top`. -/
-def forget : SheafedSpaceCat C ⥤ TopCat where
+def forget : SheafedSpaceCat C ⥤
+      TopCat where 
   obj X := (X : TopCat.{v})
   map X Y f := f.base
 #align algebraic_geometry.SheafedSpace.forget AlgebraicGeometry.SheafedSpaceCat.forget

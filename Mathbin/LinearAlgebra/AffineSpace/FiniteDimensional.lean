@@ -189,9 +189,7 @@ theorem affine_independent_iff_le_finrank_vector_span [Fintype ι] (p : ι → P
   constructor
   · rintro rfl
     rfl
-    
   · exact fun hle => le_antisymm (finrank_vector_span_range_le k p hc) hle
-    
 #align affine_independent_iff_le_finrank_vector_span affine_independent_iff_le_finrank_vector_span
 
 /-- `n + 2` points are affinely independent if and only if their
@@ -278,11 +276,9 @@ theorem AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one [Finite
       (Nat.succ_pred_eq_of_pos (card_pos_of_affine_span_eq_top k V P h_tot)).symm
     rw [hn, ← finrank_top, ← (vector_span_eq_top_of_affine_span_eq_top k V P) h_tot, ←
       hi.finrank_vector_span hn]
-    
   · intro hc
     rw [← finrank_top, ← direction_top k V P] at hc
     exact hi.affine_span_eq_of_le_of_card_eq_finrank_add_one le_top hc
-    
 #align
   affine_independent.affine_span_eq_top_iff_card_eq_finrank_add_one AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one
 
@@ -295,10 +291,8 @@ instance finiteDimensionalVectorSpanInsert (s : AffineSubspace k P)
   · rw [coe_eq_bot_iff] at hs
     rw [hs, bot_coe, span_empty, bot_coe, direction_affine_span]
     convert finiteDimensionalBot _ _ <;> simp
-    
   · rw [affine_span_coe, direction_affine_span_insert hp₀]
     infer_instance
-    
 #align finite_dimensional_vector_span_insert finiteDimensionalVectorSpanInsert
 
 /-- The direction of the affine span of adding a point to a finite-dimensional subspace is
@@ -397,7 +391,6 @@ theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
     use r
     rw [eq_vadd_iff_vsub_eq]
     exact hr.symm
-    
   · rintro ⟨v, hp₀v⟩
     use v
     intro w hw
@@ -412,7 +405,6 @@ theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
       simp
     have hw' := SetLike.le_def.1 hs hw
     rwa [Submodule.mem_span_singleton] at hw'
-    
 #align collinear_iff_of_mem collinear_iff_of_mem
 
 /-- A set of points is collinear if and only if they can all be
@@ -422,11 +414,9 @@ theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
     Collinear k s ↔ ∃ (p₀ : P)(v : V), ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ := by
   rcases Set.eq_empty_or_nonempty s with (rfl | ⟨⟨p₁, hp₁⟩⟩)
   · simp [collinearEmpty]
-    
   · rw [collinear_iff_of_mem hp₁]
     constructor
     · exact fun h => ⟨p₁, h⟩
-      
     · rintro ⟨p, v, hv⟩
       use v
       intro p₂ hp₂
@@ -434,8 +424,6 @@ theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
       rcases hv p₁ hp₁ with ⟨r₁, rfl⟩
       use r - r₁
       simp [vadd_vadd, ← add_smul]
-      
-    
 #align collinear_iff_exists_forall_eq_smul_vadd collinear_iff_exists_forall_eq_smul_vadd
 
 variable (k)
@@ -449,10 +437,8 @@ theorem collinearPair (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) := by
   cases hp
   · use 0
     simp [hp]
-    
   · use 1
     simp [hp]
-    
 #align collinear_pair collinearPair
 
 variable {k}
@@ -475,21 +461,21 @@ theorem collinear_iff_not_affine_independent {p : Fin 3 → P} :
 
 /-- If three points are not collinear, the first and second are different. -/
 theorem ne₁₂_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear k ({p₁, p₂, p₃} : Set P)) : p₁ ≠ p₂ :=
-  by
+  by 
   rintro rfl
   simpa [collinearPair] using h
 #align ne₁₂_of_not_collinear ne₁₂_of_not_collinear
 
 /-- If three points are not collinear, the first and third are different. -/
 theorem ne₁₃_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear k ({p₁, p₂, p₃} : Set P)) : p₁ ≠ p₃ :=
-  by
+  by 
   rintro rfl
   simpa [collinearPair] using h
 #align ne₁₃_of_not_collinear ne₁₃_of_not_collinear
 
 /-- If three points are not collinear, the second and third are different. -/
 theorem ne₂₃_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear k ({p₁, p₂, p₃} : Set P)) : p₂ ≠ p₃ :=
-  by
+  by 
   rintro rfl
   simpa [collinearPair] using h
 #align ne₂₃_of_not_collinear ne₂₃_of_not_collinear
@@ -504,7 +490,7 @@ theorem Collinear.mem_affine_span_of_mem_of_ne {s : Set P} (h : Collinear k s) {
   rcases h p₃ hp₃ with ⟨r₃, rfl⟩
   rw [vadd_left_mem_affine_span_pair]
   refine' ⟨r₃ / r₂, _⟩
-  have h₂ : r₂ ≠ 0 := by
+  have h₂ : r₂ ≠ 0 := by 
     rintro rfl
     simpa using hp₁p₂
   simp [smul_smul, h₂]
@@ -631,7 +617,6 @@ theorem finrank_vector_span_insert_le (s : AffineSubspace k P) (p : P) :
       exact hf (Submodule.finiteDimensionalOfLe h')
     rw [finrank_of_infinite_dimensional hf, finrank_of_infinite_dimensional hf', zero_add]
     exact zero_le_one
-    
   haveI := hf
   rw [← direction_affine_span, ← affine_span_insert_affine_span]
   rcases(s : Set P).eq_empty_or_nonempty with (hs | ⟨p₀, hp₀⟩)
@@ -641,7 +626,6 @@ theorem finrank_vector_span_insert_le (s : AffineSubspace k P) (p : P) :
     convert zero_le_one' ℕ
     rw [← finrank_bot k V]
     convert rfl <;> simp
-    
   · rw [affine_span_coe, direction_affine_span_insert hp₀, add_comm]
     refine' (Submodule.dim_add_le_dim_add_dim _ _).trans (add_le_add_right _ _)
     refine' finrank_le_one ⟨p -ᵥ p₀, Submodule.mem_span_singleton_self _⟩ fun v => _
@@ -651,7 +635,6 @@ theorem finrank_vector_span_insert_le (s : AffineSubspace k P) (p : P) :
     refine' ⟨c, _⟩
     ext
     exact hc
-    
 #align finrank_vector_span_insert_le finrank_vector_span_insert_le
 
 variable (k)

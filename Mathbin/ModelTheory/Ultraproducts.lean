@@ -50,7 +50,7 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
       refine' mem_of_superset (Inter_mem.2 xy) fun a ha => _
       simp only [Set.mem_Inter, Set.mem_set_of_eq] at ha
       simp only [Set.mem_set_of_eq, ha],
-    rel_equiv := fun n r x y xy => by
+    rel_equiv := fun n r x y xy => by 
       rw [← iff_eq_eq]
       refine' ⟨fun hx => _, fun hy => _⟩
       · refine' mem_of_superset (inter_mem hx (Inter_mem.2 xy)) _
@@ -58,13 +58,11 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
         simp only [Set.mem_Inter, Set.mem_set_of_eq] at *
         rw [← funext ha2]
         exact ha1
-        
       · refine' mem_of_superset (inter_mem hy (Inter_mem.2 xy)) _
         rintro a ⟨ha1, ha2⟩
         simp only [Set.mem_Inter, Set.mem_set_of_eq] at *
         rw [funext ha2]
-        exact ha1
-         }
+        exact ha1 }
 #align
   first_order.language.ultraproduct.setoid_prestructure FirstOrder.Language.Ultraproduct.setoidPrestructure
 
@@ -87,10 +85,8 @@ theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) 
   ext a
   induction t
   · rfl
-    
   · simp only [term.realize, t_ih]
     rfl
-    
 #align
   first_order.language.ultraproduct.term_realize_cast FirstOrder.Language.Ultraproduct.term_realize_cast
 
@@ -100,41 +96,34 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
     (x : β → ∀ a, M a) (v : Fin n → ∀ a, M a) :
     (φ.realize (fun i : β => (x i : (u : Filter α).product M)) fun i => v i) ↔
       ∀ᶠ a : α in u, φ.realize (fun i : β => x i a) fun i => v i a :=
-  by
+  by 
   letI := (u : Filter α).productSetoid M
   induction' φ with _ _ _ _ _ _ _ _ m _ _ ih ih' k φ ih
   · simp only [bounded_formula.realize, eventually_const]
-    
   · have h2 : ∀ a : α, (Sum.elim (fun i : β => x i a) fun i => v i a) = fun i => Sum.elim x v i a :=
       fun a => funext fun i => Sum.casesOn i (fun i => rfl) fun i => rfl
     simp only [bounded_formula.realize, (Sum.comp_elim coe x v).symm, h2, term_realize_cast]
     exact Quotient.eq'
-    
   · have h2 : ∀ a : α, (Sum.elim (fun i : β => x i a) fun i => v i a) = fun i => Sum.elim x v i a :=
       fun a => funext fun i => Sum.casesOn i (fun i => rfl) fun i => rfl
     simp only [bounded_formula.realize, (Sum.comp_elim coe x v).symm, term_realize_cast, h2]
     exact rel_map_quotient_mk _ _
-    
   · simp only [bounded_formula.realize, ih v, ih' v]
     rw [Ultrafilter.eventually_imp]
-    
   · simp only [bounded_formula.realize]
     trans
       ∀ m : ∀ a : α, M a,
         φ.realize (fun i : β => (x i : (u : Filter α).product M))
           (Fin.snoc (coe ∘ v) (↑m : (u : Filter α).product M))
     · exact forall_quotient_iff
-      
     have h' :
       ∀ (m : ∀ a, M a) (a : α),
         (fun i : Fin (k + 1) => (Fin.snoc v m : _ → ∀ a, M a) i a) =
           Fin.snoc (fun i : Fin k => v i a) (m a) :=
-      by
+      by 
       refine' fun m a => funext (Fin.reverseInduction _ fun i hi => _)
       · simp only [Fin.snoc_last]
-        
       · simp only [Fin.snoc_cast_succ]
-        
     simp only [← Fin.comp_snoc, ih, h']
     refine' ⟨fun h => _, fun h m => _⟩
     · contrapose! h
@@ -146,18 +135,15 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
           _⟩
       rw [← Ultrafilter.eventually_not]
       exact Filter.mem_of_superset h fun a ha => Classical.epsilon_spec ha
-      
     · rw [Filter.eventually_iff] at *
       exact Filter.mem_of_superset h fun a ha => ha (m a)
-      
-    
 #align
   first_order.language.ultraproduct.bounded_formula_realize_cast FirstOrder.Language.Ultraproduct.bounded_formula_realize_cast
 
 theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a, M a) :
     (φ.realize fun i => (x i : (u : Filter α).product M)) ↔
       ∀ᶠ a : α in u, φ.realize fun i => x i a :=
-  by
+  by 
   simp_rw [formula.realize, ← bounded_formula_realize_cast φ x, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
 #align
@@ -168,7 +154,7 @@ theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a
 /-- Łoś's Theorem : A sentence is true in an ultraproduct if and only if the set of structures it is
   true in is in the ultrafilter. -/
 theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ ↔ ∀ᶠ a : α in u, M a ⊨ φ :=
-  by
+  by 
   simp_rw [sentence.realize, ← realize_formula_cast φ, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
 #align

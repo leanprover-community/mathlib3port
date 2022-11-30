@@ -173,7 +173,7 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • f' (x + y * I) 1 - f' (x + y * I) i :=
-  by
+  by 
   set e : (ℝ × ℝ) ≃L[ℝ] ℂ := equiv_real_prodₗ.symm
   have he : ∀ x y : ℝ, ↑x + ↑y * I = e (x, y) := fun x y => (mk_eq_add_mul_I x y).symm
   have he₁ : e (1, 0) = 1 := rfl
@@ -317,7 +317,8 @@ theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_
     {r R : ℝ} (h0 : 0 < r) (hle : r ≤ R) {f : ℂ → E} {s : Set ℂ} (hs : s.Countable)
     (hc : ContinuousOn f (closedBall c R \ ball c r))
     (hd : ∀ z ∈ (ball c R \ closedBall c r) \ s, DifferentiableAt ℂ f z) :
-    (∮ z in C(c, R), (z - c)⁻¹ • f z) = ∮ z in C(c, r), (z - c)⁻¹ • f z := by
+    (∮ z in C(c, R), (z - c)⁻¹ • f z) = ∮ z in C(c, r), (z - c)⁻¹ • f z :=
+  by
   /- We apply the previous lemma to `λ z, f (c + exp z)` on the rectangle
     `[log r, log R] × [0, 2 * π]`. -/
   set A := closed_ball c R \ ball c r
@@ -338,7 +339,7 @@ theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_
   set g : ℂ → ℂ := (· + ·) c ∘ exp
   have hdg : Differentiable ℂ g := differentiable_exp.const_add _
   replace hs : (g ⁻¹' s).Countable := (hs.preimage (add_right_injective c)).preimage_cexp
-  have h_maps : maps_to g R A := by
+  have h_maps : maps_to g R A := by 
     rintro z ⟨h, -⟩
     simpa [dist_eq, g, abs_exp, hle] using h.symm
   replace hc : ContinuousOn (f ∘ g) R
@@ -348,7 +349,6 @@ theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_
       DifferentiableAt ℂ (f ∘ g) z
   · refine' fun z hz => (hd (g z) ⟨_, hz.2⟩).comp z (hdg _)
     simpa [g, dist_eq, abs_exp, hle, and_comm] using hz.1.1
-    
   simpa [g, circleMap, exp_periodic _, sub_eq_zero, ← exp_add] using
     integral_boundary_rect_eq_zero_of_differentiable_on_off_countable _ ⟨a, 0⟩ ⟨b, 2 * π⟩ _ hs hc hd
 #align
@@ -403,26 +403,24 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_o
   calc
     ‖(∮ z in C(c, R), (z - c)⁻¹ • f z) - (2 * ↑π * I) • y‖ =
         ‖(∮ z in C(c, r), (z - c)⁻¹ • f z) - ∮ z in C(c, r), (z - c)⁻¹ • y‖ :=
-      by
+      by 
       congr 2
-      · exact
+      ·
+        exact
           circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable hr0 hrR
             hs (hc.mono hsub) fun z hz => hd z ⟨hsub' hz.1, hz.2⟩
-        
       · simp [hr0.ne']
-        
     _ = ‖∮ z in C(c, r), (z - c)⁻¹ • (f z - y)‖ := by
       simp only [smul_sub]
       have hc' : ContinuousOn (fun z => (z - c)⁻¹) (sphere c r) :=
         (continuous_on_id.sub continuous_on_const).inv₀ fun z hz => sub_ne_zero.2 <| hzne _ hz
       rw [circleIntegral.integral_sub] <;> refine' (hc'.smul _).CircleIntegrable hr0.le
-      · exact
+      ·
+        exact
           hc.mono
             (subset_inter (sphere_subset_closed_ball.trans <| closed_ball_subset_closed_ball hrR)
               hzne)
-        
       · exact continuous_on_const
-        
     _ ≤ 2 * π * r * (r⁻¹ * (ε / (2 * π))) := by
       refine' circleIntegral.norm_integral_le_of_norm_le_const hr0.le fun z hz => _
       specialize hzne z hz
@@ -430,7 +428,7 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_o
       rw [norm_smul, norm_inv, hz, ← dist_eq_norm]
       refine' mul_le_mul_of_nonneg_left (hδ _ ⟨_, hzne⟩).le (inv_nonneg.2 hr0.le)
       rwa [mem_closed_ball_iff_norm, hz]
-    _ = ε := by
+    _ = ε := by 
       field_simp [hr0.ne', real.two_pi_pos.ne']
       ac_rfl
     
@@ -456,9 +454,7 @@ then the integral $\oint_{|z-c|=R}f(z)\,dz$ equals zero. -/
 theorem circle_integral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0 : 0 ≤ R) {f : ℂ → E}
     {c : ℂ} {s : Set ℂ} (hs : s.Countable) (hc : ContinuousOn f (closedBall c R))
     (hd : ∀ z ∈ ball c R \ s, DifferentiableAt ℂ f z) : (∮ z in C(c, R), f z) = 0 := by
-  rcases h0.eq_or_lt with (rfl | h0);
-  · apply circleIntegral.integral_radius_zero
-    
+  rcases h0.eq_or_lt with (rfl | h0); · apply circleIntegral.integral_radius_zero
   calc
     (∮ z in C(c, R), f z) = ∮ z in C(c, R), (z - c)⁻¹ • (z - c) • f z :=
       (circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _).symm

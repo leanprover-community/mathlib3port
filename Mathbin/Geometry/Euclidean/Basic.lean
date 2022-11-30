@@ -114,18 +114,18 @@ diagonals of a kite are orthogonal.) -/
 theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ : dist p₁ c₁ = dist p₂ c₁)
     (hc₂ : dist p₁ c₂ = dist p₂ c₂) : ⟪c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0 := by
   have h : ⟪c₂ -ᵥ c₁ + (c₂ -ᵥ c₁), p₂ -ᵥ p₁⟫ = 0 := by
-    conv_lhs =>
-    congr
-    congr
-    rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₁]
-    skip
-    rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₂]
+    conv_lhs => 
+      congr
+      congr
+      rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₁]
+      skip
+      rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₂]
     rw [sub_add_sub_comm, inner_sub_left]
-    conv_lhs =>
-    congr
-    rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₂]
-    skip
-    rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₁]
+    conv_lhs => 
+      congr
+      rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₂]
+      skip
+      rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₁]
     rw [dist_comm p₁, dist_comm p₂, dist_eq_norm_vsub V _ p₁, dist_eq_norm_vsub V _ p₂, ←
       real_inner_add_sub_eq_zero_iff] at hc₁ hc₂
     simp_rw [← neg_vsub_eq_vsub_rev c₁, ← neg_vsub_eq_vsub_rev c₂, sub_neg_eq_add, neg_add_eq_sub,
@@ -183,27 +183,19 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
     · intro i
       fin_cases i <;> simp [b, hc.symm, hp.symm]
-      
     · intro i j hij
       fin_cases i <;> fin_cases j <;> try exact False.elim (hij rfl)
       · exact ho
-        
       · rw [real_inner_comm]
         exact ho
-        
-      
   have hbs : Submodule.span ℝ (Set.range b) = s.direction := by
     refine' eq_of_le_of_finrank_eq _ _
     · rw [Submodule.span_le, Set.range_subset_iff]
       intro i
       fin_cases i
       · exact vsub_mem_direction hc₂s hc₁s
-        
       · exact vsub_mem_direction hp₂s hp₁s
-        
-      
     · rw [finrank_span_eq_card hb, Fintype.card_fin, hd]
-      
   have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
     intro v hv
     have hr : Set.range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
@@ -257,7 +249,7 @@ def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpac
   Classical.choose <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›)
       (mk'_nonempty p s.directionᗮ)
-      (by
+      (by 
         rw [direction_mk' p s.directionᗮ]
         exact Submodule.is_compl_orthogonal_of_complete_space)
 #align euclidean_geometry.orthogonal_projection_fn EuclideanGeometry.orthogonalProjectionFn
@@ -273,7 +265,7 @@ theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [
   Classical.choose_spec <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›)
       (mk'_nonempty p s.directionᗮ)
-      (by
+      (by 
         rw [direction_mk' p s.directionᗮ]
         exact Submodule.is_compl_orthogonal_of_complete_space)
 #align
@@ -319,7 +311,8 @@ points whose difference is that vector) is the `orthogonal_projection`
 for real inner product spaces, onto the direction of the affine
 subspace being projected onto. -/
 def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
-    P →ᵃ[ℝ] s where
+    P →ᵃ[ℝ]
+      s where 
   toFun p := ⟨orthogonalProjectionFn s p, orthogonal_projection_fn_mem p⟩
   linear := orthogonalProjection s.direction
   map_vadd' p v := by
@@ -339,7 +332,7 @@ def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
     have hm :
       ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈
         ({orthogonalProjectionFn s (v +ᵥ p)} : Set P) :=
-      by
+      by 
       rw [← inter_eq_singleton_orthogonal_projection_fn (v +ᵥ p)]
       exact Set.mem_inter hs ho
     rw [Set.mem_singleton_iff] at hm
@@ -411,13 +404,11 @@ theorem orthogonal_projection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s
     [CompleteSpace s.direction] {p : P} : ↑(orthogonalProjection s p) = p ↔ p ∈ s := by
   constructor
   · exact fun h => h ▸ orthogonal_projection_mem p
-    
   · intro h
     have hp : p ∈ (s : Set P) ∩ mk' p s.directionᗮ := ⟨h, self_mem_mk' p _⟩
     rw [inter_eq_singleton_orthogonal_projection p] at hp
     symm
     exact hp
-    
 #align
   euclidean_geometry.orthogonal_projection_eq_self_iff EuclideanGeometry.orthogonal_projection_eq_self_iff
 
@@ -575,7 +566,7 @@ general sense of the word that includes both those common cases. -/
 def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] : P ≃ᵃⁱ[ℝ] P :=
   AffineIsometryEquiv.mk' (fun p => ↑(orthogonalProjection s p) -ᵥ p +ᵥ orthogonalProjection s p)
     (reflection s.direction) (↑(Classical.arbitrary s))
-    (by
+    (by 
       intro p
       let v := p -ᵥ ↑(Classical.arbitrary s)
       let a : V := _root_.orthogonal_projection s.direction v
@@ -611,7 +602,7 @@ theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteS
       ∀ b : V,
         (_root_.orthogonal_projection s.direction) b = 0 →
           reflection s (reflection s (b +ᵥ a)) = b +ᵥ a :=
-    by
+    by 
     intro a b h
     have : (a : P) -ᵥ (b +ᵥ a) = -b := by rw [vsub_vadd_eq_vsub_sub, vsub_self, zero_sub]
     simp [reflection, h, this]
@@ -622,7 +613,7 @@ theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteS
 /-- Reflection is its own inverse. -/
 @[simp]
 theorem reflection_symm (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
-    (reflection s).symm = reflection s := by
+    (reflection s).symm = reflection s := by 
   ext
   rw [← (reflection s).Injective.eq_iff]
   simp
@@ -645,10 +636,8 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [Complete
       smul_eq_zero] at h
     norm_num at h
     exact h
-    
   · intro h
     simp [h]
-    
 #align euclidean_geometry.reflection_eq_self_iff EuclideanGeometry.reflection_eq_self_iff
 
 /-- Reflecting a point in two subspaces produces the same result if
@@ -658,7 +647,7 @@ theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace �
     [Nonempty s₂] [CompleteSpace s₁.direction] [CompleteSpace s₂.direction] (p : P) :
     reflection s₁ p = reflection s₂ p ↔
       (orthogonalProjection s₁ p : P) = orthogonalProjection s₂ p :=
-  by
+  by 
   rw [reflection_apply, reflection_apply]
   constructor
   · intro h
@@ -667,10 +656,8 @@ theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace �
       two_smul ℝ ((orthogonalProjection s₁ p : P) -ᵥ orthogonalProjection s₂ p), smul_eq_zero] at h
     norm_num at h
     exact h
-    
   · intro h
     rw [h]
-    
 #align
   euclidean_geometry.reflection_eq_iff_orthogonal_projection_eq EuclideanGeometry.reflection_eq_iff_orthogonal_projection_eq
 
@@ -727,7 +714,7 @@ variable (P)
 
 /-- A `sphere P` bundles a `center` and `radius`. This definition does not require the radius to
 be positive; that should be given as a hypothesis to lemmas that require it. -/
-@[ext.1]
+@[ext]
 structure Sphere where
   center : P
   radius : ℝ
@@ -844,10 +831,8 @@ theorem cospherical_iff_exists_sphere {ps : Set P} :
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with ⟨c, r, h⟩
     exact ⟨⟨c, r⟩, h⟩
-    
   · rcases h with ⟨s, h⟩
     exact ⟨s.center, s.radius, h⟩
-    
 #align
   euclidean_geometry.cospherical_iff_exists_sphere EuclideanGeometry.cospherical_iff_exists_sphere
 
@@ -858,7 +843,7 @@ theorem Sphere.cospherical (s : Sphere P) : Cospherical (s : Set P) :=
 
 /-- A subset of a cospherical set is cospherical. -/
 theorem Cospherical.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Cospherical ps₂) :
-    Cospherical ps₁ := by
+    Cospherical ps₁ := by 
   rcases hc with ⟨c, r, hcr⟩
   exact ⟨c, r, fun p hp => hcr p (hs hp)⟩
 #align euclidean_geometry.cospherical.subset EuclideanGeometry.Cospherical.subset
@@ -890,15 +875,13 @@ theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := 
   · rw [dist_eq_norm_vsub V p₁, vsub_vadd_eq_vsub_sub, vsub_self, zero_sub, norm_neg, norm_smul,
       dist_eq_norm_vsub V p₂]
     simp
-    
   · rw [H, dist_eq_norm_vsub V p₂, vsub_vadd_eq_vsub_sub, dist_eq_norm_vsub V p₂]
-    conv_lhs =>
-    congr
-    congr
-    rw [← one_smul ℝ (p₂ -ᵥ p₁ : V)]
+    conv_lhs => 
+      congr
+      congr
+      rw [← one_smul ℝ (p₂ -ᵥ p₁ : V)]
     rw [← sub_smul, norm_smul]
     norm_num
-    
 #align euclidean_geometry.cospherical_pair EuclideanGeometry.cosphericalPair
 
 /-- Any three points in a cospherical set are affinely independent. -/
@@ -909,7 +892,7 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
   rw [collinear_iff_of_mem (Set.mem_range_self (0 : Fin 3))] at hc
   rcases hc with ⟨v, hv⟩
   rw [Set.forall_range_iff] at hv
-  have hv0 : v ≠ 0 := by
+  have hv0 : v ≠ 0 := by 
     intro h
     have he : p 1 = p 0 := by simpa [h] using hv 1
     exact (by decide : (1 : Fin 3) ≠ 0) (hpi he)
@@ -920,11 +903,11 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
     intro i
     rw [← hf]
     exact hs' i
-  have hf0 : f 0 = 0 := by
+  have hf0 : f 0 = 0 := by 
     have hf0' := hf 0
     rw [eq_comm, ← @vsub_eq_zero_iff_eq V, vadd_vsub, smul_eq_zero] at hf0'
     simpa [hv0] using hf0'
-  have hfi : Function.Injective f := by
+  have hfi : Function.Injective f := by 
     intro i j h
     have hi := hf i
     rw [h, ← hf j] at hi

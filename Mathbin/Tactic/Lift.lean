@@ -40,10 +40,11 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
 
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)]
     {p : ι → Prop} (f : ∀ i : Subtype p, α i) :
-    ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by classical
-  refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
-  rintro ⟨i, hi⟩
-  exact dif_pos hi
+    ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
+  classical 
+    refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
+    rintro ⟨i, hi⟩
+    exact dif_pos hi
 #align subtype.exists_pi_extension Subtype.exists_pi_extension
 
 instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :

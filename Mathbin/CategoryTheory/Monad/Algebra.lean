@@ -53,7 +53,7 @@ namespace Algebra
 variable {T : Monad C}
 
 /-- A morphism of Eilenberg–Moore algebras for the monad `T`. -/
-@[ext.1]
+@[ext]
 structure Hom (A B : Algebra T) where
   f : A.a ⟶ B.a
   h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f := by obviously
@@ -78,7 +78,7 @@ def comp {P Q R : Algebra T} (f : Hom P Q) (g : Hom Q R) : Hom P R where f := f.
 
 end Hom
 
-instance : CategoryStruct (Algebra T) where
+instance : CategoryStruct (Algebra T) where 
   Hom := Hom
   id := Hom.id
   comp := @Hom.comp _ _ _
@@ -115,11 +115,11 @@ commutes with the structure morphisms.
 -/
 @[simps]
 def isoMk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) :
-    A ≅ B where
+    A ≅ B where 
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
-      h' := by
+      h' := by 
         rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]
         simp }
 #align category_theory.monad.algebra.iso_mk CategoryTheory.Monad.Algebra.isoMk
@@ -130,14 +130,17 @@ variable (T : Monad C)
 
 /-- The forgetful functor from the Eilenberg-Moore category, forgetting the algebraic structure. -/
 @[simps]
-def forget : Algebra T ⥤ C where
+def forget : Algebra T ⥤ C where 
   obj A := A.a
   map A B f := f.f
 #align category_theory.monad.forget CategoryTheory.Monad.forget
 
 /-- The free functor from the Eilenberg-Moore category, constructing an algebra for any object. -/
 @[simps]
-def free : C ⥤ Algebra T where
+def free :
+    C ⥤
+      Algebra
+        T where 
   obj X := { a := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
   map X Y f := { f := T.map f, h' := T.μ.naturality _ }
 #align category_theory.monad.free CategoryTheory.Monad.free
@@ -156,10 +159,10 @@ def adj : T.free ⊣ T.forget :=
         { toFun := fun f => T.η.app X ≫ f.f,
           invFun := fun f =>
             { f := T.map f ≫ Y.a,
-              h' := by
+              h' := by 
                 dsimp
                 simp [← Y.assoc, ← T.μ.naturality_assoc] },
-          left_inv := fun f => by
+          left_inv := fun f => by 
             ext
             dsimp
             simp,
@@ -173,7 +176,7 @@ def adj : T.free ⊣ T.forget :=
 -/
 theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
   ⟨⟨{ f := inv f.f,
-        h' := by
+        h' := by 
           rw [is_iso.eq_comp_inv f.f, category.assoc, ← f.h]
           simp },
       by tidy⟩⟩
@@ -216,13 +219,16 @@ Given a monad morphism from `T₂` to `T₁`, we get a functor from the algebras
 `T₂`.
 -/
 @[simps]
-def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra T₁ ⥤ Algebra T₂ where
+def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) :
+    Algebra T₁ ⥤
+      Algebra
+        T₂ where 
   obj A :=
     { a := A.a, a := h.app A.a ≫ A.a,
-      unit' := by
+      unit' := by 
         dsimp
         simp [A.unit],
-      assoc' := by
+      assoc' := by 
         dsimp
         simp [A.assoc] }
   map A₁ A₂ f := { f := f.f }
@@ -237,10 +243,10 @@ def algebraFunctorOfMonadHomId {T₁ : Monad C} : algebraFunctorOfMonadHom (𝟙
   NatIso.ofComponents
     (fun X =>
       Algebra.isoMk (Iso.refl _)
-        (by
+        (by 
           dsimp
           simp))
-    fun X Y f => by
+    fun X Y f => by 
     ext
     dsimp
     simp
@@ -255,10 +261,10 @@ def algebraFunctorOfMonadHomComp {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) 
   NatIso.ofComponents
     (fun X =>
       Algebra.isoMk (Iso.refl _)
-        (by
+        (by 
           dsimp
           simp))
-    fun X Y f => by
+    fun X Y f => by 
     ext
     dsimp
     simp
@@ -276,10 +282,10 @@ def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : 
   NatIso.ofComponents
     (fun X =>
       Algebra.isoMk (Iso.refl _)
-        (by
+        (by 
           dsimp
           simp [h]))
-    fun X Y f => by
+    fun X Y f => by 
     ext
     dsimp
     simp
@@ -290,7 +296,9 @@ def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : 
 categories over `C`, that is, we have `algebra_equiv_of_iso_monads h ⋙ forget = forget`.
 -/
 @[simps]
-def algebraEquivOfIsoMonads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) : Algebra T₁ ≌ Algebra T₂ where
+def algebraEquivOfIsoMonads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) :
+    Algebra T₁ ≌ Algebra
+        T₂ where 
   Functor := algebraFunctorOfMonadHom h.inv
   inverse := algebraFunctorOfMonadHom h.Hom
   unitIso :=
@@ -333,7 +341,7 @@ namespace Coalgebra
 variable {G : Comonad C}
 
 /-- A morphism of Eilenberg-Moore coalgebras for the comonad `G`. -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure Hom (A B : Coalgebra G) where
   f : A.a ⟶ B.a
   h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by obviously
@@ -356,7 +364,7 @@ def comp {P Q R : Coalgebra G} (f : Hom P Q) (g : Hom Q R) : Hom P R where f := 
 end Hom
 
 /-- The category of Eilenberg-Moore coalgebras for a comonad. -/
-instance : CategoryStruct (Coalgebra G) where
+instance : CategoryStruct (Coalgebra G) where 
   Hom := Hom
   id := Hom.id
   comp := @Hom.comp _ _ _
@@ -393,11 +401,11 @@ commutes with the structure morphisms.
 -/
 @[simps]
 def isoMk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) :
-    A ≅ B where
+    A ≅ B where 
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
-      h' := by
+      h' := by 
         rw [h.eq_inv_comp, ← reassoc_of w, ← functor.map_comp]
         simp }
 #align category_theory.comonad.coalgebra.iso_mk CategoryTheory.Comonad.Coalgebra.isoMk
@@ -409,7 +417,7 @@ variable (G : Comonad C)
 /-- The forgetful functor from the Eilenberg-Moore category, forgetting the coalgebraic
 structure. -/
 @[simps]
-def forget : Coalgebra G ⥤ C where
+def forget : Coalgebra G ⥤ C where 
   obj A := A.a
   map A B f := f.f
 #align category_theory.comonad.forget CategoryTheory.Comonad.forget
@@ -417,7 +425,10 @@ def forget : Coalgebra G ⥤ C where
 /-- The cofree functor from the Eilenberg-Moore category, constructing a coalgebra for any
 object. -/
 @[simps]
-def cofree : C ⥤ Coalgebra G where
+def cofree :
+    C ⥤
+      Coalgebra
+        G where 
   obj X := { a := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
   map X Y f := { f := G.map f, h' := (G.δ.naturality _).symm }
 #align category_theory.comonad.cofree CategoryTheory.Comonad.cofree
@@ -433,14 +444,14 @@ def adj : G.forget ⊣ G.cofree :=
     { homEquiv := fun X Y =>
         { toFun := fun f =>
             { f := X.a ≫ G.map f,
-              h' := by
+              h' := by 
                 dsimp
                 simp [← coalgebra.coassoc_assoc] },
           invFun := fun g => g.f ≫ G.ε.app Y,
-          left_inv := fun f => by
+          left_inv := fun f => by 
             dsimp
             rw [category.assoc, G.ε.naturality, functor.id_map, X.counit_assoc],
-          right_inv := fun g => by
+          right_inv := fun g => by 
             ext1; dsimp
             rw [functor.map_comp, g.h_assoc, cofree_obj_a, comonad.right_counit]
             apply comp_id } }
@@ -450,7 +461,7 @@ def adj : G.forget ⊣ G.cofree :=
 -/
 theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
   ⟨⟨{ f := inv f.f,
-        h' := by
+        h' := by 
           rw [is_iso.eq_inv_comp f.f, ← f.h_assoc]
           simp },
       by tidy⟩⟩

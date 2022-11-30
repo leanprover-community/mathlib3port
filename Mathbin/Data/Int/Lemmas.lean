@@ -25,9 +25,7 @@ namespace Int
 theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) := by
   by_cases h : m ≥ n
   · exact le_of_eq (Int.ofNat_sub h).symm
-    
   · simp [le_of_not_ge h, coe_nat_le]
-    
 #align int.le_coe_nat_sub Int.le_coe_nat_sub
 
 /-! ### succ and pred -/
@@ -123,12 +121,9 @@ theorem div2_bit (b n) : div2 (bit b n) = n := by
   rw [bit_val, div2_val, add_comm, Int.add_mul_div_left, (_ : (_ / 2 : ℤ) = 0), zero_add]
   cases b
   · simp
-    
   · show of_nat _ = _
     rw [Nat.div_eq_zero] <;> simp
-    
   · cc
-    
 #align int.div2_bit Int.div2_bit
 
 end Int

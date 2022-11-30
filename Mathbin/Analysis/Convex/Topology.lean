@@ -234,15 +234,11 @@ open AffineMap
 `interior s`. -/
 protected theorem Convex.strict_convex' {s : Set E} (hs : Convex 𝕜 s)
     (h : (s \ interior s).Pairwise fun x y => ∃ c : 𝕜, lineMap x y c ∈ interior s) :
-    StrictConvex 𝕜 s := by
+    StrictConvex 𝕜 s := by 
   refine' strict_convex_iff_open_segment_subset.2 _
   intro x hx y hy hne
-  by_cases hx' : x ∈ interior s;
-  · exact hs.open_segment_interior_self_subset_interior hx' hy
-    
-  by_cases hy' : y ∈ interior s;
-  · exact hs.open_segment_self_interior_subset_interior hx hy'
-    
+  by_cases hx' : x ∈ interior s; · exact hs.open_segment_interior_self_subset_interior hx' hy
+  by_cases hy' : y ∈ interior s; · exact hs.open_segment_self_interior_subset_interior hx hy'
   rcases h ⟨hx, hx'⟩ ⟨hy, hy'⟩ hne with ⟨c, hc⟩
   refine' (open_segment_subset_union x y ⟨c, rfl⟩).trans (insert_subset.2 ⟨hc, union_subset _ _⟩)
   exacts[hs.open_segment_self_interior_subset_interior hx hc,
@@ -271,7 +267,7 @@ variable [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGro
 
 /-- Convex hull of a finite set is compact. -/
 theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (convexHull ℝ s) :=
-  by
+  by 
   rw [hs.convex_hull_eq_image]
   apply (is_compact_std_simplex _).image
   haveI := hs.fintype
@@ -292,7 +288,7 @@ the result includes the closure of the original set.
 TODO Generalise this from convex sets to sets that are balanced / star-shaped about `x`. -/
 theorem Convex.closure_subset_image_homothety_interior_of_one_lt {s : Set E} (hs : Convex ℝ s)
     {x : E} (hx : x ∈ interior s) (t : ℝ) (ht : 1 < t) : closure s ⊆ homothety x t '' interior s :=
-  by
+  by 
   intro y hy
   have hne : t ≠ 0 := (one_pos.trans ht).ne'
   refine'
@@ -328,7 +324,7 @@ theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Conve
 
 /-- A nonempty convex set is path connected. -/
 protected theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.Nonempty) :
-    IsPathConnected s := by
+    IsPathConnected s := by 
   refine' is_path_connected_iff.mpr ⟨hne, _⟩
   intro x x_in y y_in
   have H := hconv.segment_subset x_in y_in
@@ -410,10 +406,8 @@ theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (cthicken
   obtain hδ | hδ := le_total 0 δ
   · rw [cthickening_eq_Inter_thickening hδ]
     exact convex_Inter₂ fun _ _ => hs.thickening _
-    
   · rw [cthickening_of_nonpos hδ]
     exact hs.closure
-    
 #align convex.cthickening Convex.cthickening
 
 /-- Given a point `x` in the convex hull of `s` and a point `y`, there exists a point
@@ -474,9 +468,7 @@ theorem dist_add_dist_of_mem_segment {x y z : E} (h : y ∈ [x -[ℝ] z]) :
 
 /-- The set of vectors in the same ray as `x` is connected. -/
 theorem is_connected_set_of_same_ray (x : E) : IsConnected { y | SameRay ℝ x y } := by
-  by_cases hx : x = 0;
-  · simpa [hx] using is_connected_univ
-    
+  by_cases hx : x = 0; · simpa [hx] using is_connected_univ
   simp_rw [← exists_nonneg_left_iff_same_ray hx]
   exact is_connected_Ici.image _ (continuous_id.smul continuous_const).ContinuousOn
 #align is_connected_set_of_same_ray is_connected_set_of_same_ray

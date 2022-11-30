@@ -91,7 +91,7 @@ theorem countable_range [Countable ι] (f : ι → β) : (range f).Countable :=
 
 theorem countable_iff_exists_subset_range [Nonempty α] {s : Set α} :
     s.Countable ↔ ∃ f : ℕ → α, s ⊆ range f :=
-  ⟨fun h => by
+  ⟨fun h => by 
     inhabit α
     exact ⟨enumerate_countable h default, subset_range_enumerate _ _⟩, fun ⟨f, hsf⟩ =>
     (countable_range f).mono hsf⟩
@@ -155,24 +155,20 @@ protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α →
 theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔
       ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ sup S = ⊤ :=
-  by
+  by 
   constructor
   · rintro ⟨s, hps, hs⟩
     refine' ⟨range s, countable_range s, forall_range_iff.2 hps, _⟩
     rwa [Sup_range]
-    
   · rintro ⟨S, hSc, hps, hS⟩
     rcases eq_empty_or_nonempty S with (rfl | hne)
     · rw [Sup_empty] at hS
       haveI := subsingleton_of_bot_eq_top hS
       rcases h with ⟨x, hx⟩
       exact ⟨fun n => x, fun n => hx, Subsingleton.elim _ _⟩
-      
     · rcases(Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
       refine' ⟨fun n => s n, fun n => hps _ (s n).coe_prop, _⟩
       rwa [hs.supr_comp, ← Sup_eq_supr']
-      
-    
 #align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_supr_eq_top_iff_countable
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
@@ -188,7 +184,7 @@ theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (
 #align set.countable_of_injective_of_countable_image Set.countable_of_injective_of_countable_image
 
 theorem countable_Union {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :
-    (⋃ i, t i).Countable := by
+    (⋃ i, t i).Countable := by 
   haveI := fun a => (ht a).to_subtype
   rw [Union_eq_range_psigma]
   apply countable_range
@@ -256,7 +252,7 @@ theorem countable_is_bot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.
 /-- The set of finite subsets of a countable set is countable. -/
 theorem countable_set_of_finite_subset {s : Set α} :
     s.Countable → { t | Set.Finite t ∧ t ⊆ s }.Countable
-  | ⟨h⟩ => by
+  | ⟨h⟩ => by 
     skip
     refine'
       countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
@@ -278,7 +274,7 @@ theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (h
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) :
-    Set.Countable (s ×ˢ t) := by
+    Set.Countable (s ×ˢ t) := by 
   haveI : Countable s := hs.to_subtype
   haveI : Countable t := ht.to_subtype
   exact (Countable.of_equiv _ <| (Equiv.Set.prod _ _).symm).to_set

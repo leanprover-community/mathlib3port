@@ -170,7 +170,7 @@ theorem ext' {c d : Con M} (H : c.R = d.R) : c = d := by
 #align con.ext' Con.ext'
 
 /-- Extensionality rule for congruence relations. -/
-@[ext.1, to_additive "Extensionality rule for additive congruence relations."]
+@[ext, to_additive "Extensionality rule for additive congruence relations."]
 theorem ext {c d : Con M} (H : ∀ x y, c x y ↔ d x y) : c = d :=
   ext' <| by ext <;> apply H
 #align con.ext Con.ext
@@ -197,9 +197,10 @@ theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
 
 /-- The kernel of a multiplication-preserving function as a congruence relation. -/
 @[to_additive "The kernel of an addition-preserving function as an additive congruence relation."]
-def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M where
+def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) :
+    Con M where 
   toSetoid := Setoid.ker f
-  mul' _ _ _ _ h1 h2 := by
+  mul' _ _ _ _ h1 h2 := by 
     dsimp [Setoid.ker, on_fun] at *
     rw [h, h1, h2, h]
 #align con.mul_ker Con.mulKer
@@ -406,7 +407,7 @@ theorem Inf_def (S : Set (Con M)) : ⇑(inf S) = inf (@Set.image (Con M) (M → 
 #align con.Inf_def Con.Inf_def
 
 @[to_additive]
-instance : PartialOrder (Con M) where
+instance : PartialOrder (Con M) where 
   le := (· ≤ ·)
   lt c d := c ≤ d ∧ ¬d ≤ c
   le_refl c _ _ := id
@@ -512,7 +513,7 @@ theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.R ⊔ d.R) := by rw [sup_eq_
 @[to_additive Sup_eq_add_con_gen
       "The supremum of a set of additive congruence relations `S` equals\nthe smallest additive congruence relation containing the binary relation 'there exists `c ∈ S`\nsuch that `x` is related to `y` by `c`'."]
 theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y :=
-  by
+  by 
   rw [con_gen_eq]
   apply congr_arg Inf
   ext
@@ -536,7 +537,9 @@ variable (M)
     binary relations on `M`. -/
 @[to_additive
       "There is a Galois insertion of additive congruence relations on a type with\nan addition `M` into binary relations on `M`."]
-protected def gi : @GaloisInsertion (M → M → Prop) (Con M) _ _ conGen coeFn where
+protected def gi :
+    @GaloisInsertion (M → M → Prop) (Con M) _ _ conGen
+      coeFn where 
   choice r h := conGen r
   gc r c := ⟨fun H _ _ h => H <| ConGen.Rel.of _ _ h, fun H => con_gen_of_con c ▸ con_gen_mono H⟩
   le_l_u x := (con_gen_of_con x).symm ▸ le_refl x
@@ -600,7 +603,10 @@ open _Root_.Quotient
     on the quotient of `M` by `c`. -/
 @[to_additive
       "Given an additive congruence relation `c` on a type `M` with an addition,\nthe order-preserving bijection between the set of additive congruence relations containing `c` and\nthe additive congruence relations on the quotient of `M` by `c`."]
-def correspondence : { d // c ≤ d } ≃o Con c.Quotient where
+def correspondence :
+    { d // c ≤ d } ≃o
+      Con
+        c.Quotient where 
   toFun d :=
     d.1.mapOfSurjective coe _ (by rw [mul_ker_mk_eq] <;> exact d.2) <| @exists_rep _ c.toSetoid
   invFun d :=
@@ -643,7 +649,8 @@ variable {M} [MulOneClass M] [MulOneClass N] [MulOneClass P] (c : Con M)
 /-- The quotient of a monoid by a congruence relation is a monoid. -/
 @[to_additive
       "The quotient of an `add_monoid` by an additive congruence relation is\nan `add_monoid`."]
-instance mulOneClass : MulOneClass c.Quotient where
+instance mulOneClass :
+    MulOneClass c.Quotient where 
   one := ((1 : M) : c.Quotient)
   mul := (· * ·)
   mul_one x := (Quotient.inductionOn' x) fun _ => congr_arg (coe : M → c.Quotient) <| mul_one _
@@ -666,7 +673,8 @@ variable (M c)
 /-- The submonoid of `M × M` defined by a congruence relation on a monoid `M`. -/
 @[to_additive
       "The `add_submonoid` of `M × M` defined by an additive congruence\nrelation on an `add_monoid` `M`."]
-protected def submonoid : Submonoid (M × M) where
+protected def submonoid :
+    Submonoid (M × M) where 
   carrier := { x | c x.1 x.2 }
   one_mem' := c.iseqv.1 1
   mul_mem' _ _ := c.mul
@@ -678,7 +686,8 @@ variable {M c}
     is an equivalence relation. -/
 @[to_additive
       "The additive congruence relation on an `add_monoid` `M` from\nan `add_submonoid` of `M × M` for which membership is an equivalence relation."]
-def ofSubmonoid (N : Submonoid (M × M)) (H : Equivalence fun x y => (x, y) ∈ N) : Con M where
+def ofSubmonoid (N : Submonoid (M × M)) (H : Equivalence fun x y => (x, y) ∈ N) :
+    Con M where 
   R x y := (x, y) ∈ N
   iseqv := H
   mul' _ _ _ _ := N.mul_mem
@@ -793,7 +802,8 @@ variable (c) (f : M →* P)
     homomorphism constant on `c`'s equivalence classes. -/
 @[to_additive
       "The homomorphism on the quotient of an `add_monoid` by an additive congruence\nrelation `c` induced by a homomorphism constant on `c`'s equivalence classes."]
-def lift (H : c ≤ ker f) : c.Quotient →* P where
+def lift (H : c ≤ ker f) :
+    c.Quotient →* P where 
   toFun x := (Con.liftOn x f) fun _ _ h => H h
   map_one' := by rw [← f.map_one] <;> rfl
   map_mul' x y := (Con.induction_on₂ x y) fun m n => f.map_mul m n ▸ rfl
@@ -848,7 +858,7 @@ theorem lift_funext (f g : c.Quotient →* P) (h : ∀ a : M, f a = g a) : f = g
 @[to_additive "The uniqueness part of the universal property for quotients of `add_monoid`s."]
 theorem lift_unique (H : c ≤ ker f) (g : c.Quotient →* P) (Hg : g.comp c.mk' = f) :
     g = c.lift f H :=
-  (lift_funext g (c.lift f H)) fun x => by
+  (lift_funext g (c.lift f H)) fun x => by 
     subst f
     rfl
 #align con.lift_unique Con.lift_unique
@@ -1126,13 +1136,9 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
       (fun (x y : M) (hxy : (x * y : c.quotient) = 1) (hyx : (y * x : c.quotient) = 1) =>
         f x y (c.eq.1 hxy) (c.eq.1 hyx))
       (fun x y x' y' hx hy => _) u.3 u.4
-  ext1;
-  · rw [c.eq.2 hx, c.eq.2 hy]
-    
+  ext1; · rw [c.eq.2 hx, c.eq.2 hy]
   rintro Hxy Hxy' -
-  ext1;
-  · rw [c.eq.2 hx, c.eq.2 hy]
-    
+  ext1; · rw [c.eq.2 hx, c.eq.2 hy]
   rintro Hyx Hyx' -
   exact heq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
 #align con.lift_on_units Con.liftOnUnits
@@ -1154,7 +1160,7 @@ theorem lift_on_units_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
 @[elab_as_elim, to_additive]
 theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient)
     (H : ∀ (x y : M) (hxy : c (x * y) 1) (hyx : c (y * x) 1), p ⟨x, y, c.Eq.2 hxy, c.Eq.2 hyx⟩) :
-    p u := by
+    p u := by 
   rcases u with ⟨⟨x⟩, ⟨y⟩, h₁, h₂⟩
   exact H x y (c.eq.1 h₁) (c.eq.1 h₂)
 #align con.induction_on_units Con.induction_on_units

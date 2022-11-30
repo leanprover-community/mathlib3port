@@ -231,7 +231,7 @@ variable {δ : Type _} [MeasurableSpace δ] [SemilatticeSup α] [HasMeasurableSu
 @[measurability]
 theorem Finset.measurableSup' {ι : Type _} {s : Finset ι} (hs : s.Nonempty) {f : ι → δ → α}
     (hf : ∀ n ∈ s, Measurable (f n)) : Measurable (s.sup' hs f) :=
-  Finset.sup'Induction hs _ (fun f hf g hg => hf.sup hg) fun n hn => hf n hn
+  Finset.sup'_induction hs _ (fun f hf g hg => hf.sup hg) fun n hn => hf n hn
 #align finset.measurable_sup' Finset.measurableSup'
 
 @[measurability]

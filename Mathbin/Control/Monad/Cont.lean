@@ -71,23 +71,26 @@ theorem run_with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) :
   rfl
 #align cont_t.run_with_cont_t ContT.run_with_cont_t
 
-@[ext.1]
+@[ext]
 protected theorem ext {x y : ContT r m α} (h : ∀ f, x.run f = y.run f) : x = y := by ext <;> apply h
 #align cont_t.ext ContT.ext
 
-instance : Monad (ContT r m) where
+instance : Monad (ContT r m) where 
   pure α x f := f x
   bind α β x f g := x fun i => f i g
 
-instance : LawfulMonad (ContT r m) where
-  id_map := by
+instance :
+    LawfulMonad
+      (ContT r
+        m) where 
+  id_map := by 
     intros
     rfl
-  pure_bind := by
+  pure_bind := by 
     intros
     ext
     rfl
-  bind_assoc := by
+  bind_assoc := by 
     intros
     ext
     rfl
@@ -106,12 +109,15 @@ theorem monad_lift_bind [Monad m] [LawfulMonad m] {α β} (x : m α) (f : α →
 
 instance : MonadCont (ContT r m) where callCc α β f g := f ⟨fun x h => g x⟩ g
 
-instance : IsLawfulMonadCont (ContT r m) where
+instance :
+    IsLawfulMonadCont
+      (ContT r m) where 
   call_cc_bind_right := by intros <;> ext <;> rfl
   call_cc_bind_left := by intros <;> ext <;> rfl
   call_cc_dummy := by intros <;> ext <;> rfl
 
-instance (ε) [MonadExcept ε m] : MonadExcept ε (ContT r m) where
+instance (ε) [MonadExcept ε m] :
+    MonadExcept ε (ContT r m) where 
   throw x e f := throw e
   catch α act h f := catch (act f) fun e => h e f
 
@@ -138,20 +144,23 @@ def ExceptT.callCc {ε} [MonadCont m] {α β : Type _} (f : Label α (ExceptT ε
 
 instance {ε} [MonadCont m] : MonadCont (ExceptT ε m) where callCc α β := ExceptT.callCc
 
-instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptT ε m) where
-  call_cc_bind_right := by
+instance {ε} [MonadCont m] [IsLawfulMonadCont m] :
+    IsLawfulMonadCont
+      (ExceptT ε
+        m) where 
+  call_cc_bind_right := by 
     intros
     simp [call_cc, ExceptT.callCc, call_cc_bind_right]
     ext
     dsimp
     congr with ⟨⟩ <;> simp [ExceptT.bindCont, @call_cc_dummy m _]
-  call_cc_bind_left := by
+  call_cc_bind_left := by 
     intros
     simp [call_cc, ExceptT.callCc, call_cc_bind_right, ExceptT.goto_mk_label, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext
     rfl
-  call_cc_dummy := by
+  call_cc_dummy := by 
     intros
     simp [call_cc, ExceptT.callCc, @call_cc_dummy m _]
     ext
@@ -172,20 +181,23 @@ def OptionT.callCc [MonadCont m] {α β : Type _} (f : Label α (OptionT m) β �
 
 instance [MonadCont m] : MonadCont (OptionT m) where callCc α β := OptionT.callCc
 
-instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionT m) where
-  call_cc_bind_right := by
+instance [MonadCont m] [IsLawfulMonadCont m] :
+    IsLawfulMonadCont
+      (OptionT
+        m) where 
+  call_cc_bind_right := by 
     intros
     simp [call_cc, OptionT.callCc, call_cc_bind_right]
     ext
     dsimp
     congr with ⟨⟩ <;> simp [OptionT.bindCont, @call_cc_dummy m _]
-  call_cc_bind_left := by
+  call_cc_bind_left := by 
     intros
     simp [call_cc, OptionT.callCc, call_cc_bind_right, OptionT.goto_mk_label, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext
     rfl
-  call_cc_dummy := by
+  call_cc_dummy := by 
     intros
     simp [call_cc, OptionT.callCc, @call_cc_dummy m _]
     ext
@@ -234,20 +246,23 @@ def StateT.callCc {σ} [MonadCont m] {α β : Type _} (f : Label α (StateT σ m
 
 instance {σ} [MonadCont m] : MonadCont (StateT σ m) where callCc α β := StateT.callCc
 
-instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateT σ m) where
-  call_cc_bind_right := by
+instance {σ} [MonadCont m] [IsLawfulMonadCont m] :
+    IsLawfulMonadCont
+      (StateT σ
+        m) where 
+  call_cc_bind_right := by 
     intros
     simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind]
     ext
     dsimp
     congr with ⟨x₀, x₁⟩
     rfl
-  call_cc_bind_left := by
+  call_cc_bind_left := by 
     intros
     simp [call_cc, StateT.callCc, call_cc_bind_left, (· >>= ·), StateT.bind, StateT.goto_mk_label]
     ext
     rfl
-  call_cc_dummy := by
+  call_cc_dummy := by 
     intros
     simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind, @call_cc_dummy m _]
     ext
@@ -274,18 +289,21 @@ def ReaderT.callCc {ε} [MonadCont m] {α β : Type _} (f : Label α (ReaderT ε
 
 instance {ρ} [MonadCont m] : MonadCont (ReaderT ρ m) where callCc α β := ReaderT.callCc
 
-instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderT ρ m) where
-  call_cc_bind_right := by
+instance {ρ} [MonadCont m] [IsLawfulMonadCont m] :
+    IsLawfulMonadCont
+      (ReaderT ρ
+        m) where 
+  call_cc_bind_right := by 
     intros
     simp [call_cc, ReaderT.callCc, call_cc_bind_right]
     ext
     rfl
-  call_cc_bind_left := by
+  call_cc_bind_left := by 
     intros
     simp [call_cc, ReaderT.callCc, call_cc_bind_left, ReaderT.goto_mk_label]
     ext
     rfl
-  call_cc_dummy := by
+  call_cc_dummy := by 
     intros
     simp [call_cc, ReaderT.callCc, @call_cc_dummy m _]
     ext
@@ -294,7 +312,9 @@ instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderT �
 /-- reduce the equivalence between two continuation passing monads to the equivalence between
 their underlying monad -/
 def ContT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ r₁ : Type u₀}
-    {α₂ r₂ : Type u₁} (F : m₁ r₁ ≃ m₂ r₂) (G : α₁ ≃ α₂) : ContT r₁ m₁ α₁ ≃ ContT r₂ m₂ α₂ where
+    {α₂ r₂ : Type u₁} (F : m₁ r₁ ≃ m₂ r₂) (G : α₁ ≃ α₂) :
+    ContT r₁ m₁ α₁ ≃
+      ContT r₂ m₂ α₂ where 
   toFun f r := F <| f fun x => F.symm <| r <| G x
   invFun f r := F.symm <| f fun x => F <| r <| G.symm x
   left_inv f := by funext r <;> simp

@@ -35,162 +35,146 @@ open BigOperators
 
 theorem exists_maximal_ideal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) (h' : (maximalIdeal R).IsPrincipal) (I : Ideal R) (hI : I ≠ ⊥) :
-    ∃ n : ℕ, I = maximalIdeal R ^ n := by classical
-  obtain ⟨x, hx : _ = Ideal.span _⟩ := h'
-  by_cases hI' : I = ⊤
-  · use 0
-    rw [pow_zero, hI', Ideal.one_eq_top]
-    
-  have H : ∀ r : R, ¬IsUnit r ↔ x ∣ r := fun r =>
-    (set_like.ext_iff.mp hx r).trans Ideal.mem_span_singleton
-  have : x ≠ 0 := by
-    rintro rfl
-    apply Ring.ne_bot_of_is_maximal_of_not_is_field (maximal_ideal.is_maximal R) h
-    simp [hx]
-  have hx' := DiscreteValuationRing.irreducible_of_span_eq_maximal_ideal x this hx
-  have H' : ∀ r : R, r ≠ 0 → r ∈ nonunits R → ∃ n : ℕ, Associated (x ^ n) r := by
-    intro r hr₁ hr₂
-    obtain ⟨f, hf₁, rfl, hf₂⟩ := (WfDvdMonoid.not_unit_iff_exists_factors_eq r hr₁).mp hr₂
-    have : ∀ b ∈ f, Associated x b := by
-      intro b hb
-      exact Irreducible.associated_of_dvd hx' (hf₁ b hb) ((H b).mp (hf₁ b hb).1)
-    clear hr₁ hr₂ hf₁
-    induction' f using Multiset.induction with fa fs fh
-    · exact (hf₂ rfl).elim
-      
-    rcases eq_or_ne fs ∅ with (rfl | hf')
-    · use 1
-      rw [pow_one, Multiset.prod_cons, Multiset.empty_eq_zero, Multiset.prod_zero, mul_one]
-      exact this _ (Multiset.mem_cons_self _ _)
-      
-    · obtain ⟨n, hn⟩ := fh hf' fun b hb => this _ (Multiset.mem_cons_of_mem hb)
-      use n + 1
-      rw [pow_add, Multiset.prod_cons, mul_comm, pow_one]
-      exact Associated.mul_mul (this _ (Multiset.mem_cons_self _ _)) hn
-      
-  have : ∃ n : ℕ, x ^ n ∈ I := by
-    obtain ⟨r, hr₁, hr₂⟩ : ∃ r : R, r ∈ I ∧ r ≠ 0 := by
-      by_contra h
-      push_neg  at h
-      apply hI
-      rw [eq_bot_iff]
-      exact h
-    obtain ⟨n, u, rfl⟩ := H' r hr₂ (le_maximal_ideal hI' hr₁)
-    use n
-    rwa [← I.unit_mul_mem_iff_mem u.is_unit, mul_comm]
-  use Nat.find this
-  apply le_antisymm
-  · change ∀ s ∈ I, s ∈ _
-    by_contra hI''
-    push_neg  at hI''
-    obtain ⟨s, hs₁, hs₂⟩ := hI''
-    apply hs₂
-    by_cases hs₃ : s = 0
-    · rw [hs₃]
-      exact zero_mem _
-      
-    obtain ⟨n, u, rfl⟩ := H' s hs₃ (le_maximal_ideal hI' hs₁)
-    rw [mul_comm, Ideal.unit_mul_mem_iff_mem _ u.is_unit] at hs₁⊢
-    apply Ideal.pow_le_pow (Nat.find_min' this hs₁)
-    apply Ideal.pow_mem_pow
-    exact (H _).mpr (dvd_refl _)
-    
-  · rw [hx, Ideal.span_singleton_pow, Ideal.span_le, Set.singleton_subset_iff]
-    exact Nat.find_spec this
-    
+    ∃ n : ℕ, I = maximalIdeal R ^ n := by
+  classical 
+    obtain ⟨x, hx : _ = Ideal.span _⟩ := h'
+    by_cases hI' : I = ⊤
+    · use 0
+      rw [pow_zero, hI', Ideal.one_eq_top]
+    have H : ∀ r : R, ¬IsUnit r ↔ x ∣ r := fun r =>
+      (set_like.ext_iff.mp hx r).trans Ideal.mem_span_singleton
+    have : x ≠ 0 := by 
+      rintro rfl
+      apply Ring.ne_bot_of_is_maximal_of_not_is_field (maximal_ideal.is_maximal R) h
+      simp [hx]
+    have hx' := DiscreteValuationRing.irreducible_of_span_eq_maximal_ideal x this hx
+    have H' : ∀ r : R, r ≠ 0 → r ∈ nonunits R → ∃ n : ℕ, Associated (x ^ n) r := by
+      intro r hr₁ hr₂
+      obtain ⟨f, hf₁, rfl, hf₂⟩ := (WfDvdMonoid.not_unit_iff_exists_factors_eq r hr₁).mp hr₂
+      have : ∀ b ∈ f, Associated x b := by 
+        intro b hb
+        exact Irreducible.associated_of_dvd hx' (hf₁ b hb) ((H b).mp (hf₁ b hb).1)
+      clear hr₁ hr₂ hf₁
+      induction' f using Multiset.induction with fa fs fh
+      · exact (hf₂ rfl).elim
+      rcases eq_or_ne fs ∅ with (rfl | hf')
+      · use 1
+        rw [pow_one, Multiset.prod_cons, Multiset.empty_eq_zero, Multiset.prod_zero, mul_one]
+        exact this _ (Multiset.mem_cons_self _ _)
+      · obtain ⟨n, hn⟩ := fh hf' fun b hb => this _ (Multiset.mem_cons_of_mem hb)
+        use n + 1
+        rw [pow_add, Multiset.prod_cons, mul_comm, pow_one]
+        exact Associated.mul_mul (this _ (Multiset.mem_cons_self _ _)) hn
+    have : ∃ n : ℕ, x ^ n ∈ I := by
+      obtain ⟨r, hr₁, hr₂⟩ : ∃ r : R, r ∈ I ∧ r ≠ 0 := by
+        by_contra h
+        push_neg  at h
+        apply hI
+        rw [eq_bot_iff]
+        exact h
+      obtain ⟨n, u, rfl⟩ := H' r hr₂ (le_maximal_ideal hI' hr₁)
+      use n
+      rwa [← I.unit_mul_mem_iff_mem u.is_unit, mul_comm]
+    use Nat.find this
+    apply le_antisymm
+    · change ∀ s ∈ I, s ∈ _
+      by_contra hI''
+      push_neg  at hI''
+      obtain ⟨s, hs₁, hs₂⟩ := hI''
+      apply hs₂
+      by_cases hs₃ : s = 0
+      · rw [hs₃]
+        exact zero_mem _
+      obtain ⟨n, u, rfl⟩ := H' s hs₃ (le_maximal_ideal hI' hs₁)
+      rw [mul_comm, Ideal.unit_mul_mem_iff_mem _ u.is_unit] at hs₁⊢
+      apply Ideal.pow_le_pow (Nat.find_min' this hs₁)
+      apply Ideal.pow_mem_pow
+      exact (H _).mpr (dvd_refl _)
+    · rw [hx, Ideal.span_singleton_pow, Ideal.span_le, Set.singleton_subset_iff]
+      exact Nat.find_spec this
 #align exists_maximal_ideal_pow_eq_of_principal exists_maximal_ideal_pow_eq_of_principal
 
 theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain R]
-    [IsDedekindDomain R] : (maximalIdeal R).IsPrincipal := by classical
-  by_cases ne_bot : maximal_ideal R = ⊥
-  · rw [ne_bot]
-    infer_instance
-    
-  obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximal_ideal R, a ≠ (0 : R) := by
-    by_contra h'
-    push_neg  at h'
-    apply ne_bot
-    rwa [eq_bot_iff]
-  have hle : Ideal.span {a} ≤ maximal_ideal R := by rwa [Ideal.span_le, Set.singleton_subset_iff]
-  have : (Ideal.span {a}).radical = maximal_ideal R := by
-    rw [Ideal.radical_eq_Inf]
-    apply le_antisymm
-    · exact Inf_le ⟨hle, inferInstance⟩
-      
-    · refine'
-        le_Inf fun I hI =>
-          (eq_maximal_ideal <| IsDedekindDomain.dimension_le_one _ (fun e => ha₂ _) hI.2).ge
-      rw [← Ideal.span_singleton_eq_bot, eq_bot_iff, ← e]
-      exact hI.1
-      
-  have : ∃ n, maximal_ideal R ^ n ≤ Ideal.span {a} := by
-    rw [← this]
-    apply Ideal.exists_radical_pow_le_of_fg
-    exact IsNoetherian.noetherian _
-  cases hn : Nat.find this
-  · have := Nat.find_spec this
-    rw [hn, pow_zero, Ideal.one_eq_top] at this
-    exact (Ideal.IsMaximal.ne_top inferInstance (eq_top_iff.mpr <| this.trans hle)).elim
-    
-  obtain ⟨b, hb₁, hb₂⟩ : ∃ b ∈ maximal_ideal R ^ n, ¬b ∈ Ideal.span {a} := by
-    by_contra h'
-    push_neg  at h'
-    rw [Nat.find_eq_iff] at hn
-    exact hn.2 n n.lt_succ_self fun x hx => not_not.mp (h' x hx)
-  have hb₃ : ∀ m ∈ maximal_ideal R, ∃ k : R, k * a = b * m := by
-    intro m hm
-    rw [← Ideal.mem_span_singleton']
-    apply Nat.find_spec this
-    rw [hn, pow_succ']
-    exact Ideal.mul_mem_mul hb₁ hm
-  have hb₄ : b ≠ 0 := by
-    rintro rfl
-    apply hb₂
-    exact zero_mem _
-  let K := FractionRing R
-  let x : K := algebraMap R K b / algebraMap R K a
-  let M := Submodule.map (Algebra.ofId R K).toLinearMap (maximal_ideal R)
-  have ha₃ : algebraMap R K a ≠ 0 := is_fraction_ring.to_map_eq_zero_iff.not.mpr ha₂
-  by_cases hx : ∀ y ∈ M, x * y ∈ M
-  · have := is_integral_of_smul_mem_submodule M _ _ x hx
-    · obtain ⟨y, e⟩ := IsIntegrallyClosed.algebra_map_eq_of_integral this
-      refine' (hb₂ (ideal.mem_span_singleton'.mpr ⟨y, _⟩)).elim
-      apply IsFractionRing.injective R K
-      rw [map_mul, e, div_mul_cancel _ ha₃]
-      
-    · rw [Submodule.ne_bot_iff]
-      refine' ⟨_, ⟨a, ha₁, rfl⟩, _⟩
-      exact is_fraction_ring.to_map_eq_zero_iff.not.mpr ha₂
-      
-    · apply Submodule.Fg.map
+    [IsDedekindDomain R] : (maximalIdeal R).IsPrincipal := by
+  classical 
+    by_cases ne_bot : maximal_ideal R = ⊥
+    · rw [ne_bot]
+      infer_instance
+    obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximal_ideal R, a ≠ (0 : R) := by
+      by_contra h'
+      push_neg  at h'
+      apply ne_bot
+      rwa [eq_bot_iff]
+    have hle : Ideal.span {a} ≤ maximal_ideal R := by rwa [Ideal.span_le, Set.singleton_subset_iff]
+    have : (Ideal.span {a}).radical = maximal_ideal R := by
+      rw [Ideal.radical_eq_Inf]
+      apply le_antisymm
+      · exact Inf_le ⟨hle, inferInstance⟩
+      · refine'
+          le_Inf fun I hI =>
+            (eq_maximal_ideal <| IsDedekindDomain.dimension_le_one _ (fun e => ha₂ _) hI.2).ge
+        rw [← Ideal.span_singleton_eq_bot, eq_bot_iff, ← e]
+        exact hI.1
+    have : ∃ n, maximal_ideal R ^ n ≤ Ideal.span {a} := by
+      rw [← this]
+      apply Ideal.exists_radical_pow_le_of_fg
       exact IsNoetherian.noetherian _
-      
-    
-  · have : (M.map (DistribMulAction.toLinearMap R K x)).comap (Algebra.ofId R K).toLinearMap = ⊤ :=
-      by
-      by_contra h
-      apply hx
-      rintro m' ⟨m, hm, rfl : algebraMap R K m = m'⟩
-      obtain ⟨k, hk⟩ := hb₃ m hm
-      have hk' : x * algebraMap R K m = algebraMap R K k := by
-        rw [← mul_div_right_comm, ← map_mul, ← hk, map_mul, mul_div_cancel _ ha₃]
-      exact ⟨k, le_maximal_ideal h ⟨_, ⟨_, hm, rfl⟩, hk'⟩, hk'.symm⟩
-    obtain ⟨y, hy₁, hy₂⟩ : ∃ y ∈ maximal_ideal R, b * y = a := by
-      rw [Ideal.eq_top_iff_one, Submodule.mem_comap] at this
-      obtain ⟨_, ⟨y, hy, rfl⟩, hy' : x * algebraMap R K y = algebraMap R K 1⟩ := this
-      rw [map_one, ← mul_div_right_comm, div_eq_one_iff_eq ha₃, ← map_mul] at hy'
-      exact ⟨y, hy, IsFractionRing.injective R K hy'⟩
-    refine' ⟨⟨y, _⟩⟩
-    apply le_antisymm
-    · intro m hm
-      obtain ⟨k, hk⟩ := hb₃ m hm
-      rw [← hy₂, mul_comm, mul_assoc] at hk
-      rw [← mul_left_cancel₀ hb₄ hk, mul_comm]
-      exact ideal.mem_span_singleton'.mpr ⟨_, rfl⟩
-      
-    · rwa [Submodule.span_le, Set.singleton_subset_iff]
-      
-    
+    cases hn : Nat.find this
+    · have := Nat.find_spec this
+      rw [hn, pow_zero, Ideal.one_eq_top] at this
+      exact (Ideal.IsMaximal.ne_top inferInstance (eq_top_iff.mpr <| this.trans hle)).elim
+    obtain ⟨b, hb₁, hb₂⟩ : ∃ b ∈ maximal_ideal R ^ n, ¬b ∈ Ideal.span {a} := by
+      by_contra h'
+      push_neg  at h'
+      rw [Nat.find_eq_iff] at hn
+      exact hn.2 n n.lt_succ_self fun x hx => not_not.mp (h' x hx)
+    have hb₃ : ∀ m ∈ maximal_ideal R, ∃ k : R, k * a = b * m := by
+      intro m hm
+      rw [← Ideal.mem_span_singleton']
+      apply Nat.find_spec this
+      rw [hn, pow_succ']
+      exact Ideal.mul_mem_mul hb₁ hm
+    have hb₄ : b ≠ 0 := by 
+      rintro rfl
+      apply hb₂
+      exact zero_mem _
+    let K := FractionRing R
+    let x : K := algebraMap R K b / algebraMap R K a
+    let M := Submodule.map (Algebra.ofId R K).toLinearMap (maximal_ideal R)
+    have ha₃ : algebraMap R K a ≠ 0 := is_fraction_ring.to_map_eq_zero_iff.not.mpr ha₂
+    by_cases hx : ∀ y ∈ M, x * y ∈ M
+    · have := is_integral_of_smul_mem_submodule M _ _ x hx
+      · obtain ⟨y, e⟩ := IsIntegrallyClosed.algebra_map_eq_of_integral this
+        refine' (hb₂ (ideal.mem_span_singleton'.mpr ⟨y, _⟩)).elim
+        apply IsFractionRing.injective R K
+        rw [map_mul, e, div_mul_cancel _ ha₃]
+      · rw [Submodule.ne_bot_iff]
+        refine' ⟨_, ⟨a, ha₁, rfl⟩, _⟩
+        exact is_fraction_ring.to_map_eq_zero_iff.not.mpr ha₂
+      · apply Submodule.Fg.map
+        exact IsNoetherian.noetherian _
+    · have :
+        (M.map (DistribMulAction.toLinearMap R K x)).comap (Algebra.ofId R K).toLinearMap = ⊤ := by
+        by_contra h
+        apply hx
+        rintro m' ⟨m, hm, rfl : algebraMap R K m = m'⟩
+        obtain ⟨k, hk⟩ := hb₃ m hm
+        have hk' : x * algebraMap R K m = algebraMap R K k := by
+          rw [← mul_div_right_comm, ← map_mul, ← hk, map_mul, mul_div_cancel _ ha₃]
+        exact ⟨k, le_maximal_ideal h ⟨_, ⟨_, hm, rfl⟩, hk'⟩, hk'.symm⟩
+      obtain ⟨y, hy₁, hy₂⟩ : ∃ y ∈ maximal_ideal R, b * y = a := by
+        rw [Ideal.eq_top_iff_one, Submodule.mem_comap] at this
+        obtain ⟨_, ⟨y, hy, rfl⟩, hy' : x * algebraMap R K y = algebraMap R K 1⟩ := this
+        rw [map_one, ← mul_div_right_comm, div_eq_one_iff_eq ha₃, ← map_mul] at hy'
+        exact ⟨y, hy, IsFractionRing.injective R K hy'⟩
+      refine' ⟨⟨y, _⟩⟩
+      apply le_antisymm
+      · intro m hm
+        obtain ⟨k, hk⟩ := hb₃ m hm
+        rw [← hy₂, mul_comm, mul_assoc] at hk
+        rw [← mul_left_cancel₀ hb₄ hk, mul_comm]
+        exact ideal.mem_span_singleton'.mpr ⟨_, rfl⟩
+      · rwa [Submodule.span_le, Set.singleton_subset_iff]
 #align
   maximal_ideal_is_principal_of_is_dedekind_domain maximal_ideal_is_principal_of_is_dedekind_domain
 
@@ -289,818 +273,21 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                []
                (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.intro "intro" []) [])
-                 (group (Tactic.tacticInfer_instance "infer_instance") [])])
+                [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
                []
-               («tactic___;_»
+               (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.intro "intro" []) [])
-                 (group
-                  (Std.Tactic.tacticHaveI_
-                   "haveI"
-                   (Term.haveDecl
-                    (Term.haveIdDecl [] [] ":=" (Term.app `IsBezout.toGcdDomain [`R]))))
-                  [])
-                 (group
-                  (Std.Tactic.tacticHaveI_
-                   "haveI"
-                   (Term.haveDecl
-                    (Term.haveIdDecl
-                     []
-                     [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
-                     ":="
-                     `ufm_of_gcd_of_wf_dvd_monoid)))
-                  [])
-                 (group
-                  (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
-                  [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group
-                     (Std.Tactic.obtain
-                      "obtain"
-                      [(Std.Tactic.RCases.rcasesPatMed
-                        [(Std.Tactic.RCases.rcasesPat.tuple
-                          "⟨"
-                          [(Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed
-                             [(Std.Tactic.RCases.rcasesPat.one `hx₁)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed
-                             [(Std.Tactic.RCases.rcasesPat.one `hx₂)])
-                            [])]
-                          "⟩")])]
-                      []
-                      [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
-                     [])
-                    (group
-                     (Std.Tactic.obtain
-                      "obtain"
-                      [(Std.Tactic.RCases.rcasesPatMed
-                        [(Std.Tactic.RCases.rcasesPat.tuple
-                          "⟨"
-                          [(Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `p)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed
-                             [(Std.Tactic.RCases.rcasesPat.one `hp₁)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed
-                             [(Std.Tactic.RCases.rcasesPat.one `hp₂)])
-                            [])]
-                          "⟩")])]
-                      []
-                      [":=" [(Term.app `WfDvdMonoid.exists_irreducible_factor [`hx₂ `hx₁])]])
-                     [])
-                    (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩")) [])])
-                  [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.exact "exact" `ValuationRing.unique_irreducible) [])])
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.intro "intro" [`H]) [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.anonymousCtor
-                    "⟨"
-                    [`inferInstance
-                     ","
-                     (Term.proj
-                      (Term.app
-                       (Term.proj
-                        (Term.app `DiscreteValuationRing.iff_pid_with_one_nonzero_prime [`R])
-                        "."
-                        `mp)
-                       [`H])
-                      "."
-                      (fieldIdx "2"))]
-                    "⟩"))
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Std.Tactic.rintro
-                   "rintro"
-                   [(Std.Tactic.RCases.rintroPat.one
-                     (Std.Tactic.RCases.rcasesPat.tuple
-                      "⟨"
-                      [(Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₁)])
-                        [])
-                       ","
-                       (Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₂)])
-                        [])]
-                      "⟩"))]
-                   [])
-                  [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.anonymousCtor
-                    "⟨"
-                    [`inferInstance
-                     ","
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`I `hI `hI']
-                       []
-                       "=>"
-                       (Term.subst
-                        (Term.app
-                         `ExistsUnique.unique
-                         [`h₂
-                          (Term.anonymousCtor "⟨" [`ne_bot "," `inferInstance] "⟩")
-                          (Term.anonymousCtor "⟨" [`hI "," `hI'] "⟩")])
-                        "▸"
-                        [(Term.app `maximal_ideal.is_maximal [`R])])))
-                     ","
-                     `h₁]
-                    "⟩"))
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.intro "intro" [`h]) [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Std.Tactic.rintro
-                   "rintro"
-                   [(Std.Tactic.RCases.rintroPat.one
-                     (Std.Tactic.RCases.rcasesPat.tuple
-                      "⟨"
-                      [(Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
-                        [])
-                       ","
-                       (Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
-                        [])]
-                      "⟩"))]
-                   [])
-                  [])
-                 (group
-                  (Tactic.tacticHave_
-                   "have"
-                   (Term.haveDecl
-                    (Term.haveIdDecl
-                     []
-                     [(Term.typeSpec ":" («term_∈_» `x "∈" (Term.app `maximal_ideal [`R])))]
-                     ":="
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(Tactic.rwSeq
-                          "rw"
-                          []
-                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]")
-                          [])
-                         []
-                         (Tactic.exact
-                          "exact"
-                          (Term.app
-                           `Submodule.subset_span
-                           [(Term.app `Set.mem_singleton [`x])]))]))))))
-                  [])
-                 (group
-                  (Tactic.tacticLet_
-                   "let"
-                   (Term.letDecl
-                    (Term.letIdDecl
-                     `x'
-                     []
-                     [(Term.typeSpec ":" (Term.app `maximal_ideal [`R]))]
-                     ":="
-                     (Term.anonymousCtor "⟨" [`x "," `this] "⟩"))))
-                  [])
-                 (group
-                  (Mathlib.Tactic.«tacticUse_,,» "use" [(Term.app `Submodule.Quotient.mk [`x'])])
-                  [])
-                 (group (Tactic.constructor "constructor") [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.intro "intro" [`e]) [])
-                    (group
-                     (Tactic.rwSeq
-                      "rw"
-                      []
-                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.Quotient.mk_eq_zero)] "]")
-                      [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
-                     [])
-                    (group
-                     (Tactic.apply
-                      "apply"
-                      (Term.app
-                       `Ring.ne_bot_of_is_maximal_of_not_is_field
-                       [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
-                     [])
-                    (group
-                     (Tactic.apply
-                      "apply"
-                      (Term.app
-                       `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
-                       [(Term.app `maximal_ideal [`R])]))
-                     [])
-                    (group
-                     («tactic___;_»
-                      (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.exact
-                         "exact"
-                         (Term.anonymousCtor
-                          "⟨"
-                          [(«term{_}» "{" [`x] "}")
-                           ","
-                           (Term.subst
-                            (Term.proj (Term.app `Finset.coe_singleton [`x]) "." `symm)
-                            "▸"
-                            [`hx.symm])]
-                          "⟩"))
-                        [])])
-                     [])
-                    (group
-                     («tactic___;_»
-                      (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Mathlib.Tactic.Conv.convLHS
-                         "conv_lhs"
-                         []
-                         []
-                         "=>"
-                         (Tactic.Conv.convSeq
-                          (Tactic.Conv.convSeq1Indented
-                           [(Tactic.Conv.convRw__
-                             "rw"
-                             []
-                             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]"))])))
-                        [])
-                       (group
-                        (Tactic.rwSeq
-                         "rw"
-                         []
-                         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
-                         [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
-                        [])
-                       (group
-                        (Std.Tactic.tacticRwa__
-                         "rwa"
-                         (Tactic.rwRuleSeq
-                          "["
-                          [(Tactic.rwRule [] `Submodule.span_le)
-                           ","
-                           (Tactic.rwRule [] `Set.singleton_subset_iff)]
-                          "]")
-                         [])
-                        [])])
-                     [])
-                    (group
-                     («tactic___;_»
-                      (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group
-                        (Tactic.rwSeq
-                         "rw"
-                         []
-                         (Tactic.rwRuleSeq
-                          "["
-                          [(Tactic.rwRule
-                            []
-                            (Term.app
-                             `LocalRing.jacobson_eq_maximal_ideal
-                             [(Term.typeAscription
-                               "("
-                               (Order.BoundedOrder.«term⊥» "⊥")
-                               ":"
-                               [(Term.app `Ideal [`R])]
-                               ")")
-                              `bot_ne_top]))]
-                          "]")
-                         [])
-                        [])
-                       (group (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")])) [])])
-                     [])])
-                  [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group
-                     (Tactic.refine'
-                      "refine'"
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`w]
-                        []
-                        "=>"
-                        (Term.app
-                         (Term.app `Quotient.inductionOn' [`w])
-                         [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
-                     [])
-                    (group
-                     (Std.Tactic.obtain
-                      "obtain"
-                      [(Std.Tactic.RCases.rcasesPatMed
-                        [(Std.Tactic.RCases.rcasesPat.tuple
-                          "⟨"
-                          [(Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                            [])]
-                          "⟩")])]
-                      []
-                      [":=" [`y]])
-                     [])
-                    (group
-                     (Tactic.rwSeq
-                      "rw"
-                      []
-                      (Tactic.rwRuleSeq
-                       "["
-                       [(Tactic.rwRule [] `hx) "," (Tactic.rwRule [] `Submodule.mem_span_singleton)]
-                       "]")
-                      [(Tactic.location "at" (Tactic.locationHyp [`hy] []))])
-                     [])
-                    (group
-                     (Std.Tactic.obtain
-                      "obtain"
-                      [(Std.Tactic.RCases.rcasesPatMed
-                        [(Std.Tactic.RCases.rcasesPat.tuple
-                          "⟨"
-                          [(Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed
-                             [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                            [])]
-                          "⟩")])]
-                      []
-                      [":=" [`hy]])
-                     [])
-                    (group
-                     (Tactic.exact
-                      "exact"
-                      (Term.anonymousCtor
-                       "⟨"
-                       [(Term.app `Ideal.Quotient.mk [(Term.hole "_") `a]) "," `rfl]
-                       "⟩"))
-                     [])])
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Std.Tactic.rintro
-                   "rintro"
-                   [(Std.Tactic.RCases.rintroPat.one
-                     (Std.Tactic.RCases.rcasesPat.tuple
-                      "⟨"
-                      [(Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
-                        [])
-                       ","
-                       (Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
-                        [])
-                       ","
-                       (Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx')])
-                        [])]
-                      "⟩"))]
-                   [])
-                  [])
-                 (group
-                  (Tactic.induction "induction" [`x] ["using" `Quotient.inductionOn'] [] [])
-                  [])
-                 (group (Mathlib.Tactic.«tacticUse_,,» "use" [`x]) [])
-                 (group (Tactic.apply "apply" `le_antisymm) [])
-                 (group (Mathlib.Tactic.tacticSwap "swap") [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group
-                     (Tactic.rwSeq
-                      "rw"
-                      []
-                      (Tactic.rwRuleSeq
-                       "["
-                       [(Tactic.rwRule [] `Submodule.span_le)
-                        ","
-                        (Tactic.rwRule [] `Set.singleton_subset_iff)]
-                       "]")
-                      [])
-                     [])
-                    (group (Tactic.exact "exact" `x.prop) [])])
-                  [])
-                 (group
-                  (Tactic.tacticHave_
-                   "have"
-                   (Term.haveDecl
-                    (Term.haveIdDecl
-                     [`h₁ []]
-                     [(Term.typeSpec
-                       ":"
-                       («term_≤_»
-                        (Order.Basic.«term_⊔_»
-                         (Term.typeAscription
-                          "("
-                          (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
-                          ":"
-                          [(Term.app `Ideal [`R])]
-                          ")")
-                         " ⊔ "
-                         (Term.app `maximal_ideal [`R]))
-                        "≤"
-                        (Order.Basic.«term_⊔_»
-                         (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
-                         " ⊔ "
-                         (Algebra.Group.Defs.«term_•_»
-                          (Term.app `maximal_ideal [`R])
-                          " • "
-                          (Term.app `maximal_ideal [`R])))))]
-                     ":="
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(Tactic.refine'
-                          "refine'"
-                          (Term.app `sup_le [`le_sup_left (Term.hole "_")]))
-                         []
-                         (Std.Tactic.rintro
-                          "rintro"
-                          [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `m))
-                           (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hm))]
-                          [])
-                         []
-                         (Std.Tactic.obtain
-                          "obtain"
-                          [(Std.Tactic.RCases.rcasesPatMed
-                            [(Std.Tactic.RCases.rcasesPat.tuple
-                              "⟨"
-                              [(Std.Tactic.RCases.rcasesPatLo
-                                (Std.Tactic.RCases.rcasesPatMed
-                                 [(Std.Tactic.RCases.rcasesPat.one `c)])
-                                [])
-                               ","
-                               (Std.Tactic.RCases.rcasesPatLo
-                                (Std.Tactic.RCases.rcasesPatMed
-                                 [(Std.Tactic.RCases.rcasesPat.one `hc)])
-                                [])]
-                              "⟩")])]
-                          []
-                          [":="
-                           [(Term.app
-                             `hx'
-                             [(Term.app
-                               `Submodule.Quotient.mk
-                               [(Term.anonymousCtor "⟨" [`m "," `hm] "⟩")])])]])
-                         []
-                         (Tactic.induction "induction" [`c] ["using" `Quotient.inductionOn'] [] [])
-                         []
-                         (Tactic.rwSeq
-                          "rw"
-                          []
-                          (Tactic.rwRuleSeq
-                           "["
-                           [(Tactic.rwRule
-                             [(patternIgnore (token.«← » "←"))]
-                             (Term.app `sub_sub_cancel [(«term_*_» `c "*" `x) `m]))]
-                           "]")
-                          [])
-                         []
-                         (Tactic.apply
-                          "apply"
-                          (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
-                         []
-                         («tactic___;_»
-                          (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group (Tactic.tacticInfer_instance "infer_instance") [])])
-                         []
-                         («tactic___;_»
-                          (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group
-                            (Tactic.refine'
-                             "refine'"
-                             (Term.app
-                              `Ideal.mem_sup_left
-                              [(Term.app
-                                `ideal.mem_span_singleton'.mpr
-                                [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))
-                            [])])
-                         []
-                         («tactic___;_»
-                          (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group
-                            (Tactic.tacticHave_
-                             "have"
-                             (Term.haveDecl
-                              (Term.haveIdDecl
-                               []
-                               []
-                               ":="
-                               (Term.app
-                                (Term.proj
-                                 (Term.app `Submodule.Quotient.eq [(Term.hole "_")])
-                                 "."
-                                 `mp)
-                                [`hc]))))
-                            [])
-                           (group
-                            (Tactic.rwSeq
-                             "rw"
-                             []
-                             (Tactic.rwRuleSeq
-                              "["
-                              [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)]
-                              "]")
-                             [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-                            [])
-                           (group
-                            (Tactic.exact "exact" (Term.app `Ideal.mem_sup_right [`this]))
-                            [])])]))))))
-                  [])
-                 (group
-                  (Tactic.tacticHave_
-                   "have"
-                   (Term.haveDecl
-                    (Term.haveIdDecl
-                     [`h₂ []]
-                     [(Term.typeSpec
-                       ":"
-                       («term_≤_»
-                        (Term.app `maximal_ideal [`R])
-                        "≤"
-                        (Term.proj
-                         (Term.typeAscription
-                          "("
-                          (Order.BoundedOrder.«term⊥» "⊥")
-                          ":"
-                          [(Term.app `Ideal [`R])]
-                          ")")
-                         "."
-                         `jacobson)))]
-                     ":="
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(Tactic.rwSeq
-                          "rw"
-                          []
-                          (Tactic.rwRuleSeq
-                           "["
-                           [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)]
-                           "]")
-                          [])
-                         []
-                         (Std.Tactic.exacts
-                          "exacts"
-                          "["
-                          [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top]
-                          "]")]))))))
-                  [])
-                 (group
-                  (Tactic.tacticHave_
-                   "have"
-                   (Term.haveDecl
-                    (Term.haveIdDecl
-                     []
-                     []
-                     ":="
-                     (Term.app
-                      `Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson
-                      [(Term.app `IsNoetherian.noetherian [(Term.hole "_")]) `h₂ `h₁]))))
-                  [])
-                 (group
-                  (Tactic.rwSeq
-                   "rw"
-                   []
-                   (Tactic.rwRuleSeq
-                    "["
-                    [(Tactic.rwRule [] `Submodule.bot_smul) "," (Tactic.rwRule [] `sup_bot_eq)]
-                    "]")
-                   [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-                  [])
-                 (group
-                  (Tactic.rwSeq
-                   "rw"
-                   []
-                   (Tactic.rwRuleSeq
-                    "["
-                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sup_eq_left)
-                     ","
-                     (Tactic.rwRule [] `eq_comm)]
-                    "]")
-                   [])
-                  [])
-                 (group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app
-                    `le_sup_left.antisymm
-                    [(«term_<|_» `h₁.trans "<|" (Term.app `le_of_eq [`this]))]))
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.exact
-                   "exact"
-                   (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))
-                  [])])
-               []
-               (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group
-                  (Tactic.rwSeq
-                   "rw"
-                   []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `ValuationRing.iff_ideal_total)] "]")
-                   [])
-                  [])
-                 (group (Tactic.intro "intro" [`H]) [])
-                 (group (Tactic.constructor "constructor") [])
-                 (group (Tactic.intro "intro" [`I `J]) [])
-                 (group
-                  (Classical.«tacticBy_cases_:_»
-                   "by_cases"
-                   [`hI ":"]
-                   («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
-                  [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.subst "subst" [`hI]) [])
-                    (group (Mathlib.Tactic.tacticLeft "left") [])
-                    (group (Tactic.exact "exact" `bot_le) [])])
-                  [])
-                 (group
-                  (Classical.«tacticBy_cases_:_»
-                   "by_cases"
-                   [`hJ ":"]
-                   («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
-                  [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.subst "subst" [`hJ]) [])
-                    (group (Mathlib.Tactic.tacticRight "right") [])
-                    (group (Tactic.exact "exact" `bot_le) [])])
-                  [])
-                 (group
-                  (Std.Tactic.obtain
-                   "obtain"
-                   [(Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.tuple
-                       "⟨"
-                       [(Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `n)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                         [])]
-                       "⟩")])]
-                   []
-                   [":=" [(Term.app `H [`I `hI])]])
-                  [])
-                 (group
-                  (Std.Tactic.obtain
-                   "obtain"
-                   [(Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.tuple
-                       "⟨"
-                       [(Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `m)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                         [])]
-                       "⟩")])]
-                   []
-                   [":=" [(Term.app `H [`J `hJ])]])
-                  [])
-                 (group
-                  (Tactic.cases'
-                   "cases'"
-                   [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
-                   []
-                   ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
-                  [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Mathlib.Tactic.tacticLeft "left") [])
-                    (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-                  [])
-                 (group
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Mathlib.Tactic.tacticRight "right") [])
-                    (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-                  [])])
-               []
-               (Tactic.tfaeFinish "tfae_finish")])))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tacticHave_
-           "have"
-           (Term.haveDecl
-            (Term.haveIdDecl
-             [`ne_bot []]
-             []
-             ":="
-             (Term.app
-              `Ring.ne_bot_of_is_maximal_of_not_is_field
-              [(Term.app `maximal_ideal.is_maximal [`R]) `h]))))
-          []
-          (Mathlib.Tactic.tacticClassical_
-           "classical"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `finrank_eq_one_iff')] "]")
-               [])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" []) [])
-                (group (Tactic.tacticInfer_instance "infer_instance") [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" []) [])
-                (group
+                [(Tactic.intro "intro" [])
+                 []
                  (Std.Tactic.tacticHaveI_
                   "haveI"
                   (Term.haveDecl
                    (Term.haveIdDecl [] [] ":=" (Term.app `IsBezout.toGcdDomain [`R]))))
-                 [])
-                (group
+                 []
                  (Std.Tactic.tacticHaveI_
                   "haveI"
                   (Term.haveDecl
@@ -1109,69 +296,63 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
                     ":="
                     `ufm_of_gcd_of_wf_dvd_monoid)))
-                 [])
-                (group
+                 []
                  (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
-                 [])
-                (group
-                 («tactic___;_»
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Std.Tactic.obtain
-                     "obtain"
-                     [(Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.tuple
-                         "⟨"
-                         [(Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₁)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₂)])
-                           [])]
-                         "⟩")])]
-                     []
-                     [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
-                    [])
-                   (group
-                    (Std.Tactic.obtain
-                     "obtain"
-                     [(Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.tuple
-                         "⟨"
-                         [(Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `p)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₁)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₂)])
-                           [])]
-                         "⟩")])]
-                     []
-                     [":=" [(Term.app `WfDvdMonoid.exists_irreducible_factor [`hx₂ `hx₁])]])
-                    [])
-                   (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩")) [])])
-                 [])
-                (group
-                 («tactic___;_»
+                  [(Std.Tactic.obtain
+                    "obtain"
+                    [(Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₁)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₂)])
+                          [])]
+                        "⟩")])]
+                    []
+                    [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
+                   []
+                   (Std.Tactic.obtain
+                    "obtain"
+                    [(Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `p)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₁)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₂)])
+                          [])]
+                        "⟩")])]
+                    []
+                    [":=" [(Term.app `WfDvdMonoid.exists_irreducible_factor [`hx₂ `hx₁])]])
+                   []
+                   (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩"))])
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" `ValuationRing.unique_irreducible) [])])
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" [`H]) [])
-                (group
+                  [(Tactic.exact "exact" `ValuationRing.unique_irreducible)])])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Tactic.intro "intro" [`H])
+                 []
                  (Tactic.exact
                   "exact"
                   (Term.anonymousCtor
@@ -1187,15 +368,13 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                       [`H])
                      "."
                      (fieldIdx "2"))]
-                   "⟩"))
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Std.Tactic.rintro
+                   "⟩"))])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
                     (Std.Tactic.RCases.rcasesPat.tuple
@@ -1209,8 +388,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                        [])]
                      "⟩"))]
                   [])
-                 [])
-                (group
+                 []
                  (Tactic.exact
                   "exact"
                   (Term.anonymousCtor
@@ -1233,26 +411,23 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                        [(Term.app `maximal_ideal.is_maximal [`R])])))
                     ","
                     `h₁]
-                   "⟩"))
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" [`h]) [])
-                (group
+                   "⟩"))])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Tactic.intro "intro" [`h])
+                 []
                  (Tactic.exact
                   "exact"
-                  (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Std.Tactic.rintro
+                  (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
                     (Std.Tactic.RCases.rcasesPat.tuple
@@ -1266,8 +441,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                        [])]
                      "⟩"))]
                   [])
-                 [])
-                (group
+                 []
                  (Tactic.tacticHave_
                   "have"
                   (Term.haveDecl
@@ -1290,8 +464,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                          (Term.app
                           `Submodule.subset_span
                           [(Term.app `Set.mem_singleton [`x])]))]))))))
-                 [])
-                (group
+                 []
                  (Tactic.tacticLet_
                   "let"
                   (Term.letDecl
@@ -1301,190 +474,167 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     [(Term.typeSpec ":" (Term.app `maximal_ideal [`R]))]
                     ":="
                     (Term.anonymousCtor "⟨" [`x "," `this] "⟩"))))
-                 [])
-                (group
+                 []
                  (Mathlib.Tactic.«tacticUse_,,» "use" [(Term.app `Submodule.Quotient.mk [`x'])])
-                 [])
-                (group (Tactic.constructor "constructor") [])
-                (group
-                 («tactic___;_»
+                 []
+                 (Tactic.constructor "constructor")
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.intro "intro" [`e]) [])
-                   (group
-                    (Tactic.rwSeq
-                     "rw"
+                  [(Tactic.intro "intro" [`e])
+                   []
+                   (Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.Quotient.mk_eq_zero)] "]")
+                    [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
+                   []
+                   (Tactic.apply
+                    "apply"
+                    (Term.app
+                     `Ring.ne_bot_of_is_maximal_of_not_is_field
+                     [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
+                   []
+                   (Tactic.apply
+                    "apply"
+                    (Term.app
+                     `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
+                     [(Term.app `maximal_ideal [`R])]))
+                   []
+                   (tactic___
+                    (cdotTk (patternIgnore (token.«·» "·")))
+                    [(Tactic.exact
+                      "exact"
+                      (Term.anonymousCtor
+                       "⟨"
+                       [(«term{_}» "{" [`x] "}")
+                        ","
+                        (Term.subst
+                         (Term.proj (Term.app `Finset.coe_singleton [`x]) "." `symm)
+                         "▸"
+                         [`hx.symm])]
+                       "⟩"))])
+                   []
+                   (tactic___
+                    (cdotTk (patternIgnore (token.«·» "·")))
+                    [(Mathlib.Tactic.Conv.convLHS
+                      "conv_lhs"
+                      []
+                      []
+                      "=>"
+                      (Tactic.Conv.convSeq
+                       (Tactic.Conv.convSeq1Indented
+                        [(Tactic.Conv.convRw__
+                          "rw"
+                          []
+                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]"))])))
                      []
-                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.Quotient.mk_eq_zero)] "]")
-                     [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
-                    [])
-                   (group
-                    (Tactic.apply
-                     "apply"
-                     (Term.app
-                      `Ring.ne_bot_of_is_maximal_of_not_is_field
-                      [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
-                    [])
-                   (group
-                    (Tactic.apply
-                     "apply"
-                     (Term.app
-                      `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
-                      [(Term.app `maximal_ideal [`R])]))
-                    [])
-                   (group
-                    («tactic___;_»
-                     (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Tactic.exact
-                        "exact"
-                        (Term.anonymousCtor
-                         "⟨"
-                         [(«term{_}» "{" [`x] "}")
-                          ","
-                          (Term.subst
-                           (Term.proj (Term.app `Finset.coe_singleton [`x]) "." `symm)
-                           "▸"
-                           [`hx.symm])]
-                         "⟩"))
-                       [])])
-                    [])
-                   (group
-                    («tactic___;_»
-                     (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Mathlib.Tactic.Conv.convLHS
-                        "conv_lhs"
-                        []
-                        []
-                        "=>"
-                        (Tactic.Conv.convSeq
-                         (Tactic.Conv.convSeq1Indented
-                          [(Tactic.Conv.convRw__
-                            "rw"
-                            []
-                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]"))])))
-                       [])
-                      (group
-                       (Tactic.rwSeq
-                        "rw"
-                        []
-                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
-                        [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
-                       [])
-                      (group
-                       (Std.Tactic.tacticRwa__
-                        "rwa"
-                        (Tactic.rwRuleSeq
-                         "["
-                         [(Tactic.rwRule [] `Submodule.span_le)
-                          ","
-                          (Tactic.rwRule [] `Set.singleton_subset_iff)]
-                         "]")
-                        [])
-                       [])])
-                    [])
-                   (group
-                    («tactic___;_»
-                     (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Tactic.rwSeq
-                        "rw"
-                        []
-                        (Tactic.rwRuleSeq
-                         "["
-                         [(Tactic.rwRule
-                           []
-                           (Term.app
-                            `LocalRing.jacobson_eq_maximal_ideal
-                            [(Term.typeAscription
-                              "("
-                              (Order.BoundedOrder.«term⊥» "⊥")
-                              ":"
-                              [(Term.app `Ideal [`R])]
-                              ")")
-                             `bot_ne_top]))]
-                         "]")
-                        [])
-                       [])
-                      (group (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")])) [])])
-                    [])])
-                 [])
-                (group
-                 («tactic___;_»
+                     (Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
+                      [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
+                     []
+                     (Std.Tactic.tacticRwa__
+                      "rwa"
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] `Submodule.span_le)
+                        ","
+                        (Tactic.rwRule [] `Set.singleton_subset_iff)]
+                       "]")
+                      [])])
+                   []
+                   (tactic___
+                    (cdotTk (patternIgnore (token.«·» "·")))
+                    [(Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule
+                         []
+                         (Term.app
+                          `LocalRing.jacobson_eq_maximal_ideal
+                          [(Term.typeAscription
+                            "("
+                            (Order.BoundedOrder.«term⊥» "⊥")
+                            ":"
+                            [(Term.app `Ideal [`R])]
+                            ")")
+                           `bot_ne_top]))]
+                       "]")
+                      [])
+                     []
+                     (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")]))])])
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.refine'
-                     "refine'"
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`w]
-                       []
-                       "=>"
-                       (Term.app
-                        (Term.app `Quotient.inductionOn' [`w])
-                        [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
-                    [])
-                   (group
-                    (Std.Tactic.obtain
-                     "obtain"
-                     [(Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.tuple
-                         "⟨"
-                         [(Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                           [])]
-                         "⟩")])]
-                     []
-                     [":=" [`y]])
-                    [])
-                   (group
-                    (Tactic.rwSeq
-                     "rw"
-                     []
-                     (Tactic.rwRuleSeq
-                      "["
-                      [(Tactic.rwRule [] `hx) "," (Tactic.rwRule [] `Submodule.mem_span_singleton)]
-                      "]")
-                     [(Tactic.location "at" (Tactic.locationHyp [`hy] []))])
-                    [])
-                   (group
-                    (Std.Tactic.obtain
-                     "obtain"
-                     [(Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.tuple
-                         "⟨"
-                         [(Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                           [])]
-                         "⟩")])]
-                     []
-                     [":=" [`hy]])
-                    [])
-                   (group
-                    (Tactic.exact
-                     "exact"
-                     (Term.anonymousCtor
-                      "⟨"
-                      [(Term.app `Ideal.Quotient.mk [(Term.hole "_") `a]) "," `rfl]
-                      "⟩"))
-                    [])])
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Std.Tactic.rintro
+                  [(Tactic.refine'
+                    "refine'"
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`w]
+                      []
+                      "=>"
+                      (Term.app
+                       (Term.app `Quotient.inductionOn' [`w])
+                       [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
+                   []
+                   (Std.Tactic.obtain
+                    "obtain"
+                    [(Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                          [])]
+                        "⟩")])]
+                    []
+                    [":=" [`y]])
+                   []
+                   (Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] `hx) "," (Tactic.rwRule [] `Submodule.mem_span_singleton)]
+                     "]")
+                    [(Tactic.location "at" (Tactic.locationHyp [`hy] []))])
+                   []
+                   (Std.Tactic.obtain
+                    "obtain"
+                    [(Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                          [])]
+                        "⟩")])]
+                    []
+                    [":=" [`hy]])
+                   []
+                   (Tactic.exact
+                    "exact"
+                    (Term.anonymousCtor
+                     "⟨"
+                     [(Term.app `Ideal.Quotient.mk [(Term.hole "_") `a]) "," `rfl]
+                     "⟩"))])])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
                     (Std.Tactic.RCases.rcasesPat.tuple
@@ -1502,31 +652,30 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                        [])]
                      "⟩"))]
                   [])
-                 [])
-                (group
+                 []
                  (Tactic.induction "induction" [`x] ["using" `Quotient.inductionOn'] [] [])
-                 [])
-                (group (Mathlib.Tactic.«tacticUse_,,» "use" [`x]) [])
-                (group (Tactic.apply "apply" `le_antisymm) [])
-                (group (Mathlib.Tactic.tacticSwap "swap") [])
-                (group
-                 («tactic___;_»
+                 []
+                 (Mathlib.Tactic.«tacticUse_,,» "use" [`x])
+                 []
+                 (Tactic.apply "apply" `le_antisymm)
+                 []
+                 (Mathlib.Tactic.tacticSwap "swap")
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group
-                    (Tactic.rwSeq
-                     "rw"
-                     []
-                     (Tactic.rwRuleSeq
-                      "["
-                      [(Tactic.rwRule [] `Submodule.span_le)
-                       ","
-                       (Tactic.rwRule [] `Set.singleton_subset_iff)]
-                      "]")
-                     [])
+                  [(Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] `Submodule.span_le)
+                      ","
+                      (Tactic.rwRule [] `Set.singleton_subset_iff)]
+                     "]")
                     [])
-                   (group (Tactic.exact "exact" `x.prop) [])])
-                 [])
-                (group
+                   []
+                   (Tactic.exact "exact" `x.prop)])
+                 []
                  (Tactic.tacticHave_
                   "have"
                   (Term.haveDecl
@@ -1603,54 +752,47 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                         []
                         (Tactic.apply "apply" (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
                         []
-                        («tactic___;_»
+                        (tactic___
                          (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group (Tactic.tacticInfer_instance "infer_instance") [])])
+                         [(Tactic.tacticInfer_instance "infer_instance")])
                         []
-                        («tactic___;_»
+                        (tactic___
                          (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group
-                           (Tactic.refine'
-                            "refine'"
-                            (Term.app
-                             `Ideal.mem_sup_left
-                             [(Term.app
-                               `ideal.mem_span_singleton'.mpr
-                               [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))
-                           [])])
+                         [(Tactic.refine'
+                           "refine'"
+                           (Term.app
+                            `Ideal.mem_sup_left
+                            [(Term.app
+                              `ideal.mem_span_singleton'.mpr
+                              [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))])
                         []
-                        («tactic___;_»
+                        (tactic___
                          (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group
-                           (Tactic.tacticHave_
-                            "have"
-                            (Term.haveDecl
-                             (Term.haveIdDecl
-                              []
-                              []
-                              ":="
-                              (Term.app
-                               (Term.proj
-                                (Term.app `Submodule.Quotient.eq [(Term.hole "_")])
-                                "."
-                                `mp)
-                               [`hc]))))
-                           [])
-                          (group
-                           (Tactic.rwSeq
-                            "rw"
-                            []
-                            (Tactic.rwRuleSeq
-                             "["
-                             [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)]
-                             "]")
-                            [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-                           [])
-                          (group
-                           (Tactic.exact "exact" (Term.app `Ideal.mem_sup_right [`this]))
-                           [])])]))))))
-                 [])
-                (group
+                         [(Tactic.tacticHave_
+                           "have"
+                           (Term.haveDecl
+                            (Term.haveIdDecl
+                             []
+                             []
+                             ":="
+                             (Term.app
+                              (Term.proj
+                               (Term.app `Submodule.Quotient.eq [(Term.hole "_")])
+                               "."
+                               `mp)
+                              [`hc]))))
+                          []
+                          (Tactic.rwSeq
+                           "rw"
+                           []
+                           (Tactic.rwRuleSeq
+                            "["
+                            [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)]
+                            "]")
+                           [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+                          []
+                          (Tactic.exact "exact" (Term.app `Ideal.mem_sup_right [`this]))])]))))))
+                 []
                  (Tactic.tacticHave_
                   "have"
                   (Term.haveDecl
@@ -1689,8 +831,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                          "["
                          [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top]
                          "]")]))))))
-                 [])
-                (group
+                 []
                  (Tactic.tacticHave_
                   "have"
                   (Term.haveDecl
@@ -1701,8 +842,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     (Term.app
                      `Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson
                      [(Term.app `IsNoetherian.noetherian [(Term.hole "_")]) `h₂ `h₁]))))
-                 [])
-                (group
+                 []
                  (Tactic.rwSeq
                   "rw"
                   []
@@ -1711,8 +851,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                    [(Tactic.rwRule [] `Submodule.bot_smul) "," (Tactic.rwRule [] `sup_bot_eq)]
                    "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-                 [])
-                (group
+                 []
                  (Tactic.rwSeq
                   "rw"
                   []
@@ -1723,64 +862,63 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     (Tactic.rwRule [] `eq_comm)]
                    "]")
                   [])
-                 [])
-                (group
+                 []
                  (Tactic.exact
                   "exact"
                   (Term.app
                    `le_sup_left.antisymm
-                   [(«term_<|_» `h₁.trans "<|" (Term.app `le_of_eq [`this]))]))
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Tactic.exact "exact" (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))
-                 [])])
-              []
-              (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Tactic.rwSeq
+                   [(«term_<|_» `h₁.trans "<|" (Term.app `le_of_eq [`this]))]))])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Tactic.exact
+                  "exact"
+                  (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
+               []
+               (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
+               []
+               (tactic___
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(Tactic.rwSeq
                   "rw"
                   []
                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `ValuationRing.iff_ideal_total)] "]")
                   [])
-                 [])
-                (group (Tactic.intro "intro" [`H]) [])
-                (group (Tactic.constructor "constructor") [])
-                (group (Tactic.intro "intro" [`I `J]) [])
-                (group
+                 []
+                 (Tactic.intro "intro" [`H])
+                 []
+                 (Tactic.constructor "constructor")
+                 []
+                 (Tactic.intro "intro" [`I `J])
+                 []
                  (Classical.«tacticBy_cases_:_»
                   "by_cases"
                   [`hI ":"]
                   («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
-                 [])
-                (group
-                 («tactic___;_»
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.subst "subst" [`hI]) [])
-                   (group (Mathlib.Tactic.tacticLeft "left") [])
-                   (group (Tactic.exact "exact" `bot_le) [])])
-                 [])
-                (group
+                  [(Tactic.subst "subst" [`hI])
+                   []
+                   (Mathlib.Tactic.tacticLeft "left")
+                   []
+                   (Tactic.exact "exact" `bot_le)])
+                 []
                  (Classical.«tacticBy_cases_:_»
                   "by_cases"
                   [`hJ ":"]
                   («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
-                 [])
-                (group
-                 («tactic___;_»
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.subst "subst" [`hJ]) [])
-                   (group (Mathlib.Tactic.tacticRight "right") [])
-                   (group (Tactic.exact "exact" `bot_le) [])])
-                 [])
-                (group
+                  [(Tactic.subst "subst" [`hJ])
+                   []
+                   (Mathlib.Tactic.tacticRight "right")
+                   []
+                   (Tactic.exact "exact" `bot_le)])
+                 []
                  (Std.Tactic.obtain
                   "obtain"
                   [(Std.Tactic.RCases.rcasesPatMed
@@ -1796,8 +934,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                       "⟩")])]
                   []
                   [":=" [(Term.app `H [`I `hI])]])
-                 [])
-                (group
+                 []
                  (Std.Tactic.obtain
                   "obtain"
                   [(Std.Tactic.RCases.rcasesPatMed
@@ -1813,26 +950,746 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                       "⟩")])]
                   []
                   [":=" [(Term.app `H [`J `hJ])]])
-                 [])
-                (group
+                 []
                  (Tactic.cases'
                   "cases'"
                   [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
                   []
                   ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
-                 [])
-                (group
-                 («tactic___;_»
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Mathlib.Tactic.tacticLeft "left") [])
-                   (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-                 [])
-                (group
-                 («tactic___;_»
+                  [(Mathlib.Tactic.tacticLeft "left")
+                   []
+                   (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
+                 []
+                 (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Mathlib.Tactic.tacticRight "right") [])
-                   (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-                 [])])
+                  [(Mathlib.Tactic.tacticRight "right")
+                   []
+                   (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
+               []
+               (Tactic.tfaeFinish "tfae_finish")])))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`ne_bot []]
+             []
+             ":="
+             (Term.app
+              `Ring.ne_bot_of_is_maximal_of_not_is_field
+              [(Term.app `maximal_ideal.is_maximal [`R]) `h]))))
+          []
+          (Mathlib.Tactic.tacticClassical_
+           "classical"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `finrank_eq_one_iff')] "]")
+               [])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.intro "intro" [])
+                []
+                (Std.Tactic.tacticHaveI_
+                 "haveI"
+                 (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `IsBezout.toGcdDomain [`R]))))
+                []
+                (Std.Tactic.tacticHaveI_
+                 "haveI"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   []
+                   [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
+                   ":="
+                   `ufm_of_gcd_of_wf_dvd_monoid)))
+                []
+                (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Std.Tactic.obtain
+                   "obtain"
+                   [(Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₁)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₂)])
+                         [])]
+                       "⟩")])]
+                   []
+                   [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
+                  []
+                  (Std.Tactic.obtain
+                   "obtain"
+                   [(Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `p)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₁)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₂)])
+                         [])]
+                       "⟩")])]
+                   []
+                   [":=" [(Term.app `WfDvdMonoid.exists_irreducible_factor [`hx₂ `hx₁])]])
+                  []
+                  (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩"))])
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Tactic.exact "exact" `ValuationRing.unique_irreducible)])])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.intro "intro" [`H])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.anonymousCtor
+                  "⟨"
+                  [`inferInstance
+                   ","
+                   (Term.proj
+                    (Term.app
+                     (Term.proj
+                      (Term.app `DiscreteValuationRing.iff_pid_with_one_nonzero_prime [`R])
+                      "."
+                      `mp)
+                     [`H])
+                    "."
+                    (fieldIdx "2"))]
+                  "⟩"))])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Std.Tactic.rintro
+                 "rintro"
+                 [(Std.Tactic.RCases.rintroPat.one
+                   (Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₁)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₂)])
+                      [])]
+                    "⟩"))]
+                 [])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.anonymousCtor
+                  "⟨"
+                  [`inferInstance
+                   ","
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`I `hI `hI']
+                     []
+                     "=>"
+                     (Term.subst
+                      (Term.app
+                       `ExistsUnique.unique
+                       [`h₂
+                        (Term.anonymousCtor "⟨" [`ne_bot "," `inferInstance] "⟩")
+                        (Term.anonymousCtor "⟨" [`hI "," `hI'] "⟩")])
+                      "▸"
+                      [(Term.app `maximal_ideal.is_maximal [`R])])))
+                   ","
+                   `h₁]
+                  "⟩"))])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.intro "intro" [`h])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Std.Tactic.rintro
+                 "rintro"
+                 [(Std.Tactic.RCases.rintroPat.one
+                   (Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                      [])]
+                    "⟩"))]
+                 [])
+                []
+                (Tactic.tacticHave_
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   []
+                   [(Term.typeSpec ":" («term_∈_» `x "∈" (Term.app `maximal_ideal [`R])))]
+                   ":="
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]") [])
+                       []
+                       (Tactic.exact
+                        "exact"
+                        (Term.app
+                         `Submodule.subset_span
+                         [(Term.app `Set.mem_singleton [`x])]))]))))))
+                []
+                (Tactic.tacticLet_
+                 "let"
+                 (Term.letDecl
+                  (Term.letIdDecl
+                   `x'
+                   []
+                   [(Term.typeSpec ":" (Term.app `maximal_ideal [`R]))]
+                   ":="
+                   (Term.anonymousCtor "⟨" [`x "," `this] "⟩"))))
+                []
+                (Mathlib.Tactic.«tacticUse_,,» "use" [(Term.app `Submodule.Quotient.mk [`x'])])
+                []
+                (Tactic.constructor "constructor")
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Tactic.intro "intro" [`e])
+                  []
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.Quotient.mk_eq_zero)] "]")
+                   [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
+                  []
+                  (Tactic.apply
+                   "apply"
+                   (Term.app
+                    `Ring.ne_bot_of_is_maximal_of_not_is_field
+                    [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
+                  []
+                  (Tactic.apply
+                   "apply"
+                   (Term.app
+                    `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
+                    [(Term.app `maximal_ideal [`R])]))
+                  []
+                  (tactic___
+                   (cdotTk (patternIgnore (token.«·» "·")))
+                   [(Tactic.exact
+                     "exact"
+                     (Term.anonymousCtor
+                      "⟨"
+                      [(«term{_}» "{" [`x] "}")
+                       ","
+                       (Term.subst
+                        (Term.proj (Term.app `Finset.coe_singleton [`x]) "." `symm)
+                        "▸"
+                        [`hx.symm])]
+                      "⟩"))])
+                  []
+                  (tactic___
+                   (cdotTk (patternIgnore (token.«·» "·")))
+                   [(Mathlib.Tactic.Conv.convLHS
+                     "conv_lhs"
+                     []
+                     []
+                     "=>"
+                     (Tactic.Conv.convSeq
+                      (Tactic.Conv.convSeq1Indented
+                       [(Tactic.Conv.convRw__
+                         "rw"
+                         []
+                         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]"))])))
+                    []
+                    (Tactic.rwSeq
+                     "rw"
+                     []
+                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
+                     [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
+                    []
+                    (Std.Tactic.tacticRwa__
+                     "rwa"
+                     (Tactic.rwRuleSeq
+                      "["
+                      [(Tactic.rwRule [] `Submodule.span_le)
+                       ","
+                       (Tactic.rwRule [] `Set.singleton_subset_iff)]
+                      "]")
+                     [])])
+                  []
+                  (tactic___
+                   (cdotTk (patternIgnore (token.«·» "·")))
+                   [(Tactic.rwSeq
+                     "rw"
+                     []
+                     (Tactic.rwRuleSeq
+                      "["
+                      [(Tactic.rwRule
+                        []
+                        (Term.app
+                         `LocalRing.jacobson_eq_maximal_ideal
+                         [(Term.typeAscription
+                           "("
+                           (Order.BoundedOrder.«term⊥» "⊥")
+                           ":"
+                           [(Term.app `Ideal [`R])]
+                           ")")
+                          `bot_ne_top]))]
+                      "]")
+                     [])
+                    []
+                    (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")]))])])
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Tactic.refine'
+                   "refine'"
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`w]
+                     []
+                     "=>"
+                     (Term.app
+                      (Term.app `Quotient.inductionOn' [`w])
+                      [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
+                  []
+                  (Std.Tactic.obtain
+                   "obtain"
+                   [(Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                         [])]
+                       "⟩")])]
+                   []
+                   [":=" [`y]])
+                  []
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `hx) "," (Tactic.rwRule [] `Submodule.mem_span_singleton)]
+                    "]")
+                   [(Tactic.location "at" (Tactic.locationHyp [`hy] []))])
+                  []
+                  (Std.Tactic.obtain
+                   "obtain"
+                   [(Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                         [])]
+                       "⟩")])]
+                   []
+                   [":=" [`hy]])
+                  []
+                  (Tactic.exact
+                   "exact"
+                   (Term.anonymousCtor
+                    "⟨"
+                    [(Term.app `Ideal.Quotient.mk [(Term.hole "_") `a]) "," `rfl]
+                    "⟩"))])])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Std.Tactic.rintro
+                 "rintro"
+                 [(Std.Tactic.RCases.rintroPat.one
+                   (Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx')])
+                      [])]
+                    "⟩"))]
+                 [])
+                []
+                (Tactic.induction "induction" [`x] ["using" `Quotient.inductionOn'] [] [])
+                []
+                (Mathlib.Tactic.«tacticUse_,,» "use" [`x])
+                []
+                (Tactic.apply "apply" `le_antisymm)
+                []
+                (Mathlib.Tactic.tacticSwap "swap")
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `Submodule.span_le)
+                     ","
+                     (Tactic.rwRule [] `Set.singleton_subset_iff)]
+                    "]")
+                   [])
+                  []
+                  (Tactic.exact "exact" `x.prop)])
+                []
+                (Tactic.tacticHave_
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   [`h₁ []]
+                   [(Term.typeSpec
+                     ":"
+                     («term_≤_»
+                      (Order.Basic.«term_⊔_»
+                       (Term.typeAscription
+                        "("
+                        (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
+                        ":"
+                        [(Term.app `Ideal [`R])]
+                        ")")
+                       " ⊔ "
+                       (Term.app `maximal_ideal [`R]))
+                      "≤"
+                      (Order.Basic.«term_⊔_»
+                       (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
+                       " ⊔ "
+                       (Algebra.Group.Defs.«term_•_»
+                        (Term.app `maximal_ideal [`R])
+                        " • "
+                        (Term.app `maximal_ideal [`R])))))]
+                   ":="
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.refine' "refine'" (Term.app `sup_le [`le_sup_left (Term.hole "_")]))
+                       []
+                       (Std.Tactic.rintro
+                        "rintro"
+                        [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `m))
+                         (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hm))]
+                        [])
+                       []
+                       (Std.Tactic.obtain
+                        "obtain"
+                        [(Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.tuple
+                            "⟨"
+                            [(Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed
+                               [(Std.Tactic.RCases.rcasesPat.one `c)])
+                              [])
+                             ","
+                             (Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed
+                               [(Std.Tactic.RCases.rcasesPat.one `hc)])
+                              [])]
+                            "⟩")])]
+                        []
+                        [":="
+                         [(Term.app
+                           `hx'
+                           [(Term.app
+                             `Submodule.Quotient.mk
+                             [(Term.anonymousCtor "⟨" [`m "," `hm] "⟩")])])]])
+                       []
+                       (Tactic.induction "induction" [`c] ["using" `Quotient.inductionOn'] [] [])
+                       []
+                       (Tactic.rwSeq
+                        "rw"
+                        []
+                        (Tactic.rwRuleSeq
+                         "["
+                         [(Tactic.rwRule
+                           [(patternIgnore (token.«← » "←"))]
+                           (Term.app `sub_sub_cancel [(«term_*_» `c "*" `x) `m]))]
+                         "]")
+                        [])
+                       []
+                       (Tactic.apply "apply" (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
+                       []
+                       (tactic___
+                        (cdotTk (patternIgnore (token.«·» "·")))
+                        [(Tactic.tacticInfer_instance "infer_instance")])
+                       []
+                       (tactic___
+                        (cdotTk (patternIgnore (token.«·» "·")))
+                        [(Tactic.refine'
+                          "refine'"
+                          (Term.app
+                           `Ideal.mem_sup_left
+                           [(Term.app
+                             `ideal.mem_span_singleton'.mpr
+                             [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))])
+                       []
+                       (tactic___
+                        (cdotTk (patternIgnore (token.«·» "·")))
+                        [(Tactic.tacticHave_
+                          "have"
+                          (Term.haveDecl
+                           (Term.haveIdDecl
+                            []
+                            []
+                            ":="
+                            (Term.app
+                             (Term.proj (Term.app `Submodule.Quotient.eq [(Term.hole "_")]) "." `mp)
+                             [`hc]))))
+                         []
+                         (Tactic.rwSeq
+                          "rw"
+                          []
+                          (Tactic.rwRuleSeq
+                           "["
+                           [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)]
+                           "]")
+                          [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+                         []
+                         (Tactic.exact "exact" (Term.app `Ideal.mem_sup_right [`this]))])]))))))
+                []
+                (Tactic.tacticHave_
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   [`h₂ []]
+                   [(Term.typeSpec
+                     ":"
+                     («term_≤_»
+                      (Term.app `maximal_ideal [`R])
+                      "≤"
+                      (Term.proj
+                       (Term.typeAscription
+                        "("
+                        (Order.BoundedOrder.«term⊥» "⊥")
+                        ":"
+                        [(Term.app `Ideal [`R])]
+                        ")")
+                       "."
+                       `jacobson)))]
+                   ":="
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.rwSeq
+                        "rw"
+                        []
+                        (Tactic.rwRuleSeq
+                         "["
+                         [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)]
+                         "]")
+                        [])
+                       []
+                       (Std.Tactic.exacts
+                        "exacts"
+                        "["
+                        [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top]
+                        "]")]))))))
+                []
+                (Tactic.tacticHave_
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   []
+                   []
+                   ":="
+                   (Term.app
+                    `Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson
+                    [(Term.app `IsNoetherian.noetherian [(Term.hole "_")]) `h₂ `h₁]))))
+                []
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] `Submodule.bot_smul) "," (Tactic.rwRule [] `sup_bot_eq)]
+                  "]")
+                 [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+                []
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sup_eq_left)
+                   ","
+                   (Tactic.rwRule [] `eq_comm)]
+                  "]")
+                 [])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.app
+                  `le_sup_left.antisymm
+                  [(«term_<|_» `h₁.trans "<|" (Term.app `le_of_eq [`this]))]))])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.exact
+                 "exact"
+                 (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
+              []
+              (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `ValuationRing.iff_ideal_total)] "]")
+                 [])
+                []
+                (Tactic.intro "intro" [`H])
+                []
+                (Tactic.constructor "constructor")
+                []
+                (Tactic.intro "intro" [`I `J])
+                []
+                (Classical.«tacticBy_cases_:_»
+                 "by_cases"
+                 [`hI ":"]
+                 («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Tactic.subst "subst" [`hI])
+                  []
+                  (Mathlib.Tactic.tacticLeft "left")
+                  []
+                  (Tactic.exact "exact" `bot_le)])
+                []
+                (Classical.«tacticBy_cases_:_»
+                 "by_cases"
+                 [`hJ ":"]
+                 («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Tactic.subst "subst" [`hJ])
+                  []
+                  (Mathlib.Tactic.tacticRight "right")
+                  []
+                  (Tactic.exact "exact" `bot_le)])
+                []
+                (Std.Tactic.obtain
+                 "obtain"
+                 [(Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.tuple
+                     "⟨"
+                     [(Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `n)])
+                       [])
+                      ","
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                       [])]
+                     "⟩")])]
+                 []
+                 [":=" [(Term.app `H [`I `hI])]])
+                []
+                (Std.Tactic.obtain
+                 "obtain"
+                 [(Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.tuple
+                     "⟨"
+                     [(Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `m)])
+                       [])
+                      ","
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                       [])]
+                     "⟩")])]
+                 []
+                 [":=" [(Term.app `H [`J `hJ])]])
+                []
+                (Tactic.cases'
+                 "cases'"
+                 [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
+                 []
+                 ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Mathlib.Tactic.tacticLeft "left")
+                  []
+                  (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
+                []
+                (tactic___
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(Mathlib.Tactic.tacticRight "right")
+                  []
+                  (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
               []
               (Tactic.tfaeFinish "tfae_finish")])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -1849,736 +1706,684 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" []) [])
-            (group (Tactic.tacticInfer_instance "infer_instance") [])])
+           [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" []) [])
-            (group
-             (Std.Tactic.tacticHaveI_
-              "haveI"
-              (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `IsBezout.toGcdDomain [`R]))))
-             [])
-            (group
-             (Std.Tactic.tacticHaveI_
-              "haveI"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                []
-                [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
-                ":="
-                `ufm_of_gcd_of_wf_dvd_monoid)))
-             [])
-            (group (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible) [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group
-                (Std.Tactic.obtain
-                 "obtain"
-                 [(Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₁)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₂)])
-                       [])]
-                     "⟩")])]
-                 []
-                 [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
-                [])
-               (group
-                (Std.Tactic.obtain
-                 "obtain"
-                 [(Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `p)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₁)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₂)])
-                       [])]
-                     "⟩")])]
-                 []
-                 [":=" [(Term.app `WfDvdMonoid.exists_irreducible_factor [`hx₂ `hx₁])]])
-                [])
-               (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩")) [])])
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.exact "exact" `ValuationRing.unique_irreducible) [])])
-             [])])
+           [(Tactic.intro "intro" [])
+            []
+            (Std.Tactic.tacticHaveI_
+             "haveI"
+             (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `IsBezout.toGcdDomain [`R]))))
+            []
+            (Std.Tactic.tacticHaveI_
+             "haveI"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
+               ":="
+               `ufm_of_gcd_of_wf_dvd_monoid)))
+            []
+            (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Std.Tactic.obtain
+               "obtain"
+               [(Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₁)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx₂)])
+                     [])]
+                   "⟩")])]
+               []
+               [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
+              []
+              (Std.Tactic.obtain
+               "obtain"
+               [(Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `p)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₁)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp₂)])
+                     [])]
+                   "⟩")])]
+               []
+               [":=" [(Term.app `WfDvdMonoid.exists_irreducible_factor [`hx₂ `hx₁])]])
+              []
+              (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩"))])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.exact "exact" `ValuationRing.unique_irreducible)])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`H]) [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.anonymousCtor
-               "⟨"
-               [`inferInstance
-                ","
-                (Term.proj
-                 (Term.app
-                  (Term.proj
-                   (Term.app `DiscreteValuationRing.iff_pid_with_one_nonzero_prime [`R])
-                   "."
-                   `mp)
-                  [`H])
-                 "."
-                 (fieldIdx "2"))]
-               "⟩"))
-             [])])
+           [(Tactic.intro "intro" [`H])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [`inferInstance
+               ","
+               (Term.proj
+                (Term.app
+                 (Term.proj
+                  (Term.app `DiscreteValuationRing.iff_pid_with_one_nonzero_prime [`R])
+                  "."
+                  `mp)
+                 [`H])
+                "."
+                (fieldIdx "2"))]
+              "⟩"))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₁)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₂)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₁)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₂)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.anonymousCtor
-               "⟨"
-               [`inferInstance
-                ","
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`I `hI `hI']
-                  []
-                  "=>"
-                  (Term.subst
-                   (Term.app
-                    `ExistsUnique.unique
-                    [`h₂
-                     (Term.anonymousCtor "⟨" [`ne_bot "," `inferInstance] "⟩")
-                     (Term.anonymousCtor "⟨" [`hI "," `hI'] "⟩")])
-                   "▸"
-                   [(Term.app `maximal_ideal.is_maximal [`R])])))
-                ","
-                `h₁]
-               "⟩"))
-             [])])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [`inferInstance
+               ","
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`I `hI `hI']
+                 []
+                 "=>"
+                 (Term.subst
+                  (Term.app
+                   `ExistsUnique.unique
+                   [`h₂
+                    (Term.anonymousCtor "⟨" [`ne_bot "," `inferInstance] "⟩")
+                    (Term.anonymousCtor "⟨" [`hI "," `hI'] "⟩")])
+                  "▸"
+                  [(Term.app `maximal_ideal.is_maximal [`R])])))
+               ","
+               `h₁]
+              "⟩"))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`h]) [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))
-             [])])
+           [(Tactic.intro "intro" [`h])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                []
-                [(Term.typeSpec ":" («term_∈_» `x "∈" (Term.app `maximal_ideal [`R])))]
-                ":="
-                (Term.byTactic
-                 "by"
-                 (Tactic.tacticSeq
-                  (Tactic.tacticSeq1Indented
-                   [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]") [])
-                    []
-                    (Tactic.exact
-                     "exact"
-                     (Term.app `Submodule.subset_span [(Term.app `Set.mem_singleton [`x])]))]))))))
-             [])
-            (group
-             (Tactic.tacticLet_
-              "let"
-              (Term.letDecl
-               (Term.letIdDecl
-                `x'
-                []
-                [(Term.typeSpec ":" (Term.app `maximal_ideal [`R]))]
-                ":="
-                (Term.anonymousCtor "⟨" [`x "," `this] "⟩"))))
-             [])
-            (group
-             (Mathlib.Tactic.«tacticUse_,,» "use" [(Term.app `Submodule.Quotient.mk [`x'])])
-             [])
-            (group (Tactic.constructor "constructor") [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.intro "intro" [`e]) [])
-               (group
-                (Tactic.rwSeq
-                 "rw"
-                 []
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.Quotient.mk_eq_zero)] "]")
-                 [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
-                [])
-               (group
-                (Tactic.apply
-                 "apply"
-                 (Term.app
-                  `Ring.ne_bot_of_is_maximal_of_not_is_field
-                  [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
-                [])
-               (group
-                (Tactic.apply
-                 "apply"
-                 (Term.app
-                  `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
-                  [(Term.app `maximal_ideal [`R])]))
-                [])
-               (group
-                («tactic___;_»
-                 (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec ":" («term_∈_» `x "∈" (Term.app `maximal_ideal [`R])))]
+               ":="
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]") [])
+                   []
                    (Tactic.exact
                     "exact"
-                    (Term.anonymousCtor
-                     "⟨"
-                     [(«term{_}» "{" [`x] "}")
-                      ","
-                      (Term.subst
-                       (Term.proj (Term.app `Finset.coe_singleton [`x]) "." `symm)
-                       "▸"
-                       [`hx.symm])]
-                     "⟩"))
-                   [])])
-                [])
-               (group
-                («tactic___;_»
-                 (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group
-                   (Mathlib.Tactic.Conv.convLHS
-                    "conv_lhs"
-                    []
-                    []
-                    "=>"
-                    (Tactic.Conv.convSeq
-                     (Tactic.Conv.convSeq1Indented
-                      [(Tactic.Conv.convRw__
-                        "rw"
-                        []
-                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]"))])))
-                   [])
-                  (group
-                   (Tactic.rwSeq
-                    "rw"
-                    []
-                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
-                    [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
-                   [])
-                  (group
-                   (Std.Tactic.tacticRwa__
-                    "rwa"
-                    (Tactic.rwRuleSeq
-                     "["
-                     [(Tactic.rwRule [] `Submodule.span_le)
-                      ","
-                      (Tactic.rwRule [] `Set.singleton_subset_iff)]
-                     "]")
-                    [])
-                   [])])
-                [])
-               (group
-                («tactic___;_»
-                 (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group
-                   (Tactic.rwSeq
-                    "rw"
-                    []
-                    (Tactic.rwRuleSeq
-                     "["
-                     [(Tactic.rwRule
-                       []
-                       (Term.app
-                        `LocalRing.jacobson_eq_maximal_ideal
-                        [(Term.typeAscription
-                          "("
-                          (Order.BoundedOrder.«term⊥» "⊥")
-                          ":"
-                          [(Term.app `Ideal [`R])]
-                          ")")
-                         `bot_ne_top]))]
-                     "]")
-                    [])
-                   [])
-                  (group (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")])) [])])
-                [])])
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group
-                (Tactic.refine'
-                 "refine'"
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`w]
-                   []
-                   "=>"
-                   (Term.app
-                    (Term.app `Quotient.inductionOn' [`w])
-                    [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
-                [])
-               (group
-                (Std.Tactic.obtain
-                 "obtain"
-                 [(Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                       [])]
-                     "⟩")])]
-                 []
-                 [":=" [`y]])
-                [])
-               (group
-                (Tactic.rwSeq
-                 "rw"
-                 []
-                 (Tactic.rwRuleSeq
-                  "["
-                  [(Tactic.rwRule [] `hx) "," (Tactic.rwRule [] `Submodule.mem_span_singleton)]
-                  "]")
-                 [(Tactic.location "at" (Tactic.locationHyp [`hy] []))])
-                [])
-               (group
-                (Std.Tactic.obtain
-                 "obtain"
-                 [(Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                       [])]
-                     "⟩")])]
-                 []
-                 [":=" [`hy]])
-                [])
-               (group
-                (Tactic.exact
+                    (Term.app `Submodule.subset_span [(Term.app `Set.mem_singleton [`x])]))]))))))
+            []
+            (Tactic.tacticLet_
+             "let"
+             (Term.letDecl
+              (Term.letIdDecl
+               `x'
+               []
+               [(Term.typeSpec ":" (Term.app `maximal_ideal [`R]))]
+               ":="
+               (Term.anonymousCtor "⟨" [`x "," `this] "⟩"))))
+            []
+            (Mathlib.Tactic.«tacticUse_,,» "use" [(Term.app `Submodule.Quotient.mk [`x'])])
+            []
+            (Tactic.constructor "constructor")
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.intro "intro" [`e])
+              []
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.Quotient.mk_eq_zero)] "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
+              []
+              (Tactic.apply
+               "apply"
+               (Term.app
+                `Ring.ne_bot_of_is_maximal_of_not_is_field
+                [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
+              []
+              (Tactic.apply
+               "apply"
+               (Term.app
+                `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
+                [(Term.app `maximal_ideal [`R])]))
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.exact
                  "exact"
                  (Term.anonymousCtor
                   "⟨"
-                  [(Term.app `Ideal.Quotient.mk [(Term.hole "_") `a]) "," `rfl]
-                  "⟩"))
-                [])])
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx')])
-                   [])]
-                 "⟩"))]
-              [])
-             [])
-            (group (Tactic.induction "induction" [`x] ["using" `Quotient.inductionOn'] [] []) [])
-            (group (Mathlib.Tactic.«tacticUse_,,» "use" [`x]) [])
-            (group (Tactic.apply "apply" `le_antisymm) [])
-            (group (Mathlib.Tactic.tacticSwap "swap") [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group
+                  [(«term{_}» "{" [`x] "}")
+                   ","
+                   (Term.subst
+                    (Term.proj (Term.app `Finset.coe_singleton [`x]) "." `symm)
+                    "▸"
+                    [`hx.symm])]
+                  "⟩"))])
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Mathlib.Tactic.Conv.convLHS
+                 "conv_lhs"
+                 []
+                 []
+                 "=>"
+                 (Tactic.Conv.convSeq
+                  (Tactic.Conv.convSeq1Indented
+                   [(Tactic.Conv.convRw__
+                     "rw"
+                     []
+                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hx)] "]"))])))
+                []
                 (Tactic.rwSeq
                  "rw"
                  []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
+                 [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
+                []
+                (Std.Tactic.tacticRwa__
+                 "rwa"
                  (Tactic.rwRuleSeq
                   "["
                   [(Tactic.rwRule [] `Submodule.span_le)
                    ","
                    (Tactic.rwRule [] `Set.singleton_subset_iff)]
                   "]")
+                 [])])
+              []
+              (tactic___
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule
+                    []
+                    (Term.app
+                     `LocalRing.jacobson_eq_maximal_ideal
+                     [(Term.typeAscription
+                       "("
+                       (Order.BoundedOrder.«term⊥» "⊥")
+                       ":"
+                       [(Term.app `Ideal [`R])]
+                       ")")
+                      `bot_ne_top]))]
+                  "]")
                  [])
-                [])
-               (group (Tactic.exact "exact" `x.prop) [])])
+                []
+                (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")]))])])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.refine'
+               "refine'"
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`w]
+                 []
+                 "=>"
+                 (Term.app
+                  (Term.app `Quotient.inductionOn' [`w])
+                  [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
+              []
+              (Std.Tactic.obtain
+               "obtain"
+               [(Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                     [])]
+                   "⟩")])]
+               []
+               [":=" [`y]])
+              []
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [] `hx) "," (Tactic.rwRule [] `Submodule.mem_span_singleton)]
+                "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`hy] []))])
+              []
+              (Std.Tactic.obtain
+               "obtain"
+               [(Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                     [])]
+                   "⟩")])]
+               []
+               [":=" [`hy]])
+              []
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app `Ideal.Quotient.mk [(Term.hole "_") `a]) "," `rfl]
+                "⟩"))])])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx')])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                [`h₁ []]
-                [(Term.typeSpec
-                  ":"
-                  («term_≤_»
-                   (Order.Basic.«term_⊔_»
-                    (Term.typeAscription
-                     "("
-                     (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
-                     ":"
-                     [(Term.app `Ideal [`R])]
-                     ")")
-                    " ⊔ "
-                    (Term.app `maximal_ideal [`R]))
-                   "≤"
-                   (Order.Basic.«term_⊔_»
+            []
+            (Tactic.induction "induction" [`x] ["using" `Quotient.inductionOn'] [] [])
+            []
+            (Mathlib.Tactic.«tacticUse_,,» "use" [`x])
+            []
+            (Tactic.apply "apply" `le_antisymm)
+            []
+            (Mathlib.Tactic.tacticSwap "swap")
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [] `Submodule.span_le)
+                 ","
+                 (Tactic.rwRule [] `Set.singleton_subset_iff)]
+                "]")
+               [])
+              []
+              (Tactic.exact "exact" `x.prop)])
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               [`h₁ []]
+               [(Term.typeSpec
+                 ":"
+                 («term_≤_»
+                  (Order.Basic.«term_⊔_»
+                   (Term.typeAscription
+                    "("
                     (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
-                    " ⊔ "
-                    (Algebra.Group.Defs.«term_•_»
-                     (Term.app `maximal_ideal [`R])
-                     " • "
-                     (Term.app `maximal_ideal [`R])))))]
-                ":="
-                (Term.byTactic
-                 "by"
-                 (Tactic.tacticSeq
-                  (Tactic.tacticSeq1Indented
-                   [(Tactic.refine' "refine'" (Term.app `sup_le [`le_sup_left (Term.hole "_")]))
+                    ":"
+                    [(Term.app `Ideal [`R])]
+                    ")")
+                   " ⊔ "
+                   (Term.app `maximal_ideal [`R]))
+                  "≤"
+                  (Order.Basic.«term_⊔_»
+                   (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
+                   " ⊔ "
+                   (Algebra.Group.Defs.«term_•_»
+                    (Term.app `maximal_ideal [`R])
+                    " • "
+                    (Term.app `maximal_ideal [`R])))))]
+               ":="
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.refine' "refine'" (Term.app `sup_le [`le_sup_left (Term.hole "_")]))
+                   []
+                   (Std.Tactic.rintro
+                    "rintro"
+                    [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `m))
+                     (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hm))]
+                    [])
+                   []
+                   (Std.Tactic.obtain
+                    "obtain"
+                    [(Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `c)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hc)])
+                          [])]
+                        "⟩")])]
                     []
-                    (Std.Tactic.rintro
-                     "rintro"
-                     [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `m))
-                      (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hm))]
-                     [])
+                    [":="
+                     [(Term.app
+                       `hx'
+                       [(Term.app
+                         `Submodule.Quotient.mk
+                         [(Term.anonymousCtor "⟨" [`m "," `hm] "⟩")])])]])
+                   []
+                   (Tactic.induction "induction" [`c] ["using" `Quotient.inductionOn'] [] [])
+                   []
+                   (Tactic.rwSeq
+                    "rw"
                     []
-                    (Std.Tactic.obtain
-                     "obtain"
-                     [(Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.tuple
-                         "⟨"
-                         [(Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `c)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hc)])
-                           [])]
-                         "⟩")])]
-                     []
-                     [":="
-                      [(Term.app
-                        `hx'
-                        [(Term.app
-                          `Submodule.Quotient.mk
-                          [(Term.anonymousCtor "⟨" [`m "," `hm] "⟩")])])]])
-                    []
-                    (Tactic.induction "induction" [`c] ["using" `Quotient.inductionOn'] [] [])
-                    []
-                    (Tactic.rwSeq
-                     "rw"
-                     []
-                     (Tactic.rwRuleSeq
-                      "["
-                      [(Tactic.rwRule
-                        [(patternIgnore (token.«← » "←"))]
-                        (Term.app `sub_sub_cancel [(«term_*_» `c "*" `x) `m]))]
-                      "]")
-                     [])
-                    []
-                    (Tactic.apply "apply" (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
-                    []
-                    («tactic___;_»
-                     (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group (Tactic.tacticInfer_instance "infer_instance") [])])
-                    []
-                    («tactic___;_»
-                     (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Tactic.refine'
-                        "refine'"
-                        (Term.app
-                         `Ideal.mem_sup_left
-                         [(Term.app
-                           `ideal.mem_span_singleton'.mpr
-                           [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))
-                       [])])
-                    []
-                    («tactic___;_»
-                     (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Tactic.tacticHave_
-                        "have"
-                        (Term.haveDecl
-                         (Term.haveIdDecl
-                          []
-                          []
-                          ":="
-                          (Term.app
-                           (Term.proj (Term.app `Submodule.Quotient.eq [(Term.hole "_")]) "." `mp)
-                           [`hc]))))
-                       [])
-                      (group
-                       (Tactic.rwSeq
-                        "rw"
-                        []
-                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
-                        [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-                       [])
-                      (group
-                       (Tactic.exact "exact" (Term.app `Ideal.mem_sup_right [`this]))
-                       [])])]))))))
-             [])
-            (group
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                [`h₂ []]
-                [(Term.typeSpec
-                  ":"
-                  («term_≤_»
-                   (Term.app `maximal_ideal [`R])
-                   "≤"
-                   (Term.proj
-                    (Term.typeAscription
-                     "("
-                     (Order.BoundedOrder.«term⊥» "⊥")
-                     ":"
-                     [(Term.app `Ideal [`R])]
-                     ")")
-                    "."
-                    `jacobson)))]
-                ":="
-                (Term.byTactic
-                 "by"
-                 (Tactic.tacticSeq
-                  (Tactic.tacticSeq1Indented
-                   [(Tactic.rwSeq
-                     "rw"
-                     []
-                     (Tactic.rwRuleSeq
-                      "["
-                      [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)]
-                      "]")
-                     [])
-                    []
-                    (Std.Tactic.exacts
-                     "exacts"
+                    (Tactic.rwRuleSeq
                      "["
-                     [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top]
-                     "]")]))))))
+                     [(Tactic.rwRule
+                       [(patternIgnore (token.«← » "←"))]
+                       (Term.app `sub_sub_cancel [(«term_*_» `c "*" `x) `m]))]
+                     "]")
+                    [])
+                   []
+                   (Tactic.apply "apply" (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
+                   []
+                   (tactic___
+                    (cdotTk (patternIgnore (token.«·» "·")))
+                    [(Tactic.tacticInfer_instance "infer_instance")])
+                   []
+                   (tactic___
+                    (cdotTk (patternIgnore (token.«·» "·")))
+                    [(Tactic.refine'
+                      "refine'"
+                      (Term.app
+                       `Ideal.mem_sup_left
+                       [(Term.app
+                         `ideal.mem_span_singleton'.mpr
+                         [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))])
+                   []
+                   (tactic___
+                    (cdotTk (patternIgnore (token.«·» "·")))
+                    [(Tactic.tacticHave_
+                      "have"
+                      (Term.haveDecl
+                       (Term.haveIdDecl
+                        []
+                        []
+                        ":="
+                        (Term.app
+                         (Term.proj (Term.app `Submodule.Quotient.eq [(Term.hole "_")]) "." `mp)
+                         [`hc]))))
+                     []
+                     (Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Submodule.mem_smul_top_iff)] "]")
+                      [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+                     []
+                     (Tactic.exact "exact" (Term.app `Ideal.mem_sup_right [`this]))])]))))))
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               [`h₂ []]
+               [(Term.typeSpec
+                 ":"
+                 («term_≤_»
+                  (Term.app `maximal_ideal [`R])
+                  "≤"
+                  (Term.proj
+                   (Term.typeAscription
+                    "("
+                    (Order.BoundedOrder.«term⊥» "⊥")
+                    ":"
+                    [(Term.app `Ideal [`R])]
+                    ")")
+                   "."
+                   `jacobson)))]
+               ":="
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)]
+                     "]")
+                    [])
+                   []
+                   (Std.Tactic.exacts
+                    "exacts"
+                    "["
+                    [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top]
+                    "]")]))))))
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               []
+               ":="
+               (Term.app
+                `Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson
+                [(Term.app `IsNoetherian.noetherian [(Term.hole "_")]) `h₂ `h₁]))))
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `Submodule.bot_smul) "," (Tactic.rwRule [] `sup_bot_eq)]
+              "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sup_eq_left)
+               ","
+               (Tactic.rwRule [] `eq_comm)]
+              "]")
              [])
-            (group
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                []
-                []
-                ":="
-                (Term.app
-                 `Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson
-                 [(Term.app `IsNoetherian.noetherian [(Term.hole "_")]) `h₂ `h₁]))))
-             [])
-            (group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [] `Submodule.bot_smul) "," (Tactic.rwRule [] `sup_bot_eq)]
-               "]")
-              [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-             [])
-            (group
-             (Tactic.rwSeq
-              "rw"
-              []
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sup_eq_left)
-                ","
-                (Tactic.rwRule [] `eq_comm)]
-               "]")
-              [])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.app
-               `le_sup_left.antisymm
-               [(«term_<|_» `h₁.trans "<|" (Term.app `le_of_eq [`this]))]))
-             [])])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              `le_sup_left.antisymm
+              [(«term_<|_» `h₁.trans "<|" (Term.app `le_of_eq [`this]))]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact "exact" (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))
-             [])])
+           [(Tactic.exact "exact" (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.rwSeq
-              "rw"
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `ValuationRing.iff_ideal_total)] "]")
+             [])
+            []
+            (Tactic.intro "intro" [`H])
+            []
+            (Tactic.constructor "constructor")
+            []
+            (Tactic.intro "intro" [`I `J])
+            []
+            (Classical.«tacticBy_cases_:_»
+             "by_cases"
+             [`hI ":"]
+             («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.subst "subst" [`hI])
               []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `ValuationRing.iff_ideal_total)] "]")
-              [])
-             [])
-            (group (Tactic.intro "intro" [`H]) [])
-            (group (Tactic.constructor "constructor") [])
-            (group (Tactic.intro "intro" [`I `J]) [])
-            (group
-             (Classical.«tacticBy_cases_:_»
-              "by_cases"
-              [`hI ":"]
-              («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.subst "subst" [`hI]) [])
-               (group (Mathlib.Tactic.tacticLeft "left") [])
-               (group (Tactic.exact "exact" `bot_le) [])])
-             [])
-            (group
-             (Classical.«tacticBy_cases_:_»
-              "by_cases"
-              [`hJ ":"]
-              («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.subst "subst" [`hJ]) [])
-               (group (Mathlib.Tactic.tacticRight "right") [])
-               (group (Tactic.exact "exact" `bot_le) [])])
-             [])
-            (group
-             (Std.Tactic.obtain
-              "obtain"
-              [(Std.Tactic.RCases.rcasesPatMed
-                [(Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `n)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                    [])]
-                  "⟩")])]
+              (Mathlib.Tactic.tacticLeft "left")
               []
-              [":=" [(Term.app `H [`I `hI])]])
-             [])
-            (group
-             (Std.Tactic.obtain
-              "obtain"
-              [(Std.Tactic.RCases.rcasesPatMed
-                [(Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `m)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                    [])]
-                  "⟩")])]
+              (Tactic.exact "exact" `bot_le)])
+            []
+            (Classical.«tacticBy_cases_:_»
+             "by_cases"
+             [`hJ ":"]
+             («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Tactic.subst "subst" [`hJ])
               []
-              [":=" [(Term.app `H [`J `hJ])]])
-             [])
-            (group
-             (Tactic.cases'
-              "cases'"
-              [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
+              (Mathlib.Tactic.tacticRight "right")
               []
-              ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Mathlib.Tactic.tacticLeft "left") [])
-               (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Mathlib.Tactic.tacticRight "right") [])
-               (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-             [])])
+              (Tactic.exact "exact" `bot_le)])
+            []
+            (Std.Tactic.obtain
+             "obtain"
+             [(Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `n)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                   [])]
+                 "⟩")])]
+             []
+             [":=" [(Term.app `H [`I `hI])]])
+            []
+            (Std.Tactic.obtain
+             "obtain"
+             [(Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `m)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                   [])]
+                 "⟩")])]
+             []
+             [":=" [(Term.app `H [`J `hJ])]])
+            []
+            (Tactic.cases'
+             "cases'"
+             [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
+             []
+             ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Mathlib.Tactic.tacticLeft "left")
+              []
+              (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Mathlib.Tactic.tacticRight "right")
+              []
+              (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -2586,102 +2391,101 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.rwSeq
-          "rw"
+       [(Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `ValuationRing.iff_ideal_total)] "]")
+         [])
+        []
+        (Tactic.intro "intro" [`H])
+        []
+        (Tactic.constructor "constructor")
+        []
+        (Tactic.intro "intro" [`I `J])
+        []
+        (Classical.«tacticBy_cases_:_»
+         "by_cases"
+         [`hI ":"]
+         («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
+        []
+        (tactic___
+         (cdotTk (patternIgnore (token.«·» "·")))
+         [(Tactic.subst "subst" [`hI])
           []
-          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `ValuationRing.iff_ideal_total)] "]")
-          [])
-         [])
-        (group (Tactic.intro "intro" [`H]) [])
-        (group (Tactic.constructor "constructor") [])
-        (group (Tactic.intro "intro" [`I `J]) [])
-        (group
-         (Classical.«tacticBy_cases_:_»
-          "by_cases"
-          [`hI ":"]
-          («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
-         [])
-        (group
-         («tactic___;_»
-          (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Tactic.subst "subst" [`hI]) [])
-           (group (Mathlib.Tactic.tacticLeft "left") [])
-           (group (Tactic.exact "exact" `bot_le) [])])
-         [])
-        (group
-         (Classical.«tacticBy_cases_:_»
-          "by_cases"
-          [`hJ ":"]
-          («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
-         [])
-        (group
-         («tactic___;_»
-          (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Tactic.subst "subst" [`hJ]) [])
-           (group (Mathlib.Tactic.tacticRight "right") [])
-           (group (Tactic.exact "exact" `bot_le) [])])
-         [])
-        (group
-         (Std.Tactic.obtain
-          "obtain"
-          [(Std.Tactic.RCases.rcasesPatMed
-            [(Std.Tactic.RCases.rcasesPat.tuple
-              "⟨"
-              [(Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `n)])
-                [])
-               ","
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                [])]
-              "⟩")])]
+          (Mathlib.Tactic.tacticLeft "left")
           []
-          [":=" [(Term.app `H [`I `hI])]])
-         [])
-        (group
-         (Std.Tactic.obtain
-          "obtain"
-          [(Std.Tactic.RCases.rcasesPatMed
-            [(Std.Tactic.RCases.rcasesPat.tuple
-              "⟨"
-              [(Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `m)])
-                [])
-               ","
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                [])]
-              "⟩")])]
+          (Tactic.exact "exact" `bot_le)])
+        []
+        (Classical.«tacticBy_cases_:_»
+         "by_cases"
+         [`hJ ":"]
+         («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
+        []
+        (tactic___
+         (cdotTk (patternIgnore (token.«·» "·")))
+         [(Tactic.subst "subst" [`hJ])
           []
-          [":=" [(Term.app `H [`J `hJ])]])
-         [])
-        (group
-         (Tactic.cases'
-          "cases'"
-          [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
+          (Mathlib.Tactic.tacticRight "right")
           []
-          ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
-         [])
-        (group
-         («tactic___;_»
-          (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Mathlib.Tactic.tacticLeft "left") [])
-           (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-         [])
-        (group
-         («tactic___;_»
-          (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Mathlib.Tactic.tacticRight "right") [])
-           (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
-         [])])
+          (Tactic.exact "exact" `bot_le)])
+        []
+        (Std.Tactic.obtain
+         "obtain"
+         [(Std.Tactic.RCases.rcasesPatMed
+           [(Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `n)])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+               [])]
+             "⟩")])]
+         []
+         [":=" [(Term.app `H [`I `hI])]])
+        []
+        (Std.Tactic.obtain
+         "obtain"
+         [(Std.Tactic.RCases.rcasesPatMed
+           [(Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `m)])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+               [])]
+             "⟩")])]
+         []
+         [":=" [(Term.app `H [`J `hJ])]])
+        []
+        (Tactic.cases'
+         "cases'"
+         [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
+         []
+         ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
+        []
+        (tactic___
+         (cdotTk (patternIgnore (token.«·» "·")))
+         [(Mathlib.Tactic.tacticLeft "left")
+          []
+          (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
+        []
+        (tactic___
+         (cdotTk (patternIgnore (token.«·» "·")))
+         [(Mathlib.Tactic.tacticRight "right")
+          []
+          (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Mathlib.Tactic.tacticRight "right") [])
-        (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
+       [(Mathlib.Tactic.tacticRight "right")
+        []
+        (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2698,15 +2502,16 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Mathlib.Tactic.tacticRight "right")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      («tactic___;_»
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Mathlib.Tactic.tacticLeft "left") [])
-        (group (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h'])) [])])
+       [(Mathlib.Tactic.tacticLeft "left")
+        []
+        (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2723,11 +2528,11 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Mathlib.Tactic.tacticLeft "left")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.cases'
        "cases'"
        [(Tactic.casesTarget [] (Term.app `le_total [`m `n]))]
@@ -2753,7 +2558,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.obtain
        "obtain"
        [(Std.Tactic.RCases.rcasesPatMed
@@ -2789,7 +2594,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.obtain
        "obtain"
        [(Std.Tactic.RCases.rcasesPatMed
@@ -2825,12 +2630,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      («tactic___;_»
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.subst "subst" [`hJ]) [])
-        (group (Mathlib.Tactic.tacticRight "right") [])
-        (group (Tactic.exact "exact" `bot_le) [])])
+       [(Tactic.subst "subst" [`hJ])
+        []
+        (Mathlib.Tactic.tacticRight "right")
+        []
+        (Tactic.exact "exact" `bot_le)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2838,10 +2645,10 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Mathlib.Tactic.tacticRight "right")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.subst "subst" [`hJ])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hJ
@@ -2849,7 +2656,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Classical.«tacticBy_cases_:_»
        "by_cases"
        [`hJ ":"]
@@ -2865,12 +2672,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      («tactic___;_»
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.subst "subst" [`hI]) [])
-        (group (Mathlib.Tactic.tacticLeft "left") [])
-        (group (Tactic.exact "exact" `bot_le) [])])
+       [(Tactic.subst "subst" [`hI])
+        []
+        (Mathlib.Tactic.tacticLeft "left")
+        []
+        (Tactic.exact "exact" `bot_le)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2878,10 +2687,10 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Mathlib.Tactic.tacticLeft "left")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.subst "subst" [`hI])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hI
@@ -2889,7 +2698,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Classical.«tacticBy_cases_:_»
        "by_cases"
        [`hI ":"]
@@ -2905,7 +2714,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.intro "intro" [`I `J])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `J
@@ -2916,17 +2725,17 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.constructor "constructor")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.intro "intro" [`H])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []

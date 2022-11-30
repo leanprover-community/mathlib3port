@@ -107,7 +107,7 @@ theorem right_inverse_trop : Function.RightInverse (trop : R → Tropical R) unt
 
 /-- Reinterpret `x : R` as an element of `tropical R`.
 See `tropical.trop_order_iso` for the order-preserving equivalence. -/
-def tropEquiv : R ≃ Tropical R where
+def tropEquiv : R ≃ Tropical R where 
   toFun := trop
   invFun := untrop
   left_inv := untrop_trop
@@ -214,19 +214,19 @@ theorem untrop_monotone [Preorder R] : Monotone (untrop : Tropical R → R) := f
 instance [PartialOrder R] : PartialOrder (Tropical R) :=
   { Tropical.preorder with le_antisymm := fun _ _ h h' => untrop_injective (le_antisymm h h') }
 
-instance [HasTop R] : Zero (Tropical R) :=
+instance [Top R] : Zero (Tropical R) :=
   ⟨trop ⊤⟩
 
-instance [HasTop R] : HasTop (Tropical R) :=
+instance [Top R] : Top (Tropical R) :=
   ⟨0⟩
 
 @[simp]
-theorem untrop_zero [HasTop R] : untrop (0 : Tropical R) = ⊤ :=
+theorem untrop_zero [Top R] : untrop (0 : Tropical R) = ⊤ :=
   rfl
 #align tropical.untrop_zero Tropical.untrop_zero
 
 @[simp]
-theorem trop_top [HasTop R] : trop (⊤ : R) = 0 :=
+theorem trop_top [Top R] : trop (⊤ : R) = 0 :=
   rfl
 #align tropical.trop_top Tropical.trop_top
 
@@ -254,7 +254,8 @@ variable [LinearOrder R]
 instance : Add (Tropical R) :=
   ⟨fun x y => trop (min (untrop x) (untrop y))⟩
 
-instance : AddCommSemigroup (Tropical R) where
+instance : AddCommSemigroup (Tropical
+        R) where 
   add := (· + ·)
   add_assoc _ _ _ := untrop_injective (min_assoc _ _ _)
   add_comm _ _ := untrop_injective (min_comm _ _)
@@ -282,12 +283,12 @@ instance : LinearOrder (Tropical R) :=
   { Tropical.partialOrder with le_total := fun a b => le_total (untrop a) (untrop b),
     decidableLe := Tropical.decidableLe, decidableLt := Tropical.decidableLt,
     DecidableEq := Tropical.decidableEq, max := fun a b => trop (max (untrop a) (untrop b)),
-    max_def := by
+    max_def := by 
       ext (x y)
       rw [maxDefault, max_def, apply_ite trop, trop_untrop, trop_untrop,
         if_congr untrop_le_iff rfl rfl],
     min := (· + ·),
-    min_def := by
+    min_def := by 
       ext (x y)
       rw [trop_add_def, minDefault, min_def, apply_ite trop, trop_untrop, trop_untrop,
         if_congr untrop_le_iff rfl rfl] }
@@ -359,13 +360,9 @@ theorem add_eq_zero_iff {a b : Tropical (WithTop R)} : a + b = 0 ↔ a = 0 ∧ b
   constructor
   · rintro (⟨rfl, h⟩ | ⟨rfl, h⟩)
     · exact ⟨rfl, le_antisymm (le_zero _) h⟩
-      
     · exact ⟨le_antisymm (le_zero _) h, rfl⟩
-      
-    
   · rintro ⟨rfl, rfl⟩
     simp
-    
 #align tropical.add_eq_zero_iff Tropical.add_eq_zero_iff
 
 instance [OrderTop R] : AddCommMonoid (Tropical R) :=
@@ -432,7 +429,8 @@ theorem untrop_div [Sub R] (x y : Tropical R) : untrop (x / y) = untrop x - untr
   rfl
 #align tropical.untrop_div Tropical.untrop_div
 
-instance [AddSemigroup R] : Semigroup (Tropical R) where
+instance [AddSemigroup R] :
+    Semigroup (Tropical R) where 
   mul := (· * ·)
   mul_assoc _ _ _ := untrop_injective (add_assoc _ _ _)
 
@@ -452,7 +450,8 @@ theorem trop_smul {α : Type _} [HasSmul α R] (x : R) (n : α) : trop (n • x)
   rfl
 #align tropical.trop_smul Tropical.trop_smul
 
-instance [AddZeroClass R] : MulOneClass (Tropical R) where
+instance [AddZeroClass R] : MulOneClass
+      (Tropical R) where 
   one := 1
   mul := (· * ·)
   one_mul _ := untrop_injective <| zero_add _
@@ -507,17 +506,13 @@ instance covariant_swap_mul [LE R] [Add R] [CovariantClass R R (Function.swap (�
 #align tropical.covariant_swap_mul Tropical.covariant_swap_mul
 
 instance covariant_add [LinearOrder R] : CovariantClass (Tropical R) (Tropical R) (· + ·) (· ≤ ·) :=
-  ⟨fun x y z h => by
+  ⟨fun x y z h => by 
     cases' le_total x y with hx hy
     · rw [add_eq_left hx, add_eq_left (hx.trans h)]
-      
     · rw [add_eq_right hy]
       cases' le_total x z with hx hx
       · rwa [add_eq_left hx]
-        
-      · rwa [add_eq_right hx]
-        
-      ⟩
+      · rwa [add_eq_right hx]⟩
 #align tropical.covariant_add Tropical.covariant_add
 
 instance covariant_mul_lt [LT R] [Add R] [CovariantClass R R (· + ·) (· < ·)] :
@@ -532,7 +527,8 @@ instance covariant_swap_mul_lt [Preorder R] [Add R]
 #align tropical.covariant_swap_mul_lt Tropical.covariant_swap_mul_lt
 
 instance [LinearOrder R] [Add R] [CovariantClass R R (· + ·) (· ≤ ·)]
-    [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] : Distrib (Tropical R) where
+    [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] :
+    Distrib (Tropical R) where 
   mul := (· * ·)
   add := (· + ·)
   left_distrib _ _ _ := untrop_injective (min_add_add_left _ _ _).symm
@@ -544,9 +540,7 @@ theorem add_pow [LinearOrder R] [AddMonoid R] [CovariantClass R R (· + ·) (· 
     (x + y) ^ n = x ^ n + y ^ n := by
   cases' le_total x y with h h
   · rw [add_eq_left h, add_eq_left (pow_le_pow_of_le_left' h _)]
-    
   · rw [add_eq_right h, add_eq_right (pow_le_pow_of_le_left' h _)]
-    
 #align tropical.add_pow Tropical.add_pow
 
 end Distrib
@@ -564,9 +558,7 @@ instance : CommSemiring (Tropical R) :=
 theorem succ_nsmul {R} [LinearOrder R] [OrderTop R] (x : Tropical R) (n : ℕ) : (n + 1) • x = x := by
   induction' n with n IH
   · simp
-    
   · rw [add_nsmul, IH, one_nsmul, add_self]
-    
 #align tropical.succ_nsmul Tropical.succ_nsmul
 
 -- TODO: find/create the right classes to make this hold (for enat, ennreal, etc)

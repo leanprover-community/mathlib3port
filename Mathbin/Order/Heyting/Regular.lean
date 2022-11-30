@@ -55,18 +55,18 @@ section HeytingAlgebra
 
 variable [HeytingAlgebra α] {a b : α}
 
-theorem is_regular_bot : IsRegular (⊥ : α) := by rw [is_regular, compl_bot, compl_top]
+theorem is_regular_bot : IsRegular (⊥ : α) := by rw [IsRegular, compl_bot, compl_top]
 #align heyting.is_regular_bot Heyting.is_regular_bot
 
-theorem is_regular_top : IsRegular (⊤ : α) := by rw [is_regular, compl_top, compl_bot]
+theorem is_regular_top : IsRegular (⊤ : α) := by rw [IsRegular, compl_top, compl_bot]
 #align heyting.is_regular_top Heyting.is_regular_top
 
 theorem IsRegular.inf (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⊓ b) := by
-  rw [is_regular, compl_compl_inf_distrib, ha.eq, hb.eq]
+  rw [IsRegular, compl_compl_inf_distrib, ha.eq, hb.eq]
 #align heyting.is_regular.inf Heyting.IsRegular.inf
 
 theorem IsRegular.himp (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⇨ b) := by
-  rw [is_regular, compl_compl_himp_distrib, ha.eq, hb.eq]
+  rw [IsRegular, compl_compl_himp_distrib, ha.eq, hb.eq]
 #align heyting.is_regular.himp Heyting.IsRegular.himp
 
 theorem is_regular_compl (a : α) : IsRegular (aᶜ) :=
@@ -117,10 +117,10 @@ theorem coe_inj {a b : Regular α} : (a : α) = b ↔ a = b :=
   Subtype.coe_inj
 #align heyting.regular.coe_inj Heyting.Regular.coe_inj
 
-instance : HasTop (Regular α) :=
+instance : Top (Regular α) :=
   ⟨⟨⊤, is_regular_top⟩⟩
 
-instance : HasBot (Regular α) :=
+instance : Bot (Regular α) :=
   ⟨⟨⊥, is_regular_bot⟩⟩
 
 instance : HasInf (Regular α) :=
@@ -193,7 +193,10 @@ theorem to_regular_coe (a : Regular α) : toRegular (a : α) = a :=
 #align heyting.regular.to_regular_coe Heyting.Regular.to_regular_coe
 
 /-- The Galois insertion between `regular.to_regular` and `coe`. -/
-def gi : GaloisInsertion toRegular (coe : Regular α → α) where
+def gi :
+    GaloisInsertion toRegular
+      (coe : Regular α →
+          α) where 
   choice a ha := ⟨a, ha.antisymm le_compl_compl⟩
   gc a b :=
     coe_le_coe.symm.trans <|
@@ -213,18 +216,18 @@ theorem coe_sup (a b : Regular α) : (↑(a ⊔ b) : α) = (a ⊔ b)ᶜᶜ :=
 instance : BooleanAlgebra (Regular α) :=
   { Regular.lattice, Regular.boundedOrder, Regular.hasHimp, Regular.hasCompl with
     le_sup_inf := fun a b c =>
-      coe_le_coe.1 <| by
+      coe_le_coe.1 <| by 
         dsimp
         rw [sup_inf_left, compl_compl_inf_distrib],
     inf_compl_le_bot := fun a => coe_le_coe.1 <| disjoint_iff_inf_le.1 disjoint_compl_right,
     top_le_sup_compl := fun a =>
-      coe_le_coe.1 <| by
+      coe_le_coe.1 <| by 
         dsimp
         rw [compl_sup, inf_compl_eq_bot, compl_bot]
         rfl,
     himp_eq := fun a b =>
       coe_injective
-        (by
+        (by 
           dsimp
           rw [compl_sup, a.prop.eq]
           refine' eq_of_forall_le_iff fun c => le_himp_iff.trans _

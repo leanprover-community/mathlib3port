@@ -57,16 +57,18 @@ theorem coe_coe (φ : characterSpace 𝕜 A) : ⇑(φ : WeakDual 𝕜 A) = φ :=
 #align weak_dual.character_space.coe_coe WeakDual.characterSpace.coe_coe
 
 /-- Elements of the character space are continuous linear maps. -/
-instance : ContinuousLinearMapClass (characterSpace 𝕜 A) 𝕜 A 𝕜 where
+instance :
+    ContinuousLinearMapClass (characterSpace 𝕜 A) 𝕜 A
+      𝕜 where 
   coe φ := (φ : A → 𝕜)
-  coe_injective' φ ψ h := by
+  coe_injective' φ ψ h := by 
     ext
     exact congr_fun h x
   map_smulₛₗ φ := (φ : WeakDual 𝕜 A).map_smul
   map_add φ := (φ : WeakDual 𝕜 A).map_add
   map_continuous φ := (φ : WeakDual 𝕜 A).cont
 
-@[ext.1]
+@[ext]
 theorem ext {φ ψ : characterSpace 𝕜 A} (h : ∀ x, φ x = ψ x) : φ = ψ :=
   FunLike.ext _ _ h
 #align weak_dual.character_space.ext WeakDual.characterSpace.ext
@@ -87,7 +89,8 @@ instance : NonUnitalAlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     map_zero := fun φ => map_zero φ, map_mul := fun φ => φ.Prop.2 }
 
 /-- An element of the character space, as an non-unital algebra homomorphism. -/
-def toNonUnitalAlgHom (φ : characterSpace 𝕜 A) : A →ₙₐ[𝕜] 𝕜 where
+def toNonUnitalAlgHom (φ : characterSpace 𝕜 A) :
+    A →ₙₐ[𝕜] 𝕜 where 
   toFun := (φ : A → 𝕜)
   map_mul' := map_mul φ
   map_smul' := map_smul φ
@@ -110,18 +113,16 @@ variable (𝕜 A)
 theorem union_zero :
     characterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y } :=
   le_antisymm
-    (by
+    (by 
       rintro φ (hφ | h₀)
       · exact hφ.2
-        
-      · exact fun x y => by simp [Set.eq_of_mem_singleton h₀]
-        )
+      · exact fun x y => by simp [Set.eq_of_mem_singleton h₀])
     fun φ hφ => Or.elim (em <| φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
 #align weak_dual.character_space.union_zero WeakDual.characterSpace.union_zero
 
 /-- The `character_space 𝕜 A` along with `0` is always a closed set in `weak_dual 𝕜 A`. -/
 theorem unionZeroIsClosed [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (characterSpace 𝕜 A ∪ {0}) :=
-  by
+  by 
   simp only [union_zero, Set.set_of_forall]
   exact
     isClosedInter fun x =>
@@ -143,9 +144,7 @@ instance : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     rcases mul_eq_zero.mp h₁ with (h₂ | h₂)
     · have : ∀ a, φ (a * 1) = 0 := fun a => by simp only [map_mul φ, h₂, mul_zero]
       exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_one] using this)
-      
     · exact (sub_eq_zero.mp h₂).symm
-      
   { characterSpace.nonUnitalAlgHomClass with map_one := map_one',
     commutes := fun φ r => by
       rw [Algebra.algebra_map_eq_smul_one, Algebra.id.map_eq_id, RingHom.id_apply]
@@ -192,7 +191,6 @@ theorem ext_ker {φ ψ : characterSpace 𝕜 A} (h : RingHom.ker φ = RingHom.ke
   have : x - algebraMap 𝕜 A (ψ x) ∈ RingHom.ker φ := by
     simpa only [h, RingHom.mem_ker, map_sub, AlgHomClass.commutes] using sub_self (ψ x)
   · rwa [RingHom.mem_ker, map_sub, AlgHomClass.commutes, sub_eq_zero] at this
-    
 #align weak_dual.character_space.ext_ker WeakDual.characterSpace.ext_ker
 
 end Ring
@@ -224,22 +222,25 @@ variable (𝕜 A) [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] 
 `A` into the `𝕜`-algebra of continuous `𝕜`-valued functions on the `character_space 𝕜 A`.
 The character space itself consists of all algebra homomorphisms from `A` to `𝕜`.  -/
 @[simps]
-def gelfandTransform : A →ₐ[𝕜] C(characterSpace 𝕜 A, 𝕜) where
+def gelfandTransform :
+    A →ₐ[𝕜]
+      C(characterSpace 𝕜 A,
+        𝕜) where 
   toFun a :=
     { toFun := fun φ => φ a, continuous_to_fun := (eval_continuous a).comp continuous_induced_dom }
-  map_one' := by
+  map_one' := by 
     ext
     simp only [coe_mk, coe_one, Pi.one_apply, map_one a]
-  map_mul' a b := by
+  map_mul' a b := by 
     ext
     simp only [map_mul, coe_mk, coe_mul, Pi.mul_apply]
-  map_zero' := by
+  map_zero' := by 
     ext
     simp only [map_zero, coe_mk, coe_mul, coe_zero, Pi.zero_apply]
-  map_add' a b := by
+  map_add' a b := by 
     ext
     simp only [map_add, coe_mk, coe_add, Pi.add_apply]
-  commutes' k := by
+  commutes' k := by 
     ext
     simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply, coe_mk,
       algebra_map_apply, Algebra.id.smul_eq_mul, mul_one]

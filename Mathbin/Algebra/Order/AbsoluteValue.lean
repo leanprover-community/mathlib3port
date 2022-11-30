@@ -3,7 +3,12 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Anne Baanen
 -/
+import Mathbin.Algebra.GroupWithZero.Units.Lemmas
+import Mathbin.Algebra.Order.Field.Defs
 import Mathbin.Algebra.Order.Hom.Basic
+import Mathbin.Algebra.Order.Ring.Abs
+import Mathbin.Algebra.Ring.Commute
+import Mathbin.Algebra.Ring.Regular
 
 /-!
 # Absolute values
@@ -40,9 +45,11 @@ section Semiring
 
 variable {R S : Type _} [Semiring R] [OrderedSemiring S] (abv : AbsoluteValue R S)
 
-instance zeroHomClass : ZeroHomClass (AbsoluteValue R S) R S where
+instance zeroHomClass :
+    ZeroHomClass (AbsoluteValue R S) R
+      S where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -153,7 +160,7 @@ variable [IsDomain S] [Nontrivial R]
 
 @[simp]
 protected theorem map_one : abv 1 = 1 :=
-  abv.map_one_of_is_regular (is_regular_of_ne_zero <| abv.NeZero one_ne_zero).left
+  abv.map_one_of_is_regular (isRegular_of_ne_zero <| abv.NeZero one_ne_zero).left
 #align absolute_value.map_one AbsoluteValue.map_one
 
 instance : MonoidWithZeroHomClass (AbsoluteValue R S) R S :=
@@ -208,9 +215,7 @@ variable [NoZeroDivisors S]
 
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a := by
-  by_cases ha : a = 0;
-  · simp [ha]
-    
+  by_cases ha : a = 0; · simp [ha]
   refine'
     (mul_self_eq_mul_self_iff.mp (by rw [← abv.map_mul, neg_mul_neg, abv.map_mul])).resolve_right _
   exact ((neg_lt_zero.mpr (abv.pos ha)).trans (abv.pos (neg_ne_zero.mpr ha))).ne'
@@ -227,7 +232,7 @@ variable {R S : Type _} [Semiring R] [LinearOrderedRing S] (abv : AbsoluteValue 
 
 /-- `absolute_value.abs` is `abs` as a bundled `absolute_value`. -/
 @[simps]
-protected def abs : AbsoluteValue S S where
+protected def abs : AbsoluteValue S S where 
   toFun := abs
   nonneg' := abs_nonneg
   eq_zero' _ := abs_eq_zero
@@ -277,7 +282,8 @@ variable {S : Type _} [OrderedSemiring S]
 variable {R : Type _} [Semiring R] (abv : R → S) [IsAbsoluteValue abv]
 
 /-- A bundled absolute value is an absolute value. -/
-instance AbsoluteValue.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv where
+instance AbsoluteValue.is_absolute_value (abv : AbsoluteValue R S) :
+    IsAbsoluteValue abv where 
   abv_nonneg := abv.Nonneg
   abv_eq_zero _ := abv.eq_zero
   abv_add := abv.add_le
@@ -286,7 +292,7 @@ instance AbsoluteValue.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteV
 
 /-- Convert an unbundled `is_absolute_value` to a bundled `absolute_value`. -/
 @[simps]
-def toAbsoluteValue : AbsoluteValue R S where
+def toAbsoluteValue : AbsoluteValue R S where 
   toFun := abv
   add_le' := abv_add abv
   eq_zero' _ := abv_eq_zero abv
@@ -404,7 +410,7 @@ variable {R : Type _} [Semiring R] [Nontrivial R] (abv : R → S) [IsAbsoluteVal
 
 theorem abv_one' : abv 1 = 1 :=
   (toAbsoluteValue abv).map_one_of_is_regular <|
-    (is_regular_of_ne_zero <| (toAbsoluteValue abv).NeZero one_ne_zero).left
+    (isRegular_of_ne_zero <| (toAbsoluteValue abv).NeZero one_ne_zero).left
 #align is_absolute_value.abv_one' IsAbsoluteValue.abv_one'
 
 /-- An absolute value as a monoid with zero homomorphism, assuming the target is a semifield. -/

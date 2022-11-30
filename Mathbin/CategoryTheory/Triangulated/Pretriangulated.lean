@@ -175,7 +175,7 @@ structure TriangulatedFunctorStruct extends C ⥤ D where
 namespace TriangulatedFunctorStruct
 
 /-- The identity `triangulated_functor_struct`. -/
-def id : TriangulatedFunctorStruct C C where
+def id : TriangulatedFunctorStruct C C where 
   obj X := X
   map _ _ f := f
   commShift := by rfl
@@ -191,17 +191,20 @@ variable {C D}
 triangles of `D`.
 -/
 @[simps]
-def mapTriangle (F : TriangulatedFunctorStruct C D) : Triangle C ⥤ Triangle D where
+def mapTriangle (F : TriangulatedFunctorStruct C D) :
+    Triangle C ⥤
+      Triangle
+        D where 
   obj T := Triangle.mk (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
   map S T f :=
     { hom₁ := F.map f.hom₁, hom₂ := F.map f.hom₂, hom₃ := F.map f.hom₃,
-      comm₁' := by
+      comm₁' := by 
         dsimp
         simp only [← F.to_functor.map_comp, f.comm₁],
-      comm₂' := by
+      comm₂' := by 
         dsimp
         simp only [← F.to_functor.map_comp, f.comm₂],
-      comm₃' := by
+      comm₃' := by 
         dsimp
         erw [category.assoc, ← F.comm_shift.hom.naturality]
         simp only [functor.comp_map, ← F.to_functor.map_comp_assoc, f.comm₃] }
@@ -229,7 +232,7 @@ structure TriangulatedFunctor extends TriangulatedFunctorStruct C D where
 
 instance : Inhabited (TriangulatedFunctor C C) :=
   ⟨{ obj := fun X => X, map := fun _ _ f => f, commShift := by rfl,
-      map_distinguished' := by
+      map_distinguished' := by 
         rintro ⟨_, _, _, _⟩ Tdt
         dsimp at *
         rwa [category.comp_id] }⟩

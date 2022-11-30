@@ -89,7 +89,7 @@ theorem is_compact_operator_iff_exists_mem_nhds_image_subset_compact (f : M₁ �
 
 theorem is_compact_operator_iff_exists_mem_nhds_is_compact_closure_image [T2Space M₂]
     (f : M₁ → M₂) : IsCompactOperator f ↔ ∃ V ∈ (𝓝 0 : Filter M₁), IsCompact (closure <| f '' V) :=
-  by
+  by 
   rw [is_compact_operator_iff_exists_mem_nhds_image_subset_compact]
   exact
     ⟨fun ⟨V, hV, K, hK, hKV⟩ => ⟨V, hV, is_compact_closure_of_subset_compact hK hKV⟩,
@@ -254,7 +254,9 @@ variable (σ₁₄ M₁ M₄)
 
 /-- The submodule of compact continuous linear maps. -/
 def compactOperator [Module R₁ M₁] [Module R₄ M₄] [HasContinuousConstSmul R₄ M₄]
-    [TopologicalAddGroup M₄] : Submodule R₄ (M₁ →SL[σ₁₄] M₄) where
+    [TopologicalAddGroup M₄] :
+    Submodule R₄ (M₁ →SL[σ₁₄]
+        M₄) where 
   carrier := { f | IsCompactOperator f }
   add_mem' f g hf hg := hf.add hg
   zero_mem' := is_compact_operator_zero
@@ -372,7 +374,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   have hcnz : c ≠ 0 := ne_zero_of_norm_ne_zero (hr.trans hc).Ne.symm
   -- We have `f ⁻¹' ((σ₁₂ c⁻¹) • K) = c⁻¹ • f ⁻¹' K ∈ 𝓝 0`. Thus, showing that
   -- `(σ₁₂ c⁻¹) • K ⊆ U` is enough to deduce that `f ⁻¹' U ∈ 𝓝 0`.
-  suffices (σ₁₂ <| c⁻¹) • K ⊆ U by
+  suffices (σ₁₂ <| c⁻¹) • K ⊆ U by 
     refine' mem_of_superset _ this
     have : IsUnit c⁻¹ := hcnz.is_unit.inv
     rwa [mem_map, preimage_smul_setₛₗ _ _ _ f this, set_smul_mem_nhds_zero_iff (inv_ne_zero hcnz)]
@@ -442,7 +444,7 @@ theorem isClosedSetOfIsCompactOperator {𝕜₁ 𝕜₂ : Type _} [NontriviallyN
   rw [mem_preimage, mem_Union₂] at hTv⊢
   rcases hTv with ⟨t, ht, htx⟩
   refine' ⟨t, ht, _⟩
-  suffices dist (u x) (v x) < ε / 2 by
+  suffices dist (u x) (v x) < ε / 2 by 
     rw [mem_ball] at *
     linarith [dist_triangle (u x) (v x) t]
   rw [mem_closed_ball_zero_iff] at hx

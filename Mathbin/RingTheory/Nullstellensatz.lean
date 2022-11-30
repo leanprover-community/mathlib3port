@@ -59,7 +59,9 @@ theorem zero_locus_top : zeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
 #align mv_polynomial.zero_locus_top MvPolynomial.zero_locus_top
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
-def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
+def vanishingIdeal (V : Set (σ → k)) :
+    Ideal (MvPolynomial σ
+        k) where 
   carrier := { p | ∀ x ∈ V, eval x p = 0 }
   zero_mem' x hx := RingHom.map_zero _
   add_mem' p q hp hq x hx := by simp only [hq x hx, hp x hx, add_zero, RingHom.map_add]
@@ -198,14 +200,12 @@ theorem vanishing_ideal_zero_locus_eq_radical (I : Ideal (MvPolynomial σ k)) :
     refine' hx.symm ▸ vanishing_ideal_anti_mono fun y hy p hp => _
     rw [← mem_vanishing_ideal_singleton_iff, Set.mem_singleton_iff.1 hy, ← hx]
     refine' hJI hp
-    
   · rw [← mem_vanishing_ideal_singleton_iff x p]
     refine'
       (mem_Inf.mp hp)
         ⟨le_trans (le_vanishing_ideal_zero_locus I)
             (vanishing_ideal_anti_mono fun y hy => hy.symm ▸ hx),
           MvPolynomial.vanishing_ideal_singleton_is_maximal⟩
-    
 #align
   mv_polynomial.vanishing_ideal_zero_locus_eq_radical MvPolynomial.vanishing_ideal_zero_locus_eq_radical
 

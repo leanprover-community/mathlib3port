@@ -127,7 +127,7 @@ theorem unit_left_adjoint_uniq_hom {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ 
 @[simp, reassoc]
 theorem unit_left_adjoint_uniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G)
     (x : C) : adj1.Unit.app x ≫ G.map ((leftAdjointUniq adj1 adj2).Hom.app x) = adj2.Unit.app x :=
-  by
+  by 
   rw [← unit_left_adjoint_uniq_hom adj1 adj2]
   rfl
 #align
@@ -145,7 +145,7 @@ theorem left_adjoint_uniq_hom_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F �
   have :
     F.map (adj2.unit.app (G.obj x)) ≫ adj1.counit.app (F'.obj (G.obj x)) ≫ adj2.counit.app x ≫ f =
       adj1.counit.app x ≫ f :=
-    by
+    by 
     erw [← adj1.counit.naturality, ← F.map_comp_assoc]
     simpa
   simpa [left_adjoint_uniq, left_adjoints_coyoneda_equiv] using this
@@ -173,7 +173,7 @@ theorem left_adjoint_uniq_trans {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣
     (adj3 : F'' ⊣ G) :
     (leftAdjointUniq adj1 adj2).Hom ≫ (leftAdjointUniq adj2 adj3).Hom =
       (leftAdjointUniq adj1 adj3).Hom :=
-  by
+  by 
   ext
   apply Quiver.Hom.op_inj
   apply coyoneda.map_injective
@@ -188,7 +188,7 @@ theorem left_adjoint_uniq_trans_app {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F
     (adj3 : F'' ⊣ G) (x : C) :
     (leftAdjointUniq adj1 adj2).Hom.app x ≫ (leftAdjointUniq adj2 adj3).Hom.app x =
       (leftAdjointUniq adj1 adj3).Hom.app x :=
-  by
+  by 
   rw [← left_adjoint_uniq_trans adj1 adj2 adj3]
   rfl
 #align
@@ -196,7 +196,7 @@ theorem left_adjoint_uniq_trans_app {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F
 
 @[simp]
 theorem left_adjoint_uniq_refl {F : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) :
-    (leftAdjointUniq adj1 adj1).Hom = 𝟙 _ := by
+    (leftAdjointUniq adj1 adj1).Hom = 𝟙 _ := by 
   ext
   apply Quiver.Hom.op_inj
   apply coyoneda.map_injective
@@ -226,7 +226,7 @@ theorem hom_equiv_symm_right_adjoint_uniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C}
 @[simp, reassoc]
 theorem unit_right_adjoint_uniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G')
     (x : C) : adj1.Unit.app x ≫ (rightAdjointUniq adj1 adj2).Hom.app (F.obj x) = adj2.Unit.app x :=
-  by
+  by 
   apply Quiver.Hom.op_inj
   convert
     left_adjoint_uniq_hom_app_counit (op_adjoint_op_of_adjoint _ _ adj2)
@@ -275,7 +275,7 @@ theorem right_adjoint_uniq_trans_app {F : C ⥤ D} {G G' G'' : D ⥤ C} (adj1 : 
     (adj3 : F ⊣ G'') (x : D) :
     (rightAdjointUniq adj1 adj2).Hom.app x ≫ (rightAdjointUniq adj2 adj3).Hom.app x =
       (rightAdjointUniq adj1 adj3).Hom.app x :=
-  by
+  by 
   apply Quiver.Hom.op_inj
   exact
     left_adjoint_uniq_trans_app (op_adjoint_op_of_adjoint _ _ adj3)
@@ -288,7 +288,7 @@ theorem right_adjoint_uniq_trans {F : C ⥤ D} {G G' G'' : D ⥤ C} (adj1 : F �
     (adj3 : F ⊣ G'') :
     (rightAdjointUniq adj1 adj2).Hom ≫ (rightAdjointUniq adj2 adj3).Hom =
       (rightAdjointUniq adj1 adj3).Hom :=
-  by
+  by 
   ext
   simp
 #align

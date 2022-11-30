@@ -35,13 +35,9 @@ theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : Tfae (a :: l) ↔
   ⟨fun H => ⟨H a (by simp) b (Or.inr h), fun p hp q hq => H _ (Or.inr hp) _ (Or.inr hq)⟩, by
     rintro ⟨ab, H⟩ p (rfl | hp) q (rfl | hq)
     · rfl
-      
     · exact ab.trans (H _ h _ hq)
-      
     · exact (ab.trans (H _ h _ hp)).symm
-      
-    · exact H _ hp _ hq
-      ⟩
+    · exact H _ hp _ hq⟩
 #align list.tfae_cons_of_mem List.tfae_cons_of_mem
 
 theorem tfae_cons_cons {a b} {l : List Prop} : Tfae (a :: b :: l) ↔ (a ↔ b) ∧ Tfae (b :: l) :=
@@ -59,7 +55,6 @@ theorem tfae_of_cycle {a b} {l : List Prop} :
     simp only [tfae_cons_cons, tfae_singleton, and_true_iff, chain_cons, chain.nil] at *
   · intro a b
     exact Iff.intro a b
-    
   rintro ⟨ab, ⟨bc, ch⟩⟩ la
   have := IH ⟨bc, ch⟩ (ab ∘ la)
   exact ⟨⟨ab, la ∘ (this.2 c (Or.inl rfl) _ (ilast'_mem _ _)).1 ∘ bc⟩, this⟩

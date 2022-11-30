@@ -59,7 +59,9 @@ instance : TopologicalSpace ℝ≥0 :=
   inferInstance
 
 -- short-circuit type class inference
-instance : TopologicalSemiring ℝ≥0 where
+instance :
+    TopologicalSemiring
+      ℝ≥0 where 
   continuous_mul := (continuous_subtype_val.fst'.mul continuous_subtype_val.snd').subtype_mk _
   continuous_add := (continuous_subtype_val.fst'.add continuous_subtype_val.snd').subtype_mk _
 
@@ -211,7 +213,7 @@ theorem summable_nat_add (f : ℕ → ℝ≥0) (hf : Summable f) (k : ℕ) : Sum
 #align nnreal.summable_nat_add Nnreal.summable_nat_add
 
 theorem summable_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) : (Summable fun i => f (i + k)) ↔ Summable f :=
-  by
+  by 
   rw [← summable_coe, ← summable_coe]
   exact @summable_nat_add_iff ℝ _ _ _ (fun i => (f i : ℝ)) k
 #align nnreal.summable_nat_add_iff Nnreal.summable_nat_add_iff
@@ -242,7 +244,7 @@ theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0} (hf : Summab
 #align nnreal.tendsto_cofinite_zero_of_summable Nnreal.tendsto_cofinite_zero_of_summable
 
 theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0} (hf : Summable f) : Tendsto f atTop (𝓝 0) :=
-  by
+  by 
   rw [← Nat.cofinite_eq_at_top]
   exact tendsto_cofinite_zero_of_summable hf
 #align nnreal.tendsto_at_top_zero_of_summable Nnreal.tendsto_at_top_zero_of_summable

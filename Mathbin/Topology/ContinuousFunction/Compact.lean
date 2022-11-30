@@ -48,7 +48,7 @@ equivalent to `C(α, β)`.
 def equivBoundedOfCompact : C(α, β) ≃ (α →ᵇ β) :=
   ⟨mkOfCompact, BoundedContinuousFunction.toContinuousMap, fun f => by
     ext
-    rfl, fun f => by
+    rfl, fun f => by 
     ext
     rfl⟩
 #align continuous_map.equiv_bounded_of_compact ContinuousMap.equivBoundedOfCompact
@@ -88,7 +88,8 @@ instance : MetricSpace C(α, β) :=
 isometric to `C(α, β)`.
 -/
 @[simps (config := { fullyApplied := false }) toEquiv apply symmApply]
-def isometricBoundedOfCompact : C(α, β) ≃ᵢ (α →ᵇ β) where
+def isometricBoundedOfCompact :
+    C(α, β) ≃ᵢ (α →ᵇ β) where 
   isometryToFun x y := rfl
   toEquiv := equivBoundedOfCompact α β
 #align continuous_map.isometric_bounded_of_compact ContinuousMap.isometricBoundedOfCompact
@@ -270,7 +271,7 @@ the `𝕜`-algebra of bounded continuous maps `α →ᵇ β` is
 -/
 def linearIsometryBoundedOfCompact : C(α, E) ≃ₗᵢ[𝕜] α →ᵇ E :=
   { addEquivBoundedOfCompact α E with
-    map_smul' := fun c f => by
+    map_smul' := fun c f => by 
       ext
       simp,
     norm_map' := fun f => rfl }
@@ -428,15 +429,15 @@ section CompRight
 /-- Precomposition by a continuous map is itself a continuous map between spaces of continuous maps.
 -/
 def compRightContinuousMap {X Y : Type _} (T : Type _) [TopologicalSpace X] [CompactSpace X]
-    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : C(X, Y)) : C(C(Y, T), C(X, T)) where
+    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : C(X, Y)) :
+    C(C(Y, T), C(X, T)) where 
   toFun g := g.comp f
-  continuous_to_fun := by
+  continuous_to_fun := by 
     refine' metric.continuous_iff.mpr _
     intro g ε ε_pos
     refine' ⟨ε, ε_pos, fun g' h => _⟩
     rw [ContinuousMap.dist_lt_iff ε_pos] at h⊢
     · exact fun x => h (f x)
-      
 #align continuous_map.comp_right_continuous_map ContinuousMap.compRightContinuousMap
 
 @[simp]
@@ -449,7 +450,9 @@ theorem comp_right_continuous_map_apply {X Y : Type _} (T : Type _) [Topological
 /-- Precomposition by a homeomorphism is itself a homeomorphism between spaces of continuous maps.
 -/
 def compRightHomeomorph {X Y : Type _} (T : Type _) [TopologicalSpace X] [CompactSpace X]
-    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : X ≃ₜ Y) : C(Y, T) ≃ₜ C(X, T) where
+    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : X ≃ₜ Y) :
+    C(Y, T) ≃ₜ C(X,
+        T) where 
   toFun := compRightContinuousMap T f.toContinuousMap
   invFun := compRightContinuousMap T f.symm.toContinuousMap
   left_inv g := ext fun _ => congr_arg g (f.apply_symm_apply _)
@@ -524,7 +527,8 @@ variable {α : Type _} {β : Type _}
 variable [TopologicalSpace α] [NormedRing β] [StarRing β]
 
 instance [CompactSpace α] [CstarRing β] :
-    CstarRing C(α, β) where norm_star_mul_self := by
+    CstarRing
+      C(α, β) where norm_star_mul_self := by 
     intro f
     refine' le_antisymm _ _
     · rw [← sq, ContinuousMap.norm_le _ (sq_nonneg _)]
@@ -533,16 +537,12 @@ instance [CompactSpace α] [CstarRing β] :
         CstarRing.norm_star_mul_self, ← sq]
       refine' sq_le_sq' _ _
       · linarith [norm_nonneg (f x), norm_nonneg f]
-        
       · exact ContinuousMap.norm_coe_le_norm f x
-        
-      
     · rw [← sq, ← Real.le_sqrt (norm_nonneg _) (norm_nonneg _),
         ContinuousMap.norm_le _ (Real.sqrt_nonneg _)]
       intro x
       rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_mul_self]
       exact ContinuousMap.norm_coe_le_norm (star f * f) x
-      
 
 end CstarRing
 

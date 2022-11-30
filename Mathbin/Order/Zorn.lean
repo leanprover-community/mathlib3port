@@ -78,7 +78,7 @@ theorem exists_maximal_of_chains_bounded (h : ∀ c, IsChain r c → ∃ ub, ∀
   ⟨ub, fun a ha =>
     have : IsChain r (insert a <| maxChain r) :=
       max_chain_spec.1.insert fun b hb _ => Or.inr <| trans (hub b hb) ha
-    hub a <| by
+    hub a <| by 
       rw [max_chain_spec.right this (subset_insert _ _)]
       exact mem_insert _ _⟩
 #align exists_maximal_of_chains_bounded exists_maximal_of_chains_bounded
@@ -131,14 +131,10 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
     (hxs : x ∈ s) : ∃ m ∈ s, x ≤ m ∧ ∀ z ∈ s, m ≤ z → z ≤ m := by
   rcases zorn_preorder₀ ({ y ∈ s | x ≤ y }) fun c hcs hc => _ with ⟨m, ⟨hms, hxm⟩, hm⟩
   · exact ⟨m, hms, hxm, fun z hzs hmz => hm _ ⟨hzs, hxm.trans hmz⟩ hmz⟩
-    
   · rcases c.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
     · exact ⟨x, ⟨hxs, le_rfl⟩, fun z => False.elim⟩
-      
     · rcases ih c (fun z hz => (hcs hz).1) hc y hy with ⟨z, hzs, hz⟩
       exact ⟨z, ⟨hzs, (hcs hy).2.trans <| hz _ hy⟩, hz⟩
-      
-    
 #align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
@@ -219,7 +215,6 @@ theorem IsChain.exists_max_chain (hc : IsChain r c) : ∃ M, @IsMaxChain _ r M �
   obtain ⟨M, ⟨_, hM₀⟩, hM₁, hM₂⟩ :=
     zorn_subset_nonempty { s | c ⊆ s ∧ IsChain r s } _ c ⟨subset.rfl, hc⟩
   · exact ⟨M, ⟨hM₀, fun d hd hMd => (hM₂ _ ⟨hM₁.trans hMd, hd⟩ hMd).symm⟩, hM₁⟩
-    
   rintro cs hcs₀ hcs₁ ⟨s, hs⟩
   refine'
     ⟨⋃₀cs, ⟨fun _ ha => Set.mem_sUnion_of_mem ((hcs₀ hs).left ha) hs, _⟩, fun _ =>
@@ -227,11 +222,8 @@ theorem IsChain.exists_max_chain (hc : IsChain r c) : ∃ M, @IsMaxChain _ r M �
   rintro y ⟨sy, hsy, hysy⟩ z ⟨sz, hsz, hzsz⟩ hyz
   obtain rfl | hsseq := eq_or_ne sy sz
   · exact (hcs₀ hsy).right hysy hzsz hyz
-    
   cases' hcs₁ hsy hsz hsseq with h h
   · exact (hcs₀ hsz).right (h hysy) hzsz hyz
-    
   · exact (hcs₀ hsy).right hysy (h hzsz) hyz
-    
 #align is_chain.exists_max_chain IsChain.exists_max_chain
 

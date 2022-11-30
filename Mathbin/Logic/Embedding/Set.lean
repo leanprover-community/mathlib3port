@@ -45,8 +45,12 @@ def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.range f) : Option
 
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]
-def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.range fᶜ) where
-  toFun f := ⟨coeOption.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
+def optionEmbeddingEquiv (α β) :
+    (Option α ↪ β) ≃
+      Σf : α ↪ β,
+        ↥(Set.range
+              fᶜ) where 
+  toFun f := ⟨some.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
   invFun f := f.1.optionElim f.2 f.2.2
   left_inv f := ext <| by rintro (_ | _) <;> simp [Option.coe_def]
   right_inv := fun ⟨f, y, hy⟩ => by ext <;> simp [Option.coe_def]
@@ -97,37 +101,31 @@ subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right, wh
 See also `equiv.sum_compl`, for when `is_compl p q`.  -/
 @[simps apply]
 def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
-    { x // p x ∨ q x } ≃ Sum { x // p x } { x // q x } where
+    { x // p x ∨ q x } ≃
+      Sum { x // p x }
+        { x // q x } where 
   toFun := subtypeOrLeftEmbedding p q
   invFun :=
     Sum.elim (Subtype.impEmbedding _ _ fun x hx => (Or.inl hx : p x ∨ q x))
       (Subtype.impEmbedding _ _ fun x hx => (Or.inr hx : p x ∨ q x))
-  left_inv x := by
+  left_inv x := by 
     by_cases hx : p x
-    · rw [subtype_or_left_embedding_apply_left _ hx]
+    · rw [subtypeOrLeftEmbedding_apply_left _ hx]
       simp [Subtype.ext_iff]
-      
-    · rw [subtype_or_left_embedding_apply_right _ hx]
+    · rw [subtypeOrLeftEmbedding_apply_right _ hx]
       simp [Subtype.ext_iff]
-      
-  right_inv x := by
+  right_inv x := by 
     cases x
     · simp only [Sum.elim_inl]
-      rw [subtype_or_left_embedding_apply_left]
+      rw [subtypeOrLeftEmbedding_apply_left]
       · simp
-        
       · simpa using x.prop
-        
-      
     · simp only [Sum.elim_inr]
-      rw [subtype_or_left_embedding_apply_right]
+      rw [subtypeOrLeftEmbedding_apply_right]
       · simp
-        
       · suffices ¬p x by simpa
         intro hp
         simpa using h.le_bot x ⟨hp, x.prop⟩
-        
-      
 #align subtype_or_equiv subtypeOrEquiv
 
 @[simp]

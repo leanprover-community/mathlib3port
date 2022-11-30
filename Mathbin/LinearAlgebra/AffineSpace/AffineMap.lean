@@ -69,7 +69,7 @@ variable {k : Type _} {V₁ : Type _} {V₂ : Type _} [Ring k] [AddCommGroup V�
   [AddCommGroup V₂] [Module k V₂] (f : V₁ →ₗ[k] V₂)
 
 /-- Reinterpret a linear map as an affine map. -/
-def toAffineMap : V₁ →ᵃ[k] V₂ where
+def toAffineMap : V₁ →ᵃ[k] V₂ where 
   toFun := f
   linear := f
   map_vadd' p v := f.map_add v p
@@ -126,7 +126,7 @@ theorem linear_map_vsub (f : P1 →ᵃ[k] P2) (p1 p2 : P1) : f.linear (p1 -ᵥ p
 #align affine_map.linear_map_vsub AffineMap.linear_map_vsub
 
 /-- Two affine maps are equal if they coerce to the same function. -/
-@[ext.1]
+@[ext]
 theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g := by
   rcases f with ⟨f, f_linear, f_add⟩
   rcases g with ⟨g, g_linear, g_add⟩
@@ -156,7 +156,8 @@ protected theorem congr_fun {f g : P1 →ᵃ[k] P2} (h : f = g) (x : P1) : f x =
 variable (k P1)
 
 /-- Constant function as an `affine_map`. -/
-def const (p : P2) : P1 →ᵃ[k] P2 where
+def const (p : P2) : P1 →ᵃ[k]
+      P2 where 
   toFun := Function.const P1 p
   linear := 0
   map_vadd' p v := by simp
@@ -175,16 +176,14 @@ theorem const_linear (p : P2) : (const k P1 p).linear = 0 :=
 variable {k P1}
 
 theorem linear_eq_zero_iff_exists_const (f : P1 →ᵃ[k] P2) : f.linear = 0 ↔ ∃ q, f = const k P1 q :=
-  by
+  by 
   refine' ⟨fun h => _, fun h => _⟩
   · use f (Classical.arbitrary P1)
     ext
     rw [coe_const, Function.const_apply, ← @vsub_eq_zero_iff_eq V2, ← f.linear_map_vsub, h,
       LinearMap.zero_apply]
-    
   · rcases h with ⟨q, rfl⟩
     exact const_linear k P1 q
-    
 #align affine_map.linear_eq_zero_iff_exists_const AffineMap.linear_eq_zero_iff_exists_const
 
 instance nonempty : Nonempty (P1 →ᵃ[k] P2) :=
@@ -195,7 +194,7 @@ instance nonempty : Nonempty (P1 →ᵃ[k] P2) :=
 base point. Namely, this function takes a map `f : P₁ → P₂`, a linear map `f' : V₁ →ₗ[k] V₂`, and
 a point `p` such that for any other point `p'` we have `f p' = f' (p' -ᵥ p) +ᵥ f p`. -/
 def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' = f' (p' -ᵥ p) +ᵥ f p) :
-    P1 →ᵃ[k] P2 where
+    P1 →ᵃ[k] P2 where 
   toFun := f
   linear := f'
   map_vadd' p' v := by rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd]
@@ -216,7 +215,10 @@ section HasSmul
 variable {R : Type _} [Monoid R] [DistribMulAction R V2] [SmulCommClass k R V2]
 
 /-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
-instance : MulAction R (P1 →ᵃ[k] V2) where
+instance :
+    MulAction R
+      (P1 →ᵃ[k]
+        V2) where 
   smul c f := ⟨c • f, c • f.linear, fun p v => by simp [smul_add]⟩
   one_smul f := ext fun p => one_smul _ _
   mul_smul c₁ c₂ f := ext fun p => mul_smul _ _ _
@@ -297,7 +299,10 @@ instance : AddCommGroup (P1 →ᵃ[k] V2) :=
 
 /-- The space of affine maps from `P1` to `P2` is an affine space over the space of affine maps
 from `P1` to the vector space `V2` corresponding to `P2`. -/
-instance : affine_space (P1 →ᵃ[k] V2) (P1 →ᵃ[k] P2) where
+instance :
+    affine_space (P1 →ᵃ[k] V2)
+      (P1 →ᵃ[k]
+        P2) where 
   vadd f g :=
     ⟨fun p => f p +ᵥ g p, f.linear + g.linear, fun p v => by simp [vadd_vadd, add_right_comm]⟩
   zero_vadd f := ext fun p => zero_vadd _ (f p)
@@ -319,7 +324,7 @@ theorem vsub_apply (f g : P1 →ᵃ[k] P2) (p : P1) : (f -ᵥ g : P1 →ᵃ[k] V
 #align affine_map.vsub_apply AffineMap.vsub_apply
 
 /-- `prod.fst` as an `affine_map`. -/
-def fst : P1 × P2 →ᵃ[k] P1 where
+def fst : P1 × P2 →ᵃ[k] P1 where 
   toFun := Prod.fst
   linear := LinearMap.fst k V1 V2
   map_vadd' _ _ := rfl
@@ -336,7 +341,7 @@ theorem fst_linear : (fst : P1 × P2 →ᵃ[k] P1).linear = LinearMap.fst k V1 V
 #align affine_map.fst_linear AffineMap.fst_linear
 
 /-- `prod.snd` as an `affine_map`. -/
-def snd : P1 × P2 →ᵃ[k] P2 where
+def snd : P1 × P2 →ᵃ[k] P2 where 
   toFun := Prod.snd
   linear := LinearMap.snd k V1 V2
   map_vadd' _ _ := rfl
@@ -357,7 +362,7 @@ variable (k P1)
 omit V2
 
 /-- Identity map as an affine map. -/
-def id : P1 →ᵃ[k] P1 where
+def id : P1 →ᵃ[k] P1 where 
   toFun := id
   linear := LinearMap.id
   map_vadd' p v := rfl
@@ -389,10 +394,11 @@ instance : Inhabited (P1 →ᵃ[k] P1) :=
 include V2 V3
 
 /-- Composition of affine maps. -/
-def comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : P1 →ᵃ[k] P3 where
+def comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) :
+    P1 →ᵃ[k] P3 where 
   toFun := f ∘ g
   linear := f.linear.comp g.linear
-  map_vadd' := by
+  map_vadd' := by 
     intro p v
     rw [Function.comp_apply, g.map_vadd, f.map_vadd]
     rfl
@@ -430,7 +436,7 @@ theorem comp_assoc (f₃₄ : P3 →ᵃ[k] P4) (f₂₃ : P2 →ᵃ[k] P3) (f₁
 
 omit V2 V3 V4
 
-instance : Monoid (P1 →ᵃ[k] P1) where
+instance : Monoid (P1 →ᵃ[k] P1) where 
   one := id k P1
   mul := comp
   one_mul := id_comp
@@ -449,7 +455,8 @@ theorem coe_one : ⇑(1 : P1 →ᵃ[k] P1) = _root_.id :=
 
 /-- `affine_map.linear` on endomorphisms is a `monoid_hom`. -/
 @[simps]
-def linearHom : (P1 →ᵃ[k] P1) →* V1 →ₗ[k] V1 where
+def linearHom : (P1 →ᵃ[k] P1) →*
+      V1 →ₗ[k] V1 where 
   toFun := linear
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -485,10 +492,8 @@ theorem image_vsub_image {s t : Set P1} (f : P1 →ᵃ[k] P2) :
   constructor
   · rintro ⟨x, hx, y, hy, hv⟩
     exact ⟨x -ᵥ y, ⟨x, hx, y, hy, rfl⟩, hv⟩
-    
   · rintro ⟨-, ⟨x, hx, y, hy, rfl⟩, rfl⟩
     exact ⟨x, hx, y, hy, rfl⟩
-    
 #align affine_map.image_vsub_image AffineMap.image_vsub_image
 
 omit V2
@@ -689,7 +694,8 @@ variable {ι : Type _} {V : ∀ i : ι, Type _} {P : ∀ i : ι, Type _} [∀ i,
 include V
 
 /-- Evaluation at a point as an affine map. -/
-def proj (i : ι) : (∀ i : ι, P i) →ᵃ[k] P i where
+def proj (i : ι) : (∀ i : ι, P i) →ᵃ[k]
+      P i where 
   toFun f := f i
   linear := @LinearMap.proj k ι _ V _ _ i
   map_vadd' p v := rfl
@@ -731,7 +737,9 @@ section DistribMulAction
 variable [Monoid R] [DistribMulAction R V2] [SmulCommClass k R V2]
 
 /-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
-instance : DistribMulAction R (P1 →ᵃ[k] V2) where
+instance :
+    DistribMulAction R
+      (P1 →ᵃ[k] V2) where 
   smul_add c f g := ext fun p => smul_add _ _ _
   smul_zero c := ext fun p => smul_zero _
 
@@ -755,14 +763,16 @@ linear part.
 
 See note [bundled maps over different rings]-/
 @[simps]
-def toConstProdLinearMap : (V1 →ᵃ[k] V2) ≃ₗ[R] V2 × (V1 →ₗ[k] V2) where
+def toConstProdLinearMap :
+    (V1 →ᵃ[k] V2) ≃ₗ[R]
+      V2 × (V1 →ₗ[k] V2) where 
   toFun f := ⟨f 0, f.linear⟩
   invFun p := p.2.toAffineMap + const k V1 p.1
-  left_inv f := by
+  left_inv f := by 
     ext
     rw [f.decomp]
     simp
-  right_inv := by
+  right_inv := by 
     rintro ⟨v, f⟩
     ext <;> simp
   map_add' := by simp

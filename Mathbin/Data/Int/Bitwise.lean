@@ -73,15 +73,13 @@ theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
   | (n : ℕ) => by
     rw [show (cond (bodd n) 1 0 : ℤ) = (cond (bodd n) 1 0 : ℕ) by cases bodd n <;> rfl] <;>
       exact congr_arg of_nat n.bodd_add_div2
-  | -[n+1] => by
+  | -[n+1] => by 
     refine' Eq.trans _ (congr_arg neg_succ_of_nat n.bodd_add_div2)
     dsimp [bodd]; cases Nat.bodd n <;> dsimp [cond, not, div2, Int.mul]
     · change -[2 * Nat.div2 n+1] = _
       rw [zero_add]
-      
     · rw [zero_add, add_comm]
       rfl
-      
 #align int.bodd_add_div2 Int.bodd_add_div2
 
 theorem div2_val : ∀ n, div2 n = n / 2
@@ -207,9 +205,9 @@ theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
       unfold bitwise nat_bitwise not <;>
     [induction' h : f ff ff with , induction' h : f ff tt with , induction' h : f tt ff with ,
     induction' h : f tt tt with ]
-  all_goals
-  unfold cond; rw [Nat.bitwise_bit]
-  repeat' first |rw [bit_coe_nat]|rw [bit_neg_succ]|rw [Bool.not_not]
+  all_goals 
+    unfold cond; rw [Nat.bitwise_bit]
+    repeat' first |rw [bit_coe_nat]|rw [bit_neg_succ]|rw [Bool.not_not]
   all_goals unfold not <;> rw [h] <;> rfl
 #align int.bitwise_bit Int.bitwise_bit
 
@@ -247,9 +245,7 @@ theorem test_bit_bitwise (f : Bool → Bool → Bool) (m n k) :
       intro b n' <;>
     rw [bitwise_bit]
   · simp [test_bit_zero]
-    
   · simp [test_bit_succ, IH]
-    
 #align int.test_bit_bitwise Int.test_bit_bitwise
 
 @[simp]
@@ -347,7 +343,7 @@ theorem shiftl_eq_mul_pow : ∀ (m : ℤ) (n : ℕ), shiftl m n = m * ↑(2 ^ n)
 
 theorem shiftr_eq_div_pow : ∀ (m : ℤ) (n : ℕ), shiftr m n = m / ↑(2 ^ n)
   | (m : ℕ), n => by rw [shiftr_coe_nat] <;> exact congr_arg coe (Nat.shiftr_eq_div_pow _ _)
-  | -[m+1], n => by
+  | -[m+1], n => by 
     rw [shiftr_neg_succ, neg_succ_of_nat_div, Nat.shiftr_eq_div_pow]; rfl
     exact coe_nat_lt_coe_nat_of_lt (pow_pos (by decide) _)
 #align int.shiftr_eq_div_pow Int.shiftr_eq_div_pow

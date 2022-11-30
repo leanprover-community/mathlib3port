@@ -104,7 +104,7 @@ instance (r : α → α → Prop) : Inhabited (r ≼i r) :=
 /-- Composition of functions shows that `≼i` is transitive -/
 @[trans]
 protected def trans (f : r ≼i s) (g : s ≼i t) : r ≼i t :=
-  ⟨f.1.trans g.1, fun a c h => by
+  ⟨f.1.trans g.1, fun a c h => by 
     simp at h⊢
     rcases g.2 _ _ h with ⟨b, rfl⟩; have h := g.1.map_rel_iff.1 h
     rcases f.2 _ _ h with ⟨a', rfl⟩; exact ⟨a', rfl⟩⟩
@@ -124,7 +124,7 @@ theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
     WellFounded r → Subsingleton (r ≼i s)
   | ⟨h⟩ =>
     ⟨fun f g => by
-      suffices (f : α → β) = g by
+      suffices (f : α → β) = g by 
         cases f
         cases g
         congr
@@ -136,11 +136,9 @@ theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
       · rcases f.init_iff.1 h with ⟨y, rfl, h'⟩
         rw [IH _ h']
         exact (g : r ↪r s).map_rel_iff.2 h'
-        
       · rcases g.init_iff.1 h with ⟨y, rfl, h'⟩
         rw [← IH _ h']
-        exact (f : r ↪r s).map_rel_iff.2 h'
-        ⟩
+        exact (f : r ↪r s).map_rel_iff.2 h'⟩
 #align initial_seg.unique_of_trichotomous_of_irrefl InitialSeg.unique_of_trichotomous_of_irrefl
 
 instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
@@ -267,9 +265,9 @@ theorem down (f : r ≺i s) : ∀ {b : β}, s b f.top ↔ ∃ a, f a = b :=
   f.down'
 #align principal_seg.down PrincipalSeg.down
 
-theorem lt_top (f : r ≺i s) (a : α) : s (f a) f.top :=
+theorem ltTop (f : r ≺i s) (a : α) : s (f a) f.top :=
   f.down.2 ⟨_, rfl⟩
-#align principal_seg.lt_top PrincipalSeg.lt_top
+#align principal_seg.lt_top PrincipalSeg.ltTop
 
 theorem init [IsTrans β s] (f : r ≺i s) {a : α} {b : β} (h : s b (f a)) : ∃ a', f a' = b :=
   f.down.1 <| trans h <| f.lt_top _
@@ -361,7 +359,7 @@ theorem equiv_lt_top (f : r ≃r s) (g : s ≺i t) : (equivLt f g).top = g.top :
 /-- Given a well order `s`, there is a most one principal segment embedding of `r` into `s`. -/
 instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
   ⟨fun f g => by
-    have ef : (f : α → β) = g := by
+    have ef : (f : α → β) = g := by 
       show ((f : r ≼i s) : α → β) = g
       rw [@Subsingleton.elim _ _ (f : r ≼i s) g]
       rfl
@@ -376,11 +374,11 @@ theorem top_eq [IsWellOrder γ t] (e : r ≃r s) (f : r ≺i t) (g : s ≺i t) :
   rw [Subsingleton.elim f (PrincipalSeg.equivLt e g)] <;> rfl
 #align principal_seg.top_eq PrincipalSeg.top_eq
 
-theorem top_lt_top {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
+theorem topLtTop {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
     (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top := by
   rw [Subsingleton.elim h (f.trans g)]
-  apply PrincipalSeg.lt_top
-#align principal_seg.top_lt_top PrincipalSeg.top_lt_top
+  apply PrincipalSeg.ltTop
+#align principal_seg.top_lt_top PrincipalSeg.topLtTop
 
 /-- Any element of a well order yields a principal segment -/
 def ofElement {α : Type _} (r : α → α → Prop) (a : α) : Subrel r { b | r b a } ≺i r :=
@@ -442,10 +440,8 @@ of the range) or an order isomorphism (if the range is everything). -/
 noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r ≺i s) (r ≃r s) := by
   by_cases h : surjective f
   · exact Sum.inr (RelIso.ofSurjective f h)
-    
   · have h' : _ := (InitialSeg.eq_or_principal f).resolve_left h
     exact Sum.inl ⟨f, Classical.choose h', Classical.choose_spec h'⟩
-    
 #align initial_seg.lt_or_eq InitialSeg.ltOrEq
 
 theorem InitialSeg.lt_or_eq_apply_left [IsWellOrder β s] (f : r ≼i s) (g : r ≺i s) (a : α) :
@@ -468,12 +464,10 @@ noncomputable def InitialSeg.leLt [IsWellOrder β s] [IsTrans γ t] (f : r ≼i 
 
 @[simp]
 theorem InitialSeg.le_lt_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) (a : α) :
-    (f.leLt g) a = g (f a) := by
+    (f.leLt g) a = g (f a) := by 
   delta InitialSeg.leLt; cases' h : f.lt_or_eq with f' f'
   · simp only [PrincipalSeg.trans_apply, f.lt_or_eq_apply_left]
-    
   · simp only [PrincipalSeg.equiv_lt_apply, f.lt_or_eq_apply_right]
-    
 #align initial_seg.le_lt_apply InitialSeg.le_lt_apply
 
 namespace RelEmbedding
@@ -512,17 +506,15 @@ noncomputable def collapse [IsWellOrder β s] (f : r ↪r s) : r ≼i s :=
   haveI := RelEmbedding.is_well_order f
   ⟨RelEmbedding.ofMonotone (fun a => (collapse_F f a).1) fun a b => collapse_F.lt f, fun a b =>
     Acc.recOn (is_well_founded.wf.apply b : Acc s b)
-      (fun b H IH a h => by
+      (fun b H IH a h => by 
         let S := { a | ¬s (collapse_F f a).1 b }
         have : S.nonempty := ⟨_, asymm h⟩
         exists (IsWellFounded.wf : WellFounded r).min S this
         refine' ((@trichotomous _ s _ _ _).resolve_left _).resolve_right _
         · exact (IsWellFounded.wf : WellFounded r).min_mem S this
-          
         · refine' collapse_F.not_lt f _ fun a' h' => _
           by_contra hn
-          exact is_well_founded.wf.not_lt_min S this hn h'
-          )
+          exact is_well_founded.wf.not_lt_min S this hn h')
       a⟩
 #align rel_embedding.collapse RelEmbedding.collapse
 

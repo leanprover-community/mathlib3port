@@ -47,11 +47,9 @@ theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a 
   · apply nonneg_of_mul_nonneg_left _ d0
     rw [this]
     exact mul_nonneg h₂ (le_of_lt h)
-    
   · apply nonneg_of_mul_nonneg_left _ h
     rw [← this]
     exact mul_nonneg h₂ (Int.ofNat_zero_le _)
-    
 #align rat.mk_nonneg Rat.mk_nonneg
 
 protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a + b) :=
@@ -61,9 +59,7 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
       intro n₁0 n₂0
-      apply add_nonneg <;> apply mul_nonneg <;>
-        · first |assumption|apply Int.ofNat_zero_le
-          
+      apply add_nonneg <;> apply mul_nonneg <;> · first |assumption|apply Int.ofNat_zero_le
 #align rat.nonneg_add Rat.nonneg_add
 
 protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a * b) :=
@@ -127,7 +123,7 @@ protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤
   simpa [sub_eq_add_neg, add_comm, add_left_comm]
 #align rat.le_trans Rat.le_trans
 
-instance : LinearOrder ℚ where
+instance : LinearOrder ℚ where 
   le := Rat.Le
   le_refl := Rat.le_refl
   le_trans := @Rat.le_trans
@@ -166,10 +162,8 @@ protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.denom < q.num * p.den
   suffices p ≠ q ↔ p.num * q.denom ≠ q.num * p.denom by
     constructor <;> intro h
     · exact lt_iff_le_and_ne.elim_right ⟨h.left, this.elim_left h.right⟩
-      
     · have tmp := lt_iff_le_and_ne.elim_left h
       exact ⟨tmp.left, this.elim_right tmp.right⟩
-      
   exact not_iff_not.elim_right eq_iff_mul_eq_mul
 #align rat.lt_def Rat.lt_def
 
@@ -225,10 +219,8 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
   simp only [lt_iff_le_not_le]
   apply and_congr
   · simp [div_num_denom, Rat.le_def b_pos d_pos]
-    
   · apply not_congr
     simp [div_num_denom, Rat.le_def d_pos b_pos]
-    
 #align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mul
 
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by simp [Rat.lt_def]
@@ -240,12 +232,10 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom := by
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one,
       zero_mul] at hq
     rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_denom]
-    
   · rw [abs_of_nonneg hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one,
       zero_mul] at hq
     rw [Int.natAbs_of_nonneg hq, num_denom]
-    
 #align rat.abs_def Rat.abs_def
 
 end Rat

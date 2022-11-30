@@ -59,7 +59,8 @@ def im : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
 
 /-- Given `s` and `t` signed measures, `s + it` is a complex measure-/
 @[simps]
-def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : ComplexMeasure α where
+def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) :
+    ComplexMeasure α where 
   measureOf' i := ⟨s i, t i⟩
   empty' := by rw [s.empty, t.empty] <;> rfl
   not_measurable' i hi := by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
@@ -78,14 +79,14 @@ theorem to_complex_measure_to_signed_measure (c : ComplexMeasure α) :
   measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.to_complex_measure_to_signed_measure
 
 theorem MeasureTheory.SignedMeasure.re_to_complex_measure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).re = s := by
+    (s.toComplexMeasure t).re = s := by 
   ext (i hi)
   rfl
 #align
   measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_to_complex_measure
 
 theorem MeasureTheory.SignedMeasure.im_to_complex_measure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).im = t := by
+    (s.toComplexMeasure t).im = t := by 
   ext (i hi)
   rfl
 #align
@@ -93,7 +94,10 @@ theorem MeasureTheory.SignedMeasure.im_to_complex_measure (s t : SignedMeasure �
 
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
 @[simps]
-def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure α where
+def equivSignedMeasure :
+    ComplexMeasure α ≃
+      SignedMeasure α × SignedMeasure
+          α where 
   toFun c := ⟨c.re, c.im⟩
   invFun := fun ⟨s, t⟩ => s.toComplexMeasure t
   left_inv c := c.to_complex_measure_to_signed_measure
@@ -112,15 +116,13 @@ variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 @[simps]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
   { equivSignedMeasure with map_add' := fun c d => by ext (i hi) <;> rfl,
-    map_smul' := by
+    map_smul' := by 
       intro r c; ext (i hi)
       · change (r • c i).re = r • (c i).re
         simp [Complex.smul_re]
-        
       · ext (i hi)
         change (r • c i).im = r • (c i).im
-        simp [Complex.smul_im]
-         }
+        simp [Complex.smul_im] }
 #align
   measure_theory.complex_measure.equiv_signed_measureₗ MeasureTheory.ComplexMeasure.equivSignedMeasureₗ
 
@@ -129,15 +131,13 @@ end
 theorem absolutely_continuous_ennreal_iff (c : ComplexMeasure α) (μ : VectorMeasure α ℝ≥0∞) :
     c ≪ᵥ μ ↔ c.re ≪ᵥ μ ∧ c.im ≪ᵥ μ := by
   constructor <;> intro h
-  · constructor <;>
+  ·
+    constructor <;>
       · intro i hi
         simp [h hi]
-        
-    
   · intro i hi
     rw [← Complex.re_add_im (c i), (_ : (c i).re = 0), (_ : (c i).im = 0)]
     exacts[by simp, h.2 hi, h.1 hi]
-    
 #align
   measure_theory.complex_measure.absolutely_continuous_ennreal_iff MeasureTheory.ComplexMeasure.absolutely_continuous_ennreal_iff
 

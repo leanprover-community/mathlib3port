@@ -89,9 +89,7 @@ theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ 
   refine' ⟨⋂ i, s i, MeasurableSet.inter hsm, _, _⟩
   · rw [sum_apply _ (MeasurableSet.inter hsm), Ennreal.tsum_eq_zero]
     exact fun i => measure_mono_null (Inter_subset _ _) (hsμ i)
-    
   · rwa [compl_Inter, measure_Union_null_iff]
-    
 #align
   measure_theory.measure.mutually_singular.sum_left MeasureTheory.Measure.MutuallySingular.sum_left
 

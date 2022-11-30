@@ -48,7 +48,7 @@ variable {𝕜}
 
 theorem trivialization.coord_changeL (b : B) :
     (trivialization B F).coordChangeL 𝕜 (trivialization B F) b = ContinuousLinearEquiv.refl 𝕜 F :=
-  by
+  by 
   ext v
   rw [Trivialization.coord_changeL_apply']
   exacts[rfl, ⟨mem_univ _, mem_univ _⟩]
@@ -56,12 +56,15 @@ theorem trivialization.coord_changeL (b : B) :
 
 variable (𝕜)
 
-instance vectorBundle : VectorBundle 𝕜 F (Bundle.Trivial B F) where
-  trivialization_linear' := by
+instance vectorBundle :
+    VectorBundle 𝕜 F
+      (Bundle.Trivial B
+        F) where 
+  trivialization_linear' := by 
     intro e he
     rw [eq_trivialization B F e]
     infer_instance
-  continuous_on_coord_change' := by
+  continuous_on_coord_change' := by 
     intro e e' he he'
     obtain rfl := eq_trivialization B F e
     obtain rfl := eq_trivialization B F e'
@@ -113,8 +116,10 @@ variable [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜 (E₁ x)] [∀ x, A
 
 /-- The product of two vector bundles is a vector bundle. -/
 instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂ E₂] :
-    VectorBundle 𝕜 (F₁ × F₂) (E₁ ×ᵇ E₂) where
-  trivialization_linear' := by
+    VectorBundle 𝕜 (F₁ × F₂)
+      (E₁ ×ᵇ
+        E₂) where 
+  trivialization_linear' := by 
     rintro _ ⟨e₁, e₂, he₁, he₂, rfl⟩; skip
     infer_instance
   continuous_on_coord_change' := by
@@ -125,9 +130,7 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
           _ <;>
       dsimp only [base_set_prod, mfld_simps]
     · mfld_set_tac
-      
     · mfld_set_tac
-      
     · rintro b hb
       rw [ContinuousLinearMap.ext_iff]
       rintro ⟨v₁, v₂⟩
@@ -136,7 +139,6 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
           (e₁.coord_changeL 𝕜 e₁' b v₁, e₂.coord_changeL 𝕜 e₂' b v₂)
       rw [e₁.coord_changeL_apply e₁', e₂.coord_changeL_apply e₂', (e₁.prod e₂).coord_changeL_apply']
       exacts[rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
-      
 #align vector_bundle.prod VectorBundle.prod
 
 variable {𝕜 F₁ E₁ F₂ E₂}
@@ -147,7 +149,7 @@ theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization F�
     (hx₂ : x ∈ e₂.baseSet) :
     (e₁.Prod e₂).continuousLinearEquivAt 𝕜 x ⟨hx₁, hx₂⟩ =
       (e₁.continuousLinearEquivAt 𝕜 x hx₁).Prod (e₂.continuousLinearEquivAt 𝕜 x hx₂) :=
-  by
+  by 
   ext1
   funext v
   obtain ⟨v₁, v₂⟩ := v
@@ -180,8 +182,11 @@ instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.is_line
 #align trivialization.pullback_linear Trivialization.pullback_linear
 
 instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E] [VectorBundle 𝕜 F E]
-    (f : K) : VectorBundle 𝕜 F ((f : B' → B) *ᵖ E) where
-  trivialization_linear' := by
+    (f : K) :
+    VectorBundle 𝕜 F
+      ((f : B' → B) *ᵖ
+        E) where 
+  trivialization_linear' := by 
     rintro _ ⟨e, he, rfl⟩; skip
     infer_instance
   continuous_on_coord_change' := by

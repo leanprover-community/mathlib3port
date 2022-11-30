@@ -154,7 +154,7 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
     (h_map : ∀ X Y f, F.map f = eqToHom (h_obj X) ≫ G.map f ≫ eqToHom (h_obj Y).symm) : F = G := by
   cases' F with F_obj _ _ _
   cases' G with G_obj _ _ _
-  obtain rfl : F_obj = G_obj := by
+  obtain rfl : F_obj = G_obj := by 
     ext X
     apply h_obj
   congr

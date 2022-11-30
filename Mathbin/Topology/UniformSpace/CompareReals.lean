@@ -65,7 +65,6 @@ theorem Rat.uniform_space_eq :
     apply h
     rw [Rat.dist_eq, abs_sub_comm] at hab
     exact_mod_cast hab
-    
   · obtain ⟨ε', h', h''⟩ : ∃ ε' : ℚ, 0 < ε' ∧ (ε' : ℝ) < ε
     exact exists_pos_rat_lt ε_pos
     use ε', h'
@@ -74,17 +73,19 @@ theorem Rat.uniform_space_eq :
     rw [Rat.dist_eq, abs_sub_comm]
     refine' lt_trans _ h''
     exact_mod_cast hab
-    
 #align rat.uniform_space_eq Rat.uniform_space_eq
 
 /-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
-def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) where
+def rationalCauSeqPkg :
+    @AbstractCompletion ℚ <|
+      IsAbsoluteValue.uniformSpace
+        (abs : ℚ → ℚ) where 
   Space := ℝ
   coe := (coe : ℚ → ℝ)
   uniformStruct := by infer_instance
   complete := by infer_instance
   separation := by infer_instance
-  UniformInducing := by
+  UniformInducing := by 
     rw [Rat.uniform_space_eq]
     exact rat.uniform_embedding_coe_real.to_uniform_inducing
   dense := Rat.dense_embedding_coe_real.dense

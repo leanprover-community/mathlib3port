@@ -27,7 +27,8 @@ open Order Set TopologicalSpace Filter
 variable {α : Type _} [TopologicalSpace α]
 
 instance (priority := 100) DiscreteTopology.first_countable_topology [DiscreteTopology α] :
-    FirstCountableTopology α where nhds_generated_countable := by
+    FirstCountableTopology
+      α where nhds_generated_countable := by
     rw [nhds_discrete]
     exact is_countably_generated_pure
 #align discrete_topology.first_countable_topology DiscreteTopology.first_countable_topology
@@ -49,14 +50,11 @@ theorem bot_topological_space_eq_generate_from_of_pred_succ_order {α} [PartialO
   have h_singleton_eq_inter : {a} = Iio (succ a) ∩ Ioi (pred a) := by
     suffices h_singleton_eq_inter' : {a} = Iic a ∩ Ici a
     · rw [h_singleton_eq_inter', ← Ioi_pred, ← Iio_succ]
-      
     rw [inter_comm, Ici_inter_Iic, Icc_self a]
   rw [h_singleton_eq_inter]
   apply IsOpen.inter
   · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-    
   · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-    
 #align
   bot_topological_space_eq_generate_from_of_pred_succ_order bot_topological_space_eq_generate_from_of_pred_succ_order
 
@@ -65,10 +63,8 @@ theorem discrete_topology_iff_order_topology_of_pred_succ' [PartialOrder α] [Pr
   refine' ⟨fun h => ⟨_⟩, fun h => ⟨_⟩⟩
   · rw [h.eq_bot]
     exact bot_topological_space_eq_generate_from_of_pred_succ_order
-    
   · rw [h.topology_eq_generate_intervals]
     exact bot_topological_space_eq_generate_from_of_pred_succ_order.symm
-    
 #align
   discrete_topology_iff_order_topology_of_pred_succ' discrete_topology_iff_order_topology_of_pred_succ'
 
@@ -87,30 +83,22 @@ theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α]
     · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply is_open_univ
-      
     · rw [is_bot_iff_is_min] at ha_bot
       rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-      
-    
   · rw [is_top_iff_is_max] at ha_top
     rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
     by_cases ha_bot : IsBot a
     · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-      
     · rw [is_bot_iff_is_min] at ha_bot
       rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply IsOpen.inter
       · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-        
       · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-        
-      
-    
 #align
   linear_order.bot_topological_space_eq_generate_from LinearOrder.bot_topological_space_eq_generate_from
 
@@ -119,10 +107,8 @@ theorem discrete_topology_iff_order_topology_of_pred_succ [LinearOrder α] [Pred
   refine' ⟨fun h => ⟨_⟩, fun h => ⟨_⟩⟩
   · rw [h.eq_bot]
     exact LinearOrder.bot_topological_space_eq_generate_from
-    
   · rw [h.topology_eq_generate_intervals]
     exact linear_order.bot_topological_space_eq_generate_from.symm
-    
 #align
   discrete_topology_iff_order_topology_of_pred_succ discrete_topology_iff_order_topology_of_pred_succ
 
@@ -132,7 +118,7 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : Dis
 #align discrete_topology.order_topology_of_pred_succ DiscreteTopology.order_topology_of_pred_succ
 
 instance (priority := 100) DiscreteTopology.metrizableSpace [DiscreteTopology α] :
-    MetrizableSpace α := by
+    MetrizableSpace α := by 
   rw [DiscreteTopology.eq_bot α]
   exact @UniformSpace.metrizableSpace α ⊥ (is_countably_generated_principal _) _
 #align discrete_topology.metrizable_space DiscreteTopology.metrizableSpace

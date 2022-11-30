@@ -39,7 +39,7 @@ namespace Units
 /-- In a complete normed ring, a perturbation of `1` by an element `t` of distance less than `1`
 from `1` is a unit.  Here we construct its `units` structure.  -/
 @[simps coe]
-def oneSub (t : R) (h : ‖t‖ < 1) : Rˣ where
+def oneSub (t : R) (h : ‖t‖ < 1) : Rˣ where 
   val := 1 - t
   inv := ∑' n : ℕ, t ^ n
   val_inv := mul_neg_geom_series t h
@@ -54,7 +54,7 @@ def add (x : Rˣ) (t : R) (h : ‖t‖ < ‖(↑x⁻¹ : R)‖⁻¹) : Rˣ :=
     (-- to make `coe_add` true definitionally, for convenience
       x *
       Units.oneSub (-(↑x⁻¹ * t))
-        (by
+        (by 
           nontriviality R using zero_lt_one
           have hpos : 0 < ‖(↑x⁻¹ : R)‖ := Units.norm_pos x⁻¹
           calc
@@ -119,7 +119,7 @@ theorem inverse_one_sub (t : R) (h : ‖t‖ < 1) : inverse (1 - t) = ↑(Units.
 
 /-- The formula `inverse (x + t) = inverse (1 + x⁻¹ * t) * x⁻¹` holds for `t` sufficiently small. -/
 theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inverse (1 + ↑x⁻¹ * t) * ↑x⁻¹ :=
-  by
+  by 
   nontriviality R
   rw [eventually_iff, Metric.mem_nhds_iff]
   have hinv : 0 < ‖(↑x⁻¹ : R)‖⁻¹ := by cancel_denoms
@@ -153,11 +153,9 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
   congr
   · rw [mul_assoc, (Units.oneSub t ht).mul_inv]
     simp
-    
   · simp only [Units.coe_one_sub]
     rw [← add_mul, geom_sum_mul_neg]
     simp
-    
 #align normed_ring.inverse_one_sub_nth_order NormedRing.inverse_one_sub_nth_order
 
 /-- The formula
@@ -167,7 +165,7 @@ theorem inverse_add_nth_order (x : Rˣ) (n : ℕ) :
     ∀ᶠ t in 𝓝 0,
       inverse ((x : R) + t) =
         (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹ + (-↑x⁻¹ * t) ^ n * inverse (x + t) :=
-  by
+  by 
   refine' (inverse_add x).mp _
   have hzero : tendsto (fun t : R => -↑x⁻¹ * t) (𝓝 0) (𝓝 0) := by
     convert ((mul_left_continuous (-(↑x⁻¹ : R))).Tendsto 0).comp tendsto_id
@@ -187,13 +185,13 @@ theorem inverse_one_sub_norm : (fun t : R => inverse (1 - t)) =O[𝓝 0] (fun t 
   refine' ⟨‖(1 : R)‖ + 1, (2 : ℝ)⁻¹, by norm_num, _⟩
   intro t ht
   simp only [ball, dist_zero_right, Set.mem_set_of_eq] at ht
-  have ht' : ‖t‖ < 1 := by
+  have ht' : ‖t‖ < 1 := by 
     have : (2 : ℝ)⁻¹ < 1 := by cancel_denoms
     linarith
   simp only [inverse_one_sub t ht', norm_one, mul_one, Set.mem_set_of_eq]
   change ‖∑' n : ℕ, t ^ n‖ ≤ _
   have := NormedRing.tsum_geometric_of_norm_lt_1 t ht'
-  have : (1 - ‖t‖)⁻¹ ≤ 2 := by
+  have : (1 - ‖t‖)⁻¹ ≤ 2 := by 
     rw [← inv_inv (2 : ℝ)]
     refine' inv_le_inv_of_le (by norm_num) _
     have : (2 : ℝ)⁻¹ + (2 : ℝ)⁻¹ = 1 := by ring
@@ -223,10 +221,9 @@ is `O(t ^ n)` as `t → 0`. -/
 theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
     (fun t : R => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹) =O[𝓝 (0 : R)]
       fun t => ‖t‖ ^ n :=
-  by
+  by 
   by_cases h : n = 0
   · simpa [h] using inverse_add_norm x
-    
   have hn : 0 < n := Nat.pos_of_ne_zero h
   simp [is_O_iff]
   cases' is_O_iff.mp (inverse_add_norm x) with C hC
@@ -234,7 +231,7 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
   have h :
     eventually_eq (𝓝 (0 : R)) (fun t => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹)
       fun t => (-↑x⁻¹ * t) ^ n * inverse (x + t) :=
-    by
+    by 
     refine' (inverse_add_nth_order x n).mp (eventually_of_forall _)
     intro t ht
     convert congr_arg (fun a => a - (range n).Sum (pow (-↑x⁻¹ * t)) * ↑x⁻¹) ht

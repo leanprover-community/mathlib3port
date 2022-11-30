@@ -123,19 +123,19 @@ theorem of_measurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
 #align measure_theory.measure.of_measurable_apply MeasureTheory.Measure.of_measurable_apply
 
 theorem to_outer_measure_injective : Injective (toOuterMeasure : Measure α → OuterMeasure α) :=
-  fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by
+  fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by 
   congr
   exact h
 #align
   measure_theory.measure.to_outer_measure_injective MeasureTheory.Measure.to_outer_measure_injective
 
-@[ext.1]
+@[ext]
 theorem ext (h : ∀ s, MeasurableSet s → μ₁ s = μ₂ s) : μ₁ = μ₂ :=
   to_outer_measure_injective <| by rw [← trimmed, outer_measure.trim_congr h, trimmed]
 #align measure_theory.measure.ext MeasureTheory.Measure.ext
 
 theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s :=
-  ⟨by
+  ⟨by 
     rintro rfl s hs
     rfl, Measure.ext⟩
 #align measure_theory.measure.ext_iff MeasureTheory.Measure.ext_iff
@@ -263,7 +263,6 @@ theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
   convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
   · ext
     rw [finite.mem_to_finset]
-    
   apply Ennreal.sum_lt_top; simpa only [finite.mem_to_finset]
 #align measure_theory.measure_bUnion_lt_top MeasureTheory.measure_bUnion_lt_top
 
@@ -318,9 +317,7 @@ theorem measure_union_lt_top (hs : μ s < ∞) (ht : μ t < ∞) : μ (s ∪ t) 
 theorem measure_union_lt_top_iff : μ (s ∪ t) < ∞ ↔ μ s < ∞ ∧ μ t < ∞ := by
   refine' ⟨fun h => ⟨_, _⟩, fun h => measure_union_lt_top h.1 h.2⟩
   · exact (measure_mono (Set.subset_union_left s t)).trans_lt h
-    
   · exact (measure_mono (Set.subset_union_right s t)).trans_lt h
-    
 #align measure_theory.measure_union_lt_top_iff MeasureTheory.measure_union_lt_top_iff
 
 theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪ t) ≠ ∞ :=
@@ -362,7 +359,8 @@ theorem measure_inter_null_of_null_left {S : Set α} (T : Set α) (h : μ S = 0)
 
 
 /-- The “almost everywhere” filter of co-null sets. -/
-def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α where
+def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) :
+    Filter α where 
   sets := { s | μ (sᶜ) = 0 }
   univ_sets := by simp
   inter_sets s t hs ht := by
@@ -413,7 +411,7 @@ theorem ae_of_all {p : α → Prop} (μ : Measure α) : (∀ a, p a) → ∀ᵐ 
 --⟨λ s hs, let ⟨t, hst, htm, htμ⟩ := exists_measurable_superset_of_null hs in
 --  ⟨tᶜ, compl_mem_ae_iff.2 htμ, htm.compl, compl_subset_comm.1 hst⟩⟩
 instance : CountableInterFilter μ.ae :=
-  ⟨by
+  ⟨by 
     intro S hSc hS
     rw [mem_ae_iff, compl_sInter, sUnion_image]
     exact (measure_bUnion_null_iff hSc).2 hS⟩
@@ -566,7 +564,7 @@ theorem ae_le_to_measurable : s ≤ᵐ[μ] toMeasurable μ s :=
 
 @[simp]
 theorem measurableSetToMeasurable (μ : Measure α) (s : Set α) : MeasurableSet (toMeasurable μ s) :=
-  by
+  by 
   rw [to_measurable]; split_ifs with hs h's
   exacts[hs.some_spec.snd.1, h's.some_spec.snd.1, (exists_measurable_superset μ s).some_spec.2.1]
 #align measure_theory.measurable_set_to_measurable MeasureTheory.measurableSetToMeasurable
@@ -575,11 +573,8 @@ theorem measurableSetToMeasurable (μ : Measure α) (s : Set α) : MeasurableSet
 theorem measure_to_measurable (s : Set α) : μ (toMeasurable μ s) = μ s := by
   rw [to_measurable]; split_ifs with hs h's
   · exact measure_congr hs.some_spec.snd.2
-    
   · simpa only [inter_univ] using h's.some_spec.snd.2 univ MeasurableSet.univ
-    
   · exact (exists_measurable_superset μ s).some_spec.2.2
-    
 #align measure_theory.measure_to_measurable MeasureTheory.measure_to_measurable
 
 /-- A measure space is a measurable space equipped with a

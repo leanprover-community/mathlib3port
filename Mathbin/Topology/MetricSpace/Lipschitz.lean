@@ -287,7 +287,7 @@ endomorphism. -/
 protected theorem listProd (f : ι → Function.EndCat α) (K : ι → ℝ≥0)
     (h : ∀ i, LipschitzWith (K i) (f i)) : ∀ l : List ι, LipschitzWith (l.map K).Prod (l.map f).Prod
   | [] => by simpa using LipschitzWith.id
-  | i::l => by
+  | i::l => by 
     simp only [List.map_cons, List.prod_cons]
     exact (h i).mul (list_prod l)
 #align lipschitz_with.list_prod LipschitzWith.listProd
@@ -295,7 +295,7 @@ protected theorem listProd (f : ι → Function.EndCat α) (K : ι → ℝ≥0)
 protected theorem pow {f : Function.EndCat α} {K} (h : LipschitzWith K f) :
     ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : Function.EndCat α)
   | 0 => LipschitzWith.id
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ, pow_succ]
     exact h.mul (pow n)
 #align lipschitz_with.pow LipschitzWith.pow
@@ -401,7 +401,7 @@ theorem diam_image_le (hf : LipschitzWith K f) (s : Set α) (hs : Metric.Bounded
 #align lipschitz_with.diam_image_le LipschitzWith.diam_image_le
 
 protected theorem distLeft (y : α) : LipschitzWith 1 fun x => dist x y :=
-  LipschitzWith.ofLeAdd fun x z => by
+  LipschitzWith.ofLeAdd fun x z => by 
     rw [add_comm]
     apply dist_triangle
 #align lipschitz_with.dist_left LipschitzWith.distLeft
@@ -492,12 +492,8 @@ theorem bounded_prod_of_nonempty (hs : s.Nonempty) (ht : t.Nonempty) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem bounded_prod : Bounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ Bounded s ∧ Bounded t := by
-  rcases s.eq_empty_or_nonempty with (rfl | hs);
-  · simp
-    
-  rcases t.eq_empty_or_nonempty with (rfl | ht);
-  · simp
-    
+  rcases s.eq_empty_or_nonempty with (rfl | hs); · simp
+  rcases t.eq_empty_or_nonempty with (rfl | ht); · simp
   simp only [bounded_prod_of_nonempty hs ht, hs.ne_empty, ht.ne_empty, false_or_iff]
 #align metric.bounded_prod Metric.bounded_prod
 
@@ -635,7 +631,8 @@ open Metric
 /-- If a function is locally Lipschitz around a point, then it is continuous at this point. -/
 theorem continuous_at_of_locally_lipschitz [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β}
     {x : α} {r : ℝ} (hr : 0 < r) (K : ℝ) (h : ∀ y, dist y x < r → dist (f y) (f x) ≤ K * dist y x) :
-    ContinuousAt f x := by
+    ContinuousAt f x :=
+  by
   -- We use `h` to squeeze `dist (f y) (f x)` between `0` and `K * dist y x`
   refine'
     tendsto_iff_dist_tendsto_zero.2
@@ -649,14 +646,14 @@ theorem continuous_at_of_locally_lipschitz [PseudoMetricSpace α] [PseudoMetricS
 /-- A function `f : α → ℝ` which is `K`-Lipschitz on a subset `s` admits a `K`-Lipschitz extension
 to the whole space. -/
 theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s : Set α} {K : ℝ≥0}
-    (hf : LipschitzOnWith K f s) : ∃ g : α → ℝ, LipschitzWith K g ∧ EqOn f g s := by
+    (hf : LipschitzOnWith K f s) : ∃ g : α → ℝ, LipschitzWith K g ∧ EqOn f g s :=
+  by
   /- An extension is given by `g y = Inf {f x + K * dist y x | x ∈ s}`. Taking `x = y`, one has
     `g y ≤ f y` for `y ∈ s`, and the other inequality holds because `f` is `K`-Lipschitz, so that it
     can not counterbalance the growth of `K * dist y x`. One readily checks from the formula that the
     extended function is also `K`-Lipschitz. -/
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · exact ⟨fun x => 0, (LipschitzWith.const _).weaken (zero_le _), eq_on_empty _ _⟩
-    
   have : Nonempty s := by simp only [hs, nonempty_coe_sort]
   let g := fun y : α => infi fun x : s => f x + K * dist y x
   have B : ∀ y : α, BddBelow (range fun x : s => f x + K * dist y x) := by
@@ -671,7 +668,7 @@ theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s :
       _ ≤ f t + K * (dist y z + dist y t) :=
         add_le_add_left (mul_le_mul_of_nonneg_left (dist_triangle_left _ _ _) K.2) _
       
-  have E : eq_on f g s := by
+  have E : eq_on f g s := by 
     intro x hx
     refine' le_antisymm (le_cinfi fun y => hf.le_add_mul hx y.2) _
     simpa only [add_zero, Subtype.coe_mk, mul_zero, dist_self] using cinfi_le (B x) ⟨x, hx⟩
@@ -702,10 +699,8 @@ theorem LipschitzOnWith.extend_pi [PseudoMetricSpace α] [Fintype ι] {f : α �
   choose g hg using this
   refine' ⟨fun x i => g i x, LipschitzWith.ofDistLeMul fun x y => _, _⟩
   · exact (dist_pi_le_iff (mul_nonneg K.2 dist_nonneg)).2 fun i => (hg i).1.dist_le_mul x y
-    
   · intro x hx
     ext1 i
     exact (hg i).2 hx
-    
 #align lipschitz_on_with.extend_pi LipschitzOnWith.extend_pi
 

@@ -83,7 +83,7 @@ instance : CoeFun (PicardLindelof E) fun _ => ℝ → E → E :=
 
 instance : Inhabited (PicardLindelof E) :=
   ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0,
-      { ht₀ := by
+      { ht₀ := by 
           rw [Subtype.coe_mk, Icc_self]
           exact mem_singleton _,
         hR := by rfl, lipschitz := fun t ht => (LipschitzWith.const 0).LipschitzOnWith _,
@@ -131,10 +131,8 @@ theorem dist_t₀_le (t : icc v.tMin v.tMax) : dist t v.t₀ ≤ v.tDist := by
   cases' le_total t v.t₀ with ht ht
   · rw [abs_of_nonpos (sub_nonpos.2 <| Subtype.coe_le_coe.2 ht), neg_sub]
     exact (sub_le_sub_left t.2.1 _).trans (le_max_right _ _)
-    
   · rw [abs_of_nonneg (sub_nonneg.2 <| Subtype.coe_le_coe.2 ht)]
     exact (sub_le_sub_right t.2.2 _).trans (le_max_left _ _)
-    
 #align picard_lindelof.dist_t₀_le PicardLindelof.dist_t₀_le
 
 /-- Projection $ℝ → [t_{\min}, t_{\max}]$ sending $(-∞, t_{\min}]$ to $t_{\min}$ and $[t_{\max}, ∞)$
@@ -186,7 +184,7 @@ protected theorem continuous : Continuous f :=
 
 /-- Each curve in `picard_lindelof.fun_space` is continuous. -/
 def toContinuousMap : v.FunSpace ↪ C(icc v.tMin v.tMax, E) :=
-  ⟨fun f => ⟨f, f.Continuous⟩, fun f g h => by
+  ⟨fun f => ⟨f, f.Continuous⟩, fun f g h => by 
     cases f
     cases g
     simpa using h⟩
@@ -202,15 +200,13 @@ theorem uniform_inducing_to_continuous_map : UniformInducing (@toContinuousMap _
 
 theorem range_to_continuous_map :
     range toContinuousMap = { f : C(icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.c f } :=
-  by
+  by 
   ext f; constructor
   · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
     exact ⟨hf₀, hf_lip⟩
-    
   · rcases f with ⟨f, hf⟩
     rintro ⟨hf₀, hf_lip⟩
     exact ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
-    
 #align
   picard_lindelof.fun_space.range_to_continuous_map PicardLindelof.FunSpace.range_to_continuous_map
 
@@ -281,7 +277,8 @@ variable [CompleteSpace E]
 that the fixed point of this map is the solution of the corresponding ODE.
 
 More precisely, some iteration of this map is a contracting map. -/
-def next (f : FunSpace v) : FunSpace v where
+def next (f : FunSpace v) :
+    FunSpace v where 
   toFun t := v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ
   map_t₀' := by rw [integral_same, add_zero]
   lipschitz' :=
@@ -324,17 +321,15 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
   calc
     ‖∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ‖ ≤
         ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * |τ - v.t₀|) ^ n / n ! * d) :=
-      by
+      by 
       refine' norm_integral_le_of_norm_le (Continuous.integrableOnIntervalOc _) _
       · continuity
-        
       · refine' (ae_restrict_mem measurableSetIoc).mono fun τ hτ => _
         refine'
           (v.lipschitz_on_with (v.proj τ).2).norm_sub_le_of_le (f₁.mem_closed_ball _)
             (f₂.mem_closed_ball _) ((h _).trans_eq _)
         rw [v.proj_of_mem]
         exact interval_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
-        
     _ = (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d := _
     
   simp_rw [mul_pow, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left,
@@ -348,10 +343,8 @@ theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : icc v
   induction' n with n ihn generalizing t
   · rw [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one, one_mul]
     exact dist_apply_le_dist f₁ f₂ t
-    
   · rw [iterate_succ_apply', iterate_succ_apply']
     exact dist_next_apply_le_of_le ihn _
-    
 #align
   picard_lindelof.fun_space.dist_iterate_next_apply_le PicardLindelof.FunSpace.dist_iterate_next_apply_le
 
@@ -393,15 +386,13 @@ theorem exists_solution :
     ∃ f : ℝ → E,
       f v.t₀ = v.x₀ ∧
         ∀ t ∈ icc v.tMin v.tMax, HasDerivWithinAt f (v t (f t)) (icc v.tMin v.tMax) t :=
-  by
+  by 
   rcases v.exists_fixed with ⟨f, hf⟩
   refine' ⟨f ∘ v.proj, _, fun t ht => _⟩
   · simp only [(· ∘ ·), proj_coe, f.map_t₀]
-    
   · simp only [(· ∘ ·), v.proj_of_mem ht]
     lift t to Icc v.t_min v.t_max using ht
     simpa only [hf, v.proj_coe] using f.has_deriv_within_at_next t
-    
 #align picard_lindelof.exists_solution PicardLindelof.exists_solution
 
 end PicardLindelof
@@ -418,7 +409,7 @@ theorem exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof [CompleteSpace E
     (hpl : IsPicardLindelof v t_min t₀ t_max x₀ L R C) :
     ∃ f : ℝ → E,
       f t₀ = x₀ ∧ ∀ t ∈ icc t_min t_max, HasDerivWithinAt f (v t (f t)) (icc t_min t_max) t :=
-  by
+  by 
   lift C to ℝ≥0 using (norm_nonneg _).trans hpl.norm_le₀
   lift t₀ to Icc t_min t_max using hpl.ht₀
   exact
@@ -433,7 +424,8 @@ variable [ProperSpace E] {v : E → E} (t₀ : ℝ) (x₀ : E)
   Picard-Lindelöf theorem. -/
 theorem exists_is_picard_lindelof_const_of_cont_diff_on_nhds {s : Set E} (hv : ContDiffOn ℝ 1 v s)
     (hs : s ∈ 𝓝 x₀) :
-    ∃ ε > (0 : ℝ), ∃ L R C, IsPicardLindelof (fun t => v) (t₀ - ε) t₀ (t₀ + ε) x₀ L R C := by
+    ∃ ε > (0 : ℝ), ∃ L R C, IsPicardLindelof (fun t => v) (t₀ - ε) t₀ (t₀ + ε) x₀ L R C :=
+  by
   -- extract Lipschitz constant
   obtain ⟨L, s', hs', hlip⟩ :=
     ContDiffAt.exists_lipschitz_on_with
@@ -446,21 +438,19 @@ theorem exists_is_picard_lindelof_const_of_cont_diff_on_nhds {s : Set E} (hv : C
       (-- uses proper_space E
         hv.continuous_on.norm.mono
         (subset_inter_iff.mp ((closed_ball_subset_ball (half_lt_self hr)).trans hball)).left)
-  have hC' : 0 ≤ C := by
+  have hC' : 0 ≤ C := by 
     apply (norm_nonneg (v x₀)).trans
     apply hC
     exact ⟨x₀, ⟨mem_closed_ball_self hr', rfl⟩⟩
   set ε := if C = 0 then 1 else r / 2 / C with hε
-  have hε0 : 0 < ε := by
+  have hε0 : 0 < ε := by 
     rw [hε]
     split_ifs
     · exact zero_lt_one
-      
     · exact div_pos (half_pos hr) (lt_of_le_of_ne hC' (Ne.symm h))
-      
   refine' ⟨ε, hε0, L, r / 2, C, _⟩
   exact
-    { ht₀ := by
+    { ht₀ := by 
         rw [← Real.closed_ball_eq_Icc]
         exact mem_closed_ball_self hε0.le,
       hR := (half_pos hr).le,
@@ -472,9 +462,7 @@ theorem exists_is_picard_lindelof_const_of_cont_diff_on_nhds {s : Set E} (hv : C
         rw [add_sub_cancel', sub_sub_cancel, max_self, mul_ite, mul_one]
         split_ifs
         · rwa [← h] at hr'
-          
-        · exact (mul_div_cancel' (r / 2) h).le
-           }
+        · exact (mul_div_cancel' (r / 2) h).le }
 #align
   exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_is_picard_lindelof_const_of_cont_diff_on_nhds
 

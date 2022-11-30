@@ -45,27 +45,19 @@ instance {B : C} [HasEqualizers C] : HasEqualizers (Over B) := by
 instance has_finite_limits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) := by
   apply @has_finite_limits_of_has_equalizers_and_finite_products _ _ _ _
   · exact construct_products.over_finite_products_of_finite_wide_pullbacks
-    
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
     · haveI : has_pullbacks C := ⟨by infer_instance⟩
       exact construct_products.over_binary_product_of_pullback
-      
     · infer_instance
-      
-    
 #align category_theory.over.has_finite_limits CategoryTheory.Over.has_finite_limits
 
 instance has_limits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over B) := by
   apply @has_limits_of_has_equalizers_and_products _ _ _ _
   · exact construct_products.over_products_of_wide_pullbacks
-    
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
     · haveI : has_pullbacks C := ⟨inferInstance⟩
       exact construct_products.over_binary_product_of_pullback
-      
     · infer_instance
-      
-    
 #align category_theory.over.has_limits CategoryTheory.Over.has_limits
 
 end CategoryTheory.Over

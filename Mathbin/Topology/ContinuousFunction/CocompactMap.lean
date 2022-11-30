@@ -63,9 +63,10 @@ section Basics
 variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
   [TopologicalSpace δ]
 
-instance : CocompactMapClass (CocompactMap α β) α β where
+instance : CocompactMapClass (CocompactMap α β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -82,19 +83,20 @@ theorem coe_to_continuous_fun {f : CocompactMap α β} : (f.toContinuousMap : α
   rfl
 #align cocompact_map.coe_to_continuous_fun CocompactMap.coe_to_continuous_fun
 
-@[ext.1]
+@[ext]
 theorem ext {f g : CocompactMap α β} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align cocompact_map.ext CocompactMap.ext
 
 /-- Copy of a `cocompact_map` with a new `to_fun` equal to the old one. Useful
 to fix definitional equalities. -/
-protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : CocompactMap α β where
+protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) :
+    CocompactMap α β where 
   toFun := f'
-  continuous_to_fun := by
+  continuous_to_fun := by 
     rw [h]
     exact f.continuous_to_fun
-  cocompact_tendsto' := by
+  cocompact_tendsto' := by 
     simp_rw [h]
     exact f.cocompact_tendsto'
 #align cocompact_map.copy CocompactMap.copy
@@ -194,7 +196,7 @@ end CocompactMap
 /-- A homemomorphism is a cocompact map. -/
 @[simps]
 def Homeomorph.toCocompactMap {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
-    (f : α ≃ₜ β) : CocompactMap α β where
+    (f : α ≃ₜ β) : CocompactMap α β where 
   toFun := f
   continuous_to_fun := f.Continuous
   cocompact_tendsto' := by

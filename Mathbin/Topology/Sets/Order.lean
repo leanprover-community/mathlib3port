@@ -27,9 +27,10 @@ structure ClopenUpperSet (α : Type _) [TopologicalSpace α] [LE α] extends Clo
 
 namespace ClopenUpperSet
 
-instance : SetLike (ClopenUpperSet α) α where
+instance : SetLike (ClopenUpperSet α)
+      α where 
   coe s := s.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
@@ -48,7 +49,7 @@ def toUpperSet (s : ClopenUpperSet α) : UpperSet α :=
   ⟨s, s.upper⟩
 #align clopen_upper_set.to_upper_set ClopenUpperSet.toUpperSet
 
-@[ext.1]
+@[ext]
 protected theorem ext {s t : ClopenUpperSet α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 #align clopen_upper_set.ext ClopenUpperSet.ext
@@ -64,10 +65,10 @@ instance : HasSup (ClopenUpperSet α) :=
 instance : HasInf (ClopenUpperSet α) :=
   ⟨fun s t => ⟨s.toClopens ⊓ t.toClopens, s.upper.inter t.upper⟩⟩
 
-instance : HasTop (ClopenUpperSet α) :=
+instance : Top (ClopenUpperSet α) :=
   ⟨⟨⊤, is_upper_set_univ⟩⟩
 
-instance : HasBot (ClopenUpperSet α) :=
+instance : Bot (ClopenUpperSet α) :=
   ⟨⟨⊥, is_upper_set_empty⟩⟩
 
 instance : Lattice (ClopenUpperSet α) :=

@@ -69,7 +69,6 @@ theorem AffineBasis.interior_convex_hull {ι E : Type _} [Finite ι] [NormedAddC
     have : range b.points = univ :=
       AffineSubspace.eq_univ_of_subsingleton_span_eq_top (subsingleton_range _) b.tot
     simp [this]
-    
   · -- The positive-dimensional case.
     haveI : FiniteDimensional ℝ E := b.finite_dimensional
     have : convexHull ℝ (range b.points) = ⋂ i, b.coord i ⁻¹' Ici 0 := by
@@ -80,7 +79,6 @@ theorem AffineBasis.interior_convex_hull {ι E : Type _} [Finite ι] [NormedAddC
       IsOpenMap.preimage_interior_eq_interior_preimage (is_open_map_barycentric_coord b _)
         (continuous_barycentric_coord b _),
       interior_Ici, mem_Inter, mem_set_of_eq, mem_Ioi, mem_preimage]
-    
 #align affine_basis.interior_convex_hull AffineBasis.interior_convex_hull
 
 variable {V P : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P]
@@ -100,7 +98,7 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
   obtain ⟨ε, ε0, hεu⟩ := metric.nhds_basis_closed_ball.mem_iff.1 (hu.mem_nhds <| hsu hq)
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := exists_subset_affine_independent_affine_span_eq_top h
   let f : P → P := fun y => line_map q y (ε / dist y q)
-  have hf : ∀ y, f y ∈ u := by
+  have hf : ∀ y, f y ∈ u := by 
     refine' fun y => hεu _
     simp only [f]
     rw [Metric.mem_closed_ball, line_map_apply, dist_vadd_left, norm_smul, Real.norm_eq_abs,
@@ -108,23 +106,19 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
     exact mul_le_of_le_one_left ε0.le (div_self_le_one _)
   have hεyq : ∀ (y) (_ : y ∉ s), ε / dist y q ≠ 0 := fun y hy =>
     div_ne_zero ε0.ne' (dist_ne_zero.2 (ne_of_mem_of_not_mem hq hy).symm)
-  classical
-  let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
-  refine' ⟨Set.range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
-  · intro p hp
-    use ⟨p, ht₁ hp⟩
-    simp [w, hp]
-    
-  · rintro y ⟨⟨p, hp⟩, rfl⟩
-    by_cases hps : p ∈ s <;>
-        simp only [w, hps, line_map_apply_one, Units.coe_mk0, dif_neg, dif_pos, not_false_iff,
-          Units.val_one, Subtype.coe_mk] <;>
-      [exact hsu hps, exact hf p]
-    
-  · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
-    
-  · rw [affine_span_eq_affine_span_line_map_units (ht₁ hq) w, ht₃]
-    
+  classical 
+    let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
+    refine' ⟨Set.range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
+    · intro p hp
+      use ⟨p, ht₁ hp⟩
+      simp [w, hp]
+    · rintro y ⟨⟨p, hp⟩, rfl⟩
+      by_cases hps : p ∈ s <;>
+          simp only [w, hps, line_map_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,
+            Units.val_one, Subtype.coe_mk] <;>
+        [exact hsu hps, exact hf p]
+    · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
+    · rw [affine_span_eq_affine_span_line_map_units (ht₁ hq) w, ht₃]
 #align
   is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affine_independent_span_eq_top
 

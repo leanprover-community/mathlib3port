@@ -46,7 +46,8 @@ namespace circle
 /-- `complex.arg ∘ coe` and `exp_map_circle` define a local equivalence between `circle and `ℝ` with
 `source = set.univ` and `target = set.Ioc (-π) π`. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def argLocalEquiv : LocalEquiv circle ℝ where
+noncomputable def argLocalEquiv :
+    LocalEquiv circle ℝ where 
   toFun := arg ∘ coe
   invFun := expMapCircle
   source := univ
@@ -59,7 +60,9 @@ noncomputable def argLocalEquiv : LocalEquiv circle ℝ where
 
 /-- `complex.arg` and `exp_map_circle` define an equivalence between `circle and `(-π, π]`. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def argEquiv : circle ≃ ioc (-π) π where
+noncomputable def argEquiv :
+    circle ≃ ioc (-π)
+        π where 
   toFun z := ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
   left_inv z := argLocalEquiv.left_inv trivial
@@ -116,7 +119,7 @@ theorem Real.Angle.exp_map_circle_coe (x : ℝ) : Real.Angle.expMapCircle x = ex
 #align real.angle.exp_map_circle_coe Real.Angle.exp_map_circle_coe
 
 theorem Real.Angle.coe_exp_map_circle (θ : Real.Angle) : (θ.expMapCircle : ℂ) = θ.cos + θ.sin * I :=
-  by
+  by 
   induction θ using Real.Angle.induction_on
   simp [Complex.exp_mul_I]
 #align real.angle.coe_exp_map_circle Real.Angle.coe_exp_map_circle
@@ -136,7 +139,7 @@ theorem Real.Angle.exp_map_circle_neg (θ : Real.Angle) :
 @[simp]
 theorem Real.Angle.exp_map_circle_add (θ₁ θ₂ : Real.Angle) :
     Real.Angle.expMapCircle (θ₁ + θ₂) = Real.Angle.expMapCircle θ₁ * Real.Angle.expMapCircle θ₂ :=
-  by
+  by 
   induction θ₁ using Real.Angle.induction_on
   induction θ₂ using Real.Angle.induction_on
   exact exp_map_circle_add θ₁ θ₂

@@ -64,13 +64,13 @@ theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn := by
   exacts[this.1, this.2]
 #align continuous_affine_map.coe_injective ContinuousAffineMap.coe_injective
 
-@[ext.1]
+@[ext]
 theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
   coe_injective <| funext h
 #align continuous_affine_map.ext ContinuousAffineMap.ext
 
 theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by
+  ⟨by 
     rintro rfl x
     rfl, ext⟩
 #align continuous_affine_map.ext_iff ContinuousAffineMap.ext_iff
@@ -111,13 +111,13 @@ theorem coe_to_continuous_map (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f 
 #align continuous_affine_map.coe_to_continuous_map ContinuousAffineMap.coe_to_continuous_map
 
 theorem to_affine_map_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
-  by
+  by 
   ext a
   exact AffineMap.congr_fun h a
 #align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affine_map_injective
 
 theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
-  by
+  by 
   ext a
   exact ContinuousMap.congr_fun h a
 #align
@@ -301,7 +301,8 @@ variable [AddCommGroup V] [Module R V] [TopologicalSpace V]
 variable [AddCommGroup W] [Module R W] [TopologicalSpace W]
 
 /-- A continuous linear map can be regarded as a continuous affine map. -/
-def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W where
+def toContinuousAffineMap (f : V →L[R] W) :
+    V →A[R] W where 
   toFun := f
   linear := f
   map_vadd' := by simp

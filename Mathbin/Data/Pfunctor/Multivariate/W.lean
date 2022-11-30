@@ -113,7 +113,7 @@ theorem comp_W_path_cases_on {α β : Typevec n} (h : α ⟹ β) {a : P.A} {f : 
 tree whereas, for a given `a : A`, `B a` is a valid path in tree `a` so
 that `Wp.obj α` is made of a tree and a function from its valid paths to
 the values it contains  -/
-def wp : Mvpfunctor n where
+def wp : Mvpfunctor n where 
   A := P.last.W
   B := P.WPath
 #align mvpfunctor.Wp Mvpfunctor.wp
@@ -211,7 +211,7 @@ theorem W_ind {α : Typevec n} {C : P.W α → Prop}
     (ih :
       ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α),
         (∀ i, C (f i)) → C (P.wMk a f' f)) :
-    ∀ x, C x := by
+    ∀ x, C x := by 
   intro x; cases' x with a f
   apply @Wp_ind n P α fun a f => C ⟨a, f⟩; dsimp
   intro a f f' ih'

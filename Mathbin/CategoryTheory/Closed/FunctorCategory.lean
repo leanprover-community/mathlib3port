@@ -41,7 +41,7 @@ def closedUnit (F : D ⥤ C) :
         closedIhom
           F where app G :=
     { app := fun X => (ihom.coev (F.obj X)).app (G.obj X),
-      naturality' := by
+      naturality' := by 
         intro X Y f
         dsimp
         simp only [ihom.coev_naturality, closed_ihom_obj_map, monoidal.tensor_obj_map]
@@ -59,7 +59,7 @@ def closedCounit (F : D ⥤ C) :
         (D ⥤
           C) where app G :=
     { app := fun X => (ihom.ev (F.obj X)).app (G.obj X),
-      naturality' := by
+      naturality' := by 
         intro X Y f
         dsimp
         simp only [closed_ihom_obj_map, pre_comm_ihom_map]

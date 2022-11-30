@@ -72,7 +72,8 @@ theorem SpecCat.Top_map_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
 /-- The spectrum, as a contravariant functor from commutative rings to topological spaces.
 -/
 @[simps]
-def SpecCat.toTop : CommRingCatᵒᵖ ⥤ TopCat where
+def SpecCat.toTop :
+    CommRingCatᵒᵖ ⥤ TopCat where 
   obj R := SpecCat.topObj (unop R)
   map R S f := SpecCat.topMap f.unop
   map_id' R := by rw [unop_id, Spec.Top_map_id]
@@ -82,7 +83,8 @@ def SpecCat.toTop : CommRingCatᵒᵖ ⥤ TopCat where
 /-- The spectrum of a commutative ring, as a `SheafedSpace`.
 -/
 @[simps]
-def SpecCat.sheafedSpaceObj (R : CommRingCat) : SheafedSpaceCat CommRingCat where
+def SpecCat.sheafedSpaceObj (R : CommRingCat) :
+    SheafedSpaceCat CommRingCat where 
   carrier := SpecCat.topObj R
   Presheaf := (structureSheaf R).1
   IsSheaf := (structureSheaf R).2
@@ -92,7 +94,8 @@ def SpecCat.sheafedSpaceObj (R : CommRingCat) : SheafedSpaceCat CommRingCat wher
 -/
 @[simps]
 def SpecCat.sheafedSpaceMap {R S : CommRingCat.{u}} (f : R ⟶ S) :
-    SpecCat.sheafedSpaceObj S ⟶ SpecCat.sheafedSpaceObj R where
+    SpecCat.sheafedSpaceObj S ⟶
+      SpecCat.sheafedSpaceObj R where 
   base := SpecCat.topMap f
   c :=
     { app := fun U =>
@@ -105,11 +108,10 @@ theorem SpecCat.SheafedSpace_map_id {R : CommRingCat} :
     SpecCat.sheafedSpaceMap (𝟙 R) = 𝟙 (SpecCat.sheafedSpaceObj R) :=
   PresheafedSpaceCat.ext _ _ (SpecCat.Top_map_id R) <|
     NatTrans.ext _ _ <|
-      funext fun U => by
+      funext fun U => by 
         dsimp
         erw [PresheafedSpace.id_c_app, comap_id]; swap
         · rw [Spec.Top_map_id, TopologicalSpace.Opens.map_id_obj_unop]
-          
         simpa [eq_to_hom_map]
 #align algebraic_geometry.Spec.SheafedSpace_map_id AlgebraicGeometry.SpecCat.SheafedSpace_map_id
 
@@ -117,7 +119,7 @@ theorem SpecCat.SheafedSpace_map_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S
     SpecCat.sheafedSpaceMap (f ≫ g) = SpecCat.sheafedSpaceMap g ≫ SpecCat.sheafedSpaceMap f :=
   PresheafedSpaceCat.ext _ _ (SpecCat.Top_map_comp f g) <|
     NatTrans.ext _ _ <|
-      funext fun U => by
+      funext fun U => by 
         dsimp
         rw [CategoryTheory.Functor.map_id]
         rw [category.comp_id]
@@ -128,7 +130,10 @@ theorem SpecCat.SheafedSpace_map_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S
 /-- Spec, as a contravariant functor from commutative rings to sheafed spaces.
 -/
 @[simps]
-def SpecCat.toSheafedSpace : CommRingCatᵒᵖ ⥤ SheafedSpaceCat CommRingCat where
+def SpecCat.toSheafedSpace :
+    CommRingCatᵒᵖ ⥤
+      SheafedSpaceCat
+        CommRingCat where 
   obj R := SpecCat.sheafedSpaceObj (unop R)
   map R S f := SpecCat.sheafedSpaceMap f.unop
   map_id' R := by rw [unop_id, Spec.SheafedSpace_map_id]
@@ -174,14 +179,13 @@ theorem SpecCat.basic_open_hom_ext {X : RingedSpaceCat} {R : CommRingCat}
         let U := PrimeSpectrum.basicOpen r
         (toOpen R U ≫ α.c.app (op U)) ≫ X.Presheaf.map (eqToHom (by rw [w])) =
           toOpen R U ≫ β.c.app (op U)) :
-    α = β := by
+    α = β := by 
   ext1
   · apply
       ((TopCat.Sheaf.pushforward β.base).obj X.sheaf).hom_ext _ PrimeSpectrum.is_basis_basic_opens
     intro r
     apply (structure_sheaf.to_basic_open_epi R r).1
     simpa using h r
-    
   exact w
 #align algebraic_geometry.Spec.basic_open_hom_ext AlgebraicGeometry.SpecCat.basic_open_hom_ext
 
@@ -235,7 +239,8 @@ The induced map of a ring homomorphism on the prime spectra, as a morphism of lo
 def SpecCat.locallyRingedSpaceMap {R S : CommRingCat} (f : R ⟶ S) :
     SpecCat.locallyRingedSpaceObj S ⟶ SpecCat.locallyRingedSpaceObj R :=
   (LocallyRingedSpaceCat.Hom.mk (SpecCat.sheafedSpaceMap f)) fun p =>
-    IsLocalRingHom.mk fun a ha => by
+    IsLocalRingHom.mk fun a ha =>
+      by
       -- Here, we are showing that the map on prime spectra induced by `f` is really a morphism of
       -- *locally* ringed spaces, i.e. that the induced map on the stalks is a local ring homomorphism.
       rw [← local_ring_hom_comp_stalk_iso_apply] at ha
@@ -268,7 +273,9 @@ theorem SpecCat.LocallyRingedSpace_map_comp {R S T : CommRingCat} (f : R ⟶ S) 
 /-- Spec, as a contravariant functor from commutative rings to locally ringed spaces.
 -/
 @[simps]
-def SpecCat.toLocallyRingedSpace : CommRingCatᵒᵖ ⥤ LocallyRingedSpace where
+def SpecCat.toLocallyRingedSpace :
+    CommRingCatᵒᵖ ⥤
+      LocallyRingedSpace where 
   obj R := SpecCat.locallyRingedSpaceObj (unop R)
   map R S f := SpecCat.locallyRingedSpaceMap f.unop
   map_id' R := by rw [unop_id, Spec.LocallyRingedSpace_map_id]
@@ -312,7 +319,7 @@ theorem Spec_map_localization_is_iso (R : CommRingCat) (M : Submonoid R)
     IsIso
       (PresheafedSpaceCat.stalkMap
         (SpecCat.toPresheafedSpace.map (CommRingCat.ofHom (algebraMap R (Localization M))).op) x) :=
-  by
+  by 
   erw [← local_ring_hom_comp_stalk_iso]
   apply (config := { instances := false }) is_iso.comp_is_iso
   infer_instance

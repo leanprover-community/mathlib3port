@@ -191,10 +191,8 @@ theorem symm_diff_sup_inf : a ∆ b ⊔ a ⊓ b = a ⊔ b := by
   refine' sup_le (le_inf le_sup_right _) (le_inf _ le_sup_right)
   · rw [sup_right_comm]
     exact le_sup_of_le_left le_sdiff_sup
-    
   · rw [sup_assoc]
     exact le_sup_of_le_right le_sdiff_sup
-    
 #align symm_diff_sup_inf symm_diff_sup_inf
 
 @[simp]
@@ -554,7 +552,7 @@ theorem symm_diff_eq_right : a ∆ b = b ↔ a = ⊥ := by rw [symm_diff_comm, s
 #align symm_diff_eq_right symm_diff_eq_right
 
 protected theorem Disjoint.symm_diff_left (ha : Disjoint a c) (hb : Disjoint b c) :
-    Disjoint (a ∆ b) c := by
+    Disjoint (a ∆ b) c := by 
   rw [symm_diff_eq_sup_sdiff_inf]
   exact (ha.sup_left hb).disjoint_sdiff_left
 #align disjoint.symm_diff_left Disjoint.symm_diff_left
@@ -755,13 +753,13 @@ theorem compl_bihimp_compl : aᶜ ⇔ bᶜ = a ⇔ b :=
 
 @[simp]
 theorem symm_diff_eq_top : a ∆ b = ⊤ ↔ IsCompl a b := by
-  rw [symm_diff_eq', ← compl_inf, inf_eq_top_iff, compl_eq_top, is_compl_iff, disjoint_iff,
+  rw [symm_diff_eq', ← compl_inf, inf_eq_top_iff, compl_eq_top, isCompl_iff, disjoint_iff,
     codisjoint_iff, and_comm]
 #align symm_diff_eq_top symm_diff_eq_top
 
 @[simp]
 theorem bihimp_eq_bot : a ⇔ b = ⊥ ↔ IsCompl a b := by
-  rw [bihimp_eq', ← compl_sup, sup_eq_bot_iff, compl_eq_bot, is_compl_iff, disjoint_iff,
+  rw [bihimp_eq', ← compl_sup, sup_eq_bot_iff, compl_eq_bot, isCompl_iff, disjoint_iff,
     codisjoint_iff]
 #align bihimp_eq_bot bihimp_eq_bot
 
@@ -786,9 +784,7 @@ theorem symm_diff_symm_diff_right' :
       congr 1
       · congr 1
         rw [inf_comm, inf_assoc]
-        
       · apply inf_left_right_swap
-        
     
 #align symm_diff_symm_diff_right' symm_diff_symm_diff_right'
 
@@ -797,10 +793,8 @@ variable {a b c}
 theorem Disjoint.le_symm_diff_sup_symm_diff_left (h : Disjoint a b) : c ≤ a ∆ c ⊔ b ∆ c := by
   trans c \ (a ⊓ b)
   · rw [h.eq_bot, sdiff_bot]
-    
   · rw [sdiff_inf]
     exact sup_le_sup le_sup_right le_sup_right
-    
 #align disjoint.le_symm_diff_sup_symm_diff_left Disjoint.le_symm_diff_sup_symm_diff_left
 
 theorem Disjoint.le_symm_diff_sup_symm_diff_right (h : Disjoint b c) : a ≤ a ∆ b ⊔ a ∆ c := by

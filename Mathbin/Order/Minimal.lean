@@ -58,7 +58,7 @@ theorem minimals_empty : minimals r ∅ = ∅ :=
 theorem maximals_singleton : maximals r {a} = {a} :=
   (maximals_subset _ _).antisymm <|
     singleton_subset_iff.2 <|
-      ⟨rfl, by
+      ⟨rfl, by 
         rintro b (rfl : b = a)
         exact id⟩
 #align maximals_singleton maximals_singleton
@@ -119,7 +119,7 @@ theorem Set.Subsingleton.minimals_eq (h : s.Subsingleton) : minimals r s = s :=
 
 theorem maximals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
     maximals r₂ s ⊆ maximals r₁ s := fun a ha =>
-  ⟨ha.1, fun b hb hab => by
+  ⟨ha.1, fun b hb hab => by 
     have := eq_of_mem_maximals ha hb (h _ _ hab)
     subst this
     exact hab⟩
@@ -127,7 +127,7 @@ theorem maximals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) 
 
 theorem minimals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
     minimals r₂ s ⊆ minimals r₁ s := fun a ha =>
-  ⟨ha.1, fun b hb hab => by
+  ⟨ha.1, fun b hb hab => by 
     have := eq_of_mem_minimals ha hb (h _ _ hab)
     subst this
     exact hab⟩
@@ -137,9 +137,7 @@ theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t 
   intro a ha
   obtain h | h := ha.1
   · exact Or.inl ⟨h, fun b hb => ha.2 <| Or.inl hb⟩
-    
   · exact Or.inr ⟨h, fun b hb => ha.2 <| Or.inr hb⟩
-    
 #align maximals_union maximals_union
 
 theorem minimals_union : minimals r (s ∪ t) ⊆ minimals r s ∪ minimals r t :=
@@ -164,7 +162,7 @@ theorem inter_minimals_subset : s ∩ minimals r t ⊆ minimals r (s ∩ t) :=
 
 theorem IsAntichain.maximals_eq (h : IsAntichain r s) : maximals r s = s :=
   (maximals_subset _ _).antisymm fun a ha =>
-    ⟨ha, fun b hb hab => by
+    ⟨ha, fun b hb hab => by 
       have := h.eq ha hb hab
       subst this
       exact hab⟩
@@ -172,7 +170,7 @@ theorem IsAntichain.maximals_eq (h : IsAntichain r s) : maximals r s = s :=
 
 theorem IsAntichain.minimals_eq (h : IsAntichain r s) : minimals r s = s :=
   (minimals_subset _ _).antisymm fun a ha =>
-    ⟨ha, fun b hb hab => by
+    ⟨ha, fun b hb hab => by 
       have := h.eq hb ha hab
       subst this
       exact hab⟩

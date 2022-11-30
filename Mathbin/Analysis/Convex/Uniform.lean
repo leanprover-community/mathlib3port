@@ -66,10 +66,8 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
   refine' ⟨δ', lt_min one_half_pos <| lt_min hε' (div_pos hδ zero_lt_three), fun x hx y hy hxy => _⟩
   obtain hx' | hx' := le_or_lt ‖x‖ (1 - δ')
   · exact (norm_add_le_of_le hx' hy).trans (sub_add_eq_add_sub _ _ _).le
-    
   obtain hy' | hy' := le_or_lt ‖y‖ (1 - δ')
   · exact (norm_add_le_of_le hx hy').trans (add_sub_assoc _ _ _).ge
-    
   have hδ' : 0 < 1 - δ' := sub_pos_of_lt (min_lt_of_left_lt one_half_lt_one)
   have h₁ : ∀ z : E, 1 - δ' < ‖z‖ → ‖‖z‖⁻¹ • z‖ = 1 := by
     rintro z hz
@@ -100,7 +98,7 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
       exact norm_add₃_le _ _ _
     _ ≤ 2 - δ + δ' + δ' :=
       add_le_add_three (h (h₁ _ hx') (h₁ _ hy') hxy') (h₂ _ hx hx'.le) (h₂ _ hy hy'.le)
-    _ ≤ 2 - δ' := by
+    _ ≤ 2 - δ' := by 
       rw [← le_sub_iff_add_le, ← le_sub_iff_add_le, sub_sub, sub_sub]
       refine' sub_le_sub_left _ _
       ring_nf
@@ -112,11 +110,11 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
 theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : ℝ) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ ≤ r → ∀ ⦃y⦄, ‖y‖ ≤ r → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 * r - δ := by
   obtain hr | hr := le_or_lt r 0
-  · exact
+  ·
+    exact
       ⟨1, one_pos, fun x hx y hy h =>
         (hε.not_le <|
             h.trans <| (norm_sub_le _ _).trans <| add_nonpos (hx.trans hr) (hy.trans hr)).elim⟩
-    
   obtain ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (div_pos hε hr)
   refine' ⟨δ * r, mul_pos hδ hr, fun x hx y hy hxy => _⟩
   rw [← div_le_one hr, div_eq_inv_mul, ← norm_smul_of_nonneg (inv_nonneg.2 hr.le)] at hx hy <;>

@@ -40,7 +40,7 @@ class Congruence : Prop where
 attribute [instance] congruence.is_equiv
 
 /-- A type synonym for `C`, thought of as the objects of the quotient category. -/
-@[ext.1]
+@[ext]
 structure Quotient where
   as : C
 #align category_theory.quotient CategoryTheory.Quotient
@@ -94,7 +94,8 @@ theorem comp_mk {a b c : Quotient r} (f : a.as ⟶ b.as) (g : b.as ⟶ c.as) :
   rfl
 #align category_theory.quotient.comp_mk CategoryTheory.Quotient.comp_mk
 
-instance category : Category (Quotient r) where
+instance category : Category (Quotient
+        r) where 
   Hom := Hom r
   id a := Quot.mk _ (𝟙 a.as)
   comp := comp r
@@ -102,7 +103,7 @@ instance category : Category (Quotient r) where
 
 /-- The functor from a category to its quotient. -/
 @[simps]
-def functor : C ⥤ Quotient r where
+def functor : C ⥤ Quotient r where 
   obj a := { as := a }
   map _ _ f := Quot.mk _ f
 #align category_theory.quotient.functor CategoryTheory.Quotient.functor
@@ -110,16 +111,18 @@ def functor : C ⥤ Quotient r where
 noncomputable instance : Full (functor r) where preimage X Y f := Quot.out f
 
 instance :
-    EssSurj (functor r) where mem_ess_image Y :=
+    EssSurj
+      (functor
+        r) where mem_ess_image Y :=
     ⟨Y.as,
       ⟨eqToIso
-          (by
+          (by 
             ext
             rfl)⟩⟩
 
 protected theorem induction {P : ∀ {a b : Quotient r}, (a ⟶ b) → Prop}
     (h : ∀ {x y : C} (f : x ⟶ y), P ((functor r).map f)) : ∀ {a b : Quotient r} (f : a ⟶ b), P f :=
-  by
+  by 
   rintro ⟨x⟩ ⟨y⟩ ⟨f⟩
   exact h f
 #align category_theory.quotient.induction CategoryTheory.Quotient.induction
@@ -139,17 +142,11 @@ theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) :
       apply congruence.comp_left
       apply congruence.comp_right
       assumption
-      
     · apply refl
-      
     · apply symm
       assumption
-      
     · apply trans <;> assumption
-      
-    
   · apply Quotient.sound
-    
 #align category_theory.quotient.functor_map_eq_iff CategoryTheory.Quotient.functor_map_eq_iff
 
 variable {D : Type _} [Category D] (F : C ⥤ D)
@@ -159,15 +156,15 @@ include H
 
 /-- The induced functor on the quotient category. -/
 @[simps]
-def lift : Quotient r ⥤ D where
+def lift : Quotient r ⥤ D where 
   obj a := F.obj a.as
   map a b hf :=
     Quot.liftOn hf (fun f => F.map f)
-      (by
+      (by 
         rintro _ _ ⟨_, _, _, _, h⟩
         simp [H _ _ _ _ h])
   map_id' a := F.map_id a.as
-  map_comp' := by
+  map_comp' := by 
     rintro a b c ⟨f⟩ ⟨g⟩
     exact F.map_comp f g
 #align category_theory.quotient.lift CategoryTheory.Quotient.lift
@@ -176,10 +173,8 @@ theorem lift_spec : functor r ⋙ lift r F H = F := by
   apply Functor.ext; rotate_left
   · rintro X
     rfl
-    
   · rintro X Y f
     simp
-    
 #align category_theory.quotient.lift_spec CategoryTheory.Quotient.lift_spec
 
 theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H := by
@@ -190,14 +185,12 @@ theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = 
     congr
     ext
     rfl
-    
   · rintro X Y f
     dsimp [lift, Functor]
     apply Quot.induction_on f
     rintro ff
     simp only [Quot.liftOn_mk, functor.comp_map]
     congr <;> ext <;> rfl
-    
 #align category_theory.quotient.lift_unique CategoryTheory.Quotient.lift_unique
 
 /-- The original functor factors through the induced functor. -/

@@ -122,7 +122,7 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
     (opβ : β → β → β) (h : ∀ (i) (x y : S i), f i (opi i x y) = opβ (f i x) (f i y)) (x y : T) :
     unionLift S f hf T (le_of_eq hT') (op x y) =
       opβ (unionLift S f hf T (le_of_eq hT') x) (unionLift S f hf T (le_of_eq hT') y) :=
-  by
+  by 
   subst hT'
   cases' Set.mem_Union.1 x.prop with i hi
   cases' Set.mem_Union.1 y.prop with j hj

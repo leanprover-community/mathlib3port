@@ -54,7 +54,7 @@ theorem nim_def (o : Ordinal) :
     nim o =
       Pgame.mk o.out.α o.out.α (fun o₂ => nim (Ordinal.typein (· < ·) o₂)) fun o₂ =>
         nim (Ordinal.typein (· < ·) o₂) :=
-  by
+  by 
   rw [nim]
   rfl
 #align pgame.nim_def Pgame.nim_def
@@ -193,7 +193,7 @@ theorem nim_one_move_right (x) : (nim 1).moveRight x = nim 0 := by simp
 #align pgame.nim_one_move_right Pgame.nim_one_move_right
 
 /-- `nim 1` has exactly the same moves as `star`. -/
-def nimOneRelabelling : nim 1 ≡r star := by
+def nimOneRelabelling : nim 1 ≡r star := by 
   rw [nim_def]
   refine' ⟨_, _, fun i => _, fun j => _⟩
   any_goals dsimp; apply Equiv.equivOfUnique
@@ -248,21 +248,13 @@ theorem nim_add_equiv_zero_iff (o₁ o₂ : Ordinal) : (nim o₁ + nim o₂ ≈ 
     · rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₂]
       refine' ⟨to_left_moves_add (Sum.inr _), _⟩
       · exact (Ordinal.principalSegOut h).top
-        
       · simpa using (impartial.add_self (nim o₁)).2
-        
-      
     · rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₁]
       refine' ⟨to_left_moves_add (Sum.inl _), _⟩
       · exact (Ordinal.principalSegOut h).top
-        
       · simpa using (impartial.add_self (nim o₂)).2
-        
-      
-    
   · rintro rfl
     exact impartial.add_self (nim o₁)
-    
 #align pgame.nim_add_equiv_zero_iff Pgame.nim_add_equiv_zero_iff
 
 @[simp]
@@ -288,7 +280,7 @@ theorem grundy_value_eq_mex_left (G : Pgame) :
 /-- The Sprague-Grundy theorem which states that every impartial game is equivalent to a game of
  nim, namely the game of nim corresponding to the games Grundy value -/
 theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (grundyValue G)
-  | G => by
+  | G => by 
     intro hG
     rw [impartial.equiv_iff_add_equiv_zero, ← impartial.forall_left_moves_fuzzy_iff_equiv_zero]
     intro i
@@ -302,7 +294,6 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       have h := Ordinal.ne_mex _
       rw [HEq] at h
       exact (h i₁).irrefl
-      
     · intro i₂
       rw [add_move_left_inr, ← impartial.exists_left_move_equiv_iff_fuzzy_zero]
       revert i₂
@@ -311,7 +302,7 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       have h' :
         ∃ i : G.left_moves,
           grundy_value (G.move_left i) = Ordinal.typein (Quotient.out (grundy_value G)).R i₂ :=
-        by
+        by 
         revert i₂
         rw [grundy_value_eq_mex_left]
         intro i₂
@@ -322,16 +313,15 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       use to_left_moves_add (Sum.inl i)
       rw [add_move_left_inl, move_left_mk]
       apply (add_congr_left (equiv_nim_grundy_value (G.move_left i))).trans
-      simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
-      decreasing_by
+      simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))decreasing_by
   pgame_wf_tac
 #align pgame.equiv_nim_grundy_value Pgame.equiv_nim_grundy_value
 
 theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} :
     grundyValue G = o ↔ (G ≈ nim o) :=
-  ⟨by
+  ⟨by 
     rintro rfl
-    exact equiv_nim_grundy_value G, by
+    exact equiv_nim_grundy_value G, by 
     intro h
     rw [← nim_equiv_iff_eq]
     exact (equiv_nim_grundy_value G).symm.trans h⟩
@@ -369,7 +359,7 @@ theorem grundy_value_neg (G : Pgame) [G.Impartial] : grundyValue (-G) = grundyVa
 theorem grundy_value_eq_mex_right :
     ∀ (G : Pgame) [G.Impartial],
       grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveRight i)
-  | ⟨l, r, L, R⟩ => by
+  | ⟨l, r, L, R⟩ => by 
     intro H
     rw [← grundy_value_neg, grundy_value_eq_mex_left]
     congr
@@ -380,7 +370,7 @@ theorem grundy_value_eq_mex_right :
 
 @[simp]
 theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m :=
-  by
+  by 
   induction' n using Nat.strong_induction_on with n hn generalizing m
   induction' m using Nat.strong_induction_on with m hm
   rw [grundy_value_eq_mex_left]
@@ -388,28 +378,29 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
   -- steps:
   -- h₀: `n xor m` is not a reachable grundy number.
   -- h₁: every Grundy number strictly smaller than `n xor m` is reachable.
-  have h₀ : ∀ i, grundy_value ((nim n + nim m).moveLeft i) ≠ (Nat.lxor n m : Ordinal) := by
+  have h₀ : ∀ i, grundy_value ((nim n + nim m).moveLeft i) ≠ (Nat.lxor n m : Ordinal) :=
+    by
     -- To show that `n xor m` is unreachable, we show that every move produces a Grundy number
     -- different from `n xor m`.
     intro i
     -- The move operates either on the left pile or on the right pile.
     apply left_moves_add_cases i
     all_goals
-    -- One of the piles is reduced to `k` stones, with `k < n` or `k < m`.
-    intro a
-    obtain ⟨ok, hk, hk'⟩ := exists_ordinal_move_left_eq a
-    obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hk (Ordinal.nat_lt_omega _))
-    replace hk := Ordinal.nat_cast_lt.1 hk
-    -- Thus, the problem is reduced to computing the Grundy value of `nim n + nim k` or
-    -- `nim k + nim m`, both of which can be dealt with using an inductive hypothesis.
-    simp only [hk', add_move_left_inl, add_move_left_inr, id]
-    first |rw [hn _ hk]|rw [hm _ hk]
-    -- But of course xor is injective, so if we change one of the arguments, we will not get the
-    -- same value again.
-    intro h
-    rw [Ordinal.nat_cast_inj] at h
-    try rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h
-    exact hk.ne (Nat.lxor_left_injective h)
+      -- One of the piles is reduced to `k` stones, with `k < n` or `k < m`.
+      intro a
+      obtain ⟨ok, hk, hk'⟩ := exists_ordinal_move_left_eq a
+      obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hk (Ordinal.nat_lt_omega _))
+      replace hk := Ordinal.nat_cast_lt.1 hk
+      -- Thus, the problem is reduced to computing the Grundy value of `nim n + nim k` or
+      -- `nim k + nim m`, both of which can be dealt with using an inductive hypothesis.
+      simp only [hk', add_move_left_inl, add_move_left_inr, id]
+      first |rw [hn _ hk]|rw [hm _ hk]
+      -- But of course xor is injective, so if we change one of the arguments, we will not get the
+      -- same value again.
+      intro h
+      rw [Ordinal.nat_cast_inj] at h
+      try rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h
+      exact hk.ne (Nat.lxor_left_injective h)
   have h₁ :
     ∀ u : Ordinal,
       u < Nat.lxor n m → u ∈ Set.range fun i => grundy_value ((nim n + nim m).moveLeft i) :=
@@ -428,12 +419,10 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
       refine' ⟨to_left_moves_add (Sum.inl i), _⟩
       simp only [hi, add_move_left_inl]
       rw [hn _ h, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
-      
     · obtain ⟨i, hi⟩ := exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
       refine' ⟨to_left_moves_add (Sum.inr i), _⟩
       simp only [hi, add_move_left_inr]
       rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
-      
   -- We are done!
   apply (Ordinal.mex_le_of_ne.{u, u} h₀).antisymm
   contrapose! h₁

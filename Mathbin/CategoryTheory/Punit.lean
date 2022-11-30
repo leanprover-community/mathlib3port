@@ -52,10 +52,12 @@ abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
 
 /-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
-def equiv : Discrete PUnit ⥤ C ≌ C where
+def equiv :
+    Discrete PUnit ⥤ C ≌
+      C where 
   Functor := { obj := fun F => F.obj ⟨⟨⟩⟩, map := fun F G θ => θ.app ⟨⟨⟩⟩ }
   inverse := Functor.const _
-  unitIso := by
+  unitIso := by 
     apply nat_iso.of_components _ _
     intro X
     apply discrete.nat_iso
@@ -64,7 +66,7 @@ def equiv : Discrete PUnit ⥤ C ≌ C where
     intros
     ext ⟨⟨⟩⟩
     simp
-  counitIso := by
+  counitIso := by 
     refine' nat_iso.of_components iso.refl _
     intro X Y f
     dsimp; simp
@@ -85,7 +87,6 @@ theorem equiv_punit_iff_unique :
     · have hx : x ⟶ h.inverse.obj ⟨⟨⟩⟩ := by convert h.unit.app x
       have hy : h.inverse.obj ⟨⟨⟩⟩ ⟶ y := by convert h.unit_inv.app y
       exact hx ≫ hy
-      
     have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y := by
       intro z
       simpa using congr_arg (· ≫ h.unit_inv.app y) (h.unit.naturality z)
@@ -94,7 +95,6 @@ theorem equiv_punit_iff_unique :
     rw [this a, this b]
     simp only [functor.comp_map]
     congr
-    
   · rintro ⟨⟨p⟩, h⟩
     haveI := fun x y => (h x y).some
     refine'
@@ -102,7 +102,6 @@ theorem equiv_punit_iff_unique :
         (CategoryTheory.Equivalence.mk ((Functor.Const _).obj ⟨⟨⟩⟩) ((Functor.Const _).obj p) _
           (by apply functor.punit_ext))
     exact nat_iso.of_components (fun _ => { Hom := default, inv := default }) fun _ _ _ => by tidy
-    
 #align category_theory.equiv_punit_iff_unique CategoryTheory.equiv_punit_iff_unique
 
 end CategoryTheory

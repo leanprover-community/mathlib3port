@@ -76,14 +76,15 @@ theorem apply_ne_zero_iff [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix 
 /-- For `A : matrix V V α` and `h : is_adj_matrix A`,
     `h.to_graph` is the simple graph whose adjacency matrix is `A`. -/
 @[simps]
-def toGraph [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) : SimpleGraph V where
+def toGraph [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) :
+    SimpleGraph V where 
   Adj i j := A i j = 1
   symm i j hij := by rwa [h.symm.apply i j]
   loopless i := by simp [h]
 #align matrix.is_adj_matrix.to_graph Matrix.IsAdjMatrix.toGraph
 
 instance [MulZeroOneClass α] [Nontrivial α] [DecidableEq α] (h : IsAdjMatrix A) :
-    DecidableRel h.toGraph.Adj := by
+    DecidableRel h.toGraph.Adj := by 
   simp only [to_graph]
   infer_instance
 
@@ -130,7 +131,7 @@ theorem compl [Zero α] [One α] (h : IsAdjMatrix A) : IsAdjMatrix A.compl :=
 #align matrix.is_adj_matrix.compl Matrix.IsAdjMatrix.compl
 
 theorem to_graph_compl_eq [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) :
-    h.compl.toGraph = h.toGraphᶜ := by
+    h.compl.toGraph = h.toGraphᶜ := by 
   ext (v w)
   cases' h.zero_or_one v w with h h <;> by_cases hvw : v = w <;> simp [Matrix.compl, h, hvw]
 #align matrix.is_adj_matrix.to_graph_compl_eq Matrix.IsAdjMatrix.to_graph_compl_eq
@@ -261,25 +262,21 @@ theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ
   rw [card_set_walk_length_eq]
   induction' n with n ih generalizing u v
   · obtain rfl | h := eq_or_ne u v <;> simp [finset_walk_length, *]
-    
   · nth_rw 0 [Nat.succ_eq_one_add]
     simp only [pow_add, pow_one, finset_walk_length, ih, mul_eq_mul, adj_matrix_mul_apply]
     rw [Finset.card_bUnion]
     · norm_cast
       simp only [Nat.cast_sum, card_map, neighbor_finset_def]
       apply Finset.sum_to_finset_eq_subtype
-      
     -- Disjointness for card_bUnion
     · rintro ⟨x, hx⟩ - ⟨y, hy⟩ - hxy
       rw [disjoint_iff_inf_le]
       intro p hp
-      simp only [inf_eq_inter, mem_inter, mem_map, Function.Embedding.coe_fn_mk, exists_prop] at
+      simp only [inf_eq_inter, mem_inter, mem_map, Function.Embedding.coeFn_mk, exists_prop] at
           hp <;>
         obtain ⟨⟨px, hpx, rfl⟩, ⟨py, hpy, hp⟩⟩ := hp
       cases hp
       simpa using hxy
-      
-    
 #align simple_graph.adj_matrix_pow_apply_eq_card_walk SimpleGraph.adj_matrix_pow_apply_eq_card_walk
 
 end SimpleGraph

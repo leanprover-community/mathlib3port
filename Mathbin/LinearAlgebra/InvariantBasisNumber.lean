@@ -91,16 +91,14 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Fin n → 
 theorem strong_rank_condition_iff_succ :
     StrongRankCondition R ↔
       ∀ (n : ℕ) (f : (Fin (n + 1) → R) →ₗ[R] Fin n → R), ¬Function.Injective f :=
-  by
+  by 
   refine' ⟨fun h n => fun f hf => _, fun h => ⟨fun n m f hf => _⟩⟩
   · letI : StrongRankCondition R := h
     exact Nat.not_succ_le_self n (le_of_fin_injective R f hf)
-    
   · by_contra H
     exact
       h m (f.comp (Function.ExtendByZero.linearMap R (Fin.castLe (not_le.1 H))))
         (hf.comp (Function.extend_injective (RelEmbedding.injective _) 0))
-    
 #align strong_rank_condition_iff_succ strong_rank_condition_iff_succ
 
 theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β]
@@ -198,9 +196,9 @@ theorem nontrivial_of_invariant_basis_number : Nontrivial R := by
   haveI : Subsingleton (Fin 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elim _ _⟩
   refine' { .. } <;>
     first
-      |· intros
-        exact 0
-        |tidy
+      |· 
+        intros
+        exact 0|tidy
 #align nontrivial_of_invariant_basis_number nontrivial_of_invariant_basis_number
 
 end
@@ -260,7 +258,7 @@ variable {R : Type u} [CommRing R] (I : Ideal R) {ι : Type v} [Fintype ι] {ι'
 private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
     (ι → R) ⧸ I.pi ι → (ι' → R) ⧸ I.pi ι' := fun x =>
   Quotient.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
-    (by
+    (by 
       refine' fun a b hab => Ideal.Quotient.eq.2 fun h => _
       rw [Submodule.quotient_rel_r_def] at hab
       rw [← LinearMap.map_sub]
@@ -272,12 +270,12 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
 private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
     ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' := by
   refine' { toFun := induced_map I e, invFun := induced_map I e.symm.. }
-  all_goals
-  first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
-  convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
-  congr
-  simp only [map_add, LinearEquiv.coe_coe, LinearEquiv.map_smulₛₗ, RingHom.id_apply,
-    LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
+  all_goals 
+    first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    congr
+    simp only [map_add, LinearEquiv.coe_coe, LinearEquiv.map_smulₛₗ, RingHom.id_apply,
+      LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
 #align induced_equiv induced_equiv
 
 end

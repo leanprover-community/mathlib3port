@@ -73,7 +73,7 @@ protected theorem Inducing.comp {g : β → γ} {f : α → β} (hg : Inducing g
 theorem inducing_of_inducing_compose {f : α → β} {g : β → γ} (hf : Continuous f) (hg : Continuous g)
     (hgf : Inducing (g ∘ f)) : Inducing f :=
   ⟨le_antisymm (by rwa [← continuous_iff_le_induced])
-      (by
+      (by 
         rw [hgf.induced, ← continuous_iff_le_induced]
         apply hg.comp continuous_induced_dom)⟩
 #align inducing_of_inducing_compose inducing_of_inducing_compose
@@ -137,7 +137,7 @@ protected theorem Inducing.inducing_iff {f : α → β} {g : β → γ} (hg : In
 #align inducing.inducing_iff Inducing.inducing_iff
 
 theorem Inducing.closure_eq_preimage_closure_image {f : α → β} (hf : Inducing f) (s : Set α) :
-    closure s = f ⁻¹' closure (f '' s) := by
+    closure s = f ⁻¹' closure (f '' s) := by 
   ext x
   rw [Set.mem_preimage, ← closure_induced, hf.induced]
 #align inducing.closure_eq_preimage_closure_image Inducing.closure_eq_preimage_closure_image
@@ -268,7 +268,7 @@ protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g
     (hgf : QuotientMap (g ∘ f)) : QuotientMap g :=
   ⟨hgf.1.of_comp,
     le_antisymm
-      (by
+      (by 
         rw [hgf.right, ← continuous_iff_coinduced_le]
         apply continuous_coinduced_rng.comp hf)
       (by rwa [← continuous_iff_coinduced_le])⟩
@@ -461,7 +461,7 @@ protected theorem id : IsClosedMap (@id α) := fun s hs => by rwa [image_id]
 #align is_closed_map.id IsClosedMap.id
 
 protected theorem comp {g : β → γ} {f : α → β} (hg : IsClosedMap g) (hf : IsClosedMap f) :
-    IsClosedMap (g ∘ f) := by
+    IsClosedMap (g ∘ f) := by 
   intro s hs
   rw [image_comp]
   exact hg _ (hf _ hs)
@@ -479,12 +479,10 @@ theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv :
 #align is_closed_map.of_inverse IsClosedMap.of_inverse
 
 theorem of_nonempty {f : α → β} (h : ∀ s, IsClosed s → s.Nonempty → IsClosed (f '' s)) :
-    IsClosedMap f := by
+    IsClosedMap f := by 
   intro s hs; cases' eq_empty_or_nonempty s with h2s h2s
   · simp_rw [h2s, image_empty, isClosedEmpty]
-    
   · exact h s hs h2s
-    
 #align is_closed_map.of_nonempty IsClosedMap.of_nonempty
 
 theorem closedRange {f : α → β} (hf : IsClosedMap f) : IsClosed (range f) :=

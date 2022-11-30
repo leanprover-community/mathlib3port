@@ -88,7 +88,7 @@ variable (V)
 /-- Any model of the theory of simple graphs represents a simple graph. -/
 @[simps]
 def simpleGraphOfStructure [Language.graph.StructureCat V] [V ⊨ Theory.simple_graph] :
-    SimpleGraph V where
+    SimpleGraph V where 
   Adj x y := RelMap adj ![x, y]
   symm :=
     Relations.realize_symmetric.1
@@ -114,26 +114,18 @@ theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V]
     [V ⊨ Theory.simple_graph] : (simpleGraphOfStructure V).StructureCat = S := by
   ext (n f xs)
   · exact (is_relational.empty_functions n).elim f
-    
   · ext (n r xs)
     rw [iff_eq_eq]
     cases n
     · exact r.elim
-      
     · cases n
       · exact r.elim
-        
       · cases n
         · cases r
           change rel_map adj ![xs 0, xs 1] = _
           refine' congr rfl (funext _)
           simp [Fin.forall_fin_two]
-          
         · exact r.elim
-          
-        
-      
-    
 #align
   first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.Structure_simple_graph_of_structure
 

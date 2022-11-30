@@ -60,7 +60,9 @@ instance :
     have this : ‖(‖x‖ : ℂ)‖ = ‖‖x‖‖ := by simp only [norm_eq_abs, abs_of_real, Real.norm_eq_abs]
     ⟨‖x‖, by rwa [this, norm_norm]⟩
 
-instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ where
+instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] :
+    NormedAlgebra R
+      ℂ where 
   norm_smul_le r x := by
     rw [norm_eq_abs, norm_eq_abs, ← algebra_map_smul ℝ r x, Algebra.smul_def, map_mul, ←
       norm_algebra_map' ℝ r, coe_algebra_map, abs_of_real]
@@ -277,7 +279,7 @@ theorem im_clm_nnnorm : ‖im_clm‖₊ = 1 :=
 theorem restrict_scalars_one_smul_right' (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
       reClm.smul_right x + I • imClm.smul_right x :=
-  by
+  by 
   ext ⟨a, b⟩
   simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
 #align complex.restrict_scalars_one_smul_right' Complex.restrict_scalars_one_smul_right'
@@ -428,7 +430,8 @@ theorem of_real_clm_nnnorm : ‖of_real_clm‖₊ = 1 :=
   Subtype.ext <| of_real_clm_norm
 #align complex.of_real_clm_nnnorm Complex.of_real_clm_nnnorm
 
-noncomputable instance : IsROrC ℂ where
+noncomputable instance :
+    IsROrC ℂ where 
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   i := Complex.i
@@ -501,17 +504,16 @@ def equivRealProdₗ : ℂ ≃L[ℝ] ℝ × ℝ :=
 end
 
 theorem has_sum_iff {α} (f : α → ℂ) (c : ℂ) :
-    HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im := by
+    HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im :=
+  by
   -- For some reason, `continuous_linear_map.has_sum` is orders of magnitude faster than
   -- `has_sum.mapL` here:
   refine' ⟨fun h => ⟨re_clm.has_sum h, im_clm.has_sum h⟩, _⟩
   rintro ⟨h₁, h₂⟩
   convert (h₁.prod_mk h₂).mapL equiv_real_prodₗ.symm.to_continuous_linear_map
   · ext x <;> rfl
-    
   · cases c
     rfl
-    
 #align complex.has_sum_iff Complex.has_sum_iff
 
 end Complex

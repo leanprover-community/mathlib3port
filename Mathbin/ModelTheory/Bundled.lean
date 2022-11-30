@@ -56,7 +56,9 @@ namespace FirstOrder
 namespace Language
 
 /-- The equivalence relation on bundled `L.Structure`s indicating that they are isomorphic. -/
-instance equivSetoid : Setoid (CategoryTheory.Bundled L.StructureCat) where
+instance equivSetoid :
+    Setoid (CategoryTheory.Bundled
+        L.StructureCat) where 
   R M N := Nonempty (M ≃[L] N)
   iseqv :=
     ⟨fun M => ⟨Equiv.refl L M⟩, fun M N => Nonempty.map Equiv.symm, fun M N P =>
@@ -116,7 +118,8 @@ end Inhabited
 variable {T}
 
 /-- Maps a bundled model along a bijection. -/
-def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) : ModelCat.{u, v, w'} T where
+def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) :
+    ModelCat.{u, v, w'} T where 
   carrier := N
   struc := e.inducedStructure
   is_model := @Equiv.Theory_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
@@ -142,7 +145,8 @@ def ulift (M : ModelCat.{u, v, w} T) : ModelCat.{u, v, max w w'} T :=
 
 /-- The reduct of any model of `φ.on_Theory T` is a model of `T`. -/
 @[simps]
-def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).ModelCat) : T.ModelCat where
+def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).ModelCat) :
+    T.ModelCat where 
   carrier := M
   struc := φ.reduct M
   nonempty' := M.nonempty'
@@ -155,7 +159,8 @@ def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).ModelCat) : T
 noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.Injective)
     [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => φ.onFunction f)]
     [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.range fun r : L.Relations n => φ.onRelation r)]
-    (M : T.ModelCat) [Inhabited M] : (φ.onTheory T).ModelCat where
+    (M : T.ModelCat) [Inhabited M] :
+    (φ.onTheory T).ModelCat where 
   carrier := M
   struc := φ.defaultExpansion M
   nonempty' := M.nonempty'
@@ -179,7 +184,8 @@ instance rightStructure {L' : Language} {T : (L.Sum L').TheoryCat} (M : T.ModelC
 
 /-- A model of a theory is also a model of any subtheory. -/
 @[simps]
-def subtheoryModel (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) : T'.ModelCat where
+def subtheoryModel (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) :
+    T'.ModelCat where 
   carrier := M
   is_model := ⟨fun φ hφ => realize_sentence_of_mem T (h hφ)⟩
 #align
@@ -213,7 +219,7 @@ end TheoryCat
 
 /-- A structure that is elementarily equivalent to a model, bundled as a model. -/
 def ElementarilyEquivalent.toModel {M : T.ModelCat} {N : Type _} [LN : L.StructureCat N]
-    (h : M ≅[L] N) : T.ModelCat where
+    (h : M ≅[L] N) : T.ModelCat where 
   carrier := N
   struc := LN
   nonempty' := h.Nonempty

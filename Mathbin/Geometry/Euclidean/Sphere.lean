@@ -129,7 +129,6 @@ theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a
   · rw [← hd] at hc
     rw [← hb] at ha
     rw [mul_dist_eq_abs_sub_sq_dist hapb ha, hb, mul_dist_eq_abs_sub_sq_dist hcpd hc, hd]
-    
   all_goals simp
 #align
   euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical
@@ -166,13 +165,11 @@ theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
   have h₁ : dist c d = dist c p / dist b p * dist a b := by
     rw [dist_mul_of_eq_angle_of_dist_mul b p a c p d, dist_comm a b]
     · rw [angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi hbpd hapc, angle_comm]
-      
     all_goals field_simp [mul_comm, hmul]
   have h₂ : dist d a = dist a p / dist b p * dist b c := by
     rw [dist_mul_of_eq_angle_of_dist_mul c p b d p a, dist_comm c b]
     · rwa [angle_comm, angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi]
       rwa [angle_comm]
-      
     all_goals field_simp [mul_comm, hmul]
   have h₃ : dist d p = dist a p * dist c p / dist b p := by field_simp [mul_comm, hmul]
   have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by rw [mul_left_comm, mul_comm]

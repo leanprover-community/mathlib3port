@@ -115,9 +115,7 @@ theorem compress_self (u a : α) : compress u u a = a := by
   unfold compress
   split_ifs
   · exact h.1.symm.sup_sdiff_cancel_right
-    
   · rfl
-    
 #align uv.compress_self Uv.compress_self
 
 @[simp]
@@ -126,12 +124,10 @@ theorem compression_self (u : α) (s : Finset α) : 𝓒 u u s = s := by
   convert union_empty s
   · ext a
     rw [mem_filter, compress_self, and_self_iff]
-    
   · refine' eq_empty_of_forall_not_mem fun a ha => _
     simp_rw [mem_filter, mem_image, compress_self] at ha
     obtain ⟨⟨b, hb, rfl⟩, hb'⟩ := ha
     exact hb' hb
-    
 #align uv.compression_self Uv.compression_self
 
 /-- Any family is compressed along two identical elements. -/
@@ -151,11 +147,8 @@ theorem compress_idem (u v a : α) : compress u v (compress u v a) = compress u 
   unfold compress
   split_ifs with h h'
   · rw [le_sdiff_iff.1 h'.2, sdiff_bot, sdiff_bot, sup_assoc, sup_idem]
-    
   · rfl
-    
   · rfl
-    
 #align uv.compress_idem Uv.compress_idem
 
 theorem compress_mem_compression (ha : a ∈ s) : compress u v a ∈ 𝓒 u v s := by
@@ -163,21 +156,17 @@ theorem compress_mem_compression (ha : a ∈ s) : compress u v a ∈ 𝓒 u v s 
   by_cases compress u v a ∈ s
   · rw [compress_idem]
     exact Or.inl ⟨h, h⟩
-    
   · exact Or.inr ⟨h, a, ha, rfl⟩
-    
 #align uv.compress_mem_compression Uv.compress_mem_compression
 
 -- This is a special case of `compress_mem_compression` once we have `compression_idem`.
 theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : compress u v a ∈ 𝓒 u v s :=
-  by
+  by 
   rw [mem_compression] at ha⊢
   simp only [compress_idem, exists_prop]
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact Or.inl ⟨ha, ha⟩
-    
   · exact Or.inr ⟨by rwa [compress_idem], b, hb, (compress_idem _ _ _).symm⟩
-    
 #align uv.compress_mem_compression_of_mem_compression Uv.compress_mem_compression_of_mem_compression
 
 /-- Compressing a family is idempotent. -/
@@ -195,7 +184,6 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
     ← card_disjoint_union, filter_union_filter_neg_eq]
   · rw [disjoint_iff_inter_eq_empty]
     exact filter_inter_filter_neg_eq _ _ _
-    
   intro a ha b hb hab
   dsimp at hab
   rw [mem_coe, mem_filter, Function.comp_apply] at ha hb
@@ -204,12 +192,8 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
   · rw [compress] at hb hab
     split_ifs  at hb hab with hbs
     · exact sup_sdiff_inj_on u v has hbs hab
-      
     · exact (hb.2 hb.1).elim
-      
-    
   · exact (ha.2 ha.1).elim
-    
 #align uv.card_compression Uv.card_compression
 
 /-- If `a` is in the family compression and can be compressed, then its compression is in the
@@ -219,13 +203,12 @@ theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a)
   rw [mem_compression, compress_of_disjoint_of_le hua hva] at ha
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact ha
-    
   have hu : u = ⊥ := by
     suffices Disjoint u (u \ v) by rwa [(hua.mono_right hva).sdiff_eq_left, disjoint_self] at this
     refine' hua.mono_right _
     rw [← compress_idem, compress_of_disjoint_of_le hua hva]
     exact sdiff_le_sdiff_right le_sup_right
-  have hv : v = ⊥ := by
+  have hv : v = ⊥ := by 
     rw [← disjoint_self]
     apply Disjoint.mono_right hva
     rw [← compress_idem, compress_of_disjoint_of_le hua hva]
@@ -239,15 +222,12 @@ theorem mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hvu : v 
   rw [mem_compression] at ha
   obtain ha | ⟨_, b, hb, h⟩ := ha
   · exact ha.1
-    
   unfold compress at h
   split_ifs  at h
   · rw [← h, le_sdiff_iff] at hva
     rw [hvu hva, hva, sup_bot_eq, sdiff_bot] at h
     rwa [← h]
-    
   · rwa [← h]
-    
 #align uv.mem_of_mem_compression Uv.mem_of_mem_compression
 
 end GeneralizedBooleanAlgebra
@@ -263,11 +243,10 @@ variable [DecidableEq α] {𝒜 : Finset (Finset α)} {U V A : Finset α}
 theorem card_compress (hUV : U.card = V.card) (A : Finset α) : (compress U V A).card = A.card := by
   unfold compress
   split_ifs
-  · rw [card_sdiff (h.2.trans le_sup_left), sup_eq_union, card_disjoint_union h.1.symm, hUV,
+  ·
+    rw [card_sdiff (h.2.trans le_sup_left), sup_eq_union, card_disjoint_union h.1.symm, hUV,
       add_tsub_cancel_right]
-    
   · rfl
-    
 #align uv.card_compress Uv.card_compress
 
 end Uv

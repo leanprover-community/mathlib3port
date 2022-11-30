@@ -71,13 +71,13 @@ closure, and its values on the boundary circle of this disc are bounded from abo
 norm of its derivative at the center is at most `C / R`. -/
 theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
     (hd : DiffContOnCl ℂ f (ball c R)) (hC : ∀ z ∈ sphere c R, ‖f z‖ ≤ C) : ‖deriv f c‖ ≤ C / R :=
-  by
+  by 
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have : HasDerivAt (e ∘ f) (e (deriv f c)) c :=
     e.has_fderiv_at.comp_has_deriv_at c
       (hd.differentiable_at is_open_ball <| mem_ball_self hR).HasDerivAt
   calc
-    ‖deriv f c‖ = ‖deriv (e ∘ f) c‖ := by
+    ‖deriv f c‖ = ‖deriv (e ∘ f) c‖ := by 
       rw [this.deriv]
       exact (UniformSpace.Completion.norm_coe _).symm
     _ ≤ C / R :=
@@ -89,7 +89,7 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
 
 /-- An auxiliary lemma for Liouville's theorem `differentiable.apply_eq_apply_of_bounded`. -/
 theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : Bounded (range f))
-    (z w : ℂ) : f z = f w := by
+    (z w : ℂ) : f z = f w := by 
   suffices : ∀ c, deriv f c = 0
   exact is_const_of_deriv_eq_zero hf this z w
   clear z w

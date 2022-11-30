@@ -38,7 +38,7 @@ theorem quotient_map_proj_Icc : QuotientMap (projIcc a b h) :=
   quotient_map_iff.2
     ⟨proj_Icc_surjective h, fun s =>
       ⟨fun hs => hs.Preimage continuous_proj_Icc, fun hs =>
-        ⟨_, hs, by
+        ⟨_, hs, by 
           ext
           simp⟩⟩⟩
 #align quotient_map_proj_Icc quotient_map_proj_Icc

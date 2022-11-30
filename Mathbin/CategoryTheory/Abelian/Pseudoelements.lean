@@ -124,13 +124,11 @@ theorem pseudo_equal_trans {P : C} : Transitive (PseudoEqual P) :=
   refine' ⟨pullback q p', pullback.fst ≫ p, pullback.snd ≫ q', _, _, _⟩
   · skip
     exact epi_comp _ _
-    
   · skip
     exact epi_comp _ _
-    
-  · rw [category.assoc, comm, ← category.assoc, pullback.condition, category.assoc, comm',
+  ·
+    rw [category.assoc, comm, ← category.assoc, pullback.condition, category.assoc, comm',
       category.assoc]
-    
 #align category_theory.abelian.pseudo_equal_trans CategoryTheory.Abelian.pseudo_equal_trans
 
 end
@@ -206,7 +204,7 @@ theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : Over P) : f ⟦a⟧ = ⟦a.
     true. -/
 theorem comp_apply {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) (a : P) : (f ≫ g) a = g (f a) :=
   (Quotient.induction_on a) fun x =>
-    Quotient.sound <| by
+    Quotient.sound <| by 
       unfold app
       rw [← category.assoc, over.coe_hom]
 #align
@@ -317,7 +315,7 @@ theorem zero_morphism_ext' {P Q : C} (f : P ⟶ Q) : (∀ a, f a = 0) → 0 = f 
   category_theory.abelian.pseudoelement.zero_morphism_ext' CategoryTheory.Abelian.Pseudoelement.zero_morphism_ext'
 
 scoped[Pseudoelement]
-  attribute [ext.1]
+  attribute [ext]
     CategoryTheory.Abelian.Pseudoelement.zero_morphism_ext CategoryTheory.Abelian.Pseudoelement.zero_morphism_ext'
 
 theorem eq_zero_iff {P Q : C} (f : P ⟶ Q) : f = 0 ↔ ∀ a, f a = 0 :=
@@ -334,7 +332,7 @@ theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Inj
       match Quotient.exact this with
       | ⟨R, p, q, ep, Eq, comm⟩ =>
         ⟨R, p, q, ep, Eq,
-          (cancel_mono f).1 <| by
+          (cancel_mono f).1 <| by 
             simp only [category.assoc]
             exact comm⟩
 #align
@@ -342,7 +340,7 @@ theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Inj
 
 /-- A morphism that is injective on pseudoelements only maps the zero element to zero. -/
 theorem zero_of_map_zero {P Q : C} (f : P ⟶ Q) : Function.Injective f → ∀ a, f a = 0 → a = 0 :=
-  fun h a ha => by
+  fun h a ha => by 
   rw [← apply_zero f] at ha
   exact h ha
 #align
@@ -394,7 +392,7 @@ section
 /-- Two morphisms in an exact sequence are exact on pseudoelements. -/
 theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact f g) :
     (∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b :=
-  ⟨fun a => by
+  ⟨fun a => by 
     rw [← comp_apply, h.w]
     exact zero_apply _ _, fun b' =>
     (Quotient.induction_on b') fun b hb => by
@@ -418,7 +416,7 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact
           rw [abelian.image.fac]
         _ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
           rw [← category.assoc, pullback.condition]
-        _ = pullback.snd ≫ b.hom := by
+        _ = pullback.snd ≫ b.hom := by 
           rw [category.assoc]
           congr
         ⟩
@@ -438,7 +436,8 @@ section
 theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
     ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → Exact f g := fun ⟨h₁, h₂⟩ =>
   (Abelian.exact_iff _ _).2
-    ⟨(zero_morphism_ext _) fun a => by rw [comp_apply, h₁ a], by
+    ⟨(zero_morphism_ext _) fun a => by rw [comp_apply, h₁ a],
+      by
       -- If we apply g to the pseudoelement induced by its kernel, we get 0 (of course!).
       have : g (kernel.ι g) = 0 := apply_eq_zero_of_comp_eq_zero _ _ (kernel.condition _)
       -- By pseudo-exactness, we get a preimage.
@@ -452,7 +451,7 @@ theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
       obtain ⟨z, hz₁, hz₂⟩ :=
         @pullback.lift' _ _ _ _ _ _ (kernel.ι (cokernel.π f)) (kernel.ι g) _
           (r ≫ a.hom ≫ abelian.factor_thru_image f) q
-          (by
+          (by 
             simp only [category.assoc, abelian.image.fac]
             exact comm)
       -- Let's give a name to the second pullback morphism.
@@ -485,7 +484,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
         ⟨show ⟦((p ≫ a.Hom - q ≫ a'.Hom) ≫ f : Over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by
             dsimp at comm
             simp [sub_eq_zero.2 comm],
-          fun Z g hh => by
+          fun Z g hh => by 
           obtain ⟨X, p', q', ep', eq', comm'⟩ := Quotient.exact hh
           have : a'.hom ≫ g = 0 := by
             apply (epi_iff_cancel_zero _).1 ep' _ (a'.hom ≫ g)
@@ -511,7 +510,7 @@ theorem pseudo_pullback {P Q R : C} {f : P ⟶ R} {g : Q ⟶ R} {p : P} {q : Q} 
     obtain ⟨Z, a, b, ea, eb, comm⟩ := Quotient.exact h
     obtain ⟨l, hl₁, hl₂⟩ :=
       @pullback.lift' _ _ _ _ _ _ f g _ (a ≫ x.hom) (b ≫ y.hom)
-        (by
+        (by 
           simp only [category.assoc]
           exact comm)
     exact
@@ -536,13 +535,11 @@ theorem ModuleCat.eq_range_of_pseudoequal {R : Type _} [CommRing R] {G : ModuleC
     refine' ⟨q a'', _⟩
     rw [← LinearMap.comp_apply, ← ModuleCat.comp_def, ← H, ModuleCat.comp_def, LinearMap.comp_apply,
       ha'', ha']
-    
   · obtain ⟨a', ha'⟩ := ha
     obtain ⟨a'', ha''⟩ := (ModuleCat.epi_iff_surjective q).1 hq a'
     refine' ⟨p a'', _⟩
     rw [← LinearMap.comp_apply, ← ModuleCat.comp_def, H, ModuleCat.comp_def, LinearMap.comp_apply,
       ha'', ha']
-    
 #align
   category_theory.abelian.pseudoelement.Module.eq_range_of_pseudoequal CategoryTheory.Abelian.Pseudoelement.ModuleCat.eq_range_of_pseudoequal
 

@@ -113,7 +113,6 @@ theorem eq_inter_halfspace (hAB : IsExposed 𝕜 A B) :
     rintro x ⟨-, h⟩
     rw [ContinuousLinearMap.zero_apply] at h
     linarith
-    
   obtain ⟨l, rfl⟩ := hAB hB
   obtain ⟨w, hw⟩ := hB
   exact
@@ -129,31 +128,28 @@ protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : Is
   refine' ⟨l₁ + l₂, subset.antisymm _ _⟩
   · rintro x ⟨⟨hxA, hxB⟩, ⟨-, hxC⟩⟩
     exact ⟨hxA, fun z hz => add_le_add (hxB z hz) (hxC z hz)⟩
-    
   rintro x ⟨hxA, hx⟩
   refine' ⟨⟨hxA, fun y hy => _⟩, hxA, fun y hy => _⟩
-  · exact
+  ·
+    exact
       (add_le_add_iff_right (l₂ x)).1 ((add_le_add (hwB.2 y hy) (hwC.2 x hxA)).trans (hx w hwB.1))
-    
-  · exact
+  ·
+    exact
       (add_le_add_iff_left (l₁ x)).1 (le_trans (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
-    
 #align is_exposed.inter IsExposed.inter
 
 theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) :
-    IsExposed 𝕜 A (⋂₀ F) := by
+    IsExposed 𝕜 A (⋂₀ F) := by 
   revert hF F
   refine' Finset.induction _ _
   · rintro h
     exfalso
     exact not_nonempty_empty h
-    
   rintro C F _ hF _ hCF
   rw [Finset.coe_insert, sInter_insert]
   obtain rfl | hFnemp := F.eq_empty_or_nonempty
   · rw [Finset.coe_empty, sInter_empty, inter_univ]
     exact hCF C (Finset.mem_singleton_self C)
-    
   exact
     (hCF C (Finset.mem_insert_self C F)).inter
       (hF hFnemp fun B hB => hCF B (Finset.mem_insert_of_mem hB))
@@ -182,16 +178,13 @@ protected theorem is_extreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B := 
   refine' ⟨⟨hx₁A, fun y hy => _⟩, ⟨hx₂A, fun y hy => _⟩⟩
   · rw [hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)]
     exact hxB.2 y hy
-    
   · rw [hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)]
     exact hxB.2 y hy
-    
 #align is_exposed.is_extreme IsExposed.is_extreme
 
 protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Convex 𝕜 B := by
   obtain rfl | hB := B.eq_empty_or_nonempty
   · exact convex_empty
-    
   obtain ⟨l, rfl⟩ := hAB hB
   exact fun x₁ hx₁ x₂ hx₂ a b ha hb hab =>
     ⟨hA hx₁.1 hx₂.1 ha hb hab, fun y hy =>
@@ -200,7 +193,7 @@ protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Conve
 #align is_exposed.convex IsExposed.convex
 
 protected theorem isClosed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsClosed A) :
-    IsClosed B := by
+    IsClosed B := by 
   obtain ⟨l, a, rfl⟩ := hAB.eq_inter_halfspace
   exact hA.is_closed_le continuous_on_const l.continuous.continuous_on
 #align is_exposed.is_closed IsExposed.isClosed

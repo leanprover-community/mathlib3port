@@ -68,7 +68,8 @@ variable (β)
 /-- The canonical bijection with the sigma type, showing that `W_type` is a fixed point of
   the polynomial functor `X ↦ Σ a : α, β a → X`. -/
 @[simps]
-def equivSigma : WType β ≃ Σa : α, β a → WType β where
+def equivSigma : WType β ≃
+      Σa : α, β a → WType β where 
   toFun := toSigma
   invFun := ofSigma
   left_inv := of_sigma_to_sigma
@@ -101,7 +102,7 @@ instance [hα : IsEmpty α] : IsEmpty (WType β) :=
 
 theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] :
     Infinite (WType β) :=
-  ⟨by
+  ⟨by 
     intro hf
     have hba : b ≠ a := fun h => ha.elim (IsEmpty.elim' (show IsEmpty (β a) from h ▸ he))
     refine'
@@ -112,14 +113,10 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
     intro n m h
     induction' n with n ih generalizing m h
     · cases' m with m <;> simp_all
-      
     · cases' m with m
       · simp_all
-        
       · refine' congr_arg Nat.succ (ih _)
-        simp_all [Function.funext_iff]
-        
-      ⟩
+        simp_all [Function.funext_iff]⟩
 #align W_type.infinite_of_nonempty_of_is_empty WType.infinite_of_nonempty_of_is_empty
 
 variable [∀ a : α, Fintype (β a)]
@@ -156,7 +153,7 @@ variable [∀ a : α, Encodable (β a)]
 
 private def encodable_zero : Encodable (WType' β 0) :=
   let f : WType' β 0 → Empty := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
-  let finv : Empty → WType' β 0 := by
+  let finv : Empty → WType' β 0 := by 
     intro x
     cases x
   have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
@@ -164,7 +161,7 @@ private def encodable_zero : Encodable (WType' β 0) :=
 #align W_type.encodable_zero W_type.encodable_zero
 
 private def f (n : ℕ) : WType' β (n + 1) → Σa : α, β a → WType' β n
-  | ⟨t, h⟩ => by
+  | ⟨t, h⟩ => by 
     cases' t with a f
     have h₀ : ∀ i : β a, WType.depth (f i) ≤ n := fun i =>
       Nat.le_of_lt_succ (lt_of_lt_of_le (WType.depth_lt_depth_mk a f i) h)
@@ -182,7 +179,7 @@ variable [Encodable α]
 
 private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (WType' β (n + 1)) :=
   Encodable.ofLeftInverse (f n) (finv n)
-    (by
+    (by 
       rintro ⟨⟨_, _⟩, _⟩
       rfl)
 #align W_type.encodable_succ W_type.encodable_succ

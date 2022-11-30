@@ -103,7 +103,7 @@ theorem prod_add (s t : Multiset α) : prod (s + t) = prod s * prod t :=
 #align multiset.prod_add Multiset.prod_add
 
 theorem prod_nsmul (m : Multiset α) : ∀ n : ℕ, (n • m).Prod = m.Prod ^ n
-  | 0 => by
+  | 0 => by 
     rw [zero_nsmul, pow_zero]
     rfl
   | n + 1 => by rw [add_nsmul, one_nsmul, pow_add, pow_one, prod_add, prod_nsmul n]
@@ -201,18 +201,16 @@ theorem prod_induction (p : α → Prop) (s : Multiset α) (p_mul : ∀ a b, p a
 
 @[to_additive]
 theorem prod_induction_nonempty (p : α → Prop) (p_mul : ∀ a b, p a → p b → p (a * b)) (hs : s ≠ ∅)
-    (p_s : ∀ a ∈ s, p a) : p s.Prod := by
+    (p_s : ∀ a ∈ s, p a) : p s.Prod := by 
   revert s
   refine' Multiset.induction _ _
   · intro h
     exfalso
     simpa using h
-    
   intro a s hs hsa hpsa
   rw [prod_cons]
   by_cases hs_empty : s = ∅
   · simp [hs_empty, hpsa a]
-    
   have hps : ∀ x, x ∈ s → p x := fun x hxs => hpsa x (mem_cons_of_mem hxs)
   exact p_mul a s.prod (hpsa a (mem_cons_self a s)) (hs hs_empty hps)
 #align multiset.prod_induction_nonempty Multiset.prod_induction_nonempty
@@ -226,9 +224,7 @@ end CommMonoid
 
 theorem prod_dvd_prod_of_dvd [CommMonoid β] {S : Multiset α} (g1 g2 : α → β)
     (h : ∀ a ∈ S, g1 a ∣ g2 a) : (Multiset.map g1 S).Prod ∣ (Multiset.map g2 S).Prod := by
-  apply Multiset.induction_on' S;
-  · simp
-    
+  apply Multiset.induction_on' S; · simp
   intro a T haS _ IH
   simp [mul_dvd_mul (h a haS) IH]
 #align multiset.prod_dvd_prod_of_dvd Multiset.prod_dvd_prod_of_dvd
@@ -239,7 +235,7 @@ variable [AddCommMonoid α]
 
 /-- `multiset.sum`, the sum of the elements of a multiset, promoted to a morphism of
 `add_comm_monoid`s. -/
-def sumAddMonoidHom : Multiset α →+ α where
+def sumAddMonoidHom : Multiset α →+ α where 
   toFun := sum
   map_zero' := sum_zero
   map_add' := sum_add
@@ -365,10 +361,8 @@ theorem all_one_of_le_one_le_of_prod_eq_one :
 theorem prod_le_prod_of_rel_le (h : s.Rel (· ≤ ·) t) : s.Prod ≤ t.Prod := by
   induction' h with _ _ _ _ rh _ rt
   · rfl
-    
   · rw [prod_cons, prod_cons]
     exact mul_le_mul' rh rt
-    
 #align multiset.prod_le_prod_of_rel_le Multiset.prod_le_prod_of_rel_le
 
 @[to_additive]
@@ -396,13 +390,12 @@ theorem pow_card_le_prod (h : ∀ x ∈ s, a ≤ x) : a ^ s.card ≤ s.Prod := b
 end OrderedCommMonoid
 
 theorem prod_nonneg [OrderedCommSemiring α] {m : Multiset α} (h : ∀ a ∈ m, (0 : α) ≤ a) :
-    0 ≤ m.Prod := by
+    0 ≤ m.Prod := by 
   revert h
   refine' m.induction_on _ _
   · rintro -
     rw [prod_zero]
     exact zero_le_one
-    
   intro a s hs ih
   rw [prod_cons]
   exact mul_nonneg (ih _ <| mem_cons_self _ _) (hs fun a ha => ih _ <| mem_cons_of_mem ha)
@@ -418,7 +411,7 @@ theorem prod_eq_one [CommMonoid α] {m : Multiset α} (h : ∀ x ∈ m, x = (1 :
 
 @[to_additive]
 theorem le_prod_of_mem [CanonicallyOrderedMonoid α] {m : Multiset α} {a : α} (h : a ∈ m) :
-    a ≤ m.Prod := by
+    a ≤ m.Prod := by 
   obtain ⟨m', rfl⟩ := exists_cons_of_mem h
   rw [prod_cons]
   exact _root_.le_mul_right (le_refl a)
@@ -432,7 +425,6 @@ theorem le_prod_of_submultiplicative_on_pred [CommMonoid α] [OrderedCommMonoid 
   revert s
   refine' Multiset.induction _ _
   · simp [le_of_eq h_one]
-    
   intro a s hs hpsa
   have hps : ∀ x, x ∈ s → p x := fun x hx => hpsa x (mem_cons_of_mem hx)
   have hp_prod : p s.prod := prod_induction p s hp_mul hp_one hps
@@ -458,12 +450,10 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred [CommMonoid α] [OrderedCo
   · intro h
     exfalso
     exact h rfl
-    
   rintro a s hs hsa_nonempty hsa_prop
   rw [prod_cons, map_cons, prod_cons]
   by_cases hs_empty : s = ∅
   · simp [hs_empty]
-    
   have hsa_restrict : ∀ x, x ∈ s → p x := fun x hx => hsa_prop x (mem_cons_of_mem hx)
   have hp_sup : p s.prod := prod_induction_nonempty p hp_mul hs_empty hsa_restrict
   have hp_a : p a := hsa_prop a (mem_cons_self a s)

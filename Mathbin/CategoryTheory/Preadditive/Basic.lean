@@ -96,7 +96,10 @@ universe u'
 
 variable {C} {D : Type u'} (F : D → C)
 
-instance inducedCategory : Preadditive.{v} (InducedCategory C F) where
+instance inducedCategory :
+    Preadditive.{v}
+      (InducedCategory C
+        F) where 
   homGroup P Q := @Preadditive.homGroup C _ _ (F P) (F Q)
   add_comp' P Q R f f' g := add_comp' _ _ _ _ _ _
   comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
@@ -104,7 +107,10 @@ instance inducedCategory : Preadditive.{v} (InducedCategory C F) where
 
 end InducedCategory
 
-instance fullSubcategory (Z : C → Prop) : Preadditive.{v} (FullSubcategory Z) where
+instance fullSubcategory (Z : C → Prop) :
+    Preadditive.{v}
+      (FullSubcategory
+        Z) where 
   homGroup P Q := @Preadditive.homGroup C _ _ P.obj Q.obj
   add_comp' P Q R f f' g := add_comp' _ _ _ _ _ _
   comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
@@ -197,14 +203,17 @@ instance {P Q : C} {f : P ⟶ Q} [Epi f] : Epi (-f) :=
 instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
   ⟨fun R g g' H => by rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H⟩
 
-instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C where
+instance (priority := 100) preadditiveHasZeroMorphisms :
+    HasZeroMorphisms C where 
   HasZero := inferInstance
   comp_zero' P Q f R := show leftComp R f 0 = 0 from map_zero _
   zero_comp' P Q R f := show rightComp P f 0 = 0 from map_zero _
 #align
   category_theory.preadditive.preadditive_has_zero_morphisms CategoryTheory.Preadditive.preadditiveHasZeroMorphisms
 
-instance moduleEndRight {X Y : C} : Module (EndCat Y) (X ⟶ Y) where
+instance moduleEndRight {X Y : C} :
+    Module (EndCat Y) (X ⟶
+        Y) where 
   smul_add r f g := add_comp _ _ _ _ _ _
   smul_zero r := zero_comp
   add_smul r s f := comp_add _ _ _ _ _ _

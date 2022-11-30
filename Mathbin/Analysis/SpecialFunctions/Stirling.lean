@@ -89,26 +89,24 @@ theorem log_stirling_seq_diff_has_sum (m : ℕ) :
   · ext k
     rw [← pow_mul, pow_add]
     push_cast
-    have : 2 * (k : ℝ) + 1 ≠ 0 := by
+    have : 2 * (k : ℝ) + 1 ≠ 0 := by 
       norm_cast
       exact succ_ne_zero (2 * k)
-    have : 2 * ((m : ℝ) + 1) + 1 ≠ 0 := by
+    have : 2 * ((m : ℝ) + 1) + 1 ≠ 0 := by 
       norm_cast
       exact succ_ne_zero (2 * m.succ)
     field_simp
     ring
-    
   · have h : ∀ (x : ℝ) (hx : x ≠ 0), 1 + x⁻¹ = (x + 1) / x := by
       intros
       rw [_root_.add_div, div_self hx, inv_eq_one_div]
-    simp (disch :=
-    norm_cast
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error") only [log_stirling_seq_formula,
-    log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one,
-    sum_singleton, h]
+    simp (disch := 
+      norm_cast
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error") only [log_stirling_seq_formula,
+      log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one,
+      sum_singleton, h]
     ring
-    
 #align stirling.log_stirling_seq_diff_has_sum Stirling.log_stirling_seq_diff_has_sum
 
 /-- The sequence `log ∘ stirling_seq ∘ succ` is monotone decreasing -/
@@ -122,12 +120,12 @@ theorem log_stirling_seq'_antitone : Antitone (Real.log ∘ stirling_seq ∘ suc
 theorem log_stirling_seq_diff_le_geo_sum (n : ℕ) :
     log (stirlingSeq n.succ) - log (stirlingSeq n.succ.succ) ≤
       (1 / (2 * n.succ + 1)) ^ 2 / (1 - (1 / (2 * n.succ + 1)) ^ 2) :=
-  by
+  by 
   have h_nonneg : 0 ≤ (1 / (2 * (n.succ : ℝ) + 1)) ^ 2 := sq_nonneg _
   have g :
     HasSum (fun k : ℕ => ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2) ^ k.succ)
       ((1 / (2 * n.succ + 1)) ^ 2 / (1 - (1 / (2 * n.succ + 1)) ^ 2)) :=
-    by
+    by 
     refine' (has_sum_geometric_of_lt_1 h_nonneg _).mul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
     rw [one_div, inv_pow]
     exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr <| by positivity) two_ne_zero)
@@ -135,7 +133,7 @@ theorem log_stirling_seq_diff_le_geo_sum (n : ℕ) :
     ∀ k : ℕ,
       1 / (2 * (k.succ : ℝ) + 1) * ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ ≤
         ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ :=
-    by
+    by 
     refine' fun k => mul_le_of_le_one_left (pow_nonneg h_nonneg k.succ) _
     rw [one_div]
     exact inv_le_one (le_add_of_nonneg_left <| by positivity)
@@ -239,9 +237,9 @@ theorem tendsto_w_at_top : Tendsto (fun n : ℕ => w n) atTop (𝓝 (π / 2)) :=
   convert tendsto_prod_pi_div_two
   funext n
   induction' n with n ih
-  · rw [w, prod_range_zero, cast_zero, mul_zero, pow_zero, one_mul, mul_zero, factorial_zero,
+  ·
+    rw [w, prod_range_zero, cast_zero, mul_zero, pow_zero, one_mul, mul_zero, factorial_zero,
       cast_one, one_pow, one_pow, one_mul, mul_zero, zero_add, div_one]
-    
   rw [w, prod_range_succ, ← ih, w, _root_.div_mul_div_comm, _root_.div_mul_div_comm]
   refine' (div_eq_div_iff _ _).mpr _
   any_goals exact ne_of_gt (by positivity)
@@ -253,11 +251,11 @@ theorem tendsto_w_at_top : Tendsto (fun n : ℕ => w n) atTop (𝓝 (π / 2)) :=
 /-- The sequence `n / (2 * n + 1)` tends to `1/2` -/
 theorem tendsto_self_div_two_mul_self_add_one :
     Tendsto (fun n : ℕ => (n : ℝ) / (2 * n + 1)) atTop (𝓝 (1 / 2)) := by
-  conv =>
-  congr
-  skip
-  skip
-  rw [one_div, ← add_zero (2 : ℝ)]
+  conv => 
+    congr
+    skip
+    skip
+    rw [one_div, ← add_zero (2 : ℝ)]
   refine'
     (((tendsto_const_div_at_top_nhds_0_nat 1).const_add (2 : ℝ)).inv₀
           ((add_zero (2 : ℝ)).symm ▸ two_ne_zero)).congr'
@@ -276,7 +274,7 @@ theorem stirling_seq_pow_four_div_stirling_seq_pow_two_eq (n : ℕ) (hn : n ≠ 
   have : (n : ℝ) ≠ 0 := cast_ne_zero.mpr hn
   have : exp 1 ≠ 0 := exp_ne_zero 1
   have : ((2 * n)! : ℝ) ≠ 0 := cast_ne_zero.mpr (factorial_ne_zero (2 * n))
-  have : 2 * (n : ℝ) + 1 ≠ 0 := by
+  have : 2 * (n : ℝ) + 1 ≠ 0 := by 
     norm_cast
     exact succ_ne_zero (2 * n)
   field_simp

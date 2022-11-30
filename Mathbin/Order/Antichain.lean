@@ -69,11 +69,8 @@ protected theorem subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.S
   rintro a ha b hb
   obtain hab | hab | hab := trichotomous_of r a b
   · exact h.eq ha hb hab
-    
   · exact hab
-    
   · exact h.eq' ha hb hab
-    
 #align is_antichain.subsingleton IsAntichain.subsingleton
 
 protected theorem flip (hs : IsAntichain r s) : IsAntichain (flip r) s := fun a ha b hb h =>

@@ -177,12 +177,10 @@ theorem witt_polynomial_vars [CharZero R] (n : ℕ) : (wittPolynomial p R n).var
     exact pow_ne_zero i hp.1
   rw [wittPolynomial, vars_sum_of_disjoint]
   · simp only [this, bUnion_singleton_eq_self]
-    
   · simp only [this]
     intro a b h
     apply disjoint_singleton_left.mpr
     rwa [mem_singleton]
-    
 #align witt_polynomial_vars witt_polynomial_vars
 
 theorem witt_polynomial_vars_subset (n : ℕ) : (wittPolynomial p R n).vars ⊆ range (n + 1) := by
@@ -229,13 +227,11 @@ theorem constant_coeff_X_in_terms_of_W [hp : Fact p.Prime] [Invertible (p : R)] 
   rw [X_in_terms_of_W_eq, mul_comm, RingHom.map_mul, RingHom.map_sub, RingHom.map_sum,
     constant_coeff_C, sum_eq_zero]
   · simp only [constant_coeff_X, sub_zero, mul_zero]
-    
   · intro m H
     rw [mem_range] at H
     simp only [RingHom.map_mul, RingHom.map_pow, constant_coeff_C, IH m H]
     rw [zero_pow, mul_zero]
     apply pow_pos hp.1.Pos
-    
 #align constant_coeff_X_in_terms_of_W constant_coeff_X_in_terms_of_W
 
 @[simp]
@@ -254,33 +250,28 @@ theorem X_in_terms_of_W_vars_aux (n : ℕ) :
   apply Nat.strong_induction_on n; clear n
   intro n ih
   rw [X_in_terms_of_W_eq, mul_comm, vars_C_mul, vars_sub_of_disjoint, vars_X, range_succ, insert_eq]
-  pick_goal 3;
-  · apply nonzero_of_invertible
-    
+  pick_goal 3; · apply nonzero_of_invertible
   on_goal 1 =>
-  simp only [true_and_iff, true_or_iff, eq_self_iff_true, mem_union, mem_singleton]
-  intro i
-  rw [mem_union, mem_union]
-  apply Or.imp id
+    simp only [true_and_iff, true_or_iff, eq_self_iff_true, mem_union, mem_singleton]
+    intro i
+    rw [mem_union, mem_union]
+    apply Or.imp id
   on_goal 2 => rw [vars_X, disjoint_singleton_left]
-  all_goals
-  intro H
-  replace H := vars_sum_subset _ _ H
-  rw [mem_bUnion] at H
-  rcases H with ⟨j, hj, H⟩
-  rw [vars_C_mul] at H
-  swap
-  · apply pow_ne_zero
-    exact_mod_cast hp.1.NeZero
-    
-  rw [mem_range] at hj
-  replace H := (ih j hj).2 (vars_pow _ _ H)
-  rw [mem_range] at H
+  all_goals 
+    intro H
+    replace H := vars_sum_subset _ _ H
+    rw [mem_bUnion] at H
+    rcases H with ⟨j, hj, H⟩
+    rw [vars_C_mul] at H
+    swap
+    · apply pow_ne_zero
+      exact_mod_cast hp.1.NeZero
+    rw [mem_range] at hj
+    replace H := (ih j hj).2 (vars_pow _ _ H)
+    rw [mem_range] at H
   · rw [mem_range]
     exact lt_of_lt_of_le H hj
-    
   · exact lt_irrefl n (lt_of_lt_of_le H hj)
-    
 #align X_in_terms_of_W_vars_aux X_in_terms_of_W_vars_aux
 
 theorem X_in_terms_of_W_vars_subset (n : ℕ) : (xInTermsOfW p ℚ n).vars ⊆ range (n + 1) :=
@@ -316,12 +307,11 @@ theorem bind₁_witt_polynomial_X_in_terms_of_W [Invertible (p : R)] (n : ℕ) :
     simp only [witt_polynomial_eq_sum_C_mul_X_pow, tsub_self, sum_range_succ_comm, pow_one,
       add_sub_cancel, pow_zero]
   rw [sum_congr rfl, this]
-  · -- this is really slow for some reason
+  ·
+    -- this is really slow for some reason
     rw [mul_right_comm, ← C_mul, ← mul_pow, mul_inv_of_self, one_pow, C_1, one_mul]
-    
   · intro i h
     rw [mem_range] at h
     simp only [AlgHom.map_mul, AlgHom.map_pow, alg_hom_C, H i h]
-    
 #align bind₁_witt_polynomial_X_in_terms_of_W bind₁_witt_polynomial_X_in_terms_of_W
 

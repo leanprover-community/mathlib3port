@@ -49,18 +49,17 @@ variable {J : Type w₁}
 
 /-- The image of a bicone under a functor. -/
 @[simps]
-def mapBicone {f : J → C} (b : Bicone f) : Bicone (F.obj ∘ f) where
+def mapBicone {f : J → C} (b : Bicone f) :
+    Bicone (F.obj ∘ f) where 
   x := F.obj b.x
   π j := F.map (b.π j)
   ι j := F.map (b.ι j)
-  ι_π j j' := by
+  ι_π j j' := by 
     rw [← F.map_comp]
     split_ifs
     · subst h
       simp only [bicone_ι_π_self, CategoryTheory.Functor.map_id, eq_to_hom_refl]
-      
     · rw [bicone_ι_π_ne _ h, F.map_zero]
-      
 #align category_theory.functor.map_bicone CategoryTheory.Functor.mapBicone
 
 theorem map_bicone_whisker {K : Type w₂} {g : K ≃ J} {f : J → C} (c : Bicone f) :
@@ -72,7 +71,8 @@ end Bicone
 
 /-- The image of a binary bicone under a functor. -/
 @[simps]
-def mapBinaryBicone {X Y : C} (b : BinaryBicone X Y) : BinaryBicone (F.obj X) (F.obj Y) where
+def mapBinaryBicone {X Y : C} (b : BinaryBicone X Y) :
+    BinaryBicone (F.obj X) (F.obj Y) where 
   x := F.obj b.x
   fst := F.map b.fst
   snd := F.map b.snd
@@ -191,14 +191,14 @@ def preservesBinaryBiproductOfPreservesBiproduct (F : C ⥤ D) [PreservesZeroMor
         IsLimit.ofIsoLimit
             ((IsLimit.postcomposeHomEquiv (diagram_iso_pair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsLimit) <|
-          Cones.ext (Iso.refl _) fun j => by
+          Cones.ext (Iso.refl _) fun j => by 
             rcases j with ⟨⟨⟩⟩
             tidy,
       IsColimit :=
         IsColimit.ofIsoColimit
             ((IsColimit.precomposeInvEquiv (diagram_iso_pair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsColimit) <|
-          Cocones.ext (Iso.refl _) fun j => by
+          Cocones.ext (Iso.refl _) fun j => by 
             rcases j with ⟨⟨⟩⟩
             tidy }
 #align
@@ -259,9 +259,10 @@ variable [PreservesZeroMorphisms F]
     the biproduct, see `preserves_biproduct_of_mono_biproduct_comparison`.  -/
 @[simp, reassoc]
 theorem biproduct_comparison'_comp_biproduct_comparison :
-    biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by classical
-  ext
-  simp [biproduct.ι_π, ← functor.map_comp, eq_to_hom_map]
+    biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by
+  classical 
+    ext
+    simp [biproduct.ι_π, ← functor.map_comp, eq_to_hom_map]
 #align
   category_theory.functor.biproduct_comparison'_comp_biproduct_comparison CategoryTheory.Functor.biproduct_comparison'_comp_biproduct_comparison
 

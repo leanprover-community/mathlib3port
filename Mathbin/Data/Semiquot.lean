@@ -135,7 +135,7 @@ theorem mem_bind (q : Semiquot α) (f : α → Semiquot β) (b : β) : b ∈ bin
   Set.mem_Union₂
 #align semiquot.mem_bind Semiquot.mem_bind
 
-instance : Monad Semiquot where
+instance : Monad Semiquot where 
   pure := @Semiquot.pure
   map := @Semiquot.map
   bind := @Semiquot.bind
@@ -164,7 +164,8 @@ theorem pure_inj {a b : α} : (pure a : Semiquot α) = pure b ↔ a = b :=
   ext_s.trans Set.singleton_eq_singleton_iff
 #align semiquot.pure_inj Semiquot.pure_inj
 
-instance : LawfulMonad Semiquot where
+instance : LawfulMonad
+      Semiquot where 
   pure_bind α β x f := ext.2 <| by simp
   bind_assoc α β γ s f g :=
     ext.2 <| by
@@ -178,7 +179,8 @@ instance : LawfulMonad Semiquot where
 instance : LE (Semiquot α) :=
   ⟨fun s t => s.s ⊆ t.s⟩
 
-instance : PartialOrder (Semiquot α) where
+instance : PartialOrder
+      (Semiquot α) where 
   le s t := ∀ ⦃x⦄, x ∈ s → x ∈ t
   le_refl s := Set.Subset.refl _
   le_trans s t u := Set.Subset.trans
@@ -216,7 +218,7 @@ theorem eq_pure {q : Semiquot α} (p) : q = pure (get q p) :=
 
 @[simp]
 theorem pure_is_pure (a : α) : IsPure (pure a)
-  | b, ab, c, ac => by
+  | b, ab, c, ac => by 
     rw [mem_pure] at ab ac
     cc
 #align semiquot.pure_is_pure Semiquot.pure_is_pure
@@ -263,7 +265,8 @@ theorem is_pure_univ [Inhabited α] : @IsPure α univ ↔ Subsingleton α :=
   ⟨fun h => ⟨fun a b => h a trivial b trivial⟩, fun ⟨h⟩ a _ b _ => h a b⟩
 #align semiquot.is_pure_univ Semiquot.is_pure_univ
 
-instance [Inhabited α] : OrderTop (Semiquot α) where
+instance [Inhabited α] : OrderTop
+      (Semiquot α) where 
   top := univ
   le_top s := Set.subset_univ _
 

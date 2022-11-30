@@ -85,13 +85,11 @@ value `sin ((n + 1) * θ) / sin θ`. -/
 theorem U_complex_cos (n : ℕ) : (u ℂ n).eval (cos θ) * sin θ = sin ((n + 1) * θ) := by
   induction' n with d hd
   · simp only [U_zero, Nat.cast_zero, eval_one, mul_one, zero_add, one_mul]
-    
   · rw [U_eq_X_mul_U_add_T]
     simp only [eval_add, eval_mul, eval_X, T_complex_cos, add_mul, mul_assoc, hd, one_mul]
     conv_rhs => rw [sin_add, mul_comm]
     push_cast
     simp only [add_mul, one_mul]
-    
 #align polynomial.chebyshev.U_complex_cos Polynomial.Chebyshev.U_complex_cos
 
 end Complex

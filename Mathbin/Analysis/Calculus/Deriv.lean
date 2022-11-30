@@ -227,7 +227,7 @@ theorem has_deriv_at_iff_has_fderiv_at {f' : F} :
 alias has_deriv_at_iff_has_fderiv_at ↔ HasDerivAt.hasFderivAt _
 
 theorem deriv_within_zero_of_not_differentiable_within_at (h : ¬DifferentiableWithinAt 𝕜 f s x) :
-    derivWithin f s x = 0 := by
+    derivWithin f s x = 0 := by 
   unfold derivWithin
   rw [fderiv_within_zero_of_not_differentiable_within_at]
   simp
@@ -545,11 +545,9 @@ theorem deriv_within_Ioi_eq_Ici {E : Type _} [NormedAddCommGroup E] [NormedSpace
   · have A := H.has_deriv_within_at.Ici_of_Ioi
     have B := (differentiable_within_at_Ioi_iff_Ici.1 H).HasDerivWithinAt
     simpa using (uniqueDiffOnIci x).Eq le_rfl A B
-    
   · rw [deriv_within_zero_of_not_differentiable_within_at H,
       deriv_within_zero_of_not_differentiable_within_at]
     rwa [differentiable_within_at_Ioi_iff_Ici] at H
-    
 #align deriv_within_Ioi_eq_Ici deriv_within_Ioi_eq_Ici
 
 section congr
@@ -1612,15 +1610,11 @@ theorem deriv_mul_const (hc : DifferentiableAt 𝕜 c x) (d : 𝔸) :
 theorem deriv_mul_const_field (v : 𝕜') : deriv (fun y => u y * v) x = deriv u x * v := by
   by_cases hu : DifferentiableAt 𝕜 u x
   · exact deriv_mul_const hu v
-    
   · rw [deriv_zero_of_not_differentiable_at hu, zero_mul]
     rcases eq_or_ne v 0 with (rfl | hd)
     · simp only [mul_zero, deriv_const]
-      
     · refine' deriv_zero_of_not_differentiable_at (mt (fun H => _) hu)
       simpa only [mul_inv_cancel_right₀ hd] using H.mul_const v⁻¹
-      
-    
 #align deriv_mul_const_field deriv_mul_const_field
 
 @[simp]
@@ -1677,7 +1671,7 @@ theorem hasStrictDerivAtInv (hx : x ≠ 0) : HasStrictDerivAt Inv.inv (-(x ^ 2)�
   suffices
     (fun p : 𝕜 × 𝕜 => (p.1 - p.2) * ((x * x)⁻¹ - (p.1 * p.2)⁻¹)) =o[𝓝 (x, x)] fun p =>
       (p.1 - p.2) * 1
-    by
+    by 
     refine' this.congr' _ (eventually_of_forall fun _ => mul_one _)
     refine' eventually.mono (IsOpen.mem_nhds (is_open_ne.prod is_open_ne) ⟨hx, hx⟩) _
     rintro ⟨y, z⟩ ⟨hy, hz⟩
@@ -1716,9 +1710,7 @@ theorem differentiableOnInv : DifferentiableOn 𝕜 (fun x : 𝕜 => x⁻¹) { x
 theorem deriv_inv : deriv (fun x => x⁻¹) x = -(x ^ 2)⁻¹ := by
   rcases eq_or_ne x 0 with (rfl | hne)
   · simp [deriv_zero_of_not_differentiable_at (mt differentiable_at_inv.1 (not_not.2 rfl))]
-    
   · exact (hasDerivAtInv hne).deriv
-    
 #align deriv_inv deriv_inv
 
 @[simp]
@@ -1809,23 +1801,19 @@ variable {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 �
 
 theorem HasDerivWithinAt.div (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWithinAt d d' s x)
     (hx : d x ≠ 0) : HasDerivWithinAt (fun y => c y / d y) ((c' * d x - c x * d') / d x ^ 2) s x :=
-  by
+  by 
   convert hc.mul ((hasDerivAtInv hx).compHasDerivWithinAt x hd)
   · simp only [div_eq_mul_inv]
-    
   · field_simp
     ring
-    
 #align has_deriv_within_at.div HasDerivWithinAt.div
 
 theorem HasStrictDerivAt.div (hc : HasStrictDerivAt c c' x) (hd : HasStrictDerivAt d d' x)
     (hx : d x ≠ 0) : HasStrictDerivAt (fun y => c y / d y) ((c' * d x - c x * d') / d x ^ 2) x := by
   convert hc.mul ((hasStrictDerivAtInv hx).comp x hd)
   · simp only [div_eq_mul_inv]
-    
   · field_simp
     ring
-    
 #align has_strict_deriv_at.div HasStrictDerivAt.div
 
 theorem HasDerivAt.div (hc : HasDerivAt c c' x) (hd : HasDerivAt d d' x) (hx : d x ≠ 0) :
@@ -2064,7 +2052,7 @@ theorem HasDerivAt.tendsto_punctured_nhds (h : HasDerivAt f f' x) (hf' : f' ≠ 
 theorem not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_zero {f g : 𝕜 → 𝕜}
     {a : 𝕜} {s t : Set 𝕜} (ha : a ∈ s) (hsu : UniqueDiffWithinAt 𝕜 s a)
     (hf : HasDerivWithinAt f 0 t (g a)) (hst : MapsTo g s t) (hfg : f ∘ g =ᶠ[𝓝[s] a] id) :
-    ¬DifferentiableWithinAt 𝕜 g s a := by
+    ¬DifferentiableWithinAt 𝕜 g s a := by 
   intro hg
   have := (hf.comp a hg.has_deriv_within_at hst).congrOfEventuallyEqOfMem hfg.symm ha
   simpa using hsu.eq_deriv _ this (hasDerivWithinAtId _ _)
@@ -2095,21 +2083,16 @@ protected theorem hasStrictDerivAt (x : 𝕜) :
     HasStrictDerivAt (fun x => p.eval x) (p.derivative.eval x) x := by
   apply p.induction_on
   · simp [hasStrictDerivAtConst]
-    
   · intro p q hp hq
     convert hp.add hq <;> simp
-    
   · intro n a h
     convert h.mul (hasStrictDerivAtId x)
     · ext y
       simp [pow_add, mul_assoc]
-      
     · simp only [pow_add, pow_one, derivative_mul, derivative_C, zero_mul, derivative_X_pow,
         derivative_X, mul_one, zero_add, eval_mul, eval_C, eval_add, eval_nat_cast, eval_pow,
         eval_X, id.def]
       ring
-      
-    
 #align polynomial.has_strict_deriv_at Polynomial.hasStrictDerivAt
 
 /-- The derivative (in the analysis sense) of a polynomial `p` is given by `p.derivative`. -/
@@ -2184,10 +2167,8 @@ theorem hasStrictDerivAtPow (n : ℕ) (x : 𝕜) :
     HasStrictDerivAt (fun x => x ^ n) ((n : 𝕜) * x ^ (n - 1)) x := by
   convert (Polynomial.c (1 : 𝕜) * Polynomial.x ^ n).HasStrictDerivAt x
   · simp
-    
   · rw [Polynomial.derivative_C_mul_X_pow]
     simp
-    
 #align has_strict_deriv_at_pow hasStrictDerivAtPow
 
 theorem hasDerivAtPow (n : ℕ) (x : 𝕜) : HasDerivAt (fun x => x ^ n) ((n : 𝕜) * x ^ (n - 1)) x :=
@@ -2279,11 +2260,8 @@ theorem hasStrictDerivAtZpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
       zpow_add₀ hx]
     congr
     abel
-    
   · simp only [hm, zpow_zero, Int.cast_zero, zero_mul, hasStrictDerivAtConst]
-    
   · exact this m hm
-    
 #align has_strict_deriv_at_zpow hasStrictDerivAtZpow
 
 theorem hasDerivAtZpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
@@ -2314,12 +2292,10 @@ theorem differentiableOnZpow (m : ℤ) (s : Set 𝕜) (h : (0 : 𝕜) ∉ s ∨ 
 theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m - 1) := by
   by_cases H : x ≠ 0 ∨ 0 ≤ m
   · exact (hasDerivAtZpow m x H).deriv
-    
   · rw [deriv_zero_of_not_differentiable_at (mt differentiable_at_zpow.1 H)]
     push_neg  at H
     rcases H with ⟨rfl, hm⟩
     rw [zero_zpow _ ((sub_one_lt _).trans hm).Ne, mul_zero]
-    
 #align deriv_zpow deriv_zpow
 
 @[simp]
@@ -2337,10 +2313,9 @@ theorem iter_deriv_zpow' (m : ℤ) (k : ℕ) :
     ((deriv^[k]) fun x : 𝕜 => x ^ m) = fun x => (∏ i in Finset.range k, m - i) * x ^ (m - k) := by
   induction' k with k ihk
   · simp only [one_mul, Int.ofNat_zero, id, sub_zero, Finset.prod_range_zero, Function.iterate_zero]
-    
-  · simp only [Function.iterate_succ_apply', ihk, deriv_const_mul_field', deriv_zpow',
+  ·
+    simp only [Function.iterate_succ_apply', ihk, deriv_const_mul_field', deriv_zpow',
       Finset.prod_range_succ, Int.ofNat_succ, ← sub_sub, Int.cast_sub, Int.cast_ofNat, mul_assoc]
-    
 #align iter_deriv_zpow' iter_deriv_zpow'
 
 theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :
@@ -2353,11 +2328,9 @@ theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
   simp only [← zpow_coe_nat, iter_deriv_zpow, Int.cast_ofNat]
   cases' le_or_lt k n with hkn hnk
   · rw [Int.ofNat_sub hkn]
-    
   · have : (∏ i in Finset.range k, (n - i : 𝕜)) = 0 :=
       Finset.prod_eq_zero (Finset.mem_range.2 hnk) (sub_self _)
     simp only [this, zero_mul]
-    
 #align iter_deriv_pow iter_deriv_pow
 
 @[simp]

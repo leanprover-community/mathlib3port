@@ -93,10 +93,9 @@ theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) :
     aeval x.coeff (verschiebungPoly n) = (verschiebungFun x).coeff n := by
   cases n
   · simp only [verschiebung_poly, verschiebung_fun_coeff_zero, if_pos rfl, AlgHom.map_zero]
-    
-  · rw [verschiebung_poly, verschiebung_fun_coeff_succ, if_neg n.succ_ne_zero, aeval_X,
+  ·
+    rw [verschiebung_poly, verschiebung_fun_coeff_succ, if_neg n.succ_ne_zero, aeval_X,
       Nat.succ_eq_add_one, add_tsub_cancel_right]
-    
 #align witt_vector.aeval_verschiebung_poly' WittVector.aeval_verschiebung_poly'
 
 variable (p)
@@ -119,12 +118,13 @@ include hp
 
 This is a additive monoid hom with underlying function `verschiebung_fun`.
 -/
-noncomputable def verschiebung : 𝕎 R →+ 𝕎 R where
+noncomputable def verschiebung :
+    𝕎 R →+ 𝕎 R where 
   toFun := verschiebungFun
   map_zero' := by
     ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;>
       simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
-  map_add' := by
+  map_add' := by 
     ghost_calc _ _
     rintro ⟨⟩ <;> ghost_simp
 #align witt_vector.verschiebung WittVector.verschiebung
@@ -183,12 +183,11 @@ theorem aeval_verschiebung_poly (x : 𝕎 R) (n : ℕ) :
 theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
     bind₁ verschiebungPoly (wittPolynomial p ℤ n) =
       if n = 0 then 0 else p * wittPolynomial p ℤ (n - 1) :=
-  by
+  by 
   apply MvPolynomial.funext
   intro x
   split_ifs with hn
   · simp only [hn, verschiebung_poly_zero, witt_polynomial_zero, bind₁_X_right]
-    
   · obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
     rw [Nat.succ_eq_add_one, add_tsub_cancel_right, RingHom.map_mul, map_nat_cast, hom_bind₁]
     calc
@@ -199,11 +198,8 @@ theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
       simp only [← aeval_verschiebung_poly, coeff_mk]
       funext k
       exact eval₂_hom_congr (RingHom.ext_int _ _) rfl rfl
-      
     · rw [ghost_component_verschiebung]
       rfl
-      
-    
 #align
   witt_vector.bind₁_verschiebung_poly_witt_polynomial WittVector.bind₁_verschiebung_poly_witt_polynomial
 

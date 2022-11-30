@@ -48,7 +48,8 @@ private unsafe def rules_from_hyps : tactic (List (expr × Bool)) := do
 
 /-- Use this attribute to make `rewrite_search` use this definition during search. -/
 @[user_attribute]
-unsafe def rewrite_search_attr : user_attribute where
+unsafe def rewrite_search_attr :
+    user_attribute where 
   Name := `rewrite
   descr := "declare that this definition should be considered by `rewrite_search`"
 #align tactic.rewrite_search.rewrite_search_attr tactic.rewrite_search.rewrite_search_attr

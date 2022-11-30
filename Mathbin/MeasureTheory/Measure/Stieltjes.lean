@@ -60,7 +60,7 @@ theorem right_continuous (x : ℝ) : ContinuousWithinAt f (ici x) x :=
 
 /-- The identity of `ℝ` as a Stieltjes function, used to construct Lebesgue measure. -/
 @[simps]
-protected def id : StieltjesFunction where
+protected def id : StieltjesFunction where 
   toFun := id
   mono' x y := id
   right_continuous' x := continuous_within_at_id
@@ -77,10 +77,11 @@ instance : Inhabited StieltjesFunction :=
 
 /-- If a function `f : ℝ → ℝ` is monotone, then the function mapping `x` to the right limit of `f`
 at `x` is a Stieltjes function, i.e., it is monotone and right-continuous. -/
-noncomputable def Monotone.stieltjesFunction {f : ℝ → ℝ} (hf : Monotone f) : StieltjesFunction where
+noncomputable def Monotone.stieltjesFunction {f : ℝ → ℝ} (hf : Monotone f) :
+    StieltjesFunction where 
   toFun := rightLim f
   mono' x y hxy := hf.rightLim hxy
-  right_continuous' := by
+  right_continuous' := by 
     intro x s hs
     obtain ⟨l, u, hlu, lus⟩ : ∃ l u : ℝ, right_lim f x ∈ Ioo l u ∧ Ioo l u ⊆ s :=
       mem_nhds_iff_exists_Ioo_subset.1 hs
@@ -104,7 +105,7 @@ theorem Monotone.stieltjes_function_eq {f : ℝ → ℝ} (hf : Monotone f) (x : 
 #align monotone.stieltjes_function_eq Monotone.stieltjes_function_eq
 
 theorem countable_left_lim_ne (f : StieltjesFunction) : Set.Countable { x | leftLim f x ≠ f x } :=
-  by
+  by 
   apply countable.mono _ f.mono.countable_not_continuous_at
   intro x hx h'x
   apply hx
@@ -134,7 +135,6 @@ theorem length_Ioc (a b : ℝ) : f.length (ioc a b) = ofReal (f b - f a) := by
   cases' le_or_lt b a with ab ab
   · rw [Real.to_nnreal_of_nonpos (sub_nonpos.2 (f.mono ab))]
     apply zero_le
-    
   cases' (Ioc_subset_Ioc_iff ab).1 h with h₁ h₂
   exact Real.to_nnreal_le_to_nnreal (sub_le_sub (f.mono h₁) (f.mono h₂))
 #align stieltjes_function.length_Ioc StieltjesFunction.length_Ioc
@@ -178,7 +178,6 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : icc a b
   cases' le_total b a with ab ab
   · rw [Ennreal.of_real_eq_zero.2 (sub_nonpos.2 (f.mono ab))]
     exact zero_le _
-    
   have := cv ⟨ab, le_rfl⟩
   simp at this
   rcases this with ⟨i, is, cb, bd⟩
@@ -189,14 +188,13 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : icc a b
   · refine' le_trans (Ennreal.of_real_le_of_real _) Ennreal.of_real_add_le
     rw [sub_add_sub_cancel]
     exact sub_le_sub_right (f.mono bd.le) _
-    
   · rintro x ⟨h₁, h₂⟩
     refine' (cv ⟨h₁, le_trans h₂ (le_of_lt cb)⟩).resolve_left (mt And.left (not_lt_of_le h₂))
-    
 #align stieltjes_function.length_subadditive_Icc_Ioo StieltjesFunction.length_subadditive_Icc_Ioo
 
 @[simp]
-theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) := by
+theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) :=
+  by
   /- It suffices to show that, if `(a, b]` is covered by sets `s i`, then `f b - f a` is bounded
     by `∑ f.length (s i) + ε`. The difficulty is that `f.length` is expressed in terms of half-open
     intervals, while we would like to have a compact interval covered by open intervals to use
@@ -210,7 +208,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) := by
     of the `f`-length of `s i`. -/
   refine'
     le_antisymm
-      (by
+      (by 
         rw [← f.length_Ioc]
         apply outer_le_length)
       (le_infi₂ fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
@@ -226,13 +224,13 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) := by
   have :
     ∀ i,
       ∃ p : ℝ × ℝ, s i ⊆ Ioo p.1 p.2 ∧ (of_real (f p.2 - f p.1) : ℝ≥0∞) < f.length (s i) + ε' i :=
-    by
+    by 
     intro i
     have :=
       Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_ne_zero.2 (ε'0 i).ne')
-    conv at this =>
-    lhs
-    rw [length]
+    conv at this => 
+      lhs
+      rw [length]
     simp only [infi_lt_iff, exists_prop] at this
     rcases this with ⟨p, q', spq, hq'⟩
     have : ContinuousWithinAt (fun r => of_real (f r - f p)) (Ioi q') q' := by
@@ -271,19 +269,19 @@ theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (ioi c
         (f.length_mono <| diff_subset_diff_left h))
       _
   cases' le_total a c with hac hac <;> cases' le_total b c with hbc hbc
-  · simp only [Ioc_inter_Ioi, f.length_Ioc, hac, sup_eq_max, hbc, le_refl, Ioc_eq_empty,
+  ·
+    simp only [Ioc_inter_Ioi, f.length_Ioc, hac, sup_eq_max, hbc, le_refl, Ioc_eq_empty,
       max_eq_right, min_eq_left, Ioc_diff_Ioi, f.length_empty, zero_add, not_lt]
-    
-  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max, ←
+  ·
+    simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max, ←
       Ennreal.of_real_add, f.mono hac, f.mono hbc, sub_nonneg, sub_add_sub_cancel, le_refl,
       max_eq_right]
-    
-  · simp only [hbc, le_refl, Ioc_eq_empty, Ioc_inter_Ioi, min_eq_left, Ioc_diff_Ioi, f.length_empty,
+  ·
+    simp only [hbc, le_refl, Ioc_eq_empty, Ioc_inter_Ioi, min_eq_left, Ioc_diff_Ioi, f.length_empty,
       zero_add, or_true_iff, le_sup_iff, f.length_Ioc, not_lt]
-    
-  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max,
+  ·
+    simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max,
       le_refl, Ioc_eq_empty, add_zero, max_eq_left, f.length_empty, not_lt]
-    
 #align stieltjes_function.measurable_set_Ioi StieltjesFunction.measurableSetIoi
 
 theorem outer_trim : f.outer.trim = f.outer := by
@@ -298,9 +296,9 @@ theorem outer_trim : f.outer.trim = f.outer := by
       intro i
       have :=
         Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_pos.2 (ε'0 i)).ne'
-      conv at this =>
-      lhs
-      rw [length]
+      conv at this => 
+        lhs
+        rw [length]
       simp only [infi_lt_iff] at this
       rcases this with ⟨a, b, h₁, h₂⟩
       rw [← f.outer_Ioc] at h₂
@@ -349,11 +347,9 @@ theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a)
     rw [A]
     refine' tendsto_measure_Inter (fun n => measurableSetIoc) (fun m n hmn => _) _
     · exact Ioc_subset_Ioc (u_mono.monotone hmn) le_rfl
-      
     · exact ⟨0, by simpa only [measure_Ioc] using Ennreal.of_real_ne_top⟩
-      
   have L2 : tendsto (fun n => f.measure (Ioc (u n) a)) at_top (𝓝 (of_real (f a - left_lim f a))) :=
-    by
+    by 
     simp only [measure_Ioc]
     have : tendsto (fun n => f (u n)) at_top (𝓝 (left_lim f a)) := by
       apply (f.mono.tendsto_left_lim a).comp
@@ -370,11 +366,9 @@ theorem measure_Icc (a b : ℝ) : f.Measure (icc a b) = ofReal (f b - leftLim f 
   · have A : Disjoint {a} (Ioc a b) := by simp
     simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← Ennreal.of_real_add,
       f.mono.left_lim_le, measure_union A measurableSetIoc, f.mono hab]
-    
   · simp only [hab, measure_empty, Icc_eq_empty, not_le]
     symm
     simp [Ennreal.of_real_eq_zero, f.mono.le_left_lim hab]
-    
 #align stieltjes_function.measure_Icc StieltjesFunction.measure_Icc
 
 @[simp]
@@ -383,7 +377,6 @@ theorem measure_Ioo {a b : ℝ} : f.Measure (ioo a b) = ofReal (leftLim f b - f 
   · simp only [hab, measure_empty, Ioo_eq_empty, not_lt]
     symm
     simp [Ennreal.of_real_eq_zero, f.mono.left_lim_le hab]
-    
   · have A : Disjoint (Ioo a b) {b} := by simp
     have D : f b - f a = f b - left_lim f b + (left_lim f b - f a) := by abel
     have := f.measure_Ioc a b
@@ -391,12 +384,8 @@ theorem measure_Ioo {a b : ℝ} : f.Measure (ioo a b) = ofReal (leftLim f b - f 
       measure_union A (measurable_set_singleton b), Icc_self] at this
     rw [D, Ennreal.of_real_add, add_comm] at this
     · simpa only [Ennreal.add_right_inj Ennreal.of_real_ne_top]
-      
     · simp only [f.mono.left_lim_le, sub_nonneg]
-      
     · simp only [f.mono.le_left_lim hab, sub_nonneg]
-      
-    
 #align stieltjes_function.measure_Ioo StieltjesFunction.measure_Ioo
 
 @[simp]
@@ -405,11 +394,9 @@ theorem measure_Ico (a b : ℝ) : f.Measure (ico a b) = ofReal (leftLim f b - le
   · simp only [hab, measure_empty, Ico_eq_empty, not_lt]
     symm
     simp [Ennreal.of_real_eq_zero, f.mono.left_lim hab]
-    
   · have A : Disjoint {a} (Ioo a b) := by simp
     simp [← Icc_union_Ioo_eq_Ico le_rfl hab, -singleton_union, hab.ne, f.mono.left_lim_le,
       measure_union A measurableSetIoo, f.mono.le_left_lim hab, ← Ennreal.of_real_add]
-    
 #align stieltjes_function.measure_Ico StieltjesFunction.measure_Ico
 
 instance : IsLocallyFiniteMeasure f.Measure :=

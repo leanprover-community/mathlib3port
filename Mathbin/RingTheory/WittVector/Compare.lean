@@ -111,7 +111,7 @@ theorem commutes' {m : ℕ} (hm : n ≤ m) (x : Zmod (p ^ m)) :
 theorem commutes_symm' {m : ℕ} (hm : n ≤ m) (x : TruncatedWittVector p m (Zmod p)) :
     (zmodEquivTrunc p n).symm (truncate hm x) =
       Zmod.castHom (pow_dvd_pow p hm) _ ((zmodEquivTrunc p m).symm x) :=
-  by
+  by 
   apply (zmod_equiv_trunc p n).Injective
   rw [← commutes']
   simp
@@ -221,7 +221,7 @@ theorem from_padic_int_comp_to_padic_int_ext (x) :
 /-- The ring of Witt vectors over `zmod p` is isomorphic to the ring of `p`-adic integers. This
 equivalence is witnessed by `witt_vector.to_padic_int` with inverse `witt_vector.from_padic_int`.
 -/
-def equiv : 𝕎 (Zmod p) ≃+* ℤ_[p] where
+def equiv : 𝕎 (Zmod p) ≃+* ℤ_[p] where 
   toFun := toPadicInt p
   invFun := fromPadicInt p
   left_inv := from_padic_int_comp_to_padic_int_ext _

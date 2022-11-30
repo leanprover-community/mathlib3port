@@ -41,7 +41,7 @@ theorem isCauOfDecreasingBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ 
         (show a - (k + (k + 1)) • ε < -|f n| from
           lt_neg.1 <|
             lt_of_le_of_lt (ham n hnm)
-              (by
+              (by 
                 rw [neg_sub, lt_sub_iff_add_lt, add_nsmul, add_nsmul, one_nsmul]
                 exact add_lt_add_of_le_of_lt hk (lt_of_le_of_lt hk (lt_add_of_pos_right _ ε0))))
         (neg_le.2 <| abs_neg (f n) ▸ le_abs_self _)⟩
@@ -58,9 +58,11 @@ theorem isCauOfDecreasingBounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ 
   rw [abs_of_nonpos (sub_nonpos.2 hfij), neg_sub, sub_lt_iff_lt_add']
   calc
     f i ≤ a - Nat.pred l • ε := hi.2
-    _ = a - l • ε + ε := by conv =>
-      rhs
-      rw [← Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hl0), succ_nsmul', sub_add, add_sub_cancel]
+    _ = a - l • ε + ε := by
+      conv => 
+        rhs
+        rw [← Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hl0), succ_nsmul', sub_add,
+          add_sub_cancel]
     _ < f j + ε := add_lt_add_right (hl j (le_trans hi.1 hj)) _
     
 #align is_cau_of_decreasing_bounded isCauOfDecreasingBounded
@@ -85,7 +87,7 @@ variable {α : Type _} {β : Type _} [Ring β] [LinearOrderedField α] {abv : β
 theorem isCauSeriesOfAbvLeCau {f : ℕ → β} {g : ℕ → α} (n : ℕ) :
     (∀ m, n ≤ m → abv (f m) ≤ g m) →
       (IsCauSeq abs fun n => ∑ i in range n, g i) → IsCauSeq abv fun n => ∑ i in range n, f i :=
-  by
+  by 
   intro hm hg ε ε0
   cases' hg (ε / 2) (div_pos ε0 (by norm_num)) with i hi
   exists max n i
@@ -104,12 +106,10 @@ theorem isCauSeriesOfAbvLeCau {f : ℕ → β} {g : ℕ → α} (n : ℕ) :
   clear hk ji j
   induction' k with k' hi
   · simp [abv_zero abv]
-    
   · simp only [Nat.succ_add, sum_range_succ_comm, sub_eq_add_neg, add_assoc]
     refine' le_trans (abv_add _ _ _) _
     simp only [sub_eq_add_neg] at hi
     exact add_le_add (hm _ (le_add_of_nonneg_of_le (Nat.zero_le _) (le_max_left _ _))) hi
-    
 #align is_cau_series_of_abv_le_cau isCauSeriesOfAbvLeCau
 
 theorem isCauSeriesOfAbvCau {f : ℕ → β} :
@@ -127,7 +127,7 @@ theorem isCauGeoSeries {β : Type _} [Ring β] [Nontrivial β] {abv : β → α}
     (x : β) (hx1 : abv x < 1) : IsCauSeq abv fun n => ∑ m in range n, x ^ m :=
   have hx1' : abv x ≠ 1 := fun h => by simpa [h, lt_irrefl] using hx1
   isCauSeriesOfAbvCau
-    (by
+    (by 
       simp only [abv_pow abv, geom_sum_eq hx1']
       conv in _ / _ => rw [← neg_div_neg_eq, neg_sub, neg_sub]
       refine' @isCauOfMonoBounded _ _ _ _ ((1 : α) / (1 - abv x)) 0 _ _
@@ -140,16 +140,12 @@ theorem isCauGeoSeries {β : Type _} [Ring β] [Nontrivial β] {abv : β → α}
         clear hn
         induction' n with n ih
         · simp
-          
         · rw [pow_succ, ← one_mul (1 : α)]
           refine' mul_le_mul (le_of_lt hx1) ih (abv_pow abv x n ▸ abv_nonneg _ _) (by norm_num)
-          
-        
       · intro n hn
         refine' div_le_div_of_le (le_of_lt <| sub_pos.2 hx1) (sub_le_sub_left _ _)
         rw [← one_mul (_ ^ n), pow_succ]
-        exact mul_le_mul_of_nonneg_right (le_of_lt hx1) (pow_nonneg (abv_nonneg _ _) _)
-        )
+        exact mul_le_mul_of_nonneg_right (le_of_lt hx1) (pow_nonneg (abv_nonneg _ _) _))
 #align is_cau_geo_series isCauGeoSeries
 
 theorem isCauGeoSeriesConst (a : α) {x : α} (hx1 : |x| < 1) :
@@ -163,7 +159,7 @@ variable {β : Type _} [Ring β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem seriesRatioTest {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1 : r < 1)
     (h : ∀ m, n ≤ m → abv (f m.succ) ≤ r * abv (f m)) : IsCauSeq abv fun m => ∑ n in range m, f n :=
-  by
+  by 
   have har1 : |r| < 1 := by rwa [abs_of_nonneg hr0]
   refine' isCauSeriesOfAbvLeCau n.succ _ (isCauGeoSeriesConst (abv (f n.succ) * r⁻¹ ^ n.succ) har1)
   intro m hmn
@@ -171,21 +167,18 @@ theorem seriesRatioTest {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1
   · have m_pos := lt_of_lt_of_le (Nat.succ_pos n) hmn
     have := h m.pred (Nat.le_of_succ_le_succ (by rwa [Nat.succ_pred_eq_of_pos m_pos]))
     simpa [r_zero, Nat.succ_pred_eq_of_pos m_pos, pow_succ]
-    
   generalize hk : m - n.succ = k
   have r_pos : 0 < r := lt_of_le_of_ne hr0 (Ne.symm r_ne_zero)
   replace hk : m = k + n.succ := (tsub_eq_iff_eq_add_of_le hmn).1 hk
   induction' k with k ih generalizing m n
   · rw [hk, zero_add, mul_right_comm, inv_pow _ _, ← div_eq_mul_inv, mul_div_cancel]
     exact (ne_of_lt (pow_pos r_pos _)).symm
-    
   · have kn : k + n.succ ≥ n.succ := by
       rw [← zero_add n.succ] <;> exact add_le_add (zero_le _) (by simp)
     rw [hk, Nat.succ_add, pow_succ' r, ← mul_assoc]
     exact
       le_trans (by rw [mul_comm] <;> exact h _ (Nat.le_of_succ_le kn))
         (mul_le_mul_of_nonneg_right (ih (k + n.succ) n h kn rfl) hr0)
-    
 #align series_ratio_test seriesRatioTest
 
 theorem sum_range_diag_flip {α : Type _} [AddCommMonoid α] (n : ℕ) (f : ℕ → ℕ → α) :
@@ -319,7 +312,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
             ∑ i in range (max N M + 1),
               abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) <
         ε / (2 * P) * P + ε / (4 * Q) * (2 * Q)
-      by
+      by 
       rw [hε] at this
       simpa [abv_mul abv]
     refine'
@@ -490,20 +483,16 @@ variable (x y : ℂ)
 @[simp]
 theorem exp_zero : exp 0 = 1 :=
   lim_eq_of_equiv_const fun ε ε0 =>
-    ⟨1, fun j hj => by
+    ⟨1, fun j hj => by 
       convert ε0
       cases j
       · exact absurd hj (not_le_of_gt zero_lt_one)
-        
       · dsimp [exp']
         induction' j with j ih
         · dsimp [exp'] <;> simp
-          
         · rw [← ih (by decide)]
           simp only [sum_range_succ, pow_succ]
-          simp
-          
-        ⟩
+          simp⟩
 #align complex.exp_zero Complex.exp_zero
 
 theorem exp_add : exp (x + y) = exp x * exp y :=
@@ -570,9 +559,7 @@ theorem exp_sub : exp (x - y) = exp x / exp y := by
 theorem exp_int_mul (z : ℂ) (n : ℤ) : Complex.exp (n * z) = Complex.exp z ^ n := by
   cases n
   · apply Complex.exp_nat_mul
-    
   · simpa [Complex.exp_neg, add_comm, ← neg_mul] using Complex.exp_nat_mul (-z) (1 + n)
-    
 #align complex.exp_int_mul Complex.exp_int_mul
 
 @[simp]
@@ -927,9 +914,7 @@ theorem cos_add_cos : cos x + cos y = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) 
     _ = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) := _
     
   · congr <;> field_simp [h2] <;> ring
-    
   · rw [cos_add, cos_sub]
-    
   ring
 #align complex.cos_add_cos Complex.cos_add_cos
 
@@ -1121,9 +1106,7 @@ theorem cos_add_sin_mul_I_pow (n : ℕ) (z : ℂ) :
   rw [← exp_mul_I, ← exp_mul_I]
   induction' n with n ih
   · rw [pow_zero, Nat.cast_zero, zero_mul, zero_mul, exp_zero]
-    
   · rw [pow_succ', ih, Nat.cast_succ, add_mul, add_mul, one_mul, exp_add]
-    
 #align complex.cos_add_sin_mul_I_pow Complex.cos_add_sin_mul_I_pow
 
 end Complex
@@ -1596,13 +1579,11 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
       rw [one_div, inv_le_inv]
       · rw [← Nat.cast_pow, ← Nat.cast_mul, Nat.cast_le, add_comm]
         exact Nat.factorial_mul_pow_le_factorial
-        
       · exact Nat.cast_pos.2 (Nat.factorial_pos _)
-        
-      · exact
+      ·
+        exact
           mul_pos (Nat.cast_pos.2 (Nat.factorial_pos _))
             (pow_pos (Nat.cast_pos.2 (Nat.succ_pos _)) _)
-        
     _ = n !⁻¹ * ∑ m in range (j - n), n.succ⁻¹ ^ m := by
       simp [mul_inv, mul_sum.symm, sum_mul.symm, -Nat.factorial_succ, mul_comm, inv_pow]
     _ = (n.succ - n.succ * n.succ⁻¹ ^ (j - n)) / (n ! * n) := by
@@ -1639,7 +1620,7 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
   calc
     abs (∑ m in (range j).filter fun k => n ≤ k, (x ^ m / m ! : ℂ)) =
         abs (∑ m in (range j).filter fun k => n ≤ k, (x ^ n * (x ^ (m - n) / m !) : ℂ)) :=
-      by
+      by 
       refine' congr_arg abs (sum_congr rfl fun m hm => _)
       rw [mem_filter, mem_range] at hm
       rw [← mul_div_assoc, ← pow_add, add_tsub_cancel_of_le hm.2]
@@ -1649,12 +1630,9 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
       rw [map_mul, map_pow, map_div₀, abs_cast_nat]
       refine' mul_le_mul_of_nonneg_left ((div_le_div_right _).2 _) _
       · exact Nat.cast_pos.2 (Nat.factorial_pos _)
-        
       · rw [abv_pow abs]
         exact pow_le_one _ (abs.nonneg _) hx
-        
       · exact pow_nonneg (abs.nonneg _) _
-        
     _ = abs x ^ n * ∑ m in (range j).filter fun k => n ≤ k, (1 / m ! : ℝ) := by
       simp [abs_mul, abv_pow abs, abs_div, mul_sum.symm]
     _ ≤ abs x ^ n * (n.succ * (n ! * n)⁻¹) :=
@@ -1683,34 +1661,22 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     
   · refine' sum_le_sum fun m hm => div_le_div (pow_nonneg (abs.nonneg x) (n + m)) le_rfl _ _
     · exact_mod_cast mul_pos n.factorial_pos (pow_pos n.succ_pos _)
-      
     · exact_mod_cast Nat.factorial_mul_pow_le_factorial
-      
-    
   · refine' Finset.sum_congr rfl fun _ _ => _
     simp only [pow_add, div_eq_inv_mul, mul_inv, mul_left_comm, mul_assoc]
-    
   · rw [← mul_sum]
     apply mul_le_mul_of_nonneg_left
     · simp_rw [← div_pow]
       rw [geom_sum_eq, div_le_iff_of_neg]
       · trans (-1 : ℝ)
         · linarith
-          
         · simp only [neg_le_sub_iff_le_add, div_pow, Nat.cast_succ, le_add_iff_nonneg_left]
           exact
             div_nonneg (pow_nonneg (abs.nonneg x) k)
               (pow_nonneg (add_nonneg n.cast_nonneg zero_le_one) k)
-          
-        
       · linarith
-        
       · linarith
-        
-      
     · exact div_nonneg (pow_nonneg (abs.nonneg x) n) (Nat.cast_nonneg n !)
-      
-    
 #align complex.exp_bound' Complex.exp_bound'
 
 theorem abs_exp_sub_one_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1) ≤ 2 * abs x :=
@@ -1805,9 +1771,7 @@ theorem exp_approx_succ {n} {x a₁ b₁ : ℝ} (m : ℕ) (e₁ : n + 1 = m) (a�
   convert mul_le_mul_of_nonneg_left (le_sub_iff_add_le'.1 e) _
   · simp [mul_add, pow_succ', div_eq_mul_inv, _root_.abs_mul, _root_.abs_inv, ← pow_abs, mul_inv]
     ac_rfl
-    
   · simp [_root_.div_nonneg, _root_.abs_nonneg]
-    
 #align real.exp_approx_succ Real.exp_approx_succ
 
 theorem exp_approx_end' {n} {x a b : ℝ} (m : ℕ) (e₁ : n + 1 = m) (rm : ℝ) (er : ↑m = rm)
@@ -1841,7 +1805,7 @@ theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ |x|
             2) :=
       congr_arg abs
         (congr_arg (fun x : ℂ => x / 2)
-          (by
+          (by 
             simp only [sum_range_succ]
             simp [pow_succ]
             apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring))
@@ -1878,7 +1842,7 @@ theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x|
             2) :=
       congr_arg abs
         (congr_arg (fun x : ℂ => x / 2)
-          (by
+          (by 
             simp only [sum_range_succ]
             simp [pow_succ]
             apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring))
@@ -1975,7 +1939,7 @@ theorem cos_two_neg : cos 2 < 0 :=
     _ ≤ 2 * (2 / 3) ^ 2 - 1 :=
       sub_le_sub_right
         (mul_le_mul_of_nonneg_left
-          (by
+          (by 
             rw [sq, sq]
             exact mul_self_le_mul_self (le_of_lt cos_one_pos) cos_one_le)
           zero_le_two)
@@ -1988,7 +1952,7 @@ theorem exp_bound_div_one_sub_of_interval_approx {x : ℝ} (h1 : 0 ≤ x) (h2 : 
     (∑ j : ℕ in Finset.range 3, x ^ j / j.factorial) +
         x ^ 3 * ((3 : ℕ) + 1) / ((3 : ℕ).factorial * (3 : ℕ)) ≤
       ∑ j in Finset.range 3, x ^ j :=
-  by
+  by 
   norm_num [Finset.sum]
   rw [add_assoc, add_comm (x + 1) (x ^ 3 * 4 / 18), ← add_assoc, add_le_add_iff_right, ←
     add_le_add_iff_left (-(x ^ 2 / 2)), ← add_assoc, CommRing.add_left_neg (x ^ 2 / 2), zero_add,
@@ -2010,7 +1974,7 @@ theorem exp_bound_div_one_sub_of_interval {x : ℝ} (h1 : 0 ≤ x) (h2 : x < 1) 
     rw [le_div_iff h1x]
     norm_num [← add_assoc, mul_sub_left_distrib, mul_one, add_mul, sub_add_eq_sub_sub,
       pow_succ' x 2]
-    have hx3 : 0 ≤ x ^ 3 := by
+    have hx3 : 0 ≤ x ^ 3 := by 
       norm_num
       exact h1
     linarith
@@ -2022,12 +1986,11 @@ theorem one_sub_le_exp_minus_of_pos {y : ℝ} (h : 0 ≤ y) : 1 - y ≤ Real.exp
   rw [Real.exp_neg]
   have r1 : (1 - y) * Real.exp y ≤ 1 := by
     cases le_or_lt (1 - y) 0
-    · have h'' : (1 - y) * y.exp ≤ 0 := by
+    · have h'' : (1 - y) * y.exp ≤ 0 := by 
         rw [mul_nonpos_iff]
         right
         exact ⟨h_1, y.exp_pos.le⟩
       linarith
-      
     have hy1 : y < 1 := by linarith
     rw [← le_div_iff' h_1]
     exact exp_bound_div_one_sub_of_interval h hy1
@@ -2045,7 +2008,6 @@ theorem add_one_le_exp_of_nonpos {x : ℝ} (h : x ≤ 0) : x + 1 ≤ Real.exp x 
 theorem add_one_le_exp (x : ℝ) : x + 1 ≤ Real.exp x := by
   cases le_or_lt 0 x
   · exact Real.add_one_le_exp_of_nonneg h
-    
   exact add_one_le_exp_of_nonpos h.le
 #align real.add_one_le_exp Real.add_one_le_exp
 

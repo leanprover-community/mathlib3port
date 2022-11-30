@@ -194,10 +194,8 @@ instance Monoid.hasMeasurablePow (M : Type _) [Monoid M] [MeasurableSpace M] [Ha
   ⟨measurableFromProdCountable fun n => by
       induction' n with n ih
       · simp only [pow_zero, ← Pi.one_def, measurableOne]
-        
       · simp only [pow_succ]
-        exact measurable_id.mul ih
-        ⟩
+        exact measurable_id.mul ih⟩
 #align monoid.has_measurable_pow Monoid.hasMeasurablePow
 
 section Pow
@@ -364,7 +362,6 @@ theorem measurableSetEqFun {m : MeasurableSpace α} {E} [MeasurableSpace E] [Add
   suffices h_set_eq : { x : α | f x = g x } = { x | (f - g) x = (0 : E) }
   · rw [h_set_eq]
     exact (hf.sub hg) measurableSetEq
-    
   ext
   simp_rw [Set.mem_set_of_eq, Pi.sub_apply, sub_eq_zero]
 #align measurable_set_eq_fun measurableSetEqFun
@@ -378,9 +375,7 @@ theorem measurableSetEqFunOfCountable {m : MeasurableSpace α} {E} [MeasurableSp
   rw [this]
   refine' MeasurableSet.union fun j => MeasurableSet.inter _ _
   · exact hf (measurable_set_singleton j)
-    
   · exact hg (measurable_set_singleton j)
-    
 #align measurable_set_eq_fun_of_countable measurableSetEqFunOfCountable
 
 theorem ae_eq_trim_of_measurable {α E} {m m0 : MeasurableSpace α} {μ : Measure α}
@@ -410,12 +405,14 @@ export HasMeasurableNeg (measurableNeg)
 
 @[to_additive]
 instance (priority := 100) hasMeasurableDivOfMulInv (G : Type _) [MeasurableSpace G]
-    [DivInvMonoid G] [HasMeasurableMul G] [HasMeasurableInv G] : HasMeasurableDiv G where
-  measurableConstDiv c := by
+    [DivInvMonoid G] [HasMeasurableMul G] [HasMeasurableInv G] :
+    HasMeasurableDiv
+      G where 
+  measurableConstDiv c := by 
     convert measurable_inv.const_mul c
     ext1
     apply div_eq_mul_inv
-  measurableDivConst c := by
+  measurableDivConst c := by 
     convert measurable_id.mul_const c⁻¹
     ext1
     apply div_eq_mul_inv
@@ -482,20 +479,18 @@ end Inv
 /-- `div_inv_monoid.has_pow` is measurable. -/
 instance DivInvMonoid.hasMeasurableZpow (G : Type u) [DivInvMonoid G] [MeasurableSpace G]
     [HasMeasurableMul₂ G] [HasMeasurableInv G] : HasMeasurablePow G ℤ :=
-  ⟨measurableFromProdCountable fun n => by
+  ⟨measurableFromProdCountable fun n => by 
       cases' n with n n
       · simp_rw [zpow_of_nat]
         exact measurable_id.pow_const _
-        
       · simp_rw [zpow_neg_succ_of_nat]
-        exact (measurable_id.pow_const (n + 1)).inv
-        ⟩
+        exact (measurable_id.pow_const (n + 1)).inv⟩
 #align div_inv_monoid.has_measurable_zpow DivInvMonoid.hasMeasurableZpow
 
 @[to_additive]
 instance (priority := 100) hasMeasurableDiv₂OfMulInv (G : Type _) [MeasurableSpace G]
     [DivInvMonoid G] [HasMeasurableMul₂ G] [HasMeasurableInv G] : HasMeasurableDiv₂ G :=
-  ⟨by
+  ⟨by 
     simp only [div_eq_mul_inv]
     exact measurable_fst.mul measurable_snd.inv⟩
 #align has_measurable_div₂_of_mul_inv hasMeasurableDiv₂OfMulInv
@@ -641,30 +636,26 @@ instance Pi.hasMeasurableSmul {ι : Type _} {α : ι → Type _} [∀ i, HasSmul
 /-- `add_monoid.has_smul_nat` is measurable. -/
 instance AddMonoid.hasMeasurableSmulNat₂ (M : Type _) [AddMonoid M] [MeasurableSpace M]
     [HasMeasurableAdd₂ M] : HasMeasurableSmul₂ ℕ M :=
-  ⟨by
+  ⟨by 
     suffices Measurable fun p : M × ℕ => p.2 • p.1 by apply this.comp measurableSwap
     refine' measurableFromProdCountable fun n => _
     induction' n with n ih
     · simp only [zero_smul, ← Pi.zero_def, measurableZero]
-      
     · simp only [succ_nsmul]
-      exact measurable_id.add ih
-      ⟩
+      exact measurable_id.add ih⟩
 #align add_monoid.has_measurable_smul_nat₂ AddMonoid.hasMeasurableSmulNat₂
 
 /-- `sub_neg_monoid.has_smul_int` is measurable. -/
 instance SubNegMonoid.hasMeasurableSmulInt₂ (M : Type _) [SubNegMonoid M] [MeasurableSpace M]
     [HasMeasurableAdd₂ M] [HasMeasurableNeg M] : HasMeasurableSmul₂ ℤ M :=
-  ⟨by
+  ⟨by 
     suffices Measurable fun p : M × ℤ => p.2 • p.1 by apply this.comp measurableSwap
     refine' measurableFromProdCountable fun n => _
     induction' n with n n ih
     · simp only [of_nat_zsmul]
       exact measurable_const_smul _
-      
     · simp only [zsmul_neg_succ_of_nat]
-      exact (measurable_const_smul _).neg
-      ⟩
+      exact (measurable_const_smul _).neg⟩
 #align sub_neg_monoid.has_measurable_smul_int₂ SubNegMonoid.hasMeasurableSmulInt₂
 
 end Smul
@@ -692,7 +683,9 @@ instance : MeasurableSpace Mˣ :=
   MeasurableSpace.comap (coe : Mˣ → M) ‹_›
 
 @[to_additive]
-instance Units.hasMeasurableSmul : HasMeasurableSmul Mˣ β where
+instance Units.hasMeasurableSmul :
+    HasMeasurableSmul Mˣ
+      β where 
   measurableConstSmul c := (measurableConstSmul (c : M) : _)
   measurableSmulConst x :=
     (measurableSmulConst x : Measurable fun c : M => c • x).comp MeasurableSpace.le_map_comap
@@ -806,10 +799,8 @@ include m
 
 @[measurability, to_additive]
 theorem List.measurableProd' (l : List (α → M)) (hl : ∀ f ∈ l, Measurable f) : Measurable l.Prod :=
-  by
-  induction' l with f l ihl;
-  · exact measurableOne
-    
+  by 
+  induction' l with f l ihl; · exact measurableOne
   rw [List.forall_mem_cons] at hl
   rw [List.prod_cons]
   exact hl.1.mul (ihl hl.2)
@@ -817,10 +808,8 @@ theorem List.measurableProd' (l : List (α → M)) (hl : ∀ f ∈ l, Measurable
 
 @[measurability, to_additive]
 theorem List.aeMeasurableProd' (l : List (α → M)) (hl : ∀ f ∈ l, AeMeasurable f μ) :
-    AeMeasurable l.Prod μ := by
-  induction' l with f l ihl;
-  · exact aeMeasurableOne
-    
+    AeMeasurable l.Prod μ := by 
+  induction' l with f l ihl; · exact aeMeasurableOne
   rw [List.forall_mem_cons] at hl
   rw [List.prod_cons]
   exact hl.1.mul (ihl hl.2)
@@ -851,14 +840,14 @@ include m
 
 @[measurability, to_additive]
 theorem Multiset.measurableProd' (l : Multiset (α → M)) (hl : ∀ f ∈ l, Measurable f) :
-    Measurable l.Prod := by
+    Measurable l.Prod := by 
   rcases l with ⟨l⟩
   simpa using l.measurable_prod' (by simpa using hl)
 #align multiset.measurable_prod' Multiset.measurableProd'
 
 @[measurability, to_additive]
 theorem Multiset.aeMeasurableProd' (l : Multiset (α → M)) (hl : ∀ f ∈ l, AeMeasurable f μ) :
-    AeMeasurable l.Prod μ := by
+    AeMeasurable l.Prod μ := by 
   rcases l with ⟨l⟩
   simpa using l.ae_measurable_prod' (by simpa using hl)
 #align multiset.ae_measurable_prod' Multiset.aeMeasurableProd'

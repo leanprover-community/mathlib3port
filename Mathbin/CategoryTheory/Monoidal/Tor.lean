@@ -38,7 +38,8 @@ variable (C)
 
 /-- We define `Tor C n : C ⥤ C ⥤ C` by left-deriving in the second factor of `(X, Y) ↦ X ⊗ Y`. -/
 @[simps]
-def tor (n : ℕ) : C ⥤ C ⥤ C where
+def tor (n : ℕ) :
+    C ⥤ C ⥤ C where 
   obj X := Functor.leftDerived ((tensoringLeft C).obj X) n
   map X Y f := NatTrans.leftDerived ((tensoringLeft C).map f) n
   map_id' X := by rw [(tensoring_left C).map_id, nat_trans.left_derived_id]
@@ -64,7 +65,8 @@ def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((tor C (n + 1)).ob
 #align category_theory.Tor_succ_of_projective CategoryTheory.torSuccOfProjective
 
 /-- The higher `Tor'` groups for `X` and `Y` are zero if `X` is projective. -/
-def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).obj X).obj Y ≅ 0 := by
+def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).obj X).obj Y ≅ 0 :=
+  by
   -- This unfortunately needs a manual `dsimp`, to avoid a slow unification problem.
   dsimp only [Tor', functor.flip]
   exact ((tensoring_right C).obj Y).leftDerivedObjProjectiveSucc n X

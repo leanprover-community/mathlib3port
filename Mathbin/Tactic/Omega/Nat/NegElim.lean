@@ -31,11 +31,8 @@ theorem push_neg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
   run_tac
     preform.induce sorry
   · simp only [not_not, preform.holds, push_neg]
-    
   · simp only [preform.holds, push_neg, not_or, ihp v, ihq v]
-    
   · simp only [preform.holds, push_neg, not_and_or, ihp v, ihq v]
-    
 #align omega.nat.push_neg_equiv Omega.Nat.push_neg_equiv
 
 /-- NNF transformation -/
@@ -63,23 +60,10 @@ theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) := by
   run_tac
     preform.induce sorry
   · cases p <;> try cases h1 <;> trivial
-    
   · cases h1
-    constructor <;>
-        [· apply ihp
-          ,
-        · apply ihq
-          ] <;>
-      assumption
-    
+    constructor <;> [· apply ihp, · apply ihq] <;> assumption
   · cases h1
-    constructor <;>
-        [· apply ihp
-          ,
-        · apply ihq
-          ] <;>
-      assumption
-    
+    constructor <;> [· apply ihp, · apply ihq] <;> assumption
 #align omega.nat.is_nnf_push_neg Omega.Nat.is_nnf_push_neg
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic omega.nat.preform.induce -/
@@ -88,11 +72,8 @@ theorem is_nnf_nnf : ∀ p : Preform, IsNnf (nnf p) := by
   run_tac
     preform.induce sorry
   · apply is_nnf_push_neg _ ih
-    
   · constructor <;> assumption
-    
   · constructor <;> assumption
-    
 #align omega.nat.is_nnf_nnf Omega.Nat.is_nnf_nnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic omega.nat.preform.induce -/
@@ -103,11 +84,8 @@ theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p := by
   · rw [push_neg_equiv]
     apply not_congr
     apply ih
-    
   · apply pred_mono_2' (ihp v) (ihq v)
-    
   · apply pred_mono_2' (ihp v) (ihq v)
-    
 #align omega.nat.nnf_equiv Omega.Nat.nnf_equiv
 
 @[simp]
@@ -126,32 +104,17 @@ theorem neg_free_neg_elim_core : ∀ p, IsNnf p → (negElimCore p).NegFree := b
     preform.induce sorry
   · cases p <;> try cases h1 <;> try trivial
     constructor <;> trivial
-    
   · cases h1
-    constructor <;>
-        [· apply ihp
-          ,
-        · apply ihq
-          ] <;>
-      assumption
-    
+    constructor <;> [· apply ihp, · apply ihq] <;> assumption
   · cases h1
-    constructor <;>
-        [· apply ihp
-          ,
-        · apply ihq
-          ] <;>
-      assumption
-    
+    constructor <;> [· apply ihp, · apply ihq] <;> assumption
 #align omega.nat.neg_free_neg_elim_core Omega.Nat.neg_free_neg_elim_core
 
 theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ b ≤ a ↔ a = b := by
   constructor <;> intro h1
   · cases h1
     apply le_antisymm <;> assumption
-    
   · constructor <;> apply le_of_eq <;> rw [h1]
-    
 #align omega.nat.le_and_le_iff_eq Omega.Nat.le_and_le_iff_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic omega.nat.preform.induce -/
@@ -162,19 +125,15 @@ theorem implies_neg_elim_core : ∀ {p : Preform}, Preform.Implies p (negElimCor
   · cases' p with t s t s <;> try apply h
     · apply Or.symm
       simpa only [preform.holds, le_and_le_iff_eq.symm, not_and_or, not_le] using h
-      
     simpa only [preform.holds, not_le, Int.add_one_le_iff] using h
-    
   · simp only [neg_elim_core]
     cases h <;>
-        [· left
-          apply ihp
-          ,
+        [· 
+          left
+          apply ihp,
         · right
-          apply ihq
-          ] <;>
+          apply ihq] <;>
       assumption
-    
   apply And.imp (ihp _) (ihq _) h
 #align omega.nat.implies_neg_elim_core Omega.Nat.implies_neg_elim_core
 

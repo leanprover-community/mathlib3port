@@ -34,7 +34,11 @@ variable {C : Type u₁} [Category.{v₁} C]
 See <https://stacks.math.columbia.edu/tag/001O>.
 -/
 @[simps]
-def yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁ where
+def yoneda :
+    C ⥤
+      Cᵒᵖ ⥤
+        Type
+          v₁ where 
   obj X :=
     { obj := fun Y => unop Y ⟶ X, map := fun Y Y' f g => f.unop ≫ g,
       map_comp' := fun _ _ _ f g => by ext; dsimp; erw [category.assoc],
@@ -45,7 +49,11 @@ def yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁ where
 /-- The co-Yoneda embedding, as a functor from `Cᵒᵖ` into co-presheaves on `C`.
 -/
 @[simps]
-def coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁ where
+def coyoneda :
+    Cᵒᵖ ⥤
+      C ⥤
+        Type
+          v₁ where 
   obj X := { obj := fun Y => unop X ⟶ Y, map := fun Y Y' f g => g ≫ f }
   map X X' f := { app := fun Y g => f.unop ≫ g }
 #align category_theory.coyoneda CategoryTheory.coyoneda
@@ -120,7 +128,12 @@ instance coyonedaFull :
 #align category_theory.coyoneda.coyoneda_full CategoryTheory.coyoneda.coyonedaFull
 
 instance coyoneda_faithful :
-    Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where map_injective' X Y f g p := by
+    Faithful
+      (coyoneda :
+        Cᵒᵖ ⥤
+          C ⥤
+            Type
+              v₁) where map_injective' X Y f g p := by
     have t := congr_fun (congr_app p X.unop) (𝟙 _)
     simpa using congr_arg Quiver.Hom.op t
 #align category_theory.coyoneda.coyoneda_faithful CategoryTheory.coyoneda.coyoneda_faithful
@@ -337,28 +350,31 @@ is naturally isomorphic to the evaluation `(X, F) ↦ F.obj X`.
 
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
-def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C where
+def yonedaLemma :
+    yonedaPairing C ≅
+      yonedaEvaluation
+        C where 
   Hom :=
     { app := fun F x => ULift.up ((x.app F.1) (𝟙 (unop F.1))),
-      naturality' := by
+      naturality' := by 
         intro X Y f; ext; dsimp
         erw [category.id_comp, ← functor_to_types.naturality]
         simp only [category.comp_id, yoneda_obj_map] }
   inv :=
     { app := fun F x =>
         { app := fun X a => (F.2.map a.op) x.down,
-          naturality' := by
+          naturality' := by 
             intro X Y f; ext; dsimp
             rw [functor_to_types.map_comp_apply] },
-      naturality' := by
+      naturality' := by 
         intro X Y f; ext; dsimp
         rw [← functor_to_types.naturality, functor_to_types.map_comp_apply] }
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext; dsimp
     erw [← functor_to_types.naturality, obj_map_id]
     simp only [yoneda_map_app, Quiver.Hom.unop_op]
     erw [category.id_comp]
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext; dsimp
     rw [functor_to_types.map_id_apply]
 #align category_theory.yoneda_lemma CategoryTheory.yonedaLemma
@@ -423,7 +439,7 @@ theorem yoneda_sections_small_inv_app_apply {C : Type u₁} [SmallCategory C] (X
 #align
   category_theory.yoneda_sections_small_inv_app_apply CategoryTheory.yoneda_sections_small_inv_app_apply
 
-attribute [local ext.1] Functor.ext
+attribute [local ext] Functor.ext
 
 /-- The curried version of yoneda lemma when `C` is small. -/
 def curriedYonedaLemma {C : Type u₁} [SmallCategory C] :

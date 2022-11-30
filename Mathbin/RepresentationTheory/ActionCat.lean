@@ -66,15 +66,19 @@ theorem ρ_one {G : MonCat.{u}} (A : ActionCat V G) : A.ρ 1 = 𝟙 A.V := by
 
 /-- When a group acts, we can lift the action to the group of automorphisms. -/
 @[simps]
-def ρAut {G : GroupCat.{u}} (A : ActionCat V (MonCat.of G)) : G ⟶ GroupCat.of (AutCat A.V) where
+def ρAut {G : GroupCat.{u}} (A : ActionCat V (MonCat.of G)) :
+    G ⟶
+      GroupCat.of
+        (AutCat
+          A.V) where 
   toFun g :=
     { Hom := A.ρ g, inv := A.ρ (g⁻¹ : G),
       hom_inv_id' := (A.ρ.map_mul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_self, ρ_one]),
       inv_hom_id' := (A.ρ.map_mul g (g⁻¹ : G)).symm.trans (by rw [mul_inv_self, ρ_one]) }
-  map_one' := by
+  map_one' := by 
     ext
     exact A.ρ.map_one
-  map_mul' x y := by
+  map_mul' x y := by 
     ext
     exact A.ρ.map_mul x y
 #align Action.ρ_Aut ActionCat.ρAut
@@ -88,7 +92,8 @@ instance inhabited' : Inhabited (ActionCat (Type u) G) :=
 #align Action.inhabited' ActionCat.inhabited'
 
 /-- The trivial representation of a group. -/
-def trivial : ActionCat AddCommGroupCat G where
+def trivial : ActionCat AddCommGroupCat
+      G where 
   V := AddCommGroupCat.of PUnit
   ρ := 1
 #align Action.trivial ActionCat.trivial
@@ -103,7 +108,7 @@ variable {G V}
 /-- A homomorphism of `Action V G`s is a morphism between the underlying objects,
 commuting with the action of `G`.
 -/
-@[ext.1]
+@[ext]
 structure Hom (M N : ActionCat V G) where
   Hom : M.V ⟶ N.V
   comm' : ∀ g : G, M.ρ g ≫ hom = hom ≫ N.ρ g := by obviously
@@ -125,14 +130,14 @@ instance (M : ActionCat V G) : Inhabited (ActionCat.Hom M M) :=
 -/
 @[simps]
 def comp {M N K : ActionCat V G} (p : ActionCat.Hom M N) (q : ActionCat.Hom N K) :
-    ActionCat.Hom M K where
+    ActionCat.Hom M K where 
   Hom := p.Hom ≫ q.Hom
   comm' g := by rw [← category.assoc, p.comm, category.assoc, q.comm, ← category.assoc]
 #align Action.hom.comp ActionCat.Hom.comp
 
 end Hom
 
-instance : Category (ActionCat V G) where
+instance : Category (ActionCat V G) where 
   Hom M N := Hom M N
   id M := Hom.id M
   comp M N K f g := Hom.comp f g
@@ -153,18 +158,18 @@ from an isomorphism of the the underlying objects,
 where the forward direction commutes with the group action. -/
 @[simps]
 def mkIso {M N : ActionCat V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.Hom = f.Hom ≫ N.ρ g) :
-    M ≅ N where
+    M ≅ N where 
   Hom := { Hom := f.Hom, comm' := comm }
   inv :=
     { Hom := f.inv,
-      comm' := fun g => by
+      comm' := fun g => by 
         have w := comm g =≫ f.inv
         simp at w
         simp [w] }
 #align Action.mk_iso ActionCat.mkIso
 
 instance (priority := 100) is_iso_of_hom_is_iso {M N : ActionCat V G} (f : M ⟶ N) [IsIso f.Hom] :
-    IsIso f := by
+    IsIso f := by 
   convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm)
   ext
   rfl
@@ -179,7 +184,10 @@ namespace FunctorCategoryEquivalence
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
-def functor : ActionCat V G ⥤ SingleObj G ⥤ V where
+def functor :
+    ActionCat V G ⥤
+      SingleObj G ⥤
+        V where 
   obj M :=
     { obj := fun _ => M.V, map := fun _ _ g => M.ρ g, map_id' := fun _ => M.ρ.map_one,
       map_comp' := fun _ _ _ g h => M.ρ.map_mul h g }
@@ -188,7 +196,10 @@ def functor : ActionCat V G ⥤ SingleObj G ⥤ V where
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
-def inverse : (SingleObj G ⥤ V) ⥤ ActionCat V G where
+def inverse :
+    (SingleObj G ⥤ V) ⥤
+      ActionCat V
+        G where 
   obj F :=
     { V := F.obj PUnit.unit,
       ρ :=
@@ -220,7 +231,8 @@ variable (V G)
 /-- The category of actions of `G` in the category `V`
 is equivalent to the functor category `single_obj G ⥤ V`.
 -/
-def functorCategoryEquivalence : ActionCat V G ≌ SingleObj G ⥤ V where
+def functorCategoryEquivalence :
+    ActionCat V G ≌ SingleObj G ⥤ V where 
   Functor := Functor
   inverse := inverse
   unitIso := unitIso
@@ -259,7 +271,7 @@ Use the `category_theory.forget` API provided by the `concrete_category` instanc
 rather than using this directly.
 -/
 @[simps]
-def forget : ActionCat V G ⥤ V where
+def forget : ActionCat V G ⥤ V where 
   obj M := M.V
   map M N f := f.Hom
 #align Action.forget ActionCat.forget
@@ -300,15 +312,18 @@ section HasZeroMorphisms
 
 variable [HasZeroMorphisms V]
 
-instance : HasZeroMorphisms (ActionCat V G) where
+instance :
+    HasZeroMorphisms
+      (ActionCat V
+        G) where 
   HasZero X Y :=
-    ⟨⟨0, by
+    ⟨⟨0, by 
         intro g
         simp⟩⟩
-  comp_zero' P Q f R := by
+  comp_zero' P Q f R := by 
     ext1
     simp
-  zero_comp' P Q R f := by
+  zero_comp' P Q R f := by 
     ext1
     simp
 
@@ -330,35 +345,38 @@ section Preadditive
 
 variable [Preadditive V]
 
-instance : Preadditive (ActionCat V G) where
+instance :
+    Preadditive
+      (ActionCat V
+        G) where 
   homGroup X Y :=
     { zero := ⟨0, by simp⟩, add := fun f g => ⟨f.Hom + g.Hom, by simp [f.comm, g.comm]⟩,
       neg := fun f => ⟨-f.Hom, by simp [f.comm]⟩,
-      zero_add := by
+      zero_add := by 
         intros
         ext
         exact zero_add _,
-      add_zero := by
+      add_zero := by 
         intros
         ext
         exact add_zero _,
-      add_assoc := by
+      add_assoc := by 
         intros
         ext
         exact add_assoc _ _ _,
-      add_left_neg := by
+      add_left_neg := by 
         intros
         ext
         exact add_left_neg _,
-      add_comm := by
+      add_comm := by 
         intros
         ext
         exact add_comm _ _ }
-  add_comp' := by
+  add_comp' := by 
     intros
     ext
     exact preadditive.add_comp _ _ _ _ _ _
-  comp_add' := by
+  comp_add' := by 
     intros
     ext
     exact preadditive.comp_add _ _ _ _ _ _
@@ -400,38 +418,41 @@ section Linear
 
 variable [Preadditive V] {R : Type _} [Semiring R] [Linear R V]
 
-instance : Linear R (ActionCat V G) where
+instance :
+    Linear R
+      (ActionCat V
+        G) where 
   homModule X Y :=
     { smul := fun r f => ⟨r • f.Hom, by simp [f.comm]⟩,
-      one_smul := by
+      one_smul := by 
         intros
         ext
         exact one_smul _ _,
-      smul_zero := by
+      smul_zero := by 
         intros
         ext
         exact smul_zero _,
-      zero_smul := by
+      zero_smul := by 
         intros
         ext
         exact zero_smul _ _,
-      add_smul := by
+      add_smul := by 
         intros
         ext
         exact add_smul _ _ _,
-      smul_add := by
+      smul_add := by 
         intros
         ext
         exact smul_add _ _ _,
-      mul_smul := by
+      mul_smul := by 
         intros
         ext
         exact mul_smul _ _ _ }
-  smul_comp' := by
+  smul_comp' := by 
     intros
     ext
     exact linear.smul_comp _ _ _ _ _ _
-  comp_smul' := by
+  comp_smul' := by 
     intros
     ext
     exact linear.comp_smul _ _ _ _ _ _
@@ -666,7 +687,9 @@ theorem left_dual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻
 end Monoidal
 
 /-- Actions/representations of the trivial group are just objects in the ambient category. -/
-def actionPunitEquivalence : ActionCat V (MonCat.of PUnit) ≌ V where
+def actionPunitEquivalence :
+    ActionCat V (MonCat.of PUnit) ≌
+      V where 
   Functor := forget V _
   inverse := { obj := fun X => ⟨X, 1⟩, map := fun X Y f => ⟨f, fun ⟨⟩ => by simp⟩ }
   unitIso :=
@@ -682,7 +705,9 @@ taking actions of `H` to actions of `G`.
 (This makes sense for any homomorphism, but the name is natural when `f` is a monomorphism.)
 -/
 @[simps]
-def res {G H : MonCat} (f : G ⟶ H) : ActionCat V H ⥤ ActionCat V G where
+def res {G H : MonCat} (f : G ⟶ H) :
+    ActionCat V H ⥤ ActionCat V
+        G where 
   obj M := { V := M.V, ρ := f ≫ M.ρ }
   map M N p := { Hom := p.Hom, comm' := fun g => p.comm (f g) }
 #align Action.res ActionCat.res
@@ -718,7 +743,8 @@ instance res_linear [Preadditive V] [Linear R V] : (res V f).Linear R where
 #align Action.res_linear ActionCat.res_linear
 
 /-- Bundles a type `H` with a multiplicative action of `G` as an `Action`. -/
-def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] : ActionCat (Type u) (MonCat.of G) where
+def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] :
+    ActionCat (Type u) (MonCat.of G) where 
   V := H
   ρ := @MulAction.toEndHom _ _ _ (by assumption)
 #align Action.of_mul_action ActionCat.ofMulAction
@@ -734,12 +760,16 @@ theorem of_mul_action_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x
 product of `F` as types is a product in the category of `G`-sets. -/
 def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι → Type max v u)
     [∀ i : ι, MulAction G (F i)] :
-    LimitCone (Discrete.functor fun i : ι => ActionCat.ofMulAction G (F i)) where
+    LimitCone
+      (Discrete.functor fun i : ι =>
+        ActionCat.ofMulAction G
+          (F
+            i)) where 
   Cone :=
     { x := ActionCat.ofMulAction G (∀ i : ι, F i),
       π :=
         { app := fun i => ⟨fun x => x i.as, fun g => by ext <;> rfl⟩,
-          naturality' := fun i j x => by
+          naturality' := fun i j x => by 
             ext
             trace
               "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
@@ -748,16 +778,16 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
   IsLimit :=
     { lift := fun s =>
         { Hom := fun x i => (s.π.app ⟨i⟩).Hom x,
-          comm' := fun g => by
+          comm' := fun g => by 
             ext (x j)
             dsimp
             exact congr_fun ((s.π.app ⟨j⟩).comm g) x },
-      fac' := fun s j => by
+      fac' := fun s j => by 
         ext
         dsimp
         congr
         rw [discrete.mk_as],
-      uniq' := fun s f h => by
+      uniq' := fun s f h => by 
         ext (x j)
         dsimp at *
         rw [← h ⟨j⟩]
@@ -773,7 +803,10 @@ variable {V} {W : Type (u + 1)} [LargeCategory W]
 /-- A functor between categories induces a functor between
 the categories of `G`-actions within those categories. -/
 @[simps]
-def mapAction (F : V ⥤ W) (G : MonCat.{u}) : ActionCat V G ⥤ ActionCat W G where
+def mapAction (F : V ⥤ W) (G : MonCat.{u}) :
+    ActionCat V G ⥤
+      ActionCat W
+        G where 
   obj M :=
     { V := F.obj M.V,
       ρ :=
@@ -782,13 +815,13 @@ def mapAction (F : V ⥤ W) (G : MonCat.{u}) : ActionCat V G ⥤ ActionCat W G w
           map_mul' := fun g h => by simp only [End.mul_def, F.map_comp, map_mul] } }
   map M N f :=
     { Hom := F.map f.Hom,
-      comm' := fun g => by
+      comm' := fun g => by 
         dsimp
         rw [← F.map_comp, f.comm, F.map_comp] }
-  map_id' M := by
+  map_id' M := by 
     ext
     simp only [ActionCat.id_hom, F.map_id]
-  map_comp' M N P f g := by
+  map_comp' M N P f g := by 
     ext
     simp only [ActionCat.comp_hom, F.map_comp]
 #align category_theory.functor.map_Action CategoryTheory.Functor.mapAction
@@ -821,32 +854,32 @@ def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
       G with
     ε :=
       { Hom := F.ε,
-        comm' := fun g => by
+        comm' := fun g => by 
           dsimp
           erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] },
     μ := fun X Y =>
       { Hom := F.μ X.V Y.V, comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) },
     ε_is_iso := by infer_instance, μ_is_iso := by infer_instance,
-    μ_natural' := by
+    μ_natural' := by 
       intros
       ext
       dsimp
       simp,
-    associativity' := by
-      intros
-      ext
-      dsimp
-      simp
-      dsimp
-      simp,
-    left_unitality' := by
+    associativity' := by 
       intros
       ext
       dsimp
       simp
       dsimp
       simp,
-    right_unitality' := by
+    left_unitality' := by 
+      intros
+      ext
+      dsimp
+      simp
+      dsimp
+      simp,
+    right_unitality' := by 
       intros
       ext
       dsimp

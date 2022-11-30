@@ -85,7 +85,7 @@ def leftDerivedZeroToSelfAppInv [EnoughProjectives C] [PreservesFiniteColimits F
       _ ≫ (homologyIsoCokernelLift _ _ _).inv ≫ (left_derived_obj_iso F 0 P).inv
   exact
     cokernel.map _ _ (𝟙 _) (kernel.lift _ (𝟙 _) (by simp))
-      (by
+      (by 
         ext
         simp)
 #align
@@ -127,7 +127,9 @@ theorem left_derived_zero_to_self_app_inv_comp [EnoughProjectives C] [PreservesF
 /-- Given `P : ProjectiveResolution X`, the isomorphism `(F.left_derived 0).obj X ≅ F.obj X` if
 `preserves_finite_colimits F`. -/
 def leftDerivedZeroToSelfAppIso [EnoughProjectives C] [PreservesFiniteColimits F] {X : C}
-    (P : ProjectiveResolutionCat X) : (F.leftDerived 0).obj X ≅ F.obj X where
+    (P : ProjectiveResolutionCat X) :
+    (F.leftDerived 0).obj X ≅
+      F.obj X where 
   Hom := leftDerivedZeroToSelfApp _ P
   inv := leftDerivedZeroToSelfAppInv _ P
   hom_inv_id' := left_derived_zero_to_self_app_comp_inv _ P
@@ -141,7 +143,7 @@ theorem left_derived_zero_to_self_natural [EnoughProjectives C] {X : C} {Y : C} 
     (P : ProjectiveResolutionCat X) (Q : ProjectiveResolutionCat Y) :
     (F.leftDerived 0).map f ≫ leftDerivedZeroToSelfApp F Q =
       leftDerivedZeroToSelfApp F P ≫ F.map f :=
-  by
+  by 
   dsimp only [left_derived_zero_to_self_app]
   rw [functor.left_derived_map_eq F 0 f (ProjectiveResolution.lift f P Q) (by simp), category.assoc,
     category.assoc, ← category.assoc _ (F.left_derived_obj_iso 0 Q).Hom, iso.inv_hom_id,

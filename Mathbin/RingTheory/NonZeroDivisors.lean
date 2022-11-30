@@ -23,7 +23,8 @@ to access this notation in your own code.
 section nonZeroDivisors
 
 /-- The submonoid of non-zero-divisors of a `monoid_with_zero` `R`. -/
-def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R where
+def nonZeroDivisors (R : Type _) [MonoidWithZero R] :
+    Submonoid R where 
   carrier := { x | ∀ z, z * x = 0 → z = 0 }
   one_mem' z hz := by rwa [mul_one] at hz
   mul_mem' x₁ x₂ hx₁ hx₂ z hz :=
@@ -60,7 +61,7 @@ theorem mul_left_coe_non_zero_divisors_eq_zero_iff {c : M₁⁰} {x : M₁} : (c
 #align mul_left_coe_non_zero_divisors_eq_zero_iff mul_left_coe_non_zero_divisors_eq_zero_iff
 
 theorem mul_cancel_right_mem_non_zero_divisor {x y r : R} (hr : r ∈ R⁰) : x * r = y * r ↔ x = y :=
-  by
+  by 
   refine' ⟨fun h => _, congr_arg _⟩
   rw [← sub_eq_zero, ← mul_right_mem_non_zero_divisors_eq_zero_iff hr, sub_mul, h, sub_self]
 #align mul_cancel_right_mem_non_zero_divisor mul_cancel_right_mem_non_zero_divisor
@@ -91,15 +92,11 @@ theorem mul_mem_non_zero_divisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M�
   · intro h
     constructor <;> intro x h' <;> apply h
     · rw [← mul_assoc, h', zero_mul]
-      
     · rw [mul_comm a b, ← mul_assoc, h', zero_mul]
-      
-    
   · rintro ⟨ha, hb⟩ x hx
     apply ha
     apply hb
     rw [mul_assoc, hx]
-    
 #align mul_mem_non_zero_divisors mul_mem_non_zero_divisors
 
 theorem is_unit_of_mem_non_zero_divisors {G₀ : Type _} [GroupWithZero G₀] {x : G₀}
@@ -154,12 +151,11 @@ theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZer
     (f : F) (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
   cases subsingleton_or_nontrivial M
   · simp [Subsingleton.elim S ⊥]
-    
-  · exact
+  ·
+    exact
       le_non_zero_divisors_of_no_zero_divisors fun h =>
         let ⟨x, hx, hx0⟩ := h
         zero_ne_one (hS (hf (trans hx0 (map_zero f).symm) ▸ hx : 0 ∈ S) 1 (mul_zero 1)).symm
-    
 #align map_le_non_zero_divisors_of_injective map_le_non_zero_divisors_of_injective
 
 theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisors M']
@@ -173,22 +169,17 @@ theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : M
   constructor; swap
   · rintro ⟨r, hrs, rfl⟩
     exact Multiset.prod_eq_zero hrs
-    
   refine' Multiset.induction _ (fun a s ih => _) s
   · intro habs
     simpa using habs
-    
   · rw [Multiset.prod_cons]
     intro hprod
     replace hprod := eq_zero_or_eq_zero_of_mul_eq_zero hprod
     cases' hprod with ha
     · exact ⟨a, Multiset.mem_cons_self a s, ha⟩
-      
     · apply (ih hprod).imp _
       rintro b ⟨hb₁, hb₂⟩
       exact ⟨Multiset.mem_cons_of_mem hb₁, hb₂⟩
-      
-    
 #align prod_zero_iff_exists_zero prod_zero_iff_exists_zero
 
 end nonZeroDivisors

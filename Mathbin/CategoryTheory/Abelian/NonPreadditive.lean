@@ -111,7 +111,8 @@ instance : Epi (Abelian.factorThruImage f) :=
   (-- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
       NormalMonoCategory.epi_of_zero_cancel
       _)
-    fun R (g : I ⟶ R) (hpg : p ≫ g = 0) => by
+    fun R (g : I ⟶ R) (hpg : p ≫ g = 0) =>
+    by
     -- Since C is abelian, u := ker g ≫ i is the kernel of some morphism h.
     let u := kernel.ι g ≫ i
     haveI : mono u := mono_comp _ _
@@ -124,10 +125,11 @@ instance : Epi (Abelian.factorThruImage f) :=
       f ≫ h = (p ≫ i) ≫ h := (abelian.image.fac f).symm ▸ rfl
       _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := ht ▸ rfl
       _ = t ≫ u ≫ h := by
-        simp only [category.assoc] <;> conv_lhs =>
-          congr
-          skip
-          rw [← category.assoc]
+        simp only [category.assoc] <;>
+          conv_lhs => 
+            congr
+            skip
+            rw [← category.assoc]
       _ = t ≫ 0 := hu.w ▸ rfl
       _ = 0 := has_zero_morphisms.comp_zero _ _
       
@@ -156,7 +158,8 @@ instance : Mono (Abelian.factorThruCoimage f) :=
   let I := Abelian.coimage f
   let i := Abelian.factorThruCoimage f
   let p := cokernel.π (kernel.ι f)
-  (NormalEpiCategory.mono_of_cancel_zero _) fun R (g : R ⟶ I) (hgi : g ≫ i = 0) => by
+  (NormalEpiCategory.mono_of_cancel_zero _) fun R (g : R ⟶ I) (hgi : g ≫ i = 0) =>
+    by
     -- Since C is abelian, u := p ≫ coker g is the cokernel of some morphism h.
     let u := p ≫ cokernel.π g
     haveI : epi u := epi_comp _ _
@@ -169,10 +172,11 @@ instance : Mono (Abelian.factorThruCoimage f) :=
       h ≫ f = h ≫ p ≫ i := (abelian.coimage.fac f).symm ▸ rfl
       _ = h ≫ p ≫ cokernel.π g ≫ t := ht ▸ rfl
       _ = h ≫ u ≫ t := by
-        simp only [category.assoc] <;> conv_lhs =>
-          congr
-          skip
-          rw [← category.assoc]
+        simp only [category.assoc] <;>
+          conv_lhs => 
+            congr
+            skip
+            rw [← category.assoc]
       _ = 0 ≫ t := by rw [← category.assoc, hu.w]
       _ = 0 := zero_comp
       
@@ -264,13 +268,11 @@ instance epi_r {A : C} : Epi (r A) := by
     · intro s
       ext <;> simp
       erw [category.comp_id]
-      
     · intro s m h
       haveI : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
       apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1
       convert h
       ext <;> simp
-      
   let hp2 : is_colimit (cokernel_cofork.of_π (limits.prod.snd : A ⨯ A ⟶ A) hlp) :=
     epi_is_cokernel_of_kernel _ hp1
   apply normal_mono_category.epi_of_zero_cancel
@@ -278,7 +280,7 @@ instance epi_r {A : C} : Epi (r A) := by
   have h : prod.lift (𝟙 A) (0 : A ⟶ A) ≫ cokernel.π (diag A) ≫ z = 0 := by rw [← category.assoc, hz]
   obtain ⟨t, ht⟩ := cokernel_cofork.is_colimit.desc' hp2 _ h
   rw [cokernel_cofork.π_of_π] at ht
-  have htt : t = 0 := by
+  have htt : t = 0 := by 
     rw [← category.id_comp t]
     change 𝟙 A ≫ t = 0
     rw [← limits.prod.lift_snd (𝟙 A) (𝟙 A), category.assoc, ht, ← category.assoc,
@@ -328,7 +330,6 @@ theorem σ_comp {X Y : C} (f : X ⟶ Y) : σ ≫ f = Limits.prod.map f f ≫ σ 
     cokernel_cofork.is_colimit.desc' is_colimit_σ (limits.prod.map f f ≫ σ) (by simp)
   suffices hfg : f = g
   · rw [← hg, cofork.π_of_π, hfg]
-    
   calc
     f = f ≫ prod.lift (𝟙 Y) 0 ≫ σ := by rw [lift_σ, category.comp_id]
     _ = prod.lift (𝟙 X) 0 ≫ limits.prod.map f f ≫ σ := by rw [lift_map_assoc]
@@ -377,12 +378,12 @@ theorem neg_def {X Y : C} (a : X ⟶ Y) : -a = 0 - a :=
 
 theorem sub_zero {X Y : C} (a : X ⟶ Y) : a - 0 = a := by
   rw [sub_def]
-  conv_lhs =>
-  congr
-  congr
-  rw [← category.comp_id a]
-  skip
-  rw [show 0 = a ≫ (0 : Y ⟶ Y) by simp]
+  conv_lhs => 
+    congr
+    congr
+    rw [← category.comp_id a]
+    skip
+    rw [show 0 = a ≫ (0 : Y ⟶ Y) by simp]
   rw [← prod.comp_lift, category.assoc, lift_σ, category.comp_id]
 #align
   category_theory.non_preadditive_abelian.sub_zero CategoryTheory.NonPreadditiveAbelian.sub_zero
@@ -397,9 +398,7 @@ theorem lift_sub_lift {X Y : C} (a b c d : X ⟶ Y) :
   simp only [sub_def]
   ext
   · rw [category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_fst, prod.lift_fst, prod.lift_fst]
-    
   · rw [category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_snd, prod.lift_snd, prod.lift_snd]
-    
 #align
   category_theory.non_preadditive_abelian.lift_sub_lift CategoryTheory.NonPreadditiveAbelian.lift_sub_lift
 
@@ -414,9 +413,9 @@ theorem neg_sub {X Y : C} (a b : X ⟶ Y) : -a - b = -b - a := by
 
 theorem neg_neg {X Y : C} (a : X ⟶ Y) : - -a = a := by
   rw [neg_def, neg_def]
-  conv_lhs =>
-  congr
-  rw [← sub_self a]
+  conv_lhs => 
+    congr
+    rw [← sub_self a]
   rw [sub_sub_sub, sub_zero, sub_self, sub_zero]
 #align category_theory.non_preadditive_abelian.neg_neg CategoryTheory.NonPreadditiveAbelian.neg_neg
 
@@ -424,10 +423,10 @@ theorem add_comm {X Y : C} (a b : X ⟶ Y) : a + b = b + a := by
   rw [add_def]
   conv_lhs => rw [← neg_neg a]
   rw [neg_def, neg_def, neg_def, sub_sub_sub]
-  conv_lhs =>
-  congr
-  skip
-  rw [← neg_def, neg_sub]
+  conv_lhs => 
+    congr
+    skip
+    rw [← neg_def, neg_sub]
   rw [sub_sub_sub, add_def, ← neg_def, neg_neg b, neg_def]
 #align
   category_theory.non_preadditive_abelian.add_comm CategoryTheory.NonPreadditiveAbelian.add_comm
@@ -458,9 +457,9 @@ theorem sub_add {X Y : C} (a b c : X ⟶ Y) : a - b + c = a - (b - c) := by
 #align category_theory.non_preadditive_abelian.sub_add CategoryTheory.NonPreadditiveAbelian.sub_add
 
 theorem add_assoc {X Y : C} (a b c : X ⟶ Y) : a + b + c = a + (b + c) := by
-  conv_lhs =>
-  congr
-  rw [add_def]
+  conv_lhs => 
+    congr
+    rw [add_def]
   rw [sub_add, ← add_neg, neg_sub', neg_neg]
 #align
   category_theory.non_preadditive_abelian.add_assoc CategoryTheory.NonPreadditiveAbelian.add_assoc
@@ -490,7 +489,9 @@ theorem add_comp (X Y Z : C) (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f �
   category_theory.non_preadditive_abelian.add_comp CategoryTheory.NonPreadditiveAbelian.add_comp
 
 /-- Every `non_preadditive_abelian` category is preadditive. -/
-def preadditive : Preadditive C where
+def preadditive :
+    Preadditive
+      C where 
   homGroup X Y :=
     { add := (· + ·), add_assoc := add_assoc, zero := 0, zero_add := neg_neg, add_zero := add_zero,
       neg := fun f => -f, add_left_neg := neg_add_self, add_comm := add_comm }

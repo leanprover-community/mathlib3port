@@ -56,7 +56,8 @@ instance : UniformAddGroup ℝ :=
 instance : TopologicalAddGroup ℝ := by infer_instance
 
 instance :
-    ProperSpace ℝ where is_compact_closed_ball x r := by
+    ProperSpace
+      ℝ where is_compact_closed_ball x r := by
     rw [Real.closed_ball_eq_Icc]
     apply is_compact_Icc
 
@@ -71,7 +72,7 @@ theorem Real.is_topological_basis_Ioo_rat :
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
-    ⟨ioo q p, by
+    ⟨ioo q p, by 
       simp only [mem_Union]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
@@ -152,7 +153,7 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
 instance : TopologicalRing ℝ :=
   { Real.topological_add_group with continuous_mul := Real.continuous_mul }
 
-instance : CompleteSpace ℝ := by
+instance : CompleteSpace ℝ := by 
   apply complete_of_cauchy_seq_tendsto
   intro u hu
   let c : CauSeq ℝ abs := ⟨u, Metric.cauchy_seq_iff'.1 hu⟩
@@ -189,7 +190,7 @@ lemma closure_of_rat_image_le_le_eq {a b : ℚ} (hab : a ≤ b) :
   closure (of_rat '' {q:ℚ | a ≤ q ∧ q ≤ b}) = {r:ℝ | of_rat a ≤ r ∧ r ≤ of_rat b} :=
 _-/
 theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
-  ⟨by
+  ⟨by 
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
     -- hr : s ⊆ closed_ball 0 r
@@ -273,7 +274,6 @@ theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
     intro K hK
     rw [Filter.mem_map, mem_cofinite]
     apply Set.to_finite
-    
   intro K hK
   have H := Int.tendsto_zmultiples_hom_cofinite ha hK
   simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H⊢
@@ -297,12 +297,10 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
   obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁ := by
     cases' lt_or_gt_of_ne g₀_ne with Hg₀ Hg₀
     · exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
-      
     · exact ⟨g₀, g₀_in, Hg₀⟩
-      
   obtain ⟨a, ha⟩ : ∃ a, IsGlb G_pos a :=
     ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
-  have a_notin : a ∉ G_pos := by
+  have a_notin : a ∉ G_pos := by 
     intro H
     exact H' a ⟨H, ha.1⟩
   obtain ⟨g₂, g₂_in, g₂_pos, g₂_lt⟩ : ∃ g₂ : ℝ, g₂ ∈ G ∧ 0 < g₂ ∧ g₂ < ε := by
@@ -311,10 +309,8 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
     refine' ⟨b - c, G.sub_mem hb.1 hc.1, _, _⟩ <;> linarith
   refine' ⟨floor (x / g₂) * g₂, _, _⟩
   · exact AddSubgroup.int_mul_mem _ g₂_in
-    
   · rw [abs_of_nonneg (sub_floor_div_mul_nonneg x g₂_pos)]
     linarith [sub_floor_div_mul_lt x g₂_pos]
-    
 #align real.subgroup_dense_of_no_min Real.subgroup_dense_of_no_min
 
 /-- Subgroups of `ℝ` are either dense or cyclic. See `real.subgroup_dense_of_no_min` and
@@ -325,18 +321,14 @@ theorem Real.subgroup_dense_or_cyclic (G : AddSubgroup ℝ) :
   · right
     use 0
     rw [H, AddSubgroup.closure_singleton_zero]
-    
   · let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
     by_cases H' : ∃ a, IsLeast G_pos a
     · right
       rcases H' with ⟨a, ha⟩
       exact ⟨a, AddSubgroup.cyclic_of_min ha⟩
-      
     · left
       rcases H with ⟨g₀, g₀_in, g₀_ne⟩
       exact Real.subgroup_dense_of_no_min g₀_in g₀_ne H'
-      
-    
 #align real.subgroup_dense_or_cyclic Real.subgroup_dense_or_cyclic
 
 end Subgroups

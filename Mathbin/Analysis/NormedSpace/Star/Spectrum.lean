@@ -29,18 +29,16 @@ variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [NormedRing E] [StarRin
   [NormedAlgebra 𝕜 E] [CompleteSpace E]
 
 theorem unitary.spectrum_subset_circle (u : unitary E) : spectrum 𝕜 (u : E) ⊆ Metric.sphere 0 1 :=
-  by
+  by 
   nontriviality E
   refine' fun k hk => mem_sphere_zero_iff_norm.mpr (le_antisymm _ _)
   · simpa only [CstarRing.norm_coe_unitary u] using norm_le_norm_of_mem hk
-    
   · rw [← unitary.coe_to_units_apply u] at hk
     have hnk := ne_zero_of_mem_of_unit hk
     rw [← inv_inv (unitary.toUnits u), ← spectrum.map_inv, Set.mem_inv] at hk
     have : ‖k‖⁻¹ ≤ ‖↑(unitary.toUnits u)⁻¹‖
     simpa only [norm_inv] using norm_le_norm_of_mem hk
     simpa using inv_le_of_inv_le (norm_pos_iff.mpr hnk) this
-    
 #align unitary.spectrum_subset_circle unitary.spectrum_subset_circle
 
 theorem spectrum.subset_circle_of_unitary {u : E} (h : u ∈ unitary E) :
@@ -78,7 +76,7 @@ theorem IsStarNormal.spectral_radius_eq_nnnorm (a : A) [IsStarNormal a] :
   have heq :
     (fun n : ℕ => (‖(a⋆ * a) ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞)) =
       (fun x => x ^ 2) ∘ fun n : ℕ => (‖a ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞) :=
-    by
+    by 
     funext
     rw [Function.comp_apply, ← rpow_nat_cast, ← rpow_mul, mul_comm, rpow_mul, rpow_nat_cast, ←
       coe_pow, sq, ← nnnorm_star_mul_self, Commute.mul_pow (star_comm_self' a), star_pow]
@@ -95,7 +93,7 @@ theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelf
     (hz : z ∈ spectrum ℂ a) : z = z.re := by
   let Iu := Units.mk0 I I_ne_zero
   have : exp ℂ (I • z) ∈ spectrum ℂ (exp ℂ (I • a)) := by
-    simpa only [Units.smul_def, Units.coe_mk0] using
+    simpa only [Units.smul_def, Units.val_mk0] using
       spectrum.exp_mem_exp (Iu • a) (smul_mem_smul_iff.mpr hz)
   exact
     Complex.ext (of_real_re _)
@@ -148,7 +146,6 @@ theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ := by
       coe_le_coe] using
       show spectralRadius ℂ (φ s) ≤ spectralRadius ℂ s from
         supr_le_supr_of_subset (AlgHom.spectrum_apply_subset φ s)
-    
 #align star_alg_hom.nnnorm_apply_le StarAlgHom.nnnorm_apply_le
 
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
@@ -180,20 +177,19 @@ include hF
 
 /-- This instance is provided instead of `star_alg_hom_class` to avoid type class inference loops.
 See note [lower instance priority] -/
-noncomputable instance (priority := 100) : StarHomClass F A ℂ where
+noncomputable instance (priority := 100) :
+    StarHomClass F A ℂ where 
   coe φ := φ
   coe_injective' := FunLike.coe_injective'
-  map_star φ a := by
+  map_star φ a := by 
     suffices hsa : ∀ s : selfAdjoint A, (φ s)⋆ = φ s
     · rw [← real_part_add_I_smul_imaginary_part a]
       simp only [map_add, map_smul, star_add, star_smul, hsa, selfAdjoint.star_coe_eq]
-      
     · intro s
       have := AlgHom.apply_mem_spectrum φ (s : A)
       rw [selfAdjoint.coe_re_map_spectrum s] at this
       rcases this with ⟨⟨_, _⟩, _, heq⟩
       rw [← HEq, IsROrC.star_def, IsROrC.conj_of_real]
-      
 
 /-- This is not an instance to avoid type class inference loops. See
 `weak_dual.complex.star_hom_class`. -/

@@ -74,7 +74,8 @@ variable (n α R)
 
 /-- `matrix.trace` as an `add_monoid_hom` -/
 @[simps]
-def traceAddMonoidHom : Matrix n n R →+ R where
+def traceAddMonoidHom : Matrix n n R →+
+      R where 
   toFun := trace
   map_zero' := trace_zero n R
   map_add' := trace_add
@@ -82,7 +83,8 @@ def traceAddMonoidHom : Matrix n n R →+ R where
 
 /-- `matrix.trace` as a `linear_map` -/
 @[simps]
-def traceLinearMap [Semiring α] [Module α R] : Matrix n n R →ₗ[α] R where
+def traceLinearMap [Semiring α] [Module α R] :
+    Matrix n n R →ₗ[α] R where 
   toFun := trace
   map_add' := trace_add
   map_smul' := trace_smul

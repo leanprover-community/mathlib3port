@@ -22,7 +22,8 @@ universe u
 
 #print SemigroupPEmpty /-
 @[to_additive]
-instance SemigroupPEmpty : Semigroup PEmpty.{u + 1} where
+instance SemigroupPEmpty :
+    Semigroup PEmpty.{u + 1} where 
   mul x y := by cases x
   mul_assoc x y z := by cases x
 #align semigroup_pempty SemigroupPEmpty

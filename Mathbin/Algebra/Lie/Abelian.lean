@@ -68,7 +68,7 @@ theorem Function.Injective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : T
 theorem Function.Surjective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R]
     [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] {f : L₁ →ₗ⁅R⁆ L₂}
     (h₁ : Function.Surjective f) (h₂ : IsLieAbelian L₁) : IsLieAbelian L₂ :=
-  { trivial := fun x y => by
+  { trivial := fun x y => by 
       obtain ⟨u, rfl⟩ := h₁ x
       obtain ⟨v, rfl⟩ := h₁ y
       rw [← LieHom.map_lie, trivial_lie_zero, LieHom.map_zero] }
@@ -116,7 +116,8 @@ protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ m : M, ⁅
 #align lie_module.mem_ker LieModule.mem_ker
 
 /-- The largest submodule of a Lie module `M` on which the Lie algebra `L` acts trivially. -/
-def maxTrivSubmodule : LieSubmodule R L M where
+def maxTrivSubmodule :
+    LieSubmodule R L M where 
   carrier := { m | ∀ x : L, ⁅x, m⁆ = 0 }
   zero_mem' x := lie_zero x
   add_mem' x y hx hy z := by rw [lie_add, hx, hy, add_zero]
@@ -146,11 +147,9 @@ theorem le_max_triv_iff_bracket_eq_bot {N : LieSubmodule R L M} :
   refine' ⟨fun h => _, fun h m hm => _⟩
   · rw [← le_bot_iff, ← ideal_oper_max_triv_submodule_eq_bot R L M ⊤]
     exact LieSubmodule.mono_lie_right _ _ ⊤ h
-    
   · rw [mem_max_triv_submodule]
     rw [LieSubmodule.lie_eq_bot_iff] at h
     exact fun x => h x (LieSubmodule.mem_top x) m hm
-    
 #align lie_module.le_max_triv_iff_bracket_eq_bot LieModule.le_max_triv_iff_bracket_eq_bot
 
 theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) :
@@ -164,20 +163,21 @@ theorem is_trivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L 
   · rintro ⟨h⟩
     ext
     simp only [mem_max_triv_submodule, h, forall_const, true_iff_iff, eq_self_iff_true]
-    
   · intro h
     constructor
     intro x m
     revert x
     rw [← mem_max_triv_submodule R L M, h]
     exact LieSubmodule.mem_top m
-    
 #align lie_module.is_trivial_iff_max_triv_eq_top LieModule.is_trivial_iff_max_triv_eq_top
 
 variable {R L M N}
 
 /-- `max_triv_submodule` is functorial. -/
-def maxTrivHom (f : M →ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M →ₗ⁅R,L⁆ maxTrivSubmodule R L N where
+def maxTrivHom (f : M →ₗ⁅R,L⁆ N) :
+    maxTrivSubmodule R L M →ₗ⁅R,L⁆
+      maxTrivSubmodule R L
+        N where 
   toFun m :=
     ⟨f m, fun x =>
       (LieModuleHom.map_lie _ _ _).symm.trans <|
@@ -197,10 +197,10 @@ theorem coe_max_triv_hom_apply (f : M →ₗ⁅R,L⁆ N) (m : maxTrivSubmodule R
 def maxTrivEquiv (e : M ≃ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M ≃ₗ⁅R,L⁆ maxTrivSubmodule R L N :=
   { maxTrivHom (e : M →ₗ⁅R,L⁆ N) with toFun := maxTrivHom (e : M →ₗ⁅R,L⁆ N),
     invFun := maxTrivHom (e.symm : N →ₗ⁅R,L⁆ M),
-    left_inv := fun m => by
+    left_inv := fun m => by 
       ext
       simp,
-    right_inv := fun n => by
+    right_inv := fun n => by 
       ext
       simp }
 #align lie_module.max_triv_equiv LieModule.maxTrivEquiv
@@ -227,21 +227,24 @@ theorem max_triv_equiv_of_equiv_symm_eq_symm (e : M ≃ₗ⁅R,L⁆ N) :
 
 /-- A linear map between two Lie modules is a morphism of Lie modules iff the Lie algebra action
 on it is trivial. -/
-def maxTrivLinearMapEquivLieModuleHom : maxTrivSubmodule R L (M →ₗ[R] N) ≃ₗ[R] M →ₗ⁅R,L⁆ N where
+def maxTrivLinearMapEquivLieModuleHom :
+    maxTrivSubmodule R L (M →ₗ[R] N) ≃ₗ[R]
+      M →ₗ⁅R,L⁆
+        N where 
   toFun f :=
     { toLinearMap := f.val,
       map_lie' := fun x m => by
         have hf : ⁅x, f.val⁆ m = 0 := by rw [f.property x, LinearMap.zero_apply]
         rw [LieHom.lie_apply, sub_eq_zero, ← LinearMap.to_fun_eq_coe] at hf
         exact hf.symm }
-  map_add' f g := by
+  map_add' f g := by 
     ext
     simp
-  map_smul' F G := by
+  map_smul' F G := by 
     ext
     simp
   invFun F :=
-    ⟨F, fun x => by
+    ⟨F, fun x => by 
       ext
       simp⟩
   left_inv f := by simp

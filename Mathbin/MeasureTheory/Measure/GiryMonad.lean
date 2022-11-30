@@ -64,7 +64,7 @@ theorem measurable_measure {μ : α → Measure β} :
 #align measure_theory.measure.measurable_measure MeasureTheory.Measure.measurable_measure
 
 theorem measurableMap (f : α → β) (hf : Measurable f) : Measurable fun μ : Measure α => map f μ :=
-  by
+  by 
   refine' measurable_of_measurable_coe _ fun s hs => _
   simp_rw [map_apply hf hs]
   exact measurable_coe (hf hs)
@@ -89,7 +89,7 @@ functions. -/
 def join (m : Measure (Measure α)) : Measure α :=
   Measure.ofMeasurable (fun s hs => ∫⁻ μ, μ s ∂m)
     (by simp only [measure_empty, lintegral_const, zero_mul])
-    (by
+    (by 
       intro f hf h
       simp_rw [measure_Union h hf]
       apply lintegral_tsum
@@ -126,21 +126,16 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
       this (fun n => simple_func.range (simple_func.eapprox f n))
         (fun n r μ => μ (simple_func.eapprox f n ⁻¹' {r})) _ _
     · exact fun n r => measurable_coe (simple_func.measurable_set_preimage _ _)
-      
     · exact fun n m h μ => simple_func.lintegral_mono (simple_func.monotone_eapprox _ h) le_rfl
-      
   intro s f hf hm
   rw [lintegral_supr _ hm]
   swap
   · exact fun n => Finset.measurableSum _ fun r _ => (hf _ _).const_mul _
-    
   congr
   funext n
   rw [lintegral_finset_sum (s n)]
   · simp_rw [lintegral_const_mul _ (hf _ _)]
-    
   · exact fun r _ => (hf _ _).const_mul _
-    
 #align measure_theory.measure.lintegral_join MeasureTheory.Measure.lintegral_join
 
 /-- Monadic bind on `measure`, only works in the category of measurable spaces and measurable

@@ -183,11 +183,9 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (
     simpa only [closure_Union, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
-    
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
     exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
-    
 #align submonoid.mem_supr_of_directed Submonoid.mem_supr_of_directed
 
 @[to_additive]
@@ -259,12 +257,9 @@ theorem supr_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x �
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
   refine' supr_induction S hx (fun i x hx => _) _ fun x y => _
   · exact ⟨_, hp _ _ hx⟩
-    
   · exact ⟨_, h1⟩
-    
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
     refine' ⟨_, hmul _ _ _ _ Cx Cy⟩
-    
 #align submonoid.supr_induction' Submonoid.supr_induction'
 
 end Submonoid
@@ -350,16 +345,14 @@ theorem closure_induction_left {s : Set M} {p : M → Prop} {x : M} (h : x ∈ c
   obtain ⟨l, rfl⟩ := h
   induction' l using FreeMonoid.recOn with x y ih
   · exact H1
-    
   · simpa only [map_mul, FreeMonoid.lift_eval_of] using Hmul _ x.prop _ ih
-    
 #align submonoid.closure_induction_left Submonoid.closure_induction_left
 
 @[elab_as_elim, to_additive]
 theorem induction_of_closure_eq_top_left {s : Set M} {p : M → Prop} (hs : closure s = ⊤) (x : M)
     (H1 : p 1) (Hmul : ∀ x ∈ s, ∀ (y), p y → p (x * y)) : p x :=
   closure_induction_left
-    (by
+    (by 
       rw [hs]
       exact mem_top _)
     H1 Hmul
@@ -377,7 +370,7 @@ theorem closure_induction_right {s : Set M} {p : M → Prop} {x : M} (h : x ∈ 
 theorem induction_of_closure_eq_top_right {s : Set M} {p : M → Prop} (hs : closure s = ⊤) (x : M)
     (H1 : p 1) (Hmul : ∀ (x), ∀ y ∈ s, p x → p (x * y)) : p x :=
   closure_induction_right
-    (by
+    (by 
       rw [hs]
       exact mem_top _)
     H1 Hmul
@@ -449,7 +442,7 @@ theorem log_pow_eq_self [DecidableEq M] {n : M} (h : Function.Injective fun m : 
 when it is injective. The inverse is given by the logarithms. -/
 @[simps]
 def powLogEquiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) :
-    Multiplicative ℕ ≃* powers n where
+    Multiplicative ℕ ≃* powers n where 
   toFun m := pow n m.toAdd
   invFun m := Multiplicative.ofAdd (log m)
   left_inv := log_pow_eq_self h
@@ -479,7 +472,7 @@ theorem map_powers {N : Type _} {F : Type _} [Monoid N] [MonoidHomClass F M N] (
 def closureCommMonoidOfComm {s : Set M} (hcomm : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a * b = b * a) :
     CommMonoid (closure s) :=
   { (closure s).toMonoid with
-    mul_comm := fun x y => by
+    mul_comm := fun x y => by 
       ext
       simp only [Submonoid.coe_mul]
       exact
@@ -496,11 +489,9 @@ theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [HasS
   refine' ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x _ _⟩
   · intro y z
     rw [one_smul, one_smul]
-    
   · clear x
     intro x hx x' hx' y z
     rw [mul_smul, mul_smul, hs x hx, hx']
-    
 #align is_scalar_tower.of_mclosure_eq_top IsScalarTower.of_mclosure_eq_top
 
 @[to_additive]
@@ -510,11 +501,9 @@ theorem SmulCommClass.of_mclosure_eq_top {N α} [Monoid M] [HasSmul N α] [MulAc
   refine' ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x _ _⟩
   · intro y z
     rw [one_smul, one_smul]
-    
   · clear x
     intro x hx x' hx' y z
     rw [mul_smul, mul_smul, hx', hs x hx]
-    
 #align smul_comm_class.of_mclosure_eq_top SmulCommClass.of_mclosure_eq_top
 
 namespace Submonoid
@@ -593,12 +582,9 @@ theorem mul_right_mem_add_closure (ha : a ∈ AddSubmonoid.closure (S : Set R)) 
   revert b
   refine' AddSubmonoid.closure_induction ha _ _ _ <;> clear ha a
   · exact fun r hr b hb => add_submonoid.mem_closure.mpr fun y hy => hy (mul_mem hr hb)
-    
   · exact fun b hb => by simp only [zero_mul, (AddSubmonoid.closure (S : Set R)).zero_mem]
-    
   · simp_rw [add_mul]
     exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr hb) (hs hb)
-    
 #align mul_mem_class.mul_right_mem_add_closure MulMemClass.mul_right_mem_add_closure
 
 /-- The product of two elements of the additive closure of a submonoid `M` is an element of the
@@ -608,12 +594,9 @@ theorem mul_mem_add_closure (ha : a ∈ AddSubmonoid.closure (S : Set R))
   revert a
   refine' AddSubmonoid.closure_induction hb _ _ _ <;> clear hb b
   · exact fun r hr b hb => MulMemClass.mul_right_mem_add_closure hb hr
-    
   · exact fun b hb => by simp only [mul_zero, (AddSubmonoid.closure (S : Set R)).zero_mem]
-    
   · simp_rw [mul_add]
     exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr hb) (hs hb)
-    
 #align mul_mem_class.mul_mem_add_closure MulMemClass.mul_mem_add_closure
 
 /-- The product of an element of `S` and an element of the additive closure of a multiplicative
@@ -648,17 +631,15 @@ theorem of_mul_image_powers_eq_multiples_of_mul [Monoid M] {x : M} :
   · rintro ⟨y, ⟨n, hy1⟩, hy2⟩
     use n
     simpa [← of_mul_pow, hy1]
-    
   · rintro ⟨n, hn⟩
     refine' ⟨x ^ n, ⟨n, rfl⟩, _⟩
     rwa [of_mul_pow]
-    
 #align of_mul_image_powers_eq_multiples_of_mul of_mul_image_powers_eq_multiples_of_mul
 
 theorem of_add_image_multiples_eq_powers_of_add [AddMonoid A] {x : A} :
     Multiplicative.ofAdd '' (AddSubmonoid.multiples x : Set A) =
       Submonoid.powers (Multiplicative.ofAdd x) :=
-  by
+  by 
   symm
   rw [Equiv.eq_image_iff_symm_image_eq]
   exact of_mul_image_powers_eq_multiples_of_mul

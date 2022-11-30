@@ -56,31 +56,27 @@ theorem euler_criterion_units (x : (Zmod p)ˣ) : (∃ y : (Zmod p)ˣ, y ^ 2 = x)
   by_cases hc : p = 2
   · subst hc
     simp only [eq_iff_true_of_subsingleton, exists_const]
-    
   · have h₀ := FiniteField.unit_is_square_iff (by rwa [ring_char_zmod_n]) x
     have hs : (∃ y : (Zmod p)ˣ, y ^ 2 = x) ↔ IsSquare x := by
       rw [is_square_iff_exists_sq x]
       simp_rw [eq_comm]
     rw [hs]
     rwa [card p] at h₀
-    
 #align zmod.euler_criterion_units Zmod.euler_criterion_units
 
 /-- Euler's Criterion: a nonzero `a : zmod p` is a square if and only if `x ^ (p / 2) = 1`. -/
 theorem euler_criterion {a : Zmod p} (ha : a ≠ 0) : IsSquare (a : Zmod p) ↔ a ^ (p / 2) = 1 := by
   apply (iff_congr _ (by simp [Units.ext_iff])).mp (euler_criterion_units p (Units.mk0 a ha))
-  simp only [Units.ext_iff, sq, Units.coe_mk0, Units.val_mul]
+  simp only [Units.ext_iff, sq, Units.val_mk0, Units.val_mul]
   constructor;
   · rintro ⟨y, hy⟩
     exact ⟨y, hy.symm⟩
-    
   · rintro ⟨y, rfl⟩
-    have hy : y ≠ 0 := by
+    have hy : y ≠ 0 := by 
       rintro rfl
       simpa [zero_pow] using ha
     refine' ⟨Units.mk0 y hy, _⟩
     simp
-    
 #align zmod.euler_criterion Zmod.euler_criterion
 
 /-- If `a : zmod p` is nonzero, then `a^(p/2)` is either `1` or `-1`. -/
@@ -90,7 +86,6 @@ theorem pow_div_two_eq_neg_one_or_one {a : Zmod p} (ha : a ≠ 0) :
   · subst p
     revert a ha
     decide
-    
   rw [← mul_self_eq_one_iff, ← pow_add, ← two_mul, two_mul_odd_div_two hp_odd]
   exact pow_card_sub_one_eq_one ha
 #align zmod.pow_div_two_eq_neg_one_or_one Zmod.pow_div_two_eq_neg_one_or_one
@@ -133,7 +128,6 @@ theorem eq_pow (a : ℤ) : (legendreSym p a : Zmod p) = a ^ (p / 2) := by
     · rw [legendreSym, ha, quadratic_char_zero,
         zero_pow (Nat.div_pos (Fact.out p.prime).two_le (succ_pos 1))]
       norm_cast
-      
     · have := (ring_char_zmod_n p).symm.trans hc
       -- p = 2
       subst p
@@ -142,11 +136,8 @@ theorem eq_pow (a : ℤ) : (legendreSym p a : Zmod p) = a ^ (p / 2) := by
       generalize (a : Zmod 2) = b
       revert b
       decide
-      
-    
   · convert quadratic_char_eq_pow_of_char_ne_two' hc (a : Zmod p)
     exact (card p).symm
-    
 #align legendre_sym.eq_pow legendreSym.eq_pow
 
 /-- If `p ∤ a`, then `legendre_sym p a` is `1` or `-1`. -/
@@ -180,7 +171,7 @@ protected theorem mul (a b : ℤ) : legendreSym p (a * b) = legendreSym p a * le
 
 /-- The Legendre symbol is a homomorphism of monoids with zero. -/
 @[simps]
-def hom : ℤ →*₀ ℤ where
+def hom : ℤ →*₀ ℤ where 
   toFun := legendreSym p
   map_zero' := at_zero p
   map_one' := at_one p
@@ -268,7 +259,7 @@ theorem mod_four_ne_three_of_sq_eq_neg_one {y : Zmod p} (hy : y ^ 2 = -1) : p % 
 theorem mod_four_ne_three_of_sq_eq_neg_sq' {x y : Zmod p} (hy : y ≠ 0) (hxy : x ^ 2 = -y ^ 2) :
     p % 4 ≠ 3 :=
   @mod_four_ne_three_of_sq_eq_neg_one p _ (x / y)
-    (by
+    (by 
       apply_fun fun z => z / y ^ 2  at hxy
       rwa [neg_div, ← div_pow, ← div_pow, div_self hy, one_pow] at hxy)
 #align zmod.mod_four_ne_three_of_sq_eq_neg_sq' Zmod.mod_four_ne_three_of_sq_eq_neg_sq'
@@ -380,11 +371,9 @@ theorem quadratic_reciprocity' (hp : p ≠ 2) (hq : q ≠ 2) :
   cases' eq_or_ne p q with h h
   · subst p
     rw [(eq_zero_iff q q).mpr (by exact_mod_cast nat_cast_self q), mul_zero]
-    
   · have qr := congr_arg (· * legendreSym p q) (quadratic_reciprocity hp hq h)
     have : ((q : ℤ) : Zmod p) ≠ 0 := by exact_mod_cast prime_ne_zero p q h
     simpa only [mul_assoc, ← pow_two, sq_one p this, mul_one] using qr
-    
 #align legendre_sym.quadratic_reciprocity' legendreSym.quadratic_reciprocity'
 
 /-- The Law of Quadratic Reciprocity: if `p` and `q` are odd primes and `p % 4 = 1`,
@@ -418,10 +407,9 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_one (hp1 : p % 4 = 1) (hq1 : q ≠
     IsSquare (q : Zmod p) ↔ IsSquare (p : Zmod q) := by
   cases' eq_or_ne p q with h h
   · subst p
-    
-  · rw [← eq_one_iff' p (prime_ne_zero p q h), ← eq_one_iff' q (prime_ne_zero q p h.symm),
+  ·
+    rw [← eq_one_iff' p (prime_ne_zero p q h), ← eq_one_iff' q (prime_ne_zero q p h.symm),
       quadratic_reciprocity_one_mod_four hp1 hq1]
-    
 #align zmod.exists_sq_eq_prime_iff_of_mod_four_eq_one Zmod.exists_sq_eq_prime_iff_of_mod_four_eq_one
 
 /-- If `p` and `q` are distinct primes that are both congruent to `3` mod `4`, then `q` is

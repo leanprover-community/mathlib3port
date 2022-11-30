@@ -29,22 +29,22 @@ instance : ConditionallyCompleteLinearOrder ℤ :=
       if h : s.Nonempty ∧ BddBelow s then
         leastOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1
       else 0,
-    le_cSup := by
+    le_cSup := by 
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨⟨n, hns⟩, hs⟩
       rw [dif_pos this]
       exact (greatest_of_bdd _ _ _).2.2 n hns,
-    cSup_le := by
+    cSup_le := by 
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨hs, ⟨n, hns⟩⟩
       rw [dif_pos this]
       exact hns (greatest_of_bdd _ (Classical.choose_spec this.2) _).2.1,
-    cInf_le := by
+    cInf_le := by 
       intro s n hs hns
       have : s.nonempty ∧ BddBelow s := ⟨⟨n, hns⟩, hs⟩
       rw [dif_pos this]
       exact (least_of_bdd _ _ _).2.2 n hns,
-    le_cInf := by
+    le_cInf := by 
       intro s n hs hns
       have : s.nonempty ∧ BddBelow s := ⟨hs, ⟨n, hns⟩⟩
       rw [dif_pos this]
@@ -56,9 +56,7 @@ theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : �
     (Hinh : ∃ z : ℤ, z ∈ s) : sup s = greatestOfBdd b Hb Hinh := by
   convert dif_pos _ using 1
   · convert coe_greatest_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddAbove s)) _
-    
   · exact ⟨Hinh, b, Hb⟩
-    
 #align int.cSup_eq_greatest_of_bdd Int.cSup_eq_greatest_of_bdd
 
 @[simp]
@@ -74,9 +72,7 @@ theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) 
     (Hinh : ∃ z : ℤ, z ∈ s) : inf s = leastOfBdd b Hb Hinh := by
   convert dif_pos _ using 1
   · convert coe_least_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddBelow s)) _
-    
   · exact ⟨Hinh, b, Hb⟩
-    
 #align int.cInf_eq_least_of_bdd Int.cInf_eq_least_of_bdd
 
 @[simp]

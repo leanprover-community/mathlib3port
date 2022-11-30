@@ -121,7 +121,8 @@ instance CommSemigroup.is_central_scalar [CommSemigroup α] : IsCentralScalar α
 
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
 @[to_additive "Like `add_monoid.to_add_action`, but adds on the right."]
-instance Monoid.toOppositeMulAction [Monoid α] : MulAction αᵐᵒᵖ α where
+instance Monoid.toOppositeMulAction [Monoid α] :
+    MulAction αᵐᵒᵖ α where 
   smul := (· • ·)
   one_smul := mul_one
   mul_smul x y r := (mul_assoc _ _ _).symm
@@ -136,7 +137,7 @@ instance IsScalarTower.opposite_mid {M N} [Mul N] [HasSmul M N] [SmulCommClass M
 @[to_additive]
 instance SmulCommClass.opposite_mid {M N} [Mul N] [HasSmul M N] [IsScalarTower M N N] :
     SmulCommClass M Nᵐᵒᵖ N :=
-  ⟨fun x y z => by
+  ⟨fun x y z => by 
     induction y using MulOpposite.rec
     simp [smul_mul_assoc]⟩
 #align smul_comm_class.opposite_mid SmulCommClass.opposite_mid

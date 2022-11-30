@@ -29,21 +29,22 @@ theorem finite_respects_iso : RespectsIso @Finite := by
   exact Finite.of_surjective _ e.to_equiv.surjective
 #align ring_hom.finite_respects_iso RingHom.finite_respects_iso
 
-theorem finite_stable_under_base_change : StableUnderBaseChange @Finite := by classical
-  introv R h
-  skip
-  replace h : Module.Finite R T := by
-    convert h
-    ext
-    rw [Algebra.smul_def]
-    rfl
-  suffices Module.Finite S (S ⊗[R] T) by
-    change Module.Finite _ _
-    convert this
-    ext
-    rw [Algebra.smul_def]
-    rfl
-  exact inferInstance
+theorem finite_stable_under_base_change : StableUnderBaseChange @Finite := by
+  classical 
+    introv R h
+    skip
+    replace h : Module.Finite R T := by 
+      convert h
+      ext
+      rw [Algebra.smul_def]
+      rfl
+    suffices Module.Finite S (S ⊗[R] T) by
+      change Module.Finite _ _
+      convert this
+      ext
+      rw [Algebra.smul_def]
+      rfl
+    exact inferInstance
 #align ring_hom.finite_stable_under_base_change RingHom.finite_stable_under_base_change
 
 end RingHom

@@ -76,7 +76,7 @@ theorem lift_comp_of (f : FreeRing α →+* R) : lift (f ∘ of) = f :=
   lift.right_inv f
 #align free_ring.lift_comp_of FreeRing.lift_comp_of
 
-@[ext.1]
+@[ext]
 theorem hom_ext ⦃f g : FreeRing α →+* R⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
   lift.symm.Injective (funext h)
 #align free_ring.hom_ext FreeRing.hom_ext

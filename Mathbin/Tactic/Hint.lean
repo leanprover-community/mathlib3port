@@ -13,7 +13,8 @@ namespace Hint
 /-- An attribute marking a `tactic unit` or `tactic string` which should be used by the `hint`
 tactic. -/
 @[user_attribute]
-unsafe def hint_tactic_attribute : user_attribute where
+unsafe def hint_tactic_attribute :
+    user_attribute where 
   Name := `hint_tactic
   descr := "A tactic that should be tried by `hint`."
 #align tactic.hint.hint_tactic_attribute tactic.hint.hint_tactic_attribute

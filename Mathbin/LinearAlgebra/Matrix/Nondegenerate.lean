@@ -47,7 +47,7 @@ variable [CommRing A] [IsDomain A]
 See also `bilin_form.nondegenerate_of_det_ne_zero'` and `bilin_form.nondegenerate_of_det_ne_zero`.
 -/
 theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) :
-    Nondegenerate M := by
+    Nondegenerate M := by 
   intro v hv
   ext i
   specialize hv (M.cramer (Pi.single i 1))
@@ -57,11 +57,9 @@ theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.
   rw [Finset.sum_eq_single i, Pi.single_eq_same, mul_one]
   · intro j _ hj
     simp [hj]
-    
   · intros
     have := Finset.mem_univ i
     contradiction
-    
 #align matrix.nondegenerate_of_det_ne_zero Matrix.nondegenerate_of_det_ne_zero
 
 theorem eq_zero_of_vec_mul_eq_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) {v : m → A}

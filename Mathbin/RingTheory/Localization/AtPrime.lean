@@ -43,7 +43,7 @@ include hp
 namespace Ideal
 
 /-- The complement of a prime ideal `I ⊆ R` is a submonoid of `R`. -/
-def primeCompl : Submonoid R where
+def primeCompl : Submonoid R where 
   carrier := (Iᶜ : Set R)
   one_mem' := by convert I.ne_top_iff_one.1 hp.1 <;> rfl
   mul_mem' x y hnx hny hxy := Or.cases_on (hp.mem_or_mem hxy) hnx hny
@@ -83,7 +83,7 @@ attribute [local instance] at_prime.nontrivial
 
 theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
   LocalRing.of_nonunits_add
-    (by
+    (by 
       intro x y hx hy hu
       cases' isUnit_iff_exists_inv.1 hu with z hxyz
       have : ∀ {r : R} {s : I.prime_compl}, mk' S r s ∈ nonunits S → r ∈ I :=
@@ -194,14 +194,14 @@ it is the unique maximal ideal given by the local ring structure `at_prime.local
 theorem AtPrime.map_eq_maximal_ideal :
     Ideal.map (algebraMap R (Localization.AtPrime I)) I =
       LocalRing.maximalIdeal (Localization I.primeCompl) :=
-  by
+  by 
   convert congr_arg (Ideal.map _) at_prime.comap_maximal_ideal.symm
   rw [map_comap I.prime_compl]
 #align localization.at_prime.map_eq_maximal_ideal Localization.AtPrime.map_eq_maximal_ideal
 
 theorem le_comap_prime_compl_iff {J : Ideal P} [hJ : J.IsPrime] {f : R →+* P} :
     I.primeCompl ≤ J.primeCompl.comap f ↔ J.comap f ≤ I :=
-  ⟨fun h x hx => by
+  ⟨fun h x hx => by 
     contrapose! hx
     exact h hx, fun h x hx hfxJ => hx (h hfxJ)⟩
 #align localization.le_comap_prime_compl_iff Localization.le_comap_prime_compl_iff

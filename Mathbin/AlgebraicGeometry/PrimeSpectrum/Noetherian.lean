@@ -31,11 +31,9 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   · use {⟨M, h_prM⟩}
     rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact le_rfl
-    
   by_cases htop : M = ⊤
   · rw [htop]
     exact ⟨0, le_top⟩
-    
   have lt_add : ∀ (z) (_ : z ∉ M), M < M + span R {z} := by
     intro z hz
     refine' lt_of_le_of_ne le_sup_left fun m_eq => hz _
@@ -62,7 +60,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
     (h_nzI : I ≠ ⊥) :
     ∃ Z : Multiset (PrimeSpectrum A),
       Multiset.prod (Z.map asIdeal) ≤ I ∧ Multiset.prod (Z.map asIdeal) ≠ ⊥ :=
-  by
+  by 
   revert h_nzI
   refine' IsNoetherian.induction (fun (M : Ideal A) hgt => _) I
   intro h_nzM
@@ -74,12 +72,10 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
       apply ring.not_is_field_iff_exists_prime.mp h_fA
     use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
     rwa [Multiset.map_singleton, Multiset.prod_singleton]
-    
   by_cases h_prM : M.is_prime
   · use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
     rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact ⟨le_rfl, h_nzM⟩
-    
   obtain ⟨x, hx, y, hy, h_xy⟩ := (ideal.not_is_prime_iff.mp h_prM).resolve_left h_topM
   have lt_add : ∀ (z) (_ : z ∉ M), M < M + span A {z} := by
     intro z hz
@@ -96,9 +92,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
     rw [mul_add]
     apply sup_le (show span A {x} * M ≤ M from Ideal.mul_le_left)
     rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
-    
   · rintro (hx | hy) <;> contradiction
-    
 #align
   prime_spectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain PrimeSpectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain
 

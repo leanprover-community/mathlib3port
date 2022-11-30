@@ -109,7 +109,6 @@ theorem tendstoInMeasureOfTendstoAeOfStronglyMeasurable [IsFiniteMeasure μ]
   refine' fun ε hε => ennreal.tendsto_at_top_zero.mpr fun δ hδ => _
   by_cases hδi : δ = ∞
   · simp only [hδi, imp_true_iff, le_top, exists_const]
-    
   lift δ to ℝ≥0 using hδi
   rw [gt_iff_lt, Ennreal.coe_pos, ← Nnreal.coe_pos] at hδ
   obtain ⟨t, htm, ht, hunif⟩ := tendsto_uniformly_on_of_ae_tendsto' hf hg hfg hδ
@@ -176,10 +175,9 @@ theorem seq_tendsto_ae_seq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ
     (hn : seqTendstoAeSeq hfg n ≤ k) : μ { x | 2⁻¹ ^ n ≤ dist (f k x) (g x) } ≤ 2⁻¹ ^ n := by
   cases n
   · exact Classical.choose_spec (exists_nat_measure_lt_two_inv hfg 0) k hn
-    
-  · exact
+  ·
+    exact
       Classical.choose_spec (exists_nat_measure_lt_two_inv hfg _) _ (le_trans (le_max_left _ _) hn)
-    
 #align
   measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_spec MeasureTheory.ExistsSeqTendstoAe.seq_tendsto_ae_seq_spec
 
@@ -196,7 +194,8 @@ end ExistsSeqTendstoAe
 /-- If `f` is a sequence of functions which converges in measure to `g`, then there exists a
 subsequence of `f` which converges a.e. to `g`. -/
 theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTop g) :
-    ∃ ns : ℕ → ℕ, StrictMono ns ∧ ∀ᵐ x ∂μ, Tendsto (fun i => f (ns i) x) atTop (𝓝 (g x)) := by
+    ∃ ns : ℕ → ℕ, StrictMono ns ∧ ∀ᵐ x ∂μ, Tendsto (fun i => f (ns i) x) atTop (𝓝 (g x)) :=
+  by
   /- Since `f` tends to `g` in measure, it has a subsequence `k ↦ f (ns k)` such that
     `μ {|f (ns k) - g| ≥ 2⁻ᵏ} ≤ 2⁻ᵏ` for all `k`. Defining
     `s := ⋂ k, ⋃ i ≥ k, {|f (ns k) - g| ≥ 2⁻ᵏ}`, we see that `μ s = 0` by the
@@ -231,9 +230,9 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
     specialize hNx n ((le_max_left _ _).trans hn_ge)
     have h_inv_n_le_k : (2 : ℝ)⁻¹ ^ n ≤ 2 * 2⁻¹ ^ k := by
       rw [mul_comm, ← inv_mul_le_iff' (@two_pos ℝ _ _)]
-      conv_lhs =>
-      congr
-      rw [← pow_one (2 : ℝ)⁻¹]
+      conv_lhs => 
+        congr
+        rw [← pow_one (2 : ℝ)⁻¹]
       rw [← pow_add, add_comm]
       exact
         pow_le_pow_of_le_one (one_div (2 : ℝ) ▸ one_half_pos.le) (inv_le_one one_le_two)
@@ -306,16 +305,12 @@ theorem tendstoInMeasureOfTendstoSnormOfStronglyMeasurable (hp_ne_zero : p ≠ 0
       mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AeStronglyMeasurable
         (Ennreal.ofReal ε)
     · exact (Ennreal.of_real_rpow_of_pos hε).symm
-      
     · ext x
       rw [dist_eq_norm, ← Ennreal.of_real_le_of_real_iff (norm_nonneg _),
         of_real_norm_eq_coe_nnnorm]
       exact Iff.rfl
-      
-    
   · rw [Ne, Ennreal.of_real_eq_zero, not_le]
     exact Or.inl (Real.rpow_pos_of_pos hε _)
-    
 #align
   measure_theory.tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable MeasureTheory.tendstoInMeasureOfTendstoSnormOfStronglyMeasurable
 
@@ -340,7 +335,7 @@ theorem tendstoInMeasureOfTendstoSnormOfNeTop (hp_ne_zero : p ≠ 0) (hp_ne_top 
 Lp-convergence for all `p ≠ 0`. -/
 theorem tendstoInMeasureOfTendstoSnormTop {E} [NormedAddCommGroup E] {f : ι → α → E} {g : α → E}
     {l : Filter ι} (hfg : Tendsto (fun n => snorm (f n - g) ∞ μ) l (𝓝 0)) :
-    TendstoInMeasure μ f l g := by
+    TendstoInMeasure μ f l g := by 
   intro δ hδ
   simp only [snorm_exponent_top, snorm_ess_sup] at hfg
   rw [Ennreal.tendsto_nhds_zero] at hfg⊢
@@ -370,9 +365,7 @@ theorem tendstoInMeasureOfTendstoSnorm {l : Filter ι} (hp_ne_zero : p ≠ 0)
   by_cases hp_ne_top : p = ∞
   · subst hp_ne_top
     exact tendsto_in_measure_of_tendsto_snorm_top hfg
-    
   · exact tendsto_in_measure_of_tendsto_snorm_of_ne_top hp_ne_zero hp_ne_top hf hg hfg
-    
 #align
   measure_theory.tendsto_in_measure_of_tendsto_snorm MeasureTheory.tendstoInMeasureOfTendstoSnorm
 

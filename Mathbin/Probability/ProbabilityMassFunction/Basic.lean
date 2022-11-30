@@ -44,7 +44,7 @@ namespace Pmf
 instance : CoeFun (Pmf α) fun p => α → ℝ≥0∞ :=
   ⟨fun p a => p.1 a⟩
 
-@[ext.1]
+@[ext]
 protected theorem ext : ∀ {p q : Pmf α}, (∀ a, p a = q a) → p = q
   | ⟨f, hf⟩, ⟨g, hg⟩, Eq => Subtype.eq <| funext Eq
 #align pmf.ext Pmf.ext
@@ -117,7 +117,7 @@ theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.support = {a} := 
 
 theorem coe_le_one (p : Pmf α) (a : α) : p a ≤ 1 :=
   has_sum_le
-    (by
+    (by 
       intro b
       split_ifs <;> simp only [h, zero_le', le_rfl])
     (has_sum_ite_eq a (p a)) (has_sum_coe_one p)
@@ -151,17 +151,13 @@ theorem to_outer_measure_apply : p.toOuterMeasure s = ∑' x, s.indicator p x :=
 theorem to_outer_measure_apply_finset (s : Finset α) : p.toOuterMeasure s = ∑ x in s, p x := by
   refine' (to_outer_measure_apply p s).trans ((@tsum_eq_sum _ _ _ _ _ _ s _).trans _)
   · exact fun x hx => Set.indicator_of_not_mem hx _
-    
   · exact Finset.sum_congr rfl fun x hx => Set.indicator_of_mem hx _
-    
 #align pmf.to_outer_measure_apply_finset Pmf.to_outer_measure_apply_finset
 
 theorem to_outer_measure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a := by
   refine' (p.to_outer_measure_apply {a}).trans (((tsum_eq_single a) fun b hb => _).trans _)
   · exact ite_eq_right_iff.2 fun hb' => False.elim <| hb hb'
-    
   · exact ite_eq_left_iff.2 fun ha' => False.elim <| ha' rfl
-    
 #align pmf.to_outer_measure_apply_singleton Pmf.to_outer_measure_apply_singleton
 
 theorem to_outer_measure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p.support s := by
@@ -178,14 +174,12 @@ theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support
     exact
       Ennreal.tsum_lt_tsum (p.tsum_coe_indicator_ne_top s)
         (fun x => Set.indicator_apply_le fun _ => le_rfl) hsa
-    
   · suffices : ∀ (x) (_ : x ∉ s), p x = 0
     exact
       trans
         (tsum_congr fun a => (Set.indicator_apply s p a).trans (ite_eq_left_iff.2 <| symm ∘ this a))
         p.tsum_coe
     exact fun a ha => (p.apply_eq_zero_iff a).2 <| Set.not_mem_subset h ha
-    
 #align pmf.to_outer_measure_apply_eq_one_iff Pmf.to_outer_measure_apply_eq_one_iff
 
 @[simp]

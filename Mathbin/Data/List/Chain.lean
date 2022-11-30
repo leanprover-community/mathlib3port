@@ -110,9 +110,7 @@ theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ 
     (ha : p a) (hl₂ : ∀ a ∈ l, p a) : Chain S (f a ha) (List.pmap f l hl₂) := by
   induction' l with lh lt l_ih generalizing a
   · simp
-    
   · simp [H _ _ _ _ (rel_of_chain_cons hl₁), l_ih _ (chain_of_chain_cons hl₁)]
-    
 #align list.chain_pmap_of_chain List.chain_pmap_of_chain
 
 theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ a, p a → β) {l : List α}
@@ -120,22 +118,18 @@ theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ 
     (H : ∀ a b ha hb, S (f a ha) (f b hb) → R a b) : Chain R a l := by
   induction' l with lh lt l_ih generalizing a
   · simp
-    
   · simp [H _ _ _ _ (rel_of_chain_cons hl₂), l_ih _ _ (chain_of_chain_cons hl₂)]
-    
 #align list.chain_of_chain_pmap List.chain_of_chain_pmap
 
 /- warning: list.pairwise.chain -> List.Pairwise.chain is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {R : α -> α -> Prop} {l : List.{u} α} {a : α}, (List.Pairwise.{u} α R (List.cons.{u} α a l)) -> (List.Chain.{u} α R a l)
 but is expected to have type
-  forall {α._@.Mathlib.Data.List.Chain._hyg.263 : Type.{u_1}} {R : α._@.Mathlib.Data.List.Chain._hyg.263 -> α._@.Mathlib.Data.List.Chain._hyg.263 -> Prop} {a : α._@.Mathlib.Data.List.Chain._hyg.263} {l : List.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263}, (List.Pairwise.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263 R (List.cons.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263 a l)) -> (List.Chain.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263 R a l)
+  forall {α._@.Mathlib.Data.List.Chain._hyg.259 : Type.{u_1}} {R : α._@.Mathlib.Data.List.Chain._hyg.259 -> α._@.Mathlib.Data.List.Chain._hyg.259 -> Prop} {a : α._@.Mathlib.Data.List.Chain._hyg.259} {l : List.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259}, (List.Pairwise.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259 R (List.cons.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259 a l)) -> (List.Chain.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259 R a l)
 Case conversion may be inaccurate. Consider using '#align list.pairwise.chain List.Pairwise.chainₓ'. -/
 protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l := by
   cases' pairwise_cons.1 p with r p'; clear p
-  induction' p' with b l r' p IH generalizing a;
-  · exact chain.nil
-    
+  induction' p' with b l r' p IH generalizing a; · exact chain.nil
   simp only [chain_cons, forall_mem_cons] at r
   exact chain_cons.2 ⟨r.1, IH r'⟩
 #align list.pairwise.chain List.Pairwise.chain
@@ -144,14 +138,14 @@ protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l := by
 lean 3 declaration is
   forall {α : Type.{u}} {R : α -> α -> Prop} [_inst_1 : IsTrans.{u} α R] {a : α} {l : List.{u} α}, (List.Chain.{u} α R a l) -> (List.Pairwise.{u} α R (List.cons.{u} α a l))
 but is expected to have type
-  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.303 : Trans.{0, 0, 0, succ u_1, succ u_1, succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, (List.Chain.{u_1} α R a l) -> (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
+  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.299 : Trans.{0, 0, 0, succ u_1, succ u_1, succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, (List.Chain.{u_1} α R a l) -> (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
 Case conversion may be inaccurate. Consider using '#align list.chain.pairwise List.Chain.pairwiseₓ'. -/
 protected theorem Chain.pairwise [IsTrans α R] :
     ∀ {a : α} {l : List α}, Chain R a l → Pairwise R (a :: l)
   | a, [], chain.nil => pairwise_singleton _ _
   | a, _, @chain.cons _ _ _ b l h hb =>
     hb.Pairwise.cons
-      (by
+      (by 
         simp only [mem_cons_iff, forall_eq_or_imp, h, true_and_iff]
         exact fun c hc => trans h (rel_of_pairwise_cons hb.pairwise hc))
 #align list.chain.pairwise List.Chain.pairwise
@@ -160,14 +154,14 @@ protected theorem Chain.pairwise [IsTrans α R] :
 lean 3 declaration is
   forall {α : Type.{u}} {R : α -> α -> Prop} [_inst_1 : IsTrans.{u} α R] {a : α} {l : List.{u} α}, Iff (List.Chain.{u} α R a l) (List.Pairwise.{u} α R (List.cons.{u} α a l))
 but is expected to have type
-  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.496 : Trans.{0, 0, 0, succ u_1, succ u_1, succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, Iff (List.Chain.{u_1} α R a l) (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
+  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.492 : Trans.{0, 0, 0, succ u_1, succ u_1, succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, Iff (List.Chain.{u_1} α R a l) (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
 Case conversion may be inaccurate. Consider using '#align list.chain_iff_pairwise List.chain_iff_pairwiseₓ'. -/
 theorem chain_iff_pairwise [IsTrans α R] {a : α} {l : List α} : Chain R a l ↔ Pairwise R (a :: l) :=
   ⟨Chain.pairwise, Pairwise.chain⟩
 #align list.chain_iff_pairwise List.chain_iff_pairwise
 
 protected theorem Chain.sublist [IsTrans α R] (hl : l₂.Chain R a) (h : l₁ <+ l₂) : l₁.Chain R a :=
-  by
+  by 
   rw [chain_iff_pairwise] at hl⊢
   exact hl.sublist (h.cons_cons a)
 #align list.chain.sublist List.Chain.sublist
@@ -184,29 +178,24 @@ theorem chain_iff_nth_le {R} :
           ∀ (i) (h : i < length l - 1),
             R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
   | a, [] => by simp
-  | a, b :: t => by
+  | a, b :: t => by 
     rw [chain_cons, chain_iff_nth_le]
     constructor
     · rintro ⟨R, ⟨h0, h⟩⟩
       constructor
       · intro w
         exact R
-        
       intro i w
       cases i
       · apply h0
-        
       convert h i _ using 1
       simp only [succ_eq_add_one, add_succ_sub_one, add_zero, length, add_lt_add_iff_right] at w
       exact lt_pred_iff.mpr w
-      
     rintro ⟨h0, h⟩; constructor
     · apply h0
       simp
-      
     constructor
     · apply h 0
-      
     intro i w; convert h (i + 1) _ using 1
     exact lt_pred_iff.mp w
 #align list.chain_iff_nth_le List.chain_iff_nth_le
@@ -392,7 +381,7 @@ theorem chain'_iff_nth_le {R} :
           R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
   | [] => by simp
   | [a] => by simp
-  | a :: b :: t => by
+  | a :: b :: t => by 
     rw [← and_forall_succ, chain'_cons, chain'_iff_nth_le]
     simp only [length, nth_le, add_tsub_cancel_right, add_lt_add_iff_right, tsub_pos_iff_lt,
       one_lt_succ_succ, true_imp_iff]
@@ -415,12 +404,10 @@ theorem exists_chain_of_relation_refl_trans_gen (h : Relation.ReflTransGen r a b
     ∃ l, Chain r a l ∧ last (a :: l) (cons_ne_nil _ _) = b := by
   apply Relation.ReflTransGen.head_induction_on h
   · exact ⟨[], chain.nil, rfl⟩
-    
   · intro c d e t ih
     obtain ⟨l, hl₁, hl₂⟩ := ih
     refine' ⟨d :: l, chain.cons e hl₁, _⟩
     rwa [last_cons_cons]
-    
 #align list.exists_chain_of_relation_refl_trans_gen List.exists_chain_of_relation_refl_trans_gen
 
 /-- Given a chain from `a` to `b`, and a predicate true at `b`, if `r x y → p y → p x` then
@@ -433,12 +420,10 @@ theorem Chain.induction (p : α → Prop) (l : List α) (h : Chain r a l)
   induction l generalizing a
   · cases hb
     simp [final]
-    
   · rw [chain_cons] at h
     rintro _ (rfl | _)
     apply carries h.1 (l_ih h.2 hb _ (Or.inl rfl))
     apply l_ih h.2 hb _ H
-    
 #align list.chain.induction List.Chain.induction
 
 /-- Given a chain from `a` to `b`, and a predicate true at `b`, if `r x y → p y → p x` then

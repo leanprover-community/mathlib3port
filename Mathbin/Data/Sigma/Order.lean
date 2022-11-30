@@ -75,49 +75,43 @@ theorem le_def [∀ i, LE (α i)] {a b : Σi, α i} : a ≤ b ↔ ∃ h : a.1 = 
   constructor
   · rintro ⟨i, a, b, h⟩
     exact ⟨rfl, h⟩
-    
   · obtain ⟨i, a⟩ := a
     obtain ⟨j, b⟩ := b
     rintro ⟨rfl : i = j, h⟩
     exact le.fiber _ _ _ h
-    
 #align sigma.le_def Sigma.le_def
 
 theorem lt_def [∀ i, LT (α i)] {a b : Σi, α i} : a < b ↔ ∃ h : a.1 = b.1, h.rec a.2 < b.2 := by
   constructor
   · rintro ⟨i, a, b, h⟩
     exact ⟨rfl, h⟩
-    
   · obtain ⟨i, a⟩ := a
     obtain ⟨j, b⟩ := b
     rintro ⟨rfl : i = j, h⟩
     exact lt.fiber _ _ _ h
-    
 #align sigma.lt_def Sigma.lt_def
 
 instance [∀ i, Preorder (α i)] : Preorder (Σi, α i) :=
   { Sigma.hasLe, Sigma.hasLt with le_refl := fun ⟨i, a⟩ => Le.fiber i a a le_rfl,
-    le_trans := by
+    le_trans := by 
       rintro _ _ _ ⟨i, a, b, hab⟩ ⟨_, _, c, hbc⟩
       exact le.fiber i a c (hab.trans hbc),
-    lt_iff_le_not_le := fun _ _ => by
+    lt_iff_le_not_le := fun _ _ => by 
       constructor
       · rintro ⟨i, a, b, hab⟩
         rwa [mk_le_mk_iff, mk_le_mk_iff, ← lt_iff_le_not_le]
-        
       · rintro ⟨⟨i, a, b, hab⟩, h⟩
         rw [mk_le_mk_iff] at h
-        exact mk_lt_mk_iff.2 (hab.lt_of_not_le h)
-         }
+        exact mk_lt_mk_iff.2 (hab.lt_of_not_le h) }
 
 instance [∀ i, PartialOrder (α i)] : PartialOrder (Σi, α i) :=
   { Sigma.preorder with
-    le_antisymm := by
+    le_antisymm := by 
       rintro _ _ ⟨i, a, b, hab⟩ ⟨_, _, _, hba⟩
       exact ext rfl (heq_of_eq <| hab.antisymm hba) }
 
 instance [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σi, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩ ⟨_, _⟩ ⟨_, _, b, h⟩
     obtain ⟨c, ha, hb⟩ := exists_between h
     exact ⟨⟨i, c⟩, lt.fiber i a c ha, lt.fiber i c b hb⟩⟩
@@ -158,20 +152,12 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ i, α
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, _⟩, _⟩
       · rintro (⟨b, a, hji⟩ | ⟨b, a, hba⟩) <;> obtain ⟨_, _, hij⟩ | ⟨_, _, hab⟩ := hab
         · exact hij.not_lt hji
-          
         · exact lt_irrefl _ hji
-          
         · exact lt_irrefl _ hij
-          
         · exact hab.not_le hba
-          
-        
       · rintro ⟨⟨a, b, hij⟩ | ⟨a, b, hab⟩, hba⟩
         · exact lex.left _ _ hij
-          
-        · exact lex.right _ _ (hab.lt_of_not_le fun h => hba <| lex.right _ _ h)
-          
-         }
+        · exact lex.right _ _ (hab.lt_of_not_le fun h => hba <| lex.right _ _ h) }
 #align sigma.lex.preorder Sigma.Lex.preorder
 
 /-- The lexicographical partial order on a sigma type. -/
@@ -187,26 +173,22 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
 
 /-- The lexicographical linear order on a sigma type. -/
 instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] :
-    OrderBot (Σₗ i, α i) where
+    OrderBot (Σₗ i, α i) where 
   bot := ⟨⊥, ⊥⟩
-  bot_le := fun ⟨a, b⟩ => by
+  bot_le := fun ⟨a, b⟩ => by 
     obtain rfl | ha := eq_bot_or_bot_lt a
     · exact lex.right _ _ bot_le
-      
     · exact lex.left _ _ ha
-      
 #align sigma.lex.order_bot Sigma.Lex.orderBot
 
 /-- The lexicographical linear order on a sigma type. -/
 instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [OrderTop (α ⊤)] :
-    OrderTop (Σₗ i, α i) where
+    OrderTop (Σₗ i, α i) where 
   top := ⟨⊤, ⊤⟩
-  le_top := fun ⟨a, b⟩ => by
+  le_top := fun ⟨a, b⟩ => by 
     obtain rfl | ha := eq_top_or_lt_top a
     · exact lex.right _ _ le_top
-      
     · exact lex.left _ _ ha
-      
 #align sigma.lex.order_top Sigma.Lex.orderTop
 
 /-- The lexicographical linear order on a sigma type. -/
@@ -217,44 +199,38 @@ instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i
 
 instance densely_ordered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σₗ i, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | ⟨_, b, h⟩)
     · obtain ⟨k, hi, hj⟩ := exists_between h
       obtain ⟨c⟩ : Nonempty (α k) := inferInstance
       exact ⟨⟨k, c⟩, left _ _ hi, left _ _ hj⟩
-      
     · obtain ⟨c, ha, hb⟩ := exists_between h
-      exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩
-      ⟩
+      exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered Sigma.Lex.densely_ordered
 
 instance densely_ordered_of_no_max_order [Preorder ι] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ i, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | ⟨_, b, h⟩)
     · obtain ⟨c, ha⟩ := exists_gt a
       exact ⟨⟨i, c⟩, right _ _ ha, left _ _ h⟩
-      
     · obtain ⟨c, ha, hb⟩ := exists_between h
-      exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩
-      ⟩
+      exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered_of_no_max_order Sigma.Lex.densely_ordered_of_no_max_order
 
 instance densely_ordered_of_no_min_order [Preorder ι] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ i, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | ⟨_, b, h⟩)
     · obtain ⟨c, hb⟩ := exists_lt b
       exact ⟨⟨j, c⟩, left _ _ h, right _ _ hb⟩
-      
     · obtain ⟨c, ha, hb⟩ := exists_between h
-      exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩
-      ⟩
+      exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered_of_no_min_order Sigma.Lex.densely_ordered_of_no_min_order
 
 instance no_max_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
     [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ i, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
@@ -263,7 +239,7 @@ instance no_max_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxO
 
 instance no_min_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
     [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ i, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
@@ -272,7 +248,7 @@ instance no_min_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxO
 
 instance no_max_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ i, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩
     obtain ⟨b, h⟩ := exists_gt a
     exact ⟨⟨i, b⟩, right _ _ h⟩⟩
@@ -280,7 +256,7 @@ instance no_max_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder 
 
 instance no_min_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ i, α i) :=
-  ⟨by
+  ⟨by 
     rintro ⟨i, a⟩
     obtain ⟨b, h⟩ := exists_lt a
     exact ⟨⟨i, b⟩, right _ _ h⟩⟩

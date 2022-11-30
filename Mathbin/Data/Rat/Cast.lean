@@ -75,11 +75,11 @@ theorem commute_cast (a : α) (r : ℚ) : Commute a r :=
 
 @[norm_cast]
 theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a / b := by
-  have b0' : b ≠ 0 := by
+  have b0' : b ≠ 0 := by 
     refine' mt _ b0
     simp (config := { contextual := true })
   cases' e : a /. b with n d h c
-  have d0 : (d : α) ≠ 0 := by
+  have d0 : (d : α) ≠ 0 := by 
     intro d0
     have dd := denom_dvd a b
     cases' show (d : ℤ) ∣ b by rwa [e] at dd with k ke
@@ -106,7 +106,6 @@ theorem cast_add_of_ne_zero :
     suffices (n₁ * (d₂ * (d₂⁻¹ * d₁⁻¹)) + n₂ * (d₁ * d₂⁻¹) * d₁⁻¹ : α) = n₁ * d₁⁻¹ + n₂ * d₂⁻¹ by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
       · simpa [division_def, left_distrib, right_distrib, mul_inv_rev, d₁0, d₂0, mul_assoc]
-        
       all_goals simp [d₁0, d₂0]
     rw [← mul_assoc (d₂ : α), mul_inv_cancel d₂0, one_mul, (Nat.cast_commute _ _).Eq]
     simp [d₁0, mul_assoc]
@@ -139,16 +138,13 @@ theorem cast_mul_of_ne_zero :
     suffices (n₁ * (n₂ * d₂⁻¹ * d₁⁻¹) : α) = n₁ * (d₁⁻¹ * (n₂ * d₂⁻¹)) by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
       · simpa [division_def, mul_inv_rev, d₁0, d₂0, mul_assoc]
-        
       all_goals simp [d₁0, d₂0]
     rw [(d₁.commute_cast (_ : α)).inv_right₀.Eq]
 #align rat.cast_mul_of_ne_zero Rat.cast_mul_of_ne_zero
 
 @[simp]
 theorem cast_inv_nat (n : ℕ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
-  cases n;
-  · simp
-    
+  cases n; · simp
   simp_rw [coe_nat_eq_mk, inv_def, mk, mk_nat, dif_neg n.succ_ne_zero, mk_pnat]
   simp [cast_def]
 #align rat.cast_inv_nat Rat.cast_inv_nat
@@ -157,9 +153,7 @@ theorem cast_inv_nat (n : ℕ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
 theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
   cases n
   · simp [cast_inv_nat]
-    
   · simp only [Int.cast_negSucc, ← Nat.cast_succ, cast_neg, inv_neg, cast_inv_nat]
-    
 #align rat.cast_inv_int Rat.cast_inv_int
 
 @[norm_cast]
@@ -473,7 +467,7 @@ theorem ext_rat' (h : ∀ m : ℤ, f m = g m) : f = g :=
 /-- If `f` and `g` agree on the integers then they are equal `φ`.
 
 See note [partially-applied ext lemmas] for why `comp` is used here. -/
-@[ext.1]
+@[ext]
 theorem ext_rat {f g : ℚ →*₀ M₀}
     (h : f.comp (Int.castRingHom ℚ : ℤ →*₀ ℚ) = g.comp (Int.castRingHom ℚ)) : f = g :=
   ext_rat' <| congr_fun h
@@ -528,7 +522,8 @@ namespace Rat
 
 variable {K : Type _} [DivisionRing K]
 
-instance (priority := 100) distribSmul : DistribSmul ℚ K where
+instance (priority := 100) distribSmul :
+    DistribSmul ℚ K where 
   smul := (· • ·)
   smul_zero a := by rw [smul_def, mul_zero]
   smul_add a x y := by simp only [smul_def, mul_add, cast_add]

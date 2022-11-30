@@ -203,7 +203,6 @@ theorem mk.inj_right {α β : Type _} (b : β) :
     Function.Injective (fun a => Prod.mk a b : α → α × β) := by
   intro b₁ b₂ h
   · simpa only [and_true_iff, eq_self_iff_true, mk.inj_iff] using h
-    
 #align prod.mk.inj_right Prod.mk.inj_right
 
 /- warning: prod.ext_iff -> Prod.ext_iff is a dubious translation:
@@ -216,7 +215,7 @@ theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
   rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
 #align prod.ext_iff Prod.ext_iff
 
-@[ext.1]
+@[ext]
 theorem ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
   ext_iff.2 ⟨h₁, h₂⟩
 #align prod.ext Prod.extₓ
@@ -437,6 +436,12 @@ theorem snd_eq_iff : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
   | ⟨a, b⟩, x => by simp
 #align prod.snd_eq_iff Prod.snd_eq_iff
 
+/- warning: prod.lex_def -> Prod.lex_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) {p : Prod.{u_1, u_2} α β} {q : Prod.{u_1, u_2} α β}, Iff (Prod.Lex.{u_1, u_2} α β r s p q) (Or (r (Prod.fst.{u_1, u_2} α β p) (Prod.fst.{u_1, u_2} α β q)) (And (Eq.{succ u_1} α (Prod.fst.{u_1, u_2} α β p) (Prod.fst.{u_1, u_2} α β q)) (s (Prod.snd.{u_1, u_2} α β p) (Prod.snd.{u_1, u_2} α β q))))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) {p : Prod.{u_1, u_2} α β} {q : Prod.{u_1, u_2} α β}, Iff (Prod.Lex.{u_1, u_2} α β r s p q) (Or (r (Prod.fst.{u_1, u_2} α β p) (Prod.fst.{u_1, u_2} α β q)) (And (Eq.{succ u_1} α (Prod.fst.{u_1, u_2} α β p) (Prod.fst.{u_1, u_2} α β q)) (s (Prod.snd.{u_1, u_2} α β p) (Prod.snd.{u_1, u_2} α β q))))
+Case conversion may be inaccurate. Consider using '#align prod.lex_def Prod.lex_defₓ'. -/
 theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × β} :
     Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
   ⟨fun h => by cases h <;> simp [*], fun h =>
@@ -520,14 +525,11 @@ instance isTotal_left {r : α → α → Prop} {s : β → β → Prop} [IsTotal
 #print Prod.isTotal_right /-
 instance isTotal_right {r : α → α → Prop} {s : β → β → Prop} [IsTrichotomous α r] [IsTotal β s] :
     IsTotal (α × β) (Lex r s) :=
-  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
+  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by 
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
-      
     · exact (total_of s a b).imp (lex.right _) (lex.right _)
-      
-    · exact Or.inr (lex.left _ _ hji)
-      ⟩
+    · exact Or.inr (lex.left _ _ hji)⟩
 #align prod.is_total_right Prod.isTotal_right
 -/
 

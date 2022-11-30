@@ -65,7 +65,7 @@ theorem is_square_one [MulOneClass α] : IsSquare (1 : α) :=
 
 @[to_additive]
 theorem IsSquare.map [MulOneClass α] [MulOneClass β] [MonoidHomClass F α β] {m : α} (f : F) :
-    IsSquare m → IsSquare (f m) := by
+    IsSquare m → IsSquare (f m) := by 
   rintro ⟨m, rfl⟩
   exact ⟨f m, by simp⟩
 #align is_square.map IsSquare.map
@@ -143,9 +143,7 @@ theorem is_square_inv : IsSquare a⁻¹ ↔ IsSquare a := by
   refine' ⟨fun h => _, fun h => _⟩
   · rw [← is_square_op_iff, ← inv_inv a]
     exact h.map (MulEquiv.inv' α)
-    
   · exact ((is_square_op_iff a).mpr h).map (MulEquiv.inv' α).symm
-    
 #align is_square_inv is_square_inv
 
 alias is_square_inv ↔ _ IsSquare.inv
@@ -176,7 +174,7 @@ theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even (|a|) �
 
 @[to_additive]
 theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : IsSquare b) :
-    IsSquare (a / b) := by
+    IsSquare (a / b) := by 
   rw [div_eq_mul_inv]
   exact ha.mul hb.inv
 #align is_square.div IsSquare.div
@@ -188,17 +186,15 @@ theorem Even.is_square_zpow [Group α] {n : ℤ} : Even n → ∀ a : α, IsSqua
 #align even.is_square_zpow Even.is_square_zpow
 
 -- `odd.tsub` requires `canonically_linear_ordered_semiring`, which we don't have
-theorem Even.tsub [CanonicallyLinearOrderedAddMonoid α] [Sub α] [HasOrderedSub α]
+theorem Even.tsub [CanonicallyLinearOrderedAddMonoid α] [Sub α] [OrderedSub α]
     [ContravariantClass α α (· + ·) (· ≤ ·)] {m n : α} (hm : Even m) (hn : Even n) : Even (m - n) :=
-  by
+  by 
   obtain ⟨a, rfl⟩ := hm
   obtain ⟨b, rfl⟩ := hn
   refine' ⟨a - b, _⟩
   obtain h | h := le_total a b
   · rw [tsub_eq_zero_of_le h, tsub_eq_zero_of_le (add_le_add h h), add_zero]
-    
   · exact (tsub_add_tsub_comm h h).symm
-    
 #align even.tsub Even.tsub
 
 theorem even_iff_exists_bit0 [Add α] {a : α} : Even a ↔ ∃ b, a = bit0 b :=
@@ -220,7 +216,7 @@ theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, Dvd.Dvd
 
 @[simp]
 theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x) = { a | Even a } :=
-  by
+  by 
   ext x
   simp [eq_comm, two_mul, Even]
 #align range_two_mul range_two_mul
@@ -251,7 +247,7 @@ theorem even_two_mul (m : α) : Even (2 * m) :=
 
 theorem Even.pow_of_ne_zero (hm : Even m) : ∀ {a : ℕ}, a ≠ 0 → Even (m ^ a)
   | 0, a0 => (a0 rfl).elim
-  | a + 1, _ => by
+  | a + 1, _ => by 
     rw [pow_succ]
     exact hm.mul_right _
 #align even.pow_of_ne_zero Even.pow_of_ne_zero
@@ -264,7 +260,7 @@ def Odd (a : α) : Prop :=
 #align odd Odd
 
 theorem odd_iff_exists_bit1 {a : α} : Odd a ↔ ∃ b, a = bit1 b :=
-  exists_congr fun b => by
+  exists_congr fun b => by 
     rw [two_mul]
     rfl
 #align odd_iff_exists_bit1 odd_iff_exists_bit1
@@ -325,10 +321,10 @@ theorem Odd.mul : Odd m → Odd n → Odd (m * n) := by
 #align odd.mul Odd.mul
 
 theorem Odd.pow (hm : Odd m) : ∀ {a : ℕ}, Odd (m ^ a)
-  | 0 => by
+  | 0 => by 
     rw [pow_zero]
     exact odd_one
-  | a + 1 => by
+  | a + 1 => by 
     rw [pow_succ]
     exact hm.mul Odd.pow
 #align odd.pow Odd.pow
@@ -447,7 +443,7 @@ theorem Odd.pow_neg_iff (hn : Odd n) : a ^ n < 0 ↔ a < 0 :=
 #align odd.pow_neg_iff Odd.pow_neg_iff
 
 theorem Even.pow_pos_iff (hn : Even n) (h₀ : 0 < n) : 0 < a ^ n ↔ a ≠ 0 :=
-  ⟨fun h ha => by
+  ⟨fun h ha => by 
     rw [ha, zero_pow h₀] at h
     exact lt_irrefl 0 h, hn.pow_pos⟩
 #align even.pow_pos_iff Even.pow_pos_iff

@@ -44,7 +44,7 @@ def liftAlternating : (∀ i, AlternatingMap R M N (Fin i)) →ₗ[R] ExteriorAl
   suffices
     (∀ i, AlternatingMap R M N (Fin i)) →ₗ[R]
       ExteriorAlgebra R M →ₗ[R] ∀ i, AlternatingMap R M N (Fin i)
-    by
+    by 
     refine' LinearMap.compr₂ this _
     refine' LinearEquiv.toLinearMap _ ∘ₗ LinearMap.proj 0
     exact alternating_map.const_linear_equiv_of_is_empty.symm
@@ -52,18 +52,17 @@ def liftAlternating : (∀ i, AlternatingMap R M N (Fin i)) →ₗ[R] ExteriorAl
   · refine'
       LinearMap.mk₂ R (fun m f i => (f i.succ).curryLeft m) (fun m₁ m₂ f => _) (fun c m f => _)
         (fun m f₁ f₂ => _) fun c m f => _
-    all_goals
-    ext i : 1
-    simp only [map_smul, map_add, Pi.add_apply, Pi.smul_apply, AlternatingMap.curry_left_add,
-      AlternatingMap.curry_left_smul, map_add, map_smul, LinearMap.add_apply, LinearMap.smul_apply]
-    
+    all_goals 
+      ext i : 1
+      simp only [map_smul, map_add, Pi.add_apply, Pi.smul_apply, AlternatingMap.curry_left_add,
+        AlternatingMap.curry_left_smul, map_add, map_smul, LinearMap.add_apply,
+        LinearMap.smul_apply]
   · -- when applied twice with the same `m`, this recursive step produces 0
     intro m x
     dsimp only [LinearMap.mk₂_apply, QuadraticForm.coe_fn_zero, Pi.zero_apply]
     simp_rw [zero_smul]
     ext i : 1
     exact AlternatingMap.curry_left_same _ _
-    
 #align exterior_algebra.lift_alternating ExteriorAlgebra.liftAlternating
 
 @[simp]
@@ -101,12 +100,10 @@ theorem lift_alternating_apply_ι_multi {n : ℕ} (f : ∀ i, AlternatingMap R M
   rw [ι_multi_apply]
   induction' n with n ih generalizing f v
   · rw [List.of_fn_zero, List.prod_nil, lift_alternating_one, Subsingleton.elim 0 v]
-    
   · rw [List.of_fn_succ, List.prod_cons, lift_alternating_ι_mul, ih,
       AlternatingMap.curry_left_apply_apply]
     congr
     exact Matrix.cons_head_tail _
-    
 #align
   exterior_algebra.lift_alternating_apply_ι_multi ExteriorAlgebra.lift_alternating_apply_ι_multi
 
@@ -122,36 +119,33 @@ theorem lift_alternating_comp (g : N →ₗ[R] N') (f : ∀ i, AlternatingMap R 
   ext v
   rw [LinearMap.comp_apply]
   induction' v using CliffordAlgebra.left_induction with r x y hx hy x m hx generalizing f
-  · rw [lift_alternating_algebra_map, lift_alternating_algebra_map, map_smul,
+  ·
+    rw [lift_alternating_algebra_map, lift_alternating_algebra_map, map_smul,
       LinearMap.comp_alternating_map_apply]
-    
   · rw [map_add, map_add, map_add, hx, hy]
-    
   · rw [lift_alternating_ι_mul, lift_alternating_ι_mul, ← hx]
     simp_rw [AlternatingMap.curry_left_comp_alternating_map]
-    
 #align exterior_algebra.lift_alternating_comp ExteriorAlgebra.lift_alternating_comp
 
 @[simp]
 theorem lift_alternating_ι_multi :
     liftAlternating (ι_multi R) = (LinearMap.id : ExteriorAlgebra R M →ₗ[R] ExteriorAlgebra R M) :=
-  by
+  by 
   ext v
   dsimp
   induction' v using CliffordAlgebra.left_induction with r x y hx hy x m hx
   · rw [lift_alternating_algebra_map, ι_multi_zero_apply, Algebra.algebra_map_eq_smul_one]
-    
   · rw [map_add, hx, hy]
-    
-  · simp_rw [lift_alternating_ι_mul, ι_multi_succ_curry_left, lift_alternating_comp,
+  ·
+    simp_rw [lift_alternating_ι_mul, ι_multi_succ_curry_left, lift_alternating_comp,
       LinearMap.comp_apply, LinearMap.mul_left_apply, hx]
-    
 #align exterior_algebra.lift_alternating_ι_multi ExteriorAlgebra.lift_alternating_ι_multi
 
 /-- `exterior_algebra.lift_alternating` is an equivalence. -/
 @[simps apply symmApply]
 def liftAlternatingEquiv :
-    (∀ i, AlternatingMap R M N (Fin i)) ≃ₗ[R] ExteriorAlgebra R M →ₗ[R] N where
+    (∀ i, AlternatingMap R M N (Fin i)) ≃ₗ[R]
+      ExteriorAlgebra R M →ₗ[R] N where 
   toFun := liftAlternating
   map_add' := map_add _
   map_smul' := map_smul _
@@ -165,7 +159,7 @@ def liftAlternatingEquiv :
 the exterior powers.
 
 See note [partially-applied ext lemmas] -/
-@[ext.1]
+@[ext]
 theorem lhom_ext ⦃f g : ExteriorAlgebra R M →ₗ[R] N⦄
     (h : ∀ i, f.compAlternatingMap (ιMulti R i) = g.compAlternatingMap (ιMulti R i)) : f = g :=
   liftAlternatingEquiv.symm.Injective <| funext h

@@ -129,7 +129,9 @@ used by the `@[simps]` attribute.
 - The second argument is a list that consists of the projection data for each projection.
 -/
 @[user_attribute]
-unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_data) where
+unsafe def simps_str_attr :
+    user_attribute Unit
+      (List Name × List projection_data) where 
   Name := `_simps_str
   descr := "An attribute specifying the projection of the given structure."
   parser := failed
@@ -145,7 +147,9 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
     of the structure)
 -/
 @[user_attribute]
-unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) where
+unsafe def notation_class_attr :
+    user_attribute Unit
+      (Bool × Option Name) where 
   Name := `notation_class
   descr := "An attribute specifying that this is a notation class. Used by @[simps]."
   parser := Prod.mk <$> Option.isNone <$> parser.optional (tk "*") <*> parser.optional ident
@@ -1000,7 +1004,9 @@ derives two `simp` lemmas:
   `simp` lemmas.
 -/
 @[user_attribute]
-unsafe def simps_attr : user_attribute Unit (Bool × List String × SimpsCfg) where
+unsafe def simps_attr :
+    user_attribute Unit
+      (Bool × List String × SimpsCfg) where 
   Name := `simps
   descr := "Automatically derive lemmas specifying the projections of this declaration."
   parser := simps_parser

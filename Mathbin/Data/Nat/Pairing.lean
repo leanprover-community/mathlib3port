@@ -48,11 +48,9 @@ theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n := by
   have sm : s * s + (n - s * s) = n := add_tsub_cancel_of_le (sqrt_le _)
   split_ifs
   · simp [mkpair, h, sm]
-    
   · have hl : n - s * s - s ≤ s :=
       tsub_le_iff_left.mpr (tsub_le_iff_left.mpr <| by rw [← add_assoc] <;> apply sqrt_le_add)
     simp [mkpair, hl.not_lt, add_assoc, add_tsub_cancel_of_le (le_of_not_gt h), sm]
-    
 #align nat.mkpair_unpair Nat.mkpair_unpair
 
 theorem mkpair_unpair' {n a b} (H : unpair n = (a, b)) : mkpair a b = n := by
@@ -65,13 +63,11 @@ theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) := by
   · show unpair (b * b + a) = (a, b)
     have be : sqrt (b * b + a) = b := sqrt_add_eq _ (le_trans (le_of_lt h) (Nat.le_add_left _ _))
     simp [unpair, be, add_tsub_cancel_right, h]
-    
   · show unpair (a * a + a + b) = (a, b)
     have ae : sqrt (a * a + (a + b)) = a := by
       rw [sqrt_add_eq]
       exact add_le_add_left (le_of_not_gt h) _
     simp [unpair, ae, Nat.not_lt_zero, add_assoc]
-    
 #align nat.unpair_mkpair Nat.unpair_mkpair
 
 /-- An equivalence between `ℕ × ℕ` and `ℕ`. -/
@@ -91,19 +87,16 @@ theorem mkpair_eq_mkpair {a b c d : ℕ} : mkpair a b = mkpair c d ↔ a = c ∧
 
 theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n := by
   let s := sqrt n
-  simp [unpair]
-  change sqrt n with s
+  simp [unpair]; change sqrt n with s
   by_cases h : n - s * s < s <;> simp [h]
   · exact lt_of_lt_of_le h (sqrt_le_self _)
-    
   · simp at h
     have s0 : 0 < s := sqrt_pos.2 n1
     exact lt_of_le_of_lt h (tsub_lt_self n1 (mul_pos s0 s0))
-    
 #align nat.unpair_lt Nat.unpair_lt
 
 @[simp]
-theorem unpair_zero : unpair 0 = 0 := by
+theorem unpair_zero : unpair 0 = 0 := by 
   rw [unpair]
   simp
 #align nat.unpair_zero Nat.unpair_zero
@@ -132,26 +125,22 @@ theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b 
     apply add_lt_add_of_le_of_lt
     exact mul_self_le_mul_self h₂
     exact lt_add_right _ _ _ h
-    
   · simp at h₁
     simp [not_lt_of_gt (lt_of_le_of_lt h₁ h)]
     apply add_lt_add
     exact mul_self_lt_mul_self h
     apply add_lt_add_right <;> assumption
-    
 #align nat.mkpair_lt_mkpair_left Nat.mkpair_lt_mkpair_left
 
 theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁ < mkpair a b₂ := by
   by_cases h₁ : a < b₁ <;> simp [mkpair, h₁, add_assoc]
   · simp [mkpair, lt_trans h₁ h, h]
     exact mul_self_lt_mul_self h
-    
   · by_cases h₂ : a < b₂ <;> simp [mkpair, h₂, h]
     simp at h₁
     rw [add_comm, add_comm _ a, add_assoc, add_lt_add_iff_left]
     rwa [add_comm, ← sqrt_lt, sqrt_add_eq]
     exact le_trans h₁ (Nat.le_add_left _ _)
-    
 #align nat.mkpair_lt_mkpair_right Nat.mkpair_lt_mkpair_right
 
 theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 := by
@@ -159,20 +148,16 @@ theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 :=
   cases lt_or_le m n
   · rw [if_pos h, max_eq_right h.le, add_lt_add_iff_left, add_assoc]
     exact h.trans_le (self_le_add_right n _)
-    
   · rw [if_neg h.not_lt, max_eq_left h, add_lt_add_iff_left, add_assoc, add_lt_add_iff_left]
     exact lt_succ_of_le h
-    
 #align nat.mkpair_lt_max_add_one_sq Nat.mkpair_lt_max_add_one_sq
 
 theorem max_sq_add_min_le_mkpair (m n : ℕ) : max m n ^ 2 + min m n ≤ mkpair m n := by
   rw [mkpair]
   cases lt_or_le m n
   · rw [if_pos h, max_eq_right h.le, min_eq_left h.le, sq]
-    
   · rw [if_neg h.not_lt, max_eq_left h, min_eq_right h, sq, add_assoc, add_le_add_iff_left]
     exact le_add_self
-    
 #align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_mkpair
 
 theorem add_le_mkpair (m n : ℕ) : m + n ≤ mkpair m n :=

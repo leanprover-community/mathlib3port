@@ -90,15 +90,13 @@ theorem tangent_cone_univ : tangentConeAt 𝕜 univ x = univ := by
   refine' ⟨fun n => w ^ n, fun n => (w ^ n)⁻¹ • y, univ_mem' fun n => mem_univ _, _, _⟩
   · simp only [norm_pow]
     exact tendsto_pow_at_top_at_top_of_one_lt hw
-    
   · convert tendsto_const_nhds
     ext n
-    have : w ^ n * (w ^ n)⁻¹ = 1 := by
+    have : w ^ n * (w ^ n)⁻¹ = 1 := by 
       apply mul_inv_cancel
       apply pow_ne_zero
       simpa [norm_eq_zero] using (ne_of_lt (lt_trans zero_lt_one hw)).symm
     rw [smul_smul, this, one_smul]
-    
 #align tangent_cone_univ tangent_cone_univ
 
 theorem tangent_cone_mono (h : s ⊆ t) : tangentConeAt 𝕜 s x ⊆ tangentConeAt 𝕜 t x := by
@@ -125,7 +123,7 @@ theorem tangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {
 #align tangent_cone_at.lim_zero tangentConeAt.lim_zero
 
 theorem tangent_cone_mono_nhds (h : 𝓝[s] x ≤ 𝓝[t] x) : tangentConeAt 𝕜 s x ⊆ tangentConeAt 𝕜 t x :=
-  by
+  by 
   rintro y ⟨c, d, ds, ctop, clim⟩
   refine' ⟨c, d, _, ctop, clim⟩
   suffices : tendsto (fun n => x + d n) at_top (𝓝[t] x)
@@ -161,11 +159,9 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ closure t)
   show ∀ᶠ n in at_top, (x, y) + (d n, d' n) ∈ s ×ˢ t
   · filter_upwards [hd] with n hn
     simp [hn, (hd' n).1]
-    
   · apply tendsto.prod_mk_nhds hy _
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
-    
 #align subset_tangent_cone_prod_left subset_tangent_cone_prod_left
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -185,11 +181,9 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s
   show ∀ᶠ n in at_top, (x, y) + (d' n, d n) ∈ s ×ˢ t
   · filter_upwards [hd] with n hn
     simp [hn, (hd' n).1]
-    
   · apply tendsto.prod_mk_nhds _ hy
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
-    
 #align subset_tangent_cone_prod_right subset_tangent_cone_prod_right
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
@@ -200,7 +194,7 @@ theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type 
     {i : ι} (hi : ∀ (j) (_ : j ≠ i), x j ∈ closure (s j)) :
     MapsTo (LinearMap.single i : E i →ₗ[𝕜] ∀ j, E j) (tangentConeAt 𝕜 (s i) (x i))
       (tangentConeAt 𝕜 (Set.pi univ s) x) :=
-  by
+  by 
   rintro w ⟨c, d, hd, hc, hy⟩
   have : ∀ (n) (j) (_ : j ≠ i), ∃ d', x j + d' ∈ s j ∧ ‖c n • d'‖ < (1 / 2 : ℝ) ^ n := by
     intro n j hj
@@ -213,15 +207,11 @@ theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type 
     ⟨c, fun n => Function.update (d' n) i (d n), hd.mono fun n hn j hj' => _, hc,
       tendsto_pi_nhds.2 fun j => _⟩
   · rcases em (j = i) with (rfl | hj) <;> simp [*]
-    
   · rcases em (j = i) with (rfl | hj)
     · simp [hy]
-      
     · suffices tendsto (fun n => c n • d' n j) at_top (𝓝 0) by simpa [hj]
       refine' squeeze_zero_norm (fun n => (hcd' n j hj).le) _
       exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
-      
-    
 #align maps_to_tangent_cone_pi maps_to_tangent_cone_pi
 
 /-- If a subset of a real vector space contains an open segment, then the direction of this
@@ -237,22 +227,17 @@ theorem mem_tangent_cone_of_open_segment_subset {s : Set G} {x y : G} (h : openS
     · rw [inv_pos]
       apply pow_pos
       norm_num
-      
     · apply inv_lt_one
       apply one_lt_pow _ (Nat.succ_ne_zero _)
       norm_num
-      
     · simp only [d, sub_smul, smul_sub, one_smul]
       abel
-      
-    
   show Filter.Tendsto (fun n : ℕ => ‖c n‖) Filter.atTop Filter.atTop
-  · have : (fun n : ℕ => ‖c n‖) = c := by
+  · have : (fun n : ℕ => ‖c n‖) = c := by 
       ext n
       exact abs_of_nonneg (pow_nonneg (by norm_num) _)
     rw [this]
     exact (tendsto_pow_at_top_at_top_of_one_lt (by norm_num)).comp (tendsto_add_at_top_nat 1)
-    
   show Filter.Tendsto (fun n : ℕ => c n • d n) Filter.atTop (𝓝 (y - x))
   · have : (fun n : ℕ => c n • d n) = fun n => y - x := by
       ext n
@@ -261,7 +246,6 @@ theorem mem_tangent_cone_of_open_segment_subset {s : Set G} {x y : G} (h : openS
       exact pow_ne_zero _ (by norm_num)
     rw [this]
     apply tendsto_const_nhds
-    
 #align mem_tangent_cone_of_open_segment_subset mem_tangent_cone_of_open_segment_subset
 
 /-- If a subset of a real vector space contains a segment, then the direction of this
@@ -370,22 +354,24 @@ theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt �
 theorem UniqueDiffWithinAt.univPi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
     (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.pi univ s) x := by
-  classical
-  simp only [unique_diff_within_at_iff, closure_pi_set] at h⊢
-  refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
-  norm_cast
-  simp only [← Submodule.supr_map_single, supr_le_iff, LinearMap.map_span, Submodule.span_le, ←
-    maps_to']
-  exact fun i => (maps_to_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
+  classical 
+    simp only [unique_diff_within_at_iff, closure_pi_set] at h⊢
+    refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
+    norm_cast
+    simp only [← Submodule.supr_map_single, supr_le_iff, LinearMap.map_span, Submodule.span_le, ←
+      maps_to']
+    exact fun i =>
+      (maps_to_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
 #align unique_diff_within_at.univ_pi UniqueDiffWithinAt.univPi
 
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
     (I : Set ι) (h : ∀ i ∈ I, UniqueDiffWithinAt 𝕜 (s i) (x i)) :
-    UniqueDiffWithinAt 𝕜 (Set.pi I s) x := by classical
-  rw [← Set.univ_pi_piecewise]
-  refine' UniqueDiffWithinAt.univPi _ _ _ _ fun i => _
-  by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAtUniv]
+    UniqueDiffWithinAt 𝕜 (Set.pi I s) x := by
+  classical 
+    rw [← Set.univ_pi_piecewise]
+    refine' UniqueDiffWithinAt.univPi _ _ _ _ fun i => _
+    by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAtUniv]
 #align unique_diff_within_at.pi UniqueDiffWithinAt.pi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

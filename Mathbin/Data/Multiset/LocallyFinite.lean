@@ -186,18 +186,20 @@ variable [PartialOrder α] [LocallyFiniteOrder α] {a b : α}
 theorem Icc_self (a : α) : icc a a = {a} := by rw [Icc, Finset.Icc_self, Finset.singleton_val]
 #align multiset.Icc_self Multiset.Icc_self
 
-theorem Ico_cons_right (h : a ≤ b) : b ::ₘ ico a b = icc a b := by classical
-  rw [Ico, ← Finset.insert_val_of_not_mem right_not_mem_Ico, Finset.Ico_insert_right h]
-  rfl
+theorem Ico_cons_right (h : a ≤ b) : b ::ₘ ico a b = icc a b := by
+  classical 
+    rw [Ico, ← Finset.insert_val_of_not_mem right_not_mem_Ico, Finset.Ico_insert_right h]
+    rfl
 #align multiset.Ico_cons_right Multiset.Ico_cons_right
 
-theorem Ioo_cons_left (h : a < b) : a ::ₘ ioo a b = ico a b := by classical
-  rw [Ioo, ← Finset.insert_val_of_not_mem left_not_mem_Ioo, Finset.Ioo_insert_left h]
-  rfl
+theorem Ioo_cons_left (h : a < b) : a ::ₘ ioo a b = ico a b := by
+  classical 
+    rw [Ioo, ← Finset.insert_val_of_not_mem left_not_mem_Ioo, Finset.Ioo_insert_left h]
+    rfl
 #align multiset.Ioo_cons_left Multiset.Ioo_cons_left
 
 theorem Ico_disjoint_Ico {a b c d : α} (h : b ≤ c) : (ico a b).Disjoint (ico c d) :=
-  fun x hab hbc => by
+  fun x hab hbc => by 
   rw [mem_Ico] at hab hbc
   exact hab.2.not_le (h.trans hbc.1)
 #align multiset.Ico_disjoint_Ico Multiset.Ico_disjoint_Ico

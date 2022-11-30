@@ -42,10 +42,8 @@ theorem continuous_algebra_map_iff_smul :
   refine' ⟨fun h => _, fun h => _⟩
   · simp only [Algebra.smul_def]
     exact (h.comp continuous_fst).mul continuous_snd
-    
   · rw [algebra_map_eq_smul_one']
     exact h.comp (continuous_id.prod_mk continuous_const)
-    
 #align continuous_algebra_map_iff_smul continuous_algebra_map_iff_smul
 
 @[continuity]

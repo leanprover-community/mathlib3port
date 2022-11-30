@@ -148,12 +148,10 @@ theorem is_o_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o
             hl.tendsto_re.eventually_gt_at_top 1] with z hre him h₁
           cases' le_total (|z.im|) z.re with hle hle
           · rwa [max_eq_left hle]
-            
           · have H : 1 < |z.im| := h₁.trans_le hle
             rwa [max_eq_right hle, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos (Real.log_pos H),
               ← Real.log_pow, Real.log_le_iff_le_exp (pow_pos (one_pos.trans H) _),
               abs_of_pos (one_pos.trans h₁)]
-            
     
 #align complex.is_exp_cmp_filter.is_o_log_abs_re Complex.IsExpCmpFilter.is_o_log_abs_re
 
@@ -186,7 +184,7 @@ theorem is_o_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ <
     (fun z => z ^ a₁ * exp (b₁ * z)) =o[l] fun z => z ^ a₂ * exp (b₂ * z) :=
   calc
     (fun z => z ^ a₁ * exp (b₁ * z)) =ᶠ[l] fun z => z ^ a₂ * exp (b₁ * z) * z ^ (a₁ - a₂) :=
-      hl.eventually_ne.mono fun z hz => by
+      hl.eventually_ne.mono fun z hz => by 
         simp only
         rw [mul_right_comm, ← cpow_add _ _ hz, add_sub_cancel'_right]
     _ =o[l] fun z => z ^ a₂ * exp (b₁ * z) * exp (↑(b₂ - b₁) * z) :=

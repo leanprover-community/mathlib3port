@@ -103,7 +103,8 @@ variable {rα : NonUnitalNonAssocSemiring α} {rβ : NonUnitalNonAssocSemiring �
 
 include rα rβ
 
-instance : NonUnitalRingHomClass (α →ₙ+* β) α β where
+instance : NonUnitalRingHomClass (α →ₙ+* β) α
+      β where 
   coe := NonUnitalRingHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_add := NonUnitalRingHom.map_add'
@@ -177,7 +178,7 @@ include rα rβ
 
 variable (f : α →ₙ+* β) {x y : α} {rα rβ}
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : α →ₙ+* β⦄ : (∀ x, f x = g x) → f = g :=
   FunLike.ext _ _
 #align non_unital_ring_hom.ext NonUnitalRingHom.ext
@@ -306,7 +307,8 @@ theorem id_comp (f : α →ₙ+* β) : (NonUnitalRingHom.id β).comp f = f :=
 
 omit rβ
 
-instance : MonoidWithZero (α →ₙ+* α) where
+instance : MonoidWithZero
+      (α →ₙ+* α) where 
   one := NonUnitalRingHom.id α
   mul := comp
   mul_one := comp_id
@@ -422,7 +424,8 @@ variable {rα : NonAssocSemiring α} {rβ : NonAssocSemiring β}
 
 include rα rβ
 
-instance : RingHomClass (α →+* β) α β where
+instance : RingHomClass (α →+* β) α
+      β where 
   coe := RingHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_add := RingHom.map_add'
@@ -531,7 +534,7 @@ theorem coe_inj ⦃f g : α →+* β⦄ (h : (f : α → β) = g) : f = g :=
   FunLike.coe_injective h
 #align ring_hom.coe_inj RingHom.coe_inj
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : α →+* β⦄ : (∀ x, f x = g x) → f = g :=
   FunLike.ext _ _
 #align ring_hom.ext RingHom.ext
@@ -724,7 +727,7 @@ theorem id_comp (f : α →+* β) : (id β).comp f = f :=
 
 omit rβ
 
-instance : Monoid (α →+* α) where
+instance : Monoid (α →+* α) where 
   one := id α
   mul := comp
   mul_one := comp_id
@@ -779,7 +782,7 @@ to `1`. -/
 def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2 : α) ≠ 0)
     (h_one : f 1 = 1) : β →+* α :=
   { f with map_one' := h_one,
-    map_mul' := fun x y => by
+    map_mul' := fun x y => by 
       have hxy := h (x + y)
       rw [mul_add, add_mul, add_mul, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mul,
         mul_add, mul_add, ← sub_eq_zero, add_comm, ← sub_sub, ← sub_sub, ← sub_sub, mul_comm y x,

@@ -73,7 +73,7 @@ def toOption (o : Part α) [Decidable o.Dom] : Option α :=
 
 /-- `part` extensionality -/
 theorem ext' : ∀ {o p : Part α} (H1 : o.Dom ↔ p.Dom) (H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂), o = p
-  | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 => by
+  | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 => by 
     have t : od = pd := propext H1
     cases t <;> rw [show o = p from funext fun p => H2 p p]
 #align part.ext' Part.ext'
@@ -110,7 +110,7 @@ theorem mem_mk_iff {p : Prop} {o : p → α} {a : α} : a ∈ Part.mk p o ↔ �
 #align part.mem_mk_iff Part.mem_mk_iff
 
 /-- `part` extensionality -/
-@[ext.1]
+@[ext]
 theorem ext {o p : Part α} (H : ∀ a, a ∈ o ↔ a ∈ p) : o = p :=
   (ext' ⟨fun h => ((H _).1 ⟨h, rfl⟩).fst, fun h => ((H _).2 ⟨h, rfl⟩).fst⟩) fun a b =>
     ((H _).2 ⟨_, rfl⟩).snd
@@ -203,10 +203,8 @@ theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x := by
   constructor
   · rw [Ne, eq_none_iff', not_not]
     exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
-    
   · rintro ⟨x, rfl⟩
     apply some_ne_none
-    
 #align part.ne_none_iff Part.ne_none_iff
 
 theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
@@ -232,7 +230,7 @@ theorem get_eq_iff_eq_some {a : Part α} {ha : a.Dom} {b : α} : a.get ha = b �
 #align part.get_eq_iff_eq_some Part.get_eq_iff_eq_some
 
 theorem get_eq_get_of_eq (a : Part α) (ha : a.Dom) {b : Part α} (h : a = b) :
-    a.get ha = b.get (h ▸ ha) := by
+    a.get ha = b.get (h ▸ ha) := by 
   congr
   exact h
 #align part.get_eq_get_of_eq Part.get_eq_get_of_eq
@@ -294,9 +292,7 @@ theorem mem_to_option {o : Part α} [Decidable o.Dom] {a : α} : a ∈ toOption 
   unfold to_option
   by_cases h : o.dom <;> simp [h]
   · exact ⟨fun h => ⟨_, h⟩, fun ⟨_, h⟩ => h⟩
-    
   · exact mt Exists.fst h
-    
 #align part.mem_to_option Part.mem_to_option
 
 protected theorem Dom.to_option {o : Part α} [Decidable o.Dom] (h : o.Dom) : o.toOption = o.get h :=
@@ -313,10 +309,8 @@ theorem elim_to_option {α β : Type _} (a : Part α) [Decidable a.Dom] (b : β)
   split_ifs
   · rw [h.to_option]
     rfl
-    
   · rw [Part.to_option_eq_none_iff.2 h]
     rfl
-    
 #align part.elim_to_option Part.elim_to_option
 
 /-- Converts an `option α` into a `part α`. -/
@@ -388,25 +382,25 @@ noncomputable def equivOption : Part α ≃ Option α :=
 #align part.equiv_option Part.equivOption
 
 /-- We give `part α` the order where everything is greater than `none`. -/
-instance : PartialOrder (Part α) where
+instance : PartialOrder (Part
+        α) where 
   le x y := ∀ i, i ∈ x → i ∈ y
   le_refl x y := id
   le_trans x y z f g i := g _ ∘ f _
   le_antisymm x y f g := Part.ext fun z => ⟨f _, g _⟩
 
-instance : OrderBot (Part α) where
+instance : OrderBot (Part α) where 
   bot := none
-  bot_le := by
+  bot_le := by 
     introv x
     rintro ⟨⟨_⟩, _⟩
 
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) :
-    x ≤ y ∨ y ≤ x := by
+    x ≤ y ∨ y ≤ x := by 
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
   · rw [h]
     left
     apply OrderBot.bot_le _
-    
   right; intro b' h₁
   rw [Part.eq_some_iff] at h₀
   replace hx := hx _ h₀; replace hy := hy _ h₁
@@ -470,20 +464,15 @@ theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := 
   simp only [h', h, true_and_iff, iff_self_iff, exists_prop_of_true, eq_iff_iff]
   apply Function.hfunext
   · simp only [h, h', exists_prop_of_true]
-    
   · cc
-    
 #align part.assert_pos Part.assert_pos
 
 theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none := by
   dsimp [assert, none]; congr
   · simp only [h, not_false_iff, exists_prop_of_false]
-    
   · apply Function.hfunext
     · simp only [h, not_false_iff, exists_prop_of_false]
-      
     cc
-    
 #align part.assert_neg Part.assert_neg
 
 theorem mem_bind {f : Part α} {g : α → Part β} : ∀ {a b}, a ∈ f → b ∈ g a → b ∈ f.bind g
@@ -533,10 +522,8 @@ theorem bind_to_option (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀
   by_cases o.dom
   · simp_rw [h.to_option, h.bind]
     rfl
-    
   · rw [Part.to_option_eq_none_iff.2 h]
     exact Part.to_option_eq_none_iff.2 fun ho => h ho.of_bind
-    
 #align part.bind_to_option Part.bind_to_option
 
 theorem bind_assoc {γ} (f : Part α) (g : α → Part β) (k : β → Part γ) :
@@ -563,12 +550,13 @@ theorem map_map (g : β → γ) (f : α → β) (o : Part α) : map g (map f o) 
   rw [← bind_some_eq_map, bind_map, bind_some_eq_map]
 #align part.map_map Part.map_map
 
-instance : Monad Part where
+instance : Monad Part where 
   pure := @some
   map := @map
   bind := @Part.bind
 
-instance : LawfulMonad Part where
+instance : LawfulMonad
+      Part where 
   bind_pure_comp_eq_map := @bind_some_eq_map
   id_map β f := by cases f <;> rfl
   pure_bind := @bind_some
@@ -610,12 +598,10 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
     replace h := h b
     simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h
     apply h _ h'
-    
   · intro b h'
     simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
     rcases h' with ⟨a, h₀, h₁⟩
     apply h _ h₀ _ h₁
-    
 #align part.bind_le Part.bind_le
 
 instance : MonadFail Part :=
@@ -633,7 +619,6 @@ theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) :
   dsimp [restrict, mem_eq]; constructor
   · rintro ⟨h₀, h₁⟩
     exact ⟨h₀, ⟨_, h₁⟩⟩
-    
   rintro ⟨h₀, h₁, h₂⟩; exact ⟨h₀, h₂⟩
 #align part.mem_restrict Part.mem_restrict
 

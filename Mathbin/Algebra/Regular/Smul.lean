@@ -96,7 +96,7 @@ theorem mul [Mul R] [IsScalarTower R R M] (ra : IsSmulRegular M a) (rb : IsSmulR
 #align is_smul_regular.mul IsSmulRegular.mul
 
 theorem of_mul [Mul R] [IsScalarTower R R M] (ab : IsSmulRegular M (a * b)) : IsSmulRegular M b :=
-  by
+  by 
   rw [← smul_eq_mul] at ab
   exact ab.of_smul _
 #align is_smul_regular.of_mul IsSmulRegular.of_mul
@@ -114,10 +114,8 @@ theorem mul_and_mul_iff [Mul R] [IsScalarTower R R M] :
   refine' ⟨_, _⟩
   · rintro ⟨ab, ba⟩
     refine' ⟨ba.of_mul, ab.of_mul⟩
-    
   · rintro ⟨ha, hb⟩
     exact ⟨ha.mul hb, hb.mul ha⟩
-    
 #align is_smul_regular.mul_and_mul_iff IsSmulRegular.mul_and_mul_iff
 
 end HasSmul
@@ -138,7 +136,7 @@ variable {M}
 /-- An element of `R` admitting a left inverse is `M`-regular. -/
 theorem of_mul_eq_one (h : a * b = 1) : IsSmulRegular M b :=
   of_mul
-    (by
+    (by 
       rw [h]
       exact one M)
 #align is_smul_regular.of_mul_eq_one IsSmulRegular.of_mul_eq_one
@@ -147,10 +145,8 @@ theorem of_mul_eq_one (h : a * b = 1) : IsSmulRegular M b :=
 theorem pow (n : ℕ) (ra : IsSmulRegular M a) : IsSmulRegular M (a ^ n) := by
   induction' n with n hn
   · simp only [one, pow_zero]
-    
   · rw [pow_succ]
     exact (ra.smul_iff (a ^ n)).mpr hn
-    
 #align is_smul_regular.pow IsSmulRegular.pow
 
 /-- An element `a` is `M`-regular if and only if a positive power of `a` is `M`-regular. -/
@@ -169,7 +165,7 @@ variable [Monoid S] [HasSmul R M] [HasSmul R S] [MulAction S M] [IsScalarTower R
 /-- An element of `S` admitting a left inverse in `R` is `M`-regular. -/
 theorem of_smul_eq_one (h : a • s = 1) : IsSmulRegular M s :=
   of_smul a
-    (by
+    (by 
       rw [h]
       exact one M)
 #align is_smul_regular.of_smul_eq_one IsSmulRegular.of_smul_eq_one

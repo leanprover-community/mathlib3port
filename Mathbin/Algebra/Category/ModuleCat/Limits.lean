@@ -76,7 +76,8 @@ instance limitModule (F : J ⥤ ModuleCat R) :
 /-- `limit.π (F ⋙ forget Ring) j` as a `ring_hom`. -/
 def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
     (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x →ₗ[R]
-      (F ⋙ forget (ModuleCat R)).obj j where
+      (F ⋙ forget (ModuleCat R)).obj
+        j where 
   toFun := (Types.limitCone (F ⋙ forget (ModuleCat R))).π.app j
   map_smul' x y := rfl
   map_add' x y := rfl
@@ -90,7 +91,8 @@ namespace HasLimits
 /-- Construction of a limit cone in `Module R`.
 (Internal use only; use the limits API.)
 -/
-def limitCone (F : J ⥤ ModuleCat.{max v w} R) : Cone F where
+def limitCone (F : J ⥤ ModuleCat.{max v w} R) :
+    Cone F where 
   x := ModuleCat.of R (Types.limitCone (F ⋙ forget _)).x
   π :=
     { app := limitπLinearMap F,
@@ -187,14 +189,15 @@ variable (f : ∀ i j, i ≤ j → G i →ₗ[R] G j) [DirectedSystem G fun i j 
 /-- The diagram (in the sense of `category_theory`)
  of an unbundled `direct_limit` of modules. -/
 @[simps]
-def directLimitDiagram : ι ⥤ ModuleCat R where
+def directLimitDiagram :
+    ι ⥤ ModuleCat R where 
   obj i := ModuleCat.of R (G i)
   map i j hij := f i j hij.le
-  map_id' i := by
+  map_id' i := by 
     apply LinearMap.ext
     intro x
     apply Module.DirectedSystem.map_self
-  map_comp' i j k hij hjk := by
+  map_comp' i j k hij hjk := by 
     apply LinearMap.ext
     intro x
     symm
@@ -208,11 +211,13 @@ the unbundled `direct_limit` of modules.
 
 In `direct_limit_is_colimit` we show that it is a colimit cocone. -/
 @[simps]
-def directLimitCocone : Cocone (directLimitDiagram G f) where
+def directLimitCocone :
+    Cocone (directLimitDiagram G
+        f) where 
   x := ModuleCat.of R <| DirectLimit G f
   ι :=
     { app := Module.DirectLimit.of R ι G f,
-      naturality' := fun i j hij => by
+      naturality' := fun i j hij => by 
         apply LinearMap.ext
         intro x
         exact direct_limit.of_f }
@@ -222,12 +227,14 @@ def directLimitCocone : Cocone (directLimitDiagram G f) where
 in the sense of `category_theory`. -/
 @[simps]
 def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] :
-    IsColimit (directLimitCocone G f) where
+    IsColimit
+      (directLimitCocone G
+        f) where 
   desc s :=
     (DirectLimit.lift R ι G f s.ι.app) fun i j h x => by
       rw [← s.w (hom_of_le h)]
       rfl
-  fac' s i := by
+  fac' s i := by 
     apply LinearMap.ext
     intro x
     dsimp
@@ -236,7 +243,7 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] :
     have :
       s.ι.app = fun i =>
         LinearMap.comp m (direct_limit.of R ι (fun i => G i) (fun i j H => f i j H) i) :=
-      by
+      by 
       funext i
       rw [← h]
       rfl

@@ -51,7 +51,7 @@ theorem nhds_set_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (diagonal α)
   have :
     (𝓤 (α × α)).HasBasis (fun U => U ∈ 𝓤 α) fun U =>
       (fun p : (α × α) × α × α => ((p.1.1, p.2.1), p.1.2, p.2.2)) ⁻¹' U ×ˢ U :=
-    by
+    by 
     rw [uniformity_prod_eq_comap_prod]
     exact (𝓤 α).basis_sets.prod_self.comap _
   refine' (is_compact_diagonal.nhds_set_basis_uniformity this).ge_iff.2 fun U hU => _
@@ -66,7 +66,7 @@ theorem compact_space_uniformity [CompactSpace α] : 𝓤 α = ⨆ x, 𝓝 (x, x
 
 theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
     {u u' : UniformSpace γ} (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) :
-    u = u' := by
+    u = u' := by 
   apply uniform_space_eq
   change uniformity _ = uniformity _
   have : @CompactSpace γ u.to_topological_space := by rwa [h]
@@ -82,18 +82,20 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- The unique uniform structure inducing a given compact topological structure. -/
-def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
+def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] :
+    UniformSpace γ where 
   uniformity := ⨆ x, 𝓝 (x, x)
-  refl := by
+  refl := by 
     simp_rw [Filter.principal_le_iff, mem_supr]
     rintro V V_in ⟨x, _⟩ ⟨⟩
     exact mem_of_mem_nhds (V_in x)
-  symm := by
+  symm := by 
     refine' le_of_eq _
     rw [Filter.map_supr]
     congr with x : 1
     erw [nhds_prod_eq, ← prod_comm]
-  comp := by
+  comp :=
+    by
     /-
         This is the difficult part of the proof. We need to prove that, for each neighborhood W
         of the diagonal Δ, W ○ W is still a neighborhood of the diagonal.
@@ -119,7 +121,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       rw [subset_interior_iff_nhds]
       rintro ⟨x, x⟩ ⟨⟩
       exact (mem_supr.mp V_in : _) x
-    have x_ne_y : x ≠ y := by
+    have x_ne_y : x ≠ y := by 
       intro h
       apply this
       apply diag_subset
@@ -136,19 +138,16 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     let U₃ := (V₁ ∪ V₂)ᶜ
     have U₃_op : IsOpen U₃ := is_open_compl_iff.mpr (IsClosed.union V₁_cl V₂_cl)
     let W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃
-    have W_in : W ∈ 𝓝Δ := by
+    have W_in : W ∈ 𝓝Δ := by 
       rw [mem_supr]
       intro x
       apply IsOpen.mem_nhds (IsOpen.union (IsOpen.union _ _) _)
       · by_cases hx : x ∈ V₁ ∪ V₂
         · left
           cases' hx with hx hx <;> [left, right] <;> constructor <;> tauto
-          
         · right
           rw [mem_prod]
           tauto
-          
-        
       all_goals simp only [IsOpen.prod, *]
     -- So W ○ W ∈ F by definition of F
     have : W ○ W ∈ F := by simpa only using mem_lift' W_in
@@ -170,7 +169,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- Hence w ∈ U₁ ∩ U₂ which is empty.
     -- So we have a contradiction
     exact hU₁₂.le_bot ⟨uw_in.2, wv_in.1⟩
-  is_open_uniformity := by
+  is_open_uniformity :=
+    by
     -- Here we need to prove the topology induced by the constructed uniformity is the
     -- topology we started with.
     suffices ∀ x : γ, Filter.comap (Prod.mk x) (⨆ y, 𝓝 (y, y)) = 𝓝 x by

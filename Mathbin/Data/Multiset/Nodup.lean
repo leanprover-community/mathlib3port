@@ -93,9 +93,7 @@ theorem count_eq_of_nodup [DecidableEq α] {a : α} {s : Multiset α} (d : Nodup
     count a s = if a ∈ s then 1 else 0 := by
   split_ifs with h
   · exact count_eq_one_of_mem d h
-    
   · exact count_eq_zero_of_not_mem h
-    
 #align multiset.count_eq_of_nodup Multiset.count_eq_of_nodup
 
 theorem nodup_iff_pairwise {α} {s : Multiset α} : Nodup s ↔ Pairwise (· ≠ ·) s :=

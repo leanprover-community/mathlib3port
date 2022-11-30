@@ -106,13 +106,15 @@ variable (R R')
 /-- The trivial multiplicative character. It takes the value `0` on non-units and
 the value `1` on units. -/
 @[simps]
-noncomputable def trivial : MulChar R R' where
+noncomputable def trivial :
+    MulChar R
+      R' where 
   toFun := by classical exact fun x => if IsUnit x then 1 else 0
-  map_nonunit' := by
+  map_nonunit' := by 
     intro a ha
     simp only [ha, if_false]
   map_one' := by simp only [isUnit_one, if_true]
-  map_mul' := by
+  map_mul' := by 
     intro x y
     simp only [IsUnit.mul_iff, boole_mul]
     split_ifs <;> tauto
@@ -143,7 +145,8 @@ theorem ext' {χ χ' : MulChar R R'} (h : ∀ a, χ a = χ' a) : χ = χ' := by
   exact MonoidHom.ext h
 #align mul_char.ext' MulChar.ext'
 
-instance : MulCharClass (MulChar R R') R R' where
+instance : MulCharClass (MulChar R R') R
+      R' where 
   coe χ := χ.toMonoidHom.toFun
   coe_injective' f g h := ext' fun a => congr_fun h a
   map_mul χ := χ.map_mul'
@@ -156,19 +159,17 @@ theorem map_nonunit (χ : MulChar R R') {a : R} (ha : ¬IsUnit a) : χ a = 0 :=
 
 /-- Extensionality. Since `mul_char`s always take the value zero on non-units, it is sufficient
 to compare the values on units. -/
-@[ext.1]
+@[ext]
 theorem ext {χ χ' : MulChar R R'} (h : ∀ a : Rˣ, χ a = χ' a) : χ = χ' := by
   apply ext'
   intro a
   by_cases ha : IsUnit a
   · exact h ha.unit
-    
   · rw [map_nonunit χ ha, map_nonunit χ' ha]
-    
 #align mul_char.ext MulChar.ext
 
 theorem ext_iff {χ χ' : MulChar R R'} : χ = χ' ↔ ∀ a : Rˣ, χ a = χ' a :=
-  ⟨by
+  ⟨by 
     rintro rfl a
     rfl, ext⟩
 #align mul_char.ext_iff MulChar.ext_iff
@@ -191,12 +192,14 @@ theorem coe_to_unit_hom (χ : MulChar R R') (a : Rˣ) : ↑(χ.toUnitHom a) = χ
 #align mul_char.coe_to_unit_hom MulChar.coe_to_unit_hom
 
 /-- Turn a homomorphism between unit groups into a `mul_char`. -/
-noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
+noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) :
+    MulChar R
+      R' where 
   toFun := by classical exact fun x => if hx : IsUnit x then f hx.Unit else 0
-  map_one' := by
+  map_one' := by 
     have h1 : (is_unit_one.unit : Rˣ) = 1 := units.eq_iff.mp rfl
     simp only [h1, dif_pos, Units.val_eq_one, map_one, isUnit_one]
-  map_mul' := by
+  map_mul' := by 
     intro x y
     by_cases hx : IsUnit x
     · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
@@ -205,13 +208,9 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
         have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
         rw [hm, map_mul]
         norm_cast
-        
       · simp only [hy, not_false_iff, dif_neg, mul_zero]
-        
-      
     · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, zero_mul]
-      
-  map_nonunit' := by
+  map_nonunit' := by 
     intro a ha
     simp only [ha, not_false_iff, dif_neg]
 #align mul_char.of_unit_hom MulChar.ofUnitHom
@@ -220,14 +219,15 @@ theorem of_unit_hom_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : of_unit_hom f ↑a = f a
 #align mul_char.of_unit_hom_coe MulChar.of_unit_hom_coe
 
 /-- The equivalence between multiplicative characters and homomorphisms of unit groups. -/
-noncomputable def equivToUnitHom : MulChar R R' ≃ (Rˣ →* R'ˣ) where
+noncomputable def equivToUnitHom :
+    MulChar R R' ≃ (Rˣ →* R'ˣ) where 
   toFun := to_unit_hom
   invFun := of_unit_hom
-  left_inv := by
+  left_inv := by 
     intro χ
     ext x
     rw [of_unit_hom_coe, coe_to_unit_hom]
-  right_inv := by
+  right_inv := by 
     intro f
     ext x
     rw [coe_to_unit_hom, of_unit_hom_coe]
@@ -266,7 +266,7 @@ protected theorem map_one (χ : MulChar R R') : χ (1 : R) = 1 :=
 
 /-- If the domain has a zero (and is nontrivial), then `χ 0 = 0`. -/
 protected theorem map_zero {R : Type u} [CommMonoidWithZero R] [Nontrivial R] (χ : MulChar R R') :
-    χ (0 : R) = 0 := by rw [map_nonunit χ not_is_unit_zero]
+    χ (0 : R) = 0 := by rw [map_nonunit χ not_isUnit_zero]
 #align mul_char.map_zero MulChar.map_zero
 
 /-- If the domain is a ring `R`, then `χ (ring_char R) = 0`. -/
@@ -342,19 +342,17 @@ theorem inv_apply_eq_inv' {R' : Type v} [Field R'] (χ : MulChar R R') (a : R) :
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
 applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R) :
-    χ⁻¹ a = χ (Ring.inverse a) := by
+    χ⁻¹ a = χ (Ring.inverse a) := by 
   by_cases ha : IsUnit a
   · rw [inv_apply_eq_inv]
     have h := IsUnit.map χ ha
     apply_fun (· * ·) (χ a) using IsUnit.mul_right_injective h
     rw [Ring.mul_inverse_cancel _ h, ← map_mul, Ring.mul_inverse_cancel _ ha, MulChar.map_one]
-    
   · revert ha
     nontriviality R
     intro ha
     -- `nontriviality R` by itself doesn't do it
     rw [map_nonunit _ ha, Ring.inverse_non_unit a ha, MulChar.map_zero χ]
-    
 #align mul_char.inv_apply MulChar.inv_apply
 
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
@@ -374,11 +372,11 @@ theorem inv_mul (χ : MulChar R R') : χ⁻¹ * χ = 1 := by
 /-- The commutative group structure on `mul_char R R'`. -/
 noncomputable instance commGroup : CommGroup (MulChar R R') :=
   { one := 1, mul := (· * ·), inv := Inv.inv, mul_left_inv := inv_mul,
-    mul_assoc := by
+    mul_assoc := by 
       intro χ₁ χ₂ χ₃
       ext a
       simp [mul_assoc],
-    mul_comm := by
+    mul_comm := by 
       intro χ₁ χ₂
       ext a
       simp [mul_comm],
@@ -389,18 +387,14 @@ noncomputable instance commGroup : CommGroup (MulChar R R') :=
 theorem pow_apply_coe (χ : MulChar R R') (n : ℕ) (a : Rˣ) : (χ ^ n) a = χ a ^ n := by
   induction' n with n ih
   · rw [pow_zero, pow_zero, one_apply_coe]
-    
   · rw [pow_succ, pow_succ, mul_apply, ih]
-    
 #align mul_char.pow_apply_coe MulChar.pow_apply_coe
 
 /-- If `n` is positive, then `(χ ^ n) a = (χ a) ^ n`. -/
 theorem pow_apply' (χ : MulChar R R') {n : ℕ} (hn : 0 < n) (a : R) : (χ ^ n) a = χ a ^ n := by
   by_cases ha : IsUnit a
   · exact pow_apply_coe χ n ha.unit
-    
   · rw [map_nonunit (χ ^ n) ha, map_nonunit χ ha, zero_pow hn]
-    
 #align mul_char.pow_apply' MulChar.pow_apply'
 
 end MulChar
@@ -468,7 +462,7 @@ theorem IsNontrivial.comp {χ : MulChar R R'} (hχ : χ.IsNontrivial) {f : R' �
 
 /-- Composition with a ring homomorphism preserves the property of being a quadratic character. -/
 theorem IsQuadratic.comp {χ : MulChar R R'} (hχ : χ.IsQuadratic) (f : R' →+* R'') :
-    (χ.ringHomComp f).IsQuadratic := by
+    (χ.ringHomComp f).IsQuadratic := by 
   intro a
   rcases hχ a with (ha | ha | ha) <;> simp [ha]
 #align mul_char.is_quadratic.comp MulChar.IsQuadratic.comp
@@ -479,12 +473,9 @@ theorem IsQuadratic.inv {χ : MulChar R R'} (hχ : χ.IsQuadratic) : χ⁻¹ = �
   rw [inv_apply_eq_inv]
   rcases hχ x with (h₀ | h₁ | h₂)
   · rw [h₀, Ring.inverse_zero]
-    
   · rw [h₁, Ring.inverse_one]
-    
   · rw [h₂, (by norm_cast : (-1 : R') = (-1 : R'ˣ)), Ring.inverse_unit (-1 : R'ˣ)]
     rfl
-    
 #align mul_char.is_quadratic.inv MulChar.IsQuadratic.inv
 
 /-- The square of a quadratic character is the trivial character. -/
@@ -496,28 +487,25 @@ theorem IsQuadratic.sq_eq_one {χ : MulChar R R'} (hχ : χ.IsQuadratic) : χ ^ 
 /-- The `p`th power of a quadratic character is itself, when `p` is the (prime) characteristic
 of the target ring. -/
 theorem IsQuadratic.pow_char {χ : MulChar R R'} (hχ : χ.IsQuadratic) (p : ℕ) [hp : Fact p.Prime]
-    [CharP R' p] : χ ^ p = χ := by
+    [CharP R' p] : χ ^ p = χ := by 
   ext x
   rw [pow_apply_coe]
   rcases hχ x with (hx | hx | hx) <;> rw [hx]
   · rw [zero_pow (Fact.out p.prime).Pos]
-    
   · rw [one_pow]
-    
   · exact CharP.neg_one_pow_char R' p
-    
 #align mul_char.is_quadratic.pow_char MulChar.IsQuadratic.pow_char
 
 /-- The `n`th power of a quadratic character is the trivial character, when `n` is even. -/
 theorem IsQuadratic.pow_even {χ : MulChar R R'} (hχ : χ.IsQuadratic) {n : ℕ} (hn : Even n) :
-    χ ^ n = 1 := by
+    χ ^ n = 1 := by 
   obtain ⟨n, rfl⟩ := even_iff_two_dvd.mp hn
   rw [pow_mul, hχ.sq_eq_one, one_pow]
 #align mul_char.is_quadratic.pow_even MulChar.IsQuadratic.pow_even
 
 /-- The `n`th power of a quadratic character is itself, when `n` is odd. -/
 theorem IsQuadratic.pow_odd {χ : MulChar R R'} (hχ : χ.IsQuadratic) {n : ℕ} (hn : Odd n) :
-    χ ^ n = χ := by
+    χ ^ n = χ := by 
   obtain ⟨n, rfl⟩ := hn
   rw [pow_add, pow_one, hχ.pow_even (even_two_mul _), one_mul]
 #align mul_char.is_quadratic.pow_odd MulChar.IsQuadratic.pow_odd
@@ -547,15 +535,11 @@ theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] :
     
   · split_ifs with h h
     · exact one_apply_coe h.unit
-      
     · exact map_nonunit _ h
-      
-    
   · congr
     ext a
     simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, Finset.mem_map,
-      Function.Embedding.coe_fn_mk, exists_true_left, IsUnit]
-    
+      Function.Embedding.coeFn_mk, exists_true_left, IsUnit]
 #align mul_char.sum_one_eq_card_units MulChar.sum_one_eq_card_units
 
 end MulChar

@@ -44,7 +44,9 @@ attribute [local instance] reflect_name_list
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Defines the user attribute `nolint` for skipping `#lint` -/
 @[user_attribute]
-unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
+unsafe def nolint_attr :
+    user_attribute (name_map (List Name))
+      (List Name) where 
   Name := "nolint"
   descr := "Do not report this declaration in any of the tests of `#lint`"
   after_set :=
@@ -108,7 +110,8 @@ A linter `linter.my_new_linter` is referred to as `my_new_linter` (without the `
 when used in `#lint`.
 -/
 @[user_attribute]
-unsafe def linter_attr : user_attribute Unit Unit where
+unsafe def linter_attr :
+    user_attribute Unit Unit where 
   Name := "linter"
   descr := "Use this declaration as a linting test in #lint"
   after_set := some fun nm _ _ => mk_const nm >>= infer_type >>= unify q(linter)

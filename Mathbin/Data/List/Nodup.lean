@@ -80,9 +80,7 @@ theorem not_nodup_pair (a : α) : ¬Nodup [a, a] :=
 
 theorem nodup_iff_sublist {l : List α} : Nodup l ↔ ∀ a, ¬[a, a] <+ l :=
   ⟨fun d a h => not_nodup_pair a (d.Sublist h), by
-    induction' l with a l IH <;> intro h;
-    · exact nodup_nil
-      
+    induction' l with a l IH <;> intro h; · exact nodup_nil
     exact
       (IH fun a s => h a <| sublist_cons_of_sublist _ s).cons fun al =>
         h a <| (singleton_sublist.2 al).cons_cons _⟩
@@ -108,36 +106,26 @@ theorem nodup_iff_nth_ne_nth {l : List α} :
   simp only [nth_le_eq_iff, some_nth_le_eq]
   constructor <;> rintro h i j h₁ h₂
   · exact mt (h i j (h₁.trans h₂) h₂) (ne_of_lt h₁)
-    
   · intro h₃
     by_contra h₄
     cases' lt_or_gt_of_ne h₄ with h₅ h₅
     · exact h i j h₅ h₂ h₃
-      
     · exact h j i h₅ h₁ h₃.symm
-      
-    
 #align list.nodup_iff_nth_ne_nth List.nodup_iff_nth_ne_nth
 
 theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
     l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
   induction' l with hd tl hl
   · simp
-    
   · specialize hl h.of_cons
     by_cases hx : tl = [x]
     · simpa [hx, and_comm, and_or_left] using h
-      
     · rw [← Ne.def, hl] at hx
       rcases hx with (rfl | ⟨y, hy, hx⟩)
       · simp
-        
       · have : tl ≠ [] := ne_nil_of_mem hy
         suffices ∃ (y : α)(H : y ∈ hd :: tl), y ≠ x by simpa [ne_nil_of_mem hy]
         exact ⟨y, mem_cons_of_mem _ hy, hx⟩
-        
-      
-    
 #align list.nodup.ne_singleton_iff List.Nodup.ne_singleton_iff
 
 theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length)
@@ -179,9 +167,7 @@ theorem count_eq_of_nodup [DecidableEq α] {a : α} {l : List α} (d : Nodup l) 
     count a l = if a ∈ l then 1 else 0 := by
   split_ifs with h
   · exact count_eq_one_of_mem d h
-    
   · exact count_eq_zero_of_not_mem h
-    
 #align list.count_eq_of_nodup List.count_eq_of_nodup
 
 theorem Nodup.of_append_left : Nodup (l₁ ++ l₂) → Nodup l₁ :=
@@ -239,18 +225,12 @@ theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : Nodup (map f l)) 
     ∀ ⦃x⦄, x ∈ l → ∀ ⦃y⦄, y ∈ l → f x = f y → x = y := by
   induction' l with hd tl ih
   · simp
-    
   · simp only [map, nodup_cons, mem_map, not_exists, not_and, ← Ne.def] at d
     rintro _ (rfl | h₁) _ (rfl | h₂) h₃
     · rfl
-      
     · apply (d.1 _ h₂ h₃.symm).elim
-      
     · apply (d.1 _ h₁ h₃).elim
-      
     · apply ih d.2 h₁ h₂ h₃
-      
-    
 #align list.inj_on_of_nodup_map List.inj_on_of_nodup_map
 
 theorem nodup_map_iff_inj_on {f : α → β} {l : List α} (d : Nodup l) :
@@ -307,9 +287,7 @@ theorem nodup_reverse {l : List α} : Nodup (reverse l) ↔ Nodup l :=
 
 theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
     l.erase a = filter (· ≠ a) l := by
-  induction' d with b l m d IH;
-  · rfl
-    
+  induction' d with b l m d IH; · rfl
   by_cases b = a
   · subst h
     rw [erase_cons_head, filter_cons_of_neg]
@@ -317,10 +295,8 @@ theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
     rw [filter_eq_self]
     simpa only [Ne.def, eq_comm] using m
     exact not_not_intro rfl
-    
   · rw [erase_cons_tail _ h, filter_cons_of_pos, IH]
     exact h
-    
 #align list.nodup.erase_eq_filter List.Nodup.erase_eq_filter
 
 theorem Nodup.erase [DecidableEq α] (a : α) : Nodup l → Nodup (l.erase a) :=
@@ -1119,9 +1095,7 @@ theorem Nodup.insert [DecidableEq α] (h : l.Nodup) : (insert a l).Nodup :=
 theorem Nodup.union [DecidableEq α] (l₁ : List α) (h : Nodup l₂) : (l₁ ∪ l₂).Nodup := by
   induction' l₁ with a l₁ ih generalizing l₂
   · exact h
-    
   · exact (ih h).insert
-    
 #align list.nodup.union List.Nodup.union
 
 theorem Nodup.inter [DecidableEq α] (l₂ : List α) : Nodup l₁ → Nodup (l₁ ∩ l₂) :=
@@ -1155,26 +1129,23 @@ protected theorem Nodup.update_nth :
 theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α → β) (x : α) (y : β) :
     l.map (Function.update f x y) =
       if x ∈ l then (l.map f).updateNth (l.indexOf x) y else l.map f :=
-  by
-  induction' l with hd tl ihl;
-  · simp
-    
+  by 
+  induction' l with hd tl ihl; · simp
   rw [nodup_cons] at hl
   simp only [mem_cons_iff, map, ihl hl.2]
   by_cases H : hd = x
   · subst hd
     simp [update_nth, hl.1]
-    
   · simp [Ne.symm H, H, update_nth, ← apply_ite (cons (f hd))]
-    
 #align list.nodup.map_update List.Nodup.map_update
 
 theorem Nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)
-    (h : ∀ a ∈ l, ∀ b ∈ l, a ≠ b → r a b) : l.Pairwise r := by classical
-  refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h
-  intro x hx
-  rw [nodup_iff_count_le_one] at hl
-  exact absurd (hl x) hx.not_le
+    (h : ∀ a ∈ l, ∀ b ∈ l, a ≠ b → r a b) : l.Pairwise r := by
+  classical 
+    refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h
+    intro x hx
+    rw [nodup_iff_count_le_one] at hl
+    exact absurd (hl x) hx.not_le
 #align list.nodup.pairwise_of_forall_ne List.Nodup.pairwise_of_forall_ne
 
 theorem Nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (hl : l.Nodup)
@@ -1184,10 +1155,9 @@ theorem Nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (h
 
 @[simp]
 theorem Nodup.pairwise_coe [IsSymm α r] (hl : l.Nodup) : { a | a ∈ l }.Pairwise r ↔ l.Pairwise r :=
-  by
+  by 
   induction' l with a l ih
   · simp
-    
   rw [List.nodup_cons] at hl
   have : ∀ b ∈ l, ¬a = b → r a b ↔ r a b := fun b hb =>
     imp_iff_right (ne_of_mem_of_not_mem hb hl.1).symm

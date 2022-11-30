@@ -198,7 +198,8 @@ end
 See note [reducible non-instances].
 -/
 @[reducible]
-def starSemigroupOfComm {R : Type _} [CommMonoid R] : StarSemigroup R where
+def starSemigroupOfComm {R : Type _} [CommMonoid R] :
+    StarSemigroup R where 
   star := id
   star_involutive x := rfl
   star_mul := mul_comm
@@ -440,7 +441,7 @@ section NonUnitalRing
 variable [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R]
 
 theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * c ≤ star c * b * c :=
-  by
+  by 
   rw [← sub_nonneg] at hab⊢
   convert conjugate_nonneg hab c
   simp only [mul_sub, sub_mul]
@@ -504,7 +505,9 @@ namespace Units
 
 variable [Monoid R] [StarSemigroup R]
 
-instance : StarSemigroup Rˣ where
+instance :
+    StarSemigroup
+      Rˣ where 
   star u :=
     { val := star u, inv := star ↑u⁻¹,
       val_inv := (star_mul _ _).symm.trans <| (congr_arg star u.inv_val).trans <| star_one _,
@@ -541,12 +544,11 @@ theorem Ring.inverse_star [Semiring R] [StarRing R] (a : R) :
   by_cases ha : IsUnit a
   · obtain ⟨u, rfl⟩ := ha
     rw [Ring.inverse_unit, ← Units.coe_star, Ring.inverse_unit, ← Units.coe_star_inv]
-    
   rw [Ring.inverse_non_unit _ ha, Ring.inverse_non_unit _ (mt is_unit_star.mp ha), star_zero]
 #align ring.inverse_star Ring.inverse_star
 
 instance Invertible.star {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r] :
-    Invertible (star r) where
+    Invertible (star r) where 
   invOf := star (⅟ r)
   inv_of_mul_self := by rw [← star_mul, mul_inv_of_self, star_one]
   mul_inv_of_self := by rw [← star_mul, inv_of_mul_self, star_one]

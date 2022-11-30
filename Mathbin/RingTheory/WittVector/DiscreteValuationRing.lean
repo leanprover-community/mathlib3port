@@ -62,11 +62,10 @@ Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself,
 -/
 def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
   Units.mkOfMulEqOne A (WittVector.mk p (inverseCoeff a A))
-    (by
+    (by 
       ext n
       induction' n with n ih
       · simp [WittVector.mul_coeff_zero, inverse_coeff, hA]
-        
       let H_coeff :=
         A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) +
           nth_remainder p n (truncate_fun (n + 1) A) fun i : Fin (n + 1) => inverse_coeff a A i
@@ -99,9 +98,9 @@ theorem is_unit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUn
 variable (p)
 
 theorem irreducible : Irreducible (p : 𝕎 k) := by
-  have hp : ¬IsUnit (p : 𝕎 k) := by
+  have hp : ¬IsUnit (p : 𝕎 k) := by 
     intro hp
-    simpa only [constant_coeff_apply, coeff_p_zero, not_is_unit_zero] using
+    simpa only [constant_coeff_apply, coeff_p_zero, not_isUnit_zero] using
       (constant_coeff : WittVector p k →+* _).is_unit_map hp
   refine' ⟨hp, fun a b hab => _⟩
   obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by
@@ -113,10 +112,8 @@ theorem irreducible : Irreducible (p : 𝕎 k) := by
   obtain ⟨n, b, hb, rfl⟩ := verschiebung_nonzero hb0
   cases m
   · exact Or.inl (is_unit_of_coeff_zero_ne_zero a ha)
-    
   cases n
   · exact Or.inr (is_unit_of_coeff_zero_ne_zero b hb)
-    
   rw [iterate_verschiebung_mul] at hab
   apply_fun fun x => coeff x 1  at hab
   simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,
@@ -142,12 +139,10 @@ theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) :
   · contrapose! hc
     have : 0 < p ^ m := pow_pos (Nat.Prime.pos (Fact.out _)) _
     simp [hc, zero_pow this]
-    
   · rw [← mul_left_iterate (p : 𝕎 k) m]
     convert hcm
     ext1 x
     rw [mul_comm, ← WittVector.verschiebung_frobenius x]
-    
 #align witt_vector.exists_eq_pow_p_mul WittVector.exists_eq_pow_p_mul
 
 end PerfectRing
@@ -157,7 +152,7 @@ section PerfectField
 variable {k : Type _} [Field k] [CharP k p] [PerfectRing k p]
 
 theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Units (𝕎 k)), a = p ^ m * b :=
-  by
+  by 
   obtain ⟨m, b, h₁, h₂⟩ := exists_eq_pow_p_mul a ha
   let b₀ := Units.mk0 (b.coeff 0) h₁
   have hb₀ : b.coeff 0 = b₀ := rfl
@@ -174,7 +169,7 @@ https://github.com/leanprover/lean4/issues/1102
 -/
 theorem discrete_valuation_ring : DiscreteValuationRing (𝕎 k) :=
   DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
-    (by
+    (by 
       refine' ⟨p, Irreducible p, fun x hx => _⟩
       obtain ⟨n, b, hb⟩ := exists_eq_pow_p_mul' x hx
       exact ⟨n, b, hb.symm⟩)

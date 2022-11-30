@@ -93,7 +93,7 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
       suffices
         Submodule.span k (range fun j : { x // x ≠ i } => b.points ↑j -ᵥ b.points i) =
           vectorSpan k (range b.points)
-        by
+        by 
         rw [this, ← direction_affine_span, b.tot, AffineSubspace.direction_top]
         exact le_rfl
       conv_rhs => rw [← image_univ]
@@ -109,7 +109,8 @@ theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) :
 #align affine_basis.basis_of_apply AffineBasis.basis_of_apply
 
 /-- The `i`th barycentric coordinate of a point. -/
-noncomputable def coord (i : ι) : P →ᵃ[k] k where
+noncomputable def coord (i : ι) :
+    P →ᵃ[k] k where 
   toFun q := 1 - (b.basisOf i).sumCoords (q -ᵥ b.points i)
   linear := -(b.basisOf i).sumCoords
   map_vadd' q v := by
@@ -135,7 +136,7 @@ theorem coord_apply_neq (i j : ι) (h : j ≠ i) : b.Coord i (b.points j) = 0 :=
 #align affine_basis.coord_apply_neq AffineBasis.coord_apply_neq
 
 theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b.points j) = if i = j then 1 else 0 :=
-  by
+  by 
   cases eq_or_ne i j <;> simp [h.symm]
   simp [h]
 #align affine_basis.coord_apply AffineBasis.coord_apply
@@ -209,30 +210,32 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.coe_coord_of_subsingleton_eq_one AffineBasis.coe_coord_of_subsingleton_eq_one
 
-theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by classical
-  intro x
-  obtain ⟨j, hij⟩ := exists_ne i
-  let s : Finset ι := {i, j}
-  have hi : i ∈ s := by simp
-  have hj : j ∈ s := by simp
-  let w : ι → k := fun j' => if j' = i then x else 1 - x
-  have hw : s.sum w = 1 := by simp [hij, Finset.sum_ite, Finset.filter_insert, Finset.filter_eq']
-  use s.affine_combination b.points w
-  simp [b.coord_apply_combination_of_mem hi hw]
+theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by
+  classical 
+    intro x
+    obtain ⟨j, hij⟩ := exists_ne i
+    let s : Finset ι := {i, j}
+    have hi : i ∈ s := by simp
+    have hj : j ∈ s := by simp
+    let w : ι → k := fun j' => if j' = i then x else 1 - x
+    have hw : s.sum w = 1 := by simp [hij, Finset.sum_ite, Finset.filter_insert, Finset.filter_eq']
+    use s.affine_combination b.points w
+    simp [b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.surjective_coord AffineBasis.surjective_coord
 
 /-- Barycentric coordinates as an affine map. -/
-noncomputable def coords : P →ᵃ[k] ι → k where
+noncomputable def coords :
+    P →ᵃ[k] ι → k where 
   toFun q i := b.Coord i q
   linear :=
     { toFun := fun v i => -(b.basisOf i).sumCoords v,
-      map_add' := fun v w => by
+      map_add' := fun v w => by 
         ext i
         simp only [LinearMap.map_add, Pi.add_apply, neg_add],
-      map_smul' := fun t v => by
+      map_smul' := fun t v => by 
         ext i
         simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] }
-  map_vadd' p v := by
+  map_vadd' p v := by 
     ext i
     simp only [linear_eq_sum_coords, LinearMap.coe_mk, LinearMap.neg_apply, Pi.vadd_apply',
       AffineMap.map_vadd]
@@ -350,12 +353,10 @@ theorem is_unit_to_matrix_iff [Nontrivial k] (p : ι → P) :
     exact
       ⟨b.affine_independent_of_to_matrix_right_inv p hA,
         b.affine_span_eq_top_of_to_matrix_left_inv p hA'⟩
-    
   · rintro ⟨h_tot, h_ind⟩
     let b' : AffineBasis ι k P := ⟨p, h_tot, h_ind⟩
     change IsUnit (b.to_matrix b'.points)
     exact b.is_unit_to_matrix b'
-    
 #align affine_basis.is_unit_to_matrix_iff AffineBasis.is_unit_to_matrix_iff
 
 end Ring

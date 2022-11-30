@@ -66,7 +66,6 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
     intro e
     apply Trunc.mk
     refine' of_equiv e h_empty
-    
   · have : card (Option (ULift (Fin n))) = card (ULift (Fin n.succ)) := by
       simp only [card_fin, card_option, card_ulift]
     apply Trunc.bind (trunc_equiv_of_card_eq this)
@@ -74,7 +73,6 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
     apply Trunc.map _ ih
     intro ih
     refine' of_equiv e (h_option ih)
-    
 #align fintype.trunc_rec_empty_option Fintype.truncRecEmptyOption
 
 /-- An induction principle for finite types, analogous to `nat.rec`. It effectively says
@@ -88,11 +86,9 @@ theorem induction_empty_option {P : ∀ (α : Type u) [Fintype α], Prop}
     @trunc_rec_empty_option (fun α => ∀ h, @P α h) (fun α β e hα hβ => @of_equiv α β hβ e (hα _))
       (fun _i => by convert h_empty) _ α _ (Classical.decEq α)
   · exact p _
-    
   · rintro α hα - Pα hα'
     skip
     convert h_option α (Pα _)
-    
 #align fintype.induction_empty_option Fintype.induction_empty_option
 
 end Fintype
@@ -101,7 +97,7 @@ end Fintype
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α ≃ β → P α → P β)
     (h_empty : P PEmpty) (h_option : ∀ {α} [Fintype α], P α → P (Option α)) (α : Type u)
-    [Finite α] : P α := by
+    [Finite α] : P α := by 
   cases nonempty_fintype α
   refine' Fintype.induction_empty_option _ _ _ α
   exacts[fun α β _ => of_equiv, h_empty, @h_option]

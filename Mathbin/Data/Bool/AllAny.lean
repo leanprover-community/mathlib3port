@@ -38,7 +38,6 @@ theorem all_cons (p : α → Bool) (a : α) (l : List α) : all (a :: l) p = (p 
 theorem all_iff_forall {p : α → Bool} : all l p ↔ ∀ a ∈ l, p a := by
   induction' l with a l ih
   · exact iff_of_true rfl (forall_mem_nil _)
-    
   simp only [all_cons, Bool.and_coe_iff, ih, forall_mem_cons]
 #align list.all_iff_forall List.all_iff_forall
 
@@ -67,7 +66,6 @@ theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = (p 
 theorem any_iff_exists {p : α → Bool} : any l p ↔ ∃ a ∈ l, p a := by
   induction' l with a l ih
   · exact iff_of_false Bool.not_false' (not_exists_mem_nil _)
-    
   simp only [any_cons, Bool.or_coe_iff, ih, exists_mem_cons_iff]
 #align list.any_iff_exists List.any_iff_exists
 

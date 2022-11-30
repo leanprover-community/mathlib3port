@@ -109,7 +109,7 @@ instance Subtype.finite {α : Sort _} [Finite α] {p : α → Prop} : Finite { x
 #align subtype.finite Subtype.finite
 
 instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite (β a)] :
-    Finite (∀ a, β a) := by
+    Finite (∀ a, β a) := by 
   haveI := Fintype.ofFinite (PLift α)
   haveI := fun a => Fintype.ofFinite (PLift (β a))
   exact
@@ -133,11 +133,9 @@ instance Quotient.finite {α : Sort _} [Finite α] (s : Setoid α) : Finite (Quo
 instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪ β) := by
   cases' isEmpty_or_nonempty (α ↪ β) with _ h
   · infer_instance
-    
   · refine' h.elim fun f => _
     haveI : Finite α := Finite.of_injective _ f.injective
     exact Finite.of_injective _ FunLike.coe_injective
-    
 #align function.embedding.finite Function.Embedding.finite
 
 instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=

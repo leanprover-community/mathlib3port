@@ -62,12 +62,8 @@ theorem exact_iff_image_eq_kernel : Exact f g ↔ imageSubobject f = kernelSubob
     fapply subobject.eq_of_comm
     · suffices is_iso (imageToKernel _ _ h.w) by exact as_iso (imageToKernel _ _ h.w)
       exact is_iso_of_mono_of_epi _
-      
     · simp
-      
-    
   · apply exact_of_image_eq_kernel
-    
 #align
   category_theory.abelian.exact_iff_image_eq_kernel CategoryTheory.Abelian.exact_iff_image_eq_kernel
 
@@ -75,7 +71,6 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
   constructor
   · intro h
     exact ⟨h.1, kernel_comp_cokernel f g h⟩
-    
   · refine' fun h => ⟨h.1, _⟩
     suffices hl :
       is_limit (kernel_fork.of_ι (image_subobject f).arrow (image_subobject_arrow_comp_eq_zero h.1))
@@ -83,24 +78,19 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
         imageToKernel f g h.1 =
           (is_limit.cone_point_unique_up_to_iso hl (limit.is_limit _)).Hom ≫
             (kernel_subobject_iso _).inv :=
-        by
+        by 
         ext
         simp
       rw [this]
       infer_instance
-      
     refine' kernel_fork.is_limit.of_ι _ _ _ _ _
     · refine' fun W u hu =>
         kernel.lift (cokernel.π f) u _ ≫ (image_iso_image f).Hom ≫ (image_subobject_iso _).inv
       rw [← kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
-      
     · tidy
-      
     · intros
       rw [← cancel_mono (image_subobject f).arrow, w]
       simp
-      
-    
 #align category_theory.abelian.exact_iff CategoryTheory.Abelian.exact_iff
 
 theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
@@ -108,13 +98,11 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
   constructor
   · intro h
     exact ⟨h.1, fork_ι_comp_cofork_π f g h cg cf⟩
-    
   · rw [exact_iff]
     refine' fun h => ⟨h.1, _⟩
     apply zero_of_epi_comp (is_limit.cone_point_unique_up_to_iso hg (limit.is_limit _)).Hom
     apply zero_of_comp_mono (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _) hf).Hom
     simp [h.2]
-    
 #align category_theory.abelian.exact_iff' CategoryTheory.Abelian.exact_iff'
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -157,15 +145,13 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
            ";"
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.apply "apply" `exact_iff) [])])
+           (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.apply "apply" `exact_iff)])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
            ";"
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
+            [(Tactic.apply "apply" `exact_iff_image_eq_kernel)])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -180,15 +166,13 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
           ";"
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.apply "apply" `exact_iff) [])])
+          (tactic___ (cdotTk (patternIgnore (token.«·» "·"))) [(Tactic.apply "apply" `exact_iff)])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
           ";"
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
+           [(Tactic.apply "apply" `exact_iff_image_eq_kernel)])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -196,9 +180,9 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
+       [(Tactic.apply "apply" `exact_iff_image_eq_kernel)])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" `exact_iff_image_eq_kernel)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -266,7 +250,6 @@ def isLimitImage (h : Exact f g) :
   refine' kernel_fork.is_limit.of_ι _ _ _ _ _
   · refine' fun W u hu => kernel.lift (cokernel.π f) u _
     rw [← kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
-    
   tidy
 #align category_theory.abelian.is_limit_image CategoryTheory.Abelian.isLimitImage
 
@@ -281,12 +264,11 @@ def isColimitCoimage (h : Exact f g) :
     IsColimit
       (CokernelCofork.ofπ (Abelian.coimage.π g) (Abelian.comp_coimage_π_eq_zero h.1) :
         CokernelCofork f) :=
-  by
+  by 
   rw [exact_iff] at h
   refine' cokernel_cofork.is_colimit.of_π _ _ _ _ _
   · refine' fun W u hu => cokernel.desc (kernel.ι g) u _
     rw [← cokernel.π_desc f u hu, ← category.assoc, h.2, has_zero_morphisms.zero_comp]
-    
   tidy
 #align category_theory.abelian.is_colimit_coimage CategoryTheory.Abelian.isColimitCoimage
 
@@ -308,7 +290,7 @@ instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
     cokernel.desc f g h.w =
       (IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (isColimitImage f g h)).Hom ≫
         Limits.image.ι g
-    from by
+    from by 
     rw [h]
     apply mono_comp
   (cancel_epi (cokernel.π f)).1 <| by simp
@@ -350,7 +332,7 @@ def isLimitOfExactOfMono [Mono f] (h : Exact f g) : IsLimit (KernelFork.ofι _ h
 #align category_theory.abelian.is_limit_of_exact_of_mono CategoryTheory.Abelian.isLimitOfExactOfMono
 
 theorem exact_of_is_cokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.ofπ _ w)) : Exact f g :=
-  by
+  by 
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (cokernel_cofork.of_π _ (cokernel.condition f)) walking_parallel_pair.one
   simp only [cofork.of_π_ι_app] at this
@@ -414,26 +396,23 @@ variable (Z)
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z]))
-              [])])
+            [(Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z]))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.intros "intros" []) [])
-             (group (Tactic.exact "exact" (Term.app `exact_zero_left_of_mono [`Z])) [])])
+            [(Tactic.intros "intros" [])
+             []
+             (Tactic.exact "exact" (Term.app `exact_zero_left_of_mono [`Z]))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))
-              [])])
+            [(Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -448,24 +427,23 @@ variable (Z)
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z])) [])])
+           [(Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intros "intros" []) [])
-            (group (Tactic.exact "exact" (Term.app `exact_zero_left_of_mono [`Z])) [])])
+           [(Tactic.intros "intros" [])
+            []
+            (Tactic.exact "exact" (Term.app `exact_zero_left_of_mono [`Z]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))
-             [])])
+           [(Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -473,9 +451,9 @@ variable (Z)
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")])) [])])
+       [(Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -564,88 +542,10 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
-              [])
-             (group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.clear "-")])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
-                    [])]
-                  "⟩"))]
-               [])
-              [])
-             (group (Tactic.exact "exact" (Term.app `zero_of_epi_comp [(Term.hole "_") `h])) [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
-              [])
-             (group (Tactic.intro "intro" []) [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.anonymousCtor
-                "⟨"
-                [(Term.byTactic
-                  "by"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
-                 ","
-                 (Term.byTactic
-                  "by"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented
-                    [(Tactic.simp
-                      "simp"
-                      []
-                      []
-                      []
-                      ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"]
-                      [])])))]
-                "⟩"))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))
-              [])])
-           []
-           (Tactic.tfaeFinish "tfae_finish")])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
-             [])
-            (group
+            [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+             []
              (Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -660,18 +560,17 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
                    [])]
                  "⟩"))]
               [])
-             [])
-            (group (Tactic.exact "exact" (Term.app `zero_of_epi_comp [(Term.hole "_") `h])) [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
-             [])
-            (group (Tactic.intro "intro" []) [])
-            (group
+             []
+             (Tactic.exact "exact" (Term.app `zero_of_epi_comp [(Term.hole "_") `h]))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+             []
+             (Tactic.intro "intro" [])
+             []
              (Tactic.exact
               "exact"
               (Term.anonymousCtor
@@ -692,16 +591,83 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
                      []
                      ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"]
                      [])])))]
-               "⟩"))
-             [])])
+               "⟩"))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+            []
+            (Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.clear "-")])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+                  [])]
+                "⟩"))]
+             [])
+            []
+            (Tactic.exact "exact" (Term.app `zero_of_epi_comp [(Term.hole "_") `h]))])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+            []
+            (Tactic.intro "intro" [])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
+               ","
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.simp
+                    "simp"
+                    []
+                    []
+                    []
+                    ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"]
+                    [])])))]
+              "⟩"))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))
-             [])])
+           [(Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -709,9 +675,9 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")])) [])])
+       [(Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -776,7 +742,7 @@ theorem Exact.op (h : Exact f g) : Exact g.op f.op := by
 #align category_theory.abelian.exact.op CategoryTheory.Abelian.Exact.op
 
 theorem Exact.op_iff : Exact g.op f.op ↔ Exact f g :=
-  ⟨fun e => by
+  ⟨fun e => by 
     rw [← is_equivalence.exact_iff _ _ (op_op_equivalence C).inverse]
     exact exact.op _ _ e, Exact.op _ _⟩
 #align category_theory.abelian.exact.op_iff CategoryTheory.Abelian.Exact.op_iff
@@ -803,7 +769,8 @@ variable {D : Type u₂} [Category.{v₂} D] [Abelian D]
 variable (F : C ⥤ D) [PreservesZeroMorphisms F]
 
 instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful [Faithful F] :
-    ReflectsExactSequences F where reflects X Y Z f g hfg := by
+    ReflectsExactSequences
+      F where reflects X Y Z f g hfg := by
     rw [abelian.exact_iff, ← F.map_comp, F.map_eq_zero_iff] at hfg
     refine' (abelian.exact_iff _ _).2 ⟨hfg.1, F.zero_of_map_zero _ _⟩
     obtain ⟨k, hk⟩ :=
@@ -885,7 +852,8 @@ theorem preserves_epimorphisms_of_map_exact : L.PreservesEpimorphisms :=
 
 /-- A functor which preserves exactness preserves kernels. -/
 def preservesKernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
-    PreservesLimit (parallelPair f 0) L where preserves c ic := by
+    PreservesLimit (parallelPair f 0)
+      L where preserves c ic := by
     letI := preserves_zero_morphisms_of_map_exact L h
     letI := preserves_monomorphisms_of_map_exact L h
     letI := mono_of_is_limit_fork ic
@@ -901,7 +869,8 @@ def preservesKernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
 
 /-- A functor which preserves exactness preserves zero cokernels. -/
 def preservesCokernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
-    PreservesColimit (parallelPair f 0) L where preserves c ic := by
+    PreservesColimit (parallelPair f 0)
+      L where preserves c ic := by
     letI := preserves_zero_morphisms_of_map_exact L h
     letI := preserves_epimorphisms_of_map_exact L h
     letI := epi_of_is_colimit_cofork ic

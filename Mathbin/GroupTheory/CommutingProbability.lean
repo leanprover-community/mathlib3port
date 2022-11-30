@@ -63,9 +63,7 @@ theorem comm_prob_eq_one_iff [h : Nonempty M] :
   rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod,
     set_fintype_card_eq_univ_iff, Set.eq_univ_iff_forall]
   · exact ⟨fun h x y => h (x, y), fun h x => h x.1 x.2⟩
-    
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
-    
 #align comm_prob_eq_one_iff comm_prob_eq_one_iff
 
 variable (G : Type _) [Group G] [Finite G]
@@ -98,21 +96,20 @@ theorem comm_prob_def' : commProb G = Nat.card (ConjClasses G) / Nat.card G := b
 
 variable {G} (H : Subgroup G)
 
-theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 := by
+theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 :=
+  by
   /- After rewriting with `comm_prob_def`, we reduce to showing that `G` has at least as many
       commuting pairs as `H`. -/
   rw [comm_prob_def, comm_prob_def, div_le_iff, mul_assoc, ← mul_pow, ← Nat.cast_mul,
     mul_comm H.index, H.card_mul_index, div_mul_cancel, Nat.cast_le]
   · refine' Finite.card_le_of_injective (fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩) _
     exact fun p q h => by simpa only [Subtype.ext_iff, Prod.ext_iff] using h
-    
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr finite.card_pos.ne')
-    
   · exact pow_pos (nat.cast_pos.mpr Finite.card_pos) 2
-    
 #align subgroup.comm_prob_subgroup_le Subgroup.comm_prob_subgroup_le
 
-theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * Nat.card H := by
+theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * Nat.card H :=
+  by
   /- After rewriting with `comm_prob_def'`, we reduce to showing that `G` has at least as many
       conjugacy classes as `G ⧸ H`. -/
   rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mul, ← Subgroup.index,
@@ -120,11 +117,8 @@ theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commP
   · apply Finite.card_le_of_surjective
     show Function.Surjective (ConjClasses.map (QuotientGroup.mk' H))
     exact ConjClasses.map_surjective Quotient.surjective_Quotient_mk''
-    
   · exact nat.cast_ne_zero.mpr finite.card_pos.ne'
-    
   · exact nat.cast_pos.mpr Finite.card_pos
-    
 #align subgroup.comm_prob_quotient_le Subgroup.comm_prob_quotient_le
 
 variable (G)

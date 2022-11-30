@@ -51,7 +51,7 @@ functor, applicative, monad, simp
 /- [mathport] port note: move this to another file, it won't work here -/
 attribute [monad_norm] functor_norm
 
-attribute [ext.1] ReaderT.ext StateT.ext ExceptT.ext OptionT.ext
+attribute [ext] ReaderT.ext StateT.ext ExceptT.ext OptionT.ext
 
 attribute [functor_norm] bind_assoc pure_bind bind_pure
 
@@ -75,7 +75,8 @@ universe u₀ u₁ v₀ v₁
 their respective function spaces -/
 def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ σ₁ : Type u₀}
     {α₂ σ₂ : Type u₁} (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) :
-    StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂ α₂ where
+    StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂
+        α₂ where 
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.left_inv _
@@ -85,7 +86,9 @@ def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
 def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ρ₁ : Type u₀}
-    {α₂ ρ₂ : Type u₁} (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂ α₂ where
+    {α₂ ρ₂ : Type u₁} (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) :
+    ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂
+        α₂ where 
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.left_inv _

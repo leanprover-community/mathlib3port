@@ -60,7 +60,6 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   -- for an empty set this fact is trivial
   rcases s.eq_empty_or_nonempty with (rfl | hs')
   · exact False.ndrec _ ha
-    
   -- otherwise, let `p₀` be a point where the value of `f` has maximal norm
   obtain ⟨p₀, hp₀s, hp₀⟩ := hs₁.exists_forall_ge hs' hf.continuous.norm.continuous_on
   -- we will show `f` agrees everywhere with `f p₀`

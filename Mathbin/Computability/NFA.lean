@@ -102,7 +102,7 @@ def accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
 
 /-- `M.to_DFA` is an `DFA` constructed from a `NFA` `M` using the subset construction. The
   states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
-def toDFA : DFA α (Set σ) where
+def toDFA : DFA α (Set σ) where 
   step := M.stepSet
   start := M.start
   accept := { S | ∃ s ∈ S, s ∈ M.accept }
@@ -113,9 +113,7 @@ theorem to_DFA_correct : M.toDFA.accepts = M.accepts := by
   ext x
   rw [accepts, DFA.accepts, eval, DFA.eval]
   change List.foldl _ _ _ ∈ { S | _ } ↔ _
-  constructor <;>
-    · exact fun ⟨w, h2, h3⟩ => ⟨w, h3, h2⟩
-      
+  constructor <;> · exact fun ⟨w, h2, h3⟩ => ⟨w, h3, h2⟩
 #align NFA.to_DFA_correct NFA.to_DFA_correct
 
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
@@ -124,7 +122,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧
           b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
-  by
+  by 
   rw [← to_DFA_correct] at hx⊢
   exact M.to_DFA.pumping_lemma hx hlen
 #align NFA.pumping_lemma NFA.pumping_lemma
@@ -135,7 +133,8 @@ namespace DFA
 
 /-- `M.to_NFA` is an `NFA` constructed from a `DFA` `M` by using the same start and accept
   states and a transition function which sends `s` with input `a` to the singleton `M.step s a`. -/
-def toNFA (M : DFA α σ') : NFA α σ' where
+def toNFA (M : DFA α σ') : NFA α
+      σ' where 
   step s a := {M.step s a}
   start := {M.start}
   accept := M.accept
@@ -147,11 +146,9 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
   change List.foldl M.to_NFA.step_set {start} s = {List.foldl M.step start s}
   induction' s with a s ih generalizing start
   · tauto
-    
   · rw [List.foldl, List.foldl,
       show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.stepSet] ]
     tauto
-    
 #align DFA.to_NFA_eval_from_match DFA.to_NFA_eval_from_match
 
 @[simp]
@@ -162,9 +159,7 @@ theorem to_NFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts := by
   constructor
   · rintro ⟨S, hS₁, hS₂⟩
     rwa [set.mem_singleton_iff.mp hS₂] at hS₁
-    
   · exact fun h => ⟨M.eval x, h, rfl⟩
-    
 #align DFA.to_NFA_correct DFA.to_NFA_correct
 
 end DFA

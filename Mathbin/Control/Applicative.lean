@@ -47,29 +47,27 @@ theorem Applicative.ext {F} :
   | { toFunctor := F1, seq := s1, pure := p1, seqLeft := sl1, seqRight := sr1 },
     { toFunctor := F2, seq := s2, pure := p2, seqLeft := sl2, seqRight := sr2 }, L1, L2, H1, H2 =>
     by
-    obtain rfl : @p1 = @p2 := by
+    obtain rfl : @p1 = @p2 := by 
       funext α x
       apply H1
-    obtain rfl : @s1 = @s2 := by
+    obtain rfl : @s1 = @s2 := by 
       funext α β f x
       apply H2
     cases L1
     cases L2
-    obtain rfl : F1 = F2 := by
+    obtain rfl : F1 = F2 := by 
       skip
       apply Functor.ext
       intros
       exact (L1_pure_seq_eq_map _ _).symm.trans (L2_pure_seq_eq_map _ _)
     congr <;> funext α β x y
     · exact (L1_seq_left_eq _ _).trans (L2_seq_left_eq _ _).symm
-      
     · exact (L1_seq_right_eq _ _).trans (L2_seq_right_eq _ _).symm
-      
 #align applicative.ext Applicative.ext
 
 end Lemmas
 
-instance : IsCommApplicative id := by refine' { .. } <;> intros <;> rfl
+instance : CommApplicative id := by refine' { .. } <;> intros <;> rfl
 
 namespace Functor
 
@@ -104,7 +102,9 @@ theorem pure_seq_eq_map (f : α → β) (x : Comp F G α) : pure f <*> x = f <$>
   comp.ext <| by simp [Applicative.pure_seq_eq_map', functor_norm]
 #align functor.comp.pure_seq_eq_map Functor.Comp.pure_seq_eq_map
 
-instance : LawfulApplicative (Comp F G) where
+instance :
+    LawfulApplicative
+      (Comp F G) where 
   pure_seq_eq_map := @Comp.pure_seq_eq_map F G _ _ _ _
   map_pure := @Comp.map_pure F G _ _ _ _
   seq_pure := @Comp.seq_pure F G _ _ _ _
@@ -122,10 +122,10 @@ theorem applicative_comp_id {F} [AF : Applicative F] [LF : LawfulApplicative F] 
     fun α β f x => show id <$> f <*> x = f <*> x by rw [id_map]
 #align functor.comp.applicative_comp_id Functor.Comp.applicative_comp_id
 
-open IsCommApplicative
+open CommApplicative
 
 instance {f : Type u → Type w} {g : Type v → Type u} [Applicative f] [Applicative g]
-    [IsCommApplicative f] [IsCommApplicative g] : IsCommApplicative (Comp f g) := by
+    [CommApplicative f] [CommApplicative g] : CommApplicative (Comp f g) := by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }
   intros
   casesm*comp _ _ _
@@ -150,14 +150,16 @@ theorem Comp.seq_mk {α β : Type w} {f : Type u → Type v} {g : Type w → Typ
   rfl
 #align comp.seq_mk Comp.seq_mk
 
-instance {α} [One α] [Mul α] : Applicative (Const α) where
+instance {α} [One α] [Mul α] :
+    Applicative (Const α) where 
   pure β x := (1 : α)
   seq β γ f x := (f * x : α)
 
 instance {α} [Monoid α] : LawfulApplicative (Const α) := by
   refine' { .. } <;> intros <;> simp [mul_assoc, (· <$> ·), (· <*> ·), pure]
 
-instance {α} [Zero α] [Add α] : Applicative (AddConst α) where
+instance {α} [Zero α] [Add α] :
+    Applicative (AddConst α) where 
   pure β x := (0 : α)
   seq β γ f x := (f + x : α)
 

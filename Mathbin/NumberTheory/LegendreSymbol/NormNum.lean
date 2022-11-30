@@ -121,12 +121,10 @@ theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) 
       CharTwo.bit1_eq_one, Pi.one_apply]
   cases' eq_or_ne b 0 with hb hb
   · rw [← hr, hb, jacobi_sym_nat.zero_right]
-    
   · haveI : NeZero b := ⟨hb⟩
     -- for `jacobi_sym.mul_right`
     rwa [bit0_eq_two_mul b, jacobi_sym_nat, jacobiSym.mul_right, ←
       _root_.legendre_sym.to_jacobi_sym, Nat.cast_bit1, ha, one_mul]
-    
 #align norm_num.jacobi_sym_nat.odd_even NormNum.jacobiSymNat.odd_even
 
 /-- If `a` is divisible by `4` and `b` is odd, then we can remove the factor `4` from `a`. -/

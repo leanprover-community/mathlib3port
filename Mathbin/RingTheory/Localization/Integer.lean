@@ -93,7 +93,6 @@ theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
   haveI := Classical.propDecidable
   refine' ⟨∏ i in s, (sec M (f i)).2, fun i hi => ⟨_, _⟩⟩
   · exact (∏ j in s.erase i, (sec M (f j)).2) * (sec M (f i)).1
-    
   rw [RingHom.map_mul, sec_spec', ← mul_assoc, ← (algebraMap R S).map_mul, ← Algebra.smul_def]
   congr 2
   refine' trans _ ((Submonoid.subtype M).map_prod _ _).symm
@@ -155,10 +154,8 @@ theorem finset_integer_multiple_image [DecidableEq R] (s : Finset S) :
   · rintro ⟨_, ⟨x, -, rfl⟩, rfl⟩
     rw [map_integer_multiple]
     exact Set.mem_image_of_mem _ x.prop
-    
   · rintro ⟨x, hx, rfl⟩
     exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integer_multiple M s id _⟩
-    
 #align is_localization.finset_integer_multiple_image IsLocalization.finset_integer_multiple_image
 
 end IsLocalization

@@ -20,7 +20,7 @@ theorem is_idempotent_elem_iff_of_fg {R : Type _} [CommRing R] (I : Ideal R) (h 
   · intro e
     obtain ⟨r, hr, hr'⟩ :=
       Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I I h
-        (by
+        (by 
           rw [smul_eq_mul]
           exact e.ge)
     simp_rw [smul_eq_mul] at hr'
@@ -28,10 +28,8 @@ theorem is_idempotent_elem_iff_of_fg {R : Type _} [CommRing R] (I : Ideal R) (h 
     intro x hx
     rw [← hr' x hx]
     exact ideal.mem_span_singleton'.mpr ⟨_, mul_comm _ _⟩
-    
   · rintro ⟨e, he, rfl⟩
     simp [IsIdempotentElem, Ideal.span_singleton_mul_span_singleton, he.eq]
-    
 #align ideal.is_idempotent_elem_iff_of_fg Ideal.is_idempotent_elem_iff_of_fg
 
 theorem is_idempotent_elem_iff_eq_bot_or_top {R : Type _} [CommRing R] [IsDomain R] (I : Ideal R)
@@ -43,9 +41,7 @@ theorem is_idempotent_elem_iff_eq_bot_or_top {R : Type _} [CommRing R] [IsDomain
     apply or_of_or_of_imp_of_imp (is_idempotent_elem.iff_eq_zero_or_one.mp he) id
     rintro rfl
     simp
-    
   · rintro (rfl | rfl) <;> simp [IsIdempotentElem]
-    
 #align ideal.is_idempotent_elem_iff_eq_bot_or_top Ideal.is_idempotent_elem_iff_eq_bot_or_top
 
 end Ideal

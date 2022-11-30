@@ -35,20 +35,18 @@ structure IsSubfield extends IsSubring S : Prop where
 #align is_subfield IsSubfield
 
 theorem IsSubfield.div_mem {S : Set F} (hS : IsSubfield S) {x y : F} (hx : x ∈ S) (hy : y ∈ S) :
-    x / y ∈ S := by
+    x / y ∈ S := by 
   rw [div_eq_mul_inv]
   exact hS.to_is_subring.to_is_submonoid.mul_mem hx (hS.inv_mem hy)
 #align is_subfield.div_mem IsSubfield.div_mem
 
 theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h : a ∈ s) :
-    a ^ n ∈ s := by
+    a ^ n ∈ s := by 
   cases n
   · rw [zpow_of_nat]
     exact hs.to_is_subring.to_is_submonoid.pow_mem h
-    
   · rw [zpow_neg_succ_of_nat]
     exact hs.inv_mem (hs.to_is_subring.to_is_submonoid.pow_mem h)
-    
 #align is_subfield.pow_mem IsSubfield.pow_mem
 
 theorem Univ.isSubfield : IsSubfield (@Set.univ F) :=
@@ -59,7 +57,7 @@ theorem Preimage.isSubfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (
     IsSubfield (f ⁻¹' s) :=
   { f.is_subring_preimage hs.to_is_subring with
     inv_mem := fun a (ha : f a ∈ s) =>
-      show f a⁻¹ ∈ s by
+      show f a⁻¹ ∈ s by 
         rw [map_inv₀]
         exact hs.inv_mem ha }
 #align preimage.is_subfield Preimage.isSubfield
@@ -102,29 +100,27 @@ theorem closure.isSubfield : IsSubfield (closure S) :=
   have h0 : (0 : F) ∈ closure S :=
     ring_closure_subset <| Ring.closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
   { closure.is_submonoid with
-    add_mem := by
+    add_mem := by 
       intro a b ha hb
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
-      classical
-      by_cases hq0 : q = 0
-      · simp [hb, hq0]
-        
-      by_cases hs0 : s = 0
-      · simp [ha, hs0]
-        
-      exact
-        ⟨p * s + q * r,
-          IsAddSubmonoid.add_mem ring.closure.is_subring.to_is_add_subgroup.to_is_add_submonoid
-            (ring.closure.is_subring.to_is_submonoid.mul_mem hp hs)
-            (ring.closure.is_subring.to_is_submonoid.mul_mem hq hr),
-          q * s, ring.closure.is_subring.to_is_submonoid.mul_mem hq hs,
-          (div_add_div p r hq0 hs0).symm⟩,
+      classical 
+        by_cases hq0 : q = 0
+        · simp [hb, hq0]
+        by_cases hs0 : s = 0
+        · simp [ha, hs0]
+        exact
+          ⟨p * s + q * r,
+            IsAddSubmonoid.add_mem ring.closure.is_subring.to_is_add_subgroup.to_is_add_submonoid
+              (ring.closure.is_subring.to_is_submonoid.mul_mem hp hs)
+              (ring.closure.is_subring.to_is_submonoid.mul_mem hq hr),
+            q * s, ring.closure.is_subring.to_is_submonoid.mul_mem hq hs,
+            (div_add_div p r hq0 hs0).symm⟩,
     zero_mem := h0,
-    neg_mem := by
+    neg_mem := by 
       rintro _ ⟨p, hp, q, hq, rfl⟩
       exact ⟨-p, ring.closure.is_subring.to_is_add_subgroup.neg_mem hp, q, hq, neg_div q p⟩,
-    inv_mem := by
+    inv_mem := by 
       rintro _ ⟨p, hp, q, hq, rfl⟩
       exact ⟨q, hq, p, hp, (inv_div _ _).symm⟩ }
 #align field.closure.is_subfield Field.closure.isSubfield

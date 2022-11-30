@@ -103,7 +103,7 @@ open SetLike.GradedMonoid Submodule
 
 variable {𝒜}
 
-@[ext.1]
+@[ext]
 theorem ext {c1 c2 : NumDenomSameDeg 𝒜 x} (hdeg : c1.deg = c2.deg) (hnum : (c1.num : A) = c2.num)
     (hdenom : (c1.denom : A) = c2.denom) : c1 = c2 := by
   rcases c1 with ⟨i1, ⟨n1, hn1⟩, ⟨d1, hd1⟩, h1⟩
@@ -235,7 +235,8 @@ theorem denom_neg (c : NumDenomSameDeg 𝒜 x) : ((-c).denom : A) = c.denom :=
 #align
   homogeneous_localization.num_denom_same_deg.denom_neg HomogeneousLocalization.NumDenomSameDeg.denom_neg
 
-instance : CommMonoid (NumDenomSameDeg 𝒜 x) where
+instance : CommMonoid (NumDenomSameDeg 𝒜
+        x) where 
   one := 1
   mul := (· * ·)
   mul_assoc c1 c2 c3 := ext _ (add_assoc _ _ _) (mul_assoc _ _ _) (mul_assoc _ _ _)
@@ -250,9 +251,7 @@ instance :
       @GradedMonoid.Gmonoid.gnpow _ (fun i => ↥(𝒜 i)) _ _ n _ c.denom, by
       induction' n with n ih
       · simpa only [coe_gnpow, pow_zero] using Submonoid.one_mem _
-        
-      · simpa only [pow_succ', coe_gnpow] using x.mul_mem ih c.denom_mem
-        ⟩
+      · simpa only [pow_succ', coe_gnpow] using x.mul_mem ih c.denom_mem⟩
 
 @[simp]
 theorem deg_pow (c : NumDenomSameDeg 𝒜 x) (n : ℕ) : (c ^ n).deg = n • c.deg :=
@@ -403,7 +402,7 @@ instance :
     Quotient.map₂' (· + ·)
       fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) c3 c4
         (h' : Localization.mk _ _ = Localization.mk _ _) =>
-      by
+      by 
       change Localization.mk _ _ = Localization.mk _ _
       simp only [num_add, denom_add, ← Localization.add_mk]
       convert congr_arg₂ (· + ·) h h' <;> erw [Localization.add_mk] <;> rfl
@@ -417,7 +416,7 @@ instance :
     Quotient.map₂' (· * ·)
       fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) c3 c4
         (h' : Localization.mk _ _ = Localization.mk _ _) =>
-      by
+      by 
       change Localization.mk _ _ = Localization.mk _ _
       simp only [num_mul, denom_mul]
       convert congr_arg₂ (· * ·) h h' <;> erw [Localization.mk_mul] <;> rfl
@@ -519,7 +518,8 @@ instance homogenousLocalizationCommRing : CommRing (HomogeneousLocalization 𝒜
   homogeneous_localization.homogenous_localization_comm_ring HomogeneousLocalization.homogenousLocalizationCommRing
 
 instance homogeneousLocalizationAlgebra :
-    Algebra (HomogeneousLocalization 𝒜 x) (Localization x) where
+    Algebra (HomogeneousLocalization 𝒜 x)
+      (Localization x) where 
   smul p q := p.val * q
   toFun := val
   map_one' := one_val
@@ -579,7 +579,7 @@ theorem eq_num_div_denom (f : HomogeneousLocalization 𝒜 x) :
 
 theorem ext_iff_val (f g : HomogeneousLocalization 𝒜 x) : f = g ↔ f.val = g.val :=
   { mp := fun h => h ▸ rfl,
-    mpr := fun h => by
+    mpr := fun h => by 
       induction f using Quotient.induction_on
       induction g using Quotient.induction_on
       rw [Quotient.eq]
@@ -598,7 +598,7 @@ abbrev AtPrime :=
 
 theorem is_unit_iff_is_unit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) :
     IsUnit f.val ↔ IsUnit f :=
-  ⟨fun h1 => by
+  ⟨fun h1 => by 
     rcases h1 with ⟨⟨a, b, eq0, eq1⟩, eq2 : a = f.val⟩
     rw [eq2] at eq0 eq1
     clear a eq2
@@ -617,7 +617,7 @@ theorem is_unit_iff_is_unit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) 
     simp only [one_mul, mul_one] at eq1
     have mem1 : a * f.num * c ∈ 𝔭.prime_compl :=
       eq1.symm ▸ fun r => Or.elim (Ideal.IsPrime.mem_or_mem inferInstance r) (by tauto) (by tauto)
-    have mem2 : f.num ∉ 𝔭 := by
+    have mem2 : f.num ∉ 𝔭 := by 
       contrapose! mem1
       erw [not_not]
       exact Ideal.mul_mem_right _ _ (Ideal.mul_mem_left _ _ mem1)
@@ -653,14 +653,12 @@ instance : LocalRing (HomogeneousLocalization.AtPrime 𝒜 𝔭) :=
       convert Localization.mk_self _
       simp only [← Subtype.val_eq_coe, Submonoid.coe_mul]
       ring
-      
     · left
       change _ ∈ 𝔭.prime_compl at mem1
       apply isUnit_of_mul_eq_one _ (Localization.mk a.denom.1 ⟨a.num.1, mem1⟩)
       rw [Localization.mk_mul]
       convert Localization.mk_self _
       simpa only [mul_comm]
-      
 
 end
 

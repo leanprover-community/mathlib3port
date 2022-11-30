@@ -88,7 +88,7 @@ theorem coe_inj : (f : Filter α) = g ↔ f = g :=
   coe_injective.eq_iff
 #align ultrafilter.coe_inj Ultrafilter.coe_inj
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : Ultrafilter α⦄ (h : ∀ s, s ∈ f ↔ s ∈ g) : f = g :=
   coe_injective <| Filter.ext h
 #align ultrafilter.ext Ultrafilter.ext
@@ -133,14 +133,16 @@ theorem diff_mem_iff (f : Ultrafilter α) : s \ t ∈ f ↔ s ∈ f ∧ t ∉ f 
 
 /-- If `sᶜ ∉ f ↔ s ∈ f`, then `f` is an ultrafilter. The other implication is given by
 `ultrafilter.compl_not_mem_iff`.  -/
-def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultrafilter α where
+def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) :
+    Ultrafilter α where 
   toFilter := f
   neBot' := ⟨fun hf => by simpa [hf] using h⟩
   le_of_le g hg hgf s hs := (h s).1 fun hsc => compl_not_mem hs (hgf hsc)
 #align ultrafilter.of_compl_not_mem_iff Ultrafilter.ofComplNotMemIff
 
 /-- If `f : filter α` is an atom, then it is an ultrafilter. -/
-def ofAtom (f : Filter α) (hf : IsAtom f) : Ultrafilter α where
+def ofAtom (f : Filter α) (hf : IsAtom f) :
+    Ultrafilter α where 
   toFilter := f
   neBot' := ⟨hf.1⟩
   le_of_le g hg := (is_atom_iff.1 hf).2 g hg.Ne
@@ -232,10 +234,10 @@ theorem map_map (f : Ultrafilter α) (m : α → β) (n : β → γ) : (f.map m)
 /-- The pullback of an ultrafilter along an injection whose range is large with respect to the given
 ultrafilter. -/
 def comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.range m ∈ u) :
-    Ultrafilter α where
+    Ultrafilter α where 
   toFilter := comap m u
   neBot' := u.neBot'.comapOfRangeMem large
-  le_of_le g hg hgu := by
+  le_of_le g hg hgu := by 
     skip
     simp only [← u.unique (map_le_iff_le_comap.2 hgu), comap_map inj, le_rfl]
 #align ultrafilter.comap Ultrafilter.comap
@@ -254,7 +256,7 @@ theorem coe_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (larg
 
 @[simp]
 theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := injective_id)
-    (h₁ : range id ∈ f := by
+    (h₁ : range id ∈ f := by 
       rw [range_id]
       exact univ_mem) :
     f.comap h₀ h₁ = f :=
@@ -265,7 +267,7 @@ theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := inje
 theorem comap_comap (f : Ultrafilter γ) {m : α → β} {n : β → γ} (inj₀ : Injective n)
     (large₀ : range n ∈ f) (inj₁ : Injective m) (large₁ : range m ∈ f.comap inj₀ large₀)
     (inj₂ : Injective (n ∘ m) := inj₀.comp inj₁)
-    (large₂ : range (n ∘ m) ∈ f := by
+    (large₂ : range (n ∘ m) ∈ f := by 
       rw [range_comp]
       exact image_mem_of_mem_comap large₀ large₁) :
     (f.comap inj₀ large₀).comap inj₁ large₁ = f.comap inj₂ large₂ :=
@@ -347,7 +349,8 @@ section
 
 attribute [local instance] Filter.monad Filter.is_lawful_monad
 
-instance is_lawful_monad : LawfulMonad Ultrafilter where
+instance is_lawful_monad :
+    LawfulMonad Ultrafilter where 
   id_map α f := coe_injective (id_map f.1)
   pure_bind α β a f := coe_injective (pure_bind a (coe ∘ f))
   bind_assoc α β γ f m₁ m₂ := coe_injective (filter_eq rfl)

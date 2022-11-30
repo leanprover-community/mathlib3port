@@ -38,7 +38,7 @@ theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f 
       ∀ x : LinearMap.ker g,
         h (cokernel.π (imageToKernel _ _ w) (toKernelSubobject x)) =
           k (cokernel.π (imageToKernel _ _ w) (toKernelSubobject x))) :
-    h = k := by
+    h = k := by 
   refine' cokernel_funext fun n => _
   -- Gosh it would be nice if `equiv_rw` could directly use an isomorphism, or an enriched `≃`.
   equiv_rw(kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv  at n
@@ -51,7 +51,7 @@ abbrev toCycles {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
   toKernelSubobject x
 #align Module.to_cycles ModuleCat.toCycles
 
-@[ext.1]
+@[ext]
 theorem cycles_ext {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} {x y : C.cycles i}
     (w : (C.cycles i).arrow x = (C.cycles i).arrow y) : x = y := by
   apply_fun (C.cycles i).arrow using (ModuleCat.mono_iff_injective _).mp (cycles C i).arrow_mono
@@ -73,7 +73,7 @@ abbrev toHomology {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
   homology.π (C.dTo i) (C.dFrom i) _ (toCycles x)
 #align Module.to_homology ModuleCat.toHomology
 
-@[ext.1]
+@[ext]
 theorem homology_ext' {M : ModuleCat R} (i : ι) {h k : C.homology i ⟶ M}
     (w : ∀ x : LinearMap.ker (C.dFrom i), h (toHomology x) = k (toHomology x)) : h = k :=
   homology_ext _ w

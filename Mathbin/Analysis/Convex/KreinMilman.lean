@@ -75,11 +75,9 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
         ⟨⟨z, hzt, hz⟩, h.is_closed htclos, hst.trans h.is_extreme⟩ (t.sep_subset _)] at
       hyB
     exact hl.not_le (hyB.2 x hxt)
-    
   refine' zorn_superset _ fun F hFS hF => _
   obtain rfl | hFnemp := F.eq_empty_or_nonempty
   · exact ⟨s, ⟨hsnemp, hscomp.is_closed, IsExtreme.rfl⟩, fun _ => False.elim⟩
-    
   refine'
     ⟨⋂₀ F,
       ⟨_, isClosedSInter fun t ht => (hFS ht).2.1,

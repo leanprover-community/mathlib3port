@@ -67,10 +67,8 @@ def FunctorCategory.prodPreservesColimits [HasBinaryProducts D] [HasColimits D]
             apply (nat_iso.of_components _ _).symm
             · intro G
               apply as_iso (prod_comparison ((evaluation C D).obj k) F G)
-              
             · intro G G'
-              apply prod_comparison_natural ((evaluation C D).obj k) (𝟙 F)
-               } }
+              apply prod_comparison_natural ((evaluation C D).obj k) (𝟙 F) } }
 #align
   category_theory.functor_category.prod_preserves_colimits CategoryTheory.FunctorCategory.prodPreservesColimits
 
@@ -78,7 +76,7 @@ instance whiskeringLeftPreservesLimits [HasLimits D] (F : C ⥤ E) :
     PreservesLimits ((whiskeringLeft C E D).obj F) :=
   ⟨fun J hJ =>
     ⟨fun K =>
-      ⟨fun c hc => by
+      ⟨fun c hc => by 
         apply evaluation_jointly_reflects_limits
         intro Y
         change is_limit (((evaluation E D).obj (F.obj Y)).mapCone c)
@@ -90,7 +88,7 @@ instance whiskeringRightPreservesLimitsOfShape {C : Type u} [Category C] {D : Ty
     [HasLimitsOfShape J D] (F : D ⥤ E) [PreservesLimitsOfShape J F] :
     PreservesLimitsOfShape J ((whiskeringRight C D E).obj F) :=
   ⟨fun K =>
-    ⟨fun c hc => by
+    ⟨fun c hc => by 
       apply evaluation_jointly_reflects_limits
       intro k
       change is_limit (((evaluation _ _).obj k ⋙ F).mapCone c)

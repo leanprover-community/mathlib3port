@@ -75,39 +75,35 @@ variable (𝕜) (A : Type _)
 
 instance [SemiNormedRing A] : NormedRing (Completion A) :=
   { Completion.ring, Completion.metricSpace with
-    dist_eq := fun x y => by
+    dist_eq := fun x y => by 
       apply completion.induction_on₂ x y <;> clear x y
       · refine' isClosedEq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
-        
       · intro x y
-        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm]
-        ,
+        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm],
     norm_mul := fun x y => by
       apply completion.induction_on₂ x y <;> clear x y
-      · exact
+      ·
+        exact
           isClosedLe (Continuous.comp continuous_norm continuous_mul)
             (Continuous.comp Real.continuous_mul
               (Continuous.prod_map continuous_norm continuous_norm))
-        
       · intro x y
         simp only [← coe_mul, norm_coe]
-        exact norm_mul_le x y
-         }
+        exact norm_mul_le x y }
 
 instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [HasUniformContinuousConstSmul 𝕜 A] :
     NormedAlgebra 𝕜 (Completion A) :=
   { Completion.algebra A 𝕜 with
     norm_smul_le := fun r x => by
       apply completion.induction_on x <;> clear x
-      · exact
+      ·
+        exact
           isClosedLe (Continuous.comp continuous_norm (continuous_const_smul r))
             (Continuous.comp (continuous_mul_left _) continuous_norm)
-        
       · intro x
         simp only [← coe_smul, norm_coe]
-        exact NormedSpace.norm_smul_le r x
-         }
+        exact NormedSpace.norm_smul_le r x }
 
 end Algebra
 

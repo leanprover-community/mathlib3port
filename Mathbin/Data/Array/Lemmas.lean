@@ -72,7 +72,7 @@ theorem mem_rev_list_aux :
         simp [DArray.iterateAux] <;> apply Or.inl <;> unfold read at e <;>
             have H : j = ⟨i, h⟩ := Fin.eq_of_veq je <;>
           rwa [← H, e],
-      fun m => by
+      fun m => by 
       simp [DArray.iterateAux, List.Mem] at m
       cases' m with e m'
       exact ⟨⟨i, h⟩, Nat.lt_succ_self _, Eq.symm e⟩
@@ -184,9 +184,7 @@ theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i,
   have ll := to_list_length a
   constructor <;> intro h <;> cases' h with h e <;> subst v
   · exact ⟨ll ▸ h, (to_list_nth_le _ _ _).symm⟩
-    
   · exact ⟨ll.symm ▸ h, to_list_nth_le _ _ _⟩
-    
 #align array.to_list_nth Array'.to_list_nth
 
 theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
@@ -201,10 +199,8 @@ theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
       rw [show (⟨(i : ℕ), h₃⟩ : Fin _) = i from Fin.eq_of_veq rfl, Array'.read_write,
         List.nth_update_nth_of_lt]
       simp [h₃]
-      
     · rw [List.nth_update_nth_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
       exact Fin.ne_of_vne ij
-      
 #align array.write_to_list Array'.write_to_list
 
 end Nth
@@ -253,7 +249,7 @@ theorem push_back_rev_list_aux :
       DArray.iterateAux (a.pushBack v) (fun _ => (· :: ·)) i h [] =
         DArray.iterateAux a (fun _ => (· :: ·)) i h' []
   | 0, h, h' => rfl
-  | i + 1, h, h' => by
+  | i + 1, h, h' => by 
     simp [DArray.iterateAux]
     refine' ⟨_, push_back_rev_list_aux _ _ _⟩
     dsimp [read, DArray.read, push_back]

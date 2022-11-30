@@ -59,7 +59,7 @@ theorem isConformalMapId : IsConformalMap (id R M) :=
 #align is_conformal_map_id isConformalMapId
 
 theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) :=
-  by
+  by 
   rcases hf with ⟨c', hc', li, rfl⟩
   exact ⟨c * c', mul_ne_zero hc hc', li, smul_smul _ _ _⟩
 #align is_conformal_map.smul IsConformalMap.smul

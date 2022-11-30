@@ -258,16 +258,17 @@ variable (p) (R)
 
 /-- The bijection between `𝕎 R` and `ℕ → R`, under the assumption that `p` is invertible in `R`.
 In `witt_vector.ghost_equiv` we upgrade this to an isomorphism of rings. -/
-private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R) where
+private def ghost_equiv' [Invertible (p : R)] :
+    𝕎 R ≃ (ℕ → R) where 
   toFun := ghostFun
   invFun x := (mk p) fun n => aeval x (xInTermsOfW p R n)
-  left_inv := by
+  left_inv := by 
     intro x
     ext n
     have := bind₁_witt_polynomial_X_in_terms_of_W p R n
     apply_fun aeval x.coeff  at this
     simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_witt_polynomial]
-  right_inv := by
+  right_inv := by 
     intro x
     ext n
     have := bind₁_X_in_terms_of_W_witt_polynomial p R n
@@ -304,7 +305,8 @@ variable {p R}
 
 /-- `witt_vector.map f` is the ring homomorphism `𝕎 R →+* 𝕎 S` naturally induced
 by a ring homomorphism `f : R →+* S`. It acts coefficientwise. -/
-noncomputable def map (f : R →+* S) : 𝕎 R →+* 𝕎 S where
+noncomputable def map (f : R →+* S) :
+    𝕎 R →+* 𝕎 S where 
   toFun := mapFun f
   map_zero' := mapFun.zero f
   map_one' := mapFun.one f
@@ -327,7 +329,7 @@ theorem map_coeff (f : R →+* S) (x : 𝕎 R) (n : ℕ) : (map f x).coeff n = f
 
 /-- `witt_vector.ghost_map` is a ring homomorphism that maps each Witt vector
 to the sequence of its ghost components. -/
-def ghostMap : 𝕎 R →+* ℕ → R where
+def ghostMap : 𝕎 R →+* ℕ → R where 
   toFun := ghostFun
   map_zero' := ghost_fun_zero
   map_one' := ghost_fun_one
@@ -372,7 +374,8 @@ end Invertible
 
 /-- `witt_vector.coeff x 0` as a `ring_hom` -/
 @[simps]
-noncomputable def constantCoeff : 𝕎 R →+* R where
+noncomputable def constantCoeff :
+    𝕎 R →+* R where 
   toFun x := x.coeff 0
   map_zero' := by simp
   map_one' := by simp

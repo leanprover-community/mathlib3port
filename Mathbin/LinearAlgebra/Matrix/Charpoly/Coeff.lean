@@ -91,10 +91,7 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
     unfold charpoly
     rw [det_of_card_zero]
     · simp
-      
     · assumption
-      
-    
   rw [← sub_add_cancel M.charpoly (∏ i : n, X - C (M i i))]
   have h1 : (∏ i : n, X - C (M i i)).degree = Fintype.card n := by
     rw [degree_eq_iff_nat_degree_eq_of_pos]
@@ -126,7 +123,6 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic := by
   by_cases Fintype.card n = 0
   · rw [charpoly, det_of_card_zero h]
     apply monic_one
-    
   have mon : (∏ i : n, X - C (M i i)).Monic := by
     apply monic_prod_of_monic univ fun i : n => X - C (M i i)
     simp [monic_X_sub_C]
@@ -161,7 +157,6 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     rw [sum_apply]
     dsimp
     rfl
-    
   · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).Eq]
     simp only [coe_scalar, Matrix.one_mul, RingHom.id_apply, Pi.smul_apply, smul_eq_mul, mul_eq_mul,
       Algebra.smul_mul_assoc]
@@ -171,7 +166,6 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     intro n hn h'n
     rw [not_mem_support_iff] at h'n
     simp only [h'n, zero_mul]
-    
 #align matrix.mat_poly_equiv_eval Matrix.mat_poly_equiv_eval
 
 theorem eval_det (M : Matrix n n R[X]) (r : R) :
@@ -193,7 +187,7 @@ variable {p : ℕ} [Fact p.Prime]
 theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
     matPolyEquiv ((expand K k : K[X] →+* K[X]).mapMatrix (charmatrix (M ^ k))) =
       X ^ k - c (M ^ k) :=
-  by
+  by 
   ext m
   rw [coeff_sub, coeff_C, mat_poly_equiv_coeff_apply, RingHom.map_matrix_apply, Matrix.map_apply,
     AlgHom.coe_to_ring_hom, Dmatrix.sub_apply, coeff_X_pow]
@@ -201,12 +195,10 @@ theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matr
   · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow,
       coeff_C]
     split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, Dmatrix.zero_apply]
-    
   · rw [charmatrix_apply_ne _ _ _ hij, AlgHom.map_neg, expand_C, coeff_neg, coeff_C]
     split_ifs with m0 mp <;>
       simp only [hij, zero_sub, Dmatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def,
         not_false_iff]
-    
 #align mat_poly_equiv_eq_X_pow_sub_C mat_poly_equiv_eq_X_pow_sub_C
 
 namespace Matrix
@@ -243,10 +235,8 @@ theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k
   · rw [tsub_zero, pow_one, charmatrix_apply, coeff_sub, coeff_X_mul_zero, coeff_C_zero, zero_sub,
       neg_mem_iff]
     exact h (c i) i
-    
   · rw [Nat.succ_eq_one_add, tsub_self_add, pow_zero, Ideal.one_eq_top]
     exact Submodule.mem_top
-    
 #align coeff_charpoly_mem_ideal_pow coeff_charpoly_mem_ideal_pow
 
 end Ideal

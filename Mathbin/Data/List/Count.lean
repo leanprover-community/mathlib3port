@@ -119,9 +119,7 @@ theorem countp_map (p : β → Prop) [DecidablePred p] (f : α → β) :
 variable {p q}
 
 theorem countp_mono_left (h : ∀ x ∈ l, p x → q x) : countp p l ≤ countp q l := by
-  induction' l with a l ihl;
-  · rfl
-    
+  induction' l with a l ihl; · rfl
   rw [forall_mem_cons] at h; cases' h with ha hl
   rw [countp_cons, countp_cons]
   refine' add_le_add (ihl hl) _
@@ -169,7 +167,7 @@ theorem count_cons_of_ne {a b : α} (h : a ≠ b) (l : List α) : count a (b :: 
 theorem count_tail :
     ∀ (l : List α) (a : α) (h : 0 < l.length),
       l.tail.count a = l.count a - ite (a = List.nthLe l 0 h) 1 0
-  | _ :: _, a, h => by
+  | _ :: _, a, h => by 
     rw [count_cons]
     split_ifs <;> simp
 #align list.count_tail List.count_tail
@@ -262,7 +260,7 @@ theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l
 theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) :
     count a (filter p l) = count a l := by
   simp only [count, countp_filter,
-    show (fun b => a = b ∧ p b) = Eq a by
+    show (fun b => a = b ∧ p b) = Eq a by 
       ext b
       constructor <;> cc]
 #align list.count_filter List.count_filter
@@ -285,19 +283,15 @@ theorem count_le_count_map [DecidableEq β] (l : List α) (f : α → β) (x : �
 
 theorem count_erase (a b : α) : ∀ l : List α, count a (l.erase b) = count a l - ite (a = b) 1 0
   | [] => by simp
-  | c :: l => by
+  | c :: l => by 
     rw [erase_cons]
     by_cases hc : c = b
     · rw [if_pos hc, hc, count_cons', Nat.add_sub_cancel]
-      
     · rw [if_neg hc, count_cons', count_cons', count_erase]
       by_cases ha : a = b
       · rw [← ha, eq_comm] at hc
         rw [if_pos ha, if_neg hc, add_zero, add_zero]
-        
       · rw [if_neg ha, tsub_zero, tsub_zero]
-        
-      
 #align list.count_erase List.count_erase
 
 @[simp]
@@ -316,15 +310,11 @@ theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β
     (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a := by
   induction' l with a' as h generalizing a
   · rw [map_nil, prod_nil, count_nil, pow_zero]
-    
   · specialize h a fun a' ha' hfa' => hf a' ha' (mem_cons_of_mem _ hfa')
     rw [List.map_cons, List.prod_cons, count_cons, h]
     split_ifs with ha'
     · rw [ha', pow_succ]
-      
     · rw [hf a' (Ne.symm ha') (List.mem_cons_self a' as), one_mul]
-      
-    
 #align list.prod_map_eq_pow_single List.prod_map_eq_pow_single
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a' «expr ≠ » a) -/

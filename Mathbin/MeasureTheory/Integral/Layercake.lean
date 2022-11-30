@@ -73,9 +73,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     intro t ht
     cases eq_or_lt_of_le ht
     · simp [← h]
-      
     · exact g_intble t h
-      
   have integrand_eq :
     ∀ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) = ∫⁻ t in Ioc 0 (f ω), Ennreal.ofReal (g t) := by
     intro ω
@@ -94,40 +92,33 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
       (fun x => (Ioc 0 (f x)).indicator (fun t : ℝ => Ennreal.ofReal (g t)) s) = fun x =>
         Ennreal.ofReal (g s) * (Ioi (0 : ℝ)).indicator (fun _ => 1) s *
           (Ici s).indicator (fun t : ℝ => (1 : ℝ≥0∞)) (f x) :=
-      by
+      by 
       funext a
       by_cases s ∈ Ioc (0 : ℝ) (f a)
-      · simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem,
+      ·
+        simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem,
           mul_one]
-        
       · have h_copy := h
         simp only [mem_Ioc, not_and, not_le] at h
         by_cases h' : 0 < s
         · simp only [h_copy, h h', indicator_of_not_mem, not_false_iff, mem_Ici, not_le, mul_zero]
-          
         · have : s ∉ Ioi (0 : ℝ) := h'
           simp only [this, h', indicator_of_not_mem, not_false_iff, mul_zero, zero_mul, mem_Ioc,
             false_and_iff]
-          
-        
     simp_rw [aux₁]
     rw [lintegral_const_mul']
     swap
     · apply Ennreal.mul_ne_top Ennreal.of_real_ne_top
-      by_cases s ∈ Ioi (0 : ℝ) <;>
-        · simp [h]
-          
-      
+      by_cases s ∈ Ioi (0 : ℝ) <;> · simp [h]
     simp_rw [show
         (fun a => (Ici s).indicator (fun t : ℝ => (1 : ℝ≥0∞)) (f a)) = fun a =>
           { a : α | s ≤ f a }.indicator (fun _ => 1) a
-        by
+        by 
         funext a
         by_cases s ≤ f a <;> simp [h]]
     rw [lintegral_indicator]
     swap
     · exact f_mble measurableSetIci
-      
     rw [lintegral_one, measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left,
       mul_assoc,
       show
@@ -136,22 +127,19 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
         by by_cases 0 < s <;> simp [h]]
     simp_rw [mul_comm _ (Ennreal.ofReal _), one_mul]
     rfl
-    
   have aux₂ :
     (Function.uncurry fun (x : α) (y : ℝ) =>
         (Ioc 0 (f x)).indicator (fun t : ℝ => Ennreal.ofReal (g t)) y) =
       { p : α × ℝ | p.2 ∈ Ioc 0 (f p.1) }.indicator fun p => Ennreal.ofReal (g p.2) :=
-    by
+    by 
     funext p
     cases p
     rw [Function.uncurry_apply_pair]
     by_cases p_snd ∈ Ioc 0 (f p_fst)
     · have h' : (p_fst, p_snd) ∈ { p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst) } := h
       rw [Set.indicator_of_mem h', Set.indicator_of_mem h]
-      
     · have h' : (p_fst, p_snd) ∉ { p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst) } := h
       rw [Set.indicator_of_not_mem h', Set.indicator_of_not_mem h]
-      
   rw [aux₂]
   have mble := measurableSetRegionBetweenOc measurableZero f_mble MeasurableSet.univ
   simp_rw [mem_univ, Pi.zero_apply, true_and_iff] at mble
@@ -187,7 +175,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   have eq₁ :
     (∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t)) =
       ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (G t) :=
-    by
+    by 
     apply lintegral_congr_ae
     filter_upwards [g_eq_G] with a ha
     rw [ha]
@@ -230,7 +218,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     (f_mble : Measurable f) {p : ℝ} (p_pos : 0 < p) :
     (∫⁻ ω, Ennreal.ofReal (f ω ^ p) ∂μ) =
       Ennreal.ofReal p * ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (t ^ (p - 1)) :=
-  by
+  by 
   have one_lt_p : -1 < p - 1 := by linarith
   have obs : ∀ x : ℝ, (∫ t : ℝ in 0 ..x, t ^ (p - 1)) = x ^ p / p := by
     intro x
@@ -249,9 +237,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   rw [← key, ← lintegral_const_mul (Ennreal.ofReal p)] <;> simp_rw [obs]
   · congr with ω
     rw [← Ennreal.of_real_mul p_pos.le, mul_div_cancel' (f ω ^ p) p_pos.ne.symm]
-    
   · exact ((f_mble.pow measurableConst).div_const p).ennrealOfReal
-    
 #align
   measure_theory.lintegral_rpow_eq_lintegral_meas_le_mul MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul
 

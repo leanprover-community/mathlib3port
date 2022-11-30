@@ -100,9 +100,7 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coe
   dsimp [select, select_poly]
   split_ifs with hi
   · rw [aeval_X]
-    
   · rw [AlgHom.map_zero]
-    
 #align witt_vector.coeff_select WittVector.coeff_select
 
 @[is_poly]
@@ -123,7 +121,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
     (bind₁ (select_poly P)) (wittPolynomial p ℤ n) +
         (bind₁ (select_poly fun i => ¬P i)) (wittPolynomial p ℤ n) =
       wittPolynomial p ℤ n
-    by
+    by 
     apply_fun aeval x.coeff  at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
   simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow,
@@ -134,9 +132,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
   by_cases Pm : P m
   · rw [if_pos Pm, if_neg _, add_zero]
     exact not_not.mpr Pm
-    
   · rwa [if_neg Pm, if_pos, zero_add]
-    
 #align witt_vector.select_add_select_not WittVector.select_add_select_not
 
 theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coeff n = 0) :
@@ -144,22 +140,18 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
   let P : ℕ → Prop := fun n => y.coeff n = 0
   haveI : DecidablePred P := Classical.decPred P
   set z := mk p fun n => if P n then x.coeff n else y.coeff n with hz
-  have hx : select P z = x := by
+  have hx : select P z = x := by 
     ext1 n
     rw [select, coeff_mk, coeff_mk]
     split_ifs with hn
     · rfl
-      
     · rw [(h n).resolve_right hn]
-      
-  have hy : select (fun i => ¬P i) z = y := by
+  have hy : select (fun i => ¬P i) z = y := by 
     ext1 n
     rw [select, coeff_mk, coeff_mk]
     split_ifs with hn
     · exact hn.symm
-      
     · rfl
-      
   calc
     (x + y).coeff n = z.coeff n := by rw [← hx, ← hy, select_add_select_not P z]
     _ = x.coeff n + y.coeff n := _
@@ -168,9 +160,7 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
   split_ifs with hn
   · dsimp [P] at hn
     rw [hn, add_zero]
-    
   · rw [(h n).resolve_right hn, zero_add]
-    
 #align witt_vector.coeff_add_of_disjoint WittVector.coeff_add_of_disjoint
 
 end Select

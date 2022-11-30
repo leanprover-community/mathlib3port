@@ -84,7 +84,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : α -> Type.{u_2}} {x₀ : Sigma.{u_1, u_2} α β} {x₁ : Sigma.{u_1, u_2} α β}, (Eq.{succ u_1} α (Sigma.fst.{u_1, u_2} α β x₀) (Sigma.fst.{u_1, u_2} α β x₁)) -> (HEq.{succ u_2} (β (Sigma.fst.{u_1, u_2} α β x₀)) (Sigma.snd.{u_1, u_2} α β x₀) (β (Sigma.fst.{u_1, u_2} α β x₁)) (Sigma.snd.{u_1, u_2} α β x₁)) -> (Eq.{max (succ u_1) (succ u_2)} (Sigma.{u_1, u_2} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align sigma.ext Sigma.extₓ'. -/
-@[ext.1]
+@[ext]
 theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
   cases x₀
   cases x₁
@@ -107,7 +107,7 @@ theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq
 
 #print Sigma.subtype_ext /-
 /-- A specialized ext lemma for equality of sigma types over an indexed subtype. -/
-@[ext.1]
+@[ext]
 theorem subtype_ext {β : Type _} {p : α → β → Prop} :
     ∀ {x₀ x₁ : Σa, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
@@ -167,7 +167,7 @@ Case conversion may be inaccurate. Consider using '#align function.injective.sig
 theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h₁ : Function.Injective f₁) (h₂ : ∀ a, Function.Injective (f₂ a)) :
     Function.Injective (Sigma.map f₁ f₂)
-  | ⟨i, x⟩, ⟨j, y⟩, h => by
+  | ⟨i, x⟩, ⟨j, y⟩, h => by 
     obtain rfl : i = j; exact h₁ (sigma.mk.inj_iff.mp h).1
     obtain rfl : x = y; exact h₂ i (sigma_mk_injective h)
     rfl
@@ -372,7 +372,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {x₀ : PSigma.{u_1, u_2} α β} {x₁ : PSigma.{u_1, u_2} α β}, (Eq.{u_1} α (PSigma.fst.{u_1, u_2} α β x₀) (PSigma.fst.{u_1, u_2} α β x₁)) -> (HEq.{u_2} (β (PSigma.fst.{u_1, u_2} α β x₀)) (PSigma.snd.{u_1, u_2} α β x₀) (β (PSigma.fst.{u_1, u_2} α β x₁)) (PSigma.snd.{u_1, u_2} α β x₁)) -> (Eq.{max (max 1 u_1) u_2} (PSigma.{u_1, u_2} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align psigma.ext PSigma.extₓ'. -/
-@[ext.1]
+@[ext]
 theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
   cases x₀
   cases x₁
@@ -417,7 +417,7 @@ theorem exists {p : (Σ'a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b
 
 #print PSigma.subtype_ext /-
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/
-@[ext.1]
+@[ext]
 theorem subtype_ext {β : Sort _} {p : α → β → Prop} :
     ∀ {x₀ x₁ : Σ'a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl

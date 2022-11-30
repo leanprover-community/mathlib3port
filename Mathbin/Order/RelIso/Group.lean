@@ -15,7 +15,7 @@ variable {α : Type _} {r : α → α → Prop}
 
 namespace RelIso
 
-instance : Group (r ≃r r) where
+instance : Group (r ≃r r) where 
   one := RelIso.refl r
   mul f₁ f₂ := f₂.trans f₁
   inv := RelIso.symm

@@ -73,9 +73,7 @@ theorem line_map_mono_endpoints (ha : a ≤ a') (hb : b ≤ b') (h₀ : 0 ≤ r)
 
 theorem line_map_strict_mono_endpoints (ha : a < a') (hb : b < b') (h₀ : 0 ≤ r) (h₁ : r ≤ 1) :
     lineMap a b r < lineMap a' b' r := by
-  rcases h₀.eq_or_lt with (rfl | h₀);
-  · simpa
-    
+  rcases h₀.eq_or_lt with (rfl | h₀); · simpa
   exact (line_map_mono_left ha.le h₁).trans_lt (line_map_strict_mono_right hb h₀)
 #align line_map_strict_mono_endpoints line_map_strict_mono_endpoints
 
@@ -249,9 +247,7 @@ theorem map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
   rw [sub_add_eq_sub_sub_swap, sub_self, zero_sub, neg_mul_eq_mul_neg, neg_sub, le_inv_smul_iff h,
     smul_smul, mul_inv_cancel_right₀, le_sub_comm, ← neg_sub (f b), smul_neg, neg_add_eq_sub]
   · exact right_ne_zero_of_mul h.ne'
-    
   · infer_instance
-    
 #align map_le_line_map_iff_slope_le_slope_right map_le_line_map_iff_slope_le_slope_right
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly above the

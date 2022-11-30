@@ -43,14 +43,15 @@ def normalEpi (hf : Epi f) : NormalEpi f :=
 end
 
 /-- The category of abelian groups is abelian. -/
-instance : Abelian AddCommGroupCat.{u} where
+instance : Abelian
+      AddCommGroupCat.{u} where 
   HasFiniteProducts := ⟨by infer_instance⟩
   normalMonoOfMono X Y := normalMono
   normalEpiOfEpi X Y := normalEpi
-  add_comp' := by
+  add_comp' := by 
     intros
     simp only [preadditive.add_comp]
-  comp_add' := by
+  comp_add' := by 
     intros
     simp only [preadditive.comp_add]
 

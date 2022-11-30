@@ -48,7 +48,7 @@ theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
     diff (MonoidHom.id H) (g • α) (g • β) =
       ⟨g.unop⁻¹ * (diff (MonoidHom.id H) α β : H) * g.unop,
         hH.mem_comm ((congr_arg (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩ :=
-  by
+  by 
   letI := H.fintype_quotient_of_finite_index
   let ϕ : H →* H :=
     { toFun := fun h =>
@@ -70,7 +70,9 @@ theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
 
 variable {H} [Normal H]
 
-instance : MulAction G H.QuotientDiff where
+instance :
+    MulAction G
+      H.QuotientDiff where 
   smul g :=
     Quotient.map' (fun α => op g⁻¹ • α) fun α β h =>
       Subtype.ext
@@ -169,7 +171,7 @@ include h1 h2 h3
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 @[nolint unused_arguments]
-private theorem step0 : N ≠ ⊥ := by
+private theorem step0 : N ≠ ⊥ := by 
   rintro rfl
   exact h3 ⊤ is_complement'_bot_top
 #align subgroup.schur_zassenhaus_induction.step0 subgroup.schur_zassenhaus_induction.step0
@@ -210,7 +212,7 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
         (K.one_lt_card_iff_ne_bot.mpr h4.1)
   have h6 :
     Nat.Coprime (Fintype.card (N.map (QuotientGroup.mk' K))) (N.map (QuotientGroup.mk' K)).index :=
-    by
+    by 
     have index_map := N.index_map_eq this (by rwa [QuotientGroup.ker_mk])
     have index_pos : 0 < N.index := Nat.pos_of_ne_zero index_ne_zero_of_finite
     rw [index_map]
@@ -223,25 +225,22 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
       refine' comap_map_eq_self _
       rwa [QuotientGroup.ker_mk]
     rwa [← key, comap_sup_eq, hH.symm.sup_eq_top, comap_top]
-    
   · rw [← comap_top (QuotientGroup.mk' K)]
     intro hH'
     rw [comap_injective this hH', is_complement'_top_right, map_eq_bot_iff, QuotientGroup.ker_mk] at
       hH
     · exact h4.2 (le_antisymm hK hH)
-      
-    
 #align subgroup.schur_zassenhaus_induction.step2 subgroup.schur_zassenhaus_induction.step2
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step3 (K : Subgroup N) [(K.map N.Subtype).Normal] : K = ⊥ ∨ K = ⊤ := by
   have key := step2 h1 h2 h3 (K.map N.subtype) K.map_subtype_le
   rw [← map_bot N.subtype] at key
-  conv at key =>
-  congr
-  skip
-  rhs
-  rw [← N.subtype_range, N.subtype.range_eq_map]
+  conv at key => 
+    congr
+    skip
+    rhs
+    rw [← N.subtype_range, N.subtype.range_eq_map]
   have inj := map_injective N.subtype_injective
   rwa [inj.eq_iff, inj.eq_iff] at key
 #align subgroup.schur_zassenhaus_induction.step3 subgroup.schur_zassenhaus_induction.step3
@@ -284,14 +283,14 @@ variable {n : ℕ} {G : Type u} [Group G]
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Fintype.card G = n)
     {N : Subgroup G} [N.Normal] (hN : Nat.Coprime (Fintype.card N) N.index) :
-    ∃ H : Subgroup G, IsComplement' N H := by
+    ∃ H : Subgroup G, IsComplement' N H := by 
   revert G
   apply Nat.strong_induction_on n
   rintro n ih G _ _ rfl N _ hN
   refine' not_forall_not.mp fun h3 => _
   haveI :=
     schur_zassenhaus_induction.step7 hN
-      (fun G' _ _ hG' => by
+      (fun G' _ _ hG' => by 
         apply ih _ hG'
         rfl)
       h3
@@ -318,14 +317,12 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal]
   · rw [hN1, Nat.coprime_zero_left, index_eq_one] at hN
     rw [hN]
     exact ⟨⊥, is_complement'_top_bot⟩
-    
   by_cases hN2 : N.index = 0
   · rw [hN2, Nat.coprime_zero_right] at hN
     haveI := (cardinal.to_nat_eq_one_iff_unique.mp hN).1
     rw [N.eq_bot_of_subsingleton]
     exact ⟨⊤, is_complement'_bot_top⟩
-    
-  have hN3 : Nat.card G ≠ 0 := by
+  have hN3 : Nat.card G ≠ 0 := by 
     rw [← N.card_mul_index]
     exact mul_ne_zero hN1 hN2
   haveI :=

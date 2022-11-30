@@ -53,7 +53,8 @@ theorem uniform_equiv_mk_coe (a : Equiv α β) (b c) : (UniformEquiv.mk a b c : 
 #align uniform_equiv.uniform_equiv_mk_coe UniformEquiv.uniform_equiv_mk_coe
 
 /-- Inverse of a uniform isomorphism. -/
-protected def symm (h : α ≃ᵤ β) : β ≃ᵤ α where
+protected def symm (h : α ≃ᵤ β) :
+    β ≃ᵤ α where 
   uniform_continuous_to_fun := h.uniform_continuous_inv_fun
   uniform_continuous_inv_fun := h.uniform_continuous_to_fun
   toEquiv := h.toEquiv.symm
@@ -87,21 +88,24 @@ theorem to_equiv_injective : Function.Injective (toEquiv : α ≃ᵤ β → α �
   | ⟨e, h₁, h₂⟩, ⟨e', h₁', h₂'⟩, rfl => rfl
 #align uniform_equiv.to_equiv_injective UniformEquiv.to_equiv_injective
 
-@[ext.1]
+@[ext]
 theorem ext {h h' : α ≃ᵤ β} (H : ∀ x, h x = h' x) : h = h' :=
   to_equiv_injective <| Equiv.ext H
 #align uniform_equiv.ext UniformEquiv.ext
 
 /-- Identity map as a uniform isomorphism. -/
 @[simps (config := { fullyApplied := false }) apply]
-protected def refl (α : Type _) [UniformSpace α] : α ≃ᵤ α where
+protected def refl (α : Type _) [UniformSpace α] :
+    α ≃ᵤ α where 
   uniform_continuous_to_fun := uniform_continuous_id
   uniform_continuous_inv_fun := uniform_continuous_id
   toEquiv := Equiv.refl α
 #align uniform_equiv.refl UniformEquiv.refl
 
 /-- Composition of two uniform isomorphisms. -/
-protected def trans (h₁ : α ≃ᵤ β) (h₂ : β ≃ᵤ γ) : α ≃ᵤ γ where
+protected def trans (h₁ : α ≃ᵤ β) (h₂ : β ≃ᵤ γ) :
+    α ≃ᵤ
+      γ where 
   uniform_continuous_to_fun := h₂.uniform_continuous_to_fun.comp h₁.uniform_continuous_to_fun
   uniform_continuous_inv_fun := h₁.uniform_continuous_inv_fun.comp h₂.uniform_continuous_inv_fun
   toEquiv := Equiv.trans h₁.toEquiv h₂.toEquiv
@@ -230,7 +234,10 @@ protected theorem uniform_embedding (h : α ≃ᵤ β) : UniformEmbedding h :=
 #align uniform_equiv.uniform_embedding UniformEquiv.uniform_embedding
 
 /-- Uniform equiv given a uniform embedding. -/
-noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) : α ≃ᵤ Set.range f where
+noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) :
+    α ≃ᵤ
+      Set.range
+        f where 
   uniform_continuous_to_fun := hf.to_uniform_inducing.UniformContinuous.subtype_mk _
   uniform_continuous_inv_fun := by
     simp [hf.to_uniform_inducing.uniform_continuous_iff, uniform_continuous_subtype_coe]
@@ -238,14 +245,19 @@ noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) :
 #align uniform_equiv.of_uniform_embedding UniformEquiv.ofUniformEmbedding
 
 /-- If two sets are equal, then they are uniformly equivalent. -/
-def setCongr {s t : Set α} (h : s = t) : s ≃ᵤ t where
+def setCongr {s t : Set α} (h : s = t) :
+    s ≃ᵤ
+      t where 
   uniform_continuous_to_fun := uniform_continuous_subtype_val.subtype_mk _
   uniform_continuous_inv_fun := uniform_continuous_subtype_val.subtype_mk _
   toEquiv := Equiv.setCongr h
 #align uniform_equiv.set_congr UniformEquiv.setCongr
 
 /-- Product of two uniform isomorphisms. -/
-def prodCongr (h₁ : α ≃ᵤ β) (h₂ : γ ≃ᵤ δ) : α × γ ≃ᵤ β × δ where
+def prodCongr (h₁ : α ≃ᵤ β) (h₂ : γ ≃ᵤ δ) :
+    α × γ ≃ᵤ
+      β ×
+        δ where 
   uniform_continuous_to_fun :=
     (h₁.UniformContinuous.comp uniform_continuous_fst).prod_mk
       (h₂.UniformContinuous.comp uniform_continuous_snd)
@@ -271,7 +283,10 @@ section
 variable (α β γ)
 
 /-- `α × β` is uniformly isomorphic to `β × α`. -/
-def prodComm : α × β ≃ᵤ β × α where
+def prodComm :
+    α × β ≃ᵤ
+      β ×
+        α where 
   uniform_continuous_to_fun := uniform_continuous_snd.prod_mk uniform_continuous_fst
   uniform_continuous_inv_fun := uniform_continuous_snd.prod_mk uniform_continuous_fst
   toEquiv := Equiv.prodComm α β
@@ -288,7 +303,11 @@ theorem coe_prod_comm : ⇑(prodComm α β) = Prod.swap :=
 #align uniform_equiv.coe_prod_comm UniformEquiv.coe_prod_comm
 
 /-- `(α × β) × γ` is uniformly isomorphic to `α × (β × γ)`. -/
-def prodAssoc : (α × β) × γ ≃ᵤ α × β × γ where
+def prodAssoc :
+    (α × β) × γ ≃ᵤ
+      α ×
+        β ×
+          γ where 
   uniform_continuous_to_fun :=
     (uniform_continuous_fst.comp uniform_continuous_fst).prod_mk
       ((uniform_continuous_snd.comp uniform_continuous_fst).prod_mk uniform_continuous_snd)
@@ -300,7 +319,7 @@ def prodAssoc : (α × β) × γ ≃ᵤ α × β × γ where
 
 /-- `α × {*}` is uniformly isomorphic to `α`. -/
 @[simps (config := { fullyApplied := false }) apply]
-def prodPunit : α × PUnit ≃ᵤ α where
+def prodPunit : α × PUnit ≃ᵤ α where 
   toEquiv := Equiv.prodPUnit α
   uniform_continuous_to_fun := uniform_continuous_fst
   uniform_continuous_inv_fun := uniform_continuous_id.prod_mk uniform_continuous_const
@@ -329,7 +348,8 @@ end
 
 /-- If `ι` has a unique element, then `ι → α` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := false })]
-def funUnique (ι α : Type _) [Unique ι] [UniformSpace α] : (ι → α) ≃ᵤ α where
+def funUnique (ι α : Type _) [Unique ι] [UniformSpace α] :
+    (ι → α) ≃ᵤ α where 
   toEquiv := Equiv.funUnique ι α
   uniform_continuous_to_fun := PiCat.uniform_continuous_proj _ _
   uniform_continuous_inv_fun := uniform_continuous_pi.mpr fun _ => uniform_continuous_id
@@ -337,7 +357,8 @@ def funUnique (ι α : Type _) [Unique ι] [UniformSpace α] : (ι → α) ≃�
 
 /-- Uniform isomorphism between dependent functions `Π i : fin 2, α i` and `α 0 × α 1`. -/
 @[simps (config := { fullyApplied := false })]
-def piFinTwo (α : Fin 2 → Type u) [∀ i, UniformSpace (α i)] : (∀ i, α i) ≃ᵤ α 0 × α 1 where
+def piFinTwo (α : Fin 2 → Type u) [∀ i, UniformSpace (α i)] :
+    (∀ i, α i) ≃ᵤ α 0 × α 1 where 
   toEquiv := piFinTwoEquiv α
   uniform_continuous_to_fun :=
     (PiCat.uniform_continuous_proj _ 0).prod_mk (PiCat.uniform_continuous_proj _ 1)
@@ -354,7 +375,10 @@ def finTwoArrow : (Fin 2 → α) ≃ᵤ α × α :=
 
 /-- A subset of a uniform space is uniformly isomorphic to its image under a uniform isomorphism.
 -/
-def image (e : α ≃ᵤ β) (s : Set α) : s ≃ᵤ e '' s where
+def image (e : α ≃ᵤ β) (s : Set α) :
+    s ≃ᵤ
+      e ''
+        s where 
   uniform_continuous_to_fun :=
     (e.UniformContinuous.comp uniform_continuous_subtype_val).subtype_mk _
   uniform_continuous_inv_fun :=

@@ -39,7 +39,7 @@ protected theorem proj_eq (h : IsHomeomorphicTrivialFiberBundle F proj) :
 
 /-- The projection from a trivial fiber bundle to its base is surjective. -/
 protected theorem surjective_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBundle F proj) :
-    Function.Surjective proj := by
+    Function.Surjective proj := by 
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact prod.fst_surjective.comp e.surjective
 #align
@@ -47,7 +47,7 @@ protected theorem surjective_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBu
 
 /-- The projection from a trivial fiber bundle to its base is continuous. -/
 protected theorem continuous_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : Continuous proj :=
-  by
+  by 
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact continuous_fst.comp e.continuous
 #align
@@ -55,7 +55,7 @@ protected theorem continuous_proj (h : IsHomeomorphicTrivialFiberBundle F proj) 
 
 /-- The projection from a trivial fiber bundle to its base is open. -/
 protected theorem is_open_map_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : IsOpenMap proj :=
-  by
+  by 
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact is_open_map_fst.comp e.is_open_map
 #align

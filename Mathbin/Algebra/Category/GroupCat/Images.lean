@@ -26,7 +26,7 @@ namespace AddCommGroupCat
 -- we restrict to the lowest universe here for now.
 variable {G H : AddCommGroupCat.{0}} (f : G ⟶ H)
 
-attribute [local ext.1] Subtype.ext_val
+attribute [local ext] Subtype.ext_val
 
 section
 
@@ -59,15 +59,17 @@ attribute [local simp] image.fac
 variable {f}
 
 /-- the universal property for the image factorisation -/
-noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
+noncomputable def image.lift (F' : MonoFactorisation f) :
+    image f ⟶
+      F'.i where 
   toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.i)
-  map_zero' := by
+  map_zero' := by 
     haveI := F'.m_mono
     apply injective_of_mono F'.m
     change (F'.e ≫ F'.m) _ = _
     rw [F'.fac, AddMonoidHom.map_zero]
     exact (Classical.indefiniteDescription (fun y => f y = 0) _).2
-  map_add' := by
+  map_add' := by 
     intro x y
     haveI := F'.m_mono
     apply injective_of_mono F'.m
@@ -90,7 +92,8 @@ theorem image.lift_fac (F' : MonoFactorisation f) : image.lift F' ≫ F'.m = ima
 end
 
 /-- the factorisation of any morphism in AddCommGroup through a mono. -/
-def monoFactorisation : MonoFactorisation f where
+def monoFactorisation : MonoFactorisation
+      f where 
   i := image f
   m := image.ι f
   e := factorThruImage f
@@ -98,7 +101,8 @@ def monoFactorisation : MonoFactorisation f where
 
 /-- the factorisation of any morphism in AddCommGroup through a mono has the universal property of
 the image. -/
-noncomputable def isImage : IsImage (monoFactorisation f) where
+noncomputable def isImage :
+    IsImage (monoFactorisation f) where 
   lift := image.lift
   lift_fac' := image.lift_fac
 #align AddCommGroup.is_image AddCommGroupCat.isImage

@@ -36,10 +36,11 @@ namespace LazyList
 open Function
 
 /-- Isomorphism between strict and lazy lists. -/
-def listEquivLazyList (α : Type _) : List α ≃ LazyList α where
+def listEquivLazyList (α : Type _) :
+    List α ≃ LazyList α where 
   toFun := LazyList.ofList
   invFun := LazyList.toList
-  right_inv := by
+  right_inv := by 
     intro
     induction x
     rfl
@@ -47,7 +48,7 @@ def listEquivLazyList (α : Type _) : List α ≃ LazyList α where
     ext
     cases x
     rfl
-  left_inv := by
+  left_inv := by 
     intro
     induction x
     rfl
@@ -74,7 +75,7 @@ protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} 
   | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk.mk <$> traverse (xs ())
 #align lazy_list.traverse LazyList.traverse
 
-instance : Traversable LazyList where
+instance : Traversable LazyList where 
   map := @LazyList.traverse id _
   traverse := @LazyList.traverse
 
@@ -85,23 +86,19 @@ instance : IsLawfulTraversable LazyList := by
     simp! [Equiv.map, Functor.map] at *
     simp [*]
     rfl
-    
   · induction x
     rfl
     simp! [Equiv.map, Functor.mapConst] at *
     simp [*]
     rfl
-    
   · induction x
     · simp! [Traversable.traverse, Equiv.traverse, functor_norm]
       rfl
-      
     simp! [Equiv.map, Functor.mapConst, Traversable.traverse] at *
     rw [x_ih]
     dsimp [list_equiv_lazy_list, Equiv.traverse, to_list, Traversable.traverse, List.traverse]
     simp! [functor_norm]
     rfl
-    
 
 /-- `init xs`, if `xs` non-empty, drops the last element of the list.
 Otherwise, return the empty list. -/
@@ -151,7 +148,7 @@ def reverse {α} (xs : LazyList α) : LazyList α :=
   ofList xs.toList.reverse
 #align lazy_list.reverse LazyList.reverse
 
-instance : Monad LazyList where
+instance : Monad LazyList where 
   pure := @LazyList.singleton
   bind := @LazyList.bind
 
@@ -170,15 +167,17 @@ theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : �
   induction xs <;> simp [LazyList.bind, append, *, append_assoc, append, LazyList.bind]
 #align lazy_list.append_bind LazyList.append_bind
 
-instance : LawfulMonad LazyList where
-  pure_bind := by
+instance :
+    LawfulMonad
+      LazyList where 
+  pure_bind := by 
     intros
     apply append_nil
-  bind_assoc := by
+  bind_assoc := by 
     intros
     dsimp [(· >>= ·)]
     induction x <;> simp [LazyList.bind, append_bind, *]
-  id_map := by
+  id_map := by 
     intros
     simp [(· <$> ·)]
     induction x <;> simp [LazyList.bind, *, singleton, append]

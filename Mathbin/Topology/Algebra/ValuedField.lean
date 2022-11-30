@@ -52,7 +52,7 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0)
   have hyp1' : v (x - y) * (v y * v y)⁻¹ < γ := mul_inv_lt_of_lt_mul₀ hyp1
   have hyp2 : v (x - y) < v y := lt_of_lt_of_le h (min_le_right _ _)
   have key : v x = v y := Valuation.map_eq_of_sub_lt v hyp2
-  have x_ne : x ≠ 0 := by
+  have x_ne : x ≠ 0 := by 
     intro h
     apply y_ne
     rw [h, v.map_zero] at key
@@ -80,7 +80,7 @@ open Valued
 instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
     TopologicalDivisionRing K :=
   { (by infer_instance : TopologicalRing K) with
-    continuous_at_inv₀ := by
+    continuous_at_inv₀ := by 
       intro x x_ne s s_in
       cases' valued.mem_nhds.mp s_in with γ hs; clear s_in
       rw [mem_map, Valued.mem_nhds]
@@ -121,11 +121,9 @@ theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ�
     intro γ hγ
     rw [Filter.Eventually, Valued.mem_nhds_zero]
     use Units.mk0 γ hγ, subset.rfl
-    
   · have v_ne : (v x : Γ₀) ≠ 0 := (Valuation.ne_zero_iff _).mpr h
     rw [ContinuousAt, LinearOrderedCommGroupWithZero.tendsto_of_ne_zero v_ne]
     apply Valued.loc_const v_ne
-    
 #align valued.continuous_valuation Valued.continuous_valuation
 
 end
@@ -148,7 +146,7 @@ local notation "hat " => Completion
 /-- A valued field is completable. -/
 instance (priority := 100) completable : CompletableTopField K :=
   { ValuedRing.separated with
-    nice := by
+    nice := by 
       rintro F hF h0
       have : ∃ γ₀ : Γ₀ˣ, ∃ M ∈ F, ∀ x ∈ M, (γ₀ : Γ₀) ≤ v x := by
         rcases filter.inf_eq_bot_iff.mp h0 with ⟨U, U_in, M, M_in, H⟩
@@ -171,7 +169,6 @@ instance (priority := 100) completable : CompletableTopField K :=
       · rw [mem_map]
         apply mem_of_superset (Filter.inter_mem M₀_in M₁_in)
         exact subset_preimage_image _ _
-        
       · rintro _ ⟨x, ⟨x_in₀, x_in₁⟩, rfl⟩ _ ⟨y, ⟨y_in₀, y_in₁⟩, rfl⟩
         simp only [mem_set_of_eq]
         specialize H₁ x x_in₁ y y_in₁
@@ -179,12 +176,11 @@ instance (priority := 100) completable : CompletableTopField K :=
         replace y_in₀ := H₀ y y_in₀
         clear H₀
         apply Valuation.inversion_estimate
-        · have : (v x : Γ₀) ≠ 0 := by
+        · have : (v x : Γ₀) ≠ 0 := by 
             intro h
             rw [h] at x_in₀
             simpa using x_in₀
           exact (Valuation.ne_zero_iff _).mp this
-          
         · refine' lt_of_lt_of_le H₁ _
           rw [Units.min_coe]
           apply min_le_min _ x_in₀
@@ -195,9 +191,7 @@ instance (priority := 100) completable : CompletableTopField K :=
               _ ≤ _ := mul_le_mul_right' x_in₀ (v x)
               
           rw [Units.val_mul]
-          exact mul_le_mul_left' this γ
-          
-         }
+          exact mul_le_mul_left' this γ }
 #align valued.completable Valued.completable
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
@@ -215,9 +209,8 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
   · refine' ⟨0, _⟩
     erw [← completion.dense_inducing_coe.to_inducing.nhds_eq_comap]
     exact valued.continuous_valuation.tendsto' 0 0 (map_zero v)
-    
   · have preimage_one : v ⁻¹' {(1 : Γ₀)} ∈ 𝓝 (1 : K) := by
-      have : (v (1 : K) : Γ₀) ≠ 0 := by
+      have : (v (1 : K) : Γ₀) ≠ 0 := by 
         rw [Valuation.map_one]
         exact zero_ne_one.symm
       convert Valued.loc_const this
@@ -229,11 +222,11 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ (x y) (_ : x ∈ V') (_ : y ∈ V'), x * y⁻¹ ∈ V := by
       have : tendsto (fun p : hat K × hat K => p.1 * p.2⁻¹) ((𝓝 1).Prod (𝓝 1)) (𝓝 1) := by
         rw [← nhds_prod_eq]
-        conv =>
-        congr
-        skip
-        skip
-        rw [← one_mul (1 : hat K)]
+        conv => 
+          congr
+          skip
+          skip
+          rw [← one_mul (1 : hat K)]
         refine'
           tendsto.mul continuous_fst.continuous_at (tendsto.comp _ continuous_snd.continuous_at)
         convert continuous_at_inv₀ (zero_ne_one.symm : 1 ≠ (0 : hat K))
@@ -246,10 +239,8 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       · rintro ⟨h, h'⟩
         rw [mem_compl_singleton_iff] at h'
         exact h' rfl
-        
       · rintro x ⟨hx, _⟩ y ⟨hy, _⟩
         apply hU <;> assumption
-        
     rcases this with ⟨V', V'_in, zeroV', hV'⟩
     have nhds_right : (fun x => x * x₀) '' V' ∈ 𝓝 x₀ := by
       have l : Function.LeftInverse (fun x : hat K => x * x₀⁻¹) fun x : hat K => x * x₀ := by
@@ -273,7 +264,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     rw [LinearOrderedCommGroupWithZero.tendsto_of_ne_zero vz₀_ne, eventually_comap]
     filter_upwards [nhds_right] with x x_in a ha
     rcases x_in with ⟨y, y_in, rfl⟩
-    have : (v (a * z₀⁻¹) : Γ₀) = 1 := by
+    have : (v (a * z₀⁻¹) : Γ₀) = 1 := by 
       apply hV
       have : ((z₀⁻¹ : K) : hat K) = z₀⁻¹ := map_inv₀ (completion.coe_ring_hom : K →+* hat K) z₀
       rw [completion.coe_mul, this, ha, hz₀, mul_inv, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y,
@@ -284,7 +275,6 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       _ = v (a * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _
       _ = v z₀ := by rw [this, one_mul]
       
-    
 #align valued.continuous_extension Valued.continuous_extension
 
 @[simp, norm_cast]
@@ -295,15 +285,16 @@ theorem extension_extends (x : K) : extension (x : hat K) = v x := by
 #align valued.extension_extends Valued.extension_extends
 
 /-- the extension of a valuation on a division ring to its completion. -/
-noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
+noncomputable def extensionValuation :
+    Valuation (hat K) Γ₀ where 
   toFun := Valued.extension
-  map_zero' := by
+  map_zero' := by 
     rw [← v.map_zero, ← Valued.extension_extends (0 : K)]
     rfl
-  map_one' := by
+  map_one' := by 
     rw [← completion.coe_one, Valued.extension_extends (1 : K)]
     exact Valuation.map_one _
-  map_mul' x y := by
+  map_mul' x y := by 
     apply completion.induction_on₂ x y
     · have c1 : Continuous fun x : hat K × hat K => Valued.extension (x.1 * x.2) :=
         valued.continuous_extension.comp (continuous_fst.mul continuous_snd)
@@ -311,31 +302,27 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
         (valued.continuous_extension.comp continuous_fst).mul
           (valued.continuous_extension.comp continuous_snd)
       exact isClosedEq c1 c2
-      
     · intro x y
       norm_cast
       exact Valuation.map_mul _ _ _
-      
-  map_add_le_max' x y := by
+  map_add_le_max' x y := by 
     rw [le_max_iff]
     apply completion.induction_on₂ x y
     · have cont : Continuous (Valued.extension : hat K → Γ₀) := Valued.continuous_extension
       exact
         (isClosedLe (cont.comp continuous_add) <| cont.comp continuous_fst).union
           (isClosedLe (cont.comp continuous_add) <| cont.comp continuous_snd)
-      
     · intro x y
       dsimp
       norm_cast
       rw [← le_max_iff]
       exact v.map_add x y
-      
 #align valued.extension_valuation Valued.extensionValuation
 
 -- Bourbaki CA VI §5 no.3 Proposition 5 (d)
 theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     closure (coe '' { x : K | v x < (γ : Γ₀) }) = { x : hat K | extensionValuation x < (γ : Γ₀) } :=
-  by
+  by 
   ext x
   let γ₀ := extension_valuation x
   suffices γ₀ ≠ 0 → (x ∈ closure (coe '' { x : K | v x < (γ : Γ₀) }) ↔ γ₀ < (γ : Γ₀)) by
@@ -344,9 +331,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
         iff_true_iff]
       apply subset_closure
       exact ⟨0, by simpa only [mem_set_of_eq, Valuation.map_zero, Units.zero_lt, true_and_iff] ⟩
-      
     · exact this h
-      
   intro h
   have hγ₀ : extension ⁻¹' {γ₀} ∈ 𝓝 x :=
     continuous_extension.continuous_at.preimage_mem_nhds
@@ -356,19 +341,16 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
   · obtain ⟨⟨-, y, hy₁ : v y < (γ : Γ₀), rfl⟩, hy₂⟩ := hx _ hγ₀
     replace hy₂ : v y = γ₀
     · simpa using hy₂
-      
     rwa [← hy₂]
-    
   · obtain ⟨y, hy₁, hy₂ : ↑y ∈ s⟩ := completion.dense_range_coe.mem_nhds (inter_mem hγ₀ hs)
     replace hy₁ : v y = γ₀
     · simpa using hy₁
-      
     rw [← hy₁] at hx
     exact ⟨⟨y, ⟨y, hx, rfl⟩⟩, hy₂⟩
-    
 #align valued.closure_coe_completion_v_lt Valued.closure_coe_completion_v_lt
 
-noncomputable instance valuedCompletion : Valued (hat K) Γ₀ where
+noncomputable instance valuedCompletion :
+    Valued (hat K) Γ₀ where 
   V := extensionValuation
   is_topological_valuation s := by
     suffices

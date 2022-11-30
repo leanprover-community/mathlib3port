@@ -107,7 +107,7 @@ theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
 @[simp]
 theorem cast_nonneg [OrderedRing α] [Nontrivial α] : ∀ {n : ℤ}, (0 : α) ≤ n ↔ 0 ≤ n
   | (n : ℕ) => by simp
-  | -[n+1] => by
+  | -[n+1] => by 
     have : -(n : α) < 1 := lt_of_le_of_lt (by simp) zero_lt_one
     simpa [(neg_succ_lt_zero n).not_le, ← sub_eq_add_neg, le_neg] using this.not_le
 #align int.cast_nonneg Int.cast_nonneg
@@ -185,19 +185,14 @@ theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : |x| ≤ 1) : (0 : α) ≤ n
   rw [← mul_add, mul_nonneg_iff]
   rcases lt_trichotomy n 0 with (h | rfl | h)
   · exact Or.inr ⟨by exact_mod_cast h.le, hnx' h⟩
-    
   · simp [le_total 0 x]
-    
   · exact Or.inl ⟨by exact_mod_cast h.le, hnx h⟩
-    
 #align int.nneg_mul_add_sq_of_abs_le_one Int.nneg_mul_add_sq_of_abs_le_one
 
 theorem cast_nat_abs : (n.natAbs : α) = |n| := by
   cases n
   · simp
-    
   · simp only [Int.natAbs, Int.cast_negSucc, abs_neg, ← Nat.cast_succ, Nat.abs_cast]
-    
 #align int.cast_nat_abs Int.cast_nat_abs
 
 end LinearOrderedRing
@@ -218,7 +213,7 @@ variable {A : Type _}
 
 /-- Two additive monoid homomorphisms `f`, `g` from `ℤ` to an additive monoid are equal
 if `f 1 = g 1`. -/
-@[ext.1]
+@[ext]
 theorem ext_int [AddMonoid A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
   have : f.comp (Int.ofNatHom : ℕ →+ ℤ) = g.comp (Int.ofNatHom : ℕ →+ ℤ) := ext_nat' _ _ h1
   have : ∀ n : ℕ, f n = g n := ext_iff.1 this
@@ -249,22 +244,20 @@ variable {M : Type _} [Monoid M]
 
 open Multiplicative
 
-@[ext.1]
+@[ext]
 theorem ext_mint {f g : Multiplicative ℤ →* M} (h1 : f (ofAdd 1) = g (ofAdd 1)) : f = g :=
   MonoidHom.ext <| AddMonoidHom.ext_iff.mp <| @AddMonoidHom.ext_int _ _ f.toAdditive g.toAdditive h1
 #align monoid_hom.ext_mint MonoidHom.ext_mint
 
 /-- If two `monoid_hom`s agree on `-1` and the naturals then they are equal. -/
-@[ext.1]
+@[ext]
 theorem ext_int {f g : ℤ →* M} (h_neg_one : f (-1) = g (-1))
     (h_nat : f.comp Int.ofNatHom.toMonoidHom = g.comp Int.ofNatHom.toMonoidHom) : f = g := by
   ext (x | x)
   · exact (MonoidHom.congr_fun h_nat x : _)
-    
   · rw [Int.negSucc_eq, ← neg_one_mul, f.map_mul, g.map_mul]
     congr 1
     exact_mod_cast (MonoidHom.congr_fun h_nat (x + 1) : _)
-    
 #align monoid_hom.ext_int MonoidHom.ext_int
 
 end MonoidHom
@@ -274,7 +267,7 @@ namespace MonoidWithZeroHom
 variable {M : Type _} [MonoidWithZero M]
 
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the naturals then they are equal. -/
-@[ext.1]
+@[ext]
 theorem ext_int {f g : ℤ →*₀ M} (h_neg_one : f (-1) = g (-1))
     (h_nat : f.comp Int.ofNatHom.toMonoidWithZeroHom = g.comp Int.ofNatHom.toMonoidWithZeroHom) :
     f = g :=

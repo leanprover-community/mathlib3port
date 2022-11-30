@@ -83,10 +83,12 @@ theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) :
 
 /-- For `H` a subgroup of `G`, this is the subgroup of all elements `g : conj_aut G`
 such that `commensurable (g • H) H` -/
-def commensurator' (H : Subgroup G) : Subgroup (ConjAct G) where
+def commensurator' (H : Subgroup G) :
+    Subgroup
+      (ConjAct G) where 
   carrier := { g : ConjAct G | Commensurable (g • H) H }
   one_mem' := by rw [Set.mem_set_of_eq, one_smul]
-  mul_mem' a b ha hb := by
+  mul_mem' a b ha hb := by 
     rw [Set.mem_set_of_eq, mul_smul]
     exact trans ((commensurable_conj a).mp hb) ha
   inv_mem' a ha := by rwa [Set.mem_set_of_eq, comm, ← commensurable_inv]

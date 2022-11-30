@@ -77,7 +77,9 @@ def IsSymmetric [CommSemiring R] (φ : MvPolynomial σ R) : Prop :=
 variable (σ R)
 
 /-- The subalgebra of symmetric `mv_polynomial`s. -/
-def symmetricSubalgebra [CommSemiring R] : Subalgebra R (MvPolynomial σ R) where
+def symmetricSubalgebra [CommSemiring R] :
+    Subalgebra R (MvPolynomial σ
+        R) where 
   carrier := setOf IsSymmetric
   algebra_map_mem' r e := rename_C e r
   mul_mem' a b ha hb e := by rw [AlgHom.map_mul, ha, hb]
@@ -211,7 +213,7 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
       (powersetLen n (univ : Finset σ)).bUnion fun t =>
         (Finsupp.single (∑ i : σ in t, Finsupp.single i 1) (1 : R)).support :=
-  by
+  by 
   rw [esymm_eq_sum_monomial]
   simp only [← single_eq_monomial]
   convert Finsupp.support_sum_eq_bUnion (powerset_len n (univ : Finset σ)) _
@@ -223,14 +225,13 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   rw [Finsupp.support_sum_eq_bUnion, Finsupp.support_sum_eq_bUnion] at this
   · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
     exact absurd this hst.symm
-    
   all_goals intro x y; simp [Finsupp.support_single_disjoint]
 #align mv_polynomial.support_esymm'' MvPolynomial.support_esymm''
 
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
       (powersetLen n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} :=
-  by
+  by 
   rw [support_esymm'']
   congr
   funext
@@ -240,27 +241,25 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
       (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
-  by
+  by 
   rw [support_esymm']
   exact bUnion_singleton
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm
 
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
-    (esymm σ R n).degrees = (univ : Finset σ).val := by classical
-  have : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val :=
-    by
-    funext
-    simp [Finsupp.to_multiset_sum_single]
-  rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]
-  · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
-    simpa using powerset_len_sup _ _ (Nat.lt_of_succ_le hn)
-    
-  · intros
-    simp only [union_val, sup_eq_union]
-    congr
-    
-  · rfl
-    
+    (esymm σ R n).degrees = (univ : Finset σ).val := by
+  classical 
+    have :
+      (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val := by
+      funext
+      simp [Finsupp.to_multiset_sum_single]
+    rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]
+    · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
+      simpa using powerset_len_sup _ _ (Nat.lt_of_succ_le hn)
+    · intros
+      simp only [union_val, sup_eq_union]
+      congr
+    · rfl
 #align mv_polynomial.degrees_esymm MvPolynomial.degrees_esymm
 
 end ElementarySymmetric

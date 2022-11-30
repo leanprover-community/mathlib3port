@@ -134,22 +134,18 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
           ∀ {i x},
             x ∈ ioo (I.lower i) (I.upper i) →
               (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f = f I) :
-    ι →ᵇᵃ[I₀] M := by
+    ι →ᵇᵃ[I₀] M := by 
   refine' ⟨f, _⟩
   replace hf : ∀ I : box ι, ↑I ≤ I₀ → ∀ s, (∑ J in (split_many I s).boxes, f J) = f I
   · intro I hI s
     induction' s using Finset.induction_on with a s ha ihs
     · simp
-      
     rw [split_many_insert, inf_split, ← ihs, bUnion_boxes, sum_bUnion_boxes]
     refine' Finset.sum_congr rfl fun J' hJ' => _
     by_cases h : a.2 ∈ Ioo (J'.lower a.1) (J'.upper a.1)
     · rw [sum_split_boxes]
       exact hf _ ((WithTop.coe_le_coe.2 <| le_of_mem _ hJ').trans hI) h
-      
     · rw [split_of_not_mem_Ioo h, top_boxes, Finset.sum_singleton]
-      
-    
   intro I hI π hπ
   have Hle : ∀ J ∈ π, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 <| π.le_of_mem hJ).trans hI
   rcases hπ.exists_split_many_le with ⟨s, hs⟩
@@ -160,7 +156,8 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
 /-- If `g : M → N` is an additive map and `f` is a box additive map, then `g ∘ f` is a box additive
 map. -/
 @[simps (config := { fullyApplied := false })]
-def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N where
+def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) :
+    ι →ᵇᵃ[I₀] N where 
   toFun := g ∘ f
   sum_partition_boxes' I hI π hπ := by rw [← g.map_sum, f.sum_partition_boxes hI hπ]
 #align box_integral.box_additive_map.map BoxIntegral.BoxAdditiveMap.map
@@ -215,7 +212,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
     Fin (n + 1) →ᵇᵃ[I₀] G :=
   ofMapSplitAdd (fun J : Box (Fin (n + 1)) => f (J.upper i) (J.face i) - f (J.lower i) (J.face i))
     I₀
-    (by
+    (by 
       intro J hJ j
       rw [WithTop.coe_le_coe] at hJ
       refine' i.succ_above_cases _ _ j
@@ -224,7 +221,6 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
           WithBot.some_eq_coe, Option.elim', box.face, (· ∘ ·),
           update_noteq (Fin.succ_above_ne _ _)]
         abel
-        
       · clear j
         intro j x hx
         have : (J.face i : WithTop (box (Fin n))) ≤ I₀.face i :=
@@ -237,8 +233,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
           box.split_upper_def hx', ← WithBot.some_eq_coe, Option.elim', box.face_mk,
           update_noteq (Fin.succ_above_ne _ _).symm, sub_add_sub_comm,
           update_comp_eq_of_injective _ i.succ_above.injective j x, ← hf]
-        simp only [box.face]
-        )
+        simp only [box.face])
 #align box_integral.box_additive_map.upper_sub_lower BoxIntegral.BoxAdditiveMap.upperSubLower
 
 end BoxAdditiveMap

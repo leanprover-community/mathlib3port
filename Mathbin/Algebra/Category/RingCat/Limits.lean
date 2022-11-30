@@ -75,7 +75,8 @@ namespace HasLimits
 /-- Construction of a limit cone in `SemiRing`.
 (Internal use only; use the limits API.)
 -/
-def limitCone (F : J ⥤ SemiRingCat.{max v u}) : Cone F where
+def limitCone (F : J ⥤ SemiRingCat.{max v u}) :
+    Cone F where 
   x := SemiRingCat.of (Types.limitCone (F ⋙ forget _)).x
   π :=
     { app := limitπRingHom F,

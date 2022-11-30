@@ -89,13 +89,11 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d {f : E → �
     simp only [Prod.mk_eq_zero] at hΛ⊢
     refine' ⟨LinearMap.ext fun x => _, hΛ.2⟩
     simpa [hΛ.1] using Λ.map_smul x 1
-    
   · ext x
     have H₁ : Λ (f' x) = f' x * Λ 1 := by
       simpa only [mul_one, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
     have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
     simpa [mul_comm] using H₂
-    
 #align
   is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at_1d IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d
 
@@ -114,17 +112,14 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [
   letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀
   · simpa only [Function.funext_iff] using hextr
-    
   rcases hextr.exists_linear_map_of_has_strict_fderiv_at (has_strict_fderiv_at_pi.2 fun i => hf' i)
       hφ' with
     ⟨Λ, Λ₀, h0, hsum⟩
   rcases(LinearEquiv.piRing ℝ ℝ ι ℝ).symm.Surjective Λ with ⟨Λ, rfl⟩
   refine' ⟨Λ, Λ₀, _, _⟩
   · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
-    
   · ext x
     simpa [mul_comm] using hsum x
-    
 #align
   is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at
 
@@ -145,9 +140,7 @@ theorem IsLocalExtrOn.linear_dependent_of_has_strict_fderiv_at {ι : Type _} [Fi
   rcases hextr.exists_multipliers_of_has_strict_fderiv_at hf' hφ' with ⟨Λ, Λ₀, hΛ, hΛf⟩
   refine' ⟨Option.elim' Λ₀ Λ, _, _⟩
   · simpa [add_comm] using hΛf
-    
   · simpa [Function.funext_iff, not_and_or, or_comm', Option.exists] using hΛ
-    
 #align
   is_local_extr_on.linear_dependent_of_has_strict_fderiv_at IsLocalExtrOn.linear_dependent_of_has_strict_fderiv_at
 

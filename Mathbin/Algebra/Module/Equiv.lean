@@ -168,10 +168,11 @@ theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛ�
   to_linear_map_injective.eq_iff
 #align linear_equiv.to_linear_map_inj LinearEquiv.to_linear_map_inj
 
-instance : SemilinearEquivClass (M ≃ₛₗ[σ] M₂) σ M M₂ where
+instance : SemilinearEquivClass (M ≃ₛₗ[σ] M₂) σ M
+      M₂ where 
   coe := LinearEquiv.toFun
   inv := LinearEquiv.invFun
-  coe_injective' f g h₁ h₂ := by
+  coe_injective' f g h₁ h₂ := by 
     cases f
     cases g
     congr
@@ -230,7 +231,7 @@ section
 
 variable {e e'}
 
-@[ext.1]
+@[ext]
 theorem ext (h : ∀ x, e x = e' x) : e = e' :=
   FunLike.ext _ _ h
 #align linear_equiv.ext LinearEquiv.ext
@@ -439,36 +440,28 @@ theorem eq_comp_to_linear_map_symm (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁
     f = g.comp e₁₂.symm.toLinearMap ↔ f.comp e₁₂.toLinearMap = g := by
   constructor <;> intro H <;> ext
   · simp [H, e₁₂.to_equiv.eq_comp_symm f g]
-    
   · simp [← H, ← e₁₂.to_equiv.eq_comp_symm f g]
-    
 #align linear_equiv.eq_comp_to_linear_map_symm LinearEquiv.eq_comp_to_linear_map_symm
 
 theorem comp_to_linear_map_symm_eq (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁ →ₛₗ[σ₁₃] M₃) :
     g.comp e₁₂.symm.toLinearMap = f ↔ g = f.comp e₁₂.toLinearMap := by
   constructor <;> intro H <;> ext
   · simp [← H, ← e₁₂.to_equiv.comp_symm_eq f g]
-    
   · simp [H, e₁₂.to_equiv.comp_symm_eq f g]
-    
 #align linear_equiv.comp_to_linear_map_symm_eq LinearEquiv.comp_to_linear_map_symm_eq
 
 theorem eq_to_linear_map_symm_comp (f : M₃ →ₛₗ[σ₃₁] M₁) (g : M₃ →ₛₗ[σ₃₂] M₂) :
     f = e₁₂.symm.toLinearMap.comp g ↔ e₁₂.toLinearMap.comp f = g := by
   constructor <;> intro H <;> ext
   · simp [H, e₁₂.to_equiv.eq_symm_comp f g]
-    
   · simp [← H, ← e₁₂.to_equiv.eq_symm_comp f g]
-    
 #align linear_equiv.eq_to_linear_map_symm_comp LinearEquiv.eq_to_linear_map_symm_comp
 
 theorem to_linear_map_symm_comp_eq (f : M₃ →ₛₗ[σ₃₁] M₁) (g : M₃ →ₛₗ[σ₃₂] M₂) :
     e₁₂.symm.toLinearMap.comp g = f ↔ g = e₁₂.toLinearMap.comp f := by
   constructor <;> intro H <;> ext
   · simp [← H, ← e₁₂.to_equiv.symm_comp_eq f g]
-    
   · simp [H, e₁₂.to_equiv.symm_comp_eq f g]
-    
 #align linear_equiv.to_linear_map_symm_comp_eq LinearEquiv.to_linear_map_symm_comp_eq
 
 omit module_M₃
@@ -662,7 +655,8 @@ section Automorphisms
 
 variable [Module R M]
 
-instance automorphismGroup : Group (M ≃ₗ[R] M) where
+instance automorphismGroup :
+    Group (M ≃ₗ[R] M) where 
   mul f g := g.trans f
   one := LinearEquiv.refl R M
   inv f := f.symm
@@ -675,7 +669,8 @@ instance automorphismGroup : Group (M ≃ₗ[R] M) where
 /-- Restriction from `R`-linear automorphisms of `M` to `R`-linear endomorphisms of `M`,
 promoted to a monoid hom. -/
 @[simps]
-def automorphismGroup.toLinearMapMonoidHom : (M ≃ₗ[R] M) →* M →ₗ[R] M where
+def automorphismGroup.toLinearMapMonoidHom :
+    (M ≃ₗ[R] M) →* M →ₗ[R] M where 
   toFun := coe
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -685,7 +680,8 @@ def automorphismGroup.toLinearMapMonoidHom : (M ≃ₗ[R] M) →* M →ₗ[R] M 
 /-- The tautological action by `M ≃ₗ[R] M` on `M`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance applyDistribMulAction : DistribMulAction (M ≃ₗ[R] M) M where
+instance applyDistribMulAction :
+    DistribMulAction (M ≃ₗ[R] M) M where 
   smul := (· <| ·)
   smul_zero := LinearEquiv.map_zero
   smul_add := LinearEquiv.map_add
@@ -766,7 +762,7 @@ def toLinearEquiv (s : S) : M ≃ₗ[R] M :=
 
 This is a stronger version of `distrib_mul_action.to_add_aut`. -/
 @[simps]
-def toModuleAut : S →* M ≃ₗ[R] M where
+def toModuleAut : S →* M ≃ₗ[R] M where 
   toFun := toLinearEquiv R M
   map_one' := LinearEquiv.ext <| one_smul _
   map_mul' a b := LinearEquiv.ext <| mul_smul _ _
@@ -803,7 +799,7 @@ theorem coe_to_linear_equiv_symm (h : ∀ (c : R) (x), e (c • x) = c • e x) 
 /-- An additive equivalence between commutative additive monoids is a linear equivalence between
 ℕ-modules -/
 def toNatLinearEquiv : M ≃ₗ[ℕ] M₂ :=
-  e.toLinearEquiv fun c a => by
+  e.toLinearEquiv fun c a => by 
     erw [e.to_add_monoid_hom.map_nsmul]
     rfl
 #align add_equiv.to_nat_linear_equiv AddEquiv.toNatLinearEquiv

@@ -269,9 +269,7 @@ theorem Continuous.matrix_block_diagonal' [Zero R] [DecidableEq l]
     split_ifs
     · subst h
       exact ((continuous_apply i₁).comp hA).matrix_elem i₂ j₂
-      
     · exact continuous_const
-      
 #align continuous.matrix_block_diagonal' Continuous.matrix_block_diagonal'
 
 @[continuity]
@@ -312,10 +310,8 @@ theorem summable_matrix_transpose {f : X → Matrix m n R} :
 theorem Matrix.transpose_tsum [T2Space R] {f : X → Matrix m n R} : (∑' x, f x)ᵀ = ∑' x, (f x)ᵀ := by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_transpose.tsum_eq.symm
-    
   · have hft := summable_matrix_transpose.not.mpr hf
     rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hft, transpose_zero]
-    
 #align matrix.transpose_tsum Matrix.transpose_tsum
 
 theorem HasSum.matrix_conj_transpose [StarAddMonoid R] [HasContinuousStar R] {f : X → Matrix m n R}
@@ -340,10 +336,8 @@ theorem Matrix.conj_transpose_tsum [StarAddMonoid R] [HasContinuousStar R] [T2Sp
     {f : X → Matrix m n R} : (∑' x, f x)ᴴ = ∑' x, (f x)ᴴ := by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_conj_transpose.tsum_eq.symm
-    
   · have hft := summable_matrix_conj_transpose.not.mpr hf
     rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hft, conj_transpose_zero]
-    
 #align matrix.conj_transpose_tsum Matrix.conj_transpose_tsum
 
 theorem HasSum.matrix_diagonal [DecidableEq n] {f : X → n → R} {a : n → R} (hf : HasSum f a) :
@@ -369,11 +363,9 @@ theorem Matrix.diagonal_tsum [DecidableEq n] [T2Space R] {f : X → n → R} :
     diagonal (∑' x, f x) = ∑' x, diagonal (f x) := by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_diagonal.tsum_eq.symm
-    
   · have hft := summable_matrix_diagonal.not.mpr hf
     rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hft]
     exact diagonal_zero
-    
 #align matrix.diagonal_tsum Matrix.diagonal_tsum
 
 theorem HasSum.matrix_diag {f : X → Matrix n n R} {a : Matrix n n R} (hf : HasSum f a) :
@@ -412,11 +404,9 @@ theorem Matrix.block_diagonal_tsum [DecidableEq p] [T2Space R] {f : X → p → 
     blockDiagonal (∑' x, f x) = ∑' x, blockDiagonal (f x) := by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_block_diagonal.tsum_eq.symm
-    
   · have hft := summable_matrix_block_diagonal.not.mpr hf
     rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hft]
     exact block_diagonal_zero
-    
 #align matrix.block_diagonal_tsum Matrix.block_diagonal_tsum
 
 theorem HasSum.matrix_block_diag {f : X → Matrix (m × p) (n × p) R} {a : Matrix (m × p) (n × p) R}
@@ -455,11 +445,9 @@ theorem Matrix.block_diagonal'_tsum [DecidableEq l] [T2Space R]
     blockDiagonal' (∑' x, f x) = ∑' x, blockDiagonal' (f x) := by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_block_diagonal'.tsum_eq.symm
-    
   · have hft := summable_matrix_block_diagonal'.not.mpr hf
     rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hft]
     exact block_diagonal'_zero
-    
 #align matrix.block_diagonal'_tsum Matrix.block_diagonal'_tsum
 
 theorem HasSum.matrix_block_diag' {f : X → Matrix (Σi, m' i) (Σi, n' i) R}

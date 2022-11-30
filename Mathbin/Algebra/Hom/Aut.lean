@@ -106,7 +106,8 @@ def toPerm : MulAut M →* Equiv.Perm M := by
 /-- The tautological action by `mul_aut M` on `M`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance applyMulDistribMulAction {M} [Monoid M] : MulDistribMulAction (MulAut M) M where
+instance applyMulDistribMulAction {M} [Monoid M] :
+    MulDistribMulAction (MulAut M) M where 
   smul := (· <| ·)
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
@@ -128,7 +129,10 @@ instance apply_has_faithful_smul {M} [Monoid M] : HasFaithfulSmul (MulAut M) M :
 mapping multiplication in `G` into multiplication in the automorphism group `mul_aut G`.
 See also the type `conj_act G` for any group `G`, which has a `mul_action (conj_act G) G` instance
 where `conj G` acts on `G` by conjugation. -/
-def conj [Group G] : G →* MulAut G where
+def conj [Group G] :
+    G →*
+      MulAut
+        G where 
   toFun g :=
     { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g,
       left_inv := fun _ => by simp [mul_assoc], right_inv := fun _ => by simp [mul_assoc],
@@ -227,7 +231,8 @@ def toPerm : AddAut A →* Equiv.Perm A := by
 /-- The tautological action by `add_aut A` on `A`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance applyDistribMulAction {A} [AddMonoid A] : DistribMulAction (AddAut A) A where
+instance applyDistribMulAction {A} [AddMonoid A] :
+    DistribMulAction (AddAut A) A where 
   smul := (· <| ·)
   smul_zero := AddEquiv.map_zero
   smul_add := AddEquiv.map_add
@@ -248,7 +253,11 @@ instance apply_has_faithful_smul {A} [AddMonoid A] : HasFaithfulSmul (AddAut A) 
 /-- Additive group conjugation, `add_aut.conj g h = g + h - g`, as an additive monoid
 homomorphism mapping addition in `G` into multiplication in the automorphism group `add_aut G`
 (written additively in order to define the map). -/
-def conj [AddGroup G] : G →+ Additive (AddAut G) where
+def conj [AddGroup G] :
+    G →+
+      Additive
+        (AddAut
+          G) where 
   toFun g :=
     @Additive.ofMul (AddAut G)
       { toFun := fun h => g + h + -g,-- this definition is chosen to match `mul_aut.conj`

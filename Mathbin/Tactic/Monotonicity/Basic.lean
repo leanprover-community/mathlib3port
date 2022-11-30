@@ -46,7 +46,7 @@ unsafe def find_one_difference :
     if c then Prod.map (cons x) id <$> find_one_difference xs ys
       else do
         guard (xs = ys)
-        mzipWith' compare xs ys
+        zipWithM' compare xs ys
         return ([], x, y, xs)
   | xs, ys => fail f! "find_one_difference: {xs }, {ys}"
 #align tactic.interactive.find_one_difference tactic.interactive.find_one_difference
@@ -153,7 +153,8 @@ open Function
 
 @[user_attribute]
 unsafe def monotonicity.attr :
-    user_attribute (native.rb_lmap MonoKey Name) (Option MonoKey × mono_selection) where
+    user_attribute (native.rb_lmap MonoKey Name)
+      (Option MonoKey × mono_selection) where 
   Name := `mono
   descr := "monotonicity of function `f` wrt relations `R₀` and `R₁`: R₀ x y → R₁ (f x) (f y)"
   cache_cfg :=

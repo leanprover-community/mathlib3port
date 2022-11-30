@@ -38,7 +38,7 @@ instance Prj.mvfunctor : Mvfunctor (Prj i) where map := Prj.map i
 #align mvqpf.prj.mvfunctor Mvqpf.Prj.mvfunctor
 
 /-- Polynomial representation of the projection functor -/
-def Prj.p : Mvpfunctor.{u} n where
+def Prj.p : Mvpfunctor.{u} n where 
   A := PUnit
   B _ j := ULift <| PLift <| i = j
 #align mvqpf.prj.P Mvqpf.Prj.p
@@ -53,7 +53,7 @@ def Prj.repr ⦃α : Typevec n⦄ : Prj i α → (Prj.p i).Obj α := fun x : α 
   ⟨⟨⟩, fun j ⟨⟨h⟩⟩ => (h.rec x : α j)⟩
 #align mvqpf.prj.repr Mvqpf.Prj.repr
 
-instance Prj.mvqpf : Mvqpf (Prj i) where
+instance Prj.mvqpf : Mvqpf (Prj i) where 
   p := Prj.p i
   abs := Prj.abs i
   repr := Prj.repr i

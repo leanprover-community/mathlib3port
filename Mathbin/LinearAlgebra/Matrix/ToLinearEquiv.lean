@@ -117,7 +117,6 @@ theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M
   · rintro ⟨v, hv, mul_eq⟩
     contrapose! hv
     exact eq_zero_of_mul_vec_eq_zero hv mul_eq
-    
   · contrapose!
     intro h
     have : Function.Injective M.to_lin' := by
@@ -127,12 +126,11 @@ theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M
           LinearMap.toMatrix'
             ((LinearEquiv.ofInjectiveEndo M.to_lin' this).symm : (n → K) →ₗ[K] n → K) =
         1 :=
-      by
+      by 
       refine' matrix.to_lin'.injective (LinearMap.ext fun v => _)
       rw [Matrix.to_lin'_mul, Matrix.to_lin'_one, Matrix.to_lin'_to_matrix', LinearMap.comp_apply]
       exact (LinearEquiv.ofInjectiveEndo M.to_lin' this).apply_symm_apply v
     exact Matrix.det_ne_zero_of_right_inverse this
-    
 #align matrix.exists_mul_vec_eq_zero_iff_aux Matrix.exists_mul_vec_eq_zero_iff_aux
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ≠ » 0) -/
@@ -146,12 +144,9 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
   refine' Iff.trans _ this; constructor <;> rintro ⟨v, hv, mul_eq⟩
   · refine' ⟨fun i => algebraMap _ _ (v i), mt (fun h => funext fun i => _) hv, _⟩
     · exact is_fraction_ring.to_map_eq_zero_iff.mp (congr_fun h i)
-      
     · ext i
       refine' (RingHom.map_mul_vec _ _ _ i).symm.trans _
       rw [mul_eq, Pi.zero_apply, RingHom.map_zero, Pi.zero_apply]
-      
-    
   · letI := Classical.decEq K
     obtain ⟨⟨b, hb⟩, ba_eq⟩ :=
       IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors A) (finset.univ.image v)
@@ -163,7 +158,6 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
       rw [hf, Subtype.coe_mk, Pi.zero_apply, RingHom.map_zero, Algebra.smul_def, mul_eq_zero,
         IsFractionRing.to_map_eq_zero_iff] at this
       exact this.resolve_left (nonZeroDivisors.ne_zero hb)
-      
     · ext i
       refine' IsFractionRing.injective A K _
       calc
@@ -173,13 +167,10 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
         _ = 0 := _
         _ = algebraMap A K 0 := (RingHom.map_zero _).symm
         
-      · simp_rw [RingHom.map_mul_vec, mul_vec, dot_product, Function.comp_apply, hf, Subtype.coe_mk,
+      ·
+        simp_rw [RingHom.map_mul_vec, mul_vec, dot_product, Function.comp_apply, hf, Subtype.coe_mk,
           RingHom.map_matrix_apply, Pi.smul_apply, smul_eq_mul, Algebra.smul_def]
-        
       · rw [mul_vec_smul, mul_eq, Pi.smul_apply, Pi.zero_apply, smul_zero]
-        
-      
-    
 #align matrix.exists_mul_vec_eq_zero_iff' Matrix.exists_mul_vec_eq_zero_iff'
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ≠ » 0) -/
@@ -202,11 +193,9 @@ theorem nondegenerate_iff_det_ne_zero {A : Type _} [DecidableEq n] [CommRing A] 
   · intro hM v hv hMv
     obtain ⟨w, hwMv⟩ := hM.exists_not_ortho_of_ne_zero hv
     simpa only [dot_product_mul_vec, hMv, zero_dot_product] using hwMv
-    
   · intro h v hv
     refine' not_imp_not.mp (h v) (funext fun i => _)
     simpa only [dot_product_mul_vec, dot_product_single, mul_one] using hv (Pi.single i 1)
-    
 #align matrix.nondegenerate_iff_det_ne_zero Matrix.nondegenerate_iff_det_ne_zero
 
 alias nondegenerate_iff_det_ne_zero ↔ nondegenerate.det_ne_zero nondegenerate.of_det_ne_zero

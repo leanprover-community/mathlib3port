@@ -38,13 +38,10 @@ theorem is_integral_stable_under_base_change :
   skip
   apply TensorProduct.induction_on x
   · apply is_integral_zero
-    
   · intro x y
     exact IsIntegral.tmul x (h y)
-    
   · intro x y hx hy
     exact is_integral_add _ hx hy
-    
 #align ring_hom.is_integral_stable_under_base_change RingHom.is_integral_stable_under_base_change
 
 end RingHom

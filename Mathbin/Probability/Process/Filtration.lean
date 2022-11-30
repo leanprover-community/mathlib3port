@@ -61,7 +61,7 @@ protected theorem le (f : Filtration ι m) (i : ι) : f i ≤ m :=
   f.le' i
 #align measure_theory.filtration.le MeasureTheory.Filtration.le
 
-@[ext.1]
+@[ext]
 protected theorem ext {f g : Filtration ι m} (h : (f : ι → MeasurableSpace Ω) = g) : f = g := by
   cases f
   cases g
@@ -89,10 +89,10 @@ instance : Inhabited (Filtration ι m) :=
 instance : LE (Filtration ι m) :=
   ⟨fun f g => ∀ i, f i ≤ g i⟩
 
-instance : HasBot (Filtration ι m) :=
+instance : Bot (Filtration ι m) :=
   ⟨const ι ⊥ bot_le⟩
 
-instance : HasTop (Filtration ι m) :=
+instance : Top (Filtration ι m) :=
   ⟨const ι m le_rfl⟩
 
 instance : HasSup (Filtration ι m) :=
@@ -122,7 +122,7 @@ theorem coe_fn_inf {f g : Filtration ι m} : ⇑(f ⊓ g) = f ⊓ g :=
 instance : HasSup (Filtration ι m) :=
   ⟨fun s =>
     { seq := fun i => sup ((fun f : Filtration ι m => f i) '' s),
-      mono' := fun i j hij => by
+      mono' := fun i j hij => by 
         refine' Sup_le fun m' hm' => _
         rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
@@ -130,7 +130,7 @@ instance : HasSup (Filtration ι m) :=
         refine' (f.mono hij).trans _
         have hfj_mem : f j ∈ (fun g : filtration ι m => g j) '' s := ⟨f, hf_mem, rfl⟩
         exact le_Sup hfj_mem,
-      le' := fun i => by
+      le' := fun i => by 
         refine' Sup_le fun m' hm' => _
         rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
@@ -145,21 +145,18 @@ theorem Sup_def (s : Set (Filtration ι m)) (i : ι) :
 noncomputable instance : HasInf (Filtration ι m) :=
   ⟨fun s =>
     { seq := fun i => if Set.Nonempty s then inf ((fun f : Filtration ι m => f i) '' s) else m,
-      mono' := fun i j hij => by
+      mono' := fun i j hij => by 
         by_cases h_nonempty : Set.Nonempty s
         swap
         · simp only [h_nonempty, Set.nonempty_image_iff, if_false, le_refl]
-          
         simp only [h_nonempty, if_true, le_Inf_iff, Set.mem_image, forall_exists_index, and_imp,
           forall_apply_eq_imp_iff₂]
         refine' fun f hf_mem => le_trans _ (f.mono hij)
         have hfi_mem : f i ∈ (fun g : filtration ι m => g i) '' s := ⟨f, hf_mem, rfl⟩
         exact Inf_le hfi_mem,
-      le' := fun i => by
+      le' := fun i => by 
         by_cases h_nonempty : Set.Nonempty s
-        swap;
-        · simp only [h_nonempty, if_false, le_refl]
-          
+        swap; · simp only [h_nonempty, if_false, le_refl]
         simp only [h_nonempty, if_true]
         obtain ⟨f, hf_mem⟩ := h_nonempty
         exact le_trans (Inf_le ⟨f, hf_mem, rfl⟩) (f.le i) }⟩
@@ -169,7 +166,8 @@ theorem Inf_def (s : Set (Filtration ι m)) (i : ι) :
   rfl
 #align measure_theory.filtration.Inf_def MeasureTheory.Filtration.Inf_def
 
-noncomputable instance : CompleteLattice (Filtration ι m) where
+noncomputable instance :
+    CompleteLattice (Filtration ι m) where 
   le := (· ≤ ·)
   le_refl f i := le_rfl
   le_trans f g h h_fg h_gh i := (h_fg i).trans (h_gh i)
@@ -185,21 +183,20 @@ noncomputable instance : CompleteLattice (Filtration ι m) where
   sup := sup
   le_Sup s f hf_mem i := le_Sup ⟨f, hf_mem, rfl⟩
   Sup_le s f h_forall i :=
-    Sup_le fun m' hm' => by
+    Sup_le fun m' hm' => by 
       obtain ⟨g, hg_mem, hfm'⟩ := hm'
       rw [← hfm']
       exact h_forall g hg_mem i
   inf := inf
-  Inf_le s f hf_mem i := by
+  Inf_le s f hf_mem i := by 
     have hs : s.nonempty := ⟨f, hf_mem⟩
     simp only [Inf_def, hs, if_true]
     exact Inf_le ⟨f, hf_mem, rfl⟩
-  le_Inf s f h_forall i := by
+  le_Inf s f h_forall i := by 
     by_cases hs : s.nonempty
     swap;
     · simp only [Inf_def, hs, if_false]
       exact f.le i
-      
     simp only [Inf_def, hs, if_true, le_Inf_iff, Set.mem_image, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂]
     exact fun g hg_mem => h_forall g hg_mem i
@@ -249,7 +246,9 @@ variable [Preorder ι]
 
 /-- Given a sequence of measurable sets `(sₙ)`, `filtration_of_set` is the smallest filtration
 such that `sₙ` is measurable with respect to the `n`-the sub-σ-algebra in `filtration_of_set`. -/
-def filtrationOfSet {s : ι → Set Ω} (hsm : ∀ i, MeasurableSet (s i)) : Filtration ι m where
+def filtrationOfSet {s : ι → Set Ω} (hsm : ∀ i, MeasurableSet (s i)) :
+    Filtration ι
+      m where 
   seq i := MeasurableSpace.generateFrom { t | ∃ j ≤ i, s j = t }
   mono' n m hnm := MeasurableSpace.generate_from_mono fun t ⟨k, hk₁, hk₂⟩ => ⟨k, hk₁.trans hnm, hk₂⟩
   le' n := MeasurableSpace.generate_from_le fun t ⟨k, hk₁, hk₂⟩ => hk₂ ▸ hsm k
@@ -277,10 +276,11 @@ include mβ
 /-- Given a sequence of functions, the natural filtration is the smallest sequence
 of σ-algebras such that that sequence of functions is measurable with respect to
 the filtration. -/
-def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) : Filtration ι m where
+def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) :
+    Filtration ι m where 
   seq i := ⨆ j ≤ i, MeasurableSpace.comap (u j) mβ
   mono' i j hij := bsupr_mono fun k => ge_trans hij
-  le' i := by
+  le' i := by 
     refine' supr₂_le _
     rintro j hj s ⟨t, ht, rfl⟩
     exact (hum j).Measurable ht
@@ -295,7 +295,7 @@ theorem filtration_of_set_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : �
     filtrationOfSet hsm =
       natural (fun i => (s i).indicator (fun ω => 1 : Ω → β)) fun i =>
         stronglyMeasurableOne.indicator (hsm i) :=
-  by
+  by 
   simp only [natural, filtration_of_set, measurable_space_supr_eq]
   ext1 i
   refine' le_antisymm (generate_from_le _) (generate_from_le _)
@@ -305,7 +305,6 @@ theorem filtration_of_set_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : �
     refine' measurable_set_generate_from ⟨{1}, measurable_set_singleton 1, _⟩
     ext x
     simp [Set.indicator_const_preimage_eq_union]
-    
   · rintro t ⟨n, ht⟩
     suffices
       MeasurableSpace.generateFrom
@@ -322,7 +321,6 @@ theorem filtration_of_set_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : �
     all_goals rw [HEq] at hu'; rw [← hu']
     exacts[measurable_set_empty _, MeasurableSet.univ, measurable_set_generate_from ⟨n, hn, rfl⟩,
       MeasurableSet.compl (measurable_set_generate_from ⟨n, hn, rfl⟩)]
-    
 #align
   measure_theory.filtration.filtration_of_set_eq_natural MeasureTheory.Filtration.filtration_of_set_eq_natural
 
@@ -374,9 +372,7 @@ theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _
           (lt_of_le_of_lt _ (Ennreal.coe_lt_top : ↑R < ∞))⟩
     simp_rw [liminf_eq, eventually_at_top]
     exact Sup_le fun b ⟨a, ha⟩ => (ha a le_rfl).trans (hbdd _)
-    
   · exact zero_mem_ℒp
-    
 #align
   measure_theory.filtration.mem_ℒp_limit_process_of_snorm_bdd MeasureTheory.Filtration.memℒpLimitProcessOfSnormBdd
 

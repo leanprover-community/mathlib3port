@@ -65,23 +65,16 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
   rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
     tsub_zero]
   · rfl
-    
   · intro i hi h0
     convert mul_zero _
     convert zero_pow _
     · cases i
       · contradiction
-        
       · rfl
-        
-      
     · exact pow_pos hp.1.Pos _
-      
-    
   · rw [Finset.mem_range]
     intro h
     exact (h (Nat.succ_pos n)).elim
-    
 #align witt_vector.ghost_component_teichmuller_fun witt_vector.ghost_component_teichmuller_fun
 
 private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
@@ -89,9 +82,7 @@ private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
   ext n
   cases n
   · rfl
-    
   · exact f.map_zero
-    
 #align witt_vector.map_teichmuller_fun witt_vector.map_teichmuller_fun
 
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
@@ -113,17 +104,15 @@ private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
 /-- The Teichmüller lift of an element of `R` to `𝕎 R`.
 The `0`-th coefficient of `teichmuller p r` is `r`, and all others are `0`.
 This is a monoid homomorphism. -/
-def teichmuller : R →* 𝕎 R where
+def teichmuller : R →* 𝕎 R where 
   toFun := teichmullerFun p
-  map_one' := by
+  map_one' := by 
     ext ⟨⟩
     · rw [one_coeff_zero]
       rfl
-      
     · rw [one_coeff_eq_of_pos _ _ _ (Nat.succ_pos n)]
       rfl
-      
-  map_mul' := by
+  map_mul' := by 
     intro x y
     rcases counit_surjective R x with ⟨x, rfl⟩
     rcases counit_surjective R y with ⟨y, rfl⟩
@@ -145,7 +134,6 @@ theorem teichmuller_zero : teichmuller p (0 : R) = 0 := by
   ext ⟨⟩ <;>
     · rw [zero_coeff]
       rfl
-      
 #align witt_vector.teichmuller_zero WittVector.teichmuller_zero
 
 /-- `teichmuller` is a natural transformation. -/

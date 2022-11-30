@@ -21,7 +21,7 @@ open Set
 @[to_additive]
 theorem MeasurableSet.constSmul {G α : Type _} [Group G] [MulAction G α] [MeasurableSpace G]
     [MeasurableSpace α] [HasMeasurableSmul G α] {s : Set α} (hs : MeasurableSet s) (a : G) :
-    MeasurableSet (a • s) := by
+    MeasurableSet (a • s) := by 
   rw [← preimage_smul_inv]
   exact measurable_const_smul _ hs
 #align measurable_set.const_smul MeasurableSet.constSmul
@@ -36,7 +36,7 @@ theorem MeasurableSet.constSmulOfNeZero {G₀ α : Type _} [GroupWithZero G₀] 
 theorem MeasurableSet.constSmul₀ {G₀ α : Type _} [GroupWithZero G₀] [Zero α]
     [MulActionWithZero G₀ α] [MeasurableSpace G₀] [MeasurableSpace α] [HasMeasurableSmul G₀ α]
     [MeasurableSingletonClass α] {s : Set α} (hs : MeasurableSet s) (a : G₀) :
-    MeasurableSet (a • s) := by
+    MeasurableSet (a • s) := by 
   rcases eq_or_ne a 0 with (rfl | ha)
   exacts[(subsingleton_zero_smul_set s).MeasurableSet, hs.const_smul_of_ne_zero ha]
 #align measurable_set.const_smul₀ MeasurableSet.constSmul₀

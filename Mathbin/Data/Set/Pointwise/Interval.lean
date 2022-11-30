@@ -850,7 +850,6 @@ theorem image_mul_right_Icc {a b c : α} (hab : a ≤ b) (hc : 0 ≤ c) :
   cases eq_or_lt_of_le hc
   · subst c
     simp [(nonempty_Icc.2 hab).image_const]
-    
   exact image_mul_right_Icc' a b ‹0 < c›
 #align set.image_mul_right_Icc Set.image_mul_right_Icc
 

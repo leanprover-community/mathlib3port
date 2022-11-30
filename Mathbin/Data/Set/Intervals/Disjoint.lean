@@ -180,10 +180,8 @@ variable [LinearOrder α] {s : Set α} {a : α} {f : ι → α}
 theorem IsGlb.bUnion_Ioi_eq (h : IsGlb s a) : (⋃ x ∈ s, ioi x) = ioi a := by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ioi_subset_Ioi (h.1 hx)
-    
   · rcases h.exists_between hx with ⟨y, hys, hay, hyx⟩
     exact mem_bUnion hys hyx
-    
 #align is_glb.bUnion_Ioi_eq IsGlb.bUnion_Ioi_eq
 
 theorem IsGlb.Union_Ioi_eq (h : IsGlb (range f) a) : (⋃ x, ioi (f x)) = ioi a :=
@@ -202,20 +200,16 @@ theorem IsGlb.bUnion_Ici_eq_Ioi (a_glb : IsGlb s a) (a_not_mem : a ∉ s) :
     (⋃ x ∈ s, ici x) = ioi a := by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ici_subset_Ioi.mpr (lt_of_le_of_ne (a_glb.1 hx) fun h => (h ▸ a_not_mem) hx)
-    
   · rcases a_glb.exists_between hx with ⟨y, hys, hay, hyx⟩
     apply mem_Union₂.mpr
     refine' ⟨y, hys, hyx.le⟩
-    
 #align is_glb.bUnion_Ici_eq_Ioi IsGlb.bUnion_Ici_eq_Ioi
 
 theorem IsGlb.bUnion_Ici_eq_Ici (a_glb : IsGlb s a) (a_mem : a ∈ s) : (⋃ x ∈ s, ici x) = ici a := by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ici_subset_Ici.mpr (mem_lower_bounds.mp a_glb.1 x hx)
-    
   · apply mem_Union₂.mpr
     refine' ⟨a, a_mem, hx⟩
-    
 #align is_glb.bUnion_Ici_eq_Ici IsGlb.bUnion_Ici_eq_Ici
 
 theorem IsLub.bUnion_Iic_eq_Iio (a_lub : IsLub s a) (a_not_mem : a ∉ s) :

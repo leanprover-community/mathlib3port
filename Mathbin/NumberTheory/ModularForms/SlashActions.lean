@@ -41,7 +41,8 @@ class SlashAction (β G α γ : Type _) [Group G] [Zero α] [One α] [HasSmul γ
 
 /-- Slash_action induced by a monoid homomorphism.-/
 def monoidHomSlashAction {β G H α γ : Type _} [Group G] [Zero α] [One α] [HasSmul γ α] [Add α]
-    [Group H] [SlashAction β G α γ] (h : H →* G) : SlashAction β H α γ where
+    [Group H] [SlashAction β G α γ] (h : H →* G) :
+    SlashAction β H α γ where 
   map k g := SlashAction.map γ k (h g)
   mul_zero k g := SlashAction.mul_zero k (h g)
   one_mul k a := by simp only [map_one, SlashAction.one_mul]
@@ -65,7 +66,7 @@ variable {Γ : Subgroup SL(2, ℤ)} {k : ℤ} (f : ℍ → ℂ)
 scoped notation:100 f " ∣[" k "]" γ:100 => ModularForm.slash k γ f
 
 theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) :
-    (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by
+    (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by 
   ext1
   simp_rw [slash, UpperHalfPlane.denom_cocycle A B x]
   have e3 : (A * B) • x = A • B • x := by convert UpperHalfPlane.mul_smul' A B x
@@ -106,7 +107,8 @@ theorem neg_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (-f) ∣[k]A
   funext <| by simp [slash]
 #align modular_form.neg_slash ModularForm.neg_slash
 
-instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ where
+instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ)
+      ℂ where 
   map := slash
   mul_zero k g := funext fun _ => by simp only [slash, Pi.zero_apply, zero_mul]
   one_mul := slash_one
@@ -162,9 +164,7 @@ theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → �
       Matrix.SpecialLinearGroup.det_coe, of_real_one, one_zpow, mul_one, subgroup_to_sl_moeb,
       sl_moeb]
     rfl
-    
   · convert zpow_ne_zero k (denom_ne_zero γ z)
-    
 #align modular_form.slash_action_eq'_iff ModularForm.slash_action_eq'_iff
 
 theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
@@ -174,7 +174,7 @@ theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
     Pi.mul_apply, Pi.smul_apply, Algebra.smul_mul_assoc, real_smul]
   set d : ℂ := ↑((↑ₘA).det : ℝ)
   have h1 : d ^ (k1 + k2 - 1) = d * d ^ (k1 - 1) * d ^ (k2 - 1) := by
-    have : d ≠ 0 := by
+    have : d ≠ 0 := by 
       dsimp [d]
       norm_cast
       exact Matrix.gLPos.det_ne_zero A

@@ -166,14 +166,16 @@ theorem IsGlb.dual (h : IsGlb s a) : IsLub (of_dual ⁻¹' s) (toDual a) :=
 
 /-- If `a` is the least element of a set `s`, then subtype `s` is an order with bottom element. -/
 @[reducible]
-def IsLeast.orderBot (h : IsLeast s a) : OrderBot s where
+def IsLeast.orderBot (h : IsLeast s a) :
+    OrderBot s where 
   bot := ⟨a, h.1⟩
   bot_le := Subtype.forall.2 h.2
 #align is_least.order_bot IsLeast.orderBot
 
 /-- If `a` is the greatest element of a set `s`, then subtype `s` is an order with top element. -/
 @[reducible]
-def IsGreatest.orderTop (h : IsGreatest s a) : OrderTop s where
+def IsGreatest.orderTop (h : IsGreatest s a) :
+    OrderTop s where 
   top := ⟨a, h.1⟩
   le_top := Subtype.forall.2 h.2
 #align is_greatest.order_top IsGreatest.orderTop
@@ -548,10 +550,8 @@ theorem lub_Iio_eq_self_or_Iio_eq_Iic [PartialOrder γ] {j : γ} (i : γ) (hj : 
     j = i ∨ Set.iio i = Set.iic j := by
   cases' eq_or_lt_of_le (lub_Iio_le i hj) with hj_eq_i hj_lt_i
   · exact Or.inl hj_eq_i
-    
   · right
     exact Set.ext fun k => ⟨fun hk_lt => hj.1 hk_lt, fun hk_le_j => lt_of_le_of_lt hk_le_j hj_lt_i⟩
-    
 #align lub_Iio_eq_self_or_Iio_eq_Iic lub_Iio_eq_self_or_Iio_eq_Iic
 
 theorem glb_Ioi_eq_self_or_Ioi_eq_Ici [PartialOrder γ] {j : γ} (i : γ) (hj : IsGlb (Set.ioi i) j) :
@@ -567,14 +567,12 @@ theorem exists_lub_Iio (i : γ) : ∃ j, IsLub (Set.iio i) j := by
   by_cases h_exists_lt : ∃ j, j ∈ upperBounds (Set.iio i) ∧ j < i
   · obtain ⟨j, hj_ub, hj_lt_i⟩ := h_exists_lt
     exact ⟨j, hj_ub, fun k hk_ub => hk_ub hj_lt_i⟩
-    
   · refine' ⟨i, fun j hj => le_of_lt hj, _⟩
     rw [mem_lower_bounds]
     by_contra
     refine' h_exists_lt _
     push_neg  at h
     exact h
-    
 #align exists_lub_Iio exists_lub_Iio
 
 theorem exists_glb_Ioi (i : γ) : ∃ j, IsGlb (Set.ioi i) j :=
@@ -733,7 +731,6 @@ theorem is_glb_Ioo {a b : γ} (h : a < b) : IsGlb (ioo a b) a :=
   ⟨fun x hx => hx.1.le, fun x hx => by
     cases' eq_or_lt_of_le (le_sup_right : a ≤ x ⊔ a) with h₁ h₂
     · exact h₁.symm ▸ le_sup_left
-      
     obtain ⟨y, lty, ylt⟩ := exists_between h₂
     apply (not_lt_of_le (sup_le (hx ⟨lty, ylt.trans_le (sup_le _ h.le)⟩) lty.le) ylt).elim
     obtain ⟨u, au, ub⟩ := exists_between h
@@ -923,25 +920,25 @@ theorem BddBelow.insert [SemilatticeInf γ] (a : γ) {s : Set γ} (hs : BddBelow
 #align bdd_below.insert BddBelow.insert
 
 theorem IsLub.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLub s b) :
-    IsLub (insert a s) (a ⊔ b) := by
+    IsLub (insert a s) (a ⊔ b) := by 
   rw [insert_eq]
   exact is_lub_singleton.union hs
 #align is_lub.insert IsLub.insert
 
 theorem IsGlb.insert [SemilatticeInf γ] (a) {b} {s : Set γ} (hs : IsGlb s b) :
-    IsGlb (insert a s) (a ⊓ b) := by
+    IsGlb (insert a s) (a ⊓ b) := by 
   rw [insert_eq]
   exact is_glb_singleton.union hs
 #align is_glb.insert IsGlb.insert
 
 theorem IsGreatest.insert [LinearOrder γ] (a) {b} {s : Set γ} (hs : IsGreatest s b) :
-    IsGreatest (insert a s) (max a b) := by
+    IsGreatest (insert a s) (max a b) := by 
   rw [insert_eq]
   exact is_greatest_singleton.union hs
 #align is_greatest.insert IsGreatest.insert
 
 theorem IsLeast.insert [LinearOrder γ] (a) {b} {s : Set γ} (hs : IsLeast s b) :
-    IsLeast (insert a s) (min a b) := by
+    IsLeast (insert a s) (min a b) := by 
   rw [insert_eq]
   exact is_least_singleton.union hs
 #align is_least.insert IsLeast.insert
@@ -1260,7 +1257,7 @@ theorem mem_lower_bounds_image (Ha : a ∈ lowerBounds s) : f a ∈ lowerBounds 
 #align monotone.mem_lower_bounds_image Monotone.mem_lower_bounds_image
 
 theorem image_upper_bounds_subset_upper_bounds_image : f '' upperBounds s ⊆ upperBounds (f '' s) :=
-  by
+  by 
   rintro _ ⟨a, ha, rfl⟩
   exact Hf.mem_upper_bounds_image ha
 #align
@@ -1577,18 +1574,16 @@ theorem IsLub.of_image [Preorder α] [Preorder β] {f : α → β} (hf : ∀ {x 
 #align is_lub.of_image IsLub.of_image
 
 theorem is_lub_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
-    IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by classical
-  refine'
-    ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H =>
-      ⟨_, _⟩⟩
-  · suffices : Function.update f a b ∈ upperBounds s
-    exact Function.update_same a b f ▸ H.2 this a
-    refine' fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
-    
-  · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
-    
-  · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upper_bounds_image hg)
-    
+    IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by
+  classical 
+    refine'
+      ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H =>
+        ⟨_, _⟩⟩
+    · suffices : Function.update f a b ∈ upperBounds s
+      exact Function.update_same a b f ▸ H.2 this a
+      refine' fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
+    · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
+    · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upper_bounds_image hg)
 #align is_lub_pi is_lub_pi
 
 theorem is_glb_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
@@ -1606,17 +1601,14 @@ theorem is_lub_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × 
   · suffices : (a, p.2) ∈ upperBounds s
     exact (H.2 this).1
     exact fun q hq => ⟨ha <| mem_image_of_mem _ hq, (H.1 hq).2⟩
-    
   · suffices : (p.1, a) ∈ upperBounds s
     exact (H.2 this).2
     exact fun q hq => ⟨(H.1 hq).1, ha <| mem_image_of_mem _ hq⟩
-    
   · exact fun q hq => ⟨H.1.1 <| mem_image_of_mem _ hq, H.2.1 <| mem_image_of_mem _ hq⟩
-    
-  · exact fun q hq =>
+  ·
+    exact fun q hq =>
       ⟨H.1.2 <| monotone_fst.mem_upper_bounds_image hq,
         H.2.2 <| monotone_snd.mem_upper_bounds_image hq⟩
-    
 #align is_lub_prod is_lub_prod
 
 theorem is_glb_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × β) :

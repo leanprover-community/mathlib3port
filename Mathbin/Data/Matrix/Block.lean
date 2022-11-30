@@ -227,7 +227,7 @@ theorem from_blocks_mul_vec [Fintype l] [Fintype m] [NonUnitalNonAssocSemiring �
     mulVec (fromBlocks A B C D) x =
       Sum.elim (mulVec A (x ∘ Sum.inl) + mulVec B (x ∘ Sum.inr))
         (mulVec C (x ∘ Sum.inl) + mulVec D (x ∘ Sum.inr)) :=
-  by
+  by 
   ext i
   cases i <;> simp [mul_vec, dot_product]
 #align matrix.from_blocks_mul_vec Matrix.from_blocks_mul_vec
@@ -237,7 +237,7 @@ theorem vec_mul_from_blocks [Fintype n] [Fintype o] [NonUnitalNonAssocSemiring �
     vecMul x (fromBlocks A B C D) =
       Sum.elim (vecMul (x ∘ Sum.inl) A + vecMul (x ∘ Sum.inr) C)
         (vecMul (x ∘ Sum.inl) B + vecMul (x ∘ Sum.inr) D) :=
-  by
+  by 
   ext i
   cases i <;> simp [vec_mul, dot_product]
 #align matrix.vec_mul_from_blocks Matrix.vec_mul_from_blocks
@@ -253,9 +253,7 @@ theorem to_block_diagonal_self (d : m → α) (p : m → Prop) :
   ext (i j)
   by_cases i = j
   · simp [h]
-    
   · simp [One.one, h, fun h' => h <| Subtype.ext h']
-    
 #align matrix.to_block_diagonal_self Matrix.to_block_diagonal_self
 
 theorem to_block_diagonal_disjoint (d : m → α) {p q : m → Prop} (hpq : Disjoint p q) :
@@ -353,9 +351,7 @@ theorem block_diagonal_transpose (M : o → Matrix m n α) :
   simp only [transpose_apply, block_diagonal_apply, eq_comm]
   split_ifs with h
   · rw [h]
-    
   · rfl
-    
 #align matrix.block_diagonal_transpose Matrix.block_diagonal_transpose
 
 @[simp]
@@ -403,7 +399,8 @@ variable (o m n α)
 /-- `matrix.block_diagonal` as an `add_monoid_hom`. -/
 @[simps]
 def blockDiagonalAddMonoidHom [AddZeroClass α] :
-    (o → Matrix m n α) →+ Matrix (m × o) (n × o) α where
+    (o → Matrix m n α) →+
+      Matrix (m × o) (n × o) α where 
   toFun := blockDiagonal
   map_zero' := block_diagonal_zero
   map_add' := block_diagonal_add
@@ -506,13 +503,11 @@ theorem block_diag_zero : blockDiag (0 : Matrix (m × o) (n × o) α) = 0 :=
 @[simp]
 theorem block_diag_diagonal [DecidableEq o] [DecidableEq m] (d : m × o → α) (k : o) :
     blockDiag (diagonal d) k = diagonal fun i => d (i, k) :=
-  ext fun i j => by
+  ext fun i j => by 
     obtain rfl | hij := Decidable.eq_or_ne i j
     · rw [block_diag, diagonal_apply_eq, diagonal_apply_eq]
-      
     · rw [block_diag, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt _ hij)]
       exact prod.fst_eq_iff.mpr
-      
 #align matrix.block_diag_diagonal Matrix.block_diag_diagonal
 
 @[simp]
@@ -541,7 +536,9 @@ variable (o m n α)
 
 /-- `matrix.block_diag` as an `add_monoid_hom`. -/
 @[simps]
-def blockDiagAddMonoidHom [AddZeroClass α] : Matrix (m × o) (n × o) α →+ o → Matrix m n α where
+def blockDiagAddMonoidHom [AddZeroClass α] :
+    Matrix (m × o) (n × o) α →+
+      o → Matrix m n α where 
   toFun := blockDiag
   map_zero' := block_diag_zero
   map_add' := block_diag_add
@@ -607,7 +604,7 @@ theorem block_diagonal'_submatrix_eq_block_diagonal (M : o → Matrix m n α) :
 theorem block_diagonal'_apply (M : ∀ i, Matrix (m' i) (n' i) α) (ik jk) :
     blockDiagonal' M ik jk =
       if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_arg n' h.symm) jk.2) else 0 :=
-  by
+  by 
   cases ik
   cases jk
   rfl
@@ -659,9 +656,7 @@ theorem block_diagonal'_diagonal [∀ i, DecidableEq (m' i)] (d : ∀ i, m' i �
   simp only [block_diagonal'_apply, diagonal]
   obtain rfl | hij := Decidable.eq_or_ne i j
   · simp
-    
   · simp [hij]
-    
 #align matrix.block_diagonal'_diagonal Matrix.block_diagonal'_diagonal
 
 @[simp]
@@ -688,7 +683,9 @@ variable (m' n' α)
 /-- `matrix.block_diagonal'` as an `add_monoid_hom`. -/
 @[simps]
 def blockDiagonal'AddMonoidHom [AddZeroClass α] :
-    (∀ i, Matrix (m' i) (n' i) α) →+ Matrix (Σi, m' i) (Σi, n' i) α where
+    (∀ i, Matrix (m' i) (n' i) α) →+
+      Matrix (Σi, m' i) (Σi, n' i)
+        α where 
   toFun := blockDiagonal'
   map_zero' := block_diagonal'_zero
   map_add' := block_diagonal'_add
@@ -716,10 +713,8 @@ theorem block_diagonal'_mul [NonUnitalNonAssocSemiring α] [∀ i, Fintype (n' i
   simp only [block_diagonal'_apply, mul_apply, ← Finset.univ_sigma_univ, Finset.sum_sigma]
   rw [Fintype.sum_eq_single k]
   · split_ifs <;> simp
-    
   · intro j' hj'
     exact Finset.sum_eq_zero fun _ _ => by rw [dif_neg hj'.symm, zero_mul]
-    
 #align matrix.block_diagonal'_mul Matrix.block_diagonal'_mul
 
 section
@@ -796,14 +791,12 @@ theorem block_diag'_zero : blockDiag' (0 : Matrix (Σi, m' i) (Σi, n' i) α) = 
 @[simp]
 theorem block_diag'_diagonal [DecidableEq o] [∀ i, DecidableEq (m' i)] (d : (Σi, m' i) → α)
     (k : o) : blockDiag' (diagonal d) k = diagonal fun i => d ⟨k, i⟩ :=
-  ext fun i j => by
+  ext fun i j => by 
     obtain rfl | hij := Decidable.eq_or_ne i j
     · rw [block_diag', diagonal_apply_eq, diagonal_apply_eq]
-      
     · rw [block_diag', diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt (fun h => _) hij)]
       cases h
       rfl
-      
 #align matrix.block_diag'_diagonal Matrix.block_diag'_diagonal
 
 @[simp]
@@ -833,7 +826,8 @@ variable (m' n' α)
 /-- `matrix.block_diag'` as an `add_monoid_hom`. -/
 @[simps]
 def blockDiag'AddMonoidHom [AddZeroClass α] :
-    Matrix (Σi, m' i) (Σi, n' i) α →+ ∀ i, Matrix (m' i) (n' i) α where
+    Matrix (Σi, m' i) (Σi, n' i) α →+
+      ∀ i, Matrix (m' i) (n' i) α where 
   toFun := blockDiag'
   map_zero' := block_diag'_zero
   map_add' := block_diag'_add
@@ -867,21 +861,22 @@ variable [CommRing R]
 
 theorem to_block_mul_eq_mul {m n k : Type _} [Fintype n] (p : m → Prop) (q : k → Prop)
     (A : Matrix m n R) (B : Matrix n k R) : (A ⬝ B).toBlock p q = A.toBlock p ⊤ ⬝ B.toBlock ⊤ q :=
-  by
+  by 
   ext (i k)
   simp only [to_block_apply, mul_apply]
   rw [Finset.sum_subtype]
-  simp [HasTop.top, CompleteLattice.top, BoundedOrder.top]
+  simp [Top.top, CompleteLattice.top, BoundedOrder.top]
 #align matrix.to_block_mul_eq_mul Matrix.to_block_mul_eq_mul
 
 theorem to_block_mul_eq_add {m n k : Type _} [Fintype n] (p : m → Prop) (q : n → Prop)
     [DecidablePred q] (r : k → Prop) (A : Matrix m n R) (B : Matrix n k R) :
     (A ⬝ B).toBlock p r =
       A.toBlock p q ⬝ B.toBlock q r + (A.toBlock p fun i => ¬q i) ⬝ B.toBlock (fun i => ¬q i) r :=
-  by classical
-  ext (i k)
-  simp only [to_block_apply, mul_apply, Pi.add_apply]
-  convert (Fintype.sum_subtype_add_sum_subtype q fun x => A (↑i) x * B x ↑k).symm
+  by
+  classical 
+    ext (i k)
+    simp only [to_block_apply, mul_apply, Pi.add_apply]
+    convert (Fintype.sum_subtype_add_sum_subtype q fun x => A (↑i) x * B x ↑k).symm
 #align matrix.to_block_mul_eq_add Matrix.to_block_mul_eq_add
 
 end

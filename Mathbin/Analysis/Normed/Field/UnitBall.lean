@@ -21,9 +21,10 @@ open Set Metric
 variable {𝕜 : Type _}
 
 /-- Unit ball in a non unital semi normed ring as a bundled `subsemigroup`. -/
-def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] : Subsemigroup 𝕜 where
+def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] :
+    Subsemigroup 𝕜 where 
   carrier := ball (0 : 𝕜) 1
-  mul_mem' x y hx hy := by
+  mul_mem' x y hx hy := by 
     rw [mem_ball_zero_iff] at *
     exact (norm_mul_le x y).trans_lt (mul_lt_one_of_nonneg_of_lt_one_left (norm_nonneg _) hx hy.le)
 #align subsemigroup.unit_ball Subsemigroup.unitBall
@@ -47,9 +48,10 @@ theorem coe_mul_unit_ball [NonUnitalSemiNormedRing 𝕜] (x y : ball (0 : 𝕜) 
 #align coe_mul_unit_ball coe_mul_unit_ball
 
 /-- Closed unit ball in a non unital semi normed ring as a bundled `subsemigroup`. -/
-def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] : Subsemigroup 𝕜 where
+def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] :
+    Subsemigroup 𝕜 where 
   carrier := closedBall 0 1
-  mul_mem' x y hx hy := by
+  mul_mem' x y hx hy := by 
     rw [mem_closed_ball_zero_iff] at *
     exact (norm_mul_le x y).trans (mul_le_one hx (norm_nonneg _) hy)
 #align subsemigroup.unit_closed_ball Subsemigroup.unitClosedBall
@@ -94,9 +96,10 @@ theorem coe_pow_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] (x : 
 #align coe_pow_unit_closed_ball coe_pow_unit_closed_ball
 
 /-- Unit sphere in a normed division ring as a bundled `submonoid`. -/
-def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid 𝕜 where
+def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] :
+    Submonoid 𝕜 where 
   carrier := sphere (0 : 𝕜) 1
-  mul_mem' x y hx hy := by
+  mul_mem' x y hx hy := by 
     rw [mem_sphere_zero_iff_norm] at *
     simp [*]
   one_mem' := mem_sphere_zero_iff_norm.2 norm_one
@@ -183,7 +186,10 @@ instance [NormedDivisionRing 𝕜] : Group (sphere (0 : 𝕜) 1) :=
 instance [NormedDivisionRing 𝕜] : HasDistribNeg (sphere (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : sphere (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
-instance [NormedDivisionRing 𝕜] : TopologicalGroup (sphere (0 : 𝕜) 1) where
+instance [NormedDivisionRing 𝕜] :
+    TopologicalGroup
+      (sphere (0 : 𝕜)
+        1) where 
   to_has_continuous_mul := (Submonoid.unitSphere 𝕜).HasContinuousMul
   continuous_inv := (continuous_subtype_coe.inv₀ ne_zero_of_mem_unit_sphere).subtype_mk _
 

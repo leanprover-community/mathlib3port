@@ -186,7 +186,7 @@ theorem nonempty_of_probability_measure (μ : ProbabilityMeasure Ω) : Nonempty 
 #align
   measure_theory.probability_measure.nonempty_of_probability_measure MeasureTheory.ProbabilityMeasure.nonempty_of_probability_measure
 
-@[ext.1]
+@[ext]
 theorem eq_of_forall_measure_apply_eq (μ ν : ProbabilityMeasure Ω)
     (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν := by
   ext1
@@ -292,7 +292,7 @@ theorem tendsto_iff_forall_lintegral_tendsto {γ : Type _} {F : Filter γ}
     Tendsto μs F (𝓝 μ) ↔
       ∀ f : Ω →ᵇ ℝ≥0,
         Tendsto (fun i => ∫⁻ ω, f ω ∂(μs i : Measure Ω)) F (𝓝 (∫⁻ ω, f ω ∂(μ : Measure Ω))) :=
-  by
+  by 
   rw [tendsto_nhds_iff_to_finite_measures_tendsto_nhds]
   exact finite_measure.tendsto_iff_forall_lintegral_tendsto
 #align
@@ -306,7 +306,7 @@ theorem tendsto_iff_forall_integral_tendsto {γ : Type _} {F : Filter γ}
     Tendsto μs F (𝓝 μ) ↔
       ∀ f : Ω →ᵇ ℝ,
         Tendsto (fun i => ∫ ω, f ω ∂(μs i : Measure Ω)) F (𝓝 (∫ ω, f ω ∂(μ : Measure Ω))) :=
-  by
+  by 
   rw [tendsto_nhds_iff_to_finite_measures_tendsto_nhds]
   rw [finite_measure.tendsto_iff_forall_integral_tendsto]
   simp only [coe_comp_to_finite_measure_eq_coe]
@@ -341,7 +341,7 @@ def normalize : ProbabilityMeasure Ω :=
   if zero : μ.mass = 0 then ⟨Measure.dirac ‹Nonempty Ω›.some, Measure.dirac.isProbabilityMeasure⟩
   else
     { val := μ.mass⁻¹ • μ,
-      property := by
+      property := by 
         refine' ⟨_⟩
         simp only [mass, measure.coe_nnreal_smul_apply, ←
           ennreal_coe_fn_eq_coe_fn_to_measure μ univ]
@@ -353,7 +353,6 @@ def normalize : ProbabilityMeasure Ω :=
 theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize s := by
   obtain rfl | h := eq_or_ne μ 0
   · simp only [zero.mass, coe_fn_zero, Pi.zero_apply, zero_mul]
-    
   have mass_nonzero : μ.mass ≠ 0 := by rwa [μ.mass_nonzero_iff]
   simp only [normalize, dif_neg mass_nonzero, Ennreal.to_nnreal_mul, Subtype.coe_mk,
     probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure, Ennreal.to_nnreal_coe,
@@ -386,7 +385,7 @@ theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) :
   measure_theory.finite_measure.normalize_eq_inv_mass_smul_of_nonzero MeasureTheory.FiniteMeasure.normalize_eq_inv_mass_smul_of_nonzero
 
 theorem coe_normalize_eq_of_nonzero (nonzero : μ ≠ 0) : (μ.normalize : Measure Ω) = μ.mass⁻¹ • μ :=
-  by
+  by 
   ext1 s s_mble
   simp only [← μ.normalize.ennreal_coe_fn_eq_coe_fn_to_measure s,
     μ.normalize_eq_of_nonzero nonzero s, Ennreal.coe_mul, ennreal_coe_fn_eq_coe_fn_to_measure,
@@ -445,7 +444,6 @@ theorem tendsto_test_against_nn_of_tendsto_normalize_test_against_nn_of_tendsto_
   · simp only [μ.mass_zero_iff.mp h_mass, zero.test_against_nn_apply, zero.mass,
       eq_self_iff_true] at *
     exact tendsto_zero_test_against_nn_of_tendsto_zero_mass mass_lim f
-    
   simp_rw [fun i => (μs i).test_against_nn_eq_mass_mul f, μ.test_against_nn_eq_mass_mul f]
   rw [probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds] at μs_lim
   rw [tendsto_iff_forall_test_against_nn_tendsto] at μs_lim
@@ -461,7 +459,7 @@ theorem tendsto_normalize_test_against_nn_of_tendsto {γ : Type _} {F : Filter �
     {μs : γ → FiniteMeasure Ω} (μs_lim : Tendsto μs F (𝓝 μ)) (nonzero : μ ≠ 0) (f : Ω →ᵇ ℝ≥0) :
     Tendsto (fun i => (μs i).normalize.toFiniteMeasure.testAgainstNn f) F
       (𝓝 (μ.normalize.toFiniteMeasure.testAgainstNn f)) :=
-  by
+  by 
   have lim_mass := μs_lim.mass
   have aux : {(0 : ℝ≥0)}ᶜ ∈ 𝓝 μ.mass :=
     is_open_compl_singleton.mem_nhds (μ.mass_nonzero_iff.mpr nonzero)
@@ -471,7 +469,7 @@ theorem tendsto_normalize_test_against_nn_of_tendsto {γ : Type _} {F : Filter �
   have eve :
     ∀ᶠ i in F,
       (μs i).normalize.toFiniteMeasure.testAgainstNn f = (μs i).mass⁻¹ * (μs i).testAgainstNn f :=
-    by
+    by 
     filter_upwards [eventually_iff.mp eventually_nonzero]
     intro i hi
     apply normalize_test_against_nn _ hi
@@ -479,12 +477,10 @@ theorem tendsto_normalize_test_against_nn_of_tendsto {γ : Type _} {F : Filter �
   have lim_pair :
     tendsto (fun i => (⟨(μs i).mass⁻¹, (μs i).testAgainstNn f⟩ : ℝ≥0 × ℝ≥0)) F
       (𝓝 ⟨μ.mass⁻¹, μ.test_against_nn f⟩) :=
-    by
+    by 
     refine' (Prod.tendsto_iff _ _).mpr ⟨_, _⟩
     · exact (continuous_on_inv₀.continuous_at aux).Tendsto.comp lim_mass
-      
     · exact tendsto_iff_forall_test_against_nn_tendsto.mp μs_lim f
-      
   exact tendsto_mul.comp lim_pair
 #align
   measure_theory.finite_measure.tendsto_normalize_test_against_nn_of_tendsto MeasureTheory.FiniteMeasure.tendsto_normalize_test_against_nn_of_tendsto
@@ -518,14 +514,12 @@ theorem tendsto_normalize_iff_tendsto {γ : Type _} {F : Filter γ} {μs : γ �
     Tendsto (fun i => (μs i).normalize) F (𝓝 μ.normalize) ∧
         Tendsto (fun i => (μs i).mass) F (𝓝 μ.mass) ↔
       Tendsto μs F (𝓝 μ) :=
-  by
+  by 
   constructor
   · rintro ⟨normalized_lim, mass_lim⟩
     exact tendsto_of_tendsto_normalize_test_against_nn_of_tendsto_mass normalized_lim mass_lim
-    
   · intro μs_lim
     refine' ⟨tendsto_normalize_of_tendsto μs_lim nonzero, μs_lim.mass⟩
-    
 #align
   measure_theory.finite_measure.tendsto_normalize_iff_tendsto MeasureTheory.FiniteMeasure.tendsto_normalize_iff_tendsto
 

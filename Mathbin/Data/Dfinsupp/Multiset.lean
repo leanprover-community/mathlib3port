@@ -44,7 +44,10 @@ namespace Multiset
 variable [DecidableEq α]
 
 /-- A computable version of `multiset.to_finsupp` -/
-def toDfinsupp : Multiset α →+ Π₀ a : α, ℕ where
+def toDfinsupp :
+    Multiset α →+
+      Π₀ a : α,
+        ℕ where 
   toFun s :=
     { toFun := fun n => s.count n,
       support' := Trunc.mk ⟨s, fun i => (em (i ∈ s)).imp_right Multiset.count_eq_zero_of_not_mem⟩ }
@@ -79,10 +82,10 @@ theorem to_dfinsupp_singleton (a : α) : toDfinsupp {a} = Dfinsupp.single a 1 :=
 @[simps apply symmApply]
 def equivDfinsupp : Multiset α ≃+ Π₀ a : α, ℕ :=
   AddMonoidHom.toAddEquiv Multiset.toDfinsupp Dfinsupp.toMultiset
-    (by
+    (by 
       ext x : 1
       simp)
-    (by
+    (by 
       refine' @Dfinsupp.add_hom_ext α (fun _ => ℕ) _ _ _ _ _ _ fun i hi => _
       simp)
 #align multiset.equiv_dfinsupp Multiset.equivDfinsupp

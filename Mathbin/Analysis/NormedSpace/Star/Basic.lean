@@ -95,11 +95,10 @@ variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 -- see Note [lower instance priority]
 /-- In a C*-ring, star preserves the norm. -/
 instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
-  ⟨by
+  ⟨by 
     intro x
     by_cases htriv : x = 0
     · simp only [htriv, star_zero]
-      
     · have hnt : 0 < ‖x‖ := norm_pos_iff.mpr htriv
       have hnt_star : 0 < ‖x⋆‖ :=
         norm_pos_iff.mpr ((AddEquiv.map_ne_zero_iff starAddEquiv).mpr htriv)
@@ -113,8 +112,7 @@ instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
           ‖x⋆‖ * ‖x⋆‖ = ‖x * x⋆‖ := by rw [← norm_star_mul_self, star_star]
           _ ≤ ‖x‖ * ‖x⋆‖ := norm_mul_le _ _
           
-      exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)
-      ⟩
+      exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)⟩
 #align cstar_ring.to_normed_star_group CstarRing.toNormedStarGroup
 
 theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ := by
@@ -173,21 +171,24 @@ instance Pi.starRing' : StarRing (∀ i, R i) :=
 variable [Fintype ι] [∀ i, CstarRing (R i)]
 
 instance Prod.cstarRing :
-    CstarRing (R₁ × R₂) where norm_star_mul_self x := by
+    CstarRing
+      (R₁ ×
+        R₂) where norm_star_mul_self x := by 
     unfold norm
     simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
     refine' le_antisymm _ _
     · refine' max_le _ _ <;> rw [sq_le_sq, abs_of_nonneg (norm_nonneg _)]
       exact (le_max_left _ _).trans (le_abs_self _)
       exact (le_max_right _ _).trans (le_abs_self _)
-      
     · rw [le_sup_iff]
       rcases le_total ‖x.fst‖ ‖x.snd‖ with (h | h) <;> simp [h]
-      
 #align prod.cstar_ring Prod.cstarRing
 
 instance Pi.cstarRing :
-    CstarRing (∀ i, R i) where norm_star_mul_self x := by
+    CstarRing
+      (∀ i,
+        R
+          i) where norm_star_mul_self x := by
     simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
     norm_cast
     exact
@@ -229,19 +230,19 @@ theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ‖U
 theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A‖ := by
   nontriviality E
   refine' le_antisymm _ _
-  · calc
+  ·
+    calc
       _ ≤ ‖(U : E)‖ * ‖A‖ := norm_mul_le _ _
       _ = ‖A‖ := by rw [norm_coe_unitary, one_mul]
       
-    
-  · calc
+  ·
+    calc
       _ = ‖(U : E)⋆ * U * A‖ := by rw [unitary.coe_star_mul_self U, one_mul]
-      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by
+      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by 
         rw [mul_assoc]
         exact norm_mul_le _ _
       _ = ‖(U : E) * A‖ := by rw [norm_star, norm_coe_unitary, one_mul]
       
-    
 #align cstar_ring.norm_coe_unitary_mul CstarRing.norm_coe_unitary_mul
 
 @[simp]
@@ -275,11 +276,9 @@ theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing 
     (hx : IsSelfAdjoint x) (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n := by
   induction' n with k hk
   · simp only [pow_zero, pow_one]
-    
   · rw [pow_succ, pow_mul', sq]
     nth_rw 0 [← self_adjoint.mem_iff.mp hx]
     rw [← star_pow, CstarRing.nnnorm_star_mul_self, ← sq, hk, pow_mul']
-    
 #align is_self_adjoint.nnnorm_pow_two_pow IsSelfAdjoint.nnnorm_pow_two_pow
 
 theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E)
@@ -330,24 +329,20 @@ theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ := by
   rw [← Sup_closed_unit_ball_eq_nnnorm]
   refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
-    
   · rintro - ⟨x, hx, rfl⟩
     exact
       ((mul 𝕜 E a).unit_le_op_norm x <| mem_closed_ball_zero_iff.mp hx).trans
         (op_norm_mul_apply_le 𝕜 E a)
-    
   · have ha : 0 < ‖a‖₊ := zero_le'.trans_lt hr
     rw [← inv_inv ‖a‖₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr
     obtain ⟨k, hk₁, hk₂⟩ :=
       NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| Nnreal.inv_pos.2 ha)
     refine' ⟨_, ⟨k • star a, _, rfl⟩, _⟩
-    · simpa only [mem_closed_ball_zero_iff, norm_smul, one_mul, norm_star] using
+    ·
+      simpa only [mem_closed_ball_zero_iff, norm_smul, one_mul, norm_star] using
         (Nnreal.le_inv_iff_mul_le ha.ne').1 (one_mul ‖a‖₊⁻¹ ▸ hk₂.le : ‖k‖₊ ≤ ‖a‖₊⁻¹)
-      
     · simp only [map_smul, nnnorm_smul, mul_apply', mul_smul_comm, CstarRing.nnnorm_self_mul_star]
       rwa [← Nnreal.div_lt_iff (mul_pos ha ha).ne', div_eq_mul_inv, mul_inv, ← mul_assoc]
-      
-    
 #align op_nnnorm_mul op_nnnorm_mul
 
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the right by `a : E` has
@@ -360,9 +355,7 @@ theorem op_nnnorm_mul_flip : ‖(mul 𝕜 E).flip a‖₊ = ‖a‖₊ := by
   refine' Set.Subset.antisymm _ _ <;> rintro - ⟨b, hb, rfl⟩ <;>
     refine' ⟨star b, by simpa only [norm_star, mem_ball_zero_iff] using hb, _⟩
   · simp only [← star_mul, nnnorm_star]
-    
   · simpa using (nnnorm_star (star b * a)).symm
-    
 #align op_nnnorm_mul_flip op_nnnorm_mul_flip
 
 variable (E)

@@ -39,27 +39,32 @@ variable (P : Cᵒᵖ ⥤ D)
 
 /-- The diagram whose colimit defines the values of `plus`. -/
 @[simps]
-def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D where
+def diagram (X : C) :
+    (J.cover X)ᵒᵖ ⥤ D where 
   obj S := multiequalizer (S.unop.index P)
   map S T f :=
     (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) (I.map f.unop)) fun I =>
       multiequalizer.condition (S.unop.index P) (I.map f.unop)
-  map_id' S := by
+  map_id' S := by 
     ext I
     cases I
     simpa
-  map_comp' S T W f g := by
+  map_comp' S T W f g := by 
     ext I
     simpa
 #align category_theory.grothendieck_topology.diagram CategoryTheory.GrothendieckTopology.diagram
 
 /-- A helper definition used to define the morphisms for `plus`. -/
 @[simps]
-def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).op ⋙ J.diagram P X where
+def diagramPullback {X Y : C} (f : X ⟶ Y) :
+    J.diagram P Y ⟶
+      (J.pullback f).op ⋙
+        J.diagram P
+          X where 
   app S :=
     (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) I.base) fun I =>
       multiequalizer.condition (S.unop.index P) I.base
-  naturality' S T f := by
+  naturality' S T f := by 
     ext
     dsimp
     simpa
@@ -69,15 +74,18 @@ def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).o
 /-- A natural transformation `P ⟶ Q` induces a natural transformation
 between diagrams whose colimits define the values of `plus`. -/
 @[simps]
-def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X ⟶ J.diagram Q X where
+def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) :
+    J.diagram P X ⟶
+      J.diagram Q
+        X where 
   app W :=
     multiequalizer.lift _ _ (fun i => multiequalizer.ι _ i ≫ η.app _)
-      (by
+      (by 
         intro i
         erw [category.assoc, category.assoc, ← η.naturality, ← η.naturality, ← category.assoc, ←
           category.assoc, multiequalizer.condition]
         rfl)
-  naturality' _ _ _ := by
+  naturality' _ _ _ := by 
     dsimp
     ext
     simpa
@@ -96,7 +104,7 @@ theorem diagram_nat_trans_id (X : C) (P : Cᵒᵖ ⥤ D) :
 
 @[simp]
 theorem diagram_nat_trans_zero [Preadditive D] (X : C) (P Q : Cᵒᵖ ⥤ D) :
-    J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by
+    J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by 
   ext (j x)
   dsimp
   rw [zero_comp, multiequalizer.lift_ι, comp_zero]
@@ -116,7 +124,8 @@ variable (D)
 
 /-- `J.diagram P`, as a functor in `P`. -/
 @[simps]
-def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ (J.cover X)ᵒᵖ ⥤ D where
+def diagramFunctor (X : C) :
+    (Cᵒᵖ ⥤ D) ⥤ (J.cover X)ᵒᵖ ⥤ D where 
   obj P := J.diagram P X
   map P Q η := J.diagramNatTrans η X
   map_id' P := J.diagram_nat_trans_id _ _
@@ -130,10 +139,10 @@ variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 /-- The plus construction, associating a presheaf to any presheaf.
 See `plus_functor` below for a functorial version. -/
-def plusObj : Cᵒᵖ ⥤ D where
+def plusObj : Cᵒᵖ ⥤ D where 
   obj X := colimit (J.diagram P X.unop)
   map X Y f := colimMap (J.diagramPullback P f.unop) ≫ colimit.pre _ _
-  map_id' := by
+  map_id' := by 
     intro X
     ext S
     dsimp
@@ -149,7 +158,7 @@ def plusObj : Cᵒᵖ ⥤ D where
     cases I
     congr
     simp
-  map_comp' := by
+  map_comp' := by 
     intro X Y Z f g
     ext S
     dsimp
@@ -169,9 +178,11 @@ def plusObj : Cᵒᵖ ⥤ D where
 #align category_theory.grothendieck_topology.plus_obj CategoryTheory.GrothendieckTopology.plusObj
 
 /-- An auxiliary definition used in `plus` below. -/
-def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q where
+def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
+    J.plusObj P ⟶
+      J.plusObj Q where 
   app X := colimMap (J.diagramNatTrans η X.unop)
-  naturality' := by
+  naturality' := by 
     intro X Y f
     dsimp [plus_obj]
     ext
@@ -218,7 +229,8 @@ variable (D)
 
 /-- The plus construction, a functor sending `P` to `J.plus_obj P`. -/
 @[simps]
-def plusFunctor : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤ D where
+def plusFunctor : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤
+        D where 
   obj P := J.plusObj P
   map P Q η := J.plusMap η
   map_id' _ := plus_map_id _ _
@@ -230,9 +242,12 @@ variable {D}
 
 /-- The canonical map from `P` to `J.plus.obj P`.
 See `to_plus` for a functorial version. -/
-def toPlus : P ⟶ J.plusObj P where
+def toPlus :
+    P ⟶
+      J.plusObj
+        P where 
   app X := Cover.toMultiequalizer (⊤ : J.cover X.unop) P ≫ colimit.ι (J.diagram P X.unop) (op ⊤)
-  naturality' := by
+  naturality' := by 
     intro X Y f
     dsimp [plus_obj]
     delta cover.to_multiequalizer
@@ -267,7 +282,8 @@ variable (D)
 
 /-- The natural transformation from the identity functor to `plus`. -/
 @[simps]
-def toPlusNatTrans : 𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D where
+def toPlusNatTrans :
+    𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D where 
   app P := J.toPlus P
   naturality' _ _ _ := to_plus_naturality _ _
 #align
@@ -302,11 +318,9 @@ theorem plus_map_to_plus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) := by
       ⟨_, _, _, II.f, 𝟙 _, I.f, II.f ≫ I.f, I.hf, sieve.downward_closed _ I.hf _, by simp⟩
   · cases I
     rfl
-    
   · dsimp [cover.index]
     erw [P.map_id, category.comp_id]
     rfl
-    
 #align
   category_theory.grothendieck_topology.plus_map_to_plus CategoryTheory.GrothendieckTopology.plus_map_to_plus
 
@@ -314,15 +328,12 @@ theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus
   rw [presheaf.is_sheaf_iff_multiequalizer] at hP
   rsuffices : ∀ X, is_iso ((J.to_plus P).app X)
   · apply nat_iso.is_iso_of_is_iso_app
-    
   intro X
   dsimp
   rsuffices : is_iso (colimit.ι (J.diagram P X.unop) (op ⊤))
   · apply is_iso.comp_is_iso
-    
   rsuffices : ∀ (S T : (J.cover X.unop)ᵒᵖ) (f : S ⟶ T), is_iso ((J.diagram P X.unop).map f)
   · apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
-    
   intro S T e
   have : S.unop.to_multiequalizer P ≫ (J.diagram P X.unop).map e = T.unop.to_multiequalizer P := by
     ext
@@ -356,7 +367,7 @@ def plusLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : 
 
 @[simp, reassoc]
 theorem to_plus_plus_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) :
-    J.toPlus P ≫ J.plusLift η hQ = η := by
+    J.toPlus P ≫ J.plusLift η hQ = η := by 
   dsimp [plus_lift]
   rw [← category.assoc]
   rw [iso.comp_inv_eq]
@@ -403,7 +414,8 @@ theorem plus_map_plus_lift {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R)
   category_theory.grothendieck_topology.plus_map_plus_lift CategoryTheory.GrothendieckTopology.plus_map_plus_lift
 
 instance plus_functor_preserves_zero_morphisms [Preadditive D] :
-    (plusFunctor J D).PreservesZeroMorphisms where map_zero' F G := by
+    (plusFunctor J
+        D).PreservesZeroMorphisms where map_zero' F G := by
     ext
     dsimp
     rw [J.plus_map_zero, nat_trans.app_zero]

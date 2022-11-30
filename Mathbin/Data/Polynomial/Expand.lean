@@ -104,17 +104,13 @@ theorem coeff_expand {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
       intro hb3
       apply hb2
       rw [← hb3, Nat.mul_div_cancel_left b hp]
-      
     · intro hn
       rw [not_mem_support_iff.1 hn]
       split_ifs <;> rfl
-      
-    
   · rw [Finset.sum_eq_zero]
     intro k hk
     rw [if_neg]
     exact fun hkn => h ⟨k, hkn.symm⟩
-    
 #align polynomial.coeff_expand Polynomial.coeff_expand
 
 @[simp]
@@ -152,10 +148,8 @@ theorem expand_eq_C {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = c
 theorem nat_degree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.natDegree * p := by
   cases' p.eq_zero_or_pos with hp hp
   · rw [hp, coe_expand, pow_zero, mul_zero, ← C_1, eval₂_hom, nat_degree_C]
-    
   by_cases hf : f = 0
   · rw [hf, AlgHom.map_zero, nat_degree_zero, zero_mul]
-    
   have hf1 : expand R p f ≠ 0 := mt (expand_eq_zero hp).1 hf
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree hf1]
   refine' le_antisymm ((degree_le_iff_coeff_zero _ _).2 fun n hn => _) _
@@ -165,14 +159,10 @@ theorem nat_degree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.na
       contrapose! hn
       rw [WithBot.coe_le_coe, ← Nat.div_mul_cancel hpn]
       exact Nat.mul_le_mul_right p hn
-      
     · rfl
-      
-    
   · refine' le_degree_of_ne_zero _
     rw [coeff_expand_mul hp, ← leading_coeff]
     exact mt leading_coeff_eq_zero.1 hf
-    
 #align polynomial.nat_degree_expand Polynomial.nat_degree_expand
 
 theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R p f).Monic := by
@@ -181,10 +171,9 @@ theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R
 #align polynomial.monic.expand Polynomial.Monic.expand
 
 theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) = expand S p (map f q) :=
-  by
+  by 
   by_cases hp : p = 0
   · simp [hp]
-    
   ext
   rw [coeff_map, coeff_expand (Nat.pos_of_ne_zero hp), coeff_expand (Nat.pos_of_ne_zero hp)]
   split_ifs <;> simp
@@ -231,23 +220,19 @@ section CharP
 variable [CharP R p]
 
 theorem expand_contract [NoZeroDivisors R] {f : R[X]} (hf : f.derivative = 0) (hp : p ≠ 0) :
-    expand R p (contract p f) = f := by
+    expand R p (contract p f) = f := by 
   ext n
   rw [coeff_expand hp.bot_lt, coeff_contract hp]
   split_ifs with h
   · rw [Nat.div_mul_cancel h]
-    
   · cases n
     · exact absurd (dvd_zero p) h
-      
     have := coeff_derivative f n
     rw [hf, coeff_zero, zero_eq_mul] at this
     cases this
     · rw [this]
-      
     rw [← Nat.cast_succ, CharP.cast_eq_zero_iff R p] at this
     exact absurd this h
-    
 #align polynomial.expand_contract Polynomial.expand_contract
 
 variable [hp : Fact p.Prime]
@@ -257,18 +242,15 @@ include hp
 theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p := by
   refine' f.induction_on' (fun a b ha hb => _) fun n a => _
   · rw [AlgHom.map_add, Polynomial.map_add, ha, hb, add_pow_char]
-    
   · rw [expand_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial,
       mul_pow, ← C.map_pow, frobenius_def]
     ring
-    
 #align polynomial.expand_char Polynomial.expand_char
 
 theorem map_expand_pow_char (f : R[X]) (n : ℕ) :
     map (frobenius R p ^ n) (expand R (p ^ n) f) = f ^ p ^ n := by
   induction n
   · simp [RingHom.one_def]
-    
   symm
   rw [pow_succ', pow_mul, ← n_ih, ← expand_char, pow_succ, RingHom.mul_def, ← map_map, mul_comm,
     expand_mul, ← map_expand]
@@ -302,7 +284,7 @@ theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} 
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
   (Nat.recOn n fun hf => by rwa [pow_zero, expand_one] at hf) fun n ih hf =>
     ih <|
-      of_irreducible_expand hp <| by
+      of_irreducible_expand hp <| by 
         rw [pow_succ] at hf
         rwa [expand_expand]
 #align polynomial.of_irreducible_expand_pow Polynomial.of_irreducible_expand_pow

@@ -31,7 +31,8 @@ variable {E F 𝕜 𝕜₂ : Type _} [SeminormedAddCommGroup E] [SeminormedAddCo
 If a family of continuous linear maps from a Banach space into a normed space is pointwise
 bounded, then the norms of these linear maps are uniformly bounded. -/
 theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ₁₂] F}
-    (h : ∀ x, ∃ C, ∀ i, ‖g i x‖ ≤ C) : ∃ C', ∀ i, ‖g i‖ ≤ C' := by
+    (h : ∀ x, ∃ C, ∀ i, ‖g i x‖ ≤ C) : ∃ C', ∀ i, ‖g i‖ ≤ C' :=
+  by
   -- sequence of subsets consisting of those `x : E` with norms `‖g i x‖` bounded by `n`
   let e : ℕ → Set E := fun n => ⋂ i : ι, { x : E | ‖g i x‖ ≤ n }
   -- each of these sets is closed
@@ -55,7 +56,6 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   have εk_pos : 0 < ε / ‖k‖ := div_pos ε_pos (zero_lt_one.trans hk)
   refine' ⟨(m + m : ℕ) / (ε / ‖k‖), fun i => ContinuousLinearMap.op_norm_le_of_shell ε_pos _ hk _⟩
   · exact div_nonneg (Nat.cast_nonneg _) εk_pos.le
-    
   intro y le_y y_lt
   calc
     ‖g i y‖ = ‖g i (y + x) - g i x‖ := by rw [ContinuousLinearMap.map_add, add_sub_cancel]
@@ -102,11 +102,13 @@ open Filter
 domain is complete, the Banach-Steinhaus theorem is used to guarantee that the limit map
 is a *continuous* linear map as well. -/
 def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E →SL[σ₁₂] F) {f : E → F}
-    (h : Tendsto (fun n x => g n x) atTop (𝓝 f)) : E →SL[σ₁₂] F where
+    (h : Tendsto (fun n x => g n x) atTop (𝓝 f)) :
+    E →SL[σ₁₂] F where 
   toFun := f
   map_add' := (linearMapOfTendsto _ _ h).map_add'
   map_smul' := (linearMapOfTendsto _ _ h).map_smul'
-  cont := by
+  cont :=
+    by
     -- show that the maps are pointwise bounded and apply `banach_steinhaus`
     have h_point_bdd : ∀ x : E, ∃ C : ℝ, ∀ n : ℕ, ‖g n x‖ ≤ C := by
       intro x
@@ -124,7 +126,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       AddMonoidHomClass.continuous_of_bound (linearMapOfTendsto _ _ h) C' fun x =>
         le_of_forall_pos_lt_add fun ε ε_pos => _
     cases' metric.tendsto_at_top.mp (tendsto_pi_nhds.mp h x) ε ε_pos with n hn
-    have lt_ε : ‖g n x - f x‖ < ε := by
+    have lt_ε : ‖g n x - f x‖ < ε := by 
       rw [← dist_eq_norm]
       exact hn n (le_refl n)
     calc

@@ -25,7 +25,7 @@ variable {a b : ℝ} {f f' : ℝ → ℝ}
 theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
     (hf : ∀ x ∈ icc a b, HasDerivWithinAt f (f' x) (icc a b) x) {m : ℝ} (hma : f' a < m)
     (hmb : m < f' b) : m ∈ f' '' icc a b := by
-  have hab' : a < b := by
+  have hab' : a < b := by 
     refine' lt_of_le_of_ne hab fun hab' => _
     subst b
     exact lt_asymm hma hmb
@@ -46,7 +46,6 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
         mem_pos_tangent_cone_at_of_segment_subset (segment_eq_Icc hab ▸ subset.refl _)
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
         hc.localize.has_fderiv_within_at_nonneg (hg a (left_mem_Icc.2 hab)) this
-      
     cases' eq_or_lt_of_le cmem.2 with hbc hbc
     -- Show that `c` can't be equal to `b`
     · subst c
@@ -57,7 +56,6 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
         mem_pos_tangent_cone_at_of_segment_subset (by rw [segment_symm, segment_eq_Icc hab])
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
         hc.localize.has_fderiv_within_at_nonneg (hg b (right_mem_Icc.2 hab)) this
-      
     exact ⟨hac, hbc⟩
   use c, cmem
   rw [← sub_eq_zero]
@@ -83,23 +81,19 @@ theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s)
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ m ⟨hma, hmb⟩
   cases' eq_or_lt_of_le hma with hma hma
   · exact hma ▸ mem_image_of_mem f' ha
-    
   cases' eq_or_lt_of_le hmb with hmb hmb
   · exact hmb.symm ▸ mem_image_of_mem f' hb
-    
   cases' le_total a b with hab hab
   · have : Icc a b ⊆ s := hs.ord_connected.out ha hb
     rcases exists_has_deriv_within_at_eq_of_gt_of_lt hab
         (fun x hx => (hf x <| this hx).HasDerivWithinAt) hma hmb with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
-    
   · have : Icc b a ⊆ s := hs.ord_connected.out hb ha
     rcases exists_has_deriv_within_at_eq_of_lt_of_gt hab
         (fun x hx => (hf x <| this hx).HasDerivWithinAt) hmb hma with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
-    
 #align convex_image_has_deriv_at convex_image_has_deriv_at
 
 /-- If the derivative of a function is never equal to `m`, then either

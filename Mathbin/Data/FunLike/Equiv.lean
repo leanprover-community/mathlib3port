@@ -169,7 +169,8 @@ theorem inv_injective : Function.Injective (EquivLike.inv : E → β → α) := 
 #align equiv_like.inv_injective EquivLike.inv_injective
 
 #print EquivLike.toEmbeddingLike /-
-instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β where
+instance (priority := 100) toEmbeddingLike :
+    EmbeddingLike E α β where 
   coe := (coe : E → α → β)
   coe_injective' e g h :=
     coe_injective' e g h ((left_inv e).eq_right_inverse (h.symm ▸ right_inv g))

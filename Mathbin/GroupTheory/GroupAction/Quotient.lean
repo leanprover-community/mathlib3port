@@ -71,7 +71,10 @@ instance right_quotient_action' [hH : H.Normal] : QuotientAction αᵐᵒᵖ H :
 #align mul_action.right_quotient_action' MulAction.right_quotient_action'
 
 @[to_additive]
-instance quotient [QuotientAction β H] : MulAction β (α ⧸ H) where
+instance quotient [QuotientAction β H] :
+    MulAction β
+      (α ⧸
+        H) where 
   smul b :=
     Quotient.map' ((· • ·) b) fun a a' h =>
       left_rel_apply.mpr <| QuotientAction.inv_mul_mem b <| left_rel_apply.mp h
@@ -160,7 +163,7 @@ theorem of_quotient_stabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer �
 theorem injective_of_quotient_stabilizer : Function.Injective (ofQuotientStabilizer α x) :=
   fun y₁ y₂ =>
   (Quotient.inductionOn₂' y₁ y₂) fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
-    Quotient.sound' <| by
+    Quotient.sound' <| by 
       rw [left_rel_apply]
       show (g₁⁻¹ * g₂) • x = x
       rw [mul_smul, ← H, inv_smul_smul]
@@ -237,17 +240,19 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
       "**Class formula** for a finite group acting on a finite type. See\n`add_action.card_eq_sum_card_add_group_div_card_stabilizer` for a specialized version using\n`quotient.out'`."]
 theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [Fintype Ω]
     [∀ b : β, Fintype <| stabilizer α b] {φ : Ω → β} (hφ : LeftInverse Quotient.mk' φ) :
-    Fintype.card β = ∑ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) := by classical
-  have :
-    ∀ ω : Ω,
-      Fintype.card α / Fintype.card ↥(stabilizer α (φ ω)) = Fintype.card (α ⧸ stabilizer α (φ ω)) :=
-    by
-    intro ω
-    rw [Fintype.card_congr (@Subgroup.groupEquivQuotientTimesSubgroup α _ (stabilizer α <| φ ω)),
-      Fintype.card_prod, Nat.mul_div_cancel]
-    exact fintype.card_pos_iff.mpr (by infer_instance)
-  simp_rw [this, ← Fintype.card_sigma,
-    Fintype.card_congr (self_equiv_sigma_orbits_quotient_stabilizer' α β hφ)]
+    Fintype.card β = ∑ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) := by
+  classical 
+    have :
+      ∀ ω : Ω,
+        Fintype.card α / Fintype.card ↥(stabilizer α (φ ω)) =
+          Fintype.card (α ⧸ stabilizer α (φ ω)) :=
+      by 
+      intro ω
+      rw [Fintype.card_congr (@Subgroup.groupEquivQuotientTimesSubgroup α _ (stabilizer α <| φ ω)),
+        Fintype.card_prod, Nat.mul_div_cancel]
+      exact fintype.card_pos_iff.mpr (by infer_instance)
+    simp_rw [this, ← Fintype.card_sigma,
+      Fintype.card_congr (self_equiv_sigma_orbits_quotient_stabilizer' α β hφ)]
 #align
   mul_action.card_eq_sum_card_group_div_card_stabilizer' MulAction.card_eq_sum_card_group_div_card_stabilizer'
 
@@ -308,7 +313,8 @@ theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fin
 
 @[to_additive]
 instance is_pretransitive_quotient (G) [Group G] (H : Subgroup G) :
-    IsPretransitive G (G ⧸ H) where exists_smul_eq := by
+    IsPretransitive G
+      (G ⧸ H) where exists_smul_eq := by 
     rintro ⟨x⟩ ⟨y⟩
     refine' ⟨y * x⁻¹, quotient_group.eq.mpr _⟩
     simp only [smul_eq_mul, H.one_mem, mul_left_inv, inv_mul_cancel_right]
@@ -330,10 +336,8 @@ theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ke
       (subgroup.normal_le_normal_core.mpr fun g hg => _)
   · rw [smul_eq_mul, mul_inv_rev, ← inv_inv g', inv_inv]
     exact H.normal_core.inv_mem hg g'⁻¹
-    
   · rw [← H.inv_mem_iff, ← mul_one g⁻¹, ← QuotientGroup.eq, ← mul_one g]
     exact (MulAction.quotient.smul_mk H g 1).symm.trans (equiv.perm.ext_iff.mp hg (1 : G))
-    
 #align subgroup.normal_core_eq_ker Subgroup.normal_core_eq_ker
 
 open QuotientGroup

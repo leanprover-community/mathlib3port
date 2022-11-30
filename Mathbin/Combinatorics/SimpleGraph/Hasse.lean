@@ -31,7 +31,7 @@ section Preorder
 variable [Preorder α] [Preorder β]
 
 /-- The Hasse diagram of an order as a simple graph. The graph of the covering relation. -/
-def hasse : SimpleGraph α where
+def hasse : SimpleGraph α where 
   Adj a b := a ⋖ b ∨ b ⋖ a
   symm a b := Or.symm
   loopless a h := h.elim (irrefl _) (irrefl _)
@@ -79,7 +79,7 @@ section LinearOrder
 variable [LinearOrder α]
 
 theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hasse α).Preconnected :=
-  fun a b => by
+  fun a b => by 
   rw [reachable_iff_refl_trans_gen]
   exact
     refl_trans_gen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max)
@@ -87,7 +87,7 @@ theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hass
 #align simple_graph.hasse_preconnected_of_succ SimpleGraph.hasse_preconnected_of_succ
 
 theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hasse α).Preconnected :=
-  fun a b => by
+  fun a b => by 
   rw [reachable_iff_refl_trans_gen, ← refl_trans_gen_swap]
   exact
     refl_trans_gen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min)

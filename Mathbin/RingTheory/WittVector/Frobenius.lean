@@ -158,8 +158,7 @@ theorem MapFrobeniusPoly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)
       hp.1.multiplicity_choose_prime_pow hj j.succ_pos]
     apply le_add_left
     rfl
-    
-  · obtain ⟨c, hc⟩ : p ^ m ∣ j + 1 := by
+  · obtain ⟨c, hc⟩ : p ^ m ∣ j + 1 := by 
       rw [← h]
       exact multiplicity.pow_multiplicity_dvd _
     obtain ⟨c, rfl⟩ : ∃ k : ℕ, c = k + 1 := by
@@ -170,11 +169,10 @@ theorem MapFrobeniusPoly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)
     apply Nat.le_of_lt_succ
     calc
       m < p ^ m := Nat.lt_pow_self hp.1.one_lt m
-      _ ≤ j + 1 := by
+      _ ≤ j + 1 := by 
         rw [← tsub_eq_of_eq_add_rev hc]
         apply Nat.sub_le
       
-    
 #align witt_vector.map_frobenius_poly.key₂ WittVector.MapFrobeniusPoly.key₂
 
 theorem map_frobenius_poly (n : ℕ) :
@@ -221,7 +219,7 @@ theorem map_frobenius_poly (n : ℕ) :
     ((p ^ (n - i)).choose (j + 1) * p ^ (j - v p ⟨j + 1, j.succ_pos⟩) * p * p ^ n : ℚ) =
       p ^ j * p * ((p ^ (n - i)).choose (j + 1) * p ^ i) * p ^ (n - i - v p ⟨j + 1, j.succ_pos⟩)
     by
-    have aux : ∀ k : ℕ, (p ^ k : ℚ) ≠ 0 := by
+    have aux : ∀ k : ℕ, (p ^ k : ℚ) ≠ 0 := by 
       intro
       apply pow_ne_zero
       exact_mod_cast hp.1.NeZero
@@ -265,7 +263,7 @@ variable (p)
 See also `frobenius_is_poly`. -/
 @[is_poly]
 theorem frobenius_fun_is_poly : IsPoly p fun R _Rcr => @frobeniusFun p R _ _Rcr :=
-  ⟨⟨frobeniusPoly p, by
+  ⟨⟨frobeniusPoly p, by 
       intros
       funext n
       apply coeff_frobenius_fun⟩⟩
@@ -287,7 +285,7 @@ we obtain a ring endomorphism `frobenius R p : 𝕎 R →+* 𝕎 R`.
 
 The underlying function of this morphism is `witt_vector.frobenius_fun`.
 -/
-def frobenius : 𝕎 R →+* 𝕎 R where
+def frobenius : 𝕎 R →+* 𝕎 R where 
   toFun := frobeniusFun
   map_zero' := by
     refine'
@@ -340,11 +338,8 @@ theorem coeff_frobenius_char_p (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = 
     
   · conv_rhs => rw [aeval_eq_eval₂_hom, eval₂_hom_map_hom]
     apply eval₂_hom_congr (RingHom.ext_int _ _) rfl rfl
-    
   · rw [frobenius_poly_zmod]
-    
   · rw [AlgHom.map_pow, aeval_X]
-    
 #align witt_vector.coeff_frobenius_char_p WittVector.coeff_frobenius_char_p
 
 theorem frobenius_eq_map_frobenius : @frobenius p R _ _ = map (frobenius R p) := by
@@ -365,11 +360,11 @@ def frobeniusEquiv [PerfectRing R p] : WittVector p R ≃+* WittVector p R :=
   { (WittVector.frobenius : WittVector p R →+* WittVector p R) with toFun := WittVector.frobenius,
     invFun := map (pthRoot R p),
     left_inv := fun f =>
-      ext fun n => by
+      ext fun n => by 
         rw [frobenius_eq_map_frobenius]
         exact pth_root_frobenius _,
     right_inv := fun f =>
-      ext fun n => by
+      ext fun n => by 
         rw [frobenius_eq_map_frobenius]
         exact frobenius_pth_root _ }
 #align witt_vector.frobenius_equiv WittVector.frobeniusEquiv

@@ -87,20 +87,22 @@ theorem forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice :
 /-- Constructs an equivalence between bounded distributive lattices from an order isomorphism
 between them. -/
 @[simps]
-def Iso.mk {α β : BoundedDistribLatticeCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : BoundedDistribLatticeCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align BoundedDistribLattice.iso.mk BoundedDistribLatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : BoundedDistribLatticeCat ⥤ BoundedDistribLatticeCat where
+def dual : BoundedDistribLatticeCat ⥤
+      BoundedDistribLatticeCat where 
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
 #align BoundedDistribLattice.dual BoundedDistribLatticeCat.dual

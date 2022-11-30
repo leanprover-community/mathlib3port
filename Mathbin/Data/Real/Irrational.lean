@@ -68,18 +68,17 @@ is irrational. -/
 theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (hm : m ≠ 0) (p : ℕ)
     [hp : Fact p.Prime] (hxr : x ^ n = m)
     (hv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩) % n ≠ 0) :
-    Irrational x := by
+    Irrational x := by 
   rcases Nat.eq_zero_or_pos n with (rfl | hnpos)
   · rw [eq_comm, pow_zero, ← Int.cast_one, Int.cast_inj] at hxr
     simpa [hxr,
       multiplicity.one_right (mt is_unit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.1.not_dvd_one)),
       Nat.zero_mod] using hv
-    
   refine' irrational_nrt_of_notint_nrt _ _ hxr _ hnpos
   rintro ⟨y, rfl⟩
   rw [← Int.cast_pow, Int.cast_inj] at hxr
   subst m
-  have : y ≠ 0 := by
+  have : y ≠ 0 := by 
     rintro rfl
     rw [zero_pow hnpos] at hm
     exact hm rfl
@@ -468,17 +467,17 @@ theorem of_mul_self (h : Irrational (x * x)) : Irrational x :=
 #align irrational.of_mul_self Irrational.of_mul_self
 
 theorem of_pow : ∀ n : ℕ, Irrational (x ^ n) → Irrational x
-  | 0 => fun h => by
+  | 0 => fun h => by 
     rw [pow_zero] at h
     exact (h ⟨1, cast_one⟩).elim
-  | n + 1 => fun h => by
+  | n + 1 => fun h => by 
     rw [pow_succ] at h
     exact h.mul_cases.elim id (of_pow n)
 #align irrational.of_pow Irrational.of_pow
 
 theorem of_zpow : ∀ m : ℤ, Irrational (x ^ m) → Irrational x
   | (n : ℕ) => of_pow n
-  | -[n+1] => fun h => by
+  | -[n+1] => fun h => by 
     rw [zpow_neg_succ_of_nat] at h
     exact h.of_inv.of_pow _
 #align irrational.of_zpow Irrational.of_zpow
@@ -502,12 +501,10 @@ theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p 
   rcases em (a = 0) with (rfl | ha)
   · obtain rfl : b = 0 := by simpa
     simpa using p_nonzero
-    
   · rw [mul_comm, ← eq_div_iff_mul_eq, eq_comm] at this
     refine' hx ⟨-b / a, _⟩
     assumption_mod_cast
     assumption_mod_cast
-    
 #align one_lt_nat_degree_of_irrational_root one_lt_nat_degree_of_irrational_root
 
 end Polynomial

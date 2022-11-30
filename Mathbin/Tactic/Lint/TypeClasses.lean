@@ -104,7 +104,8 @@ Therefore, if we create an instance that always applies, we set the priority of 
 /-- A linter object for checking instance priorities of instances that always apply.
 This is in the default linter set. -/
 @[linter]
-unsafe def linter.instance_priority : linter where
+unsafe def linter.instance_priority :
+    linter where 
   test := instance_priority
   no_errors_found := "All instance priorities are good."
   errors_found :=
@@ -137,7 +138,8 @@ private unsafe def has_nonempty_instance (d : declaration) : tactic (Option Stri
 
 /-- A linter for missing `nonempty` instances. -/
 @[linter]
-unsafe def linter.has_nonempty_instance : linter where
+unsafe def linter.has_nonempty_instance :
+    linter where 
   test := has_nonempty_instance
   auto_decls := false
   no_errors_found := "No types have missing nonempty instances."
@@ -161,7 +163,8 @@ private unsafe def impossible_instance (d : declaration) : tactic (Option String
 
 /-- A linter object for `impossible_instance`. -/
 @[linter]
-unsafe def linter.impossible_instance : linter where
+unsafe def linter.impossible_instance :
+    linter where 
   test := impossible_instance
   auto_decls := true
   no_errors_found := "All instances are applicable."
@@ -193,7 +196,8 @@ private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Opt
 
 /-- A linter object for `incorrect_type_class_argument`. -/
 @[linter]
-unsafe def linter.incorrect_type_class_argument : linter where
+unsafe def linter.incorrect_type_class_argument :
+    linter where 
   test := incorrect_type_class_argument
   auto_decls := true
   no_errors_found := "All declarations have correct type-class arguments."
@@ -222,7 +226,8 @@ private unsafe def dangerous_instance (d : declaration) : tactic (Option String)
 
 /-- A linter object for `dangerous_instance`. -/
 @[linter]
-unsafe def linter.dangerous_instance : linter where
+unsafe def linter.dangerous_instance :
+    linter where 
   test := dangerous_instance
   no_errors_found := "No dangerous instances."
   errors_found :=
@@ -296,7 +301,8 @@ Some instances take quite some time to fail, and we seem to run against the cach
 https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/odd.20repeated.20type.20class.20search
 -/
 @[linter]
-unsafe def linter.fails_quickly : linter where
+unsafe def linter.fails_quickly :
+    linter where 
   test := fails_quickly 30000
   auto_decls := true
   no_errors_found := "No type-class searches timed out."
@@ -317,7 +323,8 @@ private unsafe def class_structure (n : Name) : tactic (Option String) := do
 
 /-- A linter object for `class_structure`. -/
 @[linter]
-unsafe def linter.class_structure : linter where
+unsafe def linter.class_structure :
+    linter where 
   test d := class_structure d.to_name
   auto_decls := true
   no_errors_found := "All classes are structures."
@@ -343,7 +350,8 @@ private unsafe def has_coe_variable (d : declaration) : tactic (Option String) :
 
 /-- A linter object for `has_coe_variable`. -/
 @[linter]
-unsafe def linter.has_coe_variable : linter where
+unsafe def linter.has_coe_variable :
+    linter where 
   test := has_coe_variable
   auto_decls := true
   no_errors_found := "No invalid `has_coe` instances."
@@ -366,7 +374,8 @@ private unsafe def inhabited_nonempty (d : declaration) : tactic (Option String)
 
 /-- A linter object for `inhabited_nonempty`. -/
 @[linter]
-unsafe def linter.inhabited_nonempty : linter where
+unsafe def linter.inhabited_nonempty :
+    linter where 
   test := inhabited_nonempty
   auto_decls := false
   no_errors_found := "No uses of `inhabited` arguments should be replaced with `nonempty`."
@@ -399,7 +408,8 @@ private unsafe def decidable_classical (d : declaration) : tactic (Option String
 
 /-- A linter object for `decidable_classical`. -/
 @[linter]
-unsafe def linter.decidable_classical : linter where
+unsafe def linter.decidable_classical :
+    linter where 
   test := decidable_classical
   auto_decls := false
   no_errors_found := "No uses of `decidable` arguments should be replaced with `classical`."
@@ -430,7 +440,8 @@ unsafe def linter.fintype_finite_fun (d : declaration) : tactic (Option String) 
 
 /-- A linter object for `fintype` vs `finite`. -/
 @[linter]
-unsafe def linter.fintype_finite : linter where
+unsafe def linter.fintype_finite :
+    linter where 
   test := linter.fintype_finite_fun
   auto_decls := false
   no_errors_found :=
@@ -470,7 +481,8 @@ private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option Stri
 
 /-- Linter that checks whether `has_coe_to_fun` instances comply with Note [function coercion]. -/
 @[linter]
-unsafe def linter.has_coe_to_fun : linter where
+unsafe def linter.has_coe_to_fun :
+    linter where 
   test := has_coe_to_fun_linter
   auto_decls := true
   no_errors_found := "has_coe_to_fun is used correctly"
@@ -529,7 +541,8 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
 
 /-- A linter that checks whether an instance contains a semireducible non-instance. -/
 @[linter]
-unsafe def linter.check_reducibility : linter where
+unsafe def linter.check_reducibility :
+    linter where 
   test := check_reducible_non_instances
   auto_decls := false
   no_errors_found := "All non-instances are reducible."

@@ -35,13 +35,11 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
   · rw [zero_add] at habz
     rw [zero_smul, zero_add, habz, one_smul]
     refine' ⟨v, right_mem_segment _ _ _, segment_subset_convex_hull _ _ hv⟩ <;> simp
-    
   obtain ⟨av, bv, hav, hbv, habv, rfl⟩ := hv
   obtain rfl | hav' := hav.eq_or_lt
   · rw [zero_add] at habv
     rw [zero_smul, zero_add, habv, one_smul]
     exact ⟨q, right_mem_segment _ _ _, subset_convex_hull _ _ <| by simp⟩
-    
   obtain ⟨au, bu, hau, hbu, habu, rfl⟩ := hu
   have hab : 0 < az * av + bz * au :=
     add_pos_of_pos_of_nonneg (mul_pos haz' hav') (mul_nonneg hbz hau)
@@ -50,46 +48,39 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
         (bz * au / (az * av + bz * au)) • (av • y + bv • q),
       ⟨_, _, _, _, _, rfl⟩, _⟩
   · exact div_nonneg (mul_nonneg haz hav) hab.le
-    
   · exact div_nonneg (mul_nonneg hbz hau) hab.le
-    
   · rw [← add_div, div_self hab.ne']
-    
   rw [smul_add, smul_add, add_add_add_comm, add_comm, ← mul_smul, ← mul_smul]
-  classical
-  let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
-  let z : Fin 3 → E := ![p, q, az • x + bz • y]
-  have hw₀ : ∀ i, 0 ≤ w i := by
-    rintro i
-    fin_cases i
-    · exact mul_nonneg (mul_nonneg haz hav) hbu
-      
-    · exact mul_nonneg (mul_nonneg hbz hau) hbv
-      
-    · exact mul_nonneg hau hav
-      
-  have hw : (∑ i, w i) = az * av + bz * au := by
-    trans az * av * bu + (bz * au * bv + au * av)
-    · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
-      
-    rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add,
-      mul_assoc, ← mul_add, mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu, habv,
-      one_mul, mul_one]
-  have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := by
-    rintro i
-    fin_cases i <;> simp [z]
-  convert
-    Finset.center_mass_mem_convex_hull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i)
-      (by rwa [hw]) fun i _ => hz i
-  rw [Finset.centerMass]
-  simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ←
-    mul_assoc]
-  congr 3
-  rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate,
-    mul_smul _ bz, ← smul_add]
-  simp only [List.map, List.pmap, Nat.add_def, add_zero, Fin.mk_bit0, Fin.mk_one, List.foldr_cons,
-    List.foldr_nil]
-  rfl
+  classical 
+    let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
+    let z : Fin 3 → E := ![p, q, az • x + bz • y]
+    have hw₀ : ∀ i, 0 ≤ w i := by 
+      rintro i
+      fin_cases i
+      · exact mul_nonneg (mul_nonneg haz hav) hbu
+      · exact mul_nonneg (mul_nonneg hbz hau) hbv
+      · exact mul_nonneg hau hav
+    have hw : (∑ i, w i) = az * av + bz * au := by
+      trans az * av * bu + (bz * au * bv + au * av)
+      · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
+      rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add,
+        mul_assoc, ← mul_add, mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu,
+        habv, one_mul, mul_one]
+    have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := by
+      rintro i
+      fin_cases i <;> simp [z]
+    convert
+      Finset.center_mass_mem_convex_hull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i)
+        (by rwa [hw]) fun i _ => hz i
+    rw [Finset.centerMass]
+    simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ←
+      mul_assoc]
+    congr 3
+    rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate,
+      mul_smul _ bz, ← smul_add]
+    simp only [List.map, List.pmap, Nat.add_def, add_zero, Fin.mk_bit0, Fin.mk_one, List.foldr_cons,
+      List.foldr_nil]
+    rfl
 #align not_disjoint_segment_convex_hull_triple not_disjoint_segment_convex_hull_triple
 
 /-- **Stone's Separation Theorem** -/
@@ -113,7 +104,6 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
       not_disjoint_segment_convex_hull_triple hz hu hv
         (hC.2.symm.mono (ht.segment_subset hut hvt) <| convex_hull_min _ hC.1)
     simp [insert_subset, hp, hq, singleton_subset_iff.2 hzC]
-    
   rintro c hc
   by_contra' h
   suffices h : Disjoint (convexHull 𝕜 (insert c C)) t
@@ -121,7 +111,6 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
       hCmax _ ⟨convex_convex_hull _ _, h⟩ ((subset_insert _ _).trans <| subset_convex_hull _ _)] at
       hc
     exact hc (subset_convex_hull _ _ <| mem_insert _ _)
-    
   rw [convex_hull_insert ⟨z, hzC⟩, convex_join_singleton_left]
   refine' disjoint_Union₂_left.2 fun a ha => disjoint_iff_inf_le.mpr fun b hb => h a _ ⟨b, hb⟩
   rwa [← hC.1.convex_hull_eq]

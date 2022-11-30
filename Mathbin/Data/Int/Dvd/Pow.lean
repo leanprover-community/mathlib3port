@@ -23,12 +23,11 @@ theorem sign_pow_bit1 (k : ℕ) : ∀ n : ℤ, n.sign ^ bit1 k = n.sign
 #align int.sign_pow_bit1 Int.sign_pow_bit1
 
 theorem pow_dvd_of_le_of_pow_dvd {p m n : ℕ} {k : ℤ} (hmn : m ≤ n) (hdiv : ↑(p ^ n) ∣ k) :
-    ↑(p ^ m) ∣ k := by
+    ↑(p ^ m) ∣ k := by 
   induction k
   · apply Int.coe_nat_dvd.2
     apply pow_dvd_of_le_of_pow_dvd hmn
     apply Int.coe_nat_dvd.1 hdiv
-    
   change -[k+1] with -(↑(k + 1) : ℤ)
   apply dvd_neg_of_dvd
   apply Int.coe_nat_dvd.2

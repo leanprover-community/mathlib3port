@@ -74,7 +74,11 @@ section
 
 /-- Submonoids of monoid `M` are isomorphic to additive submonoids of `additive M`. -/
 @[simps]
-def Submonoid.toAddSubmonoid : Submonoid M ≃o AddSubmonoid (Additive M) where
+def Submonoid.toAddSubmonoid :
+    Submonoid M ≃o
+      AddSubmonoid
+        (Additive
+          M) where 
   toFun S :=
     { carrier := Additive.toMul ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
   invFun S :=
@@ -113,7 +117,11 @@ variable {A : Type _} [AddZeroClass A]
 /-- Additive submonoids of an additive monoid `A` are isomorphic to
 multiplicative submonoids of `multiplicative A`. -/
 @[simps]
-def AddSubmonoid.toSubmonoid : AddSubmonoid A ≃o Submonoid (Multiplicative A) where
+def AddSubmonoid.toSubmonoid :
+    AddSubmonoid A ≃o
+      Submonoid
+        (Multiplicative
+          A) where 
   toFun S :=
     { carrier := Multiplicative.toAdd ⁻¹' S, one_mem' := S.zero_mem',
       mul_mem' := fun _ _ => S.add_mem' }
@@ -164,7 +172,8 @@ include mc
 /-- The preimage of a submonoid along a monoid homomorphism is a submonoid. -/
 @[to_additive
       "The preimage of an `add_submonoid` along an `add_monoid` homomorphism is an\n`add_submonoid`."]
-def comap (f : F) (S : Submonoid N) : Submonoid M where
+def comap (f : F) (S : Submonoid N) :
+    Submonoid M where 
   carrier := f ⁻¹' S
   one_mem' := show f 1 ∈ S by rw [map_one] <;> exact S.one_mem
   mul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact S.mul_mem ha hb
@@ -198,7 +207,8 @@ include mc
 /-- The image of a submonoid along a monoid homomorphism is a submonoid. -/
 @[to_additive
       "The image of an `add_submonoid` along an `add_monoid` homomorphism is\nan `add_submonoid`."]
-def map (f : F) (S : Submonoid M) : Submonoid N where
+def map (f : F) (S : Submonoid M) :
+    Submonoid N where 
   carrier := f '' S
   one_mem' := ⟨1, S.one_mem, map_one f⟩
   mul_mem' := by rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩;
@@ -710,7 +720,7 @@ theorem coe_subtype : ⇑S.Subtype = coe :=
 
 /-- The top submonoid is isomorphic to the monoid. -/
 @[to_additive "The top additive submonoid is isomorphic to the additive monoid.", simps]
-def topEquiv : (⊤ : Submonoid M) ≃* M where
+def topEquiv : (⊤ : Submonoid M) ≃* M where 
   toFun x := x
   invFun x := ⟨x, mem_top x⟩
   left_inv x := x.eta _
@@ -741,11 +751,8 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
     (Subtype.recOn x) fun x hx _ => by
       refine' closure_induction' _ (fun g hg => _) _ (fun g₁ g₂ hg₁ hg₂ => _) hx
       · exact subset_closure hg
-        
       · exact Submonoid.one_mem _
-        
       · exact Submonoid.mul_mem _
-        
 #align submonoid.closure_closure_coe_preimage Submonoid.closure_closure_coe_preimage
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -753,7 +760,8 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
 of `M × N`. -/
 @[to_additive Prod
       "Given `add_submonoid`s `s`, `t` of `add_monoid`s `A`, `B` respectively, `s × t`\nas an `add_submonoid` of `A × B`."]
-def prod (s : Submonoid M) (t : Submonoid N) : Submonoid (M × N) where
+def prod (s : Submonoid M) (t : Submonoid N) :
+    Submonoid (M × N) where 
   carrier := s ×ˢ t
   one_mem' := ⟨s.one_mem, t.one_mem⟩
   mul_mem' p q hp hq := ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
@@ -860,14 +868,10 @@ theorem le_prod_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)}
     constructor
     · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
       exact (h hy1).1
-      
     · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
       exact (h hy1).2
-      
-    
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
     exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
-    
 #align submonoid.le_prod_iff Submonoid.le_prod_iff
 
 @[to_additive prod_le_iff]
@@ -879,21 +883,17 @@ theorem prod_le_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)}
     · rintro _ ⟨x, hx, rfl⟩
       apply h
       exact ⟨hx, Submonoid.one_mem _⟩
-      
     · rintro _ ⟨x, hx, rfl⟩
       apply h
       exact ⟨Submonoid.one_mem _, hx⟩
-      
-    
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
-    have h1' : inl M N x1 ∈ u := by
+    have h1' : inl M N x1 ∈ u := by 
       apply hH
       simpa using h1
-    have h2' : inr M N x2 ∈ u := by
+    have h2' : inr M N x2 ∈ u := by 
       apply hK
       simpa using h2
     simpa using Submonoid.mul_mem _ h1' h2'
-    
 #align submonoid.prod_le_iff Submonoid.prod_le_iff
 
 end Submonoid
@@ -1021,7 +1021,7 @@ theorem restrict_mrange (f : M →* N) : (f.restrict S).mrange = S.map f := by
 @[to_additive "Restriction of an `add_monoid` hom to an `add_submonoid` of the codomain.",
   simps apply]
 def codRestrict {S} [SetLike S N] [SubmonoidClass S N] (f : M →* N) (s : S) (h : ∀ x, f x ∈ s) :
-    M →* s where
+    M →* s where 
   toFun n := ⟨f n, h n⟩
   map_one' := Subtype.eq f.map_one
   map_mul' x y := Subtype.eq (f.map_mul x y)
@@ -1098,7 +1098,7 @@ theorem range_restrict_mker (f : M →* N) : mker (mrangeRestrict f) = mker f :=
 #align monoid_hom.range_restrict_mker MonoidHom.range_restrict_mker
 
 @[simp, to_additive]
-theorem mker_one : (1 : M →* N).mker = ⊤ := by
+theorem mker_one : (1 : M →* N).mker = ⊤ := by 
   ext
   simp [mem_mker]
 #align monoid_hom.mker_one MonoidHom.mker_one
@@ -1117,20 +1117,21 @@ theorem mker_prod_map {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOneClass 
 #align monoid_hom.mker_prod_map MonoidHom.mker_prod_map
 
 @[simp, to_additive]
-theorem mker_inl : (inl M N).mker = ⊥ := by
+theorem mker_inl : (inl M N).mker = ⊥ := by 
   ext x
   simp [mem_mker]
 #align monoid_hom.mker_inl MonoidHom.mker_inl
 
 @[simp, to_additive]
-theorem mker_inr : (inr M N).mker = ⊥ := by
+theorem mker_inr : (inr M N).mker = ⊥ := by 
   ext x
   simp [mem_mker]
 #align monoid_hom.mker_inr MonoidHom.mker_inr
 
 /-- The `monoid_hom` from the preimage of a submonoid to itself. -/
 @[to_additive "the `add_monoid_hom` from the preimage of an additive submonoid to itself.", simps]
-def submonoidComap (f : M →* N) (N' : Submonoid N) : N'.comap f →* N' where
+def submonoidComap (f : M →* N) (N' : Submonoid N) :
+    N'.comap f →* N' where 
   toFun x := ⟨f x, x.Prop⟩
   map_one' := Subtype.eq f.map_one
   map_mul' x y := Subtype.eq (f.map_mul x y)
@@ -1141,7 +1142,8 @@ See `mul_equiv.submonoid_map` for a variant for `mul_equiv`s. -/
 @[to_additive
       "the `add_monoid_hom` from an additive submonoid to its image. See\n`add_equiv.add_submonoid_map` for a variant for `add_equiv`s.",
   simps]
-def submonoidMap (f : M →* N) (M' : Submonoid M) : M' →* M'.map f where
+def submonoidMap (f : M →* N) (M' : Submonoid M) :
+    M' →* M'.map f where 
   toFun x := ⟨f x, ⟨x, x.Prop, rfl⟩⟩
   map_one' := Subtype.eq <| f.map_one
   map_mul' x y := Subtype.eq <| f.map_mul x y

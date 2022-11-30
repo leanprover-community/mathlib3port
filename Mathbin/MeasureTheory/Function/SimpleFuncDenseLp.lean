@@ -95,10 +95,9 @@ theorem tendsto_approx_on_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf :
     Tendsto (fun n => snorm (approxOn f hf s y₀ h₀ n - f) p μ) atTop (𝓝 0) := by
   by_cases hp_zero : p = 0
   · simpa only [hp_zero, snorm_exponent_zero] using tendsto_const_nhds
-    
   have hp : 0 < p.to_real := to_real_pos hp_zero hp_ne_top
   suffices tendsto (fun n => ∫⁻ x, ‖approx_on f hf s y₀ h₀ n x - f x‖₊ ^ p.to_real ∂μ) at_top (𝓝 0)
-    by
+    by 
     simp only [snorm_eq_lintegral_rpow_nnnorm hp_zero hp_ne_top]
     convert continuous_rpow_const.continuous_at.tendsto.comp this <;> simp [_root_.inv_pos.mpr hp]
   -- We simply check the conditions of the Dominated Convergence Theorem:
@@ -125,7 +124,7 @@ theorem tendsto_approx_on_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf :
   have h_lim :
     ∀ᵐ a : β ∂μ,
       tendsto (fun n => (‖approx_on f hf s y₀ h₀ n a - f a‖₊ : ℝ≥0∞) ^ p.to_real) at_top (𝓝 0) :=
-    by
+    by 
     filter_upwards [hμ] with a ha
     have : tendsto (fun n => (approx_on f hf s y₀ h₀ n) a - f a) at_top (𝓝 (f a - f a)) :=
       (tendsto_approx_on hf h₀ ha).sub tendsto_const_nhds
@@ -173,15 +172,13 @@ theorem tendsto_approx_on_range_Lp_snorm [BorelSpace E] {f : β → E} (hp_ne_to
     {μ : Measure β} (fmeas : Measurable f) [SeparableSpace (range f ∪ {0} : Set E)]
     (hf : snorm f p μ < ∞) :
     Tendsto (fun n => snorm (approxOn f fmeas (range f ∪ {0}) 0 (by simp) n - f) p μ) atTop (𝓝 0) :=
-  by
+  by 
   refine' tendsto_approx_on_Lp_snorm fmeas _ hp_ne_top _ _
   · apply eventually_of_forall
     intro x
     apply subset_closure
     simp
-    
   · simpa using hf
-    
 #align
   measure_theory.simple_func.tendsto_approx_on_range_Lp_snorm MeasureTheory.SimpleFunc.tendsto_approx_on_range_Lp_snorm
 
@@ -236,15 +233,13 @@ theorem tendsto_approx_on_range_L1_nnnorm [OpensMeasurableSpace E] {f : β → E
     [SeparableSpace (range f ∪ {0} : Set E)] (fmeas : Measurable f) (hf : Integrable f μ) :
     Tendsto (fun n => ∫⁻ x, ‖approxOn f fmeas (range f ∪ {0}) 0 (by simp) n x - f x‖₊ ∂μ) atTop
       (𝓝 0) :=
-  by
+  by 
   apply tendsto_approx_on_L1_nnnorm fmeas
   · apply eventually_of_forall
     intro x
     apply subset_closure
     simp
-    
   · simpa using hf.2
-    
 #align
   measure_theory.simple_func.tendsto_approx_on_range_L1_nnnorm MeasureTheory.SimpleFunc.tendsto_approx_on_range_L1_nnnorm
 
@@ -308,24 +303,19 @@ theorem measure_preimage_lt_top_of_mem_ℒp (hp_pos : p ≠ 0) (hp_ne_top : p �
   · suffices h_empty : f ⁻¹' {y} = ∅
     · rw [h_empty, measure_empty]
       exact Ennreal.coe_lt_top
-      
     ext1 x
     rw [Set.mem_preimage, Set.mem_singleton_iff, mem_empty_iff_false, iff_false_iff]
     refine' fun hxy => hyf _
     rw [mem_range, Set.mem_range]
     exact ⟨x, hxy⟩
-    
   specialize hf_snorm y hyf
   rw [Ennreal.mul_lt_top_iff] at hf_snorm
   cases hf_snorm
   · exact hf_snorm.2
-    
   cases hf_snorm
   · refine' absurd _ hy_ne
     simpa [hp_pos_real] using hf_snorm
-    
   · simp [hf_snorm]
-    
 #align
   measure_theory.simple_func.measure_preimage_lt_top_of_mem_ℒp MeasureTheory.SimpleFunc.measure_preimage_lt_top_of_mem_ℒp
 
@@ -335,20 +325,16 @@ theorem memℒpOfFiniteMeasurePreimage (p : ℝ≥0∞) {f : α →ₛ E}
   by_cases hp0 : p = 0
   · rw [hp0, mem_ℒp_zero_iff_ae_strongly_measurable]
     exact f.ae_strongly_measurable
-    
   by_cases hp_top : p = ∞
   · rw [hp_top]
     exact mem_ℒp_top f μ
-    
   refine' ⟨f.ae_strongly_measurable, _⟩
   rw [snorm_eq_snorm' hp0 hp_top, f.snorm'_eq]
   refine' Ennreal.rpow_lt_top_of_nonneg (by simp) (ennreal.sum_lt_top_iff.mpr fun y hy => _).Ne
   by_cases hy0 : y = 0
   · simp [hy0, Ennreal.to_real_pos hp0 hp_top]
-    
   · refine' Ennreal.mul_lt_top _ (hf y hy0).Ne
     exact (Ennreal.rpow_lt_top_of_nonneg Ennreal.to_real_nonneg Ennreal.coe_ne_top).Ne
-    
 #align
   measure_theory.simple_func.mem_ℒp_of_finite_measure_preimage MeasureTheory.SimpleFunc.memℒpOfFiniteMeasurePreimage
 
@@ -411,7 +397,7 @@ theorem measure_preimage_lt_top_of_integrable (f : α →ₛ E) (hf : Integrable
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) :
-    μ (support f) < ∞ := by
+    μ (support f) < ∞ := by 
   rw [support_eq]
   refine' (measure_bUnion_finset_le _ _).trans_lt (ennreal.sum_lt_top_iff.mpr fun y hy => _)
   rw [Finset.mem_filter] at hy
@@ -458,7 +444,10 @@ variable (E)
 
 /-- `Lp.simple_func` is a subspace of Lp consisting of equivalence classes of an integrable simple
     function. -/
-def simpleFunc : AddSubgroup (lp E p μ) where
+def simpleFunc :
+    AddSubgroup
+      (lp E p
+        μ) where 
   carrier := { f : lp E p μ | ∃ s : α →ₛ E, (AeEqFun.mk s s.AeStronglyMeasurable : α →ₘ[μ] E) = f }
   zero_mem' := ⟨0, rfl⟩
   add_mem' := fun f g ⟨s, hs⟩ ⟨t, ht⟩ =>
@@ -502,7 +491,7 @@ variable [NormedField 𝕜] [NormedSpace 𝕜 E]
 instance as it is (as of writing) used only in the construction of the Bochner integral. -/
 protected def hasSmul : HasSmul 𝕜 (lp.simpleFunc E p μ) :=
   ⟨fun k f =>
-    ⟨k • f, by
+    ⟨k • f, by 
       rcases f with ⟨f, ⟨s, hs⟩⟩
       use k • s
       apply Eq.trans (ae_eq_fun.smul_mk k s s.ae_strongly_measurable).symm _
@@ -520,23 +509,26 @@ theorem coe_smul (c : 𝕜) (f : lp.simpleFunc E p μ) :
 
 /-- If `E` is a normed space, `Lp.simple_func E p μ` is a module. Not declared as an
 instance as it is (as of writing) used only in the construction of the Bochner integral. -/
-protected def module : Module 𝕜 (lp.simpleFunc E p μ) where
-  one_smul f := by
+protected def module :
+    Module 𝕜
+      (lp.simpleFunc E p
+        μ) where 
+  one_smul f := by 
     ext1
     exact one_smul _ _
-  mul_smul x y f := by
+  mul_smul x y f := by 
     ext1
     exact mul_smul _ _ _
-  smul_add x f g := by
+  smul_add x f g := by 
     ext1
     exact smul_add _ _ _
-  smul_zero x := by
+  smul_zero x := by 
     ext1
     exact smul_zero _
-  add_smul x y f := by
+  add_smul x y f := by 
     ext1
     exact add_smul _ _ _
-  zero_smul f := by
+  zero_smul f := by 
     ext1
     exact zero_smul _ _
 #align measure_theory.Lp.simple_func.module MeasureTheory.lp.simpleFunc.module
@@ -655,7 +647,7 @@ theorem to_Lp_to_simple_func (f : lp.simpleFunc E p μ) :
   measure_theory.Lp.simple_func.to_Lp_to_simple_func MeasureTheory.lp.simpleFunc.to_Lp_to_simple_func
 
 theorem to_simple_func_to_Lp (f : α →ₛ E) (hfi : Memℒp f p μ) : toSimpleFunc (toLp f hfi) =ᵐ[μ] f :=
-  by
+  by 
   rw [← ae_eq_fun.mk_eq_mk]
   exact Classical.choose_spec (to_Lp f hfi).2
 #align
@@ -771,14 +763,11 @@ protected theorem induction (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) {P : lp.s
     · convert h_ind 0 MeasurableSet.empty (by simp) using 1
       ext1
       simp [hc]
-      
     exact h_ind c hs (simple_func.measure_lt_top_of_mem_ℒp_indicator hp_pos hp_ne_top hc hs hf)
-    
   · intro f g hfg hf hg hfg'
     obtain ⟨hf', hg'⟩ : mem_ℒp f p μ ∧ mem_ℒp g p μ :=
       (mem_ℒp_add_of_disjoint hfg f.strongly_measurable g.strongly_measurable).mp hfg'
     exact h_add hf' hg' hfg (hf hf') (hg hg')
-    
 #align measure_theory.Lp.simple_func.induction MeasureTheory.lp.simpleFunc.induction
 
 end Induction
@@ -875,9 +864,7 @@ theorem coe_fn_nonneg (f : lp.simpleFunc G p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
   have h0 : (0 : Lp.simple_func G p μ) =ᵐ[μ] (0 : α → G) := Lp.simple_func.coe_fn_zero p μ G
   constructor <;> intro h <;> filter_upwards [h, h0] with _ _ h2
   · rwa [h2]
-    
   · rwa [← h2]
-    
 #align measure_theory.Lp.simple_func.coe_fn_nonneg MeasureTheory.lp.simpleFunc.coe_fn_nonneg
 
 theorem exists_simple_func_nonneg_ae_eq {f : lp.simpleFunc G p μ} (hf : 0 ≤ f) :
@@ -903,19 +890,15 @@ theorem exists_simple_func_nonneg_ae_eq {f : lp.simpleFunc G p μ} (hf : 0 ≤ f
   · rw [simple_func.piecewise_apply]
     by_cases hxs : x ∈ s
     · simp only [hxs, hfs_nonneg x hxs, if_true, Pi.zero_apply, simple_func.coe_zero]
-      
     · simp only [hxs, simple_func.const_zero, if_false]
-      
-    
   · rw [simple_func.coe_piecewise]
-    have : s =ᵐ[μ] univ := by
+    have : s =ᵐ[μ] univ := by 
       rw [ae_eq_set]
       simp only [true_and_iff, measure_empty, eq_self_iff_true, diff_univ, ← compl_eq_univ_diff]
       exact hs_zero
     refine' eventually_eq.trans (to_simple_func_eq_to_fun f).symm _
     refine' eventually_eq.trans _ (piecewise_ae_eq_of_ae_eq_set this.symm)
     simp only [simple_func.const_zero, indicator_univ, piecewise_eq_indicator, simple_func.coe_zero]
-    
 #align
   measure_theory.Lp.simple_func.exists_simple_func_nonneg_ae_eq MeasureTheory.lp.simpleFunc.exists_simple_func_nonneg_ae_eq
 
@@ -944,7 +927,7 @@ theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (h
         (finite_singleton _).IsSeparable
   have g_meas : Measurable g := (Lp.strongly_measurable (g : Lp G p μ)).Measurable
   let x n := simple_func.approx_on g g_meas ((range g ∪ {0}) ∩ { y | 0 ≤ y }) 0 zero_mem n
-  have hx_nonneg : ∀ n, 0 ≤ x n := by
+  have hx_nonneg : ∀ n, 0 ≤ x n := by 
     intro n a
     change x n a ∈ { y : G | 0 ≤ y }
     have A : (range g ∪ {0} : Set G) ∩ { y | 0 ≤ y } ⊆ { y | 0 ≤ y } := inter_subset_right _ _
@@ -966,10 +949,8 @@ theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (h
     · have hg_nonneg : 0 ≤ᵐ[μ] g := (Lp.coe_fn_nonneg _).mpr g.2
       refine' hg_nonneg.mono fun a ha => subset_closure _
       simpa using ha
-      
     · simp_rw [sub_zero]
       exact hg_mem_ℒp.snorm_lt_top
-      
   refine'
     ⟨fun n =>
       (coe_simple_func_nonneg_to_Lp_nonneg p μ G) ⟨to_Lp (x n) (hx_mem_ℒp n), hx_nonneg_Lp n⟩,
@@ -983,9 +964,7 @@ theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (h
   refine' funext fun n => snorm_congr_ae (eventually_eq.sub _ _)
   · rw [Lp.simple_func.to_Lp_eq_to_Lp]
     exact h_to_Lp n
-    
   · rw [← coe_fn_coe_base]
-    
 #align
   measure_theory.Lp.simple_func.dense_range_coe_simple_func_nonneg_to_Lp_nonneg MeasureTheory.lp.simpleFunc.dense_range_coe_simple_func_nonneg_to_Lp_nonneg
 
@@ -1020,9 +999,7 @@ theorem lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : lp E p �
   refine' fun f => (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed _
   refine' Lp.simple_func.induction (lt_of_lt_of_le Ennreal.zero_lt_one _i.elim).ne' hp_ne_top _ _
   · exact fun c s => h_ind c
-    
   · exact fun f g hf hg => h_add hf hg
-    
 #align measure_theory.Lp.induction MeasureTheory.lp.induction
 
 /-- To prove something for an arbitrary `mem_ℒp` function in a second countable
@@ -1054,16 +1031,13 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
         convert h_ind 0 MeasurableSet.empty (by simp) using 1
         ext
         simp [const]
-        
       have hp_pos : p ≠ 0 := (lt_of_lt_of_le Ennreal.zero_lt_one _i.elim).ne'
       exact h_ind c hs (simple_func.measure_lt_top_of_mem_ℒp_indicator hp_pos hp_ne_top hc hs h)
-      
     · intro f g hfg hf hg int_fg
       rw [simple_func.coe_add,
         mem_ℒp_add_of_disjoint hfg f.strongly_measurable g.strongly_measurable] at int_fg
       refine' h_add hfg int_fg.1 int_fg.2 (hf int_fg.1) (hg int_fg.2)
-      
-  have : ∀ f : Lp.simple_func E p μ, P f := by
+  have : ∀ f : Lp.simple_func E p μ, P f := by 
     intro f
     exact
       h_ae (Lp.simple_func.to_simple_func_eq_to_fun f) (Lp.simple_func.mem_ℒp f)

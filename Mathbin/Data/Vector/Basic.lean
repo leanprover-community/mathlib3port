@@ -37,7 +37,7 @@ theorem to_list_injective : Function.Injective (@toList α n) :=
 #align vector.to_list_injective Vector.to_list_injective
 
 /-- Two `v w : vector α n` are equal iff they are equal at every single index. -/
-@[ext.1]
+@[ext]
 theorem ext : ∀ {v w : Vector α n} (h : ∀ m : Fin n, Vector.nth v m = Vector.nth w m), v = w
   | ⟨v, hv⟩, ⟨w, hw⟩, h => Subtype.eq (List.ext_le (by rw [hv, hw]) fun m hm hn => h ⟨m, hv ▸ hm⟩)
 #align vector.ext Vector.ext
@@ -106,7 +106,7 @@ theorem head_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map 
 
 @[simp]
 theorem tail_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).tail = v.tail.map f :=
-  by
+  by 
   obtain ⟨a, v', h⟩ := Vector.exists_eq_cons v
   rw [h, map_cons, tail_cons, tail_cons]
 #align vector.tail_map Vector.tail_map
@@ -172,7 +172,7 @@ theorem singleton_tail (v : Vector α 1) : v.tail = Vector.nil := by
 
 @[simp]
 theorem tail_of_fn {n : ℕ} (f : Fin n.succ → α) : tail (ofFn f) = ofFn fun i => f i.succ :=
-  (of_fn_nth _).symm.trans <| by
+  (of_fn_nth _).symm.trans <| by 
     congr
     funext i
     cases i
@@ -219,12 +219,10 @@ theorem nodup_iff_nth_inj {v : Vector α n} : v.toList.Nodup ↔ Function.Inject
     ext
     apply h
     simpa
-    
   · intro h i j hi hj hij
     have := @h ⟨i, hi⟩ ⟨j, hj⟩
     simp [nth_eq_nth_le] at *
     tauto
-    
 #align vector.nodup_iff_nth_inj Vector.nodup_iff_nth_inj
 
 theorem head'_to_list : ∀ v : Vector α n.succ, (toList v).head' = some (head v)
@@ -358,11 +356,9 @@ theorem scanl_head : (scanl f b v).head = b := by
   cases n
   · have : v = nil := by simp only [eq_iff_true_of_subsingleton]
     simp only [this, scanl_nil, cons_head]
-    
   · rw [← cons_head_tail v]
     simp only [← nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Fin.val_zero',
       List.nthLe]
-    
 #align vector.scanl_head Vector.scanl_head
 
 /-- For an index `i : fin n`, the `nth` element of `scanl` of a
@@ -377,19 +373,14 @@ theorem scanl_nth (i : Fin n) :
     (scanl f b v).nth i.succ = f ((scanl f b v).nth i.cast_succ) (v.nth i) := by
   cases n
   · exact finZeroElim i
-    
   induction' n with n hn generalizing b
   · have i0 : i = 0 := by simp only [eq_iff_true_of_subsingleton]
     simpa only [scanl_singleton, i0, nth_zero]
-    
   · rw [← cons_head_tail v, scanl_cons, nth_cons_succ]
     refine' Fin.cases _ _ i
     · simp only [nth_zero, scanl_head, Fin.cast_succ_zero, cons_head]
-      
     · intro i'
       simp only [hn, Fin.cast_succ_fin_succ, nth_cons_succ]
-      
-    
 #align vector.scanl_nth Vector.scanl_nth
 
 end Scan
@@ -459,12 +450,10 @@ def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} {n : ℕ} (v : Vecto
   induction' n with n ih generalizing v
   · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
     exact h_nil
-    
   · rcases v with ⟨_ | ⟨a, v⟩, _⟩
     cases v_property
     apply @h_cons n _ ⟨v, (add_left_inj 1).mp v_property⟩
     apply ih
-    
 #align vector.induction_on Vector.inductionOn
 
 -- check that the above works with `induction ... using`
@@ -476,19 +465,17 @@ variable {β γ : Type _}
 @[elab_as_elim]
 def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Vector α n) (w : Vector β n)
     (h_nil : C nil nil) (h_cons : ∀ {n a b} {x : Vector α n} {y}, C x y → C (a ::ᵥ x) (b ::ᵥ y)) :
-    C v w := by
+    C v w := by 
   induction' n with n ih generalizing v w
   · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
     rcases w with ⟨_ | ⟨-, -⟩, - | -⟩
     exact h_nil
-    
   · rcases v with ⟨_ | ⟨a, v⟩, _⟩
     cases v_property
     rcases w with ⟨_ | ⟨b, w⟩, _⟩
     cases w_property
     apply @h_cons n _ _ ⟨v, (add_left_inj 1).mp v_property⟩ ⟨w, (add_left_inj 1).mp w_property⟩
     apply ih
-    
 #align vector.induction_on₂ Vector.inductionOn₂
 
 /-- Define `C u v w` by induction on a triplet of vectors
@@ -497,13 +484,12 @@ def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Ve
 def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n → Sort _} (u : Vector α n)
     (v : Vector β n) (w : Vector γ n) (h_nil : C nil nil nil)
     (h_cons : ∀ {n a b c} {x : Vector α n} {y z}, C x y z → C (a ::ᵥ x) (b ::ᵥ y) (c ::ᵥ z)) :
-    C u v w := by
+    C u v w := by 
   induction' n with n ih generalizing u v w
   · rcases u with ⟨_ | ⟨-, -⟩, - | -⟩
     rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
     rcases w with ⟨_ | ⟨-, -⟩, - | -⟩
     exact h_nil
-    
   · rcases u with ⟨_ | ⟨a, u⟩, _⟩
     cases u_property
     rcases v with ⟨_ | ⟨b, v⟩, _⟩
@@ -514,7 +500,6 @@ def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n →
       @h_cons n _ _ _ ⟨u, (add_left_inj 1).mp u_property⟩ ⟨v, (add_left_inj 1).mp v_property⟩
         ⟨w, (add_left_inj 1).mp w_property⟩
     apply ih
-    
 #align vector.induction_on₃ Vector.inductionOn₃
 
 /-- Cast a vector to an array. -/
@@ -529,7 +514,7 @@ variable {a : α}
 /-- `v.insert_nth a i` inserts `a` into the vector `v` at position `i`
 (and shifting later components to the right). -/
 def insertNth (a : α) (i : Fin (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
-  ⟨v.1.insertNth i a, by
+  ⟨v.1.insertNth i a, by 
     rw [List.length_insert_nth, v.2]
     rw [v.2, ← Nat.succ_le_succ_iff]
     exact i.2⟩
@@ -560,38 +545,27 @@ theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
     · convert (List.insert_nth_remove_nth_of_ge i (j - 1) _ _ _).symm
       · convert (Nat.succ_pred_eq_of_pos _).symm
         exact lt_of_le_of_lt (zero_le _) h
-        
       · apply remove_nth_val
-        
       · convert hi
         exact v.2
-        
       · exact Nat.le_pred_of_lt h
-        
-      
     · convert (List.insert_nth_remove_nth_of_le i j _ _ _).symm
       · apply remove_nth_val
-        
       · convert hi
         exact v.2
-        
       · simpa using h
-        
-      
 #align vector.remove_nth_insert_nth' Vector.remove_nth_insert_nth'
 
 theorem insert_nth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     ∀ v : Vector α n,
       (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
-  | ⟨l, hl⟩ => by
+  | ⟨l, hl⟩ => by 
     refine' Subtype.eq _
     simp only [insert_nth_val, Fin.coe_succ, Fin.castSucc, Fin.val_eq_coe, Fin.coe_cast_add]
     apply List.insert_nth_comm
     · assumption
-      
     · rw [hl]
       exact Nat.le_of_succ_le_succ j.2
-      
 #align vector.insert_nth_comm Vector.insert_nth_comm
 
 end InsertNth
@@ -681,9 +655,7 @@ protected theorem traverse_def (f : α → F β) (x : α) :
 
 protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x := by
   rintro ⟨x, rfl⟩; dsimp [Vector.traverse, cast]
-  induction' x with x xs IH;
-  · rfl
-    
+  induction' x with x xs IH; · rfl
   simp! [IH]; rfl
 #align vector.id_traverse Vector.id_traverse
 
@@ -722,11 +694,14 @@ protected theorem naturality {α β : Type _} (f : α → F β) :
 
 end Traverse
 
-instance : Traversable.{u} (flip Vector n) where
+instance : Traversable.{u}
+      (flip Vector n) where 
   traverse := @Vector.traverse n
   map α β := @Vector.map.{u, u} α β n
 
-instance : IsLawfulTraversable.{u} (flip Vector n) where
+instance :
+    IsLawfulTraversable.{u}
+      (flip Vector n) where 
   id_traverse := @Vector.id_traverse n
   comp_traverse := @Vector.comp_traverse n
   traverse_eq_map_id := @Vector.traverse_eq_map_id n

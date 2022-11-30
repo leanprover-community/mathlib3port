@@ -82,7 +82,7 @@ theorem derivation_eq_zero_of_forall_mem_vars {D : Derivation R (MvPolynomial σ
 #align
   mv_polynomial.derivation_eq_zero_of_forall_mem_vars MvPolynomial.derivation_eq_zero_of_forall_mem_vars
 
-@[ext.1]
+@[ext]
 theorem derivation_ext {D₁ D₂ : Derivation R (MvPolynomial σ R) A} (h : ∀ i, D₁ (x i) = D₂ (x i)) :
     D₁ = D₂ :=
   Derivation.ext fun f => derivation_eq_of_forall_mem_vars fun i _ => h i
@@ -96,9 +96,9 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
         D (monomial s 1 * x i) =
           (monomial s 1 : MvPolynomial σ R) • D (x i) +
             (x i : MvPolynomial σ R) • D (monomial s 1) :=
-  by
+  by 
   refine' ⟨fun H p i => H _ _, fun H => _⟩
-  have hC : ∀ r, D (C r) = 0 := by
+  have hC : ∀ r, D (C r) = 0 := by 
     intro r
     rw [C_eq_smul_one, D.map_smul, h₁, smul_zero]
   have : ∀ p i, D (p * X i) = p • D (X i) + (X i : MvPolynomial σ R) • D p := by
@@ -107,9 +107,7 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
     · rw [← mul_one r, ← C_mul_monomial, mul_assoc, C_mul', D.map_smul, H, C_mul', smul_assoc,
         smul_add, D.map_smul, smul_comm r (X i)]
       infer_instance
-      
     · rw [add_mul, map_add, map_add, hp, hq, add_smul, smul_add, add_add_add_comm]
-      
   intro p q
   induction q using MvPolynomial.induction_on
   case h_C c =>
@@ -122,23 +120,18 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
 variable (R)
 
 /-- The derivation on `mv_polynomial σ R` that takes value `f i` on `X i`. -/
-def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
+def mkDerivation (f : σ → A) :
+    Derivation R (MvPolynomial σ R)
+      A where 
   toLinearMap := mkDerivationₗ R f
   map_one_eq_zero' := mk_derivationₗ_C _ 1
   leibniz' :=
     (leibniz_iff_X (mkDerivationₗ R f) (mk_derivationₗ_C _ 1)).2 fun s i => by
       simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mul]
-      rw [Finsupp.sum_add_index] <;> [skip,
-        · simp
-          ,
+      rw [Finsupp.sum_add_index] <;> [skip, · simp,
         · intros
-          simp only [Nat.cast_add, (monomial _).map_add, add_smul]
-          ]
-      rw [Finsupp.sum_single_index, Finsupp.sum_single_index] <;> [skip,
-        · simp
-          ,
-        · simp
-          ]
+          simp only [Nat.cast_add, (monomial _).map_add, add_smul]]
+      rw [Finsupp.sum_single_index, Finsupp.sum_single_index] <;> [skip, · simp, · simp]
       rw [tsub_self, add_tsub_cancel_right, Nat.cast_one, ← C_apply, C_1, one_smul, add_comm,
         Finsupp.smul_sum]
       refine' congr_arg₂ (· + ·) rfl (Finset.sum_congr rfl fun j hj => _); dsimp only

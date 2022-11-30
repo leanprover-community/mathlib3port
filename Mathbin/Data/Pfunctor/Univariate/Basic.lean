@@ -62,7 +62,7 @@ protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) :
     ∀ x : P.Obj α, (g ∘ f) <$> x = g <$> f <$> x := fun ⟨a, b⟩ => rfl
 #align pfunctor.comp_map Pfunctor.comp_map
 
-instance : IsLawfulFunctor P.Obj where
+instance : IsLawfulFunctor P.Obj where 
   id_map := @Pfunctor.id_map P
   comp_map := @Pfunctor.comp_map P
 
@@ -180,7 +180,6 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) :
     cases' h : y with a f
     refine' ⟨a, fun i => (f i).val, _, fun i => (f i).property⟩
     rw [← hy, h, Pfunctor.map_eq]
-    
   rintro ⟨a, f, xeq, pf⟩
   use ⟨a, fun i => ⟨f i, pf i⟩⟩
   rw [xeq]; rfl
@@ -192,7 +191,6 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) 
   · casesm*Exists _, _ ∧ _
     subst_vars
     assumption
-    
   repeat' first |constructor|assumption
 #align pfunctor.liftp_iff' Pfunctor.liftp_iff'
 
@@ -205,20 +203,16 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
     constructor
     · rw [← xeq, h]
       rfl
-      
     constructor
     · rw [← yeq, h]
       rfl
-      
     intro i
     exact (f i).property
-    
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use ⟨a, fun i => ⟨(f₀ i, f₁ i), h i⟩⟩
   constructor
   · rw [xeq]
     rfl
-    
   rw [yeq]; rfl
 #align pfunctor.liftr_iff Pfunctor.liftr_iff
 
@@ -232,12 +226,10 @@ theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) :
     rw [liftp_iff']
     intro
     refine' ⟨_, rfl⟩
-    
   · simp only [liftp_iff']
     cases h
     subst x
     tauto
-    
 #align pfunctor.supp_eq Pfunctor.supp_eq
 
 end Pfunctor

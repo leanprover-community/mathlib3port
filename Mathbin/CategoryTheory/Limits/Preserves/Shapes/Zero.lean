@@ -58,14 +58,15 @@ theorem zero_of_map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {
 
 theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} {f : X ⟶ Y} :
     F.map f = 0 ↔ f = 0 :=
-  ⟨F.zero_of_map_zero _, by
+  ⟨F.zero_of_map_zero _, by 
     rintro rfl
     exact F.map_zero _ _⟩
 #align category_theory.functor.map_eq_zero_iff CategoryTheory.Functor.map_eq_zero_iff
 
 instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C ⥤ D)
     [IsLeftAdjoint F] :
-    PreservesZeroMorphisms F where map_zero' X Y := by
+    PreservesZeroMorphisms
+      F where map_zero' X Y := by 
     let adj := Adjunction.ofLeftAdjoint F
     calc
       F.map (0 : X ⟶ Y) = F.map 0 ≫ F.map (adj.unit.app Y) ≫ adj.counit.app (F.obj Y) := _
@@ -74,17 +75,15 @@ instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C �
       
     · rw [adjunction.left_triangle_components]
       exact (category.comp_id _).symm
-      
     · simp only [← category.assoc, ← F.map_comp, zero_comp]
-      
     · simp only [adjunction.counit_naturality, comp_zero]
-      
 #align
   category_theory.functor.preserves_zero_morphisms_of_is_left_adjoint CategoryTheory.Functor.preserves_zero_morphisms_of_is_left_adjoint
 
 instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C ⥤ D)
     [IsRightAdjoint G] :
-    PreservesZeroMorphisms G where map_zero' X Y := by
+    PreservesZeroMorphisms
+      G where map_zero' X Y := by
     let adj := Adjunction.ofRightAdjoint G
     calc
       G.map (0 : X ⟶ Y) = adj.unit.app (G.obj X) ≫ G.map (adj.counit.app X) ≫ G.map 0 := _
@@ -92,11 +91,8 @@ instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C �
       _ = 0 := _
       
     · rw [adjunction.right_triangle_components_assoc]
-      
     · simp only [← G.map_comp, comp_zero]
-      
     · simp only [adjunction.unit_naturality_assoc, zero_comp]
-      
 #align
   category_theory.functor.preserves_zero_morphisms_of_is_right_adjoint CategoryTheory.Functor.preserves_zero_morphisms_of_is_right_adjoint
 
@@ -121,7 +117,8 @@ variable [HasZeroMorphisms C] [HasZeroMorphisms D] (F : C ⥤ D)
 
 /-- A functor that preserves zero morphisms also preserves the zero object. -/
 @[simps]
-def mapZeroObject [PreservesZeroMorphisms F] : F.obj 0 ≅ 0 where
+def mapZeroObject [PreservesZeroMorphisms F] :
+    F.obj 0 ≅ 0 where 
   Hom := 0
   inv := 0
   hom_inv_id' := by rw [← F.map_id, id_zero, F.map_zero, zero_comp]

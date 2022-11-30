@@ -142,7 +142,7 @@ def continuousLinearMapToWeakDual : Dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
 theorem dual_norm_topology_le_weak_dual_topology :
     (by infer_instance : TopologicalSpace (Dual 𝕜 E)) ≤
       (by infer_instance : TopologicalSpace (WeakDual 𝕜 E)) :=
-  by
+  by 
   convert to_weak_dual_continuous.le_induced
   exact induced_id.symm
 #align

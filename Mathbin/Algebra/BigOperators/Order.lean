@@ -6,6 +6,7 @@ Authors: Johannes Hölzl
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.Order.Ring.WithTop
 import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.Data.Fintype.Card
 
 /-!
 # Results about big operators with values in an ordered algebraic structure.
@@ -38,9 +39,7 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred (f : M → N) (p : M → P
     f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
   refine' le_trans (Multiset.le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul _ _ _) _
   · simp [hs_nonempty.ne_empty]
-    
   · exact multiset.forall_mem_map_iff.mpr hs
-    
   rw [Multiset.map_map]
   rfl
 #align
@@ -75,9 +74,7 @@ theorem le_prod_of_submultiplicative_on_pred (f : M → N) (p : M → Prop) (h_o
     (g : ι → M) {s : Finset ι} (hs : ∀ i ∈ s, p (g i)) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
   rcases eq_empty_or_nonempty s with (rfl | hs_nonempty)
   · simp [h_one]
-    
   · exact le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul g s hs_nonempty hs
-    
 #align finset.le_prod_of_submultiplicative_on_pred Finset.le_prod_of_submultiplicative_on_pred
 
 /-- Let `{x | p x}` be a subsemigroup of a commutative additive monoid `M`. Let `f : M → N` be a map
@@ -1009,13 +1006,14 @@ theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 
 
 @[to_additive sum_eq_zero_iff_of_nonneg]
 theorem prod_eq_one_iff_of_one_le' :
-    (∀ i ∈ s, 1 ≤ f i) → ((∏ i in s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) := by classical
-  apply Finset.induction_on s
-  exact fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩
-  intro a s ha ih H
-  have : ∀ i ∈ s, 1 ≤ f i := fun _ => H _ ∘ mem_insert_of_mem
-  rw [prod_insert ha, mul_eq_one_iff' (H _ <| mem_insert_self _ _) (one_le_prod' this),
-    forall_mem_insert, ih this]
+    (∀ i ∈ s, 1 ≤ f i) → ((∏ i in s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) := by
+  classical 
+    apply Finset.induction_on s
+    exact fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩
+    intro a s ha ih H
+    have : ∀ i ∈ s, 1 ≤ f i := fun _ => H _ ∘ mem_insert_of_mem
+    rw [prod_insert ha, mul_eq_one_iff' (H _ <| mem_insert_self _ _) (one_le_prod' this),
+      forall_mem_insert, ih this]
 #align finset.prod_eq_one_iff_of_one_le' Finset.prod_eq_one_iff_of_one_le'
 
 @[to_additive sum_eq_zero_iff_of_nonneg]
@@ -1038,9 +1036,7 @@ theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s
     s.Prod f ≤ n ^ s.card := by
   refine' (Multiset.prod_le_pow_card (s.val.map f) n _).trans _
   · simpa using h
-    
   · simpa
-    
 #align finset.prod_le_pow_card Finset.prod_le_pow_card
 
 @[to_additive card_nsmul_le_sum]
@@ -2609,19 +2605,19 @@ variable [OrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 
 @[to_additive sum_lt_sum]
 theorem prod_lt_prod' (Hle : ∀ i ∈ s, f i ≤ g i) (Hlt : ∃ i ∈ s, f i < g i) :
-    (∏ i in s, f i) < ∏ i in s, g i := by classical
-  rcases Hlt with ⟨i, hi, hlt⟩
-  rw [← insert_erase hi, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _)]
-  exact mul_lt_mul_of_lt_of_le hlt (prod_le_prod'' fun j hj => Hle j <| mem_of_mem_erase hj)
+    (∏ i in s, f i) < ∏ i in s, g i := by
+  classical 
+    rcases Hlt with ⟨i, hi, hlt⟩
+    rw [← insert_erase hi, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _)]
+    exact mul_lt_mul_of_lt_of_le hlt (prod_le_prod'' fun j hj => Hle j <| mem_of_mem_erase hj)
 #align finset.prod_lt_prod' Finset.prod_lt_prod'
 
 @[to_additive sum_lt_sum_of_nonempty]
 theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g i) :
-    (∏ i in s, f i) < ∏ i in s, g i := by
+    (∏ i in s, f i) < ∏ i in s, g i := by 
   apply prod_lt_prod'
   · intro i hi
     apply le_of_lt (Hlt i hi)
-    
   cases' hs with i hi
   exact ⟨i, hi, Hlt i hi⟩
 #align finset.prod_lt_prod_of_nonempty' Finset.prod_lt_prod_of_nonempty'
@@ -2752,43 +2748,39 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                  (Tactic.tacticSeq1Indented
                   [(Tactic.apply "apply" `prod_le_prod_of_subset_of_one_le')
                    []
-                   («tactic___;_»
+                   (tactic___
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group
-                      (Tactic.simp
-                       "simp"
-                       []
-                       []
-                       []
-                       ["["
-                        [(Tactic.simpLemma [] [] `Finset.insert_subset)
-                         ","
-                         (Tactic.simpLemma [] [] `h)
-                         ","
-                         (Tactic.simpLemma [] [] `ht)]
-                        "]"]
-                       [])
+                    [(Tactic.simp
+                      "simp"
+                      []
+                      []
+                      []
+                      ["["
+                       [(Tactic.simpLemma [] [] `Finset.insert_subset)
+                        ","
+                        (Tactic.simpLemma [] [] `h)
+                        ","
+                        (Tactic.simpLemma [] [] `ht)]
+                       "]"]
                       [])])
                    []
-                   («tactic___;_»
+                   (tactic___
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group (Tactic.intro "intro" [`x `hx `h'x]) [])
-                     (group
-                      (Tactic.simp
-                       "simp"
-                       []
-                       []
-                       ["only"]
-                       ["["
-                        [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
-                        "]"]
-                       [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
-                      [])
-                     (group
-                      (Tactic.exact
-                       "exact"
-                       (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
-                      [])])]))))]))])))
+                    [(Tactic.intro "intro" [`x `hx `h'x])
+                     []
+                     (Tactic.simp
+                      "simp"
+                      []
+                      []
+                      ["only"]
+                      ["["
+                       [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                       "]"]
+                      [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
+                     []
+                     (Tactic.exact
+                      "exact"
+                      (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))])]))))]))])))
        [])
       []
       []))
@@ -2866,43 +2858,39 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                 (Tactic.tacticSeq1Indented
                  [(Tactic.apply "apply" `prod_le_prod_of_subset_of_one_le')
                   []
-                  («tactic___;_»
+                  (tactic___
                    (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group
-                     (Tactic.simp
-                      "simp"
-                      []
-                      []
-                      []
-                      ["["
-                       [(Tactic.simpLemma [] [] `Finset.insert_subset)
-                        ","
-                        (Tactic.simpLemma [] [] `h)
-                        ","
-                        (Tactic.simpLemma [] [] `ht)]
-                       "]"]
-                      [])
+                   [(Tactic.simp
+                     "simp"
+                     []
+                     []
+                     []
+                     ["["
+                      [(Tactic.simpLemma [] [] `Finset.insert_subset)
+                       ","
+                       (Tactic.simpLemma [] [] `h)
+                       ","
+                       (Tactic.simpLemma [] [] `ht)]
+                      "]"]
                      [])])
                   []
-                  («tactic___;_»
+                  (tactic___
                    (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.intro "intro" [`x `hx `h'x]) [])
-                    (group
-                     (Tactic.simp
-                      "simp"
-                      []
-                      []
-                      ["only"]
-                      ["["
-                       [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
-                       "]"]
-                      [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
-                     [])
-                    (group
-                     (Tactic.exact
-                      "exact"
-                      (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
-                     [])])]))))]))])))
+                   [(Tactic.intro "intro" [`x `hx `h'x])
+                    []
+                    (Tactic.simp
+                     "simp"
+                     []
+                     []
+                     ["only"]
+                     ["["
+                      [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                      "]"]
+                     [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
+                    []
+                    (Tactic.exact
+                     "exact"
+                     (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))])]))))]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -2969,41 +2957,39 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
             (Tactic.tacticSeq1Indented
              [(Tactic.apply "apply" `prod_le_prod_of_subset_of_one_le')
               []
-              («tactic___;_»
+              (tactic___
                (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Tactic.simp
-                  "simp"
-                  []
-                  []
-                  []
-                  ["["
-                   [(Tactic.simpLemma [] [] `Finset.insert_subset)
-                    ","
-                    (Tactic.simpLemma [] [] `h)
-                    ","
-                    (Tactic.simpLemma [] [] `ht)]
-                   "]"]
-                  [])
+               [(Tactic.simp
+                 "simp"
+                 []
+                 []
+                 []
+                 ["["
+                  [(Tactic.simpLemma [] [] `Finset.insert_subset)
+                   ","
+                   (Tactic.simpLemma [] [] `h)
+                   ","
+                   (Tactic.simpLemma [] [] `ht)]
+                  "]"]
                  [])])
               []
-              («tactic___;_»
+              (tactic___
                (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.intro "intro" [`x `hx `h'x]) [])
-                (group
-                 (Tactic.simp
-                  "simp"
-                  []
-                  []
-                  ["only"]
-                  ["["
-                   [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
-                   "]"]
-                  [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
-                 [])
-                (group
-                 (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
-                 [])])]))))]))
+               [(Tactic.intro "intro" [`x `hx `h'x])
+                []
+                (Tactic.simp
+                 "simp"
+                 []
+                 []
+                 ["only"]
+                 ["["
+                  [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                  "]"]
+                 [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))])]))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
        "calc"
@@ -3066,41 +3052,39 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
            (Tactic.tacticSeq1Indented
             [(Tactic.apply "apply" `prod_le_prod_of_subset_of_one_le')
              []
-             («tactic___;_»
+             (tactic___
               (cdotTk (patternIgnore (token.«·» "·")))
-              [(group
-                (Tactic.simp
-                 "simp"
-                 []
-                 []
-                 []
-                 ["["
-                  [(Tactic.simpLemma [] [] `Finset.insert_subset)
-                   ","
-                   (Tactic.simpLemma [] [] `h)
-                   ","
-                   (Tactic.simpLemma [] [] `ht)]
-                  "]"]
-                 [])
+              [(Tactic.simp
+                "simp"
+                []
+                []
+                []
+                ["["
+                 [(Tactic.simpLemma [] [] `Finset.insert_subset)
+                  ","
+                  (Tactic.simpLemma [] [] `h)
+                  ","
+                  (Tactic.simpLemma [] [] `ht)]
+                 "]"]
                 [])])
              []
-             («tactic___;_»
+             (tactic___
               (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.intro "intro" [`x `hx `h'x]) [])
-               (group
-                (Tactic.simp
-                 "simp"
-                 []
-                 []
-                 ["only"]
-                 ["["
-                  [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
-                  "]"]
-                 [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
-                [])
-               (group
-                (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
-                [])])]))))])
+              [(Tactic.intro "intro" [`x `hx `h'x])
+               []
+               (Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                 "]"]
+                [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
+               []
+               (Tactic.exact
+                "exact"
+                (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))])]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -3108,56 +3092,52 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
         (Tactic.tacticSeq1Indented
          [(Tactic.apply "apply" `prod_le_prod_of_subset_of_one_le')
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              []
-              ["["
-               [(Tactic.simpLemma [] [] `Finset.insert_subset)
-                ","
-                (Tactic.simpLemma [] [] `h)
-                ","
-                (Tactic.simpLemma [] [] `ht)]
-               "]"]
-              [])
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             []
+             ["["
+              [(Tactic.simpLemma [] [] `Finset.insert_subset)
+               ","
+               (Tactic.simpLemma [] [] `h)
+               ","
+               (Tactic.simpLemma [] [] `ht)]
+              "]"]
              [])])
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.intro "intro" [`x `hx `h'x]) [])
-            (group
-             (Tactic.simp
-              "simp"
-              []
-              []
-              ["only"]
-              ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
-              [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
-             [])
-            (group
-             (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
-             [])])])))
+           [(Tactic.intro "intro" [`x `hx `h'x])
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
+             [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.intro "intro" [`x `hx `h'x]) [])
-        (group
-         (Tactic.simp
-          "simp"
-          []
-          []
-          ["only"]
-          ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
-          [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
-         [])
-        (group
-         (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
-         [])])
+       [(Tactic.intro "intro" [`x `hx `h'x])
+        []
+        (Tactic.simp
+         "simp"
+         []
+         []
+         ["only"]
+         ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
+         [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
+        []
+        (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3189,7 +3169,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp
        "simp"
        []
@@ -3215,7 +3195,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.intro "intro" [`x `hx `h'x])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h'x
@@ -3232,22 +3212,20 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Tactic.simp
-          "simp"
-          []
-          []
-          []
-          ["["
-           [(Tactic.simpLemma [] [] `Finset.insert_subset)
-            ","
-            (Tactic.simpLemma [] [] `h)
-            ","
-            (Tactic.simpLemma [] [] `ht)]
-           "]"]
-          [])
+       [(Tactic.simp
+         "simp"
+         []
+         []
+         []
+         ["["
+          [(Tactic.simpLemma [] [] `Finset.insert_subset)
+           ","
+           (Tactic.simpLemma [] [] `h)
+           ","
+           (Tactic.simpLemma [] [] `ht)]
+          "]"]
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp
@@ -3619,15 +3597,16 @@ theorem prod_lt_one' (h : ∀ i ∈ s, f i ≤ 1) (hs : ∃ i ∈ s, f i < 1) : 
 
 @[to_additive]
 theorem prod_eq_prod_iff_of_le {f g : ι → M} (h : ∀ i ∈ s, f i ≤ g i) :
-    ((∏ i in s, f i) = ∏ i in s, g i) ↔ ∀ i ∈ s, f i = g i := by classical
-  revert h
-  refine'
-    Finset.induction_on s (fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩) fun a s ha ih H => _
-  specialize ih fun i => H i ∘ Finset.mem_insert_of_mem
-  rw [Finset.prod_insert ha, Finset.prod_insert ha, Finset.forall_mem_insert, ← ih]
-  exact
-    mul_eq_mul_iff_eq_and_eq (H a (s.mem_insert_self a))
-      (Finset.prod_le_prod'' fun i => H i ∘ Finset.mem_insert_of_mem)
+    ((∏ i in s, f i) = ∏ i in s, g i) ↔ ∀ i ∈ s, f i = g i := by
+  classical 
+    revert h
+    refine'
+      Finset.induction_on s (fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩) fun a s ha ih H => _
+    specialize ih fun i => H i ∘ Finset.mem_insert_of_mem
+    rw [Finset.prod_insert ha, Finset.prod_insert ha, Finset.forall_mem_insert, ← ih]
+    exact
+      mul_eq_mul_iff_eq_and_eq (H a (s.mem_insert_self a))
+        (Finset.prod_le_prod'' fun i => H i ∘ Finset.mem_insert_of_mem)
 #align finset.prod_eq_prod_iff_of_le Finset.prod_eq_prod_iff_of_le
 
 end OrderedCancelCommMonoid
@@ -3644,7 +3623,7 @@ theorem exists_lt_of_prod_lt' (Hlt : (∏ i in s, f i) < ∏ i in s, g i) : ∃ 
 
 @[to_additive exists_le_of_sum_le]
 theorem exists_le_of_prod_le' (hs : s.Nonempty) (Hle : (∏ i in s, f i) ≤ ∏ i in s, g i) :
-    ∃ i ∈ s, f i ≤ g i := by
+    ∃ i ∈ s, f i ≤ g i := by 
   contrapose! Hle with Hlt
   exact prod_lt_prod_of_nonempty' hs Hlt
 #align finset.exists_le_of_prod_le' Finset.exists_le_of_prod_le'
@@ -3682,18 +3661,12 @@ theorem prod_le_prod (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ g 
     (∏ i in s, f i) ≤ ∏ i in s, g i := by
   induction' s using Finset.induction with a s has ih h
   · simp
-    
   · simp only [prod_insert has]
     apply mul_le_mul
     · exact h1 a (mem_insert_self a s)
-      
     · apply ih (fun x H => h0 _ _) fun x H => h1 _ _ <;> exact mem_insert_of_mem H
-      
     · apply prod_nonneg fun x H => h0 x (mem_insert_of_mem H)
-      
     · apply le_trans (h0 a (mem_insert_self a s)) (h1 a (mem_insert_self a s))
-      
-    
 #align finset.prod_le_prod Finset.prod_le_prod
 
 /-- If each `f i`, `i ∈ s` belongs to `[0, 1]`, then their product is less than or equal to one.
@@ -3714,12 +3687,10 @@ theorem prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i +
     apply add_le_add <;> apply mul_le_mul_of_nonneg_left <;> try apply_assumption <;> assumption <;>
         apply prod_le_prod <;>
       simp (config := { contextual := true }) [*]
-    
   · apply prod_nonneg
     simp only [and_imp, mem_sdiff, mem_singleton]
     intro j h1j h2j
     exact le_trans (hg j h1j) (hgf j h1j h2j)
-    
 #align finset.prod_add_prod_le Finset.prod_add_prod_le
 
 end OrderedCommSemiring
@@ -3739,17 +3710,14 @@ section CanonicallyOrderedCommSemiring
 
 variable [CanonicallyOrderedCommSemiring R] {f g h : ι → R} {s : Finset ι} {i : ι}
 
-theorem prod_le_prod' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i := by classical
-  induction' s using Finset.induction with a s has ih h
-  · simp
-    
-  · rw [Finset.prod_insert has, Finset.prod_insert has]
-    apply mul_le_mul'
-    · exact h _ (Finset.mem_insert_self a s)
-      
-    · exact ih fun i hi => h _ (Finset.mem_insert_of_mem hi)
-      
-    
+theorem prod_le_prod' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i := by
+  classical 
+    induction' s using Finset.induction with a s has ih h
+    · simp
+    · rw [Finset.prod_insert has, Finset.prod_insert has]
+      apply mul_le_mul'
+      · exact h _ (Finset.mem_insert_self a s)
+      · exact ih fun i hi => h _ (Finset.mem_insert_of_mem hi)
 #align finset.prod_le_prod' Finset.prod_le_prod'
 
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
@@ -3757,15 +3725,15 @@ theorem prod_le_prod' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏
 -/
 theorem prod_add_prod_le' (hi : i ∈ s) (h2i : g i + h i ≤ f i) (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j)
     (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) : ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i := by
-  classical
-  simp_rw [prod_eq_mul_prod_diff_singleton hi]
-  refine' le_trans _ (mul_le_mul_right' h2i _)
-  rw [right_distrib]
-  apply add_le_add <;> apply mul_le_mul_left' <;> apply prod_le_prod' <;>
-          simp only [and_imp, mem_sdiff, mem_singleton] <;>
-        intros <;>
-      apply_assumption <;>
-    assumption
+  classical 
+    simp_rw [prod_eq_mul_prod_diff_singleton hi]
+    refine' le_trans _ (mul_le_mul_right' h2i _)
+    rw [right_distrib]
+    apply add_le_add <;> apply mul_le_mul_left' <;> apply prod_le_prod' <;>
+            simp only [and_imp, mem_sdiff, mem_singleton] <;>
+          intros <;>
+        apply_assumption <;>
+      assumption
 #align finset.prod_add_prod_le' Finset.prod_add_prod_le'
 
 end CanonicallyOrderedCommSemiring
@@ -3812,14 +3780,13 @@ theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop 
 
 /-- A sum of numbers is infinite iff one of them is infinite -/
 theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
-    (∑ i in s, f i) = ⊤ ↔ ∃ i ∈ s, f i = ⊤ := by classical
-  constructor
-  · contrapose!
-    exact fun h => (sum_lt_top fun i hi => h i hi).Ne
-    
-  · rintro ⟨i, his, hi⟩
-    rw [sum_eq_add_sum_diff_singleton his, hi, top_add]
-    
+    (∑ i in s, f i) = ⊤ ↔ ∃ i ∈ s, f i = ⊤ := by
+  classical 
+    constructor
+    · contrapose!
+      exact fun h => (sum_lt_top fun i hi => h i hi).Ne
+    · rintro ⟨i, his, hi⟩
+      rw [sum_eq_add_sum_diff_singleton his, hi, top_add]
 #align with_top.sum_eq_top_iff WithTop.sum_eq_top_iff
 
 /-- A sum of finite numbers is still finite -/
@@ -3839,10 +3806,8 @@ theorem AbsoluteValue.sum_le [Semiring R] [OrderedSemiring S] (abv : AbsoluteVal
   letI := Classical.decEq ι
   refine' Finset.induction_on s _ fun i s hi ih => _
   · simp
-    
   · simp only [Finset.sum_insert hi]
     exact (abv.add_le _ _).trans (add_le_add le_rfl ih)
-    
 #align absolute_value.sum_le AbsoluteValue.sum_le
 
 theorem IsAbsoluteValue.abv_sum [Semiring R] [OrderedSemiring S] (abv : R → S) [IsAbsoluteValue abv]

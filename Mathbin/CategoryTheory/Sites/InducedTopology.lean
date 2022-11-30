@@ -63,10 +63,8 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
   constructor
   · intro hS
     exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩
-    
   · rintro ⟨T, rfl⟩
     exact Hld T
-    
 #align
   category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback
 
@@ -74,9 +72,11 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 -/
 @[simps]
-def inducedTopology : GrothendieckTopology C where
+def inducedTopology :
+    GrothendieckTopology
+      C where 
   sieves X S := K _ (S.functorPushforward G)
-  top_mem' X := by
+  top_mem' X := by 
     change K _ _
     rw [sieve.functor_pushforward_top]
     exact K.top_mem _
@@ -89,7 +89,7 @@ def inducedTopology : GrothendieckTopology C where
     rw [this]
     change K _ _
     apply Hld ⟨_, K.pullback_stable (G.map f) hS⟩
-  transitive' X S hS S' H' := by
+  transitive' X S hS S' H' := by 
     apply K.transitive hS
     rintro Y _ ⟨Z, g, i, hg, rfl⟩
     rw [sieve.pullback_comp]
@@ -140,10 +140,8 @@ theorem overForgetLocallyCoverDense (X : C) : LocallyCoverDense J (Over.forget X
   constructor
   · rintro ⟨_, _, g', hg, rfl⟩
     exact T.val.downward_closed hg g'
-    
   · intro hf
     exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩
-    
 #align category_theory.over_forget_locally_cover_dense CategoryTheory.overForgetLocallyCoverDense
 
 end

@@ -29,7 +29,7 @@ open ZeroObject
 
 theorem is_iso_of_short_exact_of_is_iso_of_is_iso (h : ShortExact f g) (h' : ShortExact f' g')
     (i₁ : A ⟶ A') (i₂ : B ⟶ B') (i₃ : C ⟶ C') (comm₁ : i₁ ≫ f' = f ≫ i₂) (comm₂ : i₂ ≫ g' = g ≫ i₃)
-    [IsIso i₁] [IsIso i₃] : IsIso i₂ := by
+    [IsIso i₁] [IsIso i₃] : IsIso i₂ := by 
   obtain ⟨_⟩ := h
   obtain ⟨_⟩ := h'
   skip
@@ -50,8 +50,10 @@ together with proofs that `f` is mono and `g` is epi.
 
 The morphism `i` is then automatically an isomorphism. -/
 def Splitting.mk' (h : ShortExact f g) (i : B ⟶ A ⊞ C) (h1 : f ≫ i = biprod.inl)
-    (h2 : i ≫ biprod.snd = g) : Splitting f g where
-  Iso := by
+    (h2 : i ≫ biprod.snd = g) :
+    Splitting f
+      g where 
+  Iso := by 
     refine' @as_iso _ _ _ _ i (id _)
     refine'
       is_iso_of_short_exact_of_is_iso_of_is_iso h _ _ _ _ (h1.trans (category.id_comp _).symm).symm
@@ -69,8 +71,10 @@ together with proofs that `f` is mono and `g` is epi.
 
 The morphism `i` is then automatically an isomorphism. -/
 def Splitting.mk'' (h : ShortExact f g) (i : A ⊞ C ⟶ B) (h1 : biprod.inl ≫ i = f)
-    (h2 : i ≫ g = biprod.snd) : Splitting f g where
-  Iso := by
+    (h2 : i ≫ g = biprod.snd) :
+    Splitting f
+      g where 
+  Iso := by 
     refine' (@as_iso _ _ _ _ i (id _)).symm
     refine'
       is_iso_of_short_exact_of_is_iso_of_is_iso _ h _ _ _ (h1.trans (category.id_comp _).symm).symm
@@ -84,24 +88,20 @@ def Splitting.mk'' (h : ShortExact f g) (i : A ⊞ C ⟶ B) (h1 : biprod.inl ≫
 /-- A short exact sequence that is left split admits a splitting. -/
 def LeftSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : Splitting f g :=
   Splitting.mk' h.ShortExact (biprod.lift h.LeftSplit.some g)
-    (by
+    (by 
       ext
       · simpa only [biprod.inl_fst, biprod.lift_fst, category.assoc] using h.left_split.some_spec
-        
-      · simp only [biprod.inl_snd, biprod.lift_snd, category.assoc, h.exact.w]
-        )
+      · simp only [biprod.inl_snd, biprod.lift_snd, category.assoc, h.exact.w])
     (by simp only [biprod.lift_snd])
 #align category_theory.left_split.splitting CategoryTheory.LeftSplit.splitting
 
 /-- A short exact sequence that is right split admits a splitting. -/
 def RightSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : Splitting f g :=
   Splitting.mk'' h.ShortExact (biprod.desc f h.RightSplit.some) (biprod.inl_desc _ _)
-    (by
+    (by 
       ext
       · rw [biprod.inl_snd, ← category.assoc, biprod.inl_desc, h.exact.w]
-        
-      · rw [biprod.inr_snd, ← category.assoc, biprod.inr_desc, h.right_split.some_spec]
-        )
+      · rw [biprod.inr_snd, ← category.assoc, biprod.inr_desc, h.right_split.some_spec])
 #align category_theory.right_split.splitting CategoryTheory.RightSplit.splitting
 
 end CategoryTheory

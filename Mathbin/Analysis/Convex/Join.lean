@@ -139,22 +139,16 @@ theorem convex_join_assoc_aux (s t u : Set E) :
   · refine' ⟨x, hx, y, ⟨y, hy, z, hz, left_mem_segment _ _ _⟩, a₁, b₁, ha₁, hb₁, hab₁, _⟩
     rw [add_zero] at hab₂
     rw [hab₂, one_smul, zero_smul, add_zero]
-    
   have ha₂b₁ : 0 ≤ a₂ * b₁ := mul_nonneg ha₂ hb₁
   have hab : 0 < a₂ * b₁ + b₂ := add_pos_of_nonneg_of_pos ha₂b₁ hb₂
   refine'
     ⟨x, hx, (a₂ * b₁ / (a₂ * b₁ + b₂)) • y + (b₂ / (a₂ * b₁ + b₂)) • z,
       ⟨y, hy, z, hz, _, _, _, _, _, rfl⟩, a₂ * a₁, a₂ * b₁ + b₂, mul_nonneg ha₂ ha₁, hab.le, _, _⟩
   · exact div_nonneg ha₂b₁ hab.le
-    
   · exact div_nonneg hb₂.le hab.le
-    
   · rw [← add_div, div_self hab.ne']
-    
   · rw [← add_assoc, ← mul_add, hab₁, mul_one, hab₂]
-    
   · simp_rw [smul_add, ← mul_smul, mul_div_cancel' _ hab.ne', add_assoc]
-    
 #align convex_join_assoc_aux convex_join_assoc_aux
 
 theorem convex_join_assoc (s t u : Set E) :
@@ -181,48 +175,45 @@ theorem convex_join_convex_join_convex_join_comm (s t u v : Set E) :
 #align convex_join_convex_join_convex_join_comm convex_join_convex_join_convex_join_comm
 
 theorem convex_hull_insert (hs : s.Nonempty) :
-    convexHull 𝕜 (insert x s) = convexJoin 𝕜 {x} (convexHull 𝕜 s) := by classical
-  refine'
-    (convex_join_subset ((singleton_subset_iff.2 <| mem_insert _ _).trans <| subset_convex_hull _ _)
-            (convex_hull_mono <| subset_insert _ _) <|
-          convex_convex_hull _ _).antisymm'
-      fun x hx => _
-  rw [convex_hull_eq] at hx
-  obtain ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩ := hx
-  have :
-    ((∑ i in t.filter fun i => z i = x, w i) • x + ∑ i in t.filter fun i => z i ≠ x, w i • z i) =
-      t.center_mass w z :=
-    by
-    rw [Finset.center_mass_eq_of_sum_1 _ _ hw₁, Finset.sum_smul]
-    convert Finset.sum_filter_add_sum_filter_not _ _ (w • z) using 2
-    refine' Finset.sum_congr rfl fun i hi => _
-    rw [Pi.smul_apply', (Finset.mem_filter.1 hi).2]
-  rw [← this]
-  have hw₀' : ∀ i ∈ t.filter fun i => z i ≠ x, 0 ≤ w i := fun i hi =>
-    hw₀ _ <| Finset.filter_subset _ _ hi
-  obtain hw | hw := (Finset.sum_nonneg hw₀').eq_or_gt
-  · rw [← Finset.sum_filter_add_sum_filter_not _ fun i => z i = x, hw, add_zero] at hw₁
-    rw [hw₁, one_smul, Finset.sum_eq_zero, add_zero]
-    · exact subset_convex_join_left hs.convex_hull (mem_singleton _)
-      
-    simp_rw [Finset.sum_eq_zero_iff_of_nonneg hw₀'] at hw
-    rintro i hi
-    rw [hw _ hi, zero_smul]
-    
-  refine'
-    mem_convex_join.2
-      ⟨x, mem_singleton _, (t.filter fun i => z i ≠ x).centerMass w z,
-        Finset.center_mass_mem_convex_hull _ hw₀' hw fun i hi => _,
-        ∑ i in t.filter fun i => z i = x, w i, ∑ i in t.filter fun i => z i ≠ x, w i,
-        Finset.sum_nonneg fun i hi => hw₀ _ <| Finset.filter_subset _ _ hi, Finset.sum_nonneg hw₀',
-        _, _⟩
-  · rw [Finset.mem_filter] at hi
-    exact mem_of_mem_insert_of_ne (hz _ hi.1) hi.2
-    
-  · rw [Finset.sum_filter_add_sum_filter_not, hw₁]
-    
-  · rw [Finset.centerMass, smul_inv_smul₀ hw.ne', Finset.sum_smul]
-    
+    convexHull 𝕜 (insert x s) = convexJoin 𝕜 {x} (convexHull 𝕜 s) := by
+  classical 
+    refine'
+      (convex_join_subset
+              ((singleton_subset_iff.2 <| mem_insert _ _).trans <| subset_convex_hull _ _)
+              (convex_hull_mono <| subset_insert _ _) <|
+            convex_convex_hull _ _).antisymm'
+        fun x hx => _
+    rw [convex_hull_eq] at hx
+    obtain ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩ := hx
+    have :
+      ((∑ i in t.filter fun i => z i = x, w i) • x + ∑ i in t.filter fun i => z i ≠ x, w i • z i) =
+        t.center_mass w z :=
+      by 
+      rw [Finset.center_mass_eq_of_sum_1 _ _ hw₁, Finset.sum_smul]
+      convert Finset.sum_filter_add_sum_filter_not _ _ (w • z) using 2
+      refine' Finset.sum_congr rfl fun i hi => _
+      rw [Pi.smul_apply', (Finset.mem_filter.1 hi).2]
+    rw [← this]
+    have hw₀' : ∀ i ∈ t.filter fun i => z i ≠ x, 0 ≤ w i := fun i hi =>
+      hw₀ _ <| Finset.filter_subset _ _ hi
+    obtain hw | hw := (Finset.sum_nonneg hw₀').eq_or_gt
+    · rw [← Finset.sum_filter_add_sum_filter_not _ fun i => z i = x, hw, add_zero] at hw₁
+      rw [hw₁, one_smul, Finset.sum_eq_zero, add_zero]
+      · exact subset_convex_join_left hs.convex_hull (mem_singleton _)
+      simp_rw [Finset.sum_eq_zero_iff_of_nonneg hw₀'] at hw
+      rintro i hi
+      rw [hw _ hi, zero_smul]
+    refine'
+      mem_convex_join.2
+        ⟨x, mem_singleton _, (t.filter fun i => z i ≠ x).centerMass w z,
+          Finset.center_mass_mem_convex_hull _ hw₀' hw fun i hi => _,
+          ∑ i in t.filter fun i => z i = x, w i, ∑ i in t.filter fun i => z i ≠ x, w i,
+          Finset.sum_nonneg fun i hi => hw₀ _ <| Finset.filter_subset _ _ hi,
+          Finset.sum_nonneg hw₀', _, _⟩
+    · rw [Finset.mem_filter] at hi
+      exact mem_of_mem_insert_of_ne (hz _ hi.1) hi.2
+    · rw [Finset.sum_filter_add_sum_filter_not, hw₁]
+    · rw [Finset.centerMass, smul_inv_smul₀ hw.ne', Finset.sum_smul]
 #align convex_hull_insert convex_hull_insert
 
 theorem convex_join_segments (a b c d : E) :

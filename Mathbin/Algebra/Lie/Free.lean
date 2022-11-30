@@ -159,25 +159,30 @@ instance {S : Type _} [Semiring S] [Module S R] [IsScalarTower S R R] :
 
 /-- Note that here we turn the `has_mul` coming from the `non_unital_non_assoc_semiring` structure
 on `lib R X` into a `has_bracket` on `free_lie_algebra`. -/
-instance : LieRing (FreeLieAlgebra R X) where
+instance :
+    LieRing
+      (FreeLieAlgebra R
+        X) where 
   bracket := Quot.map₂ (· * ·) (fun _ _ _ => Rel.mul_left _) fun _ _ _ => Rel.mul_right _
-  add_lie := by
+  add_lie := by 
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Quot.mk _ _ = Quot.mk _ _
     rw [add_mul]
-  lie_add := by
+  lie_add := by 
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Quot.mk _ _ = Quot.mk _ _
     rw [mul_add]
-  lie_self := by
+  lie_self := by 
     rintro ⟨a⟩
     exact Quot.sound (rel.lie_self a)
-  leibniz_lie := by
+  leibniz_lie := by 
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     exact Quot.sound (rel.leibniz_lie a b c)
 
 instance :
-    LieAlgebra R (FreeLieAlgebra R X) where lie_smul := by
+    LieAlgebra R
+      (FreeLieAlgebra R
+        X) where lie_smul := by 
     rintro t ⟨a⟩ ⟨c⟩
     change Quot.mk _ (a • t • c) = Quot.mk _ (t • a • c)
     rw [← smul_comm]
@@ -212,7 +217,7 @@ theorem lift_aux_map_mul (f : X → L) (a b : lib R X) :
 #align free_lie_algebra.lift_aux_map_mul FreeLieAlgebra.lift_aux_map_mul
 
 theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) :
-    liftAux R f a = liftAux R f b := by
+    liftAux R f a = liftAux R f b := by 
   induction h
   case lie_self a' => simp only [lift_aux_map_mul, NonUnitalAlgHom.map_zero, lie_self]
   case leibniz_lie a' b' c' =>
@@ -224,7 +229,10 @@ theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X 
 #align free_lie_algebra.lift_aux_spec FreeLieAlgebra.lift_aux_spec
 
 /-- The quotient map as a `non_unital_alg_hom`. -/
-def mk : lib R X →ₙₐ[R] CommutatorRing (FreeLieAlgebra R X) where
+def mk :
+    lib R X →ₙₐ[R]
+      CommutatorRing (FreeLieAlgebra R
+          X) where 
   toFun := Quot.mk (Rel R X)
   map_smul' t a := rfl
   map_zero' := rfl
@@ -234,26 +242,29 @@ def mk : lib R X →ₙₐ[R] CommutatorRing (FreeLieAlgebra R X) where
 
 /-- The functor `X ↦ free_lie_algebra R X` from the category of types to the category of Lie
 algebras over `R` is adjoint to the forgetful functor in the other direction. -/
-def lift : (X → L) ≃ (FreeLieAlgebra R X →ₗ⁅R⁆ L) where
+def lift :
+    (X → L) ≃
+      (FreeLieAlgebra R X →ₗ⁅R⁆
+        L) where 
   toFun f :=
     { toFun := fun c => Quot.liftOn c (liftAux R f) (lift_aux_spec R f),
-      map_add' := by
+      map_add' := by 
         rintro ⟨a⟩ ⟨b⟩
         rw [← lift_aux_map_add]
         rfl,
-      map_smul' := by
+      map_smul' := by 
         rintro t ⟨a⟩
         rw [← lift_aux_map_smul]
         rfl,
-      map_lie' := by
+      map_lie' := by 
         rintro ⟨a⟩ ⟨b⟩
         rw [← lift_aux_map_mul]
         rfl }
   invFun F := F ∘ of R
-  left_inv f := by
+  left_inv f := by 
     ext x
     simp only [lift_aux, of, Quot.liftOn_mk, LieHom.coe_mk, Function.comp_apply, lib.lift_of_apply]
-  right_inv F := by
+  right_inv F := by 
     ext ⟨a⟩
     let F' := F.to_non_unital_alg_hom.comp (mk R)
     exact NonUnitalAlgHom.congr_fun (lib.lift_comp_of R F') a
@@ -287,7 +298,7 @@ theorem lift_comp_of (F : FreeLieAlgebra R X →ₗ⁅R⁆ L) : lift R (F ∘ of
   exact (lift R).apply_symm_apply F
 #align free_lie_algebra.lift_comp_of FreeLieAlgebra.lift_comp_of
 
-@[ext.1]
+@[ext]
 theorem hom_ext {F₁ F₂ : FreeLieAlgebra R X →ₗ⁅R⁆ L} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) :
     F₁ = F₂ :=
   have h' : (lift R).symm F₁ = (lift R).symm F₂ := by ext; simp [h]
@@ -303,10 +314,10 @@ def universalEnvelopingEquivFreeAlgebra :
     UniversalEnvelopingAlgebra R (FreeLieAlgebra R X) ≃ₐ[R] FreeAlgebra R X :=
   AlgEquiv.ofAlgHom (UniversalEnvelopingAlgebra.lift R <| FreeLieAlgebra.lift R <| FreeAlgebra.ι R)
     (FreeAlgebra.lift R <| UniversalEnvelopingAlgebra.ι R ∘ FreeLieAlgebra.of R)
-    (by
+    (by 
       ext
       simp)
-    (by
+    (by 
       ext
       simp)
 #align

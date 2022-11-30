@@ -71,10 +71,10 @@ def recOnMul {C : FreeMagma α → Sort l} (x) (ih1 : ∀ x, C (of x))
   FreeMagma.recOn x ih1 ih2
 #align free_magma.rec_on_mul FreeMagma.recOnMul
 
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem hom_ext {β : Type v} [Mul β] {f g : FreeMagma α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
   (FunLike.ext _ _) fun x =>
-    recOnMul x (congr_fun h) <| by
+    recOnMul x (congr_fun h) <| by 
       intros
       simp only [map_mul, *]
 #align free_magma.hom_ext FreeMagma.hom_ext
@@ -105,13 +105,16 @@ variable {α : Type u} {β : Type v} [Mul β] (f : α → β)
 /-- The universal property of the free magma expressing its adjointness. -/
 @[to_additive "The universal property of the free additive magma expressing its adjointness.",
   simps symmApply]
-def lift : (α → β) ≃ (FreeMagma α →ₙ* β) where
+def lift :
+    (α → β) ≃
+      (FreeMagma α →ₙ*
+        β) where 
   toFun f := { toFun := liftAux f, map_mul' := fun x y => rfl }
   invFun F := F ∘ of
-  left_inv f := by
+  left_inv f := by 
     ext
     rfl
-  right_inv F := by
+  right_inv F := by 
     ext
     rfl
 #align free_magma.lift FreeMagma.lift
@@ -157,7 +160,7 @@ section Category
 variable {α β : Type u}
 
 @[to_additive]
-instance : Monad FreeMagma where
+instance : Monad FreeMagma where 
   pure _ := of
   bind _ _ x f := lift f x
 
@@ -200,7 +203,7 @@ theorem mul_seq {α β : Type u} {f g : FreeMagma (α → β)} {x : FreeMagma α
 #align free_magma.mul_seq FreeMagma.mul_seq
 
 @[to_additive]
-instance : LawfulMonad FreeMagma.{u} where
+instance : LawfulMonad FreeMagma.{u} where 
   pure_bind _ _ _ _ := rfl
   bind_assoc α β γ x f g :=
     FreeMagma.recOnPure x (fun x => rfl) fun x y ih1 ih2 => by
@@ -369,22 +372,20 @@ theorem quot_mk_assoc_left (x y z w : α) :
 #align magma.assoc_quotient.quot_mk_assoc_left Magma.AssocQuotient.quot_mk_assoc_left
 
 @[to_additive]
-instance : Semigroup (AssocQuotient α) where
-  mul x y := by
+instance :
+    Semigroup
+      (AssocQuotient
+        α) where 
+  mul x y := by 
     refine' Quot.liftOn₂ x y (fun x y => Quot.mk _ (x * y)) _ _
     · rintro a b₁ b₂ (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only
       · exact quot_mk_assoc_left _ _ _ _
-        
       · rw [← quot_mk_assoc, quot_mk_assoc_left, quot_mk_assoc]
-        
-      
     · rintro a₁ a₂ b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only
       · simp only [quot_mk_assoc, quot_mk_assoc_left]
-        
-      · rw [quot_mk_assoc, quot_mk_assoc, quot_mk_assoc_left, quot_mk_assoc_left,
+      ·
+        rw [quot_mk_assoc, quot_mk_assoc, quot_mk_assoc_left, quot_mk_assoc_left,
           quot_mk_assoc_left, ← quot_mk_assoc c d, ← quot_mk_assoc c d, quot_mk_assoc_left]
-        
-      
   mul_assoc x y z := (Quot.induction_on₃ x y z) fun p q r => quot_mk_assoc p q r
 
 /-- Embedding from magma to its free semigroup. -/
@@ -407,7 +408,7 @@ section lift
 
 variable {β : Type v} [Semigroup β] (f : α →ₙ* β)
 
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem hom_ext {f g : AssocQuotient α →ₙ* β} (h : f.comp of = g.comp of) : f = g :=
   (FunLike.ext _ _) fun x => AssocQuotient.induction_on x <| FunLike.congr_fun h
 #align magma.assoc_quotient.hom_ext Magma.AssocQuotient.hom_ext
@@ -417,7 +418,10 @@ given a semigroup `β`. -/
 @[to_additive
       "Lifts an additive magma homomorphism `α → β` to an additive semigroup homomorphism\n`add_magma.assoc_quotient α → β` given an additive semigroup `β`.",
   simps symmApply]
-def lift : (α →ₙ* β) ≃ (AssocQuotient α →ₙ* β) where
+def lift :
+    (α →ₙ* β) ≃
+      (AssocQuotient α →ₙ*
+        β) where 
   toFun f :=
     { toFun := fun x =>
         Quot.liftOn x f <| by
@@ -465,14 +469,14 @@ end AssocQuotient
 end Magma
 
 /-- Free additive semigroup over a given alphabet. -/
-@[ext.1]
+@[ext]
 structure FreeAddSemigroup (α : Type u) where
   head : α
   tail : List α
 #align free_add_semigroup FreeAddSemigroup
 
 /-- Free semigroup over a given alphabet. -/
-@[ext.1, to_additive]
+@[ext, to_additive]
 structure FreeSemigroup (α : Type u) where
   head : α
   tail : List α
@@ -483,7 +487,9 @@ namespace FreeSemigroup
 variable {α : Type u}
 
 @[to_additive]
-instance : Semigroup (FreeSemigroup α) where
+instance :
+    Semigroup (FreeSemigroup
+        α) where 
   mul L1 L2 := ⟨L1.1, L1.2 ++ L2.1 :: L2.2⟩
   mul_assoc L1 L2 L3 := ext _ _ rfl <| List.append_assoc _ _ _
 
@@ -536,7 +542,7 @@ protected def recOnMul {C : FreeSemigroup α → Sort l} (x) (ih1 : ∀ x, C (of
     List.recOn s ih1 (fun hd tl ih f => ih2 f ⟨hd, tl⟩ (ih1 f) (ih hd)) f
 #align free_semigroup.rec_on_mul FreeSemigroup.recOnMul
 
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem hom_ext {β : Type v} [Mul β] {f g : FreeSemigroup α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
   (FunLike.ext _ _) fun x =>
     (FreeSemigroup.recOnMul x (congr_fun h)) fun x y hx hy => by simp only [map_mul, *]
@@ -551,7 +557,10 @@ a semigroup `β`. -/
 @[to_additive
       "Lifts a function `α → β` to an additive semigroup homomorphism\n`free_add_semigroup α → β` given an additive semigroup `β`.",
   simps symmApply]
-def lift : (α → β) ≃ (FreeSemigroup α →ₙ* β) where
+def lift :
+    (α → β) ≃
+      (FreeSemigroup α →ₙ*
+        β) where 
   toFun f :=
     { toFun := fun x => x.2.foldl (fun a b => a * f b) (f x.1),
       map_mul' := fun x y => by
@@ -610,7 +619,7 @@ section Category
 variable {β : Type u}
 
 @[to_additive]
-instance : Monad FreeSemigroup where
+instance : Monad FreeSemigroup where 
   pure _ := of
   bind _ _ x f := lift f x
 
@@ -654,7 +663,7 @@ theorem mul_seq {f g : FreeSemigroup (α → β)} {x : FreeSemigroup α} :
 #align free_semigroup.mul_seq FreeSemigroup.mul_seq
 
 @[to_additive]
-instance : LawfulMonad FreeSemigroup.{u} where
+instance : LawfulMonad FreeSemigroup.{u} where 
   pure_bind _ _ _ _ := rfl
   bind_assoc α β γ x f g :=
     recOnPure x (fun x => rfl) fun x y ih1 ih2 => by rw [mul_bind, mul_bind, mul_bind, ih1, ih2]
@@ -795,10 +804,10 @@ def freeMagmaAssocQuotientEquiv (α : Type u) :
     Magma.AssocQuotient (FreeMagma α) ≃* FreeSemigroup α :=
   (Magma.AssocQuotient.lift FreeMagma.toFreeSemigroup).toMulEquiv
     (FreeSemigroup.lift (Magma.AssocQuotient.of ∘ FreeMagma.of))
-    (by
+    (by 
       ext
       rfl)
-    (by
+    (by 
       ext1
       rfl)
 #align free_magma_assoc_quotient_equiv freeMagmaAssocQuotientEquiv

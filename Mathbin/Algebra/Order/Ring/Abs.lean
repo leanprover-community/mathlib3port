@@ -64,11 +64,9 @@ theorem abs_cases (a : α) : |a| = a ∧ 0 ≤ a ∨ |a| = -a ∧ a < 0 := by
   by_cases 0 ≤ a
   · left
     exact ⟨abs_eq_self.mpr h, h⟩
-    
   · right
     push_neg  at h
     exact ⟨abs_eq_neg_self.mpr (le_of_lt h), h⟩
-    
 #align abs_cases abs_cases
 
 @[simp]

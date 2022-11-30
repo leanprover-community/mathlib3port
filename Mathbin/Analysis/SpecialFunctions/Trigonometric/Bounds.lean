@@ -39,7 +39,6 @@ open Real
 theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
   cases' lt_or_le 1 x with h' h'
   · exact (sin_le_one x).trans_lt h'
-    
   have hx : |x| = x := abs_of_nonneg h.le
   have := le_of_abs_le (sin_bound <| show |x| ≤ 1 by rwa [hx])
   rw [sub_le_iff_le_add', hx] at this
@@ -98,13 +97,12 @@ theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
     intro y hy
     have := cos_pos (interior_subset hy)
     simp only [deriv_tan_sub_id y this.ne', one_div, gt_iff_lt, sub_pos]
-    have bd2 : cos y ^ 2 < 1 := by
+    have bd2 : cos y ^ 2 < 1 := by 
       apply lt_of_le_of_ne y.cos_sq_le_one
       rw [cos_sq']
       simpa only [Ne.def, sub_eq_self, pow_eq_zero_iff, Nat.succ_pos'] using (sin_pos hy).ne'
     rwa [lt_inv, inv_one]
     · exact zero_lt_one
-      
     simpa only [sq, mul_self_pos] using this.ne'
   have mono := Convex.strict_mono_on_of_deriv_pos (convex_Ico 0 (π / 2)) tan_minus_id_cts deriv_pos
   have zero_in_U : (0 : ℝ) ∈ U := by rwa [left_mem_Ico]

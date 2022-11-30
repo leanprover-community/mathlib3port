@@ -69,7 +69,8 @@ unsafe def assert_not_exists (_ : parse <| tk "assert_not_exists") : lean.parser
 #align assert_not_exists assert_not_exists
 
 /-- A linter for checking that the declarations marked `assert_not_exists` eventually exist. -/
-unsafe def assert_not_exists.linter : linter where
+unsafe def assert_not_exists.linter :
+    linter where 
   test d := do
     let n := d.to_name
     let tt ← pure (`assert_not_exists._checked.isPrefixOf n) |
@@ -139,7 +140,8 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
 #align assert_no_instance assert_no_instance
 
 /-- A linter for checking that the declarations marked `assert_no_instance` eventually exist. -/
-unsafe def assert_no_instance.linter : linter where
+unsafe def assert_no_instance.linter :
+    linter where 
   test d := do
     let n := d.to_name
     let tt ← pure (`assert_no_instance._checked.isPrefixOf n) |

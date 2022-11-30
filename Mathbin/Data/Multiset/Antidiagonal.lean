@@ -40,7 +40,7 @@ theorem antidiagonal_coe' (l : List α) : @antidiagonal α l = revzip (powersetA
 @[simp]
 theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} :
     x ∈ antidiagonal s ↔ x.1 + x.2 = s :=
-  (Quotient.induction_on s) fun l => by
+  (Quotient.induction_on s) fun l => by 
     simp [antidiagonal_coe]; refine' ⟨fun h => revzip_powerset_aux h, fun h => _⟩
     haveI := Classical.decEq α
     simp [revzip_powerset_aux_lemma l revzip_powerset_aux, h.symm]
@@ -72,24 +72,19 @@ theorem antidiagonal_cons (a : α) (s) :
     simp only [revzip, reverse_append, quot_mk_to_coe, coe_eq_coe, powerset_aux'_cons, cons_coe,
       coe_map, antidiagonal_coe', coe_add]
     rw [← zip_map, ← zip_map, zip_append, (_ : _ ++ _ = _)]
-    · congr <;> simp
-      ;
-    · simp
-      
+    · congr <;> simp; · simp
 #align multiset.antidiagonal_cons Multiset.antidiagonal_cons
 
 theorem antidiagonal_eq_map_powerset [DecidableEq α] (s : Multiset α) :
     s.antidiagonal = s.powerset.map fun t => (s - t, t) := by
   induction' s using Multiset.induction_on with a s hs
   · simp only [antidiagonal_zero, powerset_zero, zero_tsub, map_singleton]
-    
   · simp_rw [antidiagonal_cons, powerset_cons, map_add, hs, map_map, Function.comp, Prod.map_mk,
       id.def, sub_cons, erase_cons_head]
     rw [add_comm]
     congr 1
     refine' Multiset.map_congr rfl fun x hx => _
     rw [cons_sub_of_le _ (mem_powerset.mp hx)]
-    
 #align multiset.antidiagonal_eq_map_powerset Multiset.antidiagonal_eq_map_powerset
 
 @[simp]
@@ -100,16 +95,14 @@ theorem card_antidiagonal (s : Multiset α) : card (antidiagonal s) = 2 ^ card s
 theorem prod_map_add [CommSemiring β] {s : Multiset α} {f g : α → β} :
     prod (s.map fun a => f a + g a) =
       sum ((antidiagonal s).map fun p => (p.1.map f).Prod * (p.2.map g).Prod) :=
-  by
+  by 
   refine' s.induction_on _ _
   · simp
-    
   · intro a s ih
     have := @sum_map_mul_left α β _
     simp [ih, add_mul, mul_comm, mul_left_comm (f a), mul_left_comm (g a), mul_assoc,
       sum_map_mul_left.symm]
     cc
-    
 #align multiset.prod_map_add Multiset.prod_map_add
 
 end Multiset

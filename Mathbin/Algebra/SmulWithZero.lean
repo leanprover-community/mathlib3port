@@ -48,14 +48,16 @@ class SmulWithZero [Zero R] [Zero M] extends SmulZeroClass R M where
   zero_smul : ∀ m : M, (0 : R) • m = 0
 #align smul_with_zero SmulWithZero
 
-instance MulZeroClass.toSmulWithZero [MulZeroClass R] : SmulWithZero R R where
+instance MulZeroClass.toSmulWithZero [MulZeroClass R] :
+    SmulWithZero R R where 
   smul := (· * ·)
   smul_zero := mul_zero
   zero_smul := zero_mul
 #align mul_zero_class.to_smul_with_zero MulZeroClass.toSmulWithZero
 
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
-instance MulZeroClass.toOppositeSmulWithZero [MulZeroClass R] : SmulWithZero Rᵐᵒᵖ R where
+instance MulZeroClass.toOppositeSmulWithZero [MulZeroClass R] :
+    SmulWithZero Rᵐᵒᵖ R where 
   smul := (· • ·)
   smul_zero r := zero_mul _
   zero_smul := mul_zero
@@ -74,7 +76,8 @@ variable {R M} [Zero R'] [Zero M'] [HasSmul R M']
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
-    (smul : ∀ (a : R) (b), f (a • b) = a • f b) : SmulWithZero R M' where
+    (smul : ∀ (a : R) (b), f (a • b) = a • f b) :
+    SmulWithZero R M' where 
   smul := (· • ·)
   zero_smul a := hf <| by simp [smul]
   smul_zero a := hf <| by simp [smul]
@@ -84,9 +87,10 @@ protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
-    (smul : ∀ (a : R) (b), f (a • b) = a • f b) : SmulWithZero R M' where
+    (smul : ∀ (a : R) (b), f (a • b) = a • f b) :
+    SmulWithZero R M' where 
   smul := (· • ·)
-  zero_smul m := by
+  zero_smul m := by 
     rcases hf m with ⟨x, rfl⟩
     simp [← smul]
   smul_zero c := by simp only [← f.map_zero, ← smul, smul_zero]
@@ -95,7 +99,8 @@ protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function
 variable (M)
 
 /-- Compose a `smul_with_zero` with a `zero_hom`, with action `f r' • m` -/
-def SmulWithZero.compHom (f : ZeroHom R' R) : SmulWithZero R' M where
+def SmulWithZero.compHom (f : ZeroHom R' R) :
+    SmulWithZero R' M where 
   smul := (· • ·) ∘ f
   smul_zero m := by simp
   zero_smul m := by simp
@@ -103,12 +108,14 @@ def SmulWithZero.compHom (f : ZeroHom R' R) : SmulWithZero R' M where
 
 end Zero
 
-instance AddMonoid.natSmulWithZero [AddMonoid M] : SmulWithZero ℕ M where
+instance AddMonoid.natSmulWithZero [AddMonoid M] :
+    SmulWithZero ℕ M where 
   smul_zero := nsmul_zero
   zero_smul := zero_nsmul
 #align add_monoid.nat_smul_with_zero AddMonoid.natSmulWithZero
 
-instance AddGroup.intSmulWithZero [AddGroup M] : SmulWithZero ℤ M where
+instance AddGroup.intSmulWithZero [AddGroup M] :
+    SmulWithZero ℤ M where 
   smul_zero := zsmul_zero
   zero_smul := zero_zsmul
 #align add_group.int_smul_with_zero AddGroup.intSmulWithZero
@@ -178,16 +185,13 @@ section GroupWithZero
 variable {α β : Type _} [GroupWithZero α] [GroupWithZero β] [MulActionWithZero α β]
 
 theorem smul_inv₀ [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) :
-    (c • x)⁻¹ = c⁻¹ • x⁻¹ := by
+    (c • x)⁻¹ = c⁻¹ • x⁻¹ := by 
   obtain rfl | hc := eq_or_ne c 0
   · simp only [inv_zero, zero_smul]
-    
   obtain rfl | hx := eq_or_ne x 0
   · simp only [inv_zero, smul_zero]
-    
   · refine' inv_eq_of_mul_eq_one_left _
     rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul]
-    
 #align smul_inv₀ smul_inv₀
 
 end GroupWithZero

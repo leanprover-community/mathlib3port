@@ -64,7 +64,7 @@ theorem rotate'_eq_drop_append_take :
     ∀ {l : List α} {n : ℕ}, n ≤ l.length → l.rotate' n = l.drop n ++ l.take n
   | [], n, h => by simp [drop_append_of_le_length h]
   | l, 0, h => by simp [take_append_of_le_length h]
-  | a :: l, n + 1, h => by
+  | a :: l, n + 1, h => by 
     have hnl : n ≤ l.length := le_of_succ_le_succ h
     have hnl' : n ≤ (l ++ [a]).length := by
       rw [length_append, length_cons, List.length, zero_add] <;> exact le_of_succ_le h
@@ -140,7 +140,6 @@ theorem rotate_eq_drop_append_take_mod {l : List α} {n : ℕ} :
     l.rotate n = l.drop (n % l.length) ++ l.take (n % l.length) := by
   cases' l.length.zero_le.eq_or_lt with hl hl
   · simp [eq_nil_of_length_eq_zero hl.symm]
-    
   rw [← rotate_eq_drop_append_take (n.mod_lt hl).le, rotate_mod]
 #align list.rotate_eq_drop_append_take_mod List.rotate_eq_drop_append_take_mod
 
@@ -149,9 +148,7 @@ theorem rotate_append_length_eq (l l' : List α) : (l ++ l').rotate l.length = l
   rw [rotate_eq_rotate']
   induction l generalizing l'
   · simp
-    
   · simp [rotate', l_ih]
-    
 #align list.rotate_append_length_eq List.rotate_append_length_eq
 
 theorem rotate_rotate (l : List α) (n m : ℕ) : (l.rotate n).rotate m = l.rotate (n + m) := by
@@ -182,14 +179,10 @@ theorem rotate_perm (l : List α) (n : ℕ) : l.rotate n ~ l := by
   rw [rotate_eq_rotate']
   induction' n with n hn generalizing l
   · simp
-    
   · cases' l with hd tl
     · simp
-      
     · rw [rotate'_cons_succ]
       exact (hn _).trans (perm_append_singleton _ _)
-      
-    
 #align list.rotate_perm List.rotate_perm
 
 @[simp]
@@ -201,13 +194,9 @@ theorem nodup_rotate {l : List α} {n : ℕ} : Nodup (l.rotate n) ↔ Nodup l :=
 theorem rotate_eq_nil_iff {l : List α} {n : ℕ} : l.rotate n = [] ↔ l = [] := by
   induction' n with n hn generalizing l
   · simp
-    
   · cases' l with hd tl
     · simp
-      
     · simp [rotate_cons_succ, hn]
-      
-    
 #align list.rotate_eq_nil_iff List.rotate_eq_nil_iff
 
 @[simp]
@@ -219,22 +208,16 @@ theorem nil_eq_rotate_iff {l : List α} {n : ℕ} : [] = l.rotate n ↔ [] = l :
 theorem rotate_singleton (x : α) (n : ℕ) : [x].rotate n = [x] := by
   induction' n with n hn
   · simp
-    
   · rwa [rotate_cons_succ]
-    
 #align list.rotate_singleton List.rotate_singleton
 
 @[simp]
 theorem rotate_eq_singleton_iff {l : List α} {n : ℕ} {x : α} : l.rotate n = [x] ↔ l = [x] := by
   induction' n with n hn generalizing l
   · simp
-    
   · cases' l with hd tl
     · simp
-      
     · simp [rotate_cons_succ, hn, append_eq_cons_iff, and_comm']
-      
-    
 #align list.rotate_eq_singleton_iff List.rotate_eq_singleton_iff
 
 @[simp]
@@ -262,31 +245,25 @@ theorem zip_with_rotate_one {β : Type _} (f : α → α → β) (x y : α) (l :
 theorem nth_le_rotate_one (l : List α) (k : ℕ) (hk : k < (l.rotate 1).length) :
     (l.rotate 1).nthLe k hk =
       l.nthLe ((k + 1) % l.length) (mod_lt _ (length_rotate l 1 ▸ k.zero_le.trans_lt hk)) :=
-  by
+  by 
   cases' l with hd tl
   · simp
-    
-  · have : k ≤ tl.length := by
+  · have : k ≤ tl.length := by 
       refine' Nat.le_of_lt_succ _
       simpa using hk
     rcases this.eq_or_lt with (rfl | hk')
     · simp [nth_le_append_right le_rfl]
-      
     · simpa [nth_le_append _ hk', length_cons, Nat.mod_eq_of_lt (Nat.succ_lt_succ hk')]
-      
-    
 #align list.nth_le_rotate_one List.nth_le_rotate_one
 
 theorem nth_le_rotate (l : List α) (n k : ℕ) (hk : k < (l.rotate n).length) :
     (l.rotate n).nthLe k hk =
       l.nthLe ((k + n) % l.length) (mod_lt _ (length_rotate l n ▸ k.zero_le.trans_lt hk)) :=
-  by
+  by 
   induction' n with n hn generalizing l k
   · have hk' : k < l.length := by simpa using hk
     simp [Nat.mod_eq_of_lt hk']
-    
   · simp [Nat.succ_eq_add_one, ← rotate_rotate, nth_le_rotate_one, hn l, add_comm, add_left_comm]
-    
 #align list.nth_le_rotate List.nth_le_rotate
 
 /-- A variant of `nth_le_rotate` useful for rewrites. -/
@@ -294,19 +271,17 @@ theorem nth_le_rotate' (l : List α) (n k : ℕ) (hk : k < l.length) :
     (l.rotate n).nthLe ((l.length - n % l.length + k) % l.length)
         ((Nat.mod_lt _ (k.zero_le.trans_lt hk)).trans_le (length_rotate _ _).ge) =
       l.nthLe k hk :=
-  by
+  by 
   rw [nth_le_rotate]
   congr
   set m := l.length
   rw [mod_add_mod, add_assoc, add_left_comm, add_comm, add_mod, add_mod _ n]
   cases' (n % m).zero_le.eq_or_lt with hn hn
   · simpa [← hn] using Nat.mod_eq_of_lt hk
-    
   · have mpos : 0 < m := k.zero_le.trans_lt hk
     have hm : m - n % m < m := tsub_lt_self mpos hn
     have hn' : n % m < m := Nat.mod_lt _ mpos
     simpa [mod_eq_of_lt hm, tsub_add_cancel_of_le hn'.le] using Nat.mod_eq_of_lt hk
-    
 #align list.nth_le_rotate' List.nth_le_rotate'
 
 theorem rotate_injective (n : ℕ) : Function.Injective fun l : List α => l.rotate n := by
@@ -315,9 +290,7 @@ theorem rotate_injective (n : ℕ) : Function.Injective fun l : List α => l.rot
   rw [rotate_eq_drop_append_take_mod, rotate_eq_drop_append_take_mod] at h
   obtain ⟨hd, ht⟩ := append_inj h _
   · rw [← take_append_drop _ l, ht, hd, take_append_drop]
-    
   · rw [length_drop, length_drop, hle]
-    
 #align list.rotate_injective List.rotate_injective
 
 -- possibly easier to find in doc-gen, otherwise not that useful.
@@ -330,14 +303,10 @@ theorem rotate_eq_iff {l l' : List α} {n : ℕ} :
   rw [← @rotate_eq_rotate _ l _ n, rotate_rotate, ← rotate_mod l', add_mod]
   cases' l'.length.zero_le.eq_or_lt with hl hl
   · rw [eq_nil_of_length_eq_zero hl.symm, rotate_nil, rotate_eq_nil_iff]
-    
   · cases' (Nat.zero_le (n % l'.length)).eq_or_lt with hn hn
     · simp [← hn]
-      
     · rw [mod_eq_of_lt (tsub_lt_self hl hn), tsub_add_cancel_of_le, mod_self, rotate_zero]
       exact (Nat.mod_lt _ hl).le
-      
-    
 #align list.rotate_eq_iff List.rotate_eq_iff
 
 theorem reverse_rotate (l : List α) (n : ℕ) :
@@ -345,14 +314,10 @@ theorem reverse_rotate (l : List α) (n : ℕ) :
   rw [← length_reverse l, ← rotate_eq_iff]
   induction' n with n hn generalizing l
   · simp
-    
   · cases' l with hd tl
     · simp
-      
     · rw [rotate_cons_succ, Nat.succ_eq_add_one, ← rotate_rotate, hn]
       simp
-      
-    
 #align list.reverse_rotate List.reverse_rotate
 
 theorem rotate_reverse (l : List α) (n : ℕ) :
@@ -364,31 +329,21 @@ theorem rotate_reverse (l : List α) (n : ℕ) :
   set k := n % l.reverse.length with hk
   cases' hk' : k with k'
   · simp [-length_reverse, ← rotate_rotate]
-    
   · cases' l with x l
     · simp
-      
     · have : k'.succ < (x :: l).length := by simp [← hk', hk, Nat.mod_lt]
       rw [Nat.mod_eq_of_lt, tsub_add_cancel_of_le, rotate_length]
       · exact tsub_le_self
-        
       · exact tsub_lt_self (by simp) Nat.succ_pos'
-        
-      
-    
 #align list.rotate_reverse List.rotate_reverse
 
 theorem map_rotate {β : Type _} (f : α → β) (l : List α) (n : ℕ) :
     map f (l.rotate n) = (map f l).rotate n := by
   induction' n with n hn IH generalizing l
   · simp
-    
   · cases' l with hd tl
     · simp
-      
     · simp [hn]
-      
-    
 #align list.map_rotate List.map_rotate
 
 theorem Nodup.rotate_eq_self_iff {l : List α} (hl : l.Nodup) {n : ℕ} :
@@ -397,20 +352,15 @@ theorem Nodup.rotate_eq_self_iff {l : List α} (hl : l.Nodup) {n : ℕ} :
   · intro h
     cases' l.length.zero_le.eq_or_lt with hl' hl'
     · simp [← length_eq_zero, ← hl']
-      
     left
     rw [nodup_iff_nth_le_inj] at hl
     refine' hl _ _ (mod_lt _ hl') hl' _
     rw [← nth_le_rotate' _ n]
     simp_rw [h, tsub_add_cancel_of_le (mod_lt _ hl').le, mod_self]
-    
   · rintro (h | h)
     · rw [← rotate_mod, h]
       exact rotate_zero l
-      
     · simp [h]
-      
-    
 #align list.nodup.rotate_eq_self_iff List.Nodup.rotate_eq_self_iff
 
 theorem Nodup.rotate_congr {l : List α} (hl : l.Nodup) (hn : l ≠ []) (i j : ℕ)
@@ -447,11 +397,9 @@ theorem IsRotated.symm (h : l ~r l') : l' ~r l := by
   obtain ⟨n, rfl⟩ := h
   cases' l with hd tl
   · simp
-    
   · use (hd :: tl).length * n - n
     rw [rotate_rotate, add_tsub_cancel_of_le, rotate_length_mul]
     exact Nat.le_mul_of_pos_left (by simp)
-    
 #align list.is_rotated.symm List.IsRotated.symm
 
 theorem is_rotated_comm : l ~r l' ↔ l' ~r l :=
@@ -473,7 +421,8 @@ theorem IsRotated.eqv : Equivalence (@IsRotated α) :=
 #align list.is_rotated.eqv List.IsRotated.eqv
 
 /-- The relation `list.is_rotated l l'` forms a `setoid` of cycles. -/
-def IsRotated.setoid (α : Type _) : Setoid (List α) where
+def IsRotated.setoid (α : Type _) :
+    Setoid (List α) where 
   R := IsRotated
   iseqv := IsRotated.eqv
 #align list.is_rotated.setoid List.IsRotated.setoid
@@ -527,7 +476,6 @@ theorem is_rotated_reverse_comm_iff : l.reverse ~r l' ↔ l ~r l'.reverse := by
   constructor <;>
     · intro h
       simpa using h.reverse
-      
 #align list.is_rotated_reverse_comm_iff List.is_rotated_reverse_comm_iff
 
 @[simp]
@@ -540,11 +488,9 @@ theorem is_rotated_iff_mod : l ~r l' ↔ ∃ n ≤ l.length, l.rotate n = l' := 
   obtain ⟨n, rfl⟩ := h
   cases' l with hd tl
   · simp
-    
   · refine' ⟨n % (hd :: tl).length, _, rotate_mod _ _⟩
     refine' (Nat.mod_lt _ _).le
     simp
-    
 #align list.is_rotated_iff_mod List.is_rotated_iff_mod
 
 theorem is_rotated_iff_mem_map_range : l ~r l' ↔ l' ∈ (List.range (l.length + 1)).map l.rotate := by
@@ -555,7 +501,7 @@ theorem is_rotated_iff_mem_map_range : l ~r l' ↔ l' ∈ (List.range (l.length 
 
 @[congr]
 theorem IsRotated.map {β : Type _} {l₁ l₂ : List α} (h : l₁ ~r l₂) (f : α → β) :
-    map f l₁ ~r map f l₂ := by
+    map f l₁ ~r map f l₂ := by 
   obtain ⟨n, rfl⟩ := h
   rw [map_rotate]
   use n
@@ -605,25 +551,21 @@ theorem nth_le_cyclic_permutations (l : List α) (n : ℕ) (hn : n < length (cyc
     nthLe (cyclicPermutations l) n hn = l.rotate n := by
   obtain rfl | h := eq_or_ne l []
   · simp
-    
   · rw [length_cyclic_permutations_of_ne_nil _ h] at hn
     simp [init_eq_take, cyclic_permutations_of_ne_nil _ h, nth_le_take',
       rotate_eq_drop_append_take hn.le]
-    
 #align list.nth_le_cyclic_permutations List.nth_le_cyclic_permutations
 
 theorem mem_cyclic_permutations_self (l : List α) : l ∈ cyclicPermutations l := by
   cases' l with x l
   · simp
-    
   · rw [mem_iff_nth_le]
     refine' ⟨0, by simp, _⟩
     simp
-    
 #align list.mem_cyclic_permutations_self List.mem_cyclic_permutations_self
 
 theorem length_mem_cyclic_permutations (l : List α) (h : l' ∈ cyclicPermutations l) :
-    length l' = length l := by
+    length l' = length l := by 
   obtain ⟨k, hk, rfl⟩ := nth_le_of_mem h
   simp
 #align list.length_mem_cyclic_permutations List.length_mem_cyclic_permutations
@@ -634,18 +576,14 @@ theorem mem_cyclic_permutations_iff {l l' : List α} : l ∈ cyclicPermutations 
   · intro h
     obtain ⟨k, hk, rfl⟩ := nth_le_of_mem h
     simp
-    
   · intro h
     obtain ⟨k, rfl⟩ := h.symm
     rw [mem_iff_nth_le]
     simp only [exists_prop, nth_le_cyclic_permutations]
     cases' l' with x l
     · simp
-      
     · refine' ⟨k % length (x :: l), _, rotate_mod _ _⟩
       simpa using Nat.mod_lt _ (zero_lt_succ _)
-      
-    
 #align list.mem_cyclic_permutations_iff List.mem_cyclic_permutations_iff
 
 @[simp]
@@ -665,16 +603,13 @@ theorem cyclic_permutations_eq_singleton_iff {l : List α} {x : α} :
 theorem Nodup.cyclic_permutations {l : List α} (hn : Nodup l) : Nodup (cyclicPermutations l) := by
   cases' l with x l
   · simp
-    
   rw [nodup_iff_nth_le_inj]
   intro i j hi hj h
   simp only [length_cyclic_permutations_cons] at hi hj
   rw [← mod_eq_of_lt hi, ← mod_eq_of_lt hj, ← length_cons x l]
   apply hn.rotate_congr
   · simp
-    
   · simpa using h
-    
 #align list.nodup.cyclic_permutations List.Nodup.cyclic_permutations
 
 @[simp]
@@ -683,9 +618,7 @@ theorem cyclic_permutations_rotate (l : List α) (k : ℕ) :
   have : (l.rotate k).cyclicPermutations.length = length (l.cyclic_permutations.rotate k) := by
     cases l
     · simp
-      
     · rw [length_cyclic_permutations_of_ne_nil] <;> simp
-      
   refine' ext_le this fun n hn hn' => _
   rw [nth_le_cyclic_permutations, nth_le_rotate, nth_le_cyclic_permutations, rotate_rotate, ←
     rotate_mod, add_comm]
@@ -703,7 +636,6 @@ theorem is_rotated_cyclic_permutations_iff {l l' : List α} :
     l.cyclicPermutations ~r l'.cyclicPermutations ↔ l ~r l' := by
   by_cases hl : l = []
   · simp [hl, eq_comm]
-    
   have hl' : l.cyclic_permutations.length = l.length := length_cyclic_permutations_of_ne_nil _ hl
   refine' ⟨fun h => _, is_rotated.cyclic_permutations⟩
   obtain ⟨k, hk⟩ := h

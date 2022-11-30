@@ -506,7 +506,7 @@ Case conversion may be inaccurate. Consider using '#align bool.bnot_inj Bool.not
 theorem not_inj : ∀ {a b : Bool}, !a = !b → a = b := by decide
 #align bool.bnot_inj Bool.not_inj
 
-instance : LinearOrder Bool where
+instance : LinearOrder Bool where 
   le a b := a = ff ∨ b = tt
   le_refl := by decide
   le_trans := by decide
@@ -515,12 +515,12 @@ instance : LinearOrder Bool where
   decidableLe := inferInstance
   DecidableEq := inferInstance
   max := or
-  max_def := by
+  max_def := by 
     funext x y
     revert x y
     exact by decide
   min := and
-  min_def := by
+  min_def := by 
     funext x y
     revert x y
     exact by decide
@@ -606,10 +606,8 @@ theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by
   · subst m
     have h := le_antisymm h (Nat.zero_le _)
     contradiction
-    
   · left
     rfl
-    
 #align bool.of_nat_le_of_nat Bool.of_nat_le_of_nat
 -/
 

@@ -59,14 +59,12 @@ theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
 
 theorem contDiffExp : ∀ {n}, ContDiff 𝕜 n exp := by
   refine' cont_diff_all_iff_nat.2 fun n => _
-  have : ContDiff ℂ (↑n) exp := by
+  have : ContDiff ℂ (↑n) exp := by 
     induction' n with n ihn
     · exact cont_diff_zero.2 continuous_exp
-      
     · rw [cont_diff_succ_iff_deriv]
       use differentiable_exp
       rwa [deriv_exp]
-      
   exact this.restrict_scalars 𝕜
 #align complex.cont_diff_exp Complex.contDiffExp
 

@@ -61,15 +61,11 @@ theorem hall_cond_of_erase {x : ι} (a : α)
     by_cases hb : a ∈ s'.bUnion fun x => t x
     · rw [card_erase_of_mem hb]
       exact Nat.le_pred_of_lt ha'
-      
     · rw [erase_eq_of_not_mem hb]
       exact Nat.le_of_lt ha'
-      
-    
   · rw [nonempty_iff_ne_empty, not_not] at he
     subst s'
     simp
-    
 #align hall_marriage_theorem.hall_cond_of_erase HallMarriageTheorem.hall_cond_of_erase
 
 /-- First case of the inductive step: assuming that
@@ -90,7 +86,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
   haveI := Classical.decEq ι
   -- Choose an arbitrary element `x : ι` and `y : t x`.
   let x := Classical.arbitrary ι
-  have tx_ne : (t x).Nonempty := by
+  have tx_ne : (t x).Nonempty := by 
     rw [← Finset.card_pos]
     calc
       0 < 1 := Nat.one_pos
@@ -110,31 +106,28 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
   -- Extend the resulting function.
   refine' ⟨fun z => if h : z = x then y else f' ⟨z, h⟩, _, _⟩
   · rintro z₁ z₂
-    have key : ∀ {x}, y ≠ f' x := by
+    have key : ∀ {x}, y ≠ f' x := by 
       intro x h
       simpa [← h] using hfr x
     by_cases h₁ : z₁ = x <;> by_cases h₂ : z₂ = x <;> simp [h₁, h₂, hfinj.eq_iff, key, key.symm]
-    
   · intro z
     split_ifs with hz
     · rwa [hz]
-      
     · specialize hfr ⟨z, hz⟩
       rw [mem_erase] at hfr
       exact hfr.2
-      
-    
 #align
   hall_marriage_theorem.hall_hard_inductive_step_A HallMarriageTheorem.hall_hard_inductive_step_A
 
 theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (s : Set ι)) :
-    s'.card ≤ (s'.bUnion fun a' => t a').card := by classical
-  rw [← card_image_of_injective s' Subtype.coe_injective]
-  convert ht (s'.image coe) using 1
-  apply congr_arg
-  ext y
-  simp
+    s'.card ≤ (s'.bUnion fun a' => t a').card := by
+  classical 
+    rw [← card_image_of_injective s' Subtype.coe_injective]
+    convert ht (s'.image coe) using 1
+    apply congr_arg
+    ext y
+    simp
 #align hall_marriage_theorem.hall_cond_of_restrict HallMarriageTheorem.hall_cond_of_restrict
 
 theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
@@ -157,13 +150,9 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
       exists_imp]
     rintro x (hx | ⟨x', hx', rfl⟩) rat hs
     · exact (hs x hx rat).elim
-      
     · exact ⟨⟨x', hx', rat⟩, hs⟩
-      
-    
   · apply bUnion_subset_bUnion_of_subset_left
     apply subset_union_left
-    
 #align hall_marriage_theorem.hall_cond_of_compl HallMarriageTheorem.hall_cond_of_compl
 
 /-- Second case of the inductive step: assuming that
@@ -210,21 +199,17 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     rw [mem_sdiff] at h
     exact h.2
   have im_disj : ∀ (x' x'' : ι) (hx' : x' ∈ s) (hx'' : ¬x'' ∈ s), f' ⟨x', hx'⟩ ≠ f'' ⟨x'', hx''⟩ :=
-    by
+    by 
     intro _ _ hx' hx'' h
     apply f''_not_mem_bUnion hx''
     rw [← h]
     apply f'_mem_bUnion
   refine' ⟨fun x => if h : x ∈ s then f' ⟨x, h⟩ else f'' ⟨x, h⟩, _, _⟩
   · exact hf'.dite _ hf'' im_disj
-    
   · intro x
     split_ifs with h
     · exact hsf' ⟨x, h⟩
-      
     · exact sdiff_subset _ _ (hsf'' ⟨x, h⟩)
-      
-    
 #align
   hall_marriage_theorem.hall_hard_inductive_step_B HallMarriageTheorem.hall_hard_inductive_step_B
 
@@ -242,23 +227,19 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).car
   rcases n with (_ | _)
   · rw [Fintype.card_eq_zero_iff] at hn
     exact ⟨isEmptyElim, isEmptyElim, isEmptyElim⟩
-    
   · have ih' :
       ∀ (ι' : Type u) [Fintype ι'] (t' : ι' → Finset α),
         Fintype.card ι' ≤ n →
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) →
             ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x :=
-      by
+      by 
       intro ι' _ _ hι' ht'
       exact ih _ (Nat.lt_succ_of_le hι') ht' _ rfl
     by_cases h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card
     · exact hall_hard_inductive_step_A hn ht ih' h
-      
     · push_neg  at h
       rcases h with ⟨s, sne, snu, sle⟩
       exact hall_hard_inductive_step_B hn ht ih' s sne snu (Nat.le_antisymm (ht _) sle)
-      
-    
 #align hall_marriage_theorem.hall_hard_inductive HallMarriageTheorem.hall_hard_inductive
 
 end HallMarriageTheorem
@@ -275,10 +256,9 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [F
     [DecidableEq α] (t : ι → Finset α) :
     (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔
       ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
-  by
+  by 
   constructor
   · exact HallMarriageTheorem.hall_hard_inductive
-    
   · rintro ⟨f, hf₁, hf₂⟩ s
     rw [← card_image_of_injective s hf₁]
     apply card_le_of_subset
@@ -286,7 +266,6 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [F
     rw [mem_image, mem_bUnion]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
-    
 #align
   finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bUnion_card_iff_exists_injective'
 

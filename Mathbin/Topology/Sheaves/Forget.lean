@@ -70,25 +70,21 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :
     simp
     dsimp
     simp
-    
   -- non-terminal `simp`, but `squeeze_simp` fails
   · ext
     simp only [limit.lift_π, functor.comp_map, map_lift_pi_comparison, fan.mk_π_app,
       preserves_product.iso_hom, parallel_pair_map_left, functor.map_comp, category.assoc]
     dsimp
     simp
-    
   · ext
     simp only [limit.lift_π, functor.comp_map, parallel_pair_map_right, fan.mk_π_app,
       preserves_product.iso_hom, map_lift_pi_comparison, functor.map_comp, category.assoc]
     dsimp
     simp
-    
   · ext
     simp
     dsimp
     simp
-    
 #align
   Top.presheaf.sheaf_condition.diagram_comp_preserves_limits TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits
 
@@ -101,21 +97,19 @@ postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves
 def mapConeFork :
     G.mapCone (fork.{v} F U) ≅
       (Cones.postcompose (diagramCompPreservesLimits G F U).inv).obj (fork (F ⋙ G) U) :=
-  Cones.ext (Iso.refl _) fun j => by
+  Cones.ext (Iso.refl _) fun j => by 
     dsimp; simp [diagram_comp_preserves_limits]; cases j <;> dsimp
     · rw [iso.eq_comp_inv]
       ext
       simp
       dsimp
       simp
-      
     · rw [iso.eq_comp_inv]
       ext
       simp
       -- non-terminal `simp`, but `squeeze_simp` fails
       dsimp
       simp only [limit.lift_π, fan.mk_π_app, ← G.map_comp, limit.lift_π_assoc, fan.mk_π_app]
-      
 #align Top.presheaf.sheaf_condition.map_cone_fork TopCat.Presheaf.SheafCondition.mapConeFork
 
 end SheafCondition
@@ -166,7 +160,6 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
     have t₄ := is_limit.postcompose_inv_equiv _ _ t₃
     -- we have our desired conclusion.
     exact ⟨t₄⟩
-    
   · intro S ι U
     refine' ⟨_⟩
     -- Let `f` be the universal morphism from `F.obj U` to the equalizer
@@ -174,7 +167,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
     -- Our goal is to show that this is an isomorphism.
     let f := equalizer.lift _ (w F U)
     -- If we can do that,
-    suffices is_iso (G.map f) by
+    suffices is_iso (G.map f) by 
       skip
       -- we have that `f` itself is an isomorphism, since `G` reflects isomorphisms
       haveI : is_iso f := is_iso_of_reflects_iso f G
@@ -186,7 +179,6 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       rintro ⟨_ | _⟩ <;>
         · dsimp [f]
           simp
-          
     · -- Returning to the task of shwoing that `G.map f` is an isomorphism,
       -- we note that `G.map f` is almost but not quite (see below) a morphism
       -- from the sheaf condition cone for `F ⋙ G` to the
@@ -208,7 +200,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       -- Now everything works: we verify that `f` really is a morphism between these cones:
       let f' : c ⟶ d' :=
         fork.mk_hom (G.map f)
-          (by
+          (by 
             dsimp only [c, d, d', f, diagram_comp_preserves_limits, res]
             dsimp only [fork.ι]
             ext1 j
@@ -222,8 +214,6 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       -- A cone morphism is an isomorphism exactly if the morphism between the cone points is,
       -- so we're done!
       exact is_iso.of_iso ((cones.forget _).mapIso (as_iso f'))
-      
-    
 #align Top.presheaf.is_sheaf_iff_is_sheaf_comp TopCat.Presheaf.is_sheaf_iff_is_sheaf_comp
 
 /-!

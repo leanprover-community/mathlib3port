@@ -194,10 +194,8 @@ theorem integrable_on_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ := by
   apply hs.induction_on
   · simp
-    
   · intro a s ha hs hf
     simp [hf, or_imp, forall_and]
-    
 #align measure_theory.integrable_on_finite_bUnion MeasureTheory.integrable_on_finite_bUnion
 
 @[simp]
@@ -214,7 +212,7 @@ theorem integrable_on_finite_Union [Finite β] {t : β → Set α} :
 #align measure_theory.integrable_on_finite_Union MeasureTheory.integrable_on_finite_Union
 
 theorem IntegrableOn.addMeasure (hμ : IntegrableOn f s μ) (hν : IntegrableOn f s ν) :
-    IntegrableOn f s (μ + ν) := by
+    IntegrableOn f s (μ + ν) := by 
   delta integrable_on
   rw [measure.restrict_add]
   exact hμ.integrable.add_measure hν
@@ -401,10 +399,8 @@ theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (support f) (s
   refine' ⟨fun hfg => ⟨_, _⟩, fun h => h.1.add h.2⟩
   · rw [← indicator_add_eq_left h]
     exact hfg.indicator hf.measurable_set_support
-    
   · rw [← indicator_add_eq_right h]
     exact hfg.indicator hg.measurable_set_support
-    
 #align measure_theory.integrable_add_of_disjoint MeasureTheory.integrable_add_of_disjoint
 
 end NormedAddCommGroup
@@ -464,9 +460,7 @@ theorem ContinuousOn.aeStronglyMeasurable [TopologicalSpace α] [TopologicalSpac
     convert is_separable.image B A using 1
     ext x
     simp
-    
   · exact is_separable_of_separable_space _
-    
 #align continuous_on.ae_strongly_measurable ContinuousOn.aeStronglyMeasurable
 
 theorem ContinuousOn.integrableAtNhdsWithinOfIsSeparable [TopologicalSpace α]

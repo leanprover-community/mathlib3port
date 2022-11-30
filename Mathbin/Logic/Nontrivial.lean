@@ -54,9 +54,7 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
   by_cases hx : x = y
   · rw [← hx] at h
     exact ⟨y', h.symm⟩
-    
   · exact ⟨y, Ne.symm hx⟩
-    
 #align decidable.exists_ne Decidable.exists_ne
 -/
 
@@ -206,7 +204,7 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
   else
     PSum.inr
       { default := default,
-        uniq := fun x : α => by
+        uniq := fun x : α => by 
           change x = default
           contrapose! h
           use x, default }
@@ -214,7 +212,7 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
 
 #print subsingleton_iff /-
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
-  ⟨by
+  ⟨by 
     intro h
     exact Subsingleton.elim, fun h => ⟨h⟩⟩
 #align subsingleton_iff subsingleton_iff
@@ -267,7 +265,7 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (Nontrivial.{u_2} β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.995 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (Nontrivial.{u_2} β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.991 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (Nontrivial.{u_2} β)
 Case conversion may be inaccurate. Consider using '#align function.injective.nontrivial Function.Injective.nontrivialₓ'. -/
 /-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
@@ -283,7 +281,7 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
   rcases exists_pair_ne β with ⟨x, y, h⟩
   rcases hf x with ⟨x', hx'⟩
   rcases hf y with ⟨y', hy'⟩
-  have : x' ≠ y' := by
+  have : x' ≠ y' := by 
     contrapose! h
     rw [← hx', ← hy', h]
   exact ⟨⟨x', y', this⟩⟩
@@ -294,7 +292,7 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.1155 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.1151 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
 Case conversion may be inaccurate. Consider using '#align function.injective.exists_ne Function.Injective.exists_neₓ'. -/
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
@@ -303,9 +301,7 @@ protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}
   rcases exists_pair_ne α with ⟨x₁, x₂, hx⟩
   by_cases h : f x₂ = y
   · exact ⟨x₁, (hf.ne_iff' h).2 hx⟩
-    
   · exact ⟨x₂, h⟩
-    
 #align function.injective.exists_ne Function.Injective.exists_ne
 
 #print nontrivial_prod_right /-

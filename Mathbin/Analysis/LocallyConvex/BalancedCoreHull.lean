@@ -111,7 +111,7 @@ theorem mem_balanced_hull_iff : x ∈ balancedHull 𝕜 s ↔ ∃ (r : 𝕜)(hr 
 /-- The balanced hull of `s` is minimal in the sense that it is contained in any balanced superset
 `t` of `s`. -/
 theorem Balanced.hull_subset_of_subset (ht : Balanced 𝕜 t) (h : s ⊆ t) : balancedHull 𝕜 s ⊆ t :=
-  fun x hx => by
+  fun x hx => by 
   obtain ⟨r, hr, y, hy, rfl⟩ := mem_balanced_hull_iff.1 hx
   exact ht.smul_mem hr (h hy)
 #align balanced.hull_subset_of_subset Balanced.hull_subset_of_subset
@@ -174,10 +174,9 @@ theorem balancedCoreAuxBalanced (h0 : (0 : E) ∈ balancedCoreAux 𝕜 s) :
   rintro a ha x ⟨y, hy, rfl⟩
   obtain rfl | h := eq_or_ne a 0
   · rwa [zero_smul]
-    
   rw [mem_balanced_core_aux_iff] at hy⊢
   intro r hr
-  have h'' : 1 ≤ ‖a⁻¹ • r‖ := by
+  have h'' : 1 ≤ ‖a⁻¹ • r‖ := by 
     rw [norm_smul, norm_inv]
     exact one_le_mul_of_one_le_of_one_le (one_le_inv (norm_pos_iff.mpr h) ha) hr
   have h' := hy (a⁻¹ • r) h''
@@ -204,7 +203,7 @@ theorem balanced_core_eq_Inter (hs : (0 : E) ∈ s) :
 #align balanced_core_eq_Inter balanced_core_eq_Inter
 
 theorem subset_balanced_core (ht : (0 : E) ∈ t) (hst : ∀ (a : 𝕜) (ha : ‖a‖ ≤ 1), a • s ⊆ t) :
-    s ⊆ balancedCore 𝕜 t := by
+    s ⊆ balancedCore 𝕜 t := by 
   rw [balanced_core_eq_Inter ht]
   refine' subset_Inter₂ fun a ha => _
   rw [← smul_inv_smul₀ (norm_pos_iff.mp <| zero_lt_one.trans_le ha) s]
@@ -233,13 +232,13 @@ protected theorem IsClosed.balancedCore (hU : IsClosed U) : IsClosed (balancedCo
     have ha' := lt_of_lt_of_le zero_lt_one ha
     rw [norm_pos_iff] at ha'
     refine' is_closed_map_smul_of_ne_zero ha' U hU
-    
   convert isClosedEmpty
   contrapose! h
   exact balanced_core_nonempty_iff.mp (set.ne_empty_iff_nonempty.mp h)
 #align is_closed.balanced_core IsClosed.balancedCore
 
-theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : balancedCore 𝕜 U ∈ 𝓝 (0 : E) := by
+theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : balancedCore 𝕜 U ∈ 𝓝 (0 : E) :=
+  by
   -- Getting neighborhoods of the origin for `0 : 𝕜` and `0 : E`
   obtain ⟨r, V, hr, hV, hrVU⟩ :
     ∃ (r : ℝ)(V : Set E), 0 < r ∧ V ∈ 𝓝 (0 : E) ∧ ∀ (c : 𝕜) (y : E), ‖c‖ < r → y ∈ V → c • y ∈ U :=

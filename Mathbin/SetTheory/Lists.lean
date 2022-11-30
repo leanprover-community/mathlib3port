@@ -104,15 +104,11 @@ theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
       let l' : Lists' α true := by rw [h] <;> exact l
       ofList (toList l') = l'
     from this _ rfl
-  fun b h l => by
-  induction l;
-  · cases h
-    ;
-  · exact rfl
-    
-  case cons' b a l IH₁ IH₂ =>
-  intro ; change l' with cons' a l
-  simpa [cons] using IH₂ rfl
+  fun b h l => by 
+  induction l; · cases h; · exact rfl
+  case cons' b a l IH₁ IH₂ => 
+    intro ; change l' with cons' a l
+    simpa [cons] using IH₂ rfl
 #align lists'.of_to_list Lists'.of_to_list
 
 end Lists'
@@ -167,15 +163,12 @@ theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l�
   cases' h with l a' a'' l l' e m s;
   · cases a
     cases h'
-    
   cases a; cases a'; cases h'; exact ⟨⟨_, m, e⟩, s⟩
 #align lists'.cons_subset Lists'.cons_subset
 
 theorem of_list_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) :
     Lists'.ofList l₁ ⊆ Lists'.ofList l₂ := by
-  induction l₁;
-  · exact subset.nil
-    
+  induction l₁; · exact subset.nil
   refine' subset.cons (Lists.Equiv.refl _) _ (l₁_ih (List.subset_of_cons_subset h))
   simp at h; simp [h]
 #align lists'.of_list_subset Lists'.of_list_subset
@@ -187,16 +180,12 @@ theorem Subset.refl {l : Lists' α true} : l ⊆ l := by
 
 theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil := by
   rw [← of_to_list l]
-  induction to_list l <;> intro h;
-  · rfl
-    
+  induction to_list l <;> intro h; · rfl
   rcases cons_subset.1 h with ⟨⟨_, ⟨⟩, _⟩, _⟩
 #align lists'.subset_nil Lists'.subset_nil
 
 theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h : a ∈ l₁.toList) : a ∈ l₂ := by
-  induction' s with _ a a' l l' e m s IH;
-  · cases h
-    
+  induction' s with _ a a' l l' e m s IH; · cases h
   simp at h; rcases h with (rfl | h)
   exacts[⟨_, m, e⟩, IH h]
 #align lists'.mem_of_subset' Lists'.mem_of_subset'
@@ -206,10 +195,8 @@ theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l�
     rw [← of_to_list l₁]
     revert H; induction to_list l₁ <;> intro
     · exact subset.nil
-      
     · simp at H
-      exact cons_subset.2 ⟨H.1, ih H.2⟩
-      ⟩
+      exact cons_subset.2 ⟨H.1, ih H.2⟩⟩
 #align lists'.subset_def Lists'.subset_def
 
 end Lists'
@@ -276,14 +263,10 @@ def inductionMut (C : Lists α → Sort _) (D : Lists' α true → Sort _) (C0 :
   intros
   induction' l with a b a l IH₁ IH₂
   · exact ⟨C0 _, ⟨⟩⟩
-    
   · exact ⟨C1 _ D0, D0⟩
-    
   · suffices
     · exact ⟨C1 _ this, this⟩
-      
     exact D1 ⟨_, _⟩ _ IH₁.1 IH₂.2
-    
 #align lists.induction_mut Lists.inductionMut
 
 /-- Membership of ZFA list. A ZFA list belongs to a proper ZFA list if it belongs to the latter as a
@@ -304,10 +287,7 @@ theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
 theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ ↔ l₁ ⊆ l₂ ∧ l₂ ⊆ l₁ := by
   refine' ⟨fun h => _, fun ⟨h₁, h₂⟩ => equiv.antisymm h₁ h₂⟩
   cases' h with _ _ _ h₁ h₂
-  · simp [Lists'.Subset.refl]
-    ;
-  · exact ⟨h₁, h₂⟩
-    
+  · simp [Lists'.Subset.refl]; · exact ⟨h₁, h₂⟩
 #align lists.equiv.antisymm_iff Lists.Equiv.antisymm_iff
 
 attribute [refl] Equiv.refl
@@ -326,14 +306,11 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
   apply induction_mut
   · intro a l₂ l₃ h₁ h₂
     rwa [← equiv_atom.1 h₁] at h₂
-    
   · intro l₁ IH l₂ l₃ h₁ h₂
     cases' h₁ with _ _ l₂
     · exact h₂
-      
     cases' h₂ with _ _ l₃
     · exact h₁
-      
     cases' equiv.antisymm_iff.1 h₁ with hl₁ hr₁
     cases' equiv.antisymm_iff.1 h₂ with hl₂ hr₂
     apply equiv.antisymm_iff.2 <;> constructor <;> apply Lists'.subset_def.2
@@ -341,18 +318,13 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
       rcases Lists'.mem_of_subset' hl₁ m₁ with ⟨a₂, m₂, e₁₂⟩
       rcases Lists'.mem_of_subset' hl₂ m₂ with ⟨a₃, m₃, e₂₃⟩
       exact ⟨a₃, m₃, IH _ m₁ e₁₂ e₂₃⟩
-      
     · intro a₃ m₃
       rcases Lists'.mem_of_subset' hr₂ m₃ with ⟨a₂, m₂, e₃₂⟩
       rcases Lists'.mem_of_subset' hr₁ m₂ with ⟨a₁, m₁, e₂₁⟩
       exact ⟨a₁, m₁, (IH _ m₁ e₂₁.symm e₃₂.symm).symm⟩
-      
-    
   · rintro _ ⟨⟩
-    
   · intro a l IH₁ IH₂
     simpa [IH₁] using IH₂
-    
 #align lists.equiv.trans Lists.Equiv.trans
 
 instance : Setoid (Lists α) :=

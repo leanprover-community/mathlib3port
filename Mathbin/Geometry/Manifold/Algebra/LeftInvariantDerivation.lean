@@ -79,7 +79,7 @@ theorem coe_injective :
   exact Derivation.coe_injective h
 #align left_invariant_derivation.coe_injective LeftInvariantDerivation.coe_injective
 
-@[ext.1]
+@[ext]
 theorem ext (h : ∀ f, X f = Y f) : X = Y :=
   coe_injective <| funext h
 #align left_invariant_derivation.ext LeftInvariantDerivation.ext
@@ -94,7 +94,7 @@ theorem coe_derivation :
 theorem coe_derivation_injective :
     Function.Injective
       (coe : LeftInvariantDerivation I G → Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
-  fun X Y h => by
+  fun X Y h => by 
   cases X
   cases Y
   congr
@@ -236,7 +236,9 @@ instance : Module 𝕜 (LeftInvariantDerivation I G) :=
 
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
-def evalAt : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g where
+def evalAt :
+    LeftInvariantDerivation I G →ₗ[𝕜]
+      PointDerivation I g where 
   toFun X := Derivation.evalAt g ↑X
   map_add' X Y := rfl
   map_smul' k X := rfl
@@ -296,28 +298,33 @@ theorem commutator_apply : ⁅X, Y⁆ f = X (Y f) - Y (X f) :=
   rfl
 #align left_invariant_derivation.commutator_apply LeftInvariantDerivation.commutator_apply
 
-instance : LieRing (LeftInvariantDerivation I G) where
-  add_lie X Y Z := by
+instance :
+    LieRing
+      (LeftInvariantDerivation I
+        G) where 
+  add_lie X Y Z := by 
     ext1
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add,
       LeftInvariantDerivation.map_add]
     ring
-  lie_add X Y Z := by
+  lie_add X Y Z := by 
     ext1
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add,
       LeftInvariantDerivation.map_add]
     ring
-  lie_self X := by
+  lie_self X := by 
     ext1
     simp only [commutator_apply, sub_self]
     rfl
-  leibniz_lie X Y Z := by
+  leibniz_lie X Y Z := by 
     ext1
     simp only [commutator_apply, coe_add, coe_sub, map_sub, Pi.add_apply]
     ring
 
 instance :
-    LieAlgebra 𝕜 (LeftInvariantDerivation I G) where lie_smul r Y Z := by
+    LieAlgebra 𝕜
+      (LeftInvariantDerivation I
+        G) where lie_smul r Y Z := by 
     ext1
     simp only [commutator_apply, map_smul, smul_sub, coe_smul, Pi.smul_apply]
 

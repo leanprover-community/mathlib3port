@@ -92,7 +92,8 @@ theorem projective_def' : Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Fin
 
 /-- A projective R-module has the property that maps from it lift along surjections. -/
 theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N)
-    (hf : Function.Surjective f) : ∃ h : P →ₗ[R] M, f.comp h = g := by
+    (hf : Function.Surjective f) : ∃ h : P →ₗ[R] M, f.comp h = g :=
+  by
   /-
     Here's the first step of the proof.
     Recall that `X →₀ R` is Lean's way of talking about the free `R`-module
@@ -125,51 +126,42 @@ instance [hP : Projective R P] [hQ : Projective R Q] : Projective R (P × Q) := 
       total_map_domain]
   · rw [← fst_apply _, apply_total R]
     exact hsP x
-    
   · rw [← snd_apply _, apply_total R]
     exact Finsupp.total_zero_apply _ (sP x)
-    
   · rw [← fst_apply _, apply_total R]
     exact Finsupp.total_zero_apply _ (sQ x)
-    
   · rw [← snd_apply _, apply_total R]
     exact hsQ x
-    
 
 variable {ι : Type _} (A : ι → Type _) [∀ i : ι, AddCommMonoid (A i)] [∀ i : ι, Module R (A i)]
 
-instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := by classical
-  rw [Module.projective_def']
-  simp_rw [projective_def] at h
-  choose s hs using h
-  letI : ∀ i : ι, AddCommMonoid (A i →₀ R) := fun i => by infer_instance
-  letI : ∀ i : ι, Module R (A i →₀ R) := fun i => by infer_instance
-  letI : AddCommMonoid (Π₀ i : ι, A i →₀ R) := @Dfinsupp.addCommMonoid ι (fun i => A i →₀ R) _
-  letI : Module R (Π₀ i : ι, A i →₀ R) := @Dfinsupp.module ι R (fun i => A i →₀ R) _ _ _
-  let f i := lmap_domain R R (Dfinsupp.single i : A i → Π₀ i, A i)
-  use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
-  ext (i x j)
-  simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
-    LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_apply,
-    Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single,
-    lmap_domain_apply, Dfinsupp.to_finsupp_single, Finsupp.sum_single_index, id.def,
-    Function.comp.left_id, Dfinsupp.single_apply]
-  rw [← Dfinsupp.lapply_apply j, apply_total R]
-  obtain rfl | hij := eq_or_ne i j
-  · convert (hs i) x
-    · ext
-      simp
-      
-    · simp
-      
-    
-  · convert Finsupp.total_zero_apply _ ((s i) x)
-    · ext
-      simp [hij]
-      
-    · simp [hij]
-      
-    
+instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := by
+  classical 
+    rw [Module.projective_def']
+    simp_rw [projective_def] at h
+    choose s hs using h
+    letI : ∀ i : ι, AddCommMonoid (A i →₀ R) := fun i => by infer_instance
+    letI : ∀ i : ι, Module R (A i →₀ R) := fun i => by infer_instance
+    letI : AddCommMonoid (Π₀ i : ι, A i →₀ R) := @Dfinsupp.addCommMonoid ι (fun i => A i →₀ R) _
+    letI : Module R (Π₀ i : ι, A i →₀ R) := @Dfinsupp.module ι R (fun i => A i →₀ R) _ _ _
+    let f i := lmap_domain R R (Dfinsupp.single i : A i → Π₀ i, A i)
+    use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
+    ext (i x j)
+    simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
+      LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_apply,
+      Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single,
+      lmap_domain_apply, Dfinsupp.to_finsupp_single, Finsupp.sum_single_index, id.def,
+      Function.comp.left_id, Dfinsupp.single_apply]
+    rw [← Dfinsupp.lapply_apply j, apply_total R]
+    obtain rfl | hij := eq_or_ne i j
+    · convert (hs i) x
+      · ext
+        simp
+      · simp
+    · convert Finsupp.total_zero_apply _ ((s i) x)
+      · ext
+        simp [hij]
+      · simp [hij]
 
 end Semiring
 
@@ -178,7 +170,8 @@ section Ring
 variable {R : Type _} [Ring R] {P : Type _} [AddCommGroup P] [Module R P]
 
 /-- Free modules are projective. -/
-theorem projectiveOfBasis {ι : Type _} (b : Basis ι R P) : Projective R P := by
+theorem projectiveOfBasis {ι : Type _} (b : Basis ι R P) : Projective R P :=
+  by
   -- need P →ₗ (P →₀ R) for definition of projective.
   -- get it from `ι → (P →₀ R)` coming from `b`.
   use b.constr ℕ fun i => Finsupp.single (b i) (1 : R)
@@ -216,11 +209,9 @@ theorem projectiveOfLiftingProperty' {R : Type u} [Semiring R] {P : Type max u v
   -- This `s` works.
   · use s
     rwa [LinearMap.ext_iff] at hs
-    
   · intro p
     use Finsupp.single p 1
     simp
-    
 #align module.projective_of_lifting_property' Module.projectiveOfLiftingProperty'
 
 /-- A variant of `of_lifting_property'` when we're working over a `[ring R]`,
@@ -245,11 +236,9 @@ theorem projectiveOfLiftingProperty {R : Type u} [Ring R] {P : Type max u v} [Ad
   -- This `s` works.
   · use s
     rwa [LinearMap.ext_iff] at hs
-    
   · intro p
     use Finsupp.single p 1
     simp
-    
 #align module.projective_of_lifting_property Module.projectiveOfLiftingProperty
 
 end OfLiftingProperty

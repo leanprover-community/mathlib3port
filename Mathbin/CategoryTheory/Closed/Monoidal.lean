@@ -49,7 +49,7 @@ This isn't an instance because it's not usually how we want to construct interna
 we'll usually prove all objects are closed uniformly.
 -/
 def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) :
-    Closed (X ⊗ Y) where isAdj := by
+    Closed (X ⊗ Y) where isAdj := by 
     haveI := hX.is_adj
     haveI := hY.is_adj
     exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
@@ -323,7 +323,8 @@ end Pre
 
 /-- The internal hom functor given by the monoidal closed structure. -/
 @[simps]
-def internalHom [MonoidalClosed C] : Cᵒᵖ ⥤ C ⥤ C where
+def internalHom [MonoidalClosed C] :
+    Cᵒᵖ ⥤ C ⥤ C where 
   obj X := ihom X.unop
   map X Y f := pre f.unop
 #align category_theory.monoidal_closed.internal_hom CategoryTheory.MonoidalClosed.internalHom
@@ -335,8 +336,9 @@ variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D]
 /-- Transport the property of being monoidal closed across a monoidal equivalence of categories -/
 noncomputable def ofEquiv (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor]
     [h : MonoidalClosed D] :
-    MonoidalClosed C where closed' X :=
-    { isAdj := by
+    MonoidalClosed
+      C where closed' X :=
+    { isAdj := by 
         haveI q : closed (F.to_functor.obj X) := inferInstance
         haveI : is_left_adjoint (tensor_left (F.to_functor.obj X)) := q.is_adj
         have i := comp_inv_iso (monoidal_functor.comm_tensor_left F X)

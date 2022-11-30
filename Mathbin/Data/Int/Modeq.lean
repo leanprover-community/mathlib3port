@@ -112,7 +112,7 @@ protected theorem mul_right' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : a * c ≡ b
 #align int.modeq.mul_right' Int.Modeq.mul_right'
 
 protected theorem add (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a + c ≡ b + d [ZMOD n] :=
-  modeq_iff_dvd.2 <| by
+  modeq_iff_dvd.2 <| by 
     convert dvd_add h₁.dvd h₂.dvd
     ring
 #align int.modeq.add Int.Modeq.add
@@ -128,7 +128,7 @@ protected theorem add_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a + c ≡ b + c [
 protected theorem add_left_cancel (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) :
     c ≡ d [ZMOD n] :=
   have : d - c = b + d - (a + c) - (b - a) := by ring
-  modeq_iff_dvd.2 <| by
+  modeq_iff_dvd.2 <| by 
     rw [this]
     exact dvd_sub h₂.dvd h₁.dvd
 #align int.modeq.add_left_cancel Int.Modeq.add_left_cancel
@@ -138,7 +138,7 @@ protected theorem add_left_cancel' (c : ℤ) (h : c + a ≡ c + b [ZMOD n]) : a 
 #align int.modeq.add_left_cancel' Int.Modeq.add_left_cancel'
 
 protected theorem add_right_cancel (h₁ : c ≡ d [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) :
-    a ≡ b [ZMOD n] := by
+    a ≡ b [ZMOD n] := by 
   rw [add_comm a, add_comm b] at h₂
   exact h₁.add_left_cancel h₂
 #align int.modeq.add_right_cancel Int.Modeq.add_right_cancel
@@ -181,9 +181,7 @@ protected theorem mul (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a * 
 #align int.modeq.mul Int.Modeq.mul
 
 protected theorem pow (m : ℕ) (h : a ≡ b [ZMOD n]) : a ^ m ≡ b ^ m [ZMOD n] := by
-  induction' m with d hd;
-  · rfl
-    
+  induction' m with d hd; · rfl
   rw [pow_succ, pow_succ]
   exact h.mul hd
 #align int.modeq.pow Int.Modeq.pow
@@ -208,7 +206,7 @@ theorem modeq_sub (a b : ℤ) : a ≡ b [ZMOD a - b] :=
 
 theorem modeq_and_modeq_iff_modeq_mul {a b m n : ℤ} (hmn : m.natAbs.Coprime n.natAbs) :
     a ≡ b [ZMOD m] ∧ a ≡ b [ZMOD n] ↔ a ≡ b [ZMOD m * n] :=
-  ⟨fun h => by
+  ⟨fun h => by 
     rw [modeq_iff_dvd, modeq_iff_dvd] at h
     rw [modeq_iff_dvd, ← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd, nat_abs_mul]
     refine' hmn.mul_dvd_of_dvd_of_dvd _ _ <;> rw [← coe_nat_dvd, nat_abs_dvd, dvd_nat_abs] <;>

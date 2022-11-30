@@ -194,7 +194,7 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     (hx : ∀ k ∈ x.support, k ≤ i) :
     DirectSum.toModule R ι (G j) (fun k => totalize G f k j) x =
       f i j hij (DirectSum.toModule R ι (G i) (fun k => totalize G f k i) x) :=
-  by
+  by 
   rw [← @Dfinsupp.sum_single ι G _ _ _ x]
   unfold Dfinsupp.sum
   simp only [LinearMap.map_sum]
@@ -212,7 +212,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
     span_induction ((Quotient.mk_eq_zero _).1 H)
       (fun x ⟨i, j, hij, y, hxy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
-        ⟨k, by
+        ⟨k, by 
           clear_
           subst hxy
           constructor
@@ -221,15 +221,11 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
               DirectSum.single_eq_lof, Dfinsupp.single_apply, Dfinsupp.single_apply] at hi0
             split_ifs  at hi0 with hi hj hj
             · rwa [hi] at hik
-              
             · rwa [hi] at hik
-              
             · rwa [hj] at hjk
-              
             exfalso
             apply hi0
             rw [sub_zero]
-            
           simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map,
             DirectSum.apply_eq_component, DirectSum.component.of]⟩)
       ⟨ind, fun _ h => (Finset.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
@@ -467,16 +463,16 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupporte
     (hst : s ⊆ t) :
     f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
       lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) :=
-  by
+  by 
   refine' Subring.InClosure.rec_on hxs _ _ _ _
-  · rw [(restriction _).map_one, (FreeCommRing.lift _).map_one, (f' j k hjk).map_one,
+  ·
+    rw [(restriction _).map_one, (FreeCommRing.lift _).map_one, (f' j k hjk).map_one,
       (restriction _).map_one, (FreeCommRing.lift _).map_one]
-    
-  · rw [(restriction _).map_neg, (restriction _).map_one, (FreeCommRing.lift _).map_neg,
+  ·
+    rw [(restriction _).map_neg, (restriction _).map_one, (FreeCommRing.lift _).map_neg,
       (FreeCommRing.lift _).map_one, (f' j k hjk).map_neg, (f' j k hjk).map_one,
       (restriction _).map_neg, (restriction _).map_one, (FreeCommRing.lift _).map_neg,
       (FreeCommRing.lift _).map_one]
-    
   · rintro _ ⟨p, hps, rfl⟩ n ih
     rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, (f' j k hjk).map_mul, ih,
       (restriction _).map_mul, (FreeCommRing.lift _).map_mul, restriction_of, dif_pos hps, lift_of,
@@ -486,11 +482,9 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupporte
     dsimp only at this
     rw [this]
     rfl
-    
   · rintro x y ihx ihy
     rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, (f' j k hjk).map_add, ihx, ihy,
       (restriction _).map_add, (FreeCommRing.lift _).map_add]
-    
 #align ring.direct_limit.of.zero_exact_aux2 Ring.DirectLimit.of.zero_exact_aux2
 
 variable {G f f'}
@@ -501,7 +495,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       ∃ H : ∀ k : Σi, G i, k ∈ s → k.1 ≤ j,
         IsSupported x s ∧
           lift (fun ix : s => f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x) = (0 : G j) :=
-  by
+  by 
   refine' span_induction (Ideal.Quotient.eq_zero_iff_mem.1 H) _ _ _ _
   · rintro x (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩)
     · refine'
@@ -510,7 +504,6 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       · rintro k (rfl | ⟨rfl | _⟩)
         exact hij
         rfl
-        
       · rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos,
           restriction_of, dif_pos, lift_of, lift_of]
         dsimp only
@@ -519,20 +512,14 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         rw [this]
         exact sub_self _
         exacts[Or.inr rfl, Or.inl rfl]
-        
-      
     · refine' ⟨i, {⟨i, 1⟩}, _, is_supported_sub (is_supported_of.2 rfl) is_supported_one, _⟩
       · rintro k (rfl | h)
         rfl
-        
       · rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos,
           (restriction _).map_one, lift_of, (FreeCommRing.lift _).map_one]
         dsimp only
         rw [(f' i i _).map_one, sub_self]
         · exact Set.mem_singleton _
-          
-        
-      
     · refine'
         ⟨i, {⟨i, x + y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
           is_supported_sub (is_supported_of.2 <| Or.inl rfl)
@@ -540,7 +527,6 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
               (is_supported_of.2 <| Or.inr <| Or.inr rfl)),
           _⟩
       · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
-        
       · rw [(restriction _).map_sub, (restriction _).map_add, restriction_of, restriction_of,
           restriction_of, dif_pos, dif_pos, dif_pos, (FreeCommRing.lift _).map_sub,
           (FreeCommRing.lift _).map_add, lift_of, lift_of, lift_of]
@@ -548,8 +534,6 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         rw [(f' i i _).map_add]
         exact sub_self _
         exacts[Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
-        
-      
     · refine'
         ⟨i, {⟨i, x * y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
           is_supported_sub (is_supported_of.2 <| Or.inl rfl)
@@ -557,20 +541,15 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
               (is_supported_of.2 <| Or.inr <| Or.inr rfl)),
           _⟩
       · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
-        
       · rw [(restriction _).map_sub, (restriction _).map_mul, restriction_of, restriction_of,
           restriction_of, dif_pos, dif_pos, dif_pos, (FreeCommRing.lift _).map_sub,
           (FreeCommRing.lift _).map_mul, lift_of, lift_of, lift_of]
         dsimp only
         rw [(f' i i _).map_mul]
         exacts[sub_self _, Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
-        
-      
-    
   · refine' Nonempty.elim (by infer_instance) fun ind : ι => _
     refine' ⟨ind, ∅, fun _ => False.elim, is_supported_zero, _⟩
     rw [(restriction _).map_zero, (FreeCommRing.lift _).map_zero]
-    
   · rintro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
     have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by
@@ -582,12 +561,11 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         is_supported_add (is_supported_upwards hxs <| Set.subset_union_left s t)
           (is_supported_upwards hyt <| Set.subset_union_right s t),
         _⟩
-    · rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, ←
+    ·
+      rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, ←
         of.zero_exact_aux2 G f' hxs hi this hik (Set.subset_union_left s t), ←
         of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right s t), ihs,
         (f' i k hik).map_zero, iht, (f' j k hjk).map_zero, zero_add]
-      
-    
   · rintro x y ⟨j, t, hj, hyt, iht⟩
     rw [smul_eq_mul]
     rcases exists_finset_support x with ⟨s, hxs⟩
@@ -604,7 +582,6 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, ←
       of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right (↑s) t), iht,
       (f' j k hjk).map_zero, mul_zero]
-    
 #align ring.direct_limit.of.zero_exact_aux Ring.DirectLimit.of.zero_exact_aux
 
 /-- A component that corresponds to zero in the direct limit is already zero in some
@@ -657,7 +634,7 @@ def lift : DirectLimit G f →+* P :=
   Ideal.Quotient.lift _ (FreeCommRing.lift fun x : Σi, G i => g x.1 x.2)
     (by
       suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σi : ι, G i => g x.fst x.snd) ⊥
-        by
+        by 
         intro x hx
         exact (mem_bot P).1 (this hx)
       rw [Ideal.span_le]

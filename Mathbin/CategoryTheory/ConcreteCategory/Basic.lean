@@ -246,7 +246,9 @@ instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D
   category_theory.induced_category.concrete_category CategoryTheory.InducedCategory.concreteCategory
 
 instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D]
-    (f : C → D) : HasForget₂ (InducedCategory D f) D where
+    (f : C → D) :
+    HasForget₂ (InducedCategory D f)
+      D where 
   forget₂ := inducedFunctor f
   forget_comp := rfl
 #align category_theory.induced_category.has_forget₂ CategoryTheory.InducedCategory.hasForget₂
@@ -258,7 +260,8 @@ instance FullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCat
   category_theory.full_subcategory.concrete_category CategoryTheory.FullSubcategory.concreteCategory
 
 instance FullSubcategory.hasForget₂ {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
-    HasForget₂ (FullSubcategory Z) C where
+    HasForget₂ (FullSubcategory Z)
+      C where 
   forget₂ := fullSubcategoryInclusion Z
   forget_comp := rfl
 #align category_theory.full_subcategory.has_forget₂ CategoryTheory.FullSubcategory.hasForget₂
@@ -270,14 +273,15 @@ def HasForget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C
     [ConcreteCategory D] (obj : C → D) (h_obj : ∀ X, (forget D).obj (obj X) = (forget C).obj X)
     (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq ((forget D).map (map f)) ((forget C).map f)) :
-    HasForget₂ C D where
+    HasForget₂ C D where 
   forget₂ := Faithful.div _ _ _ @h_obj _ @h_map
   forget_comp := by apply faithful.div_comp
 #align category_theory.has_forget₂.mk' CategoryTheory.HasForget₂.mk'
 
 /-- Every forgetful functor factors through the identity functor. This is not a global instance as
     it is prone to creating type class resolution loops. -/
-def hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] : HasForget₂ C (Type u) where
+def hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] :
+    HasForget₂ C (Type u) where 
   forget₂ := forget C
   forget_comp := Functor.comp_id _
 #align category_theory.has_forget_to_Type CategoryTheory.hasForgetToType

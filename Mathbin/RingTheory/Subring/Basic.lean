@@ -199,11 +199,12 @@ def toSubmonoid (s : Subring R) : Submonoid R :=
   { s.toSubsemiring.toSubmonoid with carrier := s.carrier }
 #align subring.to_submonoid Subring.toSubmonoid
 
-instance : SetLike (Subring R) R where
+instance : SetLike (Subring R) R where 
   coe := Subring.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
-instance : SubringClass (Subring R) R where
+instance : SubringClass (Subring R)
+      R where 
   zero_mem := zero_mem'
   add_mem := add_mem'
   one_mem := one_mem'
@@ -234,7 +235,7 @@ theorem mk_le_mk {S S' : Set R} (h₁ h₂ h₃ h₄ h₅ h₁' h₂' h₃' h₄
 #align subring.mk_le_mk Subring.mk_le_mk
 
 /-- Two subrings are equal if they have the same elements. -/
-@[ext.1]
+@[ext]
 theorem ext {S T : Subring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align subring.ext Subring.ext
@@ -299,7 +300,7 @@ theorem to_submonoid_mono : Monotone (toSubmonoid : Subring R → Submonoid R) :
 /-- Construct a `subring R` from a set `s`, a submonoid `sm`, and an additive
 subgroup `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
 protected def mk' (s : Set R) (sm : Submonoid R) (sa : AddSubgroup R) (hm : ↑sm = s)
-    (ha : ↑sa = s) : Subring R where
+    (ha : ↑sa = s) : Subring R where 
   carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   one_mem' := hm ▸ sm.one_mem
@@ -337,7 +338,7 @@ end Subring
 /-- A `subsemiring` containing -1 is a `subring`. -/
 def Subsemiring.toSubring (s : Subsemiring R) (hneg : (-1 : R) ∈ s) : Subring R :=
   { s.toSubmonoid, s.toAddSubmonoid with
-    neg_mem' := by
+    neg_mem' := by 
       rintro x
       rw [← neg_one_mul]
       apply Subsemiring.mul_mem
@@ -557,7 +558,7 @@ theorem coe_to_add_subgroup (s : Subring R) : (s.toAddSubgroup : Set R) = s :=
 
 
 /-- The subring `R` of the ring `R`. -/
-instance : HasTop (Subring R) :=
+instance : Top (Subring R) :=
   ⟨{ (⊤ : Submonoid R), (⊤ : AddSubgroup R) with }⟩
 
 @[simp]
@@ -700,7 +701,7 @@ namespace Subring
 /-! ## bot -/
 
 
-instance : HasBot (Subring R) :=
+instance : Bot (Subring R) :=
   ⟨(Int.castRingHom R).range⟩
 
 instance : Inhabited (Subring R) :=
@@ -910,11 +911,8 @@ theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {a b : R} (ha : 
     closure_induction hb _ (H0_right _) (H1_right _) (Hadd_right a) (Hneg_right a) (Hmul_right a)
   refine' closure_induction ha Hs (fun x _ => H0_left x) (fun x _ => H1_left x) _ _ _
   · exact fun x y H₁ H₂ z zs => Hadd_left x y z (H₁ z zs) (H₂ z zs)
-    
   · exact fun x hx z zs => Hneg_left x z (hx z zs)
-    
   · exact fun x y H₁ H₂ z zs => Hmul_left x y z (H₁ z zs) (H₂ z zs)
-    
 #align subring.closure_induction₂ Subring.closure_induction₂
 
 theorem mem_closure_iff {s : Set R} {x} :
@@ -931,12 +929,12 @@ theorem mem_closure_iff {s : Set R} {x} :
             (fun p hp => AddSubgroup.subset_closure ((Submonoid.closure s).mul_mem hp hq))
             (by rw [zero_mul q]; apply AddSubgroup.zero_mem _)
             (fun p₁ p₂ ihp₁ ihp₂ => by rw [add_mul p₁ p₂ q]; apply AddSubgroup.add_mem _ ihp₁ ihp₂)
-            fun x hx => by
+            fun x hx => by 
             have f : -x * q = -(x * q) := by simp
             rw [f]; apply AddSubgroup.neg_mem _ hx)
         (by rw [mul_zero x]; apply AddSubgroup.zero_mem _)
         (fun q₁ q₂ ihq₁ ihq₂ => by rw [mul_add x q₁ q₂]; apply AddSubgroup.add_mem _ ihq₁ ihq₂)
-        fun z hz => by
+        fun z hz => by 
         have f : x * -z = -(x * z) := by simp
         rw [f]; apply AddSubgroup.neg_mem _ hz,
     fun h =>
@@ -951,7 +949,7 @@ theorem mem_closure_iff {s : Set R} {x} :
 def closureCommRingOfComm {s : Set R} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b = b * a) :
     CommRing (closure s) :=
   { (closure s).toRing with
-    mul_comm := fun x y => by
+    mul_comm := fun x y => by 
       ext
       simp only [Subring.coe_mul]
       refine'
@@ -986,7 +984,9 @@ theorem exists_list_of_mem_closure {s : Set R} {x : R} (h : x ∈ closure s) :
 variable (R)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
-protected def gi : GaloisInsertion (@closure R _) coe where
+protected def gi :
+    GaloisInsertion (@closure R _)
+      coe where 
   choice s _ := closure s
   gc s t := closure_le
   le_l_u s := subset_closure
@@ -1305,15 +1305,14 @@ attribute [local reducible] closure
 @[elab_as_elim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1)
     (hneg1 : C (-1)) (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) :
-    C x := by
+    C x := by 
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
   clear hx
   induction' L with hd tl ih
   · exact h0
-    
   rw [List.forall_mem_cons] at HL
-  suffices C (List.prod hd) by
+  suffices C (List.prod hd) by 
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
   replace HL := HL.1
@@ -1324,37 +1323,30 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
     clear HP HL hd
     induction' L with hd tl ih
     · exact h1
-      
     rw [List.forall_mem_cons] at HL'
     rw [List.prod_cons]
     exact hs _ HL'.1 _ (ih HL'.2)
-    
   · rw [HP]
     clear HP HL hd
     induction' L with hd tl ih
     · exact hneg1
-      
     rw [List.prod_cons, neg_mul_eq_mul_neg]
     rw [List.forall_mem_cons] at HL'
     exact hs _ HL'.1 _ (ih HL'.2)
-    
   induction' hd with hd tl ih
   · exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
-    
   rw [List.forall_mem_cons] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
-  · exact
+  ·
+    exact
       ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
         Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
-    
   · exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
-    
-  · exact
+  ·
+    exact
       ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
         Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
-    
   · exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
-    
 #align subring.in_closure.rec_on Subring.InClosure.rec_on
 
 theorem closure_preimage_le (f : R →+* S) (s : Set S) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
@@ -1364,7 +1356,7 @@ theorem closure_preimage_le (f : R →+* S) (s : Set S) : closure (f ⁻¹' s) �
 end Subring
 
 theorem AddSubgroup.int_mul_mem {G : AddSubgroup R} (k : ℤ) {g : R} (h : g ∈ G) : (k : R) * g ∈ G :=
-  by
+  by 
   convert AddSubgroup.zsmul_mem G h k
   simp
 #align add_subgroup.int_mul_mem AddSubgroup.int_mul_mem

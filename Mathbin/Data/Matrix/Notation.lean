@@ -65,7 +65,7 @@ unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [refl
               "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         q(_) q(_) q(_)) <|
-    by
+    by 
     dsimp only [Matrix]
     exact h m
 #align matrix.matrix.reflect matrix.matrix.reflect
@@ -281,7 +281,6 @@ theorem cons_mul [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (B : Mat
   ext (i j)
   refine' Fin.cases _ _ i
   · rfl
-    
   simp [mul_val_succ]
 #align matrix.cons_mul Matrix.cons_mul
 
@@ -429,7 +428,7 @@ theorem one_fin_two :
     (1 : Matrix (Fin 2) (Fin 2) α) =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
-  by
+  by 
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_two Matrix.one_fin_two
@@ -440,7 +439,7 @@ theorem one_fin_three :
     (1 : Matrix (Fin 3) (Fin 3) α) =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
-  by
+  by 
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_three Matrix.one_fin_three
@@ -453,7 +452,7 @@ theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     A =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
-  by
+  by 
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_two Matrix.eta_fin_two
@@ -464,7 +463,7 @@ theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
     A =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
-  by
+  by 
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_three Matrix.eta_fin_three
@@ -482,7 +481,7 @@ theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂
           "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
-  by
+  by 
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
 #align matrix.mul_fin_two Matrix.mul_fin_two
@@ -501,7 +500,7 @@ theorem mul_fin_three [AddCommMonoid α] [Mul α]
           "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
-  by
+  by 
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]
 #align matrix.mul_fin_three Matrix.mul_fin_three

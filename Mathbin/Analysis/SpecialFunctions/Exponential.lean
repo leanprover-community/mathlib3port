@@ -89,7 +89,7 @@ theorem hasFderivAtExpOfMemBall [CharZero 𝕂] {x : 𝔸}
   suffices
     (fun h => exp 𝕂 x * (exp 𝕂 (0 + h) - exp 𝕂 0 - ContinuousLinearMap.id 𝕂 𝔸 h)) =ᶠ[𝓝 0] fun h =>
       exp 𝕂 (x + h) - exp 𝕂 x - exp 𝕂 x • ContinuousLinearMap.id 𝕂 𝔸 h
-    by
+    by 
     refine' (is_o.const_mul_left _ _).congr' this (eventually_eq.refl _ _)
     rw [← has_fderiv_at_iff_is_o_nhds_zero]
     exact hasFderivAtExpZeroOfRadiusPos hpos

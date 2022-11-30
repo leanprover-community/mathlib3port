@@ -209,7 +209,8 @@ theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ 
 /-- The homeomorphism given by scalar multiplication by a given element of a group `Γ` acting on
   `T` is a homeomorphism from `T` to itself. -/
 @[to_additive]
-def Homeomorph.smul (γ : G) : α ≃ₜ α where
+def Homeomorph.smul (γ : G) :
+    α ≃ₜ α where 
   toEquiv := MulAction.toPerm γ
   continuous_to_fun := continuous_const_smul γ
   continuous_inv_fun := continuous_const_smul γ⁻¹
@@ -310,13 +311,9 @@ theorem closure_smul₀ {E} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpac
   rcases eq_or_ne c 0 with (rfl | hc)
   · rcases eq_empty_or_nonempty s with (rfl | hs)
     · simp
-      
     · rw [zero_smul_set hs, zero_smul_set hs.closure]
       exact closure_singleton
-      
-    
   · exact ((Homeomorph.smulOfNeZero c hc).image_closure s).symm
-    
 #align closure_smul₀ closure_smul₀
 
 /-- `smul` is a closed map in the second argument.
@@ -342,9 +339,7 @@ theorem is_closed_map_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMono
   rcases eq_or_ne c 0 with (rfl | hne)
   · simp only [zero_smul]
     exact is_closed_map_const
-    
   · exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
-    
 #align is_closed_map_smul₀ is_closed_map_smul₀
 
 theorem IsClosed.smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoid M] [TopologicalSpace M]
@@ -489,11 +484,9 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
   rintro x ⟨x_in_U₀₀, x_in_K₀⟩ γ
   by_cases H : γ ∈ bad_Γ_set
   · exact fun h => (u_v_disjoint γ).le_bot ⟨mem_Inter₂.mp x_in_U₀₀ γ H, mem_Inter₂.mp h.1 γ H⟩
-    
   · rintro ⟨-, h'⟩
     simp only [image_smul, not_not, mem_set_of_eq, Ne.def] at H
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
-    
 #align
   t2_space_of_properly_discontinuous_smul_of_t2_space t2SpaceOfProperlyDiscontinuousSmulOfT2Space
 
@@ -515,7 +508,7 @@ variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ α] [TopologicalSp
 
 /-- Scalar multiplication preserves neighborhoods. -/
 theorem set_smul_mem_nhds_smul {c : G₀} {s : Set α} {x : α} (hs : s ∈ 𝓝 x) (hc : c ≠ 0) :
-    c • s ∈ 𝓝 (c • x : α) := by
+    c • s ∈ 𝓝 (c • x : α) := by 
   rw [mem_nhds_iff] at hs⊢
   obtain ⟨U, hs', hU, hU'⟩ := hs
   exact ⟨c • U, Set.smul_set_mono hs', hU.smul₀ hc, Set.smul_mem_smul_set hU'⟩

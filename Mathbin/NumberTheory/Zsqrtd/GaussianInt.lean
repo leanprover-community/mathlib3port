@@ -262,7 +262,7 @@ instance : Nontrivial ℤ[i] :=
 
 instance : EuclideanDomain ℤ[i] :=
   { GaussianInt.commRing, GaussianInt.nontrivial with Quotient := (· / ·), remainder := (· % ·),
-    quotient_zero := by
+    quotient_zero := by 
       simp [div_def]
       rfl,
     quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def], R := _,

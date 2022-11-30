@@ -184,7 +184,8 @@ theorem is_open_Iio {a : Γ₀} : IsOpen (iio a) :=
 /-- The topology on a linearly ordered group with zero element adjoined is compatible with the order
 structure: the set `{p : Γ₀ × Γ₀ | p.1 ≤ p.2}` is closed. -/
 instance (priority := 100) orderClosedTopology :
-    OrderClosedTopology Γ₀ where isClosedLe' := by
+    OrderClosedTopology
+      Γ₀ where isClosedLe' := by
     simp only [← is_open_compl_iff, compl_set_of, not_le, is_open_iff_mem_nhds]
     rintro ⟨a, b⟩ (hab : b < a)
     rw [nhds_prod_eq, nhds_of_ne_zero (zero_le'.trans_lt hab).ne', pure_prod]
@@ -194,28 +195,29 @@ instance (priority := 100) orderClosedTopology :
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
 instance (priority := 100) t3Space :
-    T3Space Γ₀ where toRegularSpace :=
+    T3Space
+      Γ₀ where toRegularSpace :=
     RegularSpace.ofLift'Closure fun γ => by
       rcases ne_or_eq γ 0 with (h₀ | rfl)
-      · rw [nhds_of_ne_zero h₀, lift'_pure (monotone_closure Γ₀), closure_singleton,
+      ·
+        rw [nhds_of_ne_zero h₀, lift'_pure (monotone_closure Γ₀), closure_singleton,
           principal_singleton]
-        
-      · exact
+      ·
+        exact
           has_basis_nhds_zero.lift'_closure_eq_self fun x hx =>
             is_closed_iff.2 <| Or.inl <| zero_lt_iff.2 hx
-        
 #align linear_ordered_comm_group_with_zero.t3_space LinearOrderedCommGroupWithZero.t3Space
 
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=
-  ⟨by
+  ⟨by 
     rw [continuous_iff_continuous_at]
     rintro ⟨x, y⟩
     wlog (discharger := tactic.skip) hle : x ≤ y := le_total x y using x y, y x; swap
-    · simpa only [mul_comm, (· ∘ ·), Prod.swap] using
+    ·
+      simpa only [mul_comm, (· ∘ ·), Prod.swap] using
         tendsto.comp this (continuous_swap.tendsto (x, y))
-      
     rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy), skip]
     · rw [ContinuousAt, zero_mul]
       refine'
@@ -223,7 +225,6 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
           fun γ hγ => ⟨(γ, 1), ⟨hγ, one_ne_zero⟩, _⟩
       rintro ⟨x, y⟩ ⟨hx : x < γ, hy : y < 1⟩
       exact (mul_lt_mul₀ hx hy).trans_eq (mul_one γ)
-      
     · rw [ContinuousAt, zero_mul, nhds_prod_eq, nhds_of_ne_zero hy, prod_pure, tendsto_map'_iff]
       refine' (has_basis_nhds_zero.tendsto_iff has_basis_nhds_zero).2 fun γ hγ => _
       refine' ⟨γ / y, div_ne_zero hγ hy, fun x hx => _⟩
@@ -231,14 +232,12 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
         x * y < γ / y * y := mul_lt_right₀ _ hx hy
         _ = γ := div_mul_cancel _ hy
         
-      
     · have hy : y ≠ 0 := ((zero_lt_iff.mpr hx).trans_le hle).ne'
       rw [ContinuousAt, nhds_prod_eq, nhds_of_ne_zero hx, nhds_of_ne_zero hy, prod_pure_pure]
-      exact pure_le_nhds (x * y)
-      ⟩
+      exact pure_le_nhds (x * y)⟩
 
 instance (priority := 100) : HasContinuousInv₀ Γ₀ :=
-  ⟨fun γ h => by
+  ⟨fun γ h => by 
     rw [ContinuousAt, nhds_of_ne_zero h]
     exact pure_le_nhds γ⁻¹⟩
 

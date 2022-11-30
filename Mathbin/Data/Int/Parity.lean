@@ -37,12 +37,12 @@ theorem even_iff : Even n ↔ n % 2 = 0 :=
 #align int.even_iff Int.even_iff
 
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
-  ⟨fun ⟨m, hm⟩ => by
+  ⟨fun ⟨m, hm⟩ => by 
     rw [hm, add_mod]
     norm_num, fun h =>
     ⟨n / 2,
       (mod_add_div n 2).symm.trans
-        (by
+        (by 
           rw [h]
           abel)⟩⟩
 #align int.odd_iff Int.odd_iff
@@ -75,19 +75,17 @@ theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
 theorem even_xor_odd (n : ℤ) : Xor' (Even n) (Odd n) := by
   cases' even_or_odd n with h
   · exact Or.inl ⟨h, even_iff_not_odd.mp h⟩
-    
   · exact Or.inr ⟨h, odd_iff_not_even.mp h⟩
-    
 #align int.even_xor_odd Int.even_xor_odd
 
 theorem even_xor_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
-  · simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
+  ·
+    simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
       and_false_iff] using (succ_ne_self (2 * k)).symm
-    
-  · simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
+  ·
+    simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
       one_ne_zero, and_self_iff]
-    
 #align int.even_xor_odd' Int.even_xor_odd'
 
 @[simp]
@@ -224,7 +222,6 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
     convert dvd_mul_right 4 k
     rw [eq_add_of_sub_eq hk, mul_add, add_assoc, add_sub_cancel, ← two_mul, ← mul_assoc]
     rfl
-    
   · left
     obtain ⟨k, hk⟩ := h
     convert dvd_mul_right 4 (k + 1)
@@ -232,7 +229,6 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
       sub_add, add_assoc, ← sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assoc,
       mul_add]
     rfl
-    
 #align int.four_dvd_add_or_sub_of_odd Int.four_dvd_add_or_sub_of_odd
 
 theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h =>

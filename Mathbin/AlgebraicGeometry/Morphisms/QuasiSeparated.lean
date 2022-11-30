@@ -52,18 +52,16 @@ theorem quasi_separated_space_iff_affine (X : SchemeCat) :
   constructor
   · intro H U V
     exact H U V U.1.2 U.2.IsCompact V.1.2 V.2.IsCompact
-    
   · intro H
     suffices
       ∀ (U : opens X.carrier) (hU : IsCompact U.1) (V : opens X.carrier) (hV : IsCompact V.1),
         IsCompact (U ⊓ V).1
-      by
+      by 
       intro U V hU hU' hV hV'
       exact this ⟨U, hU⟩ hU' ⟨V, hV⟩ hV'
     intro U hU V hV
     apply compact_open_induction_on V hV
     · simp
-      
     · intro S hS V hV
       change IsCompact (U.1 ∩ (S.1 ∪ V.1))
       rw [Set.inter_union_distrib_left]
@@ -71,15 +69,11 @@ theorem quasi_separated_space_iff_affine (X : SchemeCat) :
       clear hV
       apply compact_open_induction_on U hU
       · simp
-        
       · intro S hS W hW
         change IsCompact ((S.1 ∪ W.1) ∩ V.1)
         rw [Set.union_inter_distrib_right]
         apply hW.union
         apply H
-        
-      
-    
 #align
   algebraic_geometry.quasi_separated_space_iff_affine AlgebraicGeometry.quasi_separated_space_iff_affine
 
@@ -99,7 +93,6 @@ theorem quasi_compact_affine_property_iff_quasi_separated_space {X Y : SchemeCat
     erw [Subtype.range_coe, Subtype.range_coe] at e
     rw [is_compact_iff_compact_space]
     exact @Homeomorph.compact_space _ _ (H _ _) e
-    
   · introv H h₁ h₂
     skip
     let g : pullback f₁ f₂ ⟶ X := pullback.fst ≫ f₁
@@ -112,7 +105,6 @@ theorem quasi_compact_affine_property_iff_quasi_separated_space {X Y : SchemeCat
         (H ⟨⟨_, h₁.base_open.open_range⟩, range_is_affine_open_of_open_immersion _⟩
           ⟨⟨_, h₂.base_open.open_range⟩, range_is_affine_open_of_open_immersion _⟩)
         e.symm
-    
 #align
   algebraic_geometry.quasi_compact_affine_property_iff_quasi_separated_space AlgebraicGeometry.quasi_compact_affine_property_iff_quasi_separated_space
 
@@ -194,7 +186,7 @@ theorem QuasiSeparated.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y
           ∀ i j, IsAffine ((𝒰' i).obj j)),
           ∀ (i : 𝒰.J) (j k : (𝒰' i).J),
             CompactSpace (pullback ((𝒰' i).map j) ((𝒰' i).map k)).carrier] :=
-  by
+  by 
   have := quasi_compact.affine_property_is_local.diagonal_affine_open_cover_tfae f
   simp_rw [← quasi_compact_eq_affine_property, ← quasi_separated_eq_diagonal_is_quasi_compact,
     quasi_compact_affine_property_diagonal_eq] at this
@@ -274,7 +266,7 @@ theorem quasi_separated_space_of_quasi_separated {X Y : SchemeCat} (f : X ⟶ Y)
   algebraic_geometry.quasi_separated_space_of_quasi_separated AlgebraicGeometry.quasi_separated_space_of_quasi_separated
 
 instance quasi_separated_space_of_is_affine (X : SchemeCat) [IsAffine X] :
-    QuasiSeparatedSpace X.carrier := by
+    QuasiSeparatedSpace X.carrier := by 
   constructor
   intro U V hU hU' hV hV'
   obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_basic_open_union _).mp ⟨hU', hU⟩
@@ -288,7 +280,6 @@ instance quasi_separated_space_of_is_affine (X : SchemeCat) [IsAffine X] :
     change IsCompact (X.basic_open i ⊓ X.basic_open i').1
     rw [← Scheme.basic_open_mul]
     exact ((top_is_affine_open _).basic_open_is_affine _).IsCompact
-    
 #align
   algebraic_geometry.quasi_separated_space_of_is_affine AlgebraicGeometry.quasi_separated_space_of_is_affine
 
@@ -308,16 +299,14 @@ theorem quasi_separated_of_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
   · intro i
     dsimp
     infer_instance
-    
   rintro ⟨i, j⟩; dsimp at *
   specialize H _ i
   refine' @quasi_separated_space_of_quasi_separated _ H _
-  · exact
+  ·
+    exact
       pullback.map _ _ _ _ (𝟙 _) _ _ (by simp) (category.comp_id _) ≫
         (pullback_right_pullback_fst_iso g (Z.affine_cover.map i) f).Hom
-    
   · apply AlgebraicGeometry.quasi_separated_of_mono
-    
 #align algebraic_geometry.quasi_separated_of_comp AlgebraicGeometry.quasi_separated_of_comp
 
 end AlgebraicGeometry

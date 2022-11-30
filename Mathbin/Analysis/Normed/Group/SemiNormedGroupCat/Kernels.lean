@@ -37,7 +37,7 @@ def cokernelCocone {X Y : SemiNormedGroup₁Cat.{u}} (f : X ⟶ Y) : Cofork f 0 
   Cofork.ofπ
     (@SemiNormedGroup₁Cat.mkHom _ (SemiNormedGroupCat.of (Y ⧸ NormedAddGroupHom.range f.1))
       f.1.range.normedMk (NormedAddGroupHom.isQuotientQuotient _).norm_le)
-    (by
+    (by 
       ext
       simp only [comp_apply, limits.zero_comp, NormedAddGroupHom.zero_apply,
         SemiNormedGroup₁Cat.mk_hom_apply, SemiNormedGroup₁Cat.zero_apply, ←
@@ -48,14 +48,13 @@ def cokernelCocone {X Y : SemiNormedGroup₁Cat.{u}} (f : X ⟶ Y) : Cofork f 0 
 
 /-- Auxiliary definition for `has_cokernels SemiNormedGroup₁`. -/
 def cokernelLift {X Y : SemiNormedGroup₁Cat.{u}} (f : X ⟶ Y) (s : CokernelCofork f) :
-    (cokernelCocone f).x ⟶ s.x := by
+    (cokernelCocone f).x ⟶ s.x := by 
   fconstructor
   -- The lift itself:
   · apply NormedAddGroupHom.lift _ s.π.1
     rintro _ ⟨b, rfl⟩
     change (f ≫ s.π) b = 0
     simp
-    
   -- The lift has norm at most one:
   exact NormedAddGroupHom.liftNormNoninc _ _ _ s.π.2
 #align SemiNormedGroup₁.cokernel_lift SemiNormedGroup₁Cat.cokernelLift
@@ -67,7 +66,7 @@ instance :
       { Cocone := cokernelCocone f,
         IsColimit :=
           isColimitAux _ (cokernelLift f)
-            (fun s => by
+            (fun s => by 
               ext
               apply NormedAddGroupHom.lift_mk f.1.range
               rintro _ ⟨b, rfl⟩
@@ -129,7 +128,7 @@ section Cokernel
 /-- Auxiliary definition for `has_cokernels SemiNormedGroup`. -/
 def cokernelCocone {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) : Cofork f 0 :=
   @Cofork.ofπ _ _ _ _ _ _ (SemiNormedGroupCat.of (Y ⧸ NormedAddGroupHom.range f)) f.range.normedMk
-    (by
+    (by 
       ext
       simp only [comp_apply, limits.zero_comp, NormedAddGroupHom.zero_apply, ←
         NormedAddGroupHom.mem_ker, f.range.ker_normed_mk, f.mem_range, exists_apply_eq_apply])
@@ -139,7 +138,7 @@ def cokernelCocone {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) : Cofork f 0 :=
 def cokernelLift {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) (s : CokernelCofork f) :
     (cokernelCocone f).x ⟶ s.x :=
   NormedAddGroupHom.lift _ s.π
-    (by
+    (by 
       rintro _ ⟨b, rfl⟩
       change (f ≫ s.π) b = 0
       simp)
@@ -149,7 +148,7 @@ def cokernelLift {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) (s : CokernelCofor
 def isColimitCokernelCocone {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) :
     IsColimit (cokernelCocone f) :=
   isColimitAux _ (cokernelLift f)
-    (fun s => by
+    (fun s => by 
       ext
       apply NormedAddGroupHom.lift_mk f.range
       rintro _ ⟨b, rfl⟩
@@ -226,9 +225,7 @@ theorem explicit_cokernel_desc_unique {X Y Z : SemiNormedGroupCat.{u}} {f : X �
   rintro (_ | _)
   · convert w.symm
     simp
-    
   · exact he
-    
 #align
   SemiNormedGroup.explicit_cokernel_desc_unique SemiNormedGroupCat.explicit_cokernel_desc_unique
 
@@ -237,7 +234,7 @@ theorem explicit_cokernel_desc_comp_eq_desc {X Y Z W : SemiNormedGroupCat.{u}} {
     explicitCokernelDesc cond ≫ h =
       explicitCokernelDesc
         (show f ≫ g ≫ h = 0 by rw [← CategoryTheory.Category.assoc, cond, limits.zero_comp]) :=
-  by
+  by 
   refine' explicit_cokernel_desc_unique _ _ _
   rw [← CategoryTheory.Category.assoc, explicit_cokernel_π_desc]
 #align
@@ -249,10 +246,10 @@ theorem explicit_cokernel_desc_zero {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ 
   Eq.symm <| explicit_cokernel_desc_unique _ _ CategoryTheory.Limits.comp_zero
 #align SemiNormedGroup.explicit_cokernel_desc_zero SemiNormedGroupCat.explicit_cokernel_desc_zero
 
-@[ext.1]
+@[ext]
 theorem explicit_cokernel_hom_ext {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ Y}
     (e₁ e₂ : explicitCokernel f ⟶ Z) (h : explicitCokernelπ f ≫ e₁ = explicitCokernelπ f ≫ e₂) :
-    e₁ = e₂ := by
+    e₁ = e₂ := by 
   let g : Y ⟶ Z := explicit_cokernel_π f ≫ e₂
   have w : f ≫ g = 0 := by simp
   have : e₂ = explicit_cokernel_desc w := by
@@ -264,7 +261,7 @@ theorem explicit_cokernel_hom_ext {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ Y}
 #align SemiNormedGroup.explicit_cokernel_hom_ext SemiNormedGroupCat.explicit_cokernel_hom_ext
 
 instance explicitCokernelπ.epi {X Y : SemiNormedGroupCat.{u}} {f : X ⟶ Y} :
-    Epi (explicitCokernelπ f) := by
+    Epi (explicitCokernelπ f) := by 
   constructor
   intro Z g h H
   ext x
@@ -338,7 +335,7 @@ theorem explicit_cokernel_iso_inv_π {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y
 @[simp]
 theorem explicit_cokernel_iso_hom_desc {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ Y} {g : Y ⟶ Z}
     (w : f ≫ g = 0) : (explicitCokernelIso f).hom ≫ cokernel.desc f g w = explicitCokernelDesc w :=
-  by
+  by 
   ext1
   simp [explicit_cokernel_desc, explicit_cokernel_π, explicit_cokernel_iso,
     is_colimit.cocone_point_unique_up_to_iso]

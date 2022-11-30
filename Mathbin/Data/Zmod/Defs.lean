@@ -104,15 +104,16 @@ instance infinite : Infinite (Zmod 0) :=
 theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
   cases n
   · exact (not_finite (Zmod 0)).elim
-    
   · convert Fintype.card_fin (n + 1)
-    
 #align zmod.card Zmod.card
 
 /- We define each field by cases, to ensure that the eta-expanded `zmod.comm_ring` is defeq to the
 original, this helps avoid diamonds with instances coming from classes extending `comm_ring` such as
 field. -/
-instance commRing (n : ℕ) : CommRing (Zmod n) where
+instance commRing (n : ℕ) :
+    CommRing
+      (Zmod
+        n) where 
   add := Nat.casesOn n (@Add.add Int _) fun n => @Add.add (Fin n.succ) _
   add_assoc := Nat.casesOn n (@add_assoc Int _) fun n => @add_assoc (Fin n.succ) _
   zero := Nat.casesOn n (0 : Int) fun n => (0 : Fin n.succ)
@@ -133,7 +134,7 @@ instance commRing (n : ℕ) : CommRing (Zmod n) where
     Nat.casesOn n (@CommRing.nsmul_zero' Int _) fun n => @CommRing.nsmul_zero' (Fin n.succ) _
   nsmul_succ' :=
     Nat.casesOn n (@CommRing.nsmul_succ' Int _) fun n => @CommRing.nsmul_succ' (Fin n.succ) _
-  add_left_neg := by
+  add_left_neg := by 
     cases n
     exacts[@add_left_neg Int _, @add_left_neg (Fin n.succ) _]
   add_comm := Nat.casesOn n (@add_comm Int _) fun n => @add_comm (Fin n.succ) _

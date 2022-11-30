@@ -103,13 +103,9 @@ theorem Nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.
     refine' fun H => ⟨f y, fun x hx => _⟩
     rcases eq_or_ne x y with (rfl | hne)
     · apply IsRefl.refl
-      
     · exact H hx hy hne
-      
-    
   · rintro ⟨z, hz⟩ x hx y hy hne
     exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ <| hz _ hy)
-    
 #align set.nonempty.pairwise_iff_exists_forall Set.Nonempty.pairwise_iff_exists_forall
 
 /-- For a nonempty set `s`, a function `f` takes pairwise equal values on `s` if and only if
@@ -125,9 +121,7 @@ theorem pairwise_iff_exists_forall [Nonempty ι] (s : Set α) (f : α → ι) {r
     [IsEquiv ι r] : s.Pairwise (r on f) ↔ ∃ z, ∀ x ∈ s, r (f x) z := by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
   · simp
-    
   · exact hne.pairwise_iff_exists_forall
-    
 #align set.pairwise_iff_exists_forall Set.pairwise_iff_exists_forall
 
 /-- A function `f : α → ι` with nonempty codomain takes pairwise equal values on a set `s` if and
@@ -201,13 +195,11 @@ theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) :
   constructor
   · intro H n
     exact Pairwise.mono (subset_Union _ _) H
-    
   · intro H i hi j hj hij
     rcases mem_Union.1 hi with ⟨m, hm⟩
     rcases mem_Union.1 hj with ⟨n, hn⟩
     rcases h m n with ⟨p, mp, np⟩
     exact H p (mp hm) (np hn) hij
-    
 #align set.pairwise_Union Set.pairwise_Union
 
 theorem pairwise_sUnion {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
@@ -355,9 +347,7 @@ theorem PairwiseDisjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → �
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
   · exact hg d hd (hcd.subst ha) hb hab
-    
   · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono (le_supr₂ a ha) (le_supr₂ b hb)
-    
 #align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.bUnion
 
 end CompleteLattice
@@ -408,11 +398,9 @@ theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t
     refine' hs.elim hx.1 hy.1 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.2, _⟩)
     rw [h]
     exact mem_image_of_mem _ hy.2
-    
   · refine' disjoint_iff_inf_le.mpr _
     rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
     exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
-    
 #align set.pairwise_disjoint_image_right_iff Set.pairwise_disjoint_image_right_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -426,11 +414,9 @@ theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t 
     refine' ht.elim hx.2 hy.2 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.1, _⟩)
     rw [h]
     exact mem_image_of_mem _ hy.1
-    
   · refine' disjoint_iff_inf_le.mpr _
     rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
     exact h (congr_arg Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
-    
 #align set.pairwise_disjoint_image_left_iff Set.pairwise_disjoint_image_left_iff
 
 end Set

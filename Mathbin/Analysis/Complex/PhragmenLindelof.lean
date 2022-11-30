@@ -69,7 +69,7 @@ theorem is_O_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ �
     ∀ {c₁ c₂ B₁ B₂},
       c₁ ≤ c₂ →
         0 ≤ B₂ → B₁ ≤ B₂ → ∀ z, ‖expR (B₁ * expR (c₁ * |u z|))‖ ≤ ‖expR (B₂ * expR (c₂ * |u z|))‖ :=
-    by
+    by 
     intro c₁ c₂ B₁ B₂ hc hB₀ hB z
     rw [Real.norm_eq_abs, Real.norm_eq_abs, Real.abs_exp, Real.abs_exp, Real.exp_le_exp]
     exact
@@ -137,24 +137,22 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
           f =O[comap (Abs.abs ∘ re) atTop ⊓ 𝓟 (im ⁻¹' ioo a b)] fun z =>
             expR (B * expR (c * |z.re|)))
     (hle_a : ∀ z : ℂ, im z = a → ‖f z‖ ≤ C) (hle_b : ∀ z, im z = b → ‖f z‖ ≤ C) (hza : a ≤ im z)
-    (hzb : im z ≤ b) : ‖f z‖ ≤ C := by
+    (hzb : im z ≤ b) : ‖f z‖ ≤ C :=
+  by
   -- If `im z = a` or `im z = b`, then we apply `hle_a` or `hle_b`, otherwise `im z ∈ Ioo a b`.
   rw [le_iff_eq_or_lt] at hza hzb
   cases' hza with hza hza
   · exact hle_a _ hza.symm
-    
   cases' hzb with hzb hzb
   · exact hle_b _ hzb
-    
   -- WLOG, `0 < C`.
   suffices
     ∀ C' : ℝ,
       0 < C' → (∀ w : ℂ, im w = a → ‖f w‖ ≤ C') → (∀ w : ℂ, im w = b → ‖f w‖ ≤ C') → ‖f z‖ ≤ C'
-    by
+    by 
     refine' le_of_forall_le_of_dense fun C' hC' => this C' _ (fun w hw => _) fun w hw => _
     · refine' ((norm_nonneg (f (a * I))).trans (hle_a _ _)).trans_lt hC'
       rw [mul_I_im, of_real_re]
-      
     exacts[(hle_a _ hw).trans hC'.le, (hle_b _ hw).trans hC'.le]
   clear! C
   intro C hC₀ hle_a hle_b
@@ -196,7 +194,6 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
     · rw [← Real.closed_ball_eq_Icc] at hw
       rwa [of_real_mul_im, sub_im, mul_I_im, of_real_re, _root_.abs_mul, abs_of_pos hd₀,
         mul_le_mul_left hd₀]
-      
     simpa only [of_real_mul_re, _root_.abs_mul, abs_of_pos hd₀, sub_re, mul_I_re, of_real_im,
       zero_mul, neg_zero, sub_zero] using
       abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le ε₀.le hw hb'.le
@@ -214,7 +211,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
     simp only [is_O_with_iff, eventually_inf_principal, eventually_comap, mem_Ioo, ← abs_lt,
       mem_preimage, (· ∘ ·), Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] at hA
     suffices tendsto (fun R => expR (δ * expR (d * R) + B * expR (c * R) + Real.log A)) at_top (𝓝 0)
-      by
+      by 
       filter_upwards [this.eventually (ge_mem_nhds hC₀), hA] with R hR Hle w hre him
       calc
         ‖g ε w • f w‖ ≤ expR (δ * expR (d * R) + B * expR (c * R) + Real.log A) := _
@@ -232,7 +229,6 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
         sub_sub_cancel] using
         H.neg_mul_at_top δ₀
           (real.tendsto_exp_at_top.comp <| tendsto_const_nhds.mul_at_top hd₀ tendsto_id)
-      
     refine' tendsto_const_nhds.add (tendsto_const_nhds.mul _)
     exact
       tendsto_inv_at_top_zero.comp
@@ -257,17 +253,13 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' ioo a b))
     · rw [closure_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne] at hwc
       rw [norm_smul, ← one_mul C]
       exact mul_le_mul (hg₁ _ him) (him.by_cases (hle_a _) (hle_b _)) (norm_nonneg _) zero_le_one
-      
     · replace hw : w ∈ {-R, R} ×ℂ Icc (a - b) (a + b)
       exact hw.resolve_left fun h => him h.2
       have hw' := eq_endpoints_or_mem_Ioo_of_mem_Icc hw.2
       rw [← or_assoc] at hw'
       exact hR _ ((abs_eq hR₀.le).2 hw.1.symm) (hw'.resolve_left him)
-      
-    
   · rw [closure_re_prod_im, closure_Ioo hab.ne, closure_Ioo (neg_lt_self hR₀).Ne]
     exact ⟨abs_le.1 hzR.le, ⟨hza.le, hzb.le⟩⟩
-    
 #align phragmen_lindelof.horizontal_strip PhragmenLindelof.horizontal_strip
 
 /-- **Phragmen-Lindelöf principle** in a strip `U = {z : ℂ | a < im z < b}`.
@@ -356,11 +348,10 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' ioo a b))
     have :
       tendsto (fun z => z * -I) (comap (Abs.abs ∘ re) at_top ⊓ 𝓟 (im ⁻¹' Ioo a b))
         (comap (Abs.abs ∘ im) at_top ⊓ 𝓟 (re ⁻¹' Ioo a b)) :=
-      by
+      by 
       refine' (tendsto_comap_iff.2 _).inf H.tendsto
       simpa [(· ∘ ·)] using tendsto_comap
     simpa [(· ∘ ·)] using hO.comp_tendsto this
-    
   all_goals simpa
 #align phragmen_lindelof.vertical_strip PhragmenLindelof.vertical_strip
 
@@ -433,11 +424,11 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (ioi 0 ×ℂ ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → ‖f x‖ ≤ C) (him : ∀ x : ℝ, 0 ≤ x → ‖f (x * I)‖ ≤ C) (hz_re : 0 ≤ z.re)
-    (hz_im : 0 ≤ z.im) : ‖f z‖ ≤ C := by
+    (hz_im : 0 ≤ z.im) : ‖f z‖ ≤ C :=
+  by
   -- The case `z = 0` is trivial.
   rcases eq_or_ne z 0 with (rfl | hzne)
   · exact hre 0 le_rfl
-    
   -- Otherwise, `z = e ^ ζ` for some `ζ : ℂ`, `0 < Im ζ < π / 2`.
   obtain ⟨ζ, hζ, rfl⟩ : ∃ ζ : ℂ, ζ.im ∈ Icc 0 (π / 2) ∧ exp ζ = z := by
     refine' ⟨log z, _, exp_log hzne⟩
@@ -477,28 +468,23 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ ioi 0))
           (is_O_of_le _ fun w => _)
       rw [norm_one, Real.norm_of_nonneg (Real.exp_pos _).le, Real.one_le_exp_iff]
       exact mul_nonneg (le_max_right _ _) (Real.exp_pos _).le
-      
     · -- For the estimate as `ζ.re → ∞`, we reuse the uppoer estimate on `f`
       simp only [eventually_inf_principal, eventually_comap, comp_app, one_mul,
         Real.norm_of_nonneg (Real.exp_pos _).le, abs_exp, ← Real.exp_mul, Real.exp_le_exp]
       refine' (eventually_ge_at_top 0).mono fun x hx z hz hz' => _
       rw [hz, _root_.abs_of_nonneg hx, mul_comm _ c]
       exact mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.exp_pos _).le
-      
-    
   · -- If `ζ.im = 0`, then `complex.exp ζ` is a positive real number
     intro ζ hζ
     lift ζ to ℝ using hζ
     rw [comp_app, ← of_real_exp]
     exact hre _ (Real.exp_pos _).le
-    
   · -- If `ζ.im = π / 2`, then `complex.exp ζ` is a purely imaginary number with positive `im`
     intro ζ hζ
     rw [← re_add_im ζ, hζ, comp_app, exp_add_mul_I, ← of_real_cos, ← of_real_sin,
       Real.cos_pi_div_two, Real.sin_pi_div_two, of_real_zero, of_real_one, one_mul, zero_add, ←
       of_real_exp]
     exact him _ (Real.exp_pos _).le
-    
 #align phragmen_lindelof.quadrant_I PhragmenLindelof.quadrant_I
 
 /-- **Phragmen-Lindelöf principle** in the first quadrant. Let `f : ℂ → E` be a function such that
@@ -567,12 +553,11 @@ theorem quadrant_II (hd : DiffContOnCl ℂ f (iio 0 ×ℂ ioi 0))
   refine'
     quadrant_I (hd.comp (differentiable_id.mul_const _).DiffContOnCl H)
       (Exists₃Cat.imp (fun c hc B hO => _) hB) him (fun x hx => _) hz_im hz_re
-  · simpa only [(· ∘ ·), map_mul, abs_I, mul_one] using
+  ·
+    simpa only [(· ∘ ·), map_mul, abs_I, mul_one] using
       hO.comp_tendsto ((tendsto_mul_right_cobounded I_ne_zero).inf H.tendsto)
-    
   · rw [comp_app, mul_assoc, I_mul_I, mul_neg_one, ← of_real_neg]
     exact hre _ (neg_nonpos.2 hx)
-    
 #align phragmen_lindelof.quadrant_II PhragmenLindelof.quadrant_II
 
 /-- **Phragmen-Lindelöf principle** in the second quadrant. Let `f : ℂ → E` be a function such that
@@ -644,13 +629,10 @@ theorem quadrant_III (hd : DiffContOnCl ℂ f (iio 0 ×ℂ iio 0))
   · refine' Exists₃Cat.imp (fun c hc B hO => _) hB
     simpa only [(· ∘ ·), complex.abs.map_neg] using
       hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
-    
   · rw [comp_app, ← of_real_neg]
     exact hre (-x) (neg_nonpos.2 hx)
-    
   · rw [comp_app, ← neg_mul, ← of_real_neg]
     exact him (-x) (neg_nonpos.2 hx)
-    
 #align phragmen_lindelof.quadrant_III PhragmenLindelof.quadrant_III
 
 /-- **Phragmen-Lindelöf principle** in the third quadrant. Let `f : ℂ → E` be a function such that
@@ -722,13 +704,10 @@ theorem quadrant_IV (hd : DiffContOnCl ℂ f (ioi 0 ×ℂ iio 0))
   · refine' Exists₃Cat.imp (fun c hc B hO => _) hB
     simpa only [(· ∘ ·), complex.abs.map_neg] using
       hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
-    
   · rw [comp_app, ← of_real_neg]
     exact hre (-x) (neg_nonneg.2 hx)
-    
   · rw [comp_app, ← neg_mul, ← of_real_neg]
     exact him (-x) (neg_nonpos.2 hx)
-    
 #align phragmen_lindelof.quadrant_IV PhragmenLindelof.quadrant_IV
 
 /-- **Phragmen-Lindelöf principle** in the fourth quadrant. Let `f : ℂ → E` be a function such that
@@ -793,7 +772,8 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
     (hre : Tendsto (fun x : ℝ => f x) atTop (𝓝 0)) (him : ∀ x : ℝ, ‖f (x * I)‖ ≤ C)
-    (hz : 0 ≤ z.re) : ‖f z‖ ≤ C := by
+    (hz : 0 ≤ z.re) : ‖f z‖ ≤ C :=
+  by
   /- We are going to apply the Phragmen-Lindelöf principle in the first and fourth quadrants.
     The lemmas immediately imply that for any upper estimate `C'` on `‖f x‖`, `x : ℝ`, `0 ≤ x`,
     the number `max C C'` is an upper estimate on `f` in the whole right half-plane. -/
@@ -806,13 +786,11 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
           (fun x hx => (hC' x hx).trans <| le_max_right _ _)
           (fun x hx => (him x).trans (le_max_left _ _)) hz h
       exact hO.mono (inf_le_inf_left _ <| principal_mono.2 fun _ => And.left)
-      
     · refine'
         quadrant_I (hd.mono fun _ => And.left) (Exists₃Cat.imp (fun c hc B hO => _) hexp)
           (fun x hx => (hC' x hx).trans <| le_max_right _ _)
           (fun x hx => (him x).trans (le_max_left _ _)) hz h
       exact hO.mono (inf_le_inf_left _ <| principal_mono.2 fun _ => And.left)
-      
   -- Since `f` is continuous on `Ici 0` and `‖f x‖` tends to zero as `x → ∞`,
   -- the norm `‖f x‖` takes its maximum value at some `x₀ : ℝ`.
   obtain ⟨x₀, hx₀, hmax⟩ : ∃ x : ℝ, 0 ≤ x ∧ ∀ y : ℝ, 0 ≤ y → ‖f y‖ ≤ ‖f x‖ := by
@@ -822,7 +800,6 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     by_cases h₀ : ∀ x : ℝ, 0 ≤ x → f x = 0
     · refine' ⟨0, le_rfl, fun y hy => _⟩
       rw [h₀ y hy, h₀ 0 le_rfl]
-      
     push_neg  at h₀
     rcases h₀ with ⟨x₀, hx₀, hne⟩
     have hlt : ‖(0 : E)‖ < ‖f x₀‖ := by rwa [norm_zero, norm_pos_iff]
@@ -832,14 +809,13 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       bot_sup_eq]
     exact (hre.norm.eventually <| ge_mem_nhds hlt).filter_mono inf_le_left
   cases le_or_lt ‖f x₀‖ C
-  · -- If `‖f x₀‖ ≤ C`, then `hle` implies the required estimate
+  ·
+    -- If `‖f x₀‖ ≤ C`, then `hle` implies the required estimate
     simpa only [max_eq_left h] using hle _ hmax
-    
   · -- Otherwise, `‖f z‖ ≤ ‖f x₀‖` for all `z` in the right half-plane due to `hle`.
     replace hmax : IsMaxOn (norm ∘ f) { z | 0 < z.re } x₀
     · rintro z (hz : 0 < z.re)
       simpa [max_eq_right h.le] using hle _ hmax _ hz.le
-      
     -- Due to the maximum modulus principle applied to the closed ball of radius `x₀.re`,
     -- `‖f 0‖ = ‖f x₀‖`.
     have : ‖f 0‖ = ‖f x₀‖ := by
@@ -858,7 +834,6 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     -- Thus we have `C < ‖f x₀‖ = ‖f 0‖ ≤ C`. Contradiction completes the proof.
     refine' (h.not_le <| this ▸ _).elim
     simpa using him 0
-    
 #align
   phragmen_lindelof.right_half_plane_of_tendsto_zero_on_real PhragmenLindelof.right_half_plane_of_tendsto_zero_on_real
 
@@ -877,7 +852,8 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
     (hre : IsBoundedUnder (· ≤ ·) atTop fun x : ℝ => ‖f x‖) (him : ∀ x : ℝ, ‖f (x * I)‖ ≤ C)
-    (hz : 0 ≤ z.re) : ‖f z‖ ≤ C := by
+    (hz : 0 ≤ z.re) : ‖f z‖ ≤ C :=
+  by
   -- For each `ε < 0`, the function `λ z, exp (ε * z) • f z` satisfies assumptions of
   -- `right_half_plane_of_tendsto_zero_on_real`, hence `‖exp (ε * z) • f z‖ ≤ C` for all `ε < 0`.
   -- Taking the limit as `ε → 0`, we obtain the required inequality.
@@ -901,15 +877,12 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
     rw [hgn, one_mul]
     refine' mul_le_of_le_one_left (norm_nonneg _) (Real.exp_le_one_iff.2 _)
     exact mul_nonpos_of_nonpos_of_nonneg ε₀.le (le_of_lt hz)
-    
   · simp_rw [g, ← of_real_mul, ← of_real_exp, coe_smul]
     have h₀ : tendsto (fun x : ℝ => expR (ε * x)) at_top (𝓝 0) :=
       real.tendsto_exp_at_bot.comp (tendsto_const_nhds.neg_mul_at_top ε₀ tendsto_id)
     exact h₀.zero_smul_is_bounded_under_le hre
-    
   · rw [hgn, of_real_mul_re, I_re, mul_zero, mul_zero, Real.exp_zero, one_mul]
     exact him y
-    
 #align
   phragmen_lindelof.right_half_plane_of_bounded_on_real PhragmenLindelof.right_half_plane_of_bounded_on_real
 
@@ -929,7 +902,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
     (hre : SuperpolynomialDecay atTop expR fun x => ‖f x‖) (him : ∃ C, ∀ x : ℝ, ‖f (x * I)‖ ≤ C) :
-    EqOn f 0 { z : ℂ | 0 ≤ z.re } := by
+    EqOn f 0 { z : ℂ | 0 ≤ z.re } := by 
   rcases him with ⟨C, hC⟩
   -- Due to continuity, it suffices to prove the equality on the open right half-plane.
   suffices ∀ z : ℂ, 0 < z.re → f z = 0 by
@@ -949,7 +922,6 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
       (((tendsto_pow_at_top_at_top_of_one_lt (Real.one_lt_exp_iff.2 hz)).at_top_mul
               (norm_pos_iff.2 H) tendsto_const_nhds).Eventually
           (eventually_gt_at_top C)).exists
-    
   intro n
   -- This estimate follows from the Phragmen-Lindelöf principle in the right half-plane.
   refine'
@@ -964,24 +936,21 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
     filter_upwards [eventually_ge_at_top (1 : ℝ)] with r hr z hzr hre
     subst r
     refine' add_le_add (mul_le_mul_of_nonneg_left _ n.cast_nonneg) _
-    · calc
+    ·
+      calc
         z.re ≤ abs z := re_le_abs _
         _ = abs z ^ (1 : ℝ) := (Real.rpow_one _).symm
         _ ≤ abs z ^ max c 1 := Real.rpow_le_rpow_of_exponent_le hr (le_max_right _ _)
         
-      
-    · exact
+    ·
+      exact
         mul_le_mul (le_max_left _ _) (Real.rpow_le_rpow_of_exponent_le hr (le_max_left _ _))
           (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) (le_max_right _ _)
-      
-    
   · rw [tendsto_zero_iff_norm_tendsto_zero]
     simp only [hg]
     exact hre n
-    
   · rw [hg, of_real_mul_re, I_re, mul_zero, Real.exp_zero, one_pow, one_mul]
     exact hC y
-    
 #align
   phragmen_lindelof.eq_zero_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_zero_on_right_half_plane_of_superexponential_decay
 
@@ -1015,7 +984,7 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E}
       ∀ {c₁ c₂ B₁ B₂ : ℝ},
         c₁ ≤ c₂ →
           B₁ ≤ B₂ → 0 ≤ B₂ → (fun z => expR (B₁ * abs z ^ c₁)) =O[l] fun z => expR (B₂ * abs z ^ c₂)
-      by
+      by 
       rcases hfexp with ⟨cf, hcf, Bf, hOf⟩
       rcases hgexp with ⟨cg, hcg, Bg, hOg⟩
       refine' ⟨max cf cg, max_lt hcf hcg, max 0 (max Bf Bg), _⟩
@@ -1027,11 +996,9 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E}
     exact
       mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc)
         (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) hB₂
-    
   · rcases hfim with ⟨Cf, hCf⟩
     rcases hgim with ⟨Cg, hCg⟩
     exact ⟨Cf + Cg, fun x => norm_sub_le_of_le (hCf x) (hCg x)⟩
-    
 #align
   phragmen_lindelof.eq_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_on_right_half_plane_of_superexponential_decay
 

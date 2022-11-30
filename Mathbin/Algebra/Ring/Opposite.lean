@@ -23,7 +23,8 @@ instance [Distrib α] : Distrib αᵐᵒᵖ :=
     left_distrib := fun x y z => unop_injective <| add_mul (unop y) (unop z) (unop x),
     right_distrib := fun x y z => unop_injective <| mul_add (unop z) (unop x) (unop y) }
 
-instance [MulZeroClass α] : MulZeroClass αᵐᵒᵖ where
+instance [MulZeroClass α] : MulZeroClass
+      αᵐᵒᵖ where 
   zero := 0
   mul := (· * ·)
   zero_mul x := unop_injective <| mul_zero <| unop x
@@ -100,7 +101,8 @@ instance [Distrib α] : Distrib αᵃᵒᵖ :=
     left_distrib := fun x y z => unop_injective <| @mul_add α _ _ _ x z y,
     right_distrib := fun x y z => unop_injective <| @add_mul α _ _ _ y x z }
 
-instance [MulZeroClass α] : MulZeroClass αᵃᵒᵖ where
+instance [MulZeroClass α] : MulZeroClass
+      αᵃᵒᵖ where 
   zero := 0
   mul := (· * ·)
   zero_mul x := unop_injective <| zero_mul <| unop x
@@ -192,13 +194,15 @@ def NonUnitalRingHom.fromOpposite {R S : Type _} [NonUnitalNonAssocSemiring R]
 `αᵐᵒᵖ →+* βᵐᵒᵖ`. This is the action of the (fully faithful) `ᵐᵒᵖ`-functor on morphisms. -/
 @[simps]
 def NonUnitalRingHom.op {α β} [NonUnitalNonAssocSemiring α] [NonUnitalNonAssocSemiring β] :
-    (α →ₙ+* β) ≃ (αᵐᵒᵖ →ₙ+* βᵐᵒᵖ) where
+    (α →ₙ+* β) ≃
+      (αᵐᵒᵖ →ₙ+*
+        βᵐᵒᵖ) where 
   toFun f := { f.toAddMonoidHom.mulOp, f.toMulHom.op with }
   invFun f := { f.toAddMonoidHom.mulUnop, f.toMulHom.unop with }
-  left_inv f := by
+  left_inv f := by 
     ext
     rfl
-  right_inv f := by
+  right_inv f := by 
     ext
     simp
 #align non_unital_ring_hom.op NonUnitalRingHom.op
@@ -232,13 +236,16 @@ def RingHom.fromOpposite {R S : Type _} [Semiring R] [Semiring S] (f : R →+* S
 /-- A ring hom `α →+* β` can equivalently be viewed as a ring hom `αᵐᵒᵖ →+* βᵐᵒᵖ`. This is the
 action of the (fully faithful) `ᵐᵒᵖ`-functor on morphisms. -/
 @[simps]
-def RingHom.op {α β} [NonAssocSemiring α] [NonAssocSemiring β] : (α →+* β) ≃ (αᵐᵒᵖ →+* βᵐᵒᵖ) where
+def RingHom.op {α β} [NonAssocSemiring α] [NonAssocSemiring β] :
+    (α →+* β) ≃
+      (αᵐᵒᵖ →+*
+        βᵐᵒᵖ) where 
   toFun f := { f.toAddMonoidHom.mulOp, f.toMonoidHom.op with }
   invFun f := { f.toAddMonoidHom.mulUnop, f.toMonoidHom.unop with }
-  left_inv f := by
+  left_inv f := by 
     ext
     rfl
-  right_inv f := by
+  right_inv f := by 
     ext
     simp
 #align ring_hom.op RingHom.op

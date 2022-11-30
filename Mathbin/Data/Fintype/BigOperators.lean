@@ -245,15 +245,13 @@ theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommM
 theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoid β]
     (f : ∀ (a : α) (ha : p a), β) (g : ∀ (a : α) (ha : ¬p a), β) :
     (∏ a, dite (p a) (f a) (g a)) = (∏ a : { a // p a }, f a a.2) * ∏ a : { a // ¬p a }, g a a.2 :=
-  by
+  by 
   simp only [prod_dite, attach_eq_univ]
   congr 1
   · convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // p x } => f x x.2
     simp
-    
   · convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // ¬p x } => g x x.2
     simp
-    
 #align fintype.prod_dite Fintype.prod_dite
 
 section

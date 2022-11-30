@@ -109,7 +109,7 @@ theorem reverse.map_mul (a b : CliffordAlgebra Q) : reverse (a * b) = reverse b 
 
 @[simp]
 theorem reverse_comp_reverse : reverse.comp reverse = (LinearMap.id : _ →ₗ[R] CliffordAlgebra Q) :=
-  by
+  by 
   ext m
   simp only [LinearMap.id_apply, LinearMap.comp_apply]
   induction m using CliffordAlgebra.induction
@@ -139,7 +139,7 @@ def reverseEquiv : CliffordAlgebra Q ≃ₗ[R] CliffordAlgebra Q :=
 theorem reverse_comp_involute :
     reverse.comp involute.toLinearMap =
       (involute.toLinearMap.comp reverse : _ →ₗ[R] CliffordAlgebra Q) :=
-  by
+  by 
   ext
   simp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply]
   induction x using CliffordAlgebra.induction
@@ -328,20 +328,16 @@ theorem involute_eq_of_mem_even {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 0) 
   refine' even_induction Q (AlgHom.commutes _) _ _ x h
   · rintro x y hx hy ihx ihy
     rw [map_add, ihx, ihy]
-    
   · intro m₁ m₂ x hx ihx
     rw [map_mul, map_mul, involute_ι, involute_ι, ihx, neg_mul_neg]
-    
 #align clifford_algebra.involute_eq_of_mem_even CliffordAlgebra.involute_eq_of_mem_even
 
 theorem involute_eq_of_mem_odd {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 1) : involute x = -x := by
   refine' odd_induction Q involute_ι _ _ x h
   · rintro x y hx hy ihx ihy
     rw [map_add, ihx, ihy, neg_add]
-    
   · intro m₁ m₂ x hx ihx
     rw [map_mul, map_mul, involute_ι, involute_ι, ihx, neg_mul_neg, mul_neg]
-    
 #align clifford_algebra.involute_eq_of_mem_odd CliffordAlgebra.involute_eq_of_mem_odd
 
 end CliffordAlgebra

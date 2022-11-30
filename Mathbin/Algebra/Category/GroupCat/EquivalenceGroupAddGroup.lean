@@ -24,7 +24,8 @@ namespace GroupCat
 /-- The functor `Group ⥤ AddGroup` by sending `X ↦ additive X` and `f ↦ f`.
 -/
 @[simps]
-def toAddGroup : GroupCat ⥤ AddGroupCat where
+def toAddGroup :
+    GroupCat ⥤ AddGroupCat where 
   obj X := AddGroupCat.of (Additive X)
   map X Y := MonoidHom.toAdditive
 #align Group.to_AddGroup GroupCat.toAddGroup
@@ -36,7 +37,9 @@ namespace CommGroupCat
 /-- The functor `CommGroup ⥤ AddCommGroup` by sending `X ↦ additive X` and `f ↦ f`.
 -/
 @[simps]
-def toAddCommGroup : CommGroupCat ⥤ AddCommGroupCat where
+def toAddCommGroup :
+    CommGroupCat ⥤
+      AddCommGroupCat where 
   obj X := AddCommGroupCat.of (Additive X)
   map X Y := MonoidHom.toAdditive
 #align CommGroup.to_AddCommGroup CommGroupCat.toAddCommGroup
@@ -48,7 +51,8 @@ namespace AddGroupCat
 /-- The functor `AddGroup ⥤ Group` by sending `X ↦ multiplicative Y` and `f ↦ f`.
 -/
 @[simps]
-def toGroup : AddGroupCat ⥤ GroupCat where
+def toGroup : AddGroupCat ⥤
+      GroupCat where 
   obj X := GroupCat.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
 #align AddGroup.to_Group AddGroupCat.toGroup
@@ -60,7 +64,9 @@ namespace AddCommGroupCat
 /-- The functor `AddCommGroup ⥤ CommGroup` by sending `X ↦ multiplicative Y` and `f ↦ f`.
 -/
 @[simps]
-def toCommGroup : AddCommGroupCat ⥤ CommGroupCat where
+def toCommGroup :
+    AddCommGroupCat ⥤
+      CommGroupCat where 
   obj X := CommGroupCat.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
 #align AddCommGroup.to_CommGroup AddCommGroupCat.toCommGroup

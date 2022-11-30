@@ -39,9 +39,9 @@ theorem is_regular_of_ne_zero' [NonUnitalNonAssocRing α] [NoZeroDivisors α] {k
 
 theorem is_regular_iff_ne_zero' [Nontrivial α] [NonUnitalNonAssocRing α] [NoZeroDivisors α]
     {k : α} : IsRegular k ↔ k ≠ 0 :=
-  ⟨fun h => by
+  ⟨fun h => by 
     rintro rfl
-    exact not_not.mpr h.left not_is_left_regular_zero, is_regular_of_ne_zero'⟩
+    exact not_not.mpr h.left not_isLeftRegular_zero, is_regular_of_ne_zero'⟩
 #align is_regular_iff_ne_zero' is_regular_iff_ne_zero'
 
 /-- A ring with no zero divisors is a `cancel_monoid_with_zero`.

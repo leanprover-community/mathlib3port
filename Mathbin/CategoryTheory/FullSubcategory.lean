@@ -62,7 +62,9 @@ instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] :
   ⟨fun c => ↥(F c)⟩
 #align category_theory.induced_category.has_coe_to_sort CategoryTheory.InducedCategory.hasCoeToSort
 
-instance InducedCategory.category : Category.{v} (InducedCategory D F) where
+instance InducedCategory.category :
+    Category.{v} (InducedCategory D
+        F) where 
   Hom X Y := F X ⟶ F Y
   id X := 𝟙 (F X)
   comp _ _ _ f g := f ≫ g
@@ -72,7 +74,8 @@ instance InducedCategory.category : Category.{v} (InducedCategory D F) where
 forgetting the extra data.
 -/
 @[simps]
-def inducedFunctor : InducedCategory D F ⥤ D where
+def inducedFunctor : InducedCategory D F ⥤
+      D where 
   obj := F
   map x y f := f
 #align category_theory.induced_functor CategoryTheory.inducedFunctor
@@ -99,7 +102,7 @@ subcategories.
 
 See <https://stacks.math.columbia.edu/tag/001D>. We do not define 'strictly full' subcategories.
 -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure FullSubcategory where
   obj : C
   property : Z obj
@@ -138,7 +141,9 @@ variable {Z} {Z' : C → Prop}
 
 /-- An implication of predicates `Z → Z'` induces a functor between full subcategories. -/
 @[simps]
-def FullSubcategory.map (h : ∀ ⦃X⦄, Z X → Z' X) : FullSubcategory Z ⥤ FullSubcategory Z' where
+def FullSubcategory.map (h : ∀ ⦃X⦄, Z X → Z' X) :
+    FullSubcategory Z ⥤ FullSubcategory
+        Z' where 
   obj X := ⟨X.1, h X.2⟩
   map X Y f := f
 #align category_theory.full_subcategory.map CategoryTheory.FullSubcategory.map
@@ -160,7 +165,8 @@ variable {D : Type u₂} [Category.{v₂} D] (P Q : D → Prop)
 /-- A functor which maps objects to objects satisfying a certain property induces a lift through
     the full subcategory of objects satisfying that property. -/
 @[simps]
-def FullSubcategory.lift (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) : C ⥤ FullSubcategory P where
+def FullSubcategory.lift (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) :
+    C ⥤ FullSubcategory P where 
   obj X := ⟨F.obj X, hF X⟩
   map X Y f := F.map f
 #align category_theory.full_subcategory.lift CategoryTheory.FullSubcategory.lift

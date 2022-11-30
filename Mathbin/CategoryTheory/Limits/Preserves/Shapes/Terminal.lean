@@ -84,7 +84,7 @@ has limits of shape `J` and `G` preserves them, then `D` does not necessarily ha
 -/
 theorem has_terminal_of_has_terminal_of_preserves_limit [PreservesLimit (Functor.empty.{0} C) G] :
     HasTerminal D :=
-  ⟨fun F => by
+  ⟨fun F => by 
     haveI := has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩
     apply has_limit_of_iso F.unique_from_empty.symm⟩
 #align

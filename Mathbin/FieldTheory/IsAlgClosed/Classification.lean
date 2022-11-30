@@ -42,7 +42,7 @@ theorem cardinal_mk_le_sigma_polynomial :
   @mk_le_of_injective L (Σp : R[X], { x : L | x ∈ (p.map (algebraMap R L)).roots })
     (fun x : L =>
       let p := Classical.indefiniteDescription _ (halg x)
-      ⟨p.1, x, by
+      ⟨p.1, x, by 
         dsimp
         have h : p.1.map (algebraMap R L) ≠ 0 := by
           rw [Ne.def, ← Polynomial.degree_eq_bot,
@@ -51,7 +51,7 @@ theorem cardinal_mk_le_sigma_polynomial :
           exact p.2.1
         erw [Polynomial.mem_roots h, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def,
           p.2.2]⟩)
-    fun x y => by
+    fun x y => by 
     intro h
     simp only at h
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
@@ -122,12 +122,9 @@ def equivOfTranscendenceBasis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ)
         _
     · ext
       simp
-      
     · ext
       simp
-      
     exact hw.1.aevalEquiv.toRingEquiv
-    
   exact IsAlgClosure.equivOfEquiv K L e
 #align is_alg_closed.equiv_of_transcendence_basis IsAlgClosed.equivOfTranscendenceBasis
 
@@ -170,12 +167,10 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R]
   le_antisymm
     (calc
       (#K) ≤ max (max (#R) (#ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
-      _ = (#ι) := by
+      _ = (#ι) := by 
         rw [max_eq_left, max_eq_right]
         · exact le_trans hR this
-          
         · exact le_max_of_le_right this
-          
       )
     (mk_le_of_injective (show Function.Injective v from hv.1.Injective))
 #align
@@ -189,7 +184,7 @@ variable {K L : Type} [Field K] [Field L] [IsAlgClosed K] [IsAlgClosed L]
 if they have the same cardinality. -/
 @[nolint def_lemma]
 theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ < (#K))
-    (hKL : (#K) = (#L)) : K ≃+* L := by
+    (hKL : (#K) = (#L)) : K ≃+* L := by 
   apply Classical.choice
   cases'
     exists_is_transcendence_basis ℤ
@@ -237,18 +232,16 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
 if they have the same cardinality and the same characteristic. -/
 @[nolint def_lemma]
 theorem ringEquivOfCardinalEqOfCharEq (p : ℕ) [CharP K p] [CharP L p] (hK : ℵ₀ < (#K))
-    (hKL : (#K) = (#L)) : K ≃+* L := by
+    (hKL : (#K) = (#L)) : K ≃+* L := by 
   apply Classical.choice
   rcases CharP.char_is_prime_or_zero K p with (hp | hp)
   · haveI : Fact p.prime := ⟨hp⟩
     exact ⟨ring_equiv_of_cardinal_eq_of_char_p p hK hKL⟩
-    
   · rw [hp] at *
     skip
     letI : CharZero K := CharP.char_p_to_char_zero K
     letI : CharZero L := CharP.char_p_to_char_zero L
     exact ⟨ring_equiv_of_cardinal_eq_of_char_zero hK hKL⟩
-    
 #align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_eq IsAlgClosed.ringEquivOfCardinalEqOfCharEq
 
 end IsAlgClosed

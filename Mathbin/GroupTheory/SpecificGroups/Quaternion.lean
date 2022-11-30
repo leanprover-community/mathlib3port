@@ -85,38 +85,32 @@ private def inv : QuaternionGroup n → QuaternionGroup n
 
 /-- The group structure on `quaternion_group n`.
 -/
-instance : Group (QuaternionGroup n) where
+instance : Group (QuaternionGroup n) where 
   mul := mul
-  mul_assoc := by
+  mul_assoc := by 
     rintro (i | i) (j | j) (k | k) <;> simp only [mul] <;> abel
     simp only [neg_mul, one_mul, Int.cast_one, zsmul_eq_mul, Int.cast_neg, add_right_inj]
     calc
       -(n : Zmod (2 * n)) = 0 - n := by rw [zero_sub]
-      _ = 2 * n - n := by
+      _ = 2 * n - n := by 
         norm_cast
         simp
       _ = n := by ring
       
   one := one
-  one_mul := by
+  one_mul := by 
     rintro (i | i)
     · exact congr_arg a (zero_add i)
-      
     · exact congr_arg xa (sub_zero i)
-      
-  mul_one := by
+  mul_one := by 
     rintro (i | i)
     · exact congr_arg a (add_zero i)
-      
     · exact congr_arg xa (add_zero i)
-      
   inv := inv
-  mul_left_inv := by
+  mul_left_inv := by 
     rintro (i | i)
     · exact congr_arg a (neg_add_self i)
-      
     · exact congr_arg a (sub_self (n + i))
-      
 
 variable {n}
 
@@ -144,7 +138,9 @@ theorem one_def : (1 : QuaternionGroup n) = a 0 :=
   rfl
 #align quaternion_group.one_def QuaternionGroup.one_def
 
-private def fintype_helper : Sum (Zmod (2 * n)) (Zmod (2 * n)) ≃ QuaternionGroup n where
+private def fintype_helper :
+    Sum (Zmod (2 * n)) (Zmod (2 * n)) ≃
+      QuaternionGroup n where 
   invFun i :=
     match i with
     | a j => Sum.inl j
@@ -159,7 +155,10 @@ private def fintype_helper : Sum (Zmod (2 * n)) (Zmod (2 * n)) ≃ QuaternionGro
 
 /-- The special case that more or less by definition `quaternion_group 0` is isomorphic to the
 infinite dihedral group. -/
-def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralGroup 0 where
+def quaternionGroupZeroEquivDihedralGroupZero :
+    QuaternionGroup 0 ≃*
+      DihedralGroup
+        0 where 
   toFun i := QuaternionGroup.recOn i DihedralGroup.r DihedralGroup.sr
   invFun i :=
     match i with
@@ -171,7 +170,6 @@ def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralG
     rintro (k | k) (l | l) <;>
       · dsimp
         simp
-        
 #align
   quaternion_group.quaternion_group_zero_equiv_dihedral_group_zero QuaternionGroup.quaternionGroupZeroEquivDihedralGroupZero
 
@@ -195,12 +193,10 @@ theorem a_one_pow (k : ℕ) : (a 1 : QuaternionGroup n) ^ k = a k := by
   induction' k with k IH
   · rw [Nat.cast_zero]
     rfl
-    
   · rw [pow_succ, IH, a_mul_a]
     congr 1
     norm_cast
     rw [Nat.one_add]
-    
 #align quaternion_group.a_one_pow QuaternionGroup.a_one_pow
 
 @[simp]
@@ -238,9 +234,7 @@ theorem order_of_xa [NeZero n] (i : Zmod (2 * n)) : orderOf (xa i) = 4 := by
     simp only [Zmod.val_nat_cast, Zmod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
       Nat.div_self (NeZero.pos n)] at h'
     norm_num at h'
-    
   · norm_num
-    
 #align quaternion_group.order_of_xa QuaternionGroup.order_of_xa
 
 /-- In the special case `n = 1`, `quaternion 1` is a cyclic group (of order `4`). -/
@@ -263,7 +257,6 @@ theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
     apply mt a.inj
     haveI : CharZero (Zmod (2 * 0)) := Zmod.char_zero
     simpa using h.ne'
-    
   apply
     (Nat.le_of_dvd (NeZero.pos _)
           (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
@@ -278,7 +271,7 @@ theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
 /-- If `0 < n`, then `a i` has order `(2 * n) / gcd (2 * n) i`.
 -/
 theorem order_of_a [NeZero n] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
-  by
+  by 
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
   rw [← a_one_pow, order_of_pow, order_of_a_one]
 #align quaternion_group.order_of_a QuaternionGroup.order_of_a
@@ -290,26 +283,19 @@ theorem exponent : Monoid.exponent (QuaternionGroup n) = 2 * lcm n 2 := by
   · subst hn
     simp only [lcm_zero_left, mul_zero]
     exact Monoid.exponent_eq_zero_of_order_zero order_of_a_one
-    
   apply Nat.dvd_antisymm
   · apply Monoid.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)
     · rw [← order_of_dvd_iff_pow_eq_one, order_of_a]
       refine' Nat.dvd_trans ⟨gcd (2 * n) m.val, _⟩ (dvd_lcm_left (2 * n) 4)
       exact (Nat.div_mul_cancel (Nat.gcd_dvd_left (2 * n) m.val)).symm
-      
     · rw [← order_of_dvd_iff_pow_eq_one, order_of_xa]
       exact dvd_lcm_right (2 * n) 4
-      
-    
   · apply lcm_dvd
     · convert Monoid.order_dvd_exponent (a 1)
       exact order_of_a_one.symm
-      
     · convert Monoid.order_dvd_exponent (xa 0)
       exact (order_of_xa 0).symm
-      
-    
 #align quaternion_group.exponent QuaternionGroup.exponent
 
 end QuaternionGroup

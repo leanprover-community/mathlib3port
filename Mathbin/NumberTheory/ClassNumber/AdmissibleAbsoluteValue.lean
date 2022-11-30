@@ -58,7 +58,7 @@ into `abv.card ε` sets, such that all elements in each part of remainders are c
 theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0)
     (A : ι → R) (h : abv.IsAdmissible) :
     ∃ t : ι → Fin (h.card ε), ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ % b - A i₀ % b) : ℝ) < abv b • ε :=
-  by
+  by 
   let e := Fintype.equivFin ι
   obtain ⟨t, ht⟩ := h.exists_partition' (Fintype.card ι) hε hb (A ∘ e.symm)
   refine' ⟨t ∘ e, fun i₀ i₁ h => _⟩
@@ -70,15 +70,13 @@ whose remainders are close together, pointwise. -/
 theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     ∀ {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : Fin (h.card ε ^ n).succ → Fin n → R),
       ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
-  by
+  by 
   haveI := Classical.decEq R
   induction' n with n ih
   · intro ε hε b hb A
     refine' ⟨0, 1, _, _⟩
     · simp
-      
     rintro ⟨i, ⟨⟩⟩
-    
   intro ε hε b hb A
   set M := h.card ε with hM
   -- By the "nicer" pigeonhole principle, we can find a collection `s`
@@ -102,16 +100,14 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
       ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
     · refine' i.2.trans_le _
       rwa [Finset.length_to_list]
-      
     · intro i j h
       ext
       exact list.nodup_iff_nth_le_inj.mp (Finset.nodup_to_list _) _ _ _ _ h
-      
     have :
       ∀ i h,
         (finset.univ.filter fun x => t x = s).toList.nthLe i h ∈
           finset.univ.filter fun x => t x = s :=
-      by
+      by 
       intro i h
       exact finset.mem_to_list.mp (List.nth_le_mem _ _ _)
     obtain ⟨_, h₀⟩ := finset.mem_filter.mp (this i₀ _)
@@ -122,9 +118,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
   obtain ⟨k₀, k₁, hk, h⟩ := ih hε hb fun x => Fin.tail (A (s x))
   refine' ⟨s k₀, s k₁, fun h => hk (s_inj h), fun i => Fin.cases _ (fun i => _) i⟩
   · exact hs k₀ k₁
-    
   · exact h i
-    
 #align absolute_value.is_admissible.exists_approx_aux AbsoluteValue.IsAdmissible.exists_approx_aux
 
 /-- Any large enough family of vectors in `R^ι` has a pair of elements

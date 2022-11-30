@@ -31,7 +31,7 @@ include V₁ V₂
 
 -- not an instance because it loops with `nonempty`
 theorem AffineSubspace.nonempty_map {E : AffineSubspace k P₁} [Ene : Nonempty E] {φ : P₁ →ᵃ[k] P₂} :
-    Nonempty (E.map φ) := by
+    Nonempty (E.map φ) := by 
   obtain ⟨x, hx⟩ := id Ene
   refine' ⟨⟨φ x, affine_subspace.mem_map.mpr ⟨x, hx, rfl⟩⟩⟩
 #align affine_subspace.nonempty_map AffineSubspace.nonempty_map
@@ -45,15 +45,12 @@ def AffineMap.restrict (φ : P₁ →ᵃ[k] P₂) {E : AffineSubspace k P₁} {F
     [Nonempty E] [Nonempty F] (hEF : E.map φ ≤ F) : E →ᵃ[k] F := by
   refine' ⟨_, _, _⟩
   · exact fun x => ⟨φ x, hEF <| affine_subspace.mem_map.mpr ⟨x, x.property, rfl⟩⟩
-    
   · refine' φ.linear.restrict (_ : E.direction ≤ F.direction.comap φ.linear)
     rw [← Submodule.map_le_iff_le_comap, ← AffineSubspace.map_direction]
     exact AffineSubspace.direction_le hEF
-    
   · intro p v
     simp only [Subtype.ext_iff, Subtype.coe_mk, AffineSubspace.coe_vadd]
     apply AffineMap.map_vadd
-    
 #align affine_map.restrict AffineMap.restrict
 
 theorem AffineMap.restrict.coe_apply (φ : P₁ →ᵃ[k] P₂) {E : AffineSubspace k P₁}

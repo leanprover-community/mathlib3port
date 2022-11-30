@@ -113,22 +113,18 @@ as being equalized by the arrows `left_res` and `right_res` of the equalizer dia
 -/
 theorem compatible_iff_left_res_eq_right_res (sf : piOpens F U) :
     IsCompatible F U ((piOpensIsoSectionsFamily F U).Hom sf) ↔ leftRes F U sf = rightRes F U sf :=
-  by
+  by 
   constructor <;> intro h
   · ext ⟨i, j⟩
     rw [left_res, types.limit.lift_π_apply', fan.mk_π_app, right_res, types.limit.lift_π_apply',
       fan.mk_π_app]
     exact h i j
-    
   · intro i j
     convert congr_arg (limits.pi.π (fun p : ι × ι => F.obj (op (U p.1 ⊓ U p.2))) (i, j)) h
     · rw [left_res, types.pi_lift_π_apply]
       rfl
-      
     · rw [right_res, types.pi_lift_π_apply]
       rfl
-      
-    
 #align
   Top.presheaf.compatible_iff_left_res_eq_right_res TopCat.Presheaf.compatible_iff_left_res_eq_right_res
 
@@ -143,12 +139,10 @@ theorem is_gluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supr U))) :
   · ext ⟨i⟩
     rw [res, types.limit.lift_π_apply', fan.mk_π_app]
     exact h i
-    
   · intro i
     convert congr_arg (limits.pi.π (fun i : ι => F.obj (op (U i))) i) h
     rw [res, types.pi_lift_π_apply]
     rfl
-    
 #align Top.presheaf.is_gluing_iff_eq_res TopCat.Presheaf.is_gluing_iff_eq_res
 
 /-- The "equalizer" sheaf condition can be obtained from the sheaf condition
@@ -170,13 +164,11 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
   · ext (⟨i⟩x)
     simp [res]
     exact m_spec x i
-    
   · intro l hl
     ext x
     apply m_uniq
     rw [is_gluing_iff_eq_res]
     exact congr_fun hl x
-    
 #align
   Top.presheaf.is_sheaf_of_is_sheaf_unique_gluing_types TopCat.Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types
 
@@ -195,13 +187,11 @@ theorem is_sheaf_unique_gluing_of_is_sheaf_types (Fsh : F.IsSheaf) : F.IsSheafUn
   constructor
   · convert (is_gluing_iff_eq_res F U sf' _).mpr s_spec
     rw [inv_hom_id_apply]
-    
   · intro y hy
     apply s_uniq
     rw [← is_gluing_iff_eq_res F U]
     convert hy
     rw [inv_hom_id_apply]
-    
 #align
   Top.presheaf.is_sheaf_unique_gluing_of_is_sheaf_types TopCat.Presheaf.is_sheaf_unique_gluing_of_is_sheaf_types
 
@@ -273,18 +263,14 @@ theorem exists_unique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcove
   · intro i
     rw [← comp_apply, ← F.1.map_comp]
     exact gl_spec i
-    
   · intro gl' gl'_spec
     convert congr_arg _ (gl_uniq (F.1.map (eq_to_hom V_eq_supr_U.symm).op gl') fun i => _) <;>
       rw [← comp_apply, ← F.1.map_comp]
     · rw [eq_to_hom_op, eq_to_hom_op, eq_to_hom_trans, eq_to_hom_refl, F.1.map_id, id_apply]
-      
     · convert gl'_spec i
-      
-    
 #align Top.sheaf.exists_unique_gluing' TopCat.Sheaf.exists_unique_gluing'
 
-@[ext.1]
+@[ext]
 theorem eq_of_locally_eq (s t : F.1.obj (op (supr U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t := by
   let sf : ∀ i : ι, F.1.obj (op (U i)) := fun i => F.1.map (opens.le_supr U i).op s
@@ -297,12 +283,10 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (supr U)))
   · apply gl_uniq
     intro i
     rfl
-    
   · symm
     apply gl_uniq
     intro i
     rw [← h]
-    
 #align Top.sheaf.eq_of_locally_eq TopCat.Sheaf.eq_of_locally_eq
 
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
@@ -323,20 +307,16 @@ theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : 
 
 theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : U₂ ⟶ V) (hcover : V ≤ U₁ ⊔ U₂)
     (s t : F.1.obj (op V)) (h₁ : F.1.map i₁.op s = F.1.map i₁.op t)
-    (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by classical
-  fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
-  · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
-    
-  · refine' le_trans hcover _
-    rw [sup_le_iff]
-    constructor
-    · convert le_supr (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
-      
-    · convert le_supr (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
-      
-    
-  · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
-    
+    (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by
+  classical 
+    fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
+    · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
+    · refine' le_trans hcover _
+      rw [sup_le_iff]
+      constructor
+      · convert le_supr (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
+      · convert le_supr (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
+    · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
 #align Top.sheaf.eq_of_locally_eq₂ TopCat.Sheaf.eq_of_locally_eq₂
 
 end

@@ -124,12 +124,10 @@ def toEven : CliffordAlgebra Q →ₐ[R] CliffordAlgebra.even (q' Q) := by
     exact (LinearMap.mulLeft R <| e0 Q).comp (v Q)
     rw [Subtype.coe_mk, pow_two]
     exact Submodule.mul_mem_mul (LinearMap.mem_range_self _ _) (LinearMap.mem_range_self _ _)
-    
   · ext1
     dsimp only [Subalgebra.coe_mul, LinearMap.cod_restrict_apply, LinearMap.comp_apply,
       LinearMap.mul_left_apply, LinearMap.inl_apply, Subalgebra.coe_algebra_map]
     rw [← mul_assoc, e0_mul_v_mul_e0, v_sq_scalar]
-    
 #align clifford_algebra.to_even CliffordAlgebra.toEven
 
 @[simp]
@@ -139,7 +137,8 @@ theorem to_even_ι (m : M) : (toEven Q (ι Q m) : CliffordAlgebra (q' Q)) = e0 Q
 #align clifford_algebra.to_even_ι CliffordAlgebra.to_even_ι
 
 /-- The embedding from the even subalgebra with an extra dimension into the original algebra. -/
-def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q := by
+def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q :=
+  by
   /-
     Recall that we need:
      * `f ⟨0,1⟩ ⟨x,0⟩ = ι x`
@@ -158,17 +157,15 @@ def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q := by
   have hm :
     ∀ m : M × R,
       ι Q m.1 * ι Q m.1 - algebraMap R _ m.2 * algebraMap R _ m.2 = algebraMap R _ (Q' Q m) :=
-    by
+    by 
     intro m
     rw [ι_sq_scalar, ← RingHom.map_mul, ← RingHom.map_sub, sub_eq_add_neg, Q'_apply, sub_eq_add_neg]
   refine' even.lift (Q' Q) ⟨f, _, _⟩ <;> simp_rw [f_apply]
   · intro m
     rw [← (hc _ _).symm.mul_self_sub_mul_self_eq, hm]
-    
   · intro m₁ m₂ m₃
     rw [← mul_smul_comm, ← mul_assoc, mul_assoc (_ + _), ← (hc _ _).symm.mul_self_sub_mul_self_eq',
       Algebra.smul_def, ← mul_assoc, hm]
-    
 #align clifford_algebra.of_even CliffordAlgebra.ofEven
 
 theorem of_even_ι (x y : M × R) :

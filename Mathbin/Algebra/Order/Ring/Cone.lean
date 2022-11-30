@@ -53,18 +53,18 @@ open Ring
 def StrictOrderedRing.mkOfPositiveCone (C : PositiveCone α) : StrictOrderedRing α :=
   { ‹Ring α›, OrderedAddCommGroup.mkOfPositiveCone C.toPositiveCone with
     exists_pair_ne := ⟨0, 1, fun h => by simpa [← h, C.pos_iff] using C.one_pos⟩,
-    zero_le_one := by
+    zero_le_one := by 
       change C.nonneg (1 - 0)
       convert C.one_nonneg
       simp,
-    mul_pos := fun x y xp yp => by
+    mul_pos := fun x y xp yp => by 
       change C.pos (x * y - 0)
       convert
         C.mul_pos x y
-          (by
+          (by 
             convert xp
             simp)
-          (by
+          (by 
             convert yp
             simp)
       simp }

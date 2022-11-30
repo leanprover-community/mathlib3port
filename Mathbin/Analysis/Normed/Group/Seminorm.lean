@@ -3,7 +3,7 @@ Copyright (c) 2022 María Inés de Frutos-Fernández, Yaël Dillies. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 -/
-import Mathbin.Algebra.Order.Hom.Basic
+import Mathbin.Tactic.Positivity
 import Mathbin.Data.Real.Nnreal
 
 /-!
@@ -169,7 +169,7 @@ instance (priority := 100) GroupSeminormClass.toNonnegHomClass [Group E] [GroupS
   { ‹GroupSeminormClass F E› with
     map_nonneg := fun f a =>
       nonneg_of_mul_nonneg_right
-        (by
+        (by 
           rw [two_mul, ← map_one_eq_zero f, ← div_self' a]
           exact map_div_le_add _ _ _)
         two_pos }
@@ -188,7 +188,7 @@ theorem map_pos_of_ne_one (hx : x ≠ 1) : 0 < f x :=
 
 @[simp, to_additive]
 theorem map_eq_zero_iff_eq_one : f x = 0 ↔ x = 1 :=
-  ⟨eq_one_of_map_eq_zero _, by
+  ⟨eq_one_of_map_eq_zero _, by 
     rintro rfl
     exact map_one_eq_zero _⟩
 #align map_eq_zero_iff_eq_one map_eq_zero_iff_eq_one
@@ -210,7 +210,9 @@ section Group
 variable [Group E] [Group F] [Group G] {p q : GroupSeminorm E}
 
 @[to_additive]
-instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E where
+instance groupSeminormClass :
+    GroupSeminormClass (GroupSeminorm E)
+      E where 
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_one_eq_zero f := f.map_one'
@@ -229,7 +231,7 @@ theorem to_fun_eq_coe : p.toFun = p :=
   rfl
 #align group_seminorm.to_fun_eq_coe GroupSeminorm.to_fun_eq_coe
 
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align group_seminorm.ext GroupSeminorm.ext
@@ -329,7 +331,8 @@ instance : SemilatticeSup (GroupSeminorm E) :=
 /-- Composition of a group seminorm with a monoid homomorphism as a group seminorm. -/
 @[to_additive
       "Composition of an additive group seminorm with an additive monoid homomorphism as an\nadditive group seminorm."]
-def comp (p : GroupSeminorm E) (f : F →* E) : GroupSeminorm F where
+def comp (p : GroupSeminorm E) (f : F →* E) :
+    GroupSeminorm F where 
   toFun x := p (f x)
   map_one' := by rw [f.map_one, map_one_eq_zero p]
   mul_le' _ _ := (congr_arg p <| f.map_mul _ _).trans_le <| map_mul_le_add p _ _
@@ -391,7 +394,7 @@ theorem comp_mul_le (f g : F →* E) : p.comp (f * g) ≤ p.comp f + p.comp g :=
 @[to_additive]
 theorem mul_bdd_below_range_add {p q : GroupSeminorm E} {x : E} :
     BddBelow (range fun y => p y + q (x / y)) :=
-  ⟨0, by
+  ⟨0, by 
     rintro _ ⟨x, rfl⟩
     dsimp
     positivity⟩
@@ -441,13 +444,11 @@ variable [AddGroup E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ�
 
 instance [DecidableEq E] : One (AddGroupSeminorm E) :=
   ⟨{ toFun := fun x => if x = 0 then 0 else 1, map_zero' := if_pos rfl,
-      add_le' := fun x y => by
+      add_le' := fun x y => by 
         by_cases hx : x = 0
         · rw [if_pos hx, hx, zero_add, zero_add]
-          
         · rw [if_neg hx]
-          refine' le_add_of_le_of_nonneg _ _ <;> split_ifs <;> norm_num
-          ,
+          refine' le_add_of_le_of_nonneg _ _ <;> split_ifs <;> norm_num,
       neg' := fun x => by simp_rw [neg_eq_zero] }⟩
 
 @[simp]
@@ -498,13 +499,11 @@ variable [Group E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 
 @[to_additive AddGroupSeminorm.hasOne]
 instance [DecidableEq E] : One (GroupSeminorm E) :=
   ⟨{ toFun := fun x => if x = 1 then 0 else 1, map_one' := if_pos rfl,
-      mul_le' := fun x y => by
+      mul_le' := fun x y => by 
         by_cases hx : x = 1
         · rw [if_pos hx, hx, one_mul, zero_add]
-          
         · rw [if_neg hx]
-          refine' le_add_of_le_of_nonneg _ _ <;> split_ifs <;> norm_num
-          ,
+          refine' le_add_of_le_of_nonneg _ _ <;> split_ifs <;> norm_num,
       inv' := fun x => by simp_rw [inv_eq_one] }⟩
 
 @[simp, to_additive AddGroupSeminorm.apply_one]
@@ -562,7 +561,8 @@ section Group
 variable [Group E] [Group F] [Group G] {p q : GroupNorm E}
 
 @[to_additive]
-instance groupNormClass : GroupNormClass (GroupNorm E) E where
+instance groupNormClass :
+    GroupNormClass (GroupNorm E) E where 
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_one_eq_zero f := f.map_one'
@@ -583,7 +583,7 @@ theorem to_fun_eq_coe : p.toFun = p :=
   rfl
 #align group_norm.to_fun_eq_coe GroupNorm.to_fun_eq_coe
 
-@[ext.1, to_additive]
+@[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align group_norm.ext GroupNorm.ext

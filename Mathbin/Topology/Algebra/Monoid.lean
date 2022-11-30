@@ -123,7 +123,8 @@ theorem Filter.Tendsto.mul_const (b : M) {c : M} {f : α → M} {l : Filter α}
   simps]
 def Filter.Tendsto.units [TopologicalSpace N] [Monoid N] [HasContinuousMul N] [T2Space N]
     {f : ι → Nˣ} {r₁ r₂ : N} {l : Filter ι} [l.ne_bot] (h₁ : Tendsto (fun x => ↑(f x)) l (𝓝 r₁))
-    (h₂ : Tendsto (fun x => ↑(f x)⁻¹) l (𝓝 r₂)) : Nˣ where
+    (h₂ : Tendsto (fun x => ↑(f x)⁻¹) l (𝓝 r₂)) :
+    Nˣ where 
   val := r₁
   inv := r₂
   val_inv := tendsto_nhds_unique (by simpa using h₁.mul h₂) tendsto_const_nhds
@@ -180,13 +181,13 @@ theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoid M] [TopologicalSpace M
     (hmul : Tendsto (uncurry ((· * ·) : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1)
     (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1))
     (hright : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) : HasContinuousMul M :=
-  ⟨by
+  ⟨by 
     rw [continuous_iff_continuous_at]
     rintro ⟨x₀, y₀⟩
     have key :
       (fun p : M × M => x₀ * p.1 * (p.2 * y₀)) =
         ((fun x => x₀ * x) ∘ fun x => x * y₀) ∘ uncurry (· * ·) :=
-      by
+      by 
       ext p
       simp [uncurry, mul_assoc]
     have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x := by
@@ -244,7 +245,8 @@ homomorphisms that has a `monoid_hom_class` instance) to `M₁ → M₂`. -/
       "Construct a bundled additive monoid homomorphism `M₁ →+ M₂` from a function `f`\nand a proof that it belongs to the closure of the range of the coercion from `M₁ →+ M₂` (or another\ntype of bundled homomorphisms that has a `add_monoid_hom_class` instance) to `M₁ → M₂`.",
   simps (config := { fullyApplied := false })]
 def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂)
-    (hf : f ∈ closure (range fun (f : F) (x : M₁) => f x)) : M₁ →* M₂ where
+    (hf : f ∈ closure (range fun (f : F) (x : M₁) => f x)) :
+    M₁ →* M₂ where 
   toFun := f
   map_one' := (isClosedSetOfMapOne M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_one) hf
   map_mul' := (isClosedSetOfMapMul M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_mul) hf
@@ -318,7 +320,8 @@ theorem Submonoid.top_closure_mul_self_eq (s : Submonoid M) :
 itself a submonoid. -/
 @[to_additive
       "The (topological-space) closure of an additive submonoid of a space `M` with\n`has_continuous_add` is itself an additive submonoid."]
-def Submonoid.topologicalClosure (s : Submonoid M) : Submonoid M where
+def Submonoid.topologicalClosure (s : Submonoid M) :
+    Submonoid M where 
   carrier := closure (s : Set M)
   one_mem' := subset_closure s.one_mem
   mul_mem' a b ha hb := s.top_closure_mul_self_subset ⟨a, b, ha, hb, rfl⟩
@@ -404,7 +407,7 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
       (∀ i ∈ l, Tendsto (f i) x (𝓝 (a i))) →
         Tendsto (fun b => (l.map fun c => f c b).Prod) x (𝓝 (l.map a).Prod)
   | [], _ => by simp [tendsto_const_nhds]
-  | f::l, h => by
+  | f::l, h => by 
     simp only [List.map_cons, List.prod_cons]
     exact
       (h f (List.mem_cons_self _ _)).mul
@@ -421,7 +424,7 @@ theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i ∈ l
 @[to_additive]
 theorem continuous_on_list_prod {f : ι → X → M} (l : List ι) {t : Set X}
     (h : ∀ i ∈ l, ContinuousOn (f i) t) : ContinuousOn (fun a => (l.map fun i => f i a).Prod) t :=
-  by
+  by 
   intro x hx
   rw [continuous_within_at_iff_continuous_at_restrict _ hx]
   refine' tendsto_list_prod _ fun i hi => _
@@ -433,7 +436,7 @@ theorem continuous_on_list_prod {f : ι → X → M} (l : List ι) {t : Set X}
 @[continuity, to_additive]
 theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
   | 0 => by simpa using continuous_const
-  | k + 1 => by
+  | k + 1 => by 
     simp only [pow_succ]
     exact continuous_id.mul (continuous_pow _)
 #align continuous_pow continuous_pow
@@ -514,7 +517,8 @@ Notably, this instances applies when `R = A`, or when `[algebra R A]` is availab
       "If `R` acts on `A` via `A`, then continuous addition implies\ncontinuous affine addition by constants."]
 instance (priority := 100) IsScalarTower.has_continuous_const_smul {R A : Type _} [Monoid A]
     [HasSmul R A] [IsScalarTower R A A] [TopologicalSpace A] [HasContinuousMul A] :
-    HasContinuousConstSmul R A where continuous_const_smul q := by
+    HasContinuousConstSmul R
+      A where continuous_const_smul q := by
     simp (config := { singlePass := true }) only [← smul_one_mul q (_ : A)]
     exact continuous_const.mul continuous_id
 #align is_scalar_tower.has_continuous_const_smul IsScalarTower.has_continuous_const_smul
@@ -527,7 +531,8 @@ Notably, this instances applies when `R = Aᵐᵒᵖ` -/
       "If the action of `R` on `A` commutes with left-addition, then\ncontinuous addition implies continuous affine addition by constants.\n\nNotably, this instances applies when `R = Aᵃᵒᵖ`. "]
 instance (priority := 100) SmulCommClass.has_continuous_const_smul {R A : Type _} [Monoid A]
     [HasSmul R A] [SmulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] :
-    HasContinuousConstSmul R A where continuous_const_smul q := by
+    HasContinuousConstSmul R
+      A where continuous_const_smul q := by
     simp (config := { singlePass := true }) only [← mul_smul_one q (_ : A)]
     exact continuous_id.mul continuous_const
 #align smul_comm_class.has_continuous_const_smul SmulCommClass.has_continuous_const_smul
@@ -583,7 +588,7 @@ variable [HasContinuousMul M]
 theorem tendsto_multiset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Multiset ι) :
     (∀ i ∈ s, Tendsto (f i) x (𝓝 (a i))) →
       Tendsto (fun b => (s.map fun c => f c b).Prod) x (𝓝 (s.map a).Prod) :=
-  by
+  by 
   rcases s with ⟨l⟩
   simpa using tendsto_list_prod l
 #align tendsto_multiset_prod tendsto_multiset_prod
@@ -626,7 +631,6 @@ theorem eventually_eq_prod {X M : Type _} [CommMonoid M] {s : Finset ι} {l : Fi
     {f g : ι → X → M} (hs : ∀ i ∈ s, f i =ᶠ[l] g i) : (∏ i in s, f i) =ᶠ[l] ∏ i in s, g i := by
   replace hs : ∀ᶠ x in l, ∀ i ∈ s, f i x = g i x
   · rwa [eventually_all_finset]
-    
   filter_upwards [hs] with x hx
   simp only [Finset.prod_apply, Finset.prod_congr rfl hx]
 #align eventually_eq_prod eventually_eq_prod
@@ -663,7 +667,7 @@ theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i))
 @[to_additive]
 theorem continuous_finprod_cond {f : ι → X → M} {p : ι → Prop} (hc : ∀ i, p i → Continuous (f i))
     (hf : LocallyFinite fun i => mulSupport (f i)) : Continuous fun x => ∏ᶠ (i) (hi : p i), f i x :=
-  by
+  by 
   simp only [← finprod_subtype_eq_finprod_cond]
   exact continuous_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
 #align continuous_finprod_cond continuous_finprod_cond

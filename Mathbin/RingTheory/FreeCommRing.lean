@@ -91,7 +91,10 @@ variable {R : Type v} [CommRing R] (f : α → R)
 
 /-- A helper to implement `lift`. This is essentially `free_comm_monoid.lift`, but this does not
 currently exist. -/
-private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →* R) where
+private def lift_to_multiset :
+    (α → R) ≃
+      (Multiplicative (Multiset α) →*
+        R) where 
   toFun f :=
     { toFun := fun s => (s.toAdd.map f).Prod,
       map_mul' := fun x y =>
@@ -132,7 +135,7 @@ theorem lift_comp_of (f : FreeCommRing α →+* R) : lift (f ∘ of) = f :=
       fun x y ihx ihy => by rw [RingHom.map_mul, f.map_mul, ihx, ihy]
 #align free_comm_ring.lift_comp_of FreeCommRing.lift_comp_of
 
-@[ext.1]
+@[ext]
 theorem hom_ext ⦃f g : FreeCommRing α →+* R⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
   lift.symm.Injective (funext h)
 #align free_comm_ring.hom_ext FreeCommRing.hom_ext
@@ -221,31 +224,26 @@ theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
     ∀ x,
       is_supported x s →
         ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.x) x = n :=
-    by
+    by 
     intro x hx
     refine' Subring.InClosure.rec_on hx _ _ _ _
     · use 1
       rw [RingHom.map_one]
       norm_cast
-      
     · use -1
       rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
-      
     · rintro _ ⟨z, hzs, rfl⟩ _ _
       use 0
       rw [RingHom.map_mul, lift_of, if_pos hzs, zero_mul]
       norm_cast
-      
     · rintro x y ⟨q, hq⟩ ⟨r, hr⟩
       refine' ⟨q + r, _⟩
       rw [RingHom.map_add, hq, hr]
       norm_cast
-      
   specialize this (of p) hps
   rw [lift_of] at this
   split_ifs  at this
   · exact h
-    
   exfalso
   apply Ne.symm Int.zero_ne_one
   rcases this with ⟨w, H⟩
@@ -259,16 +257,12 @@ theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]
   refine' Subring.InClosure.rec_on hxs _ _ _ _
   · rw [RingHom.map_one]
     rfl
-    
   · rw [RingHom.map_neg, RingHom.map_neg, RingHom.map_one]
     rfl
-    
   · rintro _ ⟨p, hps, rfl⟩ n ih
     rw [RingHom.map_mul, restriction_of, dif_pos hps, RingHom.map_mul, map_of, ih]
-    
   · intro x y ihx ihy
     rw [RingHom.map_add, RingHom.map_add, ihx, ihy]
-    
 #align free_comm_ring.map_subtype_val_restriction FreeCommRing.map_subtype_val_restriction
 
 theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite s ∧ IsSupported x s :=
@@ -354,19 +348,15 @@ protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRin
   apply FreeCommRing.induction_on x
   · use -1
     rfl
-    
   · intro x
     use FreeRing.of x
     rfl
-    
   · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
     use x + y
     exact (FreeRing.lift _).map_add _ _
-    
   · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
     use x * y
     exact (FreeRing.lift _).map_mul _ _
-    
 #align free_ring.coe_surjective FreeRing.coe_surjective
 
 theorem coe_eq :
@@ -409,7 +399,7 @@ end FreeRing
 def freeCommRingEquivMvPolynomialInt : FreeCommRing α ≃+* MvPolynomial α ℤ :=
   RingEquiv.ofHomInv (FreeCommRing.lift <| (fun a => MvPolynomial.x a : α → MvPolynomial α ℤ))
     (MvPolynomial.eval₂Hom (Int.castRingHom (FreeCommRing α)) FreeCommRing.of)
-    (by
+    (by 
       ext
       simp)
     (by ext <;> simp)

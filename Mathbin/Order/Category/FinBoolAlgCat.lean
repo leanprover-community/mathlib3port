@@ -99,20 +99,21 @@ instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlgCat 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/
 @[simps]
-def Iso.mk {α β : FinBoolAlgCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : FinBoolAlgCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align FinBoolAlg.iso.mk FinBoolAlgCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : FinBoolAlgCat ⥤ FinBoolAlgCat where
+def dual : FinBoolAlgCat ⥤ FinBoolAlgCat where 
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
 #align FinBoolAlg.dual FinBoolAlgCat.dual
@@ -129,7 +130,8 @@ end FinBoolAlgCat
 
 /-- The powerset functor. `set` as a functor. -/
 @[simps]
-def fintypeToFinBoolAlgOp : FintypeCat ⥤ FinBoolAlgCatᵒᵖ where
+def fintypeToFinBoolAlgOp :
+    FintypeCat ⥤ FinBoolAlgCatᵒᵖ where 
   obj X := op <| FinBoolAlgCat.of (Set X)
   map X Y f :=
     Quiver.Hom.op <| (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))

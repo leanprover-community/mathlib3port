@@ -52,7 +52,7 @@ def multicospanComp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospa
       match t with
       | walking_multicospan.left a => eqToIso rfl
       | walking_multicospan.right b => eqToIso rfl)
-    (by
+    (by 
       rintro (a | b) (a | b) (f | f | f)
       any_goals dsimp; erw [Functor.map_id, Functor.map_id, category.id_comp]
       any_goals dsimp; erw [category.comp_id, category.id_comp]; rfl)
@@ -108,16 +108,14 @@ def mapMultifork :
     F.mapCone (S.Multifork P) ≅
       (Limits.Cones.postcompose (S.multicospanComp F P).Hom).obj (S.Multifork (P ⋙ F)) :=
   Cones.ext (eqToIso rfl)
-    (by
+    (by 
       rintro (a | b)
       · dsimp
         simpa
-        
       · dsimp
         simp
         dsimp [multifork.of_ι]
-        simpa
-        )
+        simpa)
 #align
   category_theory.grothendieck_topology.cover.map_multifork CategoryTheory.GrothendieckTopology.Cover.mapMultifork
 
@@ -140,7 +138,9 @@ variable (J)
 /-- Composing a sheaf with a functor preserving the appropriate limits yields a functor
 between sheaf categories. -/
 @[simps]
-def sheafCompose : SheafCat J A ⥤ SheafCat J B where
+def sheafCompose :
+    SheafCat J A ⥤
+      SheafCat J B where 
   obj G := ⟨G.val ⋙ F, Presheaf.IsSheaf.comp _ G.2⟩
   map G H η := ⟨whiskerRight η.val _⟩
   map_id' G := SheafCat.Hom.ext _ _ <| whisker_right_id _

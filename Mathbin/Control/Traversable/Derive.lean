@@ -49,7 +49,7 @@ unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr)
     (args₁ : List (Bool × expr)) (rec_call : List expr) : tactic expr := do
   let g ← target
   let (_, args') ←
-    mmapAccuml
+    mapAccumLM
         (fun (x : List expr) (y : Bool × expr) =>
           if y.1 then pure (x.tail, x.head)
           else Prod.mk rec_call <$> map_field n g.app_fn f α β y.2)
@@ -208,7 +208,7 @@ unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum e
           let
             ( _ , args' )
               ←
-              mmapAccuml
+              mapAccumLM
                 (
                     fun
                       ( x : List expr ) ( y : Bool × _ )

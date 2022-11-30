@@ -245,8 +245,7 @@ theorem of_is_product {c : BinaryFan X Y} (h : Limits.IsLimit c) (t : IsTerminal
           (by
             rintro ⟨⟨⟩⟩ <;>
               · dsimp
-                simp
-                ))))
+                simp))))
 #align category_theory.is_pullback.of_is_product CategoryTheory.IsPullback.of_is_product
 
 /-- A variant of `of_is_product` that is more useful with `apply`. -/
@@ -383,8 +382,7 @@ theorem of_is_coproduct {c : BinaryCofan X Y} (h : Limits.IsColimit c) (t : IsIn
           (by
             rintro ⟨⟨⟩⟩ <;>
               · dsimp
-                simp
-                ))))
+                simp))))
 #align category_theory.is_pushout.of_is_coproduct CategoryTheory.IsPushout.of_is_coproduct
 
 /-- A variant of `of_is_coproduct` that is more useful with `apply`. -/
@@ -894,28 +892,22 @@ variable {X Y Z : C} {f f' : X ⟶ Y} {g g' : Y ⟶ Z}
 noncomputable def IsPullback.isLimitFork (H : IsPullback f f g g') : IsLimit (Fork.ofι f H.w) := by
   fapply fork.is_limit.mk
   · exact fun s => H.is_limit.lift (pullback_cone.mk s.ι s.ι s.condition)
-    
   · exact fun s => H.is_limit.fac _ walking_cospan.left
-    
   · intro s m e
     apply pullback_cone.is_limit.hom_ext H.is_limit <;> refine' e.trans _ <;> symm <;>
       exact H.is_limit.fac _ _
-    
 #align category_theory.is_pullback.is_limit_fork CategoryTheory.IsPullback.isLimitFork
 
 /-- If `f f' : X ⟶ Y`, `g : Y ⟶ Z` forms a pushout square, then `g` is the coequalizer of
 `f` and `f'`. -/
 noncomputable def IsPushout.isLimitFork (H : IsPushout f f' g g) : IsColimit (Cofork.ofπ g H.w) :=
-  by
+  by 
   fapply cofork.is_colimit.mk
   · exact fun s => H.is_colimit.desc (pushout_cocone.mk s.π s.π s.condition)
-    
   · exact fun s => H.is_colimit.fac _ walking_span.left
-    
   · intro s m e
     apply pushout_cocone.is_colimit.hom_ext H.is_colimit <;> refine' e.trans _ <;> symm <;>
       exact H.is_colimit.fac _ _
-    
 #align category_theory.is_pushout.is_limit_fork CategoryTheory.IsPushout.isLimitFork
 
 end Equalizer
@@ -1011,7 +1003,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
 theorem Functor.map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i) :
-    IsPullback (F.map f) (F.map g) (F.map h) (F.map i) := by
+    IsPullback (F.map f) (F.map g) (F.map h) (F.map i) :=
+  by
   -- This is made slightly awkward because `C` and `D` have different universes,
   -- and so the relevant `walking_cospan` diagrams live in different universes too!
   refine'
@@ -1019,13 +1012,10 @@ theorem Functor.map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback 
       (is_limit.equiv_of_nat_iso_of_iso (cospan_comp_iso F h i) _ _ (walking_cospan.ext _ _ _)
         (is_limit_of_preserves F s.is_limit))
   · rfl
-    
   · dsimp
     simp
-    
   · dsimp
     simp
-    
 #align category_theory.functor.map_is_pullback CategoryTheory.Functor.map_is_pullback
 
 theorem Functor.map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
@@ -1035,13 +1025,10 @@ theorem Functor.map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f 
       (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)
         (is_colimit_of_preserves F s.is_colimit))
   · rfl
-    
   · dsimp
     simp
-    
   · dsimp
     simp
-    
 #align category_theory.functor.map_is_pushout CategoryTheory.Functor.map_is_pushout
 
 alias functor.map_is_pullback ← is_pullback.map

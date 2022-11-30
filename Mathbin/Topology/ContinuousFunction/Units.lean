@@ -28,7 +28,10 @@ and the units of the monoid of continuous maps. -/
 @[to_additive
       "Equivalence between continuous maps into the additive units of an additive monoid\nwith continuous addition and the additive units of the additive monoid of continuous maps.",
   simps]
-def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ where
+def unitsLift :
+    C(X, Mˣ) ≃
+      C(X,
+          M)ˣ where 
   toFun f :=
     { val := ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩,
       inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩,
@@ -40,10 +43,10 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ where
         continuous_induced_rng.2 <|
           Continuous.prod_mk (f : C(X, M)).Continuous <|
             MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
-  left_inv f := by
+  left_inv f := by 
     ext
     rfl
-  right_inv f := by
+  right_inv f := by 
     ext
     rfl
 #align continuous_map.units_lift ContinuousMap.unitsLift
@@ -68,22 +71,27 @@ theorem NormedRing.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x
 /-- Construct a continuous map into the group of units of a normed ring from a function into the
 normed ring and a proof that every element of the range is a unit. -/
 @[simps]
-noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : C(X, Rˣ) where
+noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
+    C(X, Rˣ) where 
   toFun x := (h x).Unit
   continuous_to_fun := NormedRing.is_unit_unit_continuous h
 #align continuous_map.units_of_forall_is_unit ContinuousMap.unitsOfForallIsUnit
 
 instance canLift :
     CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩)
-      fun f => ∀ x, IsUnit (f x) where prf f h :=
-    ⟨unitsOfForallIsUnit h, by
+      fun f =>
+      ∀ x,
+        IsUnit
+          (f
+            x) where prf f h :=
+    ⟨unitsOfForallIsUnit h, by 
       ext
       rfl⟩
 #align continuous_map.can_lift ContinuousMap.canLift
 
 theorem is_unit_iff_forall_is_unit (f : C(X, R)) : IsUnit f ↔ ∀ x, IsUnit (f x) :=
   Iff.intro (fun h => fun x => ⟨unitsLift.symm h.Unit x, rfl⟩) fun h =>
-    ⟨(unitsOfForallIsUnit h).unitsLift, by
+    ⟨(unitsOfForallIsUnit h).unitsLift, by 
       ext
       rfl⟩
 #align continuous_map.is_unit_iff_forall_is_unit ContinuousMap.is_unit_iff_forall_is_unit
@@ -95,7 +103,7 @@ section NormedField
 variable [NormedField 𝕜] [CompleteSpace 𝕜]
 
 theorem is_unit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x ≠ 0 := by
-  simp_rw [f.is_unit_iff_forall_is_unit, is_unit_iff_ne_zero]
+  simp_rw [f.is_unit_iff_forall_is_unit, isUnit_iff_ne_zero]
 #align continuous_map.is_unit_iff_forall_ne_zero ContinuousMap.is_unit_iff_forall_ne_zero
 
 theorem spectrum_eq_range (f : C(X, 𝕜)) : spectrum 𝕜 f = Set.range f := by

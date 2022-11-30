@@ -63,9 +63,7 @@ theorem one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
   refine' ⟨fun h => lt_of_lt_of_le (with_bot.coe_lt_coe.mpr zero_lt_one) h, fun h => _⟩
   induction x using WithBot.recBotCoe
   · exact (not_lt_bot h).elim
-    
   · exact with_bot.coe_le_coe.mpr (nat.succ_le_iff.mpr (with_bot.coe_lt_coe.mp h))
-    
 #align nat.with_bot.one_le_iff_zero_lt Nat.WithBot.one_le_iff_zero_lt
 
 theorem lt_one_iff_le_zero {x : WithBot ℕ} : x < 1 ↔ x ≤ 0 :=

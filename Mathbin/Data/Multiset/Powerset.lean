@@ -64,20 +64,15 @@ theorem powerset_aux'_cons (a : α) (l : List α) :
 #align multiset.powerset_aux'_cons Multiset.powerset_aux'_cons
 
 theorem powerset_aux'_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux' l₁ ~ powersetAux' l₂ := by
-  induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂;
-  · simp
-    
+  induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · simp
   · simp
     exact IH.append (IH.map _)
-    
   · simp
     apply perm.append_left
     rw [← append_assoc, ← append_assoc,
       (by funext s <;> simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]
     exact perm_append_comm.append_right _
-    
   · exact IH₁.trans IH₂
-    
 #align multiset.powerset_aux'_perm Multiset.powerset_aux'_perm
 
 theorem powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux l₁ ~ powersetAux l₂ :=
@@ -135,7 +130,7 @@ theorem revzip_powerset_aux {l : List α} ⦃x⦄ (h : x ∈ revzip (powersetAux
 #align multiset.revzip_powerset_aux Multiset.revzip_powerset_aux
 
 theorem revzip_powerset_aux' {l : List α} ⦃x⦄ (h : x ∈ revzip (powersetAux' l)) : x.1 + x.2 = ↑l :=
-  by
+  by 
   rw [revzip, powerset_aux', ← map_reverse, zip_map, ← revzip] at h
   simp at h; rcases h with ⟨l₁, l₂, h, rfl, rfl⟩
   exact Quot.sound (revzip_sublists' _ _ _ h)
@@ -147,7 +142,7 @@ theorem revzip_powerset_aux_lemma [DecidableEq α] (l : List α) {l' : List (Mul
   have :
     forall₂ (fun (p : Multiset α × Multiset α) (s : Multiset α) => p = (s, ↑l - s)) (revzip l')
       ((revzip l').map Prod.fst) :=
-    by
+    by 
     rw [forall₂_map_right_iff, forall₂_same]
     rintro ⟨s, t⟩ h
     dsimp
@@ -213,28 +208,20 @@ theorem powerset_len_aux_cons (n : ℕ) (a : α) (l : List α) :
 
 theorem powerset_len_aux_perm {n} {l₁ l₂ : List α} (p : l₁ ~ l₂) :
     powersetLenAux n l₁ ~ powersetLenAux n l₂ := by
-  induction' n with n IHn generalizing l₁ l₂;
-  · simp
-    
-  induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂;
-  · rfl
-    
+  induction' n with n IHn generalizing l₁ l₂; · simp
+  induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · rfl
   · simp
     exact IH.append ((IHn p).map _)
-    
   · simp
     apply perm.append_left
     cases n
     · simp
       apply perm.swap
-      
     simp
     rw [← append_assoc, ← append_assoc,
       (by funext s <;> simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]
     exact perm_append_comm.append_right _
-    
   · exact IH₁.trans IH₂
-    
 #align multiset.powerset_len_aux_perm Multiset.powerset_len_aux_perm
 
 /-- `powerset_len n s` is the multiset of all submultisets of `s` of length `n`. -/
@@ -305,9 +292,7 @@ theorem powerset_len_map {β : Type _} (f : α → β) (n : ℕ) (s : Multiset �
     powersetLen n (s.map f) = (powersetLen n s).map (map f) := by
   induction' s using Multiset.induction with t s ih generalizing n
   · cases n <;> simp [powerset_len_zero_left, powerset_len_zero_right]
-    
   · cases n <;> simp [ih, map_comp_cons]
-    
 #align multiset.powerset_len_map Multiset.powerset_len_map
 
 theorem disjoint_powerset_len (s : Multiset α) {i j : ℕ} (h : i ≠ j) :

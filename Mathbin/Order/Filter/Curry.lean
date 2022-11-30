@@ -49,14 +49,16 @@ variable {α β γ : Type _}
 `(∀ᶠ (x : α × β) in f.curry g, p x) ↔ ∀ᶠ (x : α) in f, ∀ᶠ (y : β) in g, p (x, y)`. Useful
 in adding quantifiers to the middle of `tendsto`s. See
 `has_fderiv_at_of_tendsto_uniformly_on_filter`. -/
-def curry (f : Filter α) (g : Filter β) : Filter (α × β) where
+def curry (f : Filter α) (g : Filter β) :
+    Filter (α ×
+        β) where 
   sets := { s | ∀ᶠ a : α in f, ∀ᶠ b : β in g, (a, b) ∈ s }
   univ_sets := by simp only [Set.mem_set_of_eq, Set.mem_univ, eventually_true]
-  sets_of_superset := by
+  sets_of_superset := by 
     intro x y hx hxy
     simp only [Set.mem_set_of_eq] at hx⊢
     exact hx.mono fun a ha => ha.mono fun b hb => Set.mem_of_subset_of_mem hxy hb
-  inter_sets := by
+  inter_sets := by 
     intro x y hx hy
     simp only [Set.mem_set_of_eq, Set.mem_inter_iff] at hx hy⊢
     exact (hx.and hy).mono fun a ha => (ha.1.And ha.2).mono fun b hb => hb

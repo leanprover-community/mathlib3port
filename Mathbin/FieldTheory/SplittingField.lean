@@ -53,10 +53,7 @@ def factor (f : K[X]) : K[X] :=
 #align polynomial.factor Polynomial.factor
 
 theorem irreducible_factor (f : K[X]) : Irreducible (factor f) := by rw [factor]; split_ifs with H;
-  · exact (Classical.choose_spec H).1
-    ;
-  · exact irreducible_X
-    
+  · exact (Classical.choose_spec H).1; · exact irreducible_X
 #align polynomial.irreducible_factor Polynomial.irreducible_factor
 
 /-- See note [fact non-instances]. -/
@@ -70,7 +67,6 @@ theorem factor_dvd_of_not_is_unit {f : K[X]} (hf1 : ¬IsUnit f) : factor f ∣ f
   by_cases hf2 : f = 0;
   · rw [hf2]
     exact dvd_zero _
-    
   rw [factor, dif_pos (WfDvdMonoid.exists_irreducible_factor hf1 hf2)]
   exact (Classical.choose_spec <| WfDvdMonoid.exists_irreducible_factor hf1 hf2).2
 #align polynomial.factor_dvd_of_not_is_unit Polynomial.factor_dvd_of_not_is_unit
@@ -203,10 +199,10 @@ protected theorem splits (n : ℕ) :
   (Nat.recOn n fun K _ _ hf =>
       splits_of_degree_le_one _
         (le_trans degree_le_nat_degree <| hf.symm ▸ WithBot.coe_le_coe.2 zero_le_one))
-    fun n ih K _ f hf => by
+    fun n ih K _ f hf => by 
     skip
     rw [← splits_id_iff_splits, algebra_map_succ, ← map_map, splits_id_iff_splits, ←
-      X_sub_C_mul_remove_factor f fun h => by
+      X_sub_C_mul_remove_factor f fun h => by 
         rw [h] at hf
         cases hf]
     exact splits_mul _ (splits_X_sub_C _) (ih _ (nat_degree_remove_factor' hf))
@@ -218,11 +214,11 @@ theorem exists_lift (n : ℕ) :
         ∀ (j : K →+* L) (hf : splits j f),
           ∃ k : splitting_field_aux n f →+* L, k.comp (algebraMap _ _) = j :=
   (Nat.recOn n fun K _ _ _ L _ j _ => ⟨j, j.comp_id⟩) fun n ih K _ f hf L _ j hj =>
-    have hndf : f.nat_degree ≠ 0 := by
+    have hndf : f.nat_degree ≠ 0 := by 
       intro h
       rw [h] at hf
       cases hf
-    have hfn0 : f ≠ 0 := by
+    have hfn0 : f ≠ 0 := by 
       intro h
       rw [h] at hndf
       exact hndf rfl
@@ -249,11 +245,11 @@ theorem adjoin_roots (n : ℕ) :
           ⊤ :=
   (Nat.recOn n fun K _ f hf => Algebra.eq_top_iff.2 fun x => Subalgebra.range_le _ ⟨x, rfl⟩)
     fun n ih K _ f hfn => by
-    have hndf : f.nat_degree ≠ 0 := by
+    have hndf : f.nat_degree ≠ 0 := by 
       intro h
       rw [h] at hfn
       cases hfn
-    have hfn0 : f ≠ 0 := by
+    have hfn0 : f ≠ 0 := by 
       intro h
       rw [h] at hndf
       exact hndf rfl
@@ -372,7 +368,7 @@ variable {K L F} [Algebra F K] [Algebra F L] [IsScalarTower F K L]
 variable {K}
 
 instance map (f : F[X]) [IsSplittingField F L f] : IsSplittingField K L (f.map <| algebraMap F K) :=
-  ⟨by
+  ⟨by 
     rw [splits_map_iff, ← IsScalarTower.algebra_map_eq]
     exact splits L f,
     Subalgebra.restrict_scalars_injective F <| by
@@ -395,7 +391,7 @@ theorem splits_iff (f : K[X]) [IsSplittingField K L f] :
     fun h =>
     @RingEquiv.to_ring_hom_refl K _ ▸
       RingEquiv.self_trans_symm (RingEquiv.ofBijective _ <| Algebra.bijective_algebra_map_iff.2 h) ▸
-        by
+        by 
         rw [RingEquiv.to_ring_hom_trans]
         exact splits_comp_of_splits _ _ (splits L f)⟩
 #align polynomial.is_splitting_field.splits_iff Polynomial.IsSplittingField.splits_iff
@@ -428,7 +424,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f]
         exact Algebra.toTop
   else
     AlgHom.comp
-      (by
+      (by 
         rw [← adjoin_roots L f]
         exact
           Classical.choice
@@ -445,7 +441,7 @@ theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensiona
   ⟨@Algebra.top_to_submodule K L _ _ _ ▸
       adjoin_roots L f ▸
         fg_adjoin_of_finite (Finset.finite_to_set _) fun y hy =>
-          if hf : f = 0 then by
+          if hf : f = 0 then by 
             rw [hf, Polynomial.map_zero, roots_zero] at hy
             cases hy
           else
@@ -480,14 +476,13 @@ def algEquiv (f : K[X]) [IsSplittingField K L f] : L ≃ₐ[K] SplittingField f 
 #align polynomial.is_splitting_field.alg_equiv Polynomial.IsSplittingField.algEquiv
 
 theorem ofAlgEquiv [Algebra K F] (p : K[X]) (f : F ≃ₐ[K] L) [IsSplittingField K F p] :
-    IsSplittingField K L p := by
+    IsSplittingField K L p := by 
   constructor
   · rw [← f.to_alg_hom.comp_algebra_map]
     exact splits_comp_of_splits _ _ (splits F p)
-    
-  · rw [← (Algebra.range_top_iff_surjective f.to_alg_hom).mpr f.surjective, ← root_set,
+  ·
+    rw [← (Algebra.range_top_iff_surjective f.to_alg_hom).mpr f.surjective, ← root_set,
       adjoin_root_set_eq_range (splits F p), root_set, adjoin_roots F p]
-    
 #align polynomial.is_splitting_field.of_alg_equiv Polynomial.IsSplittingField.ofAlgEquiv
 
 end IsSplittingField

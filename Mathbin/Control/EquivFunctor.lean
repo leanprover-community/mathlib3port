@@ -51,13 +51,13 @@ variable (f : Type u₀ → Type u₁) [EquivFunctor f] {α β : Type u₀} (e :
 
 #print EquivFunctor.mapEquiv /-
 /-- An `equiv_functor` in fact takes every equiv to an equiv. -/
-def mapEquiv : f α ≃ f β where
+def mapEquiv : f α ≃ f β where 
   toFun := EquivFunctor.map e
   invFun := EquivFunctor.map e.symm
-  left_inv x := by
+  left_inv x := by 
     convert (congr_fun (EquivFunctor.map_trans e e.symm) x).symm
     simp
-  right_inv y := by
+  right_inv y := by 
     convert (congr_fun (EquivFunctor.map_trans e.symm e) y).symm
     simp
 #align equiv_functor.map_equiv EquivFunctor.mapEquiv
@@ -108,15 +108,15 @@ end
 lean 3 declaration is
   forall (f : Type.{u₀} -> Type.{u₁}) [_inst_1 : Functor.{u₀, u₁} f] [_inst_2 : IsLawfulFunctor.{u₀, u₁} f _inst_1], EquivFunctor.{u₀, u₁} f
 but is expected to have type
-  forall (f : Type.{u₀} -> Type.{u₁}) [inst._@.Mathlib.Control.EquivFunctor._hyg.418 : Functor.{u₀, u₁} f] [inst._@.Mathlib.Control.EquivFunctor._hyg.421 : LawfulFunctor.{u₀, u₁} f inst._@.Mathlib.Control.EquivFunctor._hyg.418], EquivFunctor.{u₀, u₁} f
+  forall (f : Type.{u₀} -> Type.{u₁}) [inst._@.Mathlib.Control.EquivFunctor._hyg.417 : Functor.{u₀, u₁} f] [inst._@.Mathlib.Control.EquivFunctor._hyg.420 : LawfulFunctor.{u₀, u₁} f inst._@.Mathlib.Control.EquivFunctor._hyg.417], EquivFunctor.{u₀, u₁} f
 Case conversion may be inaccurate. Consider using '#align equiv_functor.of_is_lawful_functor EquivFunctor.ofLawfulFunctorₓ'. -/
 instance (priority := 100) ofLawfulFunctor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
-    EquivFunctor f where
+    EquivFunctor f where 
   map α β e := Functor.map e
-  map_refl' α := by
+  map_refl' α := by 
     ext
     apply IsLawfulFunctor.id_map
-  map_trans' α β γ k h := by
+  map_trans' α β γ k h := by 
     ext x
     apply IsLawfulFunctor.comp_map k h x
 #align equiv_functor.of_is_lawful_functor EquivFunctor.ofLawfulFunctor

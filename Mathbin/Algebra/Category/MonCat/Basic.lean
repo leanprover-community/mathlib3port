@@ -169,7 +169,7 @@ example {R S : CommMonCat} (f : R ⟶ S) : (R : Type) → (S : Type) :=
 -- when we construct the `to_fun` field, the types are presented as `↥R`,
 -- rather than `R.α` or (as we used to have) `↥(bundled.map comm_monoid.to_monoid R)`.
 example (R : CommMonCat.{u}) : R ⟶ R :=
-  { toFun := fun x => by
+  { toFun := fun x => by 
       match_target(R : Type u)
       match_hyp x : (R : Type u)
       exact x * x,
@@ -187,7 +187,8 @@ variable [Monoid X] [Monoid Y]
 @[to_additive AddEquiv.toAddMonIso
       "Build an isomorphism in the category `AddMon` from\nan `add_equiv` between `add_monoid`s.",
   simps]
-def MulEquiv.toMonIso (e : X ≃* Y) : MonCat.of X ≅ MonCat.of Y where
+def MulEquiv.toMonIso (e : X ≃* Y) :
+    MonCat.of X ≅ MonCat.of Y where 
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_Mon_iso MulEquiv.toMonIso
@@ -202,7 +203,9 @@ variable [CommMonoid X] [CommMonoid Y]
 @[to_additive AddEquiv.toAddCommMonIso
       "Build an isomorphism in the category `AddCommMon`\nfrom an `add_equiv` between `add_comm_monoid`s.",
   simps]
-def MulEquiv.toCommMonIso (e : X ≃* Y) : CommMonCat.of X ≅ CommMonCat.of Y where
+def MulEquiv.toCommMonIso (e : X ≃* Y) :
+    CommMonCat.of X ≅ CommMonCat.of
+        Y where 
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_CommMon_iso MulEquiv.toCommMonIso
@@ -231,7 +234,8 @@ in `Mon` -/
 @[to_additive addEquivIsoAddMonIso
       "additive equivalences between `add_monoid`s are the same\nas (isomorphic to) isomorphisms in `AddMon`"]
 def mulEquivIsoMonIso {X Y : Type u} [Monoid X] [Monoid Y] :
-    X ≃* Y ≅ MonCat.of X ≅ MonCat.of Y where
+    X ≃* Y ≅ MonCat.of X ≅ MonCat.of
+          Y where 
   Hom e := e.toMonIso
   inv i := i.monIsoToMulEquiv
 #align mul_equiv_iso_Mon_iso mulEquivIsoMonIso
@@ -241,14 +245,16 @@ in `CommMon` -/
 @[to_additive addEquivIsoAddCommMonIso
       "additive equivalences between `add_comm_monoid`s are\nthe same as (isomorphic to) isomorphisms in `AddCommMon`"]
 def mulEquivIsoCommMonIso {X Y : Type u} [CommMonoid X] [CommMonoid Y] :
-    X ≃* Y ≅ CommMonCat.of X ≅ CommMonCat.of Y where
+    X ≃* Y ≅ CommMonCat.of X ≅
+        CommMonCat.of Y where 
   Hom e := e.toCommMonIso
   inv i := i.commMonIsoToMulEquiv
 #align mul_equiv_iso_CommMon_iso mulEquivIsoCommMonIso
 
 @[to_additive]
 instance MonCat.forget_reflects_isos :
-    ReflectsIsomorphisms (forget MonCat.{u}) where reflects X Y f _ := by
+    ReflectsIsomorphisms
+      (forget MonCat.{u}) where reflects X Y f _ := by
     skip
     let i := as_iso ((forget MonCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
@@ -257,7 +263,9 @@ instance MonCat.forget_reflects_isos :
 
 @[to_additive]
 instance CommMonCat.forget_reflects_isos :
-    ReflectsIsomorphisms (forget CommMonCat.{u}) where reflects X Y f _ := by
+    ReflectsIsomorphisms
+      (forget
+        CommMonCat.{u}) where reflects X Y f _ := by
     skip
     let i := as_iso ((forget CommMonCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }

@@ -76,7 +76,7 @@ private def gosper_catalan (n j : ℕ) : ℚ :=
 private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
     gosperCatalan (n + 1) (i + 1) - gosperCatalan (n + 1) i =
       Nat.centralBinom i / (i + 1) * Nat.centralBinom (n - i) / (n - i + 1) :=
-  by
+  by 
   have : (n : ℚ) + 1 ≠ 0 := by exact_mod_cast n.succ_ne_zero
   have : (n : ℚ) + 1 + 1 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
   have : (i : ℚ) + 1 ≠ 0 := by exact_mod_cast i.succ_ne_zero
@@ -97,7 +97,7 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
 
 private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
     gosperCatalan (n + 1) (n + 1) - gosperCatalan (n + 1) 0 = Nat.centralBinom (n + 1) / (n + 2) :=
-  by
+  by 
   have : (n : ℚ) + 1 ≠ 0 := by exact_mod_cast n.succ_ne_zero
   have : (n : ℚ) + 1 + 1 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
   have h : (n : ℚ) + 2 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
@@ -112,7 +112,6 @@ theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n
     exact_mod_cast this
   induction' n using Nat.case_strong_induction_on with d hd
   · simp
-    
   · simp_rw [catalan_succ, Nat.cast_sum, Nat.cast_mul]
     trans
       (∑ i : Fin d.succ, Nat.centralBinom i / (i + 1) * (Nat.centralBinom (d - i) / (d - i + 1)) :
@@ -120,23 +119,16 @@ theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n
     · refine' sum_congr rfl fun i _ => _
       congr
       · exact_mod_cast hd i i.is_le
-        
       · rw_mod_cast [hd (d - i)]
         push_cast
         rw [Nat.cast_sub i.is_le]
         exact tsub_le_self
-        
-      
     · trans ∑ i : Fin d.succ, gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i
       · refine' sum_congr rfl fun i _ => _
         rw_mod_cast [gosper_trick i.is_le, mul_div]
-        
       · rw [← sum_range fun i => gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i,
           sum_range_sub, Nat.succ_eq_add_one]
         exact_mod_cast gosper_catalan_sub_eq_central_binom_div d
-        
-      
-    
 #align catalan_eq_central_binom_div catalan_eq_central_binom_div
 
 theorem succ_mul_catalan_eq_central_binom (n : ℕ) : (n + 1) * catalan n = n.centralBinom :=

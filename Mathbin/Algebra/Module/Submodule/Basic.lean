@@ -54,11 +54,13 @@ namespace Submodule
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
-instance : SetLike (Submodule R M) M where
+instance : SetLike (Submodule R M)
+      M where 
   coe := Submodule.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
-instance : AddSubmonoidClass (Submodule R M) M where
+instance : AddSubmonoidClass (Submodule R M)
+      M where 
   zero_mem := zero_mem'
   add_mem := add_mem'
 
@@ -87,14 +89,15 @@ theorem mk_le_mk {S S' : Set M} (h₁ h₂ h₃ h₁' h₂' h₃') :
   Iff.rfl
 #align submodule.mk_le_mk Submodule.mk_le_mk
 
-@[ext.1]
+@[ext]
 theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
   SetLike.ext h
 #align submodule.ext Submodule.ext
 
 /-- Copy of a submodule with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) : Submodule R M where
+protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) :
+    Submodule R M where 
   carrier := s
   zero_mem' := hs.symm ▸ p.zero_mem'
   add_mem' _ _ := hs.symm ▸ p.add_mem'
@@ -326,7 +329,6 @@ instance module' [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] :
     · intros
       apply SetCoe.ext
       simp [smul_add, add_smul, mul_smul]
-      
 #align submodule.module' Submodule.module'
 
 instance : Module R p :=
@@ -368,7 +370,8 @@ variable (S) [Semiring S] [Module S M] [Module R M] [HasSmul S R] [IsScalarTower
 /-- `V.restrict_scalars S` is the `S`-submodule of the `S`-module given by restriction of scalars,
 corresponding to `V`, an `R`-submodule of the original `R`-module.
 -/
-def restrictScalars (V : Submodule R M) : Submodule S M where
+def restrictScalars (V : Submodule R M) :
+    Submodule S M where 
   carrier := V
   zero_mem' := V.zero_mem
   smul_mem' c m h := V.smul_of_tower_mem c h
@@ -415,7 +418,9 @@ instance (p : Submodule R M) :
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
 the lattice of `S`-submodules. -/
 @[simps]
-def restrictScalarsEmbedding : Submodule R M ↪o Submodule S M where
+def restrictScalarsEmbedding :
+    Submodule R M ↪o Submodule S
+        M where 
   toFun := restrictScalars S
   inj' := restrict_scalars_injective S R M
   map_rel_iff' p q := by simp [SetLike.le_def]

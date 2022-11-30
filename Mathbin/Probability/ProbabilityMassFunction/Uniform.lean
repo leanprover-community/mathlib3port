@@ -68,7 +68,7 @@ theorem uniform_of_finset_apply_of_not_mem (ha : a ∉ s) : uniformOfFinset s hs
 @[simp]
 theorem support_uniform_of_finset : (uniformOfFinset s hs).support = s :=
   Set.ext
-    (by
+    (by 
       let ⟨a, ha⟩ := hs
       simp [mem_support_iff, Finset.ne_empty_of_mem ha])
 #align pmf.support_uniform_of_finset Pmf.support_uniform_of_finset

@@ -95,9 +95,7 @@ intuitionistic. -/
 example (a b : Prop) : (a ∧ b ∨ ¬(a ∧ b)) ∧ ((a ∨ b) ∨ ¬(a ∨ b)) → a ∨ ¬a := by
   rintro ⟨⟨ha, hb⟩ | hnab, (ha | hb) | hnab⟩ <;> try exact Or.inl ha
   · exact Or.inr fun ha => hnab ⟨ha, hb⟩
-    
   · exact Or.inr fun ha => hnab <| Or.inl ha
-    
 
 theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
   simp only [boundary, sup_inf_left, sup_inf_right, sup_right_idem, le_inf_iff, sup_assoc,
@@ -106,11 +104,9 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b)
     refine' inf_le_of_right_le _
   · rw [hnot_le_iff_codisjoint_right, codisjoint_left_comm]
     exact codisjoint_hnot_left
-    
   · refine' le_sup_of_le_right _
     rw [hnot_le_iff_codisjoint_right]
     exact codisjoint_hnot_right.mono_right (hnot_anti inf_le_left)
-    
 #align
   coheyting.boundary_le_boundary_sup_sup_boundary_inf_left Coheyting.boundary_le_boundary_sup_sup_boundary_inf_left
 

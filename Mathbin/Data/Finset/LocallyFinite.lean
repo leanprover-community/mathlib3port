@@ -245,13 +245,13 @@ theorem Icc_subset_Ioc_iff (h₁ : a₁ ≤ b₁) : icc a₁ b₁ ⊆ ioc a₂ b
 
 --TODO: `Ico_subset_Ioo_iff`, `Ioc_subset_Ioo_iff`
 theorem Icc_ssubset_Icc_left (hI : a₂ ≤ b₂) (ha : a₂ < a₁) (hb : b₁ ≤ b₂) : icc a₁ b₁ ⊂ icc a₂ b₂ :=
-  by
+  by 
   rw [← coe_ssubset, coe_Icc, coe_Icc]
   exact Set.Icc_ssubset_Icc_left hI ha hb
 #align finset.Icc_ssubset_Icc_left Finset.Icc_ssubset_Icc_left
 
 theorem Icc_ssubset_Icc_right (hI : a₂ ≤ b₂) (ha : a₂ ≤ a₁) (hb : b₁ < b₂) :
-    icc a₁ b₁ ⊂ icc a₂ b₂ := by
+    icc a₁ b₁ ⊂ icc a₂ b₂ := by 
   rw [← coe_ssubset, coe_Icc, coe_Icc]
   exact Set.Icc_ssubset_Icc_right hI ha hb
 #align finset.Icc_ssubset_Icc_right Finset.Icc_ssubset_Icc_right
@@ -282,7 +282,7 @@ def Set.fintypeOfMemBounds {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ l
 #align set.fintype_of_mem_bounds Set.fintypeOfMemBounds
 
 theorem BddBelow.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.Finite :=
-  by
+  by 
   let ⟨a, ha⟩ := h₀
   let ⟨b, hb⟩ := h₁
   classical exact ⟨Set.fintypeOfMemBounds ha hb⟩
@@ -301,7 +301,7 @@ theorem Ico_filter_lt_of_right_le [DecidablePred (· < c)] (hbc : b ≤ c) :
 #align finset.Ico_filter_lt_of_right_le Finset.Ico_filter_lt_of_right_le
 
 theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
-    (ico a b).filter (· < c) = ico a c := by
+    (ico a b).filter (· < c) = ico a c := by 
   ext x
   rw [mem_filter, mem_Ico, mem_Ico, and_right_comm]
   exact and_iff_left_of_imp fun h => h.2.trans_le hcb
@@ -318,7 +318,7 @@ theorem Ico_filter_le_of_right_le {a b : α} [DecidablePred ((· ≤ ·) b)] :
 #align finset.Ico_filter_le_of_right_le Finset.Ico_filter_le_of_right_le
 
 theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (hac : a ≤ c) :
-    (ico a b).filter ((· ≤ ·) c) = ico c b := by
+    (ico a b).filter ((· ≤ ·) c) = ico c b := by 
   ext x
   rw [mem_filter, mem_Ico, mem_Ico, and_comm', and_left_comm]
   exact and_iff_right_of_imp fun h => hac.trans h.1
@@ -592,29 +592,26 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
 #align finset.Ico_filter_le_left Finset.Ico_filter_le_left
 
-theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by classical
-  by_cases h : a ≤ b
-  · rw [← Ico_insert_right h, card_insert_of_not_mem right_not_mem_Ico]
-    exact (Nat.add_sub_cancel _ _).symm
-    
-  · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
-    
+theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by
+  classical 
+    by_cases h : a ≤ b
+    · rw [← Ico_insert_right h, card_insert_of_not_mem right_not_mem_Ico]
+      exact (Nat.add_sub_cancel _ _).symm
+    · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
 #align finset.card_Ico_eq_card_Icc_sub_one Finset.card_Ico_eq_card_Icc_sub_one
 
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (ioc a b).card = (icc a b).card - 1 :=
   @card_Ico_eq_card_Icc_sub_one αᵒᵈ _ _ _ _
 #align finset.card_Ioc_eq_card_Icc_sub_one Finset.card_Ioc_eq_card_Icc_sub_one
 
-theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by classical
-  by_cases h : a ≤ b
-  · obtain rfl | h' := h.eq_or_lt
-    · rw [Ioo_self, Ico_self, card_empty]
-      
-    rw [← Ioo_insert_left h', card_insert_of_not_mem left_not_mem_Ioo]
-    exact (Nat.add_sub_cancel _ _).symm
-    
-  · rw [Ioo_eq_empty fun h' => h h'.le, Ico_eq_empty fun h' => h h'.le, card_empty, zero_tsub]
-    
+theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by
+  classical 
+    by_cases h : a ≤ b
+    · obtain rfl | h' := h.eq_or_lt
+      · rw [Ioo_self, Ico_self, card_empty]
+      rw [← Ioo_insert_left h', card_insert_of_not_mem left_not_mem_Ioo]
+      exact (Nat.add_sub_cancel _ _).symm
+    · rw [Ioo_eq_empty fun h' => h h'.le, Ico_eq_empty fun h' => h h'.le, card_empty, zero_tsub]
 #align finset.card_Ioo_eq_card_Ico_sub_one Finset.card_Ioo_eq_card_Ico_sub_one
 
 theorem card_Ioo_eq_card_Ioc_sub_one (a b : α) : (ioo a b).card = (ioc a b).card - 1 :=
@@ -743,18 +740,14 @@ theorem Ico_inter_Ico {a b c d : α} : ico a b ∩ ico c d = ico (max a c) (min 
 theorem Ico_filter_lt (a b c : α) : ((ico a b).filter fun x => x < c) = ico a (min b c) := by
   cases le_total b c
   · rw [Ico_filter_lt_of_right_le h, min_eq_left h]
-    
   · rw [Ico_filter_lt_of_le_right h, min_eq_right h]
-    
 #align finset.Ico_filter_lt Finset.Ico_filter_lt
 
 @[simp]
 theorem Ico_filter_le (a b c : α) : ((ico a b).filter fun x => c ≤ x) = ico (max a c) b := by
   cases le_total a c
   · rw [Ico_filter_le_of_left_le h, max_eq_right h]
-    
   · rw [Ico_filter_le_of_le_left h, max_eq_left h]
-    
 #align finset.Ico_filter_le Finset.Ico_filter_le
 
 @[simp]
@@ -765,7 +758,7 @@ theorem Ioo_filter_lt (a b c : α) : (ioo a b).filter (· < c) = ioo a (min b c)
 
 @[simp]
 theorem Iio_filter_lt {α} [LinearOrder α] [LocallyFiniteOrderBot α] (a b : α) :
-    (iio a).filter (· < b) = iio (min a b) := by
+    (iio a).filter (· < b) = iio (min a b) := by 
   ext
   simp [and_assoc']
 #align finset.Iio_filter_lt Finset.Iio_filter_lt
@@ -776,20 +769,16 @@ theorem Ico_diff_Ico_left (a b c : α) : ico a b \ ico a c = ico (max a c) b := 
   · ext x
     rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, max_eq_right h, and_right_comm, not_and, not_lt]
     exact and_congr_left' ⟨fun hx => hx.2 hx.1, fun hx => ⟨h.trans hx, fun _ => hx⟩⟩
-    
   · rw [Ico_eq_empty_of_le h, sdiff_empty, max_eq_left h]
-    
 #align finset.Ico_diff_Ico_left Finset.Ico_diff_Ico_left
 
 @[simp]
 theorem Ico_diff_Ico_right (a b c : α) : ico a b \ ico c b = ico a (min b c) := by
   cases le_total b c
   · rw [Ico_eq_empty_of_le h, sdiff_empty, min_eq_left h]
-    
   · ext x
     rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, min_eq_right h, and_assoc', not_and', not_le]
     exact and_congr_right' ⟨fun hx => hx.2 hx.1, fun hx => ⟨hx.trans_le h, fun _ => hx⟩⟩
-    
 #align finset.Ico_diff_Ico_right Finset.Ico_diff_Ico_right
 
 end LocallyFiniteOrder
@@ -815,13 +804,11 @@ theorem image_add_left_Icc (a b c : α) : (icc a b).image ((· + ·) c) = icc (c
   · rintro ⟨y, hy, rfl⟩
     rw [mem_Icc] at hy
     exact ⟨add_le_add_left hy.1 c, add_le_add_left hy.2 c⟩
-    
   · intro hx
     obtain ⟨y, hy⟩ := exists_add_of_le hx.1
     rw [add_assoc] at hy
     rw [hy] at hx
     exact ⟨a + y, mem_Icc.2 ⟨le_of_add_le_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
-    
 #align finset.image_add_left_Icc Finset.image_add_left_Icc
 
 theorem image_add_left_Ico (a b c : α) : (ico a b).image ((· + ·) c) = ico (c + a) (c + b) := by
@@ -831,13 +818,11 @@ theorem image_add_left_Ico (a b c : α) : (ico a b).image ((· + ·) c) = ico (c
   · rintro ⟨y, hy, rfl⟩
     rw [mem_Ico] at hy
     exact ⟨add_le_add_left hy.1 c, add_lt_add_left hy.2 c⟩
-    
   · intro hx
     obtain ⟨y, hy⟩ := exists_add_of_le hx.1
     rw [add_assoc] at hy
     rw [hy] at hx
     exact ⟨a + y, mem_Ico.2 ⟨le_of_add_le_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
-    
 #align finset.image_add_left_Ico Finset.image_add_left_Ico
 
 theorem image_add_left_Ioc (a b c : α) : (ioc a b).image ((· + ·) c) = ioc (c + a) (c + b) := by
@@ -847,12 +832,10 @@ theorem image_add_left_Ioc (a b c : α) : (ioc a b).image ((· + ·) c) = ioc (c
   · rintro ⟨y, hy, rfl⟩
     rw [mem_Ioc] at hy
     exact ⟨add_lt_add_left hy.1 c, add_le_add_left hy.2 c⟩
-    
   · obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
     rw [add_assoc] at hy
     rw [hy] at hx
     exact ⟨a + y, mem_Ioc.2 ⟨lt_of_add_lt_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
-    
 #align finset.image_add_left_Ioc Finset.image_add_left_Ioc
 
 theorem image_add_left_Ioo (a b c : α) : (ioo a b).image ((· + ·) c) = ioo (c + a) (c + b) := by
@@ -862,12 +845,10 @@ theorem image_add_left_Ioo (a b c : α) : (ioo a b).image ((· + ·) c) = ioo (c
   · rintro ⟨y, hy, rfl⟩
     rw [mem_Ioo] at hy
     exact ⟨add_lt_add_left hy.1 c, add_lt_add_left hy.2 c⟩
-    
   · obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
     rw [add_assoc] at hy
     rw [hy] at hx
     exact ⟨a + y, mem_Ioo.2 ⟨lt_of_add_lt_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
-    
 #align finset.image_add_left_Ioo Finset.image_add_left_Ioo
 
 theorem image_add_right_Icc (a b c : α) : (icc a b).image (· + c) = icc (a + c) (b + c) := by

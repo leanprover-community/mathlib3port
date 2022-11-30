@@ -90,17 +90,13 @@ theorem one_lt_pow' (n m : ℕ) : 1 < (m + 2) ^ (n + 1) :=
 theorem one_lt_pow_iff {k n : ℕ} (h : 0 ≠ k) : 1 < n ^ k ↔ 1 < n := by
   cases n
   · cases k <;> simp [zero_pow_eq]
-    
   cases n
   · rw [one_pow]
-    
   refine' ⟨fun _ => one_lt_succ_succ n, fun _ => _⟩
   induction' k with k hk
   · exact absurd rfl h
-    
   cases k
   · simp
-    
   exact one_lt_mul (one_lt_succ_succ _).le (hk (succ_ne_zero k).symm)
 #align nat.one_lt_pow_iff Nat.one_lt_pow_iff
 
@@ -176,19 +172,17 @@ theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n := by
 theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w) + m % b := by
   by_cases b_h : b = 0
   · simp [b_h, pow_succ]
-    
   have b_pos := Nat.pos_of_ne_zero b_h
   apply Nat.strong_induction_on m
   clear m
   intro p IH
   cases' lt_or_ge p (b ^ succ w) with h₁ h₁
   -- base case: p < b^succ w
-  · have h₂ : p / b < b ^ w := by
+  · have h₂ : p / b < b ^ w := by 
       rw [div_lt_iff_lt_mul b_pos]
       simpa [pow_succ'] using h₁
     rw [mod_eq_of_lt h₁, mod_eq_of_lt h₂]
     simp [div_add_mod]
-    
   -- step: p ≥ b^succ w
   · -- Generate condition for induction hypothesis
     have h₂ : p - b ^ succ w < p := tsub_lt_self ((pow_pos b_pos _).trans_le h₁) (pow_pos b_pos _)
@@ -204,24 +198,19 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
       rw [le_div_iff_mul_le b_pos, mul_comm]
       exact h₁
     rw [Eq.symm (mod_eq_sub_mod p_b_ge)]
-    
 #align nat.mod_pow_succ Nat.mod_pow_succ
 
 theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} (w : 0 < x), x ^ k ∣ x ^ l ↔ x ^ k ≤ x ^ l
-  | x + 1, w => by
+  | x + 1, w => by 
     constructor
     · intro a
       exact le_of_dvd (pow_pos (succ_pos x) l) a
-      
     · intro a
       cases' x with x
       · simp only [one_pow]
-        
       · have le := (pow_le_iff_le_right (Nat.le_add_left _ _)).mp a
         use (x + 2) ^ (l - k)
         rw [← pow_add, add_comm k, tsub_add_cancel_of_le le]
-        
-      
 #align nat.pow_dvd_pow_iff_pow_le_pow Nat.pow_dvd_pow_iff_pow_le_pow
 
 /-- If `1 < x`, then `x^k` divides `x^l` if and only if `k` is at most `l`. -/
@@ -274,7 +263,7 @@ theorem shiftl_eq_mul_pow (m) : ∀ n, shiftl m n = m * 2 ^ n
 
 theorem shiftl'_tt_eq_mul_pow (m) : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ n
   | 0 => by simp [shiftl, shiftl', pow_zero, Nat.one_mul]
-  | k + 1 => by
+  | k + 1 => by 
     change bit1 (shiftl' tt m k) + 1 = (m + 1) * (2 * 2 ^ k)
     rw [bit1_val]
     change 2 * (shiftl' tt m k + 1) = _
@@ -321,10 +310,10 @@ theorem size_zero : size 0 = 0 := by simp [size]
 @[simp]
 theorem size_bit {b n} (h : bit b n ≠ 0) : size (bit b n) = succ (size n) := by
   rw [size]
-  conv =>
-  lhs
-  rw [binary_rec]
-  simp [h]
+  conv => 
+    lhs
+    rw [binary_rec]
+    simp [h]
   rw [div2_bit]
 #align nat.size_bit Nat.size_bit
 
@@ -349,9 +338,7 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
   rw [size_bit h, Nat.add_succ]
   by_cases s0 : shiftl' b m n = 0 <;> [skip, rw [IH s0]]
   rw [s0] at h⊢
-  cases b;
-  · exact absurd rfl h
-    
+  cases b; · exact absurd rfl h
   have : shiftl' tt m n + 1 = 1 := congr_arg (· + 1) s0
   rw [shiftl'_tt_eq_mul_pow] at this
   obtain rfl := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
@@ -372,11 +359,9 @@ theorem lt_size_self (n : ℕ) : n < 2 ^ size n := by
   have : ∀ {n}, n = 0 → n < shiftl 1 (size n) := by simp
   apply binary_rec _ _ n
   · apply this rfl
-    
   intro b n IH
   by_cases bit b n = 0
   · apply this h
-    
   rw [size_bit h, shiftl_succ]
   exact bit_lt_bit0 _ IH
 #align nat.lt_size_self Nat.lt_size_self
@@ -387,19 +372,14 @@ theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
     apply binary_rec _ _ m
     · intro n h
       simp
-      
     · intro b m IH n h
       by_cases e : bit b m = 0
       · simp [e]
-        
       rw [size_bit e]
       cases' n with n
       · exact e.elim (Nat.eq_zero_of_le_zero (le_of_lt_succ h))
-        
       · apply succ_le_succ (IH _)
-        apply lt_imp_lt_of_le_imp_le (fun h' => bit0_le_bit _ h') h
-        
-      ⟩
+        apply lt_imp_lt_of_le_imp_le (fun h' => bit0_le_bit _ h') h⟩
 #align nat.size_le Nat.size_le
 
 theorem lt_size {m n : ℕ} : m < size n ↔ 2 ^ m ≤ n := by

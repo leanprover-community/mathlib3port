@@ -275,7 +275,6 @@ theorem measurableOfReIm (hre : Measurable fun x => IsROrC.re (f x))
       ((is_R_or_C.measurable_of_real.comp him).mul_const IsROrC.i)
   · ext1 x
     exact (IsROrC.re_add_im _).symm
-    
   all_goals infer_instance
 #align measurable_of_re_im measurableOfReIm
 
@@ -286,7 +285,6 @@ theorem aeMeasurableOfReIm (hre : AeMeasurable (fun x => IsROrC.re (f x)) μ)
       ((is_R_or_C.measurable_of_real.comp_ae_measurable him).mul_const IsROrC.i)
   · ext1 x
     exact (IsROrC.re_add_im _).symm
-    
   all_goals infer_instance
 #align ae_measurable_of_re_im aeMeasurableOfReIm
 
@@ -317,11 +315,9 @@ instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
     exact
       MeasurableSet.inter (measurableFst (measurable_set_singleton 0))
         (measurableSnd measurableSetIio)
-    
   · simp_rw [Ennreal.top_rpow_def]
     refine' Measurable.ite measurableSetIoi measurableConst _
     exact Measurable.ite (measurable_set_singleton 0) measurableConst measurableConst
-    
 #align ennreal.has_measurable_pow Ennreal.hasMeasurablePow
 
 end PowInstances

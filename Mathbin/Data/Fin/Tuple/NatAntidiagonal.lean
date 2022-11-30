@@ -81,21 +81,15 @@ theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
   induction' k with k ih generalizing n
   · cases n
     · simp
-      
     · simp [eq_comm]
-      
-    
   · refine' Fin.consInduction (fun x₀ x => _) x
     simp_rw [Fin.sum_cons, antidiagonal_tuple, List.mem_bind, List.mem_map,
       List.Nat.mem_antidiagonal, Fin.cons_eq_cons, exists_eq_right_right, ih, Prod.exists]
     constructor
     · rintro ⟨a, b, rfl, rfl, rfl⟩
       rfl
-      
     · rintro rfl
       exact ⟨_, _, rfl, rfl, rfl⟩
-      
-    
 #align list.nat.mem_antidiagonal_tuple List.Nat.mem_antidiagonal_tuple
 
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
@@ -103,25 +97,19 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n
   induction' k with k ih generalizing n
   · cases n
     · simp
-      
     · simp [eq_comm]
-      
-    
   simp_rw [antidiagonal_tuple, List.nodup_bind]
   constructor
   · intro i hi
     exact (ih i.snd).map (Fin.cons_right_injective (i.fst : (fun _ => ℕ) 0))
-    
   induction n
   · exact List.pairwise_singleton _ _
-    
   · rw [List.Nat.antidiagonal_succ]
     refine' List.Pairwise.cons (fun a ha x hx₁ hx₂ => _) (n_ih.map _ fun a b h x hx₁ hx₂ => _)
     · rw [List.mem_map] at hx₁ hx₂ ha
       obtain ⟨⟨a, -, rfl⟩, ⟨x₁, -, rfl⟩, ⟨x₂, -, h⟩⟩ := ha, hx₁, hx₂
       rw [Fin.cons_eq_cons] at h
       injection h.1
-      
     · rw [List.mem_map] at hx₁ hx₂
       obtain ⟨⟨x₁, hx₁, rfl⟩, ⟨x₂, hx₂, h₁₂⟩⟩ := hx₁, hx₂
       dsimp at h₁₂
@@ -129,8 +117,6 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n
       obtain ⟨h₁₂, rfl⟩ := h₁₂
       rw [h₁₂] at h
       exact h (List.mem_map_of_mem _ hx₁) (List.mem_map_of_mem _ hx₂)
-      
-    
 #align list.nat.nodup_antidiagonal_tuple List.Nat.nodup_antidiagonal_tuple
 
 theorem antidiagonal_tuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
@@ -176,17 +162,14 @@ theorem antidiagonal_tuple_pairwise_pi_lex :
     induction n
     · rw [antidiagonal_zero]
       exact List.pairwise_singleton _ _
-      
     · rw [antidiagonal_succ, List.pairwise_cons, List.pairwise_map]
       refine' ⟨fun p hp x hx y hy => _, _⟩
       · rw [List.mem_map, Prod.exists] at hp
         obtain ⟨a, b, hab, rfl : (Nat.succ a, b) = p⟩ := hp
         exact Or.inl (Nat.zero_lt_succ _)
-        
       dsimp
       simp_rw [Nat.succ_inj', Nat.succ_lt_succ_iff]
       exact n_ih
-      
 #align list.nat.antidiagonal_tuple_pairwise_pi_lex List.Nat.antidiagonal_tuple_pairwise_pi_lex
 
 end List.Nat
@@ -282,7 +265,9 @@ section EquivProd
 
 This is the tuple version of `finset.nat.sigma_antidiagonal_equiv_prod`. -/
 @[simps]
-def sigmaAntidiagonalTupleEquivTuple (k : ℕ) : (Σn, antidiagonalTuple k n) ≃ (Fin k → ℕ) where
+def sigmaAntidiagonalTupleEquivTuple (k : ℕ) :
+    (Σn, antidiagonalTuple k n) ≃
+      (Fin k → ℕ) where 
   toFun x := x.2
   invFun x := ⟨∑ i, x i, x, mem_antidiagonal_tuple.mpr rfl⟩
   left_inv := fun ⟨n, t, h⟩ => Sigma.subtype_ext (mem_antidiagonal_tuple.mp h) rfl

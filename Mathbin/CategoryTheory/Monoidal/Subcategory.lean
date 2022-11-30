@@ -59,9 +59,12 @@ variable [MonoidalPredicate P]
 When `P` is a monoidal predicate, the full subcategory for `P` inherits the monoidal structure of
   `C`.
 -/
-instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P) where
+instance fullMonoidalSubcategory :
+    MonoidalCategory
+      (FullSubcategory
+        P) where 
   tensorObj X Y := ⟨X.1 ⊗ Y.1, prop_tensor X.2 Y.2⟩
-  tensorHom X₁ Y₁ X₂ Y₂ f g := by
+  tensorHom X₁ Y₁ X₂ Y₂ f g := by 
     change X₁.1 ⊗ X₂.1 ⟶ Y₁.1 ⊗ Y₂.1
     change X₁.1 ⟶ Y₁.1 at f
     change X₂.1 ⟶ Y₂.1 at g
@@ -86,7 +89,9 @@ instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P) where
 ("forgetting" the condition).
 -/
 @[simps]
-def fullMonoidalSubcategoryInclusion : MonoidalFunctor (FullSubcategory P) C where
+def fullMonoidalSubcategoryInclusion :
+    MonoidalFunctor (FullSubcategory P)
+      C where 
   toFunctor := fullSubcategoryInclusion P
   ε := 𝟙 _
   μ X Y := 𝟙 _
@@ -136,7 +141,8 @@ variable {P} {P' : C → Prop} [MonoidalPredicate P']
 subcategories. -/
 @[simps]
 def fullMonoidalSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
-    MonoidalFunctor (FullSubcategory P) (FullSubcategory P') where
+    MonoidalFunctor (FullSubcategory P)
+      (FullSubcategory P') where 
   toFunctor := FullSubcategory.map h
   ε := 𝟙 _
   μ X Y := 𝟙 _
@@ -171,9 +177,11 @@ instance fullBraidedSubcategory : BraidedCategory (FullSubcategory P) :=
 ("forgetting" the condition).
 -/
 @[simps]
-def fullBraidedSubcategoryInclusion : BraidedFunctor (FullSubcategory P) C where
+def fullBraidedSubcategoryInclusion :
+    BraidedFunctor (FullSubcategory P)
+      C where 
   toMonoidalFunctor := fullMonoidalSubcategoryInclusion P
-  braided' X Y := by
+  braided' X Y := by 
     rw [is_iso.eq_inv_comp]
     tidy
 #align
@@ -195,9 +203,11 @@ variable {P}
 subcategories. -/
 @[simps]
 def fullBraidedSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
-    BraidedFunctor (FullSubcategory P) (FullSubcategory P') where
+    BraidedFunctor (FullSubcategory P)
+      (FullSubcategory
+        P') where 
   toMonoidalFunctor := fullMonoidalSubcategory.map h
-  braided' X Y := by
+  braided' X Y := by 
     rw [is_iso.eq_inv_comp]
     tidy
 #align
@@ -261,11 +271,11 @@ instance fullMonoidalClosedSubcategory :
                 counit :=
                   { app := fun Y => (ihom.ev X.1).app Y.1,
                     naturality' := fun Y Z f => ihom.ev_naturality X.1 f },
-                left_triangle' := by
+                left_triangle' := by 
                   ext Y
                   simp
                   exact ihom.ev_coev X.1 Y.1,
-                right_triangle' := by
+                right_triangle' := by 
                   ext Y
                   simp
                   exact ihom.coev_ev X.1 Y.1 } } }

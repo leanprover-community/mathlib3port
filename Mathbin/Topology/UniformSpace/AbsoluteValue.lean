@@ -41,7 +41,9 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 variable {R : Type _} [CommRing R] (abv : R → 𝕜) [IsAbsoluteValue abv]
 
 /-- The uniformity coming from an absolute value. -/
-def uniformSpaceCore : UniformSpace.Core R where
+def uniformSpaceCore :
+    UniformSpace.Core
+      R where 
   uniformity := ⨅ ε > 0, 𝓟 { p : R × R | abv (p.2 - p.1) < ε }
   refl :=
     le_infi fun ε =>
@@ -84,11 +86,9 @@ theorem mem_uniformity {s : Set (R × R)} :
     exact this
   rw [mem_infi_of_directed]
   · simp [subset_def]
-    
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
     exact
       ⟨⟨min r p, lt_min hr hp⟩, by simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]⟩
-    
 #align is_absolute_value.mem_uniformity IsAbsoluteValue.mem_uniformity
 
 end IsAbsoluteValue

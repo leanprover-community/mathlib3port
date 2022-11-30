@@ -115,10 +115,8 @@ theorem disjoint_at_bot_at_top [PartialOrder α] [Nontrivial α] :
   by_cases hle : x ≤ y
   · refine' disjoint_of_disjoint_of_mem _ (Iic_mem_at_bot x) (Ici_mem_at_top y)
     exact Iic_disjoint_Ici.2 (hle.lt_of_ne hne).not_le
-    
   · refine' disjoint_of_disjoint_of_mem _ (Iic_mem_at_bot y) (Ici_mem_at_top x)
     exact Iic_disjoint_Ici.2 hle
-    
 #align filter.disjoint_at_bot_at_top Filter.disjoint_at_bot_at_top
 
 theorem disjoint_at_top_at_bot [PartialOrder α] [Nontrivial α] :
@@ -469,10 +467,8 @@ theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, �
   · apply strictMono_nat_of_lt_succ
     intro n
     apply hu
-    
   · intro n
     cases n <;> simp [hu']
-    
 #align filter.extraction_forall_of_frequently Filter.extraction_forall_of_frequently
 
 theorem extraction_forall_of_eventually {P : ℕ → ℕ → Prop} (h : ∀ n, ∀ᶠ k in at_top, P n k) :
@@ -519,7 +515,7 @@ theorem exists_lt_of_tendsto_at_bot [SemilatticeSup α] [Preorder β] [NoMinOrde
 then after any point, it reaches a value strictly greater than all previous values.
 -/
 theorem high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β} (hu : Tendsto u atTop atTop) :
-    ∀ N, ∃ n ≥ N, ∀ k < n, u k < u n := by
+    ∀ N, ∃ n ≥ N, ∀ k < n, u k < u n := by 
   intro N
   obtain ⟨k : ℕ, hkn : k ≤ N, hku : ∀ l ≤ N, u l ≤ u k⟩ : ∃ k ≤ N, ∀ l ≤ N, u l ≤ u k
   exact exists_max_image _ u (finite_le_nat N) ⟨N, le_refl N⟩
@@ -531,12 +527,10 @@ theorem high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β} (hu : Tend
     exact ⟨n, hnN, hnk, hn_min⟩
   use n, hnN
   rintro (l : ℕ) (hl : l < n)
-  have hlk : u l ≤ u k := by
+  have hlk : u l ≤ u k := by 
     cases' (le_total l N : l ≤ N ∨ N ≤ l) with H H
     · exact hku l H
-      
     · exact hn_min l hl H
-      
   calc
     u l ≤ u k := hlk
     _ < u n := hnk
@@ -1032,10 +1026,8 @@ theorem tendsto_const_mul_pow_at_top_iff :
   refine' ⟨fun h => ⟨_, _⟩, fun h => tendsto_const_mul_pow_at_top h.1 h.2⟩
   · rintro rfl
     simpa only [pow_zero, not_tendsto_const_at_top] using h
-    
   · rcases((h.eventually_gt_at_top 0).And (eventually_ge_at_top 0)).exists with ⟨k, hck, hk⟩
     exact pos_of_mul_pos_left hck (pow_nonneg hk _)
-    
 #align filter.tendsto_const_mul_pow_at_top_iff Filter.tendsto_const_mul_pow_at_top_iff
 
 end LinearOrderedSemifield
@@ -1092,11 +1084,8 @@ theorem tendsto_const_mul_at_top_iff [NeBot l] :
     Tendsto (fun x => r * f x) l atTop ↔ 0 < r ∧ Tendsto f l atTop ∨ r < 0 ∧ Tendsto f l atBot := by
   rcases lt_trichotomy r 0 with (hr | rfl | hr)
   · simp [hr, hr.not_lt, tendsto_const_mul_at_top_of_neg]
-    
   · simp [not_tendsto_const_at_top]
-    
   · simp [hr, hr.not_lt, tendsto_const_mul_at_top_of_pos]
-    
 #align filter.tendsto_const_mul_at_top_iff Filter.tendsto_const_mul_at_top_iff
 
 /-- The function `λ x, f x * r` tends to infinity along a nontrivial filter if and only if `r > 0`
@@ -1376,11 +1365,8 @@ theorem prod_at_top_at_top_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [Sem
   cases (isEmpty_or_nonempty β₂).symm
   · simp [at_top, prod_infi_left, prod_infi_right, infi_prod]
     exact infi_comm
-    
   · simp only [at_top.filter_eq_bot_of_is_empty, prod_bot]
-    
   · simp only [at_top.filter_eq_bot_of_is_empty, bot_prod]
-    
 #align filter.prod_at_top_at_top_eq Filter.prod_at_top_at_top_eq
 
 theorem prod_at_bot_at_bot_eq {β₁ β₂ : Type _} [SemilatticeInf β₁] [SemilatticeInf β₂] :
@@ -1513,11 +1499,9 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
     refine' mem_of_superset (mem_infi_of_mem ⟨x ⊔ a, h le_sup_right⟩ (mem_principal_self _)) _
     rintro _ ⟨y, hy, rfl⟩
     exact le_trans le_sup_left (Subtype.coe_le_coe.2 hy)
-    
   · intro x
     filter_upwards [mem_at_top (↑x ⊔ a)] with b hb
     exact ⟨⟨b, h <| le_sup_right.trans hb⟩, Subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩
-    
 #align filter.map_coe_at_top_of_Ici_subset Filter.map_coe_at_top_of_Ici_subset
 
 /-- The image of the filter `at_top` on `Ici a` under the coercion equals `at_top`. -/
@@ -1649,7 +1633,7 @@ theorem map_div_at_top_eq_nat (k : ℕ) (hk : 0 < k) : map (fun a => a / k) atTo
       calc
         a / k ≤ b ↔ a / k < b + 1 := by rw [← Nat.succ_eq_add_one, Nat.lt_succ_iff]
         _ ↔ a < (b + 1) * k := Nat.div_lt_iff_lt_mul hk
-        _ ↔ _ := by
+        _ ↔ _ := by 
           cases k
           exact (lt_irrefl _ hk).elim
           rw [add_mul, one_mul, Nat.succ_sub_succ_eq_sub, tsub_zero, Nat.add_succ, Nat.lt_succ_iff]
@@ -1783,7 +1767,6 @@ theorem HasAntitoneBasis.subbasis_with_rel {f : Filter α} {s : ℕ → Set α}
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ (∀ ⦃m n⦄, m < n → r (φ m) (φ n)) ∧ f.HasAntitoneBasis (s ∘ φ) := by
   rsuffices ⟨φ, hφ, hrφ⟩ : ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ m n, m < n → r (φ m) (φ n)
   · exact ⟨φ, hφ, hrφ, hs.comp_strict_mono hφ⟩
-    
   have : ∀ t : Set ℕ, t.Finite → ∀ᶠ n in at_top, ∀ m ∈ t, m < n ∧ r m n := fun t ht =>
     (eventually_all_finite ht).2 fun m hm => (eventually_gt_at_top m).And (hr _)
   rcases seq_of_forall_finite_exists fun t ht => (this t ht).exists with ⟨φ, hφ⟩
@@ -1846,14 +1829,12 @@ theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → 
     refine' ⟨x, hx_l, _⟩
     rw [tendsto_principal] at hx_p
     exact hx_p.frequently
-    
   · obtain ⟨x, hx_tendsto, hx_freq⟩ := h_exists_freq
     simp_rw [Filter.Frequently, Filter.Eventually] at hx_freq⊢
     have : { n : ℕ | ¬p (x n) } = { n | x n ∈ { y | ¬p y } } := rfl
     rw [this, ← mem_map'] at hx_freq
     contrapose! hx_freq
     exact hx_tendsto hx_freq
-    
 #align filter.frequently_iff_seq_frequently Filter.frequently_iff_seq_frequently
 
 theorem eventually_iff_seq_eventually {ι : Type _} {l : Filter ι} {p : ι → Prop}
@@ -1889,7 +1870,7 @@ theorem tendsto_of_subseq_tendsto {α ι : Type _} {x : ι → α} {f : Filter �
     [l.IsCountablyGenerated]
     (hxy :
       ∀ ns : ℕ → ι, Tendsto ns atTop l → ∃ ms : ℕ → ℕ, Tendsto (fun n => x (ns <| ms n)) atTop f) :
-    Tendsto x l f := by
+    Tendsto x l f := by 
   by_contra h
   obtain ⟨s, hs, hfreq⟩ : ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s := by
     rwa [not_tendsto_iff_exists_frequently_nmem] at h
@@ -1963,11 +1944,9 @@ theorem Function.Injective.map_at_top_finset_prod_eq [CommMonoid α] {g : γ →
     refine' fun y hy hyt => hf y (mt _ hyt)
     rintro ⟨x, rfl⟩
     exact ⟨x, ht (Finset.mem_preimage.2 <| hy.resolve_left hyt), rfl⟩
-    
   · refine' ⟨s.image g, fun t ht => _⟩
     simp only [← prod_preimage _ _ (hg.inj_on _) _ fun x _ => hf x]
     exact ⟨_, (image_subset_iff_subset_preimage _).1 ht, rfl⟩
-    
 #align function.injective.map_at_top_finset_prod_eq Function.Injective.map_at_top_finset_prod_eq
 
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`

@@ -42,11 +42,9 @@ theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
   refine' ⟨_, fun ⟨b, hb⟩ x y hx hy => (hb x hx).2.trans (add_le_add_right (hb y hy).1 _)⟩
   obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
   · simp
-    
   intro hs
   by_cases h : ∀ y ∈ s, f x ≤ f y
   · exact ⟨f x, fun y hy => ⟨h _ hy, hs hy hx⟩⟩
-    
   push_neg  at h
   obtain ⟨w, hw, hwx⟩ := h
   refine' ⟨f w, fun y hy => ⟨Nat.le_of_succ_le_succ _, hs hy hw⟩⟩
@@ -69,7 +67,7 @@ section OrderedSemiring
 variable [OrderedSemiring β]
 
 theorem Subsingleton.equitable_on {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f :=
-  fun i j hi hj => by
+  fun i j hi hj => by 
   rw [hs hi hj]
   exact le_add_of_nonneg_right zero_le_one
 #align set.subsingleton.equitable_on Set.Subsingleton.equitable_on
@@ -91,7 +89,7 @@ variable {s : Finset α} {f : α → ℕ} {a : α}
 theorem equitable_on_iff_le_le_add_one :
     EquitableOn (s : Set α) f ↔
       ∀ a ∈ s, (∑ i in s, f i) / s.card ≤ f a ∧ f a ≤ (∑ i in s, f i) / s.card + 1 :=
-  by
+  by 
   rw [Set.equitable_on_iff_exists_le_le_add_one]
   refine' ⟨_, fun h => ⟨_, h⟩⟩
   rintro ⟨b, hb⟩
@@ -99,13 +97,11 @@ theorem equitable_on_iff_le_le_add_one :
   · intro a ha
     rw [h _ ha, sum_const_nat h, Nat.mul_div_cancel_left _ (card_pos.2 ⟨a, ha⟩)]
     exact ⟨le_rfl, Nat.le_succ _⟩
-    
   push_neg  at h
   obtain ⟨x, hx₁, hx₂⟩ := h
   suffices h : b = (∑ i in s, f i) / s.card
   · simp_rw [← h]
     apply hb
-    
   symm
   refine'
     Nat.div_eq_of_lt_le (le_trans (by simp [mul_comm]) (sum_le_sum fun a ha => (hb a ha).1))

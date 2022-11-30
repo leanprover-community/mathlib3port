@@ -33,34 +33,31 @@ open Polynomial BigOperators
 
 /-- The Rees algebra of an ideal `I`, defined as the subalgebra of `R[X]` whose `i`-th coefficient
 falls in `I ^ i`. -/
-def reesAlgebra : Subalgebra R R[X] where
+def reesAlgebra :
+    Subalgebra R R[X] where 
   carrier := { f | ∀ i, f.coeff i ∈ I ^ i }
-  mul_mem' f g hf hg i := by
+  mul_mem' f g hf hg i := by 
     rw [coeff_mul]
     apply Ideal.sum_mem
     rintro ⟨j, k⟩ e
     rw [← finset.nat.mem_antidiagonal.mp e, pow_add]
     exact Ideal.mul_mem_mul (hf j) (hg k)
-  one_mem' i := by
+  one_mem' i := by 
     rw [coeff_one]
     split_ifs
     · subst h
       simp
-      
     · simp
-      
-  add_mem' f g hf hg i := by
+  add_mem' f g hf hg i := by 
     rw [coeff_add]
     exact Ideal.add_mem _ (hf i) (hg i)
   zero_mem' i := Ideal.zero_mem _
-  algebra_map_mem' r i := by
+  algebra_map_mem' r i := by 
     rw [algebra_map_apply, coeff_C]
     split_ifs
     · subst h
       simp
-      
     · simp
-      
 #align rees_algebra reesAlgebra
 
 theorem mem_rees_algebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff i ∈ I ^ i :=
@@ -85,18 +82,14 @@ theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈
     monomial n r ∈ Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) := by
   induction' n with n hn generalizing r
   · exact Subalgebra.algebra_map_mem _ _
-    
   · rw [pow_succ] at hr
     apply Submodule.smul_induction_on hr
     · intro r hr s hs
       rw [Nat.succ_eq_one_add, smul_eq_mul, ← monomial_mul_monomial]
       exact Subalgebra.mul_mem _ (Algebra.subset_adjoin (Set.mem_image_of_mem _ hr)) (hn hs)
-      
     · intro x y hx hy
       rw [monomial_add]
       exact Subalgebra.add_mem _ hx hy
-      
-    
 #align monomial_mem_adjoin_monomial monomial_mem_adjoin_monomial
 
 theorem adjoin_monomial_eq_rees_algebra :
@@ -105,26 +98,26 @@ theorem adjoin_monomial_eq_rees_algebra :
   · apply Algebra.adjoin_le _
     rintro _ ⟨r, hr, rfl⟩
     exact rees_algebra.monomial_mem.mpr (by rwa [pow_one])
-    
   · intro p hp
     rw [p.as_sum_support]
     apply Subalgebra.sum_mem _ _
     rintro i -
     exact monomial_mem_adjoin_monomial (hp i)
-    
 #align adjoin_monomial_eq_rees_algebra adjoin_monomial_eq_rees_algebra
 
 variable {I}
 
-theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by classical
-  obtain ⟨s, hs⟩ := hI
-  rw [← adjoin_monomial_eq_rees_algebra, ← hs]
-  use s.image (monomial 1)
-  rw [Finset.coe_image]
-  change
-    _ =
-      Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
-  rw [Submodule.map_span, Algebra.adjoin_span]
+theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by
+  classical 
+    obtain ⟨s, hs⟩ := hI
+    rw [← adjoin_monomial_eq_rees_algebra, ← hs]
+    use s.image (monomial 1)
+    rw [Finset.coe_image]
+    change
+      _ =
+        Algebra.adjoin R
+          (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
+    rw [Submodule.map_span, Algebra.adjoin_span]
 #align rees_algebra.fg reesAlgebra.fg
 
 instance [IsNoetherianRing R] : Algebra.FiniteType R (reesAlgebra I) :=

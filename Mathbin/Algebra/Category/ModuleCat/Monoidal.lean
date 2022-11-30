@@ -43,7 +43,7 @@ namespace MonoidalCategory
 -- you should use that API.
 open TensorProduct
 
-attribute [local ext.1] TensorProduct.ext
+attribute [local ext] TensorProduct.ext
 
 /-- (implementation) tensor product of R-modules -/
 def tensorObj (M N : ModuleCat R) : ModuleCat R :=
@@ -102,7 +102,7 @@ private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoid W] [AddCommMonoid
             (assoc R W (X ⊗[R] Y) Z).toLinearMap).comp
         (map ↑(assoc R W X Y) (1 : Z →ₗ[R] Z)) =
       (assoc R W X (Y ⊗[R] Z)).toLinearMap.comp (assoc R (W ⊗[R] X) Y Z).toLinearMap :=
-  by
+  by 
   apply TensorProduct.ext_fourfold
   intro w x y z
   rfl
@@ -156,7 +156,7 @@ theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
 theorem triangle (M N : ModuleCat.{u} R) :
     (associator M (ModuleCat.of R R) N).Hom ≫ tensorHom (𝟙 M) (leftUnitor N).Hom =
       tensorHom (rightUnitor M).Hom (𝟙 N) :=
-  by
+  by 
   apply TensorProduct.ext_threefold
   intro x y z
   change R at y
@@ -169,7 +169,8 @@ end MonoidalCategory
 
 open MonoidalCategory
 
-instance monoidalCategory : MonoidalCategory (ModuleCat.{u} R) where
+instance monoidalCategory :
+    MonoidalCategory (ModuleCat.{u} R) where
   -- data
   tensorObj := tensorObj
   tensorHom := @tensorHom _ _
@@ -275,7 +276,7 @@ theorem braiding_naturality {X₁ X₂ Y₁ Y₂ : ModuleCat.{u} R} (f : X₁ �
 theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
     (α_ X Y Z).Hom ≫ (braiding X _).Hom ≫ (α_ Y Z X).Hom =
       ((braiding X Y).Hom ⊗ 𝟙 Z) ≫ (α_ Y X Z).Hom ≫ (𝟙 Y ⊗ (braiding X Z).Hom) :=
-  by
+  by 
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
@@ -287,17 +288,19 @@ theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
 theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
     (α_ X Y Z).inv ≫ (braiding _ Z).Hom ≫ (α_ Z X Y).inv =
       (𝟙 X ⊗ (Y.braiding Z).Hom) ≫ (α_ X Z Y).inv ≫ ((X.braiding Z).Hom ⊗ 𝟙 Y) :=
-  by
+  by 
   apply (cancel_epi (α_ X Y Z).Hom).1
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
 #align Module.hexagon_reverse ModuleCat.hexagon_reverse
 
-attribute [local ext.1] TensorProduct.ext
+attribute [local ext] TensorProduct.ext
 
 /-- The symmetric monoidal structure on `Module R`. -/
-instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R) where
+instance symmetricCategory :
+    SymmetricCategory (ModuleCat.{u}
+        R) where 
   braiding := braiding
   braiding_naturality' X₁ X₂ Y₁ Y₂ f g := braiding_naturality f g
   hexagon_forward' := hexagon_forward
@@ -345,14 +348,16 @@ instance : MonoidalLinear R (ModuleCat.{u} R) := by
 @[simps]
 def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
     ((MonoidalCategory.tensorLeft M).obj N ⟶ P) ≃
-      (N ⟶ ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj P) where
+      (N ⟶
+        ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj
+          P) where 
   toFun f := LinearMap.compr₂ (TensorProduct.mk R N M) ((β_ N M).Hom ≫ f)
   invFun f := (β_ M N).Hom ≫ TensorProduct.lift f
-  left_inv f := by
+  left_inv f := by 
     ext (m n)
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       Function.comp_apply, coe_comp, monoidal_category.braiding_hom_apply]
-  right_inv f := by
+  right_inv f := by 
     ext (m n)
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       symmetric_category.symmetry_assoc]
@@ -378,7 +383,7 @@ theorem monoidal_closed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x :
 @[simp]
 theorem monoidal_closed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M)
     (y : N) : MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x :=
-  by
+  by 
   simp only [monoidal_closed.uncurry, ihom.adjunction, is_left_adjoint.adj]
   simp
 #align Module.monoidal_closed_uncurry ModuleCat.monoidal_closed_uncurry

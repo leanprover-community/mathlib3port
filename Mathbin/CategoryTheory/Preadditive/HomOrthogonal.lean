@@ -58,7 +58,7 @@ namespace HomOrthogonal
 variable {ι : Type _} {s : ι → C}
 
 theorem eq_zero [HasZeroMorphisms C] (o : HomOrthogonal s) {i j : ι} (w : i ≠ j) (f : s i ⟶ s j) :
-    f = 0 := by
+    f = 0 := by 
   haveI := o i j w
   apply Subsingleton.elim
 #align category_theory.hom_orthogonal.eq_zero CategoryTheory.HomOrthogonal.eq_zero
@@ -75,31 +75,33 @@ and matrix entries in `i`-th block living in the endomorphisms of `s i`. -/
 noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype β]
     {f : α → ι} {g : β → ι} :
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃
-      ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) where
+      ∀ i : ι,
+        Matrix (g ⁻¹' {i}) (f ⁻¹' {i})
+          (EndCat
+            (s
+              i)) where 
   toFun z i j k :=
     eqToHom
-        (by
+        (by 
           rcases k with ⟨k, ⟨⟩⟩
           simp) ≫
       biproduct.components z k j ≫
         eqToHom
-          (by
+          (by 
             rcases j with ⟨j, ⟨⟩⟩
             simp)
   invFun z :=
     biproduct.matrix fun j k =>
       if h : f j = g k then z (f j) ⟨k, by simp [h]⟩ ⟨j, by simp⟩ ≫ eqToHom (by simp [h]) else 0
-  left_inv z := by
+  left_inv z := by 
     ext (j k)
     simp only [category.assoc, biproduct.lift_π, biproduct.ι_matrix]
     split_ifs
     · simp
       rfl
-      
     · symm
       apply o.eq_zero h
-      
-  right_inv z := by
+  right_inv z := by 
     ext (i⟨j, w⟩⟨k, ⟨⟩⟩)
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
     simp [w.symm]; rfl
@@ -119,7 +121,7 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃+
       ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) :=
   { o.matrixDecomposition with
-    map_add' := fun w z => by
+    map_add' := fun w z => by 
       ext
       dsimp [biproduct.components]
       simp }
@@ -136,10 +138,8 @@ theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {
   split_ifs with h
   · cases h
     simp
-    
   · convert comp_zero
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
-    
 #align
   category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrix_decomposition_id
 
@@ -158,7 +158,6 @@ theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finty
   · intros
     simp
     rfl
-    
   · intro b nm
     simp only [Set.mem_preimage, Set.mem_singleton_iff] at nm
     simp only [category.assoc]
@@ -167,7 +166,6 @@ theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finty
     convert comp_zero
     convert comp_zero
     apply o.eq_zero nm
-    
 #align
   category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrix_decomposition_comp
 
@@ -182,7 +180,7 @@ noncomputable def matrixDecompositionLinearEquiv (o : HomOrthogonal s) {α β : 
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃ₗ[R]
       ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) :=
   { o.matrixDecompositionAddEquiv with
-    map_smul' := fun w z => by
+    map_smul' := fun w z => by 
       ext
       dsimp [biproduct.components]
       simp }
@@ -205,7 +203,7 @@ if two direct sums over `s` are isomorphic, then they have the same multipliciti
 -/
 theorem equiv_of_iso (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype β] {f : α → ι}
     {g : β → ι} (i : (⨁ fun a => s (f a)) ≅ ⨁ fun b => s (g b)) : ∃ e : α ≃ β, ∀ a, g (e a) = f a :=
-  by
+  by 
   refine' ⟨Equiv.ofPreimageEquiv _, fun a => Equiv.of_preimage_equiv_map _ _⟩
   intro c
   apply Nonempty.some
@@ -213,10 +211,10 @@ theorem equiv_of_iso (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype 
   simp only [Cardinal.mk_fintype, Nat.cast_inj]
   exact
     Matrix.square_of_invertible (o.matrix_decomposition i.inv c) (o.matrix_decomposition i.hom c)
-      (by
+      (by 
         rw [← o.matrix_decomposition_comp]
         simp)
-      (by
+      (by 
         rw [← o.matrix_decomposition_comp]
         simp)
 #align category_theory.hom_orthogonal.equiv_of_iso CategoryTheory.HomOrthogonal.equiv_of_iso

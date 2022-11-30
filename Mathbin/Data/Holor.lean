@@ -252,10 +252,8 @@ theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Fi
   letI := Classical.decEq β
   refine' Finset.induction_on s _ _
   · simp [slice_zero]
-    
   · intro _ _ h_not_in ih
     rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
-    
 #align holor.slice_sum Holor.slice_sum
 
 /-- The original holor can be recovered from its slices by multiplying with unit vectors and
@@ -265,22 +263,19 @@ theorem sum_unit_vec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
     (∑ i in (Finset.range d).attach,
         unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.Prop))) =
       x :=
-  by
+  by 
   apply slice_eq _ _ _
   ext (i hid)
   rw [← slice_sum]
   simp only [slice_unit_vec_mul hid]
   rw [Finset.sum_eq_single (Subtype.mk i <| Finset.mem_range.2 hid)]
   · simp
-    
   · intro (b : { x // x ∈ Finset.range d })(hb : b ∈ (Finset.range d).attach)(hbi : b ≠ ⟨i, _⟩)
     have hbi' : i ≠ b := by simpa only [Ne.def, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm
     simp [hbi']
-    
   · intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
     exfalso
     exact absurd (Finset.mem_attach _ _) hid'
-    
 #align holor.sum_unit_vec_mul_slice Holor.sum_unit_vec_mul_slice
 
 -- CP rank
@@ -306,7 +301,7 @@ theorem cprank_max_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CprankMax
 #align holor.cprank_max_nil Holor.cprank_max_nil
 
 theorem cprank_max_1 [Monoid α] [AddMonoid α] {x : Holor α ds} (h : CprankMax1 x) : CprankMax 1 x :=
-  by
+  by 
   have h' := CprankMax.succ 0 x 0 h CprankMax.zero
   rwa [zero_add, add_zero] at h'
 #align holor.cprank_max_1 Holor.cprank_max_1
@@ -319,9 +314,7 @@ theorem cprank_max_add [Monoid α] [AddMonoid α] :
     simp only [add_comm, add_assoc]
     apply cprank_max.succ
     · assumption
-      
     · exact cprank_max_add hx₂ hy
-      
 #align holor.cprank_max_add Holor.cprank_max_add
 
 theorem cprank_max_mul [Ring α] :
@@ -332,16 +325,14 @@ theorem cprank_max_mul [Ring α] :
     rw [Nat.add_comm]
     apply cprank_max_add
     · exact cprank_max_1 (cprank_max1.cons _ _ hy₁)
-      
     · exact cprank_max_mul k x y₂ hy₂
-      
 #align holor.cprank_max_mul Holor.cprank_max_mul
 
 theorem cprank_max_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
     (∀ x ∈ s, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) :=
   letI := Classical.decEq β
   Finset.induction_on s (by simp [cprank_max.zero])
-    (by
+    (by 
       intro x s(h_x_notin_s : x ∉ s)ih h_cprank
       simp only [Finset.sum_insert h_x_notin_s, Finset.card_insert_of_not_mem h_x_notin_s]
       rw [Nat.right_distrib]

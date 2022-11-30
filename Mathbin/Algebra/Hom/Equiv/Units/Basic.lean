@@ -15,7 +15,8 @@ variable {F α β A B M N P Q G H : Type _}
 
 /-- A group is isomorphic to its group of units. -/
 @[to_additive "An additive group is isomorphic to its group of additive units"]
-def toUnits [Group G] : G ≃* Gˣ where
+def toUnits [Group G] :
+    G ≃* Gˣ where 
   toFun x := ⟨x, x⁻¹, mul_inv_self _, inv_mul_self _⟩
   invFun := coe
   left_inv x := rfl
@@ -52,7 +53,7 @@ theorem coe_map_equiv (h : M ≃* N) (x : Mˣ) : (mapEquiv h x : N) = h x :=
 /-- Left multiplication by a unit of a monoid is a permutation of the underlying type. -/
 @[to_additive "Left addition of an additive unit is a permutation of the underlying type.",
   simps (config := { fullyApplied := false }) apply]
-def mulLeft (u : Mˣ) : Equiv.Perm M where
+def mulLeft (u : Mˣ) : Equiv.Perm M where 
   toFun x := u * x
   invFun x := ↑u⁻¹ * x
   left_inv := u.inv_mul_cancel_left
@@ -72,7 +73,7 @@ theorem mul_left_bijective (a : Mˣ) : Function.Bijective ((· * ·) a : M → M
 /-- Right multiplication by a unit of a monoid is a permutation of the underlying type. -/
 @[to_additive "Right addition of an additive unit is a permutation of the underlying type.",
   simps (config := { fullyApplied := false }) apply]
-def mulRight (u : Mˣ) : Equiv.Perm M where
+def mulRight (u : Mˣ) : Equiv.Perm M where 
   toFun x := x * u
   invFun x := x * ↑u⁻¹
   left_inv x := mul_inv_cancel_right x u
@@ -155,7 +156,7 @@ theorem Group.mul_right_bijective (a : G) : Function.Bijective (· * a) :=
 
 /-- A version of `equiv.mul_left a b⁻¹` that is defeq to `a / b`. -/
 @[to_additive " A version of `equiv.add_left a (-b)` that is defeq to `a - b`. ", simps]
-protected def divLeft (a : G) : G ≃ G where
+protected def divLeft (a : G) : G ≃ G where 
   toFun b := a / b
   invFun b := b⁻¹ * a
   left_inv b := by simp [div_eq_mul_inv]
@@ -170,7 +171,8 @@ theorem div_left_eq_inv_trans_mul_left (a : G) :
 
 /-- A version of `equiv.mul_right a⁻¹ b` that is defeq to `b / a`. -/
 @[to_additive " A version of `equiv.add_right (-a) b` that is defeq to `b - a`. ", simps]
-protected def divRight (a : G) : G ≃ G where
+protected def divRight (a : G) : G ≃
+      G where 
   toFun b := b / a
   invFun b := b * a
   left_inv b := by simp [div_eq_mul_inv]

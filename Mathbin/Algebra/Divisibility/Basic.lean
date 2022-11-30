@@ -140,7 +140,7 @@ theorem exists_eq_mul_left_of_dvd (h : a ∣ b) : ∃ c, b = c * a :=
 #align exists_eq_mul_left_of_dvd exists_eq_mul_left_of_dvd
 
 theorem dvd_iff_exists_eq_mul_left : a ∣ b ↔ ∃ c, b = c * a :=
-  ⟨exists_eq_mul_left_of_dvd, by
+  ⟨exists_eq_mul_left_of_dvd, by 
     rintro ⟨c, rfl⟩
     exact ⟨c, mul_comm _ _⟩⟩
 #align dvd_iff_exists_eq_mul_left dvd_iff_exists_eq_mul_left
@@ -186,7 +186,7 @@ theorem mul_dvd_mul_right (h : a ∣ b) (c : α) : a * c ∣ b * c :=
 
 theorem pow_dvd_pow_of_dvd {a b : α} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
   | 0 => by rw [pow_zero, pow_zero]
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ, pow_succ]
     exact mul_dvd_mul h (pow_dvd_pow_of_dvd n)
 #align pow_dvd_pow_of_dvd pow_dvd_pow_of_dvd

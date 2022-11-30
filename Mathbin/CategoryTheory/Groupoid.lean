@@ -80,9 +80,11 @@ def Groupoid.invEquiv : (X ⟶ Y) ≃ (Y ⟶ X) :=
   ⟨Groupoid.inv, Groupoid.inv, fun f => by simp, fun f => by simp⟩
 #align category_theory.groupoid.inv_equiv CategoryTheory.Groupoid.invEquiv
 
-instance (priority := 100) groupoidHasInvolutiveReverse : Quiver.HasInvolutiveReverse C where
+instance (priority := 100) groupoidHasInvolutiveReverse :
+    Quiver.HasInvolutiveReverse
+      C where 
   reverse' X Y f := Groupoid.inv f
-  inv' X Y f := by
+  inv' X Y f := by 
     dsimp [Quiver.reverse]
     simp
 #align category_theory.groupoid_has_involutive_reverse CategoryTheory.groupoidHasInvolutiveReverse
@@ -95,7 +97,8 @@ theorem Groupoid.reverse_eq_inv (f : X ⟶ Y) : Quiver.reverse f = Groupoid.inv 
 variable (X Y)
 
 /-- In a groupoid, isomorphisms are equivalent to morphisms. -/
-def Groupoid.isoEquivHom : (X ≅ Y) ≃ (X ⟶ Y) where
+def Groupoid.isoEquivHom : (X ≅ Y) ≃
+      (X ⟶ Y) where 
   toFun := Iso.hom
   invFun f := ⟨f, Groupoid.inv f⟩
   left_inv i := Iso.ext rfl
@@ -106,7 +109,8 @@ variable (C)
 
 /-- The functor from a groupoid `C` to its opposite sending every morphism to its inverse. -/
 @[simps]
-noncomputable def Groupoid.invFunctor : C ⥤ Cᵒᵖ where
+noncomputable def Groupoid.invFunctor :
+    C ⥤ Cᵒᵖ where 
   obj := Opposite.op
   map {X Y} f := (inv f).op
 #align category_theory.groupoid.inv_functor CategoryTheory.Groupoid.invFunctor

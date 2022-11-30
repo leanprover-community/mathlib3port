@@ -103,13 +103,12 @@ theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = 
 
 @[simp]
 theorem nat_degree_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).natDegree = (unop p).natDegree :=
-  by
+  by 
   by_cases p0 : p = 0
   · simp only [p0, _root_.map_zero, nat_degree_zero, unop_zero]
-    
-  · simp only [p0, nat_degree_eq_support_max', Ne.def, AddEquivClass.map_eq_zero_iff, not_false_iff,
+  ·
+    simp only [p0, nat_degree_eq_support_max', Ne.def, AddEquivClass.map_eq_zero_iff, not_false_iff,
       support_op_ring_equiv, unop_eq_zero_iff]
-    
 #align polynomial.nat_degree_op_ring_equiv Polynomial.nat_degree_op_ring_equiv
 
 @[simp]

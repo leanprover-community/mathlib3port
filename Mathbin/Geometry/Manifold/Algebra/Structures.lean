@@ -38,7 +38,9 @@ instance SmoothRing.toHasSmoothMul (I : ModelWithCorners 𝕜 E H) (R : Type _) 
 #align smooth_ring.to_has_smooth_mul SmoothRing.toHasSmoothMul
 
 instance SmoothRing.toLieAddGroup (I : ModelWithCorners 𝕜 E H) (R : Type _) [Ring R]
-    [TopologicalSpace R] [ChartedSpace H R] [SmoothRing I R] : LieAddGroup I R where
+    [TopologicalSpace R] [ChartedSpace H R] [SmoothRing I R] :
+    LieAddGroup I
+      R where 
   compatible e e' := HasGroupoid.compatible (contDiffGroupoid ⊤ I)
   smoothAdd := smoothAdd I
   smoothNeg := by simpa only [neg_one_mul] using @smoothMulLeft 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
@@ -48,7 +50,7 @@ end SmoothRing
 
 instance fieldSmoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
   { normedSpaceLieAddGroup with
-    smoothMul := by
+    smoothMul := by 
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
       simp only [Prod.mk.eta, mfld_simps]

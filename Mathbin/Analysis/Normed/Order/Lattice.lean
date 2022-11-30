@@ -53,7 +53,9 @@ theorem solid {α : Type _} [NormedLatticeAddCommGroup α] {a b : α} (h : |a| �
   NormedLatticeAddCommGroup.solid a b h
 #align solid solid
 
-instance : NormedLatticeAddCommGroup ℝ where
+instance :
+    NormedLatticeAddCommGroup
+      ℝ where 
   add_le_add_left _ _ h _ := add_le_add le_rfl h
   solid _ _ := id
 
@@ -98,13 +100,11 @@ theorem norm_inf_sub_inf_le_add_norm (a b c d : α) : ‖a ⊓ b - c ⊓ d‖ �
   calc
     |a ⊓ b - c ⊓ d| = |a ⊓ b - c ⊓ b + (c ⊓ b - c ⊓ d)| := by rw [sub_add_sub_cancel]
     _ ≤ |a ⊓ b - c ⊓ b| + |c ⊓ b - c ⊓ d| := abs_add_le _ _
-    _ ≤ |a - c| + |b - d| := by
+    _ ≤ |a - c| + |b - d| := by 
       apply add_le_add
       · exact abs_inf_sub_inf_le_abs _ _ _
-        
       · rw [@inf_comm _ _ c, @inf_comm _ _ c]
         exact abs_inf_sub_inf_le_abs _ _ _
-        
     
 #align norm_inf_sub_inf_le_add_norm norm_inf_sub_inf_le_add_norm
 
@@ -115,13 +115,11 @@ theorem norm_sup_sub_sup_le_add_norm (a b c d : α) : ‖a ⊔ b - c ⊔ d‖ �
   calc
     |a ⊔ b - c ⊔ d| = |a ⊔ b - c ⊔ b + (c ⊔ b - c ⊔ d)| := by rw [sub_add_sub_cancel]
     _ ≤ |a ⊔ b - c ⊔ b| + |c ⊔ b - c ⊔ d| := abs_add_le _ _
-    _ ≤ |a - c| + |b - d| := by
+    _ ≤ |a - c| + |b - d| := by 
       apply add_le_add
       · exact abs_sup_sub_sup_le_abs _ _ _
-        
       · rw [@sup_comm _ _ c, @sup_comm _ _ c]
         exact abs_sup_sub_sup_le_abs _ _ _
-        
     
 #align norm_sup_sub_sup_le_add_norm norm_sup_sub_sup_le_add_norm
 
@@ -139,7 +137,7 @@ theorem norm_sup_le_add (x y : α) : ‖x ⊔ y‖ ≤ ‖x‖ + ‖y‖ := by
 /-- Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
 instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : HasContinuousInf α :=
-  by
+  by 
   refine' ⟨continuous_iff_continuous_at.2 fun q => tendsto_iff_norm_tendsto_zero.2 <| _⟩
   have : ∀ p : α × α, ‖p.1 ⊓ p.2 - q.1 ⊓ q.2‖ ≤ ‖p.1 - q.1‖ + ‖p.2 - q.2‖ := fun _ =>
     norm_inf_sub_inf_le_add_norm _ _ _ _
@@ -208,7 +206,7 @@ theorem isClosedLeOfIsClosedNonneg {G} [OrderedAddCommGroup G] [TopologicalSpace
     [HasContinuousSub G] (h : IsClosed { x : G | 0 ≤ x }) :
     IsClosed { p : G × G | p.fst ≤ p.snd } := by
   have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } :=
-    by
+    by 
     ext1 p
     simp only [sub_nonneg, Set.preimage_set_of_eq]
   rw [this]

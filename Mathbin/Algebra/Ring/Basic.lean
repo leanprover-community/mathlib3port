@@ -57,7 +57,8 @@ end AddHomClass
 namespace AddMonoidHom
 
 /-- Left multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
-def mulLeft {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R where
+def mulLeft {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
+    R →+ R where 
   toFun := (· * ·) r
   map_zero' := mul_zero r
   map_add' := mul_add r
@@ -70,7 +71,8 @@ theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
 #align add_monoid_hom.coe_mul_left AddMonoidHom.coe_mul_left
 
 /-- Right multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
-def mulRight {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R where
+def mulRight {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
+    R →+ R where 
   toFun a := a * r
   map_zero' := zero_mul r
   map_add' _ _ := add_mul _ _ r

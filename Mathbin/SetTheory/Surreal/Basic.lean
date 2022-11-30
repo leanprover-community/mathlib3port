@@ -68,7 +68,7 @@ theorem numeric_def {x : Pgame} :
     Numeric x ↔
       (∀ i j, x.moveLeft i < x.moveRight j) ∧
         (∀ i, Numeric (x.moveLeft i)) ∧ ∀ j, Numeric (x.moveRight j) :=
-  by
+  by 
   cases x
   rfl
 #align pgame.numeric_def Pgame.numeric_def
@@ -81,7 +81,7 @@ theorem mk {x : Pgame} (h₁ : ∀ i j, x.moveLeft i < x.moveRight j) (h₂ : �
 #align pgame.numeric.mk Pgame.Numeric.mk
 
 theorem left_lt_right {x : Pgame} (o : Numeric x) (i : x.LeftMoves) (j : x.RightMoves) :
-    x.moveLeft i < x.moveRight j := by
+    x.moveLeft i < x.moveRight j := by 
   cases x
   exact o.1 i j
 #align pgame.numeric.left_lt_right Pgame.Numeric.left_lt_right
@@ -115,11 +115,8 @@ theorem Relabelling.numeric_imp {x y : Pgame} (r : x ≡r y) (ox : Numeric x) : 
   apply numeric.mk (fun i j => _) (fun i => _) fun j => _
   · rw [← lt_congr (r.move_left_symm i).Equiv (r.move_right_symm j).Equiv]
     apply ox.left_lt_right
-    
   · exact IHl _ (ox.move_left _) (r.move_left_symm i)
-    
   · exact IHr _ (ox.move_right _) (r.move_right_symm j)
-    
 #align pgame.relabelling.numeric_imp Pgame.Relabelling.numeric_imp
 
 /-- Relabellings preserve being numeric. -/
@@ -132,13 +129,9 @@ theorem lf_asymm {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y → �
   refine' numeric_rec fun yl yr yL yR hy oyl oyr IHyl IHyr => _
   rw [mk_lf_mk, mk_lf_mk]; rintro (⟨i, h₁⟩ | ⟨j, h₁⟩) (⟨i, h₂⟩ | ⟨j, h₂⟩)
   · exact IHxl _ _ (oyl _) (h₁.move_left_lf _) (h₂.move_left_lf _)
-    
   · exact (le_trans h₂ h₁).not_gf (lf_of_lt (hy _ _))
-    
   · exact (le_trans h₁ h₂).not_gf (lf_of_lt (hx _ _))
-    
   · exact IHxr _ _ (oyr _) (h₁.lf_move_right _) (h₂.lf_move_right _)
-    
 #align pgame.lf_asymm Pgame.lf_asymm
 
 theorem le_of_lf {x y : Pgame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) : x ≤ y :=
@@ -184,7 +177,7 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x < y ↔
       (∃ i, (∀ i', x.moveLeft i' < y.moveLeft i) ∧ ∀ j, x < (y.moveLeft i).moveRight j) ∨
         ∃ j, (∀ i, (x.moveRight j).moveLeft i < y) ∧ ∀ j', x.moveRight j < y.moveRight j' :=
-  by
+  by 
   rw [← lf_iff_lt ox oy, lf_def]
   refine' or_congr _ _ <;> refine' exists_congr fun x_1 => _ <;> refine' and_congr _ _ <;>
       refine' forall_congr' fun i => lf_iff_lt _ _ <;>
@@ -248,34 +241,25 @@ theorem le_move_right {x : Pgame} (o : Numeric x) (j) : x ≤ x.moveRight j :=
 
 theorem add : ∀ {x y : Pgame} (ox : Numeric x) (oy : Numeric y), Numeric (x + y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
-    ⟨by
+    ⟨by 
       rintro (ix | iy) (jx | jy)
       · exact add_lt_add_right (ox.1 ix jx) _
-        
-      · exact
+      ·
+        exact
           (add_lf_add_of_lf_of_le (lf_mk _ _ ix) (oy.le_move_right jy)).lt
             ((ox.move_left ix).add oy) (ox.add (oy.move_right jy))
-        
-      · exact
+      ·
+        exact
           (add_lf_add_of_lf_of_le (mk_lf _ _ jx) (oy.move_left_le iy)).lt (ox.add (oy.move_left iy))
             ((ox.move_right jx).add oy)
-        
-      · exact add_lt_add_left (oy.1 iy jy) ⟨xl, xr, xL, xR⟩
-        ,
-      by
+      · exact add_lt_add_left (oy.1 iy jy) ⟨xl, xr, xL, xR⟩, by
       constructor
       · rintro (ix | iy)
         · exact (ox.move_left ix).add oy
-          
         · exact ox.add (oy.move_left iy)
-          
-        
       · rintro (jx | jy)
         · apply (ox.move_right jx).add oy
-          
-        · apply ox.add (oy.move_right jy)
-          
-        ⟩decreasing_by
+        · apply ox.add (oy.move_right jy)⟩decreasing_by
   pgame_wf_tac
 #align pgame.numeric.add Pgame.Numeric.add
 
@@ -359,40 +343,40 @@ instance : Neg Surreal :=
   ⟨Surreal.lift (fun x ox => ⟦⟨-x, ox.neg⟩⟧) fun _ _ _ _ a =>
       Quotient.sound (neg_equiv_neg_iff.2 a)⟩
 
-instance : OrderedAddCommGroup Surreal where
+instance : OrderedAddCommGroup Surreal where 
   add := (· + ·)
-  add_assoc := by
+  add_assoc := by 
     rintro ⟨_⟩ ⟨_⟩ ⟨_⟩
     exact Quotient.sound add_assoc_equiv
   zero := 0
-  zero_add := by
+  zero_add := by 
     rintro ⟨_⟩
     exact Quotient.sound (zero_add_equiv a)
-  add_zero := by
+  add_zero := by 
     rintro ⟨_⟩
     exact Quotient.sound (add_zero_equiv a)
   neg := Neg.neg
-  add_left_neg := by
+  add_left_neg := by 
     rintro ⟨_⟩
     exact Quotient.sound (add_left_neg_equiv a)
-  add_comm := by
+  add_comm := by 
     rintro ⟨_⟩ ⟨_⟩
     exact Quotient.sound add_comm_equiv
   le := (· ≤ ·)
   lt := (· < ·)
-  le_refl := by
+  le_refl := by 
     rintro ⟨_⟩
     apply @le_rfl Pgame
-  le_trans := by
+  le_trans := by 
     rintro ⟨_⟩ ⟨_⟩ ⟨_⟩
     apply @le_trans Pgame
-  lt_iff_le_not_le := by
+  lt_iff_le_not_le := by 
     rintro ⟨_, ox⟩ ⟨_, oy⟩
     apply @lt_iff_le_not_le Pgame
-  le_antisymm := by
+  le_antisymm := by 
     rintro ⟨_⟩ ⟨_⟩ h₁ h₂
     exact Quotient.sound ⟨h₁, h₂⟩
-  add_le_add_left := by
+  add_le_add_left := by 
     rintro ⟨_⟩ ⟨_⟩ hx ⟨_⟩
     exact @add_le_add_left Pgame _ _ _ _ _ hx _
 
@@ -863,13 +847,15 @@ instance : AddMonoidWithOne Surreal :=
   AddMonoidWithOne.unary
 
 /-- Casts a `surreal` number into a `game`. -/
-def toGame : Surreal →+o Game where
+def toGame :
+    Surreal →+o
+      Game where 
   toFun := lift (fun x _ => ⟦x⟧) fun x y ox oy => Quot.sound
   map_zero' := rfl
-  map_add' := by
+  map_add' := by 
     rintro ⟨_, _⟩ ⟨_, _⟩
     rfl
-  monotone' := by
+  monotone' := by 
     rintro ⟨_, _⟩ ⟨_, _⟩
     exact id
 #align surreal.to_game Surreal.toGame
@@ -895,7 +881,8 @@ open Surreal
 namespace Ordinal
 
 /-- Converts an ordinal into the corresponding surreal. -/
-noncomputable def toSurreal : Ordinal ↪o Surreal where
+noncomputable def toSurreal :
+    Ordinal ↪o Surreal where 
   toFun o := mk _ (numeric_to_pgame o)
   inj' a b h := to_pgame_equiv_iff.1 (Quotient.exact h)
   map_rel_iff' := @to_pgame_le_iff

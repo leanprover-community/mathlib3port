@@ -79,7 +79,7 @@ theorem sinh_half_dist_add_dist (a b c : ℍ) :
     sinh ((dist a b + dist b c) / 2) =
       (dist (a : ℂ) b * dist (c : ℂ) (conj ↑b) + dist (b : ℂ) c * dist (a : ℂ) (conj ↑b)) /
         (2 * sqrt (a.im * c.im) * dist (b : ℂ) (conj ↑b)) :=
-  by
+  by 
   simp only [add_div _ _ (2 : ℝ), sinh_add, sinh_half_dist, cosh_half_dist, div_mul_div_comm]
   rw [← add_div, Complex.dist_self_conj, coe_im, abs_of_pos b.im_pos, mul_comm (dist ↑b _),
     dist_comm (b : ℂ), Complex.dist_conj_comm, mul_mul_mul_comm, mul_mul_mul_comm _ _ _ b.im]
@@ -107,25 +107,20 @@ theorem dist_eq_iff_eq_sq_sinh (hr : 0 ≤ r) :
     dist z w = r ↔ dist (z : ℂ) w ^ 2 / (4 * z.im * w.im) = sinh (r / 2) ^ 2 := by
   rw [dist_eq_iff_eq_sinh, ← sq_eq_sq, div_pow, mul_pow, sq_sqrt, mul_assoc]
   · norm_num
-    
   · exact (mul_pos z.im_pos w.im_pos).le
-    
   · exact div_nonneg dist_nonneg (mul_nonneg zero_le_two <| sqrt_nonneg _)
-    
   · exact sinh_nonneg_iff.2 (div_nonneg hr zero_le_two)
-    
 #align upper_half_plane.dist_eq_iff_eq_sq_sinh UpperHalfPlane.dist_eq_iff_eq_sq_sinh
 
 protected theorem dist_triangle (a b c : ℍ) : dist a c ≤ dist a b + dist b c := by
   rw [dist_le_iff_le_sinh, sinh_half_dist_add_dist, div_mul_eq_div_div _ _ (dist _ _), le_div_iff,
     div_mul_eq_mul_div]
-  · exact
+  ·
+    exact
       div_le_div_of_le (mul_nonneg zero_le_two (sqrt_nonneg _))
         (EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist (a : ℂ) b c (conj ↑b))
-    
   · rw [dist_comm, dist_pos, Ne.def, Complex.eq_conj_iff_im]
     exact b.im_ne_zero
-    
 #align upper_half_plane.dist_triangle UpperHalfPlane.dist_triangle
 
 theorem dist_le_dist_coe_div_sqrt (z w : ℍ) : dist z w ≤ dist (z : ℂ) w / sqrt (z.im * w.im) := by
@@ -135,7 +130,7 @@ theorem dist_le_dist_coe_div_sqrt (z w : ℍ) : dist z w ≤ dist (z : ℂ) w / 
 
 /-- An auxiliary `metric_space` instance on the upper half-plane. This instance has bad projection
 to `topological_space`. We replace it later. -/
-def metricSpaceAux : MetricSpace ℍ where
+def metricSpaceAux : MetricSpace ℍ where 
   dist := dist
   dist_self z := by rw [dist_eq, dist_self, zero_div, arsinh_zero, mul_zero]
   dist_comm := UpperHalfPlane.dist_comm
@@ -200,7 +195,6 @@ theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
   · trans Ordering.gt
     exacts[(hr₀.trans_le dist_nonneg).cmp_eq_gt,
       ((mul_neg_of_pos_of_neg w.im_pos (sinh_neg_iff.2 hr₀)).trans_le dist_nonneg).cmp_eq_gt.symm]
-    
   have hr₀' : 0 ≤ w.im * sinh r := mul_nonneg w.im_pos.le (sinh_nonneg_iff.2 hr₀)
   have hzw₀ : 0 < 2 * z.im * w.im := mul_pos (mul_pos two_pos z.im_pos) w.im_pos
   simp only [← cosh_strict_mono_on.cmp_map_eq dist_nonneg hr₀, ←
@@ -295,7 +289,7 @@ theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ
   calc
     w.im * (1 - exp (-dist z w)) =
         dist (z : ℂ) (w.center (dist z w)) - dist (w : ℂ) (w.center (dist z w)) :=
-      by
+      by 
       rw [dist_center_dist, dist_self_center, ← Real.cosh_sub_sinh]
       ring
     _ ≤ dist (z : ℂ) w := sub_le_iff_le_add.2 <| dist_triangle _ _ _
@@ -314,7 +308,6 @@ instance : MetricSpace ℍ :=
         mul_ne_zero two_ne_zero (Real.sqrt_pos.2 <| mul_pos x.1.im_pos x.2.im_pos).ne'
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-      
     · letI : MetricSpace ℍ := metric_space_aux
       refine' le_of_nhds_le_nhds fun z => _
       rw [nhds_induced]
@@ -324,7 +317,6 @@ instance : MetricSpace ℍ :=
       refine' ⟨log (R / im z + 1), Real.log_pos h₁, _⟩
       refine' fun w hw => (dist_coe_le w z).trans_lt _
       rwa [← lt_div_iff' z.im_pos, sub_lt_iff_lt_add, ← Real.lt_log_iff_exp_lt h₀]
-      
 
 theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (center z r) ≤ z.im * sinh r) :
     0 < w.im :=
@@ -341,11 +333,9 @@ theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :
   ext w; constructor
   · rintro ⟨w, hw, rfl⟩
     exact dist_le_iff_dist_coe_center_le.1 hw
-    
   · intro hw
     lift w to ℍ using im_pos_of_dist_center_le hw
     exact mem_image_of_mem _ (dist_le_iff_dist_coe_center_le.2 hw)
-    
 #align upper_half_plane.image_coe_closed_ball UpperHalfPlane.image_coe_closed_ball
 
 theorem image_coe_ball (z : ℍ) (r : ℝ) :
@@ -353,11 +343,9 @@ theorem image_coe_ball (z : ℍ) (r : ℝ) :
   ext w; constructor
   · rintro ⟨w, hw, rfl⟩
     exact dist_lt_iff_dist_coe_center_lt.1 hw
-    
   · intro hw
     lift w to ℍ using im_pos_of_dist_center_le (ball_subset_closed_ball hw)
     exact mem_image_of_mem _ (dist_lt_iff_dist_coe_center_lt.2 hw)
-    
 #align upper_half_plane.image_coe_ball UpperHalfPlane.image_coe_ball
 
 theorem image_coe_sphere (z : ℍ) (r : ℝ) :
@@ -365,14 +353,12 @@ theorem image_coe_sphere (z : ℍ) (r : ℝ) :
   ext w; constructor
   · rintro ⟨w, hw, rfl⟩
     exact dist_eq_iff_dist_coe_center_eq.1 hw
-    
   · intro hw
     lift w to ℍ using im_pos_of_dist_center_le (sphere_subset_closed_ball hw)
     exact mem_image_of_mem _ (dist_eq_iff_dist_coe_center_eq.2 hw)
-    
 #align upper_half_plane.image_coe_sphere UpperHalfPlane.image_coe_sphere
 
-instance : ProperSpace ℍ := by
+instance : ProperSpace ℍ := by 
   refine' ⟨fun z r => _⟩
   rw [← inducing_coe.is_compact_iff, image_coe_closed_ball]
   apply is_compact_closed_ball

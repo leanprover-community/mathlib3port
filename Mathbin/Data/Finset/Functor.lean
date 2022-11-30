@@ -37,7 +37,7 @@ variable {α β : Type u} [∀ P, Decidable P]
 construct `functor finset` when working classically. -/
 instance : Functor Finset where map α β f s := s.image f
 
-instance : IsLawfulFunctor Finset where
+instance : IsLawfulFunctor Finset where 
   id_map α s := image_id
   comp_map α β γ f g s := image_image.symm
 
@@ -89,7 +89,7 @@ theorem seq_right_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then
 /-- `finset.image₂` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
 theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) (t : Finset β) :
-    image₂ f s t = f <$> s <*> t := by
+    image₂ f s t = f <$> s <*> t := by 
   ext
   simp [mem_sup]
 #align finset.image₂_def Finset.image₂_def
@@ -101,7 +101,6 @@ instance : LawfulApplicative Finset :=
       obtain rfl | ht := t.eq_empty_or_nonempty
       · simp_rw [if_pos rfl, image_empty]
         exact (sup_bot _).symm
-        
       · ext a
         rw [if_neg ht.ne_empty, mem_sup]
         refine' ⟨fun ha => ⟨const β a, mem_image_of_mem _ ha, mem_image_const_self.2 ht⟩, _⟩
@@ -109,13 +108,11 @@ instance : LawfulApplicative Finset :=
         rw [mem_image] at hf ha
         obtain ⟨b, hb, rfl⟩ := hf
         obtain ⟨_, _, rfl⟩ := ha
-        exact hb
-        ,
+        exact hb,
     seq_right_eq := fun α β s t => by
       rw [seq_def, fmap_def, seq_right_def]
       obtain rfl | hs := s.eq_empty_or_nonempty
       · rw [if_pos rfl, image_empty, sup_empty, bot_eq_empty]
-        
       · ext a
         rw [if_neg hs.ne_empty, mem_sup]
         refine' ⟨fun ha => ⟨id, mem_image_const_self.2 hs, by rwa [image_id]⟩, _⟩
@@ -123,24 +120,21 @@ instance : LawfulApplicative Finset :=
         rw [mem_image] at hf ha
         obtain ⟨b, hb, rfl⟩ := ha
         obtain ⟨_, _, rfl⟩ := hf
-        exact hb
-        ,
+        exact hb,
     pure_seq_eq_map := fun α β f s => sup_singleton, map_pure := fun α β f a => image_singleton _ _,
     seq_pure := fun α β s a => sup_singleton'' _ _,
-    seq_assoc := fun α β γ s t u => by
+    seq_assoc := fun α β γ s t u => by 
       ext a
       simp_rw [seq_def, fmap_def]
       simp only [exists_prop, mem_sup, mem_image]
       constructor
       · rintro ⟨g, hg, b, ⟨f, hf, a, ha, rfl⟩, rfl⟩
         exact ⟨g ∘ f, ⟨comp g, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩
-        
       · rintro ⟨c, ⟨_, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩
-        exact ⟨g, hg, f a, ⟨f, hf, a, ha, rfl⟩, rfl⟩
-         }
+        exact ⟨g, hg, f a, ⟨f, hf, a, ha, rfl⟩, rfl⟩ }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance : IsCommApplicative Finset :=
+instance : CommApplicative Finset :=
   { Finset.is_lawful_applicative with
     commutative_prod := fun α β s t => by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
@@ -168,7 +162,7 @@ theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
 instance : LawfulMonad Finset :=
   { Finset.is_lawful_applicative with bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _,
     bind_map_eq_seq := fun α β t s => rfl, pure_bind := fun α β t s => sup_singleton,
-    bind_assoc := fun α β γ s f g => by
+    bind_assoc := fun α β γ s f g => by 
       convert sup_bUnion _ _
       exact sup_eq_bUnion _ _ }
 
@@ -192,7 +186,7 @@ end Alternative
 section Traversable
 
 variable {α β γ : Type u} {F G : Type u → Type u} [Applicative F] [Applicative G]
-  [IsCommApplicative F] [IsCommApplicative G]
+  [CommApplicative F] [CommApplicative G]
 
 /-- Traverse function for `finset`. -/
 def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) :=

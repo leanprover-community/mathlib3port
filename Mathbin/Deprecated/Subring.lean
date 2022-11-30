@@ -39,7 +39,8 @@ structure IsSubring (S : Set R) extends IsAddSubgroup S, IsSubmonoid S : Prop
 #align is_subring IsSubring
 
 /-- Construct a `subring` from a set satisfying `is_subring`. -/
-def IsSubring.subring {S : Set R} (hs : IsSubring S) : Subring R where
+def IsSubring.subring {S : Set R} (hs : IsSubring S) :
+    Subring R where 
   carrier := S
   one_mem' := hs.one_mem
   mul_mem' _ _ := hs.mul_mem
@@ -134,15 +135,14 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
 @[elab_as_elim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1)
     (hneg1 : C (-1)) (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) :
-    C x := by
+    C x := by 
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
   clear hx
   induction' L with hd tl ih
   · exact h0
-    
   rw [List.forall_mem_cons] at HL
-  suffices C (List.prod hd) by
+  suffices C (List.prod hd) by 
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
   replace HL := HL.1
@@ -153,37 +153,30 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
     clear HP HL hd
     induction' L with hd tl ih
     · exact h1
-      
     rw [List.forall_mem_cons] at HL'
     rw [List.prod_cons]
     exact hs _ HL'.1 _ (ih HL'.2)
-    
   · rw [HP]
     clear HP HL hd
     induction' L with hd tl ih
     · exact hneg1
-      
     rw [List.prod_cons, neg_mul_eq_mul_neg]
     rw [List.forall_mem_cons] at HL'
     exact hs _ HL'.1 _ (ih HL'.2)
-    
   induction' hd with hd tl ih
   · exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
-    
   rw [List.forall_mem_cons] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
-  · exact
+  ·
+    exact
       ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
         Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
-    
   · exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
-    
-  · exact
+  ·
+    exact
       ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
         Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
-    
   · exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
-    
 #align ring.in_closure.rec_on Ring.InClosure.rec_on
 
 theorem closure.is_subring : IsSubring (closure s) :=
@@ -228,24 +221,20 @@ theorem closure_mono {s t : Set R} (H : s ⊆ t) : closure s ⊆ closure t :=
 theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) :
     f '' closure s = closure (f '' s) :=
   le_antisymm
-    (by
+    (by 
       rintro _ ⟨x, hx, rfl⟩
       apply in_closure.rec_on hx <;> intros
       · rw [f.map_one]
         apply closure.is_subring.to_is_submonoid.one_mem
-        
       · rw [f.map_neg, f.map_one]
         apply closure.is_subring.to_is_add_subgroup.neg_mem
         apply closure.is_subring.to_is_submonoid.one_mem
-        
       · rw [f.map_mul]
         apply closure.is_subring.to_is_submonoid.mul_mem <;>
           solve_by_elim [subset_closure, Set.mem_image_of_mem]
-        
       · rw [f.map_add]
         apply closure.is_subring.to_is_add_submonoid.add_mem
-        assumption'
-        )
+        assumption')
     (closure_subset (RingHom.is_subring_image _ closure.is_subring) <|
       Set.image_subset _ subset_closure)
 #align ring.image_closure Ring.image_closure

@@ -56,7 +56,7 @@ theorem GradedAlgebra.lift_ι_eq (i : ℕ)
     (x : ((ι R : M →ₗ[R] ExteriorAlgebra R M).range ^ i : Submodule R (ExteriorAlgebra R M))) :
     GradedAlgebra.liftι R M x =
       DirectSum.of (fun i => ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M))) i x :=
-  by
+  by 
   cases' x with x hx
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
   refine'
@@ -64,15 +64,12 @@ theorem GradedAlgebra.lift_ι_eq (i : ℕ)
       (fun m hm i x hx ih => _) hx
   · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
     rfl
-    
   · rw [AlgHom.map_add, ihx, ihy, ← map_add]
     rfl
-    
   · obtain ⟨_, rfl⟩ := hm
     rw [AlgHom.map_mul, ih, graded_algebra.lift_ι, lift_ι_apply, graded_algebra.ι_apply R M,
       DirectSum.of_mul_of]
     exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
-    
 #align exterior_algebra.graded_algebra.lift_ι_eq ExteriorAlgebra.GradedAlgebra.lift_ι_eq
 
 /-- The exterior algebra is graded by the powers of the submodule `(exterior_algebra.ι R).range`. -/
@@ -82,7 +79,7 @@ instance gradedAlgebra :
     (-- while not necessary, the `by apply` makes this elaborate faster
     by apply graded_algebra.lift_ι R M)
     (-- the proof from here onward is identical to the `tensor_algebra` case
-    by
+    by 
       ext m
       dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
         AlgHom.id_apply, graded_algebra.lift_ι]

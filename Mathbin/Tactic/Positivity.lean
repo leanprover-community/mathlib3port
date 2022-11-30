@@ -5,6 +5,7 @@ Authors: Mario Carneiro, Heather Macbeth, Yaël Dillies
 -/
 import Mathbin.Tactic.NormNum
 import Mathbin.Algebra.Order.Field.Power
+import Mathbin.Algebra.Order.Hom.Basic
 
 /-! # `positivity` tactic
 
@@ -289,7 +290,9 @@ The main (recursive) step of this tactic is to try successively all the extensio
 attribute on the expression at hand, and also to try the two "base case" tactics
 `tactic.norm_num.positivity`, `tactic.positivity.compare_hyp` on the expression at hand. -/
 @[user_attribute]
-unsafe def attr : user_attribute (expr → tactic strictness) Unit where
+unsafe def attr :
+    user_attribute (expr → tactic strictness)
+      Unit where 
   Name := `positivity
   descr := "extensions handling particular operations for the `positivity` tactic"
   cache_cfg :=
@@ -1076,6 +1079,13 @@ unsafe def positivity_finset_card : expr → tactic strictness
       fail ∘
         format.bracket "The expression `" "` isn't of the form `finset.card s` or `fintype.card α`"
 #align tactic.positivity_finset_card tactic.positivity_finset_card
+
+/-- Extension for the `positivity` tactic: nonnegative maps take nonnegative values. -/
+@[positivity]
+unsafe def positivity_map : expr → tactic strictness
+  | expr.app q(⇑$(f)) q($(a)) => nonnegative <$> mk_app `` map_nonneg [f, a]
+  | _ => failed
+#align tactic.positivity_map tactic.positivity_map
 
 end Tactic
 

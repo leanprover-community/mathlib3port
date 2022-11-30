@@ -152,7 +152,7 @@ protected theorem UniformOnFun.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α
     (h : (𝓝 1 : Filter G).HasBasis p b) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
       { f : α →ᵤ[𝔖] G | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
-  by
+  by 
   have := h.comap fun p : G × G => p.1 / p.2
   rw [← uniformity_eq_comap_nhds_one_swapped] at this
   convert UniformOnFun.has_basis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
@@ -190,7 +190,7 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (φ : hom) (hφ : Inducing φ)
     (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) :
     HasContinuousSmul 𝕜 H := by
-  have : TopologicalAddGroup H := by
+  have : TopologicalAddGroup H := by 
     rw [hφ.induced]
     exact topological_add_group_induced φ
   have : (𝓝 0 : Filter H).HasBasis _ _ := by
@@ -209,14 +209,12 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
     intro a ha u hu x hx
     rw [SmulHomClass.map_smul]
     exact hUW (⟨ha, hu x hx⟩ : (a, φ u x) ∈ U ×ˢ W)
-    
   · rintro a ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun x : E => a • x) (𝓝 0) (𝓝 <| a • 0) := tendsto_id.const_smul a
     rw [smul_zero] at this
     refine' ⟨⟨S, (· • ·) a ⁻¹' V⟩, ⟨hS, this hV⟩, fun f hf x hx => _⟩
     rw [SmulHomClass.map_smul]
     exact hf x hx
-    
   · rintro u ⟨S, V⟩ ⟨hS, hV⟩
     rcases h u S hS hV with ⟨r, hrpos, hr⟩
     rw [Metric.eventually_nhds_iff_ball]
@@ -224,7 +222,6 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
     by_cases ha0 : a = 0
     · rw [ha0]
       simp [mem_of_mem_nhds hV]
-      
     · rw [mem_ball_zero_iff] at ha
       rw [SmulHomClass.map_smul, Pi.smul_apply]
       have : φ u x ∈ a⁻¹ • V := by
@@ -233,8 +230,6 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
         rw [norm_inv, le_inv hrpos ha0]
         exact ha.le
       rwa [Set.mem_inv_smul_set_iff₀ ha0] at this
-      
-    
 #align
   uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.has_continuous_smul_induced_of_image_bounded
 

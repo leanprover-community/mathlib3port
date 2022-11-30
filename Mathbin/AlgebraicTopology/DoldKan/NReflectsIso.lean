@@ -40,7 +40,7 @@ variable {C : Type _} [Category C] [Preadditive C]
 open MorphComponents
 
 instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)) :=
-  ⟨fun X Y f => by
+  ⟨fun X Y f => by 
     intro
     -- restating the result in a way that allows induction on the degree n
     suffices ∀ n : ℕ, is_iso (f.app (op [n])) by
@@ -63,7 +63,6 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
       dsimp at h₁₀ h₂₀
       simp only [id_comp, comp_id] at h₁₀ h₂₀
       tauto
-      
     -- induction step
     · haveI := hn
       use
@@ -73,8 +72,7 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
       simp only [morph_components.id, ← id_φ, ← pre_comp_φ, pre_comp, ← post_comp_φ, post_comp,
         P_infty_f_naturality_assoc, is_iso.hom_inv_id_assoc, assoc, is_iso.inv_hom_id_assoc,
         simplicial_object.σ_naturality, h₁, h₂, h₃]
-      tauto
-      ⟩
+      tauto⟩
 
 end DoldKan
 

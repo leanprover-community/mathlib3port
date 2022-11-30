@@ -29,7 +29,8 @@ a connected set. Superseded by `eq_on_zero_of_preconnected_of_locally_zero` whic
 completeness of the target space. -/
 theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {f : E → F}
     {U : Set E} (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U)
-    (hfz₀ : f =ᶠ[𝓝 z₀] 0) : EqOn f 0 U := by
+    (hfz₀ : f =ᶠ[𝓝 z₀] 0) : EqOn f 0 U :=
+  by
   /- Let `u` be the set of points around which `f` vanishes. It is clearly open. We have to show
     that its limit points in `U` still belong to it, from which the inclusion `U ⊆ u` will follow
     by connectedness. -/
@@ -39,7 +40,6 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
       hU.subset_of_closure_inter_subset is_open_set_of_eventually_nhds ⟨z₀, h₀, hfz₀⟩ main
     intro z hz
     simpa using mem_of_mem_nhds (Uu hz)
-    
   /- Take a limit point `x`, then a ball `B (x, r)` on which it has a power series expansion, and
     then `y ∈ B (x, r/2) ∩ u`. Then `f` has a power series expansion on `B (y, r/2)` as it is
     contained in `B (x, r)`. All the coefficients in this series expansion vanish, as `f` is zero on a
@@ -76,7 +76,7 @@ version assuming only that the function vanishes at some points arbitrarily clos
 `eq_on_zero_of_preconnected_of_frequently_eq_zero`. -/
 theorem eq_on_zero_of_preconnected_of_eventually_eq_zero {f : E → F} {U : Set E}
     (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U) (hfz₀ : f =ᶠ[𝓝 z₀] 0) :
-    EqOn f 0 U := by
+    EqOn f 0 U := by 
   let F' := UniformSpace.Completion F
   set e : F →L[𝕜] F' := UniformSpace.Completion.toComplL
   have : AnalyticOn 𝕜 (e ∘ f) U := fun x hx => (e.analytic_at _).comp (hf x hx)

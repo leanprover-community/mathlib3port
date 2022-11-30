@@ -130,10 +130,8 @@ theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
     obtain ⟨x, x_mem, rfl⟩ := (mem_coe_submodule _ _).mp x_mem
     refine' ⟨⟨x, coe_submodule_injective S h _⟩⟩
     rw [Ideal.submodule_span_eq, hx, coe_submodule_span_singleton]
-    
   · refine' ⟨⟨algebraMap R S x, _⟩⟩
     rw [hx, Ideal.submodule_span_eq, coe_submodule_span_singleton]
-    
 #align is_localization.coe_submodule_is_principal IsLocalization.coe_submodule_is_principal
 
 variable {S} (M)
@@ -145,9 +143,7 @@ theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [Is
   · refine' Submodule.span_induction h _ _ _ _
     · rintro x hx
       exact ⟨x, Submodule.subset_span hx, 1, by rw [mk'_one, _root_.map_one, one_smul]⟩
-      
     · exact ⟨0, Submodule.zero_mem _, 1, by rw [mk'_one, _root_.map_one, one_smul]⟩
-      
     · rintro _ _ ⟨y, hy, z, rfl⟩ ⟨y', hy', z', rfl⟩
       refine'
         ⟨(z' : R) • y + (z : R) • y',
@@ -156,22 +152,16 @@ theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [Is
         IsScalarTower.algebra_map_smul S (z' : R), smul_smul, smul_smul]
       congr 1
       · rw [← mul_one (1 : R), mk'_mul, mul_assoc, mk'_spec, _root_.map_one, mul_one, mul_one]
-        
       · rw [← mul_one (1 : R), mk'_mul, mul_right_comm, mk'_spec, _root_.map_one, mul_one, one_mul]
-        
       all_goals infer_instance
-      
     · rintro a _ ⟨y, hy, z, rfl⟩
       obtain ⟨y', z', rfl⟩ := mk'_surjective M a
       refine' ⟨y' • y, Submodule.smul_mem _ _ hy, z' * z, _⟩
       rw [← IsScalarTower.algebra_map_smul S y', smul_smul, ← mk'_mul, smul_smul,
         mul_comm (mk' S _ _), mul_mk'_eq_mk'_of_mul]
       all_goals infer_instance
-      
-    
   · rintro ⟨y, hy, z, rfl⟩
     exact Submodule.smul_mem _ _ (Submodule.span_subset_span R S _ hy)
-    
 #align is_localization.mem_span_iff IsLocalization.mem_span_iff
 
 theorem mem_span_map {x : S} {a : Set R} :
@@ -182,11 +172,9 @@ theorem mem_span_map {x : S} {a : Set R} :
     rintro ⟨_, ⟨y, hy, rfl⟩, z, hz⟩
     refine' ⟨y, hy, z, _⟩
     rw [hz, Algebra.linear_map_apply, smul_eq_mul, mul_comm, mul_mk'_eq_mk'_of_mul, mul_one]
-    
   · rintro ⟨y, hy, z, hz⟩
     refine' ⟨algebraMap R S y, Submodule.map_mem_span_algebra_map_image _ _ hy, z, _⟩
     rw [hz, smul_eq_mul, mul_comm, mul_mk'_eq_mk'_of_mul, mul_one]
-    
 #align is_localization.mem_span_map IsLocalization.mem_span_map
 
 end IsLocalization

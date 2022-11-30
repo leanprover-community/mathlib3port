@@ -61,7 +61,8 @@ instance semiring [Semiring α] : Semiring (ULift α) := by
 
 /-- The ring equivalence between `ulift α` and `α`.
 -/
-def ringEquiv [NonUnitalNonAssocSemiring α] : ULift α ≃+* α where
+def ringEquiv [NonUnitalNonAssocSemiring α] :
+    ULift α ≃+* α where 
   toFun := ULift.down
   invFun := ULift.up
   map_mul' x y := rfl

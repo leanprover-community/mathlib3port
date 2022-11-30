@@ -79,7 +79,6 @@ theorem von_mangoldt_nonneg {n : ℕ} : 0 ≤ Λ n := by
   rw [von_mangoldt_apply]
   split_ifs
   · exact Real.log_nonneg (one_le_cast.2 (Nat.min_fac_pos n))
-    
   rfl
 #align nat.arithmetic_function.von_mangoldt_nonneg Nat.ArithmeticFunction.von_mangoldt_nonneg
 
@@ -93,9 +92,7 @@ theorem von_mangoldt_apply_prime {p : ℕ} (hp : p.Prime) : Λ p = Real.log p :=
   nat.arithmetic_function.von_mangoldt_apply_prime Nat.ArithmeticFunction.von_mangoldt_apply_prime
 
 theorem von_mangoldt_ne_zero_iff {n : ℕ} : Λ n ≠ 0 ↔ IsPrimePow n := by
-  rcases eq_or_ne n 1 with (rfl | hn);
-  · simp [not_is_prime_pow_one]
-    
+  rcases eq_or_ne n 1 with (rfl | hn); · simp [not_is_prime_pow_one]
   exact (Real.log_pos (one_lt_cast.2 (min_fac_prime hn).one_lt)).ne'.ite_ne_right_iff
 #align
   nat.arithmetic_function.von_mangoldt_ne_zero_iff Nat.ArithmeticFunction.von_mangoldt_ne_zero_iff
@@ -114,12 +111,10 @@ open BigOperators
 theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n := by
   refine' rec_on_prime_coprime _ _ _ n
   · simp
-    
   · intro p k hp
     rw [sum_divisors_prime_pow hp, cast_pow, Real.log_pow, Finset.sum_range_succ', pow_zero,
       von_mangoldt_apply_one]
     simp [von_mangoldt_apply_pow (Nat.succ_ne_zero _), von_mangoldt_apply_prime hp]
-    
   intro a b ha' hb' hab ha hb
   simp only [von_mangoldt_apply, ← sum_filter] at ha hb⊢
   rw [mul_divisors_filter_prime_pow hab, filter_union,
@@ -160,11 +155,11 @@ theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * 
   have :
     (∑ i : ℕ in n.divisors, (μ i : ℝ) * -Real.log (n / i : ℕ)) =
       ∑ i : ℕ in n.divisors, (μ i : ℝ) * Real.log i - μ i * Real.log n :=
-    by
+    by 
     apply sum_congr rfl
     simp only [and_imp, Int.cast_eq_zero, mul_eq_mul_left_iff, Ne.def, neg_inj, mem_divisors]
     intro m mn hn
-    have : (m : ℝ) ≠ 0 := by
+    have : (m : ℝ) ≠ 0 := by 
       rw [cast_ne_zero]
       rintro rfl
       exact hn (by simpa using mn)
@@ -176,7 +171,7 @@ theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * 
 
 theorem von_mangoldt_le_log : ∀ {n : ℕ}, Λ n ≤ Real.log (n : ℝ)
   | 0 => by simp
-  | n + 1 => by
+  | n + 1 => by 
     rw [← von_mangoldt_sum]
     exact single_le_sum (fun _ _ => von_mangoldt_nonneg) (mem_divisors_self _ n.succ_ne_zero)
 #align nat.arithmetic_function.von_mangoldt_le_log Nat.ArithmeticFunction.von_mangoldt_le_log

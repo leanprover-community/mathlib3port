@@ -220,9 +220,9 @@ theorem map_tensor {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
 theorem map_left_unitor (X : C) :
     F.map (λ_ X).Hom = inv (F.μ (𝟙_ C) X) ≫ (inv F.ε ⊗ 𝟙 (F.obj X)) ≫ (λ_ (F.obj X)).Hom := by
   simp only [lax_monoidal_functor.left_unitality]
-  slice_rhs 2 3 =>
-  rw [← comp_tensor_id]
-  simp
+  slice_rhs 2 3 => 
+    rw [← comp_tensor_id]
+    simp
   simp
 #align
   category_theory.monoidal_functor.map_left_unitor CategoryTheory.MonoidalFunctor.map_left_unitor
@@ -231,9 +231,9 @@ theorem map_left_unitor (X : C) :
 theorem map_right_unitor (X : C) :
     F.map (ρ_ X).Hom = inv (F.μ X (𝟙_ C)) ≫ (𝟙 (F.obj X) ⊗ inv F.ε) ≫ (ρ_ (F.obj X)).Hom := by
   simp only [lax_monoidal_functor.right_unitality]
-  slice_rhs 2 3 =>
-  rw [← id_tensor_comp]
-  simp
+  slice_rhs 2 3 => 
+    rw [← id_tensor_comp]
+    simp
   simp
 #align
   category_theory.monoidal_functor.map_right_unitor CategoryTheory.MonoidalFunctor.map_right_unitor
@@ -242,10 +242,10 @@ theorem map_right_unitor (X : C) :
 noncomputable def μNatIso :
     Functor.prod F.toFunctor F.toFunctor ⋙ tensor D ≅ tensor C ⋙ F.toFunctor :=
   NatIso.ofComponents
-    (by
+    (by 
       intros
       apply F.μ_iso)
-    (by
+    (by 
       intros
       apply F.to_lax_monoidal_functor.μ_natural)
 #align category_theory.monoidal_functor.μ_nat_iso CategoryTheory.MonoidalFunctor.μNatIso
@@ -339,7 +339,7 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       simp only [functor.comp_map, assoc]
       rw [← category.assoc, lax_monoidal_functor.μ_natural, category.assoc, ← map_comp, ← map_comp,
         ← lax_monoidal_functor.μ_natural],
-    associativity' := fun X Y Z => by
+    associativity' := fun X Y Z => by 
       dsimp
       rw [id_tensor_comp]
       slice_rhs 3 4 => rw [← G.to_functor.map_id, G.μ_natural]
@@ -349,13 +349,13 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       rw [category.assoc, category.assoc, category.assoc, category.assoc, category.assoc, ←
         G.to_functor.map_comp, ← G.to_functor.map_comp, ← G.to_functor.map_comp, ←
         G.to_functor.map_comp, F.associativity],
-    left_unitality' := fun X => by
+    left_unitality' := fun X => by 
       dsimp
       rw [G.left_unitality, comp_tensor_id, category.assoc, category.assoc]
       apply congr_arg
       rw [F.left_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ←
         lax_monoidal_functor.μ_natural, nat_trans.id_app, map_id, ← category.assoc, map_comp],
-    right_unitality' := fun X => by
+    right_unitality' := fun X => by 
       dsimp
       rw [G.right_unitality, id_tensor_comp, category.assoc, category.assoc]
       apply congr_arg
@@ -436,10 +436,10 @@ variable (F : MonoidalFunctor.{v₁, v₂} C D) (G : MonoidalFunctor.{v₂, v₃
 @[simps]
 def comp : MonoidalFunctor.{v₁, v₃} C E :=
   { F.toLaxMonoidalFunctor.comp G.toLaxMonoidalFunctor with
-    ε_is_iso := by
+    ε_is_iso := by 
       dsimp
       infer_instance,
-    μ_is_iso := by
+    μ_is_iso := by 
       dsimp
       infer_instance }
 #align category_theory.monoidal_functor.comp CategoryTheory.MonoidalFunctor.comp
@@ -498,7 +498,7 @@ structure as well.
 -/
 @[simps]
 noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F.toFunctor ⊣ G) :
-    LaxMonoidalFunctor D C where
+    LaxMonoidalFunctor D C where 
   toFunctor := G
   ε := h.homEquiv _ _ (inv F.ε)
   μ X Y := h.homEquiv _ (X ⊗ Y) (inv (F.μ (G.obj X) (G.obj Y)) ≫ (h.counit.app X ⊗ h.counit.app Y))
@@ -537,12 +537,13 @@ noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F
 /-- If a monoidal functor `F` is an equivalence of categories then its inverse is also monoidal. -/
 @[simps]
 noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
-    MonoidalFunctor D C where
+    MonoidalFunctor D
+      C where 
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
-  ε_is_iso := by
+  ε_is_iso := by 
     dsimp [equivalence.to_adjunction]
     infer_instance
-  μ_is_iso X Y := by
+  μ_is_iso X Y := by 
     dsimp [equivalence.to_adjunction]
     infer_instance
 #align category_theory.monoidal_inverse CategoryTheory.monoidalInverse

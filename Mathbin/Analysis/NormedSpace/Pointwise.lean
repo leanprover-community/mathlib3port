@@ -107,7 +107,6 @@ theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε
     ∃ y, dist x y ≤ δ ∧ dist y z ≤ ε := by
   obtain rfl | hε' := hε.eq_or_lt
   · exact ⟨z, by rwa [zero_add] at h, (dist_self _).le⟩
-    
   have hεδ := add_pos_of_pos_of_nonneg hε' hδ
   refine'
     (exists_dist_eq x z (div_nonneg hε <| add_nonneg hε hδ) (div_nonneg hδ <| add_nonneg hε hδ) <|
@@ -195,17 +194,16 @@ theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
   obtain hs | hs := lt_or_le (inf_edist x s) (Ennreal.ofReal δ)
   · rw [inf_edist_zero_of_mem, tsub_eq_zero_of_le hs.le]
     exact hs
-    
   refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
   refine' le_sub_of_add_le_right of_real_ne_top _
   refine' le_inf_edist.2 fun z hz => le_of_forall_lt' fun r h => _
   cases r
-  · exact
+  ·
+    exact
       add_lt_top.2
         ⟨lt_top_iff_ne_top.2 <| inf_edist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩,
           of_real_lt_top⟩
-    
-  have hr : 0 < ↑r - δ := by
+  have hr : 0 < ↑r - δ := by 
     refine' sub_pos_of_lt _
     have := hs.trans_lt ((inf_edist_le_edist_of_mem hz).trans_lt h)
     rw [of_real_eq_coe_nnreal hδ.le, some_eq_coe] at this
@@ -243,7 +241,7 @@ theorem cthickening_thickening (hε : 0 ≤ ε) (hδ : 0 < δ) (s : Set E) :
 -- Note: `interior (cthickening δ s) ≠ thickening δ s` in general
 @[simp]
 theorem closure_thickening (hδ : 0 < δ) (s : Set E) : closure (thickening δ s) = cthickening δ s :=
-  by
+  by 
   rw [← cthickening_zero, cthickening_thickening le_rfl hδ, zero_add]
   infer_instance
 #align closure_thickening closure_thickening
@@ -253,9 +251,7 @@ theorem inf_edist_cthickening (δ : ℝ) (s : Set E) (x : E) :
     infEdist x (cthickening δ s) = infEdist x s - Ennreal.ofReal δ := by
   obtain hδ | hδ := le_or_lt δ 0
   · rw [cthickening_of_nonpos hδ, inf_edist_closure, of_real_of_nonpos hδ, tsub_zero]
-    
   · rw [← closure_thickening hδ, inf_edist_closure, inf_edist_thickening hδ] <;> infer_instance
-    
 #align inf_edist_cthickening inf_edist_cthickening
 
 @[simp]
@@ -263,9 +259,7 @@ theorem thickening_cthickening (hε : 0 < ε) (hδ : 0 ≤ δ) (s : Set E) :
     thickening ε (cthickening δ s) = thickening (ε + δ) s := by
   obtain rfl | hδ := hδ.eq_or_lt
   · rw [cthickening_zero, thickening_closure, add_zero]
-    
   · rw [← closure_thickening hδ, thickening_closure, thickening_thickening hε hδ] <;> infer_instance
-    
 #align thickening_cthickening thickening_cthickening
 
 @[simp]
@@ -357,9 +351,7 @@ theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) :
     c • closedBall x r = closedBall (c • x) (‖c‖ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
   · simp [hr, zero_smul_set, Set.singleton_zero, ← nonempty_closed_ball]
-    
   · exact smul_closed_ball' hc x r
-    
 #align smul_closed_ball smul_closed_ball
 
 theorem smul_closed_unit_ball (c : 𝕜) : c • closedBall (0 : E) (1 : ℝ) = closedBall (0 : E) ‖c‖ :=
@@ -392,9 +384,7 @@ theorem smul_sphere [Nontrivial E] (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) :
     c • sphere x r = sphere (c • x) (‖c‖ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
   · simp [zero_smul_set, Set.singleton_zero, hr]
-    
   · exact smul_sphere' hc x r
-    
 #align smul_sphere smul_sphere
 
 /-- Any ball `metric.ball x r`, `0 < r` is the image of the unit ball under `λ y, x + r • y`. -/

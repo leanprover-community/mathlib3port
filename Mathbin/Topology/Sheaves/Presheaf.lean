@@ -53,7 +53,9 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 /-- Tag lemmas to use in `Top.presheaf.restrict_tac`.  -/
 @[user_attribute]
-unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit where
+unsafe def restrict_attr :
+    user_attribute (tactic Unit → tactic Unit)
+      Unit where 
   Name := `sheaf_restrict
   descr := "tag lemmas to use in `Top.presheaf.restrict_tac`"
   cache_cfg :=
@@ -126,7 +128,7 @@ scoped[AlgebraicGeometry] infixl:80 " |_ " => TopCat.Presheaf.restrictOpen
 @[simp]
 theorem restrict_restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C]
     {F : X.Presheaf C} {U V W : Opens X} (e₁ : U ≤ V) (e₂ : V ≤ W) (x : F.obj (op W)) :
-    x |_ V |_ U = x |_ U := by
+    x |_ V |_ U = x |_ U := by 
   delta restrict_open restrict
   rw [← comp_apply, ← functor.map_comp]
   rfl
@@ -208,7 +210,7 @@ def id : 𝟙 X _* ℱ ≅ ℱ :=
   isoWhiskerRight (NatIso.op (Opens.mapId X).symm) ℱ ≪≫ Functor.leftUnitor _
 #align Top.presheaf.pushforward.id TopCat.Presheaf.Pushforward.id
 
-theorem id_eq : 𝟙 X _* ℱ = ℱ := by
+theorem id_eq : 𝟙 X _* ℱ = ℱ := by 
   unfold pushforward_obj
   rw [opens.map_id_eq]
   erw [functor.id_comp]
@@ -245,14 +247,14 @@ theorem comp_eq {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g) _* �
 
 @[simp]
 theorem comp_hom_app {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
-    (comp ℱ f g).Hom.app U = 𝟙 _ := by
+    (comp ℱ f g).Hom.app U = 𝟙 _ := by 
   dsimp [comp]
   tidy
 #align Top.presheaf.pushforward.comp_hom_app TopCat.Presheaf.Pushforward.comp_hom_app
 
 @[simp]
 theorem comp_inv_app {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
-    (comp ℱ f g).inv.app U = 𝟙 _ := by
+    (comp ℱ f g).inv.app U = 𝟙 _ := by 
   dsimp [comp]
   tidy
 #align Top.presheaf.pushforward.comp_inv_app TopCat.Presheaf.Pushforward.comp_inv_app
@@ -263,9 +265,9 @@ end Pushforward
 -/
 @[simps]
 def pushforwardMap {X Y : TopCat.{w}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) :
-    f _* ℱ ⟶ f _* 𝒢 where
+    f _* ℱ ⟶ f _* 𝒢 where 
   app U := α.app _
-  naturality' U V i := by
+  naturality' U V i := by 
     erw [α.naturality]
     rfl
 #align Top.presheaf.pushforward_map TopCat.Presheaf.pushforwardMap
@@ -304,7 +306,7 @@ def pullbackObjObjOfImageOpen {X Y : TopCat.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf
         ((@hom_of_le _ _ _ ((opens.map f).obj ⟨_, H⟩) (set.image_preimage.le_u_l _)).op :
           op ((opens.map f).obj ⟨⇑f '' ↑U, H⟩) ⟶ op U) }
   have hx : is_terminal x :=
-    { lift := fun s => by
+    { lift := fun s => by 
         fapply costructured_arrow.hom_mk
         change op (unop _) ⟶ op (⟨_, H⟩ : opens _)
         refine' (hom_of_le _).op
@@ -326,7 +328,7 @@ def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
     (fun U =>
       pullbackObjObjOfImageOpen (𝟙 _) ℱ (unop U) (by simpa using U.unop.2) ≪≫
         ℱ.mapIso (eqToIso (by simp)))
-    fun U V i => by
+    fun U V i => by 
     ext; simp
     erw [colimit.pre_desc_assoc]
     erw [colimit.ι_desc_assoc]
@@ -338,7 +340,7 @@ theorem id_inv_app (U : Opens Y) :
     (id ℱ).inv.app (op U) =
       colimit.ι (LanCat.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
         (@CostructuredArrow.mk _ _ _ _ _ (op U) _ (eqToHom (by simp))) :=
-  by
+  by 
   rw [← category.id_comp ((id ℱ).inv.app (op U)), ← nat_iso.app_inv, iso.comp_inv_eq]
   dsimp [id]
   rw [colimit.ι_desc_assoc]
@@ -354,7 +356,8 @@ variable (C)
 
 /-- The pushforward functor.
 -/
-def pushforward {X Y : TopCat.{w}} (f : X ⟶ Y) : X.Presheaf C ⥤ Y.Presheaf C where
+def pushforward {X Y : TopCat.{w}} (f : X ⟶ Y) :
+    X.Presheaf C ⥤ Y.Presheaf C where 
   obj := pushforwardObj f
   map := @pushforwardMap _ _ X Y f
 #align Top.presheaf.pushforward TopCat.Presheaf.pushforward
@@ -372,10 +375,8 @@ theorem id_pushforward {X : TopCat.{w}} : pushforward C (𝟙 X) = 𝟭 (X.Presh
     have h := f.congr
     erw [h (opens.op_map_id_obj U)]
     simpa [eq_to_hom_map]
-    
   · intros
     apply pushforward.id_eq
-    
 #align Top.presheaf.id_pushforward TopCat.Presheaf.id_pushforward
 
 section Iso
@@ -402,7 +403,7 @@ theorem to_pushforward_of_iso_app {X Y : TopCat} (H₁ : X ≅ Y) {ℱ : X.Presh
     (toPushforwardOfIso H₁ H₂).app U =
       ℱ.map (eqToHom (by simp [opens.map, Set.preimage_preimage])) ≫
         H₂.app (op ((Opens.map H₁.inv).obj (unop U))) :=
-  by
+  by 
   delta to_pushforward_of_iso
   simp only [Equiv.to_fun_as_coe, nat_trans.comp_app, equivalence.equivalence_mk'_unit,
     eq_to_hom_map, eq_to_hom_op, eq_to_hom_trans, presheaf_equiv_of_iso_unit_iso_hom_app_app,

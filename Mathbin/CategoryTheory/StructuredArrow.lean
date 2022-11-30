@@ -77,10 +77,10 @@ and to check that the triangle commutes.
 -/
 @[simps]
 def homMk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom ≫ T.map g = f'.Hom) :
-    f ⟶ f' where
+    f ⟶ f' where 
   left := eqToHom (by ext)
   right := g
-  w' := by
+  w' := by 
     dsimp
     simpa using w.symm
 #align category_theory.structured_arrow.hom_mk CategoryTheory.StructuredArrow.homMk
@@ -192,13 +192,18 @@ open CategoryTheory.Limits
 attribute [local tidy] tactic.discrete_cases
 
 /-- The identity structured arrow is initial. -/
-def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
+def mkIdInitial [Full T] [Faithful T] :
+    IsInitial
+      (mk
+        (𝟙
+          (T.obj
+            Y))) where 
   desc c :=
     homMk (T.preimage c.x.Hom)
-      (by
+      (by 
         dsimp
         simp)
-  uniq' c m _ := by
+  uniq' c m _ := by 
     ext
     apply T.map_injective
     simpa only [hom_mk_right, T.image_preimage, ← w m] using (category.id_comp _).symm
@@ -215,7 +220,9 @@ def pre (S : D) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S (F ⋙ G) ⥤ St
 /-- The functor `(S, F) ⥤ (G(S), F ⋙ G)`. -/
 @[simps]
 def post (S : C) (F : B ⥤ C) (G : C ⥤ D) :
-    StructuredArrow S F ⥤ StructuredArrow (G.obj S) (F ⋙ G) where
+    StructuredArrow S F ⥤
+      StructuredArrow (G.obj S)
+        (F ⋙ G) where 
   obj X := { right := X.right, Hom := G.map X.Hom }
   map X Y f := { right := f.right, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 #align category_theory.structured_arrow.post CategoryTheory.StructuredArrow.post
@@ -281,7 +288,7 @@ and to check that the triangle commutes.
 -/
 @[simps]
 def homMk {f f' : CostructuredArrow S T} (g : f.left ⟶ f'.left) (w : S.map g ≫ f'.Hom = f.Hom) :
-    f ⟶ f' where
+    f ⟶ f' where 
   left := g
   right := eqToHom (by ext)
   w' := by simpa [eq_to_hom_map] using w
@@ -388,13 +395,18 @@ open CategoryTheory.Limits
 attribute [local tidy] tactic.discrete_cases
 
 /-- The identity costructured arrow is terminal. -/
-def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
+def mkIdTerminal [Full S] [Faithful S] :
+    IsTerminal
+      (mk
+        (𝟙
+          (S.obj
+            Y))) where 
   lift c :=
     homMk (S.preimage c.x.Hom)
-      (by
+      (by 
         dsimp
         simp)
-  uniq' := by
+  uniq' := by 
     rintro c m -
     ext
     apply S.map_injective
@@ -413,7 +425,9 @@ def pre (F : B ⥤ C) (G : C ⥤ D) (S : D) : CostructuredArrow (F ⋙ G) S ⥤ 
 /-- The functor `(F, S) ⥤ (F ⋙ G, G(S))`. -/
 @[simps]
 def post (F : B ⥤ C) (G : C ⥤ D) (S : C) :
-    CostructuredArrow F S ⥤ CostructuredArrow (F ⋙ G) (G.obj S) where
+    CostructuredArrow F S ⥤
+      CostructuredArrow (F ⋙ G)
+        (G.obj S) where 
   obj X := { left := X.left, Hom := G.map X.Hom }
   map X Y f := { left := f.left, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 #align category_theory.costructured_arrow.post CategoryTheory.CostructuredArrow.post
@@ -439,11 +453,14 @@ category of structured arrows `d ⟶ F.obj c` to the category of costructured ar
 -/
 @[simps]
 def toCostructuredArrow (F : C ⥤ D) (d : D) :
-    (StructuredArrow d F)ᵒᵖ ⥤ CostructuredArrow F.op (op d) where
+    (StructuredArrow d F)ᵒᵖ ⥤
+      CostructuredArrow F.op
+        (op
+          d) where 
   obj X := @CostructuredArrow.mk _ _ _ _ _ (op X.unop.right) F.op X.unop.Hom.op
   map X Y f :=
     CostructuredArrow.homMk f.unop.right.op
-      (by
+      (by 
         dsimp
         rw [← op_comp, ← f.unop.w, functor.const_obj_map]
         erw [category.id_comp])
@@ -456,11 +473,13 @@ category of structured arrows `op d ⟶ F.op.obj c` to the category of costructu
 -/
 @[simps]
 def toCostructuredArrow' (F : C ⥤ D) (d : D) :
-    (StructuredArrow (op d) F.op)ᵒᵖ ⥤ CostructuredArrow F d where
+    (StructuredArrow (op d) F.op)ᵒᵖ ⥤
+      CostructuredArrow F
+        d where 
   obj X := @CostructuredArrow.mk _ _ _ _ _ (unop X.unop.right) F X.unop.Hom.unop
   map X Y f :=
     CostructuredArrow.homMk f.unop.right.unop
-      (by
+      (by 
         dsimp
         rw [← Quiver.Hom.unop_op (F.map (Quiver.Hom.unop f.unop.right)), ← unop_comp, ← F.op_map, ←
           f.unop.w, functor.const_obj_map]
@@ -478,11 +497,13 @@ category of costructured arrows `F.obj c ⟶ d` to the category of structured ar
 -/
 @[simps]
 def toStructuredArrow (F : C ⥤ D) (d : D) :
-    (CostructuredArrow F d)ᵒᵖ ⥤ StructuredArrow (op d) F.op where
+    (CostructuredArrow F d)ᵒᵖ ⥤
+      StructuredArrow (op d)
+        F.op where 
   obj X := @StructuredArrow.mk _ _ _ _ _ (op X.unop.left) F.op X.unop.Hom.op
   map X Y f :=
     StructuredArrow.homMk f.unop.left.op
-      (by
+      (by 
         dsimp
         rw [← op_comp, f.unop.w, functor.const_obj_map]
         erw [category.comp_id])
@@ -495,11 +516,13 @@ category of costructured arrows `F.op.obj c ⟶ op d` to the category of structu
 -/
 @[simps]
 def toStructuredArrow' (F : C ⥤ D) (d : D) :
-    (CostructuredArrow F.op (op d))ᵒᵖ ⥤ StructuredArrow d F where
+    (CostructuredArrow F.op (op d))ᵒᵖ ⥤
+      StructuredArrow d
+        F where 
   obj X := @StructuredArrow.mk _ _ _ _ _ (unop X.unop.left) F X.unop.Hom.unop
   map X Y f :=
     StructuredArrow.homMk f.unop.left.unop
-      (by
+      (by 
         dsimp
         rw [← Quiver.Hom.unop_op (F.map f.unop.left.unop), ← unop_comp, ← F.op_map, f.unop.w,
           functor.const_obj_map]

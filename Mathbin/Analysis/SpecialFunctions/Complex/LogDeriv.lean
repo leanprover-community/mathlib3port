@@ -27,10 +27,10 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
   LocalHomeomorph.ofContinuousOpen
     { toFun := exp, invFun := log, source := { z : ℂ | z.im ∈ ioo (-π) π },
       target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 },
-      map_source' := by
+      map_source' := by 
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
         refine' (not_or_of_imp fun hz => _).symm
-        obtain rfl : y = 0 := by
+        obtain rfl : y = 0 := by 
           rw [exp_im] at hz
           simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
         rw [mem_set_of_eq, ← of_real_def, exp_of_real_re]
@@ -41,14 +41,14 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
         h.imp (fun h => le_of_lt h) id,
       left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2),
       right_inv' := fun x hx =>
-        exp_log <| by
+        exp_log <| by 
           rintro rfl
           simpa [lt_irrefl] using hx }
     continuous_exp.ContinuousOn is_open_map_exp (is_open_Ioo.Preimage continuous_im)
 #align complex.exp_local_homeomorph Complex.expLocalHomeomorph
 
 theorem hasStrictDerivAtLog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
-  have h0 : x ≠ 0 := by
+  have h0 : x ≠ 0 := by 
     rintro rfl
     simpa [lt_irrefl] using h
   expLocalHomeomorph.hasStrictDerivAtSymm h h0 <| by

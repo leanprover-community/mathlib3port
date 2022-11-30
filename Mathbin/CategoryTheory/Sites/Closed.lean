@@ -57,7 +57,8 @@ namespace GrothendieckTopology
 
 /-- The `J`-closure of a sieve is the collection of arrows which it covers. -/
 @[simps]
-def close {X : C} (S : Sieve X) : Sieve X where
+def close {X : C} (S : Sieve X) :
+    Sieve X where 
   arrows Y f := J₁.Covers S f
   downward_closed' Y Z f hS := J₁.arrowStable _ _ hS
 #align category_theory.grothendieck_topology.close CategoryTheory.GrothendieckTopology.close
@@ -113,14 +114,10 @@ theorem is_closed_iff_close_eq_self {X : C} (S : Sieve X) : J₁.IsClosed S ↔ 
     · intro Y f hf
       rw [← J₁.covers_iff_mem_of_closed h]
       apply hf
-      
     · apply J₁.le_close
-      
-    
   · intro e
     rw [← e]
     apply J₁.close_is_closed
-    
 #align
   category_theory.grothendieck_topology.is_closed_iff_close_eq_self CategoryTheory.GrothendieckTopology.is_closed_iff_close_eq_self
 
@@ -135,12 +132,10 @@ theorem pullback_close {X Y : C} (f : Y ⟶ X) (S : Sieve X) :
   apply le_antisymm
   · refine' J₁.le_close_of_is_closed (sieve.pullback_monotone _ (J₁.le_close S)) _
     apply J₁.is_closed_pullback _ _ (J₁.close_is_closed _)
-    
   · intro Z g hg
     change _ ∈ J₁ _
     rw [← sieve.pullback_comp]
     apply hg
-    
 #align
   category_theory.grothendieck_topology.pullback_close CategoryTheory.GrothendieckTopology.pullback_close
 
@@ -168,12 +163,10 @@ theorem close_eq_top_iff_mem {X : C} (S : Sieve X) : J₁.close S = ⊤ ↔ S �
     intro Y f hf
     change J₁.close S f
     rwa [h]
-    
   · intro hS
     rw [eq_top_iff]
     intro Y f hf
     apply J₁.pullback_stable _ hS
-    
 #align
   category_theory.grothendieck_topology.close_eq_top_iff_mem CategoryTheory.GrothendieckTopology.close_eq_top_iff_mem
 
@@ -200,7 +193,8 @@ The presheaf sending each object to the set of `J`-closed sieves on it. This pre
 (and will turn out to be a subobject classifier for the category of `J`-sheaves).
 -/
 @[simps]
-def Functor.closedSieves : Cᵒᵖ ⥤ Type max v u where
+def Functor.closedSieves :
+    Cᵒᵖ ⥤ Type max v u where 
   obj X := { S : Sieve X.unop // J₁.IsClosed S }
   map X Y f S := ⟨S.1.pullback f.unop, J₁.isClosedPullback f.unop _ S.2⟩
 #align category_theory.functor.closed_sieves CategoryTheory.Functor.closedSieves
@@ -219,7 +213,7 @@ theorem classifierIsSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) :=
     have q : ∀ ⦃Z : C⦄ (g : Z ⟶ X) (hg : S g), M.pullback g = N.pullback g := by
       intro Z g hg
       apply congr_arg Subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)
-    have MSNS : M ⊓ S = N ⊓ S := by
+    have MSNS : M ⊓ S = N ⊓ S := by 
       ext (Z g)
       rw [sieve.inter_apply, sieve.inter_apply, and_comm' (N g), and_comm']
       apply and_congr_right
@@ -231,14 +225,11 @@ theorem classifierIsSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) :=
       apply J₁.superset_covering (sieve.pullback_monotone f inf_le_left)
       rw [← MSNS]
       apply J₁.arrow_intersect f M S hf (J₁.pullback_stable _ hS)
-      
     · intro hf
       rw [J₁.covers_iff]
       apply J₁.superset_covering (sieve.pullback_monotone f inf_le_left)
       rw [MSNS]
       apply J₁.arrow_intersect f N S hf (J₁.pullback_stable _ hS)
-      
-    
   · intro x hx
     rw [presieve.compatible_iff_sieve_compatible] at hx
     let M := sieve.bind S fun Y f hf => (x f hf).1
@@ -251,17 +242,13 @@ theorem classifierIsSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) :=
         simp_rw [← c]
         rw [show (x (g ≫ f') _).1 = _ from congr_arg Subtype.val (hx f' g hf')]
         apply sieve.pullback_eq_top_of_mem _ hg
-        
       · apply sieve.le_pullback_bind S fun Y f hf => (x f hf).1
-        
     refine' ⟨⟨_, J₁.close_is_closed M⟩, _⟩
     · intro Y f hf
       ext1
       dsimp
       rw [← J₁.pullback_close, this _ hf]
       apply le_antisymm (J₁.le_close_of_is_closed le_rfl (x f hf).2) (J₁.le_close _)
-      
-    
 #align category_theory.classifier_is_sheaf CategoryTheory.classifierIsSheaf
 
 /-- If presheaf of `J₁`-closed sieves is a `J₂`-sheaf then `J₁ ≤ J₂`. Note the converse is true by
@@ -270,7 +257,7 @@ theorem classifierIsSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) :=
 theorem le_topology_of_closed_sieves_is_sheaf {J₁ J₂ : GrothendieckTopology C}
     (h : Presieve.IsSheaf J₁ (Functor.closedSieves J₂)) : J₁ ≤ J₂ := fun X S hS => by
   rw [← J₂.close_eq_top_iff_mem]
-  have : J₂.is_closed (⊤ : sieve X) := by
+  have : J₂.is_closed (⊤ : sieve X) := by 
     intro Y f hf
     trivial
   suffices (⟨J₂.close S, J₂.close_is_closed S⟩ : Subtype _) = ⟨⊤, this⟩ by
@@ -283,7 +270,6 @@ theorem le_topology_of_closed_sieves_is_sheaf {J₁ J₂ : GrothendieckTopology 
     rw [sieve.pullback_top, ← J₂.pullback_close, S.pullback_eq_top_of_mem hf,
       J₂.close_eq_top_iff_mem]
     apply J₂.top_mem
-    
 #align
   category_theory.le_topology_of_closed_sieves_is_sheaf CategoryTheory.le_topology_of_closed_sieves_is_sheaf
 
@@ -294,18 +280,14 @@ theorem topology_eq_iff_same_sheaves {J₁ J₂ : GrothendieckTopology C} :
   · rintro rfl
     intro P
     rfl
-    
   · intro h
     apply le_antisymm
     · apply le_topology_of_closed_sieves_is_sheaf
       rw [h]
       apply classifier_is_sheaf
-      
     · apply le_topology_of_closed_sieves_is_sheaf
       rw [← h]
       apply classifier_is_sheaf
-      
-    
 #align category_theory.topology_eq_iff_same_sheaves CategoryTheory.topology_eq_iff_same_sheaves
 
 /--
@@ -316,13 +298,13 @@ In fact, such operations are in bijection with Grothendieck topologies.
 @[simps]
 def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
     (hc : ∀ ⦃X Y : C⦄ (f : Y ⟶ X) (S : Sieve X), c _ (S.pullback f) = (c _ S).pullback f) :
-    GrothendieckTopology C where
+    GrothendieckTopology C where 
   sieves X := { S | c X S = ⊤ }
   top_mem' X := top_unique ((c X).le_closure _)
-  pullback_stable' X Y S f hS := by
+  pullback_stable' X Y S f hS := by 
     rw [Set.mem_set_of_eq] at hS
     rw [Set.mem_set_of_eq, hc, hS, sieve.pullback_top]
-  transitive' X S hS R hR := by
+  transitive' X S hS R hR := by 
     rw [Set.mem_set_of_eq] at hS
     rw [Set.mem_set_of_eq, ← (c X).idempotent, eq_top_iff, ← hS]
     apply (c X).Monotone fun Y f hf => _

@@ -33,13 +33,13 @@ open Function OrderDual
 variable {F α β γ δ : Type _}
 
 /-- The type of `⊤`-preserving functions from `α` to `β`. -/
-structure TopHom (α β : Type _) [HasTop α] [HasTop β] where
+structure TopHom (α β : Type _) [Top α] [Top β] where
   toFun : α → β
   map_top' : to_fun ⊤ = ⊤
 #align top_hom TopHom
 
 /-- The type of `⊥`-preserving functions from `α` to `β`. -/
-structure BotHom (α β : Type _) [HasBot α] [HasBot β] where
+structure BotHom (α β : Type _) [Bot α] [Bot β] where
   toFun : α → β
   map_bot' : to_fun ⊥ = ⊥
 #align bot_hom BotHom
@@ -56,7 +56,7 @@ section
 /-- `top_hom_class F α β` states that `F` is a type of `⊤`-preserving morphisms.
 
 You should extend this class when you extend `top_hom`. -/
-class TopHomClass (F : Type _) (α β : outParam <| Type _) [HasTop α] [HasTop β] extends
+class TopHomClass (F : Type _) (α β : outParam <| Type _) [Top α] [Top β] extends
   FunLike F α fun _ => β where
   map_top (f : F) : f ⊤ = ⊤
 #align top_hom_class TopHomClass
@@ -64,7 +64,7 @@ class TopHomClass (F : Type _) (α β : outParam <| Type _) [HasTop α] [HasTop 
 /-- `bot_hom_class F α β` states that `F` is a type of `⊥`-preserving morphisms.
 
 You should extend this class when you extend `bot_hom`. -/
-class BotHomClass (F : Type _) (α β : outParam <| Type _) [HasBot α] [HasBot β] extends
+class BotHomClass (F : Type _) (α β : outParam <| Type _) [Bot α] [Bot β] extends
   FunLike F α fun _ => β where
   map_bot (f : F) : f ⊥ = ⊥
 #align bot_hom_class BotHomClass
@@ -130,10 +130,10 @@ theorem map_eq_bot_iff [LE α] [OrderBot α] [PartialOrder β] [OrderBot β] [Or
     (f : F) {a : α} : f a = ⊥ ↔ a = ⊥ := by rw [← map_bot f, (EquivLike.injective f).eq_iff]
 #align map_eq_bot_iff map_eq_bot_iff
 
-instance [HasTop α] [HasTop β] [TopHomClass F α β] : CoeTC F (TopHom α β) :=
+instance [Top α] [Top β] [TopHomClass F α β] : CoeTC F (TopHom α β) :=
   ⟨fun f => ⟨f, map_top f⟩⟩
 
-instance [HasBot α] [HasBot β] [BotHomClass F α β] : CoeTC F (BotHom α β) :=
+instance [Bot α] [Bot β] [BotHomClass F α β] : CoeTC F (BotHom α β) :=
   ⟨fun f => ⟨f, map_bot f⟩⟩
 
 instance [Preorder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] [BoundedOrderHomClass F α β] :
@@ -145,13 +145,14 @@ instance [Preorder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] [Bounde
 
 namespace TopHom
 
-variable [HasTop α]
+variable [Top α]
 
-section HasTop
+section Top
 
-variable [HasTop β] [HasTop γ] [HasTop δ]
+variable [Top β] [Top γ] [Top δ]
 
-instance : TopHomClass (TopHom α β) α β where
+instance : TopHomClass (TopHom α β) α
+      β where 
   coe := TopHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_top := TopHom.map_top'
@@ -169,14 +170,15 @@ theorem to_fun_eq_coe {f : TopHom α β} : f.toFun = (f : α → β) :=
 -- this must come after the coe_to_fun definition
 initialize_simps_projections TopHom (toFun → apply)
 
-@[ext.1]
+@[ext]
 theorem ext {f g : TopHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align top_hom.ext TopHom.ext
 
 /-- Copy of a `top_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : TopHom α β) (f' : α → β) (h : f' = f) : TopHom α β where
+protected def copy (f : TopHom α β) (f' : α → β) (h : f' = f) :
+    TopHom α β where 
   toFun := f'
   map_top' := h.symm ▸ f.map_top'
 #align top_hom.copy TopHom.copy
@@ -213,7 +215,8 @@ theorem id_apply (a : α) : TopHom.id α a = a :=
 #align top_hom.id_apply TopHom.id_apply
 
 /-- Composition of `top_hom`s as a `top_hom`. -/
-def comp (f : TopHom β γ) (g : TopHom α β) : TopHom α γ where
+def comp (f : TopHom β γ) (g : TopHom α β) :
+    TopHom α γ where 
   toFun := f ∘ g
   map_top' := by rw [comp_apply, map_top, map_top]
 #align top_hom.comp TopHom.comp
@@ -255,12 +258,12 @@ theorem cancel_left {g : TopHom β γ} {f₁ f₂ : TopHom α β} (hg : Injectiv
     congr_arg _⟩
 #align top_hom.cancel_left TopHom.cancel_left
 
-end HasTop
+end Top
 
-instance [Preorder β] [HasTop β] : Preorder (TopHom α β) :=
+instance [Preorder β] [Top β] : Preorder (TopHom α β) :=
   Preorder.lift (coeFn : TopHom α β → α → β)
 
-instance [PartialOrder β] [HasTop β] : PartialOrder (TopHom α β) :=
+instance [PartialOrder β] [Top β] : PartialOrder (TopHom α β) :=
   PartialOrder.lift _ FunLike.coe_injective
 
 section OrderTop
@@ -339,13 +342,14 @@ end TopHom
 
 namespace BotHom
 
-variable [HasBot α]
+variable [Bot α]
 
-section HasBot
+section Bot
 
-variable [HasBot β] [HasBot γ] [HasBot δ]
+variable [Bot β] [Bot γ] [Bot δ]
 
-instance : BotHomClass (BotHom α β) α β where
+instance : BotHomClass (BotHom α β) α
+      β where 
   coe := BotHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_bot := BotHom.map_bot'
@@ -363,14 +367,15 @@ theorem to_fun_eq_coe {f : BotHom α β} : f.toFun = (f : α → β) :=
 -- this must come after the coe_to_fun definition
 initialize_simps_projections BotHom (toFun → apply)
 
-@[ext.1]
+@[ext]
 theorem ext {f g : BotHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align bot_hom.ext BotHom.ext
 
 /-- Copy of a `bot_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : BotHom α β) (f' : α → β) (h : f' = f) : BotHom α β where
+protected def copy (f : BotHom α β) (f' : α → β) (h : f' = f) :
+    BotHom α β where 
   toFun := f'
   map_bot' := h.symm ▸ f.map_bot'
 #align bot_hom.copy BotHom.copy
@@ -407,7 +412,8 @@ theorem id_apply (a : α) : BotHom.id α a = a :=
 #align bot_hom.id_apply BotHom.id_apply
 
 /-- Composition of `bot_hom`s as a `bot_hom`. -/
-def comp (f : BotHom β γ) (g : BotHom α β) : BotHom α γ where
+def comp (f : BotHom β γ) (g : BotHom α β) :
+    BotHom α γ where 
   toFun := f ∘ g
   map_bot' := by rw [comp_apply, map_bot, map_bot]
 #align bot_hom.comp BotHom.comp
@@ -449,12 +455,12 @@ theorem cancel_left {g : BotHom β γ} {f₁ f₂ : BotHom α β} (hg : Injectiv
     congr_arg _⟩
 #align bot_hom.cancel_left BotHom.cancel_left
 
-end HasBot
+end Bot
 
-instance [Preorder β] [HasBot β] : Preorder (BotHom α β) :=
+instance [Preorder β] [Bot β] : Preorder (BotHom α β) :=
   Preorder.lift (coeFn : BotHom α β → α → β)
 
-instance [PartialOrder β] [HasBot β] : PartialOrder (BotHom α β) :=
+instance [PartialOrder β] [Bot β] : PartialOrder (BotHom α β) :=
   PartialOrder.lift _ FunLike.coe_injective
 
 section OrderBot
@@ -546,7 +552,8 @@ def toBotHom (f : BoundedOrderHom α β) : BotHom α β :=
   { f with }
 #align bounded_order_hom.to_bot_hom BoundedOrderHom.toBotHom
 
-instance : BoundedOrderHomClass (BoundedOrderHom α β) α β where
+instance : BoundedOrderHomClass (BoundedOrderHom α β) α
+      β where 
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_rel f := f.monotone'
@@ -563,7 +570,7 @@ theorem to_fun_eq_coe {f : BoundedOrderHom α β} : f.toFun = (f : α → β) :=
   rfl
 #align bounded_order_hom.to_fun_eq_coe BoundedOrderHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : BoundedOrderHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align bounded_order_hom.ext BoundedOrderHom.ext
@@ -679,7 +686,8 @@ variable [LE α] [OrderTop α] [LE β] [OrderTop β] [LE γ] [OrderTop γ]
 
 /-- Reinterpret a top homomorphism as a bot homomorphism between the dual lattices. -/
 @[simps]
-protected def dual : TopHom α β ≃ BotHom αᵒᵈ βᵒᵈ where
+protected def dual :
+    TopHom α β ≃ BotHom αᵒᵈ βᵒᵈ where 
   toFun f := ⟨f, f.map_top'⟩
   invFun f := ⟨f, f.map_bot'⟩
   left_inv f := TopHom.ext fun _ => rfl
@@ -715,7 +723,8 @@ variable [LE α] [OrderBot α] [LE β] [OrderBot β] [LE γ] [OrderBot γ]
 
 /-- Reinterpret a bot homomorphism as a top homomorphism between the dual lattices. -/
 @[simps]
-protected def dual : BotHom α β ≃ TopHom αᵒᵈ βᵒᵈ where
+protected def dual :
+    BotHom α β ≃ TopHom αᵒᵈ βᵒᵈ where 
   toFun f := ⟨f, f.map_bot'⟩
   invFun f := ⟨f, f.map_top'⟩
   left_inv f := BotHom.ext fun _ => rfl
@@ -752,7 +761,10 @@ variable [Preorder α] [BoundedOrder α] [Preorder β] [BoundedOrder β] [Preord
 /-- Reinterpret a bounded order homomorphism as a bounded order homomorphism between the dual
 orders. -/
 @[simps]
-protected def dual : BoundedOrderHom α β ≃ BoundedOrderHom αᵒᵈ βᵒᵈ where
+protected def dual :
+    BoundedOrderHom α β ≃
+      BoundedOrderHom αᵒᵈ
+        βᵒᵈ where 
   toFun f := ⟨f.toOrderHom.dual, f.map_bot', f.map_top'⟩
   invFun f := ⟨OrderHom.dual.symm f.toOrderHom, f.map_bot', f.map_top'⟩
   left_inv f := ext fun a => rfl

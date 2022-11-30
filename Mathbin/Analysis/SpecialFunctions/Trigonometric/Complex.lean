@@ -52,12 +52,10 @@ theorem sin_eq_zero_iff {θ : ℂ} : sin θ = 0 ↔ ∃ k : ℤ, θ = k * π := 
     use k + 1
     field_simp [eq_add_of_sub_eq hk]
     ring
-    
   · rintro ⟨k, rfl⟩
     use k - 1
     field_simp
     ring
-    
 #align complex.sin_eq_zero_iff Complex.sin_eq_zero_iff
 
 theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π := by
@@ -94,7 +92,6 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
         · rintro ⟨k, rfl⟩
           use -k
           simp
-          
     _ ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = 2 * k * π - x := exists_or.symm
     
 #align complex.cos_eq_cos_iff Complex.cos_eq_cos_iff
@@ -117,13 +114,11 @@ theorem tan_add {x y : ℂ}
       add_div, sub_div]
     simp only [← div_mul_div_comm, ← tan, mul_one, one_mul, div_self (cos_ne_zero_iff.mpr h1),
       div_self (cos_ne_zero_iff.mpr h2)]
-    
   · obtain ⟨t, hx, hy, hxy⟩ := tan_int_mul_pi_div_two, t (2 * k + 1), t (2 * l + 1),
       t (2 * k + 1 + (2 * l + 1))
     simp only [Int.cast_add, Int.cast_bit0, Int.cast_mul, Int.cast_one, hx, hy] at hx hy hxy
     rw [hx, hy, add_zero, zero_div, mul_div_assoc, mul_div_assoc, ←
       add_mul (2 * (k : ℂ) + 1) (2 * l + 1) (π / 2), ← mul_div_assoc, hxy]
-    
 #align complex.tan_add Complex.tan_add
 
 theorem tan_add' {x y : ℂ}
@@ -135,10 +130,8 @@ theorem tan_add' {x y : ℂ}
 theorem tan_two_mul {z : ℂ} : tan (2 * z) = 2 * tan z / (1 - tan z ^ 2) := by
   by_cases h : ∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
   · rw [two_mul, two_mul, sq, tan_add (Or.inl ⟨h, h⟩)]
-    
   · rw [not_forall_not] at h
     rw [two_mul, two_mul, sq, tan_add (Or.inr ⟨h, h⟩)]
-    
 #align complex.tan_two_mul Complex.tan_two_mul
 
 theorem tan_add_mul_I {x y : ℂ}
@@ -249,9 +242,7 @@ theorem mul_lt_sin {x : ℝ} (hx : 0 < x) (hx' : x < π / 2) : 2 / π * x < sin 
   rw [← inv_div]
   simpa [-inv_div, pi_div_two_pos.ne'] using @lt_sin_mul ((π / 2)⁻¹ * x) _ _
   · exact mul_pos (inv_pos.2 pi_div_two_pos) hx
-    
   · rwa [← div_eq_inv_mul, div_lt_one pi_div_two_pos]
-    
 #align real.mul_lt_sin Real.mul_lt_sin
 
 /-- In the range `[0, π / 2]`, we have a linear lower bound on `sin`. This inequality forms one half
@@ -260,9 +251,7 @@ theorem mul_le_sin {x : ℝ} (hx : 0 ≤ x) (hx' : x ≤ π / 2) : 2 / π * x �
   rw [← inv_div]
   simpa [-inv_div, pi_div_two_pos.ne'] using @le_sin_mul ((π / 2)⁻¹ * x) _ _
   · exact mul_nonneg (inv_nonneg.2 pi_div_two_pos.le) hx
-    
   · rwa [← div_eq_inv_mul, div_le_one pi_div_two_pos]
-    
 #align real.mul_le_sin Real.mul_le_sin
 
 end Real

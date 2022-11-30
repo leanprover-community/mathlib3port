@@ -144,14 +144,10 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
   · refine' subset_inter (subset_inter (subset.trans hsf ball_subset_closed_ball) _) _
     · rintro _ ⟨x, -, rfl⟩
       exact mem_range_self _
-      
     · rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
       exact inter_subset_right _ _
-      
-    
   · refine' subset.trans (inter_subset_inter_left _ f.closed_ball_subset) _
     rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
-    
 #align
   smooth_bump_function.image_eq_inter_preimage_of_subset_support SmoothBumpFunction.image_eq_inter_preimage_of_subset_support
 
@@ -189,7 +185,7 @@ theorem eq_one : f c = 1 :=
 #align smooth_bump_function.eq_one SmoothBumpFunction.eq_one
 
 theorem support_mem_nhds : support f ∈ 𝓝 c :=
-  f.eventually_eq_one.mono fun x hx => by
+  f.eventually_eq_one.mono fun x hx => by 
     rw [hx]
     exact one_ne_zero
 #align smooth_bump_function.support_mem_nhds SmoothBumpFunction.support_mem_nhds
@@ -226,10 +222,9 @@ theorem nhds_within_range_basis :
       _ _
   · rintro R ⟨hR0, hsub⟩
     exact ⟨⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩⟩, hsub⟩, trivial, subset.rfl⟩
-    
-  · exact fun f _ =>
+  ·
+    exact fun f _ =>
       inter_mem (mem_nhds_within_of_mem_nhds <| closed_ball_mem_nhds f.R_pos) self_mem_nhds_within
-    
 #align smooth_bump_function.nhds_within_range_basis SmoothBumpFunction.nhds_within_range_basis
 
 theorem isClosedImageOfIsClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
@@ -247,7 +242,7 @@ radius `r`. Formally, `s ⊆ e.source ∩ e ⁻¹' (ball (e c) r)`, where `e = e
 theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
     ∃ (r : _)(hr : r ∈ ioo 0 f.r),
       s ⊆ (chartAt H c).source ∩ extChartAt I c ⁻¹' ball (extChartAt I c c) r :=
-  by
+  by 
   set e := extChartAt I c
   have : IsClosed (e '' s) := f.is_closed_image_of_is_closed hsc hs
   rw [support_eq_inter_preimage, subset_inter_iff, ← image_subset_iff] at hs
@@ -326,7 +321,7 @@ theorem nhds_basis_tsupport :
   have :
     (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => True) fun f =>
       (extChartAt I c).symm '' (closed_ball (extChartAt I c c) f.r ∩ range I) :=
-    by
+    by 
     rw [← ext_chart_at_symm_map_nhds_within_range I c]
     exact nhds_within_range_basis.map _
   refine'

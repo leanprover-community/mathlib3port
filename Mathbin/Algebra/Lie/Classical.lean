@@ -179,20 +179,20 @@ variable [Fintype p] [Fintype q]
 
 theorem Pso_inv {i : R} (hi : i * i = -1) : pso p q R i * pso p q R (-i) = 1 := by
   ext (x y); rcases x with ⟨⟩ <;> rcases y with ⟨⟩
-  · -- x y : p
+  ·
+    -- x y : p
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h]
-    
-  · -- x : p, y : q
+  ·
+    -- x : p, y : q
     simp [Pso, indefinite_diagonal]
-    
-  · -- x : q, y : p
+  ·
+    -- x : q, y : p
     simp [Pso, indefinite_diagonal]
-    
-  · -- x y : q
+  ·
+    -- x y : q
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h, hi]
-    
 #align lie_algebra.orthogonal.Pso_inv LieAlgebra.Orthogonal.Pso_inv
 
 /-- There is a constructive inverse of `Pso p q R i`. -/
@@ -203,20 +203,20 @@ def invertiblePso {i : R} (hi : i * i = -1) : Invertible (pso p q R i) :=
 theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
     (pso p q R i)ᵀ ⬝ indefiniteDiagonal p q R ⬝ pso p q R i = 1 := by
   ext (x y); rcases x with ⟨⟩ <;> rcases y with ⟨⟩
-  · -- x y : p
+  ·
+    -- x y : p
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h]
-    
-  · -- x : p, y : q
+  ·
+    -- x : p, y : q
     simp [Pso, indefinite_diagonal]
-    
-  · -- x : q, y : p
+  ·
+    -- x : q, y : p
     simp [Pso, indefinite_diagonal]
-    
-  · -- x y : q
+  ·
+    -- x y : q
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h, hi]
-    
 #align
   lie_algebra.orthogonal.indefinite_diagonal_transform LieAlgebra.Orthogonal.indefinite_diagonal_transform
 
@@ -370,7 +370,7 @@ theorem indefinite_diagonal_assoc :
     indefiniteDiagonal (Sum Unit l) l R =
       Matrix.reindexLieEquiv (Equiv.sumAssoc Unit l l).symm
         (Matrix.fromBlocks 1 0 0 (indefiniteDiagonal l l R)) :=
-  by
+  by 
   ext (i j)
   rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;> rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
       simp only [indefinite_diagonal, Matrix.diagonal, Equiv.sumAssoc_apply_inl_inl,

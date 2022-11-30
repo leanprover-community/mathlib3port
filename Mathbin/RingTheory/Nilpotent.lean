@@ -87,7 +87,7 @@ theorem is_nilpotent_iff_eq_zero [MonoidWithZero R] [IsReduced R] : IsNilpotent 
 
 theorem is_reduced_of_injective [MonoidWithZero R] [MonoidWithZero S] {F : Type _}
     [MonoidWithZeroHomClass F R S] (f : F) (hf : Function.Injective f) [IsReduced S] :
-    IsReduced R := by
+    IsReduced R := by 
   constructor
   intro x hx
   apply hf
@@ -155,9 +155,7 @@ theorem is_nilpotent_add (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent
   suffices x ^ i * y ^ j = 0 by simp only [this, nsmul_eq_mul, mul_zero]
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
   · rw [pow_eq_zero_of_le hi hn, zero_mul]
-    
   · rw [pow_eq_zero_of_le hj hm, mul_zero]
-    
 #align commute.is_nilpotent_add Commute.is_nilpotent_add
 
 theorem is_nilpotent_mul_left (h : IsNilpotent x) : IsNilpotent (x * y) := by
@@ -270,7 +268,7 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
     (h₂ :
       ∀ ⦃S : Type _⦄ [CommRing S],
         ∀ I J : Ideal S, I ≤ J → P I → P (J.map (Ideal.Quotient.mk I)) → P J) :
-    P I := by
+    P I := by 
   obtain ⟨n, hI : I ^ n = ⊥⟩ := hI
   revert S
   apply Nat.strong_induction_on n
@@ -281,27 +279,20 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
     apply h₁
     rw [← Ideal.zero_eq_bot, zero_pow]
     exact zero_lt_two
-    
   cases n
   · rw [pow_zero, Ideal.one_eq_top] at hI
     haveI := subsingleton_of_bot_eq_top hI.symm
     exact (hI' (Subsingleton.elim _ _)).elim
-    
   cases n
   · rw [pow_one] at hI
     exact (hI' hI).elim
-    
   apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_ne_zero)
   · apply H n.succ _ (I ^ 2)
     · rw [← pow_mul, eq_bot_iff, ← hI, Nat.succ_eq_add_one, Nat.succ_eq_add_one]
       exact Ideal.pow_le_pow (by linarith)
-      
     · exact le_refl n.succ.succ
-      
-    
   · apply h₁
     rw [← Ideal.map_pow, Ideal.map_quotient_self]
-    
 #align ideal.is_nilpotent.induction_on Ideal.IsNilpotent.induction_on
 
 theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal R}
@@ -317,21 +308,19 @@ theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal
       h₃.map
         ((DoubleQuot.quotQuotEquivQuotSup I J).trans
               (Ideal.quotEquivOfEq (sup_eq_right.mpr e))).symm.toRingHom
-    
   · introv e H
     skip
     obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (↑H.unit⁻¹ : S ⧸ I)
     have : Ideal.Quotient.mk I (x * y) = Ideal.Quotient.mk I 1 := by
       rw [map_one, _root_.map_mul, hy, IsUnit.mul_val_inv]
     rw [Ideal.Quotient.eq] at this
-    have : (x * y - 1) ^ 2 = 0 := by
+    have : (x * y - 1) ^ 2 = 0 := by 
       rw [← Ideal.mem_bot, ← e]
       exact Ideal.pow_mem_pow this _
     have : x * (y * (2 - x * y)) = 1 := by
       rw [eq_comm, ← sub_eq_zero, ← this]
       ring
     exact isUnit_of_mul_eq_one _ _ this
-    
 #align is_nilpotent.is_unit_quotient_mk_iff IsNilpotent.is_unit_quotient_mk_iff
 
 end Ideal

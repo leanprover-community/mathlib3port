@@ -62,10 +62,8 @@ theorem matrix_eq_sum_std_basis [Fintype m] [Fintype n] (x : Matrix m n α) :
   iterate 2 rw [Finset.sum_apply]
   convert Fintype.sum_eq_single i _
   · simp [std_basis_matrix]
-    
   · intro j hj
     simp [std_basis_matrix, hj]
-    
 #align matrix.matrix_eq_sum_std_basis Matrix.matrix_eq_sum_std_basis
 
 -- TODO: tie this up with the `basis` machinery of linear algebra
@@ -87,7 +85,6 @@ protected theorem induction_on' [Fintype m] [Fintype n] {P : Matrix m n α → P
   apply Finset.sum_induction _ _ h_add h_zero
   · intros
     apply h_std_basis
-    
 #align matrix.induction_on' Matrix.induction_on'
 
 @[elab_as_elim]
@@ -95,7 +92,7 @@ protected theorem induction_on [Fintype m] [Fintype n] [Nonempty m] [Nonempty n]
     {P : Matrix m n α → Prop} (M : Matrix m n α) (h_add : ∀ p q, P p → P q → P (p + q))
     (h_std_basis : ∀ i j x, P (stdBasisMatrix i j x)) : P M :=
   Matrix.induction_on' M
-    (by
+    (by 
       inhabit m
       inhabit n
       simpa using h_std_basis default default 0)
@@ -186,7 +183,7 @@ theorem mul_same (k : n) (d : α) :
 
 @[simp]
 theorem mul_of_ne {k l : n} (h : j ≠ k) (d : α) : stdBasisMatrix i j c ⬝ stdBasisMatrix k l d = 0 :=
-  by
+  by 
   ext (a b)
   simp only [mul_apply, boole_mul, std_basis_matrix]
   by_cases h₁ : i = a <;> simp [h₁, h, h.symm]

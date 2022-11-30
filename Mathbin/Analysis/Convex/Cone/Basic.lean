@@ -94,7 +94,7 @@ section HasSmul
 
 variable [HasSmul 𝕜 E] (S T : ConvexCone 𝕜 E)
 
-instance : SetLike (ConvexCone 𝕜 E) E where
+instance : SetLike (ConvexCone 𝕜 E) E where 
   coe := carrier
   coe_injective' S T h := by cases S <;> cases T <;> congr
 
@@ -109,7 +109,7 @@ theorem mem_mk {s : Set E} {h₁ h₂ x} : x ∈ @mk 𝕜 _ _ _ _ s h₁ h₂ �
 #align convex_cone.mem_mk ConvexCone.mem_mk
 
 /-- Two `convex_cone`s are equal if they have the same elements. -/
-@[ext.1]
+@[ext]
 theorem ext {S T : ConvexCone 𝕜 E} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align convex_cone.ext ConvexCone.ext
@@ -164,7 +164,7 @@ theorem mem_infi {ι : Sort _} {x : E} {f : ι → ConvexCone 𝕜 E} : x ∈ in
 
 variable (𝕜)
 
-instance : HasBot (ConvexCone 𝕜 E) :=
+instance : Bot (ConvexCone 𝕜 E) :=
   ⟨⟨∅, fun c hc x => False.elim, fun x => False.elim⟩⟩
 
 theorem mem_bot (x : E) : (x ∈ (⊥ : ConvexCone 𝕜 E)) = False :=
@@ -176,7 +176,7 @@ theorem coe_bot : ↑(⊥ : ConvexCone 𝕜 E) = (∅ : Set E) :=
   rfl
 #align convex_cone.coe_bot ConvexCone.coe_bot
 
-instance : HasTop (ConvexCone 𝕜 E) :=
+instance : Top (ConvexCone 𝕜 E) :=
   ⟨⟨univ, fun c hc x hx => mem_univ _, fun x hx y hy => mem_univ _⟩⟩
 
 theorem mem_top (x : E) : x ∈ (⊤ : ConvexCone 𝕜 E) :=
@@ -244,7 +244,8 @@ section Module
 variable [Module 𝕜 E] [Module 𝕜 F] [Module 𝕜 G]
 
 /-- The image of a convex cone under a `𝕜`-linear map is a convex cone. -/
-def map (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) : ConvexCone 𝕜 F where
+def map (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) :
+    ConvexCone 𝕜 F where 
   carrier := f '' S
   smul_mem' := fun c hc y ⟨x, hx, hy⟩ => hy ▸ f.map_smul c x ▸ mem_image_of_mem f (S.smul_mem hc hx)
   add_mem' := fun y₁ ⟨x₁, hx₁, hy₁⟩ y₂ ⟨x₂, hx₂, hy₂⟩ =>
@@ -267,12 +268,13 @@ theorem map_id (S : ConvexCone 𝕜 E) : S.map LinearMap.id = S :=
 #align convex_cone.map_id ConvexCone.map_id
 
 /-- The preimage of a convex cone under a `𝕜`-linear map is a convex cone. -/
-def comap (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 F) : ConvexCone 𝕜 E where
+def comap (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 F) :
+    ConvexCone 𝕜 E where 
   carrier := f ⁻¹' S
-  smul_mem' c hc x hx := by
+  smul_mem' c hc x hx := by 
     rw [mem_preimage, f.map_smul c]
     exact S.smul_mem hc hx
-  add_mem' x hx y hy := by
+  add_mem' x hx y hy := by 
     rw [mem_preimage, f.map_add]
     exact S.add_mem hx hy
 #align convex_cone.comap ConvexCone.comap
@@ -310,7 +312,7 @@ the order relation is the one defined by the cone.
 -/
 theorem to_ordered_smul (S : ConvexCone 𝕜 E) (h : ∀ x y : E, x ≤ y ↔ y - x ∈ S) : OrderedSmul 𝕜 E :=
   OrderedSmul.mk'
-    (by
+    (by 
       intro x y z xy hz
       rw [h (z • x) (z • y), ← smul_sub z y x]
       exact smul_mem S hz ((h x y).mp xy.le))
@@ -377,12 +379,10 @@ theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.Salient ↔ ¬S.Flat :=
   constructor
   · rintro h₁ ⟨x, xs, H₁, H₂⟩
     exact h₁ x xs H₁ H₂
-    
   · intro h
     unfold flat at h
     push_neg  at h
     exact h
-    
 #align convex_cone.salient_iff_not_flat ConvexCone.salient_iff_not_flat
 
 theorem Flat.mono {S T : ConvexCone 𝕜 E} (h : S ≤ T) : S.Flat → T.Flat
@@ -407,7 +407,8 @@ theorem Blunt.salient {S : ConvexCone 𝕜 E} : S.Blunt → S.Salient := by
 #align convex_cone.blunt.salient ConvexCone.Blunt.salient
 
 /-- A pointed convex cone defines a preorder. -/
-def toPreorder (h₁ : S.Pointed) : Preorder E where
+def toPreorder (h₁ : S.Pointed) :
+    Preorder E where 
   le x y := y - x ∈ S
   le_refl x := by change x - x ∈ S <;> rw [sub_self x] <;> exact h₁
   le_trans x y z xy zy := by simpa using add_mem S zy xy
@@ -416,7 +417,7 @@ def toPreorder (h₁ : S.Pointed) : Preorder E where
 /-- A pointed and salient cone defines a partial order. -/
 def toPartialOrder (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrder E :=
   { toPreorder S h₁ with
-    le_antisymm := by
+    le_antisymm := by 
       intro a b ab ba
       by_contra h
       have h' : b - a ≠ 0 := fun h'' => h (eq_of_sub_eq_zero h'').symm
@@ -428,7 +429,7 @@ def toPartialOrder (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrder E :=
 /-- A pointed and salient cone defines an `ordered_add_comm_group`. -/
 def toOrderedAddCommGroup (h₁ : S.Pointed) (h₂ : S.Salient) : OrderedAddCommGroup E :=
   { toPartialOrder S h₁ h₂, show AddCommGroup E by infer_instance with
-    add_le_add_left := by
+    add_le_add_left := by 
       intro a b hab c
       change c + b - (c + a) ∈ S
       rw [add_sub_add_left_eq_sub]
@@ -460,11 +461,11 @@ theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by rw [pointed, mem_ze
 instance : Add (ConvexCone 𝕜 E) :=
   ⟨fun K₁ K₂ =>
     { carrier := { z | ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z },
-      smul_mem' := by
+      smul_mem' := by 
         rintro c hc _ ⟨x, y, hx, hy, rfl⟩
         rw [smul_add]
         use c • x, c • y, K₁.smul_mem hc hx, K₂.smul_mem hc hy,
-      add_mem' := by
+      add_mem' := by 
         rintro _ ⟨x₁, x₂, hx₁, hx₂, rfl⟩ y ⟨y₁, y₂, hy₁, hy₂, rfl⟩
         use x₁ + y₁, x₂ + y₂, K₁.add_mem hx₁ hy₁, K₂.add_mem hx₂ hy₂
         abel }⟩
@@ -476,13 +477,14 @@ theorem mem_add {K₁ K₂ : ConvexCone 𝕜 E} {a : E} :
 #align convex_cone.mem_add ConvexCone.mem_add
 
 instance : AddZeroClass (ConvexCone 𝕜 E) :=
-  ⟨0, Add.add, fun _ => by
+  ⟨0, Add.add, fun _ => by 
     ext
-    simp, fun _ => by
+    simp, fun _ => by 
     ext
     simp⟩
 
-instance : AddCommSemigroup (ConvexCone 𝕜 E) where
+instance : AddCommSemigroup (ConvexCone 𝕜
+        E) where 
   add := Add.add
   add_assoc _ _ _ := SetLike.coe_injective <| Set.addCommSemigroup.add_assoc _ _ _
   add_comm _ _ := SetLike.coe_injective <| Set.addCommSemigroup.add_comm _ _
@@ -501,7 +503,7 @@ variable (𝕜 E) [OrderedSemiring 𝕜] [OrderedAddCommGroup E] [Module 𝕜 E]
 /-- The positive cone is the convex cone formed by the set of nonnegative elements in an ordered
 module.
 -/
-def positive : ConvexCone 𝕜 E where
+def positive : ConvexCone 𝕜 E where 
   carrier := Set.ici 0
   smul_mem' c hc x (hx : _ ≤ _) := smul_nonneg hc.le hx
   add_mem' x (hx : _ ≤ _) y (hy : _ ≤ _) := add_nonneg hx hy
@@ -536,7 +538,8 @@ theorem pointed_positive : Pointed (positive 𝕜 E) :=
 
 Note that this naming diverges from the mathlib convention of `pos` and `nonneg` due to "positive
 cone" (`convex_cone.positive`) being established terminology for the non-negative elements. -/
-def strictlyPositive : ConvexCone 𝕜 E where
+def strictlyPositive : ConvexCone 𝕜
+      E where 
   carrier := Set.ioi 0
   smul_mem' c hc x (hx : _ < _) := smul_pos hc hx
   add_mem' x hx y hy := add_pos hx hy
@@ -583,12 +586,10 @@ def toCone (s : Set E) (hs : Convex 𝕜 s) : ConvexCone 𝕜 E := by
   apply ConvexCone.mk (⋃ (c : 𝕜) (H : 0 < c), c • s) <;> simp only [mem_Union, mem_smul_set]
   · rintro c c_pos _ ⟨c', c'_pos, x, hx, rfl⟩
     exact ⟨c * c', mul_pos c_pos c'_pos, x, hx, (smul_smul _ _ _).symm⟩
-    
   · rintro _ ⟨cx, cx_pos, x, hx, rfl⟩ _ ⟨cy, cy_pos, y, hy, rfl⟩
     have : 0 < cx + cy := add_pos cx_pos cy_pos
     refine' ⟨_, this, _, convex_iff_div.1 hs hx hy cx_pos.le cy_pos.le this, _⟩
     simp only [smul_add, smul_smul, mul_div_assoc', mul_div_cancel_left _ this.ne']
-    
 #align convex.to_cone Convex.toCone
 
 variable {s : Set E} (hs : Convex 𝕜 s) {x : E}
@@ -601,10 +602,8 @@ theorem mem_to_cone' : x ∈ hs.toCone s ↔ ∃ c : 𝕜, 0 < c ∧ c • x ∈
   refine' hs.mem_to_cone.trans ⟨_, _⟩
   · rintro ⟨c, hc, y, hy, rfl⟩
     exact ⟨c⁻¹, inv_pos.2 hc, by rwa [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
-    
   · rintro ⟨c, hc, hcx⟩
     exact ⟨c⁻¹, inv_pos.2 hc, _, hcx, by rw [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
-    
 #align convex.mem_to_cone' Convex.mem_to_cone'
 
 theorem subset_to_cone : s ⊆ hs.toCone s := fun x hx =>
@@ -675,7 +674,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
     @SetLike.exists_of_lt (Submodule ℝ E) _ _ _ _ (lt_top_iff_ne_top.2 hdom)
   obtain ⟨c, le_c, c_le⟩ :
     ∃ c, (∀ x : f.domain, -(x : E) - y ∈ s → f x ≤ c) ∧ ∀ x : f.domain, (x : E) + y ∈ s → c ≤ f x :=
-    by
+    by 
     set Sp := f '' { x : f.domain | (x : E) + y ∈ s }
     set Sn := f '' { x : f.domain | -(x : E) - y ∈ s }
     suffices (upperBounds Sn ∩ lowerBounds Sp).Nonempty by
@@ -684,7 +683,6 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
     · rcases Dense (-y) with ⟨x, hx⟩
       rw [← neg_neg x, AddSubgroupClass.coe_neg, ← sub_eq_add_neg] at hx
       exact ⟨_, hx⟩
-      
     rintro a ⟨xn, hxn, rfl⟩ b ⟨xp, hxp, rfl⟩
     have := s.add_mem hxp hxn
     rw [add_assoc, add_sub_cancel'_right, ← sub_eq_add_neg, ← AddSubgroupClass.coe_sub] at this
@@ -696,7 +694,6 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
     replace H := linear_pmap.domain_mono.monotone H
     rw [LinearPmap.domain_sup_span_singleton, sup_le_iff, span_le, singleton_subset_iff] at H
     exact hy H.2
-    
   · rintro ⟨z, hz⟩ hzs
     rcases mem_sup.1 hz with ⟨x, hx, y', hy', rfl⟩
     rcases mem_span_singleton.1 hy' with ⟨r, rfl⟩
@@ -710,19 +707,15 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
       replace := le_c (r⁻¹ • ⟨x, hx⟩) this
       rwa [← mul_le_mul_left (neg_pos.2 hr), neg_mul, neg_mul, neg_le_neg_iff, f.map_smul,
         smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne, one_mul] at this
-      
     · subst r
       simp only [zero_smul, add_zero] at hzs⊢
       apply nonneg
       exact hzs
-      
     · have : r⁻¹ • x + y ∈ s := by
         rwa [← s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
       replace := c_le (r⁻¹ • ⟨x, hx⟩) this
       rwa [← mul_le_mul_left hr, f.map_smul, smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne',
         one_mul] at this
-      
-    
 #align riesz_extension.step RieszExtension.step
 
 theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : E) ∈ s → 0 ≤ p x)
@@ -731,18 +724,15 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
   replace hp_nonneg : p ∈ { p | _ };
   · rw [mem_set_of_eq]
     exact hp_nonneg
-    
   obtain ⟨q, hqs, hpq, hq⟩ := zorn_nonempty_partial_order₀ _ _ _ hp_nonneg
   · refine' ⟨q, hpq, _, hqs⟩
     contrapose! hq
     rcases step s q hqs _ hq with ⟨r, hqr, hr⟩
     · exact ⟨r, hr, hqr.le, hqr.ne'⟩
-      
-    · exact fun y =>
+    ·
+      exact fun y =>
         let ⟨x, hx⟩ := hp_dense y
         ⟨of_le hpq.left x, hx⟩
-      
-    
   · intro c hcs c_chain y hy
     clear hp_nonneg hp_dense p
     have cne : c.nonempty := ⟨y, hy⟩
@@ -756,7 +746,6 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
     convert ← hcs hfc ⟨x, hfx⟩ hxs
     apply this.2
     rfl
-    
 #align riesz_extension.exists_top RieszExtension.exists_top
 
 end riesz_extension
@@ -774,9 +763,7 @@ theorem riesz_extension (s : ConvexCone ℝ E) (f : E →ₗ.[ℝ] ℝ)
   refine' ⟨g ∘ₗ ↑(LinearEquiv.ofTop _ htop).symm, _, _⟩ <;>
     simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.of_top_symm_apply]
   · exact fun x => (hfg (Submodule.coe_mk _ _).symm).symm
-    
   · exact fun x hx => hgs ⟨x, _⟩ hx
-    
 #align riesz_extension riesz_extension
 
 /-- **Hahn-Banach theorem**: if `N : E → ℝ` is a sublinear map, `f` is a linear map
@@ -802,11 +789,9 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
   replace g_eq : ∀ (x : f.domain) (y : ℝ), g (x, y) = y - f x
   · intro x y
     simpa only [Subtype.coe_mk, Subtype.coe_eta] using g_eq ⟨(x, y), ⟨x.2, trivial⟩⟩
-    
   · refine' ⟨-g.comp (inl ℝ E ℝ), _, _⟩ <;> simp only [neg_apply, inl_apply, comp_apply]
     · intro x
       simp [g_eq x 0]
-      
     · intro x
       have A : (x, N x) = (x, 0) + (0, N x) := by simp
       have B := g_nonneg ⟨x, N x⟩ (le_refl (N x))
@@ -814,15 +799,11 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
       have C := g_eq 0 (N x)
       simp only [Submodule.coe_zero, f.map_zero, sub_zero] at C
       rwa [← C]
-      
-    
   · exact fun x hx => le_trans (hf _) hx
-    
   · rintro ⟨x, y⟩
     refine' ⟨⟨(0, N x - y), ⟨f.domain.zero_mem, trivial⟩⟩, _⟩
     simp only [ConvexCone.mem_mk, mem_set_of_eq, Subtype.coe_mk, Prod.fst_add, Prod.snd_add,
       zero_add, sub_add_cancel]
-    
 #align exists_extension_of_le_sublinear exists_extension_of_le_sublinear
 
 /-! ### The dual cone -/
@@ -836,12 +817,13 @@ open RealInnerProductSpace
 
 /-- The dual cone is the cone consisting of all points `y` such that for
 all points `x` in a given set `0 ≤ ⟪ x, y ⟫`. -/
-def Set.innerDualCone (s : Set H) : ConvexCone ℝ H where
+def Set.innerDualCone (s : Set H) :
+    ConvexCone ℝ H where 
   carrier := { y | ∀ x ∈ s, 0 ≤ ⟪x, y⟫ }
-  smul_mem' c hc y hy x hx := by
+  smul_mem' c hc y hy x hx := by 
     rw [real_inner_smul_right]
     exact mul_nonneg hc.le (hy x hx)
-  add_mem' u hu v hv x hx := by
+  add_mem' u hu v hv x hx := by 
     rw [inner_add_right]
     exact add_nonneg (hu x hx) (hv x hx)
 #align set.inner_dual_cone Set.innerDualCone
@@ -917,7 +899,8 @@ theorem inner_dual_cone_eq_Inter_inner_dual_cone_singleton :
 #align
   inner_dual_cone_eq_Inter_inner_dual_cone_singleton inner_dual_cone_eq_Inter_inner_dual_cone_singleton
 
-theorem isClosedInnerDualCone : IsClosed (s.innerDualCone : Set H) := by
+theorem isClosedInnerDualCone : IsClosed (s.innerDualCone : Set H) :=
+  by
   -- reduce the problem to showing that dual cone of a singleton `{x}` is closed
   rw [inner_dual_cone_eq_Inter_inner_dual_cone_singleton]
   apply isClosedInter
@@ -958,7 +941,8 @@ variable [CompleteSpace H]
 is also the geometric interpretation of Farkas' lemma. -/
 theorem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem (K : ConvexCone ℝ H)
     (ne : (K : Set H).Nonempty) (hc : IsClosed (K : Set H)) {b : H} (disj : b ∉ K) :
-    ∃ y : H, (∀ x : H, x ∈ K → 0 ≤ ⟪x, y⟫_ℝ) ∧ ⟪y, b⟫_ℝ < 0 := by
+    ∃ y : H, (∀ x : H, x ∈ K → 0 ≤ ⟪x, y⟫_ℝ) ∧ ⟪y, b⟫_ℝ < 0 :=
+  by
   -- let `z` be the point in `K` closest to `b`
   obtain ⟨z, hzK, infi⟩ := exists_norm_eq_infi_of_complete_convex Ne hc.is_complete K.convex b
   -- for any `w` in `K`, we have `⟪b - z, w - z⟫_ℝ ≤ 0`
@@ -971,12 +955,11 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem (K : C
     specialize hinner _ (K.add_mem hxK hzK)
     rwa [add_sub_cancel, real_inner_comm, ← neg_nonneg, neg_eq_neg_one_mul, ← real_inner_smul_right,
       neg_smul, one_smul, neg_sub] at hinner
-    
   · -- as `K` is closed and non-empty, it is pointed
     have hinner₀ := hinner 0 (K.pointed_of_nonempty_of_is_closed Ne hc)
     -- the rest of the proof is a straightforward calculation
     rw [zero_sub, inner_neg_right, Right.neg_nonpos_iff] at hinner₀
-    have hbz : b - z ≠ 0 := by
+    have hbz : b - z ≠ 0 := by 
       rw [sub_ne_zero]
       contrapose! hzK
       rwa [← hzK]
@@ -989,7 +972,6 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem (K : C
       _ = ⟪b - z, b - z + z⟫_ℝ := inner_add_right.symm
       _ = ⟪b - z, b⟫_ℝ := by rw [sub_add_cancel]
       
-    
 #align
   convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem
 
@@ -1002,11 +984,9 @@ theorem ConvexCone.inner_dual_cone_of_inner_dual_cone_eq_self (K : ConvexCone �
   · rw [mem_inner_dual_cone, ← SetLike.mem_coe]
     contrapose!
     exact K.hyperplane_separation_of_nonempty_of_is_closed_of_nmem Ne hc
-    
   · rintro hxK y h
     specialize h x hxK
     rwa [real_inner_comm]
-    
 #align
   convex_cone.inner_dual_cone_of_inner_dual_cone_eq_self ConvexCone.inner_dual_cone_of_inner_dual_cone_eq_self
 

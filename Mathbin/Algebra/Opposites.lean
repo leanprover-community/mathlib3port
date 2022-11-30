@@ -39,6 +39,7 @@ universe u v
 
 open Function
 
+#print MulOpposite /-
 /-- Multiplicative opposite of a type. This type inherits all additive structures on `α` and
 reverses left and right in multiplication.-/
 @[to_additive
@@ -46,6 +47,7 @@ reverses left and right in multiplication.-/
 def MulOpposite (α : Type u) : Type u :=
   α
 #align mul_opposite MulOpposite
+-/
 
 -- mathport name: «expr ᵐᵒᵖ»
 postfix:max "ᵐᵒᵖ" => MulOpposite
@@ -57,91 +59,127 @@ variable {α : Type u}
 
 namespace MulOpposite
 
+#print MulOpposite.op /-
 /-- The element of `mul_opposite α` that represents `x : α`. -/
 @[pp_nodot, to_additive "The element of `αᵃᵒᵖ` that represents `x : α`."]
 def op : α → αᵐᵒᵖ :=
   id
 #align mul_opposite.op MulOpposite.op
+-/
 
+#print MulOpposite.unop /-
 /-- The element of `α` represented by `x : αᵐᵒᵖ`. -/
 @[pp_nodot, to_additive "The element of `α` represented by `x : αᵃᵒᵖ`."]
 def unop : αᵐᵒᵖ → α :=
   id
 #align mul_opposite.unop MulOpposite.unop
+-/
 
 attribute [pp_nodot] AddOpposite.op AddOpposite.unop
 
+#print MulOpposite.unop_op /-
 @[simp, to_additive]
 theorem unop_op (x : α) : unop (op x) = x :=
   rfl
 #align mul_opposite.unop_op MulOpposite.unop_op
+-/
 
+#print MulOpposite.op_unop /-
 @[simp, to_additive]
 theorem op_unop (x : αᵐᵒᵖ) : op (unop x) = x :=
   rfl
 #align mul_opposite.op_unop MulOpposite.op_unop
+-/
 
+#print MulOpposite.op_comp_unop /-
 @[simp, to_additive]
 theorem op_comp_unop : (op : α → αᵐᵒᵖ) ∘ unop = id :=
   rfl
 #align mul_opposite.op_comp_unop MulOpposite.op_comp_unop
+-/
 
+#print MulOpposite.unop_comp_op /-
 @[simp, to_additive]
 theorem unop_comp_op : (unop : αᵐᵒᵖ → α) ∘ op = id :=
   rfl
 #align mul_opposite.unop_comp_op MulOpposite.unop_comp_op
+-/
 
+/- warning: mul_opposite.rec -> MulOpposite.rec is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {F : (MulOpposite.{u} α) -> Sort.{v}}, (forall (X : α), F (MulOpposite.op.{u} α X)) -> (forall (X : MulOpposite.{u} α), F X)
+but is expected to have type
+  forall {α : Type.{u_1}} {F : (MulOpposite.{u_1} α) -> Sort.{v}}, (forall (X : α), F (MulOpposite.op.{u_1} α X)) -> (forall (X : MulOpposite.{u_1} α), F X)
+Case conversion may be inaccurate. Consider using '#align mul_opposite.rec MulOpposite.recₓ'. -/
 /-- A recursor for `mul_opposite`. Use as `induction x using mul_opposite.rec`. -/
 @[simp, to_additive "A recursor for `add_opposite`. Use as `induction x using add_opposite.rec`."]
 protected def rec {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
 #align mul_opposite.rec MulOpposite.rec
 
+#print MulOpposite.opEquiv /-
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/
 @[to_additive "The canonical bijection between `α` and `αᵃᵒᵖ`.",
   simps (config := { fullyApplied := false }) apply symmApply]
 def opEquiv : α ≃ αᵐᵒᵖ :=
   ⟨op, unop, unop_op, op_unop⟩
 #align mul_opposite.op_equiv MulOpposite.opEquiv
+-/
 
+#print MulOpposite.op_bijective /-
 @[to_additive]
 theorem op_bijective : Bijective (op : α → αᵐᵒᵖ) :=
   opEquiv.Bijective
 #align mul_opposite.op_bijective MulOpposite.op_bijective
+-/
 
+#print MulOpposite.unop_bijective /-
 @[to_additive]
 theorem unop_bijective : Bijective (unop : αᵐᵒᵖ → α) :=
   opEquiv.symm.Bijective
 #align mul_opposite.unop_bijective MulOpposite.unop_bijective
+-/
 
+#print MulOpposite.op_injective /-
 @[to_additive]
 theorem op_injective : Injective (op : α → αᵐᵒᵖ) :=
   op_bijective.Injective
 #align mul_opposite.op_injective MulOpposite.op_injective
+-/
 
+#print MulOpposite.op_surjective /-
 @[to_additive]
 theorem op_surjective : Surjective (op : α → αᵐᵒᵖ) :=
   op_bijective.Surjective
 #align mul_opposite.op_surjective MulOpposite.op_surjective
+-/
 
+#print MulOpposite.unop_injective /-
 @[to_additive]
 theorem unop_injective : Injective (unop : αᵐᵒᵖ → α) :=
   unop_bijective.Injective
 #align mul_opposite.unop_injective MulOpposite.unop_injective
+-/
 
+#print MulOpposite.unop_surjective /-
 @[to_additive]
 theorem unop_surjective : Surjective (unop : αᵐᵒᵖ → α) :=
   unop_bijective.Surjective
 #align mul_opposite.unop_surjective MulOpposite.unop_surjective
+-/
 
+#print MulOpposite.op_inj /-
 @[simp, to_additive]
 theorem op_inj {x y : α} : op x = op y ↔ x = y :=
   op_injective.eq_iff
 #align mul_opposite.op_inj MulOpposite.op_inj
+-/
 
+#print MulOpposite.unop_inj /-
 @[simp, to_additive]
 theorem unop_inj {x y : αᵐᵒᵖ} : unop x = unop y ↔ x = y :=
   unop_injective.eq_iff
 #align mul_opposite.unop_inj MulOpposite.unop_inj
+-/
 
 variable (α)
 
@@ -196,83 +234,123 @@ section
 
 variable (α)
 
+#print MulOpposite.op_zero /-
 @[simp]
 theorem op_zero [Zero α] : op (0 : α) = 0 :=
   rfl
 #align mul_opposite.op_zero MulOpposite.op_zero
+-/
 
+#print MulOpposite.unop_zero /-
 @[simp]
 theorem unop_zero [Zero α] : unop (0 : αᵐᵒᵖ) = 0 :=
   rfl
 #align mul_opposite.unop_zero MulOpposite.unop_zero
+-/
 
+#print MulOpposite.op_one /-
 @[simp, to_additive]
 theorem op_one [One α] : op (1 : α) = 1 :=
   rfl
 #align mul_opposite.op_one MulOpposite.op_one
+-/
 
+#print MulOpposite.unop_one /-
 @[simp, to_additive]
 theorem unop_one [One α] : unop (1 : αᵐᵒᵖ) = 1 :=
   rfl
 #align mul_opposite.unop_one MulOpposite.unop_one
+-/
 
 variable {α}
 
+#print MulOpposite.op_add /-
 @[simp]
 theorem op_add [Add α] (x y : α) : op (x + y) = op x + op y :=
   rfl
 #align mul_opposite.op_add MulOpposite.op_add
+-/
 
+#print MulOpposite.unop_add /-
 @[simp]
 theorem unop_add [Add α] (x y : αᵐᵒᵖ) : unop (x + y) = unop x + unop y :=
   rfl
 #align mul_opposite.unop_add MulOpposite.unop_add
+-/
 
+#print MulOpposite.op_neg /-
 @[simp]
 theorem op_neg [Neg α] (x : α) : op (-x) = -op x :=
   rfl
 #align mul_opposite.op_neg MulOpposite.op_neg
+-/
 
+#print MulOpposite.unop_neg /-
 @[simp]
 theorem unop_neg [Neg α] (x : αᵐᵒᵖ) : unop (-x) = -unop x :=
   rfl
 #align mul_opposite.unop_neg MulOpposite.unop_neg
+-/
 
+#print MulOpposite.op_mul /-
 @[simp, to_additive]
 theorem op_mul [Mul α] (x y : α) : op (x * y) = op y * op x :=
   rfl
 #align mul_opposite.op_mul MulOpposite.op_mul
+-/
 
+#print MulOpposite.unop_mul /-
 @[simp, to_additive]
 theorem unop_mul [Mul α] (x y : αᵐᵒᵖ) : unop (x * y) = unop y * unop x :=
   rfl
 #align mul_opposite.unop_mul MulOpposite.unop_mul
+-/
 
+#print MulOpposite.op_inv /-
 @[simp, to_additive]
 theorem op_inv [Inv α] (x : α) : op x⁻¹ = (op x)⁻¹ :=
   rfl
 #align mul_opposite.op_inv MulOpposite.op_inv
+-/
 
+#print MulOpposite.unop_inv /-
 @[simp, to_additive]
 theorem unop_inv [Inv α] (x : αᵐᵒᵖ) : unop x⁻¹ = (unop x)⁻¹ :=
   rfl
 #align mul_opposite.unop_inv MulOpposite.unop_inv
+-/
 
+#print MulOpposite.op_sub /-
 @[simp]
 theorem op_sub [Sub α] (x y : α) : op (x - y) = op x - op y :=
   rfl
 #align mul_opposite.op_sub MulOpposite.op_sub
+-/
 
+#print MulOpposite.unop_sub /-
 @[simp]
 theorem unop_sub [Sub α] (x y : αᵐᵒᵖ) : unop (x - y) = unop x - unop y :=
   rfl
 #align mul_opposite.unop_sub MulOpposite.unop_sub
+-/
 
+/- warning: mul_opposite.op_smul -> MulOpposite.op_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {R : Type.{u_1}} [_inst_1 : HasSmul.{u_1, u} R α] (c : R) (a : α), Eq.{succ u} (MulOpposite.{u} α) (MulOpposite.op.{u} α (HasSmul.smul.{u_1, u} R α _inst_1 c a)) (HasSmul.smul.{u_1, u} R (MulOpposite.{u} α) (MulOpposite.hasSmul.{u, u_1} α R _inst_1) c (MulOpposite.op.{u} α a))
+but is expected to have type
+  forall {α : Type.{u_2}} {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Opposites._hyg.2195 : SMul.{u_1, u_2} R α] (c : R) (a : α), Eq.{succ u_2} (MulOpposite.{u_2} α) (MulOpposite.op.{u_2} α (HSMul.hSMul.{u_1, u_2, u_2} R α α (instHSMul.{u_1, u_2} R α inst._@.Mathlib.Algebra.Opposites._hyg.2195) c a)) (HSMul.hSMul.{u_1, u_2, u_2} R (MulOpposite.{u_2} α) (MulOpposite.{u_2} α) (instHSMul.{u_1, u_2} R (MulOpposite.{u_2} α) (MulOpposite.instSMulMulOpposite.{u_2, u_1} α R inst._@.Mathlib.Algebra.Opposites._hyg.2195)) c (MulOpposite.op.{u_2} α a))
+Case conversion may be inaccurate. Consider using '#align mul_opposite.op_smul MulOpposite.op_smulₓ'. -/
 @[simp, to_additive]
 theorem op_smul {R : Type _} [HasSmul R α] (c : R) (a : α) : op (c • a) = c • op a :=
   rfl
 #align mul_opposite.op_smul MulOpposite.op_smul
 
+/- warning: mul_opposite.unop_smul -> MulOpposite.unop_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {R : Type.{u_1}} [_inst_1 : HasSmul.{u_1, u} R α] (c : R) (a : MulOpposite.{u} α), Eq.{succ u} α (MulOpposite.unop.{u} α (HasSmul.smul.{u_1, u} R (MulOpposite.{u} α) (MulOpposite.hasSmul.{u, u_1} α R _inst_1) c a)) (HasSmul.smul.{u_1, u} R α _inst_1 c (MulOpposite.unop.{u} α a))
+but is expected to have type
+  forall {α : Type.{u_2}} {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Opposites._hyg.2223 : SMul.{u_1, u_2} R α] (c : R) (a : MulOpposite.{u_2} α), Eq.{succ u_2} α (MulOpposite.unop.{u_2} α (HSMul.hSMul.{u_1, u_2, u_2} R (MulOpposite.{u_2} α) (MulOpposite.{u_2} α) (instHSMul.{u_1, u_2} R (MulOpposite.{u_2} α) (MulOpposite.instSMulMulOpposite.{u_2, u_1} α R inst._@.Mathlib.Algebra.Opposites._hyg.2223)) c a)) (HSMul.hSMul.{u_1, u_2, u_2} R α α (instHSMul.{u_1, u_2} R α inst._@.Mathlib.Algebra.Opposites._hyg.2223) c (MulOpposite.unop.{u_2} α a))
+Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_smul MulOpposite.unop_smulₓ'. -/
 @[simp, to_additive]
 theorem unop_smul {R : Type _} [HasSmul R α] (c : R) (a : αᵐᵒᵖ) : unop (c • a) = c • unop a :=
   rfl
@@ -282,33 +360,45 @@ end
 
 variable {α}
 
+#print MulOpposite.unop_eq_zero_iff /-
 @[simp]
 theorem unop_eq_zero_iff [Zero α] (a : αᵐᵒᵖ) : a.unop = (0 : α) ↔ a = (0 : αᵐᵒᵖ) :=
   unop_injective.eq_iff' rfl
 #align mul_opposite.unop_eq_zero_iff MulOpposite.unop_eq_zero_iff
+-/
 
+#print MulOpposite.op_eq_zero_iff /-
 @[simp]
 theorem op_eq_zero_iff [Zero α] (a : α) : op a = (0 : αᵐᵒᵖ) ↔ a = (0 : α) :=
   op_injective.eq_iff' rfl
 #align mul_opposite.op_eq_zero_iff MulOpposite.op_eq_zero_iff
+-/
 
+#print MulOpposite.unop_ne_zero_iff /-
 theorem unop_ne_zero_iff [Zero α] (a : αᵐᵒᵖ) : a.unop ≠ (0 : α) ↔ a ≠ (0 : αᵐᵒᵖ) :=
   not_congr <| unop_eq_zero_iff a
 #align mul_opposite.unop_ne_zero_iff MulOpposite.unop_ne_zero_iff
+-/
 
+#print MulOpposite.op_ne_zero_iff /-
 theorem op_ne_zero_iff [Zero α] (a : α) : op a ≠ (0 : αᵐᵒᵖ) ↔ a ≠ (0 : α) :=
   not_congr <| op_eq_zero_iff a
 #align mul_opposite.op_ne_zero_iff MulOpposite.op_ne_zero_iff
+-/
 
+#print MulOpposite.unop_eq_one_iff /-
 @[simp, to_additive]
 theorem unop_eq_one_iff [One α] (a : αᵐᵒᵖ) : a.unop = 1 ↔ a = 1 :=
   unop_injective.eq_iff' rfl
 #align mul_opposite.unop_eq_one_iff MulOpposite.unop_eq_one_iff
+-/
 
+#print MulOpposite.op_eq_one_iff /-
 @[simp, to_additive]
 theorem op_eq_one_iff [One α] (a : α) : op a = 1 ↔ a = 1 :=
   op_injective.eq_iff' rfl
 #align mul_opposite.op_eq_one_iff MulOpposite.op_eq_one_iff
+-/
 
 end MulOpposite
 
@@ -316,64 +406,84 @@ namespace AddOpposite
 
 instance [One α] : One αᵃᵒᵖ where one := op 1
 
+#print AddOpposite.op_one /-
 @[simp]
 theorem op_one [One α] : op (1 : α) = 1 :=
   rfl
 #align add_opposite.op_one AddOpposite.op_one
+-/
 
+#print AddOpposite.unop_one /-
 @[simp]
 theorem unop_one [One α] : unop 1 = (1 : α) :=
   rfl
 #align add_opposite.unop_one AddOpposite.unop_one
+-/
 
+#print AddOpposite.op_eq_one_iff /-
 @[simp]
 theorem op_eq_one_iff [One α] {a : α} : op a = 1 ↔ a = 1 :=
   op_injective.eq_iff' op_one
 #align add_opposite.op_eq_one_iff AddOpposite.op_eq_one_iff
+-/
 
+#print AddOpposite.unop_eq_one_iff /-
 @[simp]
 theorem unop_eq_one_iff [One α] {a : αᵃᵒᵖ} : unop a = 1 ↔ a = 1 :=
   unop_injective.eq_iff' unop_one
 #align add_opposite.unop_eq_one_iff AddOpposite.unop_eq_one_iff
+-/
 
 instance [Mul α] : Mul αᵃᵒᵖ where mul a b := op (unop a * unop b)
 
+#print AddOpposite.op_mul /-
 @[simp]
 theorem op_mul [Mul α] (a b : α) : op (a * b) = op a * op b :=
   rfl
 #align add_opposite.op_mul AddOpposite.op_mul
+-/
 
+#print AddOpposite.unop_mul /-
 @[simp]
 theorem unop_mul [Mul α] (a b : αᵃᵒᵖ) : unop (a * b) = unop a * unop b :=
   rfl
 #align add_opposite.unop_mul AddOpposite.unop_mul
+-/
 
 instance [Inv α] : Inv αᵃᵒᵖ where inv a := op (unop a)⁻¹
 
 instance [HasInvolutiveInv α] : HasInvolutiveInv αᵃᵒᵖ :=
   { AddOpposite.hasInv with inv_inv := fun a => unop_injective <| inv_inv _ }
 
+#print AddOpposite.op_inv /-
 @[simp]
 theorem op_inv [Inv α] (a : α) : op a⁻¹ = (op a)⁻¹ :=
   rfl
 #align add_opposite.op_inv AddOpposite.op_inv
+-/
 
+#print AddOpposite.unop_inv /-
 @[simp]
 theorem unop_inv [Inv α] (a : αᵃᵒᵖ) : unop a⁻¹ = (unop a)⁻¹ :=
   rfl
 #align add_opposite.unop_inv AddOpposite.unop_inv
+-/
 
 instance [Div α] : Div αᵃᵒᵖ where div a b := op (unop a / unop b)
 
+#print AddOpposite.op_div /-
 @[simp]
 theorem op_div [Div α] (a b : α) : op (a / b) = op a / op b :=
   rfl
 #align add_opposite.op_div AddOpposite.op_div
+-/
 
+#print AddOpposite.unop_div /-
 @[simp]
 theorem unop_div [Div α] (a b : α) : unop (a / b) = unop a / unop b :=
   rfl
 #align add_opposite.unop_div AddOpposite.unop_div
+-/
 
 end AddOpposite
 

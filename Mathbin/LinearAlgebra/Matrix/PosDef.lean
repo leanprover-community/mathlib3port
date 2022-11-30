@@ -44,9 +44,7 @@ theorem PosDef.posSemidef {M : Matrix n n 𝕜} (hM : M.PosDef) : M.PosSemidef :
   intro x
   by_cases hx : x = 0
   · simp only [hx, zero_dot_product, star_zero, IsROrC.zero_re']
-    
   · exact le_of_lt (hM.2 x hx)
-    
 #align matrix.pos_def.pos_semidef Matrix.PosDef.posSemidef
 
 theorem PosSemidef.submatrix {M : Matrix n n 𝕜} (hM : M.PosSemidef) (e : m ≃ n) :
@@ -87,7 +85,7 @@ theorem posDefOfToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.Is
 #align matrix.pos_def_of_to_quadratic_form' Matrix.posDefOfToQuadraticForm'
 
 theorem pos_def_to_quadratic_form' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
-    M.toQuadraticForm'.PosDef := by
+    M.toQuadraticForm'.PosDef := by 
   intro x hx
   simp only [to_quadratic_form', BilinForm.to_quadratic_form_apply, Matrix.to_bilin'_apply']
   apply hM.2 x hx
@@ -107,7 +105,7 @@ theorem det_pos [DecidableEq n] : 0 < det M := by
   apply hM.2 _ fun h => _
   have h_det : hM.is_hermitian.eigenvector_matrixᵀ.det = 0 :=
     Matrix.det_eq_zero_of_row_eq_zero i fun j => congr_fun h j
-  simpa only [h_det, not_is_unit_zero] using
+  simpa only [h_det, not_isUnit_zero] using
     is_unit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
 #align matrix.pos_def.det_pos Matrix.PosDef.det_pos
 
@@ -146,13 +144,11 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
       conj_sym := fun x y => by
         rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec,
           hM.is_hermitian.eq],
-      nonneg_re := fun x => by
+      nonneg_re := fun x => by 
         by_cases h : x = 0
         · simp [h]
-          
-        · exact le_of_lt (hM.2 x h)
-          ,
-      definite := fun x hx => by
+        · exact le_of_lt (hM.2 x h),
+      definite := fun x hx => by 
         by_contra' h
         simpa [hx, lt_self_iff_false] using hM.2 x h,
       add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const],

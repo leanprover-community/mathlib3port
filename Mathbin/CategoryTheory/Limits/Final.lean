@@ -203,13 +203,11 @@ def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
     convert f.w.symm
     dsimp
     simp
-    
   · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.right _ a
     convert f.w.symm
     dsimp
     simp
-    
 #align category_theory.functor.final.induction CategoryTheory.Functor.Final.induction
 
 variable {F G}
@@ -217,12 +215,15 @@ variable {F G}
 /-- Given a cocone over `F ⋙ G`, we can construct a `cocone G` with the same cocone point.
 -/
 @[simps]
-def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
+def extendCocone :
+    Cocone (F ⋙ G) ⥤
+      Cocone
+        G where 
   obj c :=
     { x := c.x,
       ι :=
         { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X),
-          naturality' := fun X Y f => by
+          naturality' := fun X Y f => by 
             dsimp; simp
             -- This would be true if we'd chosen `lift F X` to be `lift F Y`
             -- and `hom_to_lift F X` to be `f ≫ hom_to_lift F Y`.
@@ -231,19 +232,17 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
                 G.map f ≫ G.map (hom_to_lift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w, z]
-              
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w] at z
               rw [z]
-              
-            · rw [← functor.map_comp_assoc]
-               } }
+            · rw [← functor.map_comp_assoc] } }
   map X Y f := { Hom := f.Hom }
 #align category_theory.functor.final.extend_cocone CategoryTheory.Functor.Final.extendCocone
 
 @[simp]
 theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
-    G.map (homToLift F (F.obj j)) ≫ s.ι.app (lift F (F.obj j)) = s.ι.app j := by
+    G.map (homToLift F (F.obj j)) ≫ s.ι.app (lift F (F.obj j)) = s.ι.app j :=
+  by
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => G.map k ≫ s.ι.app X = (s.ι.app j : _)
@@ -251,14 +250,11 @@ theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
     rw [← w]
     rw [← s.w f] at h
     simpa using h
-    
   · intro j₁ j₂ k₁ k₂ f w h
     rw [← w] at h
     rw [← s.w f]
     simpa using h
-    
   · exact s.w (𝟙 _)
-    
 #align
   category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_aux
 
@@ -269,7 +265,8 @@ the category of cocones on `F ⋙ G` is equivalent to the category of cocones on
 for any `G : D ⥤ E`.
 -/
 @[simps]
-def coconesEquiv : Cocone (F ⋙ G) ≌ Cocone G where
+def coconesEquiv : Cocone (F ⋙ G) ≌
+      Cocone G where 
   Functor := extendCocone
   inverse := Cocones.whiskering F
   unitIso := NatIso.ofComponents (fun c => Cocones.ext (Iso.refl _) (by tidy)) (by tidy)
@@ -297,7 +294,8 @@ def isColimitExtendCoconeEquiv (t : Cocone (F ⋙ G)) :
 
 /-- Given a colimit cocone over `G : D ⥤ E` we can construct a colimit cocone over `F ⋙ G`. -/
 @[simps]
-def colimitCoconeComp (t : ColimitCocone G) : ColimitCocone (F ⋙ G) where
+def colimitCoconeComp (t : ColimitCocone G) :
+    ColimitCocone (F ⋙ G) where 
   Cocone := _
   IsColimit := (isColimitWhiskerEquiv F _).symm t.IsColimit
 #align
@@ -341,7 +339,8 @@ end
 
 /-- Given a colimit cocone over `F ⋙ G` we can construct a colimit cocone over `G`. -/
 @[simps]
-def colimitCoconeOfComp (t : ColimitCocone (F ⋙ G)) : ColimitCocone G where
+def colimitCoconeOfComp (t : ColimitCocone (F ⋙ G)) :
+    ColimitCocone G where 
   Cocone := extendCocone.obj t.Cocone
   IsColimit := (isColimitExtendCoconeEquiv F _).symm t.IsColimit
 #align
@@ -395,19 +394,19 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
     (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
     Zigzag (StructuredArrow.mk f₁.2) (StructuredArrow.mk f₂.2) := by
   induction t
-  case rel x y r =>
-  obtain ⟨f, w⟩ := r
-  fconstructor
-  swap; fconstructor
-  left; fconstructor
-  exact { right := f }
+  case rel x y r => 
+    obtain ⟨f, w⟩ := r
+    fconstructor
+    swap; fconstructor
+    left; fconstructor
+    exact { right := f }
   case refl => fconstructor
-  case symm x y h ih =>
-  apply zigzag_symmetric
-  exact ih
-  case trans x y z h₁ h₂ ih₁ ih₂ =>
-  apply Relation.ReflTransGen.trans
-  exact ih₁; exact ih₂
+  case symm x y h ih => 
+    apply zigzag_symmetric
+    exact ih
+  case trans x y z h₁ h₂ ih₁ ih₂ => 
+    apply Relation.ReflTransGen.trans
+    exact ih₁; exact ih₂
 #align
   category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqv_gen_quot_rel
 
@@ -425,7 +424,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit
     dsimp at *
     let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁
     let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂
-    have e : y₁ = y₂ := by
+    have e : y₁ = y₂ := by 
       apply (I d).toEquiv.Injective
       ext
     have t := Types.colimit_eq.{v, v} e
@@ -485,13 +484,11 @@ def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
     convert f.w
     dsimp
     simp
-    
   · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.left _ a
     convert f.w
     dsimp
     simp
-    
 #align category_theory.functor.initial.induction CategoryTheory.Functor.Initial.induction
 
 variable {F G}
@@ -499,12 +496,15 @@ variable {F G}
 /-- Given a cone over `F ⋙ G`, we can construct a `cone G` with the same cocone point.
 -/
 @[simps]
-def extendCone : Cone (F ⋙ G) ⥤ Cone G where
+def extendCone :
+    Cone (F ⋙ G) ⥤
+      Cone
+        G where 
   obj c :=
     { x := c.x,
       π :=
         { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d),
-          naturality' := fun X Y f => by
+          naturality' := fun X Y f => by 
             dsimp; simp
             -- This would be true if we'd chosen `lift F Y` to be `lift F X`
             -- and `hom_to_lift F Y` to be `hom_to_lift F X ≫ f`.
@@ -516,19 +516,17 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G where
               rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
                 c.w] at z
               rw [z, category.assoc]
-              
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
                 c.w, z, category.assoc]
-              
-            · rw [← functor.map_comp]
-               } }
+            · rw [← functor.map_comp] } }
   map X Y f := { Hom := f.Hom }
 #align category_theory.functor.initial.extend_cone CategoryTheory.Functor.Initial.extendCone
 
 @[simp]
 theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
-    s.π.app (lift F (F.obj j)) ≫ G.map (homToLift F (F.obj j)) = s.π.app j := by
+    s.π.app (lift F (F.obj j)) ≫ G.map (homToLift F (F.obj j)) = s.π.app j :=
+  by
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => s.π.app X ≫ G.map k = (s.π.app j : _)
@@ -536,14 +534,11 @@ theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
     rw [← s.w f]
     rw [← w] at h
     simpa using h
-    
   · intro j₁ j₂ k₁ k₂ f w h
     rw [← s.w f] at h
     rw [← w]
     simpa using h
-    
   · exact s.w (𝟙 _)
-    
 #align
   category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_aux
 
@@ -554,7 +549,8 @@ the category of cones on `F ⋙ G` is equivalent to the category of cones on `G`
 for any `G : D ⥤ E`.
 -/
 @[simps]
-def conesEquiv : Cone (F ⋙ G) ≌ Cone G where
+def conesEquiv : Cone (F ⋙ G) ≌
+      Cone G where 
   Functor := extendCone
   inverse := Cones.whiskering F
   unitIso := NatIso.ofComponents (fun c => Cones.ext (Iso.refl _) (by tidy)) (by tidy)
@@ -581,7 +577,8 @@ def isLimitExtendConeEquiv (t : Cone (F ⋙ G)) : IsLimit (extendCone.obj t) ≃
 
 /-- Given a limit cone over `G : D ⥤ E` we can construct a limit cone over `F ⋙ G`. -/
 @[simps]
-def limitConeComp (t : LimitCone G) : LimitCone (F ⋙ G) where
+def limitConeComp (t : LimitCone G) :
+    LimitCone (F ⋙ G) where 
   Cone := _
   IsLimit := (isLimitWhiskerEquiv F _).symm t.IsLimit
 #align category_theory.functor.initial.limit_cone_comp CategoryTheory.Functor.Initial.limitConeComp
@@ -624,7 +621,8 @@ end
 
 /-- Given a limit cone over `F ⋙ G` we can construct a limit cone over `G`. -/
 @[simps]
-def limitConeOfComp (t : LimitCone (F ⋙ G)) : LimitCone G where
+def limitConeOfComp (t : LimitCone (F ⋙ G)) :
+    LimitCone G where 
   Cone := extendCone.obj t.Cone
   IsLimit := (isLimitExtendConeEquiv F _).symm t.IsLimit
 #align

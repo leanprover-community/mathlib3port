@@ -53,7 +53,6 @@ theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
     Even (p.edges.countp fun e => x ∈ e) ↔ u ≠ v → x ≠ u ∧ x ≠ v := by
   induction' p with u u v w huv p ih
   · simp
-    
   · rw [cons_is_trail_iff] at ht
     specialize ih ht.1
     simp only [List.countp_cons, Ne.def, edges_cons, Sym2.mem_iff]
@@ -64,14 +63,11 @@ theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
           exists_prop, eq_self_iff_true, not_true, false_and_iff, and_iff_right_iff_imp]
         rintro rfl rfl
         exact G.loopless _ huv
-        
       · rw [Nat.even_add_one, ih, ← not_iff_not]
         simp only [huv.ne.symm, Ne.def, eq_self_iff_true, not_true, false_and_iff, not_forall,
           not_false_iff, exists_prop, and_true_iff, not_not, true_and_iff, iff_and_self]
         rintro rfl
         exact huv.ne
-        
-      
     · rw [not_or] at h
       simp only [h.1, h.2, not_false_iff, true_and_iff, add_zero, Ne.def] at ih⊢
       rw [ih]
@@ -80,9 +76,6 @@ theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
           simp only [imp_false, eq_self_iff_true, not_true, not_not] at h'
           cases h'
           simpa using h
-          
-      
-    
 #align
   simple_graph.walk.is_trail.even_countp_edges_iff SimpleGraph.Walk.IsTrail.even_countp_edges_iff
 
@@ -100,9 +93,7 @@ theorem IsEulerian.is_trail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.Is
   intro e
   by_cases he : e ∈ p.edges
   · exact (h e (edges_subset_edge_set _ he)).le
-    
   · simp [he]
-    
 #align simple_graph.walk.is_eulerian.is_trail SimpleGraph.Walk.IsEulerian.is_trail
 
 theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {e : Sym2 V} :
@@ -127,10 +118,8 @@ theorem is_eulerian_iff {u v : V} (p : G.Walk u v) :
   constructor
   · intro h
     exact ⟨h.is_trail, fun _ => h.mem_edges_iff.mpr⟩
-    
   · rintro ⟨h, hl⟩
     exact h.is_eulerian_of_forall_mem hl
-    
 #align simple_graph.walk.is_eulerian_iff SimpleGraph.Walk.is_eulerian_iff
 
 theorem IsEulerian.edges_finset_eq [Fintype G.edgeSet] {u v : V} {p : G.Walk u v}
@@ -152,30 +141,26 @@ theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEuleri
 theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V}
     {p : G.Walk u v} (ht : p.IsEulerian) {s}
     (h : s = (Finset.univ : Finset V).filter fun v => Odd (G.degree v)) : s.card = 0 ∨ s.card = 2 :=
-  by
+  by 
   subst s
   simp only [Nat.odd_iff_not_even, Finset.card_eq_zero]
   simp only [ht.even_degree_iff, Ne.def, not_forall, not_and, not_not, exists_prop]
   obtain rfl | hn := eq_or_ne u v
   · left
     simp
-    
   · right
     convert_to _ = ({u, v} : Finset V).card
     · simp [hn]
-      
     · congr
       ext x
       simp [hn, imp_iff_not_or]
-      
-    
 #align
   simple_graph.walk.is_eulerian.card_filter_odd_degree SimpleGraph.Walk.IsEulerian.card_filter_odd_degree
 
 theorem IsEulerian.card_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v}
     (ht : p.IsEulerian) :
     Fintype.card { v : V | Odd (G.degree v) } = 0 ∨ Fintype.card { v : V | Odd (G.degree v) } = 2 :=
-  by
+  by 
   rw [← Set.to_finset_card]
   apply is_eulerian.card_filter_odd_degree ht
   ext v

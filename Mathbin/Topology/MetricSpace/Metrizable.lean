@@ -159,11 +159,11 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
   letI : TopologicalSpace s := ⊥
   haveI : DiscreteTopology s := ⟨rfl⟩
   rsuffices ⟨f, hf⟩ : ∃ f : X → s →ᵇ ℝ, Embedding f
-  · exact
+  ·
+    exact
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
         (BoundedContinuousFunction.isometryExtend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp
           hf⟩
-    
   have hd : ∀ UV : s, Disjoint (closure UV.1.1) (UV.1.2ᶜ) := fun UV =>
     disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)
   -- Choose a sequence of `εₙ > 0`, `n : s`, that is bounded above by `1` and tends to zero
@@ -178,7 +178,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     ∀ UV : s,
       ∃ f : C(X, ℝ),
         eq_on f 0 UV.1.1 ∧ eq_on f (fun _ => ε UV) (UV.1.2ᶜ) ∧ ∀ x, f x ∈ Icc 0 (ε UV) :=
-    by
+    by 
     intro UV
     rcases exists_continuous_zero_one_of_closed isClosedClosure (hB.is_open UV.2.1.2).isClosedCompl
         (hd UV) with
@@ -209,7 +209,6 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
       _ = F y UV := by rw [hxy]
       _ = ε UV := hfε UV fun h : y ∈ V => hVy h rfl
       
-    
   · /- Now we prove that each neighborhood `V` of `x : X` include a preimage of a neighborhood of
         `F x` under `F`. Without loss of generality, `V` belongs to `B`. Choose `U ∈ B` such that
         `x ∈ V` and `closure V ⊆ U`. Then the preimage of the `(ε (U, V))`-neighborhood of `F x`
@@ -224,7 +223,6 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     contrapose! hy
     rw [hF, hF, hfε UV hy, hf0 UV hxU, Pi.zero_apply, dist_zero_right]
     exact le_abs_self _
-    
   · /- Finally, we prove that `F` is continuous. Given `δ > 0`, consider the set `T` of `(U, V) ∈ s`
         such that `ε (U, V) ≥ δ`. Since `ε` tends to zero, `T` is finite. Since each `f` is continuous,
         we can choose a neighborhood such that `dist (F y (U, V)) (F x (U, V)) ≤ δ` for any
@@ -238,7 +236,6 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     refine' this.mono fun y hy => (BoundedContinuousFunction.dist_le δ0.le).2 fun UV => _
     cases' le_total δ (ε UV) with hle hle
     exacts[hy _ hle, (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
-    
 #align topological_space.exists_embedding_l_infty TopologicalSpace.exists_embedding_l_infty
 
 /-- *Urysohn's metrization theorem* (Tychonoff's version): a T₃ topological space with second

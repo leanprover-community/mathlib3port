@@ -48,10 +48,11 @@ theorem le_def {f g : ι →₀ α} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 #align finsupp.le_def Finsupp.le_def
 
 /-- The order on `finsupp`s over a partial order embeds into the order on functions -/
-def orderEmbeddingToFun : (ι →₀ α) ↪o (ι → α) where
+def orderEmbeddingToFun : (ι →₀ α) ↪o
+      (ι → α) where 
   toFun f := f
   inj' f g h :=
-    Finsupp.ext fun i => by
+    Finsupp.ext fun i => by 
       dsimp at h
       rw [h]
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
@@ -125,7 +126,7 @@ section CanonicallyOrderedAddMonoid
 
 variable [CanonicallyOrderedAddMonoid α]
 
-instance : OrderBot (ι →₀ α) where
+instance : OrderBot (ι →₀ α) where 
   bot := 0
   bot_le := by simp only [le_def, coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
 
@@ -155,7 +156,7 @@ theorem single_le_iff {i : ι} {x : α} {f : ι →₀ α} : single i x ≤ f �
   (le_iff' _ _ support_single_subset).trans <| by simp
 #align finsupp.single_le_iff Finsupp.single_le_iff
 
-variable [Sub α] [HasOrderedSub α] {f g : ι →₀ α} {i : ι} {a b : α}
+variable [Sub α] [OrderedSub α] {f g : ι →₀ α} {i : ι} {a b : α}
 
 /-- This is called `tsub` for truncated subtraction, to distinguish it with subtraction in an
 additive group. -/
@@ -163,7 +164,7 @@ instance tsub : Sub (ι →₀ α) :=
   ⟨zipWith (fun m n => m - n) (tsub_self 0)⟩
 #align finsupp.tsub Finsupp.tsub
 
-instance : HasOrderedSub (ι →₀ α) :=
+instance : OrderedSub (ι →₀ α) :=
   ⟨fun n m k => forall_congr' fun x => tsub_le_iff_right⟩
 
 instance : CanonicallyOrderedAddMonoid (ι →₀ α) :=
@@ -185,9 +186,7 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
   ext j
   obtain rfl | h := eq_or_ne i j
   · rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same]
-    
   · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
-    
 #align finsupp.single_tsub Finsupp.single_tsub
 
 theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).support ⊆ f1.support := by

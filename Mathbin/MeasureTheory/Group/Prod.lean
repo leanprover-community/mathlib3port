@@ -102,7 +102,7 @@ theorem measurableMeasureMulRight (hs : MeasurableSet s) :
   suffices
     Measurable fun y =>
       μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => ((1 : G), z.1 * z.2)) ⁻¹' univ ×ˢ s))
-    by
+    by 
     convert this
     ext1 x
     congr 1 with y : 1
@@ -236,10 +236,10 @@ theorem measure_mul_lintegral_eq [IsMulLeftInvariant ν] (sm : MeasurableSet s) 
     lintegral_lintegral_mul (measurable_const.indicator sm).AeMeasurable hf.ae_measurable, ←
     lintegral_lintegral_mul_inv μ ν]
   swap
-  · exact
+  ·
+    exact
       (((measurable_const.indicator sm).comp measurableFst).mul
           (hf.comp measurableSnd)).AeMeasurable
-    
   have ms :
     ∀ x : G, Measurable fun y => ((fun z => z * x) ⁻¹' s).indicator (fun z => (1 : ℝ≥0∞)) y :=
     fun x => measurable_const.indicator (measurable_mul_const _ sm)
@@ -247,7 +247,7 @@ theorem measure_mul_lintegral_eq [IsMulLeftInvariant ν] (sm : MeasurableSet s) 
     ∀ x y,
       s.indicator (fun z : G => (1 : ℝ≥0∞)) (y * x) =
         ((fun z => z * x) ⁻¹' s).indicator (fun b : G => 1) y :=
-    by
+    by 
     intro x y
     symm
     convert indicator_comp_right fun y => y * x

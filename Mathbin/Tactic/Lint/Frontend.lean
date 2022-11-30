@@ -367,7 +367,7 @@ indicates mistakes made in the file above the command. It is equivalent to copyi
 output of `#lint`. On large files, it may take some time before the output appears.
 -/
 @[hole_command]
-unsafe def lint_hole_cmd : hole_command where
+unsafe def lint_hole_cmd : hole_command where 
   Name := "Lint"
   descr := "Lint: Find common mistakes in current file."
   action es := do

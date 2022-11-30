@@ -88,7 +88,6 @@ theorem zero_at_im_infty (f : ℍ → ℂ) :
   · simp_rw [Filter.Eventually, at_im_infty_mem]
     intro h ε hε
     simpa using h (Metric.closedBall (0 : ℂ) ε) (Metric.closed_ball_mem_nhds (0 : ℂ) hε)
-    
   · simp_rw [Metric.mem_nhds_iff]
     intro h s hs
     simp_rw [Filter.Eventually, at_im_infty_mem]
@@ -97,13 +96,12 @@ theorem zero_at_im_infty (f : ℍ → ℂ) :
     obtain ⟨A, hA⟩ := h (ε / 2) h11
     use A
     intro z hz
-    have hzs : f z ∈ s := by
+    have hzs : f z ∈ s := by 
       apply h2
       simp only [mem_ball_zero_iff, norm_eq_abs]
       apply lt_of_le_of_lt (hA z hz)
       linarith
     apply hzs
-    
 #align upper_half_plane.zero_at_im_infty UpperHalfPlane.zero_at_im_infty
 
 end UpperHalfPlane

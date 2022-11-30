@@ -58,12 +58,13 @@ end
 
 variable [Semiring B] [Galgebra R A] [Algebra R B]
 
-instance : Algebra R (⨁ i, A i) where
+instance : Algebra R
+      (⨁ i, A i) where 
   toFun := (DirectSum.of A 0).comp Galgebra.toFun
   map_zero' := AddMonoidHom.map_zero _
   map_add' := AddMonoidHom.map_add _
   map_one' := (DirectSum.of A 0).congr_arg Galgebra.map_one
-  map_mul' a b := by
+  map_mul' a b := by 
     simp only [AddMonoidHom.comp_apply]
     rw [of_mul_of]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.map_mul a b)
@@ -112,7 +113,7 @@ def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one 
 /-- Two `alg_hom`s out of a direct sum are equal if they agree on the generators.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem alg_hom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
     (h : ∀ i, f.toLinearMap.comp (lof _ _ A i) = g.toLinearMap.comp (lof _ _ A i)) : f = g :=
   AlgHom.to_linear_map_injective <| DirectSum.linear_map_ext _ h
@@ -132,7 +133,9 @@ end DirectSum
 -/
 @[simps]
 instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι] [CommSemiring R]
-    [Semiring A] [Algebra R A] : DirectSum.Galgebra R fun i : ι => A where
+    [Semiring A] [Algebra R A] :
+    DirectSum.Galgebra R fun i : ι =>
+      A where 
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
   map_mul a b := Sigma.ext (zero_add _).symm (heq_of_eq <| (algebraMap R A).map_mul a b)

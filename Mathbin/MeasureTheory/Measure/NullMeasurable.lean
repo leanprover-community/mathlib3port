@@ -77,11 +77,14 @@ instance [h : Inhabited α] : Inhabited (NullMeasurableSpace α μ) :=
 instance [h : Subsingleton α] : Subsingleton (NullMeasurableSpace α μ) :=
   h
 
-instance : MeasurableSpace (NullMeasurableSpace α μ) where
+instance :
+    MeasurableSpace
+      (NullMeasurableSpace α
+        μ) where 
   MeasurableSet' s := ∃ t, MeasurableSet t ∧ s =ᵐ[μ] t
   measurableSetEmpty := ⟨∅, MeasurableSet.empty, ae_eq_refl _⟩
   measurableSetCompl := fun s ⟨t, htm, hts⟩ => ⟨tᶜ, htm.compl, hts.compl⟩
-  measurableSetUnion s hs := by
+  measurableSetUnion s hs := by 
     choose t htm hts using hs
     exact ⟨⋃ i, t i, MeasurableSet.union htm, EventuallyEq.countable_Union hts⟩
 
@@ -154,7 +157,7 @@ protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : s.Countable)
 #align measure_theory.null_measurable_set.bUnion MeasureTheory.NullMeasurableSet.bUnion
 
 protected theorem sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
-    NullMeasurableSet (⋃₀s) μ := by
+    NullMeasurableSet (⋃₀s) μ := by 
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
 #align measure_theory.null_measurable_set.sUnion MeasureTheory.NullMeasurableSet.sUnion
@@ -236,10 +239,8 @@ theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
   rcases h with ⟨t, htm, hst⟩
   refine' ⟨t ∪ to_measurable μ (s \ t), _, htm.union (measurable_set_to_measurable _ _), _⟩
   · exact diff_subset_iff.1 (subset_to_measurable _ _)
-    
   · have : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by simp [ae_le_set.1 hst.le]
     simpa only [union_empty] using hst.symm.union this
-    
 #align
   measure_theory.null_measurable_set.exists_measurable_superset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq
 
@@ -273,7 +274,7 @@ theorem exists_subordinate_pairwise_disjoint [Countable ι] {s : ι → Set α}
     ∃ t : ι → Set α,
       (∀ i, t i ⊆ s i) ∧
         (∀ i, s i =ᵐ[μ] t i) ∧ (∀ i, MeasurableSet (t i)) ∧ Pairwise (Disjoint on t) :=
-  by
+  by 
   choose t ht_sub htm ht_eq using fun i => (h i).exists_measurable_subset_ae_eq
   rcases exists_null_pairwise_disjoint_diff hd with ⟨u, hum, hu₀, hud⟩
   exact
@@ -290,11 +291,8 @@ theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι]
   rw [measure_eq_extend (MeasurableSet.union h),
     extend_Union MeasurableSet.empty _ MeasurableSet.union _ hn h]
   · simp [measure_eq_extend, h]
-    
   · exact μ.empty
-    
   · exact μ.m_Union
-    
 #align measure_theory.measure_Union MeasureTheory.measure_Union
 
 theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDisjoint μ on f))
@@ -316,7 +314,7 @@ theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableS
 /-- A null measurable set `t` is Carathéodory measurable: for any `s`, we have
 `μ (s ∩ t) + μ (s \ t) = μ s`. -/
 theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
-    μ (s ∩ t) + μ (s \ t) = μ s := by
+    μ (s ∩ t) + μ (s \ t) = μ s := by 
   refine' le_antisymm _ _
   · rcases exists_measurable_superset μ s with ⟨s', hsub, hs'm, hs'⟩
     replace hs'm : null_measurable_set s' μ := hs'm.null_measurable_set
@@ -330,12 +328,11 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
       _ = μ s' := congr_arg μ (inter_union_diff _ _)
       _ = μ s := hs'
       
-    
-  · calc
+  ·
+    calc
       μ s = μ (s ∩ t ∪ s \ t) := by rw [inter_union_diff]
       _ ≤ μ (s ∩ t) + μ (s \ t) := measure_union_le _ _
       
-    
 #align measure_theory.measure_inter_add_diff₀ MeasureTheory.measure_inter_add_diff₀
 
 theorem measure_union_add_inter₀ (s : Set α) (ht : NullMeasurableSet t μ) :
@@ -503,10 +500,11 @@ namespace Measure
 
 /-- Given a measure we can complete it to a (complete) measure on all null measurable sets. -/
 def completion {_ : MeasurableSpace α} (μ : Measure α) :
-    @MeasureTheory.Measure (NullMeasurableSpace α μ) _ where
+    @MeasureTheory.Measure (NullMeasurableSpace α μ)
+      _ where 
   toOuterMeasure := μ.toOuterMeasure
   m_Union s hs hd := measure_Union₀ (hd.mono fun i j h => h.AeDisjoint) hs
-  trimmed := by
+  trimmed := by 
     refine' le_antisymm (fun s => _) (outer_measure.le_trim _)
     rw [outer_measure.trim_eq_infi]; simp only [to_outer_measure_apply]
     refine' (infi₂_mono _).trans_eq (measure_eq_infi _).symm

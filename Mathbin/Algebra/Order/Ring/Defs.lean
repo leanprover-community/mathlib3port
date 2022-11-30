@@ -259,14 +259,14 @@ theorem bit1_mono : Monotone (bit1 : α → α) := fun a b h => add_le_add_right
 lean 3 declaration is
   forall {α : Type.{u}} [_inst_1 : OrderedSemiring.{u} α] {a : α}, (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u, 0, u} α Nat α (instHPow.{u, 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676 : OrderedSemiring.{u_1} α] {a : α}, (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))))) a) -> (forall (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))))) (HPow.hPow.{u_1, 0, u_1} α Nat α (instHPow.{u_1, 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))))) a n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.666 : OrderedSemiring.{u_1} α] {a : α}, (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.666))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.666))))) a) -> (forall (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.666))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.666))))) (HPow.hPow.{u_1, 0, u_1} α Nat α (instHPow.{u_1, 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.666))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_nonneg pow_nonnegₓ'. -/
 @[simp]
 theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
-  | 0 => by
+  | 0 => by 
     rw [pow_zero]
     exact zero_le_one
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ]
     exact mul_nonneg H (pow_nonneg _)
 #align pow_nonneg pow_nonneg
@@ -321,6 +321,12 @@ section Nontrivial
 
 variable [Nontrivial α]
 
+/- warning: zero_lt_one -> zero_lt_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : OrderedSemiring.{u} α] [_inst_2 : Nontrivial.{u} α], LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α (AddMonoidWithOne.toOne.{u} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u} α (NonAssocSemiring.toAddCommMonoidWithOne.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1))))))))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292 : OrderedSemiring.{u_1} α] [inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.295 : Nontrivial.{u_1} α], LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))))) (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (Semiring.toOne.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))))
+Case conversion may be inaccurate. Consider using '#align zero_lt_one zero_lt_oneₓ'. -/
 /-- See `zero_lt_one'` for a version with the type explicit. -/
 @[simp]
 theorem zero_lt_one : (0 : α) < 1 :=
@@ -426,6 +432,7 @@ section OrderedRing
 
 variable [OrderedRing α] {a b c d : α}
 
+#print OrderedRing.toOrderedSemiring /-
 -- see Note [lower instance priority]
 instance (priority := 100) OrderedRing.toOrderedSemiring : OrderedSemiring α :=
   { ‹OrderedRing α›, Ring.toSemiring with
@@ -434,6 +441,7 @@ instance (priority := 100) OrderedRing.toOrderedSemiring : OrderedSemiring α :=
     mul_le_mul_of_nonneg_right := fun a b c h hc => by
       simpa only [sub_mul, sub_nonneg] using OrderedRing.mul_nonneg _ _ (sub_nonneg.2 h) hc }
 #align ordered_ring.to_ordered_semiring OrderedRing.toOrderedSemiring
+-/
 
 theorem mul_le_mul_of_nonpos_left (h : b ≤ a) (hc : c ≤ 0) : c * a ≤ c * b := by
   simpa only [neg_mul, neg_le_neg_iff] using mul_le_mul_of_nonneg_left h (neg_nonneg.2 hc)
@@ -563,23 +571,18 @@ def StrictOrderedSemiring.toOrderedSemiring' [@DecidableRel α (· ≤ ·)] : Or
     mul_le_mul_of_nonneg_left := fun a b c hab hc => by
       obtain rfl | hab := Decidable.eq_or_lt_of_le hab
       · rfl
-        
       obtain rfl | hc := Decidable.eq_or_lt_of_le hc
       · simp
-        
-      · exact (mul_lt_mul_of_pos_left hab hc).le
-        ,
+      · exact (mul_lt_mul_of_pos_left hab hc).le,
     mul_le_mul_of_nonneg_right := fun a b c hab hc => by
       obtain rfl | hab := Decidable.eq_or_lt_of_le hab
       · rfl
-        
       obtain rfl | hc := Decidable.eq_or_lt_of_le hc
       · simp
-        
-      · exact (mul_lt_mul_of_pos_right hab hc).le
-         }
+      · exact (mul_lt_mul_of_pos_right hab hc).le }
 #align strict_ordered_semiring.to_ordered_semiring' StrictOrderedSemiring.toOrderedSemiring'
 
+#print StrictOrderedSemiring.toOrderedSemiring /-
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedSemiring.toOrderedSemiring : OrderedSemiring α :=
   { ‹StrictOrderedSemiring α› with
@@ -590,6 +593,7 @@ instance (priority := 100) StrictOrderedSemiring.toOrderedSemiring : OrderedSemi
       letI := @StrictOrderedSemiring.toOrderedSemiring' α _ (Classical.decRel _)
       mul_le_mul_of_nonneg_right }
 #align strict_ordered_semiring.to_ordered_semiring StrictOrderedSemiring.toOrderedSemiring
+-/
 
 theorem mul_lt_mul (hac : a < c) (hbd : b ≤ d) (hb : 0 < b) (hc : 0 ≤ c) : a * b < c * d :=
   (mul_lt_mul_of_pos_right hac hb).trans_le <| mul_le_mul_of_nonneg_left hbd hc
@@ -603,15 +607,15 @@ theorem mul_lt_mul' (hac : a ≤ c) (hbd : b < d) (hb : 0 ≤ b) (hc : 0 < c) : 
 lean 3 declaration is
   forall {α : Type.{u}} [_inst_1 : StrictOrderedSemiring.{u} α] {a : α}, (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u, 0, u} α Nat α (instHPow.{u, 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568 : StrictOrderedSemiring.{u_1} α] {a : α}, (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedMonoidWithZero.toPartialOrder.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568))))) a) -> (forall (n : Nat), LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedMonoidWithZero.toPartialOrder.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568))))) (HPow.hPow.{u_1, 0, u_1} α Nat α (instHPow.{u_1, 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568))))) a n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.562 : StrictOrderedSemiring.{u_1} α] {a : α}, (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedMonoidWithZero.toPartialOrder.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.562)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.562))))) a) -> (forall (n : Nat), LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedMonoidWithZero.toPartialOrder.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.562)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.562))))) (HPow.hPow.{u_1, 0, u_1} α Nat α (instHPow.{u_1, 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.562))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_pos pow_posₓ'. -/
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
-  | 0 => by
+  | 0 => by 
     nontriviality
     rw [pow_zero]
     exact zero_lt_one
-  | n + 1 => by
+  | n + 1 => by 
     rw [pow_succ]
     exact mul_pos H (pow_pos _)
 #align pow_pos pow_pos
@@ -822,6 +826,7 @@ section StrictOrderedRing
 
 variable [StrictOrderedRing α] {a b c : α}
 
+#print StrictOrderedRing.toStrictOrderedSemiring /-
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedRing.toStrictOrderedSemiring : StrictOrderedSemiring α :=
   { ‹StrictOrderedRing α›, Ring.toSemiring with
@@ -831,6 +836,7 @@ instance (priority := 100) StrictOrderedRing.toStrictOrderedSemiring : StrictOrd
     mul_lt_mul_of_pos_right := fun a b c h hc => by
       simpa only [sub_mul, sub_pos] using StrictOrderedRing.mul_pos _ _ (sub_pos.2 h) hc }
 #align strict_ordered_ring.to_strict_ordered_semiring StrictOrderedRing.toStrictOrderedSemiring
+-/
 
 -- See note [reducible non-instances]
 /-- A choice-free version of `strict_ordered_ring.to_ordered_ring` to avoid using choice in basic
@@ -841,14 +847,12 @@ def StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : OrderedRin
     mul_nonneg := fun a b ha hb => by
       obtain ha | ha := Decidable.eq_or_lt_of_le ha
       · rw [← ha, zero_mul]
-        
       obtain hb | hb := Decidable.eq_or_lt_of_le hb
       · rw [← hb, mul_zero]
-        
-      · exact (StrictOrderedRing.mul_pos _ _ ha hb).le
-         }
+      · exact (StrictOrderedRing.mul_pos _ _ ha hb).le }
 #align strict_ordered_ring.to_ordered_ring' StrictOrderedRing.toOrderedRing'
 
+#print StrictOrderedRing.toOrderedRing /-
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedRing.toOrderedRing : OrderedRing α :=
   { ‹StrictOrderedRing α› with
@@ -856,6 +860,7 @@ instance (priority := 100) StrictOrderedRing.toOrderedRing : OrderedRing α :=
       letI := @StrictOrderedRing.toOrderedRing' α _ (Classical.decRel _)
       mul_nonneg }
 #align strict_ordered_ring.to_ordered_ring StrictOrderedRing.toOrderedRing
+-/
 
 theorem mul_lt_mul_of_neg_left (h : b < a) (hc : c < 0) : c * a < c * b := by
   simpa only [neg_mul, neg_lt_neg_iff] using mul_lt_mul_of_pos_left h (neg_pos_of_neg hc)
@@ -917,12 +922,14 @@ def StrictOrderedCommRing.toOrderedCommRing' [@DecidableRel α (· ≤ ·)] : Or
   { ‹StrictOrderedCommRing α›, StrictOrderedRing.toOrderedRing' with }
 #align strict_ordered_comm_ring.to_ordered_comm_ring' StrictOrderedCommRing.toOrderedCommRing'
 
+#print StrictOrderedCommRing.toStrictOrderedCommSemiring /-
 -- See note [lower instance priority]
 instance (priority := 100) StrictOrderedCommRing.toStrictOrderedCommSemiring :
     StrictOrderedCommSemiring α :=
   { ‹StrictOrderedCommRing α›, StrictOrderedRing.toStrictOrderedSemiring with }
 #align
   strict_ordered_comm_ring.to_strict_ordered_comm_semiring StrictOrderedCommRing.toStrictOrderedCommSemiring
+-/
 
 -- See note [lower instance priority]
 instance (priority := 100) StrictOrderedCommRing.toOrderedCommRing : OrderedCommRing α :=
@@ -1178,7 +1185,7 @@ instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup :
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
   { ‹LinearOrderedRing α› with
-    eq_zero_or_eq_zero_of_mul_eq_zero := by
+    eq_zero_or_eq_zero_of_mul_eq_zero := by 
       intro a b hab
       refine' Decidable.or_iff_not_and_not.2 fun h => _; revert hab
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
@@ -1293,11 +1300,9 @@ theorem mul_self_pos {a : α} : 0 < a * a ↔ a ≠ 0 := by
   · rintro h rfl
     rw [mul_zero] at h
     exact h.false
-    
   · intro h
     cases' h.lt_or_lt with h h
     exacts[mul_pos_of_neg_of_neg h h, mul_pos h h]
-    
 #align mul_self_pos mul_self_pos
 
 theorem mul_self_le_mul_self_of_le_of_neg_le {x y : α} (h₁ : x ≤ y) (h₂ : -x ≤ y) : x * x ≤ y * y :=
@@ -1341,12 +1346,14 @@ theorem eq_zero_of_mul_self_add_mul_self_eq_zero (h : a * a + b * b = 0) : a = 0
 
 end LinearOrderedRing
 
+#print LinearOrderedCommRing.toStrictOrderedCommRing /-
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedCommRing.toStrictOrderedCommRing
     [d : LinearOrderedCommRing α] : StrictOrderedCommRing α :=
   { d with }
 #align
   linear_ordered_comm_ring.to_strict_ordered_comm_ring LinearOrderedCommRing.toStrictOrderedCommRing
+-/
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedCommRing.toLinearOrderedCommSemiring

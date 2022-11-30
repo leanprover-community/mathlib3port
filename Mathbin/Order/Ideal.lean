@@ -92,11 +92,11 @@ theorem to_lower_set_injective : Injective (toLowerSet : Ideal P → LowerSet P)
   congr
 #align order.ideal.to_lower_set_injective Order.Ideal.to_lower_set_injective
 
-instance : SetLike (Ideal P) P where
+instance : SetLike (Ideal P) P where 
   coe s := s.carrier
   coe_injective' s t h := to_lower_set_injective <| SetLike.coe_injective h
 
-@[ext.1]
+@[ext]
 theorem ext {s t : Ideal P} : (s : Set P) = t → s = t :=
   SetLike.ext'
 #align order.ideal.ext Order.Ideal.ext
@@ -158,7 +158,7 @@ class IsProper (I : Ideal P) : Prop where
 #align order.ideal.is_proper Order.Ideal.IsProper
 
 theorem is_proper_of_not_mem {I : Ideal P} {p : P} (nmem : p ∉ I) : IsProper I :=
-  ⟨fun hp => by
+  ⟨fun hp => by 
     change p ∉ ↑I at nmem
     rw [hp] at nmem
     exact nmem (mem_univ p)⟩
@@ -187,7 +187,8 @@ section Directed
 variable [IsDirected P (· ≤ ·)] [Nonempty P] {I : Ideal P}
 
 /-- In a directed and nonempty order, the top ideal of a is `univ`. -/
-instance : OrderTop (Ideal P) where
+instance : OrderTop
+      (Ideal P) where 
   top := ⟨⊤, univ_nonempty, directed_on_univ⟩
   le_top I := le_top
 
@@ -249,7 +250,7 @@ section OrderTop
 
 variable [OrderTop P] {I : Ideal P}
 
-theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by
+theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by 
   ext
   exact iff_of_true (I.lower le_top h) trivial
 #align order.ideal.top_of_top_mem Order.Ideal.top_of_top_mem
@@ -271,7 +272,7 @@ variable {I J : Ideal P} {x y : P}
 
 /-- The smallest ideal containing a given element. -/
 @[simps]
-def principal (p : P) : Ideal P where
+def principal (p : P) : Ideal P where 
   toLowerSet := LowerSet.iic p
   nonempty' := nonempty_Iic
   directed' x hx y hy := ⟨p, le_rfl, hx, hy⟩
@@ -297,7 +298,7 @@ section OrderBot
 variable [OrderBot P]
 
 /-- There is a bottom ideal when `P` has a bottom element. -/
-instance : OrderBot (Ideal P) where
+instance : OrderBot (Ideal P) where 
   bot := principal ⊥
   bot_le := by simp
 
@@ -353,7 +354,7 @@ supremum of `I` and `J`. -/
 instance : HasSup (Ideal P) :=
   ⟨fun I J =>
     { carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j },
-      nonempty' := by
+      nonempty' := by 
         cases inter_nonempty I J
         exact ⟨w, w, h.1, w, h.2, le_sup_left⟩,
       directed' := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
@@ -420,12 +421,12 @@ instance : HasInf (Ideal P) :=
   ⟨fun S =>
     { toLowerSet := ⨅ s ∈ S, toLowerSet s,
       nonempty' :=
-        ⟨⊥, by
+        ⟨⊥, by 
           rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_Inter₂]
           exact fun s _ => s.bot_mem⟩,
       directed' := fun a ha b hb =>
         ⟨a ⊔ b,
-          ⟨by
+          ⟨by 
             rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_Inter₂] at ha hb⊢
             exact fun s hs => sup_mem (ha _ hs) (hb _ hs), le_sup_left, le_sup_right⟩⟩ }⟩
 
@@ -547,9 +548,7 @@ theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
   dsimp only [sequence_of_cofinals]
   cases Encodable.decode ι n
   · rfl
-    
   · apply cofinal.le_above
-    
 #align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotone
 
 theorem sequenceOfCofinals.encode_mem (i : ι) :
@@ -565,7 +564,8 @@ theorem sequenceOfCofinals.encode_mem (i : ι) :
   - intersects every set in `𝒟`, according to `cofinal_meets_ideal_of_cofinals p 𝒟`.
 
   This proves the Rasiowa–Sikorski lemma. -/
-def idealOfCofinals : Ideal P where
+def idealOfCofinals :
+    Ideal P where 
   carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
   lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_trans hxy hn⟩
   nonempty' := ⟨p, 0, le_rfl⟩

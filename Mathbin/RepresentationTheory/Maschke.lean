@@ -117,10 +117,10 @@ def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
         @Finset.smul_sum
         (MonoidAlgebra k G)]
     dsimp [conjugate]
-    conv_lhs =>
-    rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]
-    simp only [mulRightEmbedding]
-    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_one, Function.Embedding.coe_fn_mk,
+    conv_lhs => 
+      rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]
+      simp only [mulRightEmbedding]
+    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_one, Function.Embedding.coeFn_mk,
       Finset.sum_map, inv_inv, inv_mul_cancel_right]
 #align linear_map.sum_of_conjugates_equivariant LinearMap.sumOfConjugatesEquivariant
 
@@ -203,9 +203,9 @@ theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) :
 #align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_is_compl
 
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/
-instance complementedLattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
+instance complemented_lattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
   ⟨exists_is_compl⟩
-#align monoid_algebra.submodule.complemented_lattice MonoidAlgebra.Submodule.complementedLattice
+#align monoid_algebra.submodule.complemented_lattice MonoidAlgebra.Submodule.complemented_lattice
 
 end Submodule
 

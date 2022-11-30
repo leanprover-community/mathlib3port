@@ -56,39 +56,37 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
     (s : Finset K) :
     (∀ x ∈ s, IsIntegral F x ∧ Polynomial.Splits (algebraMap F L) (minpoly F x)) →
       Nonempty (Algebra.adjoin F (↑s : Set K) →ₐ[F] L) :=
-  by classical
-  refine' Finset.induction_on s (fun H => _) fun a s has ih H => _
-  · rw [coe_empty, Algebra.adjoin_empty]
-    exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
-    
-  rw [forall_mem_insert] at H
-  rcases H with ⟨⟨H1, H2⟩, H3⟩
-  cases' ih H3 with f
-  choose H3 H4 using H3
-  rw [coe_insert, Set.insert_eq, Set.union_comm, Algebra.adjoin_union_eq_adjoin_adjoin]
-  letI := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
-  haveI : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
-    ((Submodule.fg_iff_finite_dimensional _).1
-        (fg_adjoin_of_finite s.finite_to_set H3)).ofSubalgebraToSubmodule
-  letI := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
-  have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := is_integral_of_is_scalar_tower H1
-  have H6 :
-    (minpoly (Algebra.adjoin F (↑s : Set K)) a).Splits
-      (algebraMap (Algebra.adjoin F (↑s : Set K)) L) :=
-    by
-    refine'
-      Polynomial.splitsOfSplitsOfDvd _
-        (Polynomial.map_ne_zero <| minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
-        ((Polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)
-    · rw [← IsScalarTower.algebra_map_eq]
-      exact H2
-      
-    · rw [Polynomial.aeval_map_algebra_map, minpoly.aeval]
-      
-  obtain ⟨y, hy⟩ := Polynomial.exists_root_of_splits _ H6 (ne_of_lt (minpoly.degree_pos H5)).symm
-  refine' ⟨Subalgebra.ofRestrictScalars _ _ _⟩
-  refine' (AdjoinRoot.liftHom (minpoly (Algebra.adjoin F (↑s : Set K)) a) y hy).comp _
-  exact AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly (Algebra.adjoin F (↑s : Set K)) a
+  by
+  classical 
+    refine' Finset.induction_on s (fun H => _) fun a s has ih H => _
+    · rw [coe_empty, Algebra.adjoin_empty]
+      exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
+    rw [forall_mem_insert] at H
+    rcases H with ⟨⟨H1, H2⟩, H3⟩
+    cases' ih H3 with f
+    choose H3 H4 using H3
+    rw [coe_insert, Set.insert_eq, Set.union_comm, Algebra.adjoin_union_eq_adjoin_adjoin]
+    letI := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
+    haveI : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
+      ((Submodule.fg_iff_finite_dimensional _).1
+          (fg_adjoin_of_finite s.finite_to_set H3)).ofSubalgebraToSubmodule
+    letI := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
+    have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := is_integral_of_is_scalar_tower H1
+    have H6 :
+      (minpoly (Algebra.adjoin F (↑s : Set K)) a).Splits
+        (algebraMap (Algebra.adjoin F (↑s : Set K)) L) :=
+      by
+      refine'
+        Polynomial.splitsOfSplitsOfDvd _
+          (Polynomial.map_ne_zero <| minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
+          ((Polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)
+      · rw [← IsScalarTower.algebra_map_eq]
+        exact H2
+      · rw [Polynomial.aeval_map_algebra_map, minpoly.aeval]
+    obtain ⟨y, hy⟩ := Polynomial.exists_root_of_splits _ H6 (ne_of_lt (minpoly.degree_pos H5)).symm
+    refine' ⟨Subalgebra.ofRestrictScalars _ _ _⟩
+    refine' (AdjoinRoot.liftHom (minpoly (Algebra.adjoin F (↑s : Set K)) a) y hy).comp _
+    exact AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly (Algebra.adjoin F (↑s : Set K)) a
 #align lift_of_splits lift_of_splits
 
 end Embeddings

@@ -73,13 +73,13 @@ def toRat : ∀ f : Float, f.isFinite → ℚ
 #align fp.to_rat Fp.toRat
 
 theorem Float.Zero.valid : ValidFinite emin 0 :=
-  ⟨by
+  ⟨by 
     rw [add_sub_assoc]
     apply le_add_of_nonneg_right
     apply sub_nonneg_of_le
     apply Int.ofNat_le_ofNat_of_le
     exact C.prec_pos,
-    suffices prec ≤ 2 * emax by
+    suffices prec ≤ 2 * emax by 
       rw [← Int.coe_nat_le] at this
       rw [← sub_nonneg] at *
       simp only [emin, emax] at *
@@ -141,7 +141,6 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   let m := r.floor
   refine' (float.finite ff e₃ (Int.toNat m) _, r.denom = 1)
   · exact undefined
-    
 #align fp.of_pos_rat_dn fp.of_pos_rat_dn
 
 unsafe def next_up_pos (e m) (v : ValidFinite e m) : Float :=

@@ -55,7 +55,7 @@ theorem LDL.lower_inv_eq_gram_schmidt_basis :
       ((Pi.basisFun 𝕜 n).toMatrix
           (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _
             (Pi.basisFun 𝕜 n)))ᵀ :=
-  by
+  by 
   ext (i j)
   rw [LDL.lowerInv, Basis.CoePiBasisFun.to_matrix_eq_transpose, coe_gram_schmidt_basis]
   rfl
@@ -101,16 +101,15 @@ by some lower triangular matrix and get a diagonal matrix. -/
 theorem LDL.diag_eq_lower_inv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL.lowerInv hS)ᴴ := by
   ext (i j)
   by_cases hij : i = j
-  · simpa only [hij, LDL.diag, diagonal_apply_eq, LDL.diagEntries, Matrix.mul_assoc, inner,
+  ·
+    simpa only [hij, LDL.diag, diagonal_apply_eq, LDL.diagEntries, Matrix.mul_assoc, inner,
       Pi.star_apply, IsROrC.star_def, star_ring_end_self_apply]
-    
   · simp only [LDL.diag, hij, diagonal_apply_ne, Ne.def, not_false_iff, mul_mul_apply]
     rw [conj_transpose, transpose_map, transpose_transpose, dot_product_mul_vec,
       (LDL.lower_inv_orthogonal hS fun h : j = i => hij h.symm).symm, ← inner_conj_sym,
       mul_vec_transpose, EuclideanSpace.inner_eq_star_dot_product, ← IsROrC.star_def, ←
       star_dot_product_star, dot_product_comm, star_star]
     rfl
-    
 #align LDL.diag_eq_lower_inv_conj LDL.diag_eq_lower_inv_conj
 
 /-- The lower triangular matrix `L` of the LDL decomposition. -/

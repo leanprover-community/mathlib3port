@@ -97,7 +97,7 @@ theorem mul_eq_add : p * q = p + q := by
 
 @[symm]
 protected theorem symm : q.IsConjugateExponent p :=
-  { one_lt := by
+  { one_lt := by 
       rw [h.conj_eq]
       exact (one_lt_div h.sub_one_pos).mpr (sub_one_lt p),
     inv_add_inv_conj := by simpa [add_comm] using h.inv_add_inv_conj }

@@ -97,7 +97,8 @@ end
 end FinTm2
 
 /-- The initial configuration corresponding to a list in the input alphabet. -/
-def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) : tm.Cfg where
+def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) :
+    tm.Cfg where 
   l := Option.some tm.main
   var := tm.initialState
   stk k :=
@@ -106,7 +107,8 @@ def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) : tm.Cfg where
 #align turing.init_list Turing.initList
 
 /-- The final configuration corresponding to a list in the output alphabet. -/
-def haltList (tm : FinTm2) (s : List (tm.Γ tm.k₁)) : tm.Cfg where
+def haltList (tm : FinTm2) (s : List (tm.Γ tm.k₁)) :
+    tm.Cfg where 
   l := Option.none
   var := tm.initialState
   stk k :=
@@ -232,7 +234,8 @@ def Tm2ComputableInPolyTime.toTm2ComputableInTime {α β : Type} {ea : FinEncodi
 open Turing.TM2Cat.Stmt
 
 /-- A Turing machine computing the identity on α. -/
-def idComputer {α : Type} (ea : FinEncoding α) : FinTm2 where
+def idComputer {α : Type} (ea : FinEncoding α) :
+    FinTm2 where 
   K := Unit
   k₀ := ⟨⟩
   k₁ := ⟨⟩
@@ -253,7 +256,8 @@ noncomputable section
 
 /-- A proof that the identity map on α is computable in polytime. -/
 def idComputableInPolyTime {α : Type} (ea : FinEncoding α) :
-    @Tm2ComputableInPolyTime α α ea ea id where
+    @Tm2ComputableInPolyTime α α ea ea
+      id where 
   tm := idComputer ea
   inputAlphabet := Equiv.cast rfl
   outputAlphabet := Equiv.cast rfl

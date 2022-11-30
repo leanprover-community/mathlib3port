@@ -95,7 +95,7 @@ variable {β}
 
 theorem Filtration.adaptedNatural [MetrizableSpace β] [mβ : MeasurableSpace β] [BorelSpace β]
     {u : ι → Ω → β} (hum : ∀ i, strongly_measurable[m] (u i)) :
-    Adapted (Filtration.natural u hum) u := by
+    Adapted (Filtration.natural u hum) u := by 
   intro i
   refine' strongly_measurable.mono _ (le_supr₂_of_le i (le_refl i) le_rfl)
   rw [strongly_measurable_iff_measurable_separable]

@@ -74,10 +74,8 @@ theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix 
     rw [charmatrix_apply_eq, coeff_sub]
     simp only [coeff_X, coeff_C]
     split_ifs <;> simp
-    
   · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
     split_ifs <;> simp [h]
-    
 #align mat_poly_equiv_charmatrix mat_poly_equiv_charmatrix
 
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
@@ -107,7 +105,8 @@ This holds over any commutative ring.
 
 See `linear_map.aeval_self_charpoly` for the equivalent statement about endomorphisms.
 -/
-theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 := by
+theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :=
+  by
   -- We begin with the fact $χ_M(t) I = adjugate (t I - M) * (t I - M)$,
   -- as an identity in `matrix n n R[X]`.
   have h : M.charpoly • (1 : Matrix n n R[X]) = adjugate (charmatrix M) * charmatrix M :=

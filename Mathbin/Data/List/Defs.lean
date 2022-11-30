@@ -62,7 +62,7 @@ def splitOnP {α : Type u} (P : α → Prop) [DecidablePred P] (l : List α) : L
 lean 3 declaration is
   forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α], α -> (List.{u} α) -> (List.{u} (List.{u} α))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.8087 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{u_1} (List.{u_1} α))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.7982 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{u_1} (List.{u_1} α))
 Case conversion may be inaccurate. Consider using '#align list.split_on List.splitOnₓ'. -/
 /-- Split a list at every occurrence of an element.
 
@@ -375,7 +375,7 @@ def indexesValues (p : α → Prop) [DecidablePred p] (l : List α) : List (ℕ 
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} α], α -> (List.{u_1} α) -> (List.{0} Nat)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.10783 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{0} Nat)
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.10678 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{0} Nat)
 Case conversion may be inaccurate. Consider using '#align list.indexes_of List.indexesOfₓ'. -/
 /-- `indexes_of a l` is the list of all indexes of `a` in `l`. For example:
 ```
@@ -480,7 +480,7 @@ def countp (p : α → Prop) [DecidablePred p] : List α → Nat
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} α], α -> (List.{u_1} α) -> Nat
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.11153 : BEq.{u_1} α], α -> (List.{u_1} α) -> Nat
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.11048 : BEq.{u_1} α], α -> (List.{u_1} α) -> Nat
 Case conversion may be inaccurate. Consider using '#align list.count List.countₓ'. -/
 /-- `count a l` is the number of occurrences of `a` in `l`. -/
 def count [DecidableEq α] (a : α) : List α → Nat :=

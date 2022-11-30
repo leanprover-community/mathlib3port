@@ -50,14 +50,14 @@ theorem coeff_bit0 (p : R[X]) (n : ℕ) : coeff (bit0 p) n = bit0 (coeff p n) :=
 
 @[simp]
 theorem coeff_smul [Monoid S] [DistribMulAction S R] (r : S) (p : R[X]) (n : ℕ) :
-    coeff (r • p) n = r • coeff p n := by
+    coeff (r • p) n = r • coeff p n := by 
   rcases p with ⟨⟩
   simp_rw [← of_finsupp_smul, coeff]
   exact Finsupp.smul_apply _ _ _
 #align polynomial.coeff_smul Polynomial.coeff_smul
 
 theorem support_smul [Monoid S] [DistribMulAction S R] (r : S) (p : R[X]) :
-    support (r • p) ⊆ support p := by
+    support (r • p) ⊆ support p := by 
   intro i hi
   simp [mem_support_iff] at hi⊢
   contrapose! hi
@@ -67,7 +67,8 @@ theorem support_smul [Monoid S] [DistribMulAction S R] (r : S) (p : R[X]) :
 /-- `polynomial.sum` as a linear map. -/
 @[simps]
 def lsum {R A M : Type _} [Semiring R] [Semiring A] [AddCommMonoid M] [Module R A] [Module R M]
-    (f : ℕ → A →ₗ[R] M) : A[X] →ₗ[R] M where
+    (f : ℕ → A →ₗ[R] M) :
+    A[X] →ₗ[R] M where 
   toFun p := p.Sum fun n r => f n r
   map_add' p q := sum_add_index p q _ (fun n => (f n).map_zero) fun n _ _ => (f n).map_add _ _
   map_smul' c p := by
@@ -78,7 +79,7 @@ def lsum {R A M : Type _} [Semiring R] [Semiring A] [AddCommMonoid M] [Module R 
 variable (R)
 
 /-- The nth coefficient, as a linear map. -/
-def lcoeff (n : ℕ) : R[X] →ₗ[R] R where
+def lcoeff (n : ℕ) : R[X] →ₗ[R] R where 
   toFun p := coeff p n
   map_add' p q := coeff_add p q n
   map_smul' r p := coeff_smul r p n
@@ -119,7 +120,7 @@ theorem mul_coeff_zero (p q : R[X]) : coeff (p * q) 0 = coeff p 0 * coeff q 0 :=
 
 -- TODO: golf using `constant_coeff` once #17664 is merged
 theorem is_unit_C {x : R} : IsUnit (c x) ↔ IsUnit x :=
-  ⟨by
+  ⟨by 
     rintro ⟨⟨q, p, hqp, hpq⟩, rfl : q = C x⟩
     exact
       ⟨⟨(C x).coeff 0, p.coeff 0, by rw [← mul_coeff_zero, hqp, coeff_one_zero], by
@@ -210,7 +211,7 @@ end Fewnomials
 
 @[simp]
 theorem coeff_mul_X_pow (p : R[X]) (n d : ℕ) : coeff (p * Polynomial.x ^ n) (d + n) = coeff p d :=
-  by
+  by 
   rw [coeff_mul, sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
   · rintro ⟨i, j⟩ h1 h2
     rw [coeff_X_pow, if_neg, mul_zero]
@@ -218,9 +219,7 @@ theorem coeff_mul_X_pow (p : R[X]) (n d : ℕ) : coeff (p * Polynomial.x ^ n) (d
     apply h2
     rw [nat.mem_antidiagonal, add_right_cancel_iff] at h1
     subst h1
-    
   · exact fun h1 => (h1 (nat.mem_antidiagonal.2 rfl)).elim
-    
 #align polynomial.coeff_mul_X_pow Polynomial.coeff_mul_X_pow
 
 @[simp]
@@ -232,11 +231,9 @@ theorem coeff_mul_X_pow' (p : R[X]) (n d : ℕ) :
     (p * X ^ n).coeff d = ite (n ≤ d) (p.coeff (d - n)) 0 := by
   split_ifs
   · rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
-    
   · refine' (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => _)
     rw [coeff_X_pow, if_neg, mul_zero]
     exact ((le_of_add_le_right (finset.nat.mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).Ne
-    
 #align polynomial.coeff_mul_X_pow' Polynomial.coeff_mul_X_pow'
 
 theorem coeff_X_pow_mul' (p : R[X]) (n d : ℕ) :
@@ -298,11 +295,9 @@ theorem coeff_X_add_C_pow (r : R) (n k : ℕ) :
   rw [Finset.sum_eq_single k, coeff_X_pow_self, one_mul]
   · intro _ _ h
     simp [coeff_X_pow, h.symm]
-    
   · simp only [coeff_X_pow_self, one_mul, not_lt, Finset.mem_range]
     intro h
     rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, mul_zero]
-    
 #align polynomial.coeff_X_add_C_pow Polynomial.coeff_X_add_C_pow
 
 theorem coeff_X_add_one_pow (R : Type _) [Semiring R] (n k : ℕ) :
@@ -318,23 +313,19 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : c r ∣ φ ↔ ∀ i, r ∣ φ
   · rintro ⟨φ, rfl⟩ c
     rw [coeff_C_mul]
     apply dvd_mul_right
-    
   · intro h
     choose c hc using h
-    classical
-    let c' : ℕ → R := fun i => if i ∈ φ.support then c i else 0
-    let ψ : R[X] := ∑ i in φ.support, monomial i (c' i)
-    use ψ
-    ext i
-    simp only [ψ, c', coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff,
-      Finset.sum_ite_eq']
-    split_ifs with hi hi
-    · rw [hc]
-      
-    · rw [not_not] at hi
-      rwa [mul_zero]
-      
-    
+    classical 
+      let c' : ℕ → R := fun i => if i ∈ φ.support then c i else 0
+      let ψ : R[X] := ∑ i in φ.support, monomial i (c' i)
+      use ψ
+      ext i
+      simp only [ψ, c', coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff,
+        Finset.sum_ite_eq']
+      split_ifs with hi hi
+      · rw [hc]
+      · rw [not_not] at hi
+        rwa [mul_zero]
 #align polynomial.C_dvd_iff_dvd_coeff Polynomial.C_dvd_iff_dvd_coeff
 
 theorem coeff_bit0_mul (P Q : R[X]) (n : ℕ) : coeff (bit0 P * Q) n = 2 * coeff (P * Q) n := by
@@ -364,22 +355,18 @@ section cast
 theorem nat_cast_coeff_zero {n : ℕ} {R : Type _} [Semiring R] : (n : R[X]).coeff 0 = n := by
   induction' n with n ih
   · simp
-    
   · simp [ih]
-    
 #align polynomial.nat_cast_coeff_zero Polynomial.nat_cast_coeff_zero
 
 @[simp, norm_cast]
 theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiring R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n :=
-  by
+  by 
   fconstructor
   · intro h
     apply_fun fun p => p.coeff 0  at h
     simpa using h
-    
   · rintro rfl
     rfl
-    
 #align polynomial.nat_cast_inj Polynomial.nat_cast_inj
 
 @[simp]
@@ -393,10 +380,8 @@ theorem int_cast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[
   · intro h
     apply_fun fun p => p.coeff 0  at h
     simpa using h
-    
   · rintro rfl
     rfl
-    
 #align polynomial.int_cast_inj Polynomial.int_cast_inj
 
 end cast

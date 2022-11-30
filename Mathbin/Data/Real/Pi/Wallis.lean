@@ -23,15 +23,14 @@ theorem integral_sin_pow_div_tendsto_one :
   have h₄ :
     ∀ n,
       ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≥ 2 * n / (2 * n + 1) :=
-    by
+    by 
     rintro ⟨n⟩
     · have : 0 ≤ (1 + 1) / π := div_nonneg (by norm_num) pi_pos.le
       simp [this]
-      
     calc
       ((∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n.succ)) ≥
           (∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n + 1) :=
-        by
+        by 
         refine' div_le_div (integral_sin_pow_pos _).le le_rfl (integral_sin_pow_pos _) _
         convert integral_sin_pow_succ_le (2 * n + 1) using 1
       _ = 2 * ↑n.succ / (2 * ↑n.succ + 1) := by
@@ -43,29 +42,27 @@ theorem integral_sin_pow_div_tendsto_one :
   refine' tendsto_of_tendsto_of_tendsto_of_le_of_le _ _ (fun n => (h₄ n).le) fun n => h₃ n
   · refine' metric.tendsto_at_top.mpr fun ε hε => ⟨⌈1 / ε⌉₊, fun n hn => _⟩
     have h : (2 : ℝ) * n / (2 * n + 1) - 1 = -1 / (2 * n + 1) := by
-      conv_lhs =>
-      congr
-      skip
-      rw [←
-        @div_self _ _ ((2 : ℝ) * n + 1)
-          (by
-            norm_cast
-            linarith)]
+      conv_lhs => 
+        congr
+        skip
+        rw [←
+          @div_self _ _ ((2 : ℝ) * n + 1)
+            (by 
+              norm_cast
+              linarith)]
       rw [← sub_div, ← sub_sub, sub_self, zero_sub]
-    have hpos : (0 : ℝ) < 2 * n + 1 := by
+    have hpos : (0 : ℝ) < 2 * n + 1 := by 
       norm_cast
       norm_num
     rw [dist_eq, h, abs_div, abs_neg, abs_one, abs_of_pos hpos, one_div_lt hpos hε]
     calc
       1 / ε ≤ ⌈1 / ε⌉₊ := Nat.le_ceil _
       _ ≤ n := by exact_mod_cast hn.le
-      _ < 2 * n + 1 := by
+      _ < 2 * n + 1 := by 
         norm_cast
         linarith
       
-    
   · exact tendsto_const_nhds
-    
 #align real.integral_sin_pow_div_tendsto_one Real.integral_sin_pow_div_tendsto_one
 
 /-- This theorem establishes the Wallis Product for `π`. Our proof is largely about analyzing
@@ -91,10 +88,7 @@ theorem tendsto_prod_pi_div_two :
       at_top (𝓝 1)
   · convert h.const_mul (π / 2)
     · simp_rw [mul_inv_cancel_left₀ (show π / 2 ≠ 0 by norm_num [pi_ne_zero] )]
-      
     · rw [mul_one]
-      
-    
   convert integral_sin_pow_div_tendsto_one
   funext
   rw [integral_sin_pow_even, integral_sin_pow_odd, mul_div_mul_comm, ← prod_div_distrib, inv_div]

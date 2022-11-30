@@ -62,18 +62,19 @@ theorem mul_apply [Mul Y] (f g : LocallyConstant X Y) (x : X) : (f * g) x = f x 
 @[to_additive]
 instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
   { LocallyConstant.hasOne, LocallyConstant.hasMul with
-    one_mul := by
+    one_mul := by 
       intros
       ext
       simp only [mul_apply, one_apply, one_mul],
-    mul_one := by
+    mul_one := by 
       intros
       ext
       simp only [mul_apply, one_apply, mul_one] }
 
 /-- `coe_fn` is a `monoid_hom`. -/
 @[to_additive "`coe_fn` is an `add_monoid_hom`.", simps]
-def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y where
+def coeFnMonoidHom [MulOneClass Y] :
+    LocallyConstant X Y →* X → Y where 
   toFun := coeFn
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -81,7 +82,8 @@ def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y where
 
 /-- The constant-function embedding, as a multiplicative monoid hom. -/
 @[to_additive "The constant-function embedding, as an additive monoid hom.", simps]
-def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y where
+def constMonoidHom [MulOneClass Y] :
+    Y →* LocallyConstant X Y where 
   toFun := const X
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -89,11 +91,11 @@ def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y where
 
 instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
   { LocallyConstant.hasZero, LocallyConstant.hasMul with
-    zero_mul := by
+    zero_mul := by 
       intros
       ext
       simp only [mul_apply, zero_apply, zero_mul],
-    mul_zero := by
+    mul_zero := by 
       intros
       ext
       simp only [mul_apply, zero_apply, mul_zero] }
@@ -148,7 +150,7 @@ theorem div_apply [Div Y] (f g : LocallyConstant X Y) (x : X) : (f / g) x = f x 
 @[to_additive]
 instance [Semigroup Y] : Semigroup (LocallyConstant X Y) :=
   { LocallyConstant.hasMul with
-    mul_assoc := by
+    mul_assoc := by 
       intros
       ext
       simp only [mul_apply, mul_assoc] }
@@ -159,7 +161,7 @@ instance [SemigroupWithZero Y] : SemigroupWithZero (LocallyConstant X Y) :=
 @[to_additive]
 instance [CommSemigroup Y] : CommSemigroup (LocallyConstant X Y) :=
   { LocallyConstant.semigroup with
-    mul_comm := by
+    mul_comm := by 
       intros
       ext
       simp only [mul_apply, mul_comm] }
@@ -180,11 +182,11 @@ instance [CommMonoid Y] : CommMonoid (LocallyConstant X Y) :=
 @[to_additive]
 instance [Group Y] : Group (LocallyConstant X Y) :=
   { LocallyConstant.monoid, LocallyConstant.hasInv, LocallyConstant.hasDiv with
-    mul_left_inv := by
+    mul_left_inv := by 
       intros
       ext
       simp only [mul_apply, inv_apply, one_apply, mul_left_inv],
-    div_eq_mul_inv := by
+    div_eq_mul_inv := by 
       intros
       ext
       simp only [mul_apply, inv_apply, div_apply, div_eq_mul_inv] }
@@ -195,11 +197,11 @@ instance [CommGroup Y] : CommGroup (LocallyConstant X Y) :=
 
 instance [Distrib Y] : Distrib (LocallyConstant X Y) :=
   { LocallyConstant.hasAdd, LocallyConstant.hasMul with
-    left_distrib := by
+    left_distrib := by 
       intros
       ext
       simp only [mul_apply, add_apply, mul_add],
-    right_distrib := by
+    right_distrib := by 
       intros
       ext
       simp only [mul_apply, add_apply, add_mul] }
@@ -280,13 +282,16 @@ section Algebra
 
 variable [CommSemiring R] [Semiring Y] [Algebra R Y]
 
-instance : Algebra R (LocallyConstant X Y) where
+instance :
+    Algebra R
+      (LocallyConstant X
+        Y) where 
   toRingHom := constRingHom.comp <| algebraMap R Y
-  commutes' := by
+  commutes' := by 
     intros
     ext
     exact Algebra.commutes' _ _
-  smul_def' := by
+  smul_def' := by 
     intros
     ext
     exact Algebra.smul_def' _ _

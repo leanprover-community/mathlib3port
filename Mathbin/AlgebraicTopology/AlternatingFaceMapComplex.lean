@@ -70,14 +70,15 @@ def objD (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
 
 /-- ## The chain complex relation `d ≫ d`
 -/
-theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
+theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
+  by
   -- we start by expanding d ≫ d as a double sum
   dsimp
   rw [comp_sum]
   let d_l := fun j : Fin (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
   let d_r := fun i : Fin (n + 2) => (-1 : ℤ) ^ (i : ℕ) • X.δ i
   rw [show (fun i => (∑ j : Fin (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Fin (n + 3), d_l j ≫ d_r i
-      by
+      by 
       ext i
       rw [sum_comp]]
   rw [← Finset.sum_product']
@@ -99,24 +100,21 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.coe_succ,
       Fin.coe_cast_lt] at hij⊢
     linarith
-    
   · -- identification of corresponding terms in both sums
     rintro ⟨i, j⟩ hij
     simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_add, neg_mul,
       mul_one, Fin.coe_cast_lt, Fin.coe_succ, pow_one, mul_neg, neg_neg]
     let jj : Fin (n + 2) := (φ (i, j) hij).1
-    have ineq : jj ≤ i := by
+    have ineq : jj ≤ i := by 
       rw [← Fin.coe_fin_le]
       simpa using hij
     rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.cast_succ_cast_lt, mul_comm]
-    
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
     rw [Prod.mk.inj_iff]
     refine' ⟨by simpa using congr_arg Prod.snd h, _⟩
     have h1 := congr_arg Fin.castSucc (congr_arg Prod.fst h)
     simpa [Fin.cast_succ_cast_lt] using h1
-    
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
     simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at
@@ -124,14 +122,11 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     refine' ⟨(j'.pred _, Fin.castSucc i'), _, _⟩
     · intro H
       simpa only [H, Nat.not_lt_zero, Fin.coe_zero] using hij'
-      
-    · simpa only [true_and_iff, Finset.mem_univ, Fin.coe_cast_succ, Fin.coe_pred,
+    ·
+      simpa only [true_and_iff, Finset.mem_univ, Fin.coe_cast_succ, Fin.coe_pred,
         Finset.mem_filter] using Nat.le_pred_of_lt hij'
-      
     · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.cast_lt_cast_succ]
       constructor <;> rfl
-      
-    
 #align
   algebraic_topology.alternating_face_map_complex.d_squared AlgebraicTopology.AlternatingFaceMapComplex.d_squared
 
@@ -185,7 +180,9 @@ end AlternatingFaceMapComplex
 variable (C : Type _) [Category C] [Preadditive C]
 
 /-- The alternating face map complex, as a functor -/
-def alternatingFaceMapComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
+def alternatingFaceMapComplex :
+    SimplicialObject C ⥤
+      ChainComplex C ℕ where 
   obj := AlternatingFaceMapComplex.obj
   map X Y f := AlternatingFaceMapComplex.map f
 #align algebraic_topology.alternating_face_map_complex AlgebraicTopology.alternatingFaceMapComplex
@@ -217,14 +214,13 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
     [F.Additive] :
     alternatingFaceMapComplex C ⋙ F.mapHomologicalComplex _ =
       (SimplicialObject.whiskering C D).obj F ⋙ alternatingFaceMapComplex D :=
-  by
+  by 
   apply CategoryTheory.Functor.ext
   · intro X Y f
     ext n
     simp only [functor.comp_map, HomologicalComplex.comp_f, alternating_face_map_complex_map_f,
       functor.map_homological_complex_map_f, HomologicalComplex.eq_to_hom_f, eq_to_hom_refl,
       comp_id, id_comp, simplicial_object.whiskering_obj_map_app]
-    
   · intro X
     apply HomologicalComplex.ext
     · rintro i j (rfl : j + 1 = i)
@@ -232,11 +228,8 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
       simpa only [functor.map_homological_complex_obj_d, alternating_face_map_complex_obj_d,
         eq_to_hom_refl, id_comp, comp_id, alternating_face_map_complex.obj_d, functor.map_sum,
         functor.map_zsmul]
-      
     · ext n
       rfl
-      
-    
 #align
   algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternating_face_map_complex
 
@@ -247,15 +240,17 @@ complex attached to an augmented simplicial object. -/
 @[simps]
 def ε [Limits.HasZeroObject C] :
     simplicial_object.augmented.drop ⋙ AlgebraicTopology.alternatingFaceMapComplex C ⟶
-      simplicial_object.augmented.point ⋙ ChainComplex.single₀ C where
-  app X := by
+      simplicial_object.augmented.point ⋙
+        ChainComplex.single₀
+          C where 
+  app X := by 
     equiv_rw ChainComplex.toSingle₀Equiv _ _
     refine' ⟨X.hom.app (op [0]), _⟩
     dsimp
     simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero,
       one_zsmul, Fin.coe_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
     apply add_right_neg
-  naturality' X Y f := by
+  naturality' X Y f := by 
     ext
     exact congr_app f.w _
 #align
@@ -273,7 +268,8 @@ variable {A : Type _} [Category A] [Abelian A]
 /-- The inclusion map of the Moore complex in the alternating face map complex -/
 def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     (normalizedMooreComplex A).obj X ⟶ (alternatingFaceMapComplex A).obj X :=
-  ChainComplex.ofHom _ _ _ _ _ _ (fun n => (NormalizedMooreComplex.objX X n).arrow) fun n => by
+  ChainComplex.ofHom _ _ _ _ _ _ (fun n => (NormalizedMooreComplex.objX X n).arrow) fun n =>
+    by
     /- we have to show the compatibility of the differentials on the alternating
              face map complex with those defined on the normalized Moore complex:
              we first get rid of the terms of the alternating sum that are obviously
@@ -285,7 +281,7 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     have def_t :
       ∀ j : Fin (n + 2),
         t j = (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) :=
-      by
+      by 
       intro j
       rfl
     rw [Fin.sum_univ_succ t]
@@ -379,7 +375,9 @@ variable (C)
 
 /-- The alternating coface map complex, as a functor -/
 @[simps]
-def alternatingCofaceMapComplex : CosimplicialObject C ⥤ CochainComplex C ℕ where
+def alternatingCofaceMapComplex :
+    CosimplicialObject C ⥤
+      CochainComplex C ℕ where 
   obj := AlternatingCofaceMapComplex.obj
   map X Y f := AlternatingCofaceMapComplex.map f
 #align

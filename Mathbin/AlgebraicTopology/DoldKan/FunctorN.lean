@@ -50,18 +50,22 @@ variable {C : Type _} [Category C] [Preadditive C]
 /-- The functor `simplicial_object C ⥤ karoubi (chain_complex C ℕ)` which maps
 `X` to the formal direct factor of `K[X]` defined by `P_infty`. -/
 @[simps]
-def n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ) where
+def n₁ :
+    SimplicialObject C ⥤
+      Karoubi
+        (ChainComplex C
+          ℕ) where 
   obj X := { x := AlternatingFaceMapComplex.obj X, p := pInfty, idem := P_infty_idem }
   map X Y f :=
     { f := P_infty ≫ AlternatingFaceMapComplex.map f,
-      comm := by
+      comm := by 
         ext
         simp }
-  map_id' X := by
+  map_id' X := by 
     ext
     dsimp
     simp
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     ext
     simp
 #align algebraic_topology.dold_kan.N₁ AlgebraicTopology.DoldKan.n₁

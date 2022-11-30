@@ -96,15 +96,15 @@ theorem adjoin_induction₂ {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin 
     (Hmul_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ * x₂) y)
     (Hmul_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ * y₂)) : p a b := by
   refine' adjoin_induction hb _ (fun r => _) (Hadd_right a) (Hmul_right a)
-  · exact
+  ·
+    exact
       adjoin_induction ha Hs Halg_left (fun x y Hx Hy z hz => Hadd_left x y z (Hx z hz) (Hy z hz))
         fun x y Hx Hy z hz => Hmul_left x y z (Hx z hz) (Hy z hz)
-    
-  · exact
+  ·
+    exact
       adjoin_induction ha (Halg_right r) (fun r' => Halg r' r)
         (fun x y => Hadd_left x y ((algebraMap R A) r)) fun x y =>
         Hmul_left x y ((algebraMap R A) r)
-    
 #align algebra.adjoin_induction₂ Algebra.adjoin_induction₂
 
 /-- The difference with `algebra.adjoin_induction` is that this acts on the subtype. -/
@@ -130,13 +130,9 @@ theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coe : adjoin R s →
     eq_top_iff.2 fun x =>
       adjoin_induction' (fun a ha => _) (fun r => _) (fun _ _ => _) (fun _ _ => _) x
   · exact subset_adjoin ha
-    
   · exact Subalgebra.algebra_map_mem _ r
-    
   · exact Subalgebra.add_mem _
-    
   · exact Subalgebra.mul_mem _
-    
 #align algebra.adjoin_adjoin_coe_preimage Algebra.adjoin_adjoin_coe_preimage
 
 theorem adjoin_union (s t : Set A) : adjoin R (s ∪ t) = adjoin R s ⊔ adjoin R t :=
@@ -147,7 +143,7 @@ variable (R A)
 
 @[simp]
 theorem adjoin_empty : adjoin R (∅ : Set A) = ⊥ :=
-  show adjoin R ⊥ = ⊥ by
+  show adjoin R ⊥ = ⊥ by 
     apply GaloisConnection.l_bot
     exact Algebra.gc
 #align algebra.adjoin_empty Algebra.adjoin_empty
@@ -166,7 +162,6 @@ theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s)
     clear hr
     induction' L with hd tl ih
     · exact zero_mem _
-      
     rw [List.forall_mem_cons] at HL
     rw [List.map_cons, List.sum_cons]
     refine' Submodule.add_mem _ _ (ih HL.2)
@@ -178,19 +173,16 @@ theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s)
       exact smul_mem _ _ (subset_span hr)
     induction' hd with hd tl ih
     · exact ⟨1, 1, (Submonoid.closure s).one_mem', one_smul _ _⟩
-      
     rw [List.forall_mem_cons] at HL
     rcases ih HL.2 with ⟨z, r, hr, hzr⟩
     rw [List.prod_cons, ← hzr]
     rcases HL.1 with (⟨hd, rfl⟩ | hs)
     · refine' ⟨hd * z, r, hr, _⟩
       rw [Algebra.smul_def, Algebra.smul_def, (algebraMap _ _).map_mul, _root_.mul_assoc]
-      
-    · exact
+    ·
+      exact
         ⟨z, hd * r, Submonoid.mul_mem _ (Submonoid.subset_closure hs) hr,
           (mul_smul_comm _ _ _).symm⟩
-      
-    
   refine' span_le.2 _
   change Submonoid.closure s ≤ (adjoin R s).toSubsemiring.toSubmonoid
   exact Submonoid.closure_le.2 subset_adjoin
@@ -253,15 +245,15 @@ theorem mem_adjoin_of_map_mul {s} {x : A} {f : A →ₗ[R] B} (hf : ∀ a₁ a�
 theorem adjoin_inl_union_inr_eq_prod (s) (t) :
     adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1})) =
       (adjoin R s).Prod (adjoin R t) :=
-  by
+  by 
   apply le_antisymm
-  · simp only [adjoin_le_iff, Set.insert_subset, Subalgebra.zero_mem, Subalgebra.one_mem,
+  ·
+    simp only [adjoin_le_iff, Set.insert_subset, Subalgebra.zero_mem, Subalgebra.one_mem,
       subset_adjoin,-- the rest comes from `squeeze_simp`
       Set.union_subset_iff,
       LinearMap.coe_inl, Set.mk_preimage_prod_right, Set.image_subset_iff, SetLike.mem_coe,
       Set.mk_preimage_prod_left, LinearMap.coe_inr, and_self_iff, Set.union_singleton,
       Subalgebra.coe_prod]
-    
   · rintro ⟨a, b⟩ ⟨ha, hb⟩
     let P := adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1}))
     have Ha : (a, (0 : B)) ∈ adjoin R (LinearMap.inl R A B '' (s ∪ {1})) :=
@@ -271,7 +263,6 @@ theorem adjoin_inl_union_inr_eq_prod (s) (t) :
     replace Ha : (a, (0 : B)) ∈ P := adjoin_mono (Set.subset_union_left _ _) Ha
     replace Hb : ((0 : A), b) ∈ P := adjoin_mono (Set.subset_union_right _ _) Hb
     simpa using Subalgebra.add_mem _ Ha Hb
-    
 #align algebra.adjoin_inl_union_inr_eq_prod Algebra.adjoin_inl_union_inr_eq_prod
 
 /-- If all elements of `s : set A` commute pairwise, then `adjoin R s` is a commutative
@@ -279,7 +270,7 @@ semiring.  -/
 def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b = b * a) :
     CommSemiring (adjoin R s) :=
   { (adjoin R s).toSemiring with
-    mul_comm := fun x y => by
+    mul_comm := fun x y => by 
       ext
       simp only [Subalgebra.coe_mul]
       exact
@@ -330,11 +321,9 @@ theorem adjoin_adjoin_of_tower [Semiring B] [Algebra R B] [Algebra A B] [IsScala
     (s : Set B) : adjoin A (adjoin R s : Set B) = adjoin A s := by
   apply le_antisymm (adjoin_le _)
   · exact adjoin_mono subset_adjoin
-    
   · change adjoin R s ≤ (adjoin A s).restrictScalars R
     refine' adjoin_le _
     exact subset_adjoin
-    
 #align algebra.adjoin_adjoin_of_tower Algebra.adjoin_adjoin_of_tower
 
 variable {R}

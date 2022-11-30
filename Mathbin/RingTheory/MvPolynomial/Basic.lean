@@ -59,7 +59,8 @@ end CharP
 section Homomorphism
 
 theorem map_range_eq_map {R S : Type _} [CommRing R] [CommRing S] (p : MvPolynomial σ R)
-    (f : R →+* S) : Finsupp.mapRange f f.map_zero p = map f p := by
+    (f : R →+* S) : Finsupp.mapRange f f.map_zero p = map f p :=
+  by
   -- `finsupp.map_range_finset_sum` expects `f : R →+ S`
   change Finsupp.mapRange (f : R →+ S) (f : R →+ S).map_zero p = map f p
   rw [p.as_sum, Finsupp.map_range_finset_sum, (map f).map_sum]

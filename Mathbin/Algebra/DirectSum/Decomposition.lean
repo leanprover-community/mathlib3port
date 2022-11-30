@@ -57,7 +57,7 @@ include M
 
 /-- `direct_sum.decomposition` instances, while carrying data, are always equal. -/
 instance : Subsingleton (Decomposition ℳ) :=
-  ⟨fun x y => by
+  ⟨fun x y => by 
     cases' x with x xl xr
     cases' y with y yl yr
     congr
@@ -71,7 +71,7 @@ protected theorem Decomposition.is_internal : DirectSum.IsInternal ℳ :=
 
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
 to a direct sum of components. This is the canonical spelling of the `decompose'` field. -/
-def decompose : M ≃ ⨁ i, ℳ i where
+def decompose : M ≃ ⨁ i, ℳ i where 
   toFun := Decomposition.decompose'
   invFun := DirectSum.coeAddMonoidHom ℳ
   left_inv := Decomposition.left_inv

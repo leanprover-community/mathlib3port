@@ -86,7 +86,7 @@ Fréchet derivative -/
 theorem iterated_deriv_within_eq_equiv_comp :
     iteratedDerivWithin n f s =
       (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F).symm ∘ iteratedFderivWithin 𝕜 n f s :=
-  by
+  by 
   ext x
   rfl
 #align iterated_deriv_within_eq_equiv_comp iterated_deriv_within_eq_equiv_comp
@@ -135,9 +135,7 @@ theorem contDiffOnOfContinuousOnDifferentiableOnDeriv {n : ℕ∞}
     ContDiffOn 𝕜 n f s := by
   apply contDiffOnOfContinuousOnDifferentiableOn
   · simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff]
-    
   · simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
-    
 #align
   cont_diff_on_of_continuous_on_differentiable_on_deriv contDiffOnOfContinuousOnDifferentiableOnDeriv
 
@@ -148,7 +146,7 @@ advantage of avoiding the discussion of continuity in the proof (and for `n = �
 -/
 theorem contDiffOnOfDifferentiableOnDeriv {n : ℕ∞}
     (h : ∀ m : ℕ, (m : ℕ∞) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) :
-    ContDiffOn 𝕜 n f s := by
+    ContDiffOn 𝕜 n f s := by 
   apply contDiffOnOfDifferentiableOn
   simpa only [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 #align cont_diff_on_of_differentiable_on_deriv contDiffOnOfDifferentiableOnDeriv
@@ -207,10 +205,8 @@ theorem iterated_deriv_within_eq_iterate {x : 𝕜} (hs : UniqueDiffOn 𝕜 s) (
     iteratedDerivWithin n f s x = ((fun g : 𝕜 → F => derivWithin g s)^[n]) f x := by
   induction' n with n IH generalizing x
   · simp
-    
   · rw [iterated_deriv_within_succ (hs x hx), Function.iterate_succ']
     exact deriv_within_congr (hs x hx) (fun y hy => IH hy) (IH hx)
-    
 #align iterated_deriv_within_eq_iterate iterated_deriv_within_eq_iterate
 
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
@@ -234,7 +230,7 @@ Fréchet derivative -/
 theorem iterated_deriv_eq_equiv_comp :
     iteratedDeriv n f =
       (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F).symm ∘ iteratedFderiv 𝕜 n f :=
-  by
+  by 
   ext x
   rfl
 #align iterated_deriv_eq_equiv_comp iterated_deriv_eq_equiv_comp

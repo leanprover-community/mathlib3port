@@ -109,16 +109,16 @@ protected theorem congr_arg (η : ApplicativeTransformation F G) {α : Type u} {
 #align applicative_transformation.congr_arg ApplicativeTransformation.congr_arg
 
 theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' :=
-  by
+  by 
   cases η
   cases η'
   congr
   exact h
 #align applicative_transformation.coe_inj ApplicativeTransformation.coe_inj
 
-@[ext.1]
+@[ext]
 theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ (α : Type u) (x : F α), η x = η' x) :
-    η = η' := by
+    η = η' := by 
   apply coe_inj
   ext1 α
   exact funext (h α)
@@ -156,7 +156,8 @@ theorem preserves_map' {α β} (x : α → β) : @η _ ∘ Functor.map x = Funct
 end Preserves
 
 /-- The identity applicative transformation from an applicative functor to itself. -/
-def idTransformation : ApplicativeTransformation F F where
+def idTransformation : ApplicativeTransformation F
+      F where 
   app α := id
   preserves_pure' := by simp
   preserves_seq' α β x y := by simp
@@ -171,7 +172,7 @@ variable {H : Type u → Type s} [Applicative H] [LawfulApplicative H]
 
 /-- The composition of applicative transformations. -/
 def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) :
-    ApplicativeTransformation F H where
+    ApplicativeTransformation F H where 
   app α x := η' (η x)
   preserves_pure' α x := by simp [functor_norm]
   preserves_seq' α β x y := by simp [functor_norm]

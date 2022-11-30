@@ -23,27 +23,15 @@ run_cmd
 run_cmd
   tactic.add_doc_string `simp_attr.functor_norm "Simp set for functor_norm"
 
-/- warning: functor.map_map -> Functor.map_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} {f : Type.{u} -> Type.{v}} [_inst_1 : Functor.{u, v} f] [_inst_2 : IsLawfulFunctor.{u, v} f _inst_1] (m : α -> β) (g : β -> γ) (x : f α), Eq.{succ v} (f γ) (Functor.map.{u, v} (fun {α : Type.{u}} => f α) _inst_1 β γ g (Functor.map.{u, v} (fun {α : Type.{u}} => f α) _inst_1 α β m x)) (Functor.map.{u, v} f _inst_1 α γ (Function.comp.{succ u, succ u, succ u} α β γ g m) x)
-but is expected to have type
-  forall (f : Type.{u} -> Type.{v}) [inst._@.Mathlib.Data.Equiv.Functor._hyg.22 : Functor.{u, v} f] [inst._@.Mathlib.Data.Equiv.Functor._hyg.25 : LawfulFunctor.{u, v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.22] {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} (m : α -> β) (g : β -> γ) (x : f α), Eq.{succ v} (f γ) (Functor.map.{u, v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.22 β γ g (Functor.map.{u, v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.22 α β m x)) (Functor.map.{u, v} f inst._@.Mathlib.Data.Equiv.Functor._hyg.22 α γ (Function.comp.{succ u, succ u, succ u} α β γ g m) x)
-Case conversion may be inaccurate. Consider using '#align functor.map_map Functor.map_mapₓ'. -/
 @[functor_norm]
 theorem Functor.map_map (m : α → β) (g : β → γ) (x : f α) : g <$> m <$> x = (g ∘ m) <$> x :=
   (comp_map _ _ _).symm
-#align functor.map_map Functor.map_map
+#align functor.map_map Functor.map_mapₓ
 
-/- warning: id_map' -> id_map' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {f : Type.{u} -> Type.{v}} [_inst_1 : Functor.{u, v} f] [_inst_2 : IsLawfulFunctor.{u, v} f _inst_1] (x : f α), Eq.{succ v} (f α) (Functor.map.{u, v} f _inst_1 α α (fun (a : α) => a) x) x
-but is expected to have type
-  forall {m : Type.{u_1} -> Type.{u_2}} {α : Type.{u_1}} [inst._@.Init.Control.Lawful._hyg.144 : Functor.{u_1, u_2} m] [inst._@.Init.Control.Lawful._hyg.147 : LawfulFunctor.{u_1, u_2} m inst._@.Init.Control.Lawful._hyg.144] (x : m α), Eq.{succ u_2} (m α) (Functor.map.{u_1, u_2} m inst._@.Init.Control.Lawful._hyg.144 α α (fun (a : α) => a) x) x
-Case conversion may be inaccurate. Consider using '#align id_map' id_map'ₓ'. -/
 @[simp]
 theorem id_map' (x : f α) : (fun a => a) <$> x = x :=
   id_map _
-#align id_map' id_map'
+#align id_map' id_map'ₓ
 
 end Functor
 
@@ -51,21 +39,31 @@ section Applicative
 
 variable {F : Type u → Type v} [Applicative F]
 
-def mzipWith {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ (ma₁ : List α₁) (ma₂ : List α₂), F (List φ)
-  | x :: xs, y :: ys => (· :: ·) <$> f x y <*> mzipWith xs ys
+#print zipWithM /-
+def zipWithM {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ (ma₁ : List α₁) (ma₂ : List α₂), F (List φ)
+  | x :: xs, y :: ys => (· :: ·) <$> f x y <*> zipWithM xs ys
   | _, _ => pure []
-#align mzip_with mzipWith
+#align mzip_with zipWithM
+-/
 
-def mzipWith' (f : α → β → F γ) : List α → List β → F PUnit
-  | x :: xs, y :: ys => f x y *> mzipWith' xs ys
+#print zipWithM' /-
+def zipWithM' (f : α → β → F γ) : List α → List β → F PUnit
+  | x :: xs, y :: ys => f x y *> zipWithM' xs ys
   | [], _ => pure PUnit.unit
   | _, [] => pure PUnit.unit
-#align mzip_with' mzipWith'
+#align mzip_with' zipWithM'
+-/
 
 variable [LawfulApplicative F]
 
 attribute [functor_norm] seq_assoc pure_seq_eq_map
 
+/- warning: pure_id'_seq -> pure_id'_seq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {F : Type.{u} -> Type.{v}} [_inst_1 : Applicative.{u, v} F] [_inst_2 : LawfulApplicative.{u, v} F _inst_1] (x : F α), Eq.{succ v} (F α) (Seq.seq.{u, v} F (Applicative.toHasSeq.{u, v} F _inst_1) α α (Pure.pure.{u, v} F (Applicative.toHasPure.{u, v} F _inst_1) (α -> α) (fun (x : α) => x)) x) x
+but is expected to have type
+  forall {α : Type.{u}} {F : Type.{u} -> Type.{v}} [inst._@.Mathlib.Control.Basic._hyg.371 : Applicative.{u, v} F] [inst._@.Mathlib.Control.Basic._hyg.374 : LawfulApplicative.{u, v} F inst._@.Mathlib.Control.Basic._hyg.371] (x : F α), Eq.{succ v} (F α) (Seq.seq.{u, v} F (Applicative.toSeq.{u, v} F inst._@.Mathlib.Control.Basic._hyg.371) α α (Pure.pure.{u, v} F (Applicative.toPure.{u, v} F inst._@.Mathlib.Control.Basic._hyg.371) (α -> α) (fun (x : α) => x)) (fun (x._@.Mathlib.Control.Basic._hyg.397 : Unit) => x)) x
+Case conversion may be inaccurate. Consider using '#align pure_id'_seq pure_id'_seqₓ'. -/
 @[simp]
 theorem pure_id'_seq (x : F α) : (pure fun x => x) <*> x = x :=
   pure_id_seq x
@@ -73,6 +71,12 @@ theorem pure_id'_seq (x : F α) : (pure fun x => x) <*> x = x :=
 
 attribute [functor_norm] seq_assoc pure_seq_eq_map
 
+/- warning: seq_map_assoc -> seq_map_assoc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} {F : Type.{u} -> Type.{v}} [_inst_1 : Applicative.{u, v} F] [_inst_2 : LawfulApplicative.{u, v} F _inst_1] (x : F (α -> β)) (f : γ -> α) (y : F γ), Eq.{succ v} (F β) (Seq.seq.{u, v} F (Applicative.toHasSeq.{u, v} F _inst_1) α β x (Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F _inst_1) γ α f y)) (Seq.seq.{u, v} F (Applicative.toHasSeq.{u, v} F _inst_1) γ β (Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F _inst_1) (α -> β) (γ -> β) (fun (m : α -> β) => Function.comp.{succ u, succ u, succ u} γ α β m f) x) y)
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} {F : Type.{u} -> Type.{v}} [inst._@.Mathlib.Control.Basic._hyg.412 : Applicative.{u, v} F] [inst._@.Mathlib.Control.Basic._hyg.415 : LawfulApplicative.{u, v} F inst._@.Mathlib.Control.Basic._hyg.412] (x : F (α -> β)) (f : γ -> α) (y : F γ), Eq.{succ v} (F β) (Seq.seq.{u, v} F (Applicative.toSeq.{u, v} F inst._@.Mathlib.Control.Basic._hyg.412) α β x (fun (x._@.Mathlib.Control.Basic._hyg.441 : Unit) => Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F inst._@.Mathlib.Control.Basic._hyg.412) γ α f y)) (Seq.seq.{u, v} F (Applicative.toSeq.{u, v} F inst._@.Mathlib.Control.Basic._hyg.412) γ β (Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F inst._@.Mathlib.Control.Basic._hyg.412) (α -> β) (γ -> β) (fun (x._@.Mathlib.Control.Basic._hyg.458 : α -> β) => Function.comp.{succ u, succ u, succ u} γ α β x._@.Mathlib.Control.Basic._hyg.458 f) x) (fun (x._@.Mathlib.Control.Basic._hyg.472 : Unit) => y))
+Case conversion may be inaccurate. Consider using '#align seq_map_assoc seq_map_assocₓ'. -/
 @[functor_norm]
 theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) :
     x <*> f <$> y = (fun m : α → β => m ∘ f) <$> x <*> y := by
@@ -81,6 +85,12 @@ theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) :
   simp [pure_seq_eq_map]
 #align seq_map_assoc seq_map_assoc
 
+/- warning: map_seq -> map_seq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} {F : Type.{u} -> Type.{v}} [_inst_1 : Applicative.{u, v} F] [_inst_2 : LawfulApplicative.{u, v} F _inst_1] (f : β -> γ) (x : F (α -> β)) (y : F α), Eq.{succ v} (F γ) (Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F _inst_1) β γ f (Seq.seq.{u, v} F (Applicative.toHasSeq.{u, v} F _inst_1) α β x y)) (Seq.seq.{u, v} F (Applicative.toHasSeq.{u, v} F _inst_1) α γ (Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F _inst_1) (α -> β) (α -> γ) (Function.comp.{succ u, succ u, succ u} α β γ f) x) y)
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} {F : Type.{u} -> Type.{v}} [inst._@.Mathlib.Control.Basic._hyg.495 : Applicative.{u, v} F] [inst._@.Mathlib.Control.Basic._hyg.498 : LawfulApplicative.{u, v} F inst._@.Mathlib.Control.Basic._hyg.495] (f : β -> γ) (x : F (α -> β)) (y : F α), Eq.{succ v} (F γ) (Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F inst._@.Mathlib.Control.Basic._hyg.495) β γ f (Seq.seq.{u, v} F (Applicative.toSeq.{u, v} F inst._@.Mathlib.Control.Basic._hyg.495) α β x (fun (x._@.Mathlib.Control.Basic._hyg.530 : Unit) => y))) (Seq.seq.{u, v} F (Applicative.toSeq.{u, v} F inst._@.Mathlib.Control.Basic._hyg.495) α γ (Functor.map.{u, v} F (Applicative.toFunctor.{u, v} F inst._@.Mathlib.Control.Basic._hyg.495) (α -> β) (α -> γ) (fun (x._@.Mathlib.Control.Basic._hyg.543 : α -> β) => Function.comp.{succ u, succ u, succ u} α β γ f x._@.Mathlib.Control.Basic._hyg.543) x) (fun (x._@.Mathlib.Control.Basic._hyg.557 : Unit) => y))
+Case conversion may be inaccurate. Consider using '#align map_seq map_seqₓ'. -/
 @[functor_norm]
 theorem map_seq (f : β → γ) (x : F (α → β)) (y : F α) : f <$> (x <*> y) = (· ∘ ·) f <$> x <*> y :=
   by simp [(pure_seq_eq_map _ _).symm] <;> simp [seq_assoc]
@@ -97,32 +107,32 @@ variable {m : Type u → Type v} [Monad m] [LawfulMonad m]
 
 open List
 
-def List.mpartition {f : Type → Type} [Monad f] {α : Type} (p : α → f Bool) :
+#print List.partitionM /-
+def List.partitionM {f : Type → Type} [Monad f] {α : Type} (p : α → f Bool) :
     List α → f (List α × List α)
   | [] => pure ([], [])
   | x :: xs =>
-    condM (p x) (Prod.map (cons x) id <$> List.mpartition xs)
-      (Prod.map id (cons x) <$> List.mpartition xs)
-#align list.mpartition List.mpartition
+    condM (p x) (Prod.map (cons x) id <$> List.partitionM xs)
+      (Prod.map id (cons x) <$> List.partitionM xs)
+#align list.mpartition List.partitionM
+-/
 
+#print map_bind /-
 theorem map_bind (x : m α) {g : α → m β} {f : β → γ} : f <$> (x >>= g) = x >>= fun a => f <$> g a :=
   by rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [bind_pure_comp_eq_map]
 #align map_bind map_bind
+-/
 
+#print seq_bind_eq /-
 theorem seq_bind_eq (x : m α) {g : β → m γ} {f : α → β} : f <$> x >>= g = x >>= g ∘ f :=
   show bind (f <$> x) g = bind x (g ∘ f) by
     rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [pure_bind]
 #align seq_bind_eq seq_bind_eq
+-/
 
-/- warning: seq_eq_bind_map -> seq_eq_bind_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{u}} {m : Type.{u} -> Type.{v}} [_inst_1 : Monad.{u, v} m] [_inst_2 : LawfulMonad.{u, v} m _inst_1] {x : m α} {f : m (α -> β)}, Eq.{succ v} (m β) (Seq.seq.{u, v} m (Applicative.toHasSeq.{u, v} m (Monad.toApplicative.{u, v} m _inst_1)) α β f x) (Bind.bind.{u, v} m (Monad.toHasBind.{u, v} m _inst_1) (α -> β) β f (fun (_x : α -> β) => Functor.map.{u, v} m (Applicative.toFunctor.{u, v} m (Monad.toApplicative.{u, v} m _inst_1)) α β _x x))
-but is expected to have type
-  forall {m : Type.{u} -> Type.{u_1}} {α : Type.{u}} {β : Type.{u}} [inst._@.Init.Control.Lawful._hyg.1037 : Monad.{u, u_1} m] [inst._@.Init.Control.Lawful._hyg.1040 : LawfulMonad.{u, u_1} m inst._@.Init.Control.Lawful._hyg.1037] (f : m (α -> β)) (x : m α), Eq.{succ u_1} (m β) (Seq.seq.{u, u_1} m (Applicative.toSeq.{u, u_1} m (Monad.toApplicative.{u, u_1} m inst._@.Init.Control.Lawful._hyg.1037)) α β f (fun (x._@.Init.Control.Lawful._hyg.1063 : Unit) => x)) (Bind.bind.{u, u_1} m (Monad.toBind.{u, u_1} m inst._@.Init.Control.Lawful._hyg.1037) (α -> β) β f (fun (x._@.Init.Control.Lawful._hyg.1074 : α -> β) => Functor.map.{u, u_1} m (Applicative.toFunctor.{u, u_1} m (Monad.toApplicative.{u, u_1} m inst._@.Init.Control.Lawful._hyg.1037)) α β x._@.Init.Control.Lawful._hyg.1074 x))
-Case conversion may be inaccurate. Consider using '#align seq_eq_bind_map seq_eq_bind_mapₓ'. -/
 theorem seq_eq_bind_map {x : m α} {f : m (α → β)} : f <*> x = f >>= (· <$> x) :=
   (bind_map_eq_seq f x).symm
-#align seq_eq_bind_map seq_eq_bind_map
+#align seq_eq_bind_map seq_eq_bind_mapₓ
 
 /-- This is the Kleisli composition -/
 @[reducible]
@@ -137,14 +147,28 @@ infixl:55
   -- function
   fish
 
+/- warning: fish_pure -> fish_pure is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u} -> Type.{v}} [_inst_1 : Monad.{u, v} m] [_inst_2 : LawfulMonad.{u, v} m _inst_1] {α : Sort.{u_1}} {β : Type.{u}} (f : α -> (m β)), Eq.{max u_1 (succ v)} (α -> (m β)) (fish.{u, v, u_1} m _inst_1 α β β f (Pure.pure.{u, v} m (Applicative.toHasPure.{u, v} m (Monad.toApplicative.{u, v} m _inst_1)) β)) f
+but is expected to have type
+  forall {m : Type.{u} -> Type.{v}} [inst._@.Mathlib.Control.Basic._hyg.921 : Monad.{u, v} m] [inst._@.Mathlib.Control.Basic._hyg.924 : LawfulMonad.{u, v} m inst._@.Mathlib.Control.Basic._hyg.921] {α : Type.{u_1}} {β : Type.{u}} (f : α -> (m β)), Eq.{max (succ v) (succ u_1)} (α -> (m β)) (Bind.kleisliRight.{u_1, u, v} α m β β (Monad.toBind.{u, v} m inst._@.Mathlib.Control.Basic._hyg.921) f (Pure.pure.{u, v} m (Applicative.toPure.{u, v} m (Monad.toApplicative.{u, v} m inst._@.Mathlib.Control.Basic._hyg.921)) β)) f
+Case conversion may be inaccurate. Consider using '#align fish_pure fish_pureₓ'. -/
 @[functor_norm]
 theorem fish_pure {α β} (f : α → m β) : f >=> pure = f := by simp only [(· >=> ·), functor_norm]
 #align fish_pure fish_pure
 
+#print fish_pipe /-
 @[functor_norm]
 theorem fish_pipe {α β} (f : α → m β) : pure >=> f = f := by simp only [(· >=> ·), functor_norm]
 #align fish_pipe fish_pipe
+-/
 
+/- warning: fish_assoc -> fish_assoc is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u} -> Type.{v}} [_inst_1 : Monad.{u, v} m] [_inst_2 : LawfulMonad.{u, v} m _inst_1] {α : Sort.{u_1}} {β : Type.{u}} {γ : Type.{u}} {φ : Type.{u}} (f : α -> (m β)) (g : β -> (m γ)) (h : γ -> (m φ)), Eq.{max u_1 (succ v)} (α -> (m φ)) (fish.{u, v, u_1} m _inst_1 α γ φ (fish.{u, v, u_1} m _inst_1 α β γ f g) h) (fish.{u, v, u_1} m _inst_1 α β φ f (fish.{u, v, succ u} m _inst_1 β γ φ g h))
+but is expected to have type
+  forall {m : Type.{u} -> Type.{v}} [inst._@.Mathlib.Control.Basic._hyg.1001 : Monad.{u, v} m] [inst._@.Mathlib.Control.Basic._hyg.1004 : LawfulMonad.{u, v} m inst._@.Mathlib.Control.Basic._hyg.1001] {α : Type.{u_1}} {β : Type.{u}} {γ : Type.{u}} {φ : Type.{u}} (f : α -> (m β)) (g : β -> (m γ)) (h : γ -> (m φ)), Eq.{max (succ v) (succ u_1)} (α -> (m φ)) (Bind.kleisliRight.{u_1, u, v} α m γ φ (Monad.toBind.{u, v} m inst._@.Mathlib.Control.Basic._hyg.1001) (Bind.kleisliRight.{u_1, u, v} α m β γ (Monad.toBind.{u, v} m inst._@.Mathlib.Control.Basic._hyg.1001) f g) h) (Bind.kleisliRight.{u_1, u, v} α m β φ (Monad.toBind.{u, v} m inst._@.Mathlib.Control.Basic._hyg.1001) f (Bind.kleisliRight.{u, u, v} β m γ φ (Monad.toBind.{u, v} m inst._@.Mathlib.Control.Basic._hyg.1001) g h))
+Case conversion may be inaccurate. Consider using '#align fish_assoc fish_assocₓ'. -/
 @[functor_norm]
 theorem fish_assoc {α β γ φ} (f : α → m β) (g : β → m γ) (h : γ → m φ) :
     f >=> g >=> h = f >=> (g >=> h) := by simp only [(· >=> ·), functor_norm]
@@ -154,21 +178,25 @@ variable {β' γ' : Type v}
 
 variable {m' : Type v → Type w} [Monad m']
 
-def List.mmapAccumr (f : α → β' → m' (β' × γ')) : β' → List α → m' (β' × List γ')
+#print List.mapAccumRM /-
+def List.mapAccumRM (f : α → β' → m' (β' × γ')) : β' → List α → m' (β' × List γ')
   | a, [] => pure (a, [])
   | a, x :: xs => do
-    let (a', ys) ← List.mmapAccumr a xs
+    let (a', ys) ← List.mapAccumRM a xs
     let (a'', y) ← f x a'
     pure (a'', y :: ys)
-#align list.mmap_accumr List.mmapAccumr
+#align list.mmap_accumr List.mapAccumRM
+-/
 
-def List.mmapAccuml (f : β' → α → m' (β' × γ')) : β' → List α → m' (β' × List γ')
+#print List.mapAccumLM /-
+def List.mapAccumLM (f : β' → α → m' (β' × γ')) : β' → List α → m' (β' × List γ')
   | a, [] => pure (a, [])
   | a, x :: xs => do
     let (a', y) ← f a x
-    let (a'', ys) ← List.mmapAccuml a' xs
+    let (a'', ys) ← List.mapAccumLM a' xs
     pure (a'', y :: ys)
-#align list.mmap_accuml List.mmapAccuml
+#align list.mmap_accuml List.mapAccumLM
+-/
 
 end Monad
 
@@ -176,27 +204,35 @@ section
 
 variable {m : Type u → Type u} [Monad m] [LawfulMonad m]
 
-theorem mjoin_map_map {α β : Type u} (f : α → β) (a : m (m α)) :
+#print joinM_map_map /-
+theorem joinM_map_map {α β : Type u} (f : α → β) (a : m (m α)) :
     joinM (Functor.map f <$> a) = f <$> joinM a := by
   simp only [joinM, (· ∘ ·), id.def, (bind_pure_comp_eq_map _ _).symm, bind_assoc, map_bind,
     pure_bind]
-#align mjoin_map_map mjoin_map_map
+#align mjoin_map_map joinM_map_map
+-/
 
-theorem mjoin_map_mjoin {α : Type u} (a : m (m (m α))) : joinM (joinM <$> a) = joinM (joinM a) := by
+#print joinM_map_joinM /-
+theorem joinM_map_joinM {α : Type u} (a : m (m (m α))) : joinM (joinM <$> a) = joinM (joinM a) := by
   simp only [joinM, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc,
     pure_bind]
-#align mjoin_map_mjoin mjoin_map_mjoin
+#align mjoin_map_mjoin joinM_map_joinM
+-/
 
+#print joinM_map_pure /-
 @[simp]
-theorem mjoin_map_pure {α : Type u} (a : m α) : joinM (pure <$> a) = a := by
+theorem joinM_map_pure {α : Type u} (a : m α) : joinM (pure <$> a) = a := by
   simp only [joinM, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc,
     pure_bind, bind_pure]
-#align mjoin_map_pure mjoin_map_pure
+#align mjoin_map_pure joinM_map_pure
+-/
 
+#print joinM_pure /-
 @[simp]
-theorem mjoin_pure {α : Type u} (a : m α) : joinM (pure a) = a :=
+theorem joinM_pure {α : Type u} (a : m α) : joinM (pure a) = a :=
   LawfulMonad.pure_bind a id
-#align mjoin_pure mjoin_pure
+#align mjoin_pure joinM_pure
+-/
 
 end
 
@@ -204,21 +240,29 @@ section Alternative
 
 variable {F : Type → Type v} [Alternative F]
 
+#print succeeds /-
 def succeeds {α} (x : F α) : F Bool :=
   x $> tt <|> pure false
 #align succeeds succeeds
+-/
 
-def mtry {α} (x : F α) : F Unit :=
+#print tryM /-
+def tryM {α} (x : F α) : F Unit :=
   x $> () <|> pure ()
-#align mtry mtry
+#align mtry tryM
+-/
 
+#print guard_true /-
 @[simp]
 theorem guard_true {h : Decidable True} : @guard F _ True h = pure () := by simp [guard]
 #align guard_true guard_true
+-/
 
+#print guard_false /-
 @[simp]
 theorem guard_false {h : Decidable False} : @guard F _ False h = failure := by simp [guard]
 #align guard_false guard_false
+-/
 
 end Alternative
 
@@ -226,56 +270,61 @@ namespace Sum
 
 variable {e : Type v}
 
-/- warning: sum.bind -> Sum.bind is a dubious translation:
-lean 3 declaration is
-  forall {e : Type.{v}} {α : Type.{u_1}} {β : Type.{u_2}}, (Sum.{v, u_1} e α) -> (α -> (Sum.{v, u_2} e β)) -> (Sum.{v, u_2} e β)
-but is expected to have type
-  forall {e : Type.{v}} {α : Type.{_aux_param_0}} {β : Type.{_aux_param_1}}, (Sum.{v, _aux_param_0} e α) -> (α -> (Sum.{v, _aux_param_1} e β)) -> (Sum.{v, _aux_param_1} e β)
-Case conversion may be inaccurate. Consider using '#align sum.bind Sum.bindₓ'. -/
+#print Sum.bind /-
 protected def bind {α β} : Sum e α → (α → Sum e β) → Sum e β
   | inl x, _ => inl x
   | inr x, f => f x
 #align sum.bind Sum.bind
+-/
 
-instance : Monad (Sum.{v, u} e) where
+instance : Monad (Sum.{v, u} e) where 
   pure := @Sum.inr e
   bind := @Sum.bind e
 
 instance : IsLawfulFunctor (Sum.{v, u} e) := by refine' { .. } <;> intros <;> casesm Sum _ _ <;> rfl
 
-instance : LawfulMonad (Sum.{v, u} e) where
-  bind_assoc := by
+instance :
+    LawfulMonad
+      (Sum.{v, u}
+        e) where 
+  bind_assoc := by 
     intros
     casesm Sum _ _ <;> rfl
-  pure_bind := by
+  pure_bind := by 
     intros
     rfl
-  bind_pure_comp_eq_map := by
+  bind_pure_comp_eq_map := by 
     intros
     casesm Sum _ _ <;> rfl
-  bind_map_eq_seq := by
+  bind_map_eq_seq := by 
     intros
     cases f <;> rfl
 
 end Sum
 
-class IsCommApplicative (m : Type _ → Type _) [Applicative m] extends LawfulApplicative m :
-  Prop where
+#print CommApplicative /-
+class CommApplicative (m : Type _ → Type _) [Applicative m] extends LawfulApplicative m : Prop where
   commutative_prod :
     ∀ {α β} (a : m α) (b : m β), Prod.mk <$> a <*> b = (fun b a => (a, b)) <$> b <*> a
-#align is_comm_applicative IsCommApplicative
+#align is_comm_applicative CommApplicative
+-/
 
 open Functor
 
-theorem IsCommApplicative.commutative_map {m : Type _ → Type _} [Applicative m]
-    [IsCommApplicative m] {α β γ} (a : m α) (b : m β) {f : α → β → γ} :
-    f <$> a <*> b = flip f <$> b <*> a :=
+/- warning: is_comm_applicative.commutative_map -> CommApplicative.commutative_map is a dubious translation:
+lean 3 declaration is
+  forall {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Applicative.{u_1, u_2} m] [_inst_2 : CommApplicative.{u_1, u_2} m _inst_1] {α : Type.{u_1}} {β : Type.{u_1}} {γ : Type.{u_1}} (a : m α) (b : m β) {f : α -> β -> γ}, Eq.{succ u_2} (m γ) (Seq.seq.{u_1, u_2} (fun {α : Type.{u_1}} => m α) (Applicative.toHasSeq.{u_1, u_2} (fun {α : Type.{u_1}} => m α) _inst_1) β γ (Functor.map.{u_1, u_2} (fun {α : Type.{u_1}} => m α) (Applicative.toFunctor.{u_1, u_2} (fun {α : Type.{u_1}} => m α) _inst_1) α (β -> γ) f a) b) (Seq.seq.{u_1, u_2} m (Applicative.toHasSeq.{u_1, u_2} m _inst_1) α γ (Functor.map.{u_1, u_2} m (Applicative.toFunctor.{u_1, u_2} m _inst_1) β (α -> γ) (flip.{succ u_1, succ u_1, succ u_1} α β γ f) b) a)
+but is expected to have type
+  forall {m : Type.{u} -> Type.{v}} [h : Applicative.{u, v} m] [inst._@.Mathlib.Control.Basic._hyg.2501 : CommApplicative.{u, v} m h] {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} (a : m α) (b : m β) {f : α -> β -> γ}, Eq.{succ v} (m γ) (Seq.seq.{u, v} m (Applicative.toSeq.{u, v} m h) β γ (Functor.map.{u, v} m (Applicative.toFunctor.{u, v} m h) α (β -> γ) f a) (fun (x._@.Mathlib.Control.Basic._hyg.2532 : Unit) => b)) (Seq.seq.{u, v} m (Applicative.toSeq.{u, v} m h) α γ (Functor.map.{u, v} m (Applicative.toFunctor.{u, v} m h) β (α -> γ) (flip.{succ u, succ u, succ u} α β γ f) b) (fun (x._@.Mathlib.Control.Basic._hyg.2549 : Unit) => a))
+Case conversion may be inaccurate. Consider using '#align is_comm_applicative.commutative_map CommApplicative.commutative_mapₓ'. -/
+theorem CommApplicative.commutative_map {m : Type _ → Type _} [Applicative m] [CommApplicative m]
+    {α β γ} (a : m α) (b : m β) {f : α → β → γ} : f <$> a <*> b = flip f <$> b <*> a :=
   calc
     f <$> a <*> b = (fun p : α × β => f p.1 p.2) <$> (Prod.mk <$> a <*> b) := by
       simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
     _ = (fun b a => f a b) <$> b <*> a := by
-      rw [IsCommApplicative.commutative_prod] <;>
+      rw [CommApplicative.commutative_prod] <;>
         simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
     
-#align is_comm_applicative.commutative_map IsCommApplicative.commutative_map
+#align is_comm_applicative.commutative_map CommApplicative.commutative_map
 

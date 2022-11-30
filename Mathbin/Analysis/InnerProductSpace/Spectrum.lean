@@ -65,7 +65,7 @@ include hT
 
 /-- A self-adjoint operator preserves orthogonal complements of its eigenspaces. -/
 theorem invariant_orthogonal_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigenspace T μ)ᗮ) :
-    T v ∈ (eigenspace T μ)ᗮ := by
+    T v ∈ (eigenspace T μ)ᗮ := by 
   intro w hw
   have : T w = (μ : 𝕜) • w := by rwa [mem_eigenspace_iff] at hw
   simp [← hT w, this, inner_smul_left, hv w hw]
@@ -82,11 +82,10 @@ theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : HasEigenvalue T μ) : conj μ
 /-- The eigenspaces of a self-adjoint operator are mutually orthogonal. -/
 theorem orthogonalFamilyEigenspaces :
     @OrthogonalFamily 𝕜 _ _ _ _ (fun μ => eigenspace T μ) _ fun μ => (eigenspace T μ).subtypeₗᵢ :=
-  by
+  by 
   rintro μ ν hμν ⟨v, hv⟩ ⟨w, hw⟩
   by_cases hv' : v = 0
   · simp [hv']
-    
   have H := hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector ⟨hv, hv'⟩)
   rw [mem_eigenspace_iff] at hv hw
   refine' Or.resolve_left _ hμν.symm

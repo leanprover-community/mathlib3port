@@ -40,7 +40,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     ∃ s,
       MeasurableSet s ∧
         (∀ t, MeasurableSet t → t ⊆ s → ν t ≤ μ t) ∧ ∀ t, MeasurableSet t → t ⊆ sᶜ → μ t ≤ ν t :=
-  by
+  by 
   let d : Set α → ℝ := fun s => ((μ s).toNnreal : ℝ) - (ν s).toNnreal
   let c : Set ℝ := d '' { s | MeasurableSet s }
   let γ : ℝ := Sup c
@@ -48,7 +48,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   have hν : ∀ s, ν s ≠ ∞ := measure_ne_top ν
   have to_nnreal_μ : ∀ s, ((μ s).toNnreal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_to_nnreal <| hμ _
   have to_nnreal_ν : ∀ s, ((ν s).toNnreal : ℝ≥0∞) = ν s := fun s => Ennreal.coe_to_nnreal <| hν _
-  have d_empty : d ∅ = 0 := by
+  have d_empty : d ∅ = 0 := by 
     change _ - _ = _
     rw [measure_empty, measure_empty, sub_self]
   have d_split : ∀ s t, MeasurableSet s → MeasurableSet t → d s = d (s \ t) + d (s ∩ t) := by
@@ -70,14 +70,14 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     ∀ s : ℕ → Set α,
       (∀ n, MeasurableSet (s n)) →
         (∀ n m, n ≤ m → s m ⊆ s n) → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋂ n, s n))) :=
-    by
+    by 
     intro s hs hm
     refine' tendsto.sub _ _ <;>
       refine'
         Nnreal.tendsto_coe.2 <|
           (Ennreal.tendsto_to_nnreal <| _).comp <| tendsto_measure_Inter hs hm _
     exacts[hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
-  have bdd_c : BddAbove c := by
+  have bdd_c : BddAbove c := by 
     use (μ univ).toNnreal
     rintro r ⟨s, hs, rfl⟩
     refine' le_trans (sub_le_self _ <| Nnreal.coe_nonneg _) _
@@ -95,7 +95,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   have he₁ : ∀ n, MeasurableSet (e n) := fun n => (he n).1
   have he₂ : ∀ n, γ - (1 / 2) ^ n < d (e n) := fun n => (he n).2
   let f : ℕ → ℕ → Set α := fun n m => (Finset.ico n (m + 1)).inf e
-  have hf : ∀ n m, MeasurableSet (f n m) := by
+  have hf : ∀ n m, MeasurableSet (f n m) := by 
     intro n m
     simp only [f, Finset.inf_eq_infi]
     exact MeasurableSet.bInter (to_countable _) fun i _ => he₁ _
@@ -117,13 +117,12 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
       simp only [f]
       rw [Nat.Ico_succ_singleton, Finset.inf_singleton]
       exact aux this
-      
     · intro n(hmn : m ≤ n)ih
       have : γ + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ (n + 1)) ≤ γ + d (f m (n + 1)) := by
         calc
           γ + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ (n + 1)) ≤
               γ + (γ - 2 * (1 / 2) ^ m + ((1 / 2) ^ n - (1 / 2) ^ (n + 1))) :=
-            by
+            by 
             refine' add_le_add_left (add_le_add_left _ _) γ
             simp only [pow_add, pow_one, le_sub_iff_add_le]
             linarith
@@ -140,7 +139,6 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
           _ ≤ γ + d (f m (n + 1)) := add_le_add_right (d_le_γ _ <| (he₁ _).union (hf _ _)) _
           
       exact (add_le_add_iff_left γ).1 this
-      
   let s := ⋃ m, ⋂ n, f m n
   have γ_le_d_s : γ ≤ d s := by
     have hγ : tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) at_top (𝓝 γ) := by
@@ -159,10 +157,8 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
       refine' d_Inter _ _ _
       · intro n
         exact hf _ _
-        
       · intro n m hnm
         exact f_subset_f le_rfl hnm
-        
     refine' ge_of_tendsto this (eventually_at_top.2 ⟨m, fun n hmn => _⟩)
     change γ - 2 * (1 / 2) ^ m ≤ d (f m n)
     refine' le_trans _ (le_d_f _ _ hmn)
@@ -179,7 +175,6 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
           
     rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← Nnreal.coe_le_coe]
     simpa only [d, le_sub_iff_add_le, zero_add] using this
-    
   · intro t ht hts
     have : d t ≤ 0 :=
       (add_le_add_iff_left γ).1 <|
@@ -193,7 +188,6 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
           
     rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← Nnreal.coe_le_coe]
     simpa only [d, sub_le_iff_le_add, zero_add] using this
-    
 #align measure_theory.hahn_decomposition MeasureTheory.hahn_decomposition
 
 end MeasureTheory

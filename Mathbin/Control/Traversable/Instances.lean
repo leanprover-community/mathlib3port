@@ -117,7 +117,7 @@ variable [LawfulApplicative F]
 @[simp]
 theorem traverse_append :
     ∀ as bs : List α', traverse f (as ++ bs) = (· ++ ·) <$> traverse f as <*> traverse f bs
-  | [], bs => by
+  | [], bs => by 
     have : Append.append ([] : List β') = id := by funext <;> rfl
     simp [this, functor_norm]
   | a :: as, bs => by simp [traverse_append as bs, functor_norm] <;> congr

@@ -62,9 +62,7 @@ theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiring α] (f : l ≃. m
   dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f i with fi
   · simp [h]
-    
   · rw [Finset.sum_eq_single fi] <;> simp (config := { contextual := true }) [h, eq_comm]
-    
 #align pequiv.mul_matrix_apply Pequiv.mul_matrix_apply
 
 theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
@@ -83,16 +81,11 @@ theorem matrix_mul_apply [Fintype m] [Semiring α] [DecidableEq n] (M : Matrix l
   dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f.symm j with fj
   · simp [h, ← f.eq_some_iff]
-    
   · rw [Finset.sum_eq_single fj]
     · simp [h, ← f.eq_some_iff]
-      
     · intro b H n
       simp [h, ← f.eq_some_iff, n.symm]
-      
     · simp
-      
-    
 #align pequiv.matrix_mul_apply Pequiv.matrix_mul_apply
 
 theorem to_pequiv_mul_matrix [Fintype m] [DecidableEq m] [Semiring α] (f : m ≃ m)
@@ -123,38 +116,34 @@ theorem to_matrix_bot [DecidableEq n] [Zero α] [One α] :
 #align pequiv.to_matrix_bot Pequiv.to_matrix_bot
 
 theorem to_matrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
-    Function.Injective (@toMatrix m n α _ _ _) := by classical
-  intro f g
-  refine' not_imp_not.1 _
-  simp only [matrix.ext_iff.symm, to_matrix, Pequiv.ext_iff, not_forall, exists_imp]
-  intro i hi
-  use i
-  cases' hf : f i with fi
-  · cases' hg : g i with gi
-    · cc
-      
-    · use gi
-      simp
-      
-    
-  · use fi
-    simp [hf.symm, Ne.symm hi]
-    
+    Function.Injective (@toMatrix m n α _ _ _) := by
+  classical 
+    intro f g
+    refine' not_imp_not.1 _
+    simp only [matrix.ext_iff.symm, to_matrix, Pequiv.ext_iff, not_forall, exists_imp]
+    intro i hi
+    use i
+    cases' hf : f i with fi
+    · cases' hg : g i with gi
+      · cc
+      · use gi
+        simp
+    · use fi
+      simp [hf.symm, Ne.symm hi]
 #align pequiv.to_matrix_injective Pequiv.to_matrix_injective
 
 theorem to_matrix_swap [DecidableEq n] [Ring α] (i j : n) :
     (Equiv.swap i j).toPequiv.toMatrix =
       (1 : Matrix n n α) - (single i i).toMatrix - (single j j).toMatrix + (single i j).toMatrix +
         (single j i).toMatrix :=
-  by
+  by 
   ext
   dsimp [to_matrix, single, Equiv.swap_apply_def, Equiv.toPequiv, one_apply]
   split_ifs <;>
     first
-      |· simp_all
-        |· exfalso
+      |· simp_all|· 
+        exfalso
         assumption
-        
 #align pequiv.to_matrix_swap Pequiv.to_matrix_swap
 
 @[simp]

@@ -129,7 +129,7 @@ theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, z * y * x 
 #align ideal.mem_jacobson_iff Ideal.mem_jacobson_iff
 
 theorem exists_mul_sub_mem_of_sub_one_mem_jacobson {I : Ideal R} (r : R) (h : r - 1 ∈ jacobson I) :
-    ∃ s, s * r - 1 ∈ I := by
+    ∃ s, s * r - 1 ∈ I := by 
   cases' mem_jacobson_iff.1 h 1 with s hs
   use s
   simpa [mul_sub] using hs
@@ -147,9 +147,7 @@ theorem eq_jacobson_iff_Inf_maximal :
   intro I hI
   cases' hM I hI with is_max is_top
   · exact (mem_Inf.1 hx) ⟨le_Inf_iff.1 (le_of_eq hInf) I hI, IsMax⟩
-    
   · exact is_top.symm ▸ Submodule.mem_top
-    
 #align ideal.eq_jacobson_iff_Inf_maximal Ideal.eq_jacobson_iff_Inf_maximal
 
 theorem eq_jacobson_iff_Inf_maximal' :
@@ -179,13 +177,11 @@ theorem eq_jacobson_iff_not_mem :
     erw [← h, mem_Inf] at hx
     push_neg  at hx
     exact hx
-    
   · refine' fun h => le_antisymm (fun x hx => _) le_jacobson
     contrapose hx
     erw [mem_Inf]
     push_neg
     exact h x hx
-    
 #align ideal.eq_jacobson_iff_not_mem Ideal.eq_jacobson_iff_not_mem
 
 theorem map_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) :
@@ -199,15 +195,11 @@ theorem map_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) 
         ⟨comap f J, ⟨⟨le_comap_of_map_le hJ.1, _⟩, map_comap_of_surjective f hf J⟩⟩
     haveI : J.is_maximal := hJ.right
     exact comap_is_maximal_of_surjective f hf
-    
   · refine' Inf_le_Inf_of_subset_insert_top fun j hj => hj.recOn fun J hJ => _
     rw [← hJ.2]
     cases' map_eq_top_or_is_maximal_of_surjective f hf hJ.left.right with htop hmax
     · exact htop.symm ▸ Set.mem_insert ⊤ _
-      
     · exact Set.mem_insert_of_mem ⊤ ⟨map_mono hJ.1.1, hmax⟩
-      
-    
 #align ideal.map_jacobson_of_surjective Ideal.map_jacobson_of_surjective
 
 theorem map_jacobson_of_bijective {f : R →+* S} (hf : Function.Bijective f) :
@@ -234,17 +226,14 @@ theorem comap_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f
           le_sup_left)
     cases' map_eq_top_or_is_maximal_of_surjective _ hf hJ.right with htop hmax
     · refine' ⟨⊤, ⟨Set.mem_insert ⊤ _, htop ▸ this⟩⟩
-      
-    · refine'
+    ·
+      refine'
         ⟨map f J,
           ⟨Set.mem_insert_of_mem _ ⟨le_map_of_comap_le_of_surjective f hf hJ.1, hmax⟩, this⟩⟩
-      
-    
   · rw [comap_Inf]
     refine' le_infi_iff.2 fun J => le_infi_iff.2 fun hJ => _
     haveI : J.is_maximal := hJ.right
     refine' Inf_le ⟨comap_mono hJ.left, comap_is_maximal_of_surjective _ hf⟩
-    
 #align ideal.comap_jacobson_of_surjective Ideal.comap_jacobson_of_surjective
 
 @[mono]
@@ -269,7 +258,7 @@ theorem is_radical_of_eq_jacobson (h : jacobson I = I) : I.IsRadical :=
 #align ideal.is_radical_of_eq_jacobson Ideal.is_radical_of_eq_jacobson
 
 theorem is_unit_of_sub_one_mem_jacobson_bot (r : R) (h : r - 1 ∈ jacobson (⊥ : Ideal R)) :
-    IsUnit r := by
+    IsUnit r := by 
   cases' exists_mul_sub_mem_of_sub_one_mem_jacobson r h with s hs
   rw [mem_bot, sub_eq_zero, mul_comm] at hs
   exact isUnit_of_mul_eq_one _ _ hs
@@ -296,12 +285,10 @@ theorem jacobson_eq_iff_jacobson_quotient_eq_bot :
     replace h := congr_arg (map (Quotient.mk'' I)) h
     rw [map_jacobson_of_surjective hf (le_of_eq mk_ker)] at h
     simpa using h
-    
   · intro h
     replace h := congr_arg (comap (Quotient.mk'' I)) h
     rw [comap_jacobson_of_surjective hf, ← (Quotient.mk'' I).ker_eq_comap_bot] at h
     simpa using h
-    
 #align ideal.jacobson_eq_iff_jacobson_quotient_eq_bot Ideal.jacobson_eq_iff_jacobson_quotient_eq_bot
 
 /-- The standard radical and Jacobson radical of an ideal `I` of `R` are equal if and only if
@@ -315,13 +302,11 @@ theorem radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot :
     rw [map_radical_of_surjective hf (le_of_eq mk_ker),
       map_jacobson_of_surjective hf (le_of_eq mk_ker)] at this
     simpa using this
-    
   · intro h
     have := congr_arg (comap (Quotient.mk'' I)) h
     rw [comap_radical, comap_jacobson_of_surjective hf, ← (Quotient.mk'' I).ker_eq_comap_bot] at
       this
     simpa using this
-    
 #align
   ideal.radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot Ideal.radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot
 

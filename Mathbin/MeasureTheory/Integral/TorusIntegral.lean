@@ -159,7 +159,7 @@ theorem torusIntegrableZeroRadius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegra
 theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
     IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ))
       (icc (0 : ℝⁿ) fun _ => 2 * π) volume :=
-  by
+  by 
   refine' (hf.norm.const_mul (∏ i, |R i|)).mono' _ _
   · refine' (Continuous.aeStronglyMeasurable _).smul hf.1
     exact
@@ -167,7 +167,6 @@ theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
         (continuous_const.mul
               ((continuous_of_real.comp (continuous_apply i)).mul continuous_const).cexp).mul
           continuous_const
-    
   simp [norm_smul, map_prod]
 #align torus_integrable.function_integrable TorusIntegrable.functionIntegrable
 
@@ -264,7 +263,7 @@ theorem torus_integral_succ_above {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R :
     (i : Fin (n + 1)) :
     (∯ x in T(c, R), f x) =
       ∮ x in C(c i, R i), ∯ y in T(c ∘ i.succAbove, R ∘ i.succAbove), f (i.insertNth x y) :=
-  by
+  by 
   set e : ℝ × ℝⁿ ≃ᵐ ℝⁿ⁺¹ := (MeasurableEquiv.piFinSuccAboveEquiv (fun _ => ℝ) i).symm
   have hem : measure_preserving e :=
     (volume_preserving_pi_fin_succ_above_equiv (fun j : Fin (n + 1) => ℝ) i).symm _
@@ -281,10 +280,8 @@ theorem torus_integral_succ_above {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R :
     congr 2
     simp only [funext_iff, i.forall_iff_succ_above, circleMap, Fin.insert_nth_apply_same,
       eq_self_iff_true, Fin.insert_nth_apply_succ_above, imp_true_iff, and_self_iff]
-    
   · have := hf.function_integrable
     rwa [← hem.integrable_on_comp_preimage e.measurable_embedding, heπ] at this
-    
 #align torus_integral_succ_above torus_integral_succ_above
 
 /-- Recurrent formula for `torus_integral`, see also `torus_integral_succ_above`. -/

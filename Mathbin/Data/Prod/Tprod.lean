@@ -90,7 +90,7 @@ Case conversion may be inaccurate. Consider using '#align list.tprod.elim List.T
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
 protected def elim : ∀ {l : List ι} (v : Tprod α l) {i : ι} (hi : i ∈ l), α i
   | i :: is, v, j, hj =>
-    if hji : j = i then by
+    if hji : j = i then by 
       subst hji
       exact v.1
     else elim v.2 (hj.resolve_left hji)
@@ -114,21 +114,19 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l))
 #align list.tprod.elim_of_mem List.Tprod.elim_of_mem
 
 theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (Tprod.mk l f).elim hi = f i
-  | i :: is, f, j, hj => by
+  | i :: is, f, j, hj => by 
     by_cases hji : j = i
     · subst hji
       simp
-      
     · rw [elim_of_ne _ hji, snd_mk, elim_mk]
-      
 #align list.tprod.elim_mk List.Tprod.elim_mk
 
-@[ext.1]
+@[ext]
 theorem ext :
     ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l}
       (hvw : ∀ (i) (hi : i ∈ l), v.elim hi = w.elim hi), v = w
   | [], hl, v, w, hvw => PUnit.ext
-  | i :: is, hl, v, w, hvw => by
+  | i :: is, hl, v, w, hvw => by 
     ext; rw [← elim_self v, hvw, elim_self]
     refine' ext (nodup_cons.mp hl).2 fun j hj => _
     rw [← elim_of_mem hl, hvw, elim_of_mem hl]
@@ -175,7 +173,7 @@ protected def tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l
 theorem mk_preimage_tprod :
     ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk l ⁻¹' Set.tprod l t = { i | i ∈ l }.pi t
   | [], t => by simp [Set.tprod]
-  | i :: l, t => by
+  | i :: l, t => by 
     ext f
     have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by
       rw [mk_preimage_tprod l t]
@@ -189,7 +187,7 @@ theorem mk_preimage_tprod :
 
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l)
     (t : ∀ i, Set (α i)) : Tprod.elim' h ⁻¹' pi univ t = Set.tprod l t := by
-  have : { i | i ∈ l } = univ := by
+  have : { i | i ∈ l } = univ := by 
     ext i
     simp [h]
   rw [← this, ← mk_preimage_tprod, preimage_preimage]

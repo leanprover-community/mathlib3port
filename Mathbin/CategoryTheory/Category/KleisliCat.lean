@@ -34,7 +34,8 @@ def KleisliCat.mk (m) (α : Type u) : KleisliCat m :=
   α
 #align category_theory.Kleisli.mk CategoryTheory.KleisliCat.mk
 
-instance KleisliCat.categoryStruct {m} [Monad.{u, v} m] : CategoryStruct (KleisliCat m) where
+instance KleisliCat.categoryStruct {m} [Monad.{u, v} m] :
+    CategoryStruct (KleisliCat m) where 
   Hom α β := α → m β
   id α x := pure x
   comp X Y Z f g := f >=> g

@@ -38,14 +38,13 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
     X.obj Δ ⟶ s.n A.1.unop.len := by
   refine' (s.iso Δ).inv ≫ sigma.desc fun B => _
   by_cases B = A
-  · exact
+  ·
+    exact
       eq_to_hom
-        (by
+        (by 
           subst h
           rfl)
-    
   · exact 0
-    
 #align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
 
 @[simp, reassoc]
@@ -78,9 +77,7 @@ theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
   rw [comp_id, comp_sum, Finset.sum_eq_single A, ι_π_summand_eq_id_assoc]
   · intro B h₁ h₂
     rw [s.ι_π_summand_eq_zero_assoc _ _ h₂, zero_comp]
-    
   · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff]
-    
 #align simplicial_object.splitting.decomposition_id SimplicialObject.Splitting.decomposition_id
 
 @[simp, reassoc]

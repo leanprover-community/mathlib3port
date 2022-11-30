@@ -33,7 +33,7 @@ universe u v
 variable (R : Type u) [CommRing R]
 
 /-- The maximal spectrum of a commutative ring `R` is the type of all maximal ideals of `R`. -/
-@[ext.1]
+@[ext]
 structure MaximalSpectrum where
   asIdeal : Ideal R
   IsMaximal : as_ideal.IsMaximal
@@ -91,14 +91,14 @@ theorem infi_localization_eq_bot :
     (⨅ v : MaximalSpectrum R,
         Localization.subalgebra.ofField K _ v.asIdeal.prime_compl_le_non_zero_divisors) =
       ⊥ :=
-  by
+  by 
   ext x
   rw [Algebra.mem_bot, Algebra.mem_infi]
   constructor
   · apply imp_of_not_imp_not
     intro hrange hlocal
     let denom : Ideal R := (Submodule.span R {1} : Submodule R K).colon (Submodule.span R {x})
-    have hdenom : (1 : R) ∉ denom := by
+    have hdenom : (1 : R) ∉ denom := by 
       intro hdenom
       rcases submodule.mem_span_singleton.mp
           (submodule.mem_colon.mp hdenom x <| Submodule.mem_span_singleton_self x) with
@@ -116,10 +116,8 @@ theorem infi_localization_eq_bot :
             inv_mul_cancel_right₀ <|
               (map_ne_zero_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K).mpr fun h =>
                 (h ▸ hd) max.zero_mem]⟩
-    
   · rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
-    
 #align maximal_spectrum.infi_localization_eq_bot MaximalSpectrum.infi_localization_eq_bot
 
 end MaximalSpectrum
@@ -134,17 +132,15 @@ theorem infi_localization_eq_bot :
     (⨅ v : PrimeSpectrum R,
         Localization.subalgebra.ofField K _ <| v.asIdeal.prime_compl_le_non_zero_divisors) =
       ⊥ :=
-  by
+  by 
   ext x
   rw [Algebra.mem_infi]
   constructor
   · rw [← MaximalSpectrum.infi_localization_eq_bot, Algebra.mem_infi]
     exact fun hx ⟨v, hv⟩ => hx ⟨v, hv.IsPrime⟩
-    
   · rw [Algebra.mem_bot]
     rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
-    
 #align prime_spectrum.infi_localization_eq_bot PrimeSpectrum.infi_localization_eq_bot
 
 end PrimeSpectrum

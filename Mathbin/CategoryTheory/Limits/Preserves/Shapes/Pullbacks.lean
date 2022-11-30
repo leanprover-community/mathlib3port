@@ -82,7 +82,8 @@ def isLimitOfHasPullbackOfPreservesLimit [HasPullback f g] :
 
 /-- If `F` preserves the pullback of `f, g`, it also preserves the pullback of `g, f`. -/
 def preservesPullbackSymmetry :
-    PreservesLimit (cospan g f) G where preserves c hc := by
+    PreservesLimit (cospan g f)
+      G where preserves c hc := by
     apply (is_limit.postcompose_hom_equiv (diagramIsoCospan.{v₂} _) _).toFun
     apply is_limit.of_iso_limit _ (pullback_cone.iso_mk _).symm
     apply pullback_cone.flip_is_limit
@@ -90,15 +91,13 @@ def preservesPullbackSymmetry :
     · apply (config := { instances := false }) preserves_limit.preserves
       · dsimp
         infer_instance
-        
       apply pullback_cone.flip_is_limit
       apply is_limit.of_iso_limit _ (pullback_cone.iso_mk _)
       exact (is_limit.postcompose_hom_equiv (diagramIsoCospan.{v₁} _) _).invFun hc
-      
-    · exact
+    ·
+      exact
         (c.π.naturality walking_cospan.hom.inr).symm.trans
           (c.π.naturality walking_cospan.hom.inl : _)
-      
 #align
   category_theory.limits.preserves_pullback_symmetry CategoryTheory.Limits.preservesPullbackSymmetry
 
@@ -198,7 +197,8 @@ def isColimitOfHasPushoutOfPreservesColimit [HasPushout f g] :
 
 /-- If `F` preserves the pushout of `f, g`, it also preserves the pushout of `g, f`. -/
 def preservesPushoutSymmetry :
-    PreservesColimit (span g f) G where preserves c hc := by
+    PreservesColimit (span g f)
+      G where preserves c hc := by
     apply (is_colimit.precompose_hom_equiv (diagramIsoSpan.{v₂} _).symm _).toFun
     apply is_colimit.of_iso_colimit _ (pushout_cocone.iso_mk _).symm
     apply pushout_cocone.flip_is_colimit
@@ -206,13 +206,10 @@ def preservesPushoutSymmetry :
     · apply (config := { instances := false }) preserves_colimit.preserves
       · dsimp
         infer_instance
-        
       apply pushout_cocone.flip_is_colimit
       apply is_colimit.of_iso_colimit _ (pushout_cocone.iso_mk _)
       exact (is_colimit.precompose_hom_equiv (diagramIsoSpan.{v₁} _) _).invFun hc
-      
     · exact (c.ι.naturality walking_span.hom.snd).trans (c.ι.naturality walking_span.hom.fst).symm
-      
 #align
   category_theory.limits.preserves_pushout_symmetry CategoryTheory.Limits.preservesPushoutSymmetry
 

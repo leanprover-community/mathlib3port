@@ -82,10 +82,8 @@ theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 
     rw [PowerSeries.ext_iff, not_forall]
     refine' ⟨0, _⟩
     simp [coeff_order_ne_zero h]
-    
   · rintro rfl
     simp
-    
 #align laurent_series.power_series_part_eq_zero LaurentSeries.power_series_part_eq_zero
 
 @[simp]
@@ -94,21 +92,18 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
   ext n
   rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mul]
   by_cases h : x.order ≤ n
-  · rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_power_series,
+  ·
+    rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_power_series,
       power_series_part_coeff, ← Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h),
       add_sub_cancel'_right]
-    
   · rw [coe_power_series, of_power_series_apply, emb_domain_notin_range]
     · contrapose! h
       exact order_le_of_coeff_ne_zero h.symm
-      
     · contrapose! h
-      simp only [Set.mem_range, RelEmbedding.coe_fn_mk, Function.Embedding.coe_fn_mk] at h
+      simp only [Set.mem_range, RelEmbedding.coe_fn_mk, Function.Embedding.coeFn_mk] at h
       obtain ⟨m, hm⟩ := h
       rw [← sub_nonneg, ← hm]
       exact Int.zero_le_of_nat _
-      
-    
 #align
   laurent_series.single_order_mul_power_series_part LaurentSeries.single_order_mul_power_series_part
 
@@ -134,40 +129,36 @@ theorem coe_algebra_map [CommSemiring R] :
 /-- The localization map from power series to Laurent series. -/
 @[simps]
 instance of_power_series_localization [CommRing R] :
-    IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R)) (LaurentSeries R) where
-  map_units := by
+    IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R))
+      (LaurentSeries
+        R) where 
+  map_units := by 
     rintro ⟨_, n, rfl⟩
     refine' ⟨⟨single (n : ℤ) 1, single (-n : ℤ) 1, _, _⟩, _⟩
     · simp only [single_mul_single, mul_one, add_right_neg]
       rfl
-      
     · simp only [single_mul_single, mul_one, add_left_neg]
       rfl
-      
     · simp
-      
-  surj := by
+  surj := by 
     intro z
     by_cases h : 0 ≤ z.order
     · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
       simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow,
         Submonoid.coe_one]
       rw [Int.natAbs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]
-      
     · refine' ⟨⟨power_series_part z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
       simp only [coe_algebra_map, of_power_series_power_series_part]
       rw [mul_comm _ z]
       refine' congr rfl _
       rw [Subtype.coe_mk, of_power_series_X_pow, Int.ofNat_natAbs_of_nonpos]
       exact le_of_not_ge h
-      
-  eq_iff_exists := by
+  eq_iff_exists := by 
     intro x y
     rw [coe_algebra_map, of_power_series_injective.eq_iff]
     constructor
     · rintro rfl
       exact ⟨1, rfl⟩
-      
     · rintro ⟨⟨_, n, rfl⟩, hc⟩
       rw [← sub_eq_zero, ← sub_mul, PowerSeries.ext_iff] at hc
       rw [← sub_eq_zero, PowerSeries.ext_iff]
@@ -176,7 +167,6 @@ instance of_power_series_localization [CommRing R] :
       rw [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.X_pow_eq, PowerSeries.monomial,
         PowerSeries.coeff, Finsupp.single_add, MvPowerSeries.coeff_add_mul_monomial, mul_one] at h
       exact h
-      
 #align laurent_series.of_power_series_localization LaurentSeries.of_power_series_localization
 
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
@@ -226,17 +216,16 @@ theorem coe_mul : ((f * g : PowerSeries R) : LaurentSeries R) = f * g :=
 theorem coeff_coe (i : ℤ) :
     ((f : PowerSeries R) : LaurentSeries R).coeff i =
       if i < 0 then 0 else PowerSeries.coeff R i.natAbs f :=
-  by
+  by 
   cases i
-  · rw [Int.nat_abs_of_nat_core, Int.ofNat_eq_coe, coeff_coe_power_series,
+  ·
+    rw [Int.nat_abs_of_nat_core, Int.ofNat_eq_coe, coeff_coe_power_series,
       if_neg (Int.coe_nat_nonneg _).not_lt]
-    
   · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support,
       if_pos (Int.negSucc_lt_zero _)]
     simp only [not_exists, RelEmbedding.coe_fn_mk, Set.mem_image, not_and,
-      Function.Embedding.coe_fn_mk, Ne.def, to_power_series_symm_apply_coeff, mem_support,
+      Function.Embedding.coeFn_mk, Ne.def, to_power_series_symm_apply_coeff, mem_support,
       Int.coe_nat_eq, imp_true_iff, not_false_iff]
-    
 #align power_series.coeff_coe PowerSeries.coeff_coe
 
 @[simp, norm_cast]

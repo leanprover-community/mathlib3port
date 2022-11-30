@@ -38,7 +38,7 @@ instance : TopologicalSpace (Ultrafilter α) :=
   TopologicalSpace.generateFrom (ultrafilterBasis α)
 
 theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (ultrafilterBasis α) :=
-  ⟨by
+  ⟨by 
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;> apply mem_of_superset hv <;>
       simp [inter_subset_right a b],
@@ -70,10 +70,8 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
   constructor
   · intro h a ha
     exact h _ ⟨ha, a, rfl⟩
-    
   · rintro h a ⟨xi, a, rfl⟩
     exact h _ xi
-    
 #align ultrafilter_converges_iff ultrafilter_converges_iff
 
 instance ultrafilter_compact : CompactSpace (Ultrafilter α) :=
@@ -192,7 +190,8 @@ theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.
   unique limit of the ultrafilter `b.map f` in `γ`. -/
 theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} :
     Ultrafilter.extend f b = c ↔ ↑(b.map f) ≤ 𝓝 c :=
-  ⟨fun h => by
+  ⟨fun h =>
+    by
     -- Write b as an ultrafilter limit of pure ultrafilters, and use
     -- the facts that ultrafilter.extend is a continuous extension of f.
     let b' : Ultrafilter (Ultrafilter α) := b.map pure
@@ -222,7 +221,10 @@ section StoneCech
   point of γ. -/
 variable (α : Type u) [TopologicalSpace α]
 
-instance stoneCechSetoid : Setoid (Ultrafilter α) where
+instance stoneCechSetoid :
+    Setoid
+      (Ultrafilter
+        α) where 
   R x y :=
     ∀ (γ : Type u) [TopologicalSpace γ],
       ∀ [T2Space γ] [CompactSpace γ] (f : α → γ) (hf : Continuous f),
@@ -288,14 +290,11 @@ theorem stone_cech_hom_ext {g₁ g₂ : StoneCech α → γ'} (h₁ : Continuous
 end Extension
 
 theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x) : u ≈ pure x :=
-  fun γ tγ h₁ h₂ f hf => by
+  fun γ tγ h₁ h₂ f hf => by 
   skip
   trans f x; swap; symm
   all_goals refine' ultrafilter_extend_eq_iff.mpr (le_trans (map_mono _) (hf.tendsto _))
-  · apply pure_le_nhds
-    ;
-  · exact ux
-    
+  · apply pure_le_nhds; · exact ux
 #align convergent_eqv_pure convergent_eqv_pure
 
 theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCech α) :=

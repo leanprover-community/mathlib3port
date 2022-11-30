@@ -38,7 +38,7 @@ def powAddExpansion {R : Type _} [CommSemiring R] (x y : R) :
     ∀ n : ℕ, { k // (x + y) ^ n = x ^ n + n * x ^ (n - 1) * y + k * y ^ 2 }
   | 0 => ⟨0, by simp⟩
   | 1 => ⟨0, by simp⟩
-  | n + 2 => by
+  | n + 2 => by 
     cases' pow_add_expansion (n + 1) with z hz
     exists x * z + (n + 1) * x ^ n + z * y
     calc
@@ -62,7 +62,7 @@ private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
 private theorem poly_binom_aux2 (f : R[X]) (x y : R) :
     f.eval (x + y) =
       f.Sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) :=
-  by
+  by 
   unfold eval eval₂; congr with (n z)
   apply (poly_binom_aux1 x y _ _).property
 #align polynomial.poly_binom_aux2 polynomial.poly_binom_aux2
@@ -71,7 +71,7 @@ private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
     f.eval (x + y) =
       ((f.Sum fun e a => a * x ^ e) + f.Sum fun e a => a * e * x ^ (e - 1) * y) +
         f.Sum fun e a => a * (polyBinomAux1 x y e a).val * y ^ 2 :=
-  by
+  by 
   rw [poly_binom_aux2]
   simp [left_distrib, sum_add, mul_assoc]
 #align polynomial.poly_binom_aux3 polynomial.poly_binom_aux3
@@ -86,12 +86,9 @@ def binomExpansion (f : R[X]) (x y : R) :
   rw [poly_binom_aux3]
   congr
   · rw [← eval_eq_sum]
-    
   · rw [derivative_eval]
     exact finset.sum_mul.symm
-    
   · exact finset.sum_mul.symm
-    
 #align polynomial.binom_expansion Polynomial.binomExpansion
 
 /-- `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
@@ -99,7 +96,7 @@ def binomExpansion (f : R[X]) (x y : R) :
 def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
   | 0 => ⟨0, by simp⟩
   | 1 => ⟨1, by simp⟩
-  | k + 2 => by
+  | k + 2 => by 
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
     linear_combination (norm := ring) x * hz

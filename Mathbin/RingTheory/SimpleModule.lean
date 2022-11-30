@@ -42,7 +42,7 @@ abbrev IsSemisimpleModule :=
 
 -- Making this an instance causes the linter to complain of "dangerous instances"
 theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
-  ⟨⟨0, by
+  ⟨⟨0, by 
       have h : (⊥ : Submodule R M) ≠ ⊤ := bot_ne_top
       contrapose! h
       ext
@@ -88,7 +88,7 @@ end IsSimpleModule
 
 theorem is_semisimple_of_Sup_simples_eq_top
     (h : sup { m : Submodule R M | IsSimpleModule R m } = ⊤) : IsSemisimpleModule R M :=
-  complementedLatticeOfSupAtomsEqTop (by simp_rw [← h, is_simple_module_iff_is_atom])
+  complemented_lattice_of_Sup_atoms_eq_top (by simp_rw [← h, is_simple_module_iff_is_atom])
 #align is_semisimple_of_Sup_simples_eq_top is_semisimple_of_Sup_simples_eq_top
 
 namespace IsSemisimpleModule
@@ -102,14 +102,14 @@ theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = �
 
 instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
   haveI f : Submodule R m ≃o Set.iic m := Submodule.MapSubtype.relIso m
-  f.complemented_lattice_iff.2 IsModularLattice.complementedLatticeIic
+  f.complemented_lattice_iff.2 IsModularLattice.complemented_lattice_Iic
 #align is_semisimple_module.is_semisimple_submodule IsSemisimpleModule.is_semisimple_submodule
 
 end IsSemisimpleModule
 
 theorem is_semisimple_iff_top_eq_Sup_simples :
     sup { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
-  ⟨is_semisimple_of_Sup_simples_eq_top, by
+  ⟨is_semisimple_of_Sup_simples_eq_top, by 
     intro
     exact IsSemisimpleModule.Sup_simples_eq_top⟩
 #align is_semisimple_iff_top_eq_Sup_simples is_semisimple_iff_top_eq_Sup_simples
@@ -117,7 +117,7 @@ theorem is_semisimple_iff_top_eq_Sup_simples :
 namespace LinearMap
 
 theorem injective_or_eq_zero [IsSimpleModule R M] (f : M →ₗ[R] N) : Function.Injective f ∨ f = 0 :=
-  by
+  by 
   rw [← ker_eq_bot, ← ker_eq_top]
   apply eq_bot_or_eq_top
 #align linear_map.injective_or_eq_zero LinearMap.injective_or_eq_zero
@@ -140,11 +140,10 @@ theorem surjective_of_ne_zero [IsSimpleModule R N] {f : M →ₗ[R] N} (h : f �
 
 /-- **Schur's Lemma** for linear maps between (possibly distinct) simple modules -/
 theorem bijective_or_eq_zero [IsSimpleModule R M] [IsSimpleModule R N] (f : M →ₗ[R] N) :
-    Function.Bijective f ∨ f = 0 := by
+    Function.Bijective f ∨ f = 0 := by 
   by_cases h : f = 0
   · right
     exact h
-    
   exact Or.intro_left _ ⟨injective_of_ne_zero h, surjective_of_ne_zero h⟩
 #align linear_map.bijective_or_eq_zero LinearMap.bijective_or_eq_zero
 
@@ -170,14 +169,14 @@ noncomputable instance Module.EndCat.divisionRing [DecidableEq (Module.EndCat R 
           (Equiv.ofBijective _ (bijective_of_ne_zero h)).left_inv
           (Equiv.ofBijective _ (bijective_of_ne_zero h)).right_inv,
     exists_pair_ne :=
-      ⟨0, 1, by
+      ⟨0, 1, by 
         haveI := IsSimpleModule.nontrivial R M
         have h := exists_pair_ne M
         contrapose! h
         intro x y
         simp_rw [ext_iff, one_apply, zero_apply] at h
         rw [← h x, h y]⟩,
-    mul_inv_cancel := by
+    mul_inv_cancel := by 
       intro a a0
       change a * dite _ _ _ = 1
       ext
@@ -188,16 +187,18 @@ noncomputable instance Module.EndCat.divisionRing [DecidableEq (Module.EndCat R 
 
 end LinearMap
 
-instance jordanHolderModule : JordanHolderLattice (Submodule R M) where
+instance jordanHolderModule :
+    JordanHolderLattice (Submodule R
+        M) where 
   IsMaximal := (· ⋖ ·)
   lt_of_is_maximal x y := Covby.lt
   sup_eq_of_is_maximal x y z hxz hyz := Wcovby.sup_eq hxz.Wcovby hyz.Wcovby
-  isMaximalInfLeftOfIsMaximalSup A B := inf_covby_of_covby_sup_of_covby_sup_left
+  is_maximal_inf_left_of_is_maximal_sup A B := inf_covby_of_covby_sup_of_covby_sup_left
   Iso X Y := Nonempty <| (X.2 ⧸ X.1.comap X.2.Subtype) ≃ₗ[R] Y.2 ⧸ Y.1.comap Y.2.Subtype
-  isoSymm := fun A B ⟨f⟩ => ⟨f.symm⟩
-  isoTrans := fun A B C ⟨f⟩ ⟨g⟩ => ⟨f.trans g⟩
-  secondIso A B h :=
-    ⟨by
+  iso_symm := fun A B ⟨f⟩ => ⟨f.symm⟩
+  iso_trans := fun A B C ⟨f⟩ ⟨g⟩ => ⟨f.trans g⟩
+  second_iso A B h :=
+    ⟨by 
       rw [sup_comm, inf_comm]
       exact (LinearMap.quotientInfEquivSupQuotient B A).symm⟩
 #align jordan_holder_module jordanHolderModule

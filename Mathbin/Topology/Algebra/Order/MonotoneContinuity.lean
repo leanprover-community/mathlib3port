@@ -44,15 +44,14 @@ theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : 
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-  · filter_upwards [hs,
+  ·
+    filter_upwards [hs,
       self_mem_nhds_within] with _ hxs hxa using hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
-    
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     rw [h_mono.lt_iff_lt has hcs] at hac
     filter_upwards [hs, Ico_mem_nhds_within_Ici (left_mem_Ico.2 hac)]
     rintro x hx ⟨hax, hxc⟩
     exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
-    
 #align
   strict_mono_on.continuous_at_right_of_exists_between StrictMonoOn.continuous_at_right_of_exists_between
 
@@ -69,13 +68,11 @@ theorem continuous_at_right_of_monotone_on_of_exists_between {f : α → β} {s 
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
   · filter_upwards [hs, self_mem_nhds_within] with _ hxs hxa using hb.trans_le (h_mono has hxs hxa)
-    
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     have : a < c := not_le.1 fun h => hac.not_le <| h_mono hcs has h
     filter_upwards [hs, Ico_mem_nhds_within_Ici (left_mem_Ico.2 this)]
     rintro x hx ⟨hax, hxc⟩
     exact (h_mono hx hcs hxc.le).trans_lt hcb
-    
 #align
   continuous_at_right_of_monotone_on_of_exists_between continuous_at_right_of_monotone_on_of_exists_between
 
@@ -323,10 +320,8 @@ protected theorem continuous (e : α ≃o β) : Continuous e := by
   rcases hs with ⟨a, rfl | rfl⟩
   · rw [e.preimage_Ioi]
     apply is_open_lt'
-    
   · rw [e.preimage_Iio]
     apply is_open_gt'
-    
 #align order_iso.continuous OrderIso.continuous
 
 /-- An order isomorphism between two linear order `order_topology` spaces is a homeomorphism. -/

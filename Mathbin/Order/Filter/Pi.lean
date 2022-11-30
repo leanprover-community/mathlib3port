@@ -75,10 +75,8 @@ theorem mem_pi {s : Set (∀ i, α i)} :
     rintro ⟨I, If, V, hVf, hVI, rfl, -⟩
     choose t htf htV using hVf
     exact ⟨I, If, t, htf, Inter₂_mono fun i _ => htV i⟩
-    
   · rintro ⟨I, If, t, htf, hts⟩
     exact mem_of_superset ((pi_mem_pi If) fun i _ => htf i) hts
-    
 #align filter.mem_pi Filter.mem_pi
 
 theorem mem_pi' {s : Set (∀ i, α i)} :
@@ -87,12 +85,12 @@ theorem mem_pi' {s : Set (∀ i, α i)} :
 #align filter.mem_pi' Filter.mem_pi'
 
 theorem mem_of_pi_mem_pi [∀ i, NeBot (f i)] {I : Set ι} (h : I.pi s ∈ pi f) {i : ι} (hi : i ∈ I) :
-    s i ∈ f i := by
+    s i ∈ f i := by 
   rcases mem_pi.1 h with ⟨I', I'f, t, htf, hts⟩
   refine' mem_of_superset (htf i) fun x hx => _
   have : ∀ i, (t i).Nonempty := fun i => nonempty_of_mem (htf i)
   choose g hg
-  have : update g i x ∈ I'.pi t := by
+  have : update g i x ∈ I'.pi t := by 
     intro j hj
     rcases eq_or_ne j i with (rfl | hne) <;> simp [*]
   simpa using hts this i hi
@@ -117,7 +115,7 @@ theorem has_basis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : 
 
 @[simp]
 theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ ↔ ∃ i, f i ⊓ 𝓟 (s i) = ⊥ :=
-  by
+  by 
   constructor
   · simp only [inf_principal_eq_bot, mem_pi]
     contrapose!
@@ -125,11 +123,9 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ �
     have : ∀ i, (s i ∩ t i).Nonempty := fun i => ((hsf i).and_eventually (htf i)).exists
     choose x hxs hxt
     exact hts (fun i hi => hxt i) (mem_univ_pi.2 hxs)
-    
   · simp only [inf_principal_eq_bot]
     rintro ⟨i, hi⟩
     filter_upwards [mem_pi_of_mem i hi] with x using mt fun h => h i trivial
-    
 #align filter.pi_inf_principal_univ_pi_eq_bot Filter.pi_inf_principal_univ_pi_eq_bot
 
 @[simp]
@@ -266,7 +262,7 @@ variable {β : ι → Type _} {m : ∀ i, α i → β i}
 theorem map_pi_map_Coprod_le :
     map (fun k : ∀ i, α i => fun i => m i (k i)) (Filter.coprod f) ≤
       Filter.coprod fun i => map (m i) (f i) :=
-  by
+  by 
   simp only [le_def, mem_map, mem_Coprod_iff]
   intro s h i
   obtain ⟨t, H, hH⟩ := h i

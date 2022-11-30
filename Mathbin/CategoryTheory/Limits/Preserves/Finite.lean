@@ -78,7 +78,7 @@ def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
         skip
         exact preserves_limits_of_shape J F) :
     PreservesFiniteLimits F :=
-  ⟨fun J hJ hhJ => by
+  ⟨fun J hJ hhJ => by 
     skip
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
@@ -95,7 +95,7 @@ instance idPreservesFiniteLimits : PreservesFiniteLimits (𝟭 C) where
 /-- The composition of two left exact functors is left exact. -/
 def compPreservesFiniteLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteLimits F]
     [PreservesFiniteLimits G] : PreservesFiniteLimits (F ⋙ G) :=
-  ⟨fun _ _ _ => by
+  ⟨fun _ _ _ => by 
     skip
     infer_instance⟩
 #align
@@ -138,7 +138,7 @@ def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
         skip
         exact preserves_colimits_of_shape J F) :
     PreservesFiniteColimits F :=
-  ⟨fun J hJ hhJ => by
+  ⟨fun J hJ hhJ => by 
     skip
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
@@ -155,7 +155,7 @@ instance idPreservesFiniteColimits : PreservesFiniteColimits (𝟭 C) where
 /-- The composition of two right exact functors is right exact. -/
 def compPreservesFiniteColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteColimits F]
     [PreservesFiniteColimits G] : PreservesFiniteColimits (F ⋙ G) :=
-  ⟨fun _ _ _ => by
+  ⟨fun _ _ _ => by 
     skip
     infer_instance⟩
 #align

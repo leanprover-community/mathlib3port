@@ -105,11 +105,11 @@ theorem CHSH_id [CommRing R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 = 1)
   -- If we had a Gröbner basis algorithm, this would be trivial.
   -- Without one, it is somewhat tedious!
   rw [← sub_eq_zero]
-  repeat'
-  ring_nf
-  simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mul, mul_add, sub_mul, mul_sub, add_assoc, neg_add,
-    neg_sub, sub_add, sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mul, mul_one,
-    add_right_neg, add_zero, sub_eq_add_neg, A₀_inv, mul_one, add_right_neg, zero_mul]
+  repeat' 
+    ring_nf
+    simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mul, mul_add, sub_mul, mul_sub, add_assoc,
+      neg_add, neg_sub, sub_add, sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mul,
+      mul_one, add_right_neg, add_zero, sub_eq_add_neg, A₀_inv, mul_one, add_right_neg, zero_mul]
 #align CHSH_id CHSH_id
 
 /-- Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
@@ -127,23 +127,20 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
       have h : 4 * P = (4 : ℝ) • P := by simp [Algebra.smul_def]
       rw [idem, h, ← mul_smul]
       norm_num
-    have sa : star P = P := by
+    have sa : star P = P := by 
       dsimp [P]
       simp only [star_add, star_sub, star_mul, star_bit0, star_one, T.A₀_sa, T.A₁_sa, T.B₀_sa,
         T.B₁_sa, mul_comm B₀, mul_comm B₁]
     rw [idem']
-    conv_rhs =>
-    congr
-    skip
-    congr
-    rw [← sa]
+    conv_rhs => 
+      congr
+      skip
+      congr
+      rw [← sa]
     convert smul_le_smul_of_nonneg (star_mul_self_nonneg : 0 ≤ star P * P) _
     · simp
-      
     · infer_instance
-      
     · norm_num
-      
   apply le_of_sub_nonneg
   simpa only [sub_add_eq_sub_sub, ← sub_add] using i₁
 #align CHSH_inequality_of_comm CHSH_inequality_of_comm
@@ -193,7 +190,8 @@ of the difference.
 -/
 theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R] [OrderedSmul ℝ R]
     [StarModule ℝ R] (A₀ A₁ B₀ B₁ : R) (T : IsCHSHTuple A₀ A₁ B₀ B₁) :
-    A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ √2 ^ 3 • 1 := by
+    A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ √2 ^ 3 • 1 :=
+  by
   -- abel will create `ℤ` multiplication. We will `simp` them away to `ℝ` multiplication.
   have M : ∀ (m : ℤ) (a : ℝ) (x : R), m • a • x = ((m : ℝ) * a) • x := fun m a x => by
     rw [zsmul_eq_smul_cast ℝ, ← mul_smul]
@@ -219,27 +217,27 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     congr
     exact mul_left_cancel₀ (by norm_num) tsirelson_inequality_aux
   have pos : 0 ≤ √2⁻¹ • (P ^ 2 + Q ^ 2) := by
-    have P_sa : star P = P := by
+    have P_sa : star P = P := by 
       dsimp [P]
       simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
-    have Q_sa : star Q = Q := by
+    have Q_sa : star Q = Q := by 
       dsimp [Q]
       simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
-    have P2_nonneg : 0 ≤ P ^ 2 := by
+    have P2_nonneg : 0 ≤ P ^ 2 := by 
       rw [sq]
-      conv =>
-      congr
-      skip
-      congr
-      rw [← P_sa]
+      conv => 
+        congr
+        skip
+        congr
+        rw [← P_sa]
       convert (star_mul_self_nonneg : 0 ≤ star P * P)
-    have Q2_nonneg : 0 ≤ Q ^ 2 := by
+    have Q2_nonneg : 0 ≤ Q ^ 2 := by 
       rw [sq]
-      conv =>
-      congr
-      skip
-      congr
-      rw [← Q_sa]
+      conv => 
+        congr
+        skip
+        congr
+        rw [← Q_sa]
       convert (star_mul_self_nonneg : 0 ≤ star Q * Q)
     convert
       smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg) (le_of_lt (show 0 < √2⁻¹ by norm_num))

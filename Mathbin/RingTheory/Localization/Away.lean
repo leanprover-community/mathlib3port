@@ -65,7 +65,7 @@ variable {g : R →+* P}
 `z : S` to `g y * (g x)⁻ⁿ`, where `y : R, n : ℕ` are such that `z = F y * (F x)⁻ⁿ`. -/
 noncomputable def lift (hg : IsUnit (g x)) : S →+* P :=
   IsLocalization.lift fun y : Submonoid.powers x =>
-    show IsUnit (g y.1) by
+    show IsUnit (g y.1) by 
       obtain ⟨n, hn⟩ := y.2
       rw [← hn, g.map_pow]
       exact IsUnit.map (powMonoidHom n : P →* P) hg
@@ -119,7 +119,6 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S := by
     obtain ⟨c, eq⟩ := (IsLocalization.eq_iff_exists M S).mp hxy
     obtain ⟨u, hu⟩ := H c
     rwa [← hu, Units.mul_left_inj] at eq
-    
   · intro y
     obtain ⟨⟨x, s⟩, eq⟩ := IsLocalization.surj M y
     obtain ⟨u, hu⟩ := H s
@@ -127,7 +126,6 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S := by
     dsimp only [Algebra.ofId, RingHom.to_fun_eq_coe, AlgHom.coe_mk]
     rw [RingHom.map_mul, ← Eq, ← hu, mul_assoc, ← RingHom.map_mul]
     simp
-    
 #align is_localization.at_units IsLocalization.atUnits
 
 /-- The localization away from a unit is isomorphic to the ring -/
@@ -148,21 +146,19 @@ noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
 theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S]
     [Algebra R S] {r : R} (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) :
     IsLocalization.Away r S :=
-  { map_units := by
+  { map_units := by 
       rintro ⟨_, n, rfl⟩
       exact (algebraMap R S).is_unit_map (hr.pow _),
-    surj := fun z => by
+    surj := fun z => by 
       obtain ⟨z', rfl⟩ := H.2 z
       exact ⟨⟨z', 1⟩, by simp⟩,
-    eq_iff_exists := fun x y => by
+    eq_iff_exists := fun x y => by 
       erw [H.1.eq_iff]
       constructor
       · rintro rfl
         exact ⟨1, rfl⟩
-        
       · rintro ⟨⟨_, n, rfl⟩, e⟩
-        exact (hr.pow _).mul_left_inj.mp e
-         }
+        exact (hr.pow _).mul_left_inj.mp e }
 #align is_localization.away_of_is_unit_of_bijective IsLocalization.away_of_is_unit_of_bijective
 
 end AtUnits

@@ -107,7 +107,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
   let A := { a' | a' ∈ t ∧ ∀ c ∈ u, Disjoint (B a') (B c) }
   have Anonempty : A.nonempty := ⟨a, hat, a_disj⟩
   let m := Sup (δ '' A)
-  have bddA : BddAbove (δ '' A) := by
+  have bddA : BddAbove (δ '' A) := by 
     refine' ⟨R, fun x xA => _⟩
     rcases(mem_image _ _ _).1 xA with ⟨a', ha', rfl⟩
     exact δle a' ha'.1
@@ -116,15 +116,13 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     rcases eq_or_lt_of_le this with (mzero | mpos)
     · refine' ⟨a, ⟨hat, a_disj⟩, _⟩
       simpa only [← mzero, zero_div] using δnonneg a hat
-      
-    · have I : m / τ < m := by
+    · have I : m / τ < m := by 
         rw [div_lt_iff (zero_lt_one.trans hτ)]
         conv_lhs => rw [← mul_one m]
         exact (mul_lt_mul_left mpos).2 hτ
       rcases exists_lt_of_lt_cSup (nonempty_image_iff.2 Anonempty) I with ⟨x, xA, hx⟩
       rcases(mem_image _ _ _).1 xA with ⟨a', ha', rfl⟩
       exact ⟨a', ha', hx.le⟩
-      
   clear hat hu a_disj a
   have a'_ne_u : a' ∉ u := fun H => (hne _ a'A.1).ne_empty (disjoint_self.1 (a'A.2 _ H))
   -- we claim that `u ∪ {a'}` still belongs to `T`, contradicting the maximality of `u`.
@@ -132,11 +130,9 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
   -- check that `u ∪ {a'}` is made of elements of `t`.
   · rw [insert_subset]
     exact ⟨a'A.1, uT.1⟩
-    
   -- check that `u ∪ {a'}` is a disjoint family. This follows from the fact that `a'` does not
   -- intersect `u`.
   · exact uT.2.1.insert fun b bu ba' => a'A.2 b bu
-    
   -- check that every element `c` of `t` intersecting `u ∪ {a'}` intersects an element of this
   -- family with large `δ`.
   · intro c ct b ba'u hcb
@@ -146,7 +142,6 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     · rcases H with ⟨d, du, hd⟩
       rcases uT.2.2 c ct d du hd with ⟨d', d'u, hd'⟩
       exact ⟨d', mem_insert_of_mem _ d'u, hd'⟩
-      
     -- otherwise, `c` belongs to `A`. The element of `u ∪ {a'}` that it intersects has to be `a'`.
     -- moreover, `δ c` is smaller than the maximum `m` of `δ` over `A`, which is `≤ δ a' / τ`
     -- thanks to the good choice of `a'`. This is the desired inequality.
@@ -156,17 +151,13 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
       · refine' ⟨b, mem_insert _ _, hcb, _⟩
         calc
           δ c ≤ m := le_cSup bddA (mem_image_of_mem _ ⟨ct, H⟩)
-          _ = τ * (m / τ) := by
+          _ = τ * (m / τ) := by 
             field_simp [(zero_lt_one.trans hτ).ne']
             ring
           _ ≤ τ * δ b := mul_le_mul_of_nonneg_left ha' (zero_le_one.trans hτ.le)
           
-        
       · rw [← not_disjoint_iff_nonempty_inter] at hcb
         exact (hcb (H _ H')).elim
-        
-      
-    
 #align
   vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
 
@@ -179,16 +170,15 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
     ∃ (u : _)(_ : u ⊆ t),
       (u.PairwiseDisjoint fun a => closedBall (x a) (r a)) ∧
         ∀ a ∈ t, ∃ b ∈ u, closedBall (x a) (r a) ⊆ closedBall (x b) (5 * r b) :=
-  by
+  by 
   rcases eq_empty_or_nonempty t with (rfl | tnonempty)
   · exact ⟨∅, subset.refl _, pairwise_disjoint_empty, by simp⟩
-    
   by_cases ht : ∀ a ∈ t, r a < 0
-  · exact
+  ·
+    exact
       ⟨t, subset.rfl, fun a ha b hb hab => by
         simp only [Function.onFun, closed_ball_eq_empty.2 (ht a ha), empty_disjoint], fun a ha =>
         ⟨a, ha, by simp only [closed_ball_eq_empty.2 (ht a ha), empty_subset]⟩⟩
-    
   push_neg  at ht
   let t' := { a ∈ t | 0 ≤ r a }
   rcases exists_disjoint_subfamily_covering_enlargment (fun a => closed_ball (x a) (r a)) t' r 2
@@ -205,11 +195,9 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
   refine' ⟨u, ut'.trans fun a ha => ha.1, u_disj, fun a ha => _⟩
   rcases le_or_lt 0 (r a) with (h'a | h'a)
   · exact A a ⟨ha, h'a⟩
-    
   · rcases ht with ⟨b, rb⟩
     rcases A b ⟨rb.1, rb.2⟩ with ⟨c, cu, hc⟩
     refine' ⟨c, cu, by simp only [closed_ball_eq_empty.2 h'a, empty_subset]⟩
-    
 #align
   vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball
 
@@ -230,7 +218,8 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     (μB : ∀ a ∈ t, μ (closedBall (c a) (3 * r a)) ≤ C * μ (B a))
     (ht : ∀ a ∈ t, (interior (B a)).Nonempty) (h't : ∀ a ∈ t, IsClosed (B a))
     (hf : ∀ x ∈ s, ∀ ε > (0 : ℝ), ∃ a ∈ t, r a ≤ ε ∧ c a = x) :
-    ∃ (u : _)(_ : u ⊆ t), u.Countable ∧ u.PairwiseDisjoint B ∧ μ (s \ ⋃ a ∈ u, B a) = 0 := by
+    ∃ (u : _)(_ : u ⊆ t), u.Countable ∧ u.PairwiseDisjoint B ∧ μ (s \ ⋃ a ∈ u, B a) = 0 :=
+  by
   /- The idea of the proof is the following. Assume for simplicity that `μ` is finite. Applying the
     abstract Vitali covering theorem with `δ = r` given by `hf`, one obtains a disjoint subfamily `u`,
     such that any element of `t` intersects an element of `u` with comparable radius. Fix `ε > 0`.
@@ -257,7 +246,6 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     refine' ⟨min 1 (R / 20), _, min_le_left _ _, _⟩
     · simp only [true_and_iff, lt_min_iff, zero_lt_one]
       linarith
-      
     · apply lt_of_le_of_lt (measure_mono _) μR
       apply closed_ball_subset_closed_ball
       calc
@@ -265,7 +253,6 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
           mul_le_mul_of_nonneg_left (min_le_right _ _) (by norm_num)
         _ = R := by ring
         
-      
   choose R hR0 hR1 hRμ
   -- we restrict to a subfamily `t'` of `t`, made of elements small enough to ensure that
   -- they only see a finite part of the measure, and with a doubling property
@@ -275,7 +262,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     ∃ (u : _)(_ : u ⊆ t'),
       u.PairwiseDisjoint B ∧ ∀ a ∈ t', ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ r a ≤ 2 * r b :=
     by
-    have A : ∀ a ∈ t', r a ≤ 1 := by
+    have A : ∀ a ∈ t', r a ≤ 1 := by 
       intro a ha
       apply ha.2.trans (hR1 (c a))
     have A' : ∀ a ∈ t', (B a).Nonempty := fun a hat' =>
@@ -314,9 +301,8 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       apply closed_ball_subset_closed_ball'
       have : r a ≤ R0 := le_cSup R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
       linarith [Idist_v a ⟨au, hax⟩, hR0 x]
-      
     · have R0pos : 0 < R0 := (hR0 x).trans_le H
-      have vnonempty : v.nonempty := by
+      have vnonempty : v.nonempty := by 
         by_contra
         rw [← ne_empty_iff_nonempty, not_not] at h
         simp only [h, Real.Sup_empty, image_empty] at R0_def
@@ -331,14 +317,11 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
         apply closed_ball_subset_closed_ball'
         rw [dist_comm]
         linarith [Idist_v a hav, (ut' (vu hav)).2]
-        
       · intro b bu hbx
         refine' (hB b (ut bu)).trans _
         apply closed_ball_subset_closed_ball'
         have : r b ≤ R0 := le_cSup R0_bdd (mem_image_of_mem _ ⟨bu, hbx⟩)
         linarith [Idist_v b ⟨bu, hbx⟩]
-        
-      
   -- we will show that, in `ball x (R x)`, almost all `s` is covered by the family `u`.
   refine'
     ⟨_ ∩ ball x (R x), inter_mem_nhds_within _ (ball_mem_nhds _ (hR0 _)),
@@ -363,7 +346,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   -- main property: the points `z` of `s` which are not covered by `u` are contained in the
   -- enlargements of the elements not in `w`.
   have M : (s \ ⋃ a ∈ u, B a) ∩ ball x (R x) ⊆ ⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a) :=
-    by
+    by 
     intro z hz
     set k := ⋃ (a : v) (ha : a ∈ w), B a with hk
     have k_closed : IsClosed k := isClosedBUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
@@ -384,21 +367,21 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     -- choose an element `a` of the family `t` contained in this small ball
     obtain ⟨a, hat, ad, rfl⟩ : ∃ a ∈ t, r a ≤ min d (R z) ∧ c a = z
     exact hf z ((mem_diff _).1 (mem_of_mem_inter_left hz)).1 (min d (R z)) (lt_min dpos (hR0 z))
-    have ax : B a ⊆ ball x (R x) := by
+    have ax : B a ⊆ ball x (R x) := by 
       refine' (hB a hat).trans _
       refine' subset.trans _ (hd.trans (diff_subset (ball x (R x)) k))
       exact closed_ball_subset_closed_ball (ad.trans (min_le_left _ _))
     -- it intersects an element `b` of `u` with comparable diameter, by definition of `u`
     obtain ⟨b, bu, ab, bdiam⟩ : ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ r a ≤ 2 * r b
     exact hu a ⟨hat, ad.trans (min_le_right _ _)⟩
-    have bv : b ∈ v := by
+    have bv : b ∈ v := by 
       refine' ⟨bu, ab.mono _⟩
       rw [inter_comm]
       exact inter_subset_inter_right _ ax
     let b' : v := ⟨b, bv⟩
     -- `b` can not belong to `w`, as the elements of `w` do not intersect `closed_ball z d`,
     -- contrary to `b`
-    have b'_notmem_w : b' ∉ w := by
+    have b'_notmem_w : b' ∉ w := by 
       intro b'w
       have b'k : B b' ⊆ k := @Finset.subset_set_bUnion_of_mem _ _ _ (fun y : v => B y) _ b'w
       have : (ball x (R x) \ k ∩ k).Nonempty := by
@@ -439,7 +422,8 @@ This is essentially a restatement of the measurable Vitali theorem. -/
 protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
     [SecondCountableTopology α] (μ : Measure α) [IsLocallyFiniteMeasure μ] (C : ℝ≥0)
     (h : ∀ x, ∃ᶠ r in 𝓝[>] 0, μ (closedBall x (3 * r)) ≤ C * μ (closedBall x r)) :
-    VitaliFamily μ where
+    VitaliFamily
+      μ where 
   setsAt x :=
     { a |
       IsClosed a ∧
@@ -453,7 +437,7 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
     refine'
       ⟨closed_ball x r, ⟨is_closed_ball, _, ⟨r, subset.rfl, μr⟩⟩, closed_ball_subset_closed_ball rε⟩
     exact (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball
-  covering := by
+  covering := by 
     intro s f fsubset ffine
     let t : Set (ℝ × α × Set α) :=
       { p |
@@ -466,10 +450,8 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
       rcases fsubset x xs ha with ⟨a_closed, a_int, ⟨r, ar, μr⟩⟩
       refine' ⟨⟨min r ε, x, a⟩, ⟨_, _, a_int, a_closed, ha, xs⟩, min_le_right _ _, rfl⟩
       · rcases min_cases r ε with (h' | h') <;> rwa [h'.1]
-        
       · apply le_trans (measure_mono (closed_ball_subset_closed_ball _)) μr
         exact mul_le_mul_of_nonneg_left (min_le_left _ _) zero_le_three
-        
     rcases exists_disjoint_covering_ae μ s t C (fun p => p.1) (fun p => p.2.1) (fun p => p.2.2)
         (fun p hp => hp.1) (fun p hp => hp.2.1) (fun p hp => hp.2.2.1) (fun p hp => hp.2.2.2.1)
         A with
@@ -477,16 +459,12 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
     refine' ⟨(fun p : ℝ × α × Set α => p.2) '' t', _, _, _, _⟩
     · rintro - ⟨q, hq, rfl⟩
       exact (t't hq).2.2.2.2.2
-      
     · rintro p ⟨q, hq, rfl⟩ p' ⟨q', hq', rfl⟩ hqq'
       exact t'_disj hq hq' (ne_of_apply_ne _ hqq')
-      
     · rintro - ⟨q, hq, rfl⟩
       exact (t't hq).2.2.2.2.1
-      
     · convert μt' using 3
       rw [bUnion_image]
-      
 #align vitali.vitali_family Vitali.vitaliFamily
 
 end Vitali

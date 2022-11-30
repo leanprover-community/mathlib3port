@@ -88,7 +88,7 @@ variable [Archimedean K]
 open Nat
 
 theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v - (of v).convergents n| < ε :=
-  by
+  by 
   intro ε ε_pos
   -- use the archimedean property to obtian a suitable N
   rcases(exists_nat_gt (1 / ε) : ∃ N' : ℕ, 1 / ε < N') with ⟨N', one_div_ε_lt_N'⟩
@@ -102,7 +102,6 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
     have : v - g.convergents n = 0 := sub_eq_zero.elim_right this
     rw [this]
     exact_mod_cast ε_pos
-    
   · let B := g.denominators n
     let nB := g.denominators (n + 1)
     have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / (B * nB) :=
@@ -149,7 +148,6 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
       _ ≤ B * nB :=
         mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_lt zero_lt_B)
       
-    
 #align
   generalized_continued_fraction.of_convergence_epsilon GeneralizedContinuedFraction.of_convergence_epsilon
 

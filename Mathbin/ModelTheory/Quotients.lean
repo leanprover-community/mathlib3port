@@ -39,7 +39,10 @@ class Prestructure (s : Setoid M) where
 
 variable {L} {s : Setoid M} [ps : L.Prestructure s]
 
-instance quotientStructure : L.StructureCat (Quotient s) where
+instance quotientStructure :
+    L.StructureCat
+      (Quotient
+        s) where 
   funMap n f x :=
     Quotient.map (@funMap L M ps.toStructure n f) Prestructure.fun_equiv (Quotient.finChoice x)
   rel_map n r x :=
@@ -70,9 +73,7 @@ theorem Term.realize_quotient_mk {β : Type _} (t : L.term β) (x : β → M) :
     (t.realize fun i => ⟦x i⟧) = ⟦@Term.realize _ _ ps.toStructure _ x t⟧ := by
   induction' t with _ _ _ _ ih
   · rfl
-    
   · simp only [ih, fun_map_quotient_mk, term.realize]
-    
 #align first_order.language.term.realize_quotient_mk FirstOrder.Language.Term.realize_quotient_mk
 
 end Language

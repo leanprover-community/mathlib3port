@@ -52,26 +52,20 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     rw [choose_succ_succ, Nat.cast_add, mul_add]
     congr 1
     · rw [pow_succ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
-      
     · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).Eq]
       by_cases h_eq : i = n
       · rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
-        
       · rw [succ_sub (lt_of_le_of_ne h_le h_eq)]
         rw [pow_succ y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
-        
-      
   induction' n with n ih
   · rw [pow_zero, sum_range_succ, range_zero, sum_empty, zero_add]
     dsimp [t]
     rw [pow_zero, pow_zero, choose_self, Nat.cast_one, mul_one, mul_one]
-    
   · rw [sum_range_succ', h_first]
     rw [sum_congr rfl (h_middle n), sum_add_distrib, add_assoc]
     rw [pow_succ (x + y), ih, add_mul, mul_sum, mul_sum]
     congr 1
     rw [sum_range_succ', sum_range_succ, h_first, h_last, mul_zero, add_zero, pow_succ]
-    
 #align commute.add_pow Commute.add_pow
 
 /-- A version of `commute.add_pow` that avoids ℕ-subtraction by summing over the antidiagonal and
@@ -111,7 +105,7 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
       _ =
           (∑ i in range (m + 1), choose (2 * m + 1) i) +
             ∑ i in ico (m + 1) (2 * m + 2), choose (2 * m + 1) i :=
-        by
+        by 
         rw [range_eq_Ico, sum_Ico_reflect]
         · congr
           have A : m + 1 ≤ 2 * m + 1 := by linarith
@@ -119,12 +113,10 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
           congr
           rw [tsub_eq_iff_eq_add_of_le A]
           ring
-          
         · linarith
-          
       _ = ∑ i in range (2 * m + 2), choose (2 * m + 1) i := sum_range_add_sum_Ico _ (by linarith)
       _ = 2 ^ (2 * m + 1) := sum_range_choose (2 * m + 1)
-      _ = 2 * 4 ^ m := by
+      _ = 2 * 4 ^ m := by 
         rw [pow_succ, pow_mul]
         rfl
       
@@ -152,9 +144,7 @@ end Nat
 
 theorem Int.alternating_sum_range_choose {n : ℕ} :
     (∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ)) = if n = 0 then 1 else 0 := by
-  cases n;
-  · simp
-    
+  cases n; · simp
   have h := add_pow (-1 : ℤ) 1 n.succ
   simp only [one_pow, mul_one, add_left_neg] at h
   rw [← h, zero_pow (Nat.succ_pos n), if_neg (Nat.succ_ne_zero n)]
@@ -175,12 +165,10 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
     rw [mem_range, Nat.lt_succ_iff]
     rw [mem_powerset] at hy
     exact card_le_of_subset hy
-    
   · refine' sum_congr rfl fun y hy => _
     rw [← card_powerset_len, ← sum_const]
     refine' sum_congr powerset_len_eq_filter.symm fun z hz => _
     rw [(mem_powerset_len.1 hz).2]
-    
 #align finset.sum_powerset_apply_card Finset.sum_powerset_apply_card
 
 theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
@@ -190,10 +178,11 @@ theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset
 #align finset.sum_powerset_neg_one_pow_card Finset.sum_powerset_neg_one_pow_card
 
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
-    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = 0 := by classical
-  rw [sum_powerset_neg_one_pow_card, if_neg]
-  rw [← Ne.def, ← nonempty_iff_ne_empty]
-  apply h0
+    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = 0 := by
+  classical 
+    rw [sum_powerset_neg_one_pow_card, if_neg]
+    rw [← Ne.def, ← nonempty_iff_ne_empty]
+    apply h0
 #align
   finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty
 

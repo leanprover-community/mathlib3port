@@ -145,7 +145,7 @@ theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
   | _, b, ⟨d, rfl⟩, ha =>
     mul_left_not_lt b
       (mt
-        (by
+        (by 
           rintro rfl
           exact mul_zero _)
         ha)
@@ -221,9 +221,9 @@ theorem xgcd_zero_left {s t r' s' t' : R} : xgcdAux 0 s t r' s' t' = (r', s', t'
 
 theorem xgcd_aux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
-  conv =>
-  lhs
-  rw [xgcd_aux]
+  conv => 
+    lhs
+    rw [xgcd_aux]
   exact if_neg h
 #align euclidean_domain.xgcd_aux_rec EuclideanDomain.xgcd_aux_rec
 

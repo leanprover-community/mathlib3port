@@ -3,6 +3,7 @@ Copyright (c) 2022 Benjamin Davidson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson, Devon Tuma, Eric Rodriguez, Oliver Nash
 -/
+import Mathbin.Tactic.Positivity
 import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Topology.Algebra.Field
 
@@ -73,7 +74,6 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       _ = |x₀| * i / |x₀| := by ring
       _ = i := mul_div_cancel_left i fun h => hx₀ (abs_eq_zero.1 h)
       
-    
   · obtain ⟨i, hi, hit⟩ := h
     refine' ⟨i * |x₀|, mul_pos hi (abs_pos.2 hx₀), fun x hx => _⟩
     have : |x / x₀ - 1| < i
@@ -86,7 +86,6 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       
     specialize hit (x / x₀) this
     rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit
-    
 #align nhds_eq_map_mul_left_nhds_one nhds_eq_map_mul_left_nhds_one
 
 theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
@@ -108,14 +107,15 @@ theorem mul_tendsto_nhds_one_nhds_one :
   have hb0 : 0 ≤ b := le_trans hε' (le_of_lt hb)
   refine'
     ⟨lt_of_le_of_lt _ (mul_lt_mul'' ha hb hε' hε'), lt_of_lt_of_le (mul_lt_mul'' ha' hb' ha0 hb0) _⟩
-  · calc
+  ·
+    calc
       1 - ε = 1 - ε / 2 - ε / 2 := by ring_nf
       _ ≤ 1 - ε / 2 - ε / 2 + ε / 2 * (ε / 2) := le_add_of_nonneg_right (by positivity)
       _ = (1 - ε / 2) * (1 - ε / 2) := by ring_nf
       _ ≤ (1 - ε / 4) * (1 - ε / 4) := mul_le_mul (by linarith) (by linarith) (by linarith) hε'
       
-    
-  · calc
+  ·
+    calc
       (1 + ε / 4) * (1 + ε / 4) = 1 + ε / 2 + ε / 4 * (ε / 4) := by ring_nf
       _ = 1 + ε / 2 + ε * ε / 16 := by ring_nf
       _ ≤ 1 + ε / 2 + ε / 2 :=
@@ -126,27 +126,24 @@ theorem mul_tendsto_nhds_one_nhds_one :
           (1 + ε / 2)
       _ ≤ 1 + ε := by ring_nf
       
-    
 #align mul_tendsto_nhds_one_nhds_one mul_tendsto_nhds_one_nhds_one
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedField.has_continuous_mul : HasContinuousMul α :=
-  ⟨by
+  ⟨by 
     rw [continuous_iff_continuous_at]
     rintro ⟨x₀, y₀⟩
     by_cases hx₀ : x₀ = 0
     · rw [hx₀, ContinuousAt, zero_mul, nhds_prod_eq]
       exact mul_tendsto_nhds_zero_right y₀
-      
     by_cases hy₀ : y₀ = 0
     · rw [hy₀, ContinuousAt, mul_zero, nhds_prod_eq]
       exact mul_tendsto_nhds_zero_left x₀
-      
     have hxy : x₀ * y₀ ≠ 0 := mul_ne_zero hx₀ hy₀
     have key :
       (fun p : α × α => x₀ * p.1 * (p.2 * y₀)) =
         ((fun x => x₀ * x) ∘ fun x => x * y₀) ∘ uncurry (· * ·) :=
-      by
+      by 
       ext p
       simp [uncurry, mul_assoc]
     have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x := by
@@ -275,7 +272,7 @@ theorem tendsto_pow_neg_at_top {n : ℕ} (hn : n ≠ 0) :
 #align tendsto_pow_neg_at_top tendsto_pow_neg_at_top
 
 theorem tendsto_zpow_at_top_zero {n : ℤ} (hn : n < 0) : Tendsto (fun x : α => x ^ n) atTop (𝓝 0) :=
-  by
+  by 
   lift -n to ℕ using le_of_lt (neg_pos.mpr hn) with N
   rw [← neg_pos, ← h, Nat.cast_pos] at hn
   simpa only [h, neg_neg] using tendsto_pow_neg_at_top hn.ne'
@@ -290,16 +287,12 @@ theorem tendsto_const_mul_pow_nhds_iff' {n : ℕ} {c d : α} :
     Tendsto (fun x : α => c * x ^ n) atTop (𝓝 d) ↔ (c = 0 ∨ n = 0) ∧ c = d := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp [tendsto_const_nhds_iff]
-    
   rcases lt_trichotomy c 0 with (hc | rfl | hc)
   · have := tendsto_const_mul_pow_at_bot_iff.2 ⟨hn, hc⟩
     simp [not_tendsto_nhds_of_tendsto_at_bot this, hc.ne, hn]
-    
   · simp [tendsto_const_nhds_iff]
-    
   · have := tendsto_const_mul_pow_at_top_iff.2 ⟨hn, hc⟩
     simp [not_tendsto_nhds_of_tendsto_at_top this, hc.ne', hn]
-    
 #align tendsto_const_mul_pow_nhds_iff' tendsto_const_mul_pow_nhds_iff'
 
 theorem tendsto_const_mul_pow_nhds_iff {n : ℕ} {c d : α} (hc : c ≠ 0) :
@@ -315,18 +308,12 @@ theorem tendsto_const_mul_zpow_at_top_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 
       simp only [zpow_coe_nat] at h
       rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h
       exact Or.inl h
-      
     · rw [not_le] at hn
       refine' Or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_at_top_zero hn)⟩
-      
-    
   · cases h
     · simp only [h.left, h.right, zpow_zero, mul_one]
       exact tendsto_const_nhds
-      
     · exact h.2.symm ▸ tendsto_const_mul_zpow_at_top_zero h.1
-      
-    
 #align tendsto_const_mul_zpow_at_top_nhds_iff tendsto_const_mul_zpow_at_top_nhds_iff
 
 -- TODO: With a different proof, this could be possibly generalised to only require a
@@ -334,12 +321,12 @@ theorem tendsto_const_mul_zpow_at_top_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 
 -- `nnreal` instance of `has_continuous_inv₀`.
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
-    TopologicalDivisionRing α where continuous_at_inv₀ := by
+    TopologicalDivisionRing
+      α where continuous_at_inv₀ := by
     suffices ∀ {x : α}, 0 < x → ContinuousAt Inv.inv x by
       intro x hx
       cases hx.symm.lt_or_lt
       · exact this h
-        
       convert (this <| neg_pos.mpr h).neg.comp continuous_neg.continuous_at
       ext
       simp [neg_inv]
@@ -348,14 +335,14 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
       (nhds_basis_Ioo_pos t).tendsto_iff <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
     refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
-    have hx : t / 2 < x := by
+    have hx : t / 2 < x := by 
       rw [Set.mem_Ioo, sub_lt_comm, lt_min_iff] at h
       nlinarith
     have hx' : 0 < x := (half_pos ht).trans hx
     have aux : 0 < 2 / t ^ 2 := by positivity
     rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt_comm, ← abs_sub_lt_iff] at h⊢
     rw [inv_sub_inv ht.ne' hx'.ne', abs_div, div_eq_mul_inv]
-    suffices (|t * x|)⁻¹ < 2 / t ^ 2 by
+    suffices (|t * x|)⁻¹ < 2 / t ^ 2 by 
       rw [← abs_neg, neg_sub]
       refine' (mul_lt_mul'' h this (by positivity) (by positivity)).trans_le _
       rw [mul_comm, mul_min_of_nonneg _ _ aux.le]
@@ -381,9 +368,7 @@ theorem nhds_within_pos_comap_mul_left {x : α} (hx : 0 < x) :
   intro x hx
   convert nhds_within_le_comap (continuous_mul_left x).ContinuousWithinAt
   · exact (mul_zero _).symm
-    
   · rw [image_const_mul_Ioi_zero hx]
-    
 #align nhds_within_pos_comap_mul_left nhds_within_pos_comap_mul_left
 
 theorem eventually_nhds_within_pos_mul_left {x : α} (hx : 0 < x) {p : α → Prop}

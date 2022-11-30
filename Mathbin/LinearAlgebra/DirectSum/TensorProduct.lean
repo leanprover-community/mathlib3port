@@ -23,7 +23,7 @@ open DirectSum
 
 open LinearMap
 
-attribute [local ext.1] TensorProduct.ext
+attribute [local ext] TensorProduct.ext
 
 variable (R : Type _) [CommRing R]
 

@@ -55,9 +55,10 @@ variable {L} {M} {N}
 
 namespace ElementaryEmbedding
 
-instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N where
+instance funLike : FunLike (M ↪ₑ[L] N) M fun _ =>
+      N where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     cases f
     cases g
     simp only
@@ -71,23 +72,23 @@ instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
 
 @[simp]
 theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n)
-    (v : α → M) (xs : Fin n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by classical
-  rw [← bounded_formula.realize_restrict_free_var Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
-  swap
-  · infer_instance
-    
-  have h :=
-    f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
-      (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
-  simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
-  rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
-    Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equiv.symm_comp_self,
-    Function.comp.right_id, Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr,
-    Sum.elim_comp_inr, ← Function.comp.assoc] at h
-  refine' h.trans _
-  rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp.right_id,
-    Sum.elim_comp_inl, Sum.elim_comp_inr, ← Set.inclusion_eq_id,
-    bounded_formula.realize_restrict_free_var Set.Subset.rfl]
+    (v : α → M) (xs : Fin n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
+  classical 
+    rw [← bounded_formula.realize_restrict_free_var Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
+    swap
+    · infer_instance
+    have h :=
+      f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
+        (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
+    simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
+    rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
+      Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equiv.symm_comp_self,
+      Function.comp.right_id, Function.comp.assoc, Sum.elim_comp_inl,
+      Function.comp.assoc _ _ Sum.inr, Sum.elim_comp_inr, ← Function.comp.assoc] at h
+    refine' h.trans _
+    rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp.right_id,
+      Sum.elim_comp_inl, Sum.elim_comp_inr, ← Set.inclusion_eq_id,
+      bounded_formula.realize_restrict_free_var Set.Subset.rfl]
 #align
   first_order.language.elementary_embedding.map_bounded_formula FirstOrder.Language.ElementaryEmbedding.map_bounded_formula
 
@@ -151,7 +152,8 @@ theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Fin n �
 #align
   first_order.language.elementary_embedding.map_rel FirstOrder.Language.ElementaryEmbedding.map_rel
 
-instance strongHomClass : StrongHomClass L (M ↪ₑ[L] N) M N where
+instance strongHomClass :
+    StrongHomClass L (M ↪ₑ[L] N) M N where 
   map_fun := map_fun
   map_rel := map_rel
 #align
@@ -164,7 +166,8 @@ theorem map_constants (φ : M ↪ₑ[L] N) (c : L.Constants) : φ c = c :=
   first_order.language.elementary_embedding.map_constants FirstOrder.Language.ElementaryEmbedding.map_constants
 
 /-- An elementary embedding is also a first-order embedding. -/
-def toEmbedding (f : M ↪ₑ[L] N) : M ↪[L] N where
+def toEmbedding (f : M ↪ₑ[L] N) : M ↪[L]
+      N where 
   toFun := f
   inj' := f.Injective
 #align
@@ -198,7 +201,7 @@ theorem coe_injective : @Function.Injective (M ↪ₑ[L] N) (M → N) coeFn :=
 #align
   first_order.language.elementary_embedding.coe_injective FirstOrder.Language.ElementaryEmbedding.coe_injective
 
-@[ext.1]
+@[ext]
 theorem ext ⦃f g : M ↪ₑ[L] N⦄ (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align first_order.language.elementary_embedding.ext FirstOrder.Language.ElementaryEmbedding.ext
@@ -268,13 +271,12 @@ def ElementaryEmbedding.ofModelsElementaryDiagram (N : Type _) [L.StructureCat N
               (((L.Lhom_with_constants M).onBoundedFormula φ).subst
                   (constants.term ∘ Sum.inr ∘ x)).alls).trans
           _)
-    · simp_rw [sentence.realize, bounded_formula.realize_alls, bounded_formula.realize_subst,
+    ·
+      simp_rw [sentence.realize, bounded_formula.realize_alls, bounded_formula.realize_subst,
         Lhom.realize_on_bounded_formula, formula.realize, Unique.forall_iff, realize_constants]
-      
     · simp_rw [sentence.realize, bounded_formula.realize_alls, bounded_formula.realize_subst,
         Lhom.realize_on_bounded_formula, formula.realize, Unique.forall_iff]
-      rfl
-      ⟩
+      rfl⟩
 #align
   first_order.language.elementary_embedding.of_models_elementary_diagram FirstOrder.Language.ElementaryEmbedding.ofModelsElementaryDiagram
 
@@ -294,36 +296,26 @@ theorem is_elementary_of_exists (f : M ↪[L] N)
       φ.realize (f ∘ default) (f ∘ xs) ↔ φ.realize default xs
   · intro n φ x
     refine' φ.realize_relabel_sum_inr.symm.trans (trans (h n _ _) φ.realize_relabel_sum_inr)
-    
   refine' fun n φ => φ.recOn _ _ _ _ _
   · exact fun _ _ => Iff.rfl
-    
   · intros
     simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
-    
   · intros
     simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
-    
   · intro _ _ _ ih1 ih2 _
     simp [ih1, ih2]
-    
   · intro n φ ih xs
     simp only [bounded_formula.realize_all]
     refine' ⟨fun h a => _, _⟩
     · rw [← ih, Fin.comp_snoc]
       exact h (f a)
-      
     · contrapose!
       rintro ⟨a, ha⟩
       obtain ⟨b, hb⟩ := htv n φ.not xs a _
       · refine' ⟨b, fun h => hb (Eq.mp _ ((ih _).2 h))⟩
         rw [Unique.eq_default (f ∘ default), Fin.comp_snoc]
-        
       · rw [bounded_formula.realize_not, ← Unique.eq_default (f ∘ default)]
         exact ha
-        
-      
-    
 #align
   first_order.language.embedding.is_elementary_of_exists FirstOrder.Language.Embedding.is_elementary_of_exists
 
@@ -430,7 +422,8 @@ theorem is_elementary (S : L.ElementarySubstructure M) : (S : L.Substructure M).
   first_order.language.elementary_substructure.is_elementary FirstOrder.Language.ElementarySubstructure.is_elementary
 
 /-- The natural embedding of an `L.substructure` of `M` into `M`. -/
-def subtype (S : L.ElementarySubstructure M) : S ↪ₑ[L] M where
+def subtype (S : L.ElementarySubstructure M) :
+    S ↪ₑ[L] M where 
   toFun := coe
   map_formula' := S.IsElementary
 #align
@@ -443,7 +436,7 @@ theorem coe_subtype {S : L.ElementarySubstructure M} : ⇑S.Subtype = coe :=
   first_order.language.elementary_substructure.coe_subtype FirstOrder.Language.ElementarySubstructure.coe_subtype
 
 /-- The substructure `M` of the structure `M` is elementary. -/
-instance : HasTop (L.ElementarySubstructure M) :=
+instance : Top (L.ElementarySubstructure M) :=
   ⟨⟨⊤, fun n φ x => Substructure.realize_formula_top.symm⟩⟩
 
 instance : Inhabited (L.ElementarySubstructure M) :=

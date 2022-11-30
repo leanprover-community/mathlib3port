@@ -31,29 +31,32 @@ variable [∀ a b : C, HasCoproductsOfShape (a ⟶ b) D]
 
 /-- The left adjoint of evaluation. -/
 @[simps]
-def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
+def evaluationLeftAdjoint (c : C) :
+    D ⥤
+      C ⥤
+        D where 
   obj d :=
     { obj := fun t => ∐ fun i : c ⟶ t => d,
       map := fun u v f => sigma.desc fun g => (Sigma.ι fun _ => d) <| g ≫ f,
-      map_id' := by
+      map_id' := by 
         intros ; ext ⟨j⟩; simp only [cofan.mk_ι_app, colimit.ι_desc, category.comp_id]
         congr 1; rw [category.comp_id],
-      map_comp' := by
+      map_comp' := by 
         intros ; ext; simp only [cofan.mk_ι_app, colimit.ι_desc_assoc, colimit.ι_desc]
         congr 1; rw [category.assoc] }
   map d₁ d₂ f :=
     { app := fun e => sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h,
-      naturality' := by
+      naturality' := by 
         intros
         ext
         dsimp
         simp }
-  map_id' := by
+  map_id' := by 
     intros
     ext (x⟨j⟩)
     dsimp
     simp
-  map_comp' := by
+  map_comp' := by 
     intros
     ext
     dsimp
@@ -68,12 +71,12 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
         { toFun := fun f => Sigma.ι (fun _ => d) (𝟙 _) ≫ f.app c,
           invFun := fun f =>
             { app := fun e => sigma.desc fun h => f ≫ F.map h,
-              naturality' := by
+              naturality' := by 
                 intros
                 ext
                 dsimp
                 simp },
-          left_inv := by
+          left_inv := by 
             intro f
             ext (x⟨g⟩)
             dsimp
@@ -81,15 +84,15 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
               evaluation_left_adjoint_obj_map, colimit.ι_desc_assoc, cofan.mk_ι_app]
             congr 2
             rw [category.id_comp],
-          right_inv := fun f => by
+          right_inv := fun f => by 
             dsimp
             simp },
-      hom_equiv_naturality_left_symm' := by
+      hom_equiv_naturality_left_symm' := by 
         intros
         ext
         dsimp
         simp,
-      hom_equiv_naturality_right' := by
+      hom_equiv_naturality_right' := by 
         intros
         dsimp
         simp }
@@ -103,10 +106,8 @@ theorem NatTrans.mono_iff_mono_app {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ 
   constructor
   · intro h c
     exact (inferInstance : mono (((evaluation _ _).obj c).map η))
-    
   · intro _
     apply nat_trans.mono_of_mono_app
-    
 #align category_theory.nat_trans.mono_iff_mono_app CategoryTheory.NatTrans.mono_iff_mono_app
 
 end
@@ -117,30 +118,33 @@ variable [∀ a b : C, HasProductsOfShape (a ⟶ b) D]
 
 /-- The right adjoint of evaluation. -/
 @[simps]
-def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
+def evaluationRightAdjoint (c : C) :
+    D ⥤
+      C ⥤
+        D where 
   obj d :=
     { obj := fun t => ∏ fun i : t ⟶ c => d, map := fun u v f => pi.lift fun g => Pi.π _ <| f ≫ g,
-      map_id' := by
+      map_id' := by 
         intros ; ext ⟨j⟩; dsimp
         simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
         congr ; simp,
-      map_comp' := by
+      map_comp' := by 
         intros ; ext ⟨j⟩; dsimp
         simp only [limit.lift_π, fan.mk_π_app, category.assoc]
         congr 1; simp }
   map d₁ d₂ f :=
     { app := fun t => pi.lift fun g => Pi.π _ g ≫ f,
-      naturality' := by
+      naturality' := by 
         intros
         ext
         dsimp
         simp }
-  map_id' := by
+  map_id' := by 
     intros
     ext (x⟨j⟩)
     dsimp
     simp
-  map_comp' := by
+  map_comp' := by 
     intros
     ext
     dsimp
@@ -154,16 +158,16 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
     { homEquiv := fun F d =>
         { toFun := fun f =>
             { app := fun t => pi.lift fun g => F.map g ≫ f,
-              naturality' := by
+              naturality' := by 
                 intros
                 ext
                 dsimp
                 simp },
           invFun := fun f => f.app _ ≫ Pi.π _ (𝟙 _),
-          left_inv := fun f => by
+          left_inv := fun f => by 
             dsimp
             simp,
-          right_inv := by
+          right_inv := by 
             intro f
             ext (x⟨g⟩)
             dsimp
@@ -171,11 +175,11 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
               fan.mk_π_app]
             congr
             rw [category.comp_id] },
-      hom_equiv_naturality_left_symm' := by
+      hom_equiv_naturality_left_symm' := by 
         intros
         dsimp
         simp,
-      hom_equiv_naturality_right' := by
+      hom_equiv_naturality_right' := by 
         intros
         ext
         dsimp
@@ -190,10 +194,8 @@ theorem NatTrans.epi_iff_epi_app {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀
   constructor
   · intro h c
     exact (inferInstance : epi (((evaluation _ _).obj c).map η))
-    
   · intros
     apply nat_trans.epi_of_epi_app
-    
 #align category_theory.nat_trans.epi_iff_epi_app CategoryTheory.NatTrans.epi_iff_epi_app
 
 end

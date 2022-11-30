@@ -31,7 +31,7 @@ theorem hasStrictFderivAtCpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0
         (p.1 ^ p.2 * log p.1) • ContinuousLinearMap.snd ℂ ℂ ℂ)
       p :=
   by
-  have A : p.1 ≠ 0 := by
+  have A : p.1 ≠ 0 := by 
     intro h
     simpa [h, lt_irrefl] using hp
   have : (fun x : ℂ × ℂ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
@@ -58,10 +58,9 @@ theorem hasStrictDerivAtConstCpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
     rw [log_zero, mul_zero]
     refine' (hasStrictDerivAtConst _ 0).congr_of_eventually_eq _
     exact (is_open_ne.eventually_mem h).mono fun y hy => (zero_cpow hy).symm
-    
-  · simpa only [cpow_def_of_ne_zero hx, mul_one] using
+  ·
+    simpa only [cpow_def_of_ne_zero hx, mul_one] using
       ((hasStrictDerivAtId y).const_mul (log x)).cexp
-    
 #align complex.has_strict_deriv_at_const_cpow Complex.hasStrictDerivAtConstCpow
 
 theorem hasFderivAtCpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
@@ -297,9 +296,7 @@ theorem hasStrictDerivAtRpowConstOfNe {x : ℝ} (hx : x ≠ 0) (p : ℝ) :
         ((hasStrictDerivAtId x).Prod (hasStrictDerivAtConst _ _))
     convert this
     simp
-    
   · simpa using (hasStrictDerivAtId x).rpow (hasStrictDerivAtConst x p) hx
-    
 #align real.has_strict_deriv_at_rpow_const_of_ne Real.hasStrictDerivAtRpowConstOfNe
 
 theorem hasStrictDerivAtConstRpow {a : ℝ} (ha : 0 < a) (x : ℝ) :
@@ -327,7 +324,6 @@ theorem hasDerivAtRpowConst {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) :
     HasDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x := by
   rcases ne_or_eq x 0 with (hx | rfl)
   · exact (has_strict_deriv_at_rpow_const_of_ne hx _).HasDerivAt
-    
   replace h : 1 ≤ p := h.neg_resolve_left rfl
   apply
     hasDerivAtOfHasDerivAtOfNe fun x hx => (has_strict_deriv_at_rpow_const_of_ne hx p).HasDerivAt
@@ -357,12 +353,10 @@ theorem contDiffAtRpowConstOfNe {x p : ℝ} {n : ℕ∞} (h : x ≠ 0) :
 theorem contDiffRpowConstOfLe {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDiff ℝ n fun x : ℝ => x ^ p := by
   induction' n with n ihn generalizing p
   · exact cont_diff_zero.2 (continuous_id.rpow_const fun x => by exact_mod_cast Or.inr h)
-    
   · have h1 : 1 ≤ p := le_trans (by simp) h
     rw [Nat.cast_succ, ← le_sub_iff_add_le] at h
     rw [cont_diff_succ_iff_deriv, deriv_rpow_const' h1]
     refine' ⟨differentiable_rpow_const h1, cont_diff_const.mul (ihn h)⟩
-    
 #align real.cont_diff_rpow_const_of_le Real.contDiffRpowConstOfLe
 
 theorem contDiffAtRpowConstOfLe {x p : ℝ} {n : ℕ} (h : ↑n ≤ p) :
@@ -550,14 +544,14 @@ theorem HasDerivWithinAt.rpow (hf : HasDerivWithinAt f f' s x) (hg : HasDerivWit
     (h : 0 < f x) :
     HasDerivWithinAt (fun x => f x ^ g x) (f' * g x * f x ^ (g x - 1) + g' * f x ^ g x * log (f x))
       s x :=
-  by
+  by 
   convert (hf.has_fderiv_within_at.rpow hg.has_fderiv_within_at h).HasDerivWithinAt using 1
   dsimp; ring
 #align has_deriv_within_at.rpow HasDerivWithinAt.rpow
 
 theorem HasDerivAt.rpow (hf : HasDerivAt f f' x) (hg : HasDerivAt g g' x) (h : 0 < f x) :
     HasDerivAt (fun x => f x ^ g x) (f' * g x * f x ^ (g x - 1) + g' * f x ^ g x * log (f x)) x :=
-  by
+  by 
   rw [← has_deriv_within_at_univ] at *
   exact hf.rpow hg h
 #align has_deriv_at.rpow HasDerivAt.rpow

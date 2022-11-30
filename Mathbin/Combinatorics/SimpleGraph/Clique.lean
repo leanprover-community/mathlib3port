@@ -56,12 +56,10 @@ theorem is_clique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ := by
     ext (⟨v, hv⟩⟨w, hw⟩)
     simp only [comap_adj, Subtype.coe_mk, top_adj, Ne.def, Subtype.mk_eq_mk]
     exact ⟨adj.ne, h hv hw⟩
-    
   · intro h v hv w hw hne
     have : (G.induce s).Adj ⟨v, hv⟩ ⟨w, hw⟩ = _ := rfl
     conv_lhs at this => rw [h]
     simpa [hne]
-    
 #align simple_graph.is_clique_iff_induce_eq SimpleGraph.is_clique_iff_induce_eq
 
 instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.IsClique s) :=
@@ -140,10 +138,8 @@ theorem is_3_clique_iff :
     refine' ⟨a, b, c, _⟩
     rw [is_3_clique_triple_iff] at h
     tauto
-    
   · rintro ⟨a, b, c, hab, hbc, hca, rfl⟩
     exact is_3_clique_triple_iff.2 ⟨hab, hbc, hca⟩
-    
 #align simple_graph.is_3_clique_iff SimpleGraph.is_3_clique_iff
 
 end NClique
@@ -193,13 +189,11 @@ noncomputable def topEmbeddingOfNotCliqueFree {n : ℕ} (h : ¬G.CliqueFree n) :
 #align simple_graph.top_embedding_of_not_clique_free SimpleGraph.topEmbeddingOfNotCliqueFree
 
 theorem not_clique_free_iff (n : ℕ) : ¬G.CliqueFree n ↔ Nonempty ((⊤ : SimpleGraph (Fin n)) ↪g G) :=
-  by
+  by 
   constructor
   · exact fun h => ⟨top_embedding_of_not_clique_free h⟩
-    
   · rintro ⟨f⟩
     exact not_clique_free_of_top_embedding f
-    
 #align simple_graph.not_clique_free_iff SimpleGraph.not_clique_free_iff
 
 theorem clique_free_iff {n : ℕ} : G.CliqueFree n ↔ IsEmpty ((⊤ : SimpleGraph (Fin n)) ↪g G) := by
@@ -207,7 +201,7 @@ theorem clique_free_iff {n : ℕ} : G.CliqueFree n ↔ IsEmpty ((⊤ : SimpleGra
 #align simple_graph.clique_free_iff SimpleGraph.clique_free_iff
 
 theorem not_clique_free_card_of_top_embedding [Fintype α] (f : (⊤ : SimpleGraph α) ↪g G) :
-    ¬G.CliqueFree (card α) := by
+    ¬G.CliqueFree (card α) := by 
   rw [not_clique_free_iff]
   use (iso.complete_graph (Fintype.equivFin α)).symm.toEmbedding.trans f
 #align

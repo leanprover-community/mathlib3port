@@ -55,13 +55,11 @@ theorem tendsto_sum_pi_div_four :
       simp only [Nnreal.coe_nat_cast, Function.comp_apply, Nnreal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
         @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
-          (by
+          (by 
             norm_cast
             simp only [Nat.succ_ne_zero, not_false_iff]),
         rpow_neg_one k, sub_eq_add_neg]
-      
     · simp only [add_zero, add_right_neg]
-      
   -- (2) We convert the limit in our goal to an inequality
   refine' squeeze_zero_norm _ H
   intro k
@@ -75,23 +73,21 @@ theorem tendsto_sum_pi_div_four :
     convert f_bound
     simp only [f]
     simp [b]
-    
   -- We show that `U` is indeed in [0,1]
-  have hU1 : (U : ℝ) ≤ 1 := by
+  have hU1 : (U : ℝ) ≤ 1 := by 
     by_cases hk : k = 0
     · simp [u, U, hk]
-      
-    · exact
+    ·
+      exact
         rpow_le_one_of_one_le_of_nonpos
-          (by
+          (by 
             norm_cast
             exact nat.succ_le_iff.mpr (Nat.pos_of_ne_zero hk))
           (le_of_lt
             (@div_neg_of_neg_of_pos _ _ (-(1 : ℝ)) (2 * k + 1) (neg_neg_iff_pos.mpr zero_lt_one)
-              (by
+              (by 
                 norm_cast
                 exact Nat.succ_pos')))
-      
   have hU2 := Nnreal.coe_nonneg U
   -- (4) We compute the derivative of `f`, denoted by `f'`
   let f' := fun x : ℝ => (-x ^ 2) ^ k / (1 + x ^ 2)
@@ -105,17 +101,15 @@ theorem tendsto_sum_pi_div_four :
       · ext y
         simp only [b, id.def]
         ring
-        
       · simp only [Nat.add_succ_sub_one, add_zero, mul_one, id.def, Nat.cast_bit0, Nat.cast_add,
           Nat.cast_one, Nat.cast_mul]
         rw [← mul_assoc,
           @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _
-            (by
+            (by 
               norm_cast
               linarith),
           pow_mul x 2 i, ← mul_pow (-1) (x ^ 2) i]
         ring_nf
-        
     convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
     have g_sum :=
       @geom_sum_eq _ _ (-x ^ 2) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k

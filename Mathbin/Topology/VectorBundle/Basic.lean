@@ -74,20 +74,19 @@ variable [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Mod
 protected def symmₗ (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) : F →ₗ[R] E b := by
   refine' IsLinearMap.mk' (e.symm b) _
   by_cases hb : b ∈ e.base_set
-  · exact
+  ·
+    exact
       (((e.linear R hb).mk' _).inverse (e.symm b) (e.symm_apply_apply_mk hb) fun v =>
           congr_arg Prod.snd <| e.apply_mk_symm hb v).is_linear
-    
   · rw [e.coe_symm_of_not_mem hb]
     exact (0 : F →ₗ[R] E b).is_linear
-    
 #align pretrivialization.symmₗ Pretrivialization.symmₗ
 
 /-- A pretrivialization for a vector bundle defines linear equivalences between the
 fibers and the model space. -/
 @[simps (config := { fullyApplied := false })]
 def linearEquivAt (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) (hb : b ∈ e.baseSet) :
-    E b ≃ₗ[R] F where
+    E b ≃ₗ[R] F where 
   toFun y := (e (totalSpaceMk b y)).2
   invFun := e.symm b
   left_inv := e.symm_apply_apply_mk hb
@@ -262,7 +261,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear 
   { if hb : b ∈ e.baseSet ∩ e'.baseSet then
       (e.linearEquivAt R b (hb.1 : _)).symm.trans (e'.linearEquivAt R b hb.2)
     else LinearEquiv.refl R F with
-    continuous_to_fun := by
+    continuous_to_fun := by 
       by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
         refine' (e'.continuous_on.comp_continuous _ _).snd
@@ -270,11 +269,9 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear 
           e.continuous_on_symm.comp_continuous (Continuous.Prod.mk b) fun y =>
             mk_mem_prod hb.1 (mem_univ y)
         exact fun y => e'.mem_source.mpr hb.2
-        
       · rw [dif_neg hb]
-        exact continuous_id
-        ,
-    continuous_inv_fun := by
+        exact continuous_id,
+    continuous_inv_fun := by 
       by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
         refine' (e.continuous_on.comp_continuous _ _).snd
@@ -282,10 +279,8 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear 
           e'.continuous_on_symm.comp_continuous (Continuous.Prod.mk b) fun y =>
             mk_mem_prod hb.2 (mem_univ y)
         exact fun y => e.mem_source.mpr hb.1
-        
       · rw [dif_neg hb]
-        exact continuous_id
-         }
+        exact continuous_id }
 #align trivialization.coord_changeL Trivialization.coordChangeL
 
 variable {R}
@@ -309,9 +304,7 @@ theorem mk_coord_changeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is
   · rw [e.mk_symm hb.1 y, e'.coe_fst', e.proj_symm_apply' hb.1]
     rw [e.proj_symm_apply' hb.1]
     exact hb.2
-    
   · exact e.coord_changeL_apply e' hb y
-    
 #align trivialization.mk_coord_changeL Trivialization.mk_coord_changeL
 
 /-- A version of `coord_change_apply` that fully unfolds `coord_change`. The right-hand side is
@@ -376,7 +369,7 @@ def continuousLinearMapAt (e : Trivialization F (π E)) [e.is_linear R] (b : B) 
         e.linearMapAt
       R b with
     toFun := e.linearMapAt R b,
-    cont := by
+    cont := by 
       dsimp
       rw [e.coe_linear_map_at b]
       refine' continuous_if_const _ (fun hb => _) fun _ => continuous_zero
@@ -393,15 +386,13 @@ def symmL (e : Trivialization F (π E)) [e.is_linear R] (b : B) : F →L[R] E b 
         e.symmₗ
       R b with
     toFun := e.symm b,
-    cont := by
+    cont := by 
       by_cases hb : b ∈ e.base_set
       · rw [(FiberBundle.total_space_mk_inducing F E b).continuous_iff]
         exact
           e.continuous_on_symm.comp_continuous (continuous_const.prod_mk continuous_id) fun x =>
             mk_mem_prod hb (mem_univ x)
-        
-      · refine' continuous_zero.congr fun x => (e.symm_apply_of_not_mem hb x).symm
-         }
+      · refine' continuous_zero.congr fun x => (e.symm_apply_of_not_mem hb x).symm }
 #align trivialization.symmL Trivialization.symmL
 
 variable {R}
@@ -468,9 +459,7 @@ theorem apply_eq_prod_continuous_linear_equiv_at (e : Trivialization F (π E)) [
   · refine' e.coe_fst _
     rw [e.source_eq]
     exact hb
-    
   · simp only [coe_coe, continuous_linear_equiv_at_apply]
-    
 #align
   trivialization.apply_eq_prod_continuous_linear_equiv_at Trivialization.apply_eq_prod_continuous_linear_equiv_at
 
@@ -485,7 +474,6 @@ theorem symm_apply_eq_mk_continuous_linear_equiv_at_symm (e : Trivialization F (
     exact ⟨hb, mem_univ _⟩
   apply e.to_local_homeomorph.inj_on (e.to_local_homeomorph.map_target h)
   · simp only [e.source_eq, hb, mem_preimage]
-    
   simp_rw [e.apply_eq_prod_continuous_linear_equiv_at R b hb, e.to_local_homeomorph.right_inv h,
     ContinuousLinearEquiv.apply_symm_apply]
 #align
@@ -495,7 +483,7 @@ theorem comp_continuous_linear_equiv_at_eq_coord_change (e e' : Trivialization F
     [e.is_linear R] [e'.is_linear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) :
     (e.continuousLinearEquivAt R b hb.1).symm.trans (e'.continuousLinearEquivAt R b hb.2) =
       coordChangeL R e e' b :=
-  by
+  by 
   ext v
   rw [coord_changeL_apply e e' hb]
   rfl
@@ -530,7 +518,8 @@ structure VectorBundleCore (ι : Type _) where
 
 /-- The trivial vector bundle core, in which all the changes of coordinates are the
 identity. -/
-def trivialVectorBundleCore (ι : Type _) [Inhabited ι] : VectorBundleCore R B F ι where
+def trivialVectorBundleCore (ι : Type _) [Inhabited ι] :
+    VectorBundleCore R B F ι where 
   baseSet ι := univ
   is_open_base_set i := is_open_univ
   indexAt := default
@@ -566,7 +555,7 @@ include Z
 theorem coord_change_linear_comp (i j k : ι) :
     ∀ x ∈ Z.baseSet i ∩ Z.baseSet j ∩ Z.baseSet k,
       (Z.coordChange j k x).comp (Z.coordChange i j x) = Z.coordChange i k x :=
-  fun x hx => by
+  fun x hx => by 
   ext v
   exact Z.coord_change_comp i j k x hx v
 #align vector_bundle_core.coord_change_linear_comp VectorBundleCore.coord_change_linear_comp
@@ -740,11 +729,13 @@ instance fiberBundle : FiberBundle F Z.Fiber :=
   Z.toFiberBundleCore.FiberBundle
 #align vector_bundle_core.fiber_bundle VectorBundleCore.fiberBundle
 
-instance vectorBundle : VectorBundle R F Z.Fiber where
-  trivialization_linear' := by
+instance vectorBundle :
+    VectorBundle R F
+      Z.Fiber where 
+  trivialization_linear' := by 
     rintro _ ⟨i, rfl⟩
     apply local_triv.is_linear
-  continuous_on_coord_change' := by
+  continuous_on_coord_change' := by 
     rintro _ _ ⟨i, rfl⟩ ⟨i', rfl⟩
     refine' (Z.continuous_on_coord_change i i').congr fun b hb => _
     ext v
@@ -837,16 +828,14 @@ theorem mk_coord_change (a : VectorPrebundle R F E) {e e' : Pretrivialization F 
   · rw [e.mk_symm hb.1 v, e'.coe_fst', e.proj_symm_apply' hb.1]
     rw [e.proj_symm_apply' hb.1]
     exact hb.2
-    
   · exact a.coord_change_apply he he' hb v
-    
 #align vector_prebundle.mk_coord_change VectorPrebundle.mk_coord_change
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Natural identification of `vector_prebundle` as a `fiber_prebundle`. -/
 def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=
   { a with
-    continuous_triv_change := by
+    continuous_triv_change := by 
       intro e he e' he'
       have :=
         is_bounded_bilinear_map_apply.continuous.comp_continuous_on
@@ -854,7 +843,7 @@ def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=
       have H :
         e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.to_local_equiv.source =
           (e'.base_set ∩ e.base_set) ×ˢ univ :=
-        by
+        by 
         rw [e'.target_eq, e.source_eq]
         ext ⟨b, f⟩
         simp (config := { contextual := true }) only [-total_space.proj, and_congr_right_iff,
@@ -934,7 +923,7 @@ establishes that for the topology constructed on the sigma-type using
 "trivializations" (i.e., homeomorphisms with respect to the constructed topology). -/
 theorem toVectorBundle :
     @VectorBundle R _ F E _ _ _ _ _ _ a.totalSpaceTopology a.fiberTopology a.toFiberBundle :=
-  { trivialization_linear' := by
+  { trivialization_linear' := by 
       rintro _ ⟨e, he, rfl⟩
       apply linear_of_mem_pretrivialization_atlas,
     continuous_on_coord_change' := by

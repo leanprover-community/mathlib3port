@@ -40,7 +40,8 @@ universe u
 variable (X : ProfiniteCat.{u})
 
 /-- The functor `discrete_quotient X ⥤ Fintype` whose limit is isomorphic to `X`. -/
-def fintypeDiagram : DiscreteQuotient X ⥤ FintypeCat where
+def fintypeDiagram :
+    DiscreteQuotient X ⥤ FintypeCat where 
   obj S := FintypeCat.of S
   map S T f := DiscreteQuotient.ofLe f.le
 #align Profinite.fintype_diagram ProfiniteCat.fintypeDiagram
@@ -57,19 +58,17 @@ def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
 
 instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
   is_iso_of_bijective _
-    (by
+    (by 
       refine' ⟨fun a b => _, fun a => _⟩
       · intro h
         refine' DiscreteQuotient.eq_of_proj_eq fun S => _
         apply_fun fun f : (limit_cone X.diagram).x => f.val S  at h
         exact h
-        
       · obtain ⟨b, hb⟩ :=
           DiscreteQuotient.exists_of_compat (fun S => a.val S) fun _ _ h => a.prop (hom_of_le h)
         refine' ⟨b, _⟩
         ext S : 3
-        apply hb
-        )
+        apply hb)
 #align Profinite.is_iso_as_limit_cone_lift ProfiniteCat.is_iso_as_limit_cone_lift
 
 /-- The isomorphism between `X` and the explicit limit of `X.diagram`,

@@ -69,9 +69,7 @@ instance (priority := 100) LinearOrder.Sup_convergence_class [TopologicalSpace �
   · rcases ha.exists_between hb with ⟨c, hcs, bc, bca⟩
     lift c to s using hcs
     refine' (eventually_ge_at_top c).mono fun x hx => bc.trans_le hx
-    
   · exact eventually_of_forall fun x => (ha.1 x.2).trans_lt hb
-    
 #align linear_order.Sup_convergence_class LinearOrder.Sup_convergence_class
 
 -- see Note [lower instance priority]
@@ -225,13 +223,9 @@ theorem tendsto_iff_tendsto_subseq_of_monotone {ι₁ ι₂ α : Type _} [Semila
     (hg : Tendsto φ atTop atTop) : Tendsto f atTop (𝓝 l) ↔ Tendsto (f ∘ φ) atTop (𝓝 l) := by
   constructor <;> intro h
   · exact h.comp hg
-    
   · rcases tendsto_of_monotone hf with (h' | ⟨l', hl'⟩)
     · exact (not_tendsto_at_top_of_tendsto_nhds h (h'.comp hg)).elim
-      
     · rwa [tendsto_nhds_unique h (hl'.comp hg)]
-      
-    
 #align tendsto_iff_tendsto_subseq_of_monotone tendsto_iff_tendsto_subseq_of_monotone
 
 /-! The next family of results, such as `is_lub_of_tendsto_at_top` and `supr_eq_of_tendsto`, are
@@ -274,9 +268,7 @@ theorem is_lub_of_tendsto_at_top [TopologicalSpace α] [Preorder α] [OrderClose
   constructor
   · rintro _ ⟨b, rfl⟩
     exact hf.ge_of_tendsto ha b
-    
   · exact fun _ hb => le_of_tendsto' ha fun x => hb (Set.mem_range_self x)
-    
 #align is_lub_of_tendsto_at_top is_lub_of_tendsto_at_top
 
 theorem is_glb_of_tendsto_at_bot [TopologicalSpace α] [Preorder α] [OrderClosedTopology α]

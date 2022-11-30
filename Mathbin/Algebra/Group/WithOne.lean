@@ -145,7 +145,8 @@ protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 �
 -- `with_one.mul_one_class._proof_{1,2}` have an ill-typed statement after `with_one` is made
 -- irreducible.
 @[to_additive]
-instance [Mul α] : MulOneClass (WithOne α) where
+instance [Mul α] : MulOneClass (WithOne
+        α) where 
   mul := (· * ·)
   one := 1
   one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.liftOrGet_isLeftId _).1
@@ -168,7 +169,7 @@ section
 -- will unfold it in the statement of the lemma it generates.
 /-- `coe` as a bundled morphism -/
 @[to_additive "`coe` as a bundled morphism", simps apply]
-def coeMulHom [Mul α] : α →ₙ* WithOne α where
+def coeMulHom [Mul α] : α →ₙ* WithOne α where 
   toFun := coe
   map_mul' x y := rfl
 #align with_one.coe_mul_hom WithOne.coeMulHom
@@ -181,17 +182,20 @@ variable [Mul α] [MulOneClass β]
 
 /-- Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
 @[to_additive "Lift an add_semigroup homomorphism `f` to a bundled add_monoid homorphism."]
-def lift : (α →ₙ* β) ≃ (WithOne α →* β) where
+def lift :
+    (α →ₙ* β) ≃
+      (WithOne α →*
+        β) where 
   toFun f :=
     { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
       map_mul' := fun x y =>
         (WithOne.cases_on x
-            (by
+            (by 
               rw [one_mul]
               exact (one_mul _).symm))
           fun x =>
           (WithOne.cases_on y
-              (by
+              (by 
                 rw [mul_one]
                 exact (mul_one _).symm))
             fun y => f.map_mul x y }
@@ -256,16 +260,9 @@ theorem map_comp (f : α →ₙ* β) (g : β →ₙ* γ) : map (g.comp f) = (map
 @[to_additive "A version of `equiv.option_congr` for `with_zero`.", simps apply]
 def MulEquiv.withOneCongr (e : α ≃* β) : WithOne α ≃* WithOne β :=
   { map e.toMulHom with toFun := map e.toMulHom, invFun := map e.symm.toMulHom,
-    left_inv := fun x =>
-      (map_map _ _ _).trans <| by
-        induction x using WithOne.cases_on <;>
-          · simp
-            ,
+    left_inv := fun x => (map_map _ _ _).trans <| by induction x using WithOne.cases_on <;> · simp,
     right_inv := fun x =>
-      (map_map _ _ _).trans <| by
-        induction x using WithOne.cases_on <;>
-          · simp
-             }
+      (map_map _ _ _).trans <| by induction x using WithOne.cases_on <;> · simp }
 #align mul_equiv.with_one_congr MulEquiv.withOneCongr
 
 @[simp]
@@ -327,7 +324,7 @@ theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : a * 0 = 0 := by case
 #align with_zero.mul_zero WithZero.mul_zero
 
 instance [Mul α] : NoZeroDivisors (WithZero α) :=
-  ⟨by
+  ⟨by 
     rintro (a | a) (b | b) h
     exacts[Or.inl rfl, Or.inl rfl, Or.inr rfl, Option.noConfusion h]⟩
 
@@ -479,7 +476,7 @@ variable [Group α]
 /-- if `G` is a group then `with_zero G` is a group with zero. -/
 instance : GroupWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.divInvMonoid, WithZero.nontrivial with inv_zero := inv_zero,
-    mul_inv_cancel := fun a ha => by
+    mul_inv_cancel := fun a ha => by 
       lift a to α using ha
       norm_cast
       apply mul_right_inv }
@@ -492,34 +489,29 @@ instance [CommGroup α] : CommGroupWithZero (WithZero α) :=
 instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
   { WithZero.addMonoid, WithZero.hasOne with natCast := fun n => if n = 0 then 0 else (n.cast : α),
     nat_cast_zero := rfl,
-    nat_cast_succ := fun n => by
+    nat_cast_succ := fun n => by 
       cases n
-      show (((1 : ℕ) : α) : WithZero α) = 0 + 1;
-      · rw [Nat.cast_one, coe_one, zero_add]
-        
+      show (((1 : ℕ) : α) : WithZero α) = 0 + 1; · rw [Nat.cast_one, coe_one, zero_add]
       show (((n + 2 : ℕ) : α) : WithZero α) = ((n + 1 : ℕ) : α) + 1
-      · rw [Nat.cast_succ, coe_add, coe_one]
-         }
+      · rw [Nat.cast_succ, coe_add, coe_one] }
 
 instance [Semiring α] : Semiring (WithZero α) :=
   { WithZero.addMonoidWithOne, WithZero.addCommMonoid, WithZero.mulZeroClass,
     WithZero.monoidWithZero with
-    left_distrib := fun a b c => by
-      cases' a with a;
-      · rfl
-        
+    left_distrib := fun a b c => by 
+      cases' a with a; · rfl
       cases' b with b <;> cases' c with c <;> try rfl
       exact congr_arg some (left_distrib _ _ _),
-    right_distrib := fun a b c => by
+    right_distrib := fun a b c => by 
       cases' c with c
       · change (a + b) * 0 = a * 0 + b * 0
         simp
-        
       cases' a with a <;> cases' b with b <;> try rfl
       exact congr_arg some (right_distrib _ _ _) }
 
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
-def unitsWithZeroEquiv [Group α] : (WithZero α)ˣ ≃* α where
+def unitsWithZeroEquiv [Group α] :
+    (WithZero α)ˣ ≃* α where 
   toFun a := unzero a.NeZero
   invFun a := Units.mk0 a coe_ne_zero
   left_inv _ := Units.ext <| by simpa only [coe_unzero]

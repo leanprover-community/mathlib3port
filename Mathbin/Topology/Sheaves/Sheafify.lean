@@ -47,7 +47,9 @@ namespace Sheafify
 /--
 The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
-def isGerm : PrelocalPredicate fun x => F.stalk x where
+def isGerm :
+    PrelocalPredicate fun x =>
+      F.stalk x where 
   pred U f := ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
   res := fun V U i f ⟨g, p⟩ =>
     ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
@@ -73,9 +75,11 @@ def sheafify : Sheaf (Type v) X :=
 sending each section to its germs.
 (This forms the unit of the adjunction.)
 -/
-def toSheafify : F ⟶ F.sheafify.1 where
+def toSheafify :
+    F ⟶
+      F.sheafify.1 where 
   app U f := ⟨fun x => F.germ x f, PrelocalPredicate.sheafify_of ⟨f, fun x => rfl⟩⟩
-  naturality' U U' f := by
+  naturality' U U' f := by 
     ext (x⟨u, m⟩)
     exact germ_res_apply F f.unop ⟨u, m⟩ x
 #align Top.presheaf.to_sheafify TopCat.Presheaf.toSheafify
@@ -94,10 +98,7 @@ theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber 
   · use ⟨U, m⟩
     fconstructor
     · exact fun y => F.germ y s
-      
     · exact ⟨prelocal_predicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
-      
-    
 #align Top.presheaf.stalk_to_fiber_surjective TopCat.Presheaf.stalk_to_fiber_surjective
 
 theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x) := by
@@ -115,10 +116,8 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
   refine' ⟨_, _, _⟩
   · change W ⊓ (U' ⊓ V') ⟶ U.obj
     exact opens.inf_le_right _ _ ≫ opens.inf_le_left _ _ ≫ iU
-    
   · change W ⊓ (U' ⊓ V') ⟶ V.obj
     exact opens.inf_le_right _ _ ≫ opens.inf_le_right _ _ ≫ iV
-    
   · intro w
     dsimp
     specialize wU ⟨w.1, w.2.2.1⟩
@@ -127,7 +126,6 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
     dsimp at wV
     erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩,
       CategoryTheory.types_comp_apply, CategoryTheory.types_comp_apply, e']
-    
 #align Top.presheaf.stalk_to_fiber_injective TopCat.Presheaf.stalk_to_fiber_injective
 
 /-- The isomorphism betweeen a stalk of the sheafification and the original stalk.

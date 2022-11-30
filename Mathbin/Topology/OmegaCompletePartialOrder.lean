@@ -60,11 +60,9 @@ theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOp
   · ext1 x
     simp only [Sup_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
       SetCoe.exists, supr_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
-    
   · intro p hp
     convert hs (setOf p) (mem_preimage.1 hp)
     simp only [mem_set_of_eq]
-    
 #align Scott.is_open_sUnion ScottCat.is_open_sUnion
 
 end ScottCat
@@ -78,7 +76,8 @@ def ScottCat (α : Type u) :=
 #align Scott ScottCat
 
 instance ScottCat.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] :
-    TopologicalSpace (ScottCat α) where
+    TopologicalSpace (ScottCat
+        α) where 
   IsOpen := ScottCat.IsOpen α
   is_open_univ := ScottCat.is_open_univ α
   is_open_inter := ScottCat.IsOpen.inter α
@@ -96,7 +95,7 @@ def notBelow :=
 #align not_below notBelow
 
 theorem not_below_is_open : IsOpen (notBelow y) := by
-  have h : Monotone (notBelow y) := by
+  have h : Monotone (notBelow y) := by 
     intro x y' h
     simp only [notBelow, setOf, le_Prop_eq]
     intro h₀ h₁
@@ -119,9 +118,7 @@ open OmegaCompletePartialOrder
 theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) := by
   constructor
   · apply le_ωSup
-    
   · apply ωSup_le
-    
 #align is_ωSup_ωSup is_ωSup_ωSup
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:565:11: unsupported: specialize non-hyp -/
@@ -129,7 +126,7 @@ theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : ScottCat α → ScottCat β) (hf : Continuous f) :
     OmegaCompletePartialOrder.Continuous' f := by
   simp only [continuous_def, (· ⁻¹' ·)] at hf
-  have h : Monotone f := by
+  have h : Monotone f := by 
     intro x y h
     cases' hf { x | ¬x ≤ f y } (not_below_is_open _) with hf hf'
     clear hf'

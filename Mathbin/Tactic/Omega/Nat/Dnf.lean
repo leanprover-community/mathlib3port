@@ -42,7 +42,6 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     simp only [val_canonize ht, val_canonize hs, term.val_sub, preform.holds, sub_eq_add_neg] at *
     rw [h2, add_neg_self]
     apply List.forall_mem_nil
-    
   · apply List.exists_mem_cons_of
     constructor
     apply List.forall_mem_nil
@@ -51,19 +50,14 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
       sub_eq_add_neg] at *
     rw [← sub_eq_add_neg, le_sub_comm, sub_zero, Int.coe_nat_le]
     assumption
-    
   · cases h1
-    
-  · cases' h2 with h2 h2 <;>
-              [· cases' ihp h1.left h0.left h2 with c h3
-                ,
-              · cases' ihq h1.right h0.right h2 with c h3
-                ] <;>
+  ·
+    cases' h2 with h2 h2 <;> [· cases' ihp h1.left h0.left h2 with c h3,
+              · cases' ihq h1.right h0.right h2 with c h3] <;>
             cases' h3 with h3 h4 <;>
           refine' ⟨c, list.mem_append.elim_right _, h4⟩ <;>
         [left, right] <;>
       assumption
-    
   · rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h0.right h2.right with ⟨cq, hq1, hq2⟩
     refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
@@ -71,7 +65,6 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption
-    
 #align omega.nat.exists_clause_holds_core Omega.Nat.exists_clause_holds_core
 
 def Term.varsCore (is : List Int) : List Bool :=
@@ -126,15 +119,13 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
     ∀ m bs, ∀ t ∈ nonnegConstsCore m bs, 0 ≤ Term.val v t
   | _, [] => fun _ h2 => by cases h2
   | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
-  | k, tt :: bs => by
+  | k, tt :: bs => by 
     simp only [nonneg_consts_core]
     rw [List.forall_mem_cons]
     constructor
     · simp only [term.val, one_mul, zero_add, coeffs.val_set]
       apply h1
-      
     · apply holds_nonneg_consts_core (k + 1) bs
-      
 #align omega.nat.holds_nonneg_consts_core Omega.Nat.holds_nonneg_consts_core
 
 theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
@@ -147,7 +138,7 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   intro h1 h2 h3
   rcases exists_clause_holds_core h1 h2 h3 with ⟨c, h4, h5⟩
   exists nonnegate c
-  have h6 : nonnegate c ∈ dnf p := by
+  have h6 : nonnegate c ∈ dnf p := by 
     simp only [dnf]
     rw [List.mem_map]
     refine' ⟨c, h4, rfl⟩

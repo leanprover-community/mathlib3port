@@ -51,7 +51,7 @@ instance (priority := 100) baireCategoryTheoremEmetricComplete [PseudoEmetricSpa
     [CompleteSpace α] : BaireSpace α := by
   refine' ⟨fun f ho hd => _⟩
   let B : ℕ → ℝ≥0∞ := fun n => 1 / 2 ^ n
-  have Bpos : ∀ n, 0 < B n := by
+  have Bpos : ∀ n, 0 < B n := by 
     intro n
     simp only [B, one_div, one_mul, Ennreal.inv_pos]
     exact pow_ne_top two_ne_top
@@ -60,7 +60,7 @@ instance (priority := 100) baireCategoryTheoremEmetricComplete [PseudoEmetricSpa
     `closed_ball center radius` is included both in `f n` and in `closed_ball x δ`.
     We can also require `radius ≤ (1/2)^(n+1)`, to ensure we get a Cauchy sequence later. -/
   have : ∀ n x δ, δ ≠ 0 → ∃ y r, 0 < r ∧ r ≤ B (n + 1) ∧ closed_ball y r ⊆ closed_ball x δ ∩ f n :=
-    by
+    by 
     intro n x δ δpos
     have : x ∈ closure (f n) := hd n x
     rcases Emetric.mem_closure_iff.1 this (δ / 2) (Ennreal.half_pos δpos) with ⟨y, ys, xy⟩
@@ -98,13 +98,13 @@ instance (priority := 100) baireCategoryTheoremEmetricComplete [PseudoEmetricSpa
     Nat.recOn n (Prod.mk x (min ε (B 0))) fun n p => Prod.mk (center n p.1 p.2) (radius n p.1 p.2)
   let c : ℕ → α := fun n => (F n).1
   let r : ℕ → ℝ≥0∞ := fun n => (F n).2
-  have rpos : ∀ n, 0 < r n := by
+  have rpos : ∀ n, 0 < r n := by 
     intro n
     induction' n with n hn
     exact lt_min εpos (Bpos 0)
     exact Hpos n (c n) (r n) hn.ne'
   have r0 : ∀ n, r n ≠ 0 := fun n => (rpos n).ne'
-  have rB : ∀ n, r n ≤ B n := by
+  have rB : ∀ n, r n ≤ B n := by 
     intro n
     induction' n with n hn
     exact min_le_right _ _
@@ -122,7 +122,7 @@ instance (priority := 100) baireCategoryTheoremEmetricComplete [PseudoEmetricSpa
         _ ⊆ closed_ball (c n) (B n) := closed_ball_subset_closed_ball (rB n)
         
     exact I A
-  have : CauchySeq c := cauchySeqOfEdistLeGeometricTwo _ one_ne_top cdist
+  have : CauchySeq c := cauchy_seq_of_edist_le_geometric_two _ one_ne_top cdist
   -- as the sequence `c n` is Cauchy in a complete space, it converges to a limit `y`.
   rcases cauchy_seq_tendsto_of_complete this with ⟨y, ylim⟩
   -- this point `y` will be the desired point. We will check that it belongs to all
@@ -133,9 +133,7 @@ instance (priority := 100) baireCategoryTheoremEmetricComplete [PseudoEmetricSpa
     intro n
     refine' Nat.le_induction _ fun m hnm h => _
     · exact subset.refl _
-      
     · exact subset.trans (incl m) (subset.trans (inter_subset_left _ _) h)
-      
   have yball : ∀ n, y ∈ closed_ball (c n) (r n) := by
     intro n
     refine' is_closed_ball.mem_of_tendsto ylim _
@@ -147,7 +145,6 @@ instance (priority := 100) baireCategoryTheoremEmetricComplete [PseudoEmetricSpa
     have : closed_ball (c (n + 1)) (r (n + 1)) ⊆ f n :=
       subset.trans (incl n) (inter_subset_right _ _)
     exact this (yball (n + 1))
-    
   show edist y x ≤ ε
   exact le_trans (yball 0) (min_le_left _ _)
 #align baire_category_theorem_emetric_complete baireCategoryTheoremEmetricComplete
@@ -201,12 +198,10 @@ theorem dense_sInter_of_open {S : Set (Set α)} (ho : ∀ s ∈ S, IsOpen s) (hS
     (hd : ∀ s ∈ S, Dense s) : Dense (⋂₀ S) := by
   cases' S.eq_empty_or_nonempty with h h
   · simp [h]
-    
   · rcases hS.exists_eq_range h with ⟨f, hf⟩
     have F : ∀ n, f n ∈ S := fun n => by rw [hf] <;> exact mem_range_self _
     rw [hf, sInter_range]
     exact dense_Inter_of_open_nat (fun n => ho _ (F n)) fun n => hd _ (F n)
-    
 #align dense_sInter_of_open dense_sInter_of_open
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with
@@ -216,11 +211,8 @@ theorem dense_bInter_of_open {S : Set β} {f : β → Set α} (ho : ∀ s ∈ S,
   rw [← sInter_image]
   apply dense_sInter_of_open
   · rwa [ball_image_iff]
-    
   · exact hS.image _
-    
   · rwa [ball_image_iff]
-    
 #align dense_bInter_of_open dense_bInter_of_open
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with
@@ -230,16 +222,14 @@ theorem dense_Inter_of_open [Encodable β] {f : β → Set α} (ho : ∀ s, IsOp
   rw [← sInter_range]
   apply dense_sInter_of_open
   · rwa [forall_range_iff]
-    
   · exact countable_range _
-    
   · rwa [forall_range_iff]
-    
 #align dense_Inter_of_open dense_Inter_of_open
 
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with ⋂₀. -/
 theorem dense_sInter_of_Gδ {S : Set (Set α)} (ho : ∀ s ∈ S, IsGδ s) (hS : S.Countable)
-    (hd : ∀ s ∈ S, Dense s) : Dense (⋂₀ S) := by
+    (hd : ∀ s ∈ S, Dense s) : Dense (⋂₀ S) :=
+  by
   -- the result follows from the result for a countable intersection of dense open sets,
   -- by rewriting each set as a countable intersection of open sets, which are of course dense.
   choose T hTo hTc hsT using ho
@@ -256,7 +246,6 @@ theorem dense_sInter_of_Gδ {S : Set (Set α)} (ho : ∀ s ∈ S, IsGδ s) (hS :
     have := hd s hs x
     rw [hsT s hs] at this
     exact closure_mono (sInter_subset_of_mem tTs) this
-    
 #align dense_sInter_of_Gδ dense_sInter_of_Gδ
 
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with
@@ -278,7 +267,7 @@ theorem dense_bInter_of_Gδ {S : Set β} {f : ∀ x ∈ S, Set α} (ho : ∀ s �
 
 /-- Baire theorem: the intersection of two dense Gδ sets is dense. -/
 theorem Dense.inter_of_Gδ {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) (hsc : Dense s)
-    (htc : Dense t) : Dense (s ∩ t) := by
+    (htc : Dense t) : Dense (s ∩ t) := by 
   rw [inter_eq_Inter]
   apply dense_Inter_of_Gδ <;> simp [Bool.forall_bool, *]
 #align dense.inter_of_Gδ Dense.inter_of_Gδ
@@ -311,24 +300,21 @@ theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
 #align dense_of_mem_residual dense_of_mem_residual
 
 instance : CountableInterFilter (residual α) :=
-  ⟨by
+  ⟨by 
     intro S hSc hS
     simp only [mem_residual] at *
     choose T hTs hT using hS
     refine' ⟨⋂ s ∈ S, T s ‹_›, _, _, _⟩
     · rw [sInter_eq_bInter]
       exact Inter₂_mono hTs
-      
     · exact is_Gδ_bInter hSc fun s hs => (hT s hs).1
-      
-    · exact dense_bInter_of_Gδ (fun s hs => (hT s hs).1) hSc fun s hs => (hT s hs).2
-      ⟩
+    · exact dense_bInter_of_Gδ (fun s hs => (hT s hs).1) hSc fun s hs => (hT s hs).2⟩
 
 /-- If a countable family of closed sets cover a dense `Gδ` set, then the union of their interiors
 is dense. Formulated here with `⋃`. -/
 theorem IsGδ.dense_Union_interior_of_closed [Encodable ι] {s : Set α} (hs : IsGδ s) (hd : Dense s)
     {f : ι → Set α} (hc : ∀ i, IsClosed (f i)) (hU : s ⊆ ⋃ i, f i) : Dense (⋃ i, interior (f i)) :=
-  by
+  by 
   let g i := frontier (f i)ᶜ
   have hgo : ∀ i, IsOpen (g i) := fun i => is_closed_frontier.is_open_compl
   have hgd : Dense (⋂ i, g i) := by

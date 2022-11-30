@@ -310,7 +310,7 @@ private theorem newton_seq_succ_dist (n : ℕ) :
 
 include hnsol
 
-private theorem T_pos : T > 0 := by
+private theorem T_pos : T > 0 := by 
   rw [T_def]
   exact div_pos (norm_pos_iff.2 hnsol) (deriv_sq_norm_pos hnorm)
 #align T_pos T_pos
@@ -339,7 +339,7 @@ private theorem newton_seq_dist_aux (n : ℕ) :
     ∀ k : ℕ, ‖newton_seq (n + k) - newton_seq n‖ ≤ ‖F.derivative.eval a‖ * T ^ 2 ^ n
   | 0 => by simp [T_pow_nonneg hnorm, mul_nonneg]
   | k + 1 =>
-    have : 2 ^ n ≤ 2 ^ (n + k) := by
+    have : 2 ^ n ≤ 2 ^ (n + k) := by 
       apply pow_le_pow
       norm_num
       apply Nat.le_add_right
@@ -410,10 +410,8 @@ private theorem bound'_sq :
   simp only [mul_assoc]
   apply tendsto.mul
   · apply tendsto_const_nhds
-    
   · apply bound'
     assumption
-    
 #align bound'_sq bound'_sq
 
 private theorem newton_seq_is_cauchy : IsCauSeq norm newton_seq := by
@@ -424,10 +422,8 @@ private theorem newton_seq_is_cauchy : IsCauSeq norm newton_seq := by
   apply lt_of_le_of_lt
   · apply newton_seq_dist _ _ hj
     assumption
-    
   · apply hN
     exact le_rfl
-    
 #align newton_seq_is_cauchy newton_seq_is_cauchy
 
 private def newton_cau_seq : CauSeq ℤ_[p] norm :=
@@ -469,10 +465,8 @@ private theorem soln_dist_to_a : ‖soln - a‖ = ‖F.eval a‖ / ‖F.derivati
 private theorem soln_dist_to_a_lt_deriv : ‖soln - a‖ < ‖F.derivative.eval a‖ := by
   rw [soln_dist_to_a, div_lt_iff]
   · rwa [sq] at hnorm
-    
   · apply deriv_norm_pos
     assumption
-    
 #align soln_dist_to_a_lt_deriv soln_dist_to_a_lt_deriv
 
 private theorem eval_soln : F.eval soln = 0 :=
@@ -504,7 +498,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0)
       lt_irrefl ‖F.derivative.eval soln‖
         (calc
           ‖F.derivative.eval soln‖ = ‖-q * h‖ := by rw [this]
-          _ ≤ 1 * ‖h‖ := by
+          _ ≤ 1 * ‖h‖ := by 
             rw [PadicInt.norm_mul]
             exact mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (norm_nonneg _)
           _ = ‖z - soln‖ := by simp [h]

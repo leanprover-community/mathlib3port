@@ -59,16 +59,14 @@ Given `h : P.factors f`, you can recover the morphism as `P.factor_thru f h`.
 -/
 def Factors {X Y : C} (P : Subobject Y) (f : X ⟶ Y) : Prop :=
   Quotient.liftOn' P (fun P => P.Factors f)
-    (by
+    (by 
       rintro P Q ⟨h⟩
       apply propext
       constructor
       · rintro ⟨i, w⟩
         exact ⟨i ≫ h.hom.left, by erw [category.assoc, over.w h.hom, w]⟩
-        
       · rintro ⟨i, w⟩
-        exact ⟨i ≫ h.inv.left, by erw [category.assoc, over.w h.inv, w]⟩
-        )
+        exact ⟨i ≫ h.inv.left, by erw [category.assoc, over.w h.inv, w]⟩)
 #align category_theory.subobject.factors CategoryTheory.Subobject.Factors
 
 @[simp]
@@ -109,7 +107,7 @@ theorem factors_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} : P.Factor
 #align category_theory.subobject.factors_zero CategoryTheory.Subobject.factors_zero
 
 theorem factors_of_le {Y Z : C} {P Q : Subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) :
-    P.Factors f → Q.Factors f := by
+    P.Factors f → Q.Factors f := by 
   simp only [factors_iff]
   exact fun ⟨u, hu⟩ => ⟨u ≫ of_le _ _ h, by simp [← hu]⟩
 #align category_theory.subobject.factors_of_le CategoryTheory.Subobject.factors_of_le
@@ -141,7 +139,7 @@ theorem factor_thru_mk_self (f : X ⟶ Y) [Mono f] :
 
 @[simp]
 theorem factor_thru_comp_arrow {X Y : C} {P : Subobject Y} (f : X ⟶ P) (h) :
-    P.factorThru (f ≫ P.arrow) h = f := by
+    P.factorThru (f ≫ P.arrow) h = f := by 
   ext
   simp
 #align
@@ -154,11 +152,9 @@ theorem factor_thru_eq_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} {f 
   · intro w
     replace w := w =≫ P.arrow
     simpa using w
-    
   · rintro rfl
     ext
     simp
-    
 #align category_theory.subobject.factor_thru_eq_zero CategoryTheory.Subobject.factor_thru_eq_zero
 
 theorem factor_thru_right {X Y Z : C} {P : Subobject Z} (f : X ⟶ Y) (g : Y ⟶ Z) (h : P.Factors g) :
@@ -210,7 +206,7 @@ theorem factor_thru_add_sub_factor_thru_right {X Y : C} {P : Subobject Y} (f g :
     (w : P.Factors (f + g)) (wg : P.Factors g) :
     P.factorThru (f + g) w - P.factorThru g wg =
       P.factorThru f (factors_left_of_factors_add f g w wg) :=
-  by
+  by 
   ext
   simp
 #align
@@ -227,7 +223,7 @@ theorem factor_thru_add_sub_factor_thru_left {X Y : C} {P : Subobject Y} (f g : 
     (w : P.Factors (f + g)) (wf : P.Factors f) :
     P.factorThru (f + g) w - P.factorThru f wf =
       P.factorThru g (factors_right_of_factors_add f g w wf) :=
-  by
+  by 
   ext
   simp
 #align

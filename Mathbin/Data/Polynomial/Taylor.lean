@@ -30,7 +30,8 @@ open Polynomial
 variable {R : Type _} [Semiring R] (r : R) (f : R[X])
 
 /-- The Taylor expansion of a polynomial `f` at `r`. -/
-def taylor (r : R) : R[X] →ₗ[R] R[X] where
+def taylor (r : R) : R[X] →ₗ[R]
+      R[X] where 
   toFun f := f.comp (X + c r)
   map_add' f g := add_comp
   map_smul' c f := by simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply]
@@ -76,9 +77,7 @@ theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasseDeriv n f).eval r 
       LinearMap.map_sum]
     simp only [lcoeff_apply, ← C_eq_nat_cast, mul_assoc, ← C_pow, ← C_mul, coeff_mul_C,
       (Nat.cast_commute _ _).Eq, coeff_X_pow, boole_mul, Finset.sum_ite_eq, Finset.mem_range]
-    split_ifs with h;
-    · rfl
-      
+    split_ifs with h; · rfl
     push_neg  at h; rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, mul_zero]
 #align polynomial.taylor_coeff Polynomial.taylor_coeff
 

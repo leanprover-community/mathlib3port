@@ -73,7 +73,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
                 (lt_add_iff_pos_right _).2
                   (add_pos_of_nonneg_of_pos (Nat.zero_le _)
                     (mul_pos (by decide) (Nat.div_pos hp.1.two_le (by decide))))
-          _ = p * p := by
+          _ = p * p := by 
             conv_rhs => rw [← Nat.mod_add_div p 2]
             ring
           )
@@ -179,10 +179,10 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
           _ = 4 * (m / 2 : ℕ) ^ 2 := by simp [sq, bit0, bit1, mul_add, add_mul, add_assoc]
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
             (lt_add_iff_pos_right _).2
-              (by
+              (by 
                 rw [hm2, Int.ofNat_one, one_pow, mul_one]
                 exact add_pos_of_nonneg_of_pos (Int.coe_nat_nonneg _) zero_lt_one)
-          _ = m ^ 2 := by
+          _ = m ^ 2 := by 
             conv_rhs => rw [← Nat.mod_add_div m 2]
             simp [-Nat.mod_add_div, mul_add, add_mul, bit0, bit1, mul_comm, mul_assoc,
               mul_left_comm, pow_add, add_comm, add_left_comm]
@@ -237,14 +237,14 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       let ⟨v, hv⟩ := hazbycxdw
       have hn_nonneg : 0 ≤ n :=
         nonneg_of_mul_nonneg_right
-          (by
+          (by 
             erw [← hn]
             repeat' try refine' add_nonneg _ _; try exact sq_nonneg _)
           (Int.coe_nat_pos.2 <| NeZero.pos m)
       have hnm : n.natAbs < m :=
         Int.coe_nat_lt.1
           (lt_of_mul_lt_mul_left
-            (by
+            (by 
               rw [Int.natAbs_of_nonneg hn_nonneg, ← hn, ← sq]
               exact hwxyzlt)
             (Int.coe_nat_nonneg m))
@@ -254,13 +254,13 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
           calc
             (m : ℤ) ^ 2 * (s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2) =
                 ((m : ℕ) * s) ^ 2 + ((m : ℕ) * t) ^ 2 + ((m : ℕ) * u) ^ 2 + ((m : ℕ) * v) ^ 2 :=
-              by
+              by 
               simp [mul_pow]
               ring
             _ = (w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2) * (a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2) := by
               simp only [hs.symm, ht.symm, hu.symm, hv.symm]
               ring
-            _ = _ := by
+            _ = _ := by 
               rw [hn, habcd, Int.natAbs_of_nonneg hn_nonneg]
               dsimp [m]
               ring

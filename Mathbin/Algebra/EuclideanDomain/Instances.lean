@@ -28,7 +28,7 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
         rw [Int.natAbs_of_nonneg (Int.mod_nonneg _ b0), ← Int.abs_eq_nat_abs]
         exact Int.mod_lt _ b0,
     mul_left_not_lt := fun a b b0 =>
-      not_lt_of_ge <| by
+      not_lt_of_ge <| by 
         rw [← mul_one a.nat_abs, Int.natAbs_mul]
         exact mul_le_mul_of_nonneg_left (Int.natAbs_pos_of_ne_zero b0) (Nat.zero_le _) }
 #align int.euclidean_domain Int.euclideanDomain

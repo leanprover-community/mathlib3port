@@ -72,7 +72,7 @@ the original statement, the case `n = 0` breaks many arguments. -/
 theorem exists_pos (h : LiouvilleWith p x) :
     ∃ (C : ℝ)(h₀ : 0 < C),
       ∃ᶠ n : ℕ in at_top, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p :=
-  by
+  by 
   rcases h with ⟨C, hC⟩
   refine' ⟨max C 1, zero_lt_one.trans_le <| le_max_right _ _, _⟩
   refine' ((eventually_ge_at_top 1).and_frequently hC).mono _
@@ -116,13 +116,11 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   refine' ⟨r.num * m, _, _⟩
   · rw [A]
     simp [hne, hr]
-    
   · rw [A, ← sub_mul, abs_mul]
     simp only [smul_eq_mul, id.def, Nat.cast_mul]
     refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
     rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
     exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
-    
 #align liouville_with.mul_rat LiouvilleWith.mul_rat
 
 /-- The product `x * r`, `r : ℚ`, `r ≠ 0`, is a Liouville number with exponent `p` if and only if
@@ -322,10 +320,8 @@ protected theorem irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x
   rcases eq_or_ne r 0 with (rfl | h0)
   · refine' h.ne_cast_int hp 0 _
     rw [Rat.cast_zero, Int.cast_zero]
-    
   · refine' (h.mul_rat (inv_ne_zero h0)).ne_cast_int hp 1 _
     simp [Rat.cast_ne_zero.2 h0]
-    
 #align liouville_with.irrational LiouvilleWith.irrational
 
 end LiouvilleWith
@@ -362,9 +358,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
     have hb0 : (0 : ℝ) < b := zero_lt_one.trans hb
     exact one_div_le_one_div_of_le (pow_pos hb0 _) (pow_le_pow hb.le hnm)
-    
   · exact (hm b h hb _).not_lt hlt
-    
 #align liouville.frequently_exists_num Liouville.frequently_exists_num
 
 /-- A Liouville number is a Liouville number with any real exponent. -/

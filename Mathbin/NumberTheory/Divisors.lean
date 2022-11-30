@@ -79,9 +79,7 @@ theorem properDivisors.not_self_mem : ¬n ∈ properDivisors n := by simp [prope
 
 @[simp]
 theorem mem_proper_divisors {m : ℕ} : n ∈ properDivisors m ↔ n ∣ m ∧ n < m := by
-  rcases eq_or_ne m 0 with (rfl | hm);
-  · simp [proper_divisors]
-    
+  rcases eq_or_ne m 0 with (rfl | hm); · simp [proper_divisors]
   simp only [and_comm', ← filter_dvd_eq_proper_divisors hm, mem_filter, mem_range]
 #align nat.mem_proper_divisors Nat.mem_proper_divisors
 
@@ -94,9 +92,7 @@ theorem divisors_eq_proper_divisors_insert_self_of_pos (h : 0 < n) :
 
 @[simp]
 theorem mem_divisors {m : ℕ} : n ∈ divisors m ↔ n ∣ m ∧ m ≠ 0 := by
-  rcases eq_or_ne m 0 with (rfl | hm);
-  · simp [divisors]
-    
+  rcases eq_or_ne m 0 with (rfl | hm); · simp [divisors]
   simp only [hm, Ne.def, not_false_iff, and_true_iff, ← filter_dvd_eq_divisors hm, mem_filter,
     mem_range, and_iff_right_iff_imp, lt_succ_iff]
   exact le_of_dvd hm.bot_lt
@@ -112,9 +108,7 @@ theorem mem_divisors_self (n : ℕ) (h : n ≠ 0) : n ∈ n.divisors :=
 theorem dvd_of_mem_divisors {m : ℕ} (h : n ∈ divisors m) : n ∣ m := by
   cases m
   · apply dvd_zero
-    
   · simp [mem_divisors.1 h]
-    
 #align nat.dvd_of_mem_divisors Nat.dvd_of_mem_divisors
 
 @[simp]
@@ -127,14 +121,12 @@ theorem mem_divisors_antidiagonal {x : ℕ × ℕ} :
   constructor <;> intro h
   · contrapose! h
     simp [h]
-    
   · rw [Nat.lt_add_one_iff, Nat.lt_add_one_iff]
     rw [mul_eq_zero, Decidable.not_or_iff_and_not] at h
     simp only [succ_le_of_lt (Nat.pos_of_ne_zero h.1), succ_le_of_lt (Nat.pos_of_ne_zero h.2),
       true_and_iff]
     exact
       ⟨le_mul_of_pos_right (Nat.pos_of_ne_zero h.2), le_mul_of_pos_left (Nat.pos_of_ne_zero h.1)⟩
-    
 #align nat.mem_divisors_antidiagonal Nat.mem_divisors_antidiagonal
 
 variable {n}
@@ -142,7 +134,6 @@ variable {n}
 theorem divisor_le {m : ℕ} : n ∈ divisors m → n ≤ m := by
   cases m
   · simp
-    
   simp only [mem_divisors, m.succ_ne_zero, and_true_iff, Ne.def, not_false_iff]
   exact Nat.le_of_dvd (Nat.succ_pos m)
 #align nat.divisor_le Nat.divisor_le
@@ -163,7 +154,7 @@ theorem divisors_subset_proper_divisors {m : ℕ} (hzero : n ≠ 0) (h : m ∣ n
 #align nat.divisors_subset_proper_divisors Nat.divisors_subset_proper_divisors
 
 @[simp]
-theorem divisors_zero : divisors 0 = ∅ := by
+theorem divisors_zero : divisors 0 = ∅ := by 
   ext
   simp
 #align nat.divisors_zero Nat.divisors_zero
@@ -179,7 +170,7 @@ theorem proper_divisors_subset_divisors : properDivisors n ⊆ divisors n :=
 #align nat.proper_divisors_subset_divisors Nat.proper_divisors_subset_divisors
 
 @[simp]
-theorem divisors_one : divisors 1 = {1} := by
+theorem divisors_one : divisors 1 = {1} := by 
   ext
   simp
 #align nat.divisors_one Nat.divisors_one
@@ -193,7 +184,6 @@ theorem pos_of_mem_divisors {m : ℕ} (h : m ∈ n.divisors) : 0 < m := by
   cases m
   · rw [mem_divisors, zero_dvd_iff] at h
     cases h.2 h.1
-    
   apply Nat.succ_pos
 #align nat.pos_of_mem_divisors Nat.pos_of_mem_divisors
 
@@ -224,13 +214,13 @@ theorem swap_mem_divisors_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisorsAntid
 #align nat.swap_mem_divisors_antidiagonal Nat.swap_mem_divisors_antidiagonal
 
 theorem fst_mem_divisors_of_mem_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisorsAntidiagonal n) :
-    x.fst ∈ divisors n := by
+    x.fst ∈ divisors n := by 
   rw [mem_divisors_antidiagonal] at h
   simp [Dvd.intro _ h.1, h.2]
 #align nat.fst_mem_divisors_of_mem_antidiagonal Nat.fst_mem_divisors_of_mem_antidiagonal
 
 theorem snd_mem_divisors_of_mem_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisorsAntidiagonal n) :
-    x.snd ∈ divisors n := by
+    x.snd ∈ divisors n := by 
   rw [mem_divisors_antidiagonal] at h
   simp [Dvd.intro_left _ h.1, h.2]
 #align nat.snd_mem_divisors_of_mem_antidiagonal Nat.snd_mem_divisors_of_mem_antidiagonal
@@ -239,19 +229,17 @@ theorem snd_mem_divisors_of_mem_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisor
 theorem map_swap_divisors_antidiagonal :
     (divisorsAntidiagonal n).map ⟨Prod.swap, Prod.swap_rightInverse.Injective⟩ =
       divisorsAntidiagonal n :=
-  by
+  by 
   ext
-  simp only [exists_prop, mem_divisors_antidiagonal, Finset.mem_map, Function.Embedding.coe_fn_mk,
+  simp only [exists_prop, mem_divisors_antidiagonal, Finset.mem_map, Function.Embedding.coeFn_mk,
     Ne.def, Prod.swap_prod_mk, Prod.exists]
   constructor
   · rintro ⟨x, y, ⟨⟨rfl, h⟩, rfl⟩⟩
     simp [mul_comm, h]
-    
   · rintro ⟨rfl, h⟩
     use a.snd, a.fst
     rw [mul_comm]
     simp [h]
-    
 #align nat.map_swap_divisors_antidiagonal Nat.map_swap_divisors_antidiagonal
 
 @[simp]
@@ -269,30 +257,27 @@ theorem image_snd_divisors_antidiagonal : (divisorsAntidiagonal n).image Prod.sn
 theorem map_div_right_divisors :
     n.divisors.map ⟨fun d => (d, n / d), fun p₁ p₂ => congr_arg Prod.fst⟩ =
       n.divisorsAntidiagonal :=
-  by
+  by 
   obtain rfl | hn := Decidable.eq_or_ne n 0
   · simp
-    
   ext ⟨d, nd⟩
   simp only [and_true_iff, Finset.mem_map, exists_eq_left, Ne.def, hn, not_false_iff,
-    mem_divisors_antidiagonal, Function.Embedding.coe_fn_mk, mem_divisors]
+    mem_divisors_antidiagonal, Function.Embedding.coeFn_mk, mem_divisors]
   constructor
   · rintro ⟨a, ⟨k, rfl⟩, h⟩
     obtain ⟨rfl, rfl⟩ := Prod.mk.inj_iff.1 h
     have := (mul_ne_zero_iff.1 hn).1
     rw [Nat.mul_div_cancel_left _ (zero_lt_iff.mpr this)]
-    
   · rintro rfl
     refine' ⟨d, dvd_mul_right _ _, _⟩
     have := (mul_ne_zero_iff.1 hn).1
     rw [Nat.mul_div_cancel_left _ (zero_lt_iff.mpr this)]
-    
 #align nat.map_div_right_divisors Nat.map_div_right_divisors
 
 theorem map_div_left_divisors :
     n.divisors.map ⟨fun d => (n / d, d), fun p₁ p₂ => congr_arg Prod.snd⟩ =
       n.divisorsAntidiagonal :=
-  by
+  by 
   apply Finset.map_injective ⟨Prod.swap, prod.swap_right_inverse.injective⟩
   rw [map_swap_divisors_antidiagonal, ← map_div_right_divisors, Finset.map_map]
   rfl
@@ -302,10 +287,9 @@ theorem sum_divisors_eq_sum_proper_divisors_add_self :
     (∑ i in divisors n, i) = (∑ i in properDivisors n, i) + n := by
   cases n
   · simp
-    
-  · rw [divisors_eq_proper_divisors_insert_self_of_pos (Nat.succ_pos _),
+  ·
+    rw [divisors_eq_proper_divisors_insert_self_of_pos (Nat.succ_pos _),
       Finset.sum_insert proper_divisors.not_self_mem, add_comm]
-    
 #align
   nat.sum_divisors_eq_sum_proper_divisors_add_self Nat.sum_divisors_eq_sum_proper_divisors_add_self
 
@@ -325,9 +309,7 @@ theorem perfect_iff_sum_divisors_eq_two_mul (h : 0 < n) :
   rw [perfect_iff_sum_proper_divisors h, sum_divisors_eq_sum_proper_divisors_add_self, two_mul]
   constructor <;> intro h
   · rw [h]
-    
   · apply add_right_cancel h
-    
 #align nat.perfect_iff_sum_divisors_eq_two_mul Nat.perfect_iff_sum_divisors_eq_two_mul
 
 theorem mem_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ} :
@@ -357,31 +339,29 @@ theorem eq_proper_divisors_of_subset_of_sum_eq_sum {s : Finset ℕ} (hsub : s �
   cases n
   · rw [proper_divisors_zero, subset_empty] at hsub
     simp [hsub]
-    
-  classical
-  rw [← sum_sdiff hsub]
-  intro h
-  apply subset.antisymm hsub
-  rw [← sdiff_eq_empty_iff_subset]
-  contrapose h
-  rw [← Ne.def, ← nonempty_iff_ne_empty] at h
-  apply ne_of_lt
-  rw [← zero_add (∑ x in s, x), ← add_assoc, add_zero]
-  apply add_lt_add_right
-  have hlt := sum_lt_sum_of_nonempty h fun x hx => pos_of_mem_proper_divisors (sdiff_subset _ _ hx)
-  simp only [sum_const_zero] at hlt
-  apply hlt
+  classical 
+    rw [← sum_sdiff hsub]
+    intro h
+    apply subset.antisymm hsub
+    rw [← sdiff_eq_empty_iff_subset]
+    contrapose h
+    rw [← Ne.def, ← nonempty_iff_ne_empty] at h
+    apply ne_of_lt
+    rw [← zero_add (∑ x in s, x), ← add_assoc, add_zero]
+    apply add_lt_add_right
+    have hlt :=
+      sum_lt_sum_of_nonempty h fun x hx => pos_of_mem_proper_divisors (sdiff_subset _ _ hx)
+    simp only [sum_const_zero] at hlt
+    apply hlt
 #align nat.eq_proper_divisors_of_subset_of_sum_eq_sum Nat.eq_proper_divisors_of_subset_of_sum_eq_sum
 
 theorem sum_proper_divisors_dvd (h : (∑ x in n.properDivisors, x) ∣ n) :
     (∑ x in n.properDivisors, x) = 1 ∨ (∑ x in n.properDivisors, x) = n := by
   cases n
   · simp
-    
   cases n
   · contrapose! h
     simp
-    
   rw [or_iff_not_imp_right]
   intro ne_n
   have hlt : (∑ x in n.succ.succ.proper_divisors, x) < n.succ.succ :=
@@ -407,7 +387,7 @@ theorem Prime.prod_divisors {α : Type _} [CommMonoid α] {p : ℕ} {f : ℕ →
 #align nat.prime.prod_divisors Nat.Prime.prod_divisors
 
 theorem proper_divisors_eq_singleton_one_iff_prime : n.properDivisors = {1} ↔ n.Prime :=
-  ⟨fun h => by
+  ⟨fun h => by 
     have h1 := mem_singleton.2 rfl
     rw [← h, mem_proper_divisors] at h1
     refine' nat.prime_def_lt''.mpr ⟨h1.2, fun m hdvd => _⟩
@@ -419,10 +399,8 @@ theorem proper_divisors_eq_singleton_one_iff_prime : n.properDivisors = {1} ↔ 
 theorem sum_proper_divisors_eq_one_iff_prime : (∑ x in n.properDivisors, x) = 1 ↔ n.Prime := by
   cases n
   · simp [Nat.not_prime_zero]
-    
   cases n
   · simp [Nat.not_prime_one]
-    
   rw [← proper_divisors_eq_singleton_one_iff_prime]
   refine' ⟨fun h => _, fun h => h.symm ▸ sum_singleton⟩
   rw [@eq_comm (Finset ℕ) _ _]
@@ -443,11 +421,9 @@ theorem mem_proper_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : �
   · rcases h with ⟨h_left, rfl, h_right⟩
     rwa [pow_lt_pow_iff pp.one_lt] at h_right
     simpa
-    
   · rcases h with ⟨h_left, rfl⟩
     rwa [pow_lt_pow_iff pp.one_lt]
     simp [h_left, le_of_lt]
-    
 #align nat.mem_proper_divisors_prime_pow Nat.mem_proper_divisors_prime_pow
 
 theorem proper_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) :
@@ -487,18 +463,14 @@ theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
     n.factors.toFinset = (divisors n).filter Prime := by
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
-    
   · ext q
     simpa [hn, hn.ne', mem_factors] using and_comm' (Prime q) (q ∣ n)
-    
 #align nat.prime_divisors_eq_to_filter_divisors_prime Nat.prime_divisors_eq_to_filter_divisors_prime
 
 @[simp]
 theorem image_div_divisors_eq_divisors (n : ℕ) :
     image (fun x : ℕ => n / x) n.divisors = n.divisors := by
-  by_cases hn : n = 0;
-  · simp [hn]
-    
+  by_cases hn : n = 0; · simp [hn]
   ext
   constructor
   · rw [mem_image]
@@ -507,26 +479,20 @@ theorem image_div_divisors_eq_divisors (n : ℕ) :
     refine' ⟨_, hn⟩
     rw [← hx2]
     exact div_dvd_of_dvd hx1.1
-    
   · rw [mem_divisors, mem_image]
     rintro ⟨h1, -⟩
     exact ⟨n / a, mem_divisors.mpr ⟨div_dvd_of_dvd h1, hn⟩, Nat.div_div_self h1 hn⟩
-    
 #align nat.image_div_divisors_eq_divisors Nat.image_div_divisors_eq_divisors
 
 @[simp, to_additive sum_div_divisors]
 theorem prod_div_divisors {α : Type _} [CommMonoid α] (n : ℕ) (f : ℕ → α) :
     (∏ d in n.divisors, f (n / d)) = n.divisors.Prod f := by
-  by_cases hn : n = 0;
-  · simp [hn]
-    
+  by_cases hn : n = 0; · simp [hn]
   rw [← prod_image]
   · exact prod_congr (image_div_divisors_eq_divisors n) (by simp)
-    
   · intro x hx y hy h
     rw [mem_divisors] at hx hy
     exact (div_eq_iff_eq_of_dvd_dvd hn hx.1 hy.1).mp h
-    
 #align nat.prod_div_divisors Nat.prod_div_divisors
 
 end Nat

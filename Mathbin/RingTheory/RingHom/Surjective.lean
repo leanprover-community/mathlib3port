@@ -33,21 +33,19 @@ theorem surjective_respects_iso : RespectsIso surjective := by
   exact e.surjective
 #align ring_hom.surjective_respects_iso RingHom.surjective_respects_iso
 
-theorem surjective_stable_under_base_change : StableUnderBaseChange surjective := by classical
-  introv R h
-  skip
-  intro x
-  induction' x using TensorProduct.induction_on with x y x y ex ey
-  · exact ⟨0, map_zero _⟩
-    
-  · obtain ⟨y, rfl⟩ := h y
-    use y • x
-    dsimp
-    rw [TensorProduct.smul_tmul, Algebra.algebra_map_eq_smul_one]
-    
-  · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey
-    exact ⟨x + y, map_add _ x y⟩
-    
+theorem surjective_stable_under_base_change : StableUnderBaseChange surjective := by
+  classical 
+    introv R h
+    skip
+    intro x
+    induction' x using TensorProduct.induction_on with x y x y ex ey
+    · exact ⟨0, map_zero _⟩
+    · obtain ⟨y, rfl⟩ := h y
+      use y • x
+      dsimp
+      rw [TensorProduct.smul_tmul, Algebra.algebra_map_eq_smul_one]
+    · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey
+      exact ⟨x + y, map_add _ x y⟩
 #align ring_hom.surjective_stable_under_base_change RingHom.surjective_stable_under_base_change
 
 open BigOperators
@@ -61,7 +59,7 @@ theorem surjective_of_localization_span : OfLocalizationSpan surjective := by
   rintro x -
   obtain ⟨l, hl⟩ :=
     (Finsupp.mem_span_iff_total R s 1).mp
-      (show _ ∈ Ideal.span s by
+      (show _ ∈ Ideal.span s by 
         rw [hs]
         trivial)
   fapply
@@ -70,11 +68,8 @@ theorem surjective_of_localization_span : OfLocalizationSpan surjective := by
   · dsimp only
     simp_rw [← _root_.map_mul, ← map_sum, ← f.map_one]
     exact f.congr_arg hl
-    
   · exact fun _ => Set.mem_range_self _
-    
   · exact fun _ => Set.mem_range_self _
-    
   · intro r
     obtain ⟨y, hy⟩ := H r (IsLocalization.mk' _ x (1 : Submonoid.powers (f r)))
     obtain ⟨z, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers (r : R)) y
@@ -84,7 +79,6 @@ theorem surjective_of_localization_span : OfLocalizationSpan surjective := by
     simp_rw [_root_.mul_assoc, _root_.one_mul, ← map_pow, ← f.map_mul, ← pow_add, mul_comm x] at hm
     rw [map_pow] at hm
     refine' ⟨n + m, _, hm⟩
-    
 #align ring_hom.surjective_of_localization_span RingHom.surjective_of_localization_span
 
 end RingHom

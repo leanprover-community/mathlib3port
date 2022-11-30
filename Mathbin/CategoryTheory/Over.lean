@@ -48,7 +48,7 @@ namespace Over
 
 variable {X : T}
 
-@[ext.1]
+@[ext]
 theorem OverMorphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g := by
   tidy
 #align category_theory.over.over_morphism.ext CategoryTheory.Over.OverMorphism.ext
@@ -221,7 +221,7 @@ instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :
   refine' ⟨fun (Y : T) l m a => _⟩
   let l' : mk (m ≫ f.hom) ⟶ f :=
     hom_mk l
-      (by
+      (by 
         dsimp
         rw [← over.w k, reassoc_of a])
   suffices l' = hom_mk m by apply congr_arg comma_morphism.left this
@@ -236,11 +236,12 @@ variable (f : Over X)
 
 /-- Given f : Y ⟶ X, this is the obvious functor from (T/X)/f to T/Y -/
 @[simps]
-def iteratedSliceForward : Over f ⥤ Over f.left where
+def iteratedSliceForward :
+    Over f ⥤ Over f.left where 
   obj α := Over.mk α.Hom.left
   map α β κ :=
     Over.homMk κ.left.left
-      (by
+      (by 
         rw [auto_param_eq]
         rw [← over.w κ]
         rfl)
@@ -248,19 +249,22 @@ def iteratedSliceForward : Over f ⥤ Over f.left where
 
 /-- Given f : Y ⟶ X, this is the obvious functor from T/Y to (T/X)/f -/
 @[simps]
-def iteratedSliceBackward : Over f.left ⥤ Over f where
+def iteratedSliceBackward :
+    Over f.left ⥤
+      Over f where 
   obj g := mk (homMk g.Hom : mk (g.Hom ≫ f.Hom) ⟶ f)
   map g h α := homMk (homMk α.left (w_assoc α f.Hom)) (OverMorphism.ext (w α))
 #align category_theory.over.iterated_slice_backward CategoryTheory.Over.iteratedSliceBackward
 
 /-- Given f : Y ⟶ X, we have an equivalence between (T/X)/f and T/Y -/
 @[simps]
-def iteratedSliceEquiv : Over f ≌ Over f.left where
+def iteratedSliceEquiv :
+    Over f ≌ Over f.left where 
   Functor := iteratedSliceForward f
   inverse := iteratedSliceBackward f
   unitIso :=
     NatIso.ofComponents (fun g => Over.isoMk (Over.isoMk (Iso.refl _) (by tidy)) (by tidy))
-      fun X Y g => by
+      fun X Y g => by 
       ext
       dsimp
       simp
@@ -291,7 +295,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 /-- A functor `F : T ⥤ D` induces a functor `over X ⥤ over (F.obj X)` in the obvious way. -/
 @[simps]
-def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X) where
+def post (F : T ⥤ D) :
+    Over X ⥤ Over (F.obj X) where 
   obj Y := mk <| F.map Y.Hom
   map Y₁ Y₂ f := { left := F.map f.left, w' := by tidy <;> erw [← F.map_comp, w] }
 #align category_theory.over.post CategoryTheory.Over.post
@@ -315,7 +320,7 @@ namespace Under
 
 variable {X : T}
 
-@[ext.1]
+@[ext]
 theorem UnderMorphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g :=
   by tidy
 #align category_theory.under.under_morphism.ext CategoryTheory.Under.UnderMorphism.ext
@@ -474,7 +479,7 @@ instance epi_right_of_epi {f g : Under X} (k : f ⟶ g) [Epi k] : Epi k.right :=
   refine' ⟨fun (Y : T) l m a => _⟩
   let l' : g ⟶ mk (g.hom ≫ m) :=
     hom_mk l
-      (by
+      (by 
         dsimp
         rw [← under.w k, category.assoc, a, category.assoc])
   suffices l' = hom_mk m by apply congr_arg comma_morphism.right this
@@ -489,7 +494,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 /-- A functor `F : T ⥤ D` induces a functor `under X ⥤ under (F.obj X)` in the obvious way. -/
 @[simps]
-def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X) where
+def post {X : T} (F : T ⥤ D) :
+    Under X ⥤ Under (F.obj X) where 
   obj Y := mk <| F.map Y.Hom
   map Y₁ Y₂ f := { right := F.map f.right, w' := by tidy <;> erw [← F.map_comp, w] }
 #align category_theory.under.post CategoryTheory.Under.post

@@ -16,7 +16,7 @@ open Equiv
 
 @[simp]
 theorem Equiv.option_congr_one {α : Type _} : (1 : Perm α).optionCongr = 1 :=
-  Equiv.option_congr_refl
+  Equiv.optionCongr_refl
 #align equiv.option_congr_one Equiv.option_congr_one
 
 @[simp]
@@ -24,11 +24,9 @@ theorem Equiv.option_congr_swap {α : Type _} [DecidableEq α] (x y : α) :
     optionCongr (swap x y) = swap (some x) (some y) := by
   ext (_ | i)
   · simp [swap_apply_of_ne_of_ne]
-    
   · by_cases hx : i = x
     simp [hx, swap_apply_of_ne_of_ne]
     by_cases hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
-    
 #align equiv.option_congr_swap Equiv.option_congr_swap
 
 @[simp]
@@ -36,10 +34,8 @@ theorem Equiv.option_congr_sign {α : Type _} [DecidableEq α] [Fintype α] (e :
     Perm.sign e.optionCongr = Perm.sign e := by
   apply perm.swap_induction_on e
   · simp [perm.one_def]
-    
   · intro f x y hne h
-    simp [h, hne, perm.mul_def, ← Equiv.option_congr_trans]
-    
+    simp [h, hne, perm.mul_def, ← Equiv.optionCongr_trans]
 #align equiv.option_congr_sign Equiv.option_congr_sign
 
 @[simp]
@@ -49,15 +45,11 @@ theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option 
   have : Option.map (⇑(remove_none σ)) x = (swap none (σ none)) (σ x) := by
     cases x
     · simp
-      
     · cases h : σ (some x)
       · simp [remove_none_none _ h]
-        
       · have hn : σ (some x) ≠ none := by simp [h]
         have hσn : σ (some x) ≠ σ none := σ.injective.ne (by simp)
         simp [remove_none_some _ ⟨_, h⟩, ← h, swap_apply_of_ne_of_ne hn hσn]
-        
-      
   simpa using this
 #align map_equiv_remove_none map_equiv_remove_none
 
@@ -66,13 +58,14 @@ theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option 
 The fixed `option α` is swapped with `none`. -/
 @[simps]
 def Equiv.Perm.decomposeOption {α : Type _} [DecidableEq α] :
-    Perm (Option α) ≃ Option α × Perm α where
+    Perm (Option α) ≃
+      Option α × Perm α where 
   toFun σ := (σ none, removeNone σ)
   invFun i := swap none i.1 * i.2.optionCongr
   left_inv σ := by simp
   right_inv := fun ⟨x, σ⟩ => by
     have : remove_none (swap none x * σ.option_congr) = σ :=
-      Equiv.option_congr_injective (by simp [← mul_assoc])
+      Equiv.optionCongr_injective (by simp [← mul_assoc])
     simp [← perm.eq_inv_iff_eq, this]
 #align equiv.perm.decompose_option Equiv.Perm.decomposeOption
 

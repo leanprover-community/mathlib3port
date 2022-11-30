@@ -117,7 +117,7 @@ theorem lift_comp_ι (g : ExteriorAlgebra R M →ₐ[R] A) :
 #align exterior_algebra.lift_comp_ι ExteriorAlgebra.lift_comp_ι
 
 /-- See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem hom_ext {f g : ExteriorAlgebra R M →ₐ[R] A}
     (h : f.toLinearMap.comp (ι R) = g.toLinearMap.comp (ι R)) : f = g :=
   CliffordAlgebra.hom_ext h
@@ -218,10 +218,8 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
     rw [h, AlgHom.commutes] at hf0
     have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
     exact this.symm.imp_left Eq.symm
-    
   · rintro ⟨rfl, rfl⟩
     rw [LinearMap.map_zero, RingHom.map_zero]
-    
 #align exterior_algebra.ι_eq_algebra_map_iff ExteriorAlgebra.ι_eq_algebra_map_iff
 
 @[simp]
@@ -234,7 +232,7 @@ theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
 theorem ι_range_disjoint_one :
     Disjoint (LinearMap.range (ι R : M →ₗ[R] ExteriorAlgebra R M))
       (1 : Submodule R (ExteriorAlgebra R M)) :=
-  by
+  by 
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
   rw [ι_eq_algebra_map_iff x] at hx
@@ -253,18 +251,14 @@ theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) :
     (ι R <| f i) * (List.ofFn fun i => ι R <| f i).Prod = 0 := by
   induction' n with n hn
   · exact i.elim0
-    
   · rw [List.of_fn_succ, List.prod_cons, ← mul_assoc]
     by_cases h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
-      
     · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Fin.succ i) (i.pred h))
       simp only at hn
       rw [Fin.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
       rw [← add_mul, ι_add_mul_swap, zero_mul]
-      
-    
 #align exterior_algebra.ι_mul_prod_list ExteriorAlgebra.ι_mul_prod_list
 
 variable (R)
@@ -284,21 +278,17 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
       clear hxy
       induction' n with n hn generalizing x y
       · exact x.elim0
-        
       · rw [List.of_fn_succ, List.prod_cons]
         by_cases hx : x = 0
         · rw [hx] at hfxy h
           rw [hfxy, ← Fin.succ_pred y (ne_of_lt h).symm]
           exact ι_mul_prod_list (f ∘ Fin.succ) _
-          
         · convert mul_zero _
           refine'
             hn (fun i => f <| Fin.succ i) (x.pred hx)
               (y.pred (ne_of_lt <| lt_of_le_of_lt x.zero_le h).symm) (fin.pred_lt_pred_iff.mpr h) _
           simp only [Fin.succ_pred]
-          exact hfxy
-          
-        ,
+          exact hfxy,
     toFun := F }
 #align exterior_algebra.ι_multi ExteriorAlgebra.ιMulti
 
@@ -323,7 +313,7 @@ theorem ι_multi_succ_apply {n : ℕ} (v : Fin n.succ → M) :
 theorem ι_multi_succ_curry_left {n : ℕ} (m : M) :
     (ιMulti R n.succ).curryLeft m = (LinearMap.mulLeft R (ι R m)).compAlternatingMap (ιMulti R n) :=
   AlternatingMap.ext fun v =>
-    (ι_multi_succ_apply _).trans <| by
+    (ι_multi_succ_apply _).trans <| by 
       simp_rw [Matrix.tail_cons]
       rfl
 #align exterior_algebra.ι_multi_succ_curry_left ExteriorAlgebra.ι_multi_succ_curry_left

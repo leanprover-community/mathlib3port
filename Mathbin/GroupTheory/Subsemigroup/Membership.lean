@@ -50,7 +50,6 @@ theorem mem_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ 
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
     exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
-    
 #align subsemigroup.mem_supr_of_directed Subsemigroup.mem_supr_of_directed
 
 @[to_additive]
@@ -120,10 +119,8 @@ theorem supr_induction' (S : ι → Subsemigroup M) {C : ∀ x, (x ∈ ⨆ i, S 
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
   refine' supr_induction S hx (fun i x hx => _) fun x y => _
   · exact ⟨_, hp _ _ hx⟩
-    
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
     exact ⟨_, hmul _ _ _ _ Cx Cy⟩
-    
 #align subsemigroup.supr_induction' Subsemigroup.supr_induction'
 
 end Subsemigroup

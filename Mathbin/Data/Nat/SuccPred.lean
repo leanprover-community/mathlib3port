@@ -24,27 +24,21 @@ instance : SuccOrder ℕ :=
 
 -- so that Lean reads `nat.pred` through `pred_order.pred`
 @[reducible]
-instance : PredOrder ℕ where
+instance : PredOrder ℕ where 
   pred := pred
   pred_le := pred_le
-  min_of_le_pred a ha := by
+  min_of_le_pred a ha := by 
     cases a
-    · exact is_min_bot
-      
+    · exact isMin_bot
     · exact (not_succ_le_self _ ha).elim
-      
-  le_pred_of_lt a b h := by
+  le_pred_of_lt a b h := by 
     cases b
     · exact (a.not_lt_zero h).elim
-      
     · exact le_of_succ_le_succ h
-      
-  le_of_pred_lt a b h := by
+  le_of_pred_lt a b h := by 
     cases a
     · exact b.zero_le
-      
     · exact h
-      
 
 @[simp]
 theorem succ_eq_succ : Order.succ = succ :=
@@ -58,14 +52,14 @@ theorem pred_eq_pred : Order.pred = pred :=
 
 theorem succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n
   | 0 => rfl
-  | n + 1 => by
+  | n + 1 => by 
     rw [Function.iterate_succ', add_succ]
     exact congr_arg _ n.succ_iterate
 #align nat.succ_iterate Nat.succ_iterate
 
 theorem pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
   | 0 => rfl
-  | n + 1 => by
+  | n + 1 => by 
     rw [Function.iterate_succ', sub_succ]
     exact congr_arg _ n.pred_iterate
 #align nat.pred_iterate Nat.pred_iterate

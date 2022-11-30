@@ -27,34 +27,34 @@ theorem fmap_def {α' β'} {s : Multiset α'} (f : α' → β') : f <$> s = s.ma
 
 instance : IsLawfulFunctor Multiset := by refine' { .. } <;> intros <;> simp
 
-open IsLawfulTraversable IsCommApplicative
+open IsLawfulTraversable CommApplicative
 
-variable {F : Type u → Type u} [Applicative F] [IsCommApplicative F]
+variable {F : Type u → Type u} [Applicative F] [CommApplicative F]
 
 variable {α' β' : Type u} (f : α' → F β')
 
 def traverse : Multiset α' → F (Multiset β') :=
   Quotient.lift (Functor.map coe ∘ Traversable.traverse f)
-    (by
+    (by 
       introv p; unfold Function.comp
       induction p
       case nil => rfl
       case cons =>
-      have :
-        Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₁ =
-          Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₂ :=
-        by rw [p_ih]
-      simpa [functor_norm]
+        have :
+          Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₁ =
+            Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₂ :=
+          by rw [p_ih]
+        simpa [functor_norm]
       case swap =>
-      have :
-        (fun a b (l : List β') => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
-          (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
-        by
-        rw [IsCommApplicative.commutative_map]
-        congr
-        funext a b l
-        simpa [flip] using perm.swap b a l
-      simp [(· ∘ ·), this, functor_norm]
+        have :
+          (fun a b (l : List β') => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
+            (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
+          by 
+          rw [CommApplicative.commutative_map]
+          congr
+          funext a b l
+          simpa [flip] using perm.swap b a l
+        simp [(· ∘ ·), this, functor_norm]
       case trans => simp [*])
 #align multiset.traverse Multiset.traverse
 
@@ -71,7 +71,9 @@ theorem bind_def {α β} : (· >>= ·) = @bind α β :=
   rfl
 #align multiset.bind_def Multiset.bind_def
 
-instance : LawfulMonad Multiset where
+instance :
+    LawfulMonad
+      Multiset where 
   bind_pure_comp_eq_map α β f s := (Multiset.induction_on s rfl) fun a s ih => by simp
   pure_bind α β x f := by simp [pure]
   bind_assoc := @bind_assoc
@@ -96,8 +98,8 @@ theorem id_traverse {α : Type _} (x : Multiset α) : traverse id.mk x = x :=
   Quotient.induction_on x (by intro ; simp [traverse]; rfl)
 #align multiset.id_traverse Multiset.id_traverse
 
-theorem comp_traverse {G H : Type _ → Type _} [Applicative G] [Applicative H] [IsCommApplicative G]
-    [IsCommApplicative H] {α β γ : Type _} (g : α → G β) (h : β → H γ) (x : Multiset α) :
+theorem comp_traverse {G H : Type _ → Type _} [Applicative G] [Applicative H] [CommApplicative G]
+    [CommApplicative H] {α β γ : Type _} (g : α → G β) (h : β → H γ) (x : Multiset α) :
     traverse (comp.mk ∘ Functor.map h ∘ g) x = Comp.mk (Functor.map (traverse h) (traverse g x)) :=
   Quotient.induction_on x
     (by
@@ -105,21 +107,21 @@ theorem comp_traverse {G H : Type _ → Type _} [Applicative G] [Applicative H] 
         simp [(· <$> ·), (· ∘ ·), functor_norm])
 #align multiset.comp_traverse Multiset.comp_traverse
 
-theorem map_traverse {G : Type _ → Type _} [Applicative G] [IsCommApplicative G] {α β γ : Type _}
+theorem map_traverse {G : Type _ → Type _} [Applicative G] [CommApplicative G] {α β γ : Type _}
     (g : α → G β) (h : β → γ) (x : Multiset α) :
     Functor.map (Functor.map h) (traverse g x) = traverse (Functor.map h ∘ g) x :=
   Quotient.induction_on x
     (by intro <;> simp [traverse, functor_norm] <;> rw [IsLawfulFunctor.comp_map, map_traverse])
 #align multiset.map_traverse Multiset.map_traverse
 
-theorem traverse_map {G : Type _ → Type _} [Applicative G] [IsCommApplicative G] {α β γ : Type _}
+theorem traverse_map {G : Type _ → Type _} [Applicative G] [CommApplicative G] {α β γ : Type _}
     (g : α → β) (h : β → G γ) (x : Multiset α) : traverse h (map g x) = traverse (h ∘ g) x :=
   Quotient.induction_on x
     (by intro <;> simp [traverse] <;> rw [← Traversable.traverse_map h g] <;> [rfl, infer_instance])
 #align multiset.traverse_map Multiset.traverse_map
 
-theorem naturality {G H : Type _ → Type _} [Applicative G] [Applicative H] [IsCommApplicative G]
-    [IsCommApplicative H] (eta : ApplicativeTransformation G H) {α β : Type _} (f : α → G β)
+theorem naturality {G H : Type _ → Type _} [Applicative G] [Applicative H] [CommApplicative G]
+    [CommApplicative H] (eta : ApplicativeTransformation G H) {α β : Type _} (f : α → G β)
     (x : Multiset α) : eta (traverse f x) = traverse (@eta _ ∘ f) x :=
   Quotient.induction_on x
     (by intro <;> simp [traverse, IsLawfulTraversable.naturality, functor_norm])

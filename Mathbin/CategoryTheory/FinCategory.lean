@@ -70,7 +70,10 @@ abbrev AsType : Type :=
 #align category_theory.fin_category.as_type CategoryTheory.FinCategory.AsType
 
 @[simps (config := lemmasOnly) hom id comp]
-noncomputable instance categoryAsType : SmallCategory (AsType α) where
+noncomputable instance categoryAsType :
+    SmallCategory
+      (AsType
+        α) where 
   hom i j := Fin (Fintype.card (@Quiver.Hom (ObjAsType α) _ i j))
   id i := Fintype.equivFin _ (𝟙 i)
   comp i j k f g := Fintype.equivFin _ ((Fintype.equivFin _).symm f ≫ (Fintype.equivFin _).symm g)
@@ -80,7 +83,8 @@ attribute [local simp] category_as_type_hom category_as_type_id category_as_type
 
 /-- The "identity" functor from `as_type α` to `obj_as_type α`. -/
 @[simps]
-noncomputable def asTypeToObjAsType : AsType α ⥤ ObjAsType α where
+noncomputable def asTypeToObjAsType :
+    AsType α ⥤ ObjAsType α where 
   obj := id
   map i j := (Fintype.equivFin _).symm
 #align
@@ -88,7 +92,8 @@ noncomputable def asTypeToObjAsType : AsType α ⥤ ObjAsType α where
 
 /-- The "identity" functor from `obj_as_type α` to `as_type α`. -/
 @[simps]
-noncomputable def objAsTypeToAsType : ObjAsType α ⥤ AsType α where
+noncomputable def objAsTypeToAsType :
+    ObjAsType α ⥤ AsType α where 
   obj := id
   map i j := Fintype.equivFin _
 #align
@@ -121,7 +126,8 @@ open Opposite
 
 /-- The opposite of a finite category is finite.
 -/
-instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] : FinCategory Jᵒᵖ where
+instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] :
+    FinCategory Jᵒᵖ where 
   fintypeObj := Fintype.ofEquiv _ equivToOpposite
   fintypeHom j j' := Fintype.ofEquiv _ (opEquiv j j').symm
 #align category_theory.fin_category_opposite CategoryTheory.finCategoryOpposite

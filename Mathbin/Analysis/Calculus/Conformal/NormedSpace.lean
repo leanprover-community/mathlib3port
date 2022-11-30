@@ -74,15 +74,11 @@ theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
   constructor
   · rintro ⟨f', hf, hf'⟩
     rwa [hf.fderiv]
-    
   · intro H
     by_cases h : DifferentiableAt ℝ f x
     · exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
-      
     · nontriviality X
       exact absurd (fderiv_zero_of_not_differentiable_at h) H.ne_zero
-      
-    
 #align conformal_at_iff_is_conformal_map_fderiv conformal_at_iff_is_conformal_map_fderiv
 
 namespace ConformalAt
@@ -99,7 +95,7 @@ theorem congr {f g : X → Y} {x : X} {u : Set X} (hx : x ∈ u) (hu : IsOpen u)
 #align conformal_at.congr ConformalAt.congr
 
 theorem comp {f : X → Y} {g : Y → Z} (x : X) (hg : ConformalAt g (f x)) (hf : ConformalAt f x) :
-    ConformalAt (g ∘ f) x := by
+    ConformalAt (g ∘ f) x := by 
   rcases hf with ⟨f', hf₁, cf⟩
   rcases hg with ⟨g', hg₁, cg⟩
   exact ⟨g'.comp f', hg₁.comp x hf₁, cg.comp cf⟩

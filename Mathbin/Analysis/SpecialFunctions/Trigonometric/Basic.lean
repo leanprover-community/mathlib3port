@@ -549,7 +549,7 @@ theorem cos_eq_one_iff (x : ℝ) : cos x = 1 ↔ ∃ n : ℤ, (n : ℝ) * (2 * �
 
 theorem cos_eq_one_iff_of_lt_of_lt {x : ℝ} (hx₁ : -(2 * π) < x) (hx₂ : x < 2 * π) :
     cos x = 1 ↔ x = 0 :=
-  ⟨fun h => by
+  ⟨fun h => by 
     rcases(cos_eq_one_iff _).1 h with ⟨n, rfl⟩
     rw [mul_lt_iff_lt_one_left two_pi_pos] at hx₂
     rw [neg_lt, neg_mul_eq_neg_mul, mul_lt_iff_lt_one_left two_pi_pos] at hx₁
@@ -708,14 +708,12 @@ theorem sqrt_two_add_series_nonneg {x : ℝ} (h : 0 ≤ x) : ∀ n : ℕ, 0 ≤ 
 
 theorem sqrt_two_add_series_lt_two : ∀ n : ℕ, sqrtTwoAddSeries 0 n < 2
   | 0 => by norm_num
-  | n + 1 => by
+  | n + 1 => by 
     refine' lt_of_lt_of_le _ (sqrt_sq zero_lt_two.le).le
     rw [sqrt_two_add_series, sqrt_lt_sqrt_iff, ← lt_sub_iff_add_lt']
     · refine' (sqrt_two_add_series_lt_two n).trans_le _
       norm_num
-      
     · exact add_nonneg zero_le_two (sqrt_two_add_series_zero_nonneg n)
-      
 #align real.sqrt_two_add_series_lt_two Real.sqrt_two_add_series_lt_two
 
 theorem sqrt_two_add_series_succ (x : ℝ) :
@@ -727,7 +725,7 @@ theorem sqrt_two_add_series_succ (x : ℝ) :
 theorem sqrt_two_add_series_monotone_left {x y : ℝ} (h : x ≤ y) :
     ∀ n : ℕ, sqrtTwoAddSeries x n ≤ sqrtTwoAddSeries y n
   | 0 => h
-  | n + 1 => by
+  | n + 1 => by 
     rw [sqrt_two_add_series, sqrt_two_add_series]
     exact sqrt_le_sqrt (add_le_add_left (sqrt_two_add_series_monotone_left _) _)
 #align real.sqrt_two_add_series_monotone_left Real.sqrt_two_add_series_monotone_left
@@ -735,14 +733,12 @@ theorem sqrt_two_add_series_monotone_left {x y : ℝ} (h : x ≤ y) :
 @[simp]
 theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrtTwoAddSeries 0 n / 2
   | 0 => by simp
-  | n + 1 => by
+  | n + 1 => by 
     have : (2 : ℝ) ≠ 0 := two_ne_zero
     symm; rw [div_eq_iff_mul_eq this]; symm
     rw [sqrt_two_add_series, sqrt_eq_iff_sq_eq, mul_pow, cos_sq, ← mul_div_assoc, Nat.add_succ,
       pow_succ, mul_div_mul_left _ _ this, cos_pi_over_two_pow, add_mul]
-    congr ;
-    · norm_num
-      
+    congr ; · norm_num
     rw [mul_comm, sq, mul_assoc, ← mul_div_assoc, mul_div_cancel_left, ← mul_div_assoc,
         mul_div_cancel_left] <;>
       try exact this
@@ -754,7 +750,6 @@ theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrtTwoAddSe
       apply div_pos pi_pos
       apply pow_pos
       norm_num
-      
     apply div_lt_div' (le_refl π) _ pi_pos _
     refine' lt_of_le_of_lt (le_of_eq (pow_one _).symm) _
     apply pow_lt_pow; norm_num; apply Nat.succ_lt_succ; apply Nat.succ_pos; all_goals norm_num
@@ -782,16 +777,13 @@ theorem sin_pi_over_two_pow_succ (n : ℕ) :
     convert mul_div_cancel' _ _
     norm_num
     norm_num
-    
   · rw [sub_nonneg]
     apply le_of_lt
     apply sqrt_two_add_series_lt_two
-    
   apply le_of_lt; apply mul_pos; apply sin_pos_of_pos_of_lt_pi
   · apply div_pos pi_pos
     apply pow_pos
     norm_num
-    
   refine' lt_of_lt_of_le _ (le_of_eq (div_one _)); rw [div_lt_div_left]
   refine' lt_of_le_of_lt (le_of_eq (pow_zero 2).symm) _
   apply pow_lt_pow; norm_num; apply Nat.succ_pos; apply pi_pos
@@ -867,17 +859,15 @@ theorem sin_pi_div_thirty_two : sin (π / 32) = sqrt (2 - sqrt (2 + sqrt (2 + sq
 @[simp]
 theorem cos_pi_div_three : cos (π / 3) = 1 / 2 := by
   have h₁ : (2 * cos (π / 3) - 1) ^ 2 * (2 * cos (π / 3) + 2) = 0 := by
-    have : cos (3 * (π / 3)) = cos π := by
+    have : cos (3 * (π / 3)) = cos π := by 
       congr 1
       ring
     linarith [cos_pi, cos_three_mul (π / 3)]
   cases' mul_eq_zero.mp h₁ with h h
   · linarith [pow_eq_zero h]
-    
   · have : cos π < cos (π / 3) := by
       refine' cos_lt_cos_of_nonneg_of_le_pi _ rfl.ge _ <;> linarith [pi_pos]
     linarith [cos_pi]
-    
 #align real.cos_pi_div_three Real.cos_pi_div_three
 
 /-- The square of the cosine of `π / 6` is `3 / 4` (this is sometimes more convenient than the
@@ -903,12 +893,9 @@ theorem cos_pi_div_six : cos (π / 6) = sqrt 3 / 2 := by
     rw [← sub_eq_zero] at h1⊢
     convert h1 using 1
     ring
-    
   · norm_num
-    
   · have : 0 < cos (π / 6) := by apply cos_pos_of_mem_Ioo <;> constructor <;> linarith [pi_pos]
     linarith
-    
 #align real.cos_pi_div_six Real.cos_pi_div_six
 
 /-- The sine of `π / 6` is `1 / 2`. -/
@@ -1089,10 +1076,9 @@ theorem tendsto_cos_pi_div_two : Tendsto cos (𝓝[<] (π / 2)) (𝓝[>] 0) := b
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
-    
-  · filter_upwards [Ioo_mem_nhds_within_Iio
+  ·
+    filter_upwards [Ioo_mem_nhds_within_Iio
         (right_mem_Ioc.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
-    
 #align real.tendsto_cos_pi_div_two Real.tendsto_cos_pi_div_two
 
 theorem tendsto_tan_pi_div_two : Tendsto tan (𝓝[<] (π / 2)) atTop := by
@@ -1109,10 +1095,9 @@ theorem tendsto_cos_neg_pi_div_two : Tendsto cos (𝓝[>] (-(π / 2))) (𝓝[>] 
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
-    
-  · filter_upwards [Ioo_mem_nhds_within_Ioi
+  ·
+    filter_upwards [Ioo_mem_nhds_within_Ioi
         (left_mem_Ico.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
-    
 #align real.tendsto_cos_neg_pi_div_two Real.tendsto_cos_neg_pi_div_two
 
 theorem tendsto_tan_neg_pi_div_two : Tendsto tan (𝓝[>] (-(π / 2))) atBot := by
@@ -1435,13 +1420,12 @@ theorem abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le {a b : ℝ} (ha : a ≤ 0) {
   have : Real.exp (|z.re|) ≤ Real.exp z.re + Real.exp (-z.re) :=
     apply_abs_le_add_of_nonneg (fun x => (Real.exp_pos x).le) z.re
   refine' mul_le_mul_of_nonpos_left (mul_le_mul this _ _ ((Real.exp_pos _).le.trans this)) ha
-  · exact
+  ·
+    exact
       Real.cos_le_cos_of_nonneg_of_le_pi (_root_.abs_nonneg _)
         (hb.trans <| half_le_self <| real.pi_pos.le) hz
-    
   · refine' Real.cos_nonneg_of_mem_Icc ⟨_, hb⟩
     exact (neg_nonpos.2 <| real.pi_div_two_pos.le).trans ((_root_.abs_nonneg _).trans hz)
-    
 #align
   complex.abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le Complex.abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le
 

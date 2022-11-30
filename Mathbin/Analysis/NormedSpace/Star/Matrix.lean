@@ -24,7 +24,8 @@ section EntrywiseSupNorm
 variable [IsROrC 𝕜] [Fintype n] [DecidableEq n]
 
 theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.unitaryGroup n 𝕜)
-    (i j : n) : ‖U i j‖ ≤ 1 := by
+    (i j : n) : ‖U i j‖ ≤ 1 :=
+  by
   -- The norm squared of an entry is at most the L2 norm of its row.
   have norm_sum : ‖U i j‖ ^ 2 ≤ ∑ x, ‖U i x‖ ^ 2 := by
     apply Multiset.single_le_sum
@@ -33,11 +34,9 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
       cases' h_x with a h_a
       rw [← h_a.2]
       apply sq_nonneg
-      
     · rw [Multiset.mem_map]
       use j
       simp only [eq_self_iff_true, Finset.mem_univ_val, and_self_iff, sq_eq_sq]
-      
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ
   have diag_eq_norm_sum : (U ⬝ Uᴴ) i i = ∑ x : n, ‖U i x‖ ^ 2 := by
     simp only [Matrix.mul_apply, Matrix.conj_transpose_apply, ← star_ring_end_apply,
@@ -60,7 +59,7 @@ attribute [local instance] Matrix.normedAddCommGroup
 
 /-- The entrywise sup norm of a unitary matrix is at most 1. -/
 theorem entrywise_sup_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.unitaryGroup n 𝕜) :
-    ‖U‖ ≤ 1 := by
+    ‖U‖ ≤ 1 := by 
   simp_rw [pi_norm_le_iff_of_nonneg zero_le_one]
   intro i j
   exact entry_norm_bound_of_unitary hU _ _

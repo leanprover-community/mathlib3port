@@ -93,9 +93,11 @@ namespace ContinuousMonoidHom
 variable {A B C D E}
 
 @[to_additive]
-instance : ContinuousMonoidHomClass (ContinuousMonoidHom A B) A B where
+instance :
+    ContinuousMonoidHomClass (ContinuousMonoidHom A B) A
+      B where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -110,7 +112,7 @@ directly. -/
 instance : CoeFun (ContinuousMonoidHom A B) fun _ => A → B :=
   FunLike.hasCoeToFun
 
-@[to_additive, ext.1]
+@[to_additive, ext]
 theorem ext {f g : ContinuousMonoidHom A B} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align continuous_monoid_hom.ext ContinuousMonoidHom.ext
@@ -230,7 +232,9 @@ def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) :
 #align continuous_monoid_hom.coprod ContinuousMonoidHom.coprod
 
 @[to_additive]
-instance : CommGroup (ContinuousMonoidHom A E) where
+instance :
+    CommGroup (ContinuousMonoidHom A
+        E) where 
   mul f g := (mul E).comp (f.Prod g)
   mul_comm f g := ext fun x => mul_comm (f x) (g x)
   mul_assoc f g h := ext fun x => mul_assoc (f x) (g x) (h x)
@@ -273,7 +277,7 @@ theorem closedEmbeddingToContinuousMap [HasContinuousMul B] [T2Space B] :
               ⋃ (x) (y) (U) (V) (W) (hU : IsOpen U) (hV : IsOpen V) (hW : IsOpen W) (h :
                 Disjoint (U * V) W),
                 { f | f '' {x} ⊆ U } ∩ { f | f '' {y} ⊆ V } ∩ { f | f '' {x * y} ⊆ W })ᶜ
-        by
+        by 
         rw [this, compl_compl]
         refine' (ContinuousMap.is_open_gen is_compact_singleton is_open_compl_singleton).union _
         repeat' apply is_open_Union; intro
@@ -286,7 +290,6 @@ theorem closedEmbeddingToContinuousMap [HasContinuousMul B] [T2Space B] :
         exact
           ⟨fun h => h (map_one f), fun x y U V W hU hV hW h ⟨⟨hfU, hfV⟩, hfW⟩ =>
             h.le_bot ⟨Set.mul_mem_mul hfU hfV, (congr_arg (· ∈ W) (map_mul f x y)).mp hfW⟩⟩
-        
       · rintro ⟨hf1, hf2⟩
         suffices ∀ x y, f (x * y) = f x * f y by
           refine'
@@ -300,8 +303,7 @@ theorem closedEmbeddingToContinuousMap [HasContinuousMul B] [T2Space B] :
           is_open_prod_iff.mp (hUV.preimage hB) (f x) (f y) hfUV
         refine' ⟨x, y, U, V, W, hU, hV, hW, h.mono_left _, ⟨hfU, hfV⟩, hfW⟩
         rintro _ ⟨x, y, hx : (x, y).1 ∈ U, hy : (x, y).2 ∈ V, rfl⟩
-        exact h' ⟨hx, hy⟩
-        ⟩⟩
+        exact h' ⟨hx, hy⟩⟩⟩
 #align
   continuous_monoid_hom.closed_embedding_to_continuous_map ContinuousMonoidHom.closedEmbeddingToContinuousMap
 
@@ -354,7 +356,8 @@ variable (E)
 /-- `continuous_monoid_hom _ f` is a functor. -/
 @[to_additive "`continuous_add_monoid_hom _ f` is a functor."]
 def compLeft (f : ContinuousMonoidHom A B) :
-    ContinuousMonoidHom (ContinuousMonoidHom B E) (ContinuousMonoidHom A E) where
+    ContinuousMonoidHom (ContinuousMonoidHom B E)
+      (ContinuousMonoidHom A E) where 
   toFun g := g.comp f
   map_one' := rfl
   map_mul' g h := rfl
@@ -367,7 +370,8 @@ variable (A) {E}
 @[to_additive "`continuous_add_monoid_hom f _` is a functor."]
 def compRight {B : Type _} [CommGroup B] [TopologicalSpace B] [TopologicalGroup B]
     (f : ContinuousMonoidHom B E) :
-    ContinuousMonoidHom (ContinuousMonoidHom A B) (ContinuousMonoidHom A E) where
+    ContinuousMonoidHom (ContinuousMonoidHom A B)
+      (ContinuousMonoidHom A E) where 
   toFun g := f.comp g
   map_one' := ext fun a => map_one f
   map_mul' g h := ext fun a => map_mul f (g a) (h a)
@@ -424,7 +428,8 @@ variable (A B C D E)
 /-- `continuous_monoid_hom.dual` as a `continuous_monoid_hom`. -/
 noncomputable def mapHom [LocallyCompactSpace E] :
     ContinuousMonoidHom (ContinuousMonoidHom A E)
-      (ContinuousMonoidHom (PontryaginDual E) (PontryaginDual A)) where
+      (ContinuousMonoidHom (PontryaginDual E)
+        (PontryaginDual A)) where 
   toFun := map
   map_one' := map_one
   map_mul' := map_mul

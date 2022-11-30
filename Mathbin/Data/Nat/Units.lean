@@ -28,12 +28,13 @@ protected theorem is_unit_iff {n : ℕ} : IsUnit n ↔ n = 1 :=
     fun h => h.symm ▸ ⟨1, rfl⟩
 #align nat.is_unit_iff Nat.is_unit_iff
 
-instance uniqueUnits : Unique ℕˣ where
+instance uniqueUnits : Unique ℕˣ where 
   default := 1
   uniq := Nat.units_eq_one
 #align nat.unique_units Nat.uniqueUnits
 
-instance uniqueAddUnits : Unique (AddUnits ℕ) where
+instance uniqueAddUnits : Unique
+      (AddUnits ℕ) where 
   default := 0
   uniq := Nat.add_units_eq_zero
 #align nat.unique_add_units Nat.uniqueAddUnits

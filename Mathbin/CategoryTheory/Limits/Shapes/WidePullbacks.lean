@@ -56,10 +56,11 @@ inductive Hom : WidePullbackShape J → WidePullbackShape J → Type w
 
 attribute [nolint unused_arguments] hom.decidable_eq
 
-instance struct : CategoryStruct (WidePullbackShape J) where
+instance struct : CategoryStruct
+      (WidePullbackShape J) where 
   Hom := Hom
   id j := Hom.id j
-  comp j₁ j₂ j₃ f g := by
+  comp j₁ j₂ j₃ f g := by 
     cases f
     exact g
     cases g
@@ -95,18 +96,16 @@ variable {C : Type u} [Category.{v} C]
 fixed object.
 -/
 @[simps]
-def wideCospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : WidePullbackShape J ⥤ C where
+def wideCospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) :
+    WidePullbackShape J ⥤ C where 
   obj j := Option.casesOn j B objs
-  map X Y f := by
+  map X Y f := by 
     cases' f with _ j
     · apply 𝟙 _
-      
     · exact arrows j
-      
-  map_comp' _ _ _ f g := by
+  map_comp' _ _ _ f g := by 
     cases f
     · simpa
-      
     cases g
     simp
 #align
@@ -136,7 +135,9 @@ def mkCone {F : WidePullbackShape J ⥤ C} {X : C} (f : X ⟶ F.obj none) (π : 
 
 /-- Wide pullback diagrams of equivalent index types are equivlent. -/
 def equivalenceOfEquiv (J' : Type w') (h : J ≃ J') :
-    WidePullbackShape J ≌ WidePullbackShape J' where
+    WidePullbackShape J ≌
+      WidePullbackShape
+        J' where 
   Functor := wideCospan none (fun j => some (h j)) fun j => Hom.term (h j)
   inverse := wideCospan none (fun j => some (h.invFun j)) fun j => Hom.term (h.invFun j)
   unitIso :=
@@ -171,10 +172,11 @@ inductive Hom : WidePushoutShape J → WidePushoutShape J → Type w
 
 attribute [nolint unused_arguments] hom.decidable_eq
 
-instance struct : CategoryStruct (WidePushoutShape J) where
+instance struct : CategoryStruct
+      (WidePushoutShape J) where 
   Hom := Hom
   id j := Hom.id j
-  comp j₁ j₂ j₃ f g := by
+  comp j₁ j₂ j₃ f g := by 
     cases f
     exact g
     cases g
@@ -210,14 +212,13 @@ variable {C : Type u} [Category.{v} C]
 fixed object.
 -/
 @[simps]
-def wideSpan (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : WidePushoutShape J ⥤ C where
+def wideSpan (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) :
+    WidePushoutShape J ⥤ C where 
   obj j := Option.casesOn j B objs
-  map X Y f := by
+  map X Y f := by 
     cases' f with _ j
     · apply 𝟙 _
-      
     · exact arrows j
-      
   map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;> first |simpa|simp
 #align
   category_theory.limits.wide_pushout_shape.wide_span CategoryTheory.Limits.WidePushoutShape.wideSpan
@@ -337,9 +338,7 @@ theorem eq_lift_of_comp_eq (g : X ⟶ widePullback _ _ arrows) :
       (wide_pullback_shape.mk_cone f fs <| w)
   rintro (_ | _)
   · apply h2
-    
   · apply h1
-    
 #align
   category_theory.limits.wide_pullback.eq_lift_of_comp_eq CategoryTheory.Limits.widePullback.eq_lift_of_comp_eq
 
@@ -350,17 +349,15 @@ theorem hom_eq_lift (g : X ⟶ widePullback _ _ arrows) :
 #align
   category_theory.limits.wide_pullback.hom_eq_lift CategoryTheory.Limits.widePullback.hom_eq_lift
 
-@[ext.1]
+@[ext]
 theorem hom_ext (g1 g2 : X ⟶ widePullback _ _ arrows) :
     (∀ j : J, g1 ≫ π arrows j = g2 ≫ π arrows j) → g1 ≫ base arrows = g2 ≫ base arrows → g1 = g2 :=
-  by
+  by 
   intro h1 h2
   apply limit.hom_ext
   rintro (_ | _)
   · apply h2
-    
   · apply h1
-    
 #align category_theory.limits.wide_pullback.hom_ext CategoryTheory.Limits.widePullback.hom_ext
 
 end WidePullback
@@ -418,9 +415,7 @@ theorem eq_desc_of_comp_eq (g : widePushout _ _ arrows ⟶ X) :
       (wide_pushout_shape.mk_cocone f fs <| w)
   rintro (_ | _)
   · apply h2
-    
   · apply h1
-    
 #align
   category_theory.limits.wide_pushout.eq_desc_of_comp_eq CategoryTheory.Limits.widePushout.eq_desc_of_comp_eq
 
@@ -429,22 +424,20 @@ theorem hom_eq_desc (g : widePushout _ _ arrows ⟶ X) :
       desc (head arrows ≫ g) (fun j => ι arrows j ≫ g) fun j => by
         rw [← category.assoc]
         simp :=
-  by
+  by 
   apply eq_desc_of_comp_eq
   tidy
 #align category_theory.limits.wide_pushout.hom_eq_desc CategoryTheory.Limits.widePushout.hom_eq_desc
 
-@[ext.1]
+@[ext]
 theorem hom_ext (g1 g2 : widePushout _ _ arrows ⟶ X) :
     (∀ j : J, ι arrows j ≫ g1 = ι arrows j ≫ g2) → head arrows ≫ g1 = head arrows ≫ g2 → g1 = g2 :=
-  by
+  by 
   intro h1 h2
   apply colimit.hom_ext
   rintro (_ | _)
   · apply h2
-    
   · apply h1
-    
 #align category_theory.limits.wide_pushout.hom_ext CategoryTheory.Limits.widePushout.hom_ext
 
 end WidePushout
@@ -463,7 +456,9 @@ def widePullbackShapeOpMap :
 
 /-- The obvious functor `wide_pullback_shape J ⥤ (wide_pushout_shape J)ᵒᵖ` -/
 @[simps]
-def widePullbackShapeOp : WidePullbackShape J ⥤ (WidePushoutShape J)ᵒᵖ where
+def widePullbackShapeOp :
+    WidePullbackShape J ⥤ (WidePushoutShape
+          J)ᵒᵖ where 
   obj X := op X
   map := widePullbackShapeOpMap J
 #align category_theory.limits.wide_pullback_shape_op CategoryTheory.Limits.widePullbackShapeOp
@@ -479,7 +474,9 @@ def widePushoutShapeOpMap :
 
 /-- The obvious functor `wide_pushout_shape J ⥤ (wide_pullback_shape J)ᵒᵖ` -/
 @[simps]
-def widePushoutShapeOp : WidePushoutShape J ⥤ (WidePullbackShape J)ᵒᵖ where
+def widePushoutShapeOp :
+    WidePushoutShape J ⥤ (WidePullbackShape
+          J)ᵒᵖ where 
   obj X := op X
   map := widePushoutShapeOpMap J
 #align category_theory.limits.wide_pushout_shape_op CategoryTheory.Limits.widePushoutShapeOp
@@ -526,7 +523,9 @@ def widePullbackShapeUnopOp : widePullbackShapeOp J ⋙ widePushoutShapeUnop J �
 
 /-- The duality equivalence `(wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J` -/
 @[simps]
-def widePushoutShapeOpEquiv : (WidePushoutShape J)ᵒᵖ ≌ WidePullbackShape J where
+def widePushoutShapeOpEquiv :
+    (WidePushoutShape J)ᵒᵖ ≌
+      WidePullbackShape J where 
   Functor := widePushoutShapeUnop J
   inverse := widePullbackShapeOp J
   unitIso := (widePushoutShapeOpUnop J).symm
@@ -536,7 +535,9 @@ def widePushoutShapeOpEquiv : (WidePushoutShape J)ᵒᵖ ≌ WidePullbackShape J
 
 /-- The duality equivalence `(wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J` -/
 @[simps]
-def widePullbackShapeOpEquiv : (WidePullbackShape J)ᵒᵖ ≌ WidePushoutShape J where
+def widePullbackShapeOpEquiv :
+    (WidePullbackShape J)ᵒᵖ ≌
+      WidePushoutShape J where 
   Functor := widePullbackShapeUnop J
   inverse := widePushoutShapeOp J
   unitIso := (widePullbackShapeOpUnop J).symm

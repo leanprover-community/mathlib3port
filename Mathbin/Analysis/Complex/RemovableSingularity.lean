@@ -37,7 +37,6 @@ theorem analyticAtOfDifferentiableOnPuncturedNhdsOfContinuousAt {f : ℂ → E} 
   · refine' fun z hz => ContinuousAt.continuous_within_at _
     rcases eq_or_ne z c with (rfl | hne)
     exacts[hc, (hRs ⟨hz, hne⟩).ContinuousAt]
-    
   exact
     (has_fpower_series_on_ball_of_differentiable_off_countable (countable_singleton c) hc
         (fun z hz => hRs (diff_subset_diff_left ball_subset_closed_ball hz)) hR0).AnalyticAt
@@ -46,7 +45,7 @@ theorem analyticAtOfDifferentiableOnPuncturedNhdsOfContinuousAt {f : ℂ → E} 
 
 theorem differentiable_on_compl_singleton_and_continuous_at_iff {f : ℂ → E} {s : Set ℂ} {c : ℂ}
     (hs : s ∈ 𝓝 c) : DifferentiableOn ℂ f (s \ {c}) ∧ ContinuousAt f c ↔ DifferentiableOn ℂ f s :=
-  by
+  by 
   refine' ⟨_, fun hd => ⟨hd.mono (diff_subset _ _), (hd.DifferentiableAt hs).ContinuousAt⟩⟩
   rintro ⟨hd, hc⟩ x hx
   rcases eq_or_ne x c with (rfl | hne)
@@ -55,10 +54,9 @@ theorem differentiable_on_compl_singleton_and_continuous_at_iff {f : ℂ → E} 
             hc).DifferentiableAt.DifferentiableWithinAt
     refine' eventually_nhds_within_iff.2 ((eventually_mem_nhds.2 hs).mono fun z hz hzx => _)
     exact hd.differentiable_at (inter_mem hz (is_open_ne.mem_nhds hzx))
-    
-  · simpa only [DifferentiableWithinAt, HasFderivWithinAt, hne.nhds_within_diff_singleton] using
+  ·
+    simpa only [DifferentiableWithinAt, HasFderivWithinAt, hne.nhds_within_diff_singleton] using
       hd x ⟨hx, hne⟩
-    
 #align
   complex.differentiable_on_compl_singleton_and_continuous_at_iff Complex.differentiable_on_compl_singleton_and_continuous_at_iff
 

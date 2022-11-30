@@ -107,7 +107,7 @@ theorem mem_span_pow' {x y : S} {d : ℕ} :
 theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
     y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔
       ∃ f : R[X], f.natDegree < d ∧ y = aeval x f :=
-  by
+  by 
   rw [mem_span_pow']
   constructor <;>
     · rintro ⟨f, h, hy⟩
@@ -115,9 +115,7 @@ theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
       by_cases hf : f = 0
       · simp only [hf, nat_degree_zero, degree_zero] at h⊢
         first |exact lt_of_le_of_ne (Nat.zero_le d) hd.symm|exact WithBot.bot_lt_coe d
-        
       simpa only [degree_eq_nat_degree hf, WithBot.coe_lt_coe] using h
-      
 #align power_basis.mem_span_pow PowerBasis.mem_span_pow
 
 theorem dim_ne_zero [h : Nontrivial S] (pb : PowerBasis R S) : pb.dim ≠ 0 := fun h =>
@@ -174,11 +172,10 @@ theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p �
     (root : aeval h.gen p = 0) : h.dim ≤ p.natDegree := by
   refine' le_of_not_lt fun hlt => NeZero _
   let p_coeff : Fin h.dim → A := fun i => p.coeff i
-  suffices ∀ i, p_coeff i = 0 by
+  suffices ∀ i, p_coeff i = 0 by 
     ext i
     by_cases hi : i < h.dim
     · exact this ⟨i, hi⟩
-      
     exact coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_le hlt (le_of_not_gt hi))
   intro i
   refine' linear_independent_iff'.mp h.basis.linear_independent _ _ _ i (Finset.mem_univ _)
@@ -188,9 +185,7 @@ theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p �
   ext i
   split_ifs with hi
   · simp_rw [coe_basis, p_coeff, Fin.coe_mk]
-    
   · rw [coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_le hlt (le_of_not_gt hi)), zero_smul]
-    
 #align power_basis.dim_le_nat_degree_of_root PowerBasis.dim_le_nat_degree_of_root
 
 theorem dim_le_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p ≠ 0)
@@ -247,12 +242,11 @@ section Equiv
 variable [Algebra A S] {S' : Type _} [CommRing S'] [Algebra A S']
 
 theorem nat_degree_lt_nat_degree {p q : R[X]} (hp : p ≠ 0) (hpq : p.degree < q.degree) :
-    p.natDegree < q.natDegree := by
+    p.natDegree < q.natDegree := by 
   by_cases hq : q = 0;
   · rw [hq, degree_zero] at hpq
     have := not_lt_bot hpq
     contradiction
-    
   rwa [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe] at hpq
 #align power_basis.nat_degree_lt_nat_degree PowerBasis.nat_degree_lt_nat_degree
 
@@ -264,7 +258,6 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
     @aeval_mod_by_monic_eq_self_of_root _ _ _ _ _ f _ (minpoly.monic pb.is_integral_gen) y hy]
   by_cases hf : f %ₘ minpoly A pb.gen = 0
   · simp only [hf, AlgHom.map_zero, LinearMap.map_zero]
-    
   have : (f %ₘ minpoly A pb.gen).natDegree < pb.dim := by
     rw [← pb.nat_degree_minpoly]
     apply nat_degree_lt_nat_degree hf
@@ -291,7 +284,7 @@ theorem constr_pow_mul (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A p
     (x x' : S) :
     pb.Basis.constr A (fun i => y ^ (i : ℕ)) (x * x') =
       pb.Basis.constr A (fun i => y ^ (i : ℕ)) x * pb.Basis.constr A (fun i => y ^ (i : ℕ)) x' :=
-  by
+  by 
   obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x
   obtain ⟨g, rfl⟩ := pb.exists_eq_aeval' x'
   simp only [← aeval_mul, pb.constr_pow_aeval hy]
@@ -331,7 +324,10 @@ see `lift_equiv'` for the corresponding statement.
 -/
 @[simps]
 noncomputable def liftEquiv (pb : PowerBasis A S) :
-    (S →ₐ[A] S') ≃ { y : S' // aeval y (minpoly A pb.gen) = 0 } where
+    (S →ₐ[A] S') ≃
+      { y : S' //
+        aeval y (minpoly A pb.gen) =
+          0 } where 
   toFun f := ⟨f pb.gen, by rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
   invFun y := pb.lift y y.2
   left_inv f := pb.alg_hom_ext <| lift_gen _ _ _
@@ -367,11 +363,11 @@ noncomputable def equivOfRoot (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) :
     S ≃ₐ[A] S' :=
   AlgEquiv.ofAlgHom (pb.lift pb'.gen h₂) (pb'.lift pb.gen h₁)
-    (by
+    (by 
       ext x
       obtain ⟨f, hf, rfl⟩ := pb'.exists_eq_aeval' x
       simp)
-    (by
+    (by 
       ext x
       obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval' x
       simp)
@@ -450,23 +446,20 @@ theorem IsIntegral.linear_independent_pow [Algebra K S] {x : S} (hx : IsIntegral
     · intro b _ hb
       rw [if_neg (mt (fun h => _) hb)]
       exact Fin.coe_injective h
-      
     · intro hi
       rw [if_pos rfl]
       exact finsupp.not_mem_support_iff.mp hi
-      
   have f_def' : ∀ i, f.coeff i = if hi : i < _ then p ⟨i, hi⟩ else 0 := by
     intro i
     split_ifs with hi
     · exact f_def ⟨i, hi⟩
-      
     simp only [f, Finsupp.sum, coeff_monomial, finset_sum_coeff]
     apply Finset.sum_eq_zero
     rintro ⟨j, hj⟩ -
     apply if_neg (mt _ hi)
     rintro rfl
     exact hj
-  suffices f = 0 by
+  suffices f = 0 by 
     ext i
     rw [← f_def, this, coeff_zero, Finsupp.zero_apply]
   contrapose hp with hf
@@ -508,7 +501,8 @@ variable {S' : Type _} [CommRing S'] [Algebra R S']
 
 /-- `power_basis.map pb (e : S ≃ₐ[R] S')` is the power basis for `S'` generated by `e pb.gen`. -/
 @[simps dim gen Basis]
-noncomputable def map (pb : PowerBasis R S) (e : S ≃ₐ[R] S') : PowerBasis R S' where
+noncomputable def map (pb : PowerBasis R S) (e : S ≃ₐ[R] S') :
+    PowerBasis R S' where 
   dim := pb.dim
   Basis := pb.Basis.map e.toLinearEquiv
   gen := e pb.gen
@@ -531,7 +525,7 @@ variable [IsDomain A]
 
 @[simp]
 theorem equiv_of_root_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') (h₁ h₂) :
-    pb.equivOfRoot (pb.map e) h₁ h₂ = e := by
+    pb.equivOfRoot (pb.map e) h₁ h₂ = e := by 
   ext x
   obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x
   simp [aeval_alg_equiv]

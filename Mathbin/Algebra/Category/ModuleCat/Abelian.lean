@@ -28,7 +28,8 @@ namespace ModuleCat
 variable {R : Type u} [Ring R] {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- In the category of modules, every monomorphism is normal. -/
-def normalMono (hf : Mono f) : NormalMono f where
+def normalMono (hf : Mono f) :
+    NormalMono f where 
   z := of R (N ⧸ f.range)
   g := f.range.mkq
   w := LinearMap.range_mkq_comp _
@@ -46,13 +47,14 @@ def normalMono (hf : Mono f) : NormalMono f where
         (LinearEquiv.toModuleIso'
           ((Submodule.quotEquivOfEqBot _ (ker_eq_bot_of_mono _)).symm ≪≫ₗ
             (LinearMap.quotKerEquivRange f ≪≫ₗ LinearEquiv.ofEq _ _ (Submodule.ker_mkq _).symm))) <|
-      by
+      by 
       ext
       rfl
 #align Module.normal_mono ModuleCat.normalMono
 
 /-- In the category of modules, every epimorphism is normal. -/
-def normalEpi (hf : Epi f) : NormalEpi f where
+def normalEpi (hf : Epi f) : NormalEpi
+      f where 
   w := of R f.ker
   g := f.ker.Subtype
   w := LinearMap.comp_ker_subtype _
@@ -70,13 +72,16 @@ def normalEpi (hf : Epi f) : NormalEpi f where
           (Submodule.quotEquivOfEq _ _ (Submodule.range_subtype _) ≪≫ₗ
               LinearMap.quotKerEquivRange f ≪≫ₗ
             LinearEquiv.ofTop _ (range_eq_top_of_epi _))) <|
-      by
+      by 
       ext
       rfl
 #align Module.normal_epi ModuleCat.normalEpi
 
 /-- The category of R-modules is abelian. -/
-instance : Abelian (ModuleCat R) where
+instance :
+    Abelian
+      (ModuleCat
+        R) where 
   HasFiniteProducts := ⟨fun n => Limits.has_limits_of_shape_of_has_limits⟩
   HasKernels := Limits.has_kernels_of_has_equalizers (ModuleCat R)
   HasCokernels := has_cokernels_Module

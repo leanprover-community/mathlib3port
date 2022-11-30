@@ -59,7 +59,7 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
         (∀ x ∈ s, ∀ y ∈ s, [x, y] ⊆ [a, b]) ∧
           (∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], DifferentiableAt ℝ f z) ∧
             ∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], ‖deriv f z‖ ≤ C * ‖g z‖ :=
-    by
+    by 
     rcases hfg.exists_nonneg with ⟨C, C₀, hC⟩
     have h :
       ∀ᶠ x : ℝ × ℝ in l.prod l,
@@ -72,7 +72,6 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
         (hs x hx y hy z hz).1.1, fun x hx y hy z hz => (hs x hx y hy z hz).1.2⟩
   replace hgi : IntervalIntegrable (fun x => C * ‖g x‖) volume a b
   · convert hgi.norm.smul C
-    
   obtain ⟨c, hc, d, hd, hlt⟩ : ∃ c ∈ s, ∃ d ∈ s, (‖f c‖ + ∫ y in Ι a b, C * ‖g y‖) < ‖f d‖ := by
     rcases Filter.nonempty_of_mem hsl with ⟨c, hc⟩
     have : ∀ᶠ x in l, (‖f c‖ + ∫ y in Ι a b, C * ‖g y‖) < ‖f x‖ :=
@@ -117,11 +116,9 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff
     · refine' ⟨𝓝[<] c, inferInstance, inferInstance, inf_le_left, _⟩
       rw [← Iic_diff_right]
       exact diff_mem_nhds_within_diff (Icc_mem_nhds_within_Iic ⟨hlt, hc.2⟩) _
-      
     · refine' ⟨𝓝[>] c, inferInstance, inferInstance, inf_le_left, _⟩
       rw [← Ici_diff_left]
       exact diff_mem_nhds_within_diff (Icc_mem_nhds_within_Ici ⟨hc.1, hlt⟩) _
-      
   skip
   have : l ≤ 𝓝[[a, b] \ {c}] c := le_inf hle (le_principal_iff.2 hmem)
   exact
@@ -171,12 +168,10 @@ theorem interval_integrable_sub_inv_iff {a b c : ℝ} :
   constructor
   · refine' fun h => or_iff_not_imp_left.2 fun hne hc => _
     exact not_interval_integrable_of_sub_inv_is_O_punctured (is_O_refl _ _) hne hc h
-    
   · rintro (rfl | h₀)
     exacts[IntervalIntegrable.refl,
       interval_integrable_inv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀)
         (continuous_on_id.sub continuous_on_const)]
-    
 #align interval_integrable_sub_inv_iff interval_integrable_sub_inv_iff
 
 /-- The function `λ x, x⁻¹` is integrable on `a..b` if and only if `a = b` or `0 ∉ [a, b]`. -/

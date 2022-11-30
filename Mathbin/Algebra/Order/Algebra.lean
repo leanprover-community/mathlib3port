@@ -39,9 +39,7 @@ theorem algebra_map_monotone : Monotone (algebraMap R A) := fun a b h => by
   rw [Algebra.algebra_map_eq_smul_one, Algebra.algebra_map_eq_smul_one, ← sub_nonneg, ← sub_smul]
   trans (b - a) • (0 : A)
   · simp
-    
   · exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h)
-    
 #align algebra_map_monotone algebra_map_monotone
 
 end OrderedAlgebra

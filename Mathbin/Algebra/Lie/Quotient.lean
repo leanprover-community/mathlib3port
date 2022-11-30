@@ -115,7 +115,7 @@ instance lieQuotientLieModule : LieModule R L (M ⧸ N) :=
 #align lie_submodule.quotient.lie_quotient_lie_module LieSubmodule.Quotient.lieQuotientLieModule
 
 instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
-  ⟨by
+  ⟨by 
     intro x y
     apply Quotient.liftOn₂' x y fun x' y' => mk ⁅x', y'⁆
     intro x₁ x₂ y₁ y₂ h₁ h₂
@@ -126,9 +126,7 @@ instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
     rw [h]
     apply Submodule.add_mem
     · apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
-      
-    · apply lie_mem_left R L I (x₁ - y₁) y₂ h₁
-      ⟩
+    · apply lie_mem_left R L I (x₁ - y₁) y₂ h₁⟩
 #align lie_submodule.quotient.lie_quotient_has_bracket LieSubmodule.Quotient.lieQuotientHasBracket
 
 @[simp]
@@ -136,29 +134,32 @@ theorem mk_bracket (x y : L) : mk ⁅x, y⁆ = ⁅(mk x : L ⧸ I), (mk y : L �
   rfl
 #align lie_submodule.quotient.mk_bracket LieSubmodule.Quotient.mk_bracket
 
-instance lieQuotientLieRing : LieRing (L ⧸ I) where
-  add_lie := by
+instance lieQuotientLieRing :
+    LieRing
+      (L ⧸
+        I) where 
+  add_lie := by 
     intro x' y' z'
     apply Quotient.inductionOn₃' x' y' z'
     intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply add_lie
-  lie_add := by
+  lie_add := by 
     intro x' y' z'
     apply Quotient.inductionOn₃' x' y' z'
     intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply lie_add
-  lie_self := by
+  lie_self := by 
     intro x'
     apply Quotient.inductionOn' x'
     intro x
     rw [is_quotient_mk, ← mk_bracket]
     apply congr_arg
     apply lie_self
-  leibniz_lie := by
+  leibniz_lie := by 
     intro x' y' z'
     apply Quotient.inductionOn₃' x' y' z'
     intro x y z
@@ -168,7 +169,7 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
 #align lie_submodule.quotient.lie_quotient_lie_ring LieSubmodule.Quotient.lieQuotientLieRing
 
 instance lieQuotientLieAlgebra :
-    LieAlgebra R (L ⧸ I) where lie_smul := by
+    LieAlgebra R (L ⧸ I) where lie_smul := by 
     intro t x' y'
     apply Quotient.inductionOn₂' x' y'
     intro x y
@@ -189,7 +190,7 @@ theorem mk_eq_zero {m : M} : mk' N m = 0 ↔ m ∈ N :=
 #align lie_submodule.quotient.mk_eq_zero LieSubmodule.Quotient.mk_eq_zero
 
 @[simp]
-theorem mk'_ker : (mk' N).ker = N := by
+theorem mk'_ker : (mk' N).ker = N := by 
   ext
   simp
 #align lie_submodule.quotient.mk'_ker LieSubmodule.Quotient.mk'_ker
@@ -203,7 +204,7 @@ theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by
 `lie_submodule.quotient.mk'` are equal.
 
 See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem lie_module_hom_ext ⦃f g : M ⧸ N →ₗ⁅R,L⁆ M⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
   LieModuleHom.ext fun x => Quotient.inductionOn' x <| LieModuleHom.congr_fun h
 #align lie_submodule.quotient.lie_module_hom_ext LieSubmodule.Quotient.lie_module_hom_ext
@@ -224,7 +225,7 @@ variable (f : L →ₗ⁅R⁆ L')
 @[simps]
 noncomputable def quotKerEquivRange : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
   { (f : L →ₗ[R] L').quotKerEquivRange with toFun := (f : L →ₗ[R] L').quotKerEquivRange,
-    map_lie' := by
+    map_lie' := by 
       rintro ⟨x⟩ ⟨y⟩
       rw [← SetLike.coe_eq_coe, LieSubalgebra.coe_bracket]
       simp only [Submodule.Quotient.quot_mk_eq_mk, LinearMap.quot_ker_equiv_range_apply_mk, ←

@@ -85,16 +85,17 @@ theorem get_map (x : Comp F G α) :
 
 include q q'
 
-instance : Mvqpf (Comp F G) where
+instance : Mvqpf (Comp F
+        G) where 
   p := Mvpfunctor.comp (p F) fun i => P <| G i
   abs α := comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
   repr α :=
     Mvpfunctor.comp.mk ∘
       repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
-  abs_repr := by
+  abs_repr := by 
     intros
     simp [(· ∘ ·), Mvfunctor.map_map, (· ⊚ ·), abs_repr]
-  abs_map := by
+  abs_map := by 
     intros
     simp [(· ∘ ·)]
     rw [← abs_map]

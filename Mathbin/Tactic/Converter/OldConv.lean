@@ -84,7 +84,7 @@ protected unsafe def bind {α β : Type} (c₁ : old_conv α) (c₂ : α → old
   pr           ← join_proofs r pr₁ pr₂,
   return ⟨b, e₂, pr⟩
   -/
-unsafe instance : Monad old_conv where
+unsafe instance : Monad old_conv where 
   map := @old_conv.map
   pure := @old_conv.pure
   bind := @old_conv.bind
@@ -223,8 +223,8 @@ unsafe def congr_core (c_f c_a : old_conv Unit) : old_conv Unit := fun r lhs => 
   let expr.app f a ← return lhs
   let f_type ← infer_type f >>= tactic.whnf
   guard (f_type f_type.is_arrow)
-  let ⟨(), new_f, of⟩ ← mtry c_f r f
-  let ⟨(), new_a, oa⟩ ← mtry c_a r a
+  let ⟨(), new_f, of⟩ ← tryM c_f r f
+  let ⟨(), new_a, oa⟩ ← tryM c_a r a
   let rhs ← return <| new_f new_a
   match of, oa with
     | none, none => return ⟨(), rhs, none⟩

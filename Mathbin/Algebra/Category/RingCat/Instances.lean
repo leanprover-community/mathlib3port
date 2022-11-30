@@ -47,7 +47,7 @@ instance CommRingCat.is_local_ring_hom_comp {R S T : CommRingCat} (f : R ⟶ S) 
 #align CommRing.is_local_ring_hom_comp CommRingCat.is_local_ring_hom_comp
 
 theorem is_local_ring_hom_of_iso {R S : CommRingCat} (f : R ≅ S) : IsLocalRingHom f.Hom :=
-  { map_nonunit := fun a ha => by
+  { map_nonunit := fun a ha => by 
       convert f.inv.is_unit_map ha
       rw [CategoryTheory.Iso.hom_inv_id_apply] }
 #align is_local_ring_hom_of_iso is_local_ring_hom_of_iso

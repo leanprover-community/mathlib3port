@@ -88,17 +88,14 @@ theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y�
       rw [this]
       change s _ _ = s _ _
       simp
-      
     · have : s _ _ = _ := (ht hf _ hm).symm
       simp only [assoc] at this
       rw [this]
       simp
-      
   refine' ⟨hU.amalgamate t hT, _, _⟩
   · rintro Z _ ⟨Y, f, g, hg, hf, rfl⟩
     rw [op_comp, functor_to_types.map_comp_apply, presieve.is_sheaf_for.valid_glue _ _ _ hg]
     apply ht hg _ hf
-    
   · intro y hy
     apply hU.is_separated_for.ext
     intro Y f hf
@@ -106,7 +103,6 @@ theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y�
     intro Z g hg
     rw [← functor_to_types.map_comp_apply, ← op_comp, hy _ (presieve.bind_comp _ _ hg),
       hU.valid_glue _ _ hf, ht hf _ hg]
-    
 #align category_theory.sheaf.is_sheaf_for_bind CategoryTheory.Sheaf.is_sheaf_for_bind
 
 /-- Given two sieves `R` and `S`, to show that `P` is a sheaf for `S`, we can show:
@@ -131,23 +127,19 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
     dsimp
     rw [← pullback_comp]
     apply (hS (R.downward_closed hf _)).IsSeparatedFor
-    
   · intro Y f hf
     have : sieve.pullback f (bind R fun T (k : T ⟶ X) (hf : R k) => pullback k S) = R.pullback f :=
-      by
+      by 
       ext (Z g)
       constructor
       · rintro ⟨W, k, l, hl, _, comm⟩
         rw [pullback_apply, ← comm]
         simp [hl]
-        
       · intro a
         refine' ⟨Z, 𝟙 Z, _, a, _⟩
         simp [hf]
-        
     rw [this]
     apply hR' hf
-    
 #align category_theory.sheaf.is_sheaf_for_trans CategoryTheory.Sheaf.is_sheaf_for_trans
 
 /-- Construct the finest (largest) Grothendieck topology for which the given presheaf is a sheaf.
@@ -155,27 +147,28 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
 This is a special case of https://stacks.math.columbia.edu/tag/00Z9, but following a different
 proof (see the comments there).
 -/
-def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C where
+def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) :
+    GrothendieckTopology
+      C where 
   sieves X S := ∀ (Y) (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f)
-  top_mem' X Y f := by
+  top_mem' X Y f := by 
     rw [sieve.pullback_top]
     exact presieve.is_sheaf_for_top_sieve P
-  pullback_stable' X Y S f hS Z g := by
+  pullback_stable' X Y S f hS Z g := by 
     rw [← pullback_comp]
     apply hS
-  transitive' X S hS R hR Z g := by
+  transitive' X S hS R hR Z g :=
+    by
     -- This is the hard part of the construction, showing that the given set of sieves satisfies
     -- the transitivity axiom.
     refine' is_sheaf_for_trans P (pullback g S) _ (hS Z g) _ _
     · intro Y f hf
       rw [← pullback_comp]
       apply (hS _ _).IsSeparatedFor
-      
     · intro Y f hf
       have := hR hf _ (𝟙 _)
       rw [pullback_id, pullback_comp] at this
       apply this
-      
 #align category_theory.sheaf.finest_topology_single CategoryTheory.Sheaf.finestTopologySingle
 
 /--
@@ -237,7 +230,7 @@ namespace Subcanonical
 theorem ofYonedaIsSheaf (J : GrothendieckTopology C) (h : ∀ X, Presieve.IsSheaf J (yoneda.obj X)) :
     Subcanonical J :=
   le_finest_topology _ _
-    (by
+    (by 
       rintro P ⟨X, rfl⟩
       apply h)
 #align

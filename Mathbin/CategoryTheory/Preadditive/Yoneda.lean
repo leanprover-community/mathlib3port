@@ -38,7 +38,9 @@ variable {C : Type u} [Category.{v} C] [Preadditive C]
 object `X` to the `End Y`-module of morphisms `X ⟶ Y`.
 -/
 @[simps]
-def preadditiveYonedaObj (Y : C) : Cᵒᵖ ⥤ ModuleCat.{v} (EndCat Y) where
+def preadditiveYonedaObj (Y : C) :
+    Cᵒᵖ ⥤ ModuleCat.{v}
+        (EndCat Y) where 
   obj X := ModuleCat.of _ (X.unop ⟶ Y)
   map X X' f :=
     { toFun := fun g => f.unop ≫ g, map_add' := fun g g' => comp_add _ _ _ _ _ _,
@@ -50,17 +52,19 @@ object `X` to the group of morphisms `X ⟶ Y`. At each point, we get an additio
 structure, see `preadditive_yoneda_obj`.
 -/
 @[simps]
-def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v} where
+def preadditiveYoneda :
+    C ⥤ Cᵒᵖ ⥤
+        AddCommGroupCat.{v} where 
   obj Y := preadditiveYonedaObj Y ⋙ forget₂ _ _
   map Y Y' f :=
     { app := fun X =>
         { toFun := fun g => g ≫ f, map_zero' := Limits.zero_comp,
           map_add' := fun g g' => add_comp _ _ _ _ _ _ },
       naturality' := fun X X' g => (AddCommGroupCat.ext _ _ _ _) fun x => Category.assoc _ _ _ }
-  map_id' X := by
+  map_id' X := by 
     ext
     simp
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     ext
     simp
 #align category_theory.preadditive_yoneda CategoryTheory.preadditiveYoneda
@@ -69,7 +73,9 @@ def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v} where
 object `Y` to the `End X`-module of morphisms `X ⟶ Y`.
 -/
 @[simps]
-def preadditiveCoyonedaObj (X : Cᵒᵖ) : C ⥤ ModuleCat.{v} (EndCat X) where
+def preadditiveCoyonedaObj (X : Cᵒᵖ) :
+    C ⥤ ModuleCat.{v}
+        (EndCat X) where 
   obj Y := ModuleCat.of _ (unop X ⟶ Y)
   map Y Y' f :=
     { toFun := fun g => g ≫ f, map_add' := fun g g' => add_comp _ _ _ _ _ _,
@@ -81,7 +87,9 @@ object `Y` to the group of morphisms `X ⟶ Y`. At each point, we get an additio
 structure, see `preadditive_coyoneda_obj`.
 -/
 @[simps]
-def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat.{v} where
+def preadditiveCoyoneda :
+    Cᵒᵖ ⥤
+      C ⥤ AddCommGroupCat.{v} where 
   obj X := preadditiveCoyonedaObj X ⋙ forget₂ _ _
   map X X' f :=
     { app := fun Y =>
@@ -89,10 +97,10 @@ def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat.{v} where
           map_add' := fun g g' => comp_add _ _ _ _ _ _ },
       naturality' := fun Y Y' g =>
         (AddCommGroupCat.ext _ _ _ _) fun x => Eq.symm <| Category.assoc _ _ _ }
-  map_id' X := by
+  map_id' X := by 
     ext
     simp
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     ext
     simp
 #align category_theory.preadditive_coyoneda CategoryTheory.preadditiveCoyoneda

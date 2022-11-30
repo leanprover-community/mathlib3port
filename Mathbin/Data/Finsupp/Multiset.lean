@@ -27,7 +27,8 @@ namespace Finsupp
 
 /-- Given `f : α →₀ ℕ`, `f.to_multiset` is the multiset with multiplicities given by the values of
 `f` on the elements of `α`. We define this function as an `add_equiv`. -/
-def toMultiset : (α →₀ ℕ) ≃+ Multiset α where
+def toMultiset :
+    (α →₀ ℕ) ≃+ Multiset α where 
   toFun f := f.Sum fun a n => n • {a}
   invFun s := ⟨s.toFinset, fun a => s.count a, fun a => by simp⟩
   left_inv f :=
@@ -79,13 +80,11 @@ theorem to_multiset_map (f : α →₀ ℕ) (g : α → β) :
     f.toMultiset.map g = (f.mapDomain g).toMultiset := by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.map_zero, map_domain_zero, to_multiset_zero]
-    
   · intro a n f _ _ ih
     rw [to_multiset_add, Multiset.map_add, ih, map_domain_add, map_domain_single,
       to_multiset_single, to_multiset_add, to_multiset_single, ← Multiset.coe_map_add_monoid_hom,
       (Multiset.mapAddMonoidHom g).map_nsmul]
     rfl
-    
 #align finsupp.to_multiset_map Finsupp.to_multiset_map
 
 @[simp]
@@ -93,26 +92,21 @@ theorem prod_to_multiset [CommMonoid α] (f : α →₀ ℕ) :
     f.toMultiset.Prod = f.Prod fun a n => a ^ n := by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.prod_zero, Finsupp.prod_zero_index]
-    
   · intro a n f _ _ ih
     rw [to_multiset_add, Multiset.prod_add, ih, to_multiset_single, Multiset.prod_nsmul,
       Finsupp.prod_add_index' pow_zero pow_add, Finsupp.prod_single_index, Multiset.prod_singleton]
     · exact pow_zero a
-      
-    
 #align finsupp.prod_to_multiset Finsupp.prod_to_multiset
 
 @[simp]
 theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultiset.toFinset = f.support := by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.to_finset_zero, support_zero]
-    
   · intro a n f ha hn ih
     rw [to_multiset_add, Multiset.to_finset_add, ih, to_multiset_single, support_add_eq,
       support_single_ne_zero _ hn, Multiset.to_finset_nsmul _ _ hn, Multiset.to_finset_singleton]
     refine' Disjoint.mono_left support_single_subset _
     rwa [Finset.disjoint_singleton_left]
-    
 #align finsupp.to_finset_to_multiset Finsupp.to_finset_to_multiset
 
 @[simp]
@@ -189,7 +183,8 @@ theorem Finsupp.to_multiset_to_finsupp (f : α →₀ ℕ) : f.toMultiset.toFins
 namespace Finsupp
 
 /-- `finsupp.to_multiset` as an order isomorphism. -/
-def orderIsoMultiset : (ι →₀ ℕ) ≃o Multiset ι where
+def orderIsoMultiset :
+    (ι →₀ ℕ) ≃o Multiset ι where 
   toEquiv := toMultiset.toEquiv
   map_rel_iff' f g := by simp [Multiset.le_iff_count, le_def]
 #align finsupp.order_iso_multiset Finsupp.orderIsoMultiset

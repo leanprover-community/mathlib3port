@@ -52,7 +52,8 @@ variable [Monoid M] (S : Submonoid M)
 /-- `S.left_inv` is the submonoid containing all the left inverses of `S`. -/
 @[to_additive
       "`S.left_neg` is the additive submonoid containing all the left additive inverses\nof `S`."]
-def leftInv : Submonoid M where
+def leftInv : Submonoid
+      M where 
   carrier := { x : M | ∃ y : S, x * y = 1 }
   one_mem' := ⟨1, mul_one 1⟩
   mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ =>
@@ -125,7 +126,8 @@ theorem from_left_inv_eq_iff (a : S.left_inv) (b : M) :
 @[to_additive
       "The `add_monoid_hom` from `S.left_neg` to `S` sending an element to its\nright additive inverse in `S`.",
   simps]
-noncomputable def fromCommLeftInv : S.left_inv →* S where
+noncomputable def fromCommLeftInv :
+    S.left_inv →* S where 
   toFun := S.fromLeftInv
   map_one' := S.from_left_inv_one
   map_mul' x y :=
@@ -143,14 +145,14 @@ include hS
   simps apply]
 noncomputable def leftInvEquiv : S.left_inv ≃* S :=
   { S.fromCommLeftInv with
-    invFun := fun x => by
+    invFun := fun x => by 
       choose x' hx using hS x.prop
       exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩,
     left_inv := fun x =>
-      Subtype.eq <| by
+      Subtype.eq <| by 
         dsimp; generalize_proofs h; rw [← h.some.mul_left_inj]
         exact h.some.inv_val.trans ((S.mul_from_left_inv x).symm.trans (by rw [h.some_spec])),
-    right_inv := fun x => by
+    right_inv := fun x => by 
       dsimp
       ext
       rw [from_left_inv_eq_iff]

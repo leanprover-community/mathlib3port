@@ -25,7 +25,7 @@ variable {A : Type _} [CommRing A] {Γ : Type _} [LinearOrderedCommGroupWithZero
 the complement of `v.supp`. -/
 noncomputable def Valuation.extendToLocalization : Valuation B Γ :=
   let f := IsLocalization.toLocalizationMap S B
-  let h : ∀ s : S, IsUnit (v.1.toMonoidHom s) := fun s => is_unit_iff_ne_zero.2 (hS s.2)
+  let h : ∀ s : S, IsUnit (v.1.toMonoidHom s) := fun s => isUnit_iff_ne_zero.2 (hS s.2)
   { f.lift h with map_zero' := by convert f.lift_eq _ 0 <;> simp,
     map_add_le_max' := fun x y => by
       obtain ⟨a, b, s, rfl, rfl⟩ : ∃ (a b : A)(s : S), f.mk' a s = x ∧ f.mk' b s = y := by
@@ -35,12 +35,10 @@ noncomputable def Valuation.extendToLocalization : Valuation B Γ :=
         constructor <;>
           · rw [f.mk'_eq_iff_eq, Submonoid.coe_mul]
             ring_nf
-            
       convert_to f.lift h (f.mk' (a + b) s) ≤ max (f.lift h _) (f.lift h _)
       · refine' congr_arg (f.lift h) (IsLocalization.eq_mk'_iff_mul_eq.2 _)
         rw [add_mul, map_add]
         iterate 2 erw [IsLocalization.mk'_spec]
-        
       iterate 3 rw [f.lift_mk']
       rw [max_mul_mul_right]
       apply mul_le_mul_right' (v.map_add a b) }

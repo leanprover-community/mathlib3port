@@ -41,9 +41,9 @@ namespace Compacts
 
 variable {α}
 
-instance : SetLike (Compacts α) α where
+instance : SetLike (Compacts α) α where 
   coe := Compacts.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     cases s
     cases t
     congr
@@ -57,7 +57,7 @@ instance (K : Compacts α) : CompactSpace K :=
 
 instance : CanLift (Set α) (Compacts α) coe IsCompact where prf K hK := ⟨⟨K, hK⟩, rfl⟩
 
-@[ext.1]
+@[ext]
 protected theorem ext {s t : Compacts α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 #align topological_space.compacts.ext TopologicalSpace.Compacts.ext
@@ -78,10 +78,10 @@ instance : HasSup (Compacts α) :=
 instance [T2Space α] : HasInf (Compacts α) :=
   ⟨fun s t => ⟨s ∩ t, s.IsCompact.inter t.IsCompact⟩⟩
 
-instance [CompactSpace α] : HasTop (Compacts α) :=
+instance [CompactSpace α] : Top (Compacts α) :=
   ⟨⟨univ, is_compact_univ⟩⟩
 
-instance : HasBot (Compacts α) :=
+instance : Bot (Compacts α) :=
   ⟨⟨∅, is_compact_empty⟩⟩
 
 instance : SemilatticeSup (Compacts α) :=
@@ -122,10 +122,11 @@ theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
 
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} :
-    (↑(s.sup f) : Set α) = s.sup fun i => f i := by classical
-  refine' Finset.induction_on s rfl fun a s _ h => _
-  simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
-  congr
+    (↑(s.sup f) : Set α) = s.sup fun i => f i := by
+  classical 
+    refine' Finset.induction_on s rfl fun a s _ h => _
+    simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
+    congr
 #align topological_space.compacts.coe_finset_sup TopologicalSpace.Compacts.coe_finset_sup
 
 /-- The image of a compact set under a continuous function. -/
@@ -140,13 +141,14 @@ theorem coe_map {f : α → β} (hf : Continuous f) (s : Compacts α) : (s.map f
 
 /-- A homeomorphism induces an equivalence on compact sets, by taking the image. -/
 @[simp]
-protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
+protected def equiv (f : α ≃ₜ β) :
+    Compacts α ≃ Compacts β where 
   toFun := Compacts.map f f.Continuous
   invFun := Compacts.map _ f.symm.Continuous
-  left_inv s := by
+  left_inv s := by 
     ext1
     simp only [coe_map, ← image_comp, f.symm_comp_self, image_id]
-  right_inv s := by
+  right_inv s := by 
     ext1
     simp only [coe_map, ← image_comp, f.self_comp_symm, image_id]
 #align topological_space.compacts.equiv TopologicalSpace.Compacts.equiv
@@ -158,7 +160,8 @@ theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
-protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β) where
+protected def prod (K : Compacts α) (L : Compacts β) :
+    Compacts (α × β) where 
   carrier := K ×ˢ L
   is_compact' := IsCompact.prod K.2 L.2
 #align topological_space.compacts.prod TopologicalSpace.Compacts.prod
@@ -181,9 +184,10 @@ structure NonemptyCompacts (α : Type _) [TopologicalSpace α] extends Compacts 
 
 namespace NonemptyCompacts
 
-instance : SetLike (NonemptyCompacts α) α where
+instance : SetLike (NonemptyCompacts α)
+      α where 
   coe s := s.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
@@ -201,7 +205,7 @@ def toCloseds [T2Space α] (s : NonemptyCompacts α) : Closeds α :=
   ⟨s, s.IsCompact.IsClosed⟩
 #align topological_space.nonempty_compacts.to_closeds TopologicalSpace.NonemptyCompacts.toCloseds
 
-@[ext.1]
+@[ext]
 protected theorem ext {s t : NonemptyCompacts α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 #align topological_space.nonempty_compacts.ext TopologicalSpace.NonemptyCompacts.ext
@@ -220,7 +224,7 @@ theorem carrier_eq_coe (s : NonemptyCompacts α) : s.carrier = s :=
 instance : HasSup (NonemptyCompacts α) :=
   ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.Nonempty.mono <| subset_union_left _ _⟩⟩
 
-instance [CompactSpace α] [Nonempty α] : HasTop (NonemptyCompacts α) :=
+instance [CompactSpace α] [Nonempty α] : Top (NonemptyCompacts α) :=
   ⟨⟨⊤, univ_nonempty⟩⟩
 
 instance : SemilatticeSup (NonemptyCompacts α) :=
@@ -278,9 +282,10 @@ structure PositiveCompacts (α : Type _) [TopologicalSpace α] extends Compacts 
 
 namespace PositiveCompacts
 
-instance : SetLike (PositiveCompacts α) α where
+instance : SetLike (PositiveCompacts α)
+      α where 
   coe s := s.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
@@ -304,7 +309,7 @@ def toNonemptyCompacts (s : PositiveCompacts α) : NonemptyCompacts α :=
 #align
   topological_space.positive_compacts.to_nonempty_compacts TopologicalSpace.PositiveCompacts.toNonemptyCompacts
 
-@[ext.1]
+@[ext]
 protected theorem ext {s t : PositiveCompacts α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 #align topological_space.positive_compacts.ext TopologicalSpace.PositiveCompacts.ext
@@ -325,7 +330,7 @@ instance : HasSup (PositiveCompacts α) :=
     ⟨s.toCompacts ⊔ t.toCompacts,
       s.interior_nonempty.mono <| interior_mono <| subset_union_left _ _⟩⟩
 
-instance [CompactSpace α] [Nonempty α] : HasTop (PositiveCompacts α) :=
+instance [CompactSpace α] [Nonempty α] : Top (PositiveCompacts α) :=
   ⟨⟨⊤, interior_univ.symm.subst univ_nonempty⟩⟩
 
 instance : SemilatticeSup (PositiveCompacts α) :=
@@ -387,9 +392,10 @@ structure CompactOpens (α : Type _) [TopologicalSpace α] extends Compacts α w
 
 namespace CompactOpens
 
-instance : SetLike (CompactOpens α) α where
+instance : SetLike (CompactOpens α)
+      α where 
   coe s := s.carrier
-  coe_injective' s t h := by
+  coe_injective' s t h := by 
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
@@ -414,7 +420,7 @@ def toClopens [T2Space α] (s : CompactOpens α) : Clopens α :=
   ⟨s, s.IsOpen, s.IsCompact.IsClosed⟩
 #align topological_space.compact_opens.to_clopens TopologicalSpace.CompactOpens.toClopens
 
-@[ext.1]
+@[ext]
 protected theorem ext {s t : CompactOpens α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 #align topological_space.compact_opens.ext TopologicalSpace.CompactOpens.ext
@@ -436,10 +442,10 @@ instance [QuasiSeparatedSpace α] : HasInf (CompactOpens α) :=
 instance [QuasiSeparatedSpace α] : SemilatticeInf (CompactOpens α) :=
   SetLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
 
-instance [CompactSpace α] : HasTop (CompactOpens α) :=
+instance [CompactSpace α] : Top (CompactOpens α) :=
   ⟨⟨⊤, is_open_univ⟩⟩
 
-instance : HasBot (CompactOpens α) :=
+instance : Bot (CompactOpens α) :=
   ⟨⟨⊥, is_open_empty⟩⟩
 
 instance [T2Space α] : SDiff (CompactOpens α) :=

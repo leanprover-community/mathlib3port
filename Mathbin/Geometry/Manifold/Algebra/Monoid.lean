@@ -234,7 +234,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
   {G' : Type _} [Monoid G'] [TopologicalSpace G'] [ChartedSpace H' G'] [HasSmoothMul I' G']
 
 theorem smoothPow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
-  | 0 => by
+  | 0 => by 
     simp only [pow_zero]
     exact smoothConst
   | k + 1 => by simpa [pow_succ] using smooth_id.mul (smoothPow _)

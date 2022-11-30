@@ -64,10 +64,8 @@ theorem aeval_continuous_map_apply (g : R[X]) (f : C(α, R)) (x : α) :
   apply Polynomial.induction_on' g
   · intro p q hp hq
     simp [hp, hq]
-    
   · intro n a
     simp [Pi.pow_apply]
-    
 #align polynomial.aeval_continuous_map_apply Polynomial.aeval_continuous_map_apply
 
 end
@@ -81,23 +79,24 @@ variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 /-- The algebra map from `R[X]` to continuous functions `C(R, R)`.
 -/
 @[simps]
-def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R) where
+def toContinuousMapAlgHom :
+    R[X] →ₐ[R] C(R, R) where 
   toFun p := p.toContinuousMap
-  map_zero' := by
+  map_zero' := by 
     ext
     simp
-  map_add' := by
+  map_add' := by 
     intros
     ext
     simp
-  map_one' := by
+  map_one' := by 
     ext
     simp
-  map_mul' := by
+  map_mul' := by 
     intros
     ext
     simp
-  commutes' := by
+  commutes' := by 
     intros
     ext
     simp [Algebra.algebra_map_eq_smul_one]
@@ -106,23 +105,24 @@ def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R) where
 /-- The algebra map from `R[X]` to continuous functions `C(X, R)`, for any subset `X` of `R`.
 -/
 @[simps]
-def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R) where
+def toContinuousMapOnAlgHom (X : Set R) :
+    R[X] →ₐ[R] C(X, R) where 
   toFun p := p.toContinuousMapOn X
-  map_zero' := by
+  map_zero' := by 
     ext
     simp
-  map_add' := by
+  map_add' := by 
     intros
     ext
     simp
-  map_one' := by
+  map_one' := by 
     ext
     simp
-  map_mul' := by
+  map_mul' := by 
     intros
     ext
     simp
-  commutes' := by
+  commutes' := by 
     intros
     ext
     simp [Algebra.algebra_map_eq_smul_one]
@@ -156,7 +156,8 @@ theorem polynomial_functions_coe (X : Set R) :
 -- induces a normed algebra isomorphism between `polynomial_functions X` and
 -- `polynomial_functions (f ⁻¹' X)`, intertwining the pullback along `f` of `C(R, R)` to itself.
 theorem polynomial_functions_separates_points (X : Set R) :
-    (polynomialFunctions X).SeparatesPoints := fun x y h => by
+    (polynomialFunctions X).SeparatesPoints := fun x y h =>
+  by
   -- We use `polynomial.X`, then clean up.
   refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.x, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
   dsimp; simp only [Polynomial.eval_X]
@@ -172,7 +173,7 @@ is the polynomials on `[a,b]`. -/
 theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h : a < b) :
     (polynomialFunctions I).comap (compRightAlgHom ℝ ℝ (iccHomeoI a b h).symm.toContinuousMap) =
       polynomialFunctions (Set.icc a b) :=
-  by
+  by 
   ext f
   fconstructor
   · rintro ⟨p, ⟨-, w⟩⟩
@@ -181,7 +182,6 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
     let q := p.comp ((b - a)⁻¹ • Polynomial.x + Polynomial.c (-a * (b - a)⁻¹))
     refine' ⟨q, ⟨_, _⟩⟩
     · simp
-      
     · ext x
       simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_to_ring_hom,
         Polynomial.eval_X, Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul,
@@ -197,7 +197,6 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
         simp only [mul_add]
         field_simp
         ring
-        
       · change _ + _ ∈ I
         rw [mul_comm (b - a)⁻¹, ← neg_mul, ← add_mul, ← sub_eq_add_neg]
         have w₁ : 0 < (b - a)⁻¹ := inv_pos.mpr (sub_pos.mpr h)
@@ -205,22 +204,14 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
         have w₃ : (x : ℝ) - a ≤ b - a := sub_le_sub_right x.2.2 a
         fconstructor
         · exact mul_nonneg w₂ (le_of_lt w₁)
-          
         · rw [← div_eq_mul_inv, div_le_one (sub_pos.mpr h)]
           exact w₃
-          
-        
-      
-    
   · rintro ⟨p, ⟨-, rfl⟩⟩
     let q := p.comp ((b - a) • Polynomial.x + Polynomial.c a)
     refine' ⟨q, ⟨_, _⟩⟩
     · simp
-      
     · ext x
       simp [mul_comm]
-      
-    
 #align
   polynomial_functions.comap_comp_right_alg_hom_Icc_homeo_I polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I
 

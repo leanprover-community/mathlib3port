@@ -41,7 +41,8 @@ See `category_theory.hom_of_le` and `category_theory.le_of_hom`.
 
 See <https://stacks.math.columbia.edu/tag/00D3>.
 -/
-instance (priority := 100) smallCategory (α : Type u) [Preorder α] : SmallCategory α where
+instance (priority := 100) smallCategory (α : Type u) [Preorder α] :
+    SmallCategory α where 
   Hom U V := ULift (PLift (U ≤ V))
   id X := ⟨⟨le_refl X⟩⟩
   comp X Y Z f g := ⟨⟨le_trans _ _ _ f.down.down g.down.down⟩⟩
@@ -116,7 +117,8 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 
 /-- A monotone function between preorders induces a functor between the associated categories.
 -/
-def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y where
+def Monotone.functor {f : X → Y} (h : Monotone f) :
+    X ⥤ Y where 
   obj := f
   map x₁ x₂ g := (h g.le).Hom
 #align monotone.functor Monotone.functor
@@ -152,7 +154,8 @@ theorem Iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
 
 /-- A categorical equivalence between partial orders is just an order isomorphism.
 -/
-def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y where
+def Equivalence.toOrderIso (e : X ≌ Y) :
+    X ≃o Y where 
   toFun := e.Functor.obj
   invFun := e.inverse.obj
   left_inv a := (e.unitIso.app a).to_eq.symm

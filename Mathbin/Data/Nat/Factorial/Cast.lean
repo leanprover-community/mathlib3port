@@ -33,18 +33,15 @@ theorem cast_asc_factorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a +
 #align nat.cast_asc_factorial Nat.cast_asc_factorial
 
 theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) :=
-  by
+  by 
   rw [← pochhammer_eval_cast, pochhammer_nat_eq_desc_factorial]
   cases b
   · simp_rw [desc_factorial_zero]
-    
   simp_rw [add_succ, succ_sub_one]
   obtain h | h := le_total a b
   · rw [desc_factorial_of_lt (lt_succ_of_le h), desc_factorial_of_lt (lt_succ_of_le _)]
     rw [tsub_eq_zero_iff_le.mpr h, zero_add]
-    
   · rw [tsub_add_cancel_of_le h]
-    
 #align nat.cast_desc_factorial Nat.cast_desc_factorial
 
 theorem cast_factorial : (a ! : S) = (pochhammer S a).eval 1 := by
@@ -63,11 +60,10 @@ theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) := by
   rw [cast_desc_factorial]
   cases a
   · rw [zero_tsub, cast_zero, pochhammer_ne_zero_eval_zero _ two_ne_zero, zero_mul]
-    
-  · rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, pochhammer_succ_right, pochhammer_one,
+  ·
+    rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, pochhammer_succ_right, pochhammer_one,
       Polynomial.X_mul, Polynomial.eval_mul_X, Polynomial.eval_add, Polynomial.eval_X, cast_one,
       Polynomial.eval_one]
-    
 #align nat.cast_desc_factorial_two Nat.cast_desc_factorial_two
 
 end Ring

@@ -45,19 +45,15 @@ theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1
     refine' integrable_on.mul_continuous_on _ _ is_compact_Icc
     · refine' (interval_integrable_iff_integrable_Icc_of_le zero_le_one).mp _
       exact intervalIntegral.intervalIntegrableRpow' hs
-      
     · exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousOn
-      
-    
   · have B : (0 : ℝ) < 1 / 2 := by norm_num
     apply integrableOfIsOExpNeg B _ (is_o.is_O (rpow_mul_exp_neg_mul_sq_is_o_exp_neg hb _))
     intro x hx
-    have N : x ≠ 0 := by
+    have N : x ≠ 0 := by 
       refine' (zero_lt_one.trans_le _).ne'
       exact hx
     apply ((continuous_at_rpow_const _ _ (Or.inl N)).mul _).ContinuousWithinAt
     exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousAt
-    
 #align integrable_on_rpow_mul_exp_neg_mul_sq integrableOnRpowMulExpNegMulSq
 
 theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
@@ -74,14 +70,12 @@ theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 <
     exact
       (measurable_id'.neg.pow measurableConst).mul
         ((measurable_id'.pow measurableConst).const_mul (-b)).exp
-    
   · have : MeasurableSet (Ioi (0 : ℝ)) := measurableSetIoi
     filter_upwards [ae_restrict_mem this] with x hx
     have h'x : 0 ≤ x := le_of_lt hx
     rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (exp_pos _).le]
     apply mul_le_mul_of_nonneg_right _ (exp_pos _).le
     simpa [abs_of_nonneg h'x] using abs_rpow_le_abs_rpow (-x) s
-    
 #align integrable_rpow_mul_exp_neg_mul_sq integrableRpowMulExpNegMulSq
 
 theorem integrableExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => exp (-b * x ^ 2) := by
@@ -135,7 +129,7 @@ theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) :
   have L :
     tendsto (fun x : ℝ => (2 * b)⁻¹ - (2 * b)⁻¹ * exp (-b * x ^ 2)) at_top
       (𝓝 ((2 * b)⁻¹ - (2 * b)⁻¹ * 0)) :=
-    by
+    by 
     refine' tendsto_const_nhds.sub _
     apply tendsto.const_mul
     apply tendsto_exp_at_bot.comp
@@ -143,19 +137,16 @@ theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) :
   simpa using L
 #align integral_mul_exp_neg_mul_sq integral_mul_exp_neg_mul_sq
 
-theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) := by
+theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) :=
+  by
   -- First we deal with the crazy case where `b ≤ 0`: then both sides vanish.
   rcases le_or_lt b 0 with (hb | hb)
   · rw [integral_undef, sqrt_eq_zero_of_nonpos]
     · exact div_nonpos_of_nonneg_of_nonpos pi_pos.le hb
-      
     · simpa only [not_lt, integrable_exp_neg_mul_sq_iff] using hb
-      
-    
   -- Assume now `b > 0`. We will show that the squares of the sides coincide.
   refine' (sq_eq_sq _ (sqrt_nonneg _)).1 _
   · exact integral_nonneg fun x => (exp_pos _).le
-    
   /- We compute `(∫ exp(-b x^2))^2` as an integral over `ℝ^2`, and then make a polar change of
     coordinates. We are left with `∫ r * exp (-b r^2)`, which has been computed in
     `integral_mul_exp_neg_mul_sq` using the fact that this function has an obvious primitive. -/
@@ -177,14 +168,14 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
       congr
       conv_rhs => rw [← one_mul (p.1 ^ 2), ← sin_sq_add_cos_sq p.2]
       ring
-    _ = π / b := by
+    _ = π / b := by 
       have : 0 ≤ π + π := by linarith [Real.pi_pos]
       simp only [integral_const, measure.restrict_apply', measurableSetIoo, univ_inter, this,
         sub_neg_eq_add, Algebra.id.smul_eq_mul, mul_one, volume_Ioo, two_mul,
         Ennreal.to_real_of_real, integral_mul_exp_neg_mul_sq hb, one_mul]
       field_simp [hb.ne']
       ring
-    _ = sqrt (π / b) ^ 2 := by
+    _ = sqrt (π / b) ^ 2 := by 
       rw [sq_sqrt]
       exact div_nonneg pi_pos.le hb.le
     
@@ -198,7 +189,6 @@ theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in ioi 0, exp (-b * x ^ 2)) = s
   · rw [integral_undef, sqrt_eq_zero_of_nonpos, zero_div]
     exact div_nonpos_of_nonneg_of_nonpos pi_pos.le hb
     rwa [← integrable_on, integrable_on_Ioi_exp_neg_mul_sq_iff, not_lt]
-    
   have full_integral := integral_gaussian b
   have : MeasurableSet (Ioi (0 : ℝ)) := measurableSetIoi
   rw [← integral_add_compl this (integrableExpNegMulSq hb), compl_Ioi] at full_integral
@@ -215,7 +205,7 @@ theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in ioi 0, exp (-b * x ^ 2)) = s
   have t2 :
     tendsto (fun c : ℝ => ∫ x in 0 ..c, exp (-b * x ^ 2)) at_top
       (𝓝 (∫ x in Iic 0, exp (-b * x ^ 2))) :=
-    by
+    by 
     simp_rw [this]
     refine' interval_integral_tendsto_integral_Iic _ _ tendsto_neg_at_top_at_bot
     apply (integrableExpNegMulSq hb).IntegrableOn
@@ -225,12 +215,13 @@ theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in ioi 0, exp (-b * x ^ 2)) = s
 namespace Complex
 
 /-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
-theorem Gamma_one_half_eq : gamma (1 / 2) = sqrt π := by
+theorem Gamma_one_half_eq : gamma (1 / 2) = sqrt π :=
+  by
   -- first reduce to real integrals
   have hh : (1 / 2 : ℂ) = ↑(1 / 2 : ℝ) := by
     simp only [one_div, of_real_inv, of_real_bit0, of_real_one]
   have hh2 : (1 / 2 : ℂ).re = 1 / 2 := by convert Complex.of_real_re (1 / 2 : ℝ)
-  replace hh2 : 0 < (1 / 2 : ℂ).re := by
+  replace hh2 : 0 < (1 / 2 : ℂ).re := by 
     rw [hh2]
     exact one_half_pos
   rw [Gamma_eq_integral _ hh2, hh, Gamma_integral_of_real, of_real_inj, Real.gammaIntegral]
@@ -241,7 +232,7 @@ theorem Gamma_one_half_eq : gamma (1 / 2) = sqrt π := by
       (fun x : ℝ =>
         (2 * x ^ ((2 : ℝ) - 1)) • (Real.exp (-x ^ (2 : ℝ)) * (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1)))
       (fun x : ℝ => 2 * Real.exp (-1 * x ^ (2 : ℕ))) (Ioi 0) :=
-    by
+    by 
     intro x hx
     dsimp only
     have : (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1) = x⁻¹ := by

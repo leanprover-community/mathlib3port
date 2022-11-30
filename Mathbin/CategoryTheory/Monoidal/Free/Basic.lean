@@ -139,35 +139,39 @@ section
 
 open FreeMonoidalCategory.HomEquiv
 
-instance categoryFreeMonoidalCategory : Category.{u} (F C) where
+instance categoryFreeMonoidalCategory :
+    Category.{u}
+      (F C) where 
   Hom X Y := Quotient (FreeMonoidalCategory.setoidHom X Y)
   id X := ⟦FreeMonoidalCategory.Hom.id _⟧
   comp X Y Z f g :=
     Quotient.map₂ Hom.comp
-      (by
+      (by 
         intro f f' hf g g' hg
         exact comp hf hg)
       f g
-  id_comp' := by
+  id_comp' := by 
     rintro X Y ⟨f⟩
     exact Quotient.sound (id_comp f)
-  comp_id' := by
+  comp_id' := by 
     rintro X Y ⟨f⟩
     exact Quotient.sound (comp_id f)
-  assoc' := by
+  assoc' := by 
     rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩
     exact Quotient.sound (assoc f g h)
 #align
   category_theory.free_monoidal_category.category_free_monoidal_category CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory
 
-instance : MonoidalCategory (F C) where
+instance :
+    MonoidalCategory
+      (F C) where 
   tensorObj X Y := FreeMonoidalCategory.tensor X Y
   tensorHom X₁ Y₁ X₂ Y₂ :=
-    Quotient.map₂ Hom.tensor <| by
+    Quotient.map₂ Hom.tensor <| by 
       intro _ _ h _ _ h'
       exact hom_equiv.tensor h h'
   tensor_id' X Y := Quotient.sound tensor_id
-  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by
+  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by 
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩
     exact Quotient.sound (tensor_comp _ _ _ _)
   tensorUnit := FreeMonoidalCategory.unit
@@ -177,12 +181,12 @@ instance : MonoidalCategory (F C) where
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
     exact Quotient.sound (associator_naturality _ _ _)
   leftUnitor X := ⟨⟦Hom.l_hom X⟧, ⟦Hom.l_inv X⟧, Quotient.sound l_hom_inv, Quotient.sound l_inv_hom⟩
-  left_unitor_naturality' X Y := by
+  left_unitor_naturality' X Y := by 
     rintro ⟨f⟩
     exact Quotient.sound (l_naturality _)
   rightUnitor X :=
     ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotient.sound ρ_hom_inv, Quotient.sound ρ_inv_hom⟩
-  right_unitor_naturality' X Y := by
+  right_unitor_naturality' X Y := by 
     rintro ⟨f⟩
     exact Quotient.sound (ρ_naturality _)
   pentagon' W X Y Z := Quotient.sound pentagon
@@ -297,59 +301,38 @@ def projectMapAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObj f X ⟶ projec
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :=
   Quotient.lift (projectMapAux f)
-    (by
+    (by 
       intro f g h
       induction' h with
         X Y f X Y f g hfg hfg' X Y f g h _ _ hfg hgh X Y Z f f' g g' _ _ hf hg W X Y Z f g f' g' _ _ hfg hfg'
       · rfl
-        
       · exact hfg'.symm
-        
       · exact hfg.trans hgh
-        
       · simp only [project_map_aux, hf, hg]
-        
       · simp only [project_map_aux, hfg, hfg']
-        
       · simp only [project_map_aux, category.comp_id]
-        
       · simp only [project_map_aux, category.id_comp]
-        
       · simp only [project_map_aux, category.assoc]
-        
       · simp only [project_map_aux, monoidal_category.tensor_id]
         rfl
-        
       · simp only [project_map_aux, monoidal_category.tensor_comp]
-        
       · simp only [project_map_aux, iso.hom_inv_id]
-        
       · simp only [project_map_aux, iso.inv_hom_id]
-        
       · simp only [project_map_aux, monoidal_category.associator_naturality]
-        
       · simp only [project_map_aux, iso.hom_inv_id]
-        
       · simp only [project_map_aux, iso.inv_hom_id]
-        
       · simp only [project_map_aux]
         dsimp [project_obj]
         exact monoidal_category.right_unitor_naturality _
-        
       · simp only [project_map_aux, iso.hom_inv_id]
-        
       · simp only [project_map_aux, iso.inv_hom_id]
-        
       · simp only [project_map_aux]
         dsimp [project_obj]
         exact monoidal_category.left_unitor_naturality _
-        
       · simp only [project_map_aux]
         exact monoidal_category.pentagon _ _ _ _
-        
       · simp only [project_map_aux]
-        exact monoidal_category.triangle _ _
-        )
+        exact monoidal_category.triangle _ _)
 #align
   category_theory.free_monoidal_category.project_map CategoryTheory.FreeMonoidalCategory.projectMap
 
@@ -357,7 +340,8 @@ end
 
 /-- If `D` is a monoidal category and we have a function `C → D`, then we have a functor from the
     free monoidal category over `C` to the category `D`. -/
-def project : MonoidalFunctor (F C) D where
+def project : MonoidalFunctor (F C)
+      D where 
   obj := projectObj f
   map := projectMap f
   ε := 𝟙 _

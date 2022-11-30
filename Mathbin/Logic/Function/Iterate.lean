@@ -141,10 +141,8 @@ theorem iterate_left {g : ℕ → α → α} (H : ∀ n, Semiconj f (g n) (g <| 
   induction' n with n ihn generalizing k
   · rw [Nat.zero_add]
     exact id_left
-    
   · rw [Nat.succ_eq_add_one, Nat.add_right_comm, Nat.add_assoc]
     exact (H k).compLeft (ihn (k + 1))
-    
 #align function.semiconj.iterate_left Function.Semiconj.iterate_left
 -/
 
@@ -182,9 +180,7 @@ theorem iterate_eq_of_map_eq (h : Commute f g) (n : ℕ) {x} (hx : f x = g x) :
 
 #print Function.Commute.comp_iterate /-
 theorem comp_iterate (h : Commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[n] := by
-  induction' n with n ihn;
-  · rfl
-    
+  induction' n with n ihn; · rfl
   funext x
   simp only [ihn, (h.iterate_right n).Eq, iterate_succ, comp_app]
 #align function.commute.comp_iterate Function.Commute.comp_iterate
@@ -250,7 +246,7 @@ theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ f^[n.pred] = f^[
 def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) :
     p ((f^[n]) a) :=
   Nat.rec ha
-    (fun m => by
+    (fun m => by 
       rw [iterate_succ']
       exact h _)
     n
@@ -309,9 +305,7 @@ theorem foldl_const (f : α → α) (a : α) (l : List β) :
     l.foldl (fun b _ => f b) a = (f^[l.length]) a := by
   induction' l with b l H generalizing a
   · rfl
-    
   · rw [length_cons, foldl, iterate_succ_apply, H]
-    
 #align list.foldl_const List.foldl_const
 -/
 

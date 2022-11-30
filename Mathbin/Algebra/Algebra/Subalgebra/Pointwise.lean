@@ -36,11 +36,9 @@ theorem mul_self (S : Subalgebra R A) : S.toSubmodule * S.toSubmodule = S.toSubm
   apply le_antisymm
   · refine' (mul_to_submodule_le _ _).trans_eq _
     rw [sup_idem]
-    
   · intro x hx1
     rw [← mul_one x]
     exact Submodule.mul_mem_mul hx1 (show (1 : A) ∈ S from one_mem S)
-    
 #align subalgebra.mul_self Subalgebra.mul_self
 
 /-- When `A` is commutative, `subalgebra.mul_to_submodule_le` is strict. -/
@@ -54,14 +52,10 @@ theorem mul_to_submodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemirin
   · cases' hx with hxS hxT
     · rw [← mul_one x]
       exact Submodule.mul_mem_mul hxS (show (1 : A) ∈ T from one_mem T)
-      
     · rw [← one_mul x]
       exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) hxT
-      
-    
   · rw [← one_mul (algebraMap _ _ _)]
     exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) (algebra_map_mem _ _)
-    
   have := Submodule.mul_mem_mul hx hy
   rwa [mul_assoc, mul_comm _ T.to_submodule, ← mul_assoc _ _ S.to_submodule, mul_self,
     mul_comm T.to_submodule, ← mul_assoc, mul_self] at this
@@ -72,7 +66,10 @@ variable {R' : Type _} [Semiring R'] [MulSemiringAction R' A] [SmulCommClass R' 
 /-- The action on a subalgebra corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwiseMulAction : MulAction R' (Subalgebra R A) where
+protected def pointwiseMulAction :
+    MulAction R'
+      (Subalgebra R
+        A) where 
   smul a S := S.map (MulSemiringAction.toAlgHom _ _ a)
   one_smul S := (congr_arg (fun f => S.map f) (AlgHom.ext <| one_smul R')).trans S.map_id
   mul_smul a₁ a₂ S :=

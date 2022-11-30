@@ -82,7 +82,7 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
   calc
     map Prod.swap ((𝓤 α).lift' gen) =
         (𝓤 α).lift' fun s : Set (α × α) => { p | s ∈ p.2.val ×ᶠ p.1.val } :=
-      by
+      by 
       delta gen
       simp [map_lift'_eq, monotone_set_of, Filter.monotone_mem, Function.comp,
         image_swap_eq_preimage_swap, -Subtype.val_eq_coe]
@@ -90,7 +90,7 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
       uniformity_lift_le_swap
         (monotone_principal.comp
           (monotone_set_of fun p => @Filter.monotone_mem _ (p.2.val ×ᶠ p.1.val)))
-        (by
+        (by 
           have h := fun p : CauchyCat α × CauchyCat α => @Filter.prod_comm _ _ p.2.val p.1.val
           simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
           exact le_rfl)
@@ -116,7 +116,7 @@ private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
 private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) ≤ (𝓤 α).lift' gen :=
   calc
     (((𝓤 α).lift' gen).lift' fun s => compRel s s) = (𝓤 α).lift' fun s => compRel (gen s) (gen s) :=
-      by
+      by 
       rw [lift'_lift'_assoc]
       exact monotone_gen
       exact monotone_comp_rel monotone_id monotone_id
@@ -205,9 +205,7 @@ theorem nonempty_Cauchy_iff : Nonempty (CauchyCat α) ↔ Nonempty α := by
   · have := eq_univ_iff_forall.1 dense_embedding_pure_cauchy.to_dense_inducing.closure_range c
     obtain ⟨_, ⟨_, a, _⟩⟩ := mem_closure_iff.1 this _ is_open_univ trivial
     exact ⟨a⟩
-    
   · exact ⟨pure_cauchy c⟩
-    
 #align Cauchy.nonempty_Cauchy_iff CauchyCat.nonempty_Cauchy_iff
 
 section
@@ -264,10 +262,8 @@ theorem uniform_continuous_extend {f : α → β} : UniformContinuous (extend f)
   · rw [extend, if_pos hf]
     exact
       uniform_continuous_uniformly_extend uniform_inducing_pure_cauchy dense_range_pure_cauchy hf
-    
   · rw [extend, if_neg hf]
     exact uniform_continuous_of_const fun a b => by congr
-    
 #align Cauchy.uniform_continuous_extend CauchyCat.uniform_continuous_extend
 
 end Extend
@@ -289,7 +285,6 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
     cases' h with h₁ h₂
     rw [← e] at h₂
     exact dt ⟨_, h₁, h₂⟩
-    
   · intro H
     refine' separated_def.1 (by infer_instance) _ _ fun t tu => _
     rcases mem_uniformity_is_closed tu with ⟨d, du, dc, dt⟩
@@ -303,7 +298,6 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
     have := dc.closure_subset_iff.2 h
     rw [closure_prod_eq] at this
     refine' dt (this ⟨_, _⟩) <;> dsimp <;> apply limc <;> assumption
-    
 #align Cauchy.Cauchy_eq CauchyCat.Cauchy_eq
 
 section
@@ -405,7 +399,8 @@ theorem dense_range_coe : DenseRange (coe : α → Completion α) :=
 variable (α)
 
 /-- The Haudorff completion as an abstract completion. -/
-def cpkg {α : Type _} [UniformSpace α] : AbstractCompletion α where
+def cpkg {α : Type _} [UniformSpace α] :
+    AbstractCompletion α where 
   Space := Completion α
   coe := coe
   uniformStruct := by infer_instance
@@ -630,7 +625,6 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
         SeparationQuotient.lift_mk (uniform_continuous_coe α),
         completion.map_coe uniform_continuous_quotient_mk] <;>
       infer_instance
-    
   · intro a
     refine'
       completion.induction_on a
@@ -639,7 +633,6 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
         extension_coe (separation_quotient.uniform_continuous_lift _),
         SeparationQuotient.lift_mk (uniform_continuous_coe α) _] <;>
       infer_instance
-    
 #align
   uniform_space.completion.completion_separation_quotient_equiv UniformSpace.Completion.completionSeparationQuotientEquiv
 

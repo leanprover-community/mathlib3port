@@ -111,14 +111,14 @@ theorem exists_prod_set {p : α × β → Prop} : (∃ x ∈ s ×ˢ t, p x) ↔ 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_empty : s ×ˢ (∅ : Set β) = ∅ := by
+theorem prod_empty : s ×ˢ (∅ : Set β) = ∅ := by 
   ext
   exact and_false_iff _
 #align set.prod_empty Set.prod_empty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem empty_prod : (∅ : Set α) ×ˢ t = ∅ := by
+theorem empty_prod : (∅ : Set α) ×ˢ t = ∅ := by 
   ext
   exact false_and_iff _
 #align set.empty_prod Set.empty_prod
@@ -456,19 +456,15 @@ first set is empty. -/
 theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
   cases' (s ×ˢ t).eq_empty_or_nonempty with h h
   · simp [h, prod_eq_empty_iff.1 h]
-    
   have st : s.nonempty ∧ t.nonempty := by rwa [prod_nonempty_iff] at h
   refine' ⟨fun H => Or.inl ⟨_, _⟩, _⟩
   · have := image_subset (Prod.fst : α × β → α) H
     rwa [fst_image_prod _ st.2, fst_image_prod _ (h.mono H).snd] at this
-    
   · have := image_subset (Prod.snd : α × β → β) H
     rwa [snd_image_prod st.1, snd_image_prod (h.mono H).fst] at this
-    
   · intro H
     simp only [st.1.ne_empty, st.2.ne_empty, or_false_iff] at H
     exact prod_mono H.1 H.2
-    
 #align set.prod_subset_prod_iff Set.prod_subset_prod_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -476,17 +472,15 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t).Nonempty) :
-    s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by
+    s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by 
   constructor
   · intro heq
     have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty := by rwa [← HEq]
     rw [prod_nonempty_iff] at h h₁
     rw [← fst_image_prod s h.2, ← fst_image_prod s₁ h₁.2, HEq, eq_self_iff_true, true_and_iff, ←
       snd_image_prod h.1 t, ← snd_image_prod h₁.1 t₁, HEq]
-    
   · rintro ⟨rfl, rfl⟩
     rfl
-    
 #align set.prod_eq_prod_iff_of_nonempty Set.prod_eq_prod_iff_of_nonempty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -500,7 +494,6 @@ theorem prod_eq_prod_iff :
       or_iff_right_iff_imp]
     rintro ⟨rfl, rfl⟩
     exact prod_eq_empty_iff.mp h
-    
   rw [prod_eq_prod_iff_of_nonempty h]
   rw [← ne_empty_iff_nonempty, Ne.def, prod_eq_empty_iff] at h
   simp_rw [h, false_and_iff, or_false_iff]
@@ -520,7 +513,7 @@ theorem prod_eq_iff_eq (ht : t.Nonempty) : s ×ˢ t = s₁ ×ˢ t ↔ s = s₁ :
 @[simp]
 theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t :=
   Set.ext fun a =>
-    ⟨by
+    ⟨by 
       rintro ⟨_, _, rfl⟩
       exact ⟨_, _, (mem_prod.mp ‹_›).1, (mem_prod.mp ‹_›).2, rfl⟩, by
       rintro ⟨_, _, _, _, rfl⟩
@@ -703,7 +696,7 @@ theorem disjoint_diagonal_off_diag : Disjoint (diagonal α) s.offDiag :=
 #align set.disjoint_diagonal_off_diag Set.disjoint_diagonal_off_diag
 
 theorem off_diag_inter : (s ∩ t).offDiag = s.offDiag ∩ t.offDiag :=
-  ext fun x => by
+  ext fun x => by 
     simp only [mem_off_diag, mem_inter_iff]
     tauto
 #align set.off_diag_inter Set.off_diag_inter
@@ -825,10 +818,8 @@ theorem range_dcomp (f : ∀ i, α i → β i) :
   apply subset.antisymm _ fun x hx => _
   · rintro _ ⟨x, rfl⟩ i -
     exact ⟨x i, rfl⟩
-    
   · choose y hy using hx
     exact ⟨fun i => y i trivial, funext fun i => hy i trivial⟩
-    
 #align set.range_dcomp Set.range_dcomp
 
 @[simp]
@@ -860,17 +851,15 @@ theorem preimage_pi (s : Set ι) (t : ∀ i, Set (β i)) (f : ∀ i, α i → β
 theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : ∀ i, Set (α i)) :
     (pi s fun i => if p i then t₁ i else t₂ i) =
       pi ({ i ∈ s | p i }) t₁ ∩ pi ({ i ∈ s | ¬p i }) t₂ :=
-  by
+  by 
   ext f
   refine' ⟨fun h => _, _⟩
-  · constructor <;>
+  ·
+    constructor <;>
       · rintro i ⟨his, hpi⟩
         simpa [*] using h i
-        
-    
   · rintro ⟨ht₁, ht₂⟩ i his
     by_cases p i <;> simp_all
-    
 #align set.pi_if Set.pi_if
 
 theorem union_pi : (s₁ ∪ s₂).pi t = s₁.pi t ∩ s₂.pi t := by
@@ -884,7 +873,7 @@ theorem pi_inter_compl (s : Set ι) : pi s t ∩ pi (sᶜ) t = pi univ t := by
 
 theorem pi_update_of_not_mem [DecidableEq ι] (hi : i ∉ s) (f : ∀ j, α j) (a : α i)
     (t : ∀ j, α j → Set (β j)) : (s.pi fun j => t j (update f i a j)) = s.pi fun j => t j (f j) :=
-  (pi_congr rfl) fun j hj => by
+  (pi_congr rfl) fun j hj => by 
     rw [update_noteq]
     exact fun h => hi (h ▸ hj)
 #align set.pi_update_of_not_mem Set.pi_update_of_not_mem
@@ -921,10 +910,10 @@ theorem eval_image_univ_pi_subset : eval i '' pi univ t ⊆ t i :=
 #align set.eval_image_univ_pi_subset Set.eval_image_univ_pi_subset
 
 theorem subset_eval_image_pi (ht : (s.pi t).Nonempty) (i : ι) : t i ⊆ eval i '' s.pi t := by
-  classical
-  obtain ⟨f, hf⟩ := ht
-  refine' fun y hy => ⟨update f i y, fun j hj => _, update_same _ _ _⟩
-  obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
+  classical 
+    obtain ⟨f, hf⟩ := ht
+    refine' fun y hy => ⟨update f i y, fun j hj => _, update_same _ _ _⟩
+    obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
 #align set.subset_eval_image_pi Set.subset_eval_image_pi
 
 theorem eval_image_pi (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i '' s.pi t = t i :=
@@ -968,14 +957,10 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s)
   refine' ⟨fun h => _, fun hx j hj => _⟩
   · convert h i hi
     simp
-    
   · obtain rfl | h := eq_or_ne j i
     · simpa
-      
     · rw [update_noteq h]
       exact hf j hj h
-      
-    
 #align set.update_preimage_pi Set.update_preimage_pi
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/

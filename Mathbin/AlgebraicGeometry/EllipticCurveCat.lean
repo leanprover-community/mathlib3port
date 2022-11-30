@@ -166,7 +166,7 @@ theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 
   E.Δ.NeZero <|
     mul_left_cancel₀ (pow_ne_zero 4 <| nonzero_of_invertible (2 : K)) <|
       (algebraMap K A).Injective
-        (by
+        (by 
           simp only [map_mul, map_pow, map_bit0, map_one, map_zero]
           linear_combination hdisc - two_torsion_polynomial.disc_eq E A)
 #align
@@ -182,14 +182,15 @@ variable (u : Rˣ) (r s t : R)
 /-- The elliptic curve over `R` induced by an admissible linear change of variables
   `(x, y) ↦ (u²x + r, u³y + u²sx + t)` for some `u ∈ Rˣ` and some `r, s, t ∈ R`.
   When `R` is a field, any two isomorphic long Weierstrass equations are related by this. -/
-def changeOfVariable : EllipticCurveCat R where
+def changeOfVariable :
+    EllipticCurveCat R where 
   a₁ := ↑u⁻¹ * (E.a₁ + 2 * s)
   a₂ := ↑u⁻¹ ^ 2 * (E.a₂ - s * E.a₁ + 3 * r - s ^ 2)
   a₃ := ↑u⁻¹ ^ 3 * (E.a₃ + r * E.a₁ + 2 * t)
   a₄ := ↑u⁻¹ ^ 4 * (E.a₄ - s * E.a₃ + 2 * r * E.a₂ - (t + r * s) * E.a₁ + 3 * r ^ 2 - 2 * s * t)
   a₆ := ↑u⁻¹ ^ 6 * (E.a₆ + r * E.a₄ + r ^ 2 * E.a₂ + r ^ 3 - t * E.a₃ - t ^ 2 - r * t * E.a₁)
   Δ := u⁻¹ ^ 12 * E.Δ
-  Δ_eq := by
+  Δ_eq := by 
     simp [-inv_pow]
     ring1
 #align EllipticCurve.change_of_variable EllipticCurveCat.changeOfVariable
@@ -240,7 +241,7 @@ theorem b₄_eq : (E.changeOfVariable u r s t).b₄ = ↑u⁻¹ ^ 4 * (E.b₄ + 
 @[simp]
 theorem b₆_eq :
     (E.changeOfVariable u r s t).b₆ = ↑u⁻¹ ^ 6 * (E.b₆ + 2 * r * E.b₄ + r ^ 2 * E.b₂ + 4 * r ^ 3) :=
-  by
+  by 
   simp [change_of_variable]
   ring1
 #align EllipticCurve.change_of_variable.b₆_eq EllipticCurveCat.changeOfVariable.b₆_eq
@@ -249,7 +250,7 @@ theorem b₆_eq :
 theorem b₈_eq :
     (E.changeOfVariable u r s t).b₈ =
       ↑u⁻¹ ^ 8 * (E.b₈ + 3 * r * E.b₆ + 3 * r ^ 2 * E.b₄ + r ^ 3 * E.b₂ + 3 * r ^ 4) :=
-  by
+  by 
   simp [change_of_variable]
   ring1
 #align EllipticCurve.change_of_variable.b₈_eq EllipticCurveCat.changeOfVariable.b₈_eq

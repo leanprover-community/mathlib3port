@@ -34,7 +34,7 @@ cubic, discriminant, polynomial, root
 noncomputable section
 
 /-- The structure representing a cubic polynomial. -/
-@[ext.1]
+@[ext]
 structure Cubic (R : Type _) where
   (a b c d : R)
 #align cubic Cubic
@@ -71,7 +71,7 @@ private theorem coeffs :
     (∀ n > 3, P.toPoly.coeff n = 0) ∧
       P.toPoly.coeff 3 = P.a ∧
         P.toPoly.coeff 2 = P.b ∧ P.toPoly.coeff 1 = P.c ∧ P.toPoly.coeff 0 = P.d :=
-  by
+  by 
   simp only [to_poly, coeff_add, coeff_C, coeff_C_mul_X, coeff_C_mul_X_pow]
   norm_num
   intro n hn
@@ -192,11 +192,14 @@ section Degree
 
 /-- The equivalence between cubic polynomials and polynomials of degree at most three. -/
 @[simps]
-def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 } where
+def equiv :
+    Cubic R ≃
+      { p : R[X] //
+        p.degree ≤ 3 } where 
   toFun P := ⟨P.toPoly, degree_cubic_le⟩
   invFun f := ⟨coeff f 3, coeff f 2, coeff f 1, coeff f 0⟩
   left_inv P := by ext <;> simp only [Subtype.coe_mk, coeffs]
-  right_inv f := by
+  right_inv f := by 
     ext (_ | _ | _ | _ | n) <;> simp only [Subtype.coe_mk, coeffs]
     have h3 : 3 < n + 4 := by linarith only
     rw [coeff_eq_zero h3,
@@ -373,14 +376,13 @@ theorem mem_roots_iff [IsDomain R] (h0 : P.toPoly ≠ 0) (x : R) :
 theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3 := by
   apply (to_finset_card_le P.to_poly.roots).trans
   by_cases hP : P.to_poly = 0
-  · exact
+  ·
+    exact
       (card_roots' P.to_poly).trans
-        (by
+        (by 
           rw [hP, nat_degree_zero]
           exact zero_le 3)
-    
   · exact WithBot.coe_le_coe.1 ((card_roots hP).trans degree_cubic_le)
-    
 #align cubic.card_roots_le Cubic.card_roots_le
 
 end Extension
@@ -417,7 +419,7 @@ theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z})
 theorem eq_sum_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     map φ P =
       ⟨φ P.a, φ P.a * -(x + y + z), φ P.a * (x * y + x * z + y * z), φ P.a * -(x * y * z)⟩ :=
-  by
+  by 
   apply_fun to_poly
   any_goals exact fun P Q => (to_poly_injective P Q).mp
   rw [eq_prod_three_roots ha h3, to_poly]

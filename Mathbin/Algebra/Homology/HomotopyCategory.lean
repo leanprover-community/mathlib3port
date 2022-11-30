@@ -33,7 +33,10 @@ variable (c : ComplexShape ι)
 def homotopic : HomRel (HomologicalComplex V c) := fun C D f g => Nonempty (Homotopy f g)
 #align homotopic homotopic
 
-instance homotopy_congruence : Congruence (homotopic V c) where
+instance homotopy_congruence :
+    Congruence
+      (homotopic V
+        c) where 
   IsEquiv C D :=
     { refl := fun C => ⟨Homotopy.refl C⟩, symm := fun f g ⟨w⟩ => ⟨w.symm⟩,
       trans := fun f g h ⟨w₁⟩ ⟨w₂⟩ => ⟨w₁.trans w₂⟩ }
@@ -102,13 +105,14 @@ theorem quotient_map_out_comp_out {C D E : HomotopyCategory V c} (f : C ⟶ D) (
 /-- Homotopy equivalent complexes become isomorphic in the homotopy category. -/
 @[simps]
 def isoOfHomotopyEquiv {C D : HomologicalComplex V c} (f : HomotopyEquiv C D) :
-    (quotient V c).obj C ≅ (quotient V c).obj D where
+    (quotient V c).obj C ≅
+      (quotient V c).obj D where 
   Hom := (quotient V c).map f.Hom
   inv := (quotient V c).map f.inv
-  hom_inv_id' := by
+  hom_inv_id' := by 
     rw [← (Quotient V c).map_comp, ← (Quotient V c).map_id]
     exact eq_of_homotopy _ _ f.homotopy_hom_inv_id
-  inv_hom_id' := by
+  inv_hom_id' := by 
     rw [← (Quotient V c).map_comp, ← (Quotient V c).map_id]
     exact eq_of_homotopy _ _ f.homotopy_inv_hom_id
 #align homotopy_category.iso_of_homotopy_equiv HomotopyCategory.isoOfHomotopyEquiv
@@ -116,17 +120,18 @@ def isoOfHomotopyEquiv {C D : HomologicalComplex V c} (f : HomotopyEquiv C D) :
 /-- If two complexes become isomorphic in the homotopy category,
   then they were homotopy equivalent. -/
 def homotopyEquivOfIso {C D : HomologicalComplex V c}
-    (i : (quotient V c).obj C ≅ (quotient V c).obj D) : HomotopyEquiv C D where
+    (i : (quotient V c).obj C ≅ (quotient V c).obj D) :
+    HomotopyEquiv C D where 
   Hom := Quot.out i.Hom
   inv := Quot.out i.inv
   homotopyHomInvId :=
     homotopyOfEq _ _
-      (by
+      (by 
         simp
         rfl)
   homotopyInvHomId :=
     homotopyOfEq _ _
-      (by
+      (by 
         simp
         rfl)
 #align homotopy_category.homotopy_equiv_of_iso HomotopyCategory.homotopyEquivOfIso
@@ -170,17 +175,19 @@ variable {V} {W : Type _} [Category W] [Preadditive W]
 /-- An additive functor induces a functor between homotopy categories. -/
 @[simps]
 def Functor.mapHomotopyCategory (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
-    HomotopyCategory V c ⥤ HomotopyCategory W c where
+    HomotopyCategory V c ⥤
+      HomotopyCategory W
+        c where 
   obj C := (HomotopyCategory.quotient W c).obj ((F.mapHomologicalComplex c).obj C.as)
   map C D f := (HomotopyCategory.quotient W c).map ((F.mapHomologicalComplex c).map (Quot.out f))
-  map_id' C := by
+  map_id' C := by 
     rw [← (HomotopyCategory.quotient W c).map_id]
     apply HomotopyCategory.eq_of_homotopy
     rw [← (F.map_homological_complex c).map_id]
     apply F.map_homotopy
     apply HomotopyCategory.homotopyOfEq
     exact Quot.out_eq _
-  map_comp' C D E f g := by
+  map_comp' C D E f g := by 
     rw [← (HomotopyCategory.quotient W c).map_comp]
     apply HomotopyCategory.eq_of_homotopy
     rw [← (F.map_homological_complex c).map_comp]
@@ -195,9 +202,12 @@ def Functor.mapHomotopyCategory (c : ComplexShape ι) (F : V ⥤ W) [F.Additive]
   the induced functors on the homotopy category. -/
 @[simps]
 def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G)
-    (c : ComplexShape ι) : F.mapHomotopyCategory c ⟶ G.mapHomotopyCategory c where
+    (c : ComplexShape ι) :
+    F.mapHomotopyCategory c ⟶
+      G.mapHomotopyCategory
+        c where 
   app C := (HomotopyCategory.quotient W c).map ((NatTrans.mapHomologicalComplex α c).app C.as)
-  naturality' C D f := by
+  naturality' C D f := by 
     dsimp
     simp only [← functor.map_comp]
     congr 1

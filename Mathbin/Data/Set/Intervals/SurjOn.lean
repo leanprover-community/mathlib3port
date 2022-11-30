@@ -36,14 +36,10 @@ theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
   · intro p hp
     rcases eq_left_or_mem_Ioo_of_mem_Ico hp with (rfl | hp')
     · exact mem_image_of_mem f (left_mem_Ico.mpr hab)
-      
     · have := surj_on_Ioo_of_monotone_surjective h_mono h_surj a b hp'
       exact image_subset f Ioo_subset_Ico_self this
-      
-    
   · rw [Ico_eq_empty (h_mono hab).not_lt]
     exact surj_on_empty f _
-    
 #align surj_on_Ico_of_monotone_surjective surj_on_Ico_of_monotone_surjective
 
 theorem surj_on_Ioc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
@@ -57,12 +53,9 @@ theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
   intro p hp
   rcases eq_endpoints_or_mem_Ioo_of_mem_Icc hp with (rfl | rfl | hp')
   · exact ⟨a, left_mem_Icc.mpr hab, rfl⟩
-    
   · exact ⟨b, right_mem_Icc.mpr hab, rfl⟩
-    
   · have := surj_on_Ioo_of_monotone_surjective h_mono h_surj a b hp'
     exact image_subset f Ioo_subset_Icc_self this
-    
 #align surj_on_Icc_of_monotone_surjective surj_on_Icc_of_monotone_surjective
 
 theorem surj_on_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)

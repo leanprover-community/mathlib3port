@@ -128,15 +128,15 @@ theorem finrank_hom_simple_simple [IsAlgClosed k] (V W : FdRep k G) [Simple V] [
 /-- The forgetful functor to `Rep k G` preserves hom-sets and their vector space structure -/
 def forget₂HomLinearEquiv (X Y : FdRep k G) :
     ((forget₂ (FdRep k G) (RepCat k G)).obj X ⟶ (forget₂ (FdRep k G) (RepCat k G)).obj Y) ≃ₗ[k]
-      X ⟶ Y where
+      X ⟶ Y where 
   toFun f := ⟨f.hom, f.comm⟩
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := ⟨(forget₂ (FgModule k) (ModuleCat k)).map f.hom, f.comm⟩
-  left_inv _ := by
+  left_inv _ := by 
     ext
     rfl
-  right_inv _ := by
+  right_inv _ := by 
     ext
     rfl
 #align fdRep.forget₂_hom_linear_equiv FdRep.forget₂HomLinearEquiv

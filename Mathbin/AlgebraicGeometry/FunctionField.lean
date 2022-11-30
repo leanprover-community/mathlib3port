@@ -83,18 +83,14 @@ theorem generic_point_eq_of_is_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H
     [hX : IrreducibleSpace X.carrier] [IrreducibleSpace Y.carrier] :
     f.1.base (genericPoint X.carrier : _) = (genericPoint Y.carrier : _) := by
   apply ((generic_point_spec _).Eq _).symm
-  show T0Space Y.carrier;
-  · infer_instance
-    
+  show T0Space Y.carrier; · infer_instance
   convert (generic_point_spec X.carrier).image (show Continuous f.1.base by continuity)
   symm
   rw [eq_top_iff, Set.top_eq_univ, Set.top_eq_univ]
   convert subset_closure_inter_of_is_preirreducible_of_is_open _ H.base_open.open_range _
   rw [Set.univ_inter, Set.image_univ]
   apply (config := { instances := false }) PreirreducibleSpace.is_preirreducible_univ
-  show PreirreducibleSpace Y.carrier;
-  · infer_instance
-    
+  show PreirreducibleSpace Y.carrier; · infer_instance
   exact ⟨_, trivial, Set.mem_range_self hX.2.some⟩
 #align
   algebraic_geometry.generic_point_eq_of_is_open_immersion AlgebraicGeometry.generic_point_eq_of_is_open_immersion
@@ -117,14 +113,14 @@ instance function_field_is_scalar_tower [IrreducibleSpace X.carrier] (U : Opens 
 
 noncomputable instance (R : CommRingCat) [IsDomain R] :
     Algebra R (SchemeCat.spec.obj <| op R).functionField :=
-  RingHom.toAlgebra <| by
+  RingHom.toAlgebra <| by 
     change CommRingCat.of R ⟶ _
     apply structure_sheaf.to_stalk
 
 @[simp]
 theorem generic_point_eq_bot_of_affine (R : CommRingCat) [IsDomain R] :
     genericPoint (SchemeCat.spec.obj <| op R).carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) :=
-  by
+  by 
   apply (generic_point_spec (Scheme.Spec.obj <| op R).carrier).Eq
   simp [is_generic_point_def, ← PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
 #align
@@ -152,7 +148,7 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : SchemeCat} [IsIntegral X]
         ⟨genericPoint X.carrier,
           ((generic_point_spec X.carrier).mem_open_set_iff U.Prop).mpr (by simpa using h)⟩ =
       genericPoint (SchemeCat.spec.obj <| op <| X.Presheaf.obj <| op U).carrier :=
-  by
+  by 
   haveI : is_affine _ := hU
   have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
     ext1
@@ -175,7 +171,7 @@ theorem function_field_is_fraction_ring_of_is_affine_open [IsIntegral X] (U : Op
   haveI : Nonempty (X.restrict U.open_embedding).carrier := hU'
   haveI : IsIntegral (X.restrict U.open_embedding) :=
     @is_integral_of_is_affine_is_domain _ _ _
-      (by
+      (by 
         dsimp
         rw [opens.open_embedding_obj_top]
         infer_instance)

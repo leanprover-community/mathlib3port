@@ -70,19 +70,17 @@ theorem even_or_odd' (n : ℕ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
 theorem even_xor_odd (n : ℕ) : Xor' (Even n) (Odd n) := by
   cases' even_or_odd n with h
   · exact Or.inl ⟨h, even_iff_not_odd.mp h⟩
-    
   · exact Or.inr ⟨h, odd_iff_not_even.mp h⟩
-    
 #align nat.even_xor_odd Nat.even_xor_odd
 
 theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
-  · simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
+  ·
+    simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
       and_false_iff] using (succ_ne_self (2 * k)).symm
-    
-  · simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
+  ·
+    simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
       one_ne_zero, and_self_iff]
-    
 #align nat.even_xor_odd' Nat.even_xor_odd'
 
 @[simp]
@@ -133,9 +131,9 @@ theorem two_not_dvd_two_mul_sub_one : ∀ {n} (w : 0 < n), ¬2 ∣ 2 * n - 1
 
 @[parity_simps]
 theorem even_sub (h : n ≤ m) : Even (m - n) ↔ (Even m ↔ Even n) := by
-  conv =>
-  rhs
-  rw [← tsub_add_cancel_of_le h, even_add]
+  conv => 
+    rhs
+    rw [← tsub_add_cancel_of_le h, even_add]
   by_cases h : Even n <;> simp [h]
 #align nat.even_sub Nat.even_sub
 
@@ -219,10 +217,8 @@ theorem even_mul_succ_self (n : ℕ) : Even (n * (n + 1)) := by
 theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) := by
   cases n
   · exact even_zero
-    
   · rw [mul_comm]
     apply even_mul_succ_self
-    
 #align nat.even_mul_self_pred Nat.even_mul_self_pred
 
 theorem even_sub_one_of_prime_ne_two {p : ℕ} (hp : Prime p) (hodd : p ≠ 2) : Even (p - 1) :=

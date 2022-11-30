@@ -58,10 +58,8 @@ theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α}
     cases' hp.dvd_or_dvd hps with h h
     · have hap := hs a (Multiset.mem_cons.2 (Or.inl rfl))
       exact ⟨a, Multiset.mem_cons_self a _, hp.associated_of_dvd hap h⟩
-      
     · rcases ih (fun r hr => hs _ (Multiset.mem_cons.2 (Or.inr hr))) h with ⟨q, hq₁, hq₂⟩
       exact ⟨q, Multiset.mem_cons.2 (Or.inr hq₁), hq₂⟩
-      
 #align exists_associated_mem_of_dvd_prod exists_associated_mem_of_dvd_prod
 
 theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
@@ -69,7 +67,6 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
     (div : ∀ a ∈ s, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) : s.Prod ∣ n := by
   induction' s using Multiset.induction_on with a s induct n primes divs generalizing n
   · simp only [Multiset.prod_zero, one_dvd]
-    
   · rw [Multiset.prod_cons]
     obtain ⟨k, rfl⟩ : a ∣ n := div a (Multiset.mem_cons_self a s)
     apply mul_dvd_mul_left a
@@ -86,8 +83,6 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
       rw [Multiset.countp_cons_of_pos _ (Associated.refl _), Nat.succ_le_succ_iff, ← not_lt,
         Multiset.countp_pos] at this
       exact this ⟨b, b_in_s, assoc.symm⟩
-      
-    
 #align multiset.prod_primes_dvd Multiset.prod_primes_dvd
 
 theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α)

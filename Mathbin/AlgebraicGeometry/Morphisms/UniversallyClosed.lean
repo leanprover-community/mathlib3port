@@ -55,7 +55,7 @@ theorem universally_closed_stable_under_base_change : StableUnderBaseChange @Uni
   algebraic_geometry.universally_closed_stable_under_base_change AlgebraicGeometry.universally_closed_stable_under_base_change
 
 theorem universally_closed_stable_under_composition : StableUnderComposition @UniversallyClosed :=
-  by
+  by 
   rw [universally_closed_eq]
   exact stable_under_composition.universally fun X Y Z f g hf hg => IsClosedMap.comp hg hf
 #align
@@ -85,14 +85,13 @@ theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carr
 theorem universally_closed_is_local_at_target : PropertyIsLocalAtTarget @UniversallyClosed := by
   rw [universally_closed_eq]
   apply universally_is_local_at_target_of_morphism_restrict
-  · exact
+  ·
+    exact
       stable_under_composition.respects_iso (fun X Y Z f g hf hg => IsClosedMap.comp hg hf)
         fun X Y f => (TopCat.homeoOfIso (Scheme.forget_to_Top.map_iso f)).IsClosedMap
-    
   · intro X Y f ι U hU H
     simp_rw [topologically, morphism_restrict_base] at H
     exact (is_closed_map_iff_is_closed_map_of_supr_eq_top hU).mpr H
-    
 #align
   algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universally_closed_is_local_at_target
 

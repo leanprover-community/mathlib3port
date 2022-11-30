@@ -50,14 +50,16 @@ namespace SingleObj
 variable (α : Type u)
 
 /-- One and `flip (*)` become `id` and `comp` for morphisms of the single object category. -/
-instance categoryStruct [One α] [Mul α] : CategoryStruct (SingleObj α) where
+instance categoryStruct [One α] [Mul α] :
+    CategoryStruct (SingleObj α) where 
   Hom _ _ := α
   comp _ _ _ x y := y * x
   id _ := 1
 #align category_theory.single_obj.category_struct CategoryTheory.SingleObj.categoryStruct
 
 /-- Monoid laws become category laws for the single object category. -/
-instance category [Monoid α] : Category (SingleObj α) where
+instance category [Monoid α] :
+    Category (SingleObj α) where 
   comp_id' _ _ := one_mul
   id_comp' _ _ := mul_one
   assoc' _ _ _ _ x y z := (mul_assoc z y x).symm
@@ -75,7 +77,8 @@ theorem comp_as_mul [Monoid α] {x y z : SingleObj α} (f : x ⟶ y) (g : y ⟶ 
 
 See <https://stacks.math.columbia.edu/tag/0019>.
 -/
-instance groupoid [Group α] : Groupoid (SingleObj α) where
+instance groupoid [Group α] :
+    Groupoid (SingleObj α) where 
   inv _ _ x := x⁻¹
   inv_comp' _ _ := mul_right_inv
   comp_inv' _ _ := mul_left_inv
@@ -109,7 +112,10 @@ See <https://stacks.math.columbia.edu/tag/001F> --
 although we do not characterize when the functor is full or faithful.
 -/
 def mapHom (α : Type u) (β : Type v) [Monoid α] [Monoid β] :
-    (α →* β) ≃ SingleObj α ⥤ SingleObj β where
+    (α →* β) ≃
+      SingleObj α ⥤
+        SingleObj
+          β where 
   toFun f :=
     { obj := id, map := fun _ _ => ⇑f, map_id' := fun _ => f.map_one,
       map_comp' := fun _ _ _ x y => f.map_mul y x }
@@ -132,13 +138,14 @@ theorem map_hom_comp {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α
 /-- Given a function `f : C → G` from a category to a group, we get a functor
     `C ⥤ G` sending any morphism `x ⟶ y` to `f y * (f x)⁻¹`. -/
 @[simps]
-def differenceFunctor {C G} [Category C] [Group G] (f : C → G) : C ⥤ SingleObj G where
+def differenceFunctor {C G} [Category C] [Group G] (f : C → G) :
+    C ⥤ SingleObj G where 
   obj _ := ()
   map x y _ := f y * (f x)⁻¹
-  map_id' := by
+  map_id' := by 
     intro
     rw [single_obj.id_as_one, mul_right_inv]
-  map_comp' := by
+  map_comp' := by 
     intros
     rw [single_obj.comp_as_mul, ← mul_assoc, mul_left_inj, mul_assoc, inv_mul_self, mul_one]
 #align category_theory.single_obj.difference_functor CategoryTheory.SingleObj.differenceFunctor
@@ -199,12 +206,13 @@ namespace MonCat
 open CategoryTheory
 
 /-- The fully faithful functor from `Mon` to `Cat`. -/
-def toCat : MonCat ⥤ Cat where
+def toCat : MonCat ⥤ Cat where 
   obj x := CatCat.of (SingleObj x)
   map x y f := SingleObj.mapHom x y f
 #align Mon.to_Cat MonCat.toCat
 
-instance toCatFull : Full toCat where
+instance toCatFull :
+    Full toCat where 
   preimage x y := (SingleObj.mapHom x y).invFun
   witness' x y := by apply Equiv.right_inv
 #align Mon.to_Cat_full MonCat.toCatFull

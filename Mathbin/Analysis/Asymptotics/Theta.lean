@@ -220,9 +220,7 @@ theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : 
     (fun x => f x ^ n) =Θ[l] fun x => g x ^ n := by
   cases n
   · simpa only [zpow_of_nat] using h.pow _
-    
   · simpa only [zpow_neg_succ_of_nat] using (h.pow _).inv
-    
 #align asymptotics.is_Theta.zpow Asymptotics.IsTheta.zpow
 
 theorem is_Theta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂ : c₂ ≠ 0) :

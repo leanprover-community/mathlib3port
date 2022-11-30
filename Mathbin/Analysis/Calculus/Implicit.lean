@@ -249,7 +249,8 @@ variable (f f')
 differentiable map such that its derivative is surjective and has a complemented kernel. -/
 @[simp]
 def implicitFunctionDataOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤)
-    (hker : (ker f').ClosedComplemented) : ImplicitFunctionData 𝕜 E F (ker f') where
+    (hker : (ker f').ClosedComplemented) :
+    ImplicitFunctionData 𝕜 E F (ker f') where 
   leftFun := f
   leftDeriv := f'
   rightFun x := Classical.choose hker (x - a)
@@ -376,12 +377,10 @@ theorem toImplicitFunctionOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : 
     simp only [Classical.choose_spec hker, implicit_function_data_of_complemented,
       ContinuousLinearMap.coe_comp', Submodule.coe_subtypeL', Submodule.coe_subtype,
       Function.comp_apply, ContinuousLinearMap.coe_id', id.def]
-    
   swap
   · ext
     simp only [ContinuousLinearMap.coe_comp', Submodule.coe_subtypeL', Submodule.coe_subtype,
       Function.comp_apply, LinearMap.map_coe_ker, ContinuousLinearMap.zero_apply]
-    
   simp only [implicit_function_data_of_complemented, map_sub, sub_self]
 #align
   has_strict_fderiv_at.to_implicit_function_of_complemented HasStrictFderivAt.toImplicitFunctionOfComplemented

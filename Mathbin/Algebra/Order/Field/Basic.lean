@@ -98,19 +98,19 @@ theorem div_nonpos_of_nonneg_of_nonpos (ha : 0 ≤ a) (hb : b ≤ 0) : a / b ≤
 #align div_nonpos_of_nonneg_of_nonpos div_nonpos_of_nonneg_of_nonpos
 
 theorem zpow_nonneg (ha : 0 ≤ a) : ∀ n : ℤ, 0 ≤ a ^ n
-  | (n : ℕ) => by
+  | (n : ℕ) => by 
     rw [zpow_coe_nat]
     exact pow_nonneg ha _
-  | -[n+1] => by
+  | -[n+1] => by 
     rw [zpow_neg_succ_of_nat]
     exact inv_nonneg.2 (pow_nonneg ha _)
 #align zpow_nonneg zpow_nonneg
 
 theorem zpow_pos_of_pos (ha : 0 < a) : ∀ n : ℤ, 0 < a ^ n
-  | (n : ℕ) => by
+  | (n : ℕ) => by 
     rw [zpow_coe_nat]
     exact pow_pos ha _
-  | -[n+1] => by
+  | -[n+1] => by 
     rw [zpow_neg_succ_of_nat]
     exact inv_pos.2 (pow_pos ha _)
 #align zpow_pos_of_pos zpow_pos_of_pos
@@ -301,9 +301,7 @@ theorem inv_lt_one_iff_of_pos (h₀ : 0 < a) : a⁻¹ < 1 ↔ 1 < a :=
 theorem inv_lt_one_iff : a⁻¹ < 1 ↔ a ≤ 0 ∨ 1 < a := by
   cases' le_or_lt a 0 with ha ha
   · simp [ha, (inv_nonpos.2 ha).trans_lt zero_lt_one]
-    
   · simp only [ha.not_le, false_or_iff, inv_lt_one_iff_of_pos ha]
-    
 #align inv_lt_one_iff inv_lt_one_iff
 
 theorem one_lt_inv_iff : 1 < a⁻¹ ↔ 0 < a ∧ a < 1 :=
@@ -313,9 +311,7 @@ theorem one_lt_inv_iff : 1 < a⁻¹ ↔ 0 < a ∧ a < 1 :=
 theorem inv_le_one_iff : a⁻¹ ≤ 1 ↔ a ≤ 0 ∨ 1 ≤ a := by
   rcases em (a = 1) with (rfl | ha)
   · simp [le_rfl]
-    
   · simp only [Ne.le_iff_lt (Ne.symm ha), Ne.le_iff_lt (mt inv_eq_one.1 ha), inv_lt_one_iff]
-    
 #align inv_le_one_iff inv_le_one_iff
 
 theorem one_le_inv_iff : 1 ≤ a⁻¹ ↔ 0 < a ∧ a ≤ 1 :=
@@ -510,10 +506,8 @@ theorem half_lt_self : 0 < a → a / 2 < a :=
 theorem half_le_self (ha_nonneg : 0 ≤ a) : a / 2 ≤ a := by
   by_cases h0 : a = 0
   · simp [h0]
-    
   · rw [← Ne.def] at h0
     exact (half_lt_self (lt_of_le_of_ne ha_nonneg h0.symm)).le
-    
 #align half_le_self half_le_self
 
 theorem one_half_lt_one : (1 / 2 : α) < 1 :=
@@ -636,11 +630,9 @@ theorem IsGlb.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsGlb s b) :
     IsGlb ((fun b => a * b) '' s) (a * b) := by
   rcases lt_or_eq_of_le ha with (ha | rfl)
   · exact (OrderIso.mulLeft₀ _ ha).is_glb_image'.2 hs
-    
   · simp_rw [zero_mul]
     rw [hs.nonempty.image_const]
     exact is_glb_singleton
-    
 #align is_glb.mul_left IsGlb.mul_left
 
 theorem IsGlb.mul_right {s : Set α} (ha : 0 ≤ a) (hs : IsGlb s b) :
@@ -810,41 +802,29 @@ theorem lt_one_div_of_neg (ha : a < 0) (hb : b < 0) : a < 1 / b ↔ b < 1 / a :=
 theorem one_lt_div_iff : 1 < a / b ↔ 0 < b ∧ b < a ∨ b < 0 ∧ a < b := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
   · simp [hb, hb.not_lt, one_lt_div_of_neg]
-    
   · simp [lt_irrefl, zero_le_one]
-    
   · simp [hb, hb.not_lt, one_lt_div]
-    
 #align one_lt_div_iff one_lt_div_iff
 
 theorem one_le_div_iff : 1 ≤ a / b ↔ 0 < b ∧ b ≤ a ∨ b < 0 ∧ a ≤ b := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
   · simp [hb, hb.not_lt, one_le_div_of_neg]
-    
   · simp [lt_irrefl, zero_lt_one.not_le, zero_lt_one]
-    
   · simp [hb, hb.not_lt, one_le_div]
-    
 #align one_le_div_iff one_le_div_iff
 
 theorem div_lt_one_iff : a / b < 1 ↔ 0 < b ∧ a < b ∨ b = 0 ∨ b < 0 ∧ b < a := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
   · simp [hb, hb.not_lt, hb.ne, div_lt_one_of_neg]
-    
   · simp [zero_lt_one]
-    
   · simp [hb, hb.not_lt, div_lt_one, hb.ne.symm]
-    
 #align div_lt_one_iff div_lt_one_iff
 
 theorem div_le_one_iff : a / b ≤ 1 ↔ 0 < b ∧ a ≤ b ∨ b = 0 ∨ b < 0 ∧ b ≤ a := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
   · simp [hb, hb.not_lt, hb.ne, div_le_one_of_neg]
-    
   · simp [zero_le_one]
-    
   · simp [hb, hb.not_lt, div_le_one, hb.ne.symm]
-    
 #align div_le_one_iff div_le_one_iff
 
 /-! ### Relating two divisions, involving `1` -/
@@ -907,17 +887,18 @@ theorem add_sub_div_two_lt (h : a < b) : a + (b - a) / 2 < b := by
 #align add_sub_div_two_lt add_sub_div_two_lt
 
 /-- An inequality involving `2`. -/
-theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 := by
+theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 :=
+  by
   -- Take inverses on both sides to obtain `2⁻¹ ≤ 1 - 1 / a`
   refine' (inv_le_inv_of_le (inv_pos.2 <| zero_lt_two' α) _).trans_eq (inv_inv (2 : α))
   -- move `1 / a` to the left and `1 - 1 / 2 = 1 / 2` to the right to obtain `1 / a ≤ ⅟ 2`
   refine' (le_sub_iff_add_le.2 (_ : _ + 2⁻¹ = _).le).trans ((sub_le_sub_iff_left 1).2 _)
-  · -- show 2⁻¹ + 2⁻¹ = 1
+  ·
+    -- show 2⁻¹ + 2⁻¹ = 1
     exact (two_mul _).symm.trans (mul_inv_cancel two_ne_zero)
-    
-  · -- take inverses on both sides and use the assumption `2 ≤ a`.
+  ·
+    -- take inverses on both sides and use the assumption `2 ≤ a`.
     exact (one_div a).le.trans (inv_le_inv_of_le zero_lt_two a2)
-    
 #align sub_one_div_inv_le_two sub_one_div_inv_le_two
 
 /-! ### Results about `is_lub` and `is_glb` -/
@@ -928,11 +909,9 @@ theorem IsLub.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsLub s b) :
     IsLub ((fun b => a * b) '' s) (a * b) := by
   rcases lt_or_eq_of_le ha with (ha | rfl)
   · exact (OrderIso.mulLeft₀ _ ha).is_lub_image'.2 hs
-    
   · simp_rw [zero_mul]
     rw [hs.nonempty.image_const]
     exact is_lub_singleton
-    
 #align is_lub.mul_left IsLub.mul_left
 
 -- TODO: Generalize to `linear_ordered_semifield`
@@ -970,7 +949,7 @@ theorem le_of_forall_sub_le (h : ∀ ε > 0, b - ε ≤ a) : b ≤ a := by
 
 theorem mul_self_inj_of_nonneg (a0 : 0 ≤ a) (b0 : 0 ≤ b) : a * a = b * b ↔ a = b :=
   mul_self_eq_mul_self_iff.trans <|
-    or_iff_left_of_imp fun h => by
+    or_iff_left_of_imp fun h => by 
       subst a
       have : b = 0 := le_antisymm (neg_nonneg.1 a0) b0
       rw [this, neg_zero]

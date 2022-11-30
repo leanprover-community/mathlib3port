@@ -39,10 +39,8 @@ theorem norm_sub (h : SameRay ℝ x y) : ‖x - y‖ = |‖x‖ - ‖y‖| := by
   · rw [← sub_nonneg] at hab
     rw [← sub_smul, norm_smul_of_nonneg hab, norm_smul_of_nonneg ha, norm_smul_of_nonneg hb, ←
       sub_mul, abs_of_nonneg (mul_nonneg hab (norm_nonneg _))]
-    
   · intro ha hb hab
     rw [norm_sub_rev, this hb ha hab.symm, abs_sub_comm]
-    
 #align same_ray.norm_sub SameRay.norm_sub
 
 theorem norm_smul_eq (h : SameRay ℝ x y) : ‖x‖ • y = ‖y‖ • x := by
@@ -87,12 +85,8 @@ alias same_ray_iff_inv_norm_smul_eq_of_ne ↔ SameRay.inv_norm_smul_eq _
 /-- Two vectors `x y` in a real normed space are on the ray if and only if one of them is zero or
 the unit vectors `‖x‖⁻¹ • x` and `‖y‖⁻¹ • y` are equal. -/
 theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ ‖x‖⁻¹ • x = ‖y‖⁻¹ • y := by
-  rcases eq_or_ne x 0 with (rfl | hx);
-  · simp [SameRay.zero_left]
-    
-  rcases eq_or_ne y 0 with (rfl | hy);
-  · simp [SameRay.zero_right]
-    
+  rcases eq_or_ne x 0 with (rfl | hx); · simp [SameRay.zero_left]
+  rcases eq_or_ne y 0 with (rfl | hy); · simp [SameRay.zero_right]
   simp only [same_ray_iff_inv_norm_smul_eq_of_ne hx hy, *, false_or_iff]
 #align same_ray_iff_inv_norm_smul_eq same_ray_iff_inv_norm_smul_eq
 
@@ -101,9 +95,7 @@ theorem same_ray_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : SameRay ℝ x y ↔ x 
   obtain rfl | hy := eq_or_ne y 0
   · rw [norm_zero, norm_eq_zero] at h
     exact iff_of_true (SameRay.zero_right _) h
-    
   · exact ⟨fun hxy => norm_inj_on_ray_right hy hxy SameRay.rfl h, fun hxy => hxy ▸ SameRay.rfl⟩
-    
 #align same_ray_iff_of_norm_eq same_ray_iff_of_norm_eq
 
 theorem not_same_ray_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : ¬SameRay ℝ x y ↔ x ≠ y :=

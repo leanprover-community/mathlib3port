@@ -43,10 +43,10 @@ instance WideSubquiver.quiver {V} [Quiver V] (H : WideSubquiver V) : Quiver H :=
 
 namespace Quiver
 
-instance {V} [Quiver V] : HasBot (WideSubquiver V) :=
+instance {V} [Quiver V] : Bot (WideSubquiver V) :=
   ⟨fun a b => ∅⟩
 
-instance {V} [Quiver V] : HasTop (WideSubquiver V) :=
+instance {V} [Quiver V] : Top (WideSubquiver V) :=
   ⟨fun a b => Set.univ⟩
 
 instance {V} [Quiver V] : Inhabited (WideSubquiver V) :=
@@ -54,7 +54,7 @@ instance {V} [Quiver V] : Inhabited (WideSubquiver V) :=
 
 -- TODO Unify with `category_theory.arrow`? (The fields have been named to match.)
 /-- `total V` is the type of _all_ arrows of `V`. -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
   left : V
   right : V
@@ -62,11 +62,13 @@ structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
 #align quiver.total Quiver.Total
 
 /-- A wide subquiver of `G` can equivalently be viewed as a total set of arrows. -/
-def wideSubquiverEquivSetTotal {V} [Quiver V] : WideSubquiver V ≃ Set (Total V) where
+def wideSubquiverEquivSetTotal {V} [Quiver V] :
+    WideSubquiver V ≃
+      Set (Total V) where 
   toFun H := { e | e.Hom ∈ H e.left e.right }
   invFun S a b := { e | Total.mk a b e ∈ S }
   left_inv H := rfl
-  right_inv := by
+  right_inv := by 
     intro S
     ext
     cases x

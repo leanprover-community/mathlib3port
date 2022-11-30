@@ -33,15 +33,12 @@ theorem frobenius_zmod (f : MvPolynomial σ (Zmod p)) : frobenius _ p f = expand
   apply induction_on f
   · intro a
     rw [expand_C, frobenius_def, ← C_pow, Zmod.pow_card]
-    
   · simp only [AlgHom.map_add, RingHom.map_add]
     intro _ _ hf hg
     rw [hf, hg]
-    
   · simp only [expand_X, RingHom.map_mul, AlgHom.map_mul]
     intro _ _ hf
     rw [hf, frobenius_def]
-    
 #align mv_polynomial.frobenius_zmod MvPolynomial.frobenius_zmod
 
 theorem expand_zmod (f : MvPolynomial σ (Zmod p)) : expand p f = f ^ p :=
@@ -105,12 +102,9 @@ theorem indicator_mem_restrict_degree (c : σ → K) :
   refine' Finset.sum_eq_single n _ _
   · intro b hb ne
     rw [Multiset.count_singleton, if_neg Ne.symm, mul_zero]
-    
   · intro h
     exact (h <| Finset.mem_univ _).elim
-    
   · rw [Multiset.count_singleton_self, mul_one]
-    
 #align mv_polynomial.indicator_mem_restrict_degree MvPolynomial.indicator_mem_restrict_degree
 
 end CommRing
@@ -134,13 +128,15 @@ variable (K σ)
 
 /-- `mv_polynomial.eval` as a `K`-linear map. -/
 @[simps]
-def evalₗ [CommSemiring K] : MvPolynomial σ K →ₗ[K] (σ → K) → K where
+def evalₗ [CommSemiring K] :
+    MvPolynomial σ K →ₗ[K] (σ → K) →
+        K where 
   toFun p e := eval e p
-  map_add' p q := by
+  map_add' p q := by 
     ext x
     rw [RingHom.map_add]
     rfl
-  map_smul' a p := by
+  map_smul' a p := by 
     ext e
     rw [smul_eq_C_mul, RingHom.map_mul, eval_C]
     rfl
@@ -155,7 +151,6 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
   refine' top_unique (SetLike.le_def.2 fun e _ => mem_map.2 _)
   refine' ⟨∑ n : σ → K, e n • indicator n, _, _⟩
   · exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
-    
   · ext n
     simp only [LinearMap.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply,
       LinearMap.map_smul]
@@ -163,12 +158,8 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
     trans
     refine' Finset.sum_eq_single n (fun b _ h => _) _
     · rw [eval_indicator_apply_eq_zero _ _ h.symm, smul_zero]
-      
     · exact fun h => (h <| Finset.mem_univ n).elim
-      
     · rw [eval_indicator_apply_eq_one, smul_eq_mul, mul_one]
-      
-    
 #align mv_polynomial.map_restrict_dom_evalₗ MvPolynomial.map_restrict_dom_evalₗ
 
 end MvPolynomial

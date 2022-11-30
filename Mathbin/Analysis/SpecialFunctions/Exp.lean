@@ -239,7 +239,6 @@ theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) :
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp only [pow_zero, div_one]
     exact (tendsto_exp_at_top.const_mul_at_top hb).at_top_add tendsto_const_nhds
-    
   simp only [add_div, mul_div_assoc]
   exact
     ((tendsto_exp_div_pow_at_top n).const_mul_at_top hb).at_top_add
@@ -257,15 +256,11 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
     simpa only [Pi.inv_apply] using (inv_div _ _).symm
   cases lt_or_gt_of_ne hb
   · exact H b c h
-    
   · convert (H (-b) (-c) (neg_pos.mpr h)).neg
     · ext x
       field_simp
       rw [← neg_add (b * exp x) c, neg_div_neg_eq]
-      
     · exact neg_zero.symm
-      
-    
 #align real.tendsto_div_pow_mul_exp_add_at_top Real.tendsto_div_pow_mul_exp_add_at_top
 
 /-- `real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/

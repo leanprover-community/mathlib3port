@@ -64,7 +64,7 @@ instance : ContractibleSpace ℍ :=
 instance : LocPathConnectedSpace ℍ :=
   loc_path_connected_of_is_open <| is_open_lt continuous_const Complex.continuous_im
 
-instance : NoncompactSpace ℍ := by
+instance : NoncompactSpace ℍ := by 
   refine' ⟨fun h => _⟩
   have : IsCompact (Complex.im ⁻¹' Ioi 0) := is_compact_iff_is_compact_univ.2 h
   replace := this.is_closed.closure_eq

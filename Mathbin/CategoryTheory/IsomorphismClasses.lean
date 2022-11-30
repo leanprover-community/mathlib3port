@@ -30,7 +30,7 @@ def IsIsomorphic : C → C → Prop := fun X Y => Nonempty (X ≅ Y)
 variable (C)
 
 /-- `is_isomorphic` defines a setoid. -/
-def isIsomorphicSetoid : Setoid C where
+def isIsomorphicSetoid : Setoid C where 
   R := IsIsomorphic
   iseqv := ⟨fun X => ⟨Iso.refl X⟩, fun X Y ⟨α⟩ => ⟨α.symm⟩, fun X Y Z ⟨α⟩ ⟨β⟩ => ⟨α.trans β⟩⟩
 #align category_theory.is_isomorphic_setoid CategoryTheory.isIsomorphicSetoid
@@ -39,7 +39,8 @@ end Category
 
 /-- The functor that sends each category to the quotient space of its objects up to an isomorphism.
 -/
-def isomorphismClasses : Cat.{v, u} ⥤ Type u where
+def isomorphismClasses :
+    Cat.{v, u} ⥤ Type u where 
   obj C := Quotient (isIsomorphicSetoid C.α)
   map C D F := (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
 #align category_theory.isomorphism_classes CategoryTheory.isomorphismClasses

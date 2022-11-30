@@ -48,15 +48,14 @@ def graph.proj {f : Fin n → α} : graph f → α := fun p => p.1.1
 theorem graph.card (f : Fin n → α) : (graph f).card = n := by
   rw [graph, Finset.card_image_of_injective]
   · exact Finset.card_fin _
-    
   · intro _ _
     simp
-    
 #align tuple.graph.card Tuple.graph.card
 
 /-- `graph_equiv₁ f` is the natural equivalence between `fin n` and `graph f`,
 mapping `i` to `(f i, i)`. -/
-def graphEquiv₁ (f : Fin n → α) : Fin n ≃ graph f where
+def graphEquiv₁ (f : Fin n → α) :
+    Fin n ≃ graph f where 
   toFun i := ⟨(f i, i), by simp [graph]⟩
   invFun p := p.1.2
   left_inv i := by simp
@@ -91,9 +90,7 @@ theorem self_comp_sort (f : Fin n → α) : f ∘ sort f = graph.proj ∘ graphE
 theorem monotone_proj (f : Fin n → α) : Monotone (graph.proj : graph f → α) := by
   rintro ⟨⟨x, i⟩, hx⟩ ⟨⟨y, j⟩, hy⟩ (_ | h)
   · exact le_of_lt ‹_›
-    
   · simp [graph.proj]
-    
 #align tuple.monotone_proj Tuple.monotone_proj
 
 theorem monotone_sort (f : Fin n → α) : Monotone (f ∘ sort f) := by
@@ -125,11 +122,9 @@ theorem eq_sort_iff' : σ = sort f ↔ StrictMono (σ.trans <| graphEquiv₁ f) 
   constructor <;> intro h
   · rw [h, sort, Equiv.trans_assoc, Equiv.symm_trans_self]
     exact (graph_equiv₂ f).StrictMono
-    
   · have := Subsingleton.elim (graph_equiv₂ f) (h.order_iso_of_surjective _ <| Equiv.surjective _)
     ext1
     exact (graph_equiv₁ f).apply_eq_iff_eq_symm_apply.1 (FunLike.congr_fun this x).symm
-    
 #align tuple.eq_sort_iff' Tuple.eq_sort_iff'
 
 /-- A permutation `σ` equals `sort f` if and only if `f ∘ σ` is monotone and whenever `i < j`
@@ -140,10 +135,8 @@ theorem eq_sort_iff :
   rw [eq_sort_iff']
   refine' ⟨fun h => ⟨(monotone_proj f).comp h.Monotone, fun i j hij hfij => _⟩, fun h i j hij => _⟩
   · exact (((Prod.Lex.lt_iff _ _).1 <| h hij).resolve_left hfij.not_lt).2
-    
   · obtain he | hl := (h.1 hij.le).eq_or_lt <;> apply (Prod.Lex.lt_iff _ _).2
     exacts[Or.inr ⟨he, h.2 i j hij he⟩, Or.inl hl]
-    
 #align tuple.eq_sort_iff Tuple.eq_sort_iff
 
 /-- The permutation that sorts `f` is the identity if and only if `f` is monotone. -/

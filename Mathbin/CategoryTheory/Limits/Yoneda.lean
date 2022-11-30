@@ -33,7 +33,8 @@ variable {C : Type v} [SmallCategory C]
 /-- The colimit cocone over `coyoneda.obj X`, with cocone point `punit`.
 -/
 @[simps]
-def colimitCocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
+def colimitCocone (X : Cᵒᵖ) :
+    Cocone (coyoneda.obj X) where 
   x := PUnit
   ι := { app := by tidy }
 #align category_theory.coyoneda.colimit_cocone CategoryTheory.coyoneda.colimitCocone
@@ -41,13 +42,15 @@ def colimitCocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
 /-- The proposed colimit cocone over `coyoneda.obj X` is a colimit cocone.
 -/
 @[simps]
-def colimitCoconeIsColimit (X : Cᵒᵖ) : IsColimit (colimitCocone X) where
+def colimitCoconeIsColimit (X : Cᵒᵖ) :
+    IsColimit (colimitCocone
+        X) where 
   desc s x := s.ι.app (unop X) (𝟙 _)
-  fac' s Y := by
+  fac' s Y := by 
     ext f
     convert congr_fun (s.w f).symm (𝟙 (unop X))
     simp
-  uniq' s m w := by
+  uniq' s m w := by 
     ext ⟨⟩
     rw [← w]
     simp
@@ -84,10 +87,8 @@ instance yonedaPreservesLimits (X : C) :
                   refine' Quiver.Hom.op_inj (t.uniq ⟨op X, _, _⟩ _ fun j => _)
                   · dsimp
                     simp [← s.w α]
-                    
                   -- See library note [dsimp, simp]
-                  · exact Quiver.Hom.unop_inj (congr_fun (w j) x)
-                     } } }
+                  · exact Quiver.Hom.unop_inj (congr_fun (w j) x) } } }
 #align category_theory.yoneda_preserves_limits CategoryTheory.yonedaPreservesLimits
 
 /-- The coyoneda embedding `coyoneda.obj X : C ⥤ Type v` for `X : Cᵒᵖ` preserves limits. -/
@@ -104,7 +105,7 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) :
                     simp [← s.w α]⟩,-- See library note [dsimp, simp]
               fac' := fun s j => funext fun x => t.fac _ _,
               uniq' := fun s m w =>
-                funext fun x => by
+                funext fun x => by 
                   refine' t.uniq ⟨unop X, _⟩ _ fun j => _
                   exact congr_fun (w j) x } } }
 #align category_theory.coyoneda_preserves_limits CategoryTheory.coyonedaPreservesLimits
@@ -117,7 +118,7 @@ def yonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ Cᵒ�
       funext fun _ => Quiver.Hom.op_inj (s.w α).symm⟩
   { lift := fun s => ((t s.x.unop).lift (s' s) PUnit.unit).op,
     fac' := fun s j => Quiver.Hom.unop_inj (congr_fun ((t s.x.unop).fac (s' s) j) PUnit.unit),
-    uniq' := fun s m w => by
+    uniq' := fun s m w => by 
       apply Quiver.Hom.unop_inj
       suffices (fun x : PUnit => m.unop) = (t s.X.unop).lift (s' s) by
         apply congr_fun this PUnit.unit

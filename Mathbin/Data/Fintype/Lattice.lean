@@ -58,13 +58,13 @@ end Finset
 open Finset Function
 
 theorem Finite.exists_max [Finite α] [Nonempty α] [LinearOrder β] (f : α → β) :
-    ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by
+    ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by 
   cases nonempty_fintype α
   simpa using exists_max_image univ f univ_nonempty
 #align finite.exists_max Finite.exists_max
 
 theorem Finite.exists_min [Finite α] [Nonempty α] [LinearOrder β] (f : α → β) :
-    ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by
+    ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by 
   cases nonempty_fintype α
   simpa using exists_min_image univ f univ_nonempty
 #align finite.exists_min Finite.exists_min

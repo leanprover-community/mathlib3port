@@ -26,7 +26,9 @@ namespace Nat
 /-! ### Sets -/
 
 
-instance Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s where
+instance Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] :
+    OrderBot
+      s where 
   bot := ⟨Nat.find (nonempty_subtype.1 h), Nat.find_spec (nonempty_subtype.1 h)⟩
   bot_le x := Nat.find_min' _ x.2
 #align nat.subtype.order_bot Nat.Subtype.orderBot
@@ -48,24 +50,20 @@ theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k 
 
 
 protected theorem lt_div_iff_mul_lt {n d : ℕ} (hnd : d ∣ n) (a : ℕ) : a < n / d ↔ d * a < n := by
-  rcases d.eq_zero_or_pos with (rfl | hd0);
-  · simp [zero_dvd_iff.mp hnd]
-    
+  rcases d.eq_zero_or_pos with (rfl | hd0); · simp [zero_dvd_iff.mp hnd]
   rw [← mul_lt_mul_left hd0, ← Nat.eq_mul_of_div_eq_right hnd rfl]
 #align nat.lt_div_iff_mul_lt Nat.lt_div_iff_mul_lt
 
 theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy : y ∣ n) :
-    n / x = n / y ↔ x = y := by
+    n / x = n / y ↔ x = y := by 
   constructor
   · intro h
     rw [← mul_right_inj' hn]
     apply Nat.eq_mul_of_div_eq_left (dvd_mul_of_dvd_left hy x)
     rw [eq_comm, mul_comm, Nat.mul_div_assoc _ hy]
     exact Nat.eq_mul_of_div_eq_right hx h
-    
   · intro h
     rw [h]
-    
 #align nat.div_eq_iff_eq_of_dvd_dvd Nat.div_eq_iff_eq_of_dvd_dvd
 
 protected theorem div_eq_zero_iff {a b : ℕ} (hb : 0 < b) : a / b = 0 ↔ a < b :=
@@ -108,23 +106,20 @@ protected theorem dvd_add_self_right {m n : ℕ} : m ∣ n + m ↔ m ∣ n :=
 theorem dvd_sub' {k m n : ℕ} (h₁ : k ∣ m) (h₂ : k ∣ n) : k ∣ m - n := by
   cases' le_total n m with H H
   · exact dvd_sub H h₁ h₂
-    
   · rw [tsub_eq_zero_iff_le.mpr H]
     exact dvd_zero k
-    
 #align nat.dvd_sub' Nat.dvd_sub'
 
 theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else 0
   | a, 0 => by simp
   | 0, 1 => by simp
-  | 0, b + 2 => by
+  | 0, b + 2 => by 
     have hb2 : b + 2 > 1 := by decide
     simp [ne_of_gt hb2, div_eq_of_lt hb2]
-  | a + 1, b + 1 => by
+  | a + 1, b + 1 => by 
     rw [Nat.div_def]; conv_rhs => rw [Nat.div_def]
     by_cases hb_eq_a : b = a + 1
     · simp [hb_eq_a, le_refl]
-      
     by_cases hb_le_a1 : b ≤ a + 1
     · have hb_le_a : b ≤ a := le_of_lt_succ (lt_of_le_of_ne hb_le_a1 hb_eq_a)
       have h₁ : 0 < b + 1 ∧ b + 1 ≤ a + 1 + 1 := ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a1⟩
@@ -138,12 +133,10 @@ theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 el
         succ_div (a - b),
         add_tsub_add_eq_tsub_right]
       simp [dvd_iff, succ_eq_add_one, add_comm 1, add_assoc]
-      
     · have hba : ¬b ≤ a := not_le_of_gt (lt_trans (lt_succ_self a) (lt_of_not_ge hb_le_a1))
       have hb_dvd_a : ¬b + 1 ∣ a + 2 := fun h =>
         hb_le_a1 (le_of_succ_le_succ (le_of_dvd (succ_pos _) h))
       simp [hba, hb_le_a1, hb_dvd_a]
-      
 #align nat.succ_div Nat.succ_div
 
 theorem succ_div_of_dvd {a b : ℕ} (hba : b ∣ a + 1) : (a + 1) / b = a / b + 1 := by
@@ -188,7 +181,7 @@ theorem div_div_div_eq_div : ∀ {a b c : ℕ} (dvd : b ∣ a) (dvd2 : a ∣ c),
   | a + 1, c + 1 =>
     have a_split : a + 1 ≠ 0 := succ_ne_zero a
     have c_split : c + 1 ≠ 0 := succ_ne_zero c
-    fun b dvd dvd2 => by
+    fun b dvd dvd2 => by 
     rcases dvd2 with ⟨k, rfl⟩
     rcases dvd with ⟨k2, pr⟩
     have k2_nonzero : k2 ≠ 0 := fun k2_zero => by simpa [k2_zero] using pr
@@ -209,9 +202,7 @@ theorem eq_zero_of_dvd_of_lt {a b : ℕ} (w : a ∣ b) (h : b < a) : b = 0 :=
 theorem mod_div_self (m n : ℕ) : m % n / n = 0 := by
   cases n
   · exact (m % 0).div_zero
-    
   · exact Nat.div_eq_zero (m.mod_lt n.succ_pos)
-    
 #align nat.mod_div_self Nat.mod_div_self
 
 /-- `n` is not divisible by `a` iff it is between `a * k` and `a * (k + 1)` for some `k`. -/

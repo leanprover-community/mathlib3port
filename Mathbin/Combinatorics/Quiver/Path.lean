@@ -57,9 +57,7 @@ theorem length_cons (a b c : V) (p : Path a b) (e : b ⟶ c) : (p.cons e).length
 theorem eq_of_length_zero (p : Path a b) (hzero : p.length = 0) : a = b := by
   cases p
   · rfl
-    
   · cases Nat.succ_ne_zero _ hzero
-    
 #align quiver.path.eq_of_length_zero Quiver.Path.eq_of_length_zero
 
 /-- Composition of paths. -/
@@ -101,16 +99,13 @@ theorem length_comp (p : Path a b) : ∀ {c} (q : Path b c), (p.comp q).length =
 theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length = q₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ := by
   refine'
-    ⟨fun h => _, by
+    ⟨fun h => _, by 
       rintro ⟨rfl, rfl⟩
       rfl⟩
   induction' q₁ with d₁ e₁ q₁ f₁ ih generalizing q₂ <;> obtain _ | ⟨q₂, f₂⟩ := q₂
   · exact ⟨h, rfl⟩
-    
   · cases hq
-    
   · cases hq
-    
   simp only [comp_cons] at h
   obtain rfl := h.1
   obtain ⟨rfl, rfl⟩ := ih (Nat.succ.inj hq) h.2.1.Eq
@@ -121,7 +116,7 @@ theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length
 theorem comp_inj' {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (h : p₁.length = p₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
   ⟨fun h_eq => (comp_inj <| Nat.add_left_cancel <| by simpa [h] using congr_arg length h_eq).1 h_eq,
-    by
+    by 
     rintro ⟨rfl, rfl⟩
     rfl⟩
 #align quiver.path.comp_inj' Quiver.Path.comp_inj'

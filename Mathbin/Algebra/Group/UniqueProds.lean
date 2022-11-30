@@ -75,7 +75,7 @@ theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
     UniqueMul A B a0 b0 ↔ ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = a0 * b0 :=
   ⟨fun _ => ⟨(a0, b0), ⟨Finset.mem_product.mpr ⟨aA, bB⟩, rfl, by simp⟩, by simpa⟩, fun h =>
     h.elim2
-      (by
+      (by 
         rintro ⟨x1, x2⟩ _ _ J x y hx hy l
         rcases prod.mk.inj_iff.mp (J (a0, b0) (Finset.mk_mem_product aA bB) rfl) with ⟨rfl, rfl⟩
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
@@ -100,7 +100,7 @@ theorem mul_hom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : 
     (u : UniqueMul A B (f a0) (f b0)) :
     UniqueMul (A.Preimage f (Set.inj_on_of_injective hf _))
       (B.Preimage f (Set.inj_on_of_injective hf _)) a0 b0 :=
-  by
+  by 
   intro a b ha hb ab
   rw [← hf.eq_iff, ← hf.eq_iff]
   rw [← hf.eq_iff, map_mul, map_mul] at ab
@@ -119,14 +119,12 @@ theorem mul_hom_image_iff [DecidableEq H] (f : G →ₙ* H) (hf : Function.Injec
     rw [← hf.eq_iff, ← hf.eq_iff]
     rw [← hf.eq_iff, map_mul, map_mul] at ab
     exact h (finset.mem_image.mpr ⟨_, ha, rfl⟩) (finset.mem_image.mpr ⟨_, hb, rfl⟩) ab
-    
   · intro a b aA bB ab
     obtain ⟨a, ha, rfl⟩ : ∃ a' ∈ A, f a' = a := finset.mem_image.mp aA
     obtain ⟨b, hb, rfl⟩ : ∃ b' ∈ B, f b' = b := finset.mem_image.mp bB
     rw [hf.eq_iff, hf.eq_iff]
     rw [← map_mul, ← map_mul, hf.eq_iff] at ab
     exact h ha hb ab
-    
 #align unique_mul.mul_hom_image_iff UniqueMul.mul_hom_image_iff
 
 /-- `unique_mul` is preserved under embeddings that are multiplicative.
@@ -139,7 +137,6 @@ theorem mul_hom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
   classical convert mul_hom_image_iff ⟨f, mul⟩ f.2 <;>
       · ext
         simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
-        
 #align unique_mul.mul_hom_map_iff UniqueMul.mul_hom_map_iff
 
 end UniqueMul
@@ -165,7 +162,9 @@ attribute [to_additive] UniqueProds
 namespace Multiplicative
 
 instance {M} [Add M] [UniqueSums M] :
-    UniqueProds (Multiplicative M) where unique_mul_of_nonempty A B hA hB := by
+    UniqueProds
+      (Multiplicative
+        M) where unique_mul_of_nonempty A B hA hB := by
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
     obtain ⟨a0, hA0, b0, hB0, J⟩ := UniqueSums.unique_add_of_nonempty hA' hB
@@ -176,7 +175,9 @@ end Multiplicative
 namespace Additive
 
 instance {M} [Mul M] [UniqueProds M] :
-    UniqueSums (Additive M) where unique_add_of_nonempty A B hA hB := by
+    UniqueSums
+      (Additive
+        M) where unique_add_of_nonempty A B hA hB := by
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
     obtain ⟨a0, hA0, b0, hB0, J⟩ := UniqueProds.unique_mul_of_nonempty hA' hB
@@ -189,7 +190,7 @@ theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
     [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
     [ContravariantClass A A (· * ·) (· ≤ ·)] {a b a0 b0 : A} (ha : a0 ≤ a) (hb : b0 ≤ b)
     (ab : a * b ≤ a0 * b0) : a = a0 ∧ b = b0 := by
-  haveI := Mul.to_covariant_class_right A
+  haveI := Mul.to_CovariantClass_right A
   have ha' : ¬a0 * b0 < a * b → ¬a0 < a := mt fun h => mul_lt_mul_of_lt_of_le h hb
   have hb' : ¬a0 * b0 < a * b → ¬b0 < b := mt fun h => mul_lt_mul_of_le_of_lt ha h
   push_neg  at ha' hb'

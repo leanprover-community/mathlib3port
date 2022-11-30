@@ -40,18 +40,15 @@ instance : QuasiSober X.carrier := by
     quasiSoberOfOpenCover (Set.range fun x => Set.range <| (X.affine_cover.map x).1.base)
   · rintro ⟨_, i, rfl⟩
     exact (X.affine_cover.is_open i).base_open.open_range
-    
   · rintro ⟨_, i, rfl⟩
     exact
       @OpenEmbedding.quasiSober _ _ _
         (Homeomorph.ofEmbedding _
               (X.affine_cover.is_open i).base_open.toEmbedding).symm.OpenEmbedding
         PrimeSpectrum.quasiSober
-    
   · rw [Set.top_eq_univ, Set.sUnion_range, Set.eq_univ_iff_forall]
     intro x
     exact ⟨_, ⟨_, rfl⟩, X.affine_cover.covers x⟩
-    
 
 /-- A scheme `X` is reduced if all `𝒪ₓ(U)` are reduced. -/
 class IsReduced : Prop where
@@ -61,7 +58,7 @@ class IsReduced : Prop where
 attribute [instance] is_reduced.component_reduced
 
 theorem is_reduced_of_stalk_is_reduced [∀ x : X.carrier, IsReduced (X.Presheaf.stalk x)] :
-    IsReduced X := by
+    IsReduced X := by 
   refine' ⟨fun U => ⟨fun s hs => _⟩⟩
   apply presheaf.section_ext X.sheaf U s 0
   intro x
@@ -72,7 +69,7 @@ theorem is_reduced_of_stalk_is_reduced [∀ x : X.carrier, IsReduced (X.Presheaf
   algebraic_geometry.is_reduced_of_stalk_is_reduced AlgebraicGeometry.is_reduced_of_stalk_is_reduced
 
 instance stalk_is_reduced_of_reduced [IsReduced X] (x : X.carrier) :
-    IsReduced (X.Presheaf.stalk x) := by
+    IsReduced (X.Presheaf.stalk x) := by 
   constructor
   rintro g ⟨n, e⟩
   obtain ⟨U, hxU, s, rfl⟩ := X.presheaf.germ_exist x g
@@ -85,7 +82,7 @@ instance stalk_is_reduced_of_reduced [IsReduced X] (x : X.carrier) :
 #align algebraic_geometry.stalk_is_reduced_of_reduced AlgebraicGeometry.stalk_is_reduced_of_reduced
 
 theorem is_reduced_of_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f]
-    [IsReduced Y] : IsReduced X := by
+    [IsReduced Y] : IsReduced X := by 
   constructor
   intro U
   have : U = (opens.map f.1.base).obj (H.base_open.is_open_map.functor.obj U) := by
@@ -117,7 +114,7 @@ theorem affine_is_reduced_iff (R : CommRingCat) :
   skip
   have :
     _root_.is_reduced (LocallyRingedSpace.Γ.obj (op <| Spec.to_LocallyRingedSpace.obj <| op R)) :=
-    by
+    by 
     change _root_.is_reduced ((Scheme.Spec.obj <| op R).Presheaf.obj <| op ⊤)
     infer_instance
   exact
@@ -169,7 +166,6 @@ theorem reduce_to_affine_nbhd (P : ∀ (X : SchemeCat) (x : X.carrier), Prop)
   obtain ⟨y, e⟩ := X.affine_cover.covers x
   convert h₂ (X.affine_cover.map (X.affine_cover.f x)) y _
   · rw [e]
-    
   apply h₁
 #align algebraic_geometry.reduce_to_affine_nbhd AlgebraicGeometry.reduce_to_affine_nbhd
 
@@ -187,7 +183,6 @@ theorem eq_zero_of_basic_open_eq_bot {X : SchemeCat} [hX : IsReduced X] {U : Ope
     specialize H rfl ⟨x, hx⟩
     erw [TopCat.Presheaf.germ_res_apply] at H
     exact H
-    
   · rintro X Y f hf
     have e : f.val.base ⁻¹' Set.range ⇑f.val.base = ⊤ := by
       rw [← Set.image_univ, Set.preimage_image_eq _ hf.base_open.inj, Set.top_eq_univ]
@@ -196,20 +191,17 @@ theorem eq_zero_of_basic_open_eq_bot {X : SchemeCat} [hX : IsReduced X] {U : Ope
     haveI := is_reduced_of_open_immersion f
     specialize
       H (f.1.c.app _ s) _
-        ⟨x, by
+        ⟨x, by 
           change x ∈ f.val.base ⁻¹' _
           rw [e]
           trivial⟩
     · rw [← Scheme.preimage_basic_open, hs]
       ext1
       simp [opens.map]
-      
     · erw [← PresheafedSpace.stalk_map_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
       apply_fun inv <| PresheafedSpace.stalk_map f.val x  at H
       erw [CategoryTheory.IsIso.hom_inv_id_apply, map_zero] at H
       exact H
-      
-    
   · intro R hX s hs x
     erw [basic_open_eq_of_affine', PrimeSpectrum.basic_open_eq_bot_iff] at hs
     replace hs := hs.map (Spec_Γ_identity.app R).inv
@@ -218,7 +210,6 @@ theorem eq_zero_of_basic_open_eq_bot {X : SchemeCat} [hX : IsReduced X] {U : Ope
     rw [iso.hom_inv_id_apply] at hs
     rw [hs, map_zero]
     exact @is_reduced.component_reduced hX ⊤
-    
 #align
   algebraic_geometry.eq_zero_of_basic_open_eq_bot AlgebraicGeometry.eq_zero_of_basic_open_eq_bot
 
@@ -251,10 +242,8 @@ instance (priority := 900) is_reduced_of_is_integral [IsIntegral X] : IsReduced 
     haveI := CommRingCat.subsingleton_of_is_terminal (X.sheaf.is_terminal_of_eq_empty this)
     change _root_.is_reduced (X.sheaf.val.obj (op U))
     infer_instance
-    
   · haveI : Nonempty U := by simpa
     infer_instance
-    
 #align algebraic_geometry.is_reduced_of_is_integral AlgebraicGeometry.is_reduced_of_is_integral
 
 instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.carrier := by
@@ -274,26 +263,20 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.carri
       (CommRingCat.prodFanIsLimit _ _)
   apply (config := { instances := false }) false_of_nontrivial_of_product_domain
   · exact e.symm.CommRing_iso_to_ring_equiv.is_domain _
-    
   · apply X.to_LocallyRingedSpace.component_nontrivial
-    
   · apply X.to_LocallyRingedSpace.component_nontrivial
-    
   · ext x
     constructor
     · rintro ⟨hS, hT⟩
       cases h₁ (show x ∈ ⊤ by trivial)
       exacts[hS h, hT h]
-      
     · intro x
       exact x.rec _
-      
-    
 #align
   algebraic_geometry.is_irreducible_of_is_integral AlgebraicGeometry.is_irreducible_of_is_integral
 
 theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleSpace X.carrier] :
-    IsIntegral X := by
+    IsIntegral X := by 
   constructor;
   refine' fun U hU =>
     ⟨fun a b e => _, (@LocallyRingedSpace.component_nontrivial X.to_LocallyRingedSpace U hU).1⟩
@@ -305,7 +288,7 @@ theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleS
   subst e'
   replace e := congr_arg (X.presheaf.germ x) e
   rw [RingHom.map_mul, RingHom.map_zero] at e
-  refine' zero_ne_one' (X.presheaf.stalk x.1) (is_unit_zero_iff.1 _)
+  refine' zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 _)
   convert hx₁.mul hx₂
   exact e.symm
 #align
@@ -340,10 +323,8 @@ theorem is_integral_of_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpe
 instance {R : CommRingCat} [H : IsDomain R] : IsIntegral (SchemeCat.spec.obj <| op R) := by
   apply (config := { instances := false }) is_integral_of_is_irreducible_is_reduced
   · infer_instance
-    
   · dsimp [Spec.Top_obj]
     infer_instance
-    
 
 theorem affine_is_integral_iff (R : CommRingCat) :
     IsIntegral (SchemeCat.spec.obj <| op R) ↔ IsDomain R :=

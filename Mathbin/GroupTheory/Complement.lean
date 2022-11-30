@@ -129,14 +129,11 @@ theorem is_complement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} := by
     ⟨fun h => set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.2.1, a.2.2⟩
-    
   · have : (⟨⟨_, mem_top a⁻¹⟩, ⟨a, ha⟩⟩ : (⊤ : Set G) × S) = ⟨⟨_, mem_top b⁻¹⟩, ⟨b, hb⟩⟩ :=
       h.1 ((inv_mul_self a).trans (inv_mul_self b).symm)
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).2
-    
   · rintro ⟨g, rfl⟩
     exact is_complement_top_singleton
-    
 #align subgroup.is_complement_top_left Subgroup.is_complement_top_left
 
 @[to_additive]
@@ -145,14 +142,11 @@ theorem is_complement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} := b
     ⟨fun h => set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.1.1, a.1.2⟩
-    
   · have : (⟨⟨a, ha⟩, ⟨_, mem_top a⁻¹⟩⟩ : S × (⊤ : Set G)) = ⟨⟨b, hb⟩, ⟨_, mem_top b⁻¹⟩⟩ :=
       h.1 ((mul_inv_self a).trans (mul_inv_self b).symm)
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).1
-    
   · rintro ⟨g, rfl⟩
     exact is_complement_singleton_top
-    
 #align subgroup.is_complement_top_right Subgroup.is_complement_top_right
 
 @[to_additive]
@@ -194,12 +188,10 @@ theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
     exact
       ⟨x.1, (congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq h1)).mp x.2.2, fun y hy =>
         (prod.ext_iff.mp (h2 ⟨y, y⁻¹ * g, hy⟩ (mul_inv_cancel_left y g))).1⟩
-    
   · obtain ⟨x, h1, h2⟩ := h g
     refine' ⟨⟨x, x⁻¹ * g, h1⟩, mul_inv_cancel_left x g, fun y hy => _⟩
     have := h2 y.1 ((congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq hy)).mp y.2.2)
     exact Prod.ext this (Subtype.ext (eq_inv_mul_of_mul_eq ((congr_arg _ this).mp hy)))
-    
 #align
   subgroup.mem_left_transversals_iff_exists_unique_inv_mul_mem Subgroup.mem_left_transversals_iff_exists_unique_inv_mul_mem
 
@@ -212,12 +204,10 @@ theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
     exact
       ⟨x.2, (congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq h1)).mp x.1.2, fun y hy =>
         (prod.ext_iff.mp (h2 ⟨⟨g * y⁻¹, hy⟩, y⟩ (inv_mul_cancel_right g y))).2⟩
-    
   · obtain ⟨x, h1, h2⟩ := h g
     refine' ⟨⟨⟨g * x⁻¹, h1⟩, x⟩, inv_mul_cancel_right g x, fun y hy => _⟩
     have := h2 y.2 ((congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq hy)).mp y.1.2)
     exact Prod.ext (Subtype.ext (eq_mul_inv_of_mul_eq ((congr_arg _ this).mp hy))) this
-    
 #align
   subgroup.mem_right_transversals_iff_exists_unique_mul_inv_mem Subgroup.mem_right_transversals_iff_exists_unique_mul_inv_mem
 
@@ -292,28 +282,25 @@ theorem range_mem_right_transversals {f : Quotient (QuotientGroup.rightRel H) �
 #align subgroup.range_mem_right_transversals Subgroup.range_mem_right_transversals
 
 @[to_additive]
-theorem exists_left_transversal (g : G) : ∃ S ∈ leftTransversals (H : Set G), g ∈ S := by classical
-  refine'
-    ⟨Set.range (Function.update Quotient.out' (↑g) g), range_mem_left_transversals fun q => _, g,
-      Function.update_same g g Quotient.out'⟩
-  by_cases hq : q = g
-  · exact hq.symm ▸ congr_arg _ (Function.update_same g g Quotient.out')
-    
-  · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
-    
+theorem exists_left_transversal (g : G) : ∃ S ∈ leftTransversals (H : Set G), g ∈ S := by
+  classical 
+    refine'
+      ⟨Set.range (Function.update Quotient.out' (↑g) g), range_mem_left_transversals fun q => _, g,
+        Function.update_same g g Quotient.out'⟩
+    by_cases hq : q = g
+    · exact hq.symm ▸ congr_arg _ (Function.update_same g g Quotient.out')
+    · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
 #align subgroup.exists_left_transversal Subgroup.exists_left_transversal
 
 @[to_additive]
 theorem exists_right_transversal (g : G) : ∃ S ∈ rightTransversals (H : Set G), g ∈ S := by
-  classical
-  refine'
-    ⟨Set.range (Function.update Quotient.out' _ g), range_mem_right_transversals fun q => _,
-      Quotient.mk' g, Function.update_same (Quotient.mk' g) g Quotient.out'⟩
-  by_cases hq : q = Quotient.mk' g
-  · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk' g) g Quotient.out')
-    
-  · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
-    
+  classical 
+    refine'
+      ⟨Set.range (Function.update Quotient.out' _ g), range_mem_right_transversals fun q => _,
+        Quotient.mk' g, Function.update_same (Quotient.mk' g) g Quotient.out'⟩
+    by_cases hq : q = Quotient.mk' g
+    · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk' g) g Quotient.out')
+    · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
 #align subgroup.exists_right_transversal Subgroup.exists_right_transversal
 
 namespace MemLeftTransversals
@@ -417,19 +404,22 @@ open MulAction MemLeftTransversals
 variable {F : Type _} [Group F] [MulAction F G] [QuotientAction F H]
 
 @[to_additive]
-instance : MulAction F (leftTransversals (H : Set G)) where
+instance :
+    MulAction F
+      (leftTransversals
+        (H :
+          Set
+            G)) where 
   smul f T :=
-    ⟨f • T, by
+    ⟨f • T, by 
       refine' mem_left_transversals_iff_exists_unique_inv_mul_mem.mpr fun g => _
       obtain ⟨t, ht1, ht2⟩ := mem_left_transversals_iff_exists_unique_inv_mul_mem.mp T.2 (f⁻¹ • g)
       refine' ⟨⟨f • t, Set.smul_mem_smul_set t.2⟩, _, _⟩
       · exact (congr_arg _ (smul_inv_smul f g)).mp (quotient_action.inv_mul_mem f ht1)
-        
       · rintro ⟨-, t', ht', rfl⟩ h
         replace h := quotient_action.inv_mul_mem f⁻¹ h
         simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h⊢
-        exact subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)
-        ⟩
+        exact subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)⟩
   one_smul T := Subtype.ext (one_smul F T)
   mul_smul f₁ f₂ T := Subtype.ext (mul_smul f₁ f₂ T)
 
@@ -628,9 +618,7 @@ theorem transfer_transversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H
     sub_eq_neg_add, cast_sub_one, add_sub_cancel'_right]
   by_cases hk : k = 0
   · rw [if_pos hk, if_pos hk, zpow_coe_nat]
-    
   · rw [if_neg hk, if_neg hk]
-    
 #align subgroup.transfer_transversal_apply'' Subgroup.transfer_transversal_apply''
 
 end Subgroup

@@ -19,14 +19,12 @@ namespace Int
 
 @[simp]
 theorem cast_eq_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) = 0 ↔ n = 0 :=
-  ⟨fun h => by
+  ⟨fun h => by 
     cases n
     · rw [Int.cast_of_nat] at h
       exact congr_arg coe (Nat.cast_eq_zero.1 h)
-      
     · rw [cast_neg_succ_of_nat, neg_eq_zero, Nat.cast_eq_zero] at h
-      contradiction
-      ,
+      contradiction,
     fun h => by rw [h, cast_zero]⟩
 #align int.cast_eq_zero Int.cast_eq_zero
 
@@ -48,9 +46,7 @@ theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dv
     ((m / n : ℤ) : k) = m / n := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp [Int.div_zero]
-    
   · exact cast_div n_dvd (cast_ne_zero.mpr hn)
-    
 #align int.cast_div_char_zero Int.cast_div_char_zero
 
 end Int

@@ -108,11 +108,15 @@ add_decl_doc NonUnitalSubsemiring.toAddSubmonoid
 
 namespace NonUnitalSubsemiring
 
-instance : SetLike (NonUnitalSubsemiring R) R where
+instance :
+    SetLike (NonUnitalSubsemiring R)
+      R where 
   coe := NonUnitalSubsemiring.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
-instance : NonUnitalSubsemiringClass (NonUnitalSubsemiring R) R where
+instance :
+    NonUnitalSubsemiringClass (NonUnitalSubsemiring R)
+      R where 
   zero_mem := zero_mem'
   add_mem := add_mem'
   mul_mem := mul_mem'
@@ -123,7 +127,7 @@ theorem mem_carrier {s : NonUnitalSubsemiring R} {x : R} : x ∈ s.carrier ↔ x
 #align non_unital_subsemiring.mem_carrier NonUnitalSubsemiring.mem_carrier
 
 /-- Two non-unital subsemirings are equal if they have the same elements. -/
-@[ext.1]
+@[ext]
 theorem ext {S T : NonUnitalSubsemiring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align non_unital_subsemiring.ext NonUnitalSubsemiring.ext
@@ -184,7 +188,8 @@ theorem to_add_submonoid_mono :
 /-- Construct a `non_unital_subsemiring R` from a set `s`, a subsemigroup `sg`, and an additive
 submonoid `sa` such that `x ∈ s ↔ x ∈ sg ↔ x ∈ sa`. -/
 protected def mk' (s : Set R) (sg : Subsemigroup R) (hg : ↑sg = s) (sa : AddSubmonoid R)
-    (ha : ↑sa = s) : NonUnitalSubsemiring R where
+    (ha : ↑sa = s) : NonUnitalSubsemiring
+      R where 
   carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   add_mem' x y := by simpa only [← ha] using sa.add_mem
@@ -261,7 +266,7 @@ theorem coe_to_add_submonoid (s : NonUnitalSubsemiring R) : (s.toAddSubmonoid : 
 #align non_unital_subsemiring.coe_to_add_submonoid NonUnitalSubsemiring.coe_to_add_submonoid
 
 /-- The non-unital subsemiring `R` of the non-unital semiring `R`. -/
-instance : HasTop (NonUnitalSubsemiring R) :=
+instance : Top (NonUnitalSubsemiring R) :=
   ⟨{ (⊤ : Subsemigroup R), (⊤ : AddSubmonoid R) with }⟩
 
 @[simp]
@@ -395,7 +400,7 @@ end NonUnitalRingHom
 namespace NonUnitalSubsemiring
 
 -- should we define this as the range of the zero homomorphism?
-instance : HasBot (NonUnitalSubsemiring R) :=
+instance : Bot (NonUnitalSubsemiring R) :=
   ⟨{ carrier := {0}, add_mem' := fun _ _ _ _ => by simp_all, zero_mem' := Set.mem_singleton 0,
       mul_mem' := fun _ _ _ _ => by simp_all }⟩
 
@@ -628,9 +633,7 @@ theorem non_unital_subsemiring_closure_eq_closure :
       rintro - ⟨H1, rfl⟩ <;>
     rintro - ⟨H2, rfl⟩
   · exact add_submonoid.mem_closure.mp hx H1.to_add_submonoid H2
-    
   · exact H2 sM
-    
 #align
   subsemigroup.non_unital_subsemiring_closure_eq_closure Subsemigroup.non_unital_subsemiring_closure_eq_closure
 
@@ -662,7 +665,7 @@ theorem mem_closure_iff {s : Set R} {x} :
 
 @[simp]
 theorem closure_add_submonoid_closure {s : Set R} : closure ↑(AddSubmonoid.closure s) = closure s :=
-  by
+  by 
   ext x
   refine' ⟨fun hx => _, fun hx => closure_mono AddSubmonoid.subset_closure hx⟩
   rintro - ⟨H, rfl⟩
@@ -698,7 +701,9 @@ theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {x} {y : R} (hx 
 variable (R)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
-protected def gi : GaloisInsertion (@closure R _) coe where
+protected def gi :
+    GaloisInsertion (@closure R _)
+      coe where 
   choice s _ := closure s
   gc s t := closure_le
   le_l_u s := subset_closure

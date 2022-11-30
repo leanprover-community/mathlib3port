@@ -60,7 +60,7 @@ theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.i :=
   IF.is_compl_I_F.eq_compl.symm
 #align order.ideal.prime_pair.compl_F_eq_I Order.Ideal.PrimePair.compl_F_eq_I
 
-theorem I_is_proper : IsProper IF.i := by
+theorem I_is_proper : IsProper IF.i := by 
   cases IF.F.nonempty
   apply is_proper_of_not_mem (_ : w ∉ IF.I)
   rwa [← IF.compl_I_eq_F] at h
@@ -99,7 +99,7 @@ def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
 
 theorem PrimePair.iIsPrime (IF : PrimePair P) : IsPrime IF.i :=
   { IF.I_is_proper with
-    compl_filter := by
+    compl_filter := by 
       rw [IF.compl_I_eq_F]
       exact IF.F.is_pfilter }
 #align order.ideal.prime_pair.I_is_prime Order.Ideal.PrimePair.iIsPrime
@@ -118,19 +118,16 @@ theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ 
 #align order.ideal.is_prime.mem_or_mem Order.Ideal.IsPrime.mem_or_mem
 
 theorem IsPrime.ofMemOrMem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) : IsPrime I :=
-  by
+  by 
   rw [is_prime_iff]
   use ‹_›
   apply is_pfilter.of_def
   · exact Set.nonempty_compl.2 (I.is_proper_iff.1 ‹_›)
-    
   · intro x _ y _
     refine' ⟨x ⊓ y, _, inf_le_left, inf_le_right⟩
     have := mt hI
     tauto!
-    
   · exact @mem_compl_of_ge _ _ _
-    
 #align order.ideal.is_prime.of_mem_or_mem Order.Ideal.IsPrime.ofMemOrMem
 
 theorem is_prime_iff_mem_or_mem [IsProper I] : IsPrime I ↔ ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I :=
@@ -195,7 +192,6 @@ instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I := by
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
   suffices ass : x ⊓ y ⊔ x ⊓ yᶜ ∈ J
   · rwa [sup_inf_inf_compl] at ass
-    
   exact
     sup_mem (J.lower inf_le_right hyJ)
       (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
@@ -223,7 +219,7 @@ def IsPrime.toPrimePair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
 #align order.pfilter.is_prime.to_prime_pair Order.Pfilter.IsPrime.toPrimePair
 
 theorem Order.Ideal.PrimePair.fIsPrime (IF : Ideal.PrimePair P) : IsPrime IF.f :=
-  { compl_ideal := by
+  { compl_ideal := by 
       rw [IF.compl_F_eq_I]
       exact IF.I.is_ideal }
 #align order.ideal.prime_pair.F_is_prime Order.Ideal.PrimePair.fIsPrime

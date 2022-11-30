@@ -162,7 +162,7 @@ variable [One α] [Add α]
 lean 3 declaration is
   forall {α : Type.{u}} [_inst_1 : One.{u} α] [_inst_2 : Add.{u} α], Eq.{succ u} α (HAdd.hAdd.{u, u, u} α α α (instHAdd.{u} α _inst_2) (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α _inst_1))) (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α _inst_1)))) (OfNat.ofNat.{u} α 2 (OfNat.mk.{u} α 2 (bit0.{u} α _inst_2 (One.one.{u} α _inst_1))))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1670 : AddMonoidWithOne.{u_1} α], Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddMonoidWithOne.toAddMonoid.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1670)))) (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (AddMonoidWithOne.toOne.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1670))) (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (AddMonoidWithOne.toOne.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1670)))) (OfNat.ofNat.{u_1} α 2 (instOfNat.{u_1} α 2 (AddMonoidWithOne.toNatCast.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1670) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1652 : AddMonoidWithOne.{u_1} α], Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (AddMonoidWithOne.toAddMonoid.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1652)))) (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (AddMonoidWithOne.toOne.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1652))) (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (AddMonoidWithOne.toOne.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1652)))) (OfNat.ofNat.{u_1} α 2 (instOfNat.{u_1} α 2 (AddMonoidWithOne.toNatCast.{u_1} α inst._@.Mathlib.Data.Nat.Cast.Defs._hyg.1652) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
 Case conversion may be inaccurate. Consider using '#align one_add_one_eq_two one_add_one_eq_twoₓ'. -/
 theorem one_add_one_eq_two : 1 + 1 = (2 : α) :=
   rfl
@@ -564,7 +564,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u}} [inst._@.Mathlib.Algebra.Ring.Defs._hyg.2161 : NonUnitalNonAssocRing.{u} α], HasDistribNeg.{u} α (NonUnitalNonAssocRing.toMul.{u} α inst._@.Mathlib.Algebra.Ring.Defs._hyg.2161)
 Case conversion may be inaccurate. Consider using '#align non_unital_non_assoc_ring.to_has_distrib_neg NonUnitalNonAssocRing.toHasDistribNegₓ'. -/
-instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg α where
+instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg :
+    HasDistribNeg α where 
   neg := Neg.neg
   neg_neg := neg_neg
   neg_mul a b := eq_neg_of_add_eq_zero_left <| by rw [← right_distrib, add_left_neg, zero_mul]

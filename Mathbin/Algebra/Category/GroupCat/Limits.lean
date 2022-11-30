@@ -289,25 +289,29 @@ namespace AddCommGroupCat
 /-- The categorical kernel of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical kernel.
 -/
-def kernelIsoKer {G H : AddCommGroupCat.{u}} (f : G ⟶ H) : kernel f ≅ AddCommGroupCat.of f.ker where
+def kernelIsoKer {G H : AddCommGroupCat.{u}} (f : G ⟶ H) :
+    kernel f ≅
+      AddCommGroupCat.of
+        f.ker where 
   Hom :=
     { toFun := fun g =>
-        ⟨kernel.ι f g, by
+        ⟨kernel.ι f g,
+          by
           -- TODO where is this `has_coe_t_aux.coe` coming from? can we prevent it appearing?
           change (kernel.ι f) g ∈ f.ker
           simp [AddMonoidHom.mem_ker]⟩,
-      map_zero' := by
+      map_zero' := by 
         ext
         simp,
-      map_add' := fun g g' => by
+      map_add' := fun g g' => by 
         ext
         simp }
   inv := kernel.lift f (AddSubgroup.subtype f.ker) (by tidy)
-  hom_inv_id' := by
+  hom_inv_id' := by 
     apply equalizer.hom_ext _
     ext
     simp
-  inv_hom_id' := by
+  inv_hom_id' := by 
     apply AddCommGroupCat.ext
     simp only [AddMonoidHom.coe_mk, coe_id, coe_comp]
     rintro ⟨x, mem⟩

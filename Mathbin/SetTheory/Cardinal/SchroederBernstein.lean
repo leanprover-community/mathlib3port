@@ -46,7 +46,6 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   cases' isEmpty_or_nonempty β with hβ hβ
   · have : IsEmpty α := Function.isEmpty f
     exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).Bijective⟩
-    
   set F : Set α →o Set α :=
     { toFun := fun s => (g '' (f '' s)ᶜ)ᶜ,
       monotone' := fun s t hst =>
@@ -66,12 +65,10 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
       obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
       rw [g'g _, g'g _] at hxy
       rw [hxy]
-      
     · intro x hx y hy hxy
       obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
       rw [g'g _] at hxy
       exact hy' ⟨x, hx, hxy⟩
-      
   exact ⟨h, ‹injective h›, ‹surjective h›⟩
 #align function.embedding.schroeder_bernstein Function.Embedding.schroeder_bernstein
 
@@ -113,24 +110,19 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
         let ⟨f, hf⟩ := Classical.axiom_of_choice h
         have : f ∈ s :=
           have : insert f s ∈ sets := fun x hx y hy => by
-            cases hx <;> cases hy;
-            · simp [hx, hy]
-              
+            cases hx <;> cases hy; · simp [hx, hy]
             · subst x
               exact fun i e => (hf i y hy e.symm).elim
-              
             · subst y
               exact fun i e => (hf i x hx e).elim
-              
             · exact hs x hx y hy
-              
           ms _ this (subset_insert f s) ▸ mem_insert _ _
         let ⟨i⟩ := I
         hf i f this rfl
   let ⟨f, hf⟩ := Classical.axiom_of_choice e
   ⟨i,
     ⟨fun j =>
-      ⟨fun a => f a j, fun a b e' => by
+      ⟨fun a => f a j, fun a b e' => by 
         let ⟨sa, ea⟩ := hf a
         let ⟨sb, eb⟩ := hf b
         rw [← ea, ← eb, hs _ sa _ sb _ e']⟩⟩⟩

@@ -160,7 +160,7 @@ theorem mk_coe_fn (f : α →ₘ[μ] β) : mk f f.AeStronglyMeasurable = f := by
   exact (ae_strongly_measurable.ae_eq_mk _).symm
 #align measure_theory.ae_eq_fun.mk_coe_fn MeasureTheory.AeEqFun.mk_coe_fn
 
-@[ext.1]
+@[ext]
 theorem ext {f g : α →ₘ[μ] β} (h : f =ᵐ[μ] g) : f = g := by
   rwa [← f.mk_coe_fn, ← g.mk_coe_fn, mk_eq_mk]
 #align measure_theory.ae_eq_fun.ext MeasureTheory.AeEqFun.ext
@@ -656,7 +656,8 @@ instance : Monoid (α →ₘ[μ] γ) :=
 
 /-- `ae_eq_fun.to_germ` as a `monoid_hom`. -/
 @[to_additive "`ae_eq_fun.to_germ` as an `add_monoid_hom`.", simps]
-def toGermMonoidHom : (α →ₘ[μ] γ) →* μ.ae.Germ γ where
+def toGermMonoidHom : (α →ₘ[μ] γ) →*
+      μ.ae.Germ γ where 
   toFun := toGerm
   map_one' := one_to_germ
   map_mul' := mul_to_germ
@@ -875,7 +876,8 @@ variable [Group β] [TopologicalGroup β]
 classes of `μ`-almost-everywhere measurable functions. -/
 @[to_additive
       "The `add_hom` from the group of continuous maps from `α` to `β` to the group of\nequivalence classes of `μ`-almost-everywhere measurable functions."]
-def toAeEqFunMulHom : C(α, β) →* α →ₘ[μ] β where
+def toAeEqFunMulHom :
+    C(α, β) →* α →ₘ[μ] β where 
   toFun := ContinuousMap.toAeEqFun μ
   map_one' := rfl
   map_mul' f g :=

@@ -59,13 +59,11 @@ theorem exists_primitive_element_of_finite_top [Finite E] : ∃ α : E, F⟮⟯ 
   by_cases hx : x = 0
   · rw [hx]
     exact F⟮⟯.zero_mem
-    
   · obtain ⟨n, hn⟩ := set.mem_range.mp (hα (Units.mk0 x hx))
-    rw [show x = α ^ n by
+    rw [show x = α ^ n by 
         norm_cast
-        rw [hn, Units.coe_mk0]]
+        rw [hn, Units.val_mk0]]
     exact zpow_mem (mem_adjoin_simple_self F ↑α) n
-    
 #align field.exists_primitive_element_of_finite_top Field.exists_primitive_element_of_finite_top
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -129,17 +127,14 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   · use γ
     apply le_antisymm
     · rw [adjoin_le_iff]
-      have α_in_Fγ : α ∈ F⟮⟯ := by
+      have α_in_Fγ : α ∈ F⟮⟯ := by 
         rw [← add_sub_cancel α (c • β)]
         exact F⟮⟯.sub_mem (mem_adjoin_simple_self F γ) (F⟮⟯.toSubalgebra.smul_mem β_in_Fγ c)
       exact fun x hx => by cases hx <;> cases hx <;> cases hx <;> assumption
-      
     · rw [adjoin_simple_le_iff]
       have α_in_Fαβ : α ∈ F⟮⟯ := subset_adjoin F {α, β} (Set.mem_insert α {β})
       have β_in_Fαβ : β ∈ F⟮⟯ := subset_adjoin F {α, β} (Set.mem_insert_of_mem α rfl)
       exact F⟮⟯.add_mem α_in_Fαβ (F⟮⟯.smul_mem β_in_Fαβ)
-      
-    
   let p :=
     EuclideanDomain.gcd ((f.map (algebraMap F F⟮⟯)).comp (C (adjoin_simple.gen F γ) - C ↑c * X))
       (g.map (algebraMap F F⟮⟯))
@@ -153,15 +148,13 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
       simp [mul_sub, coeff_C, mul_div_cancel_left β (mt leading_coeff_eq_zero.mp h_ne_zero)]
     rw [finale]
     exact Subtype.mem (-p.coeff 0 / p.coeff 1)
-    
   have h_sep : h.separable := separable_gcd_right _ (IsSeparable.separable F β).map
-  have h_root : h.eval β = 0 := by
+  have h_root : h.eval β = 0 := by 
     apply eval_gcd_eq_zero
-    · rw [eval_comp, eval_sub, eval_mul, eval_C, eval_C, eval_X, eval_map, ← aeval_def, ←
+    ·
+      rw [eval_comp, eval_sub, eval_mul, eval_C, eval_C, eval_X, eval_map, ← aeval_def, ←
         Algebra.smul_def, add_sub_cancel, minpoly.aeval]
-      
     · rw [eval_map, ← aeval_def, minpoly.aeval]
-      
   have h_splits : splits ιEE' h :=
     splits_of_splits_gcd_right ιEE' map_g_ne_zero (splitting_field.splits _)
   have h_roots : ∀ x ∈ (h.map ιEE').roots, x = ιEE' β := by
@@ -169,13 +162,13 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
     rw [mem_roots_map h_ne_zero] at hx
     specialize
       hc (ιEE' γ - ιEE' (ιFE c) * x)
-        (by
+        (by 
           have f_root := root_left_of_root_gcd hx
           rw [eval₂_comp, eval₂_sub, eval₂_mul, eval₂_C, eval₂_C, eval₂_X, eval₂_map] at f_root
           exact (mem_roots_map (minpoly.ne_zero hα)).mpr f_root)
     specialize
       hc x
-        (by
+        (by 
           rw [mem_roots_map (minpoly.ne_zero hβ), ← eval₂_map]
           exact root_right_of_root_gcd hx)
     by_contra a
@@ -187,9 +180,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   trans EuclideanDomain.gcd (_ : E[X]) (_ : E[X])
   · dsimp only [p]
     convert (gcd_map (algebraMap F⟮⟯ E)).symm
-    
   · simpa [map_comp, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, h]
-    
 #align field.primitive_element_inf_aux Field.primitive_element_inf_aux
 
 end PrimitiveElementInf
@@ -219,9 +210,7 @@ theorem exists_primitive_element : ∃ α : E, F⟮⟯ = ⊤ := by
       cases' primitive_element_inf_aux F α β with γ hγ
       exact ⟨γ, hγ.symm⟩
     exact induction_on_adjoin P base ih ⊤
-    
   · exact exists_primitive_element_of_finite_bot F E
-    
 #align field.exists_primitive_element Field.exists_primitive_element
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/

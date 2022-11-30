@@ -58,7 +58,6 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
       · refine' hf ⟨a, ha⟩ (Subtype.ext _)
         rwa [mem_fixed_points, is_fixed_pt, perm.subtype_equiv_subtype_perm, @coe_fn_coe_base',
           Equiv.coe_fn_mk, Subtype.coe_mk, Equiv.Perm.of_subtype_apply_of_mem] at hfa
-        
       rintro hf ⟨a, ha⟩ hfa
       refine' hf _ _ ha
       change perm.subtype_equiv_subtype_perm p f a = a
@@ -89,15 +88,12 @@ def atMostOneFixedPointEquivSumDerangements [DecidableEq α] (a : α) :
         · convert subtype_subtype_equiv_subtype_inter _ _
           ext f
           rfl
-          
     _ ≃ Sum { f : Perm α // fixedPoints f = {a} } { f : Perm α // fixedPoints f = ∅ } := by
       refine' Equiv.sumCongr (subtype_equiv_right fun f => _) (subtype_equiv_right fun f => _)
       · rw [Set.eq_singleton_iff_unique_mem, and_comm']
         rfl
-        
       · rw [Set.eq_empty_iff_forall_not_mem]
         refine' ⟨fun h x hx => h.2 (h.1 hx ▸ hx), fun h => ⟨fun x hx => (h _ hx).elim, h _⟩⟩
-        
     _ ≃ Sum (derangements ({a}ᶜ : Set α)) (derangements α) := by
       refine'
         Equiv.sumCongr ((derangements.subtypeEquiv _).trans <| subtype_equiv_right fun x => _).symm
@@ -144,12 +140,9 @@ theorem RemoveNone.fiber_some (a : α) :
     apply_fun some  at x_fixed
     cases' Fx : F (some x) with y
     · rwa [remove_none_none F Fx, F_none, Option.some_inj, eq_comm] at x_fixed
-      
     · exfalso
       rw [remove_none_some F ⟨y, Fx⟩] at x_fixed
       exact F_derangement _ x_fixed
-      
-    
   · intro h_opfp
     use equiv.perm.decompose_option.symm (some a, f)
     constructor
@@ -158,21 +151,16 @@ theorem RemoveNone.fiber_some (a : α) :
       simp only [perm.decompose_option_symm_apply, swap_apply_self, perm.coe_mul]
       cases x
       · simp
-        
       simp only [Equiv.option_congr_apply, Option.map_some']
       by_cases x_vs_a : x = a
       · rw [x_vs_a, swap_apply_right]
         apply Option.some_ne_none
-        
       have ne_1 : some x ≠ none := Option.some_ne_none _
       have ne_2 : some x ≠ some a := (Option.some_injective α).ne_iff.mpr x_vs_a
       rw [swap_apply_of_ne_of_ne ne_1 ne_2, (Option.some_injective α).ne_iff]
       intro contra
       exact x_vs_a (h_opfp contra)
-      
     · rw [apply_symm_apply]
-      
-    
 #align derangements.equiv.remove_none.fiber_some derangements.Equiv.RemoveNone.fiber_some
 
 end Equiv

@@ -45,7 +45,8 @@ variable [NontriviallyNormedField 𝕜] [Module 𝕜 E] [Module 𝕜 F] [HasCont
 neighborhood of zero that gets mapped into a bounded set in `F`. -/
 def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
     (h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)) : E →L[𝕜] F :=
-  ⟨f, by
+  ⟨f,
+    by
     -- It suffices to show that `f` is continuous at `0`.
     refine' continuous_of_continuous_at_zero f _
     rw [continuous_at_def, f.map_zero]
@@ -125,7 +126,6 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
         Nat.cast_add, Nat.cast_one, inv_le h' zero_lt_one]
       norm_cast
       simp
-      
     intro n hn
     -- The converse direction follows from continuity of the scalar multiplication
     have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
@@ -148,7 +148,6 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     by_cases h : n = 0
     · rw [h, Nat.cast_zero, zero_smul]
       refine' mem_of_mem_nhds (bE.1.mem_of_mem <| by triv)
-      
     rcases hu n h with ⟨y, hy, hu1⟩
     convert hy
     rw [← hu1, ← mul_smul]
@@ -165,7 +164,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     exact hn.le
   have hn' : 0 < ‖(n : 𝕜')‖ := lt_of_lt_of_le hr h1
   rw [norm_pos_iff, Ne.def, Nat.cast_eq_zero] at hn'
-  have h'' : f (u n) ∈ V := by
+  have h'' : f (u n) ∈ V := by 
     simp only [Set.image_subset_iff] at h'
     specialize h' (n : 𝕜') h1 (Set.mem_range_self n)
     simp only [Set.mem_preimage, LinearMap.map_smulₛₗ, map_nat_cast] at h'

@@ -149,7 +149,7 @@ theorem toRightInvOn (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (
 #align antilipschitz_with.to_right_inv_on AntilipschitzWith.toRightInvOn
 
 theorem toRightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
-    LipschitzWith K g := by
+    LipschitzWith K g := by 
   intro x y
   have := hf (g x) (g y)
   rwa [hg x, hg y] at this

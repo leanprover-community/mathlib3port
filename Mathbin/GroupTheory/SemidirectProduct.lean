@@ -36,7 +36,7 @@ variable (N : Type _) (G : Type _) {H : Type _} [Group N] [Group G] [Group H]
 /-- The semidirect product of groups `N` and `G`, given a map `φ` from `G` to the automorphism
   group of `N`. It the product of sets with the group operation
   `⟨n₁, g₁⟩ * ⟨n₂, g₂⟩ = ⟨n₁ * φ g₁ n₂, g₁ * g₂⟩` -/
-@[ext.1]
+@[ext]
 structure SemidirectProduct (φ : G →* MulAut N) where
   left : N
   right : G
@@ -52,7 +52,7 @@ namespace SemidirectProduct
 
 variable {N G} {φ : G →* MulAut N}
 
-instance : Group (N ⋊[φ] G) where
+instance : Group (N ⋊[φ] G) where 
   one := ⟨1, 1⟩
   mul a b := ⟨a.1 * φ a.2 b.1, a.2 * b.2⟩
   inv x := ⟨φ x.2⁻¹ x.1⁻¹, x.2⁻¹⟩
@@ -95,7 +95,7 @@ theorem mul_right (a b : N ⋊[φ] G) : (a * b).right = a.right * b.right :=
 #align semidirect_product.mul_right SemidirectProduct.mul_right
 
 /-- The canonical map `N →* N ⋊[φ] G` sending `n` to `⟨n, 1⟩` -/
-def inl : N →* N ⋊[φ] G where
+def inl : N →* N ⋊[φ] G where 
   toFun n := ⟨n, 1⟩
   map_one' := rfl
   map_mul' := by intros <;> ext <;> simp
@@ -121,7 +121,7 @@ theorem inl_inj {n₁ n₂ : N} : (inl n₁ : N ⋊[φ] G) = inl n₂ ↔ n₁ =
 #align semidirect_product.inl_inj SemidirectProduct.inl_inj
 
 /-- The canonical map `G →* N ⋊[φ] G` sending `g` to `⟨1, g⟩` -/
-def inr : G →* N ⋊[φ] G where
+def inr : G →* N ⋊[φ] G where 
   toFun g := ⟨1, g⟩
   map_one' := rfl
   map_mul' := by intros <;> ext <;> simp
@@ -163,7 +163,7 @@ theorem inl_left_mul_inr_right (x : N ⋊[φ] G) : inl x.left * inr x.right = x 
 #align semidirect_product.inl_left_mul_inr_right SemidirectProduct.inl_left_mul_inr_right
 
 /-- The canonical projection map `N ⋊[φ] G →* G`, as a group hom. -/
-def rightHom : N ⋊[φ] G →* G where
+def rightHom : N ⋊[φ] G →* G where 
   toFun := SemidirectProduct.right
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -208,10 +208,10 @@ variable (f₁ : N →* H) (f₂ : G →* H)
 /-- Define a group hom `N ⋊[φ] G →* H`, by defining maps `N →* H` and `G →* H`  -/
 def lift (f₁ : N →* H) (f₂ : G →* H)
     (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁) :
-    N ⋊[φ] G →* H where
+    N ⋊[φ] G →* H where 
   toFun a := f₁ a.1 * f₂ a.2
   map_one' := by simp
-  map_mul' a b := by
+  map_mul' a b := by 
     have := fun n g => MonoidHom.ext_iff.1 (h n) g
     simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom] at this
     simp [this, mul_assoc]
@@ -258,10 +258,10 @@ variable {N₁ : Type _} {G₁ : Type _} [Group N₁] [Group G₁] {φ₁ : G₁
   satisfy a commutativity condition `∀ n g, f₁ (φ g n) = φ₁ (f₂ g) (f₁ n)`.  -/
 def map (f₁ : N →* N₁) (f₂ : G →* G₁)
     (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁) :
-    N ⋊[φ] G →* N₁ ⋊[φ₁] G₁ where
+    N ⋊[φ] G →* N₁ ⋊[φ₁] G₁ where 
   toFun x := ⟨f₁ x.1, f₂ x.2⟩
   map_one' := by simp
-  map_mul' x y := by
+  map_mul' x y := by 
     replace h := MonoidHom.ext_iff.1 (h x.right) y.left
     ext <;> simp_all
 #align semidirect_product.map SemidirectProduct.map

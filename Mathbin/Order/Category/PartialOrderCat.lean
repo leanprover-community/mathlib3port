@@ -54,20 +54,21 @@ instance hasForgetToPreorder : HasForget₂ PartialOrderCat PreorderCat :=
 
 /-- Constructs an equivalence between partial orders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : PartialOrderCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : PartialOrderCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply x
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply x
 #align PartialOrder.iso.mk PartialOrderCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : PartialOrderCat ⥤ PartialOrderCat where
+def dual : PartialOrderCat ⥤ PartialOrderCat where 
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
 #align PartialOrder.dual PartialOrderCat.dual
@@ -89,13 +90,15 @@ theorem PartialOrder_dual_comp_forget_to_Preorder :
 #align PartialOrder_dual_comp_forget_to_Preorder PartialOrder_dual_comp_forget_to_Preorder
 
 /-- `antisymmetrization` as a functor. It is the free functor. -/
-def preorderToPartialOrder : PreorderCat.{u} ⥤ PartialOrderCat where
+def preorderToPartialOrder :
+    PreorderCat.{u} ⥤
+      PartialOrderCat where 
   obj X := PartialOrderCat.of (Antisymmetrization X (· ≤ ·))
   map X Y f := f.Antisymmetrization
-  map_id' X := by
+  map_id' X := by 
     ext
     exact Quotient.inductionOn' x fun x => Quotient.map'_mk' _ (fun a b => id) _
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     ext
     exact Quotient.inductionOn' x fun x => OrderHom.antisymmetrization_apply_mk _ _
 #align Preorder_to_PartialOrder preorderToPartialOrder

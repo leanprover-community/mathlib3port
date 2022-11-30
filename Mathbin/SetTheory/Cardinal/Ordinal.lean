@@ -59,16 +59,12 @@ theorem ord_is_limit {c} (co : ℵ₀ ≤ c) : (ord c).IsLimit := by
   refine' ⟨fun h => aleph_0_ne_zero _, fun a => lt_imp_lt_of_le_imp_le fun h => _⟩
   · rw [← Ordinal.le_zero, ord_le] at h
     simpa only [card_zero, nonpos_iff_eq_zero] using co.trans h
-    
   · rw [ord_le] at h⊢
     rwa [← @add_one_of_aleph_0_le (card a), ← card_succ]
     rw [← ord_le, ← le_succ_of_is_limit, ord_le]
     · exact co.trans h
-      
     · rw [ord_aleph_0]
       exact omega_is_limit
-      
-    
 #align cardinal.ord_is_limit Cardinal.ord_is_limit
 
 /-! ### Aleph cardinals -/
@@ -260,9 +256,7 @@ theorem aleph_le {o₁ o₂ : Ordinal} : aleph o₁ ≤ aleph o₂ ↔ o₁ ≤ 
 theorem max_aleph_eq (o₁ o₂ : Ordinal) : max (aleph o₁) (aleph o₂) = aleph (max o₁ o₂) := by
   cases' le_total (aleph o₁) (aleph o₂) with h h
   · rw [max_eq_right h, max_eq_right (aleph_le.1 h)]
-    
   · rw [max_eq_left h, max_eq_left (aleph_le.1 h)]
-    
 #align cardinal.max_aleph_eq Cardinal.max_aleph_eq
 
 @[simp]
@@ -283,12 +277,8 @@ theorem aleph_limit {o : Ordinal} (ho : IsLimit o) : aleph o = ⨆ a : iio o, al
     · rcases lt_omega.1 h with ⟨n, rfl⟩
       use ⟨0, ho.pos⟩
       simpa using (nat_lt_aleph_0 n).le
-      
     · exact ⟨⟨_, (sub_lt_of_le h).2 hi⟩, aleph'_le.2 (le_add_sub _ _)⟩
-      
-    
   · exact fun i => aleph_le.2 (le_of_lt i.2)
-    
 #align cardinal.aleph_limit Cardinal.aleph_limit
 
 theorem aleph_0_le_aleph' {o : Ordinal} : ℵ₀ ≤ aleph' o ↔ ω ≤ o := by rw [← aleph'_omega, aleph'_le]
@@ -330,7 +320,7 @@ instance (o : Ordinal) : NoMaxOrder (aleph o).ord.out.α :=
 
 theorem exists_aleph {c : Cardinal} : ℵ₀ ≤ c ↔ ∃ o, c = aleph o :=
   ⟨fun h =>
-    ⟨alephIdx c - ω, by
+    ⟨alephIdx c - ω, by 
       rw [aleph, Ordinal.add_sub_cancel_of_le, aleph'_aleph_idx]
       rwa [← aleph_0_le_aleph', aleph'_aleph_idx]⟩,
     fun ⟨o, e⟩ => e.symm ▸ aleph_0_le_aleph _⟩
@@ -361,7 +351,7 @@ theorem countable_iff_lt_aleph_one {α : Type _} (s : Set α) : s.Countable ↔ 
 theorem ord_card_unbounded : Unbounded (· < ·) { b : Ordinal | b.card.ord = b } :=
   unbounded_lt_iff.2 fun a =>
     ⟨_,
-      ⟨by
+      ⟨by 
         dsimp
         rw [card_ord], (lt_ord_succ_card a).le⟩⟩
 #align cardinal.ord_card_unbounded Cardinal.ord_card_unbounded
@@ -375,7 +365,7 @@ theorem ord_aleph'_eq_enum_card : ord ∘ aleph' = enumOrd { b : Ordinal | b.car
   rw [← eq_enum_ord _ ord_card_unbounded, range_eq_iff]
   exact
     ⟨aleph'_is_normal.strict_mono,
-      ⟨fun a => by
+      ⟨fun a => by 
         dsimp
         rw [card_ord], fun b hb => eq_aleph'_of_eq_card_ord hb⟩⟩
 #align cardinal.ord_aleph'_eq_enum_card Cardinal.ord_aleph'_eq_enum_card
@@ -396,16 +386,14 @@ theorem eq_aleph_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) (ho' : ω �
 
 /-- `ord ∘ aleph` enumerates the infinite ordinals that are cardinals. -/
 theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd { b : Ordinal | b.card.ord = b ∧ ω ≤ b } :=
-  by
+  by 
   rw [← eq_enum_ord _ ord_card_unbounded']
   use aleph_is_normal.strict_mono
   rw [range_eq_iff]
   refine' ⟨fun a => ⟨_, _⟩, fun b hb => eq_aleph_of_eq_card_ord hb.1 hb.2⟩
   · rw [card_ord]
-    
   · rw [← ord_aleph_0, ord_le_ord]
     exact aleph_0_le_aleph _
-    
 #align cardinal.ord_aleph_eq_enum_card Cardinal.ord_aleph_eq_enum_card
 
 /-! ### Beth cardinals -/
@@ -440,19 +428,15 @@ theorem beth_strict_mono : StrictMono beth := by
   intro h
   rcases zero_or_succ_or_limit b with (rfl | ⟨c, rfl⟩ | hb)
   · exact (Ordinal.not_lt_zero a h).elim
-    
   · rw [lt_succ_iff] at h
     rw [beth_succ]
     apply lt_of_le_of_lt _ (cantor _)
     rcases eq_or_lt_of_le h with (rfl | h)
     · rfl
-      
     exact (IH c (lt_succ c) h).le
-    
   · apply (cantor _).trans_le
     rw [beth_limit hb, ← beth_succ]
     exact le_csupr (bdd_above_of_small _) (⟨_, hb.succ_lt h⟩ : Iio b)
-    
 #align cardinal.beth_strict_mono Cardinal.beth_strict_mono
 
 theorem beth_mono : Monotone beth :=
@@ -472,15 +456,12 @@ theorem beth_le {o₁ o₂ : Ordinal} : beth o₁ ≤ beth o₂ ↔ o₁ ≤ o�
 theorem aleph_le_beth (o : Ordinal) : aleph o ≤ beth o := by
   apply limit_rec_on o
   · simp
-    
   · intro o h
     rw [aleph_succ, beth_succ, succ_le_iff]
     exact (cantor _).trans_le (power_le_power_left two_ne_zero h)
-    
   · intro o ho IH
     rw [aleph_limit ho, beth_limit ho]
     exact csupr_mono (bdd_above_of_small _) fun x => IH x.1 x.2
-    
 #align cardinal.aleph_le_beth Cardinal.aleph_le_beth
 
 theorem aleph_0_le_beth (o : Ordinal) : ℵ₀ ≤ beth o :=
@@ -543,24 +524,20 @@ theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c := by
         typein_inj] at h
       exact max_le_iff.1 (le_iff_lt_or_eq.2 <| h.imp_right And.left)
     suffices H : (insert (g p) { x | r x (g p) } : Set α) ≃ Sum { x | r x (g p) } PUnit
-    · exact
+    ·
+      exact
         ⟨(Set.embeddingOfSubset _ _ this).trans
             ((Equiv.Set.prod _ _).trans (H.prod_congr H)).toEmbedding⟩
-      
     refine' (Equiv.Set.insert _).trans ((Equiv.refl _).sumCongr punit_equiv_punit)
     apply @irrefl _ r
-    
   cases' lt_or_le (card (succ (typein (· < ·) (g p)))) ℵ₀ with qo qo
   · exact (mul_lt_aleph_0 qo qo).trans_le ol
-    
   · suffices
     · exact (IH _ this qo).trans_lt this
-      
     rw [← lt_ord]
     apply (ord_is_limit ol).2
     rw [mk_def, e]
     apply typein_lt_type
-    
 #align cardinal.mul_eq_self Cardinal.mul_eq_self
 
 end UsingOrdinals
@@ -629,10 +606,9 @@ theorem mul_le_max_of_aleph_0_le_left {a b : Cardinal} (h : ℵ₀ ≤ a) : a * 
 #align cardinal.mul_le_max_of_aleph_0_le_left Cardinal.mul_le_max_of_aleph_0_le_left
 
 theorem mul_eq_max_of_aleph_0_le_left {a b : Cardinal} (h : ℵ₀ ≤ a) (h' : b ≠ 0) :
-    a * b = max a b := by
+    a * b = max a b := by 
   cases' le_or_lt ℵ₀ b with hb hb
   · exact mul_eq_max h hb
-    
   refine' (mul_le_max_of_aleph_0_le_left h).antisymm _
   have : b ≤ a := hb.le.trans h
   rw [max_eq_left this]
@@ -641,7 +617,7 @@ theorem mul_eq_max_of_aleph_0_le_left {a b : Cardinal} (h : ℵ₀ ≤ a) (h' : 
 #align cardinal.mul_eq_max_of_aleph_0_le_left Cardinal.mul_eq_max_of_aleph_0_le_left
 
 theorem mul_eq_max_of_aleph_0_le_right {a b : Cardinal} (h' : a ≠ 0) (h : ℵ₀ ≤ b) :
-    a * b = max a b := by
+    a * b = max a b := by 
   rw [mul_comm, max_comm]
   exact mul_eq_max_of_aleph_0_le_left h h'
 #align cardinal.mul_eq_max_of_aleph_0_le_right Cardinal.mul_eq_max_of_aleph_0_le_right
@@ -649,29 +625,19 @@ theorem mul_eq_max_of_aleph_0_le_right {a b : Cardinal} (h' : a ≠ 0) (h : ℵ�
 theorem mul_eq_max' {a b : Cardinal} (h : ℵ₀ ≤ a * b) : a * b = max a b := by
   rcases aleph_0_le_mul_iff.mp h with ⟨ha, hb, ha' | hb'⟩
   · exact mul_eq_max_of_aleph_0_le_left ha' hb
-    
   · exact mul_eq_max_of_aleph_0_le_right ha hb'
-    
 #align cardinal.mul_eq_max' Cardinal.mul_eq_max'
 
 theorem mul_le_max (a b : Cardinal) : a * b ≤ max (max a b) ℵ₀ := by
-  rcases eq_or_ne a 0 with (rfl | ha0);
-  · simp
-    
-  rcases eq_or_ne b 0 with (rfl | hb0);
-  · simp
-    
+  rcases eq_or_ne a 0 with (rfl | ha0); · simp
+  rcases eq_or_ne b 0 with (rfl | hb0); · simp
   cases' le_or_lt ℵ₀ a with ha ha
   · rw [mul_eq_max_of_aleph_0_le_left ha hb0]
     exact le_max_left _ _
-    
   · cases' le_or_lt ℵ₀ b with hb hb
     · rw [mul_comm, mul_eq_max_of_aleph_0_le_left hb ha0, max_comm]
       exact le_max_left _ _
-      
     · exact le_max_of_le_right (mul_lt_aleph_0 ha hb).le
-      
-    
 #align cardinal.mul_le_max Cardinal.mul_le_max
 
 theorem mul_eq_left {a b : Cardinal} (ha : ℵ₀ ≤ a) (hb : b ≤ a) (hb' : b ≠ 0) : a * b = a := by
@@ -696,25 +662,21 @@ theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ℵ₀ b ≤ a ∧ 
   rw [max_le_iff]
   refine' ⟨fun h => _, _⟩
   · cases' le_or_lt ℵ₀ a with ha ha
-    · have : a ≠ 0 := by
+    · have : a ≠ 0 := by 
         rintro rfl
         exact ha.not_lt aleph_0_pos
       left
       use ha
       · rw [← not_lt]
         exact fun hb => ne_of_gt (hb.trans_le (le_mul_left this)) h
-        
       · rintro rfl
         apply this
         rw [mul_zero] at h
         exact h.symm
-        
-      
     right
     by_cases h2a : a = 0
     · exact Or.inr h2a
-      
-    have hb : b ≠ 0 := by
+    have hb : b ≠ 0 := by 
       rintro rfl
       apply h2a
       rw [mul_zero] at h
@@ -733,12 +695,9 @@ theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ℵ₀ b ≤ a ∧ 
     conv_lhs => rw [← mul_one n]
     rwa [mul_lt_mul_left]
     apply Nat.lt_of_succ_le h2a
-    
   · rintro (⟨⟨ha, hab⟩, hb⟩ | rfl | rfl)
     · rw [mul_eq_max_of_aleph_0_le_left ha hb, max_eq_left hab]
-      
     all_goals simp
-    
 #align cardinal.mul_eq_left_iff Cardinal.mul_eq_left_iff
 
 /-! ### Properties of `add` -/
@@ -780,14 +739,10 @@ theorem add_le_max (a b : Cardinal) : a + b ≤ max (max a b) ℵ₀ := by
   cases' le_or_lt ℵ₀ a with ha ha
   · rw [add_eq_max ha]
     exact le_max_left _ _
-    
   · cases' le_or_lt ℵ₀ b with hb hb
     · rw [add_comm, add_eq_max hb, max_comm]
       exact le_max_left _ _
-      
     · exact le_max_of_le_right (add_lt_aleph_0 ha hb).le
-      
-    
 #align cardinal.add_le_max Cardinal.add_le_max
 
 theorem add_le_of_le {a b c : Cardinal} (hc : ℵ₀ ≤ c) (h1 : a ≤ c) (h2 : b ≤ c) : a + b ≤ c :=
@@ -801,11 +756,10 @@ theorem add_lt_of_lt {a b c : Cardinal} (hc : ℵ₀ ≤ c) (h1 : a < c) (h2 : b
 #align cardinal.add_lt_of_lt Cardinal.add_lt_of_lt
 
 theorem eq_of_add_eq_of_aleph_0_le {a b c : Cardinal} (h : a + b = c) (ha : a < c) (hc : ℵ₀ ≤ c) :
-    b = c := by
+    b = c := by 
   apply le_antisymm
   · rw [← h]
     apply self_le_add_left
-    
   rw [← not_lt]; intro hb
   have : a + b < c := add_lt_of_lt hc ha hb
   simpa [h, lt_irrefl] using this
@@ -828,19 +782,14 @@ theorem add_eq_left_iff {a b : Cardinal} : a + b = a ↔ max ℵ₀ b ≤ a ∨ 
       rw [← not_lt]
       apply fun hb => ne_of_gt _ h
       exact hb.trans_le (self_le_add_left b a)
-      
     right
     rw [← h, add_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha
     rcases ha with ⟨⟨n, rfl⟩, ⟨m, rfl⟩⟩
     norm_cast  at h⊢
     rw [← add_right_inj, h, add_zero]
-    
   · rintro (⟨h1, h2⟩ | h3)
     · rw [add_eq_max h1, max_eq_left h2]
-      
     · rw [h3, add_zero]
-      
-    
 #align cardinal.add_eq_left_iff Cardinal.add_eq_left_iff
 
 theorem add_eq_right_iff {a b : Cardinal} : a + b = b ↔ max ℵ₀ a ≤ b ∨ a = 0 := by
@@ -861,13 +810,12 @@ theorem mk_add_one_eq {α : Type _} [Infinite α] : (#α) + 1 = (#α) :=
 #align cardinal.mk_add_one_eq Cardinal.mk_add_one_eq
 
 protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : a + b = a + c) (ha : a < ℵ₀) :
-    b = c := by
+    b = c := by 
   cases' le_or_lt ℵ₀ b with hb hb
   · have : a < b := ha.trans_le hb
     rw [add_eq_right hb this.le, eq_comm] at h
     rw [eq_of_add_eq_of_aleph_0_le h this hb]
-    
-  · have hc : c < ℵ₀ := by
+  · have hc : c < ℵ₀ := by 
       rw [← not_le]
       intro hc
       apply lt_irrefl ℵ₀
@@ -880,11 +828,10 @@ protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : a + b = a + c) (
     rcases hc with ⟨k, rfl⟩
     norm_cast  at h⊢
     apply add_left_cancel h
-    
 #align cardinal.eq_of_add_eq_add_left Cardinal.eq_of_add_eq_add_left
 
 protected theorem eq_of_add_eq_add_right {a b c : Cardinal} (h : a + b = c + b) (hb : b < ℵ₀) :
-    a = c := by
+    a = c := by 
   rw [add_comm a b, add_comm c b] at h
   exact Cardinal.eq_of_add_eq_add_left h hb
 #align cardinal.eq_of_add_eq_add_right Cardinal.eq_of_add_eq_add_right
@@ -895,7 +842,7 @@ theorem aleph_add_aleph (o₁ o₂ : Ordinal) : aleph o₁ + aleph o₂ = aleph 
 #align cardinal.aleph_add_aleph Cardinal.aleph_add_aleph
 
 theorem principal_add_ord {c : Cardinal} (hc : ℵ₀ ≤ c) : Ordinal.Principal (· + ·) c.ord :=
-  fun a b ha hb => by
+  fun a b ha hb => by 
   rw [lt_ord, Ordinal.card_add] at *
   exact add_lt_of_lt hc ha hb
 #align cardinal.principal_add_ord Cardinal.principal_add_ord
@@ -946,13 +893,13 @@ theorem pow_le {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : μ < ℵ₀) : 
       (fun α H1 =>
         Nat.recOn n
           (lt_of_lt_of_le
-              (by
+              (by 
                 rw [Nat.cast_zero, power_zero]
                 exact one_lt_aleph_0)
               H1).le
           fun n ih =>
           trans_rel_left _
-            (by
+            (by 
               rw [Nat.cast_succ, power_add, power_one]
               exact mul_le_mul_right' ih _)
             (mul_eq_self H1))
@@ -967,9 +914,7 @@ theorem power_self_eq {c : Cardinal} (h : ℵ₀ ≤ c) : c ^ c = 2 ^ c := by
   apply ((power_le_power_right <| (cantor c).le).trans _).antisymm
   · convert power_le_power_right ((nat_lt_aleph_0 2).le.trans h)
     apply nat.cast_two.symm
-    
   · rw [← power_mul, mul_eq_self h]
-    
 #align cardinal.power_self_eq Cardinal.power_self_eq
 
 theorem prod_eq_two_power {ι : Type u} [Infinite ι] {c : ι → Cardinal.{v}} (h₁ : ∀ i, 2 ≤ c i)
@@ -978,12 +923,10 @@ theorem prod_eq_two_power {ι : Type u} [Infinite ι] {c : ι → Cardinal.{v}} 
   apply le_antisymm
   · refine' (prod_le_prod _ _ h₂).trans_eq _
     rw [prod_const, lift_lift, ← lift_power, power_self_eq (aleph_0_le_mk ι), lift_umax.{u, v}]
-    
   · rw [← prod_const', lift_prod]
     refine' prod_le_prod _ _ fun i => _
     rw [lift_two, ← lift_two.{u, v}, lift_le]
     exact h₁ i
-    
 #align cardinal.prod_eq_two_power Cardinal.prod_eq_two_power
 
 theorem power_eq_two_power {c₁ c₂ : Cardinal} (h₁ : ℵ₀ ≤ c₁) (h₂ : 2 ≤ c₂) (h₂' : c₂ ≤ c₁) :
@@ -1007,9 +950,7 @@ theorem power_nat_eq {c : Cardinal.{u}} {n : ℕ} (h1 : ℵ₀ ≤ c) (h2 : 1 �
 theorem power_nat_le_max {c : Cardinal.{u}} {n : ℕ} : c ^ (n : Cardinal.{u}) ≤ max c ℵ₀ := by
   cases' le_or_lt ℵ₀ c with hc hc
   · exact le_max_of_le_left (power_nat_le hc)
-    
   · exact le_max_of_le_right (power_lt_aleph_0 hc (nat_lt_aleph_0 _)).le
-    
 #align cardinal.power_nat_le_max Cardinal.power_nat_le_max
 
 theorem powerlt_aleph_0 {c : Cardinal} (h : ℵ₀ ≤ c) : c ^< ℵ₀ = c := by
@@ -1019,7 +960,6 @@ theorem powerlt_aleph_0 {c : Cardinal} (h : ℵ₀ ≤ c) : c ^< ℵ₀ = c := b
     rw [lt_aleph_0]
     rintro ⟨n, rfl⟩
     apply power_nat_le h
-    
   convert le_powerlt c one_lt_aleph_0; rw [power_one]
 #align cardinal.powerlt_aleph_0 Cardinal.powerlt_aleph_0
 
@@ -1027,7 +967,6 @@ theorem powerlt_aleph_0_le (c : Cardinal) : c ^< ℵ₀ ≤ max c ℵ₀ := by
   cases le_or_lt ℵ₀ c
   · rw [powerlt_aleph_0 h]
     apply le_max_left
-    
   rw [powerlt_le]
   exact fun c' hc' => (power_lt_aleph_0 h hc').le.trans (le_max_right _ _)
 #align cardinal.powerlt_aleph_0_le Cardinal.powerlt_aleph_0_le
@@ -1055,19 +994,15 @@ theorem mk_list_eq_max_mk_aleph_0 (α : Type u) [Nonempty α] : (#List α) = max
   cases finite_or_infinite α
   · rw [mk_list_eq_aleph_0, eq_comm, max_eq_right]
     exact mk_le_aleph_0
-    
   · rw [mk_list_eq_mk, eq_comm, max_eq_left]
     exact aleph_0_le_mk α
-    
 #align cardinal.mk_list_eq_max_mk_aleph_0 Cardinal.mk_list_eq_max_mk_aleph_0
 
 theorem mk_list_le_max (α : Type u) : (#List α) ≤ max ℵ₀ (#α) := by
   cases finite_or_infinite α
   · exact mk_le_aleph_0.trans (le_max_left _ _)
-    
   · rw [mk_list_eq_mk]
     apply le_max_right
-    
 #align cardinal.mk_list_le_max Cardinal.mk_list_le_max
 
 @[simp]
@@ -1084,21 +1019,18 @@ theorem mk_finset_of_infinite (α : Type u) [Infinite α] : (#Finset α) = (#α)
 theorem mk_finsupp_lift_of_infinite (α : Type u) (β : Type v) [Infinite α] [Zero β] [Nontrivial β] :
     (#α →₀ β) = max (lift.{v} (#α)) (lift.{u} (#β)) := by
   apply le_antisymm
-  · calc
+  ·
+    calc
       (#α →₀ β) ≤ (#Finset (α × β)) := mk_le_of_injective (Finsupp.graph_injective α β)
       _ = (#α × β) := mk_finset_of_infinite _
       _ = max (lift.{v} (#α)) (lift.{u} (#β)) := by
         rw [mk_prod, mul_eq_max_of_aleph_0_le_left] <;> simp
       
-    
   · apply max_le <;> rw [← lift_id (#α →₀ β), ← lift_umax]
     · cases' exists_ne (0 : β) with b hb
       exact lift_mk_le.{u, max u v, v}.2 ⟨⟨_, Finsupp.single_left_injective hb⟩⟩
-      
     · inhabit α
       exact lift_mk_le.{v, max u v, u}.2 ⟨⟨_, Finsupp.single_injective default⟩⟩
-      
-    
 #align cardinal.mk_finsupp_lift_of_infinite Cardinal.mk_finsupp_lift_of_infinite
 
 theorem mk_finsupp_of_infinite (α β : Type u) [Infinite α] [Zero β] [Nontrivial β] :
@@ -1113,9 +1045,7 @@ theorem mk_finsupp_lift_of_infinite' (α : Type u) (β : Type v) [Nonempty α] [
     have : ℵ₀ ≤ (#β).lift := aleph_0_le_lift.2 (aleph_0_le_mk β)
     rw [max_eq_right (le_trans _ this), power_nat_eq this]
     exacts[Fintype.card_pos, lift_le_aleph_0.2 (lt_aleph_0_of_finite _).le]
-    
   · apply mk_finsupp_lift_of_infinite
-    
 #align cardinal.mk_finsupp_lift_of_infinite' Cardinal.mk_finsupp_lift_of_infinite'
 
 theorem mk_finsupp_of_infinite' (α β : Type u) [Nonempty α] [Zero β] [Infinite β] :
@@ -1151,7 +1081,6 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     use Sum.inl ⁻¹' range f
     refine' le_trans (mk_preimage_of_injective _ _ fun x y => Sum.inl.inj) _
     apply mk_range_le
-    
   rintro ⟨s, ⟨g⟩⟩
   use fun y => if h : ∃ x : s, g x = y then Sum.inl (Classical.choose h).val else Sum.inr ⟨⟩
   apply Subtype.eq; ext
@@ -1162,11 +1091,8 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     · rw [dif_pos h'] at h
       cases Sum.inl.inj h
       exact (Classical.choose h').2
-      
     · rw [dif_neg h'] at h
       cases h
-      
-    
   · intro h
     have : ∃ z : s, g z = g ⟨x, h⟩ := ⟨⟨x, h⟩, rfl⟩
     use g ⟨x, h⟩
@@ -1177,7 +1103,6 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     exact congr_arg Subtype.val this
     apply g.2
     exact Classical.choose_spec this
-    
 #align cardinal.mk_bounded_set_le_of_infinite Cardinal.mk_bounded_set_le_of_infinite
 
 theorem mk_bounded_set_le (α : Type u) (c : Cardinal) :
@@ -1189,7 +1114,6 @@ theorem mk_bounded_set_le (α : Type u) (c : Cardinal) :
     apply Sum.inr.inj
     intro s hs
     exact mk_image_le.trans hs
-    
   apply (mk_bounded_set_le_of_infinite (Sum (ULift.{u} ℕ) α) c).trans
   rw [max_comm, ← add_eq_max] <;> rfl
 #align cardinal.mk_bounded_set_le Cardinal.mk_bounded_set_le
@@ -1203,7 +1127,6 @@ theorem mk_bounded_subset_le {α : Type u} (s : Set α) (c : Cardinal.{u}) :
     apply Subtype.eq
     dsimp only at h⊢
     refine' (preimage_eq_preimage' _ _).1 h <;> rw [Subtype.range_coe] <;> assumption
-    
   rintro ⟨t, h1t, h2t⟩; exact (mk_preimage_of_injective _ _ Subtype.val_injective).trans h2t
 #align cardinal.mk_bounded_subset_le Cardinal.mk_bounded_subset_le
 
@@ -1217,7 +1140,7 @@ theorem mk_compl_of_infinite {α : Type _} [Infinite α] (s : Set α) (h2 : (#s)
 #align cardinal.mk_compl_of_infinite Cardinal.mk_compl_of_infinite
 
 theorem mk_compl_finset_of_infinite {α : Type _} [Infinite α] (s : Finset α) :
-    (#(↑sᶜ : Set α)) = (#α) := by
+    (#(↑sᶜ : Set α)) = (#α) := by 
   apply mk_compl_of_infinite
   exact (finset_card_lt_aleph_0 s).trans_le (aleph_0_le_mk α)
 #align cardinal.mk_compl_finset_of_infinite Cardinal.mk_compl_finset_of_infinite
@@ -1234,12 +1157,12 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Finite α]
   cases nonempty_fintype α
   rcases lift_mk_eq.1 h1 with ⟨e⟩; letI : Fintype β := Fintype.ofEquiv α e
   replace h1 : Fintype.card α = Fintype.card β := (Fintype.of_equiv_card _).symm
-  classical
-  lift s to Finset α using s.to_finite
-  lift t to Finset β using t.to_finite
-  simp only [Finset.coe_sort_coe, mk_coe_finset, lift_nat_cast, Nat.cast_inj] at h2
-  simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl,
-    lift_nat_cast, Nat.cast_inj, h1, h2]
+  classical 
+    lift s to Finset α using s.to_finite
+    lift t to Finset β using t.to_finite
+    simp only [Finset.coe_sort_coe, mk_coe_finset, lift_nat_cast, Nat.cast_inj] at h2
+    simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl,
+      lift_nat_cast, Nat.cast_inj, h1, h2]
 #align cardinal.mk_compl_eq_mk_compl_finite_lift Cardinal.mk_compl_eq_mk_compl_finite_lift
 
 theorem mk_compl_eq_mk_compl_finite {α β : Type u} [Finite α] {s : Set α} {t : Set β}
@@ -1278,14 +1201,12 @@ theorem extend_function_of_lt {α β : Type _} {s : Set α} (f : s ↪ β) (hs :
     (h : Nonempty (α ≃ β)) : ∃ g : α ≃ β, ∀ x : s, g x = f x := by
   cases fintypeOrInfinite α
   · exact extend_function_finite f h
-    
   · apply extend_function f
     cases' id h with g
     haveI := Infinite.of_injective _ g.injective
     rw [← lift_mk_eq'] at h⊢
     rwa [mk_compl_of_infinite s hs, mk_compl_of_infinite]
     rwa [← lift_lt, mk_range_eq_of_injective f.injective, ← h, lift_lt]
-    
 #align cardinal.extend_function_of_lt Cardinal.extend_function_of_lt
 
 section Bit
@@ -1353,13 +1274,11 @@ theorem aleph_0_le_bit0 {c : Cardinal} : ℵ₀ ≤ bit0 c ↔ ℵ₀ ≤ c := b
 theorem bit1_eq_self_iff {c : Cardinal} : bit1 c = c ↔ ℵ₀ ≤ c := by
   by_cases h : ℵ₀ ≤ c
   · simp only [bit1, bit0_eq_self h, h, eq_self_iff_true, add_one_of_aleph_0_le]
-    
   · refine' iff_of_false (ne_of_gt _) h
     rcases lt_aleph_0.1 (not_le.1 h) with ⟨n, rfl⟩
     norm_cast
     dsimp [bit1, bit0]
     linarith
-    
 #align cardinal.bit1_eq_self_iff Cardinal.bit1_eq_self_iff
 
 @[simp]
@@ -1377,40 +1296,32 @@ theorem aleph_0_le_bit1 {c : Cardinal} : ℵ₀ ≤ bit1 c ↔ ℵ₀ ≤ c := b
 theorem bit0_le_bit0 {a b : Cardinal} : bit0 a ≤ bit0 b ↔ a ≤ b := by
   cases' le_or_lt ℵ₀ a with ha ha <;> cases' le_or_lt ℵ₀ b with hb hb
   · rw [bit0_eq_self ha, bit0_eq_self hb]
-    
   · rw [bit0_eq_self ha]
     refine' iff_of_false (fun h => _) (hb.trans_le ha).not_le
     have A : bit0 b < ℵ₀ := by simpa using hb
     exact lt_irrefl _ ((A.trans_le ha).trans_le h)
-    
   · rw [bit0_eq_self hb]
     exact iff_of_true ((bit0_lt_aleph_0.2 ha).le.trans hb) (ha.le.trans hb)
-    
   · rcases lt_aleph_0.1 ha with ⟨m, rfl⟩
     rcases lt_aleph_0.1 hb with ⟨n, rfl⟩
     norm_cast
     exact bit0_le_bit0
-    
 #align cardinal.bit0_le_bit0 Cardinal.bit0_le_bit0
 
 @[simp]
 theorem bit0_le_bit1 {a b : Cardinal} : bit0 a ≤ bit1 b ↔ a ≤ b := by
   cases' le_or_lt ℵ₀ a with ha ha <;> cases' le_or_lt ℵ₀ b with hb hb
   · rw [bit0_eq_self ha, bit1_eq_self_iff.2 hb]
-    
   · rw [bit0_eq_self ha]
     refine' iff_of_false (fun h => _) (hb.trans_le ha).not_le
     have A : bit1 b < ℵ₀ := by simpa using hb
     exact lt_irrefl _ ((A.trans_le ha).trans_le h)
-    
   · rw [bit1_eq_self_iff.2 hb]
     exact iff_of_true ((bit0_lt_aleph_0.2 ha).le.trans hb) (ha.le.trans hb)
-    
   · rcases lt_aleph_0.1 ha with ⟨m, rfl⟩
     rcases lt_aleph_0.1 hb with ⟨n, rfl⟩
     norm_cast
     exact Nat.bit0_le_bit1_iff
-    
 #align cardinal.bit0_le_bit1 Cardinal.bit0_le_bit1
 
 @[simp]
@@ -1426,112 +1337,87 @@ theorem bit1_le_bit0 {a b : Cardinal} : bit1 a ≤ bit0 b ↔ a < b ∨ a ≤ b 
     refine' ⟨fun h => Or.inr h, fun h => _⟩
     cases h
     · exact le_of_lt h
-      
     · exact h
-      
-    
   · rw [bit1_eq_self_iff.2 ha]
     refine' iff_of_false (fun h => _) fun h => _
     · have A : bit0 b < ℵ₀ := by simpa using hb
       exact lt_irrefl _ ((A.trans_le ha).trans_le h)
-      
     · exact not_le_of_lt (hb.trans_le ha) (h.elim le_of_lt And.left)
-      
-    
   · rw [bit0_eq_self hb]
     exact iff_of_true ((bit1_lt_aleph_0.2 ha).le.trans hb) (Or.inl <| ha.trans_le hb)
-    
   · rcases lt_aleph_0.1 ha with ⟨m, rfl⟩
     rcases lt_aleph_0.1 hb with ⟨n, rfl⟩
     norm_cast
     simp [not_le.mpr ha]
-    
 #align cardinal.bit1_le_bit0 Cardinal.bit1_le_bit0
 
 @[simp]
 theorem bit0_lt_bit0 {a b : Cardinal} : bit0 a < bit0 b ↔ a < b := by
   cases' le_or_lt ℵ₀ a with ha ha <;> cases' le_or_lt ℵ₀ b with hb hb
   · rw [bit0_eq_self ha, bit0_eq_self hb]
-    
   · rw [bit0_eq_self ha]
     refine' iff_of_false (fun h => _) (hb.le.trans ha).not_lt
     have A : bit0 b < ℵ₀ := by simpa using hb
     exact lt_irrefl _ ((A.trans_le ha).trans h)
-    
   · rw [bit0_eq_self hb]
     exact iff_of_true ((bit0_lt_aleph_0.2 ha).trans_le hb) (ha.trans_le hb)
-    
   · rcases lt_aleph_0.1 ha with ⟨m, rfl⟩
     rcases lt_aleph_0.1 hb with ⟨n, rfl⟩
     norm_cast
     exact bit0_lt_bit0
-    
 #align cardinal.bit0_lt_bit0 Cardinal.bit0_lt_bit0
 
 @[simp]
 theorem bit1_lt_bit0 {a b : Cardinal} : bit1 a < bit0 b ↔ a < b := by
   cases' le_or_lt ℵ₀ a with ha ha <;> cases' le_or_lt ℵ₀ b with hb hb
   · rw [bit1_eq_self_iff.2 ha, bit0_eq_self hb]
-    
   · rw [bit1_eq_self_iff.2 ha]
     refine' iff_of_false (fun h => _) (hb.le.trans ha).not_lt
     have A : bit0 b < ℵ₀ := by simpa using hb
     exact lt_irrefl _ ((A.trans_le ha).trans h)
-    
   · rw [bit0_eq_self hb]
     exact iff_of_true ((bit1_lt_aleph_0.2 ha).trans_le hb) (ha.trans_le hb)
-    
   · rcases lt_aleph_0.1 ha with ⟨m, rfl⟩
     rcases lt_aleph_0.1 hb with ⟨n, rfl⟩
     norm_cast
     exact Nat.bit1_lt_bit0_iff
-    
 #align cardinal.bit1_lt_bit0 Cardinal.bit1_lt_bit0
 
 @[simp]
 theorem bit1_lt_bit1 {a b : Cardinal} : bit1 a < bit1 b ↔ a < b := by
   cases' le_or_lt ℵ₀ a with ha ha <;> cases' le_or_lt ℵ₀ b with hb hb
   · rw [bit1_eq_self_iff.2 ha, bit1_eq_self_iff.2 hb]
-    
   · rw [bit1_eq_self_iff.2 ha]
     refine' iff_of_false (fun h => _) (hb.le.trans ha).not_lt
     have A : bit1 b < ℵ₀ := by simpa using hb
     exact lt_irrefl _ ((A.trans_le ha).trans h)
-    
   · rw [bit1_eq_self_iff.2 hb]
     exact iff_of_true ((bit1_lt_aleph_0.2 ha).trans_le hb) (ha.trans_le hb)
-    
   · rcases lt_aleph_0.1 ha with ⟨m, rfl⟩
     rcases lt_aleph_0.1 hb with ⟨n, rfl⟩
     norm_cast
     exact bit1_lt_bit1
-    
 #align cardinal.bit1_lt_bit1 Cardinal.bit1_lt_bit1
 
 @[simp]
 theorem bit0_lt_bit1 {a b : Cardinal} : bit0 a < bit1 b ↔ a < b ∨ a ≤ b ∧ a < ℵ₀ := by
   cases' le_or_lt ℵ₀ a with ha ha <;> cases' le_or_lt ℵ₀ b with hb hb
   · simp [bit0_eq_self ha, bit1_eq_self_iff.2 hb, not_lt.mpr ha]
-    
   · rw [bit0_eq_self ha]
     refine' iff_of_false (fun h => _) fun h => _
     · have A : bit1 b < ℵ₀ := by simpa using hb
       exact lt_irrefl _ ((A.trans_le ha).trans h)
-      
     · exact (hb.trans_le ha).not_le (h.elim le_of_lt And.left)
-      
-    
   · rw [bit1_eq_self_iff.2 hb]
     exact iff_of_true ((bit0_lt_aleph_0.2 ha).trans_le hb) (Or.inl <| ha.trans_le hb)
-    
   · rcases lt_aleph_0.1 ha with ⟨m, rfl⟩
     rcases lt_aleph_0.1 hb with ⟨n, rfl⟩
     norm_cast
     simp only [ha, and_true_iff, Nat.bit0_lt_bit1_iff, or_iff_right_of_imp le_of_lt]
-    
 #align cardinal.bit0_lt_bit1 Cardinal.bit0_lt_bit1
 
-theorem one_lt_two : (1 : Cardinal) < 2 := by
+theorem one_lt_two : (1 : Cardinal) < 2 :=
+  by
   -- This strategy works generally to prove inequalities between numerals in `cardinality`.
   norm_cast
   norm_num

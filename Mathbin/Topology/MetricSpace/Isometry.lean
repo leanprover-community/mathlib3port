@@ -261,7 +261,7 @@ theorem UniformEmbedding.toIsometry {α β} [UniformSpace α] [MetricSpace β] {
       (@PseudoMetricSpace.toPseudoEmetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
-  by
+  by 
   apply Isometry.ofDistEq
   intro x y
   rfl
@@ -275,7 +275,7 @@ theorem Embedding.toIsometry {α β} [TopologicalSpace α] [MetricSpace β] {f :
       (@PseudoMetricSpace.toPseudoEmetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
-  by
+  by 
   apply Isometry.ofDistEq
   intro x y
   rfl
@@ -350,12 +350,12 @@ theorem ediam_image (h : α ≃ᵢ β) (s : Set α) : Emetric.diam (h '' s) = Em
 #align isometric.ediam_image Isometric.ediam_image
 
 theorem to_equiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.toEquiv → h₁ = h₂
-  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by
+  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by 
     dsimp at H
     subst e₁
 #align isometric.to_equiv_inj Isometric.to_equiv_inj
 
-@[ext.1]
+@[ext]
 theorem ext ⦃h₁ h₂ : α ≃ᵢ β⦄ (H : ∀ x, h₁ x = h₂ x) : h₁ = h₂ :=
   to_equiv_inj <| Equiv.ext H
 #align isometric.ext Isometric.ext
@@ -363,7 +363,7 @@ theorem ext ⦃h₁ h₂ : α ≃ᵢ β⦄ (H : ∀ x, h₁ x = h₂ x) : h₁ =
 /-- Alternative constructor for isometric bijections,
 taking as input an isometry, and a right inverse. -/
 def mk' {α : Type u} [EmetricSpace α] (f : α → β) (g : β → α) (hfg : ∀ x, f (g x) = x)
-    (hf : Isometry f) : α ≃ᵢ β where
+    (hf : Isometry f) : α ≃ᵢ β where 
   toFun := f
   invFun := g
   left_inv x := hf.Injective <| hfg _
@@ -387,7 +387,8 @@ theorem trans_apply (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) (x : α) : h₁.
 #align isometric.trans_apply Isometric.trans_apply
 
 /-- The inverse of an isometric isomorphism, as an isometric isomorphism. -/
-protected def symm (h : α ≃ᵢ β) : β ≃ᵢ α where
+protected def symm (h : α ≃ᵢ β) :
+    β ≃ᵢ α where 
   isometryToFun := h.Isometry.right_inv h.right_inv
   toEquiv := h.toEquiv.symm
 #align isometric.symm Isometric.symm
@@ -490,7 +491,8 @@ theorem image_emetric_closed_ball (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) :
 
 /-- The (bundled) homeomorphism associated to an isometric isomorphism. -/
 @[simps toEquiv]
-protected def toHomeomorph (h : α ≃ᵢ β) : α ≃ₜ β where
+protected def toHomeomorph (h : α ≃ᵢ β) :
+    α ≃ₜ β where 
   continuous_to_fun := h.Continuous
   continuous_inv_fun := h.symm.Continuous
   toEquiv := h.toEquiv
@@ -525,7 +527,7 @@ theorem comp_continuous_iff' {γ} [TopologicalSpace γ] (h : α ≃ᵢ β) {f : 
 #align isometric.comp_continuous_iff' Isometric.comp_continuous_iff'
 
 /-- The group of isometries. -/
-instance : Group (α ≃ᵢ α) where
+instance : Group (α ≃ᵢ α) where 
   one := Isometric.refl _
   mul e₁ e₂ := e₂.trans e₁
   inv := Isometric.symm
@@ -632,7 +634,8 @@ end Isometric
 range of the isometry. -/
 @[simps (config := { simpRhs := true }) toEquiv apply]
 def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) :
-    α ≃ᵢ range f where
+    α ≃ᵢ range
+        f where 
   isometryToFun x y := by simpa [Subtype.edist_eq] using h x y
   toEquiv := Equiv.ofInjective f h.Injective
 #align isometry.isometric_on_range Isometry.isometricOnRange

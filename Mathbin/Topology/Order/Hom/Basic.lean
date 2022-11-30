@@ -81,9 +81,10 @@ def toContinuousMap (f : α →Co β) : C(α, β) :=
   { f with }
 #align continuous_order_hom.to_continuous_map ContinuousOrderHom.toContinuousMap
 
-instance : ContinuousOrderHomClass (α →Co β) α β where
+instance : ContinuousOrderHomClass (α →Co β) α
+      β where 
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective' f g h := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -100,7 +101,7 @@ theorem to_fun_eq_coe {f : α →Co β} : f.toFun = (f : α → β) :=
   rfl
 #align continuous_order_hom.to_fun_eq_coe ContinuousOrderHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : α →Co β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align continuous_order_hom.ext ContinuousOrderHom.ext

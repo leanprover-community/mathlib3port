@@ -34,7 +34,7 @@ theorem tendsto_const_div_at_top_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => 
 #align tendsto_const_div_at_top_nhds_0_nat tendsto_const_div_at_top_nhds_0_nat
 
 theorem Nnreal.tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) :=
-  by
+  by 
   rw [← Nnreal.tendsto_coe]
   exact tendsto_inverse_at_top_nhds_0_nat
 #align nnreal.tendsto_inverse_at_top_nhds_0_nat Nnreal.tendsto_inverse_at_top_nhds_0_nat
@@ -100,9 +100,7 @@ theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
     (h : ∀ k < n, c * u k < u (k + 1)) : c ^ n * u 0 < u n := by
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_le_of_lt hn _ _ h
   · simp
-    
   · simp [pow_succ, mul_assoc, le_refl]
-    
 #align geom_lt geom_lt
 
 theorem geom_le {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k < n, c * u k ≤ u (k + 1)) :
@@ -115,9 +113,7 @@ theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
     (h : ∀ k < n, u (k + 1) < c * u k) : u n < c ^ n * u 0 := by
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_lt_of_le hn _ h _
   · simp
-    
   · simp [pow_succ, mul_assoc, le_refl]
-    
 #align lt_geom lt_geom
 
 theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k < n, u (k + 1) ≤ c * u k) :
@@ -189,7 +185,7 @@ theorem tsum_geometric_two : (∑' n : ℕ, ((1 : ℝ) / 2) ^ n) = 2 :=
 #align tsum_geometric_two tsum_geometric_two
 
 theorem sum_geometric_two_le (n : ℕ) : (∑ i : ℕ in range n, (1 / (2 : ℝ)) ^ i) ≤ 2 := by
-  have : ∀ i, 0 ≤ (1 / (2 : ℝ)) ^ i := by
+  have : ∀ i, 0 ≤ (1 / (2 : ℝ)) ^ i := by 
     intro i
     apply pow_nonneg
     norm_num
@@ -208,7 +204,6 @@ theorem tsum_geometric_inv_two_ge (n : ℕ) : (∑' i, ite (n ≤ i) ((2 : ℝ)�
     apply summable_of_nonneg_of_le _ _ summable_geometric_two <;>
       · intro i
         by_cases hi : n ≤ i <;> simp [hi]
-        
   have B : ((Finset.range n).Sum fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0) = 0 :=
     Finset.sum_eq_zero fun i hi =>
       ite_eq_right_iff.2 fun h => (lt_irrefl _ ((Finset.mem_range.1 hi).trans_le h)).elim
@@ -222,9 +217,7 @@ theorem has_sum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n)
   · funext n
     simp
     rfl
-    
   · norm_num
-    
 #align has_sum_geometric_two' has_sum_geometric_two'
 
 theorem summable_geometric_two' (a : ℝ) : Summable fun n : ℕ => a / 2 / 2 ^ n :=
@@ -237,7 +230,7 @@ theorem tsum_geometric_two' (a : ℝ) : (∑' n : ℕ, a / 2 / 2 ^ n) = a :=
 
 /-- **Sum of a Geometric Series** -/
 theorem Nnreal.has_sum_geometric {r : ℝ≥0} (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ :=
-  by
+  by 
   apply Nnreal.has_sum_coe.1
   push_cast
   rw [Nnreal.coe_sub (le_of_lt hr)]
@@ -261,7 +254,6 @@ theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r
     norm_cast  at *
     convert Ennreal.tsum_coe_eq (Nnreal.has_sum_geometric hr)
     rw [Ennreal.coe_inv <| ne_of_gt <| tsub_pos_iff_lt.2 hr]
-    
   · rw [tsub_eq_zero_iff_le.mpr hr, Ennreal.inv_zero, Ennreal.tsum_eq_supr_nat, supr_eq_top]
     refine' fun a ha =>
       (Ennreal.exists_nat_gt (lt_top_iff_ne_top.1 ha)).imp fun n hn => lt_of_lt_of_le hn _
@@ -269,7 +261,6 @@ theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r
       (n : ℝ≥0∞) = ∑ i in range n, 1 := by rw [sum_const, nsmul_one, card_range]
       _ ≤ ∑ i in range n, r ^ i := sum_le_sum fun k _ => one_le_pow_of_one_le' hr k
       
-    
 #align ennreal.tsum_geometric Ennreal.tsum_geometric
 
 end Geometric
@@ -293,12 +284,12 @@ include hr hC hu
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * r^n`, `C ≠ ∞`, `r < 1`,
 then `f` is a Cauchy sequence.-/
-theorem cauchySeqOfEdistLeGeometric : CauchySeq f := by
-  refine' cauchySeqOfEdistLeOfTsumNeTop _ hu _
+theorem cauchy_seq_of_edist_le_geometric : CauchySeq f := by
+  refine' cauchy_seq_of_edist_le_of_tsum_ne_top _ hu _
   rw [Ennreal.tsum_mul_left, Ennreal.tsum_geometric]
   refine' Ennreal.mul_ne_top hC (Ennreal.inv_ne_top.2 _)
   exact (tsub_pos_iff_lt.2 hr).ne'
-#align cauchy_seq_of_edist_le_geometric cauchySeqOfEdistLeGeometric
+#align cauchy_seq_of_edist_le_geometric cauchy_seq_of_edist_le_geometric
 
 omit hr hC
 
@@ -327,11 +318,11 @@ variable [PseudoEmetricSpace α] (C : ℝ≥0∞) (hC : C ≠ ⊤) {f : ℕ → 
 include hC hu
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then `f` is a Cauchy sequence.-/
-theorem cauchySeqOfEdistLeGeometricTwo : CauchySeq f := by
+theorem cauchy_seq_of_edist_le_geometric_two : CauchySeq f := by
   simp only [div_eq_mul_inv, Ennreal.inv_pow] at hu
-  refine' cauchySeqOfEdistLeGeometric 2⁻¹ C _ hC hu
+  refine' cauchy_seq_of_edist_le_geometric 2⁻¹ C _ hC hu
   simp [Ennreal.one_lt_two]
-#align cauchy_seq_of_edist_le_geometric_two cauchySeqOfEdistLeGeometricTwo
+#align cauchy_seq_of_edist_le_geometric_two cauchy_seq_of_edist_le_geometric_two
 
 omit hC
 
@@ -365,19 +356,17 @@ include hr hu
 theorem aux_has_sum_of_le_geometric : HasSum (fun n : ℕ => C * r ^ n) (C / (1 - r)) := by
   rcases sign_cases_of_C_mul_pow_nonneg fun n => dist_nonneg.trans (hu n) with (rfl | ⟨C₀, r₀⟩)
   · simp [has_sum_zero]
-    
   · refine' HasSum.mul_left C _
     simpa using has_sum_geometric_of_lt_1 r₀ hr
-    
 #align aux_has_sum_of_le_geometric aux_has_sum_of_le_geometric
 
 variable (r C)
 
 /-- If `dist (f n) (f (n+1))` is bounded by `C * r^n`, `r < 1`, then `f` is a Cauchy sequence.
 Note that this lemma does not assume `0 ≤ C` or `0 ≤ r`. -/
-theorem cauchySeqOfLeGeometric : CauchySeq f :=
-  cauchySeqOfDistLeOfSummable _ hu ⟨_, aux_has_sum_of_le_geometric hr hu⟩
-#align cauchy_seq_of_le_geometric cauchySeqOfLeGeometric
+theorem cauchy_seq_of_le_geometric : CauchySeq f :=
+  cauchy_seq_of_dist_le_of_summable _ hu ⟨_, aux_has_sum_of_le_geometric hr hu⟩
+#align cauchy_seq_of_le_geometric cauchy_seq_of_le_geometric
 
 /-- If `dist (f n) (f (n+1))` is bounded by `C * r^n`, `r < 1`, then the distance from
 `f n` to the limit of `f` is bounded above by `C * r^n / (1 - r)`. -/
@@ -403,9 +392,9 @@ omit hr hu
 variable (hu₂ : ∀ n, dist (f n) (f (n + 1)) ≤ C / 2 / 2 ^ n)
 
 /-- If `dist (f n) (f (n+1))` is bounded by `(C / 2) / 2^n`, then `f` is a Cauchy sequence. -/
-theorem cauchySeqOfLeGeometricTwo : CauchySeq f :=
-  cauchySeqOfDistLeOfSummable _ hu₂ <| ⟨_, has_sum_geometric_two' C⟩
-#align cauchy_seq_of_le_geometric_two cauchySeqOfLeGeometricTwo
+theorem cauchy_seq_of_le_geometric_two : CauchySeq f :=
+  cauchy_seq_of_dist_le_of_summable _ hu₂ <| ⟨_, has_sum_geometric_two' C⟩
+#align cauchy_seq_of_le_geometric_two cauchy_seq_of_le_geometric_two
 
 /-- If `dist (f n) (f (n+1))` is bounded by `(C / 2) / 2^n`, then the distance from
 `f 0` to the limit of `f` is bounded above by `C`. -/
@@ -458,10 +447,8 @@ def posSumOfEncodable {ε : ℝ} (hε : 0 < ε) (ι) [Encodable ι] :
   refine' ⟨c, hg, has_sum_le_inj _ (@Encodable.encode_injective ι _) _ _ hg hf⟩
   · intro i _
     exact le_of_lt (f0 _)
-    
   · intro n
     exact le_rfl
-    
 #align pos_sum_of_encodable posSumOfEncodable
 
 theorem Set.Countable.exists_pos_has_sum_le {ι : Type _} {s : Set ι} (hs : s.Countable) {ε : ℝ}
@@ -471,14 +458,12 @@ theorem Set.Countable.exists_pos_has_sum_le {ι : Type _} {s : Set ι} (hs : s.C
   refine' ⟨fun i => if h : i ∈ s then f ⟨i, h⟩ else 1, fun i => _, ⟨c, _, hcε⟩⟩
   · split_ifs
     exacts[hf0 _, zero_lt_one]
-    
   · simpa only [Subtype.coe_prop, dif_pos, Subtype.coe_eta]
-    
 #align set.countable.exists_pos_has_sum_le Set.Countable.exists_pos_has_sum_le
 
 theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : s.Countable) {ε : ℝ}
     (hε : 0 < ε) : ∃ ε' : ι → ℝ, (∀ i, 0 < ε' i) ∧ ∀ t : Finset ι, ↑t ⊆ s → (∑ i in t, ε' i) ≤ ε :=
-  by
+  by 
   rcases hs.exists_pos_has_sum_le hε with ⟨ε', hpos, c, hε'c, hcε⟩
   refine' ⟨ε', hpos, fun t ht => _⟩
   rw [← sum_subtype_of_mem _ ht]
@@ -547,7 +532,7 @@ theorem tendsto_factorial_div_pow_self_at_top :
     (eventually_of_forall fun n =>
       div_nonneg (by exact_mod_cast n.factorial_pos.le)
         (pow_nonneg (by exact_mod_cast n.zero_le) _))
-    (by
+    (by 
       refine' (eventually_gt_at_top 0).mono fun n hn => _
       rcases Nat.exists_eq_succ_of_ne_zero hn.ne.symm with ⟨k, rfl⟩
       rw [← prod_range_add_one_eq_factorial, pow_eq_prod_const, div_eq_mul_inv, ← inv_eq_one_div,
@@ -559,11 +544,9 @@ theorem tendsto_factorial_div_pow_self_at_top :
           intro x hx <;>
         rw [Finset.mem_range] at hx
       · refine' mul_nonneg _ (inv_nonneg.mpr _) <;> norm_cast <;> linarith
-        
       · refine' (div_le_one <| by exact_mod_cast hn).mpr _
         norm_cast
-        linarith
-        )
+        linarith)
 #align tendsto_factorial_div_pow_self_at_top tendsto_factorial_div_pow_self_at_top
 
 /-!
@@ -591,11 +574,9 @@ theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) :
       inv_mul_cancel (zero_lt_one.trans_le hx).ne']
     have := Nat.lt_floor_add_one (a * x)
     linarith
-    
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     rw [div_le_iff (zero_lt_one.trans_le hx)]
     simp [Nat.floor_le (mul_nonneg ha (zero_le_one.trans hx))]
-    
 #align tendsto_nat_floor_mul_div_at_top tendsto_nat_floor_mul_div_at_top
 
 theorem tendsto_nat_floor_div_at_top : Tendsto (fun x => (⌊x⌋₊ : R) / x) atTop (𝓝 1) := by
@@ -611,11 +592,9 @@ theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) :
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     rw [le_div_iff (zero_lt_one.trans_le hx)]
     exact Nat.le_ceil _
-    
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     simp [div_le_iff (zero_lt_one.trans_le hx), inv_mul_cancel (zero_lt_one.trans_le hx).ne',
       (Nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, add_mul]
-    
 #align tendsto_nat_ceil_mul_div_at_top tendsto_nat_ceil_mul_div_at_top
 
 theorem tendsto_nat_ceil_div_at_top : Tendsto (fun x => (⌈x⌉₊ : R) / x) atTop (𝓝 1) := by

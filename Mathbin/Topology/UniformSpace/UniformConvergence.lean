@@ -287,7 +287,7 @@ theorem TendstoUniformlyOnFilter.prod_map {ι' α' β' : Type _} [UniformSpace �
     (h' : TendstoUniformlyOnFilter F' f' q q') :
     TendstoUniformlyOnFilter (fun i : ι × ι' => Prod.map (F i.1) (F' i.2)) (Prod.map f f')
       (p.Prod q) (p'.Prod q') :=
-  by
+  by 
   intro u hu
   rw [uniformity_prod_eq_prod, mem_map, mem_prod_iff] at hu
   obtain ⟨v, hv, w, hw, hvw⟩ := hu
@@ -307,7 +307,7 @@ theorem TendstoUniformlyOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F
     (h' : TendstoUniformlyOn F' f' p' s') :
     TendstoUniformlyOn (fun i : ι × ι' => Prod.map (F i.1) (F' i.2)) (Prod.map f f') (p.Prod p')
       (s ×ˢ s') :=
-  by
+  by 
   rw [tendsto_uniformly_on_iff_tendsto_uniformly_on_filter] at h h'⊢
   simpa only [prod_principal_principal] using h.prod_map h'
 #align tendsto_uniformly_on.prod_map TendstoUniformlyOn.prod_map
@@ -414,11 +414,9 @@ theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ
     exact
       ⟨tendsto_left_nhds_uniformity.comp tendsto_fst,
         (tendsto_diag_uniformity id ⊤).comp tendsto_top⟩
-    
   · rw [tendsto_principal]
     apply mem_of_superset (prod_mem_prod hU (mem_top.mpr rfl)) fun q h => _
     simp [h.1, mem_of_mem_nhds hU]
-    
 #align uniform_continuous_on.tendsto_uniformly UniformContinuousOn.tendsto_uniformly
 
 theorem UniformContinuous₂.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {f : α → β → γ}
@@ -478,7 +476,8 @@ theorem TendstoUniformlyOn.uniform_cauchy_seq_on (hF : TendstoUniformlyOn F f p 
 theorem UniformCauchySeqOnFilter.tendsto_uniformly_on_filter_of_tendsto [NeBot p]
     (hF : UniformCauchySeqOnFilter F p p')
     (hF' : ∀ᶠ x : α in p', Tendsto (fun n => F n x) p (𝓝 (f x))) :
-    TendstoUniformlyOnFilter F f p p' := by
+    TendstoUniformlyOnFilter F f p p' :=
+  by
   -- Proof idea: |f_n(x) - f(x)| ≤ |f_n(x) - f_m(x)| + |f_m(x) - f(x)|. We choose `n`
   -- so that |f_n(x) - f_m(x)| is uniformly small across `s` whenever `m ≥ n`. Then for
   -- a fixed `x`, we choose `m` sufficiently large such that |f_m(x) - f(x)| is small.
@@ -487,7 +486,7 @@ theorem UniformCauchySeqOnFilter.tendsto_uniformly_on_filter_of_tendsto [NeBot p
   -- We will choose n, x, and m simultaneously. n and x come from hF. m comes from hF'
   -- But we need to promote hF' to the full product filter to use it
   have hmc : ∀ᶠ x : (ι × ι) × α in p ×ᶠ p ×ᶠ p', tendsto (fun n : ι => F n x.snd) p (𝓝 (f x.snd)) :=
-    by
+    by 
     rw [eventually_prod_iff]
     refine' ⟨fun x => True, by simp, _, hF', by simp⟩
   -- To apply filter operations we'll need to do some order manipulation
@@ -611,7 +610,7 @@ theorem tendsto_uniformly_on_of_seq_tendsto_uniformly_on {l : Filter ι} [l.IsCo
     (fun q : ι × α => (f q.snd, F q.fst q.snd)) ∘ u =
       (fun q : ℕ × α => (f q.snd, F ((fun n : ℕ => (u n).fst) q.fst) q.snd)) ∘ fun n =>
         (n, (u n).snd) :=
-    by
+    by 
     ext1 n
     simp
   rw [this]
@@ -627,7 +626,7 @@ theorem TendstoUniformlyOn.seq_tendsto_uniformly_on {l : Filter ι} (h : Tendsto
   have :
     (fun q : ℕ × α => (f q.snd, F (u q.fst) q.snd)) =
       (fun q : ι × α => (f q.snd, F q.fst q.snd)) ∘ fun p : ℕ × α => (u p.fst, p.snd) :=
-    by
+    by 
     ext1 x
     simp
   rw [this]
@@ -646,7 +645,7 @@ theorem tendsto_uniformly_on_iff_seq_tendsto_uniformly_on {l : Filter ι} [l.IsC
 theorem tendsto_uniformly_iff_seq_tendsto_uniformly {l : Filter ι} [l.IsCountablyGenerated] :
     TendstoUniformly F f l ↔
       ∀ u : ℕ → ι, Tendsto u atTop l → TendstoUniformly (fun n => F (u n)) f atTop :=
-  by
+  by 
   simp_rw [← tendsto_uniformly_on_univ]
   exact tendsto_uniformly_on_iff_seq_tendsto_uniformly_on
 #align tendsto_uniformly_iff_seq_tendsto_uniformly tendsto_uniformly_iff_seq_tendsto_uniformly
@@ -672,7 +671,7 @@ def TendstoLocallyUniformly (F : ι → α → β) (f : α → β) (p : Filter �
 theorem tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe :
     TendstoLocallyUniformlyOn F f p s ↔
       TendstoLocallyUniformly (fun i (x : s) => F i x) (f ∘ coe) p :=
-  by
+  by 
   refine' forall₂_congr fun V hV => _
   simp only [exists_prop, Function.comp_apply, SetCoe.forall, Subtype.coe_mk]
   refine' forall₂_congr fun x hx => ⟨_, _⟩
@@ -681,13 +680,11 @@ theorem tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe :
     exact
       ⟨coe ⁻¹' u, (mem_nhds_subtype _ _ _).mpr ⟨u, hu₁, rfl.subset⟩,
         ht₂.mono fun i hi y hy₁ hy₂ => hi y (hu₂ ⟨hy₂, hy₁⟩)⟩
-    
   · rintro ⟨t, ht₁, ht₂⟩
     obtain ⟨u, hu₁, hu₂⟩ := (mem_nhds_subtype _ _ _).mp ht₁
     exact
       ⟨u ∩ s, mem_nhds_within_iff_exists_mem_nhds_inter.mpr ⟨u, hu₁, rfl.subset⟩,
         ht₂.mono fun i hi y hy => hi y hy.2 (hu₂ (by simp [hy.1]))⟩
-    
 #align
   tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe
 
@@ -700,10 +697,8 @@ theorem tendsto_locally_uniformly_iff_forall_tendsto :
   refine' forall₃_congr fun x u hu => ⟨_, _⟩
   · rintro ⟨n, hn, hp⟩
     exact ⟨_, hp, n, hn, fun i hi a ha => hi a ha⟩
-    
   · rintro ⟨I, hI, n, hn, hu⟩
     exact ⟨n, hn, by filter_upwards [hI] using hu⟩
-    
 #align tendsto_locally_uniformly_iff_forall_tendsto tendsto_locally_uniformly_iff_forall_tendsto
 
 protected theorem TendstoUniformlyOn.tendsto_locally_uniformly_on (h : TendstoUniformlyOn F f p s) :
@@ -725,7 +720,7 @@ theorem TendstoLocallyUniformlyOn.mono (h : TendstoLocallyUniformlyOn F f p s) (
 
 theorem tendsto_locally_uniformly_on_Union {S : γ → Set α} (hS : ∀ i, IsOpen (S i))
     (h : ∀ i, TendstoLocallyUniformlyOn F f p (S i)) : TendstoLocallyUniformlyOn F f p (⋃ i, S i) :=
-  by
+  by 
   rintro v hv x ⟨_, ⟨i, rfl⟩, hi : x ∈ S i⟩
   obtain ⟨t, ht, ht'⟩ := h i v hv x hi
   refine' ⟨t, _, ht'⟩
@@ -860,149 +855,16 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `K))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hK1))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hK2))]
-               [])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.app
-                (Term.proj
-                 (Term.app `tendsto_locally_uniformly_on_iff_tendsto_uniformly_on_of_compact [`hK2])
-                 "."
-                 `mp)
-                [(Term.app `h.mono [`hK1])]))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
-               [])
-              [])
-             (group
-              (Std.Tactic.obtain
-               "obtain"
-               [(Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `K)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed
-                      [(Std.Tactic.RCases.rcasesPat.tuple
-                        "⟨"
-                        [(Std.Tactic.RCases.rcasesPatLo
-                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hK1)])
-                          [])
-                         ","
-                         (Std.Tactic.RCases.rcasesPatLo
-                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hK2)])
-                          [])]
-                        "⟩")])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hK3)])
-                     [])]
-                   "⟩")])]
-               []
-               [":="
-                [(Term.app
-                  (Term.proj (Term.proj (Term.app `compact_basis_nhds [`x]) "." `mem_iff) "." `mp)
-                  [(Term.app `hs.mem_nhds [`hx])])]])
-              [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.anonymousCtor
-                "⟨"
-                [`K "," (Term.app `nhds_within_le_nhds [`hK1]) "," (Term.app `h [`K `hK3 `hK2])]
-                "⟩"))
-              [])])
-           []
-           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
-           []
-           («tactic___;_»
-            (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `u))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hu))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
-                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
-               [])
-              [])
-             (group
-              (Std.Tactic.obtain
-               "obtain"
-               [(Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv1)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv2)])
-                     [])]
-                   "⟩")])]
-               []
-               [":=" [(Term.app `h [`x `hx])]])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.anonymousCtor "⟨" [`v "," `hv1 "," (Term.app `hv2 [`u `hu])] "⟩"))
-              [])])
-           []
-           (Tactic.tfaeFinish "tfae_finish")])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
+            [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `K))
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hK1))
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hK2))]
               [])
-             [])
-            (group
+             []
              (Tactic.exact
               "exact"
               (Term.app
@@ -1010,22 +872,19 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
                 (Term.app `tendsto_locally_uniformly_on_iff_tendsto_uniformly_on_of_compact [`hK2])
                 "."
                 `mp)
-               [(Term.app `h.mono [`hK1])]))
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
+               [(Term.app `h.mono [`hK1])]))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
               [])
-             [])
-            (group
+             []
              (Std.Tactic.obtain
               "obtain"
               [(Std.Tactic.RCases.rcasesPatMed
@@ -1058,22 +917,19 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
                [(Term.app
                  (Term.proj (Term.proj (Term.app `compact_basis_nhds [`x]) "." `mem_iff) "." `mp)
                  [(Term.app `hs.mem_nhds [`hx])])]])
-             [])
-            (group
+             []
              (Tactic.refine'
               "refine'"
               (Term.anonymousCtor
                "⟨"
                [`K "," (Term.app `nhds_within_le_nhds [`hK1]) "," (Term.app `h [`K `hK3 `hK2])]
-               "⟩"))
-             [])])
-          []
-          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
-          []
-          («tactic___;_»
-           (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
+               "⟩"))])
+           []
+           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+           []
+           (tactic___
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `u))
@@ -1081,8 +937,7 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
                (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
               [])
-             [])
-            (group
+             []
              (Std.Tactic.obtain
               "obtain"
               [(Std.Tactic.RCases.rcasesPatMed
@@ -1102,12 +957,130 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
                   "⟩")])]
               []
               [":=" [(Term.app `h [`x `hx])]])
-             [])
-            (group
+             []
              (Tactic.exact
               "exact"
-              (Term.anonymousCtor "⟨" [`v "," `hv1 "," (Term.app `hv2 [`u `hu])] "⟩"))
-             [])])
+              (Term.anonymousCtor "⟨" [`v "," `hv1 "," (Term.app `hv2 [`u `hu])] "⟩"))])
+           []
+           (Tactic.tfaeFinish "tfae_finish")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `K))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hK1))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hK2))]
+             [])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj
+               (Term.app `tendsto_locally_uniformly_on_iff_tendsto_uniformly_on_of_compact [`hK2])
+               "."
+               `mp)
+              [(Term.app `h.mono [`hK1])]))])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
+             [])
+            []
+            (Std.Tactic.obtain
+             "obtain"
+             [(Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `K)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed
+                    [(Std.Tactic.RCases.rcasesPat.tuple
+                      "⟨"
+                      [(Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hK1)])
+                        [])
+                       ","
+                       (Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hK2)])
+                        [])]
+                      "⟩")])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hK3)])
+                   [])]
+                 "⟩")])]
+             []
+             [":="
+              [(Term.app
+                (Term.proj (Term.proj (Term.app `compact_basis_nhds [`x]) "." `mem_iff) "." `mp)
+                [(Term.app `hs.mem_nhds [`hx])])]])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor
+              "⟨"
+              [`K "," (Term.app `nhds_within_le_nhds [`hK1]) "," (Term.app `h [`K `hK3 `hK2])]
+              "⟩"))])
+          []
+          (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
+          []
+          (tactic___
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `u))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hu))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
+              (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
+             [])
+            []
+            (Std.Tactic.obtain
+             "obtain"
+             [(Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv1)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv2)])
+                   [])]
+                 "⟩")])]
+             []
+             [":=" [(Term.app `h [`x `hx])]])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor "⟨" [`v "," `hv1 "," (Term.app `hv2 [`u `hu])] "⟩"))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -1115,44 +1088,40 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Std.Tactic.rintro
-          "rintro"
-          [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
-           (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `u))
-           (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hu))
-           (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
-           (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
-          [])
+       [(Std.Tactic.rintro
+         "rintro"
+         [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
+          (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `u))
+          (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hu))
+          (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))
+          (Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `hx))]
          [])
-        (group
-         (Std.Tactic.obtain
-          "obtain"
-          [(Std.Tactic.RCases.rcasesPatMed
-            [(Std.Tactic.RCases.rcasesPat.tuple
-              "⟨"
-              [(Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)])
-                [])
-               ","
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv1)])
-                [])
-               ","
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv2)])
-                [])]
-              "⟩")])]
-          []
-          [":=" [(Term.app `h [`x `hx])]])
-         [])
-        (group
-         (Tactic.exact
-          "exact"
-          (Term.anonymousCtor "⟨" [`v "," `hv1 "," (Term.app `hv2 [`u `hu])] "⟩"))
-         [])])
+        []
+        (Std.Tactic.obtain
+         "obtain"
+         [(Std.Tactic.RCases.rcasesPatMed
+           [(Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `v)])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv1)])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hv2)])
+               [])]
+             "⟩")])]
+         []
+         [":=" [(Term.app `h [`x `hx])]])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.anonymousCtor "⟨" [`v "," `hv1 "," (Term.app `hv2 [`u `hu])] "⟩"))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`v "," `hv1 "," (Term.app `hv2 [`u `hu])] "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1187,7 +1156,7 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.obtain
        "obtain"
        [(Std.Tactic.RCases.rcasesPatMed
@@ -1227,7 +1196,7 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rintro
        "rintro"
        [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `h))
@@ -1296,11 +1265,9 @@ theorem tendsto_locally_uniformly_on_iff_filter :
   · rintro h x hx u hu
     obtain ⟨s, hs1, hs2⟩ := h u hu x hx
     exact ⟨_, hs2, _, eventually_of_mem hs1 fun x => id, fun i hi y hy => hi y hy⟩
-    
   · rintro h u hu x hx
     obtain ⟨pa, hpa, pb, hpb, h⟩ := h x hx u hu
     refine' ⟨pb, hpb, eventually_of_mem hpa fun i hi y hy => h hi hy⟩
-    
 #align tendsto_locally_uniformly_on_iff_filter tendsto_locally_uniformly_on_iff_filter
 
 theorem tendsto_locally_uniformly_iff_filter :
@@ -1372,7 +1339,7 @@ theorem continuous_within_at_of_locally_uniform_approx_of_continuous_within_at (
 a point is continuous at this point. -/
 theorem continuous_at_of_locally_uniform_approx_of_continuous_at
     (L : ∀ u ∈ 𝓤 β, ∃ t ∈ 𝓝 x, ∃ F, ContinuousAt F x ∧ ∀ y ∈ t, (f y, F y) ∈ u) :
-    ContinuousAt f x := by
+    ContinuousAt f x := by 
   rw [← continuous_within_at_univ]
   apply continuous_within_at_of_locally_uniform_approx_of_continuous_within_at (mem_univ _) _
   simpa only [exists_prop, nhds_within_univ, continuous_within_at_univ] using L

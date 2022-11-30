@@ -148,20 +148,13 @@ theorem mul_salem_spencer_insert :
   rw [mem_insert_iff] at hb hc hd
   obtain rfl | hb := hb <;> obtain rfl | hc := hc
   · rfl
-    
   all_goals obtain rfl | hd := hd
   · exact (mul_left_cancel h).symm
-    
   · exact ha hc hd h
-    
   · exact mul_right_cancel h
-    
   · exact (ha hb hd <| (mul_comm _ _).trans h).symm
-    
   · exact ha' hb hc h
-    
   · exact hs hb hc hd h
-    
 #align mul_salem_spencer_insert mul_salem_spencer_insert
 
 @[simp, to_additive]
@@ -170,10 +163,8 @@ theorem mul_salem_spencer_pair (a b : α) : MulSalemSpencer ({a, b} : Set α) :=
   refine' ⟨mul_salem_spencer_singleton _, _, _⟩
   · rintro c d (rfl : c = b) (rfl : d = c)
     exact mul_right_cancel
-    
   · rintro c d (rfl : c = b) (rfl : d = c) _
     rfl
-    
 #align mul_salem_spencer_pair mul_salem_spencer_pair
 
 @[to_additive]
@@ -218,7 +209,7 @@ variable [OrderedCancelCommMonoid α] {s : Set α} {a : α}
 theorem mul_salem_spencer_insert_of_lt (hs : ∀ i ∈ s, i < a) :
     MulSalemSpencer (insert a s) ↔
       MulSalemSpencer s ∧ ∀ ⦃b c⦄, b ∈ s → c ∈ s → a * b = c * c → a = b :=
-  by
+  by 
   refine' mul_salem_spencer_insert.trans _
   rw [← and_assoc']
   exact and_iff_left fun b c hb hc h => ((mul_lt_mul_of_lt_of_lt (hs _ hb) (hs _ hc)).Ne h).elim
@@ -272,10 +263,8 @@ theorem add_salem_spencer_iff_eq_right {s : Set ℕ} :
   · rintro rfl
     simp_rw [← two_mul] at habc
     exact mul_left_cancel₀ two_ne_zero habc
-    
   · rintro rfl
     exact (add_left_cancel habc).symm
-    
 #align add_salem_spencer_iff_eq_right add_salem_spencer_iff_eq_right
 
 end Nat
@@ -285,7 +274,7 @@ The idea is that an arithmetic progression is contained on a line and the fronti
 convex set does not contain lines. -/
 theorem add_salem_spencer_frontier [LinearOrderedField 𝕜] [TopologicalSpace E] [AddCommMonoid E]
     [Module 𝕜 E] {s : Set E} (hs₀ : IsClosed s) (hs₁ : StrictConvex 𝕜 s) :
-    AddSalemSpencer (frontier s) := by
+    AddSalemSpencer (frontier s) := by 
   intro a b c ha hb hc habc
   obtain rfl : (1 / 2 : 𝕜) • a + (1 / 2 : 𝕜) • b = c := by
     rwa [← smul_add, one_div, inv_smul_eq_iff₀ (show (2 : 𝕜) ≠ 0 by norm_num), two_smul]
@@ -299,10 +288,8 @@ theorem add_salem_spencer_sphere [NormedAddCommGroup E] [NormedSpace ℝ E] [Str
   obtain rfl | hr := eq_or_ne r 0
   · rw [sphere_zero]
     exact add_salem_spencer_singleton _
-    
   · convert add_salem_spencer_frontier is_closed_ball (strict_convex_closed_ball ℝ x r)
     exact (frontier_closed_ball _ hr).symm
-    
 #align add_salem_spencer_sphere add_salem_spencer_sphere
 
 end SalemSpencer
@@ -326,7 +313,7 @@ def mulRothNumber : Finset α →o ℕ :=
   ⟨fun s =>
     Nat.findGreatest (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α))
       s.card,
-    by
+    by 
     rintro t u htu
     refine' Nat.find_greatest_mono (fun m => _) (card_le_of_subset htu)
     rintro ⟨v, hvt, hv⟩
@@ -402,7 +389,7 @@ theorem le_mul_roth_number_product (s : Finset α) (t : Finset β) :
 @[to_additive]
 theorem mul_roth_number_lt_of_forall_not_mul_salem_spencer
     (h : ∀ t ∈ powersetLen n s, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n :=
-  by
+  by 
   obtain ⟨t, hts, hcard, ht⟩ := mul_roth_number_spec s
   rw [← hcard, ← not_le]
   intro hn
@@ -427,14 +414,12 @@ theorem mul_roth_number_map_mul_left :
     rw [coe_map] at hu
     rw [← hcard, card_map]
     exact (mul_salem_spencer_mul_left_iff.1 hu).le_mul_roth_number hus
-    
   · obtain ⟨u, hus, hcard, hu⟩ := mul_roth_number_spec s
     have h : MulSalemSpencer (u.map <| mulLeftEmbedding a : Set α) := by
       rw [coe_map]
       exact hu.mul_left
     convert h.le_mul_roth_number (map_subset_map.2 hus)
     rw [card_map, hcard]
-    
 #align mul_roth_number_map_mul_left mul_roth_number_map_mul_left
 
 @[simp, to_additive]
@@ -501,7 +486,6 @@ theorem roth_number_nat_zero : rothNumberNat 0 = 0 :=
 theorem add_roth_number_Ico (a b : ℕ) : addRothNumber (ico a b) = rothNumberNat (b - a) := by
   obtain h | h := le_total b a
   · rw [tsub_eq_zero_of_le h, Ico_eq_empty_of_le h, roth_number_nat_zero, add_roth_number_empty]
-    
   convert add_roth_number_map_add_left _ a
   rw [range_eq_Ico, map_eq_image]
   convert (image_add_left_Ico 0 (b - a) _).symm

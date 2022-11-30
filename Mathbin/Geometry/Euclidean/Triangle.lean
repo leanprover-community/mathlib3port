@@ -84,7 +84,6 @@ theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V}
       (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one y (y - x))) h
   by_cases hxy : x = y
   · rw [hxy]
-    
   · rw [← norm_neg (y - x), neg_sub, mul_comm, mul_comm ‖y‖, div_eq_mul_inv, div_eq_mul_inv,
       mul_inv_rev, mul_inv_rev, ← mul_assoc, ← mul_assoc] at h
     replace h :=
@@ -95,11 +94,9 @@ theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V}
     by_cases hx0 : x = 0
     · rw [hx0, norm_zero, inner_zero_left, zero_mul, zero_sub, neg_eq_zero] at h
       rw [hx0, norm_zero, h]
-      
     · by_cases hy0 : y = 0
       · rw [hy0, norm_zero, inner_zero_right, zero_mul, sub_zero] at h
         rw [hy0, norm_zero, h]
-        
       · rw [inv_sub_inv (fun hz => hx0 (norm_eq_zero.1 hz)) fun hz => hy0 (norm_eq_zero.1 hz), ←
           neg_sub, ← mul_div_assoc, mul_comm, mul_div_assoc, ← mul_neg_one] at h
         symm
@@ -107,9 +104,6 @@ theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V}
         replace h := (mul_left_cancel₀ (sub_ne_zero_of_ne hyx) h).symm
         rw [real_inner_div_norm_mul_norm_eq_neg_one_iff, ← angle_eq_pi_iff] at h
         exact hpi h
-        
-      
-    
 #align
   inner_product_geometry.norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi InnerProductGeometry.norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi
 
@@ -120,7 +114,6 @@ theorem cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle {x y : V} (hx : x ≠ 0
   by_cases hxy : x = y
   · rw [hxy, angle_self hy]
     simp
-    
   · rw [Real.cos_add, cos_angle, cos_angle, cos_angle]
     have hxn : ‖x‖ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
     have hyn : ‖y‖ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
@@ -151,7 +144,6 @@ theorem cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle {x y : V} (hx : x ≠ 0
       real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
     field_simp [hxn, hyn, hxyn]
     ring
-    
 #align
   inner_product_geometry.cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle InnerProductGeometry.cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle
 
@@ -162,7 +154,6 @@ theorem sin_angle_sub_add_angle_sub_rev_eq_sin_angle {x y : V} (hx : x ≠ 0) (h
   by_cases hxy : x = y
   · rw [hxy, angle_self hy]
     simp
-    
   · rw [Real.sin_add, cos_angle, cos_angle]
     have hxn : ‖x‖ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
     have hyn : ‖y‖ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
@@ -195,7 +186,6 @@ theorem sin_angle_sub_add_angle_sub_rev_eq_sin_angle {x y : V} (hx : x ≠ 0) (h
       real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
     field_simp [hxn, hyn, hxyn]
     ring
-    
 #align
   inner_product_geometry.sin_angle_sub_add_angle_sub_rev_eq_sin_angle InnerProductGeometry.sin_angle_sub_add_angle_sub_rev_eq_sin_angle
 
@@ -234,7 +224,7 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
     add_le_add (add_le_add (angle_le_pi _ _) (angle_le_pi _ _)) (angle_le_pi _ _)
   have h3lt : angle x y + angle x (x - y) + angle y (y - x) < π + π + π := by
     by_contra hnlt
-    have hxy : angle x y = π := by
+    have hxy : angle x y = π := by 
       by_contra hxy
       exact
         hnlt
@@ -254,7 +244,7 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
     rw [hn, mul_nonneg_iff_left_nonneg_of_pos Real.pi_pos] at h0
     norm_cast  at h0
     exact h0
-  have hn3 : n < 3 := by
+  have hn3 : n < 3 := by 
     rw [hn, show π + π + π = 3 * π by ring] at h3lt
     replace h3lt := lt_of_mul_lt_mul_right h3lt (le_of_lt Real.pi_pos)
     norm_cast  at h3lt
@@ -263,14 +253,11 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
   · rw [hn] at hcos
     simp at hcos
     norm_num at hcos
-    
   · rw [hn]
     norm_num
-    
   · rw [hn] at hcos
     simp at hcos
     norm_num at hcos
-    
 #align
   inner_product_geometry.angle_add_angle_sub_add_angle_sub_eq_pi InnerProductGeometry.angle_add_angle_sub_add_angle_sub_eq_pi
 
@@ -299,16 +286,14 @@ theorem dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle (
     dist p1 p3 * dist p1 p3 =
       dist p1 p2 * dist p1 p2 + dist p3 p2 * dist p3 p2 -
         2 * dist p1 p2 * dist p3 p2 * Real.cos (∠ p1 p2 p3) :=
-  by
+  by 
   rw [dist_eq_norm_vsub V p1 p3, dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p3 p2]
   unfold angle
   convert
     norm_sub_sq_eq_norm_sq_add_norm_sq_sub_two_mul_norm_mul_norm_mul_cos_angle (p1 -ᵥ p2 : V)
       (p3 -ᵥ p2 : V)
   · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
-    
   · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
-    
 #align
   euclidean_geometry.dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle EuclideanGeometry.dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle
 
@@ -321,9 +306,7 @@ theorem angle_eq_angle_of_dist_eq {p1 p2 p3 : P} (h : dist p1 p2 = dist p1 p3) :
   unfold angle
   convert angle_sub_eq_angle_sub_rev_of_norm_eq h
   · exact (vsub_sub_vsub_cancel_left p3 p2 p1).symm
-    
   · exact (vsub_sub_vsub_cancel_left p2 p3 p1).symm
-    
 #align euclidean_geometry.angle_eq_angle_of_dist_eq EuclideanGeometry.angle_eq_angle_of_dist_eq
 
 /-- Converse of pons asinorum, angle-at-point form. -/
@@ -369,7 +352,6 @@ theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c 
     dist a b ^ 2 + dist a c ^ 2 = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by
   by_cases hbc : b = c
   · simp [hbc, midpoint_self, dist_self, two_mul]
-    
   · let m := midpoint ℝ b c
     have : dist b c ≠ 0 := (dist_pos.mpr hbc).ne'
     have hm := dist_sq_mul_dist_add_dist_sq_mul_dist a b c m (angle_midpoint_eq_pi b c hbc)
@@ -377,7 +359,7 @@ theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c 
     calc
       dist a b ^ 2 + dist a c ^ 2 =
           2 / dist b c * (dist a b ^ 2 * (2⁻¹ * dist b c) + dist a c ^ 2 * (2⁻¹ * dist b c)) :=
-        by
+        by 
         field_simp
         ring
       _ = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by
@@ -385,7 +367,6 @@ theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c 
         field_simp
         ring
       
-    
 #align
   euclidean_geometry.dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq EuclideanGeometry.dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq
 
@@ -405,13 +386,11 @@ theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠
   by_cases hab₁ : a = b
   · have hab'₁ : a' = b' := by rw [← dist_eq_zero, hab, dist_eq_zero.mpr hab₁, mul_zero r]
     rw [hab₁, hab'₁, dist_comm b' c', dist_comm b c, hcb]
-    
-  · have h1 : 0 ≤ r * dist a b := by
+  · have h1 : 0 ≤ r * dist a b := by 
       rw [← hab]
       exact dist_nonneg
     have h2 : 0 ≤ r := nonneg_of_mul_nonneg_left h1 (dist_pos.mpr hab₁)
     exact (sq_eq_sq dist_nonneg (mul_nonneg h2 dist_nonneg)).mp h'
-    
 #align
   euclidean_geometry.dist_mul_of_eq_angle_of_dist_mul EuclideanGeometry.dist_mul_of_eq_angle_of_dist_mul
 

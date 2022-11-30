@@ -318,8 +318,8 @@ section lift
 -- See note [reducible non-instances]
 /-- Pullback an `order.frame` along an injection. -/
 @[reducible]
-protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSup α] [HasInf α] [HasTop α]
-    [HasBot α] [Frame β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
+protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSup α] [HasInf α] [Top α] [Bot α]
+    [Frame β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a)
     (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : Frame α :=
   { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
@@ -333,8 +333,8 @@ protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSup α] [HasI
 -- See note [reducible non-instances]
 /-- Pullback an `order.coframe` along an injection. -/
 @[reducible]
-protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSup α] [HasInf α] [HasTop α]
-    [HasBot α] [Coframe β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
+protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSup α] [HasInf α] [Top α] [Bot α]
+    [Coframe β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a)
     (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : Coframe α :=
   { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
@@ -349,7 +349,7 @@ protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSup α] [Ha
 /-- Pullback a `complete_distrib_lattice` along an injection. -/
 @[reducible]
 protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] [HasSup α] [HasInf α]
-    [HasTop α] [HasBot α] [CompleteDistribLattice β] (f : α → β) (hf : Function.Injective f)
+    [Top α] [Bot α] [CompleteDistribLattice β] (f : α → β) (hf : Function.Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a)
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : CompleteDistribLattice α :=
@@ -361,7 +361,7 @@ protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] 
 /-- Pullback a `complete_boolean_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] [HasSup α] [HasInf α]
-    [HasTop α] [HasBot α] [HasCompl α] [SDiff α] [CompleteBooleanAlgebra β] (f : α → β)
+    [Top α] [Bot α] [HasCompl α] [SDiff α] [CompleteBooleanAlgebra β] (f : α → β)
     (hf : Function.Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a)
     (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥)

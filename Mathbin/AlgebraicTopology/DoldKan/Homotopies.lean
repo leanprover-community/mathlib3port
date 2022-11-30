@@ -127,15 +127,13 @@ theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
     (hσ' q n m hnm : X _[n] ⟶ X _[m]) =
       ((-1 : ℤ) ^ a • X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro (Eq.symm ha))⟩) ≫
         eqToHom (by congr ) :=
-  by
+  by 
   simp only [hσ', hσ]
   split_ifs
   · exfalso
     linarith
-    
   · have h' := tsub_eq_of_eq_add ha
     congr
-    
 #align algebraic_topology.dold_kan.hσ'_eq AlgebraicTopology.DoldKan.hσ'_eq
 
 theorem hσ'_eq' {q n a : ℕ} (ha : n = a + q) :
@@ -172,9 +170,7 @@ theorem Hσ_eq_zero (q : ℕ) : (hσ q : K[X] ⟶ K[X]).f 0 = 0 := by
     simp only [alternating_face_map_complex.obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero,
       one_zsmul, Fin.coe_one, pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
     erw [δ_comp_σ_self, δ_comp_σ_succ]
-    
   · rw [hσ'_eq_zero (Nat.succ_pos q) (c_mk 1 0 rfl), zero_comp]
-    
 #align algebraic_topology.dold_kan.Hσ_eq_zero AlgebraicTopology.DoldKan.Hσ_eq_zero
 
 /-- The maps `hσ' q n m hnm` are natural on the simplicial object -/
@@ -186,17 +182,17 @@ theorem hσ'_naturality (q : ℕ) (n m : ℕ) (hnm : c.Rel m n) {X Y : Simplicia
   unfold hσ
   split_ifs
   · rw [zero_comp, comp_zero]
-    
   · simp only [zsmul_comp, comp_zsmul]
     erw [f.naturality]
     rfl
-    
 #align algebraic_topology.dold_kan.hσ'_naturality AlgebraicTopology.DoldKan.hσ'_naturality
 
 /-- For each q, `Hσ q` is a natural transformation. -/
-def natTransHσ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where
+def natTransHσ (q : ℕ) :
+    alternatingFaceMapComplex C ⟶
+      alternatingFaceMapComplex C where 
   app X := hσ q
-  naturality' X Y f := by
+  naturality' X Y f := by 
     unfold Hσ
     rw [null_homotopic_map'_comp, comp_null_homotopic_map']
     congr
@@ -209,13 +205,11 @@ theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addi
     (X : SimplicialObject C) (q n m : ℕ) (hnm : c.Rel m n) :
     (hσ' q n m hnm : K[((whiskering _ _).obj G).obj X].x n ⟶ _) =
       G.map (hσ' q n m hnm : K[X].x n ⟶ _) :=
-  by
+  by 
   unfold hσ' hσ
   split_ifs
   · simp only [functor.map_zero, zero_comp]
-    
   · simpa only [eq_to_hom_map, functor.map_comp, functor.map_zsmul]
-    
 #align algebraic_topology.dold_kan.map_hσ' AlgebraicTopology.DoldKan.map_hσ'
 
 /-- The null homotopic maps `Hσ` are compatible with the application of additive functors. -/

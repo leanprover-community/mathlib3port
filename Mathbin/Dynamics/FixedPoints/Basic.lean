@@ -191,11 +191,9 @@ protected theorem zpow (h : Function.IsFixedPt e x) (n : ℤ) : Function.IsFixed
   cases n
   · rw [Int.ofNat_eq_coe, zpow_coe_nat, ← Equiv.Perm.iterate_eq_pow]
     exact h.iterate n
-    
   · change Function.IsFixedPt (⇑(e ^ (-(↑(n + 1) : ℤ)))) x
     rw [zpow_neg, zpow_coe_nat, ← inv_pow, ← Equiv.Perm.iterate_eq_pow, Equiv.Perm.inv_def]
     exact (Equiv.IsFixedPt.symm h).iterate (n + 1)
-    
 #align equiv.is_fixed_pt.zpow Equiv.IsFixedPt.zpow
 
 end Equiv.IsFixedPt

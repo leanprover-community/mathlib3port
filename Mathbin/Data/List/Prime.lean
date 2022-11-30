@@ -28,18 +28,12 @@ theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.Prod �
     induction' L with L_hd L_tl L_ih
     · rw [prod_nil] at h
       exact absurd h pp.not_dvd_one
-      
     · rw [prod_cons] at h
       cases' pp.dvd_or_dvd h with hd hd
       · exact ⟨L_hd, mem_cons_self L_hd L_tl, hd⟩
-        
       · obtain ⟨x, hx1, hx2⟩ := L_ih hd
         exact ⟨x, mem_cons_of_mem L_hd hx1, hx2⟩
-        
-      
-    
   · exact fun ⟨a, ha1, ha2⟩ => dvd_trans ha2 (dvd_prod ha1)
-    
 #align prime.dvd_prod_iff Prime.dvd_prod_iff
 
 theorem Prime.not_dvd_prod {p : M} {L : List M} (pp : Prime p) (hL : ∀ a ∈ L, ¬p ∣ a) :
@@ -78,17 +72,18 @@ theorem perm_of_prod_eq_prod :
   | a::l, [], h₁, h₂, h₃ =>
     have ha : a ∣ 1 := @prod_nil M _ ▸ h₁ ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _
     absurd ha (Prime.not_dvd_one (h₂ a (mem_cons_self _ _)))
-  | a::l₁, b::l₂, h, hl₁, hl₂ => by classical
-    have hl₁' : ∀ p ∈ l₁, Prime p := fun p hp => hl₁ p (mem_cons_of_mem _ hp)
-    have hl₂' : ∀ p ∈ (b::l₂).erase a, Prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
-    have ha : a ∈ b::l₂ :=
-      mem_list_primes_of_dvd_prod (hl₁ a (mem_cons_self _ _)) hl₂
-        (h ▸ by rw [prod_cons] <;> exact dvd_mul_right _ _)
-    have hb : (b::l₂) ~ a::(b::l₂).erase a := perm_cons_erase ha
-    have hl : Prod l₁ = Prod ((b::l₂).erase a) :=
-      (mul_right_inj' (hl₁ a (mem_cons_self _ _)).NeZero).1 <| by
-        rwa [← prod_cons, ← prod_cons, ← hb.prod_eq]
-    exact perm.trans ((perm_of_prod_eq_prod hl hl₁' hl₂').cons _) hb.symm
+  | a::l₁, b::l₂, h, hl₁, hl₂ => by
+    classical 
+      have hl₁' : ∀ p ∈ l₁, Prime p := fun p hp => hl₁ p (mem_cons_of_mem _ hp)
+      have hl₂' : ∀ p ∈ (b::l₂).erase a, Prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
+      have ha : a ∈ b::l₂ :=
+        mem_list_primes_of_dvd_prod (hl₁ a (mem_cons_self _ _)) hl₂
+          (h ▸ by rw [prod_cons] <;> exact dvd_mul_right _ _)
+      have hb : (b::l₂) ~ a::(b::l₂).erase a := perm_cons_erase ha
+      have hl : Prod l₁ = Prod ((b::l₂).erase a) :=
+        (mul_right_inj' (hl₁ a (mem_cons_self _ _)).NeZero).1 <| by
+          rwa [← prod_cons, ← prod_cons, ← hb.prod_eq]
+      exact perm.trans ((perm_of_prod_eq_prod hl hl₁' hl₂').cons _) hb.symm
 #align perm_of_prod_eq_prod perm_of_prod_eq_prod
 
 end CancelCommMonoidWithZero

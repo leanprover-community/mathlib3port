@@ -127,26 +127,22 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr has_deriv_within_at.sub, \",\", expr has_deriv_within_at.add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     · refine' (hf _ _).compHasDerivWithinAt _ _
       · exact xt_mem t ht
-        
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.const_add, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-      
-    · trace
+    ·
+      trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-      
-    · trace
+    ·
+      trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-      
     · suffices H :
         HasDerivWithinAt (fun u => ((u * h) ^ 2 / 2) • f'' w w)
           ((((2 : ℕ) : ℝ) * (t * h) ^ (2 - 1) * (1 * h) / 2) • f'' w w) (Icc 0 1) t
       · convert H using 2
         simp only [one_mul, Nat.cast_bit0, pow_one, Nat.cast_one]
         ring
-        
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_id', \",\", expr has_deriv_at.pow, \",\", expr has_deriv_at.mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-      
   -- check that `g'` is uniformly bounded, with a suitable bound `ε * ((‖v‖ + ‖w‖) * ‖w‖) * h^2`.
   have g'_bound : ∀ t ∈ Ico (0 : ℝ) 1, ‖g' t‖ ≤ ε * ((‖v‖ + ‖w‖) * ‖w‖) * h ^ 2 := by
     intro t ht
@@ -198,10 +194,9 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
     simp only [Nat.one_ne_zero, add_zero, one_mul, zero_div, zero_mul, sub_zero, zero_smul, Ne.def,
       not_false_iff, bit0_eq_zero, zero_pow']
     abel
-    
-  · simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg,
+  ·
+    simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg,
       mul_assoc, pow_bit0_abs, norm_nonneg, abs_pow]
-    
 #align convex.taylor_approx_two_segment Convex.taylor_approx_two_segment
 
 /-- One can get `f'' v w` as the limit of `h ^ (-2)` times the alternate sum of the values of `f`
@@ -215,7 +210,7 @@ theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v �
             f (x + h • (v + 2 • w)) -
           h ^ 2 • f'' v w) =o[𝓝[>] 0]
       fun h => h ^ 2 :=
-  by
+  by 
   have A : (1 : ℝ) / 2 ∈ Ioc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
   have B : (1 : ℝ) / 2 ∈ Icc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
   have C : ∀ w : E, (2 : ℝ) • w = 2 • w := fun w => by simp only [two_smul]
@@ -287,10 +282,8 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
       rw [← one_smul ℝ (f'' w v - f'' v w), smul_smul, smul_smul]
       congr 1
       field_simp [LT.lt.ne' hpos]
-      
     · filter_upwards [self_mem_nhds_within] with _ hpos
       field_simp [LT.lt.ne' hpos, HasSmul.smul]
-      
   simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
 #align
   convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior
@@ -302,7 +295,8 @@ derivative at a point of this convex set, then this second derivative is symmetr
 theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Convex ℝ s)
     (hne : (interior s).Nonempty) {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
     (hf : ∀ x ∈ interior s, HasFderivAt f (f' x) x) {x : E} (xs : x ∈ s)
-    (hx : HasFderivWithinAt f' f'' (interior s) x) (v w : E) : f'' v w = f'' w v := by
+    (hx : HasFderivWithinAt f' f'' (interior s) x) (v w : E) : f'' v w = f'' w v :=
+  by
   /- we work around a point `x + 4 z` in the interior of `s`. For any vector `m`,
     then `x + 4 (z + t m)` also belongs to the interior of `s` for small enough `t`. This means that
     we will be able to apply `second_derivative_within_at_symmetric_of_mem_interior` to show
@@ -328,7 +322,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
   choose t ts tpos using fun m => ((B m).And self_mem_nhds_within).exists
   -- applying `second_derivative_within_at_symmetric_of_mem_interior` to the vectors `z`
   -- and `z + (t m) m`, we deduce that `f'' m z = f'' z m` for all `m`.
-  have C : ∀ m : E, f'' m z = f'' z m := by
+  have C : ∀ m : E, f'' m z = f'' z m := by 
     intro m
     have : f'' (z + t m • m) (z + t 0 • 0) = f'' (z + t 0 • 0) (z + t m • m) :=
       s_conv.second_derivative_within_at_symmetric_of_mem_interior hf xs hx (ts 0) (ts m)

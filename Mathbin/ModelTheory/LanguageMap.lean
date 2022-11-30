@@ -69,7 +69,8 @@ protected def mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (φ₀ : c → L
 variable (ϕ : L →ᴸ L')
 
 /-- Pulls a structure back along a language map. -/
-def reduct (M : Type _) [L'.StructureCat M] : L.StructureCat M where
+def reduct (M : Type _) [L'.StructureCat M] :
+    L.StructureCat M where 
   funMap n f xs := funMap (ϕ.onFunction f) xs
   rel_map n r xs := RelMap (ϕ.onRelation r) xs
 #align first_order.language.Lhom.reduct FirstOrder.Language.LhomCat.reduct
@@ -105,7 +106,7 @@ protected def ofIsEmpty [L.IsAlgebraic] [L.IsRelational] : L →ᴸ L' :=
 
 variable {L L'} {L'' : Language}
 
-@[ext.1]
+@[ext]
 protected theorem funext {F G : L →ᴸ L'} (h_fun : F.onFunction = G.onFunction)
     (h_rel : F.onRelation = G.onRelation) : F = G := by
   cases' F with Ff Fr
@@ -168,7 +169,9 @@ variable (ψ : L'' →ᴸ L')
 
 /-- A language map defined on two factors of a sum. -/
 @[simps]
-protected def sumElim : L.Sum L'' →ᴸ L' where
+protected def sumElim :
+    L.Sum L'' →ᴸ
+      L' where 
   onFunction n := Sum.elim (fun f => ϕ.onFunction f) fun f => ψ.onFunction f
   onRelation n := Sum.elim (fun f => ϕ.onRelation f) fun f => ψ.onRelation f
 #align first_order.language.Lhom.sum_elim FirstOrder.Language.LhomCat.sumElim
@@ -198,7 +201,10 @@ variable {L₁ L₂ : Language} (ψ : L₁ →ᴸ L₂)
 
 /-- The map between two sum-languages induced by maps on the two factors. -/
 @[simps]
-def sumMap : L.Sum L₁ →ᴸ L'.Sum L₂ where
+def sumMap :
+    L.Sum L₁ →ᴸ
+      L'.Sum
+        L₂ where 
   onFunction n := Sum.map (fun f => ϕ.onFunction f) fun f => ψ.onFunction f
   onRelation n := Sum.map (fun f => ϕ.onRelation f) fun f => ψ.onRelation f
 #align first_order.language.Lhom.sum_map FirstOrder.Language.LhomCat.sumMap
@@ -226,7 +232,9 @@ protected structure Injective : Prop where
 noncomputable def defaultExpansion (ϕ : L →ᴸ L')
     [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => onFunction ϕ f)]
     [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.range fun r : L.Relations n => onRelation ϕ r)]
-    (M : Type _) [Inhabited M] [L.StructureCat M] : L'.StructureCat M where
+    (M : Type _) [Inhabited M] [L.StructureCat M] :
+    L'.StructureCat
+      M where 
   funMap n f xs :=
     if h' : f ∈ Set.range fun f : L.Functions n => onFunction ϕ f then funMap h'.some xs
     else default
@@ -331,11 +339,9 @@ theorem Injective.is_expansion_on_default {ϕ : L →ᴸ L'}
   · have hf : ϕ.on_function f ∈ Set.range fun f : L.functions n => ϕ.on_function f := ⟨f, rfl⟩
     refine' (dif_pos hf).trans _
     rw [h.on_function hf.some_spec]
-    
   · have hr : ϕ.on_relation r ∈ Set.range fun r : L.relations n => ϕ.on_relation r := ⟨r, rfl⟩
     refine' (dif_pos hr).trans _
     rw [h.on_relation hr.some_spec]
-    
 #align
   first_order.language.Lhom.injective.is_expansion_on_default FirstOrder.Language.LhomCat.Injective.is_expansion_on_default
 
@@ -435,7 +441,7 @@ def LhomCat.constantsOnMap (f : α → β) : constantsOn α →ᴸ constantsOn �
 theorem constants_on_map_is_expansion_on {f : α → β} {fα : α → M} {fβ : β → M} (h : fβ ∘ f = fα) :
     @LhomCat.IsExpansionOn _ _ (LhomCat.constantsOnMap f) M (constantsOn.structure fα)
       (constantsOn.structure fβ) :=
-  by
+  by 
   letI := constants_on.Structure fα
   letI := constants_on.Structure fβ
   exact
@@ -501,11 +507,12 @@ variable (L) (α)
 
 /-- The language map removing an empty constant set.  -/
 @[simps]
-def LequivCat.addEmptyConstants [ie : IsEmpty α] : L ≃ᴸ L[[α]] where
+def LequivCat.addEmptyConstants [ie : IsEmpty α] :
+    L ≃ᴸ L[[α]] where 
   toLhom := lhomWithConstants L α
   invLhom := LhomCat.sumElim (LhomCat.id L) (LhomCat.ofIsEmpty (constantsOn α) L)
   left_inv := by rw [Lhom_with_constants, Lhom.sum_elim_comp_inl]
-  right_inv := by
+  right_inv := by 
     simp only [Lhom.comp_sum_elim, Lhom_with_constants, Lhom.comp_id]
     exact trans (congr rfl (Subsingleton.elim _ _)) Lhom.sum_elim_inl_inr
 #align

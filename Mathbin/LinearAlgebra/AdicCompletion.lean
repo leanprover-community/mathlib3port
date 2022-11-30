@@ -87,12 +87,18 @@ def HausdorffificationCat : Type _ :=
 
 /-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
 In fact, this is only complete if the ideal is finitely generated. -/
-def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule R M)) where
+def adicCompletion :
+    Submodule R
+      (∀ n : ℕ,
+        M ⧸
+          (I ^ n • ⊤ :
+            Submodule R
+              M)) where 
   carrier :=
     { f |
       ∀ {m n} (h : m ≤ n),
         liftq _ (mkq _)
-            (by
+            (by 
               rw [ker_mkq]
               exact smul_mono (Ideal.pow_le_pow h) le_rfl)
             (f n) =
@@ -114,7 +120,7 @@ variable {M}
 protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
     eq_of_sub_eq_zero <|
-      (h.haus (x - y)) fun n => by
+      (h.haus (x - y)) fun n => by 
         rw [Ideal.top_pow, top_smul]
         exact Smodeq.top⟩
 #align is_Hausdorff.subsingleton IsHausdorff.subsingleton
@@ -198,14 +204,13 @@ instance bot : IsPrecomplete (⊥ : Ideal R) M := by
   refine' ⟨fun f hf => ⟨f 1, fun n => _⟩⟩; cases n
   · rw [pow_zero, Ideal.one_eq_top, top_smul]
     exact Smodeq.top
-    
   specialize hf (Nat.le_add_left 1 n)
   rw [pow_one, bot_smul, Smodeq.bot] at hf; rw [hf]
 #align is_precomplete.bot IsPrecomplete.bot
 
 instance top : IsPrecomplete (⊤ : Ideal R) M :=
   ⟨fun f hf =>
-    ⟨0, fun n => by
+    ⟨0, fun n => by 
       rw [Ideal.top_pow, top_smul]
       exact Smodeq.top⟩⟩
 #align is_precomplete.top IsPrecomplete.top
@@ -219,7 +224,10 @@ end IsPrecomplete
 namespace adicCompletion
 
 /-- The canonical linear map to the completion. -/
-def of : M →ₗ[R] adicCompletion I M where
+def of :
+    M →ₗ[R]
+      adicCompletion I
+        M where 
   toFun x := ⟨fun n => mkq _ x, fun m n hmn => rfl⟩
   map_add' x y := rfl
   map_smul' c x := rfl
@@ -231,7 +239,9 @@ theorem of_apply (x : M) (n : ℕ) : (of I M x).1 n = mkq _ x :=
 #align adic_completion.of_apply adicCompletion.of_apply
 
 /-- Linearly evaluating a sequence in the completion at a given input. -/
-def eval (n : ℕ) : adicCompletion I M →ₗ[R] M ⧸ (I ^ n • ⊤ : Submodule R M) where
+def eval (n : ℕ) :
+    adicCompletion I M →ₗ[R]
+      M ⧸ (I ^ n • ⊤ : Submodule R M) where 
   toFun f := f.1 n
   map_add' f g := rfl
   map_smul' c f := rfl
@@ -263,7 +273,7 @@ theorem range_eval (n : ℕ) : (eval I M n).range = ⊤ :=
 
 variable {I M}
 
-@[ext.1]
+@[ext]
 theorem ext {x y : adicCompletion I M} (h : ∀ n, eval I M n x = eval I M n y) : x = y :=
   Subtype.eq <| funext h
 #align adic_completion.ext adicCompletion.ext
@@ -325,13 +335,10 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
       ring
     cases n
     · simp only [Ideal.one_eq_top, pow_zero]
-      
     · dsimp [f]
       rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_comm, ← sub_sub,
         sub_self, zero_sub, neg_mem_iff, mul_pow]
       exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)
-      
-    
 #align is_adic_complete.le_jacobson_bot IsAdicComplete.le_jacobson_bot
 
 end IsAdicComplete

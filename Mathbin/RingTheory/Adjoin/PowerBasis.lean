@@ -33,7 +33,7 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
   have hx' :
     _root_.is_integral K
       (show adjoin K ({x} : Set S) from ⟨x, subset_adjoin (Set.mem_singleton x)⟩) :=
-    by
+    by 
     apply (is_integral_algebra_map_iff hST).mp
     convert hx
     infer_instance
@@ -43,7 +43,6 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
       ⟨x, subset_adjoin (Set.mem_singleton x)⟩ ^ (i : ℕ)
   · have := hx'.linear_independent_pow
     rwa [minpoly_eq] at this
-    
   · rintro ⟨y, hy⟩ _
     have := hx'.mem_span_pow
     rw [minpoly_eq] at this
@@ -53,8 +52,6 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
       use f
       ext
       exact aeval_algebra_map_apply S (⟨x, _⟩ : adjoin K {x}) _
-      
-    
 #align algebra.adjoin.power_basis_aux Algebra.adjoin.powerBasisAux
 
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
@@ -62,7 +59,9 @@ where `d` is the degree of the minimal polynomial of `x`. See `algebra.adjoin.po
 a version over a more general base ring. -/
 @[simps gen dim]
 noncomputable def adjoin.powerBasis {x : S} (hx : IsIntegral K x) :
-    PowerBasis K (adjoin K ({x} : Set S)) where
+    PowerBasis K
+      (adjoin K
+        ({x} : Set S)) where 
   gen := ⟨x, subset_adjoin (Set.mem_singleton x)⟩
   dim := (minpoly K x).natDegree
   Basis := adjoin.powerBasisAux hx
@@ -113,7 +112,6 @@ theorem repr_gen_pow_is_integral [IsDomain S]
     simp
   by_cases hQ : Q = 0
   · simp [this, hQ, is_integral_zero]
-    
   have hlt : Q.nat_degree < B.dim := by
     rw [← B.nat_degree_minpoly, hmin, (minpoly.monic hB).nat_degree_map,
       nat_degree_lt_nat_degree_iff hQ]
@@ -131,9 +129,7 @@ theorem repr_gen_pow_is_integral [IsDomain S]
   · simp only [hij, eq_self_iff_true, if_true]
     rw [Algebra.smul_def, mul_one]
     exact is_integral_algebra_map
-    
   · simp [hij, is_integral_zero]
-    
 #align power_basis.repr_gen_pow_is_integral PowerBasis.repr_gen_pow_is_integral
 
 variable {B}
@@ -172,14 +168,10 @@ theorem repr_pow_is_integral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.B
       B.basis.repr_self_apply]
     split_ifs
     · exact is_integral_one
-      
     · exact is_integral_zero
-      
-    
   · intro hx
     rw [pow_succ]
     exact repr_mul_is_integral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
-    
 #align power_basis.repr_pow_is_integral PowerBasis.repr_pow_is_integral
 
 /-- Let `B B' : power_basis K S` be such that `is_integral R B.gen`, and let `P : R[X]` be such that

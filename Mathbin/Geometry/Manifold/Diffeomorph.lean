@@ -155,7 +155,7 @@ theorem coe_fn_injective : Injective fun (h : M ≃ₘ^n⟮I, I'⟯ M') (x : M) 
   Equiv.coe_fn_injective.comp to_equiv_injective
 #align diffeomorph.coe_fn_injective Diffeomorph.coe_fn_injective
 
-@[ext.1]
+@[ext]
 theorem ext {h h' : M ≃ₘ^n⟮I, I'⟯ M'} (Heq : ∀ x, h x = h' x) : h = h' :=
   coe_fn_injective <| funext Heq
 #align diffeomorph.ext Diffeomorph.ext
@@ -165,7 +165,8 @@ section
 variable (M I n)
 
 /-- Identity map as a diffeomorphism. -/
-protected def refl : M ≃ₘ^n⟮I, I⟯ M where
+protected def refl : M ≃ₘ^n⟮I, I⟯
+      M where 
   contMdiffToFun := contMdiffId
   contMdiffInvFun := contMdiffId
   toEquiv := Equiv.refl M
@@ -184,7 +185,9 @@ theorem coe_refl : ⇑(Diffeomorph.refl I M n) = id :=
 end
 
 /-- Composition of two diffeomorphisms. -/
-protected def trans (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : M' ≃ₘ^n⟮I', J⟯ N) : M ≃ₘ^n⟮I, J⟯ N where
+protected def trans (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : M' ≃ₘ^n⟮I', J⟯ N) :
+    M ≃ₘ^n⟮I, J⟯
+      N where 
   contMdiffToFun := h₂.contMdiffToFun.comp h₁.contMdiffToFun
   contMdiffInvFun := h₁.contMdiffInvFun.comp h₂.contMdiffInvFun
   toEquiv := h₁.toEquiv.trans h₂.toEquiv
@@ -206,7 +209,8 @@ theorem coe_trans (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : M' ≃ₘ^n⟮I', J�
 #align diffeomorph.coe_trans Diffeomorph.coe_trans
 
 /-- Inverse of a diffeomorphism. -/
-protected def symm (h : M ≃ₘ^n⟮I, J⟯ N) : N ≃ₘ^n⟮J, I⟯ M where
+protected def symm (h : M ≃ₘ^n⟮I, J⟯ N) :
+    N ≃ₘ^n⟮J, I⟯ M where 
   contMdiffToFun := h.contMdiffInvFun
   contMdiffInvFun := h.contMdiffToFun
   toEquiv := h.toEquiv.symm
@@ -310,10 +314,8 @@ theorem cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ 
     rw [← h.symm_apply_apply x] at Hfh
     simpa only [(· ∘ ·), h.apply_symm_apply] using
       Hfh.comp (h x) (h.symm.cont_mdiff_within_at.of_le hm) (maps_to_preimage _ _)
-    
   · rw [← h.image_eq_preimage]
     exact fun hf => hf.comp x (h.cont_mdiff_within_at.of_le hm) (maps_to_image _ _)
-    
 #align
   diffeomorph.cont_mdiff_within_at_comp_diffeomorph_iff Diffeomorph.cont_mdiff_within_at_comp_diffeomorph_iff
 
@@ -374,7 +376,9 @@ section Constructions
 
 /-- Product of two diffeomorphisms. -/
 def prodCongr (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : N ≃ₘ^n⟮J, J'⟯ N') :
-    (M × N) ≃ₘ^n⟮I.Prod J, I'.Prod J'⟯ M' × N' where
+    (M × N) ≃ₘ^n⟮I.Prod J, I'.Prod J'⟯
+      M' ×
+        N' where 
   contMdiffToFun := (h₁.ContMdiff.comp contMdiffFst).prod_mk (h₂.ContMdiff.comp contMdiffSnd)
   contMdiffInvFun :=
     (h₁.symm.ContMdiff.comp contMdiffFst).prod_mk (h₂.symm.ContMdiff.comp contMdiffSnd)
@@ -398,7 +402,9 @@ section
 variable (I J J' M N N' n)
 
 /-- `M × N` is diffeomorphic to `N × M`. -/
-def prodComm : (M × N) ≃ₘ^n⟮I.Prod J, J.Prod I⟯ N × M where
+def prodComm :
+    (M × N) ≃ₘ^n⟮I.Prod J, J.Prod I⟯
+      N × M where 
   contMdiffToFun := contMdiffSnd.prod_mk contMdiffFst
   contMdiffInvFun := contMdiffSnd.prod_mk contMdiffFst
   toEquiv := Equiv.prodComm M N
@@ -415,7 +421,11 @@ theorem coe_prod_comm : ⇑(prodComm I J M N n) = Prod.swap :=
 #align diffeomorph.coe_prod_comm Diffeomorph.coe_prod_comm
 
 /-- `(M × N) × N'` is diffeomorphic to `M × (N × N')`. -/
-def prodAssoc : ((M × N) × N') ≃ₘ^n⟮(I.Prod J).Prod J', I.Prod (J.Prod J')⟯ M × N × N' where
+def prodAssoc :
+    ((M × N) × N') ≃ₘ^n⟮(I.Prod J).Prod J', I.Prod (J.Prod J')⟯
+      M ×
+        N ×
+          N' where 
   contMdiffToFun :=
     (contMdiffFst.comp contMdiffFst).prod_mk ((contMdiffSnd.comp contMdiffFst).prod_mk contMdiffSnd)
   contMdiffInvFun :=
@@ -466,7 +476,8 @@ namespace ContinuousLinearEquiv
 variable (e : E ≃L[𝕜] E')
 
 /-- A continuous linear equivalence between normed spaces is a diffeomorphism. -/
-def toDiffeomorph : E ≃ₘ[𝕜] E' where
+def toDiffeomorph : E ≃ₘ[𝕜]
+      E' where 
   contMdiffToFun := e.ContDiff.ContMdiff
   contMdiffInvFun := e.symm.ContDiff.ContMdiff
   toEquiv := e.toLinearEquiv.toEquiv
@@ -494,7 +505,9 @@ namespace ModelWithCorners
 variable (I) (e : E ≃ₘ[𝕜] E')
 
 /-- Apply a diffeomorphism (e.g., a continuous linear equivalence) to the model vector space. -/
-def transDiffeomorph (I : ModelWithCorners 𝕜 E H) (e : E ≃ₘ[𝕜] E') : ModelWithCorners 𝕜 E' H where
+def transDiffeomorph (I : ModelWithCorners 𝕜 E H) (e : E ≃ₘ[𝕜] E') :
+    ModelWithCorners 𝕜 E'
+      H where 
   toLocalEquiv := I.toLocalEquiv.trans e.toEquiv.toLocalEquiv
   source_eq := by simp
   uniqueDiff' := by simp [range_comp e, I.unique_diff]
@@ -554,14 +567,16 @@ variable (I M)
 
 /-- The identity diffeomorphism between a manifold with model `I` and the same manifold
 with model `I.trans_diffeomorph e`. -/
-def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I, I.transDiffeomorph e⟯ M where
+def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) :
+    M ≃ₘ⟮I, I.transDiffeomorph e⟯
+      M where 
   toEquiv := Equiv.refl M
   contMdiffToFun x := by
     refine' cont_mdiff_within_at_iff'.2 ⟨continuous_within_at_id, _⟩
     refine' e.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
-    · simp only [Equiv.coe_refl, id, (· ∘ ·), I.coe_ext_chart_at_trans_diffeomorph,
+    ·
+      simp only [Equiv.coe_refl, id, (· ∘ ·), I.coe_ext_chart_at_trans_diffeomorph,
         (extChartAt I x).right_inv hy.1]
-      
     exact
       ⟨(extChartAt I x).map_source (mem_ext_chart_source I x), trivial, by simp only [mfld_simps]⟩
   contMdiffInvFun x := by
@@ -570,7 +585,6 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I, I.transDiffeomorph
     · simp only [mem_inter_iff, I.ext_chart_at_trans_diffeomorph_target] at hy
       simp only [Equiv.coe_refl, Equiv.refl_symm, id, (· ∘ ·),
         I.coe_ext_chart_at_trans_diffeomorph_symm, (extChartAt I x).right_inv hy.1]
-      
     exact
       ⟨(extChartAt _ x).map_source (mem_ext_chart_source _ x), trivial, by
         simp only [e.symm_apply_apply, Equiv.refl_symm, Equiv.coe_refl, mfld_simps]⟩

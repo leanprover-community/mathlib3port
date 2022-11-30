@@ -107,10 +107,8 @@ theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁�
   intro x hx y hy z hz
   trans x * z * ⁅y, ⁅z⁻¹, x⁻¹⁆⁆⁻¹ * z⁻¹ * y * ⁅x⁻¹, ⁅y⁻¹, z⁆⁆⁻¹ * y⁻¹ * x⁻¹
   · group
-    
   · rw [h1 _ (H₂.inv_mem hy) _ hz _ (H₁.inv_mem hx), h2 _ (H₃.inv_mem hz) _ (H₁.inv_mem hx) _ hy]
     group
-    
 #align
   subgroup.commutator_commutator_eq_bot_of_rotate Subgroup.commutator_commutator_eq_bot_of_rotate
 
@@ -133,7 +131,6 @@ instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal �
   suffices h_base : base = Group.conjugatesOfSet base
   · rw [h_base]
     exact Subgroup.normal_closure_normal
-    
   refine' Set.Subset.antisymm Group.subset_conjugates_of_set fun a h => _
   simp_rw [Group.mem_conjugates_of_set_iff, is_conj_iff] at h
   rcases h with ⟨b, ⟨c, hc, e, he, rfl⟩, d, rfl⟩
@@ -174,11 +171,9 @@ theorem map_commutator (f : G →* G') : map f ⁅H₁, H₂⁆ = ⁅map f H₁,
   constructor
   · intro p hp q hq
     exact commutator_mem_commutator (mem_map_of_mem _ hp) (mem_map_of_mem _ hq)
-    
   · rintro _ ⟨p, hp, rfl⟩ _ ⟨q, hq, rfl⟩
     rw [← map_commutator_element]
     exact mem_map_of_mem _ (commutator_mem_commutator hp hq)
-    
 #align subgroup.map_commutator Subgroup.map_commutator
 
 variable {H₁ H₂}
@@ -203,15 +198,12 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
   · rw [commutator_le]
     rintro ⟨p₁, p₂⟩ ⟨hp₁, hp₂⟩ ⟨q₁, q₂⟩ ⟨hq₁, hq₂⟩
     exact ⟨commutator_mem_commutator hp₁ hq₁, commutator_mem_commutator hp₂ hq₂⟩
-    
   · rw [prod_le_iff]
     constructor <;>
       · rw [map_commutator]
         apply commutator_mono <;>
           simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl,
             MonoidHom.fst_comp_inr, MonoidHom.snd_comp_inr]
-        
-    
 #align subgroup.commutator_prod_prod Subgroup.commutator_prod_prod
 
 /-- The commutator of direct product is contained in the direct product of the commutators.
@@ -229,23 +221,20 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs
 theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _} [∀ i, Group (Gs i)]
     (H K : ∀ i, Subgroup (Gs i)) :
     ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ = Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
-  by classical
-  apply le_antisymm (commutator_pi_pi_le H K)
-  · rw [pi_le_iff]
-    intro i hi
-    rw [map_commutator]
-    apply commutator_mono <;>
-      · rw [le_pi_iff]
-        intro j hj
-        rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
-        by_cases h : j = i
-        · subst h
-          simpa using hx
-          
-        · simp [h, one_mem]
-          
-        
-    
+  by
+  classical 
+    apply le_antisymm (commutator_pi_pi_le H K)
+    · rw [pi_le_iff]
+      intro i hi
+      rw [map_commutator]
+      apply commutator_mono <;>
+        · rw [le_pi_iff]
+          intro j hj
+          rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
+          by_cases h : j = i
+          · subst h
+            simpa using hx
+          · simp [h, one_mem]
 #align subgroup.commutator_pi_pi_of_finite Subgroup.commutator_pi_pi_of_finite
 
 end Subgroup

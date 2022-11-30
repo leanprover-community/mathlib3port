@@ -245,11 +245,10 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
     (h' : f.IsBoundedUnder (· ≥ ·) u := by
       run_tac
         is_bounded_default) :
-    ∃ c : α, Tendsto u f (𝓝 c) := by
+    ∃ c : α, Tendsto u f (𝓝 c) := by 
   by_cases hbot : f = ⊥;
   · rw [hbot]
     exact ⟨Inf ∅, tendsto_bot⟩
-    
   haveI : ne_bot f := ⟨hbot⟩
   refine' ⟨limsup u f, _⟩
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
@@ -289,14 +288,12 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
     rcases hc with ⟨d, hd, h'd⟩
     refine' ⟨f d, _, h'd⟩
     filter_upwards [hd] with x hx using f_decr hx
-    
   · rcases eq_or_lt_of_le (bot_le : ⊥ ≤ F.Limsup) with (h | Limsup_ne_bot)
     · rw [← h]
       apply liminf_le_of_frequently_le
       apply frequently_of_forall
       intro x
       exact f_decr bot_le
-      
     by_cases h' : ∃ c, c < F.Limsup ∧ Set.ioo c F.Limsup = ∅
     · rcases h' with ⟨c, c_lt, hc⟩
       have B : ∃ᶠ n in F, F.Limsup ≤ n := by
@@ -312,14 +309,13 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
         simpa [hc]
       apply liminf_le_of_frequently_le
       exact B.mono fun x hx => f_decr hx
-      
     by_contra' H
     obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.ioc l F.Limsup ⊆ { x : R | f x < F.liminf f }
     exact exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H) ⟨⊥, Limsup_ne_bot⟩
     obtain ⟨m, l_m, m_lt⟩ : (Set.ioo l F.Limsup).Nonempty := by
       contrapose! h'
       refine' ⟨l, l_lt, by rwa [Set.not_nonempty_iff_eq_empty] at h'⟩
-    have B : F.liminf f ≤ f m := by
+    have B : F.liminf f ≤ f m := by 
       apply liminf_le_of_frequently_le
       apply
         (frequently_lt_of_lt_Limsup
@@ -331,7 +327,6 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
       exact f_decr hx.le
     have I : f m < F.liminf f := h'l ⟨l_m, m_lt.le⟩
     exact lt_irrefl _ (B.trans_lt I)
-    
 #align antitone.map_Limsup_of_continuous_at Antitone.map_Limsup_of_continuous_at
 
 /-- A continuous antitone function between complete linear ordered spaces sends a `filter.limsup`
@@ -395,7 +390,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
       { ω |
         Tendsto (fun n => ∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → ℕ) ω) atTop
           atTop } :=
-  by
+  by 
   ext ω
   simp only [limsup_eq_infi_supr_of_nat, ge_iff_le, Set.supr_eq_Union, Set.infi_eq_Inter,
     Set.mem_Inter, Set.mem_Union, exists_prop]
@@ -419,7 +414,6 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
           ⟨j - 1, Finset.mem_range.2 (lt_of_le_of_lt (Nat.sub_le _ _) j.lt_succ_self), _⟩
       rw [Nat.sub_add_cancel hj₁, Set.indicator_of_mem hj₂]
       exact zero_lt_one
-      
     · rw [imp_false] at hk
       push_neg  at hk
       obtain ⟨i, hi⟩ := hk
@@ -440,8 +434,6 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
       rw [Nat.sub_add_cancel (le_trans ((le_add_iff_nonneg_left _).2 zero_le') hj₁),
         Set.indicator_of_mem hj₂]
       exact zero_lt_one
-      
-    
   · rintro hω i
     rw [Set.mem_set_of_eq, tendsto_at_top_at_top] at hω
     by_contra hcon
@@ -452,21 +444,16 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
         refine' fun j hij =>
           (Finset.sum_le_card_nsmul _ _ _ _ : _ ≤ (Finset.range j).card • 1).trans _
         · exact fun m hm => Set.indicator_apply_le' (fun _ => le_rfl) fun _ => zero_le_one
-          
         · simpa only [Finset.card_range, smul_eq_mul, mul_one]
-          
       by_cases hij : j < i
       · exact hle _ hij.le
-        
       · rw [← Finset.sum_range_add_sum_Ico _ (not_lt.1 hij)]
         suffices (∑ k in Finset.ico i j, (s (k + 1)).indicator 1 ω) = 0 by
           rw [this, add_zero]
           exact hle _ le_rfl
         rw [Finset.sum_eq_zero fun m hm => _]
         exact Set.indicator_of_not_mem (hcon _ <| (Finset.mem_Ico.1 hm).1.trans m.le_succ) _
-        
     exact not_le.2 (lt_of_lt_of_le i.lt_succ_self <| h _ le_rfl) this
-    
 #align limsup_eq_tendsto_sum_indicator_nat_at_top limsup_eq_tendsto_sum_indicator_nat_at_top
 
 theorem limsup_eq_tendsto_sum_indicator_at_top (R : Type _) [StrictOrderedSemiring R]
@@ -475,7 +462,7 @@ theorem limsup_eq_tendsto_sum_indicator_at_top (R : Type _) [StrictOrderedSemiri
       { ω |
         Tendsto (fun n => ∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → R) ω) atTop
           atTop } :=
-  by
+  by 
   rw [limsup_eq_tendsto_sum_indicator_nat_at_top s]
   ext ω
   simp only [Set.mem_set_of_eq]
@@ -483,10 +470,8 @@ theorem limsup_eq_tendsto_sum_indicator_at_top (R : Type _) [StrictOrderedSemiri
       (fun n => ∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → R) ω) = fun n =>
         ↑(∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → ℕ) ω))]
   · exact tendsto_coe_nat_at_top_iff.symm
-    
   · ext n
     simp only [Set.indicator, Pi.one_apply, Finset.sum_boole, Nat.cast_id]
-    
 #align limsup_eq_tendsto_sum_indicator_at_top limsup_eq_tendsto_sum_indicator_at_top
 
 end Indicator

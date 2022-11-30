@@ -57,8 +57,8 @@ def Nnreal :=
   { r : ℝ // 0 ≤ r }deriving StrictOrderedSemiring, CommMonoidWithZero, FloorSemiring, CommSemiring,
   Semiring, SemilatticeInf, SemilatticeSup, DistribLattice, DenselyOrdered, OrderBot,
   CanonicallyLinearOrderedSemifield, LinearOrderedCommGroupWithZero, Archimedean,
-  LinearOrderedSemiring, OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, HasOrderedSub,
-  Div, Inhabited
+  LinearOrderedSemiring, OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, OrderedSub, Div,
+  Inhabited
 #align nnreal Nnreal
 
 -- mathport name: nnreal
@@ -141,7 +141,7 @@ noncomputable example : Div ℝ≥0 := by infer_instance
 
 example : LE ℝ≥0 := by infer_instance
 
-example : HasBot ℝ≥0 := by infer_instance
+example : Bot ℝ≥0 := by infer_instance
 
 example : Inhabited ℝ≥0 := by infer_instance
 
@@ -254,7 +254,8 @@ instance {M : Type _} [AddCommMonoid M] [Module ℝ M] : Module ℝ≥0 M :=
   Module.compHom M toRealHom
 
 /-- An `algebra` over `ℝ` restricts to an `algebra` over `ℝ≥0`. -/
-instance {A : Type _} [Semiring A] [Algebra ℝ A] : Algebra ℝ≥0 A where
+instance {A : Type _} [Semiring A] [Algebra ℝ A] :
+    Algebra ℝ≥0 A where 
   smul := (· • ·)
   commutes' r x := by simp [Algebra.commutes]
   smul_def' r x := by simp [← Algebra.smul_def (r : ℝ) x, smul_def]
@@ -418,7 +419,9 @@ example : NoMaxOrder ℝ≥0 := by infer_instance
 /-- If `a` is a nonnegative real number, then the closed interval `[0, a]` in `ℝ` is order
 isomorphic to the interval `set.Iic a`. -/
 @[simps apply_coe_coe]
-def orderIsoIccZeroCoe (a : ℝ≥0) : Set.icc (0 : ℝ) a ≃o Set.iic a where
+def orderIsoIccZeroCoe (a : ℝ≥0) :
+    Set.icc (0 : ℝ) a ≃o
+      Set.iic a where 
   toEquiv := Equiv.Set.sep (Set.ici 0) fun x => x ≤ a
   map_rel_iff' x y := Iff.rfl
 #align nnreal.order_iso_Icc_zero_coe Nnreal.orderIsoIccZeroCoe
@@ -489,15 +492,15 @@ example : Archimedean ℝ≥0 := by infer_instance
 
 -- TODO: why are these three instances necessary? why aren't they inferred?
 instance covariant_add : CovariantClass ℝ≥0 ℝ≥0 (· + ·) (· ≤ ·) :=
-  OrderedAddCommMonoid.to_covariant_class_left ℝ≥0
+  OrderedAddCommMonoid.to_CovariantClass_left ℝ≥0
 #align nnreal.covariant_add Nnreal.covariant_add
 
 instance contravariant_add : ContravariantClass ℝ≥0 ℝ≥0 (· + ·) (· < ·) :=
-  OrderedCancelAddCommMonoid.to_contravariant_class_left ℝ≥0
+  OrderedCancelAddCommMonoid.to_ContravariantClass_left ℝ≥0
 #align nnreal.contravariant_add Nnreal.contravariant_add
 
 instance covariant_mul : CovariantClass ℝ≥0 ℝ≥0 (· * ·) (· ≤ ·) :=
-  OrderedCommMonoid.to_covariant_class_left ℝ≥0
+  OrderedCommMonoid.to_CovariantClass_left ℝ≥0
 #align nnreal.covariant_mul Nnreal.covariant_mul
 
 -- Why isn't `nnreal.contravariant_add` inferred?
@@ -650,18 +653,14 @@ theorem to_nnreal_lt_iff_lt_coe {r : ℝ} {p : ℝ≥0} (ha : 0 ≤ r) : Real.to
 theorem lt_to_nnreal_iff_coe_lt {r : ℝ≥0} {p : ℝ} : r < Real.toNnreal p ↔ ↑r < p := by
   cases le_total 0 p
   · rw [← Nnreal.coe_lt_coe, Real.coe_to_nnreal p h]
-    
   · rw [to_nnreal_eq_zero.2 h]
     constructor
     · intro
       have := not_lt_of_le (zero_le r)
       contradiction
-      
     · intro rp
       have : ¬p ≤ 0 := not_le_of_lt (lt_of_le_of_lt (Nnreal.coe_nonneg _) rp)
       contradiction
-      
-    
 #align real.lt_to_nnreal_iff_coe_lt Real.lt_to_nnreal_iff_coe_lt
 
 @[simp]
@@ -669,9 +668,7 @@ theorem to_nnreal_bit0 (r : ℝ) : Real.toNnreal (bit0 r) = bit0 (Real.toNnreal 
   cases' le_total r 0 with hr hr
   · rw [to_nnreal_of_nonpos hr, to_nnreal_of_nonpos, bit0_zero]
     exact add_nonpos hr hr
-    
   · exact to_nnreal_add hr hr
-    
 #align real.to_nnreal_bit0 Real.to_nnreal_bit0
 
 @[simp]
@@ -703,10 +700,8 @@ theorem Real.to_nnreal_mul {p q : ℝ} (hp : 0 ≤ p) :
   cases' le_total 0 q with hq hq
   · apply Nnreal.eq
     simp [Real.toNnreal, hp, hq, max_eq_left, mul_nonneg]
-    
   · have hpq := mul_nonpos_of_nonneg_of_nonpos hp hq
     rw [to_nnreal_eq_zero.2 hq, to_nnreal_eq_zero.2 hpq, mul_zero]
-    
 #align real.to_nnreal_mul Real.to_nnreal_mul
 
 end Mul
@@ -758,7 +753,7 @@ theorem coe_sub_def {r p : ℝ≥0} : ↑(r - p) = max (r - p : ℝ) 0 :=
   rfl
 #align nnreal.coe_sub_def Nnreal.coe_sub_def
 
-noncomputable example : HasOrderedSub ℝ≥0 := by infer_instance
+noncomputable example : OrderedSub ℝ≥0 := by infer_instance
 
 theorem sub_div (a b c : ℝ≥0) : (a - b) / c = a / c - b / c :=
   tsub_div _ _ _
@@ -861,14 +856,12 @@ theorem mul_lt_of_lt_div {a b r : ℝ≥0} (h : a < b / r) : a * r < b := by
 #align nnreal.mul_lt_of_lt_div Nnreal.mul_lt_of_lt_div
 
 theorem div_le_div_left_of_le {a b c : ℝ≥0} (b0 : 0 < b) (c0 : 0 < c) (cb : c ≤ b) :
-    a / b ≤ a / c := by
+    a / b ≤ a / c := by 
   by_cases a0 : a = 0
   · rw [a0, zero_div, zero_div]
-    
   · cases' a with a ha
     replace a0 : 0 < a := lt_of_le_of_ne ha (ne_of_lt (zero_lt_iff.mpr a0))
     exact (div_le_div_left a0 b0 c0).mpr cb
-    
 #align nnreal.div_le_div_left_of_le Nnreal.div_le_div_left_of_le
 
 theorem div_le_div_left {a b c : ℝ≥0} (a0 : 0 < a) (b0 : 0 < b) (c0 : 0 < c) :
@@ -934,10 +927,8 @@ theorem Real.to_nnreal_inv {x : ℝ} : Real.toNnreal x⁻¹ = (Real.toNnreal x)�
   by_cases hx : 0 ≤ x
   · nth_rw 0 [← Real.coe_to_nnreal x hx]
     rw [← Nnreal.coe_inv, Real.to_nnreal_coe]
-    
   · have hx' := le_of_not_ge hx
     rw [to_nnreal_eq_zero.mpr hx', inv_zero, to_nnreal_eq_zero.mpr (inv_nonpos.mpr hx')]
-    
 #align real.to_nnreal_inv Real.to_nnreal_inv
 
 theorem Real.to_nnreal_div {x y : ℝ} (hx : 0 ≤ x) :
@@ -961,9 +952,7 @@ theorem inv_lt_one {x : ℝ≥0} (hx : 1 < x) : x⁻¹ < 1 :=
 theorem zpow_pos {x : ℝ≥0} (hx : x ≠ 0) (n : ℤ) : 0 < x ^ n := by
   cases n
   · simp [pow_pos hx.bot_lt _]
-    
   · simp [pow_pos hx.bot_lt _]
-    
 #align nnreal.zpow_pos Nnreal.zpow_pos
 
 theorem inv_lt_inv_iff {x y : ℝ≥0} (hx : x ≠ 0) (hy : y ≠ 0) : y⁻¹ < x⁻¹ ↔ x < y :=
@@ -1091,11 +1080,9 @@ theorem image_real_to_nnreal (h : s.OrdConnected) : (Real.toNnreal '' s).OrdConn
   cases' le_total y 0 with hy₀ hy₀
   · rw [mem_Icc, Real.to_nnreal_of_nonpos hy₀, nonpos_iff_eq_zero] at hz
     exact ⟨y, hy, (to_nnreal_of_nonpos hy₀).trans hz.2.symm⟩
-    
   · lift y to ℝ≥0 using hy₀
     rw [to_nnreal_coe] at hz
     exact ⟨z, h.out hx hy ⟨to_nnreal_le_iff_le_coe.1 hz.1, hz.2⟩, to_nnreal_coe⟩
-    
 #align set.ord_connected.image_real_to_nnreal Set.OrdConnected.image_real_to_nnreal
 
 theorem preimage_real_to_nnreal (h : t.OrdConnected) : (Real.toNnreal ⁻¹' t).OrdConnected :=
@@ -1110,15 +1097,15 @@ namespace Real
 
 /-- The absolute value on `ℝ` as a map to `ℝ≥0`. -/
 @[pp_nodot]
-def nnabs : ℝ →*₀ ℝ≥0 where
+def nnabs : ℝ →*₀ ℝ≥0 where 
   toFun x := ⟨|x|, abs_nonneg x⟩
-  map_zero' := by
+  map_zero' := by 
     ext
     simp
-  map_one' := by
+  map_one' := by 
     ext
     simp
-  map_mul' x y := by
+  map_mul' x y := by 
     ext
     simp [abs_mul]
 #align real.nnabs Real.nnabs

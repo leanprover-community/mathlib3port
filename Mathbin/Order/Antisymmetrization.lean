@@ -131,7 +131,11 @@ theorem AntisymmRel.image {a b : α} (h : AntisymmRel (· ≤ ·) a b) {f : α �
   ⟨hf h.1, hf h.2⟩
 #align antisymm_rel.image AntisymmRel.image
 
-instance : PartialOrder (Antisymmetrization α (· ≤ ·)) where
+instance :
+    PartialOrder
+      (Antisymmetrization α
+        (· ≤
+          ·)) where 
   le a b :=
     (Quotient.liftOn₂' a b (· ≤ ·)) fun (a₁ a₂ b₁ b₂ : α) h₁ h₂ =>
       propext ⟨fun h => h₁.2.trans <| h.trans h₂.1, fun h => h₁.1.trans <| h.trans h₂.2⟩
@@ -159,7 +163,7 @@ theorem acc_antisymmetrization_iff : Acc (· < ·) (toAntisymmetrization (· ≤
 theorem well_founded_antisymmetrization_iff :
     WellFounded (@LT.lt (Antisymmetrization α (· ≤ ·)) _) ↔ WellFounded (@LT.lt α _) :=
   ⟨fun h => ⟨fun a => acc_antisymmetrization_iff.1 <| h.apply _⟩, fun h =>
-    ⟨by
+    ⟨by 
       rintro ⟨a⟩
       exact acc_antisymmetrization_iff.2 (h.apply a)⟩⟩
 #align well_founded_antisymmetrization_iff well_founded_antisymmetrization_iff
@@ -250,7 +254,9 @@ variable (α)
 
 /-- `of_antisymmetrization` as an order embedding. -/
 @[simps]
-noncomputable def OrderEmbedding.ofAntisymmetrization : Antisymmetrization α (· ≤ ·) ↪o α where
+noncomputable def OrderEmbedding.ofAntisymmetrization :
+    Antisymmetrization α (· ≤ ·) ↪o
+      α where 
   toFun := ofAntisymmetrization _
   inj' _ _ := Quotient.out_inj.1
   map_rel_iff' a b := of_antisymmetrization_le_of_antisymmetrization_iff
@@ -258,7 +264,9 @@ noncomputable def OrderEmbedding.ofAntisymmetrization : Antisymmetrization α (�
 
 /-- `antisymmetrization` and `order_dual` commute. -/
 def OrderIso.dualAntisymmetrization :
-    (Antisymmetrization α (· ≤ ·))ᵒᵈ ≃o Antisymmetrization αᵒᵈ (· ≤ ·) where
+    (Antisymmetrization α (· ≤ ·))ᵒᵈ ≃o
+      Antisymmetrization αᵒᵈ
+        (· ≤ ·) where 
   toFun := (Quotient.map' id) fun _ _ => And.symm
   invFun := (Quotient.map' id) fun _ _ => And.symm
   left_inv a := (Quotient.inductionOn' a) fun a => by simp_rw [Quotient.map'_mk', id]

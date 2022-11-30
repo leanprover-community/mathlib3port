@@ -67,7 +67,8 @@ theorem down_ssubset_down {s t : SetSemiring α} : s.down ⊂ t.down ↔ s < t :
   Iff.rfl
 #align set_semiring.down_ssubset_down SetSemiring.down_ssubset_down
 
-instance : AddCommMonoid (SetSemiring α) where
+instance : AddCommMonoid
+      (SetSemiring α) where 
   add s t := (s.down ∪ t.down).up
   zero := (∅ : Set α).up
   add_assoc := union_assoc
@@ -128,7 +129,8 @@ instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
 
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/
-def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
+def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) :
+    SetSemiring α →+* SetSemiring β where 
   toFun := image f
   map_zero' := image_empty _
   map_one' := by rw [image_one, map_one, singleton_one]

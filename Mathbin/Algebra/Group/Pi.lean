@@ -185,14 +185,16 @@ This is `function.eval i` as a `mul_hom`. -/
 @[to_additive
       "Evaluation of functions into an indexed collection of additive semigroups at a\npoint is an additive semigroup homomorphism.\nThis is `function.eval i` as an `add_hom`.",
   simps]
-def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ* f i where
+def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ*
+      f i where 
   toFun g := g i
   map_mul' x y := Pi.mul_apply _ _ i
 #align pi.eval_mul_hom Pi.evalMulHom
 
 /-- `function.const` as a `mul_hom`. -/
 @[to_additive "`function.const` as an `add_hom`.", simps]
-def Pi.constMulHom (α β : Type _) [Mul β] : β →ₙ* α → β where
+def Pi.constMulHom (α β : Type _) [Mul β] :
+    β →ₙ* α → β where 
   toFun := Function.const α
   map_mul' _ _ := rfl
 #align pi.const_mul_hom Pi.constMulHom
@@ -202,7 +204,8 @@ See also `mul_hom.eval`. -/
 @[to_additive
       "Coercion of an `add_hom` into a function is itself a `add_hom`.\nSee also `add_hom.eval`. ",
   simps]
-def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroup β] : (α →ₙ* β) →ₙ* α → β where
+def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroup β] :
+    (α →ₙ* β) →ₙ* α → β where 
   toFun g := g
   map_mul' x y := rfl
 #align mul_hom.coe_fn MulHom.coeFn
@@ -213,7 +216,7 @@ homomorphism `f` between `α` and `β`. -/
       "Additive semigroup homomorphism between the function spaces `I → α` and `I → β`,\ninduced by an additive semigroup homomorphism `f` between `α` and `β`",
   simps]
 protected def MulHom.compLeft {α β : Type _} [Mul α] [Mul β] (f : α →ₙ* β) (I : Type _) :
-    (I → α) →ₙ* I → β where
+    (I → α) →ₙ* I → β where 
   toFun h := f ∘ h
   map_mul' _ _ := by ext <;> simp
 #align mul_hom.comp_left MulHom.compLeft
@@ -230,7 +233,8 @@ This is `function.eval i` as a `monoid_hom`. -/
 @[to_additive
       "Evaluation of functions into an indexed collection of additive monoids at a\npoint is an additive monoid homomorphism.\nThis is `function.eval i` as an `add_monoid_hom`.",
   simps]
-def Pi.evalMonoidHom (i : I) : (∀ i, f i) →* f i where
+def Pi.evalMonoidHom (i : I) :
+    (∀ i, f i) →* f i where 
   toFun g := g i
   map_one' := Pi.one_apply i
   map_mul' x y := Pi.mul_apply _ _ i
@@ -238,7 +242,8 @@ def Pi.evalMonoidHom (i : I) : (∀ i, f i) →* f i where
 
 /-- `function.const` as a `monoid_hom`. -/
 @[to_additive "`function.const` as an `add_monoid_hom`.", simps]
-def Pi.constMonoidHom (α β : Type _) [MulOneClass β] : β →* α → β where
+def Pi.constMonoidHom (α β : Type _) [MulOneClass β] :
+    β →* α → β where 
   toFun := Function.const α
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -250,7 +255,8 @@ See also `monoid_hom.eval`. -/
 @[to_additive
       "Coercion of an `add_monoid_hom` into a function is itself a `add_monoid_hom`.\n\nSee also `add_monoid_hom.eval`. ",
   simps]
-def MonoidHom.coeFn (α β : Type _) [MulOneClass α] [CommMonoid β] : (α →* β) →* α → β where
+def MonoidHom.coeFn (α β : Type _) [MulOneClass α] [CommMonoid β] :
+    (α →* β) →* α → β where 
   toFun g := g
   map_one' := rfl
   map_mul' x y := rfl
@@ -262,7 +268,7 @@ homomorphism `f` between `α` and `β`. -/
       "Additive monoid homomorphism between the function spaces `I → α` and `I → β`,\ninduced by an additive monoid homomorphism `f` between `α` and `β`",
   simps]
 protected def MonoidHom.compLeft {α β : Type _} [MulOneClass α] [MulOneClass β] (f : α →* β)
-    (I : Type _) : (I → α) →* I → β where
+    (I : Type _) : (I → α) →* I → β where 
   toFun h := f ∘ h
   map_one' := by ext <;> simp
   map_mul' _ _ := by ext <;> simp
@@ -284,9 +290,10 @@ into a dependent family of values, as functions supported at a point.
 This is the `one_hom` version of `pi.mul_single`. -/
 @[to_additive ZeroHom.single
       "The zero-preserving homomorphism including a single value\ninto a dependent family of values, as functions supported at a point.\n\nThis is the `zero_hom` version of `pi.single`."]
-def OneHom.single [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i) where
+def OneHom.single [∀ i, One <| f i] (i : I) :
+    OneHom (f i) (∀ i, f i) where 
   toFun := mulSingle i
-  map_one' := mul_single_one i
+  map_one' := mulSingle_one i
 #align one_hom.single OneHom.single
 
 @[simp, to_additive]
@@ -302,7 +309,7 @@ This is the `monoid_hom` version of `pi.mul_single`. -/
 @[to_additive
       "The additive monoid homomorphism including a single additive\nmonoid into a dependent family of additive monoids, as functions supported at a point.\n\nThis is the `add_monoid_hom` version of `pi.single`."]
 def MonoidHom.single [∀ i, MulOneClass <| f i] (i : I) : f i →* ∀ i, f i :=
-  { OneHom.single f i with map_mul' := mul_single_op₂ (fun _ => (· * ·)) (fun _ => one_mul _) _ }
+  { OneHom.single f i with map_mul' := mulSingle_op₂ (fun _ => (· * ·)) (fun _ => one_mul _) _ }
 #align monoid_hom.single MonoidHom.single
 
 @[simp, to_additive]
@@ -316,7 +323,8 @@ into a dependent family of `mul_zero_class`es, as functions supported at a point
 
 This is the `mul_hom` version of `pi.single`. -/
 @[simps]
-def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) : f i →ₙ* ∀ i, f i where
+def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) :
+    f i →ₙ* ∀ i, f i where 
   toFun := single i
   map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => zero_mul _) _
 #align mul_hom.single MulHom.single
@@ -357,11 +365,9 @@ theorem Pi.mul_single_commute [∀ i, MulOneClass <| f i] :
   by_cases h1 : i = k;
   · subst h1
     simp [hij]
-    
   by_cases h2 : j = k;
   · subst h2
     simp [hij]
-    
   simp [h1, h2]
 #align pi.mul_single_commute Pi.mul_single_commute
 
@@ -371,9 +377,7 @@ theorem Pi.mul_single_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i)
     Commute (mulSingle i (x i)) (mulSingle j (x j)) := by
   obtain rfl | hij := Decidable.eq_or_ne i j
   · rfl
-    
   · exact Pi.mul_single_commute hij _ _
-    
 #align pi.mul_single_apply_commute Pi.mul_single_apply_commute
 
 @[to_additive update_eq_sub_add_single]
@@ -382,9 +386,7 @@ theorem Pi.update_eq_div_mul_single [∀ i, Group <| f i] (g : ∀ i : I, f i) (
   ext j
   rcases eq_or_ne i j with (rfl | h)
   · simp
-    
   · simp [Function.update_noteq h.symm, h]
-    
 #align pi.update_eq_div_mul_single Pi.update_eq_div_mul_single
 
 @[to_additive Pi.single_add_single_eq_single_add_single]
@@ -392,7 +394,7 @@ theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [
     {k l m n : I} {u v : M} (hu : u ≠ 1) (hv : v ≠ 1) :
     mulSingle k u * mulSingle l v = mulSingle m u * mulSingle n v ↔
       k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u * v = 1 ∧ k = l ∧ m = n :=
-  by
+  by 
   refine' ⟨fun h => _, _⟩
   · have hk := congr_fun h k
     have hl := congr_fun h l
@@ -403,34 +405,21 @@ theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [
     · refine' Or.inl ⟨rfl, not_ne_iff.mp fun hln => (hv _).elim⟩
       rcases eq_or_ne k l with (rfl | hkl)
       · rwa [if_neg hln.symm, if_neg hln.symm, one_mul, one_mul] at hn
-        
       · rwa [if_neg hkl.symm, if_neg hln, one_mul, one_mul] at hl
-        
-      
     · rcases eq_or_ne m n with (rfl | hmn)
       · rcases eq_or_ne k l with (rfl | hkl)
         · rw [if_neg hkm.symm, if_neg hkm.symm, one_mul, if_pos rfl] at hm
           exact Or.inr (Or.inr ⟨hm, rfl, rfl⟩)
-          
         · simpa only [if_neg hkm, if_neg hkl, mul_one] using hk
-          
-        
       · rw [if_neg hkm.symm, if_neg hmn, one_mul, mul_one] at hm
         obtain rfl := (ite_ne_right_iff.mp (ne_of_eq_of_ne hm.symm hu)).1
         rw [if_neg hkm, if_neg hkm, one_mul, mul_one] at hk
         obtain rfl := (ite_ne_right_iff.mp (ne_of_eq_of_ne hk.symm hu)).1
         exact Or.inr (Or.inl ⟨hk.trans (if_pos rfl), rfl, rfl⟩)
-        
-      
-    
   · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ | ⟨h, rfl, rfl⟩)
     · rfl
-      
     · apply mul_comm
-      
     · simp_rw [← Pi.mul_single_mul, h, mul_single_one]
-      
-    
 #align
   pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single
 
@@ -505,7 +494,8 @@ variable {η : Type v} (R : Type w) (s : ι → η)
 
 /-- `function.extend s f 1` as a bundled hom. -/
 @[to_additive Function.ExtendByZero.hom "`function.extend s f 0` as a bundled hom.", simps]
-noncomputable def Function.ExtendByOne.hom [MulOneClass R] : (ι → R) →* η → R where
+noncomputable def Function.ExtendByOne.hom [MulOneClass R] :
+    (ι → R) →* η → R where 
   toFun f := Function.extend s f 1
   map_one' := Function.extend_one s
   map_mul' f g := by simpa using Function.extend_mul s f g 1 1

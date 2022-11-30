@@ -77,7 +77,8 @@ as a prelax functor. This will be promoted to a pseudofunctor after proving the 
 See `inclusion`.
 -/
 def preinclusion (B : Type u) [Quiver.{v + 1} B] :
-    PrelaxFunctor (LocallyDiscrete (Paths B)) (FreeBicategory B) where
+    PrelaxFunctor (LocallyDiscrete (Paths B))
+      (FreeBicategory B) where 
   obj := id
   map a b := (inclusionPath a b).obj
   map₂ a b f g η := (inclusionPath a b).map η
@@ -176,23 +177,23 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
     (preinclusion B).map ⟨p⟩ ◁ η ≫ (normalizeIso p g).Hom =
       (normalizeIso p f).Hom ≫
         (preinclusion B).map₂ (eqToHom (Discrete.ext _ _ (normalize_aux_congr p η))) :=
-  by
+  by 
   rcases η with ⟨⟩; induction η
   case id => simp
   case vcomp _ _ _ _ _ _ _ ihf ihg =>
-  rw [mk_vcomp, bicategory.whisker_left_comp]
-  slice_lhs 2 3 => rw [ihg]
-  slice_lhs 1 2 => rw [ihf]
-  simp
+    rw [mk_vcomp, bicategory.whisker_left_comp]
+    slice_lhs 2 3 => rw [ihg]
+    slice_lhs 1 2 => rw [ihf]
+    simp
   case
     whisker_left _ _ _ _ _ _ _ ih =>-- p ≠ nil required! See the docstring of `normalize_aux`.
     dsimp;
     simp_rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc, ih, assoc]
-  case whisker_right _ _ _ _ _ h η ih =>
-  dsimp
-  rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right_assoc, ih, comp_whisker_right]
-  have := dcongr_arg (fun x => (normalize_iso x h).Hom) (normalize_aux_congr p (Quot.mk _ η))
-  dsimp at this; simp [this]
+  case whisker_right _ _ _ _ _ h η ih => 
+    dsimp
+    rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right_assoc, ih, comp_whisker_right]
+    have := dcongr_arg (fun x => (normalize_iso x h).Hom) (normalize_aux_congr p (Quot.mk _ η))
+    dsimp at this; simp [this]
   all_goals dsimp; dsimp [id_def, comp_def]; simp
 #align
   category_theory.free_bicategory.normalize_naturality CategoryTheory.FreeBicategory.normalize_naturality
@@ -209,7 +210,8 @@ theorem normalize_aux_nil_comp {a b c : B} (f : Hom a b) (g : Hom b c) :
 
 /-- The normalization pseudofunctor for the free bicategory on a quiver `B`. -/
 def normalize (B : Type u) [Quiver.{v + 1} B] :
-    Pseudofunctor (FreeBicategory B) (LocallyDiscrete (Paths B)) where
+    Pseudofunctor (FreeBicategory B)
+      (LocallyDiscrete (Paths B)) where 
   obj := id
   map a b f := ⟨normalizeAux nil f⟩
   map₂ a b f g η := eq_to_hom <| Discrete.ext _ _ <| normalize_aux_congr nil η
@@ -221,7 +223,7 @@ def normalize (B : Type u) [Quiver.{v + 1} B] :
 def normalizeUnitIso (a b : FreeBicategory B) :
     𝟭 (a ⟶ b) ≅ (normalize B).mapFunctor a b ⋙ inclusionPath a b :=
   NatIso.ofComponents (fun f => (λ_ f).symm ≪≫ normalizeIso nil f)
-    (by
+    (by 
       intro f g η
       erw [left_unitor_inv_naturality_assoc, assoc]
       congr 1

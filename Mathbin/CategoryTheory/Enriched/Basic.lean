@@ -125,7 +125,10 @@ def TransportEnrichment (F : LaxMonoidalFunctor V W) (C : Type u₁) :=
   C
 #align category_theory.transport_enrichment CategoryTheory.TransportEnrichment
 
-instance (F : LaxMonoidalFunctor V W) : EnrichedCategory W (TransportEnrichment F C) where
+instance (F : LaxMonoidalFunctor V W) :
+    EnrichedCategory W
+      (TransportEnrichment F
+        C) where 
   Hom := fun X Y : C => F.obj (X ⟶[V] Y)
   id := fun X : C => F.ε ≫ F.map (eId V X)
   comp := fun X Y Z : C => F.μ _ _ ≫ F.map (eComp V X Y Z)
@@ -148,7 +151,7 @@ end
 /-- Construct an honest category from a `Type v`-enriched category.
 -/
 def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Type v) C] :
-    Category.{v} C where
+    Category.{v} C where 
   Hom := 𝒞.Hom
   id X := eId (Type v) X PUnit.unit
   comp X Y Z f g := eComp (Type v) X Y Z ⟨f, g⟩
@@ -161,17 +164,17 @@ def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Typ
 /-- Construct a `Type v`-enriched category from an honest category.
 -/
 def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] :
-    EnrichedCategory (Type v) C where
+    EnrichedCategory (Type v) C where 
   Hom := 𝒞.Hom
   id X p := 𝟙 X
   comp X Y Z p := p.1 ≫ p.2
-  id_comp X Y := by
+  id_comp X Y := by 
     ext
     simp
-  comp_id X Y := by
+  comp_id X Y := by 
     ext
     simp
-  assoc W X Y Z := by
+  assoc W X Y Z := by 
     ext ⟨f, g, h⟩
     simp
 #align
@@ -180,20 +183,19 @@ def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] :
 /-- We verify that an enriched category in `Type u` is just the same thing as an honest category.
 -/
 def enrichedCategoryTypeEquivCategory (C : Type u₁) :
-    EnrichedCategory (Type v) C ≃ Category.{v} C where
+    EnrichedCategory (Type v) C ≃
+      Category.{v} C where 
   toFun 𝒞 := category_of_enriched_category_Type C
   invFun 𝒞 := enriched_category_Type_of_category C
-  left_inv 𝒞 := by
+  left_inv 𝒞 := by 
     cases 𝒞
     dsimp [enriched_category_Type_of_category]
     congr
     · ext (X⟨⟩)
       rfl
-      
     · ext (X Y Z⟨f, g⟩)
       rfl
-      
-  right_inv 𝒞 := by
+  right_inv 𝒞 := by 
     rcases 𝒞 with @⟨@⟨⟨⟩⟩⟩
     dsimp
     congr
@@ -337,7 +339,8 @@ attribute [simp, reassoc] enriched_functor.map_comp
 
 /-- The identity enriched functor. -/
 @[simps]
-def EnrichedFunctor.id (C : Type u₁) [EnrichedCategory V C] : EnrichedFunctor V C C where
+def EnrichedFunctor.id (C : Type u₁) [EnrichedCategory V C] :
+    EnrichedFunctor V C C where 
   obj X := X
   map X Y := 𝟙 _
 #align category_theory.enriched_functor.id CategoryTheory.EnrichedFunctor.id
@@ -349,7 +352,8 @@ instance : Inhabited (EnrichedFunctor V C C) :=
 @[simps]
 def EnrichedFunctor.comp {C : Type u₁} {D : Type u₂} {E : Type u₃} [EnrichedCategory V C]
     [EnrichedCategory V D] [EnrichedCategory V E] (F : EnrichedFunctor V C D)
-    (G : EnrichedFunctor V D E) : EnrichedFunctor V C E where
+    (G : EnrichedFunctor V D E) :
+    EnrichedFunctor V C E where 
   obj X := G.obj (F.obj X)
   map X Y := F.map _ _ ≫ G.map _ _
 #align category_theory.enriched_functor.comp CategoryTheory.EnrichedFunctor.comp
@@ -362,22 +366,23 @@ variable {W : Type (v + 1)} [Category.{v} W] [MonoidalCategory W]
 by mapping the `(𝟙_ W)`-shaped morphisms.
 -/
 def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C] [EnrichedCategory W D]
-    (F : EnrichedFunctor W C D) : ForgetEnrichment W C ⥤ ForgetEnrichment W D where
+    (F : EnrichedFunctor W C D) :
+    ForgetEnrichment W C ⥤
+      ForgetEnrichment W
+        D where 
   obj X := ForgetEnrichment.of W (F.obj (ForgetEnrichment.to W X))
   map X Y f :=
     ForgetEnrichment.homOf W
       (ForgetEnrichment.homTo W f ≫ F.map (ForgetEnrichment.to W X) (ForgetEnrichment.to W Y))
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     dsimp
     apply_fun forget_enrichment.hom_to W
     · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp,
         forget_enrichment.hom_to_hom_of, enriched_functor.map_comp, forget_enrichment_comp]
       rfl
-      
     · intro f g w
       apply_fun forget_enrichment.hom_of W  at w
       simpa using w
-      
 #align category_theory.enriched_functor.forget CategoryTheory.EnrichedFunctor.forget
 
 end
@@ -438,7 +443,7 @@ coming from the ambient braiding on `V`.)
 /-- The type of `A`-graded natural transformations between `V`-functors `F` and `G`.
 This is the type of morphisms in `V` from `A` to the `V`-object of natural transformations.
 -/
-@[ext.1, nolint has_nonempty_instance]
+@[ext, nolint has_nonempty_instance]
 structure GradedNatTrans (A : Center V) (F G : EnrichedFunctor V C D) where
   app : ∀ X : C, A.1 ⟶ F.obj X ⟶[V] G.obj X
   naturality :
@@ -455,11 +460,15 @@ open BraidedCategory
 the `V`-object of natural transformations from `F` to `G`.
 -/
 @[simps]
-def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) : Vᵒᵖ ⥤ Type max u₁ w where
+def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) :
+    Vᵒᵖ ⥤
+      Type
+        max u₁
+          w where 
   obj A := GradedNatTrans ((Center.ofBraided V).obj (unop A)) F G
   map A A' f σ :=
     { app := fun X => f.unop ≫ σ.app X,
-      naturality := fun X Y => by
+      naturality := fun X Y => by 
         have p := σ.naturality X Y
         dsimp at p⊢
         rw [← id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, category.assoc,
@@ -480,23 +489,26 @@ is just the same thing as an honest functor.
 -/
 @[simps]
 def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Type v) C] {D : Type u₂}
-    [𝒟 : EnrichedCategory (Type v) D] : EnrichedFunctor (Type v) C D ≃ C ⥤ D where
+    [𝒟 : EnrichedCategory (Type v) D] :
+    EnrichedFunctor (Type v) C D ≃
+      C ⥤
+        D where 
   toFun F :=
     { obj := fun X => F.obj X, map := fun X Y f => F.map X Y f,
       map_id' := fun X => congr_fun (F.map_id X) PUnit.unit,
       map_comp' := fun X Y Z f g => congr_fun (F.map_comp X Y Z) ⟨f, g⟩ }
   invFun F :=
     { obj := fun X => F.obj X, map := fun X Y f => F.map f,
-      map_id' := fun X => by
+      map_id' := fun X => by 
         ext ⟨⟩
         exact F.map_id X,
-      map_comp' := fun X Y Z => by
+      map_comp' := fun X Y Z => by 
         ext ⟨f, g⟩
         exact F.map_comp f g }
-  left_inv F := by
+  left_inv F := by 
     cases F
     simp
-  right_inv F := by
+  right_inv F := by 
     cases F
     simp
 #align
@@ -517,7 +529,7 @@ def enrichedNatTransYonedaTypeIsoYonedaNatTrans {C : Type v} [EnrichedCategory (
             naturality' := fun X Y f => congr_fun (σ.naturality X Y) ⟨x, f⟩ },
         inv := fun σ =>
           { app := fun X x => (σ x).app X,
-            naturality := fun X Y => by
+            naturality := fun X Y => by 
               ext ⟨x, f⟩
               exact (σ x).naturality f } })
     (by tidy)

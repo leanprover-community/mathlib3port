@@ -51,7 +51,7 @@ theorem coe_of (α : Type _) [Lattice α] : ↥(of α) = α :=
 instance : Inhabited LatticeCat :=
   ⟨of Bool⟩
 
-instance : BundledHom @LatticeHom where
+instance : BundledHom @LatticeHom where 
   toFun _ _ _ _ := coeFn
   id := @LatticeHom.id
   comp := @LatticeHom.comp
@@ -63,27 +63,30 @@ instance : LargeCategory.{u} LatticeCat :=
 instance : ConcreteCategory LatticeCat :=
   BundledHom.concreteCategory LatticeHom
 
-instance hasForgetToPartialOrder : HasForget₂ LatticeCat PartialOrderCat where
+instance hasForgetToPartialOrder :
+    HasForget₂ LatticeCat
+      PartialOrderCat where 
   forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
   forget_comp := rfl
 #align Lattice.has_forget_to_PartialOrder LatticeCat.hasForgetToPartialOrder
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : LatticeCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : LatticeCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align Lattice.iso.mk LatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : LatticeCat ⥤ LatticeCat where
+def dual : LatticeCat ⥤ LatticeCat where 
   obj X := of Xᵒᵈ
   map X Y := LatticeHom.dual
 #align Lattice.dual LatticeCat.dual

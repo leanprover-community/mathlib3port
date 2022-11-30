@@ -76,7 +76,8 @@ the pure values are the Dirac measure, and the bind operation maps to the integr
 In probability theory, the `Meas`-morphisms `X → Prob X` are (sub-)Markov kernels (here `Prob` is
 the restriction of `Measure` to (sub-)probability space.)
 -/
-def measure : MeasCat ⥤ MeasCat where
+def measure : MeasCat ⥤
+      MeasCat where 
   obj X := ⟨@MeasureTheory.Measure X.1 X.2⟩
   map X Y f := ⟨Measure.map (f : X → Y), Measure.measurableMap f f.2⟩
   map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
@@ -85,7 +86,8 @@ def measure : MeasCat ⥤ MeasCat where
 #align Meas.Measure MeasCat.measure
 
 /-- The Giry monad, i.e. the monadic structure associated with `Measure`. -/
-def giry : CategoryTheory.Monad MeasCat where
+def giry : CategoryTheory.Monad
+      MeasCat where 
   toFunctor := measure
   η' :=
     { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurableDirac⟩,
@@ -102,7 +104,7 @@ def giry : CategoryTheory.Monad MeasCat where
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
-def integral : giry.Algebra where
+def integral : giry.Algebra where 
   A := MeasCat.of ℝ≥0∞
   a := ⟨fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m, Measure.measurableLintegral measurableId⟩
   unit' := Subtype.eq <| funext fun r : ℝ≥0∞ => lintegral_dirac' _ measurableId

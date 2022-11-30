@@ -102,14 +102,11 @@ theorem card_quot_mul_of_coprime [IsDedekindDomain S] [Module.Free ℤ S] [Modul
     nontriviality S
     exfalso
     exact not_nontrivial_iff_subsingleton.mpr ‹Subsingleton S› ‹Nontrivial S›
-    
   haveI : Infinite S := Infinite.of_surjective _ b.repr.to_equiv.surjective
   by_cases hI : I = ⊥
   · rw [hI, Submodule.bot_mul, card_quot_bot, zero_mul]
-    
   by_cases hJ : J = ⊥
   · rw [hJ, Submodule.mul_bot, card_quot_bot, mul_zero]
-    
   have hIJ : I * J ≠ ⊥ := mt ideal.mul_eq_bot.mp (not_or_of_not hI hJ)
   letI := Classical.decEq (Module.Free.ChooseBasisIndex ℤ S)
   letI := I.fintype_quotient_of_free_of_ne_bot hI
@@ -143,12 +140,11 @@ include P_prime hP
 Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] {i : ℕ} (a c : S) (a_mem : a ∈ P ^ i)
     (a_not_mem : a ∉ P ^ (i + 1)) (c_mem : c ∈ P ^ i) : ∃ d : S, ∃ e ∈ P ^ (i + 1), a * d + e = c :=
-  by
+  by 
   suffices eq_b : P ^ i = Ideal.span {a} ⊔ P ^ (i + 1)
   · rw [eq_b] at c_mem
     simp only [mul_comm a]
     exact ideal.mem_span_singleton_sup.mp c_mem
-    
   refine'
     (Ideal.eq_prime_pow_of_succ_lt_of_le hP (lt_of_le_of_ne le_sup_right _)
         (sup_le (ideal.span_le.mpr (set.singleton_subset_iff.mpr a_mem))
@@ -182,46 +178,43 @@ theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d'
 theorem card_quot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module.Free ℤ S] {i : ℕ} :
     cardQuot (P ^ i) = cardQuot P ^ i := by
   let b := Module.Free.chooseBasis ℤ S
-  classical
-  induction' i with i ih
-  · simp
-    
-  letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i.succ) (pow_ne_zero _ hP)
-  letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i) (pow_ne_zero _ hP)
-  letI := Ideal.fintypeQuotientOfFreeOfNeBot P hP
-  have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
-  suffices hquot : map (P ^ i.succ).mkq (P ^ i) ≃ S ⧸ P
-  · rw [pow_succ (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
-      card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i),
-      card_quot_apply P]
-    congr 1
-    rw [Fintype.card_eq]
-    exact ⟨hquot⟩
-    
-  choose a a_mem a_not_mem using SetLike.exists_of_lt this
-  choose f g hg hf using fun c (hc : c ∈ P ^ i) =>
-    Ideal.exists_mul_add_mem_pow_succ hP a c a_mem a_not_mem hc
-  choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkq (P ^ i.succ)) (P ^ i)) =>
-    submodule.mem_map.mp hc'
-  refine' Equiv.ofBijective (fun c' => Quotient.mk' (f (k c' c'.Prop) (hk_mem c' c'.Prop))) ⟨_, _⟩
-  · rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
-    rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkq_apply, mkq_apply,
-      Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
-    refine' Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) _
-    simpa only [Submodule.Quotient.mk'_eq_mk, Submodule.Quotient.mk'_eq_mk,
-      Submodule.Quotient.eq] using h
-    
-  · intro d'
-    refine' Quotient.inductionOn' d' fun d => _
-    have hd' := mem_map.mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
-    refine' ⟨⟨_, hd'⟩, _⟩
-    simp only [Submodule.Quotient.mk'_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
-      Subtype.coe_mk]
-    refine'
-      Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _) _
-    rw [hf, add_zero]
-    exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
-    
+  classical 
+    induction' i with i ih
+    · simp
+    letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i.succ) (pow_ne_zero _ hP)
+    letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i) (pow_ne_zero _ hP)
+    letI := Ideal.fintypeQuotientOfFreeOfNeBot P hP
+    have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
+    suffices hquot : map (P ^ i.succ).mkq (P ^ i) ≃ S ⧸ P
+    · rw [pow_succ (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
+        card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i),
+        card_quot_apply P]
+      congr 1
+      rw [Fintype.card_eq]
+      exact ⟨hquot⟩
+    choose a a_mem a_not_mem using SetLike.exists_of_lt this
+    choose f g hg hf using fun c (hc : c ∈ P ^ i) =>
+      Ideal.exists_mul_add_mem_pow_succ hP a c a_mem a_not_mem hc
+    choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkq (P ^ i.succ)) (P ^ i)) =>
+      submodule.mem_map.mp hc'
+    refine' Equiv.ofBijective (fun c' => Quotient.mk' (f (k c' c'.Prop) (hk_mem c' c'.Prop))) ⟨_, _⟩
+    · rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
+      rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkq_apply, mkq_apply,
+        Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
+      refine' Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) _
+      simpa only [Submodule.Quotient.mk'_eq_mk, Submodule.Quotient.mk'_eq_mk,
+        Submodule.Quotient.eq] using h
+    · intro d'
+      refine' Quotient.inductionOn' d' fun d => _
+      have hd' := mem_map.mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
+      refine' ⟨⟨_, hd'⟩, _⟩
+      simp only [Submodule.Quotient.mk'_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
+        Subtype.coe_mk]
+      refine'
+        Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _)
+          _
+      rw [hf, add_zero]
+      exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
 #align card_quot_pow_of_prime card_quot_pow_of_prime
 
 end PPrime
@@ -235,7 +228,6 @@ theorem card_quot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite �
     nontriviality S
     exfalso
     exact not_nontrivial_iff_subsingleton.mpr ‹Subsingleton S› ‹Nontrivial S›
-    
   haveI : Infinite S := Infinite.of_surjective _ b.repr.to_equiv.surjective
   exact
     UniqueFactorizationMonoid.multiplicative_of_coprime card_quot I J (card_quot_bot _ _)
@@ -251,7 +243,8 @@ theorem card_quot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite �
 
 /-- The absolute norm of the ideal `I : ideal R` is the cardinality of the quotient `R ⧸ I`. -/
 noncomputable def Ideal.absNorm [Infinite S] [IsDedekindDomain S] [Module.Free ℤ S]
-    [Module.Finite ℤ S] : Ideal S →*₀ ℕ where
+    [Module.Finite ℤ S] :
+    Ideal S →*₀ ℕ where 
   toFun := Submodule.cardQuot
   map_mul' I J := by rw [card_quot_mul]
   map_one' := by rw [Ideal.one_eq_top, card_quot_top]
@@ -294,7 +287,6 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
     have : (1 : S) ≠ 0 := one_ne_zero
     have : (1 : S) = 0 := EquivLike.injective e (Subsingleton.elim _ _)
     contradiction
-    
   let ι := Module.Free.ChooseBasisIndex ℤ S
   let b := Module.Free.chooseBasis ℤ S
   cases isEmpty_or_nonempty ι
@@ -303,7 +295,6 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
       (not_nontrivial_iff_subsingleton.mpr
           (Function.Surjective.subsingleton b.repr.to_equiv.symm.surjective)
           (by infer_instance)).elim
-    
   -- Thus `(S ⧸ I)` is isomorphic to a product of `zmod`s, so it is a fintype.
   letI := Ideal.fintypeQuotientOfFreeOfNeBot I hI
   -- Use the Smith normal form to choose a nice basis for `I`.
@@ -326,7 +317,7 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
         int.nat_abs_eq_iff_associated.mpr (LinearMap.associated_det_comp_equiv _ _ _)
       _ = abs_norm I := this
       
-  have ha : ∀ i, f (b' i) = a i • b' i := by
+  have ha : ∀ i, f (b' i) = a i • b' i := by 
     intro i
     rw [f_apply, b'.equiv_apply, Equiv.refl_apply, ab_eq]
   have mem_I_iff : ∀ x, x ∈ I ↔ ∀ i, a i ∣ b'.repr x i := by
@@ -338,11 +329,9 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
     constructor
     · rintro ⟨c, rfl⟩ i
       exact ⟨c i, this c i⟩
-      
     · rintro ha
       choose c hc using ha
       exact ⟨c, b'.ext_elem fun i => trans (hc i) (this c i).symm⟩
-      
   -- `det f` is equal to `∏ i, a i`,
   letI := Classical.decEq ι
   calc
@@ -361,10 +350,7 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
       smul_eq_mul, mul_one]
     by_cases h : i = j
     · rw [h, Matrix.diagonal_apply_eq, Finsupp.single_eq_same]
-      
     · rw [Matrix.diagonal_apply_ne _ h, Finsupp.single_eq_of_ne (Ne.symm h)]
-      
-    
   -- Now we map everything through the linear equiv `S ≃ₗ (ι → ℤ)`,
   -- which maps `(S ⧸ I)` to `Π i, zmod (a i).nat_abs`.
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
@@ -392,9 +378,9 @@ theorem abs_norm_span_singleton (r : S) :
     absNorm (span ({r} : Set S)) = (Algebra.norm ℤ r).natAbs := by
   rw [Algebra.norm_apply]
   by_cases hr : r = 0
-  · simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.abs_norm_bot,
+  ·
+    simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.abs_norm_bot,
       LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
-    
   letI := Ideal.fintypeQuotientOfFreeOfNeBot (span {r}) (mt span_singleton_eq_bot.mp hr)
   let b := Module.Free.chooseBasis ℤ S
   rw [← nat_abs_det_equiv _ (b.equiv (basis_span_singleton b hr) (Equiv.refl _))]

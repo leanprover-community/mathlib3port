@@ -299,7 +299,8 @@ theorem coe_snd : ⇑(snd M N) = Prod.snd :=
 `f.prod g : M →ₙ* (N × P)` given by `(f.prod g) x = (f x, g x)`. -/
 @[to_additive Prod
       "Combine two `add_monoid_hom`s `f : add_hom M N`, `g : add_hom M P` into\n`f.prod g : add_hom M (N × P)` given by `(f.prod g) x = (f x, g x)`"]
-protected def prod (f : M →ₙ* N) (g : M →ₙ* P) : M →ₙ* N × P where
+protected def prod (f : M →ₙ* N) (g : M →ₙ* P) :
+    M →ₙ* N × P where 
   toFun := Pi.prod f g
   map_mul' x y := Prod.ext (f.map_mul x y) (g.map_mul x y)
 #align mul_hom.prod MulHom.prod
@@ -469,7 +470,8 @@ variable [MulOneClass P]
 given by `(f.prod g) x = (f x, g x)`. -/
 @[to_additive Prod
       "Combine two `add_monoid_hom`s `f : M →+ N`, `g : M →+ P` into\n`f.prod g : M →+ N × P` given by `(f.prod g) x = (f x, g x)`"]
-protected def prod (f : M →* N) (g : M →* P) : M →* N × P where
+protected def prod (f : M →* N) (g : M →* P) :
+    M →* N × P where 
   toFun := Pi.prod f g
   map_one' := Prod.ext f.map_one g.map_one
   map_mul' x y := Prod.ext (f.map_mul x y) (g.map_mul x y)
@@ -634,7 +636,10 @@ variable {M N} [Monoid M] [Monoid N]
     units of each monoid. -/
 @[to_additive prod_add_units
       "The additive monoid equivalence between additive units of a product\nof two additive monoids, and the product of the additive units of each additive monoid."]
-def prodUnits : (M × N)ˣ ≃* Mˣ × Nˣ where
+def prodUnits :
+    (M × N)ˣ ≃*
+      Mˣ ×
+        Nˣ where 
   toFun := (Units.map (MonoidHom.fst M N)).Prod (Units.map (MonoidHom.snd M N))
   invFun u := ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹), by simp, by simp⟩
   left_inv u := by simp
@@ -655,7 +660,8 @@ Used mainly to define the natural topology of `αˣ`. -/
 @[to_additive
       "Canonical homomorphism of additive monoids from `add_units α` into `α × αᵃᵒᵖ`.\nUsed mainly to define the natural topology of `add_units α`.",
   simps]
-def embedProduct (α : Type _) [Monoid α] : αˣ →* α × αᵐᵒᵖ where
+def embedProduct (α : Type _) [Monoid α] :
+    αˣ →* α × αᵐᵒᵖ where 
   toFun x := ⟨x, op ↑x⁻¹⟩
   map_one' := by
     simp only [inv_one, eq_self_iff_true, Units.val_one, op_one, Prod.mk_eq_one, and_self_iff]
@@ -678,7 +684,8 @@ variable {α : Type _}
 
 /-- Multiplication as a multiplicative homomorphism. -/
 @[to_additive "Addition as an additive homomorphism.", simps]
-def mulMulHom [CommSemigroup α] : α × α →ₙ* α where
+def mulMulHom [CommSemigroup α] :
+    α × α →ₙ* α where 
   toFun a := a.1 * a.2
   map_mul' a b := mul_mul_mul_comm _ _ _ _
 #align mul_mul_hom mulMulHom
@@ -697,7 +704,8 @@ def mulMonoidWithZeroHom [CommMonoidWithZero α] : α × α →*₀ α :=
 
 /-- Division as a monoid homomorphism. -/
 @[to_additive "Subtraction as an additive monoid homomorphism.", simps]
-def divMonoidHom [DivisionCommMonoid α] : α × α →* α where
+def divMonoidHom [DivisionCommMonoid α] :
+    α × α →* α where 
   toFun a := a.1 / a.2
   map_one' := div_one _
   map_mul' a b := mul_div_mul_comm _ _ _ _
@@ -705,7 +713,8 @@ def divMonoidHom [DivisionCommMonoid α] : α × α →* α where
 
 /-- Division as a multiplicative homomorphism with zero. -/
 @[simps]
-def divMonoidWithZeroHom [CommGroupWithZero α] : α × α →*₀ α where
+def divMonoidWithZeroHom [CommGroupWithZero α] :
+    α × α →*₀ α where 
   toFun a := a.1 / a.2
   map_zero' := zero_div _
   map_one' := div_one _

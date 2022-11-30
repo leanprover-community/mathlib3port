@@ -30,7 +30,7 @@ variable {ι α β : Type _} {l : Filter α}
 namespace Filter
 
 /-- The cofinite filter is the filter of subsets whose complements are finite. -/
-def cofinite : Filter α where
+def cofinite : Filter α where 
   sets := { s | sᶜ.Finite }
   univ_sets := by simp only [compl_univ, finite_empty, mem_set_of_eq]
   sets_of_superset s t (hs : sᶜ.Finite) (st : s ⊆ t) := hs.Subset <| compl_subset_compl.2 st
@@ -158,12 +158,10 @@ theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrder β]
       exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
     refine' ⟨a₀, ha₀s, fun a has => (lt_or_le (f a) x).elim _ (le_trans ha₀.le)⟩
     exact fun h => others_bigger a ⟨h, has⟩
-    
   · -- in this case, f is constant because all values are at top
     push_neg  at not_all_top
     obtain ⟨a₀, ha₀s⟩ := hs
     exact ⟨a₀, ha₀s, fun a ha => not_all_top a ha (f a₀)⟩
-    
 #align filter.tendsto.exists_within_forall_le Filter.Tendsto.exists_within_forall_le
 
 theorem Filter.Tendsto.exists_forall_le [Nonempty α] [LinearOrder β] {f : α → β}

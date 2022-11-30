@@ -40,7 +40,7 @@ theorem coe_sections :
       sections (l.map fun l : List α => (l : Multiset α) : Multiset (Multiset α)) =
         (l.sections.map fun l : List α => (l : Multiset α) : Multiset (Multiset α))
   | [] => rfl
-  | a :: l => by
+  | a :: l => by 
     simp
     rw [← cons_coe, sections_cons, bind_map_comm, coe_sections l]
     simp [List.sections, (· ∘ ·), List.bind]

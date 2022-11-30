@@ -128,7 +128,8 @@ theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn :
   rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
 #align non_unital_alg_hom.coe_injective NonUnitalAlgHom.coe_injective
 
-instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B where
+instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A
+      B where 
   coe := toFun
   coe_injective' := coe_injective
   map_smul f := f.map_smul'
@@ -136,13 +137,13 @@ instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B where
   map_zero f := f.map_zero'
   map_mul f := f.map_mul'
 
-@[ext.1]
+@[ext]
 theorem ext {f g : A →ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
   coe_injective <| funext h
 #align non_unital_alg_hom.ext NonUnitalAlgHom.ext
 
 theorem ext_iff {f g : A →ₙₐ[R] B} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by
+  ⟨by 
     rintro rfl x
     rfl, ext⟩
 #align non_unital_alg_hom.ext_iff NonUnitalAlgHom.ext_iff
@@ -302,7 +303,7 @@ variable (R A B)
 
 /-- The first projection of a product is a non-unital alg_hom. -/
 @[simps]
-def fst : A × B →ₙₐ[R] A where
+def fst : A × B →ₙₐ[R] A where 
   toFun := Prod.fst
   map_zero' := rfl
   map_add' x y := rfl
@@ -312,7 +313,7 @@ def fst : A × B →ₙₐ[R] A where
 
 /-- The second projection of a product is a non-unital alg_hom. -/
 @[simps]
-def snd : A × B →ₙₐ[R] B where
+def snd : A × B →ₙₐ[R] B where 
   toFun := Prod.snd
   map_zero' := rfl
   map_add' x y := rfl
@@ -324,7 +325,8 @@ variable {R A B}
 
 /-- The prod of two morphisms is a morphism. -/
 @[simps]
-def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C where
+def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) :
+    A →ₙₐ[R] B × C where 
   toFun := Pi.prod f g
   map_zero' := by simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
   map_add' x y := by simp only [Pi.prod, Prod.mk_add_mk, map_add]
@@ -354,7 +356,9 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 /-- Taking the product of two maps with the same domain is equivalent to taking the product of
 their codomains. -/
 @[simps]
-def prodEquiv : (A →ₙₐ[R] B) × (A →ₙₐ[R] C) ≃ (A →ₙₐ[R] B × C) where
+def prodEquiv :
+    (A →ₙₐ[R] B) × (A →ₙₐ[R] C) ≃
+      (A →ₙₐ[R] B × C) where 
   toFun f := f.1.Prod f.2
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   left_inv f := by ext <;> rfl

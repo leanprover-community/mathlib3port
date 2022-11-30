@@ -56,9 +56,7 @@ theorem ord_connected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
     (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → ioo x y ⊆ s) : OrdConnected s := by
   rw [ord_connected_iff]
   intro x hx y hy hxy
-  rcases eq_or_lt_of_le hxy with (rfl | hxy');
-  · simpa
-    
+  rcases eq_or_lt_of_le hxy with (rfl | hxy'); · simpa
   rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
   exact insert_subset.2 ⟨hx, insert_subset.2 ⟨hy, hs x hx y hy hxy'⟩⟩
 #align set.ord_connected_of_Ioo Set.ord_connected_of_Ioo
@@ -170,7 +168,7 @@ theorem ord_connected_Ioo {a b : α} : OrdConnected (ioo a b) :=
 
 @[instance]
 theorem ord_connected_singleton {α : Type _} [PartialOrder α] {a : α} :
-    OrdConnected ({a} : Set α) := by
+    OrdConnected ({a} : Set α) := by 
   rw [← Icc_self]
   exact ord_connected_Icc
 #align set.ord_connected_singleton Set.ord_connected_singleton

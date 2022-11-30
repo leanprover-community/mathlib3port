@@ -34,12 +34,9 @@ protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } := by
   · obtain ⟨n', hn', -⟩ := n.prop.1
     rw [hn']
     exact n'.prop
-    
   · obtain ⟨n', hn', pn'⟩ := n.prop.1
     simpa [hn', Subtype.coe_eta] using pn'
-    
   · exact n.prop.2 m hm ⟨m, rfl, pm⟩
-    
 #align pnat.find_x PNat.findX
 
 /-- If `p` is a (decidable) predicate on `ℕ+` and `hp : ∃ (n : ℕ+), p n` is a proof that
@@ -75,10 +72,8 @@ theorem find_eq_iff : PNat.find h = m ↔ p m ∧ ∀ n < m, ¬p n := by
   constructor
   · rintro rfl
     exact ⟨PNat.find_spec h, fun _ => PNat.find_min h⟩
-    
   · rintro ⟨hm, hlt⟩
     exact le_antisymm (PNat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| PNat.find_spec h)
-    
 #align pnat.find_eq_iff PNat.find_eq_iff
 
 @[simp]
@@ -124,7 +119,6 @@ theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
     PNat.find h = PNat.find h₂ + 1 := by
   refine' (find_eq_iff _).2 ⟨PNat.find_spec h₂, fun n => PNat.recOn n _ _⟩
   · simp [h1]
-    
   intro m IH hm
   simp only [add_lt_add_iff_right, lt_find_iff] at hm
   exact hm _ le_rfl

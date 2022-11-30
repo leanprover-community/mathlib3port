@@ -46,16 +46,17 @@ namespace LieSubmodule
 variable (N : LieSubmodule R L M) {N₁ N₂ : LieSubmodule R L M}
 
 /-- The centralizer of a Lie submodule. -/
-def centralizer : LieSubmodule R L M where
+def centralizer :
+    LieSubmodule R L M where 
   carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
-  add_mem' m₁ m₂ hm₁ hm₂ x := by
+  add_mem' m₁ m₂ hm₁ hm₂ x := by 
     rw [lie_add]
     exact N.add_mem' (hm₁ x) (hm₂ x)
   zero_mem' x := by simp
-  smul_mem' t m hm x := by
+  smul_mem' t m hm x := by 
     rw [lie_smul]
     exact N.smul_mem' t (hm x)
-  lie_mem x m hm y := by
+  lie_mem x m hm y := by 
     rw [leibniz_lie]
     exact N.add_mem' (hm ⁅y, x⁆) (N.lie_mem (hm y))
 #align lie_submodule.centralizer LieSubmodule.centralizer
@@ -186,7 +187,6 @@ theorem normalizer_eq_self_iff :
     intro y hy
     replace hx : ⁅_, LieSubmodule.Quotient.mk' _ x⁆ = 0 := hx ⟨y, hy⟩
     rwa [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero] at hx
-    
   · let y := LieSubmodule.Quotient.mk' H.to_lie_submodule x
     have hy : y ∈ LieModule.maxTrivSubmodule R H (L ⧸ H.to_lie_submodule) := by
       rintro ⟨z, hz⟩
@@ -194,7 +194,6 @@ theorem normalizer_eq_self_iff :
         Submodule.coe_mk, mem_to_lie_submodule]
       exact (H.mem_normalizer_iff' x).mp hx z hz
     simpa using h y hy
-    
 #align lie_subalgebra.normalizer_eq_self_iff LieSubalgebra.normalizer_eq_self_iff
 
 end LieSubalgebra

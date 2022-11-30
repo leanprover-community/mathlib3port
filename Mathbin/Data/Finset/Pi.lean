@@ -110,7 +110,6 @@ theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) :
   rw [eq_singleton_iff_unique_mem]
   constructor
   · simp
-    
   intro a ha
   ext (i hi)
   rw [mem_pi] at ha

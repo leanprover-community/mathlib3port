@@ -86,9 +86,7 @@ theorem multinomial_congr {f g : α → ℕ} (h : ∀ a ∈ s, f a = g a) :
     multinomial s f = multinomial s g := by
   simp only [multinomial]; congr 1
   · rw [Finset.sum_congr rfl h]
-    
   · exact Finset.prod_congr rfl fun a ha => by rw [h a ha]
-    
 #align nat.multinomial_congr Nat.multinomial_congr
 
 /-! ### Connection to binomial coefficients
@@ -175,16 +173,15 @@ theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.s
 theorem multinomial_update (a : α) (f : α →₀ ℕ) :
     f.multinomial = (f.Sum fun _ => id).choose (f a) * (f.update a 0).multinomial := by
   simp only [multinomial_eq]
-  classical
-  by_cases a ∈ f.support
-  · rw [← Finset.insert_erase h, Nat.multinomial_insert _ f (Finset.not_mem_erase a _),
-      Finset.add_sum_erase _ f h, support_update_zero]
-    congr 1
-    exact
-      Nat.multinomial_congr _ fun _ h => (Function.update_noteq (Finset.mem_erase.1 h).1 0 f).symm
-    
-  rw [not_mem_support_iff] at h
-  rw [h, Nat.choose_zero_right, one_mul, ← h, update_self]
+  classical 
+    by_cases a ∈ f.support
+    · rw [← Finset.insert_erase h, Nat.multinomial_insert _ f (Finset.not_mem_erase a _),
+        Finset.add_sum_erase _ f h, support_update_zero]
+      congr 1
+      exact
+        Nat.multinomial_congr _ fun _ h => (Function.update_noteq (Finset.mem_erase.1 h).1 0 f).symm
+    rw [not_mem_support_iff] at h
+    rw [h, Nat.choose_zero_right, one_mul, ← h, update_self]
 #align finsupp.multinomial_update Finsupp.multinomial_update
 
 end Finsupp
@@ -205,15 +202,11 @@ theorem multinomial_filter_ne [DecidableEq α] (a : α) (m : Multiset α) :
   dsimp only [multinomial]
   convert Finsupp.multinomial_update a _
   · rw [← Finsupp.card_to_multiset, m.to_finsupp_to_multiset]
-    
   · ext1 a'
     rw [to_finsupp_apply, count_filter, Finsupp.coe_update]
     split_ifs
     · rw [Function.update_noteq h.symm, to_finsupp_apply]
-      
     · rw [not_ne_iff.1 h, Function.update_same]
-      
-    
 #align multiset.multinomial_filter_ne Multiset.multinomial_filter_ne
 
 end Multiset
@@ -237,27 +230,22 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
           k.1.1.multinomial *
             (k.1.1.map <| x).noncommProd
               (Multiset.map_set_pairwise <| hc.mono <| mem_sym_iff.1 k.2) :=
-  by
+  by 
   induction' s using Finset.induction with a s ha ih
   · rw [sum_empty]
     rintro (_ | n)
     · rw [pow_zero, Fintype.sum_subsingleton]
       swap
       · exact ⟨0, Or.inl rfl⟩
-        
       convert (one_mul _).symm
       apply Nat.cast_one
-      
     · rw [pow_succ, zero_mul]
       apply (Fintype.sum_empty _).symm
       rw [sym_empty]
       infer_instance
-      
-    
   intro n; specialize ih (hc.mono <| s.subset_insert a)
   rw [sum_insert ha, ((Commute.sum_right s _ _) fun b hb => _).add_pow, sum_range]; swap
   · exact hc (mem_insert_self a s) (mem_insert_of_mem hb) (ne_of_mem_of_not_mem hb ha).symm
-    
   simp_rw [ih, mul_sum, sum_mul, sum_sigma', univ_sigma_univ]
   refine' ((Fintype.sum_equiv (sym_insert_equiv ha) _ _) fun m => _).symm
   rw [m.1.1.multinomial_filter_ne a]

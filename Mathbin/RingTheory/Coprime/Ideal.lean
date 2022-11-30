@@ -29,7 +29,7 @@ When ideals are all of the form `I i = R ∙ s i`, this is equivalent to the
 theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι → Ideal R) :
     (⨆ i ∈ t, ⨅ (j) (hj : j ∈ t) (ij : j ≠ i), I j) = ⊤ ↔
       (t : Set ι).Pairwise fun i j => I i ⊔ I j = ⊤ :=
-  by
+  by 
   haveI : DecidableEq ι := Classical.decEq ι
   rw [eq_top_iff_one, Submodule.mem_supr_finset_iff_exists_sum]
   refine' h.cons_induction _ _ <;> clear t h
@@ -38,10 +38,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
     · rw [h]
       simp only [Finset.mem_singleton, Ne.def, infi_infi_eq_left, eq_self_iff_true, not_true,
         infi_false]
-      
     · simp only [dif_pos, dif_ctx_congr, Submodule.coe_mk, eq_self_iff_true]
-      
-    
   intro a t hat h ih
   rw [Finset.coe_cons,
     Set.pairwise_insert_of_symmetric fun i j (h : I i ⊔ I j = ⊤) => sup_comm.trans h]
@@ -59,12 +56,10 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       apply this (Finset.subset_cons _ hi)
       rintro rfl
       exact hat hi
-      
     · have := Submodule.coe_mem (μ i)
       simp only [mem_infi] at this⊢
       intro j hj ij
       exact this _ (Finset.subset_cons _ hj) ij
-      
     · rw [← @if_pos _ _ h.some_spec R (μ a) 0, ← Finset.sum_pi_single', ← Finset.sum_add_distrib] at
         hμ
       convert hμ
@@ -72,10 +67,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       rw [Pi.add_apply, Submodule.coe_add, Submodule.coe_mk]
       by_cases hi : i = h.some
       · rw [hi, Pi.single_eq_same, Pi.single_eq_same, Submodule.coe_mk]
-        
       · rw [Pi.single_eq_of_ne hi, Pi.single_eq_of_ne hi, Submodule.coe_zero]
-        
-      
     · rw [eq_top_iff_one, Submodule.mem_sup]
       rw [add_comm] at hμ
       refine' ⟨_, _, _, _, hμ⟩
@@ -85,20 +77,16 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
         apply this _ (Finset.mem_cons_self _ _)
         rintro rfl
         exact hat hx
-        
       · have := Submodule.coe_mem (μ a)
         simp only [mem_infi] at this
         exact this _ (Finset.subset_cons _ hb) ab.symm
-        
-      
-    
   · rintro ⟨hs, Hb⟩
     obtain ⟨μ, hμ⟩ := ih.mpr hs
     obtain ⟨u, hu, v, hv, huv⟩ :=
       submodule.mem_sup.mp
         ((eq_top_iff_one _).mp <|
           sup_infi_eq_top fun b hb =>
-            Hb b hb <| by
+            Hb b hb <| by 
               rintro rfl
               exact hat hb)
     refine' ⟨fun i => if hi : i = a then ⟨v, _⟩ else ⟨u * μ i, _⟩, _⟩
@@ -106,16 +94,12 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       intro j hj ij
       rw [Finset.mem_cons, ← hi] at hj
       exact hv _ (hj.resolve_left ij)
-      
     · have := Submodule.coe_mem (μ i)
       simp only [mem_infi] at this⊢
       intro j hj ij
       rcases finset.mem_cons.mp hj with (rfl | hj)
       · exact mul_mem_right _ _ hu
-        
       · exact mul_mem_left _ _ (this _ hj ij)
-        
-      
     · rw [Finset.sum_cons, dif_pos rfl, add_comm]
       rw [← mul_one u] at huv
       rw [← huv, ← hμ, Finset.mul_sum]
@@ -126,8 +110,6 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       rfl
       rintro rfl
       exact hat hj
-      
-    
 #align ideal.supr_infi_eq_top_iff_pairwise Ideal.supr_infi_eq_top_iff_pairwise
 
 end Ideal

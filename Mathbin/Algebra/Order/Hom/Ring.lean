@@ -135,7 +135,8 @@ def toOrderMonoidWithZeroHom (f : α →+*o β) : α →*₀o β :=
   { f with }
 #align order_ring_hom.to_order_monoid_with_zero_hom OrderRingHom.toOrderMonoidWithZeroHom
 
-instance : OrderRingHomClass (α →+*o β) α β where
+instance : OrderRingHomClass (α →+*o β) α
+      β where 
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_mul f := f.map_mul'
@@ -153,7 +154,7 @@ theorem to_fun_eq_coe (f : α →+*o β) : f.toFun = ⇑f :=
   rfl
 #align order_ring_hom.to_fun_eq_coe OrderRingHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : α →+*o β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align order_ring_hom.ext OrderRingHom.ext
@@ -326,10 +327,11 @@ def toOrderIso (f : α ≃+*o β) : α ≃o β :=
   ⟨f.toRingEquiv.toEquiv, fun _ _ => f.map_le_map_iff'⟩
 #align order_ring_iso.to_order_iso OrderRingIso.toOrderIso
 
-instance : OrderRingIsoClass (α ≃+*o β) α β where
+instance : OrderRingIsoClass (α ≃+*o β) α
+      β where 
   coe f := f.toFun
   inv f := f.invFun
-  coe_injective' f g h₁ h₂ := by
+  coe_injective' f g h₁ h₂ := by 
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -348,7 +350,7 @@ theorem to_fun_eq_coe (f : α ≃+*o β) : f.toFun = f :=
   rfl
 #align order_ring_iso.to_fun_eq_coe OrderRingIso.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : α ≃+*o β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align order_ring_iso.ext OrderRingIso.ext
@@ -502,12 +504,11 @@ conditionally complete.
 linear ordered field. -/
 instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField β] [Archimedean β] :
     Subsingleton (α →+*o β) :=
-  ⟨fun f g => by
+  ⟨fun f g => by 
     ext x
     by_contra' h
     wlog h : f x < g x using f g, g f
     · exact Ne.lt_or_lt h
-      
     obtain ⟨q, hf, hg⟩ := exists_rat_btwn h
     rw [← map_rat_cast f] at hf
     rw [← map_rat_cast g] at hg

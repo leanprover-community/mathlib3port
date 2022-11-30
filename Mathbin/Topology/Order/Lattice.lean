@@ -69,7 +69,8 @@ instance (priority := 100) OrderDual.topologicalLattice (L : Type _) [Topologica
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrder.topologicalLattice {L : Type _} [TopologicalSpace L]
-    [LinearOrder L] [OrderClosedTopology L] : TopologicalLattice L where
+    [LinearOrder L] [OrderClosedTopology L] :
+    TopologicalLattice L where 
   continuous_inf := continuous_min
   continuous_sup := continuous_max
 #align linear_order.topological_lattice LinearOrder.topologicalLattice

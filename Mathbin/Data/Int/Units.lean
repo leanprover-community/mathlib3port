@@ -37,17 +37,13 @@ theorem is_unit_iff {a : ℤ} : IsUnit a ↔ a = 1 ∨ a = -1 := by
   refine' ⟨fun h => is_unit_eq_one_or h, fun h => _⟩
   rcases h with (rfl | rfl)
   · exact isUnit_one
-    
   · exact is_unit_one.neg
-    
 #align int.is_unit_iff Int.is_unit_iff
 
 theorem is_unit_eq_or_eq_neg {a b : ℤ} (ha : IsUnit a) (hb : IsUnit b) : a = b ∨ a = -b := by
   rcases is_unit_eq_one_or hb with (rfl | rfl)
   · exact is_unit_eq_one_or ha
-    
   · rwa [or_comm', neg_neg, ← is_unit_iff]
-    
 #align int.is_unit_eq_or_eq_neg Int.is_unit_eq_or_eq_neg
 
 theorem eq_one_or_neg_one_of_mul_eq_one {z w : ℤ} (h : z * w = 1) : z = 1 ∨ z = -1 :=
@@ -73,9 +69,7 @@ theorem eq_one_or_neg_one_of_mul_eq_neg_one' {z w : ℤ} (h : z * w = -1) :
     z = 1 ∧ w = -1 ∨ z = -1 ∧ w = 1 := by
   rcases is_unit_eq_one_or (is_unit.mul_iff.mp (int.is_unit_iff.mpr (Or.inr h))).1 with (rfl | rfl)
   · exact Or.inl ⟨rfl, one_mul w ▸ h⟩
-    
   · exact Or.inr ⟨rfl, neg_inj.mp (neg_one_mul w ▸ h)⟩
-    
 #align int.eq_one_or_neg_one_of_mul_eq_neg_one' Int.eq_one_or_neg_one_of_mul_eq_neg_one'
 
 theorem mul_eq_neg_one_iff_eq_one_or_neg_one {z w : ℤ} :

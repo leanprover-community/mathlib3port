@@ -65,12 +65,15 @@ instance [Monoid R] [MulAction R M] : MulAction R Mᵒᵈ :=
 instance [MonoidWithZero R] [AddMonoid M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
   { OrderDual.mulAction, OrderDual.smulWithZero with }
 
-instance [MonoidWithZero R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction R Mᵒᵈ where
+instance [MonoidWithZero R] [AddMonoid M] [DistribMulAction R M] :
+    DistribMulAction R
+      Mᵒᵈ where 
   smul_add k a := OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a
   smul_zero r := OrderDual.rec (@smul_zero _ M _ _) r
 
 instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] :
-    OrderedSmul R Mᵒᵈ where
+    OrderedSmul R
+      Mᵒᵈ where 
   smul_lt_smul_of_pos a b := @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
   lt_of_smul_lt_smul_of_pos a b := @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
 
@@ -88,13 +91,9 @@ theorem smul_lt_smul_of_pos : a < b → 0 < c → c • a < c • b :=
 theorem smul_le_smul_of_nonneg (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c • a ≤ c • b := by
   rcases h₁.eq_or_lt with (rfl | hab)
   · rfl
-    
   · rcases h₂.eq_or_lt with (rfl | hc)
     · rw [zero_smul, zero_smul]
-      
     · exact (smul_lt_smul_of_pos hab hc).le
-      
-    
 #align smul_le_smul_of_nonneg smul_le_smul_of_nonneg
 
 theorem smul_nonneg (hc : 0 ≤ c) (ha : 0 ≤ a) : 0 ≤ c • a :=
@@ -168,25 +167,20 @@ theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [
 #align ordered_smul.mk'' OrderedSmul.mk''
 
 instance Nat.ordered_smul [LinearOrderedCancelAddCommMonoid M] : OrderedSmul ℕ M :=
-  OrderedSmul.mk'' fun n hn a b hab => by
+  OrderedSmul.mk'' fun n hn a b hab => by 
     cases n
     · cases hn
-      
     induction' n with n ih
     · simp only [one_nsmul, hab]
-      
     · simp only [succ_nsmul _ n.succ, add_lt_add hab (ih n.succ_pos)]
-      
 #align nat.ordered_smul Nat.ordered_smul
 
 instance Int.ordered_smul [LinearOrderedAddCommGroup M] : OrderedSmul ℤ M :=
-  OrderedSmul.mk'' fun n hn => by
+  OrderedSmul.mk'' fun n hn => by 
     cases n
     · simp only [Int.ofNat_eq_coe, Int.coe_nat_pos, coe_nat_zsmul] at hn⊢
       exact strict_mono_smul_left hn
-      
     · cases (Int.negSucc_not_pos _).1 hn
-      
 #align int.ordered_smul Int.ordered_smul
 
 -- TODO: `linear_ordered_field M → ordered_smul ℚ M`
@@ -269,7 +263,8 @@ variable (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
-def OrderIso.smulLeft (hc : 0 < c) : M ≃o M where
+def OrderIso.smulLeft (hc : 0 < c) :
+    M ≃o M where 
   toFun b := c • b
   invFun b := c⁻¹ • b
   left_inv := inv_smul_smul₀ hc.ne'

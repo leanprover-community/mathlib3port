@@ -68,7 +68,8 @@ end
 
 /-- The filter represented by a `cfilter` is the collection of supersets of
   elements of the filter base. -/
-def toFilter (F : Cfilter (Set α) σ) : Filter α where
+def toFilter (F : Cfilter (Set α) σ) :
+    Filter α where 
   sets := { a | ∃ b, F b ⊆ a }
   univ_sets := ⟨F.pt, subset_univ _⟩
   sets_of_superset := fun x y ⟨b, h⟩ s => ⟨b, Subset.trans h s⟩
@@ -249,7 +250,7 @@ protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g
         inter_subset_inter (F.f.inf_le_left _ _) (G.f.inf_le_left _ _),
       inf_le_right := fun ⟨a, a'⟩ ⟨b, b'⟩ =>
         inter_subset_inter (F.f.inf_le_right _ _) (G.f.inf_le_right _ _) },
-    by
+    by 
     ext x
     cases F <;> cases G <;> substs f g <;> simp [Cfilter.toFilter]
     constructor
@@ -257,10 +258,8 @@ protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g
       apply mem_inf_of_inter _ _ h
       use s
       use t
-      
     · rintro ⟨s, ⟨a, ha⟩, t, ⟨b, hb⟩, rfl⟩
-      exact ⟨a, b, inter_subset_inter ha hb⟩
-      ⟩
+      exact ⟨a, b, inter_subset_inter ha hb⟩⟩
 #align filter.realizer.inf Filter.Realizer.inf
 
 /-- Construct a realizer for the cofinite filter -/
@@ -342,13 +341,13 @@ theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ 
 #align filter.realizer.tendsto_iff Filter.Realizer.tendsto_iff
 
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
-  classical
-  rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, not_forall]
-  simp only [Set.not_nonempty_iff_eq_empty]
-  exact
-    ⟨fun ⟨x, e⟩ _ => ⟨x, le_of_eq e⟩, fun h =>
-      let ⟨x, h⟩ := h ()
-      ⟨x, le_bot_iff.1 h⟩⟩
+  classical 
+    rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, not_forall]
+    simp only [Set.not_nonempty_iff_eq_empty]
+    exact
+      ⟨fun ⟨x, e⟩ _ => ⟨x, le_of_eq e⟩, fun h =>
+        let ⟨x, h⟩ := h ()
+        ⟨x, le_bot_iff.1 h⟩⟩
 #align filter.realizer.ne_bot_iff Filter.Realizer.ne_bot_iff
 
 end Filter.Realizer

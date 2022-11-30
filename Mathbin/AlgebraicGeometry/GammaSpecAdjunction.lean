@@ -99,7 +99,9 @@ theorem to_Γ_Spec_continuous : Continuous X.toΓSpecFun := by
 /-- The canonical (bundled) continuous map from the underlying topological
 space of `X` to the prime spectrum of its global sections. -/
 @[simps]
-def toΓSpecBase : X.toTop ⟶ SpecCat.topObj (Γ.obj (op X)) where
+def toΓSpecBase :
+    X.toTop ⟶ SpecCat.topObj
+        (Γ.obj (op X)) where 
   toFun := X.toΓSpecFun
   continuous_to_fun := X.to_Γ_Spec_continuous
 #align
@@ -160,7 +162,6 @@ theorem to_Γ_Spec_c_app_iff
     pick_goal 5
     exact is_localization.to_basic_open _ r
     exact h
-    
   apply congr_arg
 #align
   algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_c_app_iff AlgebraicGeometry.LocallyRingedSpaceCat.to_Γ_Spec_c_app_iff
@@ -174,7 +175,9 @@ theorem to_Γ_Spec_c_app_spec :
 /-- The sheaf hom on all basic opens, commuting with restrictions. -/
 def toΓSpecCBasicOpens :
     (inducedFunctor basicOpen).op ⋙ (structureSheaf (Γ.obj (op X))).1 ⟶
-      (inducedFunctor basicOpen).op ⋙ ((TopCat.Sheaf.pushforward X.toΓSpecBase).obj X.𝒪).1 where
+      (inducedFunctor basicOpen).op ⋙
+        ((TopCat.Sheaf.pushforward X.toΓSpecBase).obj
+            X.𝒪).1 where 
   app r := X.toΓSpecCApp r.unop
   naturality' r s f := by
     apply (structure_sheaf.to_basic_open_epi (Γ.obj (op X)) r.unop).1
@@ -188,7 +191,10 @@ def toΓSpecCBasicOpens :
 
 /-- The canonical morphism of sheafed spaces from `X` to the spectrum of its global sections. -/
 @[simps]
-def toΓSpecSheafedSpace : X.toSheafedSpace ⟶ SpecCat.toSheafedSpace.obj (op (Γ.obj (op X))) where
+def toΓSpecSheafedSpace :
+    X.toSheafedSpace ⟶
+      SpecCat.toSheafedSpace.obj
+        (op (Γ.obj (op X))) where 
   base := X.toΓSpecBase
   c :=
     TopCat.Sheaf.restrictHomEquivHom (structureSheaf (Γ.obj (op X))).1 _ is_basis_basic_opens
@@ -230,9 +236,11 @@ theorem to_stalk_stalk_map_to_Γ_Spec (x : X) :
 
 /-- The canonical morphism from `X` to the spectrum of its global sections. -/
 @[simps val_base]
-def toΓSpec : X ⟶ SpecCat.locallyRingedSpaceObj (Γ.obj (op X)) where
+def toΓSpec :
+    X ⟶ SpecCat.locallyRingedSpaceObj
+        (Γ.obj (op X)) where 
   val := X.toΓSpecSheafedSpace
-  Prop := by
+  Prop := by 
     intro x
     let p : PrimeSpectrum (Γ.obj (op X)) := X.to_Γ_Spec_fun x
     constructor
@@ -271,7 +279,6 @@ theorem comp_ring_hom_ext {X : LocallyRingedSpaceCat} {R : CommRingCat} {f : R �
     rw [category.assoc]
     erw [to_Γ_Spec_SheafedSpace_app_spec, ← X.presheaf.map_comp]
     convert h r
-    
   exact w
 #align
   algebraic_geometry.LocallyRingedSpace.comp_ring_hom_ext AlgebraicGeometry.LocallyRingedSpaceCat.comp_ring_hom_ext
@@ -290,9 +297,12 @@ theorem Γ_Spec_left_triangle : toSpecΓ (Γ.obj (op X)) ≫ X.toΓSpec.1.c.app 
 end LocallyRingedSpaceCat
 
 /-- The unit as a natural transformation. -/
-def identityToΓSpec : 𝟭 LocallyRingedSpaceCat.{u} ⟶ Γ.rightOp ⋙ Spec.to_LocallyRingedSpace where
+def identityToΓSpec :
+    𝟭 LocallyRingedSpaceCat.{u} ⟶
+      Γ.rightOp ⋙
+        Spec.to_LocallyRingedSpace where 
   app := LocallyRingedSpaceCat.toΓSpec
-  naturality' X Y f := by
+  naturality' X Y f := by 
     symm
     apply LocallyRingedSpace.comp_ring_hom_ext
     · ext1 x
@@ -302,12 +312,10 @@ def identityToΓSpec : 𝟭 LocallyRingedSpaceCat.{u} ⟶ Γ.rightOp ⋙ Spec.to
       congr 2
       exact (PresheafedSpace.stalk_map_germ f.1 ⊤ ⟨x, trivial⟩).symm
       infer_instance
-      
     · intro r
       rw [LocallyRingedSpace.comp_val_c_app, ← category.assoc]
       erw [Y.to_Γ_Spec_SheafedSpace_app_spec, f.1.c.naturality]
       rfl
-      
 #align algebraic_geometry.identity_to_Γ_Spec AlgebraicGeometry.identityToΓSpec
 
 namespace ΓSpec
@@ -322,17 +330,15 @@ theorem right_triangle (R : CommRingCat) :
     identityToΓSpec.app (SpecCat.toLocallyRingedSpace.obj <| op R) ≫
         SpecCat.toLocallyRingedSpace.map (specΓIdentity.inv.app R).op =
       𝟙 _ :=
-  by
+  by 
   apply LocallyRingedSpace.comp_ring_hom_ext
   · ext ((p : PrimeSpectrum R)x)
     erw [←
       IsLocalization.AtPrime.to_map_mem_maximal_iff ((structure_sheaf R).Presheaf.stalk p)
         p.as_ideal x]
     rfl
-    
   · intro r
     apply to_open_res
-    
 #align algebraic_geometry.Γ_Spec.right_triangle AlgebraicGeometry.ΓSpec.right_triangle
 
 -- Removing this makes the following definition time out.
@@ -341,11 +347,11 @@ theorem right_triangle (R : CommRingCat) :
 def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.to_LocallyRingedSpace :=
   Adjunction.mkOfUnitCounit
     { Unit := identityToΓSpec, counit := (NatIso.op specΓIdentity).inv,
-      left_triangle' := by
+      left_triangle' := by 
         ext X
         erw [category.id_comp]
         exact congr_arg Quiver.Hom.op (left_triangle X),
-      right_triangle' := by
+      right_triangle' := by 
         ext1
         ext1 R
         erw [category.id_comp]
@@ -378,7 +384,7 @@ theorem adjunction_hom_equiv (X : SchemeCat) (R : CommRingCatᵒᵖ) :
 theorem adjunction_hom_equiv_symm_apply {X : SchemeCat} {R : CommRingCatᵒᵖ}
     (f : X ⟶ SchemeCat.spec.obj R) :
     (ΓSpec.adjunction.homEquiv X R).symm f = (locallyRingedSpaceAdjunction.homEquiv X.1 R).symm f :=
-  by
+  by 
   congr 2
   exact adjunction_hom_equiv _ _
 #align
@@ -423,7 +429,7 @@ theorem adjunction_unit_app_app_top (X : SchemeCat) :
         ((ΓSpec.adjunction.Unit.app X).1.base _* X.Presheaf).obj (op ⊤))
       ((ΓSpec.adjunction.Unit.app X).val.c.app (op ⊤))
       (specΓIdentity.Hom.app (X.Presheaf.obj (op ⊤))) :=
-  by
+  by 
   have := congr_app Γ_Spec.adjunction.left_triangle X
   dsimp at this
   rw [← is_iso.eq_comp_inv] at this

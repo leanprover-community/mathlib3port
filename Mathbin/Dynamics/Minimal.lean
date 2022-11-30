@@ -112,7 +112,6 @@ theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
   constructor;
   · intro h s
     exact eq_empty_or_univ_of_smul_invariant_closed M
-    
   refine' fun H => ⟨fun x => dense_iff_closure_eq.2 <| (H _ _ _).resolve_left _⟩
   exacts[isClosedClosure, fun c => smul_closure_orbit_subset _ _,
     (orbit_nonempty _).closure.ne_empty]

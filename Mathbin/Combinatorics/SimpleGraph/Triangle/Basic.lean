@@ -66,7 +66,7 @@ theorem FarFromTriangleFree.clique_finset_nonempty' (hH : H ≤ G) (hG : G.FarFr
 variable [Nonempty α]
 
 theorem FarFromTriangleFree.nonpos (h₀ : G.FarFromTriangleFree ε) (h₁ : G.CliqueFree 3) : ε ≤ 0 :=
-  by
+  by 
   have := h₀ (empty_subset _)
   rw [coe_empty, Finset.card_empty, cast_zero, delete_edges_empty_eq] at this
   exact nonpos_of_mul_nonpos_left (this h₁) (cast_pos.2 <| sq_pos_of_pos Fintype.card_pos)

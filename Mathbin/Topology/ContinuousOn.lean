@@ -121,9 +121,7 @@ theorem mem_nhds_within_iff_eventually {s t : Set α} {x : α} :
   constructor
   · rintro ⟨u, hu, hut⟩
     exact eventually_of_mem hu fun x hxu hxs => hut ⟨hxu, hxs⟩
-    
   · refine' fun h => ⟨_, h, fun y hy => hy.1 hy.2⟩
-    
 #align mem_nhds_within_iff_eventually mem_nhds_within_iff_eventually
 
 theorem mem_nhds_within_iff_eventually_eq {s t : Set α} {x : α} :
@@ -138,19 +136,15 @@ theorem nhds_within_eq_iff_eventually_eq {s t : Set α} {x : α} : 𝓝[s] x = �
     filter_upwards [(h t).mpr (eventually_of_forall fun x => id),
       (h s).mp (eventually_of_forall fun x => id)]
     exact fun x => Iff.intro
-    
   · refine' fun h u => eventually_congr (h.mono fun x h => _)
     rw [h]
-    
 #align nhds_within_eq_iff_eventually_eq nhds_within_eq_iff_eventually_eq
 
 theorem nhds_within_le_iff {s t : Set α} {x : α} : 𝓝[s] x ≤ 𝓝[t] x ↔ t ∈ 𝓝[s] x := by
   simp_rw [Filter.le_def, mem_nhds_within_iff_eventually]
   constructor
   · exact fun h => (h t <| eventually_of_forall fun x => id).mono fun x => id
-    
   · exact fun h u hu => (h.And hu).mono fun x hx h => hx.2 <| hx.1 h
-    
 #align nhds_within_le_iff nhds_within_le_iff
 
 theorem preimage_nhds_within_coinduced' {π : α → β} {s : Set β} {t : Set α} {a : α} (h : a ∈ t)
@@ -250,7 +244,7 @@ theorem preimage_nhds_within_coinduced {π : α → β} {s : Set β} {t : Set α
     (ht : IsOpen t)
     (hs :
       s ∈ @nhds β (TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace) (π a)) :
-    π ⁻¹' s ∈ 𝓝 a := by
+    π ⁻¹' s ∈ 𝓝 a := by 
   rw [← ht.nhds_within_eq h]
   exact preimage_nhds_within_coinduced' h ht hs
 #align preimage_nhds_within_coinduced preimage_nhds_within_coinduced
@@ -318,7 +312,7 @@ theorem nhds_within_prod_eq {α : Type _} [TopologicalSpace α] {β : Type _} [T
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nhds_within_prod {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
     {s u : Set α} {t v : Set β} {a : α} {b : β} (hu : u ∈ 𝓝[s] a) (hv : v ∈ 𝓝[t] b) :
-    u ×ˢ v ∈ 𝓝[s ×ˢ t] (a, b) := by
+    u ×ˢ v ∈ 𝓝[s ×ˢ t] (a, b) := by 
   rw [nhds_within_prod_eq]
   exact prod_mem_prod hu hv
 #align nhds_within_prod nhds_within_prod
@@ -623,7 +617,6 @@ theorem continuous_on_iff_continuous_restrict {f : α → β} {s : Set α} :
   rw [ContinuousOn, continuous_iff_continuous_at]; constructor
   · rintro h ⟨x, xs⟩
     exact (continuous_within_at_iff_continuous_at_restrict f xs).mp (h x xs)
-    
   intro h x xs
   exact (continuous_within_at_iff_continuous_at_restrict f xs).mpr (h ⟨x, xs⟩)
 #align continuous_on_iff_continuous_restrict continuous_on_iff_continuous_restrict
@@ -637,7 +630,6 @@ theorem continuous_on_iff' {f : α → β} {s : Set α} :
     constructor <;>
       · rintro ⟨u, ou, useq⟩
         exact ⟨u, ou, useq.symm⟩
-        
   rw [continuous_on_iff_continuous_restrict, continuous_def] <;> simp only [this]
 #align continuous_on_iff' continuous_on_iff'
 
@@ -828,9 +820,7 @@ theorem IsOpenMap.continuous_on_image_of_left_inv_on {f : α → β} {s : Set α
   refine' continuous_on_iff'.2 fun t ht => ⟨f '' (t ∩ s), _, _⟩
   · rw [← image_restrict]
     exact h _ (ht.preimage continuous_subtype_coe)
-    
   · rw [inter_eq_self_of_subset_left (image_subset f (inter_subset_right t s)), hleft.image_inter']
-    
 #align is_open_map.continuous_on_image_of_left_inv_on IsOpenMap.continuous_on_image_of_left_inv_on
 
 theorem IsOpenMap.continuous_on_range_of_left_inverse {f : α → β} (hf : IsOpenMap f) {finv : β → α}
@@ -954,12 +944,10 @@ theorem Set.LeftInvOn.map_nhds_within_eq {f : α → β} {g : β → α} {x : β
     (hg : ContinuousWithinAt g s x) : map g (𝓝[s] x) = 𝓝[g '' s] g x := by
   apply le_antisymm
   · exact hg.tendsto_nhds_within (maps_to_image _ _)
-    
   · have A : g ∘ f =ᶠ[𝓝[g '' s] g x] id :=
       h.right_inv_on_image.eq_on.eventually_eq_of_mem self_mem_nhds_within
     refine' le_map_of_right_inverse A _
     simpa only [hx] using hf.tendsto_nhds_within (h.maps_to (surj_on_image _ _))
-    
 #align set.left_inv_on.map_nhds_within_eq Set.LeftInvOn.map_nhds_within_eq
 
 theorem Function.LeftInverse.map_nhds_eq {f : α → β} {g : β → α} {x : β}
@@ -1022,11 +1010,9 @@ theorem continuous_on_open_iff {f : α → β} {s : Set α} (hs : IsOpen s) :
     rcases h t ht with ⟨u, u_open, hu⟩
     rw [inter_comm, hu]
     apply IsOpen.inter u_open hs
-    
   · intro h t ht
     refine' ⟨s ∩ f ⁻¹' t, h t ht, _⟩
     rw [@inter_comm _ s (f ⁻¹' t), inter_assoc, inter_self]
-    
 #align continuous_on_open_iff continuous_on_open_iff
 
 theorem ContinuousOn.preimage_open_of_open {f : α → β} {s : Set α} {t : Set β}
@@ -1073,20 +1059,15 @@ theorem continuous_on_open_of_generate_from {β : Type _} {s : Set α} {T : Set 
   intro t ht
   induction' ht with u hu u v Tu Tv hu hv U hU hU'
   · exact h u hu
-    
   · simp only [preimage_univ, inter_univ]
     exact hs
-    
   · have : s ∩ f ⁻¹' (u ∩ v) = s ∩ f ⁻¹' u ∩ (s ∩ f ⁻¹' v) := by
       rw [preimage_inter, inter_assoc, inter_left_comm _ s, ← inter_assoc s s, inter_self]
     rw [this]
     exact hu.inter hv
-    
   · rw [preimage_sUnion, inter_Union₂]
     exact is_open_bUnion hU'
-    
   · exact hs
-    
 #align continuous_on_open_of_generate_from continuous_on_open_of_generate_from
 
 theorem ContinuousWithinAt.prod {f : α → β} {g : α → γ} {s : Set α} {x : α}
@@ -1140,37 +1121,31 @@ theorem ContinuousOn.piecewise' {s t : Set α} {f g : α → β} [∀ a, Decidab
     (hpf : ∀ a ∈ s ∩ frontier t, Tendsto f (𝓝[s ∩ t] a) (𝓝 (piecewise t f g a)))
     (hpg : ∀ a ∈ s ∩ frontier t, Tendsto g (𝓝[s ∩ tᶜ] a) (𝓝 (piecewise t f g a)))
     (hf : ContinuousOn f <| s ∩ t) (hg : ContinuousOn g <| s ∩ tᶜ) :
-    ContinuousOn (piecewise t f g) s := by
+    ContinuousOn (piecewise t f g) s := by 
   intro x hx
   by_cases hx' : x ∈ frontier t
   · exact (hpf x ⟨hx, hx'⟩).piecewise_nhds_within (hpg x ⟨hx, hx'⟩)
-    
   · rw [← inter_univ s, ← union_compl_self t, inter_union_distrib_left] at hx⊢
     cases hx
     · apply ContinuousWithinAt.union
-      · exact
+      ·
+        exact
           (hf x hx).congr (fun y hy => piecewise_eq_of_mem _ _ _ hy.2)
             (piecewise_eq_of_mem _ _ _ hx.2)
-        
       · have : x ∉ closure (tᶜ) := fun h => hx' ⟨subset_closure hx.2, by rwa [closure_compl] at h⟩
         exact
           continuous_within_at_of_not_mem_closure fun h =>
             this (closure_inter_subset_inter_closure _ _ h).2
-        
-      
     · apply ContinuousWithinAt.union
       · have : x ∉ closure t := fun h =>
           hx' ⟨h, fun h' : x ∈ interior t => hx.2 (interior_subset h')⟩
         exact
           continuous_within_at_of_not_mem_closure fun h =>
             this (closure_inter_subset_inter_closure _ _ h).2
-        
-      · exact
+      ·
+        exact
           (hg x hx).congr (fun y hy => piecewise_eq_of_not_mem _ _ _ hy.2)
             (piecewise_eq_of_not_mem _ _ _ hx.2)
-        
-      
-    
 #align continuous_on.piecewise' ContinuousOn.piecewise'
 
 theorem ContinuousOn.if' {s : Set α} {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
@@ -1196,18 +1171,14 @@ theorem ContinuousOn.if {α β : Type _} [TopologicalSpace α] [TopologicalSpace
     simp only [← hp a ha, if_t_t]
     apply tendsto_nhds_within_mono_left (inter_subset_inter_right s subset_closure)
     exact hf a ⟨ha.1, ha.2.1⟩
-    
   · rintro a ha
     simp only [hp a ha, if_t_t]
     apply tendsto_nhds_within_mono_left (inter_subset_inter_right s subset_closure)
     rcases ha with ⟨has, ⟨_, ha⟩⟩
     rw [← mem_compl_iff, ← closure_compl] at ha
     apply hg a ⟨has, ha⟩
-    
   · exact hf.mono (inter_subset_inter_right s subset_closure)
-    
   · exact hg.mono (inter_subset_inter_right s subset_closure)
-    
 #align continuous_on.if ContinuousOn.if
 
 theorem ContinuousOn.piecewise {s t : Set α} {f g : α → β} [∀ a, Decidable (a ∈ t)]
@@ -1228,7 +1199,7 @@ theorem continuous_if' {p : α → Prop} {f g : α → β} [∀ a, Decidable (p 
 theorem continuous_if {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
     (hp : ∀ a ∈ frontier { x | p x }, f a = g a) (hf : ContinuousOn f (closure { x | p x }))
     (hg : ContinuousOn g (closure { x | ¬p x })) : Continuous fun a => if p a then f a else g a :=
-  by
+  by 
   rw [continuous_iff_continuous_on_univ]
   apply ContinuousOn.if <;> simp <;> assumption
 #align continuous_if continuous_if
@@ -1264,11 +1235,12 @@ theorem Continuous.piecewise {s : Set α} {f g : α → β} [∀ a, Decidable (a
 #align continuous.piecewise Continuous.piecewise
 
 theorem IsOpen.ite' {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s')
-    (ht : ∀ x ∈ frontier t, x ∈ s ↔ x ∈ s') : IsOpen (t.ite s s') := by classical
-  simp only [is_open_iff_continuous_mem, Set.ite] at *
-  convert continuous_piecewise (fun x hx => propext (ht x hx)) hs.continuous_on hs'.continuous_on
-  ext x
-  by_cases hx : x ∈ t <;> simp [hx]
+    (ht : ∀ x ∈ frontier t, x ∈ s ↔ x ∈ s') : IsOpen (t.ite s s') := by
+  classical 
+    simp only [is_open_iff_continuous_mem, Set.ite] at *
+    convert continuous_piecewise (fun x hx => propext (ht x hx)) hs.continuous_on hs'.continuous_on
+    ext x
+    by_cases hx : x ∈ t <;> simp [hx]
 #align is_open.ite' IsOpen.ite'
 
 theorem IsOpen.ite {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s')
@@ -1295,11 +1267,8 @@ theorem continuous_on_piecewise_ite' {s s' t : Set α} {f f' : α → β} [∀ x
     ContinuousOn (t.piecewise f f') (t.ite s s') := by
   apply ContinuousOn.piecewise
   · rwa [ite_inter_of_inter_eq _ H]
-    
   · rwa [ite_inter_closure_eq_of_inter_frontier_eq H]
-    
   · rwa [ite_inter_closure_compl_eq_of_inter_frontier_eq H]
-    
 #align continuous_on_piecewise_ite' continuous_on_piecewise_ite'
 
 theorem continuous_on_piecewise_ite {s s' t : Set α} {f f' : α → β} [∀ x, Decidable (x ∈ t)]
@@ -1355,7 +1324,7 @@ theorem ContinuousWithinAt.snd {f : α → β × γ} {s : Set α} {a : α} (h : 
 theorem continuous_within_at_prod_iff {f : α → β × γ} {s : Set α} {x : α} :
     ContinuousWithinAt f s x ↔
       ContinuousWithinAt (Prod.fst ∘ f) s x ∧ ContinuousWithinAt (Prod.snd ∘ f) s x :=
-  ⟨fun h => ⟨h.fst, h.snd⟩, by
+  ⟨fun h => ⟨h.fst, h.snd⟩, by 
     rintro ⟨h1, h2⟩
     convert h1.prod h2
     ext

@@ -40,10 +40,11 @@ variable {ι : Type _} [Fintype ι] {I J : Box ι}
 namespace Prepartition
 
 /-- Split a box in `ℝⁿ` into `2 ^ n` boxes by hyperplanes passing through its center. -/
-def splitCenter (I : Box ι) : Prepartition I where
+def splitCenter (I : Box ι) :
+    Prepartition I where 
   boxes := Finset.univ.map (Box.splitCenterBoxEmb I)
   le_of_mem' := by simp [I.split_center_box_le]
-  PairwiseDisjoint := by
+  PairwiseDisjoint := by 
     rw [Finset.coe_map, Finset.coe_univ, image_univ]
     rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ Hne
     exact I.disjoint_split_center_box (mt (congr_arg _) Hne)
@@ -114,7 +115,7 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
           π.IsSubordinate r ∧
             (∀ J ∈ π, ∃ m : ℕ, ∀ i, (J : _).upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) ∧
               π.distortion = I.distortion :=
-  by
+  by 
   refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
   · choose! πi hP hHen hr Hn Hd using hJ
     choose! n hn using Hn
@@ -123,7 +124,7 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
     have hsub :
       ∀ J' ∈ (split_center J).bUnionTagged πi,
         ∃ n : ℕ, ∀ i, (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n :=
-      by
+      by 
       intro J' hJ'
       rcases(split_center J).mem_bUnion_tagged.1 hJ' with ⟨J₁, h₁, h₂⟩
       refine' ⟨n J₁ J' + 1, fun i => _⟩
@@ -132,7 +133,6 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
     refine' tagged_prepartition.distortion_of_const _ hP.nonempty_boxes fun J' h' => _
     rcases hsub J' h' with ⟨n, hn⟩
     exact box.distortion_eq_of_sub_eq_div hn
-    
   · refine'
       ⟨I.Icc ∩ closed_ball z (r z), inter_mem_nhds_within _ (closed_ball_mem_nhds _ (r z).coe_prop),
         _⟩
@@ -144,7 +144,6 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
     simp only [tagged_prepartition.mem_single, forall_eq]
     refine' ⟨0, fun i => _⟩
     simp
-    
 #align
   box_integral.box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic BoxIntegral.Box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic
 
@@ -168,7 +167,7 @@ theorem exists_tagged_le_is_Henstock_is_subordinate_Union_eq {I : Box ι} (r : (
     ∃ π' : TaggedPrepartition I,
       π'.toPrepartition ≤ π ∧
         π'.IsHenstock ∧ π'.IsSubordinate r ∧ π'.distortion = π.distortion ∧ π'.union = π.union :=
-  by
+  by 
   have := fun J => box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic J r
   choose! πi πip πiH πir hsub πid; clear hsub
   refine'

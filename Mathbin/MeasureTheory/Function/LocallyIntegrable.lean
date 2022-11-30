@@ -56,13 +56,11 @@ theorem locally_integrable_iff [LocallyCompactSpace X] :
   refine' ⟨fun hf x => _, fun hf K hK => _⟩
   · obtain ⟨K, hK, h2K⟩ := exists_compact_mem_nhds x
     exact ⟨K, h2K, hf hK⟩
-    
   · refine'
       IsCompact.induction_on hK integrable_on_empty (fun s t hst h => h.monoSet hst)
         (fun s t hs ht => integrable_on_union.mpr ⟨hs, ht⟩) fun x hx => _
     obtain ⟨K, hK, h2K⟩ := hf x
     exact ⟨K, nhds_within_le_nhds hK, h2K⟩
-    
 #align measure_theory.locally_integrable_iff MeasureTheory.locally_integrable_iff
 
 theorem locallyIntegrableConst [IsLocallyFiniteMeasure μ] (c : E) :
@@ -81,11 +79,9 @@ theorem locally_integrable_map_homeomorph [BorelSpace X] [BorelSpace Y] (e : X �
     convert (integrable_on_map_equiv e.to_measurable_equiv).1 (h this) using 1
     simp only [← preimage_comp, Homeomorph.to_measurable_equiv_coe, Homeomorph.symm_comp_self,
       preimage_id_eq, id.def]
-    
   · apply (integrable_on_map_equiv e.to_measurable_equiv).2
     have : IsCompact (e ⁻¹' k) := (Homeomorph.is_compact_preimage _).2 hk
     exact h this
-    
 #align
   measure_theory.locally_integrable_map_homeomorph MeasureTheory.locally_integrable_map_homeomorph
 
@@ -150,7 +146,7 @@ variable {K : Set X} {a b : X}
 /-- A function `f` continuous on a compact set `K` is integrable on this set with respect to any
 locally finite measure. -/
 theorem ContinuousOn.integrableOnCompact (hK : IsCompact K) (hf : ContinuousOn f K) :
-    IntegrableOn f K μ := by
+    IntegrableOn f K μ := by 
   letI := metrizable_space_metric X
   apply hK.integrable_on_of_nhds_within fun x hx => _
   exact hf.integrable_at_nhds_within_of_is_separable hK.measurable_set hK.is_separable hx
@@ -207,11 +203,10 @@ variable [BorelSpace X] [MetrizableSpace X] [ConditionallyCompleteLinearOrder X]
   [SecondCountableTopology E] [IsLocallyFiniteMeasure μ] {s : Set X}
 
 theorem MonotoneOn.integrableOnCompact (hs : IsCompact s) (hmono : MonotoneOn f s) :
-    IntegrableOn f s μ := by
+    IntegrableOn f s μ := by 
   borelize E
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact integrable_on_empty
-    
   have hbelow : BddBelow (f '' s) :=
     ⟨f (Inf s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono (hs.Inf_mem h) hy (cInf_le hs.bdd_below hy)⟩
   have habove : BddAbove (f '' s) :=

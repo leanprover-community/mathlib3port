@@ -152,14 +152,10 @@ theorem nnnorm_diagonal [DecidableEq n] (v : n → α) : ‖diagonal v‖₊ = �
   refine' le_antisymm (Finset.sup_le fun j hj => _) _
   · obtain rfl | hij := eq_or_ne i j
     · rw [diagonal_apply_eq]
-      
     · rw [diagonal_apply_ne _ hij, nnnorm_zero]
       exact zero_le _
-      
-    
   · refine' Eq.trans_le _ (Finset.le_sup (Finset.mem_univ i))
     rw [diagonal_apply_eq]
-    
 #align matrix.nnnorm_diagonal Matrix.nnnorm_diagonal
 
 @[simp]
@@ -276,9 +272,7 @@ theorem linfty_op_nnnorm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v
   congr 1 with i : 1
   refine' ((Finset.sum_eq_single_of_mem _ (Finset.mem_univ i)) fun j hj hij => _).trans _
   · rw [diagonal_apply_ne' _ hij, nnnorm_zero]
-    
   · rw [diagonal_apply_eq]
-    
 #align matrix.linfty_op_nnnorm_diagonal Matrix.linfty_op_nnnorm_diagonal
 
 @[simp]
@@ -502,11 +496,9 @@ theorem frobenius_nnnorm_diagonal [DecidableEq n] (v : n → α) :
   · rw [Finset.sum_map, Nnreal.sqrt_eq_rpow]
     dsimp
     simp_rw [diagonal_apply_eq, Nnreal.rpow_two]
-    
   · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, Nnreal.zero_rpow two_ne_zero]
     intro h
     exact finset.mem_map.not.mp his ⟨i.1, Finset.mem_univ _, Prod.ext rfl h⟩
-    
 #align matrix.frobenius_nnnorm_diagonal Matrix.frobenius_nnnorm_diagonal
 
 @[simp]

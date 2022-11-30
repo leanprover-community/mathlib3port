@@ -32,20 +32,16 @@ theorem map_with_index_core_eq (l : List α) (f : ℕ → α → β) (n : ℕ) :
     l.mapWithIndexCore f n = l.mapWithIndex fun i a => f (i + n) a := by
   induction' l with hd tl hl generalizing f n
   · simpa
-    
   · rw [map_with_index]
     simp [map_with_index_core, hl, add_left_comm, add_assoc, add_comm]
-    
 #align list.map_with_index_core_eq List.map_with_index_core_eq
 
 theorem map_with_index_eq_enum_map (l : List α) (f : ℕ → α → β) :
     l.mapWithIndex f = l.enum.map (Function.uncurry f) := by
   induction' l with hd tl hl generalizing f
   · simp [List.enum_eq_zip_range]
-    
   · rw [map_with_index, map_with_index_core, map_with_index_core_eq, hl]
     simp [enum_eq_zip_range, range_succ_eq_map, zip_with_map_left, map_uncurry_zip_eq_zip_with]
-    
 #align list.map_with_index_eq_enum_map List.map_with_index_eq_enum_map
 
 @[simp]
@@ -59,9 +55,7 @@ theorem map_with_index_append {α} (K L : List α) (f : ℕ → α → β) :
     (K ++ L).mapWithIndex f = K.mapWithIndex f ++ L.mapWithIndex fun i a => f (i + K.length) a := by
   induction' K with a J IH generalizing f
   · simp
-    
   · simp [IH fun i => f (i + 1), add_assoc]
-    
 #align list.map_with_index_append List.map_with_index_append
 
 @[simp]
@@ -69,9 +63,7 @@ theorem length_map_with_index {α β} (l : List α) (f : ℕ → α → β) :
     (l.mapWithIndex f).length = l.length := by
   induction' l with hd tl IH generalizing f
   · simp
-    
   · simp [IH]
-    
 #align list.length_map_with_index List.length_map_with_index
 
 @[simp]
@@ -85,9 +77,7 @@ theorem map_with_index_eq_of_fn {α β} (l : List α) (f : ℕ → α → β) :
     l.mapWithIndex f = ofFn fun i : Fin l.length => f (i : ℕ) (l.nthLe i i.is_lt) := by
   induction' l with hd tl IH generalizing f
   · simp
-    
   · simpa [IH]
-    
 #align list.map_with_index_eq_of_fn List.map_with_index_eq_of_fn
 
 end MapWithIndex
@@ -109,9 +99,7 @@ theorem foldr_with_index_aux_eq_foldr_with_index_aux_spec (f : ℕ → α → β
     foldrWithIndexAux f start b as = foldrWithIndexAuxSpec f start b as := by
   induction as generalizing start
   · rfl
-    
   · simp only [foldr_with_index_aux, foldr_with_index_aux_spec_cons, *]
-    
 #align
   list.foldr_with_index_aux_eq_foldr_with_index_aux_spec List.foldr_with_index_aux_eq_foldr_with_index_aux_spec
 
@@ -151,9 +139,7 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
     foldlWithIndexAux f start a bs = foldlWithIndexAuxSpec f start a bs := by
   induction bs generalizing start a
   · rfl
-    
   · simp [foldl_with_index_aux, foldl_with_index_aux_spec_cons, *]
-    
 #align
   list.foldl_with_index_aux_eq_foldl_with_index_aux_spec List.foldl_with_index_aux_eq_foldl_with_index_aux_spec
 
@@ -203,9 +189,7 @@ theorem mmap_with_index_aux_eq_mmap_with_index_aux_spec {α β} (f : ℕ → α 
     (as : List α) : mmapWithIndexAux f start as = mmapWithIndexAuxSpec f start as := by
   induction as generalizing start
   · rfl
-    
   · simp [mmap_with_index_aux, mmap_with_index_aux_spec_cons, *]
-    
 #align
   list.mmap_with_index_aux_eq_mmap_with_index_aux_spec List.mmap_with_index_aux_eq_mmap_with_index_aux_spec
 

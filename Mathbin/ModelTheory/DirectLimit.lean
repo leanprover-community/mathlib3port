@@ -64,10 +64,9 @@ theorem coe_nat_le_rec (m n : ℕ) (h : m ≤ n) :
   ext x
   induction' k with k ih
   · rw [nat_le_rec, Nat.le_rec_on_self, embedding.refl_apply, Nat.le_rec_on_self]
-    
-  · rw [Nat.le_rec_on_succ le_self_add, nat_le_rec, Nat.le_rec_on_succ le_self_add, ← nat_le_rec,
+  ·
+    rw [Nat.le_rec_on_succ le_self_add, nat_le_rec, Nat.le_rec_on_succ le_self_add, ← nat_le_rec,
       embedding.comp_apply, ih]
-    
 #align
   first_order.language.directed_system.coe_nat_le_rec FirstOrder.Language.DirectedSystem.coe_nat_le_rec
 
@@ -111,12 +110,16 @@ variable (G)
 namespace DirectLimit
 
 /-- The directed limit glues together the structures along the embeddings. -/
-def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] : Setoid (Σi, G i) where
+def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] :
+    Setoid
+      (Σi,
+        G
+          i) where 
   R := fun ⟨i, x⟩ ⟨j, y⟩ => ∃ (k : ι)(ik : i ≤ k)(jk : j ≤ k), f i k ik x = f j k jk y
   iseqv :=
     ⟨fun ⟨i, x⟩ => ⟨i, refl i, refl i, rfl⟩, fun ⟨i, x⟩ ⟨j, y⟩ ⟨k, ik, jk, h⟩ =>
       ⟨k, jk, ik, h.symm⟩, fun ⟨i, x⟩ ⟨j, y⟩ ⟨k, z⟩ ⟨ij, hiij, hjij, hij⟩ ⟨jk, hjjk, hkjk, hjk⟩ =>
-      by
+      by 
       obtain ⟨ijk, hijijk, hjkijk⟩ := directed_of (· ≤ ·) ij jk
       refine' ⟨ijk, le_trans hiij hijijk, le_trans hkjk hjkijk, _⟩
       rw [← DirectedSystem.map_map, hij, DirectedSystem.map_map]
@@ -127,7 +130,10 @@ def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] :
 /-- The structure on the `Σ`-type which becomes the structure on the direct limit after quotienting.
  -/
 noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] :
-    L.StructureCat (Σi, G i) where
+    L.StructureCat
+      (Σi,
+        G
+          i) where 
   funMap n F x :=
     ⟨_,
       funMap F
@@ -192,7 +198,7 @@ variable [Nonempty ι]
 theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy : x ≈ y) :
     ∃ (i : ι)(hx : i ∈ upperBounds (range (Sigma.fst ∘ x)))(hy :
       i ∈ upperBounds (range (Sigma.fst ∘ y))), unify f x i hx = unify f y i hy :=
-  by
+  by 
   obtain ⟨i, hi⟩ := Fintype.bdd_above_range (Sum.elim (fun a => (x a).1) fun a => (y a).1)
   rw [sum.elim_range, upper_bounds_union] at hi
   simp_rw [← Function.comp_apply Sigma.fst _] at hi
@@ -216,15 +222,18 @@ theorem rel_map_equiv_unify {n : ℕ} (R : L.Relations n) (x : Fin n → Σi, G 
 
 /-- The direct limit `setoid` respects the structure `sigma_structure`, so quotienting by it
   gives rise to a valid structure. -/
-noncomputable instance prestructure : L.Prestructure (DirectLimit.setoid G f) where
+noncomputable instance prestructure :
+    L.Prestructure
+      (DirectLimit.setoid G
+        f) where 
   toStructure := sigmaStructure G f
-  fun_equiv n F x y xy := by
+  fun_equiv n F x y xy := by 
     obtain ⟨i, hx, hy, h⟩ := exists_unify_eq G f xy
     refine'
       Setoid.trans (fun_map_equiv_unify G f F x i hx)
         (Setoid.trans _ (Setoid.symm (fun_map_equiv_unify G f F y i hy)))
     rw [h]
-  rel_equiv n R x y xy := by
+  rel_equiv n R x y xy := by 
     obtain ⟨i, hx, hy, h⟩ := exists_unify_eq G f xy
     refine'
       trans (rel_map_equiv_unify G f R x i hx) (trans _ (symm (rel_map_equiv_unify G f R y i hy)))
@@ -265,18 +274,18 @@ theorem exists_quotient_mk_sigma_mk_eq {α : Type _} [Fintype α] (x : α → Di
   ext a
   rw [Quotient.eq_mk_iff_out, Function.comp_apply, unify, equiv_iff G f _]
   · simp only [DirectedSystem.map_self]
-    
   · rfl
-    
 #align
   first_order.language.direct_limit.exists_quotient_mk_sigma_mk_eq FirstOrder.Language.DirectLimit.exists_quotient_mk_sigma_mk_eq
 
 variable (L ι)
 
 /-- The canonical map from a component to the direct limit. -/
-def of (i : ι) : G i ↪[L] DirectLimit G f where
+def of (i : ι) :
+    G i ↪[L] DirectLimit G
+        f where 
   toFun := Quotient.mk'' ∘ Sigma.mk i
-  inj' x y h := by
+  inj' x y h := by 
     simp only [Quotient.eq] at h
     obtain ⟨j, h1, h2, h3⟩ := h
     exact (f i j h1).Injective h3
@@ -320,7 +329,9 @@ variable (L ι G f)
 /-- The universal property of the direct limit: maps from the components to another module
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit. -/
-def lift : DirectLimit G f ↪[L] P where
+def lift :
+    DirectLimit G f ↪[L]
+      P where 
   toFun :=
     Quotient.lift (fun x : Σi, G i => (g x.1) x.2) fun x y xy => by
       simp only
@@ -333,11 +344,11 @@ def lift : DirectLimit G f ↪[L] P where
     rw [← Hg x.out.1 i hx, ← Hg y.out.1 i hy] at xy
     rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.eq, equiv_iff G f hx hy]
     exact (g i).Injective xy
-  map_fun' n F x := by
+  map_fun' n F x := by 
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
     rw [fun_map_quotient_mk_sigma_mk, ← Function.comp.assoc, Quotient.lift_comp_mk]
     simp only [Quotient.lift_mk, embedding.map_fun]
-  map_rel' n R x := by
+  map_rel' n R x := by 
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
     rw [rel_map_quotient_mk_sigma_mk G f, ← (g i).map_rel R y, ← Function.comp.assoc,
       Quotient.lift_comp_mk]
@@ -371,7 +382,6 @@ theorem cg {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)
     StructureCat.Cg L (DirectLimit G f) := by
   refine' ⟨⟨⋃ i, direct_limit.of L ι G f i '' Classical.choose (h i).out, _, _⟩⟩
   · exact Set.countable_Union fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
-    
   · rw [eq_top_iff, substructure.closure_Union]
     simp_rw [← embedding.coe_to_hom, substructure.closure_image]
     rw [le_supr_iff]
@@ -380,10 +390,7 @@ theorem cg {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)
     refine' hS (out x).1 ⟨(out x).2, _, _⟩
     · rw [(Classical.choose_spec (h (out x).1).out).2]
       simp only [substructure.coe_top]
-      
     · simp only [embedding.coe_to_hom, direct_limit.of_apply, Sigma.eta, Quotient.out_eq]
-      
-    
 #align first_order.language.direct_limit.cg FirstOrder.Language.DirectLimit.cg
 
 instance cg' {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]

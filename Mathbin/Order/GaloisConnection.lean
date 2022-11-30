@@ -193,10 +193,8 @@ theorem u_eq {z : α} {y : β} : u y = z ↔ ∀ x, x ≤ z ↔ l x ≤ y := by
   constructor
   · rintro rfl x
     exact (gc x y).symm
-    
   · intro H
     exact ((H <| u y).mpr (gc.l_u_le y)).antisymm ((gc _ _).mp <| (H z).mp le_rfl)
-    
 #align galois_connection.u_eq GaloisConnection.u_eq
 
 end PartialOrder
@@ -229,10 +227,8 @@ theorem l_eq {x : α} {z : β} : l x = z ↔ ∀ y, z ≤ y ↔ x ≤ u y := by
   constructor
   · rintro rfl y
     exact gc x y
-    
   · intro H
     exact ((gc _ _).mpr <| (H z).mp le_rfl).antisymm ((H <| l x).mpr (gc.le_u_l x))
-    
 #align galois_connection.l_eq GaloisConnection.l_eq
 
 end PartialOrder
@@ -486,7 +482,7 @@ structure GaloisInsertion {α β : Type _} [Preorder α] [Preorder β] (l : α �
 /-- A constructor for a Galois insertion with the trivial `choice` function. -/
 def GaloisInsertion.monotoneIntro {α β : Type _} [Preorder α] [Preorder β] {l : α → β} {u : β → α}
     (hu : Monotone u) (hl : Monotone l) (hul : ∀ a, a ≤ u (l a)) (hlu : ∀ b, l (u b) = b) :
-    GaloisInsertion l u where
+    GaloisInsertion l u where 
   choice x _ := l x
   gc := GaloisConnection.monotone_intro hu hl hul fun b => le_of_eq (hlu b)
   le_l_u b := le_of_eq <| (hlu b).symm
@@ -495,7 +491,7 @@ def GaloisInsertion.monotoneIntro {α β : Type _} [Preorder α] [Preorder β] {
 
 /-- Makes a Galois insertion from an order-preserving bijection. -/
 protected def OrderIso.toGaloisInsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
-    GaloisInsertion oi oi.symm where
+    GaloisInsertion oi oi.symm where 
   choice b h := oi b
   gc := oi.to_galois_connection
   le_l_u g := le_of_eq (oi.right_inv g).symm
@@ -510,7 +506,8 @@ def GaloisConnection.toGaloisInsertion {α β : Type _} [Preorder α] [Preorder 
 
 /-- Lift the bottom along a Galois connection -/
 def GaloisConnection.liftOrderBot {α β : Type _} [Preorder α] [OrderBot α] [PartialOrder β]
-    {l : α → β} {u : β → α} (gc : GaloisConnection l u) : OrderBot β where
+    {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
+    OrderBot β where 
   bot := l ⊥
   bot_le b := gc.l_le <| bot_le
 #align galois_connection.lift_order_bot GaloisConnection.liftOrderBot
@@ -670,7 +667,8 @@ def liftLattice [Lattice α] (gi : GaloisInsertion l u) : Lattice β :=
 -- See note [reducible non instances]
 /-- Lift the top along a Galois insertion -/
 @[reducible]
-def liftOrderTop [Preorder α] [OrderTop α] (gi : GaloisInsertion l u) : OrderTop β where
+def liftOrderTop [Preorder α] [OrderTop α] (gi : GaloisInsertion l u) :
+    OrderTop β where 
   top := gi.choice ⊤ <| le_top
   le_top := by
     simp only [gi.choice_eq] <;> exact fun b => (gi.le_l_u b).trans (gi.gc.monotone_l le_top)
@@ -694,10 +692,10 @@ def liftCompleteLattice [CompleteLattice α] (gi : GaloisInsertion l u) : Comple
       gi.choice (inf (u '' s)) <|
         (is_glb_Inf _).2 <|
           gi.gc.monotone_u.mem_lower_bounds_image (gi.is_glb_of_u_image <| is_glb_Inf _).1,
-    Inf_le := fun s => by
+    Inf_le := fun s => by 
       rw [gi.choice_eq]
       exact (gi.is_glb_of_u_image (is_glb_Inf _)).1,
-    le_Inf := fun s => by
+    le_Inf := fun s => by 
       rw [gi.choice_eq]
       exact (gi.is_glb_of_u_image (is_glb_Inf _)).2 }
 #align galois_insertion.lift_complete_lattice GaloisInsertion.liftCompleteLattice
@@ -747,7 +745,7 @@ def GaloisInsertion.ofDual [Preorder α] [Preorder β] {l : αᵒᵈ → βᵒ�
 
 /-- Makes a Galois coinsertion from an order-preserving bijection. -/
 protected def OrderIso.toGaloisCoinsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
-    GaloisCoinsertion oi oi.symm where
+    GaloisCoinsertion oi oi.symm where 
   choice b h := oi.symm b
   gc := oi.to_galois_connection
   u_l_le g := le_of_eq (oi.left_inv g)
@@ -769,7 +767,8 @@ def GaloisConnection.toGaloisCoinsertion {α β : Type _} [Preorder α] [Preorde
 
 /-- Lift the top along a Galois connection -/
 def GaloisConnection.liftOrderTop {α β : Type _} [PartialOrder α] [Preorder β] [OrderTop β]
-    {l : α → β} {u : β → α} (gc : GaloisConnection l u) : OrderTop α where
+    {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
+    OrderTop α where 
   top := u ⊤
   le_top b := gc.le_u <| le_top
 #align galois_connection.lift_order_top GaloisConnection.liftOrderTop
@@ -923,7 +922,8 @@ end GaloisCoinsertion
 /-- If `α` is a partial order with bottom element (e.g., `ℕ`, `ℝ≥0`), then `with_bot.unbot' ⊥` and
 coercion form a Galois insertion. -/
 def WithBot.giUnbot'Bot [Preorder α] [OrderBot α] :
-    GaloisInsertion (WithBot.unbot' ⊥) (coe : α → WithBot α) where
+    GaloisInsertion (WithBot.unbot' ⊥)
+      (coe : α → WithBot α) where 
   gc a b := WithBot.unbot'_bot_le_iff
   le_l_u a := le_rfl
   choice o ho := o.unbot' ⊥

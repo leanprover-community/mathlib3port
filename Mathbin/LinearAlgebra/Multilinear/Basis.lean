@@ -35,7 +35,6 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
   induction' n with m hm
   · ext x
     convert h finZeroElim
-    
   · apply Function.LeftInverse.injective uncurry_curry_left
     refine' Basis.ext (e 0) _
     intro i
@@ -43,12 +42,11 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
     intro j
     convert h (Fin.cons i j)
     iterate 2 
-    rw [curry_left_apply]
-    congr 1 with x
-    refine' Fin.cases rfl (fun x => _) x
-    dsimp [Fin.tail]
-    rw [Fin.cons_succ, Fin.cons_succ]
-    
+      rw [curry_left_apply]
+      congr 1 with x
+      refine' Fin.cases rfl (fun x => _) x
+      dsimp [Fin.tail]
+      rw [Fin.cons_succ, Fin.cons_succ]
 #align basis.ext_multilinear_fin Basis.ext_multilinear_fin
 
 /-- Two multilinear maps indexed by a `fintype` are equal if they are equal when all arguments

@@ -31,7 +31,9 @@ variable {J : Type w} [SmallCategory J] [FinCategory J]
 
 /-- The limit cone over any functor from a finite diagram into a `semilattice_inf` with `order_top`.
 -/
-def finiteLimitCone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : LimitCone F where
+def finiteLimitCone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) :
+    LimitCone
+      F where 
   Cone :=
     { x := Finset.univ.inf F.obj,
       π := { app := fun j => homOfLe (Finset.inf_le (Fintype.complete _)) } }
@@ -42,7 +44,9 @@ def finiteLimitCone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : LimitCone
 /--
 The colimit cocone over any functor from a finite diagram into a `semilattice_sup` with `order_bot`.
 -/
-def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : ColimitCocone F where
+def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) :
+    ColimitCocone
+      F where 
   Cocone :=
     { x := Finset.univ.sup F.obj,
       ι := { app := fun i => homOfLe (Finset.le_sup (Fintype.complete _)) } }
@@ -200,7 +204,9 @@ variable {J : Type u} [SmallCategory J]
 
 /-- The limit cone over any functor into a complete lattice.
 -/
-def limitCone (F : J ⥤ α) : LimitCone F where
+def limitCone (F : J ⥤ α) :
+    LimitCone
+      F where 
   Cone :=
     { x := infi F.obj,
       π := { app := fun j => homOfLe (CompleteLattice.Inf_le _ _ (Set.mem_range_self _)) } }
@@ -212,7 +218,9 @@ def limitCone (F : J ⥤ α) : LimitCone F where
 
 /-- The colimit cocone over any functor into a complete lattice.
 -/
-def colimitCocone (F : J ⥤ α) : ColimitCocone F where
+def colimitCocone (F : J ⥤ α) :
+    ColimitCocone
+      F where 
   Cocone :=
     { x := supr F.obj,
       ι := { app := fun j => homOfLe (CompleteLattice.le_Sup _ _ (Set.mem_range_self _)) } }

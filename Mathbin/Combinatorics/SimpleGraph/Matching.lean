@@ -68,7 +68,7 @@ theorem IsMatching.to_edge_eq_of_adj {M : Subgraph G} (h : M.IsMatching) {v w : 
   simple_graph.subgraph.is_matching.to_edge_eq_of_adj SimpleGraph.Subgraph.IsMatching.to_edge_eq_of_adj
 
 theorem IsMatching.toEdge.surjective {M : Subgraph G} (h : M.IsMatching) :
-    Function.Surjective h.toEdge := by
+    Function.Surjective h.toEdge := by 
   rintro ⟨e, he⟩
   refine' Sym2.ind (fun x y he => _) e he
   exact ⟨⟨x, M.edge_vert he⟩, h.to_edge_eq_of_adj _ he⟩
@@ -102,21 +102,20 @@ theorem is_matching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintype (M.ne
   simple_graph.subgraph.is_matching_iff_forall_degree SimpleGraph.Subgraph.is_matching_iff_forall_degree
 
 theorem IsMatching.even_card {M : Subgraph G} [Fintype M.verts] (h : M.IsMatching) :
-    Even M.verts.toFinset.card := by classical
-  rw [is_matching_iff_forall_degree] at h
-  use M.coe.edge_finset.card
-  rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
-  simp [h, Finset.card_univ]
+    Even M.verts.toFinset.card := by
+  classical 
+    rw [is_matching_iff_forall_degree] at h
+    use M.coe.edge_finset.card
+    rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
+    simp [h, Finset.card_univ]
 #align simple_graph.subgraph.is_matching.even_card SimpleGraph.Subgraph.IsMatching.even_card
 
 theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v w := by
   refine' ⟨_, fun hm => ⟨fun v hv => hm v, fun v => _⟩⟩
   · rintro ⟨hm, hs⟩ v
     exact hm (hs v)
-    
   · obtain ⟨w, hw, -⟩ := hm v
     exact M.edge_vert hw
-    
 #align simple_graph.subgraph.is_perfect_matching_iff SimpleGraph.Subgraph.is_perfect_matching_iff
 
 theorem is_perfect_matching_iff_forall_degree {M : Subgraph G} [∀ v, Fintype (M.neighborSet v)] :

@@ -559,7 +559,8 @@ nat.one_pos
 ```
 -/
 @[hole_command]
-unsafe def library_search_hole_cmd : hole_command where
+unsafe def library_search_hole_cmd :
+    hole_command where 
   Name := "library_search"
   descr := "Use `library_search` to complete the goal."
   action _ := do

@@ -52,9 +52,7 @@ theorem derived_series_succ (n : ℕ) :
 theorem derived_series_normal (n : ℕ) : (derivedSeries G n).Normal := by
   induction' n with n ih
   · exact (⊤ : Subgroup G).normal_of_characteristic
-    
   · exact Subgroup.commutator_normal (derivedSeries G n) (derivedSeries G n)
-    
 #align derived_series_normal derived_series_normal
 
 @[simp]
@@ -74,9 +72,7 @@ theorem map_derived_series_le_derived_series (n : ℕ) :
     (derivedSeries G n).map f ≤ derivedSeries G' n := by
   induction' n with n ih
   · exact le_top
-    
   · simp only [derived_series_succ, map_commutator, commutator_mono, ih]
-    
 #align map_derived_series_le_derived_series map_derived_series_le_derived_series
 
 variable {f}
@@ -85,9 +81,7 @@ theorem derived_series_le_map_derived_series (hf : Function.Surjective f) (n : �
     derivedSeries G' n ≤ (derivedSeries G n).map f := by
   induction' n with n ih
   · exact (map_top_of_surjective f hf).ge
-    
   · exact commutator_le_map_commutator ih ih
-    
 #align derived_series_le_map_derived_series derived_series_le_map_derived_series
 
 theorem map_derived_series_eq (hf : Function.Surjective f) (n : ℕ) :
@@ -118,7 +112,7 @@ instance (priority := 100) CommGroup.is_solvable {G : Type _} [CommGroup G] : Is
 #align comm_group.is_solvable CommGroup.is_solvable
 
 theorem is_solvable_of_comm {G : Type _} [hG : Group G] (h : ∀ a b : G, a * b = b * a) :
-    IsSolvable G := by
+    IsSolvable G := by 
   letI hG' : CommGroup G := { hG with mul_comm := h }
   cases hG
   exact CommGroup.is_solvable
@@ -136,20 +130,19 @@ variable {G}
 
 theorem solvable_of_ker_le_range {G' G'' : Type _} [Group G'] [Group G''] (f : G' →* G)
     (g : G →* G'') (hfg : g.ker ≤ f.range) [hG' : IsSolvable G'] [hG'' : IsSolvable G''] :
-    IsSolvable G := by
+    IsSolvable G := by 
   obtain ⟨n, hn⟩ := id hG''
   obtain ⟨m, hm⟩ := id hG'
   refine' ⟨⟨n + m, le_bot_iff.mp (map_bot f ▸ hm ▸ _)⟩⟩
   clear hm
   induction' m with m hm
-  · exact
+  ·
+    exact
       f.range_eq_map ▸
         ((derivedSeries G n).map_eq_bot_iff.mp
               (le_bot_iff.mp ((map_derived_series_le_derived_series g n).trans hn.le))).trans
           hfg
-    
   · exact commutator_le_map_commutator hm hm
-    
 #align solvable_of_ker_le_range solvable_of_ker_le_range
 
 theorem solvable_of_solvable_injective (hf : Function.Injective f) [h : IsSolvable G'] :
@@ -185,29 +178,23 @@ variable [IsSimpleGroup G]
 theorem IsSimpleGroup.derived_series_succ {n : ℕ} : derivedSeries G n.succ = commutator G := by
   induction' n with n ih
   · exact derived_series_one G
-    
   rw [derived_series_succ, ih]
   cases' (commutator.normal G).eq_bot_or_eq_top with h h
   · rw [h, commutator_bot_left]
-    
   · rwa [h]
-    
 #align is_simple_group.derived_series_succ IsSimpleGroup.derived_series_succ
 
 theorem IsSimpleGroup.comm_iff_is_solvable : (∀ a b : G, a * b = b * a) ↔ IsSolvable G :=
-  ⟨is_solvable_of_comm, fun ⟨⟨n, hn⟩⟩ => by
+  ⟨is_solvable_of_comm, fun ⟨⟨n, hn⟩⟩ => by 
     cases n
     · intro a b
       refine' (mem_bot.1 _).trans (mem_bot.1 _).symm <;>
         · rw [← hn]
           exact mem_top _
-          
-      
     · rw [IsSimpleGroup.derived_series_succ] at hn
       intro a b
       rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn, commutator_eq_closure]
-      exact subset_closure ⟨a, b, rfl⟩
-      ⟩
+      exact subset_closure ⟨a, b, rfl⟩⟩
 #align is_simple_group.comm_iff_is_solvable IsSimpleGroup.comm_iff_is_solvable
 
 end IsSimpleGroup
@@ -229,14 +216,12 @@ theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) := by
   refine' not_solvable_of_mem_derived_series (show x ≠ 1 by decide) fun n => _
   induction' n with n ih
   · exact mem_top x
-    
   · rw [key, (derived_series_normal _ _).mem_comm_iff, inv_mul_cancel_left]
     exact commutator_mem_commutator ih ((derived_series_normal _ _).conj_mem _ ih _)
-    
 #align equiv.perm.fin_5_not_solvable Equiv.Perm.fin_5_not_solvable
 
 theorem Equiv.Perm.not_solvable (X : Type _) (hX : 5 ≤ Cardinal.mk X) :
-    ¬IsSolvable (Equiv.Perm X) := by
+    ¬IsSolvable (Equiv.Perm X) := by 
   intro h
   have key : Nonempty (Fin 5 ↪ X) := by
     rwa [← Cardinal.lift_mk_le, Cardinal.mk_fin, Cardinal.lift_nat_cast, Nat.cast_bit1,

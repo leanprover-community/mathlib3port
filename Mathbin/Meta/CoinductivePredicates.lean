@@ -10,7 +10,7 @@ section
 universe u
 
 @[user_attribute]
-unsafe def monotonicity : user_attribute where
+unsafe def monotonicity : user_attribute where 
   Name := `monotonicity
   descr := "Monotonicity rules for predicates"
 #align monotonicity monotonicity

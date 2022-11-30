@@ -79,32 +79,30 @@ variable {Q}
 Note that $v ⌋ x$ is spelt `contract_left (Q.associated v) x`.
 
 This includes [grinberg_clifford_2016][] Theorem 10.75 -/
-def contractLeft : Module.Dual R M →ₗ[R] CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q where
+def contractLeft :
+    Module.Dual R M →ₗ[R]
+      CliffordAlgebra Q →ₗ[R]
+        CliffordAlgebra
+          Q where 
   toFun d := foldr' Q (contractLeftAux Q d) (contract_left_aux_contract_left_aux Q d) 0
   map_add' d₁ d₂ :=
-    LinearMap.ext fun x => by
+    LinearMap.ext fun x => by 
       rw [LinearMap.add_apply]
       induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
       · simp_rw [foldr'_algebra_map, smul_zero, zero_add]
-        
       · rw [map_add, map_add, map_add, add_add_add_comm, hx, hy]
-        
       · rw [foldr'_ι_mul, foldr'_ι_mul, foldr'_ι_mul, hx]
         dsimp only [contract_left_aux_apply_apply]
         rw [sub_add_sub_comm, mul_add, LinearMap.add_apply, add_smul]
-        
   map_smul' c d :=
-    LinearMap.ext fun x => by
+    LinearMap.ext fun x => by 
       rw [LinearMap.smul_apply, RingHom.id_apply]
       induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
       · simp_rw [foldr'_algebra_map, smul_zero]
-        
       · rw [map_add, map_add, smul_add, hx, hy]
-        
       · rw [foldr'_ι_mul, foldr'_ι_mul, hx]
         dsimp only [contract_left_aux_apply_apply]
         rw [LinearMap.smul_apply, smul_assoc, mul_smul_comm, smul_sub]
-        
 #align clifford_algebra.contract_left CliffordAlgebra.contractLeft
 
 /-- Contract an element of the clifford algebra with an element `d : module.dual R M` from the
@@ -202,12 +200,10 @@ variable {Q}
 theorem contract_left_contract_left (x : CliffordAlgebra Q) : d⌋(d⌋x) = 0 := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [contract_left_algebra_map, map_zero]
-    
   · rw [map_add, map_add, hx, hy, add_zero]
-    
-  · rw [contract_left_ι_mul, map_sub, contract_left_ι_mul, hx, LinearMap.map_smul, mul_zero,
+  ·
+    rw [contract_left_ι_mul, map_sub, contract_left_ι_mul, hx, LinearMap.map_smul, mul_zero,
       sub_zero, sub_self]
-    
 #align clifford_algebra.contract_left_contract_left CliffordAlgebra.contract_left_contract_left
 
 /-- This is [grinberg_clifford_2016][] Theorem 13 -/
@@ -219,12 +215,9 @@ theorem contract_right_contract_right (x : CliffordAlgebra Q) : x⌊d⌊d = 0 :=
 theorem contract_left_comm (x : CliffordAlgebra Q) : d⌋(d'⌋x) = -(d'⌋(d⌋x)) := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [contract_left_algebra_map, map_zero, neg_zero]
-    
   · rw [map_add, map_add, map_add, map_add, hx, hy, neg_add]
-    
   · simp only [contract_left_ι_mul, map_sub, LinearMap.map_smul]
     rw [neg_sub, sub_sub_eq_add_sub, hx, mul_neg, ← sub_eq_add_neg]
-    
 #align clifford_algebra.contract_left_comm CliffordAlgebra.contract_left_comm
 
 /-- This is [grinberg_clifford_2016][] Theorem 14 -/
@@ -330,24 +323,19 @@ theorem change_form_contract_left (d : Module.Dual R M) (x : CliffordAlgebra Q) 
     changeForm h (d⌋x) = d⌋changeForm h x := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp only [contract_left_algebra_map, change_form_algebra_map, map_zero]
-    
   · rw [map_add, map_add, map_add, map_add, hx, hy]
-    
   · simp only [contract_left_ι_mul, change_form_ι_mul, map_sub, LinearMap.map_smul]
     rw [← hx, contract_left_comm, ← sub_add, sub_neg_eq_add, ← hx]
-    
 #align clifford_algebra.change_form_contract_left CliffordAlgebra.change_form_contract_left
 
 theorem change_form_self_apply (x : CliffordAlgebra Q) : changeForm changeForm.zero_proof x = x :=
-  by
+  by 
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [change_form_algebra_map]
-    
   · rw [map_add, hx, hy]
-    
-  · rw [change_form_ι_mul, hx, map_zero, LinearMap.zero_apply, map_zero, LinearMap.zero_apply,
+  ·
+    rw [change_form_ι_mul, hx, map_zero, LinearMap.zero_apply, map_zero, LinearMap.zero_apply,
       sub_zero]
-    
 #align clifford_algebra.change_form_self_apply CliffordAlgebra.change_form_self_apply
 
 @[simp]
@@ -361,13 +349,11 @@ theorem change_form_change_form (x : CliffordAlgebra Q) :
     changeForm h' (changeForm h x) = changeForm (changeForm.add_proof h h') x := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [change_form_algebra_map]
-    
   · rw [map_add, map_add, map_add, hx, hy]
-    
-  · rw [change_form_ι_mul, map_sub, change_form_ι_mul, change_form_ι_mul, hx, sub_sub, map_add,
+  ·
+    rw [change_form_ι_mul, map_sub, change_form_ι_mul, change_form_ι_mul, hx, sub_sub, map_add,
       LinearMap.add_apply, map_add, LinearMap.add_apply, change_form_contract_left, hx,
       add_comm (_ : CliffordAlgebra Q'')]
-    
 #align clifford_algebra.change_form_change_form CliffordAlgebra.change_form_change_form
 
 theorem change_form_comp_change_form :

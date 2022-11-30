@@ -21,18 +21,22 @@ open Filter
 variable {α β ι : Type _} {π : ι → Type _} [Fintype ι] [Bornology α] [Bornology β]
   [∀ i, Bornology (π i)]
 
-instance : Bornology (α × β) where
+instance : Bornology
+      (α × β) where 
   cobounded := (cobounded α).coprod (cobounded β)
   le_cofinite :=
     @coprod_cofinite α β ▸ coprod_mono ‹Bornology α›.le_cofinite ‹Bornology β›.le_cofinite
 
-instance : Bornology (∀ i, π i) where
+instance :
+    Bornology (∀ i,
+        π i) where 
   cobounded := Filter.coprod fun i => cobounded (π i)
   le_cofinite := @Coprod_cofinite ι π _ ▸ Filter.Coprod_mono fun i => Bornology.le_cofinite _
 
 /-- Inverse image of a bornology. -/
 @[reducible]
-def Bornology.induced {α β : Type _} [Bornology β] (f : α → β) : Bornology α where
+def Bornology.induced {α β : Type _} [Bornology β] (f : α → β) :
+    Bornology α where 
   cobounded := comap f (cobounded β)
   le_cofinite := (comap_mono (Bornology.le_cofinite β)).trans (comap_cofinite_le _)
 #align bornology.induced Bornology.induced
@@ -83,20 +87,14 @@ theorem is_bounded_prod_of_nonempty (hne : Set.Nonempty (s ×ˢ t)) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_bounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBounded s ∧ IsBounded t := by
-  rcases s.eq_empty_or_nonempty with (rfl | hs);
-  · simp
-    
-  rcases t.eq_empty_or_nonempty with (rfl | ht);
-  · simp
-    
+  rcases s.eq_empty_or_nonempty with (rfl | hs); · simp
+  rcases t.eq_empty_or_nonempty with (rfl | ht); · simp
   simp only [hs.ne_empty, ht.ne_empty, is_bounded_prod_of_nonempty (hs.prod ht), false_or_iff]
 #align bornology.is_bounded_prod Bornology.is_bounded_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_bounded_prod_self : IsBounded (s ×ˢ s) ↔ IsBounded s := by
-  rcases s.eq_empty_or_nonempty with (rfl | hs);
-  · simp
-    
+  rcases s.eq_empty_or_nonempty with (rfl | hs); · simp
   exact (is_bounded_prod_of_nonempty (hs.prod hs)).trans (and_self_iff _)
 #align bornology.is_bounded_prod_self Bornology.is_bounded_prod_self
 
@@ -127,11 +125,9 @@ theorem is_bounded_pi_of_nonempty (hne : (pi univ S).Nonempty) :
 theorem is_bounded_pi : IsBounded (pi univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, IsBounded (S i) := by
   by_cases hne : ∃ i, S i = ∅
   · simp [hne, univ_pi_eq_empty_iff.2 hne]
-    
   · simp only [hne, false_or_iff]
     simp only [not_exists, ← Ne.def, ne_empty_iff_nonempty, ← univ_pi_nonempty_iff] at hne
     exact is_bounded_pi_of_nonempty hne
-    
 #align bornology.is_bounded_pi Bornology.is_bounded_pi
 
 /-!

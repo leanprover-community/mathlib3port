@@ -73,37 +73,40 @@ def hallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
 theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
     (h : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (ι' : Finset ι) :
-    Nonempty (hallMatchingsOn t ι') := by classical
-  refine' ⟨Classical.indefiniteDescription _ _⟩
-  apply (all_card_le_bUnion_card_iff_exists_injective' fun i : ι' => t i).mp
-  intro s'
-  convert h (s'.image coe) using 1
-  simp only [card_image_of_injective s' Subtype.coe_injective]
-  rw [image_bUnion]
+    Nonempty (hallMatchingsOn t ι') := by
+  classical 
+    refine' ⟨Classical.indefiniteDescription _ _⟩
+    apply (all_card_le_bUnion_card_iff_exists_injective' fun i : ι' => t i).mp
+    intro s'
+    convert h (s'.image coe) using 1
+    simp only [card_image_of_injective s' Subtype.coe_injective]
+    rw [image_bUnion]
 #align hall_matchings_on.nonempty hallMatchingsOn.nonempty
 
 -- TODO: This takes a long time to elaborate for an unknown reason.
 /-- This is the `hall_matchings_on` sets assembled into a directed system.
 -/
 def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) :
-    (Finset ι)ᵒᵖ ⥤ Type max u v where
+    (Finset ι)ᵒᵖ ⥤ Type
+        max u v where 
   obj ι' := hallMatchingsOn t ι'.unop
   map ι' ι'' g f := hallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
 #align hall_matchings_functor hallMatchingsFunctor
 
 noncomputable instance hallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α)
-    (ι' : Finset ι) : Fintype (hallMatchingsOn t ι') := by classical
-  rw [hallMatchingsOn]
-  let g : hallMatchingsOn t ι' → ι' → ι'.bUnion t := by
-    rintro f i
-    refine' ⟨f.val i, _⟩
-    rw [mem_bUnion]
-    exact ⟨i, i.property, f.property.2 i⟩
-  apply Fintype.ofInjective g
-  intro f f' h
-  simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h
-  ext a
-  exact h a
+    (ι' : Finset ι) : Fintype (hallMatchingsOn t ι') := by
+  classical 
+    rw [hallMatchingsOn]
+    let g : hallMatchingsOn t ι' → ι' → ι'.bUnion t := by
+      rintro f i
+      refine' ⟨f.val i, _⟩
+      rw [mem_bUnion]
+      exact ⟨i, i.property, f.property.2 i⟩
+    apply Fintype.ofInjective g
+    intro f f' h
+    simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h
+    ext a
+    exact h a
 #align hall_matchings_on.fintype hallMatchingsOn.fintype
 
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
@@ -120,39 +123,36 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
     [DecidableEq α] (t : ι → Finset α) :
     (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔
       ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
-  by
+  by 
   constructor
   · intro h
     -- Set up the functor
     haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
       hallMatchingsOn.nonempty t h ι'.unop
-    classical
-    haveI : ∀ ι' : (Finset ι)ᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') := by
-      intro ι'
-      rw [hallMatchingsFunctor]
-      infer_instance
-    -- Apply the compactness argument
-    obtain ⟨u, hu⟩ := nonempty_sections_of_fintype_inverse_system (hallMatchingsFunctor t)
-    -- Interpret the resulting section of the inverse limit
-    refine' ⟨_, _, _⟩
-    · -- Build the matching function from the section
-      exact fun i =>
-        (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
-      
-    · -- Show that it is injective
-      intro i i'
-      have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
-      have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
-      have le : ∀ {s t : Finset ι}, s ⊆ t → s ≤ t := fun _ _ h => h
-      rw [← hu (CategoryTheory.homOfLe (le subi)).op, ← hu (CategoryTheory.homOfLe (le subi')).op]
-      let uii' := u (Opposite.op ({i, i'} : Finset ι))
-      exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
-      
-    · -- Show that it maps each index to the corresponding finite set
-      intro i
-      apply (u (Opposite.op ({i} : Finset ι))).property.2
-      
-    
+    classical 
+      haveI : ∀ ι' : (Finset ι)ᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') := by
+        intro ι'
+        rw [hallMatchingsFunctor]
+        infer_instance
+      -- Apply the compactness argument
+      obtain ⟨u, hu⟩ := nonempty_sections_of_fintype_inverse_system (hallMatchingsFunctor t)
+      -- Interpret the resulting section of the inverse limit
+      refine' ⟨_, _, _⟩
+      ·
+        -- Build the matching function from the section
+        exact fun i =>
+          (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
+      · -- Show that it is injective
+        intro i i'
+        have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
+        have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
+        have le : ∀ {s t : Finset ι}, s ⊆ t → s ≤ t := fun _ _ h => h
+        rw [← hu (CategoryTheory.homOfLe (le subi)).op, ← hu (CategoryTheory.homOfLe (le subi')).op]
+        let uii' := u (Opposite.op ({i, i'} : Finset ι))
+        exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
+      · -- Show that it maps each index to the corresponding finite set
+        intro i
+        apply (u (Opposite.op ({i} : Finset ι))).property.2
   · -- The reverse direction is a straightforward cardinality argument
     rintro ⟨f, hf₁, hf₂⟩ s
     rw [← Finset.card_image_of_injective s hf₁]
@@ -161,7 +161,6 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
     rw [Finset.mem_image, Finset.mem_bUnion]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
-    
 #align
   finset.all_card_le_bUnion_card_iff_exists_injective Finset.all_card_le_bUnion_card_iff_exists_injective
 
@@ -189,7 +188,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
     [DecidableEq β] (r : α → β → Prop) [∀ a : α, Fintype (Rel.image r {a})] :
     (∀ A : Finset α, A.card ≤ Fintype.card (Rel.image r A)) ↔
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
-  by
+  by 
   let r' a := (Rel.image r {a}).toFinset
   have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.bUnion r').card := by
     intro A
@@ -215,7 +214,7 @@ theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : 
     (r : α → β → Prop) [∀ a, DecidablePred (r a)] :
     (∀ A : Finset α, A.card ≤ (univ.filter fun b : β => ∃ a ∈ A, r a b).card) ↔
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
-  by
+  by 
   haveI := Classical.decEq β
   let r' a := univ.filter fun b => r a b
   have h : ∀ A : Finset α, (univ.filter fun b : β => ∃ a ∈ A, r a b) = A.bUnion r' := by

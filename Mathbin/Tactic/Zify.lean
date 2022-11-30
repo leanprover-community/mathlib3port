@@ -42,7 +42,8 @@ between `nat` and `int`.
 For example, `int.coe_nat_le_coe_nat_iff : ∀ (m n : ℕ), ↑m ≤ ↑n ↔ m ≤ n` is a `zify` lemma.
 -/
 @[user_attribute]
-unsafe def zify_attr : user_attribute simp_lemmas Unit where
+unsafe def zify_attr :
+    user_attribute simp_lemmas Unit where 
   Name := `zify
   descr := "Used to tag lemmas for use in the `zify` tactic"
   cache_cfg :=

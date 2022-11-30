@@ -57,14 +57,14 @@ variable {ι 𝕜 F : Type _} [Finite ι] [Semiring 𝕜] [TopologicalSpace 𝕜
 theorem LinearMap.continuous_on_pi (f : (ι → 𝕜) →ₗ[𝕜] F) : Continuous f := by
   cases nonempty_fintype ι
   classical
-  -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
-  -- function.
-  have : (f : (ι → 𝕜) → F) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
-    ext x
-    exact f.pi_apply_eq_sum_univ x
-  rw [this]
-  refine' continuous_finset_sum _ fun i hi => _
-  exact (continuous_apply i).smul continuous_const
+    -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
+    -- function.
+    have : (f : (ι → 𝕜) → F) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
+      ext x
+      exact f.pi_apply_eq_sum_univ x
+    rw [this]
+    refine' continuous_finset_sum _ fun i hi => _
+    exact (continuous_apply i).smul continuous_const
 #align linear_map.continuous_on_pi LinearMap.continuous_on_pi
 
 end Semiring
@@ -96,7 +96,8 @@ include hnorm
 vector space over itself (with the norm topology) is *equal* to the norm topology. -/
 theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAddGroup 𝕜 t _)
     (h₂ : @HasContinuousSmul 𝕜 𝕜 _ hnorm.toUniformSpace.toTopologicalSpace t) (h₃ : @T2Space 𝕜 t) :
-    t = hnorm.toUniformSpace.toTopologicalSpace := by
+    t = hnorm.toUniformSpace.toTopologicalSpace :=
+  by
   -- Let `𝓣₀` denote the topology on `𝕜` induced by the norm, and `𝓣` be any T2 vector
   -- topology on `𝕜`. To show that `𝓣₀ = 𝓣`, it suffices to show that they have the same
   -- neighborhoods of 0.
@@ -117,7 +118,6 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
     by_cases hξ0 : ξ = 0
     · rw [hξ0]
       exact Metric.mem_closed_ball_self hε.le
-      
     · rw [mem_closed_ball_zero_iff]
       -- Now suppose `ξ ≠ 0`. By contradiction, let's assume `ε < ‖ξ‖`, and show that
       -- `ξ₀ ∈ 𝓑 ⊆ {ξ₀}ᶜ`, which is a contradiction.
@@ -130,37 +130,36 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
       refine' (balancedCoreBalanced _).smul_mem _ hξ
       rw [norm_mul, norm_inv, mul_inv_le_iff (norm_pos_iff.mpr hξ0), mul_one]
       exact (hξ₀ε.trans h).le
-      
-    
-  · -- Finally, to show `𝓣₀ ≤ 𝓣`, we simply argue that `id = (λ x, x • 1)` is continuous from
+  ·
+    -- Finally, to show `𝓣₀ ≤ 𝓣`, we simply argue that `id = (λ x, x • 1)` is continuous from
     -- `(𝕜, 𝓣₀)` to `(𝕜, 𝓣)` because `(•) : (𝕜, 𝓣₀) × (𝕜, 𝓣) → (𝕜, 𝓣)` is continuous.
     calc
       @nhds 𝕜 hnorm.to_uniform_space.to_topological_space 0 =
           map id (@nhds 𝕜 hnorm.to_uniform_space.to_topological_space 0) :=
         map_id.symm
       _ = map (fun x => id x • 1) (@nhds 𝕜 hnorm.to_uniform_space.to_topological_space 0) := by
-        conv_rhs =>
-          congr
-          ext
-          rw [smul_eq_mul, mul_one] <;> rfl
+        conv_rhs => 
+            congr
+            ext
+            rw [smul_eq_mul, mul_one] <;>
+          rfl
       _ ≤ @nhds 𝕜 t ((0 : 𝕜) • 1) :=
         @tendsto.smul_const _ _ _ hnorm.to_uniform_space.to_topological_space t _ _ _ _ _ tendsto_id
           (1 : 𝕜)
       _ = @nhds 𝕜 t 0 := by rw [zero_smul]
       
-    
 #align unique_topology_of_t2 unique_topology_of_t2
 
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
     its kernel is closed. -/
 theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsClosed (l.ker : Set E)) :
-    Continuous l := by
+    Continuous l :=
+  by
   -- `l` is either constant or surjective. If it is constant, the result is trivial.
   by_cases H : finrank 𝕜 l.range = 0
   · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
     rw [H]
     exact continuous_zero
-    
   · -- In the case where `l` is surjective, we factor it as `φ : (E ⧸ l.ker) ≃ₗ[𝕜] 𝕜`. Note that
     -- `E ⧸ l.ker` is T2 since `l.ker` is closed.
     have : finrank 𝕜 l.range = 1 :=
@@ -175,7 +174,7 @@ theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : Is
     have hlφ : (l : E → 𝕜) = φ ∘ l.ker.mkq := by ext <;> rfl
     -- Since the quotient map `E →ₗ[𝕜] (E ⧸ l.ker)` is continuous, the continuity of `l` will follow
     -- form the continuity of `φ`.
-    suffices Continuous φ.to_equiv by
+    suffices Continuous φ.to_equiv by 
       rw [hlφ]
       exact this.comp continuous_quot_mk
     -- The pullback by `φ.symm` of the quotient topology is a T2 topology on `𝕜`, because `φ.symm`
@@ -194,7 +193,6 @@ theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : Is
     -- topology, which is trivial by definition of the pushforward.
     rw [this.symm, Equiv.induced_symm]
     exact continuous_coinduced_rng
-    
 #align linear_map.continuous_of_is_closed_ker LinearMap.continuous_of_is_closed_ker
 
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
@@ -228,7 +226,6 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
   induction' hn : Fintype.card ι with n IH generalizing ι E
   · rw [Fintype.card_eq_zero_iff] at hn
     exact continuous_of_const fun x y => funext hn.elim
-    
   · haveI : FiniteDimensional 𝕜 E := of_fintype_basis ξ
     -- first step: thanks to the induction hypothesis, any n-dimensional subspace is equivalent
     -- to a standard space of dimension n, hence it is complete and therefore closed.
@@ -247,13 +244,12 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
         complete_space_coe_iff_is_complete.1 ((complete_space_congr U).1 (by infer_instance))
       exact this.is_closed
     -- second step: any linear form is continuous, as its kernel is closed by the first step
-    have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f := by
+    have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f := by 
       intro f
       by_cases H : finrank 𝕜 f.range = 0
       · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
         rw [H]
         exact continuous_zero
-        
       · have : finrank 𝕜 f.ker = n := by
           have Z := f.finrank_range_add_finrank_ker
           rw [finrank_eq_card_basis ξ, hn] at Z
@@ -263,17 +259,16 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
           exact Nat.succ.inj Z
         have : IsClosed (f.ker : Set E) := H₁ _ this
         exact LinearMap.continuous_of_is_closed_ker f this
-        
     rw [continuous_pi_iff]
     intro i
     change Continuous (ξ.coord i)
     exact H₂ (ξ.coord i)
-    
 #align continuous_equiv_fun_basis_aux continuous_equiv_fun_basis_aux
 
 /-- Any linear map on a finite dimensional space over a complete field is continuous. -/
 theorem LinearMap.continuous_of_finite_dimensional [T2Space E] [FiniteDimensional 𝕜 E]
-    (f : E →ₗ[𝕜] F') : Continuous f := by
+    (f : E →ₗ[𝕜] F') : Continuous f :=
+  by
   -- for the proof, go to a model vector space `b → 𝕜` thanks to `continuous_equiv_fun_basis`, and
   -- argue that all linear maps there are continuous.
   let b := Basis.ofVectorSpace 𝕜 E
@@ -313,7 +308,9 @@ namespace LinearMap
 variable [T2Space E] [FiniteDimensional 𝕜 E]
 
 /-- The continuous linear map induced by a linear map on a finite dimensional space -/
-def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' where
+def toContinuousLinearMap :
+    (E →ₗ[𝕜] F') ≃ₗ[𝕜]
+      E →L[𝕜] F' where 
   toFun f := ⟨f, f.continuous_of_finite_dimensional⟩
   invFun := coe
   map_add' f g := rfl
@@ -359,14 +356,12 @@ theorem is_open_map_of_finite_dimensional (f : F →ₗ[𝕜] E) (hf : Function.
     IsOpenMap f := by
   rcases f.exists_right_inverse_of_surjective (LinearMap.range_eq_top.2 hf) with ⟨g, hg⟩
   refine' IsOpenMap.of_sections fun x => ⟨fun y => g (y - f x) + x, _, _, fun y => _⟩
-  · exact
+  ·
+    exact
       ((g.continuous_of_finite_dimensional.comp <| continuous_id.sub continuous_const).add
           continuous_const).ContinuousAt
-    
   · rw [sub_self, map_zero, zero_add]
-    
   · simp only [map_sub, map_add, ← comp_apply f g, hg, id_apply, sub_add_cancel]
-    
 #align linear_map.is_open_map_of_finite_dimensional LinearMap.is_open_map_of_finite_dimensional
 
 end LinearMap

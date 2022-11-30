@@ -43,7 +43,9 @@ instance : Inhabited QuivCat :=
   ⟨QuivCat.of (Quiver.Empty PEmpty)⟩
 
 /-- Category structure on `Quiv` -/
-instance category : LargeCategory.{max v u} QuivCat.{v, u} where
+instance category :
+    LargeCategory.{max v u}
+      QuivCat.{v, u} where 
   Hom C D := Prefunctor C D
   id C := Prefunctor.id C
   comp C D E F G := Prefunctor.comp F G
@@ -54,7 +56,8 @@ instance category : LargeCategory.{max v u} QuivCat.{v, u} where
 
 /-- The forgetful functor from categories to quivers. -/
 @[simps]
-def forget : Cat.{v, u} ⥤ Quiv.{v, u} where
+def forget : Cat.{v, u} ⥤ Quiv.{v,
+        u} where 
   obj C := QuivCat.of C
   map C D F := F.toPrefunctor
 #align category_theory.Quiv.forget CategoryTheory.QuivCat.forget
@@ -65,17 +68,18 @@ namespace CatCat
 
 /-- The functor sending each quiver to its path category. -/
 @[simps]
-def free : Quiv.{v, u} ⥤ Cat.{max u v, u} where
+def free : Quiv.{v, u} ⥤
+      Cat.{max u v, u} where 
   obj V := CatCat.of (Paths V)
   map V W F :=
     { obj := fun X => F.obj X, map := fun X Y f => F.mapPath f,
       map_comp' := fun X Y Z f g => F.map_path_comp f g }
-  map_id' V := by
+  map_id' V := by 
     change (show paths V ⥤ _ from _) = _
     ext
     apply eq_conj_eq_to_hom
     rfl
-  map_comp' U V W F G := by
+  map_comp' U V W F G := by 
     change (show paths U ⥤ _ from _) = _
     ext
     apply eq_conj_eq_to_hom
@@ -89,7 +93,7 @@ namespace QuivCat
 /-- Any prefunctor into a category lifts to a functor from the path category. -/
 @[simps]
 def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunctor V C) :
-    Paths V ⥤ C where
+    Paths V ⥤ C where 
   obj X := F.obj X
   map X Y f := composePath (F.mapPath f)
 #align category_theory.Quiv.lift CategoryTheory.QuivCat.lift
@@ -104,13 +108,12 @@ def adj : Cat.free ⊣ Quiv.forget :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun V C =>
         { toFun := fun F => Paths.of.comp F.toPrefunctor, invFun := fun F => lift F,
-          left_inv := fun F => by
+          left_inv := fun F => by 
             ext
             · erw [(eq_conj_eq_to_hom _).symm]
               apply category.id_comp
-              
             rfl,
-          right_inv := by
+          right_inv := by 
             rintro ⟨obj, map⟩
             dsimp only [Prefunctor.comp]
             congr

@@ -24,7 +24,7 @@ instance : SuccOrder ℤ :=
 
 -- so that Lean reads `int.pred` through `pred_order.pred`
 @[reducible]
-instance : PredOrder ℤ where
+instance : PredOrder ℤ where 
   pred := pred
   pred_le a := (sub_one_lt_of_le le_rfl).le
   min_of_le_pred a ha := ((sub_one_lt_of_le le_rfl).not_le ha).elim
@@ -47,14 +47,14 @@ theorem pos_iff_one_le {a : ℤ} : 0 < a ↔ 1 ≤ a :=
 
 theorem succ_iterate (a : ℤ) : ∀ n, (succ^[n]) a = a + n
   | 0 => (add_zero a).symm
-  | n + 1 => by
+  | n + 1 => by 
     rw [Function.iterate_succ', Int.ofNat_succ, ← add_assoc]
     exact congr_arg _ (succ_iterate n)
 #align int.succ_iterate Int.succ_iterate
 
 theorem pred_iterate (a : ℤ) : ∀ n, (pred^[n]) a = a - n
   | 0 => (sub_zero a).symm
-  | n + 1 => by
+  | n + 1 => by 
     rw [Function.iterate_succ', Int.ofNat_succ, ← sub_sub]
     exact congr_arg _ (pred_iterate n)
 #align int.pred_iterate Int.pred_iterate

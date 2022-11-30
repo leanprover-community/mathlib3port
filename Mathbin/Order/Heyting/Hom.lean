@@ -222,7 +222,8 @@ namespace HeytingHom
 
 variable [HeytingAlgebra α] [HeytingAlgebra β] [HeytingAlgebra γ] [HeytingAlgebra δ]
 
-instance : HeytingHomClass (HeytingHom α β) α β where
+instance : HeytingHomClass (HeytingHom α β) α
+      β where 
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
   map_sup f := f.map_sup'
@@ -240,14 +241,15 @@ theorem to_fun_eq_coe {f : HeytingHom α β} : f.toFun = (f : α → β) :=
   rfl
 #align heyting_hom.to_fun_eq_coe HeytingHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : HeytingHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align heyting_hom.ext HeytingHom.ext
 
 /-- Copy of a `heyting_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : HeytingHom α β) (f' : α → β) (h : f' = f) : HeytingHom α β where
+protected def copy (f : HeytingHom α β) (f' : α → β) (h : f' = f) :
+    HeytingHom α β where 
   toFun := f'
   map_sup' := by simpa only [h] using map_sup f
   map_inf' := by simpa only [h] using map_inf f
@@ -337,7 +339,8 @@ namespace CoheytingHom
 
 variable [CoheytingAlgebra α] [CoheytingAlgebra β] [CoheytingAlgebra γ] [CoheytingAlgebra δ]
 
-instance : CoheytingHomClass (CoheytingHom α β) α β where
+instance : CoheytingHomClass (CoheytingHom α β) α
+      β where 
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
   map_sup f := f.map_sup'
@@ -355,14 +358,15 @@ theorem to_fun_eq_coe {f : CoheytingHom α β} : f.toFun = (f : α → β) :=
   rfl
 #align coheyting_hom.to_fun_eq_coe CoheytingHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : CoheytingHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align coheyting_hom.ext CoheytingHom.ext
 
 /-- Copy of a `coheyting_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : CoheytingHom α β) (f' : α → β) (h : f' = f) : CoheytingHom α β where
+protected def copy (f : CoheytingHom α β) (f' : α → β) (h : f' = f) :
+    CoheytingHom α β where 
   toFun := f'
   map_sup' := by simpa only [h] using map_sup f
   map_inf' := by simpa only [h] using map_inf f
@@ -452,7 +456,8 @@ namespace BiheytingHom
 
 variable [BiheytingAlgebra α] [BiheytingAlgebra β] [BiheytingAlgebra γ] [BiheytingAlgebra δ]
 
-instance : BiheytingHomClass (BiheytingHom α β) α β where
+instance : BiheytingHomClass (BiheytingHom α β) α
+      β where 
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
   map_sup f := f.map_sup'
@@ -470,14 +475,15 @@ theorem to_fun_eq_coe {f : BiheytingHom α β} : f.toFun = (f : α → β) :=
   rfl
 #align biheyting_hom.to_fun_eq_coe BiheytingHom.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {f g : BiheytingHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align biheyting_hom.ext BiheytingHom.ext
 
 /-- Copy of a `biheyting_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : BiheytingHom α β) (f' : α → β) (h : f' = f) : BiheytingHom α β where
+protected def copy (f : BiheytingHom α β) (f' : α → β) (h : f' = f) :
+    BiheytingHom α β where 
   toFun := f'
   map_sup' := by simpa only [h] using map_sup f
   map_inf' := by simpa only [h] using map_inf f

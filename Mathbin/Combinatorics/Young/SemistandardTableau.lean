@@ -57,9 +57,11 @@ structure Ssyt (μ : YoungDiagram) where
 
 namespace Ssyt
 
-instance funLike {μ : YoungDiagram} : FunLike (Ssyt μ) ℕ fun _ => ℕ → ℕ where
+instance funLike {μ : YoungDiagram} :
+    FunLike (Ssyt μ) ℕ fun _ => ℕ →
+        ℕ where 
   coe := Ssyt.entry
-  coe_injective' T T' h := by
+  coe_injective' T T' h := by 
     cases T
     cases T'
     congr
@@ -75,9 +77,9 @@ theorem to_fun_eq_coe {μ : YoungDiagram} {T : Ssyt μ} : T.entry = (T : ℕ →
   rfl
 #align ssyt.to_fun_eq_coe Ssyt.to_fun_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {μ : YoungDiagram} {T T' : Ssyt μ} (h : ∀ i j, T i j = T' i j) : T = T' :=
-  FunLike.ext T T' fun x => by
+  FunLike.ext T T' fun x => by 
     funext
     apply h
 #align ssyt.ext Ssyt.ext
@@ -85,7 +87,7 @@ theorem ext {μ : YoungDiagram} {T T' : Ssyt μ} (h : ∀ i j, T i j = T' i j) :
 /-- Copy of an `ssyt μ` with a new `entry` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) :
-    Ssyt μ where
+    Ssyt μ where 
   entry := entry'
   row_weak' _ _ _ := h.symm ▸ T.row_weak'
   col_strict' _ _ _ := h.symm ▸ T.col_strict'
@@ -125,14 +127,15 @@ theorem row_weak_of_le {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j
 #align ssyt.row_weak_of_le Ssyt.row_weak_of_le
 
 theorem col_weak {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 ≤ i2) (cell : (i2, j) ∈ μ) :
-    T i1 j ≤ T i2 j := by
+    T i1 j ≤ T i2 j := by 
   cases eq_or_lt_of_le hi
   subst h
   exact le_of_lt (T.col_strict h cell)
 #align ssyt.col_weak Ssyt.col_weak
 
 /-- The "highest weight" SSYT of a given shape is has all i's in row i, for each i. -/
-def highestWeight (μ : YoungDiagram) : Ssyt μ where
+def highestWeight (μ : YoungDiagram) :
+    Ssyt μ where 
   entry i j := if (i, j) ∈ μ then i else 0
   row_weak' i j1 j2 hj hcell := by
     rw [if_pos hcell, if_pos (μ.up_left_mem (by rfl) (le_of_lt hj) hcell)]

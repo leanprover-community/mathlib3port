@@ -71,10 +71,8 @@ theorem WithTop.coe_Inf' [HasInf α] {s : Set α} (hs : s.Nonempty) :
   change _ = ite _ _ _
   split_ifs
   · cases h (mem_image_of_mem _ hx)
-    
   · rw [preimage_image_eq]
     exact Option.some_injective _
-    
 #align with_top.coe_Inf' WithTop.coe_Inf'
 
 @[norm_cast]
@@ -88,9 +86,7 @@ theorem WithTop.coe_Sup' [Preorder α] [HasSup α] {s : Set α} (hs : BddAbove s
   change _ = ite _ _ _
   rw [if_neg, preimage_image_eq, if_pos hs]
   · exact Option.some_injective _
-    
   · rintro ⟨x, h, ⟨⟩⟩
-    
 #align with_top.coe_Sup' WithTop.coe_Sup'
 
 @[norm_cast]
@@ -175,7 +171,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α,
-  HasBot α where
+  Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   cSup_empty : Sup ∅ = ⊥
 #align conditionally_complete_linear_order_bot ConditionallyCompleteLinearOrderBot
@@ -216,10 +212,10 @@ open Classical
 noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) [i₁ : LinearOrder α]
     [i₂ : OrderBot α] [h : IsWellOrder α (· < ·)] : ConditionallyCompleteLinearOrderBot α :=
   { i₁, i₂, LinearOrder.toLattice with inf := fun s => if hs : s.Nonempty then h.wf.min s hs else ⊥,
-    cInf_le := fun s a hs has => by
+    cInf_le := fun s a hs has => by 
       have s_ne : s.nonempty := ⟨a, has⟩
       simpa [s_ne] using not_lt.1 (h.wf.not_lt_min s s_ne has),
-    le_cInf := fun s a hs has => by
+    le_cInf := fun s a hs has => by 
       simp only [hs, dif_pos]
       exact has (h.wf.min_mem s hs),
     sup := fun s => if hs : (upperBounds s).Nonempty then h.wf.min _ hs else ⊥,
@@ -432,7 +428,7 @@ theorem is_lub_csupr [Nonempty ι] {f : ι → α} (H : BddAbove (range f)) :
 #align is_lub_csupr is_lub_csupr
 
 theorem is_lub_csupr_set {f : β → α} {s : Set β} (H : BddAbove (f '' s)) (Hne : s.Nonempty) :
-    IsLub (f '' s) (⨆ i : s, f i) := by
+    IsLub (f '' s) (⨆ i : s, f i) := by 
   rw [← Sup_image']
   exact is_lub_cSup (Hne.image _) H
 #align is_lub_csupr_set is_lub_csupr_set
@@ -733,12 +729,10 @@ theorem le_csupr_of_le {f : ι → α} (H : BddAbove (range f)) (c : ι) (h : a 
 
 /-- The indexed supremum of two functions are comparable if the functions are pointwise comparable-/
 theorem csupr_mono {f g : ι → α} (B : BddAbove (range g)) (H : ∀ x, f x ≤ g x) : supr f ≤ supr g :=
-  by
+  by 
   cases isEmpty_or_nonempty ι
   · rw [supr_of_empty', supr_of_empty']
-    
   · exact csupr_le fun x => le_csupr_of_le B x (H x)
-    
 #align csupr_mono csupr_mono
 
 theorem le_csupr_set {f : β → α} {s : Set β} (H : BddAbove (f '' s)) {c : β} (hc : c ∈ s) :
@@ -968,9 +962,7 @@ theorem cInf_univ : inf (univ : Set α) = ⊥ :=
 theorem is_lub_cSup' {s : Set α} (hs : BddAbove s) : IsLub s (sup s) := by
   rcases eq_empty_or_nonempty s with (rfl | hne)
   · simp only [cSup_empty, is_lub_empty]
-    
   · exact is_lub_cSup hne hs
-    
 #align is_lub_cSup' is_lub_cSup'
 
 theorem cSup_le_iff' {s : Set α} (hs : BddAbove s) {a : α} : sup s ≤ a ↔ ∀ x ∈ s, x ≤ a :=
@@ -1045,56 +1037,38 @@ variable [ConditionallyCompleteLinearOrderBot α]
 /-- The Sup of a non-empty set is its least upper bound for a conditionally
 complete lattice with a top. -/
 theorem is_lub_Sup' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (WithTop β)}
-    (hs : s.Nonempty) : IsLub s (sup s) := by
+    (hs : s.Nonempty) : IsLub s (sup s) := by 
   constructor
   · show ite _ _ _ ∈ _
     split_ifs
     · intro _ _
       exact le_top
-      
     · rintro (⟨⟩ | a) ha
       · contradiction
-        
       apply some_le_some.2
       exact le_cSup h_1 ha
-      
     · intro _ _
       exact le_top
-      
-    
   · show ite _ _ _ ∈ _
     split_ifs
     · rintro (⟨⟩ | a) ha
       · exact le_rfl
-        
       · exact False.elim (not_top_le_coe a (ha h))
-        
-      
     · rintro (⟨⟩ | b) hb
       · exact le_top
-        
       refine' some_le_some.2 (cSup_le _ _)
       · rcases hs with ⟨⟨⟩ | b, hb⟩
         · exact absurd hb h
-          
         · exact ⟨b, hb⟩
-          
-        
       · intro a ha
         exact some_le_some.1 (hb ha)
-        
-      
     · rintro (⟨⟩ | b) hb
       · exact le_rfl
-        
       · exfalso
         apply h_1
         use b
         intro a ha
         exact some_le_some.1 (hb ha)
-        
-      
-    
 #align with_top.is_lub_Sup' WithTop.is_lub_Sup'
 
 theorem is_lub_Sup (s : Set (WithTop α)) : IsLub s (sup s) := by
@@ -1103,32 +1077,26 @@ theorem is_lub_Sup (s : Set (WithTop α)) : IsLub s (sup s) := by
     show IsLub ∅ (ite _ _ _)
     split_ifs
     · cases h
-      
     · rw [preimage_empty, cSup_empty]
       exact is_lub_empty
-      
     · exfalso
       apply h_1
       use ⊥
       rintro a ⟨⟩
-      
-    
   exact is_lub_Sup' hs
 #align with_top.is_lub_Sup WithTop.is_lub_Sup
 
 /-- The Inf of a bounded-below set is its greatest lower bound for a conditionally
 complete lattice with a top. -/
 theorem is_glb_Inf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (WithTop β)}
-    (hs : BddBelow s) : IsGlb s (inf s) := by
+    (hs : BddBelow s) : IsGlb s (inf s) := by 
   constructor
   · show ite _ _ _ ∈ _
     split_ifs
     · intro a ha
       exact top_le_iff.2 (Set.mem_singleton_iff.1 (h ha))
-      
     · rintro (⟨⟩ | a) ha
       · exact le_top
-        
       refine' some_le_some.2 (cInf_le _ ha)
       rcases hs with ⟨⟨⟩ | b, hb⟩
       · exfalso
@@ -1136,51 +1104,38 @@ theorem is_glb_Inf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (Wi
         intro c hc
         rw [mem_singleton_iff, ← top_le_iff]
         exact hb hc
-        
       use b
       intro c hc
       exact some_le_some.1 (hb hc)
-      
-    
   · show ite _ _ _ ∈ _
     split_ifs
     · intro _ _
       exact le_top
-      
     · rintro (⟨⟩ | a) ha
       · exfalso
         apply h
         intro b hb
         exact Set.mem_singleton_iff.2 (top_le_iff.1 (ha hb))
-        
       · refine' some_le_some.2 (le_cInf _ _)
-        · classical
-          contrapose! h
-          rintro (⟨⟩ | a) ha
-          · exact mem_singleton ⊤
-            
-          · exact (h ⟨a, ha⟩).elim
-            
-          
+        ·
+          classical 
+            contrapose! h
+            rintro (⟨⟩ | a) ha
+            · exact mem_singleton ⊤
+            · exact (h ⟨a, ha⟩).elim
         · intro b hb
           rw [← some_le_some]
           exact ha hb
-          
-        
-      
-    
 #align with_top.is_glb_Inf' WithTop.is_glb_Inf'
 
 theorem is_glb_Inf (s : Set (WithTop α)) : IsGlb s (inf s) := by
   by_cases hs : BddBelow s
   · exact is_glb_Inf' hs
-    
   · exfalso
     apply hs
     use ⊥
     intro _ _
     exact bot_le
-    
 #align with_top.is_glb_Inf WithTop.is_glb_Inf
 
 noncomputable instance : CompleteLinearOrder (WithTop α) :=
@@ -1438,44 +1393,35 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
     [ConditionallyCompleteLattice α] : CompleteLattice (WithTop (WithBot α)) :=
   { WithTop.hasInf, WithTop.hasSup, WithTop.boundedOrder, WithTop.lattice with
     le_Sup := fun S a haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS,
-    Sup_le := fun S a ha => by
+    Sup_le := fun S a ha => by 
       cases' S.eq_empty_or_nonempty with h
       · show ite _ _ _ ≤ a
         split_ifs
         · rw [h] at h_1
           cases h_1
-          
         · convert bot_le
           convert WithBot.cSup_empty
           rw [h]
           rfl
-          
         · exfalso
           apply h_2
           use ⊥
           rw [h]
           rintro b ⟨⟩
-          
-        
-      · refine' (WithTop.is_lub_Sup' h).2 ha
-        ,
+      · refine' (WithTop.is_lub_Sup' h).2 ha,
     Inf_le := fun S a haS =>
-      show ite _ _ _ ≤ a by
+      show ite _ _ _ ≤ a by 
         split_ifs
         · cases' a with a
           exact le_rfl
           cases h haS <;> tauto
-          
         · cases a
           · exact le_top
-            
           · apply WithTop.some_le_some.2
             refine' cInf_le _ haS
             use ⊥
             intro b hb
-            exact bot_le
-            
-          ,
+            exact bot_le,
     le_Inf := fun S a haS => (WithTop.is_glb_Inf' ⟨a, haS⟩).2 haS }
 #align with_top.with_bot.complete_lattice WithTop.WithBot.completeLattice
 
@@ -1490,10 +1436,8 @@ theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyComple
   refine' ⟨fun hf r => _, fun hf a ha => _⟩
   · rcases hf r (WithTop.coe_lt_top r) with ⟨i, hi⟩
     exact ⟨f i, ⟨i, rfl⟩, with_top.coe_lt_coe.mp hi⟩
-    
   · rcases hf (a.untop ha.ne) with ⟨-, ⟨i, rfl⟩, hi⟩
     exact ⟨i, by simpa only [WithTop.coe_untop _ ha.ne] using with_top.coe_lt_coe.mpr hi⟩
-    
 #align with_top.supr_coe_eq_top WithTop.supr_coe_eq_top
 
 theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]

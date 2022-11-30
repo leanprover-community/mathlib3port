@@ -78,7 +78,9 @@ open Tactic
 /-- When `C` has pullbacks, a morphism `f : X ⟶ Y` induces a functor `over Y ⥤ over X`,
 by pulling back a morphism along `f`. -/
 @[simps]
-def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
+def pullback {X Y : C} (f : X ⟶ Y) :
+    Over Y ⥤ Over
+        X where 
   obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ X)
   map g h k :=
     Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition]))
@@ -91,16 +93,16 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
     { homEquiv := fun g h =>
         { toFun := fun X =>
             Over.homMk (pullback.lift X.left g.Hom (Over.w X)) (pullback.lift_snd _ _ _),
-          invFun := fun Y => by
+          invFun := fun Y => by 
             refine' over.hom_mk _ _
             refine' Y.left ≫ pullback.fst
             dsimp
             rw [← over.w Y, category.assoc, pullback.condition, category.assoc]; rfl,
-          left_inv := fun X => by
+          left_inv := fun X => by 
             ext
             dsimp
             simp,
-          right_inv := fun Y => by
+          right_inv := fun Y => by 
             ext; dsimp
             simp only [pullback.lift_fst]
             dsimp
@@ -166,7 +168,9 @@ variable [HasPushouts C]
 /-- When `C` has pushouts, a morphism `f : X ⟶ Y` induces a functor `under X ⥤ under Y`,
 by pushing a morphism forward along `f`. -/
 @[simps]
-def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y where
+def pushout {X Y : C} (f : X ⟶ Y) :
+    Under X ⥤ Under
+        Y where 
   obj g := Under.mk (pushout.inr : Y ⟶ pushout g.Hom f)
   map g h k :=
     Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition]))

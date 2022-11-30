@@ -37,7 +37,7 @@ universe u v
 instance : Nontrivial ℕ :=
   ⟨⟨0, 1, Nat.zero_ne_one⟩⟩
 
-instance : CommSemiring ℕ where
+instance : CommSemiring ℕ where 
   add := Nat.add
   add_assoc := Nat.add_assoc
   zero := Nat.zero
@@ -202,7 +202,6 @@ theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) := by
   · rw [not_le] at h1
     have h2 := le_of_lt h1
     rw [max_eq_left h2, max_eq_left (succ_le_succ h2)]
-    
 #align nat.max_succ_succ Nat.max_succ_succ
 
 theorem not_succ_lt_self {n : ℕ} : ¬succ n < n :=
@@ -248,9 +247,7 @@ theorem succ_lt_succ_iff {m n : ℕ} : succ m < succ n ↔ m < n :=
 
 theorem div_le_iff_le_mul_add_pred {m n k : ℕ} (n0 : 0 < n) : m / n ≤ k ↔ m ≤ n * k + (n - 1) := by
   rw [← lt_succ_iff, div_lt_iff_lt_mul n0, succ_mul, mul_comm]
-  cases n;
-  · cases n0
-    
+  cases n; · cases n0
   exact lt_succ_iff
 #align nat.div_le_iff_le_mul_add_pred Nat.div_le_iff_le_mul_add_pred
 
@@ -417,9 +414,10 @@ theorem le_rec_on_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) :
 #align nat.le_rec_on_self Nat.le_rec_on_self
 
 theorem le_rec_on_succ {C : ℕ → Sort u} {n m} (h1 : n ≤ m) {h2 : n ≤ m + 1} {next} (x : C n) :
-    (leRecOn h2 (@next) x : C (m + 1)) = next (leRecOn h1 (@next) x : C m) := by conv =>
-  lhs
-  rw [le_rec_on, Or.by_cases, dif_pos h1]
+    (leRecOn h2 (@next) x : C (m + 1)) = next (leRecOn h1 (@next) x : C m) := by
+  conv => 
+    lhs
+    rw [le_rec_on, Or.by_cases, dif_pos h1]
 #align nat.le_rec_on_succ Nat.le_rec_on_succ
 
 theorem le_rec_on_succ' {C : ℕ → Sort u} {n} {h : n ≤ n + 1} {next} (x : C n) :
@@ -428,9 +426,7 @@ theorem le_rec_on_succ' {C : ℕ → Sort u} {n} {h : n ≤ n + 1} {next} (x : C
 
 theorem le_rec_on_trans {C : ℕ → Sort u} {n m k} (hnm : n ≤ m) (hmk : m ≤ k) {next} (x : C n) :
     (leRecOn (le_trans hnm hmk) (@next) x : C k) = leRecOn hmk (@next) (leRecOn hnm (@next) x) := by
-  induction' hmk with k hmk ih;
-  · rw [le_rec_on_self]
-    
+  induction' hmk with k hmk ih; · rw [le_rec_on_self]
   rw [le_rec_on_succ (le_trans hnm hmk), ih, le_rec_on_succ]
 #align nat.le_rec_on_trans Nat.le_rec_on_trans
 
@@ -446,7 +442,6 @@ theorem le_rec_on_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : �
   induction' hnm with m hnm ih;
   · intro x y H
     rwa [le_rec_on_self, le_rec_on_self] at H
-    
   intro x y H; rw [le_rec_on_succ hnm, le_rec_on_succ hnm] at H; exact ih (Hnext _ H)
 #align nat.le_rec_on_injective Nat.le_rec_on_injective
 
@@ -456,7 +451,6 @@ theorem le_rec_on_surjective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : 
   · intro x
     use x
     rw [le_rec_on_self]
-    
   intro x; rcases Hnext _ x with ⟨w, rfl⟩; rcases ih w with ⟨x, rfl⟩; use x; rw [le_rec_on_succ]
 #align nat.le_rec_on_surjective Nat.le_rec_on_surjective
 
@@ -518,7 +512,7 @@ theorem decreasing_induction_trans {P : ℕ → Sort _} (h : ∀ n, P (n + 1) �
     (mn : m ≤ n) (nk : n ≤ k) (hP : P k) :
     (decreasingInduction h (le_trans mn nk) hP : P m) =
       decreasingInduction h mn (decreasingInduction h nk hP) :=
-  by
+  by 
   induction' nk with k nk ih
   rw [decreasing_induction_self]
   rw [decreasing_induction_succ h (le_trans mn nk), ih, decreasing_induction_succ]
@@ -530,59 +524,6 @@ theorem decreasing_induction_succ_left {P : ℕ → Sort _} (h : ∀ n, P (n + 1
   rw [Subsingleton.elim mn (le_trans (le_succ m) smn), decreasing_induction_trans,
     decreasing_induction_succ']
 #align nat.decreasing_induction_succ_left Nat.decreasing_induction_succ_left
-
-/-- Recursion principle on even and odd numbers: if we have `P 0`, and for all `i : ℕ` we can
-extend from `P i` to both `P (2 * i)` and `P (2 * i + 1)`, then we have `P n` for all `n : ℕ`.
-This is nothing more than a wrapper around `nat.binary_rec`, to avoid having to switch to
-dealing with `bit0` and `bit1`. -/
-@[elab_as_elim]
-def evenOddRec {P : ℕ → Sort _} (h0 : P 0) (h_even : ∀ (n) (ih : P n), P (2 * n))
-    (h_odd : ∀ (n) (ih : P n), P (2 * n + 1)) (n : ℕ) : P n := by
-  refine' @binary_rec P h0 (fun b i hi => _) n
-  cases b
-  · simpa [bit, bit0_val i] using h_even i hi
-    
-  · simpa [bit, bit1_val i] using h_odd i hi
-    
-#align nat.even_odd_rec Nat.evenOddRec
-
-@[simp]
-theorem even_odd_rec_zero (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
-    (h_odd : ∀ i, P i → P (2 * i + 1)) : @evenOddRec _ h0 h_even h_odd 0 = h0 :=
-  binary_rec_zero _ _
-#align nat.even_odd_rec_zero Nat.even_odd_rec_zero
-
-@[simp]
-theorem even_odd_rec_even (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
-    (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
-    @evenOddRec _ h0 h_even h_odd (2 * n) = h_even n (evenOddRec h0 h_even h_odd n) := by
-  convert binary_rec_eq _ ff n
-  · exact (bit0_eq_two_mul _).symm
-    
-  · exact (bit0_eq_two_mul _).symm
-    
-  · apply heq_of_cast_eq
-    rfl
-    
-  · exact H
-    
-#align nat.even_odd_rec_even Nat.even_odd_rec_even
-
-@[simp]
-theorem even_odd_rec_odd (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
-    (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
-    @evenOddRec _ h0 h_even h_odd (2 * n + 1) = h_odd n (evenOddRec h0 h_even h_odd n) := by
-  convert binary_rec_eq _ tt n
-  · exact (bit0_eq_two_mul _).symm
-    
-  · exact (bit0_eq_two_mul _).symm
-    
-  · apply heq_of_cast_eq
-    rfl
-    
-  · exact H
-    
-#align nat.even_odd_rec_odd Nat.even_odd_rec_odd
 
 /-- Given `P : ℕ → ℕ → Sort*`, if for all `a b : ℕ` we can extend `P` from the rectangle
 strictly below `(a,b)` to `P a b`, then we have `P n m` for all `n m : ℕ`.
@@ -622,20 +563,17 @@ def leRecOn' {C : ℕ → Sort _} {n : ℕ} :
 Also works for functions to `Sort*`. Weakens the assumptions of `decreasing_induction`. -/
 @[elab_as_elim]
 def decreasingInduction' {P : ℕ → Sort _} {m n : ℕ} (h : ∀ k < n, m ≤ k → P (k + 1) → P k)
-    (mn : m ≤ n) (hP : P n) : P m := by
+    (mn : m ≤ n) (hP : P n) : P m :=
+  by
   -- induction mn using nat.le_rec_on' generalizing h hP -- this doesn't work unfortunately
     refine' le_rec_on' mn _ _ h hP <;>
     clear h hP mn n
   · intro n mn ih h hP
     apply ih
     · exact fun k hk => h k hk.step
-      
     · exact h n (lt_succ_self n) mn hP
-      
-    
   · intro h hP
     exact hP
-    
 #align nat.decreasing_induction' Nat.decreasingInduction'
 
 /-! ### `div` -/
@@ -790,9 +728,9 @@ protected theorem mul_dvd_mul_iff_right {a b c : ℕ} (hc : 0 < c) : a * c ∣ b
 
 @[simp]
 theorem mod_mod_of_dvd (n : Nat) {m k : Nat} (h : m ∣ k) : n % k % m = n % m := by
-  conv =>
-  rhs
-  rw [← mod_add_div n k]
+  conv => 
+    rhs
+    rw [← mod_add_div n k]
   rcases h with ⟨t, rfl⟩; rw [mul_assoc, add_mul_mod_self_left]
 #align nat.mod_mod_of_dvd Nat.mod_mod_of_dvd
 
@@ -869,9 +807,7 @@ theorem mul_div_le (m n : ℕ) : n * (m / n) ≤ m := by
   cases' Nat.eq_zero_or_pos n with n0 h
   · rw [n0, zero_mul]
     exact m.zero_le
-    
   · rw [mul_comm, ← Nat.le_div_iff_mul_le' h]
-    
 #align nat.mul_div_le Nat.mul_div_le
 -/
 
@@ -902,10 +838,8 @@ theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.find h = m ↔ p m ∧ ∀ n < 
   constructor
   · rintro rfl
     exact ⟨Nat.find_spec h, fun _ => Nat.find_min h⟩
-    
   · rintro ⟨hm, hlt⟩
     exact le_antisymm (Nat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| Nat.find_spec h)
-    
 #align nat.find_eq_iff Nat.find_eq_iff
 
 @[simp]
@@ -1112,21 +1046,18 @@ instance decidableBallLt (n : Nat) (P : ∀ k < n, Prop) :
     ∀ [H : ∀ n h, Decidable (P n h)], Decidable (∀ n h, P n h) := by
   induction' n with n IH <;> intro <;> skip
   · exact is_true fun n => by decide
-    
   cases' IH fun k h => P k (lt_succ_of_lt h) with h
   · refine' is_false (mt _ h)
     intro hn k h
     apply hn
-    
   by_cases p : P n (lt_succ_self n)
-  · exact
+  ·
+    exact
       is_true fun k h' =>
         (le_of_lt_succ h').lt_or_eq_dec.elim (h _) fun e =>
           match k, e, h' with
           | _, rfl, h => p
-    
   · exact is_false (mt (fun hn => hn _ _) p)
-    
 #align nat.decidable_ball_lt Nat.decidableBallLt
 
 instance decidableForallFin {n : ℕ} (P : Fin n → Prop) [H : DecidablePred P] :

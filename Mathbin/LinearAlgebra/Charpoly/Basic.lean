@@ -94,7 +94,7 @@ theorem pow_eq_aeval_mod_charpoly (k : ℕ) : f ^ k = aeval f (X ^ k %ₘ f.char
 variable {f}
 
 theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R f).coeff 0 ≠ 0 :=
-  by
+  by 
   intro h
   obtain ⟨P, hP⟩ := X_dvd_iff.2 h
   have hdegP : P.degree < (minpoly R f).degree := by

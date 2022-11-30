@@ -38,19 +38,22 @@ attribute [local instance] subtype_val_mono
 /-- The category of `mono_over α`, for `α : Type u`, is equivalent to the partial order `set α`.
 -/
 @[simps]
-noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ Set α where
+noncomputable def Types.monoOverEquivalenceSet (α : Type u) :
+    MonoOver α ≌
+      Set
+        α where 
   Functor :=
     { obj := fun f => Set.range f.1.Hom,
       map := fun f g t =>
         homOfLe
-          (by
+          (by 
             rintro a ⟨x, rfl⟩
             exact ⟨t.1 x, congr_fun t.w x⟩) }
   inverse :=
     { obj := fun s => MonoOver.mk' (Subtype.val : s → α),
       map := fun s t b =>
         MonoOver.homMk (fun w => ⟨w.1, Set.mem_of_mem_of_subset w.2 b.le⟩)
-          (by
+          (by 
             ext
             simp) }
   unitIso :=

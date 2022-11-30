@@ -32,15 +32,16 @@ exchanging the horizontal and vertical directions.
 -/
 @[simps]
 def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') :
-    HomologicalComplex (HomologicalComplex V c') c where
+    HomologicalComplex (HomologicalComplex V c')
+      c where 
   x i :=
     { x := fun j => (C.x j).x i, d := fun j j' => (C.d j j').f i,
-      shape' := fun j j' w => by
+      shape' := fun j j' w => by 
         rw [C.shape j j' w]
         simp,
       d_comp_d' := fun j₁ j₂ j₃ _ _ => congr_hom (C.d_comp_d j₁ j₂ j₃) i }
   d i i' := { f := fun j => (C.x j).d i i', comm' := fun j j' h => ((C.d j j').comm i i').symm }
-  shape' i i' w := by
+  shape' i i' w := by 
     ext j
     exact (C.X j).shape i i' w
 #align homological_complex.flip_obj HomologicalComplex.flipObj
@@ -51,7 +52,8 @@ variable (V c c')
 @[simps]
 def flip :
     HomologicalComplex (HomologicalComplex V c) c' ⥤
-      HomologicalComplex (HomologicalComplex V c') c where
+      HomologicalComplex (HomologicalComplex V c')
+        c where 
   obj C := flipObj C
   map C D f :=
     { f := fun i =>
@@ -66,17 +68,17 @@ def flipEquivalenceUnitIso :
     (fun C =>
       { Hom :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
-            comm' := fun i j h => by
+            comm' := fun i j h => by 
               ext
               dsimp
               simp only [category.id_comp, category.comp_id] },
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
-            comm' := fun i j h => by
+            comm' := fun i j h => by 
               ext
               dsimp
               simp only [category.id_comp, category.comp_id] } })
-    fun X Y f => by
+    fun X Y f => by 
     ext
     dsimp
     simp only [category.id_comp, category.comp_id]
@@ -90,17 +92,17 @@ def flipEquivalenceCounitIso :
     (fun C =>
       { Hom :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
-            comm' := fun i j h => by
+            comm' := fun i j h => by 
               ext
               dsimp
               simp only [category.id_comp, category.comp_id] },
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
-            comm' := fun i j h => by
+            comm' := fun i j h => by 
               ext
               dsimp
               simp only [category.id_comp, category.comp_id] } })
-    fun X Y f => by
+    fun X Y f => by 
     ext
     dsimp
     simp only [category.id_comp, category.comp_id]
@@ -110,7 +112,8 @@ def flipEquivalenceCounitIso :
 @[simps]
 def flipEquivalence :
     HomologicalComplex (HomologicalComplex V c) c' ≌
-      HomologicalComplex (HomologicalComplex V c') c where
+      HomologicalComplex (HomologicalComplex V c')
+        c where 
   Functor := flip V c c'
   inverse := flip V c' c
   unitIso := flipEquivalenceUnitIso V c c'

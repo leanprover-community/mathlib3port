@@ -21,7 +21,8 @@ unsafe def loc.to_string : Loc → String
 #align loc.to_string loc.to_string
 
 /-- shift `pos` `n` columns to the left -/
-unsafe def pos.move_left (p : Pos) (n : ℕ) : Pos where
+unsafe def pos.move_left (p : Pos) (n : ℕ) :
+    Pos where 
   line := p.line
   column := p.column - n
 #align pos.move_left pos.move_left
@@ -61,7 +62,7 @@ unsafe def struct_inst : lean.parser pexpr :=
 unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
   let r ← e.get_structure_instance_info
   let fs ←
-    mzipWith
+    zipWithM
         (fun n v => do
           let v ← to_expr v >>= pp
           pure <| f! "{n } := {v}")
@@ -74,7 +75,13 @@ unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
 /-- Attribute containing a table that accumulates multiple `squeeze_simp` suggestions -/
 @[user_attribute]
 private unsafe def squeeze_loc_attr :
-    user_attribute Unit (Option (List (Pos × String × List simp_arg_type × String))) where
+    user_attribute Unit
+      (Option
+        (List
+          (Pos ×
+            String ×
+              List simp_arg_type ×
+                String))) where 
   Name := `_squeeze_loc
   parser := fail "this attribute should not be used"
   descr := "table to accumulate multiple `squeeze_simp` suggestions"

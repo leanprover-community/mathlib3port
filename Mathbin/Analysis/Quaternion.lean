@@ -71,13 +71,15 @@ theorem nnnorm_coe (a : ℝ) : ‖(a : ℍ)‖₊ = ‖a‖₊ :=
   Subtype.ext <| norm_coe a
 #align quaternion.nnnorm_coe Quaternion.nnnorm_coe
 
-noncomputable instance : NormedDivisionRing ℍ where
+noncomputable instance : NormedDivisionRing
+      ℍ where 
   dist_eq _ _ := rfl
   norm_mul' a b := by
     simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
     exact Real.sqrt_mul norm_sq_nonneg _
 
-noncomputable instance : NormedAlgebra ℝ ℍ where
+noncomputable instance :
+    NormedAlgebra ℝ ℍ where 
   norm_smul_le a x := (norm_smul a x).le
   toAlgebra := Quaternion.algebra
 
@@ -132,7 +134,7 @@ theorem coe_complex_coe (r : ℝ) : ((r : ℂ) : ℍ) = r :=
 #align quaternion.coe_complex_coe Quaternion.coe_complex_coe
 
 /-- Coercion `ℂ →ₐ[ℝ] ℍ` as an algebra homomorphism. -/
-def ofComplex : ℂ →ₐ[ℝ] ℍ where
+def ofComplex : ℂ →ₐ[ℝ] ℍ where 
   toFun := coe
   map_one' := rfl
   map_zero' := rfl

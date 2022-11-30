@@ -107,7 +107,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     ∀ᶠ x in 𝓝 x₀,
       ‖x - x₀‖⁻¹ * ‖((∫ a, F x a ∂μ) - ∫ a, F x₀ a ∂μ) - (∫ a, F' a ∂μ) (x - x₀)‖ =
         ‖∫ a, ‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀)) ∂μ‖ :=
-    by
+    by 
     apply mem_of_superset (ball_mem_nhds _ ε_pos)
     intro x x_in
     rw [Set.mem_set_of_eq, ← norm_smul_of_nonneg (nneg _), integral_smul, integral_sub,
@@ -120,7 +120,6 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
   · filter_upwards [h_ball] with _ x_in
     apply ae_strongly_measurable.const_smul
     exact ((hF_meas _ x_in).sub (hF_meas _ x₀_in)).sub (hF'_meas.apply_continuous_linear_map _)
-    
   · apply mem_of_superset h_ball
     intro x hx
     apply (h_diff.and h_lipsch).mono
@@ -141,12 +140,8 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     apply mul_le_mul_of_nonneg_left ((F' a).le_op_norm _) (nneg _)
     by_cases h : ‖x - x₀‖ = 0
     · simpa [h] using add_nonneg (b_nonneg a) (norm_nonneg (F' a))
-      
     · field_simp [h]
-      
-    
   · exact b_int.add hF'_int.norm
-    
   · apply h_diff.mono
     intro a ha
     suffices tendsto (fun x => ‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))) (𝓝 x₀) (𝓝 0) by simpa
@@ -154,11 +149,10 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     have :
       (fun x => ‖x - x₀‖⁻¹ * ‖F x a - F x₀ a - F' a (x - x₀)‖) = fun x =>
         ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))‖ :=
-      by
+      by 
       ext x
       rw [norm_smul_of_nonneg (nneg _)]
     rwa [has_fderiv_at_iff_tendsto, this] at ha
-    
 #align
   has_fderiv_at_integral_of_dominated_loc_of_lip' has_fderiv_at_integral_of_dominated_loc_of_lip'
 
@@ -235,7 +229,6 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
       ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_restrict_scalarsL',
       ContinuousLinearMap.norm_restrict_scalars, ContinuousLinearMap.norm_smul_rightL_apply] using
       hF'_int
-    
   refine' ⟨hF'_int, _⟩
   simp_rw [has_deriv_at_iff_has_fderiv_at] at h_diff⊢
   rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key

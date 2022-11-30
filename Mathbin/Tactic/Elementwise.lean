@@ -173,7 +173,8 @@ The name of the produced lemma can be specified with `@[elementwise other_lemma_
 If `simp` is added first, the generated lemma will also have the `simp` attribute.
 -/
 @[user_attribute]
-unsafe def elementwise_attr : user_attribute Unit (Option Name) where
+unsafe def elementwise_attr :
+    user_attribute Unit (Option Name) where 
   Name := `elementwise
   descr := "create a companion lemma for a morphism equation applied to an element"
   parser := optional ident

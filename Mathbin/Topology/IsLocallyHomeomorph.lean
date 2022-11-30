@@ -38,7 +38,7 @@ namespace IsLocallyHomeomorphOn
 definition of `is_locally_homeomorph_on f s`, since it only requires `e : local_homeomorph X Y` to
 agree with `f` on its source `e.source`, as opposed to on the whole space `X`. -/
 theorem mk (h : ∀ x ∈ s, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ ∀ y ∈ e.source, f y = e y) :
-    IsLocallyHomeomorphOn f s := by
+    IsLocallyHomeomorphOn f s := by 
   intro x hx
   obtain ⟨e, hx, he⟩ := h x hx
   exact

@@ -128,12 +128,8 @@ instance covariant_class_mul_le {α : Type u} [Mul α] [Preorder α]
     [CovariantClass α α (· * ·) (· ≤ ·)] :
     CovariantClass (WithZero α) (WithZero α) (· * ·) (· ≤ ·) := by
   refine' ⟨fun a b c hbc => _⟩
-  induction a using WithZero.recZeroCoe;
-  · exact zero_le _
-    
-  induction b using WithZero.recZeroCoe;
-  · exact zero_le _
-    
+  induction a using WithZero.recZeroCoe; · exact zero_le _
+  induction b using WithZero.recZeroCoe; · exact zero_le _
   rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩
   rw [← coe_mul, ← coe_mul, coe_le_coe]
   exact mul_le_mul_left' hbc' a
@@ -170,21 +166,16 @@ protected theorem covariant_class_add_le [AddZeroClass α] [Preorder α]
   refine' ⟨fun a b c hbc => _⟩
   induction a using WithZero.recZeroCoe
   · rwa [zero_add, zero_add]
-    
   induction b using WithZero.recZeroCoe
   · rw [add_zero]
     induction c using WithZero.recZeroCoe
     · rw [add_zero]
       exact le_rfl
-      
     · rw [← coe_add, coe_le_coe]
       exact le_add_of_nonneg_right (h _)
-      
-    
   · rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩
     rw [← coe_add, ← coe_add, coe_le_coe]
     exact add_le_add_left hbc' a
-    
 #align with_zero.covariant_class_add_le WithZero.covariant_class_add_le
 
 /-
@@ -210,13 +201,11 @@ section CanonicallyOrderedMonoid
 
 instance WithZero.has_exists_add_of_le {α} [Add α] [Preorder α] [HasExistsAddOfLe α] :
     HasExistsAddOfLe (WithZero α) :=
-  ⟨fun a b => by
+  ⟨fun a b => by 
     apply WithZero.cases_on a
     · exact fun _ => ⟨b, (zero_add b).symm⟩
-      
     apply WithZero.cases_on b
     · exact fun b' h => (WithBot.not_coe_le_bot _ h).elim
-      
     rintro a' b' h
     obtain ⟨c, rfl⟩ := exists_add_of_le (WithZero.coe_le_coe.1 h)
     exact ⟨c, rfl⟩⟩
@@ -227,15 +216,12 @@ instance WithZero.has_exists_add_of_le {α} [Add α] [Preorder α] [HasExistsAdd
 instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAddMonoid α] :
     CanonicallyOrderedAddMonoid (WithZero α) :=
   { WithZero.orderBot, WithZero.orderedAddCommMonoid zero_le, WithZero.has_exists_add_of_le with
-    le_self_add := fun a b => by
+    le_self_add := fun a b => by 
       apply WithZero.cases_on a
       · exact bot_le
-        
       apply WithZero.cases_on b
       · exact fun b' => le_rfl
-        
-      · exact fun a' b' => WithZero.coe_le_coe.2 le_self_add
-         }
+      · exact fun a' b' => WithZero.coe_le_coe.2 le_self_add }
 #align with_zero.canonically_ordered_add_monoid WithZero.canonicallyOrderedAddMonoid
 
 end CanonicallyOrderedMonoid

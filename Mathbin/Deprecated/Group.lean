@@ -106,7 +106,8 @@ include mM mN
 
 /-- Interpret a map `f : M → N` as a homomorphism `M →* N`. -/
 @[to_additive "Interpret a map `f : M → N` as a homomorphism `M →+ N`."]
-def of {f : M → N} (h : IsMonoidHom f) : M →* N where
+def of {f : M → N} (h : IsMonoidHom f) :
+    M →* N where 
   toFun := f
   map_one' := h.2
   map_mul' := h.1.1

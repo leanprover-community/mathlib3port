@@ -79,7 +79,6 @@ theorem continuous_on_tan_Ioo : ContinuousOn tan (ioo (-(π / 2)) (π / 2)) := b
     refine' hx_lt _
     rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, mul_le_mul_right (half_pos pi_pos)]
     simp [h]
-    
   · rw [lt_iff_not_ge] at hx_gt
     refine' hx_gt _
     rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul,
@@ -90,10 +89,7 @@ theorem continuous_on_tan_Ioo : ContinuousOn tan (ioo (-(π / 2)) (π / 2)) := b
       rw [← Int.cast_one, ← Int.cast_neg]
       norm_cast
       exact hr_le
-      
     · exact zero_lt_two
-      
-    
 #align real.continuous_on_tan_Ioo Real.continuous_on_tan_Ioo
 
 theorem surj_on_tan : SurjOn tan (ioo (-(π / 2)) (π / 2)) univ :=
@@ -194,9 +190,7 @@ theorem arctan_neg (x : ℝ) : arctan (-x) = -arctan x := by simp [arctan_eq_arc
 #align real.arctan_neg Real.arctan_neg
 
 theorem arctan_eq_arccos {x : ℝ} (h : 0 ≤ x) : arctan x = arccos (sqrt (1 + x ^ 2))⁻¹ := by
-  rw [arctan_eq_arcsin, arccos_eq_arcsin]; swap;
-  · exact inv_nonneg.2 (sqrt_nonneg _)
-    
+  rw [arctan_eq_arcsin, arccos_eq_arcsin]; swap; · exact inv_nonneg.2 (sqrt_nonneg _)
   congr 1
   rw [← sqrt_inv, sq_sqrt, ← one_div, one_sub_div, add_sub_cancel', sqrt_div, sqrt_sq h]
   all_goals positivity
@@ -207,11 +201,8 @@ theorem arccos_eq_arctan {x : ℝ} (h : 0 < x) : arccos x = arctan (sqrt (1 - x 
   rw [arccos, eq_comm]
   refine' arctan_eq_of_tan_eq _ ⟨_, _⟩
   · rw [tan_pi_div_two_sub, tan_arcsin, inv_div]
-    
   · linarith only [arcsin_le_pi_div_two x, pi_pos]
-    
   · linarith only [arcsin_pos.2 h]
-    
 #align real.arccos_eq_arctan Real.arccos_eq_arctan
 
 @[continuity]
@@ -224,7 +215,8 @@ theorem continuous_at_arctan {x : ℝ} : ContinuousAt arctan x :=
 #align real.continuous_at_arctan Real.continuous_at_arctan
 
 /-- `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the whole line. -/
-def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ where
+def tanLocalHomeomorph : LocalHomeomorph ℝ
+      ℝ where 
   toFun := tan
   invFun := arctan
   source := ioo (-(π / 2)) (π / 2)

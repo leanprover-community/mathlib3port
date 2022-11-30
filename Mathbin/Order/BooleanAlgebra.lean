@@ -78,7 +78,7 @@ operation `\` (called `sdiff`, after "set difference") satisfying `(a ⊓ b) ⊔
 
 This is a generalization of Boolean algebras which applies to `finset α` for arbitrary
 (not-necessarily-`fintype`) `α`. -/
-class GeneralizedBooleanAlgebra (α : Type u) extends DistribLattice α, SDiff α, HasBot α where
+class GeneralizedBooleanAlgebra (α : Type u) extends DistribLattice α, SDiff α, Bot α where
   sup_inf_sdiff : ∀ a b : α, a ⊓ b ⊔ a \ b = a
   inf_inf_sdiff : ∀ a b : α, a ⊓ b ⊓ a \ b = ⊥
 #align generalized_boolean_algebra GeneralizedBooleanAlgebra
@@ -110,7 +110,7 @@ theorem inf_sdiff_inf (x y : α) : x \ y ⊓ (x ⊓ y) = ⊥ := by rw [inf_comm,
 -- see Note [lower instance priority]
 instance (priority := 100) GeneralizedBooleanAlgebra.toOrderBot : OrderBot α :=
   { GeneralizedBooleanAlgebra.toHasBot α with
-    bot_le := fun a => by
+    bot_le := fun a => by 
       rw [← inf_inf_sdiff a a, inf_assoc]
       exact inf_le_left }
 #align generalized_boolean_algebra.to_order_bot GeneralizedBooleanAlgebra.toOrderBot
@@ -230,7 +230,7 @@ theorem Disjoint.sdiff_eq_of_sup_eq (hi : Disjoint x z) (hs : x ⊔ z = y) : y \
 protected theorem Disjoint.sdiff_unique (hd : Disjoint x z) (hz : z ≤ y) (hs : y ≤ x ⊔ z) :
     y \ x = z :=
   sdiff_unique
-    (by
+    (by 
       rw [← inf_eq_right] at hs
       rwa [sup_inf_right, inf_sup_right, @sup_comm _ _ x, inf_sup_self, inf_comm, @sup_comm _ _ z,
         hs, sup_eq_left])
@@ -241,7 +241,7 @@ protected theorem Disjoint.sdiff_unique (hd : Disjoint x z) (hz : z ≤ y) (hs :
 theorem disjoint_sdiff_iff_le (hz : z ≤ y) (hx : x ≤ y) : Disjoint z (y \ x) ↔ z ≤ x :=
   ⟨fun H =>
     le_of_inf_le_sup_le (le_trans H.le_bot bot_le)
-      (by
+      (by 
         rw [sup_sdiff_cancel_right hx]
         refine' le_trans (sup_le_sup_left sdiff_le z) _
         rw [sup_eq_right.2 hz]),
@@ -261,19 +261,15 @@ theorem inf_sdiff_eq_bot_iff (hz : z ≤ y) (hx : x ≤ y) : z ⊓ y \ x = ⊥ �
 
 -- cf. `is_compl.left_le_iff` and `is_compl.right_le_iff`
 theorem le_iff_eq_sup_sdiff (hz : z ≤ y) (hx : x ≤ y) : x ≤ z ↔ y = z ⊔ y \ x :=
-  ⟨fun H => by
+  ⟨fun H => by 
     apply le_antisymm
     · conv_lhs => rw [← sup_inf_sdiff y x]
       apply sup_le_sup_right
       rwa [inf_eq_right.2 hx]
-      
     · apply le_trans
       · apply sup_le_sup_right hz
-        
-      · rw [sup_sdiff_left]
-        
-      ,
-    fun H => by
+      · rw [sup_sdiff_left],
+    fun H => by 
     conv_lhs at H => rw [← sup_sdiff_cancel_right hx]
     refine' le_of_inf_le_sup_le _ H.le
     rw [inf_sdiff_self_right]
@@ -347,7 +343,8 @@ theorem sup_inf_inf_sdiff : x ⊓ y ⊓ z ⊔ y \ z = x ⊓ y ⊔ y \ z :=
 theorem sdiff_sdiff_right : x \ (y \ z) = x \ y ⊔ x ⊓ y ⊓ z := by
   rw [sup_comm, inf_comm, ← inf_assoc, sup_inf_inf_sdiff]
   apply sdiff_unique
-  · calc
+  ·
+    calc
       x ⊓ y \ z ⊔ (z ⊓ x ⊔ x \ y) = (x ⊔ (z ⊓ x ⊔ x \ y)) ⊓ (y \ z ⊔ (z ⊓ x ⊔ x \ y)) := by
         rw [sup_inf_right]
       _ = (x ⊔ x ⊓ z ⊔ x \ y) ⊓ (y \ z ⊔ (x ⊓ z ⊔ x \ y)) := by ac_rfl
@@ -360,8 +357,8 @@ theorem sdiff_sdiff_right : x \ (y \ z) = x \ y ⊔ x ⊓ y ⊓ z := by
       _ = x ⊓ (y \ z ⊔ (x ⊔ x ⊓ z)) := by rw [sup_inf_sdiff, @sup_comm _ _ (x ⊓ z)]
       _ = x := by rw [sup_inf_self, sup_comm, inf_sup_self]
       
-    
-  · calc
+  ·
+    calc
       x ⊓ y \ z ⊓ (z ⊓ x ⊔ x \ y) = x ⊓ y \ z ⊓ (z ⊓ x) ⊔ x ⊓ y \ z ⊓ x \ y := by rw [inf_sup_left]
       _ = x ⊓ (y \ z ⊓ z ⊓ x) ⊔ x ⊓ y \ z ⊓ x \ y := by ac_rfl
       _ = x ⊓ y \ z ⊓ x \ y := by rw [inf_sdiff_self_left, bot_inf_eq, inf_bot_eq, bot_sup_eq]
@@ -369,7 +366,6 @@ theorem sdiff_sdiff_right : x \ (y \ z) = x \ y ⊔ x ⊓ y ⊓ z := by
       _ = x ⊓ (y \ z ⊓ (y ⊓ x \ y)) := by ac_rfl
       _ = ⊥ := by rw [inf_sdiff_self_right, inf_bot_eq, inf_bot_eq]
       
-    
 #align sdiff_sdiff_right sdiff_sdiff_right
 
 theorem sdiff_sdiff_right' : x \ (y \ z) = x \ y ⊔ x ⊓ z :=
@@ -518,8 +514,8 @@ to be present at define-time, the `extends` mechanism does not work with them.
 Instead, we extend using the underlying `has_bot` and `has_top` data typeclasses, and replicate the
 order axioms of those classes here. A "forgetful" instance back to `bounded_order` is provided.
 -/
-class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, SDiff α, HasHimp α,
-  HasTop α, HasBot α where
+class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, SDiff α, HasHimp α, Top α,
+  Bot α where
   inf_compl_le_bot : ∀ x : α, x ⊓ xᶜ ≤ ⊥
   top_le_sup_compl : ∀ x : α, ⊤ ≤ x ⊔ xᶜ
   le_top : ∀ a : α, a ≤ ⊤
@@ -543,7 +539,7 @@ def GeneralizedBooleanAlgebra.toBooleanAlgebra [GeneralizedBooleanAlgebra α] [O
   { ‹GeneralizedBooleanAlgebra α›, GeneralizedBooleanAlgebra.toOrderBot, ‹OrderTop α› with
     compl := fun a => ⊤ \ a, inf_compl_le_bot := fun _ => disjoint_sdiff_self_right.le_bot,
     top_le_sup_compl := fun _ => le_sup_sdiff,
-    sdiff_eq := fun _ _ => by
+    sdiff_eq := fun _ _ => by 
       rw [← inf_sdiff_assoc, inf_top_eq]
       rfl }
 #align generalized_boolean_algebra.to_boolean_algebra GeneralizedBooleanAlgebra.toBooleanAlgebra
@@ -579,9 +575,9 @@ theorem himp_eq : x ⇨ y = y ⊔ xᶜ :=
   BooleanAlgebra.himp_eq x y
 #align himp_eq himp_eq
 
-instance (priority := 100) BooleanAlgebra.toComplementedLattice : ComplementedLattice α :=
+instance (priority := 100) BooleanAlgebra.to_complemented_lattice : ComplementedLattice α :=
   ⟨fun x => ⟨xᶜ, is_compl_compl⟩⟩
-#align boolean_algebra.to_complemented_lattice BooleanAlgebra.toComplementedLattice
+#align boolean_algebra.to_complemented_lattice BooleanAlgebra.to_complemented_lattice
 
 -- see Note [lower instance priority]
 instance (priority := 100) BooleanAlgebra.toGeneralizedBooleanAlgebra :
@@ -612,13 +608,13 @@ theorem top_sdiff : ⊤ \ x = xᶜ :=
 #align top_sdiff top_sdiff
 
 theorem eq_compl_iff_is_compl : x = yᶜ ↔ IsCompl x y :=
-  ⟨fun h => by
+  ⟨fun h => by 
     rw [h]
     exact is_compl_compl.symm, IsCompl.eq_compl⟩
 #align eq_compl_iff_is_compl eq_compl_iff_is_compl
 
 theorem compl_eq_iff_is_compl : xᶜ = y ↔ IsCompl x y :=
-  ⟨fun h => by
+  ⟨fun h => by 
     rw [← h]
     exact is_compl_compl, IsCompl.compl_eq⟩
 #align compl_eq_iff_is_compl compl_eq_iff_is_compl
@@ -668,12 +664,12 @@ theorem IsCompl.compl_eq_iff (h : IsCompl x y) : zᶜ = y ↔ z = x :=
 
 @[simp]
 theorem compl_eq_top : xᶜ = ⊤ ↔ x = ⊥ :=
-  is_compl_bot_top.compl_eq_iff
+  isCompl_bot_top.compl_eq_iff
 #align compl_eq_top compl_eq_top
 
 @[simp]
 theorem compl_eq_bot : xᶜ = ⊥ ↔ x = ⊤ :=
-  is_compl_top_bot.compl_eq_iff
+  isCompl_top_bot.compl_eq_iff
 #align compl_eq_bot compl_eq_bot
 
 @[simp]
@@ -781,8 +777,8 @@ section lift
 -- See note [reducible non-instances]
 /-- Pullback a `generalized_boolean_algebra` along an injection. -/
 @[reducible]
-protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf α] [HasBot α]
-    [SDiff α] [GeneralizedBooleanAlgebra β] (f : α → β) (hf : Injective f)
+protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf α] [Bot α] [SDiff α]
+    [GeneralizedBooleanAlgebra β] (f : α → β) (hf : Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : GeneralizedBooleanAlgebra α :=
   { hf.GeneralizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff,
@@ -794,8 +790,8 @@ protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf �
 -- See note [reducible non-instances]
 /-- Pullback a `boolean_algebra` along an injection. -/
 @[reducible]
-protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α]
-    [HasCompl α] [SDiff α] [BooleanAlgebra β] (f : α → β) (hf : Injective f)
+protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [Top α] [Bot α] [HasCompl α]
+    [SDiff α] [BooleanAlgebra β] (f : α → β) (hf : Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BooleanAlgebra α :=
@@ -809,7 +805,7 @@ protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop 
     sdiff_eq := fun a b =>
       hf <|
         (map_sdiff _ _).trans <|
-          sdiff_eq.trans <| by
+          sdiff_eq.trans <| by 
             convert (map_inf _ _).symm
             exact (map_compl _).symm }
 #align function.injective.boolean_algebra Function.Injective.booleanAlgebra

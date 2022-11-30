@@ -79,9 +79,7 @@ theorem foldr_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n :
     foldr Q f hf n (l.map <| ι Q).Prod = List.foldr (fun m n => f m n) n l := by
   induction' l with hd tl ih
   · rw [List.map_nil, List.prod_nil, List.foldr_nil, foldr_one]
-    
   · rw [List.map_cons, List.prod_cons, List.foldr_cons, foldr_mul, foldr_ι, ih]
-    
 #align clifford_algebra.foldr_prod_map_ι CliffordAlgebra.foldr_prod_map_ι
 
 end Foldr
@@ -140,7 +138,8 @@ theorem foldl_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n :
 end Foldl
 
 theorem right_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
-    (h_add : ∀ x y, P x → P y → P (x + y)) (h_ι_mul : ∀ m x, P x → P (x * ι Q m)) : ∀ x, P x := by
+    (h_add : ∀ x y, P x → P y → P (x + y)) (h_ι_mul : ∀ m x, P x → P (x * ι Q m)) : ∀ x, P x :=
+  by
   /- It would be neat if we could prove this via `foldr` like how we prove
     `clifford_algebra.induction`, but going via the grading seems easier. -/
   intro x
@@ -150,9 +149,7 @@ theorem right_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alg
   · refine' Submodule.pow_induction_on_right _ hr h_add (fun x px m => _) hx
     rintro ⟨m, rfl⟩
     exact h_ι_mul _ _ px
-    
   · simpa only [map_zero] using hr 0
-    
 #align clifford_algebra.right_induction CliffordAlgebra.right_induction
 
 theorem left_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
@@ -161,11 +158,8 @@ theorem left_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alge
   intro x
   induction' x using CliffordAlgebra.right_induction with r x y hx hy m x hx
   · simpa only [reverse.commutes] using hr r
-    
   · simpa only [map_add] using h_add _ _ hx hy
-    
   · simpa only [reverse.map_mul, reverse_ι] using h_mul_ι _ _ hx
-    
 #align clifford_algebra.left_induction CliffordAlgebra.left_induction
 
 /-! ### Versions with extra state -/
@@ -230,11 +224,8 @@ theorem foldr'_ι_mul (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
   congr 1
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [foldr_algebra_map, Prod.smul_mk, Algebra.algebra_map_eq_smul_one]
-    
   · rw [map_add, Prod.fst_add, hx, hy]
-    
   · rw [foldr_mul, foldr_ι, foldr'_aux_apply_apply, hx]
-    
 #align clifford_algebra.foldr'_ι_mul CliffordAlgebra.foldr'_ι_mul
 
 end CliffordAlgebra

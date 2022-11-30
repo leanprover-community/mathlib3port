@@ -28,7 +28,7 @@ open Function
 variable {α β : Type _}
 
 /-- Two-pointing of a type. This is a Type-valued termed `nontrivial`. -/
-@[ext.1]
+@[ext]
 structure TwoPointing (α : Type _) extends α × α where
   fst_ne_snd : fst ≠ snd
   deriving DecidableEq
@@ -80,7 +80,7 @@ section Pi
 variable (α) [Nonempty α]
 
 /-- The two-pointing of constant functions. -/
-def pi : TwoPointing (α → β) where
+def pi : TwoPointing (α → β) where 
   fst _ := q.fst
   snd _ := q.snd
   fst_ne_snd h := q.fst_ne_snd <| by convert congr_fun h (Classical.arbitrary α)
@@ -99,7 +99,7 @@ theorem pi_snd : (q.pi α).snd = const α q.snd :=
 end Pi
 
 /-- The product of two two-pointings. -/
-def prod : TwoPointing (α × β) where
+def prod : TwoPointing (α × β) where 
   fst := (p.fst, q.fst)
   snd := (p.snd, q.snd)
   fst_ne_snd h := p.fst_ne_snd (congr_arg Prod.fst h)

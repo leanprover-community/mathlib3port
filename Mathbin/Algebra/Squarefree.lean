@@ -52,7 +52,7 @@ theorem not_squarefree_zero [MonoidWithZero R] [Nontrivial R] : ¬Squarefree (0 
 #align not_squarefree_zero not_squarefree_zero
 
 theorem Squarefree.ne_zero [MonoidWithZero R] [Nontrivial R] {m : R} (hm : Squarefree (m : R)) :
-    m ≠ 0 := by
+    m ≠ 0 := by 
   rintro rfl
   exact not_squarefree_zero hm
 #align squarefree.ne_zero Squarefree.ne_zero
@@ -63,9 +63,7 @@ theorem Irreducible.squarefree [CommMonoid R] {x : R} (h : Irreducible x) : Squa
   rw [mul_assoc] at hz
   rcases h.is_unit_or_is_unit hz with (hu | hu)
   · exact hu
-    
   · apply isUnit_of_mul_isUnit_left hu
-    
 #align irreducible.squarefree Irreducible.squarefree
 
 @[simp]
@@ -120,24 +118,22 @@ section CancelCommMonoidWithZero
 variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
 
 theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by
-  classical
-  revert hb
-  refine'
-    WfDvdMonoid.induction_on_irreducible b (by contradiction) (fun u hu hu' => _)
-      fun b p hb hp ih hpb => _
-  · rw [multiplicity.finite_iff_dom, multiplicity.is_unit_right ha.not_unit hu]
-    exact PartEnat.dom_coe 0
-    
-  · refine'
-      multiplicity.finite_mul ha
-        (multiplicity.finite_iff_dom.mpr
-          (PartEnat.dom_of_le_coe (show multiplicity a p ≤ ↑1 from _)))
-        (ih hb)
-    norm_cast
-    exact
-      ((multiplicity.squarefree_iff_multiplicity_le_one p).mp hp.squarefree a).resolve_right
-        ha.not_unit
-    
+  classical 
+    revert hb
+    refine'
+      WfDvdMonoid.induction_on_irreducible b (by contradiction) (fun u hu hu' => _)
+        fun b p hb hp ih hpb => _
+    · rw [multiplicity.finite_iff_dom, multiplicity.is_unit_right ha.not_unit hu]
+      exact PartEnat.dom_coe 0
+    · refine'
+        multiplicity.finite_mul ha
+          (multiplicity.finite_iff_dom.mpr
+            (PartEnat.dom_of_le_coe (show multiplicity a p ≤ ↑1 from _)))
+          (ih hb)
+      norm_cast
+      exact
+        ((multiplicity.squarefree_iff_multiplicity_le_one p).mp hp.squarefree a).resolve_right
+          ha.not_unit
 #align multiplicity.finite_prime_left multiplicity.finite_prime_left
 
 end CancelCommMonoidWithZero
@@ -154,18 +150,15 @@ theorem irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree (r 
   constructor
   · rintro (⟨rfl, h⟩ | h)
     · simpa using h
-      
     intro x hx t
     exact hx.not_unit (h x t)
-    
   intro h
   rcases eq_or_ne r 0 with (rfl | hr)
   · exact Or.inl (by simpa using h)
-    
   right
   intro x hx
   by_contra i
-  have : x ≠ 0 := by
+  have : x ≠ 0 := by 
     rintro rfl
     apply hr
     simpa only [zero_dvd_iff, mul_zero] using hx
@@ -206,11 +199,10 @@ theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
   (is_radical_iff_pow_one_lt 2 one_lt_two).2 fun y hy =>
     And.right <|
       (dvd_gcd_iff x x y).1
-        (by
+        (by 
           by_cases gcd x y = 0;
           · rw [h]
             apply dvd_zero
-            
           replace hy := ((dvd_gcd_iff x x _).2 ⟨dvd_rfl, hy⟩).trans gcd_pow_right_dvd_pow_gcd
           obtain ⟨z, hz⟩ := gcd_dvd_left x y
           nth_rw 0 [hz]  at hy⊢
@@ -221,7 +213,7 @@ theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
 
 theorem is_radical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
   ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.Squarefree h,
-    Or.ndrec Squarefree.is_radical <| by
+    Or.ndrec Squarefree.is_radical <| by 
       rintro rfl
       rw [zero_is_radical_iff]
       infer_instance⟩
@@ -250,32 +242,26 @@ theorem squarefree_iff_nodup_normalized_factors [NormalizationMonoid R] [Decidab
       · rw [← normalize_normalized_factor _ hmem]
         rw [multiplicity_eq_count_normalized_factors ha x0] at h
         assumption_mod_cast
-        
       · have := ha.1
         contradiction
-        
-      
     · simp [Multiset.count_eq_zero_of_not_mem hmem]
-      
-    
   · rw [or_iff_not_imp_right]
     intro hu
     by_cases h0 : a = 0
     · simp [h0, x0]
-      
     rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩
     apply le_trans (multiplicity.multiplicity_le_multiplicity_of_dvd_left hdvd)
     rw [multiplicity_eq_count_normalized_factors hib x0]
     specialize h (normalize b)
     assumption_mod_cast
-    
 #align
   unique_factorization_monoid.squarefree_iff_nodup_normalized_factors UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors
 
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) :
-    x ∣ y ^ n ↔ x ∣ y := by classical
-  haveI := UniqueFactorizationMonoid.toGcdMonoid R
-  exact ⟨hsq.is_radical n y, fun h => h.pow h0⟩
+    x ∣ y ^ n ↔ x ∣ y := by
+  classical 
+    haveI := UniqueFactorizationMonoid.toGcdMonoid R
+    exact ⟨hsq.is_radical n y, fun h => h.pow h0⟩
 #align
   unique_factorization_monoid.dvd_pow_iff_dvd_of_squarefree UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree
 

@@ -46,9 +46,12 @@ inductive Bicone
 instance : Inhabited (Bicone J) :=
   ⟨Bicone.left⟩
 
-instance finBicone [Fintype J] : Fintype (Bicone J) where
+instance finBicone [Fintype J] :
+    Fintype
+      (Bicone
+        J) where 
   elems := [Bicone.left, Bicone.right].toFinset ∪ Finset.image Bicone.diagram (Fintype.elems J)
-  complete j := by
+  complete j := by 
     cases j <;> simp
     exact Fintype.complete j
 #align category_theory.fin_bicone CategoryTheory.finBicone
@@ -72,10 +75,11 @@ instance BiconeHom.decidableEq {j k : Bicone J} : DecidableEq (BiconeHom J j k) 
 #align category_theory.bicone_hom.decidable_eq CategoryTheory.BiconeHom.decidableEq
 
 @[simps]
-instance biconeCategoryStruct : CategoryStruct (Bicone J) where
+instance biconeCategoryStruct :
+    CategoryStruct (Bicone J) where 
   Hom := BiconeHom J
   id j := Bicone.casesOn j BiconeHom.left_id BiconeHom.right_id fun k => BiconeHom.diagram (𝟙 k)
-  comp X Y Z f g := by
+  comp X Y Z f g := by 
     cases f
     exact g
     exact g
@@ -87,7 +91,8 @@ instance biconeCategoryStruct : CategoryStruct (Bicone J) where
     exact bicone_hom.diagram (f_f ≫ g_f)
 #align category_theory.bicone_category_struct CategoryTheory.biconeCategoryStruct
 
-instance biconeCategory : Category (Bicone J) where
+instance biconeCategory :
+    Category (Bicone J) where 
   id_comp' X Y f := by cases f <;> simp
   comp_id' X Y f := by cases f <;> simp
   assoc' W X Y Z f g h := by cases f <;> cases g <;> cases h <;> simp
@@ -102,9 +107,10 @@ variable (J : Type v₁) [SmallCategory J]
 /-- Given a diagram `F : J ⥤ C` and two `cone F`s, we can join them into a diagram `bicone J ⥤ C`.
 -/
 @[simps]
-def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) : Bicone J ⥤ C where
+def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) :
+    Bicone J ⥤ C where 
   obj X := Bicone.casesOn X c₁.x c₂.x fun j => F.obj j
-  map X Y f := by
+  map X Y f := by 
     cases f
     exact 𝟙 _
     exact 𝟙 _
@@ -112,7 +118,7 @@ def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone
     exact c₂.π.app f_1
     exact F.map f_f
   map_id' X := by cases X <;> simp
-  map_comp' X Y Z f g := by
+  map_comp' X Y Z f g := by 
     cases f
     exact (category.id_comp _).symm
     exact (category.id_comp _).symm
@@ -128,31 +134,31 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := by
   cases j <;> cases k
   exact
     { elems := {bicone_hom.left_id},
-      complete := fun f => by
+      complete := fun f => by 
         cases f
         simp }
   exact { elems := ∅, complete := fun f => by cases f }
   exact
     { elems := {bicone_hom.left k},
-      complete := fun f => by
+      complete := fun f => by 
         cases f
         simp }
   exact { elems := ∅, complete := fun f => by cases f }
   exact
     { elems := {bicone_hom.right_id},
-      complete := fun f => by
+      complete := fun f => by 
         cases f
         simp }
   exact
     { elems := {bicone_hom.right k},
-      complete := fun f => by
+      complete := fun f => by 
         cases f
         simp }
   exact { elems := ∅, complete := fun f => by cases f }
   exact { elems := ∅, complete := fun f => by cases f }
   exact
     { elems := Finset.image bicone_hom.diagram (Fintype.elems (j ⟶ k)),
-      complete := fun f => by
+      complete := fun f => by 
         cases f
         simp only [Finset.mem_image]
         use f_f

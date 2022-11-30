@@ -30,7 +30,7 @@ instance : Inhabited ℤ :=
 instance : Nontrivial ℤ :=
   ⟨⟨0, 1, Int.zero_ne_one⟩⟩
 
-instance : CommRing ℤ where
+instance : CommRing ℤ where 
   add := Int.add
   add_assoc := Int.add_assoc
   zero := Int.zero
@@ -331,20 +331,14 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
   induction i
   · induction i
     · exact hz
-      
     · exact hp _ i_ih
-      
-    
-  · have : ∀ n : ℕ, p (-n) := by
+  · have : ∀ n : ℕ, p (-n) := by 
       intro n
       induction n
       · simp [hz]
-        
       · convert hn _ n_ih using 1
         simp [sub_eq_neg_add]
-        
     exact this (i + 1)
-    
 #align int.induction_on Int.induction_on
 -/
 
@@ -364,11 +358,9 @@ theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b := by
     · rintro i n rfl
       rw [add_comm _ i, add_assoc]
       exact Nat.le_add_right i (b.succ + b).succ
-      
     · apply succ_le_succ
       rw [← succ.inj e, ← add_assoc, add_comm]
       apply Nat.le_add_right
-      
   cases a <;> cases' b with b b <;> simp [nat_abs, Nat.succ_add] <;> try rfl <;> [skip,
       rw [add_comm a b]] <;>
     apply this
@@ -433,7 +425,7 @@ theorem natAbs_ne_zero {a : ℤ} : a.natAbs ≠ 0 ↔ a ≠ 0 :=
 
 #print Int.natAbs_lt_natAbs_of_nonneg_of_lt /-
 theorem natAbs_lt_natAbs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a < b) :
-    a.natAbs < b.natAbs := by
+    a.natAbs < b.natAbs := by 
   lift b to ℕ using le_trans w₁ (le_of_lt w₂)
   lift a to ℕ using w₁
   simpa [coe_nat_lt] using w₂
@@ -443,12 +435,11 @@ theorem natAbs_lt_natAbs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a 
 #print Int.natAbs_eq_natAbs_iff /-
 theorem natAbs_eq_natAbs_iff {a b : ℤ} : a.natAbs = b.natAbs ↔ a = b ∨ a = -b := by
   constructor <;> intro h
-  · cases' Int.natAbs_eq a with h₁ h₁ <;> cases' Int.natAbs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;>
+  ·
+    cases' Int.natAbs_eq a with h₁ h₁ <;> cases' Int.natAbs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;>
       simp [h]
-    
   · cases h <;> rw [h]
     rw [Int.natAbs_neg]
-    
 #align int.nat_abs_eq_nat_abs_iff Int.natAbs_eq_natAbs_iff
 -/
 
@@ -658,13 +649,11 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
         · refine' le_trans _ (Nat.le_add_right _ _)
           rw [← Nat.mul_div_mul _ _ m.succ_pos]
           apply Nat.div_mul_le_self
-          
         · change m.succ * n.succ ≤ _
           rw [mul_left_comm]
           apply Nat.mul_le_mul_left
           apply (Nat.div_lt_iff_lt_mul k.succ_pos).1
           apply Nat.lt_succ_self
-          
 #align int.mul_div_mul_of_pos Int.mul_ediv_mul_of_pos
 -/
 

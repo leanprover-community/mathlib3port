@@ -49,7 +49,7 @@ theorem coevaluation_apply_one :
     (coevaluation K V) (1 : K) =
       let bV := Basis.ofVectorSpace K V
       ∑ i : Basis.ofVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.Coord i :=
-  by
+  by 
   simp only [coevaluation, id]
   rw [(Basis.singleton Unit K).constr_apply_fintype K]
   simp only [Fintype.univ_punit, Finset.sum_const, one_smul, Basis.singleton_repr,
@@ -65,7 +65,7 @@ theorem contract_left_assoc_coevaluation :
         (TensorProduct.assoc K _ _ _).symm.toLinearMap ∘ₗ
           (coevaluation K V).ltensor (Module.Dual K V) =
       (TensorProduct.lid K _).symm.toLinearMap ∘ₗ (TensorProduct.rid K _).toLinearMap :=
-  by
+  by 
   letI := Classical.decEq (Basis.ofVectorSpaceIndex K V)
   apply TensorProduct.ext
   apply (Basis.ofVectorSpace K V).dualBasis.ext; intro j; apply LinearMap.ext_ring
@@ -85,7 +85,7 @@ theorem contract_left_assoc_coevaluation' :
     (contractLeft K V).ltensor _ ∘ₗ
         (TensorProduct.assoc K _ _ _).toLinearMap ∘ₗ (coevaluation K V).rtensor V =
       (TensorProduct.rid K _).symm.toLinearMap ∘ₗ (TensorProduct.lid K _).toLinearMap :=
-  by
+  by 
   letI := Classical.decEq (Basis.ofVectorSpaceIndex K V)
   apply TensorProduct.ext
   apply LinearMap.ext_ring; apply (Basis.ofVectorSpace K V).ext; intro j

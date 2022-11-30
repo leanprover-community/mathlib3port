@@ -52,20 +52,14 @@ theorem map_sub [Sub β] [Zero β] {f : α → β} (h : ∀ x y, f (x - y) = f x
 
 end
 
-variable [CanonicallyOrderedAddMonoid α] [Sub α] [HasOrderedSub α]
+variable [CanonicallyOrderedAddMonoid α] [Sub α] [OrderedSub α]
 
-instance : HasOrderedSub (WithTop α) := by
+instance : OrderedSub (WithTop α) := by 
   constructor
   rintro x y z
-  induction y using WithTop.recTopCoe;
-  · simp
-    
-  induction x using WithTop.recTopCoe;
-  · simp
-    
-  induction z using WithTop.recTopCoe;
-  · simp
-    
+  induction y using WithTop.recTopCoe; · simp
+  induction x using WithTop.recTopCoe; · simp
+  induction z using WithTop.recTopCoe; · simp
   norm_cast; exact tsub_le_iff_right
 
 end WithTop

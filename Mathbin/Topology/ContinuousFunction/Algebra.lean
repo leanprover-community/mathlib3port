@@ -192,7 +192,8 @@ section Subtype
 /-- The `submonoid` of continuous maps `α → β`. -/
 @[to_additive "The `add_submonoid` of continuous maps `α → β`. "]
 def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β]
-    [Monoid β] [HasContinuousMul β] : Submonoid (α → β) where
+    [Monoid β] [HasContinuousMul β] :
+    Submonoid (α → β) where 
   carrier := { f : α → β | Continuous f }
   one_mem' := @continuous_const _ _ _ _ 1
   mul_mem' f g fc gc := fc.mul gc
@@ -253,7 +254,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [LocallyCompactSpace α] [TopologicalSpace β]
     [Mul β] [HasContinuousMul β] : HasContinuousMul C(α, β) :=
-  ⟨by
+  ⟨by 
     refine' continuous_of_continuous_uncurry _ _
     have h1 : Continuous fun x : (C(α, β) × C(α, β)) × α => x.fst.fst x.snd :=
       continuous_eval'.comp (continuous_fst.prod_map continuous_id)
@@ -265,7 +266,8 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [LocallyCompactSpace 
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.",
   simps]
 def coeFnMonoidHom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoid β]
-    [HasContinuousMul β] : C(α, β) →* α → β where
+    [HasContinuousMul β] : C(α, β) →*
+      α → β where 
   toFun := coeFn
   map_one' := coe_one
   map_mul' := coe_mul
@@ -278,7 +280,8 @@ def coeFnMonoidHom {α : Type _} {β : Type _} [TopologicalSpace α] [Topologica
   simps]
 protected def MonoidHom.compLeftContinuous (α : Type _) {β : Type _} {γ : Type _}
     [TopologicalSpace α] [TopologicalSpace β] [Monoid β] [HasContinuousMul β] [TopologicalSpace γ]
-    [Monoid γ] [HasContinuousMul γ] (g : β →* γ) (hg : Continuous g) : C(α, β) →* C(α, γ) where
+    [Monoid γ] [HasContinuousMul γ] (g : β →* γ) (hg : Continuous g) :
+    C(α, β) →* C(α, γ) where 
   toFun f := (⟨g, hg⟩ : C(β, γ)).comp f
   map_one' := ext fun x => g.map_one
   map_mul' f₁ f₂ := ext fun x => g.map_mul _ _
@@ -290,7 +293,7 @@ protected def MonoidHom.compLeftContinuous (α : Type _) {β : Type _} {γ : Typ
   simps]
 def compMonoidHom' {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
     [TopologicalSpace γ] [MulOneClass γ] [HasContinuousMul γ] (g : C(α, β)) :
-    C(β, γ) →* C(α, γ) where
+    C(β, γ) →* C(α, γ) where 
   toFun f := f.comp g
   map_one' := one_comp g
   map_mul' f₁ f₂ := mul_comp f₁ f₂ g
@@ -323,8 +326,11 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommGroup β]
-    [TopologicalGroup β] : TopologicalGroup C(α, β) where
-  continuous_mul := by
+    [TopologicalGroup β] :
+    TopologicalGroup
+      C(α,
+        β) where 
+  continuous_mul := by 
     letI : UniformSpace β := TopologicalGroup.toUniformSpace β
     have : UniformGroup β := topological_comm_group_is_uniform
     rw [continuous_iff_continuous_at]
@@ -334,7 +340,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
       uniform_continuous_mul.comp_tendsto_uniformly_on
         ((tendsto_iff_forall_compact_tendsto_uniformly_on.mp Filter.tendsto_id K hK).Prod
           (tendsto_iff_forall_compact_tendsto_uniformly_on.mp Filter.tendsto_id K hK))
-  continuous_inv := by
+  continuous_inv := by 
     letI : UniformSpace β := TopologicalGroup.toUniformSpace β
     have : UniformGroup β := topological_comm_group_is_uniform
     rw [continuous_iff_continuous_at]
@@ -451,7 +457,7 @@ end ContinuousMap
 
 end RingStructure
 
-attribute [local ext.1] Subtype.eq
+attribute [local ext] Subtype.eq
 
 section ModuleStructure
 
@@ -498,7 +504,7 @@ instance [LocallyCompactSpace α] [HasSmul R M] [HasContinuousConstSmul R M] :
 @[to_additive]
 instance [LocallyCompactSpace α] [TopologicalSpace R] [HasSmul R M] [HasContinuousSmul R M] :
     HasContinuousSmul R C(α, M) :=
-  ⟨by
+  ⟨by 
     refine' continuous_of_continuous_uncurry _ _
     have h : Continuous fun x : (R × C(α, M)) × α => x.fst.snd x.snd :=
       continuous_eval'.comp (continuous_snd.prod_map continuous_id)
@@ -602,7 +608,10 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiring R] {A : 
   [TopologicalSpace A₂] [Semiring A₂] [Algebra R A₂] [TopologicalSemiring A₂]
 
 /-- Continuous constant functions as a `ring_hom`. -/
-def ContinuousMap.c : R →+* C(α, A) where
+def ContinuousMap.c :
+    R →+*
+      C(α,
+        A) where 
   toFun := fun c : R => ⟨fun x : α => (algebraMap R A) c, continuous_const⟩
   map_one' := by ext x <;> exact (algebraMap R A).map_one
   map_mul' c₁ c₂ := by ext x <;> exact (algebraMap R A).map_mul _ _
@@ -615,7 +624,8 @@ theorem ContinuousMap.C_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMa
   rfl
 #align continuous_map.C_apply ContinuousMap.C_apply
 
-instance ContinuousMap.algebra : Algebra R C(α, A) where
+instance ContinuousMap.algebra :
+    Algebra R C(α, A) where 
   toRingHom := ContinuousMap.c
   commutes' c f := by ext x <;> exact Algebra.commutes' _ _
   smul_def' c f := by ext x <;> exact Algebra.smul_def' _ _
@@ -638,21 +648,22 @@ variable (A)
 -/
 @[simps]
 def ContinuousMap.compRightAlgHom {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
-    (f : C(α, β)) : C(β, A) →ₐ[R] C(α, A) where
+    (f : C(α, β)) : C(β, A) →ₐ[R]
+      C(α, A) where 
   toFun g := g.comp f
-  map_zero' := by
+  map_zero' := by 
     ext
     rfl
-  map_add' g₁ g₂ := by
+  map_add' g₁ g₂ := by 
     ext
     rfl
-  map_one' := by
+  map_one' := by 
     ext
     rfl
-  map_mul' g₁ g₂ := by
+  map_mul' g₁ g₂ := by 
     ext
     rfl
-  commutes' r := by
+  commutes' r := by 
     ext
     rfl
 #align continuous_map.comp_right_alg_hom ContinuousMap.compRightAlgHom
@@ -720,10 +731,7 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
     use (v x • 1 : C(α, 𝕜))
     · apply s.smul_mem
       apply s.one_mem
-      
     · simp [coe_fn_coe_base']
-      
-    
   obtain ⟨f, ⟨f, ⟨m, rfl⟩⟩, w⟩ := h n
   replace w : f x - f y ≠ 0 := sub_ne_zero_of_ne w
   let a := v x
@@ -736,11 +744,8 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
     -- ``def subobject_mem := `[solve_by_elim with subobject_mem { max_depth := 10 }]``
     solve_by_elim (config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem,
       Subalgebra.sub_mem, Subalgebra.algebra_map_mem]
-    
   · simp [f', coe_fn_coe_base']
-    
   · simp [f', coe_fn_coe_base', inv_mul_cancel_right₀ w]
-    
 #align subalgebra.separates_points.strongly Subalgebra.SeparatesPoints.strongly
 
 end ContinuousMap
@@ -753,20 +758,18 @@ instance ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace �
   by_cases n : Nonempty α
   · obtain ⟨x⟩ := n
     ext f
-    have h : f = algebraMap R C(α, R) (f x) := by
+    have h : f = algebraMap R C(α, R) (f x) := by 
       ext x'
       simp only [mul_one, Algebra.id.smul_eq_mul, algebra_map_apply]
       congr
     rw [h]
     simp only [Subalgebra.algebra_map_mem]
-    
   · ext f
-    have h : f = 0 := by
+    have h : f = 0 := by 
       ext x'
       exact False.elim (n ⟨x'⟩)
     subst h
     simp only [Subalgebra.zero_mem]
-    
 #align continuous_map.subsingleton_subalgebra ContinuousMap.subsingleton_subalgebra
 
 end AlgebraStructure
@@ -790,7 +793,8 @@ instance hasSmul' {α : Type _} [TopologicalSpace α] {R : Type _} [Semiring R] 
 
 instance module' {α : Type _} [TopologicalSpace α] (R : Type _) [Ring R] [TopologicalSpace R]
     [TopologicalRing R] (M : Type _) [TopologicalSpace M] [AddCommMonoid M] [HasContinuousAdd M]
-    [Module R M] [HasContinuousSmul R M] : Module C(α, R) C(α, M) where
+    [Module R M] [HasContinuousSmul R M] :
+    Module C(α, R) C(α, M) where 
   smul := (· • ·)
   smul_add c f g := by ext x <;> exact smul_add (c x) (f x) (g x)
   add_smul c₁ c₂ f := by ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
@@ -920,7 +924,8 @@ with the continuous function `f`. See `continuous_map.comp_monoid_hom'` and
 pre-composition into a `monoid_hom`, an `add_monoid_hom` and an `alg_hom`, respectively, under
 suitable assumptions on `A`. -/
 @[simps]
-def compStarAlgHom' (f : C(X, Y)) : C(Y, A) →⋆ₐ[𝕜] C(X, A) where
+def compStarAlgHom' (f : C(X, Y)) :
+    C(Y, A) →⋆ₐ[𝕜] C(X, A) where 
   toFun g := g.comp f
   map_one' := one_comp _
   map_mul' _ _ := rfl

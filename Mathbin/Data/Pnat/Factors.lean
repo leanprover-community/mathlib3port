@@ -24,7 +24,7 @@ the multiplicity of `p` in this factors multiset being the p-adic valuation of `
  below. -/
 def PrimeMultiset :=
   Multiset Nat.Primes deriving Inhabited, Repr, CanonicallyOrderedAddMonoid, DistribLattice,
-  SemilatticeSup, OrderBot, Sub, HasOrderedSub
+  SemilatticeSup, OrderBot, Sub, OrderedSub
 #align prime_multiset PrimeMultiset
 
 namespace PrimeMultiset
@@ -169,7 +169,7 @@ theorem to_of_pnat_multiset (v : Multiset ℕ+) (h) : (ofPnatMultiset v h : Mult
 #align prime_multiset.to_of_pnat_multiset PrimeMultiset.to_of_pnat_multiset
 
 theorem prod_of_pnat_multiset (v : Multiset ℕ+) (h) : ((ofPnatMultiset v h).Prod : ℕ+) = v.Prod :=
-  by
+  by 
   dsimp [Prod]
   rw [to_of_pnat_multiset]
 #align prime_multiset.prod_of_pnat_multiset PrimeMultiset.prod_of_pnat_multiset
@@ -228,7 +228,7 @@ def factorMultiset (n : ℕ+) : PrimeMultiset :=
 
 /-- The product of the factors is the original number -/
 theorem prod_factor_multiset (n : ℕ+) : (factorMultiset n).Prod = n :=
-  Eq <| by
+  Eq <| by 
     dsimp [factor_multiset]
     rw [PrimeMultiset.prod_of_nat_list]
     exact Nat.prod_factors n.ne_zero
@@ -264,7 +264,8 @@ end PrimeMultiset
 namespace PNat
 
 /-- Positive integers biject with multisets of primes. -/
-def factorMultisetEquiv : ℕ+ ≃ PrimeMultiset where
+def factorMultisetEquiv :
+    ℕ+ ≃ PrimeMultiset where 
   toFun := factorMultiset
   invFun := PrimeMultiset.prod
   left_inv := prod_factor_multiset
@@ -312,15 +313,13 @@ theorem factor_multiset_le_iff {m n : ℕ+} : factorMultiset m ≤ factorMultise
     apply Dvd.intro (n.factor_multiset - m.factor_multiset).Prod
     rw [← PrimeMultiset.prod_add, PrimeMultiset.factor_multiset_prod, add_tsub_cancel_of_le h,
       prod_factor_multiset]
-    
   · intro h
     rw [← mul_div_exact h, factor_multiset_mul]
     exact le_self_add
-    
 #align pnat.factor_multiset_le_iff PNat.factor_multiset_le_iff
 
 theorem factor_multiset_le_iff' {m : ℕ+} {v : PrimeMultiset} : factorMultiset m ≤ v ↔ m ∣ v.Prod :=
-  by
+  by 
   let h := @factor_multiset_le_iff m v.prod
   rw [v.factor_multiset_prod] at h
   exact h
@@ -354,12 +353,10 @@ theorem factor_multiset_gcd (m n : ℕ+) :
   · apply le_inf_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr
     exact gcd_dvd_left m n
     exact gcd_dvd_right m n
-    
   · rw [← PrimeMultiset.prod_dvd_iff, prod_factor_multiset]
     apply dvd_gcd <;> rw [PrimeMultiset.prod_dvd_iff']
     exact inf_le_left
     exact inf_le_right
-    
 #align pnat.factor_multiset_gcd PNat.factor_multiset_gcd
 
 theorem factor_multiset_lcm (m n : ℕ+) :
@@ -369,11 +366,9 @@ theorem factor_multiset_lcm (m n : ℕ+) :
     apply lcm_dvd <;> rw [← factor_multiset_le_iff']
     exact le_sup_left
     exact le_sup_right
-    
   · apply sup_le_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr
     exact dvd_lcm_left m n
     exact dvd_lcm_right m n
-    
 #align pnat.factor_multiset_lcm PNat.factor_multiset_lcm
 
 /-- The number of occurrences of p in the factor multiset of m
@@ -387,11 +382,9 @@ theorem count_factor_multiset (m : ℕ+) (p : Nat.Primes) (k : ℕ) :
   apply multiset.eq_repeat.mpr
   constructor
   · rw [Multiset.card_nsmul, PrimeMultiset.card_of_prime, mul_one]
-    
   · intro q h
     rw [PrimeMultiset.ofPrime, Multiset.nsmul_singleton _ k] at h
     exact Multiset.eq_of_mem_repeat h
-    
 #align pnat.count_factor_multiset PNat.count_factor_multiset
 
 end PNat

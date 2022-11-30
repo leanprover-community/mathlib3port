@@ -99,14 +99,12 @@ theorem span_singleton_ann_ideal_generator (a : A) :
     Ideal.span {annIdealGenerator 𝕜 a} = annIdeal 𝕜 a := by
   by_cases h : ann_ideal_generator 𝕜 a = 0
   · rw [h, ann_ideal_generator_eq_zero_iff.mp h, Set.singleton_zero, Ideal.span_zero]
-    
   · rw [ann_ideal_generator, Ideal.span_singleton_mul_right_unit, Ideal.span_singleton_generator]
     apply polynomial.is_unit_C.mpr
     apply IsUnit.mk0
     apply inv_eq_zero.not.mpr
     apply polynomial.leading_coeff_eq_zero.not.mpr
     apply (mul_ne_zero_iff.mp h).1
-    
 #align polynomial.span_singleton_ann_ideal_generator Polynomial.span_singleton_ann_ideal_generator
 
 /-- The annihilating ideal generator is a member of the annihilating ideal. -/
@@ -160,13 +158,12 @@ theorem ann_ideal_generator_eq_minpoly (a : A) : annIdealGenerator 𝕜 a = minp
     rintro ⟨p, p_monic, hp : aeval a p = 0⟩
     refine' p_monic.ne_zero (ideal.mem_bot.mp _)
     simpa only [ann_ideal_generator_eq_zero_iff.mp h] using mem_ann_ideal_iff_aeval_eq_zero.mpr hp
-    
-  · exact
+  ·
+    exact
       minpoly.unique _ _ (monic_ann_ideal_generator _ _ h) (ann_ideal_generator_aeval_eq_zero _ _)
         fun q q_monic hq =>
         degree_ann_ideal_generator_le_of_mem a q (mem_ann_ideal_iff_aeval_eq_zero.mpr hq)
           q_monic.NeZero
-    
 #align polynomial.ann_ideal_generator_eq_minpoly Polynomial.ann_ideal_generator_eq_minpoly
 
 /-- If a monic generates the annihilating ideal, it must match our choice
@@ -175,13 +172,10 @@ theorem monic_generator_eq_minpoly (a : A) (p : 𝕜[X]) (p_monic : p.Monic)
     (p_gen : Ideal.span {p} = annIdeal 𝕜 a) : annIdealGenerator 𝕜 a = p := by
   by_cases h : p = 0
   · rwa [h, ann_ideal_generator_eq_zero_iff, ← p_gen, ideal.span_singleton_eq_bot.mpr]
-    
   · rw [← span_singleton_ann_ideal_generator, Ideal.span_singleton_eq_span_singleton] at p_gen
     rw [eq_comm]
     apply eq_of_monic_of_associated p_monic _ p_gen
     · apply monic_ann_ideal_generator _ _ ((Associated.ne_zero_iff p_gen).mp h)
-      
-    
 #align polynomial.monic_generator_eq_minpoly Polynomial.monic_generator_eq_minpoly
 
 end Field

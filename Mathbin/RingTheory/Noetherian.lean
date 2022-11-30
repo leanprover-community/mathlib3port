@@ -134,9 +134,7 @@ theorem is_noetherian_of_linear_equiv (f : M ≃ₗ[R] P) [IsNoetherian R M] : I
 theorem is_noetherian_top_iff : IsNoetherian R (⊤ : Submodule R M) ↔ IsNoetherian R M := by
   constructor <;> intro h
   · exact is_noetherian_of_linear_equiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
-    
   · exact is_noetherian_of_linear_equiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl).symm
-    
 #align is_noetherian_top_iff is_noetherian_top_iff
 
 theorem is_noetherian_of_injective [IsNoetherian R P] (f : M →ₗ[R] P) (hf : Function.Injective f) :
@@ -211,18 +209,16 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ring R] [∀ i, A
   · let coe_e := Equiv.subtypeUnivEquiv Finset.mem_univ
     letI : IsNoetherian R (∀ i : Finset.univ, M (coe_e i)) := on_finset Finset.univ
     exact is_noetherian_of_linear_equiv (LinearEquiv.piCongrLeft R M coe_e)
-    
   intro s
   induction' s using Finset.induction with a s has ih
   · exact ⟨fun s => by convert Submodule.fg_bot⟩
-    
   refine'
     @is_noetherian_of_linear_equiv _ _ _ _ _ _ _ _ _ (@is_noetherian_prod _ (M a) _ _ _ _ _ _ _ ih)
   fconstructor
-  · exact fun f i =>
+  ·
+    exact fun f i =>
       Or.by_cases (Finset.mem_insert.1 i.2) (fun h : i.1 = a => show M i.1 from Eq.recOn h.symm f.1)
         fun h : i.1 ∈ s => show M i.1 from f.2 ⟨i.1, h⟩
-    
   · intro f g
     ext i
     unfold Or.by_cases
@@ -231,15 +227,12 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ring R] [∀ i, A
     · change _ = _ + _
       simp only [dif_pos]
       rfl
-      
     · change _ = _ + _
-      have : ¬i = a := by
+      have : ¬i = a := by 
         rintro rfl
         exact has h
       simp only [dif_neg this, dif_pos h]
       rfl
-      
-    
   · intro c f
     ext i
     unfold Or.by_cases
@@ -248,40 +241,31 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ring R] [∀ i, A
     · change _ = c • _
       simp only [dif_pos]
       rfl
-      
     · change _ = c • _
-      have : ¬i = a := by
+      have : ¬i = a := by 
         rintro rfl
         exact has h
       simp only [dif_neg this, dif_pos h]
       rfl
-      
-    
-  · exact fun f =>
+  ·
+    exact fun f =>
       (f ⟨a, Finset.mem_insert_self _ _⟩, fun i => f ⟨i.1, Finset.mem_insert_of_mem i.2⟩)
-    
   · intro f
     apply Prod.ext
     · simp only [Or.by_cases, dif_pos]
-      
     · ext ⟨i, his⟩
-      have : ¬i = a := by
+      have : ¬i = a := by 
         rintro rfl
         exact has his
       simp only [Or.by_cases, this, not_false_iff, dif_neg]
-      
-    
   · intro f
     ext ⟨i, hi⟩
     rcases Finset.mem_insert.1 hi with (rfl | h)
     · simp only [Or.by_cases, dif_pos]
-      
-    · have : ¬i = a := by
+    · have : ¬i = a := by 
         rintro rfl
         exact has h
       simp only [Or.by_cases, dif_neg this, dif_pos h]
-      
-    
 #align is_noetherian_pi is_noetherian_pi
 
 /-- A version of `is_noetherian_pi` for non-dependent functions. We need this instance because
@@ -315,13 +299,12 @@ theorem is_noetherian_iff_fg_well_founded :
     IsNoetherian R M ↔
       WellFounded
         ((· > ·) : { N : Submodule R M // N.Fg } → { N : Submodule R M // N.Fg } → Prop) :=
-  by
+  by 
   let α := { N : Submodule R M // N.Fg }
   constructor
   · intro H
     let f : α ↪o Submodule R M := OrderEmbedding.subtype _
     exact OrderEmbedding.well_founded f.dual (is_noetherian_iff_well_founded.mp H)
-    
   · intro H
     constructor
     intro N
@@ -337,15 +320,10 @@ theorem is_noetherian_iff_fg_well_founded :
     · injection this with eq
       rw [← Eq]
       exact (le_sup_left : (R ∙ x) ≤ (R ∙ x) ⊔ N₀) (Submodule.mem_span_singleton_self _)
-      
     · exact Submodule.Fg.sup ⟨{x}, by rw [Finset.coe_singleton]⟩ h₁
-      
     · exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e
-      
     · show N₀ ≤ (R ∙ x) ⊔ N₀
       exact le_sup_right
-      
-    
 #align is_noetherian_iff_fg_well_founded is_noetherian_iff_fg_well_founded
 
 variable (R M)
@@ -396,7 +374,7 @@ theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set 
     rintro n x ⟨y, hy₁, rfl⟩
     exact (f y).2
   have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | m ≤ a }) ≤ span R (coe ∘ f '' { m | m ≤ b }) :=
-    by
+    by 
     intro a b
     rw [span_le_span_iff hs (this a) (this b),
       Set.image_subset_image_iff (subtype.coe_injective.comp f.injective), Set.subset_def]
@@ -464,18 +442,16 @@ is eventually zero.
 -/
 theorem IsNoetherian.disjoint_partial_sups_eventually_bot [I : IsNoetherian R M]
     (f : ℕ → Submodule R M) (h : ∀ n, Disjoint (partialSups f n) (f (n + 1))) :
-    ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊥ := by
+    ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊥ :=
+  by
   -- A little off-by-one cleanup first:
   suffices t : ∃ n : ℕ, ∀ m, n ≤ m → f (m + 1) = ⊥
   · obtain ⟨n, w⟩ := t
     use n + 1
     rintro (_ | m) p
     · cases p
-      
     · apply w
       exact nat.succ_le_succ_iff.mp p
-      
-    
   obtain ⟨n, w⟩ := monotone_stabilizes_iff_noetherian.mpr I (partialSups f)
   exact
     ⟨n, fun m p =>
@@ -567,20 +543,16 @@ theorem is_noetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Modul
     @is_noetherian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_noetherian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
-      
     · intro f g
       apply Subtype.eq
       change (∑ i in s.attach, (f i + g i) • _) = _
       simp only [add_smul, Finset.sum_add_distrib]
       rfl
-      
     · intro c f
       apply Subtype.eq
       change (∑ i in s.attach, (c • f i) • _) = _
       simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
-      
-    
   rw [LinearMap.range_eq_top]
   rintro ⟨n, hn⟩
   change n ∈ N at hn

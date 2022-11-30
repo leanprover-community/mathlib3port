@@ -49,7 +49,7 @@ def gcd (n m : ℕ+) : ℕ+ :=
 /-- The least common multiple (lcm) of two positive natural numbers,
   viewed as positive natural number. -/
 def lcm (n m : ℕ+) : ℕ+ :=
-  ⟨Nat.lcm (n : ℕ) (m : ℕ), by
+  ⟨Nat.lcm (n : ℕ) (m : ℕ), by 
     let h := mul_pos n.pos m.pos
     rw [← gcd_mul_lcm (n : ℕ) (m : ℕ), mul_comm] at h
     exact pos_of_dvd_of_pos (Dvd.intro (Nat.gcd (n : ℕ) (m : ℕ)) rfl) h⟩
@@ -196,7 +196,7 @@ theorem gcd_eq_right_iff_dvd {m n : ℕ+} : m ∣ n ↔ n.gcd m = m := by
 #align pnat.gcd_eq_right_iff_dvd PNat.gcd_eq_right_iff_dvd
 
 theorem Coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (k * m).gcd n = m.gcd n :=
-  by
+  by 
   intro h; apply Eq; simp only [gcd_coe, mul_coe]
   apply Nat.Coprime.gcd_mul_left_cancel; simpa
 #align pnat.coprime.gcd_mul_left_cancel PNat.Coprime.gcd_mul_left_cancel
@@ -222,7 +222,7 @@ theorem one_gcd {n : ℕ+} : gcd 1 n = 1 := by
 #align pnat.one_gcd PNat.one_gcd
 
 @[simp]
-theorem gcd_one {n : ℕ+} : gcd n 1 = 1 := by
+theorem gcd_one {n : ℕ+} : gcd n 1 = 1 := by 
   rw [gcd_comm]
   apply one_gcd
 #align pnat.gcd_one PNat.gcd_one
@@ -251,7 +251,7 @@ theorem Coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.Coprime n → m.
 #align pnat.coprime.coprime_dvd_left PNat.Coprime.coprime_dvd_left
 
 theorem Coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
-    a = (a * b).gcd m := by
+    a = (a * b).gcd m := by 
   rw [gcd_eq_left_iff_dvd] at am
   conv_lhs => rw [← am]; symm
   apply coprime.gcd_mul_right_cancel a
@@ -272,7 +272,7 @@ theorem Coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.Coprime n) (
 #align pnat.coprime.factor_eq_gcd_right_right PNat.Coprime.factor_eq_gcd_right_right
 
 theorem Coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.Coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n :=
-  by
+  by 
   rw [← coprime_coe] at h; apply Eq
   simp only [gcd_coe, mul_coe]; apply Nat.Coprime.gcd_mul k h
 #align pnat.coprime.gcd_mul PNat.Coprime.gcd_mul

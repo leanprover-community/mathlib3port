@@ -46,7 +46,9 @@ variable [AddCommMonoid N] [Module R N]
 include dec_ι
 
 /-- `dfinsupp.mk` as a `linear_map`. -/
-def lmk (s : Finset ι) : (∀ i : (↑s : Set ι), M i) →ₗ[R] Π₀ i, M i where
+def lmk (s : Finset ι) :
+    (∀ i : (↑s : Set ι), M i) →ₗ[R]
+      Π₀ i, M i where 
   toFun := mk s
   map_add' _ _ := mk_add
   map_smul' c x := mk_smul c x
@@ -66,7 +68,7 @@ theorem lhom_ext ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i x, φ (sing
 
 See note [partially-applied ext lemmas].
 After apply this lemma, if `M = R` then it suffices to verify `φ (single a 1) = ψ (single a 1)`. -/
-@[ext.1]
+@[ext]
 theorem lhom_ext' ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i, φ.comp (lsingle i) = ψ.comp (lsingle i)) :
     φ = ψ :=
   lhom_ext fun i => LinearMap.congr_fun (h i)
@@ -75,7 +77,8 @@ theorem lhom_ext' ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i, φ.comp (
 omit dec_ι
 
 /-- Interpret `λ (f : Π₀ i, M i), f i` as a linear map. -/
-def lapply (i : ι) : (Π₀ i, M i) →ₗ[R] M i where
+def lapply (i : ι) : (Π₀ i, M i) →ₗ[R]
+      M i where 
   toFun f := f i
   map_add' f g := add_apply f g i
   map_smul' c f := smul_apply c f i
@@ -129,31 +132,31 @@ include dec_ι
 See note [bundled maps over different rings] for why separate `R` and `S` semirings are used. -/
 @[simps]
 def lsum [Semiring S] [Module S N] [SmulCommClass R S N] :
-    (∀ i, M i →ₗ[R] N) ≃ₗ[S] (Π₀ i, M i) →ₗ[R] N where
+    (∀ i, M i →ₗ[R] N) ≃ₗ[S]
+      (Π₀ i, M i) →ₗ[R]
+        N where 
   toFun F :=
     { toFun := sumAddHom fun i => (F i).toAddMonoidHom,
       map_add' := (liftAddHom fun i => (F i).toAddMonoidHom).map_add,
-      map_smul' := fun c f => by
+      map_smul' := fun c f => by 
         dsimp
         apply Dfinsupp.induction f
         · rw [smul_zero, AddMonoidHom.map_zero, smul_zero]
-          
         · intro a b f ha hb hf
           rw [smul_add, AddMonoidHom.map_add, AddMonoidHom.map_add, smul_add, hf, ← single_smul,
             sum_add_hom_single, sum_add_hom_single, LinearMap.to_add_monoid_hom_coe,
-            LinearMap.map_smul]
-           }
+            LinearMap.map_smul] }
   invFun F i := F.comp (lsingle i)
-  left_inv F := by
+  left_inv F := by 
     ext (x y)
     simp
-  right_inv F := by
+  right_inv F := by 
     ext (x y)
     simp
-  map_add' F G := by
+  map_add' F G := by 
     ext (x y)
     simp
-  map_smul' c F := by
+  map_smul' c F := by 
     ext
     simp
 #align dfinsupp.lsum Dfinsupp.lsum
@@ -315,10 +318,8 @@ theorem supr_eq_range_dfinsupp_lsum (p : ι → Submodule R N) :
   · apply supr_le _
     intro i y hy
     exact ⟨Dfinsupp.single i ⟨y, hy⟩, Dfinsupp.sum_add_hom_single _ _ _⟩
-    
   · rintro x ⟨v, rfl⟩
     exact dfinsupp_sum_add_hom_mem _ v _ fun i _ => (le_supr p i : p i ≤ _) (v i).Prop
-    
 #align submodule.supr_eq_range_dfinsupp_lsum Submodule.supr_eq_range_dfinsupp_lsum
 
 /-- The bounded supremum of a family of commutative additive submonoids is equal to the range of
@@ -328,21 +329,17 @@ satisfy `p i`, coercing them to `γ`, and summing them. -/
 theorem bsupr_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι → Submodule R N) :
     (⨆ (i) (h : p i), S i) =
       ((Dfinsupp.lsum ℕ fun i => (S i).Subtype).comp (Dfinsupp.filterLinearMap R _ p)).range :=
-  by
+  by 
   apply le_antisymm
   · refine' supr₂_le fun i hi y hy => ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
     rw [LinearMap.comp_apply, filter_linear_map_apply, filter_single_pos _ _ hi]
     exact Dfinsupp.sum_add_hom_single _ _ _
-    
   · rintro x ⟨v, rfl⟩
     refine' dfinsupp_sum_add_hom_mem _ _ _ fun i hi => _
     refine' mem_supr_of_mem i _
     by_cases hp : p i
     · simp [hp]
-      
     · simp [hp]
-      
-    
 #align submodule.bsupr_eq_range_dfinsupp_lsum Submodule.bsupr_eq_range_dfinsupp_lsum
 
 theorem mem_supr_iff_exists_dfinsupp (p : ι → Submodule R N) (x : N) :
@@ -370,47 +367,40 @@ open BigOperators
 omit dec_ι
 
 theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
-    (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by classical
-  rw [Submodule.mem_supr_iff_exists_dfinsupp']
-  constructor <;> rintro ⟨μ, hμ⟩
-  · use fun i => ⟨μ i, (supr_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
-    rw [← hμ]
-    symm
-    apply Finset.sum_subset
-    · intro x
-      contrapose
-      intro hx
-      rw [mem_support_iff, not_ne_iff]
-      ext
-      rw [coe_zero, ← mem_bot R]
-      convert coe_mem (μ x)
+    (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by
+  classical 
+    rw [Submodule.mem_supr_iff_exists_dfinsupp']
+    constructor <;> rintro ⟨μ, hμ⟩
+    · use fun i => ⟨μ i, (supr_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
+      rw [← hμ]
       symm
-      exact supr_neg hx
-      
-    · intro x _ hx
-      rw [mem_support_iff, not_ne_iff] at hx
-      rw [hx]
-      rfl
-      
-    
-  · refine' ⟨Dfinsupp.mk s _, _⟩
-    · rintro ⟨i, hi⟩
-      refine' ⟨μ i, _⟩
-      rw [supr_pos]
-      · exact coe_mem _
-        
-      · exact hi
-        
-      
-    simp only [Dfinsupp.sum]
-    rw [Finset.sum_subset support_mk_subset, ← hμ]
-    exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
-    · intro x _ hx
-      rw [mem_support_iff, not_ne_iff] at hx
-      rw [hx]
-      rfl
-      
-    
+      apply Finset.sum_subset
+      · intro x
+        contrapose
+        intro hx
+        rw [mem_support_iff, not_ne_iff]
+        ext
+        rw [coe_zero, ← mem_bot R]
+        convert coe_mem (μ x)
+        symm
+        exact supr_neg hx
+      · intro x _ hx
+        rw [mem_support_iff, not_ne_iff] at hx
+        rw [hx]
+        rfl
+    · refine' ⟨Dfinsupp.mk s _, _⟩
+      · rintro ⟨i, hi⟩
+        refine' ⟨μ i, _⟩
+        rw [supr_pos]
+        · exact coe_mem _
+        · exact hi
+      simp only [Dfinsupp.sum]
+      rw [Finset.sum_subset support_mk_subset, ← hμ]
+      exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
+      · intro x _ hx
+        rw [mem_support_iff, not_ne_iff] at hx
+        rw [hx]
+        rfl
 #align submodule.mem_supr_finset_iff_exists_sum Submodule.mem_supr_finset_iff_exists_sum
 
 end Submodule
@@ -451,7 +441,6 @@ theorem independentOfDfinsuppLsumInjective (p : ι → Submodule R N)
   replace hv :
     lsum ℕ (fun i => (p i).Subtype) (erase i v) = lsum ℕ (fun i => (p i).Subtype) (single i x)
   · simpa only [lsum_single] using hv
-    
   have := dfinsupp.ext_iff.mp (h hv) i
   simpa [eq_comm] using this
 #align
@@ -474,7 +463,7 @@ theorem lsum_comp_map_range_to_span_singleton [∀ m : R, Decidable (m ≠ 0)] (
               _ →ₗ[R] _).comp
           (finsuppLequivDfinsupp R : (ι →₀ R) ≃ₗ[R] _).toLinearMap) =
       Finsupp.total ι N R v :=
-  by
+  by 
   ext
   simp
 #align
@@ -503,10 +492,12 @@ Note that this is not generally true for `[semiring R]`, for instance when `A` i
 
 See `counterexamples/direct_sum_is_internal.lean` for a proof of this fact. -/
 theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Independent p) :
-    Function.Injective (lsum ℕ fun i => (p i).Subtype) := by
+    Function.Injective (lsum ℕ fun i => (p i).Subtype) :=
+  by
   -- simplify everything down to binders over equalities in `N`
   rw [independent_iff_forall_dfinsupp] at h
-  suffices (lsum ℕ fun i => (p i).Subtype).ker = ⊥ by
+  suffices (lsum ℕ fun i => (p i).Subtype).ker = ⊥
+    by
     -- Lean can't find this without our help
     letI : AddCommGroup (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
     rw [LinearMap.ker_eq_bot] at this
@@ -558,19 +549,20 @@ forms a linearly independent family.
 See also `complete_lattice.independent.linear_independent'`. -/
 theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N)
     (hp : Independent p) {v : ι → N} (hv : ∀ i, v i ∈ p i) (hv' : ∀ i, v i ≠ 0) :
-    LinearIndependent R v := by classical
-  rw [linear_independent_iff]
-  intro l hl
-  let a :=
-    Dfinsupp.mapRange.linearMap (fun i => LinearMap.toSpanSingleton R (p i) ⟨v i, hv i⟩)
-      l.to_dfinsupp
-  have ha : a = 0 := by
-    apply hp.dfinsupp_lsum_injective
-    rwa [← lsum_comp_map_range_to_span_singleton _ hv] at hl
-  ext i
-  apply smul_left_injective R (hv' i)
-  have : l i • v i = a i := rfl
-  simp [this, ha]
+    LinearIndependent R v := by
+  classical 
+    rw [linear_independent_iff]
+    intro l hl
+    let a :=
+      Dfinsupp.mapRange.linearMap (fun i => LinearMap.toSpanSingleton R (p i) ⟨v i, hv i⟩)
+        l.to_dfinsupp
+    have ha : a = 0 := by 
+      apply hp.dfinsupp_lsum_injective
+      rwa [← lsum_comp_map_range_to_span_singleton _ hv] at hl
+    ext i
+    apply smul_left_injective R (hv' i)
+    have : l i • v i = a i := rfl
+    simp [this, ha]
 #align
   complete_lattice.independent.linear_independent CompleteLattice.Independent.linear_independent
 

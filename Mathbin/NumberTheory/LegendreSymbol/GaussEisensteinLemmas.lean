@@ -34,7 +34,7 @@ theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 := by
       _ = ∏ x : (Zmod p)ˣ, x := _
       _ = -1 := by
         simp_rw [← Units.coe_hom_apply, ← (Units.coeHom (Zmod p)).map_prod,
-          prod_univ_units_id_eq_neg_one, Units.coe_hom_apply, Units.coe_neg, Units.val_one]
+          prod_univ_units_id_eq_neg_one, Units.coe_hom_apply, Units.val_neg, Units.val_one]
       
   have hp : 0 < p := (Fact.out p.prime).Pos
   symm
@@ -46,17 +46,12 @@ theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 := by
       rw [← @val_zero p]
       intro h
       apply Units.ne_zero a (val_injective p h)
-      
     · exact val_lt _
-      
-    
   · intro a ha
     simp only [cast_id, nat_cast_val]
-    
   · intro _ _ _ _ h
     rw [Units.ext_iff]
     exact val_injective p h
-    
   · intro b hb
     rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb
     refine' ⟨Units.mk0 b _, Finset.mem_univ _, _⟩
@@ -64,10 +59,7 @@ theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 := by
       apply hb.1
       apply_fun val  at h
       simpa only [val_cast_of_lt hb.right, val_zero] using h
-      
-    · simp only [val_cast_of_lt hb.right, Units.coe_mk0]
-      
-    
+    · simp only [val_cast_of_lt hb.right, Units.val_mk0]
 #align zmod.wilsons_lemma Zmod.wilsons_lemma
 
 @[simp]
@@ -101,32 +93,29 @@ theorem Ico_map_val_min_abs_nat_abs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] 
   have hmem :
     ∀ (x : ℕ) (hx : x ∈ Ico 1 (p / 2).succ),
       (a * x : Zmod p).valMinAbs.natAbs ∈ Ico 1 (p / 2).succ :=
-    by
+    by 
     intro x hx
     simp [hap, CharP.cast_eq_zero_iff (Zmod p) p, hpe hx, lt_succ_iff, succ_le_iff, pos_iff_ne_zero,
       nat_abs_val_min_abs_le _]
   have hsurj :
     ∀ (b : ℕ) (hb : b ∈ Ico 1 (p / 2).succ),
       ∃ x ∈ Ico 1 (p / 2).succ, b = (a * x : Zmod p).valMinAbs.natAbs :=
-    by
+    by 
     intro b hb
     refine' ⟨(b / a : Zmod p).valMinAbs.natAbs, mem_Ico.mpr ⟨_, _⟩, _⟩
     · apply Nat.pos_of_ne_zero
       simp only [div_eq_mul_inv, hap, CharP.cast_eq_zero_iff (Zmod p) p, hpe hb, not_false_iff,
         val_min_abs_eq_zero, inv_eq_zero, Int.natAbs_eq_zero, Ne.def, mul_eq_zero, or_self_iff]
-      
     · apply lt_succ_of_le
       apply nat_abs_val_min_abs_le
-      
     · rw [nat_cast_nat_abs_val_min_abs]
       split_ifs
-      · erw [mul_div_cancel' _ hap, val_min_abs_def_pos, val_cast_of_lt (hep hb),
+      ·
+        erw [mul_div_cancel' _ hap, val_min_abs_def_pos, val_cast_of_lt (hep hb),
           if_pos (le_of_lt_succ (mem_Ico.1 hb).2), Int.natAbs_ofNat]
-        
-      · erw [mul_neg, mul_div_cancel' _ hap, nat_abs_val_min_abs_neg, val_min_abs_def_pos,
+      ·
+        erw [mul_neg, mul_div_cancel' _ hap, nat_abs_val_min_abs_neg, val_min_abs_def_pos,
           val_cast_of_lt (hep hb), if_pos (le_of_lt_succ (mem_Ico.1 hb).2), Int.natAbs_ofNat]
-        
-      
   exact
     Multiset.map_eq_map_of_bij_of_nodup _ _ (Finset.nodup _) (Finset.nodup _)
       (fun x _ => (a * x : Zmod p).valMinAbs.natAbs) hmem (fun _ _ => rfl)
@@ -188,7 +177,7 @@ theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : �
 theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a : Zmod p) ≠ 0) :
     legendreSym p a =
       (-1) ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card :=
-  by
+  by 
   haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
   have :
     (legendreSym p a : Zmod p) =
@@ -333,7 +322,7 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
   have hdisj :
     Disjoint ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q)
       ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) :=
-    by
+    by 
     apply disjoint_filter.2 fun x hx hpq hqp => _
     have hxp : x.1 < p :=
       lt_of_le_of_lt
@@ -360,7 +349,7 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
 theorem eisenstein_lemma {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℕ} (ha1 : a % 2 = 1)
     (ha0 : (a : Zmod p) ≠ 0) : legendreSym p a = (-1) ^ ∑ x in ico 1 (p / 2).succ, x * a / p := by
   haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
-  have ha0' : ((a : ℤ) : Zmod p) ≠ 0 := by
+  have ha0' : ((a : ℤ) : Zmod p) ≠ 0 := by 
     norm_cast
     exact ha0
   rw [neg_one_pow_eq_pow_mod_two, gauss_lemma hp ha0', neg_one_pow_eq_pow_mod_two,

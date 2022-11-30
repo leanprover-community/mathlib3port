@@ -42,14 +42,14 @@ noncomputable def mirror :=
 theorem mirror_zero : (0 : R[X]).mirror = 0 := by simp [mirror]
 #align polynomial.mirror_zero Polynomial.mirror_zero
 
-theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a := by classical
-  by_cases ha : a = 0
-  · rw [ha, monomial_zero_right, mirror_zero]
-    
-  · rw [mirror, reverse, nat_degree_monomial n a, if_neg ha, nat_trailing_degree_monomial ha, ←
-      C_mul_X_pow_eq_monomial, reflect_C_mul_X_pow, rev_at_le (le_refl n), tsub_self, pow_zero,
-      mul_one]
-    
+theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a := by
+  classical 
+    by_cases ha : a = 0
+    · rw [ha, monomial_zero_right, mirror_zero]
+    ·
+      rw [mirror, reverse, nat_degree_monomial n a, if_neg ha, nat_trailing_degree_monomial ha, ←
+        C_mul_X_pow_eq_monomial, reflect_C_mul_X_pow, rev_at_le (le_refl n), tsub_self, pow_zero,
+        mul_one]
 #align polynomial.mirror_monomial Polynomial.mirror_monomial
 
 theorem mirror_C (a : R) : (c a).mirror = c a :=
@@ -63,7 +63,6 @@ theorem mirror_X : x.mirror = (x : R[X]) :=
 theorem mirror_nat_degree : p.mirror.natDegree = p.natDegree := by
   by_cases hp : p = 0
   · rw [hp, mirror_zero]
-    
   nontriviality R
   rw [mirror, nat_degree_mul', reverse_nat_degree, nat_degree_X_pow,
     tsub_add_cancel_of_le p.nat_trailing_degree_le_nat_degree]
@@ -73,10 +72,9 @@ theorem mirror_nat_degree : p.mirror.natDegree = p.natDegree := by
 theorem mirror_nat_trailing_degree : p.mirror.natTrailingDegree = p.natTrailingDegree := by
   by_cases hp : p = 0
   · rw [hp, mirror_zero]
-    
-  · rw [mirror, nat_trailing_degree_mul_X_pow ((mt reverse_eq_zero.mp) hp),
+  ·
+    rw [mirror, nat_trailing_degree_mul_X_pow ((mt reverse_eq_zero.mp) hp),
       reverse_nat_trailing_degree, zero_add]
-    
 #align polynomial.mirror_nat_trailing_degree Polynomial.mirror_nat_trailing_degree
 
 theorem coeff_mirror (n : ℕ) :
@@ -86,16 +84,13 @@ theorem coeff_mirror (n : ℕ) :
     by_cases h1 : n ≤ p.nat_degree + p.nat_trailing_degree
     · rw [rev_at_le h1, coeff_eq_zero_of_lt_nat_trailing_degree]
       exact (tsub_lt_iff_left h1).mpr (Nat.add_lt_add_right h2 _)
-      
     · rw [← rev_at_fun_eq, rev_at_fun, if_neg h1, coeff_eq_zero_of_nat_degree_lt h2]
-      
-    
   rw [not_lt] at h2
   rw [rev_at_le (h2.trans (Nat.le_add_right _ _))]
   by_cases h3 : p.nat_trailing_degree ≤ n
-  · rw [← tsub_add_eq_add_tsub h2, ← tsub_tsub_assoc h2 h3, mirror, coeff_mul_X_pow', if_pos h3,
+  ·
+    rw [← tsub_add_eq_add_tsub h2, ← tsub_tsub_assoc h2 h3, mirror, coeff_mul_X_pow', if_pos h3,
       coeff_reverse, rev_at_le (tsub_le_self.trans h2)]
-    
   rw [not_le] at h3
   rw [coeff_eq_zero_of_nat_degree_lt (lt_tsub_iff_right.mpr (Nat.add_lt_add_left h3 _))]
   exact coeff_eq_zero_of_lt_nat_trailing_degree (by rwa [mirror_nat_trailing_degree])
@@ -106,15 +101,12 @@ theorem mirror_eval_one : p.mirror.eval 1 = p.eval 1 := by
   simp_rw [eval_eq_sum_range, one_pow, mul_one, mirror_nat_degree]
   refine' Finset.sum_bij_ne_zero _ _ _ _ _
   · exact fun n hn hp => rev_at (p.nat_degree + p.nat_trailing_degree) n
-    
   · intro n hn hp
     rw [Finset.mem_range_succ_iff] at *
     rw [rev_at_le (hn.trans (Nat.le_add_right _ _))]
     rw [tsub_le_iff_tsub_le, add_comm, add_tsub_cancel_right, ← mirror_nat_trailing_degree]
     exact nat_trailing_degree_le_of_ne_zero hp
-    
   · exact fun n₁ n₂ hn₁ hp₁ hn₂ hp₂ h => by rw [← @rev_at_invol _ n₁, h, rev_at_invol]
-    
   · intro n hn hp
     use rev_at (p.nat_degree + p.nat_trailing_degree) n
     refine' ⟨_, _, rev_at_invol.symm⟩
@@ -122,13 +114,9 @@ theorem mirror_eval_one : p.mirror.eval 1 = p.eval 1 := by
       rw [rev_at_le (hn.trans (Nat.le_add_right _ _))]
       rw [tsub_le_iff_tsub_le, add_comm, add_tsub_cancel_right]
       exact nat_trailing_degree_le_of_ne_zero hp
-      
     · change p.mirror.coeff _ ≠ 0
       rwa [coeff_mirror, rev_at_invol]
-      
-    
   · exact fun n hn hp => p.coeff_mirror n
-    
 #align polynomial.mirror_eval_one Polynomial.mirror_eval_one
 
 theorem mirror_mirror : p.mirror.mirror = p :=
@@ -185,7 +173,6 @@ variable [NoZeroDivisors R]
 theorem nat_degree_mul_mirror : (p * p.mirror).natDegree = 2 * p.natDegree := by
   by_cases hp : p = 0
   · rw [hp, zero_mul, nat_degree_zero, mul_zero]
-    
   rw [nat_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_degree, two_mul]
 #align polynomial.nat_degree_mul_mirror Polynomial.nat_degree_mul_mirror
 
@@ -193,7 +180,6 @@ theorem nat_trailing_degree_mul_mirror :
     (p * p.mirror).natTrailingDegree = 2 * p.natTrailingDegree := by
   by_cases hp : p = 0
   · rw [hp, zero_mul, nat_trailing_degree_zero, mul_zero]
-    
   rw [nat_trailing_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_trailing_degree, two_mul]
 #align polynomial.nat_trailing_degree_mul_mirror Polynomial.nat_trailing_degree_mul_mirror
 
@@ -212,17 +198,15 @@ variable [NoZeroDivisors R]
 theorem mirror_mul_of_domain : (p * q).mirror = p.mirror * q.mirror := by
   by_cases hp : p = 0
   · rw [hp, zero_mul, mirror_zero, zero_mul]
-    
   by_cases hq : q = 0
   · rw [hq, mul_zero, mirror_zero, mul_zero]
-    
   rw [mirror, mirror, mirror, reverse_mul_of_domain, nat_trailing_degree_mul hp hq, pow_add]
   rw [mul_assoc, ← mul_assoc q.reverse]
-  conv_lhs =>
-  congr
-  skip
-  congr
-  rw [← X_pow_mul]
+  conv_lhs => 
+    congr
+    skip
+    congr
+    rw [← X_pow_mul]
   repeat' rw [mul_assoc]
 #align polynomial.mirror_mul_of_domain Polynomial.mirror_mul_of_domain
 
@@ -241,16 +225,15 @@ theorem irreducible_of_mirror (h1 : ¬IsUnit f)
     (h3 : ∀ g, g ∣ f → g ∣ f.mirror → IsUnit g) : Irreducible f := by
   constructor
   · exact h1
-    
   · intro g h fgh
     let k := g * h.mirror
     have key : f * f.mirror = k * k.mirror := by
       rw [fgh, mirror_mul_of_domain, mirror_mul_of_domain, mirror_mirror, mul_assoc, mul_comm h,
         mul_comm g.mirror, mul_assoc, ← mul_assoc]
-    have g_dvd_f : g ∣ f := by
+    have g_dvd_f : g ∣ f := by 
       rw [fgh]
       exact dvd_mul_right g h
-    have h_dvd_f : h ∣ f := by
+    have h_dvd_f : h ∣ f := by 
       rw [fgh]
       exact dvd_mul_left h g
     have g_dvd_k : g ∣ k := dvd_mul_right g h.mirror
@@ -260,14 +243,9 @@ theorem irreducible_of_mirror (h1 : ¬IsUnit f)
     have hk := h2 k key
     rcases hk with (hk | hk | hk | hk)
     · exact Or.inr (h3 h h_dvd_f (by rwa [← hk]))
-      
     · exact Or.inr (h3 h h_dvd_f (by rwa [eq_neg_iff_eq_neg.mp hk, mirror_neg, dvd_neg]))
-      
     · exact Or.inl (h3 g g_dvd_f (by rwa [← hk]))
-      
     · exact Or.inl (h3 g g_dvd_f (by rwa [eq_neg_iff_eq_neg.mp hk, dvd_neg]))
-      
-    
 #align polynomial.irreducible_of_mirror Polynomial.irreducible_of_mirror
 
 end CommRing

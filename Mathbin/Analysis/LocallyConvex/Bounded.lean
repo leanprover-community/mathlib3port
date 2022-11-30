@@ -193,7 +193,7 @@ theorem TotallyBounded.isVonNBounded {s : Set E} (hs : TotallyBounded s) :
   rcases hs x.snd hx.2.1 with ⟨t, ht, hs⟩
   refine' Absorbs.monoRight _ hs
   rw [ht.absorbs_Union]
-  have hx_fstsnd : x.fst + x.snd ⊆ U := by
+  have hx_fstsnd : x.fst + x.snd ⊆ U := by 
     intro z hz
     rcases set.mem_add.mp hz with ⟨z1, z2, hz1, hz2, hz⟩
     have hz' : (z1, z2) ∈ x.fst ×ˢ x.snd := ⟨hz1, hz2⟩
@@ -230,9 +230,7 @@ theorem is_vonN_bounded_iff (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ Bor
     rw [← ball_norm_seminorm 𝕜 E, Seminorm.smul_ball_zero (hρ.trans ha), ball_norm_seminorm,
       mul_one] at hρball
     exact ⟨‖a‖, hρball.trans Metric.ball_subset_closed_ball⟩
-    
   · exact fun ⟨C, hC⟩ => (is_vonN_bounded_closed_ball 𝕜 E C).Subset hC
-    
 #align normed_space.is_vonN_bounded_iff NormedSpace.is_vonN_bounded_iff
 
 theorem is_vonN_bounded_iff' (s : Set E) :
@@ -264,10 +262,8 @@ theorem is_bounded_iff_subset_smul_ball {s : Set E} :
     rcases h (Metric.ball_mem_nhds 0 zero_lt_one) with ⟨ρ, hρ, hρball⟩
     rcases NormedField.exists_lt_norm 𝕜 ρ with ⟨a, ha⟩
     exact ⟨a, hρball a ha.le⟩
-    
   · rintro ⟨a, ha⟩
     exact ((is_vonN_bounded_ball 𝕜 E 1).image (a • 1 : E →L[𝕜] E)).Subset ha
-    
 #align normed_space.is_bounded_iff_subset_smul_ball NormedSpace.is_bounded_iff_subset_smul_ball
 
 theorem is_bounded_iff_subset_smul_closed_ball {s : Set E} :
@@ -275,11 +271,9 @@ theorem is_bounded_iff_subset_smul_closed_ball {s : Set E} :
   constructor
   · rw [is_bounded_iff_subset_smul_ball 𝕜]
     exact Exists.imp fun a ha => ha.trans <| Set.smul_set_mono <| Metric.ball_subset_closed_ball
-    
   · rw [← is_vonN_bounded_iff 𝕜]
     rintro ⟨a, ha⟩
     exact ((is_vonN_bounded_closed_ball 𝕜 E 1).image (a • 1 : E →L[𝕜] E)).Subset ha
-    
 #align
   normed_space.is_bounded_iff_subset_smul_closed_ball NormedSpace.is_bounded_iff_subset_smul_closed_ball
 

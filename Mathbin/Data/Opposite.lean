@@ -118,7 +118,7 @@ theorem unop_inj_iff (x y : αᵒᵖ) : unop x = unop y ↔ x = y :=
 
 #print Opposite.equivToOpposite /-
 /-- The type-level equivalence between a type and its opposite. -/
-def equivToOpposite : α ≃ αᵒᵖ where
+def equivToOpposite : α ≃ αᵒᵖ where 
   toFun := op
   invFun := unop
   left_inv := unop_op

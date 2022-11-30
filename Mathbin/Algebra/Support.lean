@@ -231,9 +231,7 @@ theorem mul_support_pow [Monoid M] (f : α → M) (n : ℕ) :
     (mulSupport fun x => f x ^ n) ⊆ mulSupport f := by
   induction' n with n hfn
   · simpa only [pow_zero, mul_support_one] using empty_subset _
-    
   · simpa only [pow_succ] using (mul_support_mul f _).trans (union_subset subset.rfl hfn)
-    
 #align function.mul_support_pow Function.mul_support_pow
 
 section DivisionMonoid
@@ -379,7 +377,7 @@ open Function
 
 @[to_additive]
 theorem mul_support_mul_single_subset : mulSupport (mulSingle a b) ⊆ {a} := fun x hx =>
-  by_contra fun hx' => hx <| mul_single_eq_of_ne hx' _
+  by_contra fun hx' => hx <| mulSingle_eq_of_ne hx' _
 #align pi.mul_support_mul_single_subset Pi.mul_support_mul_single_subset
 
 @[to_additive]

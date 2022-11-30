@@ -41,7 +41,9 @@ namespace SemiNormedGroupCat
 
 /-- The completion of a seminormed group, as an endofunctor on `SemiNormedGroup`. -/
 @[simps]
-def completion : SemiNormedGroupCat.{u} ⥤ SemiNormedGroupCat.{u} where
+def completion :
+    SemiNormedGroupCat.{u} ⥤
+      SemiNormedGroupCat.{u} where 
   obj V := SemiNormedGroupCat.of (completion V)
   map V W f := f.Completion
   map_id' V := completion_id
@@ -54,7 +56,8 @@ instance Completion_complete_space {V : SemiNormedGroupCat} : CompleteSpace (com
 
 /-- The canonical morphism from a seminormed group `V` to its completion. -/
 @[simps]
-def completion.incl {V : SemiNormedGroupCat} : V ⟶ completion.obj V where
+def completion.incl {V : SemiNormedGroupCat} :
+    V ⟶ completion.obj V where 
   toFun v := (v : completion V)
   map_add' := Completion.coe_add
   bound' := ⟨1, fun v => by simp⟩
@@ -85,13 +88,14 @@ theorem completion.map_zero (V W : SemiNormedGroupCat) : completion.map (0 : V �
   (completion.mapHom V W).map_zero
 #align SemiNormedGroup.Completion.map_zero SemiNormedGroupCat.completion.map_zero
 
-instance : Preadditive SemiNormedGroupCat.{u} where
+instance : Preadditive
+      SemiNormedGroupCat.{u} where 
   homGroup P Q := inferInstance
-  add_comp' := by
+  add_comp' := by 
     intros
     ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
-  comp_add' := by
+  comp_add' := by 
     intros
     ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
@@ -102,7 +106,7 @@ instance : Functor.Additive completion where map_add' X Y := (completion.mapHom 
 the completion of `V`. The lemmas `lift_unique` and `lift_comp_incl` provide the api for the
 universal property of the completion. -/
 def completion.lift {V W : SemiNormedGroupCat} [CompleteSpace W] [SeparatedSpace W] (f : V ⟶ W) :
-    completion.obj V ⟶ W where
+    completion.obj V ⟶ W where 
   toFun := f.extension
   map_add' := f.extension.toAddMonoidHom.map_add'
   bound' := f.extension.bound'

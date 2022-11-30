@@ -85,7 +85,7 @@ irreducible_def of (Z : C) : ProjectiveResolutionCat Z :=
   { complex := ofComplex Z,
     π :=
       ChainComplex.mkHom _ _ (Projective.π Z) 0
-        (by
+        (by 
           simp
           exact (exact_d_f (projective.π Z)).w.symm)
         fun n _ => ⟨0, by ext⟩,
@@ -94,8 +94,7 @@ irreducible_def of (Z : C) : ProjectiveResolutionCat Z :=
     exact := by
       rintro (_ | n) <;>
         · simp
-          apply exact_d_f
-          ,
+          apply exact_d_f,
     Epi := Projective.π_epi Z }
 #align category_theory.ProjectiveResolution.of CategoryTheory.ProjectiveResolutionCat.of
 
@@ -115,7 +114,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 then `X` is a projective resolution of `Y.` -/
 def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
     (f : X ⟶ (ChainComplex.single₀ C).obj Y) [QuasiIso f] (H : ∀ n, Projective (X.x n)) :
-    ProjectiveResolutionCat Y where
+    ProjectiveResolutionCat Y where 
   complex := X
   π := f
   Projective := H

@@ -53,11 +53,12 @@ theorem Fintype.card_finset_len [Fintype α] (k : ℕ) :
 #align fintype.card_finset_len Fintype.card_finset_len
 
 instance Set.fintype [Fintype α] : Fintype (Set α) :=
-  ⟨(@Finset.univ α _).powerset.map ⟨coe, coe_injective⟩, fun s => by classical
-    refine' mem_map.2 ⟨finset.univ.filter s, mem_powerset.2 (subset_univ _), _⟩
-    apply (coe_filter _ _).trans
-    rw [coe_univ, Set.sep_univ]
-    rfl⟩
+  ⟨(@Finset.univ α _).powerset.map ⟨coe, coe_injective⟩, fun s => by
+    classical 
+      refine' mem_map.2 ⟨finset.univ.filter s, mem_powerset.2 (subset_univ _), _⟩
+      apply (coe_filter _ _).trans
+      rw [coe_univ, Set.sep_univ]
+      rfl⟩
 #align set.fintype Set.fintype
 
 -- Not to be confused with `set.finite`, the predicate

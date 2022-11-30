@@ -75,20 +75,19 @@ section MulOneClass
 
 variable [Monoid R] [MulAction R M] [MulOneClass M] [IsScalarTower R M M] [SmulCommClass R M M]
 
-instance : MulOneClass (SubMulAction R M) where
+instance : MulOneClass (SubMulAction R
+        M) where 
   mul := (· * ·)
   one := 1
-  mul_one a := by
+  mul_one a := by 
     ext
     simp only [mem_mul, mem_one, mul_smul_comm, exists_and_left, exists_exists_eq_and, mul_one]
     constructor
     · rintro ⟨y, hy, r, rfl⟩
       exact smul_mem _ _ hy
-      
     · intro hx
       exact ⟨x, hx, 1, one_smul _ _⟩
-      
-  one_mul a := by
+  one_mul a := by 
     ext
     simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_left, exists_exists_eq_and, one_mul]
     refine' ⟨_, fun hx => ⟨1, x, hx, one_smul _ _⟩⟩
@@ -101,7 +100,8 @@ section Semigroup
 
 variable [Monoid R] [MulAction R M] [Semigroup M] [IsScalarTower R M M]
 
-instance : Semigroup (SubMulAction R M) where
+instance : Semigroup (SubMulAction R
+        M) where 
   mul := (· * ·)
   mul_assoc a b c := SetLike.coe_injective (mul_assoc (_ : Set _) _ _)
 
@@ -121,7 +121,7 @@ theorem coe_pow (p : SubMulAction R M) : ∀ {n : ℕ} (hn : n ≠ 0), ↑(p ^ n
 #align sub_mul_action.coe_pow SubMulAction.coe_pow
 
 theorem subset_coe_pow (p : SubMulAction R M) : ∀ {n : ℕ}, (p ^ n : Set M) ⊆ ↑(p ^ n)
-  | 0 => by
+  | 0 => by 
     rw [pow_zero, pow_zero]
     exact subset_coe_one
   | n + 1 => (coe_pow p n.succ_ne_zero).Superset

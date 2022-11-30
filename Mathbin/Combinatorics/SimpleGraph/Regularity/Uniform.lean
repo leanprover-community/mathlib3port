@@ -81,13 +81,10 @@ theorem isUniformSingleton (hε : 0 < ε) : G.IsUniform ε {a} {b} := by
   obtain rfl | rfl := Finset.subset_singleton_iff.1 hs'
   · replace hs : ε ≤ 0 := by simpa using hs
     exact (hε.not_le hs).elim
-    
   obtain rfl | rfl := Finset.subset_singleton_iff.1 ht'
   · replace ht : ε ≤ 0 := by simpa using ht
     exact (hε.not_le ht).elim
-    
   · rwa [sub_self, abs_zero]
-    
 #align simple_graph.is_uniform_singleton SimpleGraph.isUniformSingleton
 
 theorem not_is_uniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
@@ -112,7 +109,7 @@ theorem not_is_uniform_iff :
             t' ⊆ t ∧
               ↑s.card * ε ≤ s'.card ∧
                 ↑t.card * ε ≤ t'.card ∧ ε ≤ |G.edgeDensity s' t' - G.edgeDensity s t| :=
-  by
+  by 
   unfold is_uniform
   simp only [not_forall, not_lt, exists_prop]
 #align simple_graph.not_is_uniform_iff SimpleGraph.not_is_uniform_iff
@@ -158,7 +155,7 @@ theorem nonuniform_witnesses_spec (h : ¬G.IsUniform ε s t) :
     ε ≤
       |G.edgeDensity (G.nonuniformWitnesses ε s t).1 (G.nonuniformWitnesses ε s t).2 -
           G.edgeDensity s t| :=
-  by
+  by 
   rw [nonuniform_witnesses, dif_pos h]
   exact (not_is_uniform_iff.1 h).some_spec.2.some_spec.2.2.2
 #align simple_graph.nonuniform_witnesses_spec SimpleGraph.nonuniform_witnesses_spec
@@ -174,9 +171,7 @@ theorem nonuniform_witness_subset (h : ¬G.IsUniform ε s t) : G.nonuniformWitne
   unfold nonuniform_witness
   split_ifs
   · exact G.left_nonuniform_witnesses_subset h
-    
   · exact G.right_nonuniform_witnesses_subset fun i => h i.symm
-    
 #align simple_graph.nonuniform_witness_subset SimpleGraph.nonuniform_witness_subset
 
 theorem nonuniform_witness_card_le (h : ¬G.IsUniform ε s t) :
@@ -184,25 +179,20 @@ theorem nonuniform_witness_card_le (h : ¬G.IsUniform ε s t) :
   unfold nonuniform_witness
   split_ifs
   · exact G.left_nonuniform_witnesses_card h
-    
   · exact G.right_nonuniform_witnesses_card fun i => h i.symm
-    
 #align simple_graph.nonuniform_witness_card_le SimpleGraph.nonuniform_witness_card_le
 
 theorem nonuniform_witness_spec (h₁ : s ≠ t) (h₂ : ¬G.IsUniform ε s t) :
     ε ≤
       |G.edgeDensity (G.nonuniformWitness ε s t) (G.nonuniformWitness ε t s) - G.edgeDensity s t| :=
-  by
+  by 
   unfold nonuniform_witness
   rcases trichotomous_of WellOrderingRel s t with (lt | rfl | gt)
   · rw [if_pos lt, if_neg (asymm lt)]
     exact G.nonuniform_witnesses_spec h₂
-    
   · cases h₁ rfl
-    
   · rw [if_neg (asymm GT.gt), if_pos GT.gt, edge_density_comm, edge_density_comm _ s]
     apply G.nonuniform_witnesses_spec fun i => h₂ i.symm
-    
 #align simple_graph.nonuniform_witness_spec SimpleGraph.nonuniform_witness_spec
 
 end SimpleGraph

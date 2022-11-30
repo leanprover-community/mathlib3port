@@ -53,13 +53,9 @@ theorem rdrop_eq_reverse_drop_reverse : l.rdrop n = reverse (l.reverse.drop n) :
   rw [rdrop]
   induction' l using List.reverseRecOn with xs x IH generalizing n
   · simp
-    
   · cases n
     · simp [take_append]
-      
     · simp [take_append_eq_append_take, IH]
-      
-    
 #align list.rdrop_eq_reverse_drop_reverse List.rdrop_eq_reverse_drop_reverse
 
 @[simp]
@@ -84,13 +80,9 @@ theorem rtake_eq_reverse_take_reverse : l.rtake n = reverse (l.reverse.take n) :
   rw [rtake]
   induction' l using List.reverseRecOn with xs x IH generalizing n
   · simp
-    
   · cases n
     · simp
-      
     · simp [drop_append_eq_append_drop, IH]
-      
-    
 #align list.rtake_eq_reverse_take_reverse List.rtake_eq_reverse_take_reverse
 
 @[simp]
@@ -150,7 +142,6 @@ theorem rdrop_while_eq_nil_iff : rdropWhile p l = [] ↔ ∀ x ∈ l, p x := by 
 theorem drop_while_eq_self_iff : dropWhile p l = l ↔ ∀ hl : 0 < l.length, ¬p (l.nthLe 0 hl) := by
   induction' l with hd tl IH
   · simp
-    
   · rw [drop_while]
     split_ifs
     · simp only [h, length, nth_le, Nat.succ_pos', not_true, forall_true_left, iff_false_iff]
@@ -158,10 +149,7 @@ theorem drop_while_eq_self_iff : dropWhile p l = l ↔ ∀ hl : 0 < l.length, ¬
       refine' (cons_ne_self hd tl) (sublist.antisymm _ (sublist_cons _ _))
       rw [← H]
       exact (drop_while_suffix _).Sublist
-      
     · simp [h]
-      
-    
 #align list.drop_while_eq_self_iff List.drop_while_eq_self_iff
 
 @[simp]
@@ -172,10 +160,8 @@ theorem rdrop_while_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p 
   intro h
   rw [nth_le_reverse']
   · simp
-    
   · rw [← Ne.def, ← pos_iff_ne_zero] at h
     simp [tsub_lt_iff_right (Nat.succ_le_of_lt h)]
-    
 #align list.rdrop_while_eq_self_iff List.rdrop_while_eq_self_iff
 
 variable (p) (l)

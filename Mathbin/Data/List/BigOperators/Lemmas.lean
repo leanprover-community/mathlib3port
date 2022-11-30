@@ -28,10 +28,8 @@ theorem list_sum_right [NonUnitalNonAssocSemiring R] (a : R) (l : List R)
     (h : ∀ b ∈ l, Commute a b) : Commute a l.Sum := by
   induction' l with x xs ih
   · exact Commute.zero_right _
-    
   · rw [List.sum_cons]
     exact (h _ <| mem_cons_self _ _).addRight (ih fun j hj => h _ <| mem_cons_of_mem _ hj)
-    
 #align commute.list_sum_right Commute.list_sum_right
 
 theorem list_sum_left [NonUnitalNonAssocSemiring R] (b : R) (l : List R)
@@ -71,9 +69,7 @@ theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.Prod = -1) : (-1 : 
 /-- If all elements in a list are bounded below by `1`, then the length of the list is bounded
 by the sum of the elements. -/
 theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀ i ∈ L, 1 ≤ i) : L.length ≤ L.Sum := by
-  induction' L with j L IH h;
-  · simp
-    
+  induction' L with j L IH h; · simp
   rw [sum_cons, length, add_comm]
   exact add_le_add (h _ (Set.mem_insert _ _)) (IH fun i hi => h i (Set.mem_union_right _ hi))
 #align list.length_le_sum_of_one_le List.length_le_sum_of_one_le
@@ -87,10 +83,8 @@ theorem dvd_prod [CommMonoid M] {a} {l : List M} (ha : a ∈ l) : a ∣ l.Prod :
 theorem dvd_sum [Semiring R] {a} {l : List R} (h : ∀ x ∈ l, a ∣ x) : a ∣ l.Sum := by
   induction' l with x l ih
   · exact dvd_zero _
-    
   · rw [List.sum_cons]
     exact dvd_add (h _ (mem_cons_self _ _)) (ih fun x hx => h x (mem_cons_of_mem _ hx))
-    
 #align list.dvd_sum List.dvd_sum
 
 section Alternating

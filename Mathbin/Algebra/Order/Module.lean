@@ -24,7 +24,8 @@ open Pointwise
 
 variable {k M N : Type _}
 
-instance [Semiring k] [OrderedAddCommMonoid M] [Module k M] : Module k Mᵒᵈ where
+instance [Semiring k] [OrderedAddCommMonoid M] [Module k M] :
+    Module k Mᵒᵈ where 
   add_smul r s x := OrderDual.rec (add_smul _ _) x
   zero_smul m := OrderDual.rec (zero_smul _) m
 
@@ -179,7 +180,8 @@ variable (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
-def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o Mᵒᵈ where
+def OrderIso.smulLeftDual {c : k} (hc : c < 0) :
+    M ≃o Mᵒᵈ where 
   toFun b := OrderDual.toDual (c • b)
   invFun b := c⁻¹ • OrderDual.ofDual b
   left_inv := inv_smul_smul₀ hc.Ne

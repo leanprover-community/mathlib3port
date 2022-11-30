@@ -136,7 +136,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
           summable_one_div_pow_of_le
           m1 fun j => Nat.le.intro rfl)
     _ = ∑' i, (1 / m) ^ i * (1 / m ^ (n + 1)!) :=-- split the sum in the exponent and massage
-    by
+    by 
       congr
       ext i
       rw [pow_add, ← div_div, div_eq_mul_one_div, one_div_pow]
@@ -160,7 +160,8 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) :
         (sub_one_div_inv_le_two hm) (by positivity)
     _ = 2 / m ^ (n + 1)! := mul_one_div 2 _
     _ = 2 / m ^ (n ! * (n + 1)) := congr_arg ((· / ·) 2) (congr_arg (pow m) (mul_comm _ _))
-    _ ≤ 1 / m ^ (n ! * n) := by
+    _ ≤ 1 / m ^ (n ! * n) :=
+      by
       -- [ NB: in this block, I do not follow the brace convention for subgoals -- I wait until
       --   I solve all extraneous goals at once with `exact pow_pos (zero_lt_two.trans_le hm) _`. ]
       -- Clear denominators and massage*
@@ -185,7 +186,6 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
     ∃ p : ℕ, liouvilleNumberInitialTerms m k = p / m ^ k ! := by
   induction' k with k h
   · exact ⟨1, by rw [liouville_number_initial_terms, range_one, sum_singleton, Nat.cast_one]⟩
-    
   · rcases h with ⟨p_k, h_k⟩
     use p_k * m ^ ((k + 1)! - k !) + 1
     unfold liouville_number_initial_terms at h_k⊢
@@ -195,18 +195,17 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
         show k.succ * k ! - k ! = (k.succ - 1) * k ! by rw [tsub_mul, one_mul], Nat.succ_sub_one,
         add_mul, one_mul, pow_add]
       simp [mul_assoc]
-      
     refine' mul_ne_zero_iff.mpr ⟨_, _⟩
     all_goals exact pow_ne_zero _ (nat.cast_ne_zero.mpr hm.ne.symm)
-    
 #align liouville.liouville_number_rat_initial_terms Liouville.liouville_number_rat_initial_terms
 
-theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) := by
+theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) :=
+  by
   -- two useful inequalities
-  have mZ1 : 1 < (m : ℤ) := by
+  have mZ1 : 1 < (m : ℤ) := by 
     norm_cast
     exact one_lt_two.trans_le hm
-  have m1 : 1 < (m : ℝ) := by
+  have m1 : 1 < (m : ℝ) := by 
     norm_cast
     exact one_lt_two.trans_le hm
   intro n

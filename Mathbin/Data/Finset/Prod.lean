@@ -119,7 +119,7 @@ theorem product_subset_product_right (ht : t ⊆ t') : s ×ˢ t ⊆ s ×ˢ t' :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem map_swap_product (s : Finset α) (t : Finset β) :
     (t ×ˢ s).map ⟨Prod.swap, Prod.swap_injective⟩ = s ×ˢ t :=
-  coe_injective <| by
+  coe_injective <| by 
     push_cast
     exact Set.image_swap_prod _ _
 #align finset.map_swap_product Finset.map_swap_product
@@ -129,7 +129,7 @@ theorem map_swap_product (s : Finset α) (t : Finset β) :
 @[simp]
 theorem image_swap_product [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     (t ×ˢ s).image Prod.swap = s ×ˢ t :=
-  coe_injective <| by
+  coe_injective <| by 
     push_cast
     exact Set.image_swap_prod _ _
 #align finset.image_swap_product Finset.image_swap_product
@@ -193,21 +193,19 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
     ((s ×ˢ t).filter fun x : α × β => p x.1 ↔ q x.2).card =
       (s.filter p).card * (t.filter q).card +
         (s.filter (Not ∘ p)).card * (t.filter (Not ∘ q)).card :=
-  by classical
-  rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
-  · apply congr_arg
-    ext ⟨a, b⟩
-    simp only [filter_union_right, mem_filter, mem_product]
-    constructor <;> intro h <;> use h.1
-    simp only [Function.comp_apply, and_self_iff, h.2, em (q b)]
-    cases h.2 <;>
-      · try simp at h_1
-        simp [h_1]
-        
-    
-  · apply Finset.disjoint_filter_filter'
-    exact (disjoint_compl_right.inf_left _).inf_right _
-    
+  by
+  classical 
+    rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
+    · apply congr_arg
+      ext ⟨a, b⟩
+      simp only [filter_union_right, mem_filter, mem_product]
+      constructor <;> intro h <;> use h.1
+      simp only [Function.comp_apply, and_self_iff, h.2, em (q b)]
+      cases h.2 <;>
+        · try simp at h_1
+          simp [h_1]
+    · apply Finset.disjoint_filter_filter'
+      exact (disjoint_compl_right.inf_left _).inf_right _
 #align finset.filter_product_card Finset.filter_product_card
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -255,7 +253,7 @@ theorem product_eq_empty {s : Finset α} {t : Finset β} : s ×ˢ t = ∅ ↔ s 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem singleton_product {a : α} : ({a} : Finset α) ×ˢ t = t.map ⟨Prod.mk a, Prod.mk.inj_left _⟩ :=
-  by
+  by 
   ext ⟨x, y⟩
   simp [and_left_comm, eq_comm]
 #align finset.singleton_product Finset.singleton_product
@@ -270,7 +268,7 @@ theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem singleton_product_singleton {a : α} {b : β} :
     ({a} : Finset α) ×ˢ ({b} : Finset β) = {(a, b)} := by
-  simp only [product_singleton, Function.Embedding.coe_fn_mk, map_singleton]
+  simp only [product_singleton, Function.Embedding.coeFn_mk, map_singleton]
 #align finset.singleton_product_singleton Finset.singleton_product_singleton
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -385,7 +383,7 @@ theorem coe_off_diag : (s.offDiag : Set (α × α)) = (s : Set α).offDiag :=
 
 @[simp]
 theorem diag_card : (diag s).card = s.card := by
-  suffices diag s = s.image fun a => (a, a) by
+  suffices diag s = s.image fun a => (a, a) by 
     rw [this]
     apply card_image_of_inj_on
     exact fun x1 h1 x2 h2 h3 => (Prod.mk.inj h3).1
@@ -393,12 +391,10 @@ theorem diag_card : (diag s).card = s.card := by
   rw [mem_diag]
   constructor <;> intro h <;> rw [Finset.mem_image] at *
   · use a₁, h.1, prod.mk.inj_iff.mpr ⟨rfl, h.2⟩
-    
   · rcases h with ⟨a, h1, h2⟩
     have h := Prod.mk.inj h2
     rw [← h.1, ← h.2]
     use h1
-    
 #align finset.diag_card Finset.diag_card
 
 @[simp]
@@ -459,7 +455,7 @@ theorem diag_inter : (s ∩ t).diag = s.diag ∩ t.diag :=
 #align finset.diag_inter Finset.diag_inter
 
 theorem off_diag_inter : (s ∩ t).offDiag = s.offDiag ∩ t.offDiag :=
-  coe_injective <| by
+  coe_injective <| by 
     push_cast
     exact Set.off_diag_inter _ _
 #align finset.off_diag_inter Finset.off_diag_inter
@@ -475,7 +471,7 @@ variable {s t}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem off_diag_union (h : Disjoint s t) :
     (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s ×ˢ t ∪ t ×ˢ s :=
-  coe_injective <| by
+  coe_injective <| by 
     push_cast
     exact Set.off_diag_union (disjoint_coe.2 h)
 #align finset.off_diag_union Finset.off_diag_union

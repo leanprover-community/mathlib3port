@@ -59,53 +59,45 @@ theorem le_partial_sups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m �
   induction' n with n ih
   · cases h
     exact le_rfl
-    
   · cases' h with h h
     · exact le_sup_right
-      
     · exact (ih h).trans le_sup_left
-      
-    
 #align le_partial_sups_of_le le_partial_sups_of_le
 
 theorem le_partial_sups (f : ℕ → α) : f ≤ partialSups f := fun n => le_partial_sups_of_le f le_rfl
 #align le_partial_sups le_partial_sups
 
 theorem partial_sups_le (f : ℕ → α) (n : ℕ) (a : α) (w : ∀ m, m ≤ n → f m ≤ a) :
-    partialSups f n ≤ a := by
+    partialSups f n ≤ a := by 
   induction' n with n ih
   · apply w 0 le_rfl
-    
   · exact sup_le (ih fun m p => w m (Nat.le_succ_of_le p)) (w (n + 1) le_rfl)
-    
 #align partial_sups_le partial_sups_le
 
 theorem Monotone.partial_sups_eq {f : ℕ → α} (hf : Monotone f) : (partialSups f : ℕ → α) = f := by
   ext n
   induction' n with n ih
   · rfl
-    
   · rw [partial_sups_succ, ih, sup_eq_right.2 (hf (Nat.le_succ _))]
-    
 #align monotone.partial_sups_eq Monotone.partial_sups_eq
 
 theorem partial_sups_mono : Monotone (partialSups : (ℕ → α) → ℕ →o α) := by
   rintro f g h n
   induction' n with n ih
   · exact h 0
-    
   · exact sup_le_sup ih (h _)
-    
 #align partial_sups_mono partial_sups_mono
 
 /-- `partial_sups` forms a Galois insertion with the coercion from monotone functions to functions.
 -/
-def partialSups.gi : GaloisInsertion (partialSups : (ℕ → α) → ℕ →o α) coeFn where
+def partialSups.gi :
+    GaloisInsertion (partialSups : (ℕ → α) → ℕ →o α)
+      coeFn where 
   choice f h :=
-    ⟨f, by
+    ⟨f, by 
       convert (partialSups f).Monotone
       exact (le_partial_sups f).antisymm h⟩
-  gc f g := by
+  gc f g := by 
     refine' ⟨(le_partial_sups f).trans, fun h => _⟩
     convert partial_sups_mono h
     exact OrderHom.ext _ _ g.monotone.partial_sups_eq.symm
@@ -117,11 +109,9 @@ theorem partial_sups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
     partialSups f n = (Finset.range (n + 1)).sup' ⟨n, Finset.self_mem_range_succ n⟩ f := by
   induction' n with n ih
   · simp
-    
   · dsimp [partialSups] at ih⊢
     simp_rw [@Finset.range_succ n.succ]
     rw [ih, Finset.sup'_insert, sup_comm]
-    
 #align partial_sups_eq_sup'_range partial_sups_eq_sup'_range
 
 end SemilatticeSup
@@ -130,10 +120,8 @@ theorem partial_sups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ →
     partialSups f n = (Finset.range (n + 1)).sup f := by
   induction' n with n ih
   · simp
-    
   · dsimp [partialSups] at ih⊢
     rw [Finset.range_succ, Finset.sup_insert, sup_comm, ih]
-    
 #align partial_sups_eq_sup_range partial_sups_eq_sup_range
 
 /- Note this lemma requires a distributive lattice, so is not useful (or true) in situations such as
@@ -142,10 +130,8 @@ theorem partial_sups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f :
     (h : Pairwise (Disjoint on f)) {m n : ℕ} (hmn : m < n) : Disjoint (partialSups f m) (f n) := by
   induction' m with m ih
   · exact h hmn.ne
-    
   · rw [partial_sups_succ, disjoint_sup_left]
     exact ⟨ih (Nat.lt_of_succ_lt hmn), h hmn.ne⟩
-    
 #align partial_sups_disjoint_of_disjoint partial_sups_disjoint_of_disjoint
 
 section CompleteLattice

@@ -58,7 +58,8 @@ theorem coe_of (α : Type _) [SemilatticeSup α] [OrderBot α] : ↥(of α) = α
 instance : Inhabited SemilatticeSupCat :=
   ⟨of PUnit⟩
 
-instance : LargeCategory.{u} SemilatticeSupCat where
+instance : LargeCategory.{u}
+      SemilatticeSupCat where 
   Hom X Y := SupBotHom X Y
   id X := SupBotHom.id X
   comp X Y Z f g := g.comp f
@@ -66,7 +67,9 @@ instance : LargeCategory.{u} SemilatticeSupCat where
   comp_id' X Y := SupBotHom.id_comp
   assoc' W X Y Z _ _ _ := SupBotHom.comp_assoc _ _ _
 
-instance : ConcreteCategory SemilatticeSupCat where
+instance :
+    ConcreteCategory
+      SemilatticeSupCat where 
   forget := { obj := SemilatticeSupCat.X, map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
@@ -103,7 +106,8 @@ theorem coe_of (α : Type _) [SemilatticeInf α] [OrderTop α] : ↥(of α) = α
 instance : Inhabited SemilatticeInfCat :=
   ⟨of PUnit⟩
 
-instance : LargeCategory.{u} SemilatticeInfCat where
+instance : LargeCategory.{u}
+      SemilatticeInfCat where 
   Hom X Y := InfTopHom X Y
   id X := InfTopHom.id X
   comp X Y Z f g := g.comp f
@@ -111,7 +115,9 @@ instance : LargeCategory.{u} SemilatticeInfCat where
   comp_id' X Y := InfTopHom.id_comp
   assoc' W X Y Z _ _ _ := InfTopHom.comp_assoc _ _ _
 
-instance : ConcreteCategory SemilatticeInfCat where
+instance :
+    ConcreteCategory
+      SemilatticeInfCat where 
   forget := { obj := SemilatticeInfCat.X, map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
@@ -135,20 +141,23 @@ namespace SemilatticeSupCat
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : SemilatticeSupCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : SemilatticeSupCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align SemilatticeSup.iso.mk SemilatticeSupCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : SemilatticeSupCat ⥤ SemilatticeInfCat where
+def dual :
+    SemilatticeSupCat ⥤
+      SemilatticeInfCat where 
   obj X := SemilatticeInfCat.of Xᵒᵈ
   map X Y := SupBotHom.dual
 #align SemilatticeSup.dual SemilatticeSupCat.dual
@@ -159,20 +168,23 @@ namespace SemilatticeInfCat
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : SemilatticeInfCat.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : SemilatticeInfCat.{u}} (e : α ≃o β) :
+    α ≅ β where 
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
+  hom_inv_id' := by 
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by
+  inv_hom_id' := by 
     ext
     exact e.apply_symm_apply _
 #align SemilatticeInf.iso.mk SemilatticeInfCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : SemilatticeInfCat ⥤ SemilatticeSupCat where
+def dual :
+    SemilatticeInfCat ⥤
+      SemilatticeSupCat where 
   obj X := SemilatticeSupCat.of Xᵒᵈ
   map X Y := InfTopHom.dual
 #align SemilatticeInf.dual SemilatticeInfCat.dual

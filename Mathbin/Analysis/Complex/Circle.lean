@@ -134,7 +134,8 @@ theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x *
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/
 @[simps]
-def expMapCircleHom : ℝ →+ Additive circle where
+def expMapCircleHom :
+    ℝ →+ Additive circle where 
   toFun := Additive.ofMul ∘ expMapCircle
   map_zero' := exp_map_circle_zero
   map_add' := exp_map_circle_add

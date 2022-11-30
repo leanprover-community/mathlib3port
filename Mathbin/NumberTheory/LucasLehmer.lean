@@ -100,10 +100,8 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 := 
 theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i := by
   cases i <;> dsimp [s_mod]
   · exact sup_eq_right.mp rfl
-    
   · apply Int.mod_nonneg
     exact mersenne_int_ne_zero p w
-    
 #align lucas_lehmer.s_mod_nonneg LucasLehmer.s_mod_nonneg
 
 theorem s_mod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i <;> simp [s_mod]
@@ -115,18 +113,14 @@ theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
   · refine' (abs_of_nonneg _).symm
     simp only [sub_nonneg, ge_iff_le]
     exact_mod_cast Nat.one_le_two_pow p
-    
   · exact mersenne_int_ne_zero p w
-    
 #align lucas_lehmer.s_mod_lt LucasLehmer.s_mod_lt
 
 theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : Zmod (2 ^ (p' + 2) - 1)) := by
   induction' i with i ih
   · dsimp [s, s_zmod]
     norm_num
-    
   · push_cast [s, s_zmod, ih]
-    
 #align lucas_lehmer.s_zmod_eq_s LucasLehmer.s_zmod_eq_s
 
 -- These next two don't make good `norm_cast` lemmas.
@@ -160,11 +154,9 @@ theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) :
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
     apply s_mod_nonneg _ (Nat.lt_of_succ_lt w)
     exact s_mod_lt _ (Nat.lt_of_succ_lt w) (p - 2)
-    
   · intro h
     rw [h]
     simp
-    
 #align lucas_lehmer.residue_eq_zero_iff_s_mod_eq_zero LucasLehmer.residue_eq_zero_iff_s_mod_eq_zero
 
 /-- A Mersenne number `2^p-1` is prime if and only if
@@ -193,7 +185,7 @@ namespace X
 
 variable {q : ℕ+}
 
-@[ext.1]
+@[ext]
 theorem ext {x y : X q} (h₁ : x.1 = y.1) (h₂ : x.2 = y.2) : x = y := by
   cases x; cases y
   congr <;> assumption
@@ -269,8 +261,7 @@ instance : Monoid (X q) :=
     mul_assoc := fun x y z => by
       ext <;>
         · dsimp
-          ring
-          ,
+          ring,
     one := ⟨1, 0⟩, one_mul := fun x => by ext <;> simp, mul_one := fun x => by ext <;> simp }
 
 instance : AddGroupWithOne (X q) :=
@@ -283,14 +274,12 @@ theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by
   ext <;>
     · dsimp
       ring
-      
 #align lucas_lehmer.X.left_distrib LucasLehmer.X.left_distrib
 
 theorem right_distrib (x y z : X q) : (x + y) * z = x * z + y * z := by
   ext <;>
     · dsimp
       ring
-      
 #align lucas_lehmer.X.right_distrib LucasLehmer.X.right_distrib
 
 instance : Ring (X q) :=
@@ -302,8 +291,7 @@ instance : CommRing (X q) :=
     mul_comm := fun x y => by
       ext <;>
         · dsimp
-          ring
-           }
+          ring }
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -520,11 +508,9 @@ theorem ωb_mul_ω (q : ℕ+) : (ωb : X q) * ω = 1 := by
 theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^ 2 ^ i := by
   induction' i with i ih
   · dsimp [s, ω, ωb]
-    ext <;>
-      · simp <;> rfl
-        
-    
-  · calc
+    ext <;> · simp <;> rfl
+  ·
+    calc
       (s (i + 1) : X q) = (s i ^ 2 - 2 : ℤ) := rfl
       _ = (s i : X q) ^ 2 - 2 := by push_cast
       _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by rw [ih]
@@ -533,7 +519,6 @@ theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^
         rw [← mul_pow ωb ω, ωb_mul_ω, one_pow, mul_one, add_sub_cancel]
       _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mul, ← pow_mul, pow_succ']
       
-    
 #align lucas_lehmer.X.closed_form LucasLehmer.X.closed_form
 
 end X
@@ -562,21 +547,19 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
           _ < 2 ^ (p' + 2) := Nat.lt_two_pow _
           _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h'
           )
-    
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
     dsimp [q] at h
     injection h with h'
     clear h
     rw [mersenne, PNat.one_coe, Nat.min_fac_eq_two_iff, pow_succ] at h'
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
-    
 #align lucas_lehmer.two_lt_q LucasLehmer.two_lt_q
 
 theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     ∃ k : ℤ,
       (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) =
         k * mersenne (p' + 2) * (ω : X (q (p' + 2))) ^ 2 ^ p' - 1 :=
-  by
+  by 
   dsimp [lucas_lehmer_residue] at h
   rw [s_zmod_eq_s p'] at h
   simp [Zmod.int_coe_zmod_eq_zero_iff_dvd] at h
@@ -620,7 +603,7 @@ theorem ω_pow_eq_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
 #align lucas_lehmer.ω_pow_eq_one LucasLehmer.ω_pow_eq_one
 
 /-- `ω` as an element of the group of units. -/
-def ωUnit (p : ℕ) : Units (X (q p)) where
+def ωUnit (p : ℕ) : Units (X (q p)) where 
   val := ω
   inv := ωb
   val_inv := by simp [ω_mul_ωb]
@@ -638,7 +621,6 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   apply Nat.eq_prime_pow_of_dvd_least_prime_pow
   -- the order of ω divides 2^p
   · norm_num
-    
   · intro o
     have ω_pow := order_of_dvd_iff_pow_eq_one.1 o
     replace ω_pow :=
@@ -648,12 +630,10 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
       congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
     haveI : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
     apply Zmod.neg_one_ne_one h.symm
-    
   · apply order_of_dvd_iff_pow_eq_one.2
     apply Units.ext
     push_cast
     exact ω_pow_eq_one p' h
-    
 #align lucas_lehmer.order_ω LucasLehmer.order_ω
 
 theorem order_ineq (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
@@ -761,15 +741,16 @@ Someone should do this, too!
 -/
 
 
-theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1] := by
+theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1] :=
+  by
   -- See https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/help.20finding.20a.20lemma/near/177698446
   conv in k => rw [← Nat.div_add_mod k (2 ^ n)]
   refine' Nat.Modeq.add_right _ _
-  conv =>
-  congr
-  skip
-  skip
-  rw [← one_mul (k / 2 ^ n)]
+  conv => 
+    congr
+    skip
+    skip
+    rw [← one_mul (k / 2 ^ n)]
   exact (Nat.modeq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
 #align modeq_mersenne modeq_mersenne
 

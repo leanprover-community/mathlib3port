@@ -23,23 +23,24 @@ unitary
 /-- In a *-monoid, `unitary R` is the submonoid consisting of all the elements `U` of
 `R` such that `star U * U = 1` and `U * star U = 1`.
 -/
-def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R where
+def unitary (R : Type _) [Monoid R] [StarSemigroup R] :
+    Submonoid R where 
   carrier := { U | star U * U = 1 ∧ U * star U = 1 }
   one_mem' := by simp only [mul_one, and_self_iff, Set.mem_set_of_eq, star_one]
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
     refine' ⟨_, _⟩
-    · calc
+    ·
+      calc
         star (U * B) * (U * B) = star B * star U * U * B := by simp only [mul_assoc, star_mul]
         _ = star B * (star U * U) * B := by rw [← mul_assoc]
         _ = 1 := by rw [hA₁, mul_one, hB₁]
         
-      
-    · calc
+    ·
+      calc
         U * B * star (U * B) = U * B * (star B * star U) := by rw [star_mul]
         _ = U * (B * star B) * star U := by simp_rw [← mul_assoc]
         _ = 1 := by rw [hB₂, mul_one, hA₂]
         
-      
 #align unitary unitary
 
 variable {R : Type _}
@@ -103,12 +104,12 @@ instance : Group (unitary R) :=
   { Submonoid.toMonoid _ with inv := star, mul_left_inv := star_mul_self }
 
 instance : HasInvolutiveStar (unitary R) :=
-  ⟨fun _ => by
+  ⟨fun _ => by 
     ext
     simp only [coe_star, star_star]⟩
 
 instance : StarSemigroup (unitary R) :=
-  ⟨fun _ _ => by
+  ⟨fun _ _ => by 
     ext
     simp only [coe_star, Submonoid.coe_mul, star_mul]⟩
 
@@ -125,7 +126,9 @@ theorem star_eq_inv' : (star : unitary R → unitary R) = Inv.inv :=
 
 /-- The unitary elements embed into the units. -/
 @[simps]
-def toUnits : unitary R →* Rˣ where
+def toUnits :
+    unitary R →*
+      Rˣ where 
   toFun x := ⟨x, ↑x⁻¹, coe_mul_star_self x, coe_star_mul_self x⟩
   map_one' := Units.ext rfl
   map_mul' x y := Units.ext rfl
@@ -172,9 +175,7 @@ theorem coe_div (U₁ U₂ : unitary R) : ↑(U₁ / U₂) = (U₁ / U₂ : R) :
 theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
   induction z
   · simp [SubmonoidClass.coe_pow]
-    
   · simp [coe_inv]
-    
 #align unitary.coe_zpow unitary.coe_zpow
 
 end GroupWithZero
@@ -184,8 +185,10 @@ section Ring
 variable [Ring R] [StarRing R]
 
 instance :
-    Neg (unitary R) where neg U :=
-    ⟨-U, by
+    Neg
+      (unitary
+        R) where neg U :=
+    ⟨-U, by 
       simp_rw [mem_iff, star_neg, neg_mul_neg]
       exact U.prop⟩
 

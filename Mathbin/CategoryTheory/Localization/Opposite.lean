@@ -29,10 +29,11 @@ namespace Localization
 for `W : morphism_property C`, then `L.op` also does. -/
 def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E]
     (h : StrictUniversalPropertyFixedTarget L W Eᵒᵖ) :
-    StrictUniversalPropertyFixedTarget L.op W.op E where
+    StrictUniversalPropertyFixedTarget L.op W.op
+      E where 
   inverts := h.inverts.op
   lift F hF := (h.lift F.rightOp hF.rightOp).leftOp
-  fac F hF := by
+  fac F hF := by 
     convert congr_arg functor.left_op (h.fac F.right_op hF.right_op)
     exact F.right_op_left_op_eq.symm
   uniq F₁ F₂ eq := by

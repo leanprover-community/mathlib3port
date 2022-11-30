@@ -151,12 +151,12 @@ theorem f_inv_app_f_app (i j k : D.J) (U : Opens (D.V (i, j)).carrier) :
         (π₂⁻¹ i, j, k) (unop _) ≫
           (D.V _).Presheaf.map
             (eqToHom
-              (by
+              (by 
                 delta is_open_immersion.open_functor
                 dsimp only [functor.op, IsOpenMap.functor, opens.map, unop_op]
                 congr
                 apply pullback_base)) :=
-  by
+  by 
   have := PresheafedSpace.congr_app (@pullback.condition _ _ _ _ _ (D.f i j) (D.f i k) _)
   dsimp only [comp_c_app] at this
   rw [← cancel_epi (inv ((D.f_open i j).invApp U)), is_iso.inv_hom_id_assoc,
@@ -178,7 +178,7 @@ theorem snd_inv_app_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k
     ∃ eq,
       (π₂⁻¹ i, j, k) U ≫ (D.t k i).c.app _ ≫ (D.V (k, i)).Presheaf.map (eqToHom Eq) =
         (D.t' k i j).c.app _ ≫ (π₁⁻¹ k, j, i) (unop _) :=
-  by
+  by 
   constructor
   rw [← is_iso.eq_inv_comp, is_open_immersion.inv_inv_app, category.assoc,
     (D.t' k i j).c.naturality_assoc]
@@ -209,7 +209,7 @@ theorem snd_inv_app_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
       (D.t' k i j).c.app _ ≫
         (π₁⁻¹ k, j, i) (unop _) ≫
           (D.V (k, i)).Presheaf.map (eqToHom (D.snd_inv_app_t_app' i j k U).some.symm) :=
-  by
+  by 
   have e := (D.snd_inv_app_t_app' i j k U).some_spec
   reassoc! e
   rw [← e]
@@ -223,7 +223,7 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
     (Opens.map (𝖣.ι j).base).obj ((D.ι_open_embedding i).IsOpenMap.Functor.obj U) =
       (D.f_open j i).openFunctor.obj
         ((Opens.map (𝖣.t j i).base).obj ((Opens.map (𝖣.f i j).base).obj U)) :=
-  by
+  by 
   dsimp only [opens.map, IsOpenMap.functor]
   congr 1
   rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) i, ←
@@ -237,14 +237,11 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
   change (D.t i j ≫ D.t j i).base '' _ = _
   rw [𝖣.t_inv]
   · simp
-    
   · change Function.Bijective (TopCat.homeoOfIso (as_iso _))
     exact Homeomorph.bijective _
     infer_instance
-    
   · rw [← TopCat.mono_iff_injective]
     infer_instance
-    
 #align
   algebraic_geometry.PresheafedSpace.glue_data.ι_image_preimage_eq AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_image_preimage_eq
 
@@ -263,7 +260,7 @@ theorem opens_image_preimage_map_app' (i j k : D.J) (U : Opens (D.U i).carrier) 
       D.opensImagePreimageMap i j U ≫ (D.f j k).c.app _ =
         ((π₁ j, i, k) ≫ D.t j i ≫ D.f i j).c.app (op U) ≫
           (π₂⁻¹ j, i, k) (unop _) ≫ (D.V (j, k)).Presheaf.map (eqToHom Eq) :=
-  by
+  by 
   constructor
   delta opens_image_preimage_map
   simp_rw [category.assoc]
@@ -328,9 +325,7 @@ def ιInvAppπApp {i : D.J} (U : Opens (D.U i).carrier) (j) :
     change (D.f j k ≫ 𝖣.ι j).base ⁻¹' _ = _
     congr 3
     exact colimit.w 𝖣.diagram.multispan (walking_multispan.hom.fst (j, k))
-    
   · exact D.opens_image_preimage_map i j U
-    
 #align
   algebraic_geometry.PresheafedSpace.glue_data.ι_inv_app_π_app AlgebraicGeometry.PresheafedSpaceCat.GlueData.ιInvAppπApp
 
@@ -352,10 +347,8 @@ def ιInvApp {i : D.J} (U : Opens (D.U i).carrier) :
             rcases f with (_ | ⟨j, k⟩ | ⟨j, k⟩)
             · erw [category.id_comp, CategoryTheory.Functor.map_id]
               rw [category.comp_id]
-              
             · erw [category.id_comp]
               congr 1
-              
             erw [category.id_comp]
             -- It remains to show that the blue is equal to red + green in the original diagram.
             -- The proof strategy is illustrated in ![this diagram](https://i.imgur.com/mBzV1Rx.png)
@@ -408,10 +401,8 @@ theorem ι_inv_app_π {i : D.J} (U : Opens (D.U i).carrier) :
   simp only [eq_to_hom_op, eq_to_hom_trans, eq_to_hom_map (functor.op _), ← functor.map_comp]
   rw [set.range_iff_surjective.mpr _]
   · simp
-    
   · rw [← TopCat.epi_iff_surjective]
     infer_instance
-    
 #align
   algebraic_geometry.PresheafedSpace.glue_data.ι_inv_app_π AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_inv_app_π
 
@@ -453,7 +444,6 @@ theorem π_ι_inv_app_π (i j : D.J) (U : Opens (D.U i).carrier) :
     apply (config := { instances := false }) mono_comp
     erw [D.ι_image_preimage_eq i j U]
     all_goals infer_instance
-    
 #align
   algebraic_geometry.PresheafedSpace.glue_data.π_ι_inv_app_π AlgebraicGeometry.PresheafedSpaceCat.GlueData.π_ι_inv_app_π
 
@@ -470,11 +460,9 @@ theorem π_ι_inv_app_eq_id (i : D.J) (U : Opens (D.U i).carrier) :
     congr 1
     simp_rw [category.assoc]
     apply π_ι_inv_app_π
-    
   · simp_rw [category.assoc]
     rw [category.id_comp]
     apply π_ι_inv_app_π
-    
 #align
   algebraic_geometry.PresheafedSpace.glue_data.π_ι_inv_app_eq_id AlgebraicGeometry.PresheafedSpaceCat.GlueData.π_ι_inv_app_eq_id
 
@@ -483,16 +471,15 @@ instance componentwise_diagram_π_is_iso (i : D.J) (U : Opens (D.U i).carrier) :
   use D.ι_inv_app_π_eq_map U ≫ D.ι_inv_app U
   constructor
   · apply π_ι_inv_app_eq_id
-    
   · rw [category.assoc, (D.ι_inv_app_π _).some_spec]
     exact iso.inv_hom_id ((D.to_glue_data.U i).Presheaf.mapIso (eq_to_iso _))
-    
 #align
   algebraic_geometry.PresheafedSpace.glue_data.componentwise_diagram_π_is_iso AlgebraicGeometry.PresheafedSpaceCat.GlueData.componentwise_diagram_π_is_iso
 
-instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) where
+instance ι_is_open_immersion (i : D.J) :
+    IsOpenImmersion (𝖣.ι i) where 
   base_open := D.ι_open_embedding i
-  c_iso U := by
+  c_iso U := by 
     erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]
     infer_instance
 #align
@@ -523,18 +510,14 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
       rw [← Set.image_subset_iff, ← Set.image_univ, ← Set.image_comp, Set.image_univ, ← coe_comp,
         this, coe_comp, ← Set.image_univ, Set.image_comp]
       exact Set.image_subset_range _ _
-      
     · apply is_open_immersion.lift_fac
-      
     · rw [← cancel_mono (𝖣.ι j), category.assoc, ← (𝖣.vPullbackCone i j).condition]
       conv_rhs => rw [← s.condition]
       erw [is_open_immersion.lift_fac_assoc]
-      
     · intro m e₁ e₂
       rw [← cancel_mono (D.f i j)]
       erw [e₁]
       rw [is_open_immersion.lift_fac]
-      
 #align
   algebraic_geometry.PresheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.PresheafedSpaceCat.GlueData.vPullbackConeIsLimit
 

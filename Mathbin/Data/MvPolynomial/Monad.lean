@@ -337,18 +337,24 @@ theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ)
     bind₂ f (monomial d 1) = monomial d 1 := by rw [bind₂_monomial, f.map_one, one_mul]
 #align mv_polynomial.bind₂_monomial_one MvPolynomial.bind₂_monomial_one
 
-instance monad : Monad fun σ => MvPolynomial σ R where
+instance monad :
+    Monad fun σ => MvPolynomial σ
+        R where 
   map α β f p := rename f p
   pure _ := x
   bind _ _ p f := bind₁ f p
 #align mv_polynomial.monad MvPolynomial.monad
 
-instance is_lawful_functor : IsLawfulFunctor fun σ => MvPolynomial σ R where
+instance is_lawful_functor :
+    IsLawfulFunctor fun σ =>
+      MvPolynomial σ R where 
   id_map := by intros <;> simp [(· <$> ·)]
   comp_map := by intros <;> simp [(· <$> ·)]
 #align mv_polynomial.is_lawful_functor MvPolynomial.is_lawful_functor
 
-instance is_lawful_monad : LawfulMonad fun σ => MvPolynomial σ R where
+instance is_lawful_monad :
+    LawfulMonad fun σ =>
+      MvPolynomial σ R where 
   pure_bind := by intros <;> simp [pure, bind]
   bind_assoc := by intros <;> simp [bind, ← bind₁_comp_bind₁]
 #align mv_polynomial.is_lawful_monad MvPolynomial.is_lawful_monad

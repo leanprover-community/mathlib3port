@@ -134,11 +134,9 @@ theorem ord_connected_proj_eq {x y : s} :
   · rw [← mem_ord_connected_component, ← ord_connected_component_ord_connected_proj, h,
       ord_connected_component_ord_connected_proj, self_mem_ord_connected_component]
     exact y.2
-    
   · simp only [ord_connected_proj]
     congr 1
     exact ord_connected_component_eq h
-    
 #align set.ord_connected_proj_eq Set.ord_connected_proj_eq
 
 /-- A set that intersects each order connected component of a set by a single point. Defined as the
@@ -224,10 +222,8 @@ theorem disjoint_ord_t5_nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
   clear ha' hb'
   cases' le_total x a with hxa hax
   · exact hb (Icc_subset_interval' ⟨hxa, hab⟩) has
-    
   cases' le_total b x with hbx hxb
   · exact ha (Icc_subset_interval ⟨hab, hbx⟩) hbt
-    
   have : x ∈ ord_separating_set s t := ⟨mem_Union₂.2 ⟨a, has, ha⟩, mem_Union₂.2 ⟨b, hbt, hb⟩⟩
   lift x to ord_separating_set s t using this
   suffices : ord_connected_component (ord_separating_set s t) x ⊆ [a, b]

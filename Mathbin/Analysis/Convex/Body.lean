@@ -49,9 +49,10 @@ namespace ConvexBody
 
 variable {V}
 
-instance : SetLike (ConvexBody V) V where
+instance : SetLike (ConvexBody V)
+      V where 
   coe := ConvexBody.carrier
-  coe_injective' K L h := by
+  coe_injective' K L h := by 
     cases K
     cases L
     congr
@@ -68,7 +69,7 @@ theorem nonempty (K : ConvexBody V) : (K : Set V).Nonempty :=
   K.nonempty'
 #align convex_body.nonempty ConvexBody.nonempty
 
-@[ext.1]
+@[ext]
 protected theorem ext {K L : ConvexBody V} (h : (K : Set V) = L) : K = L :=
   SetLike.ext' h
 #align convex_body.ext ConvexBody.ext
@@ -78,19 +79,22 @@ theorem coe_mk (s : Set V) (h₁ h₂ h₃) : (mk s h₁ h₂ h₃ : Set V) = s 
   rfl
 #align convex_body.coe_mk ConvexBody.coe_mk
 
-instance : AddMonoid (ConvexBody V) where
+instance :
+    AddMonoid
+      (ConvexBody
+        V) where
   -- we cannot write K + L to avoid reducibility issues with the set.has_add instance
   add K L :=
     ⟨Set.image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact,
       K.Nonempty.add L.Nonempty⟩
-  add_assoc K L M := by
+  add_assoc K L M := by 
     ext
     simp only [coe_mk, Set.image2_add, add_assoc]
   zero := ⟨0, convex_singleton 0, is_compact_singleton, Set.singleton_nonempty 0⟩
-  zero_add K := by
+  zero_add K := by 
     ext
     simp only [coe_mk, Set.image2_add, zero_add]
-  add_zero K := by
+  add_zero K := by 
     ext
     simp only [coe_mk, Set.image2_add, add_zero]
 
@@ -109,7 +113,7 @@ instance : Inhabited (ConvexBody V) :=
 
 instance : AddCommMonoid (ConvexBody V) :=
   { ConvexBody.addMonoid with
-    add_comm := fun K L => by
+    add_comm := fun K L => by 
       ext
       simp only [coe_add, add_comm] }
 
@@ -124,18 +128,19 @@ theorem coe_smul (c : ℝ) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (
   rfl
 #align convex_body.coe_smul ConvexBody.coe_smul
 
-instance : DistribMulAction ℝ (ConvexBody V) where
+instance : DistribMulAction ℝ
+      (ConvexBody V) where 
   toHasSmul := ConvexBody.hasSmul
-  one_smul K := by
+  one_smul K := by 
     ext
     simp only [coe_smul, one_smul]
-  mul_smul c d K := by
+  mul_smul c d K := by 
     ext
     simp only [coe_smul, mul_smul]
-  smul_add c K L := by
+  smul_add c K L := by 
     ext
     simp only [coe_smul, coe_add, smul_add]
-  smul_zero c := by
+  smul_zero c := by 
     ext
     simp only [coe_smul, coe_zero, smul_zero]
 
@@ -146,12 +151,15 @@ theorem coe_smul' (c : ℝ≥0) (K : ConvexBody V) : (↑(c • K) : Set V) = c 
 
 /-- The convex bodies in a fixed space $V$ form a module over the nonnegative reals.
 -/
-instance : Module ℝ≥0 (ConvexBody V) where
-  add_smul c d K := by
+instance :
+    Module ℝ≥0
+      (ConvexBody
+        V) where 
+  add_smul c d K := by 
     ext1
     simp only [coe_smul, coe_add]
     exact Convex.add_smul K.convex (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _)
-  zero_smul K := by
+  zero_smul K := by 
     ext1
     exact Set.zero_smul_set K.nonempty
 

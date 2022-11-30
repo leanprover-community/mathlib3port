@@ -35,13 +35,12 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     suffices
       (eval₂_hom (RingHom.id _) (IsEmpty.elim' Fin.is_empty)) p =
         (eval finZeroElim : MvPolynomial (Fin 0) R →+* R) p
-      by
+      by 
       rw [← this]
       simp only [coe_eval₂_hom, is_empty_ring_equiv_apply, RingEquiv.trans_apply,
         aeval_eq_eval₂_hom]
       congr
     exact eval₂_hom_congr rfl (Subsingleton.elim _ _) rfl
-    
   · let e := (finSuccEquiv R n).toRingEquiv
     apply e.injective
     simp only [RingEquiv.map_zero]
@@ -51,7 +50,6 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     apply ih
     swap
     · infer_instance
-      
     intro x
     dsimp [e]
     rw [fin_succ_equiv_apply]
@@ -61,28 +59,20 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
       
     · intro i
       exact Fin.cases (eval x q) x i
-      
     apply induction_on p
     · intro r
       simp only [eval_C, Polynomial.eval_C, RingHom.coe_comp, eval₂_hom_C]
-      
     · intros
       simp only [*, RingHom.map_add, Polynomial.eval_add]
-      
     · intro φ i hφ
       simp only [*, eval_X, Polynomial.eval_mul, RingHom.map_mul, eval₂_hom_X']
       congr 1
       by_cases hi : i = 0
       · subst hi
         simp only [Polynomial.eval_X, Fin.cases_zero]
-        
       · rw [← Fin.succ_pred i hi]
         simp only [eval_X, Polynomial.eval_C, Fin.cases_succ]
-        
-      
     · infer_instance
-      
-    
 #align mv_polynomial.funext_fin mv_polynomial.funext_fin
 
 /-- Two multivariate polynomials over an infinite integral domain are equal
@@ -98,9 +88,9 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   suffices p = 0 by rw [this, AlgHom.map_zero]
   apply funext_fin
   intro x
-  classical
-  convert h (Function.extend f x 0)
-  simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
+  classical 
+    convert h (Function.extend f x 0)
+    simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
 #align mv_polynomial.funext MvPolynomial.funext
 
 theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} :

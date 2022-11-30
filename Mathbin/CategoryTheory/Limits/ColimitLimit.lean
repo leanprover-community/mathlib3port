@@ -68,12 +68,12 @@ noncomputable def colimitLimitToLimitColimit :
                   { app := fun k =>
                       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫
                         colimit.ι ((curry.obj F).obj j) k,
-                    naturality' := by
+                    naturality' := by 
                       dsimp
                       intro k k' f
                       simp only [functor.comp_map, curry_obj_map_app, limits.lim_map_π_assoc,
                         swap_map, category.comp_id, map_id_left_eq_curry_map, colimit.w] } },
-          naturality' := by
+          naturality' := by 
             dsimp
             intro j j' f
             ext k
@@ -90,7 +90,7 @@ this lemma characterises it.
 theorem ι_colimit_limit_to_limit_colimit_π (j) (k) :
     colimit.ι _ k ≫ colimitLimitToLimitColimit F ≫ limit.π _ j =
       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k :=
-  by
+  by 
   dsimp [colimit_limit_to_limit_colimit]
   simp
 #align
@@ -101,7 +101,7 @@ theorem ι_colimit_limit_to_limit_colimit_π_apply (F : J × K ⥤ Type v) (j) (
     limit.π (curry.obj F ⋙ colim) j
         (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
-  by
+  by 
   dsimp [colimit_limit_to_limit_colimit]
   simp
 #align
@@ -110,12 +110,15 @@ theorem ι_colimit_limit_to_limit_colimit_π_apply (F : J × K ⥤ Type v) (j) (
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
 @[simps]
 noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G] :
-    colim.mapCone (Limit.cone G) ⟶ Limit.cone (G ⋙ colim) where
+    colim.mapCone (Limit.cone G) ⟶
+      Limit.cone
+        (G ⋙
+          colim) where 
   Hom :=
     colim.map (limitIsoSwapCompLim G).Hom ≫
       colimitLimitToLimitColimit (uncurry.obj G : _) ≫
         lim.map (whiskerRight (currying.unitIso.app G).inv colim)
-  w' j := by
+  w' j := by 
     ext1 k
     simp only [limit_obj_iso_limit_comp_evaluation_hom_π_assoc, iso.app_inv,
       ι_colimit_limit_to_limit_colimit_π_assoc, whisker_right_app, colimit.ι_map,

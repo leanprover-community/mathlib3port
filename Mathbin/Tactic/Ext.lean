@@ -207,7 +207,9 @@ private unsafe def hacky_name_reflect : has_reflect Name := fun n =>
 #align hacky_name_reflect hacky_name_reflect
 
 @[user_attribute]
-private unsafe def ext_attr_core : user_attribute (name_map Name) Name where
+private unsafe def ext_attr_core :
+    user_attribute (name_map Name)
+      Name where 
   Name := `_ext_core
   descr := "(internal attribute used by ext)"
   cache_cfg :=
@@ -225,7 +227,8 @@ end PerformanceHack
 
 /-- Private attribute used to tag extensionality lemmas. -/
 @[user_attribute]
-private unsafe def ext_lemma_attr_core : user_attribute where
+private unsafe def ext_lemma_attr_core :
+    user_attribute where 
   Name := `_ext_lemma_core
   descr := "(internal attribute used by ext)"
   parser := failure
@@ -318,7 +321,8 @@ x = y ↔ x.x = y.x ∧ x.y = y.y ∧ x.z == y.z ∧ x.k = y.k
 
 -/
 @[user_attribute]
-unsafe def extensional_attribute : user_attribute Unit (Option Name) where
+unsafe def extensional_attribute :
+    user_attribute Unit (Option Name) where 
   Name := `ext
   descr := "lemmas usable by `ext` tactic"
   parser := optional ident
@@ -353,10 +357,10 @@ defined later.
 
 
 -- We mark some existing extensionality lemmas.
-attribute [ext.1] Array'.ext propext Function.hfunext
+attribute [ext] Array'.ext propext Function.hfunext
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:18:19: unsupported: attribute [ext id] -/
-attribute [ext.1] _root_.funext
+attribute [ext] _root_.funext
 
 -- This line is equivalent to:
 --   attribute [ext (→)] _root_.funext
@@ -366,12 +370,12 @@ run_cmd
   add_ext_lemma (Name.mk_numeral 0 Name.anonymous) `` _root_.funext true
 
 -- We create some extensionality lemmas for existing structures.
-attribute [ext.1] ULift
+attribute [ext] ULift
 
 namespace PLift
 
 -- This is stronger than the one generated automatically.
-@[ext.1]
+@[ext]
 theorem ext {P : Prop} (a b : PLift P) : a = b := by cases a; cases b; rfl
 #align plift.ext PLift.ext
 
@@ -379,11 +383,11 @@ end PLift
 
 -- Conservatively, we'll only add extensionality lemmas for `has_*` structures
 -- as they become useful.
-attribute [ext.1] Zero
+attribute [ext] Zero
 
 #print Unit.ext /-
-@[ext.1]
-theorem Unit.ext {x y : Unit} : x = y := by
+@[ext]
+theorem Unit.ext {x y : Unit} : x = y := by 
   cases x
   cases y
   rfl
@@ -391,8 +395,8 @@ theorem Unit.ext {x y : Unit} : x = y := by
 -/
 
 #print PUnit.ext /-
-@[ext.1]
-theorem PUnit.ext {x y : PUnit} : x = y := by
+@[ext]
+theorem PUnit.ext {x y : PUnit} : x = y := by 
   cases x
   cases y
   rfl

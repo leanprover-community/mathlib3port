@@ -208,12 +208,12 @@ variable [PartialOrder 𝕆] [Preorder α]
 
 @[simp]
 theorem grade_bot [OrderBot 𝕆] [OrderBot α] [GradeMinOrder 𝕆 α] : grade 𝕆 (⊥ : α) = ⊥ :=
-  (is_min_bot.grade _).eq_bot
+  (isMin_bot.grade _).eq_bot
 #align grade_bot grade_bot
 
 @[simp]
 theorem grade_top [OrderTop 𝕆] [OrderTop α] [GradeMaxOrder 𝕆 α] : grade 𝕆 (⊤ : α) = ⊤ :=
-  (is_max_top.grade _).eq_top
+  (isMax_top.grade _).eq_top
 #align grade_top grade_top
 
 end PartialOrder
@@ -223,7 +223,8 @@ end PartialOrder
 
 variable [Preorder 𝕆] [Preorder ℙ] [Preorder α] [Preorder β]
 
-instance Preorder.toGradeBoundedOrder : GradeBoundedOrder α α where
+instance Preorder.toGradeBoundedOrder :
+    GradeBoundedOrder α α where 
   grade := id
   is_min_grade _ := id
   is_max_grade _ := id
@@ -239,7 +240,8 @@ theorem grade_self (a : α) : grade α a = a :=
 /-! #### Dual -/
 
 
-instance [GradeOrder 𝕆 α] : GradeOrder 𝕆ᵒᵈ αᵒᵈ where
+instance [GradeOrder 𝕆 α] :
+    GradeOrder 𝕆ᵒᵈ αᵒᵈ where 
   grade := to_dual ∘ grade 𝕆 ∘ of_dual
   grade_strict_mono := grade_strict_mono.dual
   covby_grade a b h := (h.ofDual.grade _).toDual
@@ -270,7 +272,8 @@ theorem grade_of_dual [GradeOrder 𝕆 α] (a : αᵒᵈ) : grade 𝕆 (ofDual a
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
 def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f)
-    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder ℙ α where
+    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
+    GradeOrder ℙ α where 
   grade := f ∘ grade 𝕆
   grade_strict_mono := hf.comp grade_strict_mono
   covby_grade a b h := hcovby _ _ <| h.grade _
@@ -305,7 +308,8 @@ def GradeBoundedOrder.liftLeft [GradeBoundedOrder 𝕆 α] (f : 𝕆 → ℙ) (h
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
 def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMono f)
-    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder 𝕆 α where
+    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
+    GradeOrder 𝕆 α where 
   grade := grade 𝕆 ∘ f
   grade_strict_mono := grade_strict_mono.comp hf
   covby_grade a b h := (hcovby _ _ h).grade _
@@ -353,12 +357,11 @@ inferrable. -/
 @[reducible]
 def GradeMinOrder.finToNat (n : ℕ) [GradeMinOrder (Fin n) α] : GradeMinOrder ℕ α :=
   (GradeMinOrder.liftLeft (_ : Fin n → ℕ) Fin.coe_strict_mono fun _ _ => Covby.coe_fin) fun a h =>
-    by
+    by 
     cases n
     · exact ((@Fin.elim0 fun _ => False) <| grade (Fin 0) a).elim
-      
     rw [h.eq_bot, Fin.bot_eq_zero]
-    exact is_min_bot
+    exact isMin_bot
 #align grade_min_order.fin_to_nat GradeMinOrder.finToNat
 
 instance GradeOrder.natToInt [GradeOrder ℕ α] : GradeOrder ℤ α :=

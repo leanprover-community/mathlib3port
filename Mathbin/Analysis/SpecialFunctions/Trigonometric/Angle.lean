@@ -199,20 +199,16 @@ theorem cos_eq_iff_coe_eq_or_eq_neg {θ ψ : ℝ} :
       rw [eq_div_iff_mul_eq (two_ne_zero' ℝ), ← sub_eq_iff_eq_add] at hn
       rw [← hn, coe_sub, eq_neg_iff_add_eq_zero, sub_add_cancel, mul_assoc, coe_int_mul_eq_zsmul,
         mul_comm, coe_two_pi, zsmul_zero]
-      
     · left
       rw [eq_div_iff_mul_eq (two_ne_zero' ℝ), eq_sub_iff_add_eq] at hn
       rw [← hn, coe_add, mul_assoc, coe_int_mul_eq_zsmul, mul_comm, coe_two_pi, zsmul_zero,
         zero_add]
-      
-    
   · rw [angle_eq_iff_two_pi_dvd_sub, ← coe_neg, angle_eq_iff_two_pi_dvd_sub]
     rintro (⟨k, H⟩ | ⟨k, H⟩)
     rw [← sub_eq_zero, cos_sub_cos, H, mul_assoc 2 π k, mul_div_cancel_left _ (two_ne_zero' ℝ),
       mul_comm π _, sin_int_mul_pi, mul_zero]
     rw [← sub_eq_zero, cos_sub_cos, ← sub_neg_eq_add, H, mul_assoc 2 π k,
       mul_div_cancel_left _ (two_ne_zero' ℝ), mul_comm π _, sin_int_mul_pi, mul_zero, zero_mul]
-    
 #align real.angle.cos_eq_iff_coe_eq_or_eq_neg Real.Angle.cos_eq_iff_coe_eq_or_eq_neg
 
 theorem sin_eq_iff_coe_eq_or_add_eq_pi {θ ψ : ℝ} :
@@ -224,12 +220,10 @@ theorem sin_eq_iff_coe_eq_or_add_eq_pi {θ ψ : ℝ} :
     · left
       rw [coe_sub, coe_sub] at h
       exact sub_right_inj.1 h
-      
     right
     rw [coe_sub, coe_sub, eq_neg_iff_add_eq_zero, add_sub, sub_add_eq_add_sub, ← coe_add,
       add_halves, sub_sub, sub_eq_zero] at h
     exact h.symm
-    
   · rw [angle_eq_iff_two_pi_dvd_sub, ← eq_sub_iff_add_eq, ← coe_sub, angle_eq_iff_two_pi_dvd_sub]
     rintro (⟨k, H⟩ | ⟨k, H⟩)
     rw [← sub_eq_zero, sin_sub_sin, H, mul_assoc 2 π k, mul_div_cancel_left _ (two_ne_zero' ℝ),
@@ -240,16 +234,11 @@ theorem sin_eq_iff_coe_eq_or_add_eq_pi {θ ψ : ℝ} :
     rw [← sub_eq_zero, sin_sub_sin, H', add_div, mul_assoc 2 _ π,
       mul_div_cancel_left _ (two_ne_zero' ℝ), cos_add_pi_div_two, sin_int_mul_pi, neg_zero,
       mul_zero]
-    
 #align real.angle.sin_eq_iff_coe_eq_or_add_eq_pi Real.Angle.sin_eq_iff_coe_eq_or_add_eq_pi
 
 theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin ψ) : (θ : Angle) = ψ := by
-  cases' cos_eq_iff_coe_eq_or_eq_neg.mp Hcos with hc hc;
-  · exact hc
-    
-  cases' sin_eq_iff_coe_eq_or_add_eq_pi.mp Hsin with hs hs;
-  · exact hs
-    
+  cases' cos_eq_iff_coe_eq_or_eq_neg.mp Hcos with hc hc; · exact hc
+  cases' sin_eq_iff_coe_eq_or_add_eq_pi.mp Hsin with hs hs; · exact hs
   rw [eq_neg_iff_add_eq_zero, hs] at hc
   obtain ⟨n, hn⟩ : ∃ n, n • _ = _ := quotient_add_group.left_rel_apply.mp (Quotient.exact' hc)
   rw [← neg_one_mul, add_zero, ← sub_eq_zero, zsmul_eq_mul, ← mul_assoc, ← sub_mul, mul_eq_zero,
@@ -576,9 +565,7 @@ theorem abs_to_real_coe_eq_self_iff {θ : ℝ} : |(θ : Angle).toReal| = θ ↔ 
 
 theorem abs_to_real_neg_coe_eq_self_iff {θ : ℝ} : |(-θ : Angle).toReal| = θ ↔ 0 ≤ θ ∧ θ ≤ π := by
   refine' ⟨fun h => h ▸ ⟨abs_nonneg _, abs_to_real_le_pi _⟩, fun h => _⟩
-  by_cases hnegpi : θ = π;
-  · simp [hnegpi, real.pi_pos.le]
-    
+  by_cases hnegpi : θ = π; · simp [hnegpi, real.pi_pos.le]
   rw [← coe_neg,
     to_real_coe_eq_self_iff.2
       ⟨neg_lt_neg (lt_of_le_of_ne h.2 hnegpi), (neg_nonpos.2 h.1).trans real.pi_pos.le⟩,
@@ -649,9 +636,7 @@ theorem tan_eq_of_two_nsmul_eq {θ ψ : Angle} (h : (2 : ℕ) • θ = (2 : ℕ)
   rw [two_nsmul_eq_iff] at h
   rcases h with (rfl | rfl)
   · rfl
-    
   · exact tan_add_pi _
-    
 #align real.angle.tan_eq_of_two_nsmul_eq Real.Angle.tan_eq_of_two_nsmul_eq
 
 theorem tan_eq_of_two_zsmul_eq {θ ψ : Angle} (h : (2 : ℤ) • θ = (2 : ℤ) • ψ) : tan θ = tan ψ := by
@@ -734,13 +719,11 @@ theorem to_real_neg_iff_sign_neg {θ : Angle} : θ.toReal < 0 ↔ θ.sign = -1 :
   rw [sign, ← sin_to_real, sign_eq_neg_one_iff]
   rcases lt_trichotomy θ.to_real 0 with (h | h | h)
   · exact ⟨fun _ => Real.sin_neg_of_neg_of_neg_pi_lt h (neg_pi_lt_to_real θ), fun _ => h⟩
-    
   · simp [h]
-    
-  · exact
+  ·
+    exact
       ⟨fun hn => False.elim (h.asymm hn), fun hn =>
         False.elim (hn.not_le (sin_nonneg_of_nonneg_of_le_pi h.le (to_real_le_pi θ)))⟩
-    
 #align real.angle.to_real_neg_iff_sign_neg Real.Angle.to_real_neg_iff_sign_neg
 
 theorem to_real_nonneg_iff_sign_nonneg {θ : Angle} : 0 ≤ θ.toReal ↔ 0 ≤ θ.sign := by
@@ -748,26 +731,21 @@ theorem to_real_nonneg_iff_sign_nonneg {θ : Angle} : 0 ≤ θ.toReal ↔ 0 ≤ 
   · refine' ⟨fun hn => False.elim (h.not_le hn), fun hn => _⟩
     rw [to_real_neg_iff_sign_neg.1 h] at hn
     exact False.elim (hn.not_lt (by decide))
-    
   · simp [h, sign, ← sin_to_real]
-    
   · refine' ⟨fun _ => _, fun _ => h.le⟩
     rw [sign, ← sin_to_real, sign_nonneg_iff]
     exact sin_nonneg_of_nonneg_of_le_pi h.le (to_real_le_pi θ)
-    
 #align real.angle.to_real_nonneg_iff_sign_nonneg Real.Angle.to_real_nonneg_iff_sign_nonneg
 
 @[simp]
 theorem sign_to_real {θ : Angle} (h : θ ≠ π) : sign θ.toReal = θ.sign := by
   rcases lt_trichotomy θ.to_real 0 with (ht | ht | ht)
   · simp [ht, to_real_neg_iff_sign_neg.1 ht]
-    
   · simp [sign, ht, ← sin_to_real]
-    
-  · rw [sign, ← sin_to_real, sign_pos ht,
+  ·
+    rw [sign, ← sin_to_real, sign_pos ht,
       sign_pos
         (sin_pos_of_pos_of_lt_pi ht ((to_real_le_pi θ).lt_of_ne (to_real_eq_pi_iff.not.2 h)))]
-    
 #align real.angle.sign_to_real Real.Angle.sign_to_real
 
 theorem coe_abs_to_real_of_sign_nonneg {θ : Angle} (h : 0 ≤ θ.sign) : ↑(|θ.toReal|) = θ := by
@@ -778,10 +756,8 @@ theorem neg_coe_abs_to_real_of_sign_nonpos {θ : Angle} (h : θ.sign ≤ 0) : -�
   rw [SignType.nonpos_iff] at h
   rcases h with (h | h)
   · rw [abs_of_neg (to_real_neg_iff_sign_neg.2 h), coe_neg, neg_neg, coe_to_real]
-    
   · rw [sign_eq_zero_iff] at h
     rcases h with (rfl | rfl) <;> simp [abs_of_pos Real.pi_pos]
-    
 #align real.angle.neg_coe_abs_to_real_of_sign_nonpos Real.Angle.neg_coe_abs_to_real_of_sign_nonpos
 
 theorem eq_iff_sign_eq_and_abs_to_real_eq {θ ψ : Angle} :
@@ -789,27 +765,20 @@ theorem eq_iff_sign_eq_and_abs_to_real_eq {θ ψ : Angle} :
   refine' ⟨_, fun h => _⟩;
   · rintro rfl
     exact ⟨rfl, rfl⟩
-    
   rcases h with ⟨hs, hr⟩
   rw [abs_eq_abs] at hr
   rcases hr with (hr | hr)
   · exact to_real_injective hr
-    
   · by_cases h : θ = π
     · rw [h, to_real_pi, eq_neg_iff_eq_neg] at hr
       exact False.elim ((neg_pi_lt_to_real ψ).Ne hr.symm)
-      
     · by_cases h' : ψ = π
       · rw [h', to_real_pi] at hr
         exact False.elim ((neg_pi_lt_to_real θ).Ne hr.symm)
-        
       · rw [← sign_to_real h, ← sign_to_real h', hr, Left.sign_neg, SignType.neg_eq_self_iff,
           _root_.sign_eq_zero_iff, to_real_eq_zero_iff] at hs
         rw [hs, to_real_zero, neg_zero, to_real_eq_zero_iff] at hr
         rw [hr, hs]
-        
-      
-    
 #align real.angle.eq_iff_sign_eq_and_abs_to_real_eq Real.Angle.eq_iff_sign_eq_and_abs_to_real_eq
 
 theorem eq_iff_abs_to_real_eq_of_sign_eq {θ ψ : Angle} (h : θ.sign = ψ.sign) :
@@ -827,7 +796,7 @@ theorem sign_coe_neg_pi_div_two : (↑(-π / 2) : Angle).sign = -1 := by
 #align real.angle.sign_coe_neg_pi_div_two Real.Angle.sign_coe_neg_pi_div_two
 
 theorem sign_coe_nonneg_of_nonneg_of_le_pi {θ : ℝ} (h0 : 0 ≤ θ) (hpi : θ ≤ π) :
-    0 ≤ (θ : Angle).sign := by
+    0 ≤ (θ : Angle).sign := by 
   rw [sign, sign_nonneg_iff]
   exact sin_nonneg_of_nonneg_of_le_pi h0 hpi
 #align real.angle.sign_coe_nonneg_of_nonneg_of_le_pi Real.Angle.sign_coe_nonneg_of_nonneg_of_le_pi

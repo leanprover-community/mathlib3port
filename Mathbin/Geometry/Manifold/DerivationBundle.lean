@@ -130,7 +130,9 @@ variable {I} {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : T
 differential takes `h : f x = y`. It is particularly handy to deal with situations where the points
 on where it has to be evaluated are equal but not definitionally equal. -/
 def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) :
-    PointDerivation I x →ₗ[𝕜] PointDerivation I' y where
+    PointDerivation I x →ₗ[𝕜]
+      PointDerivation I'
+        y where 
   toFun v :=
     Derivation.mk'
       { toFun := fun g => v (g.comp f),

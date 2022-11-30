@@ -50,7 +50,7 @@ quaternion
 /- ./././Mathport/Syntax/Translate/Command.lean:414:34: infer kinds are unsupported in Lean 4: mk {} -/
 /-- Quaternion algebra over a type with fixed coefficients $a=i^2$ and $b=j^2$.
 Implemented as a structure with four fields: `re`, `im_i`, `im_j`, and `im_k`. -/
-@[nolint unused_arguments, ext.1]
+@[nolint unused_arguments, ext]
 structure QuaternionAlgebra (R : Type _) (a b : R) where mk ::
   re : R
   imI : R
@@ -65,7 +65,9 @@ namespace QuaternionAlgebra
 
 /-- The equivalence between a quaternion algebra over R and R × R × R × R. -/
 @[simps]
-def equivProd {R : Type _} (c₁ c₂ : R) : ℍ[R,c₁,c₂] ≃ R × R × R × R where
+def equivProd {R : Type _} (c₁ c₂ : R) :
+    ℍ[R,c₁,c₂] ≃ R × R × R ×
+            R where 
   toFun a := ⟨a.1, a.2, a.3, a.4⟩
   invFun a := ⟨a.1, a.2.1, a.2.2.1, a.2.2.2⟩
   left_inv := fun ⟨a₁, a₂, a₃, a₄⟩ => rfl
@@ -224,7 +226,8 @@ instance : Ring ℍ[R,c₁,c₂] := by
       simp <;>
     ring
 
-instance : Algebra R ℍ[R,c₁,c₂] where
+instance :
+    Algebra R ℍ[R,c₁,c₂] where 
   smul r a := ⟨r * a.1, r * a.2, r * a.3, r * a.4⟩
   toFun := coe
   map_one' := rfl
@@ -270,7 +273,7 @@ variable (R c₁ c₂)
 
 /-- `quaternion_algebra.re` as a `linear_map`-/
 @[simps]
-def reLm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def reLm : ℍ[R,c₁,c₂] →ₗ[R] R where 
   toFun := re
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -278,7 +281,7 @@ def reLm : ℍ[R,c₁,c₂] →ₗ[R] R where
 
 /-- `quaternion_algebra.im_i` as a `linear_map`-/
 @[simps]
-def imILm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def imILm : ℍ[R,c₁,c₂] →ₗ[R] R where 
   toFun := imI
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -286,7 +289,7 @@ def imILm : ℍ[R,c₁,c₂] →ₗ[R] R where
 
 /-- `quaternion_algebra.im_j` as a `linear_map`-/
 @[simps]
-def imJLm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def imJLm : ℍ[R,c₁,c₂] →ₗ[R] R where 
   toFun := imJ
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -294,7 +297,7 @@ def imJLm : ℍ[R,c₁,c₂] →ₗ[R] R where
 
 /-- `quaternion_algebra.im_k` as a `linear_map`-/
 @[simps]
-def imKLm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def imKLm : ℍ[R,c₁,c₂] →ₗ[R] R where 
   toFun := imK
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -468,7 +471,7 @@ theorem conj_sub : (a - b).conj = a.conj - b.conj :=
   (conj : ℍ[R,c₁,c₂] ≃ₗ[R] _).map_sub a b
 #align quaternion_algebra.conj_sub QuaternionAlgebra.conj_sub
 
-instance : StarRing ℍ[R,c₁,c₂] where
+instance : StarRing ℍ[R,c₁,c₂] where 
   star := conj
   star_involutive := conj_conj
   star_add := conj_add
@@ -529,7 +532,7 @@ instance : Algebra R ℍ[R] :=
 instance : StarRing ℍ[R] :=
   QuaternionAlgebra.starRing
 
-@[ext.1]
+@[ext]
 theorem ext : a.re = b.re → a.imI = b.imI → a.imJ = b.imJ → a.imK = b.imK → a = b :=
   QuaternionAlgebra.ext a b
 #align quaternion.ext Quaternion.ext
@@ -914,7 +917,7 @@ theorem coe_conj_ae : ⇑(conjAe : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ) = op ∘ co
 #align quaternion.coe_conj_ae Quaternion.coe_conj_ae
 
 /-- Square of the norm. -/
-def normSq : ℍ[R] →*₀ R where
+def normSq : ℍ[R] →*₀ R where 
   toFun a := (a * a.conj).re
   map_zero' := by rw [conj_zero, zero_mul, zero_re]
   map_one' := by rw [conj_one, one_mul, one_re]

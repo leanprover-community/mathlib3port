@@ -126,12 +126,10 @@ def horner' (a : HornerExpr) (x : PosNum) (n : Num) (b : HornerExpr) : HornerExp
 
 def addConst (k : ZNum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then e
-  else by
+  else by 
     induction' e with n a x n b A B
     · exact const (k + n)
-      
     · exact horner a x n B
-      
 #align tactic.ring2.horner_expr.add_const Tactic.Ring2.HornerExpr.addConst
 
 def addAux (a₁ : HornerExpr) (A₁ : HornerExpr → HornerExpr) (x₁ : PosNum) :
@@ -177,21 +175,17 @@ end-/
 def neg (e : HornerExpr) : HornerExpr := by
   induction' e with n a x n b A B
   · exact const (-n)
-    
   · exact horner A x n B
-    
 #align tactic.ring2.horner_expr.neg Tactic.Ring2.HornerExpr.neg
 
 def mulConst (k : ZNum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then 0
   else
     if k = 1 then e
-    else by
+    else by 
       induction' e with n a x n b A B
       · exact const (n * k)
-        
       · exact horner A x n B
-        
 #align tactic.ring2.horner_expr.mul_const Tactic.Ring2.HornerExpr.mulConst
 
 def mulAux (a₁ x₁ n₁ b₁) (A₁ B₁ : HornerExpr → HornerExpr) : HornerExpr → HornerExpr
@@ -235,14 +229,11 @@ instance : Mul HornerExpr :=
 
 def pow (e : HornerExpr) : Num → HornerExpr
   | 0 => 1
-  | Num.pos p => by
+  | Num.pos p => by 
     induction' p with p ep p ep
     · exact e
-      
     · exact (ep.mul ep).mul e
-      
     · exact ep.mul ep
-      
 #align tactic.ring2.horner_expr.pow Tactic.Ring2.HornerExpr.pow
 
 def inv (e : HornerExpr) : HornerExpr :=
@@ -271,7 +262,7 @@ theorem cseval_atom {α} [CommSemiring α] (t : Tree α) (n : PosNum) :
 
 theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
     (cs : e.IsCs) : (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e :=
-  by
+  by 
   simp [add_const]
   cases k <;> simp! [*]
   simp [show ZNum.pos k ≠ 0 by decide]
@@ -279,30 +270,24 @@ theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
   · rcases cs with ⟨n, rfl⟩
     refine' ⟨⟨n + Num.pos k, by simp [add_comm] <;> rfl⟩, _⟩
     cases n <;> simp!
-    
   · rcases B cs.2 with ⟨csb, h⟩
     simp! [*, cs.1]
     rw [← Tactic.Ring.horner_add_const, add_comm]
     rw [add_comm]
-    
 #align tactic.ring2.horner_expr.cseval_add_const Tactic.Ring2.HornerExpr.cseval_add_const
 
 theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
     (horner' a x n b).IsCs ∧
       cseval t (horner' a x n b) = Tactic.Ring.horner (cseval t a) (t.getOrZero x) n (cseval t b) :=
-  by
+  by 
   cases' a with n₁ a₁ x₁ n₁ b₁ <;> simp [horner'] <;> split_ifs
   · simp! [*, Tactic.Ring.horner]
-    
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
-    
   · refine' ⟨⟨h₁.1, h₂⟩, Eq.symm _⟩
     simp! [*]
     apply Tactic.Ring.horner_horner
     simp
-    
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
-    
 #align tactic.ring2.horner_expr.cseval_horner' Tactic.Ring2.HornerExpr.cseval_horner'
 
 theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
@@ -310,11 +295,9 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
     simpa using cseval_add_const t n₁ cs₂
-    
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂ generalizing n₁ b₁
   · rcases cs₂ with ⟨n₂, rfl⟩
     simp! [cseval_add_const t n₂ cs₁, add_comm]
-    
   cases' cs₁ with csa₁ csb₁; cases' id cs₂ with csa₂ csb₂
   simp! ; have C := PosNum.cmp_to_nat x₁ x₂
   cases PosNum.cmp x₁ x₂ <;> simp!
@@ -322,7 +305,6 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
     refine' ⟨⟨csa₁, csh⟩, Eq.symm _⟩
     apply Tactic.Ring.horner_add_const
     exact h.symm
-    
   · cases C
     have B0 :
       is_cs 0 →
@@ -330,7 +312,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
           is_cs e₂ → is_cs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0 + cseval t e₂ :=
       fun _ e₂ c => ⟨c, (zero_add _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp!
-    · have : n₁ = n₂ := by
+    · have : n₁ = n₂ := by 
         have := congr_arg (coe : ZNum → ℤ) e
         simp at this
         have := sub_eq_zero.1 this
@@ -341,9 +323,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       · refine' ⟨csh, h.trans (Eq.symm _)⟩
         simp [*]
         apply Tactic.Ring.horner_add_horner_eq <;> try rfl
-        
       all_goals simp! [*]
-      
     · simp [B₁ csb₁ csb₂, add_comm]
       rcases A₂ csa₂ _ _ B0 ⟨csa₁, 0, rfl⟩ with ⟨csh, h⟩
       refine' ⟨csh, Eq.symm _⟩
@@ -352,12 +332,8 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add']
         simpa using congr_arg (coe : ZNum → ℤ) e
-        
       · rfl
-        
       · apply add_comm
-        
-      
     · have : (horner a₂ x₁ (Num.pos k) 0).IsCs := ⟨csa₂, 0, rfl⟩
       simp [B₁ csb₁ csb₂, A₁ csa₁ this]
       symm
@@ -365,43 +341,34 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
         simpa using congr_arg (coe : ZNum → ℤ) e
-        
       all_goals rfl
-      
-    
   · rcases B₂ csb₂ _ _ B₁ ⟨csa₁, csb₁⟩ with ⟨csh, h⟩
     refine' ⟨⟨csa₂, csh⟩, Eq.symm _⟩
     apply Tactic.Ring.const_add_horner
     simp [h]
-    
 #align tactic.ring2.horner_expr.cseval_add Tactic.Ring2.HornerExpr.cseval_add
 
 theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
     (cs : e.IsCs) : (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k :=
-  by
+  by 
   simp [mul_const]
   split_ifs with h h
   · cases (Num.to_znum_inj.1 h : k = 0)
     exact ⟨⟨0, rfl⟩, (mul_zero _).symm⟩
-    
   · cases (Num.to_znum_inj.1 h : k = 1)
     exact ⟨cs, (mul_one _).symm⟩
-    
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
     suffices
     refine' ⟨⟨n * k, this⟩, _⟩
     swap
     · cases n <;> cases k <;> rfl
-      
     rw [show _ from this]
     simp!
-    
   · cases cs
     simp! [*]
     symm
     apply Tactic.Ring.horner_mul_const <;> rfl
-    
 #align tactic.ring2.horner_expr.cseval_mul_const Tactic.Ring2.HornerExpr.cseval_mul_const
 
 theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
@@ -409,11 +376,9 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
     simpa [mul_comm] using cseval_mul_const t n₁ cs₂
-    
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂
   · rcases cs₂ with ⟨n₂, rfl⟩
     simpa! using cseval_mul_const t n₂ cs₁
-    
   cases' cs₁ with csa₁ csb₁; cases' id cs₂ with csa₂ csb₂
   simp! ; have C := PosNum.cmp_to_nat x₁ x₂
   cases' A₂ csa₂ with csA₂ hA₂
@@ -421,7 +386,6 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   · simp [A₁ csa₁ cs₂, B₁ csb₁ cs₂]
     symm
     apply Tactic.Ring.horner_mul_const <;> rfl
-    
   · cases' cseval_horner' t _ x₁ n₂ 0 csA₂ ⟨0, rfl⟩ with csh₁ h₁
     cases C
     split_ifs
@@ -429,42 +393,32 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       refine' ⟨csh₁, h₁.trans (Eq.symm _)⟩
       apply Tactic.Ring.horner_mul_horner_zero <;> try rfl
       simp! [hA₂]
-      
     · cases' A₁ csa₁ csb₂ with csA₁ hA₁
       cases' cseval_add t csh₁ _ with csh₂ h₂
       · refine' ⟨csh₂, h₂.trans (Eq.symm _)⟩
         apply Tactic.Ring.horner_mul_horner <;> try rfl
         simp! [*]
-        
       exact ⟨csA₁, (B₁ csb₁ csb₂).1⟩
-      
-    
   · simp [A₂ csa₂, B₂ csb₂]
     rw [mul_comm, eq_comm]
     apply Tactic.Ring.horner_const_mul
     · apply mul_comm
-      
     · rfl
-      
-    
 #align tactic.ring2.horner_expr.cseval_mul Tactic.Ring2.HornerExpr.cseval_mul
 
 theorem cseval_pow {α} [CommSemiring α] (t : Tree α) {x : HornerExpr} (cs : x.IsCs) :
     ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
   | 0 => ⟨⟨1, rfl⟩, (pow_zero _).symm⟩
-  | Num.pos p => by
+  | Num.pos p => by 
     simp [pow]; induction' p with p ep p ep
     · simp [*]
-      
     · simp [pow_bit1]
       cases' cseval_mul t ep.1 ep.1 with cs₀ h₀
       cases' cseval_mul t cs₀ cs with cs₁ h₁
       simp [*]
-      
     · simp [pow_bit0]
       cases' cseval_mul t ep.1 ep.1 with cs₀ h₀
       simp [*]
-      
 #align tactic.ring2.horner_expr.cseval_pow Tactic.Ring2.HornerExpr.cseval_pow
 
 /-- For any given tree `t` of atoms and any reflected expression `r`,

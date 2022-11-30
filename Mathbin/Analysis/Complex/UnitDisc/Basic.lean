@@ -60,7 +60,7 @@ theorem coe_ne_one (z : 𝔻) : (z : ℂ) ≠ 1 :=
 #align complex.unit_disc.coe_ne_one Complex.UnitDisc.coe_ne_one
 
 theorem coe_ne_neg_one (z : 𝔻) : (z : ℂ) ≠ -1 :=
-  ne_of_apply_ne abs <| by
+  ne_of_apply_ne abs <| by 
     rw [abs.map_neg, map_one]
     exact z.abs_ne_one
 #align complex.unit_disc.coe_ne_neg_one Complex.UnitDisc.coe_ne_neg_one

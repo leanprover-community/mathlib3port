@@ -28,9 +28,9 @@ namespace CategoryTheory
 
 namespace MonoOver
 
-section HasTop
+section Top
 
-instance {X : C} : HasTop (MonoOver X) where top := mk' (𝟙 _)
+instance {X : C} : Top (MonoOver X) where top := mk' (𝟙 _)
 
 instance {X : C} : Inhabited (MonoOver X) :=
   ⟨⊤⟩
@@ -79,13 +79,13 @@ def pullbackSelf {A B : C} (f : A ⟶ B) [Mono f] : (pullback f).obj (mk' f) ≅
 
 end
 
-end HasTop
+end Top
 
-section HasBot
+section Bot
 
 variable [HasInitial C] [InitialMonoClass C]
 
-instance {X : C} : HasBot (MonoOver X) where bot := mk' (initial.to X)
+instance {X : C} : Bot (MonoOver X) where bot := mk' (initial.to X)
 
 @[simp]
 theorem bot_left (X : C) : ((⊥ : MonoOver X) : C) = ⊥_ C :=
@@ -107,7 +107,7 @@ def mapBot (f : X ⟶ Y) [Mono f] : (map f).obj ⊥ ≅ ⊥ :=
   isoOfBothWays (homMk (initial.to _) (by simp)) (homMk (𝟙 _) (by simp))
 #align category_theory.mono_over.map_bot CategoryTheory.MonoOver.mapBot
 
-end HasBot
+end Bot
 
 section ZeroOrderBot
 
@@ -138,10 +138,13 @@ but we reuse all the names from `semilattice_inf` because they will be used to c
 `semilattice_inf (subobject A)` shortly.
 -/
 @[simps]
-def inf {A : C} : MonoOver A ⥤ MonoOver A ⥤ MonoOver A where
+def inf {A : C} :
+    MonoOver A ⥤
+      MonoOver A ⥤ MonoOver
+          A where 
   obj f := pullback f.arrow ⋙ map f.arrow
   map f₁ f₂ k :=
-    { app := fun g => by
+    { app := fun g => by 
         apply hom_mk _ _
         apply pullback.lift pullback.fst (pullback.snd ≫ k.left) _
         rw [pullback.condition, assoc, w k]
@@ -202,12 +205,8 @@ def supLe {A : C} (f g h : MonoOver A) : (f ⟶ h) → (g ⟶ h) → ((sup.obj f
   · dsimp
     ext1
     · simp [w k₁]
-      
     · simp [w k₂]
-      
-    
   · apply image.lift_fac
-    
 #align category_theory.mono_over.sup_le CategoryTheory.MonoOver.supLe
 
 end Sup
@@ -218,9 +217,10 @@ namespace Subobject
 
 section OrderTop
 
-instance orderTop {X : C} : OrderTop (Subobject X) where
+instance orderTop {X : C} :
+    OrderTop (Subobject X) where 
   top := Quotient.mk' ⊤
-  le_top := by
+  le_top := by 
     refine' Quotient.ind' fun f => _
     exact ⟨mono_over.le_top f⟩
 #align category_theory.subobject.order_top CategoryTheory.Subobject.orderTop
@@ -302,9 +302,10 @@ section OrderBot
 
 variable [HasInitial C] [InitialMonoClass C]
 
-instance orderBot {X : C} : OrderBot (Subobject X) where
+instance orderBot {X : C} :
+    OrderBot (Subobject X) where 
   bot := Quotient.mk' ⊥
-  bot_le := by
+  bot_le := by 
     refine' Quotient.ind' fun f => _
     exact ⟨mono_over.bot_le f⟩
 #align category_theory.subobject.order_bot CategoryTheory.Subobject.orderBot
@@ -347,9 +348,9 @@ theorem bot_arrow {B : C} : (⊥ : Subobject B).arrow = 0 :=
 #align category_theory.subobject.bot_arrow CategoryTheory.Subobject.bot_arrow
 
 theorem bot_factors_iff_zero {A B : C} (f : A ⟶ B) : (⊥ : Subobject B).Factors f ↔ f = 0 :=
-  ⟨by
+  ⟨by 
     rintro ⟨h, rfl⟩
-    simp, by
+    simp, by 
     rintro rfl
     exact ⟨0, by simp⟩⟩
 #align category_theory.subobject.bot_factors_iff_zero CategoryTheory.Subobject.bot_factors_iff_zero
@@ -367,7 +368,8 @@ variable (C)
 
 /-- Sending `X : C` to `subobject X` is a contravariant functor `Cᵒᵖ ⥤ Type`. -/
 @[simps]
-def functor [HasPullbacks C] : Cᵒᵖ ⥤ Type max u₁ v₁ where
+def functor [HasPullbacks C] :
+    Cᵒᵖ ⥤ Type max u₁ v₁ where 
   obj X := Subobject X.unop
   map X Y f := (pullback f.unop).obj
   map_id' X := funext pullback_id
@@ -395,7 +397,7 @@ theorem inf_le_right {A : C} (f g : Subobject A) : (inf.obj f).obj g ≤ g :=
 
 theorem le_inf {A : C} (h f g : Subobject A) : h ≤ f → h ≤ g → h ≤ (inf.obj f).obj g :=
   Quotient.inductionOn₃' h f g
-    (by
+    (by 
       rintro f g h ⟨k⟩ ⟨l⟩
       exact ⟨mono_over.le_inf _ _ _ k l⟩)
 #align category_theory.subobject.le_inf CategoryTheory.Subobject.le_inf
@@ -438,42 +440,37 @@ theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X ⊓ Y
 
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
-    (s.inf P).Factors f ↔ ∀ i ∈ s, (P i).Factors f := by classical
-  apply Finset.induction_on s
-  · simp [top_factors]
-    
-  · intro i s nm ih
-    simp [ih]
-    
+    (s.inf P).Factors f ↔ ∀ i ∈ s, (P i).Factors f := by
+  classical 
+    apply Finset.induction_on s
+    · simp [top_factors]
+    · intro i s nm ih
+      simp [ih]
 #align category_theory.subobject.finset_inf_factors CategoryTheory.Subobject.finset_inf_factors
 
 -- `i` is explicit here because often we'd like to defer a proof of `m`
 theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → Subobject B) (i : I)
     (m : i ∈ s) : (P i).Factors (s.inf P).arrow := by
   revert i m
-  classical
-  apply Finset.induction_on s
-  · rintro _ ⟨⟩
-    
-  · intro i s nm ih j m
-    rw [Finset.inf_insert]
-    simp only [Finset.mem_insert] at m
-    rcases m with (rfl | m)
-    · rw [← factor_thru_arrow _ _ (inf_arrow_factors_left _ _)]
-      exact factors_comp_arrow _
-      
-    · rw [← factor_thru_arrow _ _ (inf_arrow_factors_right _ _)]
-      apply factors_of_factors_right
-      exact ih _ m
-      
-    
+  classical 
+    apply Finset.induction_on s
+    · rintro _ ⟨⟩
+    · intro i s nm ih j m
+      rw [Finset.inf_insert]
+      simp only [Finset.mem_insert] at m
+      rcases m with (rfl | m)
+      · rw [← factor_thru_arrow _ _ (inf_arrow_factors_left _ _)]
+        exact factors_comp_arrow _
+      · rw [← factor_thru_arrow _ _ (inf_arrow_factors_right _ _)]
+        apply factors_of_factors_right
+        exact ih _ m
 #align
   category_theory.subobject.finset_inf_arrow_factors CategoryTheory.Subobject.finset_inf_arrow_factors
 
 theorem inf_eq_map_pullback' {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
     (Subobject.inf.obj (Quotient.mk' f₁)).obj f₂ =
       (Subobject.map f₁.arrow).obj ((Subobject.pullback f₁.arrow).obj f₂) :=
-  by
+  by 
   apply Quotient.inductionOn' f₂
   intro f₂
   rfl
@@ -549,20 +546,17 @@ theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B}
 variable [HasInitial C] [InitialMonoClass C]
 
 theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} {f : A ⟶ B}
-    (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by classical
-  revert h
-  apply Finset.induction_on s
-  · rintro ⟨_, ⟨⟨⟩, _⟩⟩
-    
-  · rintro i s nm ih ⟨j, ⟨m, h⟩⟩
-    simp only [Finset.sup_insert]
-    simp at m
-    rcases m with (rfl | m)
-    · exact sup_factors_of_factors_left h
-      
-    · exact sup_factors_of_factors_right (ih ⟨j, ⟨m, h⟩⟩)
-      
-    
+    (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by
+  classical 
+    revert h
+    apply Finset.induction_on s
+    · rintro ⟨_, ⟨⟨⟩, _⟩⟩
+    · rintro i s nm ih ⟨j, ⟨m, h⟩⟩
+      simp only [Finset.sup_insert]
+      simp at m
+      rcases m with (rfl | m)
+      · exact sup_factors_of_factors_left h
+      · exact sup_factors_of_factors_right (ih ⟨j, ⟨m, h⟩⟩)
 #align category_theory.subobject.finset_sup_factors CategoryTheory.Subobject.finset_sup_factors
 
 end SemilatticeSup
@@ -608,7 +602,7 @@ def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s
       underlying.map
         (homOfLe
           (k _
-            (by
+            (by 
               rcases j with ⟨-, ⟨g, ⟨m, rfl⟩⟩⟩
               simpa using m))))
     (by tidy)
@@ -637,15 +631,13 @@ def widePullbackι {A : C} (s : Set (Subobject A)) : widePullback s ⟶ A :=
 
 instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullbackι s) :=
   ⟨fun W u v h =>
-    limit.hom_ext fun j => by
+    limit.hom_ext fun j => by 
       cases j
       · exact h
-        
       · apply (cancel_mono ((equivShrink (subobject A)).symm j).arrow).1
         rw [assoc, assoc]
         erw [limit.w (wide_cospan s) (wide_pullback_shape.hom.term j)]
-        exact h
-        ⟩
+        exact h⟩
 #align category_theory.subobject.wide_pullback_ι_mono CategoryTheory.Subobject.wide_pullback_ι_mono
 
 /- warning: category_theory.subobject.Inf clashes with category_theory.subobject.inf -> CategoryTheory.Subobject.inf
@@ -672,22 +664,18 @@ theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f :
     apply eq_to_hom
     apply congr_arg fun X : subobject A => (X : C)
     exact Equiv.symm_apply_apply _ _
-    
   · dsimp [Inf]
     simp only [category.comp_id, category.assoc, ← underlying_iso_hom_comp_eq_mk,
       subobject.arrow_congr, congr_arg_mpr_hom_left, iso.cancel_iso_hom_left]
     convert limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)
-    
 #align category_theory.subobject.Inf_le CategoryTheory.Subobject.Inf_le
 
 theorem le_Inf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) : f ≤ inf s :=
-  by
+  by 
   fapply le_of_comm
   · exact limits.limit.lift _ (le_Inf_cone s f k) ≫ (underlying_iso _).inv
-    
   · dsimp [Inf, wide_pullback_ι]
     simp
-    
 #align category_theory.subobject.le_Inf CategoryTheory.Subobject.le_Inf
 
 instance {B : C} : CompleteSemilatticeInf (Subobject B) :=
@@ -728,24 +716,22 @@ theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s :
     refine' _ ≫ factor_thru_image _ ≫ (underlying_iso _).inv
     refine' _ ≫ sigma.ι _ ⟨equivShrink _ f, by simpa [Set.mem_image] using H⟩
     exact eq_to_hom (congr_arg (fun X : subobject A => (X : C)) (Equiv.symm_apply_apply _ _).symm)
-    
   · dsimp [Sup, small_coproduct_desc]
     simp
     dsimp
     simp
-    
 #align category_theory.subobject.le_Sup CategoryTheory.Subobject.le_Sup
 
 theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set α) (x : β) :
     e.symm x ∈ s ↔ x ∈ e '' s :=
-  ⟨fun h => ⟨e.symm x, h, by simp⟩, by
+  ⟨fun h => ⟨e.symm x, h, by simp⟩, by 
     rintro ⟨a, m, rfl⟩
     simpa using m⟩
 #align
   category_theory.subobject.symm_apply_mem_iff_mem_image CategoryTheory.Subobject.symm_apply_mem_iff_mem_image
 
 theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, g ≤ f) : sup s ≤ f :=
-  by
+  by 
   fapply le_of_comm
   · dsimp [Sup]
     refine' (underlying_iso _).Hom ≫ image.lift ⟨_, f.arrow, _, _⟩
@@ -753,18 +739,14 @@ theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ 
       rintro ⟨g, m⟩
       refine' underlying.map (hom_of_le (k _ _))
       simpa [symm_apply_mem_iff_mem_image] using m
-      
     · ext j
       rcases j with ⟨j, m⟩
       dsimp [small_coproduct_desc]
       simp
       dsimp
       simp
-      
-    
   · dsimp [Sup]
     simp
-    
 #align category_theory.subobject.Sup_le CategoryTheory.Subobject.Sup_le
 
 instance {B : C} : CompleteSemilatticeSup (Subobject B) :=
@@ -802,26 +784,29 @@ end ZeroObject
 section SubobjectSubobject
 
 /-- The subobject lattice of a subobject `Y` is order isomorphic to the interval `set.Iic Y`. -/
-def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.iic Y where
+def subobjectOrderIso {X : C} (Y : Subobject X) :
+    Subobject (Y : C) ≃o
+      Set.iic
+        Y where 
   toFun Z :=
     ⟨Subobject.mk (Z.arrow ≫ Y.arrow),
       Set.mem_Iic.mpr (le_of_comm ((underlyingIso _).Hom ≫ Z.arrow) (by simp))⟩
   invFun Z := Subobject.mk (ofLe _ _ Z.2)
   left_inv Z :=
     mk_eq_of_comm _ (underlyingIso _)
-      (by
+      (by 
         ext
         simp)
   right_inv Z :=
     Subtype.ext
       (mk_eq_of_comm _ (underlyingIso _)
-        (by
+        (by 
           dsimp
           simp [← iso.eq_inv_comp]))
   map_rel_iff' W Z :=
     ⟨fun h =>
       le_of_comm ((underlyingIso _).inv ≫ ofLe _ _ (Subtype.mk_le_mk.mp h) ≫ (underlyingIso _).Hom)
-        (by
+        (by 
           ext
           simp),
       fun h =>

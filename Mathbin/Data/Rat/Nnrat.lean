@@ -30,7 +30,7 @@ open BigOperators
 /-- Nonnegative rational numbers. -/
 def Nnrat :=
   { q : ℚ // 0 ≤ q }deriving CanonicallyOrderedCommSemiring, CanonicallyLinearOrderedSemifield,
-  LinearOrderedCommGroupWithZero, Sub, HasOrderedSub, DenselyOrdered, Archimedean, Inhabited
+  LinearOrderedCommGroupWithZero, Sub, OrderedSub, DenselyOrdered, Archimedean, Inhabited
 #align nnrat Nnrat
 
 -- mathport name: nnrat
@@ -52,7 +52,7 @@ theorem val_eq_coe (q : ℚ≥0) : q.val = q :=
 instance canLift : CanLift ℚ ℚ≥0 coe fun q => 0 ≤ q where prf q hq := ⟨⟨q, hq⟩, rfl⟩
 #align nnrat.can_lift Nnrat.canLift
 
-@[ext.1]
+@[ext]
 theorem ext : (p : ℚ) = (q : ℚ) → p = q :=
   Subtype.ext
 #align nnrat.ext Nnrat.ext
@@ -401,19 +401,15 @@ theorem to_nnrat_bit1 (hq : 0 ≤ q) : toNnrat (bit1 q) = bit1 (toNnrat q) :=
 theorem to_nnrat_mul (hp : 0 ≤ p) : toNnrat (p * q) = toNnrat p * toNnrat q := by
   cases' le_total 0 q with hq hq
   · ext <;> simp [to_nnrat, hp, hq, max_eq_left, mul_nonneg]
-    
   · have hpq := mul_nonpos_of_nonneg_of_nonpos hp hq
     rw [to_nnrat_eq_zero.2 hq, to_nnrat_eq_zero.2 hpq, mul_zero]
-    
 #align rat.to_nnrat_mul Rat.to_nnrat_mul
 
 theorem to_nnrat_inv (q : ℚ) : toNnrat q⁻¹ = (toNnrat q)⁻¹ := by
   obtain hq | hq := le_total q 0
   · rw [to_nnrat_eq_zero.mpr hq, inv_zero, to_nnrat_eq_zero.mpr (inv_nonpos.mpr hq)]
-    
   · nth_rw 0 [← Rat.coe_to_nnrat q hq]
     rw [← coe_inv, to_nnrat_coe]
-    
 #align rat.to_nnrat_inv Rat.to_nnrat_inv
 
 theorem to_nnrat_div (hp : 0 ≤ p) : toNnrat (p / q) = toNnrat p / toNnrat q := by
@@ -473,7 +469,7 @@ theorem ext_num_denom (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
 #align nnrat.ext_num_denom Nnrat.ext_num_denom
 
 theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
-  ⟨by
+  ⟨by 
     rintro rfl
     exact ⟨rfl, rfl⟩, fun h => ext_num_denom h.1 h.2⟩
 #align nnrat.ext_num_denom_iff Nnrat.ext_num_denom_iff

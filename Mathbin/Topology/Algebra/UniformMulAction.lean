@@ -184,7 +184,7 @@ end HasSmul
 
 @[to_additive]
 instance [Monoid M] [MulAction M X] [HasUniformContinuousConstSmul M X] :
-    MulAction M (Completion X) where
+    MulAction M (Completion X) where 
   smul := (· • ·)
   one_smul := (ext' (continuous_const_smul _) continuous_id) fun a => by rw [← coe_smul, one_smul]
   mul_smul x y :=

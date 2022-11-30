@@ -86,7 +86,6 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
   induction' N with N ihN
   · apply h0
     simpa using hN 0 le_rfl
-    
   rw [imp_false] at ihN
   push_neg  at ihN
   rcases ihN with ⟨n, hn, hμn⟩
@@ -102,9 +101,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
     ⟨x, ⟨⟨hxs, hxn⟩, hxT⟩, m, hm0, ⟨hxms, hxm⟩, hxx⟩
   refine' hxT ⟨hxs, mem_Union₂.2 ⟨n + m, _, _⟩⟩
   · exact add_le_add hn (Nat.one_le_of_lt <| pos_iff_ne_zero.2 hm0)
-    
   · rwa [Set.mem_preimage, ← iterate_add_apply] at hxm
-    
 #align
   measure_theory.conservative.frequently_measure_inter_ne_zero MeasureTheory.Conservative.frequently_measure_inter_ne_zero
 
@@ -197,7 +194,6 @@ theorem ae_frequently_mem_of_mem_nhds [TopologicalSpace α] [SecondCountableTopo
 protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[n]) μ := by
   cases n
   · exact conservative.id μ
-    
   -- Discharge the trivial case `n = 0`
   refine' ⟨hf.1.iterate _, fun s hs hs0 => _⟩
   rcases(hf.frequently_ae_mem_and_frequently_image_mem hs hs0).exists with ⟨x, hxs, hx⟩
@@ -207,17 +203,15 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
   rw [Nat.frequently_at_top_iff_infinite] at hx
   rcases Nat.exists_lt_modeq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
   set m := (l - k) / (n + 1)
-  have : (n + 1) * m = l - k := by
+  have : (n + 1) * m = l - k := by 
     apply Nat.mul_div_cancel'
     exact (Nat.modeq_iff_dvd' hkl.le).1 hn
   refine' ⟨(f^[k]) x, hk, m, _, _⟩
   · intro hm
     rw [hm, mul_zero, eq_comm, tsub_eq_zero_iff_le] at this
     exact this.not_lt hkl
-    
   · rwa [← iterate_mul, this, ← iterate_add_apply, tsub_add_cancel_of_le]
     exact hkl.le
-    
 #align measure_theory.conservative.iterate MeasureTheory.Conservative.iterate
 
 end Conservative

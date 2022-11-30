@@ -93,7 +93,7 @@ theorem mem_erase_none {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔
 #align finset.mem_erase_none Finset.mem_erase_none
 
 theorem erase_none_eq_bUnion [DecidableEq α] (s : Finset (Option α)) :
-    s.eraseNone = s.bUnion Option.toFinset := by
+    s.eraseNone = s.bUnion Option.toFinset := by 
   ext
   simp
 #align finset.erase_none_eq_bUnion Finset.erase_none_eq_bUnion

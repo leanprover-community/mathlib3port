@@ -147,7 +147,10 @@ instance is_scalar_tower_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [IsSca
 #align prod.is_scalar_tower_both Prod.is_scalar_tower_both
 
 @[to_additive]
-instance {m : Monoid M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where
+instance {m : Monoid M} [MulAction M α] [MulAction M β] :
+    MulAction M
+      (α ×
+        β) where 
   mul_smul a₁ a₂ p := mk.inj_iff.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
   one_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨one_smul _ _, one_smul _ _⟩
 
@@ -162,7 +165,10 @@ instance {R M N : Type _} {r : Monoid R} [AddMonoid M] [AddMonoid N] [DistribMul
   { Prod.distribSmul with }
 
 instance {R M N : Type _} {r : Monoid R} [Monoid M] [Monoid N] [MulDistribMulAction R M]
-    [MulDistribMulAction R N] : MulDistribMulAction R (M × N) where
+    [MulDistribMulAction R N] :
+    MulDistribMulAction R
+      (M ×
+        N) where 
   smul_mul a p₁ p₂ := mk.inj_iff.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
   smul_one a := mk.inj_iff.mpr ⟨smul_one _, smul_one _⟩
 
@@ -176,7 +182,7 @@ section BundledSmul
 /-- Scalar multiplication as a multiplicative homomorphism. -/
 @[simps]
 def smulMulHom [Monoid α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] :
-    α × β →ₙ* β where
+    α × β →ₙ* β where 
   toFun a := a.1 • a.2
   map_mul' a b := (smul_mul_smul _ _ _ _).symm
 #align smul_mul_hom smulMulHom

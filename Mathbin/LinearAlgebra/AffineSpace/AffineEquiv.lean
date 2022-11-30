@@ -123,7 +123,7 @@ theorem to_affine_map_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.toAffineMap = e'.toAf
   to_affine_map_injective.eq_iff
 #align affine_equiv.to_affine_map_inj AffineEquiv.to_affine_map_inj
 
-@[ext.1]
+@[ext]
 theorem ext {e e' : P₁ ≃ᵃ[k] P₂} (h : ∀ x, e x = e' x) : e = e' :=
   to_affine_map_injective <| AffineMap.ext h
 #align affine_equiv.ext AffineEquiv.ext
@@ -156,7 +156,7 @@ one base point. Namely, this function takes a map `e : P₁ → P₂`, a linear 
 `e' : V₁ ≃ₗ[k] V₂`, and a point `p` such that for any other point `p'` we have
 `e p' = e' (p' -ᵥ p) +ᵥ e p`. -/
 def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗ[k] V₂) (p : P₁) (h : ∀ p' : P₁, e p' = e' (p' -ᵥ p) +ᵥ e p) :
-    P₁ ≃ᵃ[k] P₂ where
+    P₁ ≃ᵃ[k] P₂ where 
   toFun := e
   invFun := fun q' : P₂ => e'.symm (q' -ᵥ e p) +ᵥ p
   left_inv p' := by simp [h p']
@@ -177,7 +177,8 @@ theorem linear_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (p h) : (mk' e
 
 /-- Inverse of an affine equivalence as an affine equivalence. -/
 @[symm]
-def symm (e : P₁ ≃ᵃ[k] P₂) : P₂ ≃ᵃ[k] P₁ where
+def symm (e : P₁ ≃ᵃ[k] P₂) :
+    P₂ ≃ᵃ[k] P₁ where 
   toEquiv := e.toEquiv.symm
   linear := e.linear.symm
   map_vadd' v p :=
@@ -250,7 +251,7 @@ omit V₂
 
 /-- Identity map as an `affine_equiv`. -/
 @[refl]
-def refl : P₁ ≃ᵃ[k] P₁ where
+def refl : P₁ ≃ᵃ[k] P₁ where 
   toEquiv := Equiv.refl P₁
   linear := LinearEquiv.refl k V₁
   map_vadd' _ _ := rfl
@@ -292,7 +293,8 @@ include V₂ V₃
 
 /-- Composition of two `affine_equiv`alences, applied left to right. -/
 @[trans]
-def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] P₃ where
+def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) :
+    P₁ ≃ᵃ[k] P₃ where 
   toEquiv := e.toEquiv.trans e'.toEquiv
   linear := e.linear.trans e'.linear
   map_vadd' p v := by
@@ -352,7 +354,7 @@ theorem apply_line_map (e : P₁ ≃ᵃ[k] P₂) (a b : P₁) (c : k) :
 
 omit V₂
 
-instance : Group (P₁ ≃ᵃ[k] P₁) where
+instance : Group (P₁ ≃ᵃ[k] P₁) where 
   one := refl k P₁
   mul e e' := e'.trans e
   inv := symm
@@ -385,7 +387,8 @@ theorem inv_def (e : P₁ ≃ᵃ[k] P₁) : e⁻¹ = e.symm :=
 
 /-- `affine_equiv.linear` on automorphisms is a `monoid_hom`. -/
 @[simps]
-def linearHom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁ where
+def linearHom : (P₁ ≃ᵃ[k] P₁) →*
+      V₁ ≃ₗ[k] V₁ where 
   toFun := linear
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -395,7 +398,10 @@ def linearHom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁ where
 
 This is the affine version of `linear_map.general_linear_group.general_linear_equiv`. -/
 @[simps]
-def equivUnitsAffineMap : (P₁ ≃ᵃ[k] P₁) ≃* (P₁ →ᵃ[k] P₁)ˣ where
+def equivUnitsAffineMap :
+    (P₁ ≃ᵃ[k] P₁) ≃*
+      (P₁ →ᵃ[k]
+          P₁)ˣ where 
   toFun e := ⟨e, e.symm, congr_arg coe e.symm_trans_self, congr_arg coe e.self_trans_symm⟩
   invFun u :=
     { toFun := (u : P₁ →ᵃ[k] P₁), invFun := (↑u⁻¹ : P₁ →ᵃ[k] P₁),
@@ -413,14 +419,16 @@ variable (k)
 /-- The map `v ↦ v +ᵥ b` as an affine equivalence between a module `V` and an affine space `P` with
 tangent space `V`. -/
 @[simps]
-def vaddConst (b : P₁) : V₁ ≃ᵃ[k] P₁ where
+def vaddConst (b : P₁) : V₁ ≃ᵃ[k]
+      P₁ where 
   toEquiv := Equiv.vaddConst b
   linear := LinearEquiv.refl _ _
   map_vadd' p v := add_vadd _ _ _
 #align affine_equiv.vadd_const AffineEquiv.vaddConst
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
-def constVsub (p : P₁) : P₁ ≃ᵃ[k] V₁ where
+def constVsub (p : P₁) : P₁ ≃ᵃ[k]
+      V₁ where 
   toEquiv := Equiv.constVsub p
   linear := LinearEquiv.neg k
   map_vadd' p' v := by simp [vsub_vadd_eq_vsub_sub, neg_add_eq_sub]
@@ -443,7 +451,8 @@ variable (P₁)
 Note that there is no need for an `affine_map.const_vadd` as it is always an equivalence.
 This is roughly to `distrib_mul_action.to_linear_equiv` as `+ᵥ` is to `•`. -/
 @[simps apply linear]
-def constVadd (v : V₁) : P₁ ≃ᵃ[k] P₁ where
+def constVadd (v : V₁) :
+    P₁ ≃ᵃ[k] P₁ where 
   toEquiv := Equiv.constVadd P₁ v
   linear := LinearEquiv.refl _ _
   map_vadd' p w := vadd_comm _ _ _
@@ -467,7 +476,9 @@ theorem const_vadd_symm (v : V₁) : (constVadd k P₁ v).symm = constVadd k P�
 
 /-- A more bundled version of `affine_equiv.const_vadd`. -/
 @[simps]
-def constVaddHom : Multiplicative V₁ →* P₁ ≃ᵃ[k] P₁ where
+def constVaddHom :
+    Multiplicative V₁ →*
+      P₁ ≃ᵃ[k] P₁ where 
   toFun v := constVadd k P₁ v.toAdd
   map_one' := const_vadd_zero _ _
   map_mul' := const_vadd_add _ _
@@ -585,7 +596,8 @@ end AffineEquiv
 namespace LinearEquiv
 
 /-- Interpret a linear equivalence between modules as an affine equivalence. -/
-def toAffineEquiv (e : V₁ ≃ₗ[k] V₂) : V₁ ≃ᵃ[k] V₂ where
+def toAffineEquiv (e : V₁ ≃ₗ[k] V₂) :
+    V₁ ≃ᵃ[k] V₂ where 
   toEquiv := e.toEquiv
   linear := e
   map_vadd' p v := e.map_add v p

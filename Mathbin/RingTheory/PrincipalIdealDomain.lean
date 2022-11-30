@@ -165,14 +165,13 @@ open Submodule.IsPrincipal Ideal
 theorem to_maximal_ideal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R}
     [hpi : IsPrime S] (hS : S ≠ ⊥) : IsMaximal S :=
   is_maximal_iff.2
-    ⟨(ne_top_iff_one S).1 hpi.1, by
+    ⟨(ne_top_iff_one S).1 hpi.1, by 
       intro T x hST hxS hxT
       cases' (mem_iff_generator_dvd _).1 (hST <| generator_mem S) with z hz
       cases hpi.mem_or_mem (show generator T * z ∈ S from hz ▸ generator_mem S)
       · have hTS : T ≤ S
         rwa [← T.span_singleton_generator, Ideal.span_le, singleton_subset_iff]
         exact (hxS <| hTS hxT).elim
-        
       cases' (mem_iff_generator_dvd _).1 h with y hy
       have : generator S ≠ 0 := mt (eq_bot_iff_generator_eq_zero _).2 hS
       rw [← mul_one (generator S), hy, mul_left_comm, mul_right_inj' this] at hz
@@ -362,7 +361,7 @@ theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
   obtain ⟨d, hd⟩ := IsPrincipalIdealRing.principal (span ({x, y} : Set R))
   rw [submodule_span_eq] at hd
   rw [hd]
-  suffices Associated d (gcd x y) by
+  suffices Associated d (gcd x y) by 
     obtain ⟨D, HD⟩ := this
     rw [← HD]
     exact span_singleton_mul_right_unit D.is_unit _
@@ -371,16 +370,12 @@ theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
     constructor <;> rw [← Ideal.mem_span_singleton, ← hd, mem_span_pair]
     · use 1, 0
       rw [one_mul, zero_mul, add_zero]
-      
     · use 0, 1
       rw [one_mul, zero_mul, zero_add]
-      
-    
   · obtain ⟨r, s, rfl⟩ : ∃ r s, r * x + s * y = d := by
       rw [← mem_span_pair, hd, Ideal.mem_span_singleton]
     apply dvd_add <;> apply dvd_mul_of_dvd_right
     exacts[gcd_dvd_left x y, gcd_dvd_right x y]
-    
 #align span_gcd span_gcd
 
 theorem gcd_dvd_iff_exists (a b : R) {z} : gcd a b ∣ z ↔ ∃ x y, z = a * x + b * y := by
@@ -412,11 +407,9 @@ theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y
   apply is_coprime_of_dvd
   · rintro ⟨rfl, rfl⟩
     simpa using h
-    
   · rintro z nu nz ⟨w, rfl⟩ dy
     refine' h' (dvd_trans _ dy)
     simpa using mul_dvd_mul_left z (is_unit_iff_dvd_one.1 <| (of_irreducible_mul h).resolve_left nu)
-    
 #align dvd_or_coprime dvd_or_coprime
 
 theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
@@ -427,7 +420,6 @@ theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
   apply H i h1 <;>
     · apply dvd_trans h2
       assumption
-      
 #align is_coprime_of_irreducible_dvd is_coprime_of_irreducible_dvd
 
 theorem is_coprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
@@ -436,7 +428,7 @@ theorem is_coprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
 #align is_coprime_of_prime_dvd is_coprime_of_prime_dvd
 
 theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCoprime p n ↔ ¬p ∣ n :=
-  by
+  by 
   constructor
   · intro co H
     apply pp.not_unit
@@ -444,15 +436,12 @@ theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCopri
     apply IsCoprime.dvd_of_dvd_mul_left co
     rw [mul_one n]
     exact H
-    
   · intro nd
     apply is_coprime_of_irreducible_dvd
     · rintro ⟨hp, -⟩
       exact pp.ne_zero hp
-      
     rintro z zi zp zn
     exact nd ((zi.associated_of_dvd pp zp).symm.Dvd.trans zn)
-    
 #align irreducible.coprime_iff_not_dvd Irreducible.coprime_iff_not_dvd
 
 theorem Prime.coprime_iff_not_dvd {p n : R} (pp : Prime p) : IsCoprime p n ↔ ¬p ∣ n :=

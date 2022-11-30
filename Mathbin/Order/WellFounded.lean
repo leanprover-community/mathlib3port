@@ -84,11 +84,9 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrder α] {x y : α} : x ≤ y → y = 
     cases le_not_le_of_lt nge
     rw [xle left] at nge
     exact lt_irrefl x nge
-    
   · intro ngt xle
     contrapose! ngt
     exact lt_of_le_of_ne xle (Ne.symm ngt)
-    
 #align well_founded.eq_iff_not_lt_of_le WellFounded.eq_iff_not_lt_of_le
 
 theorem well_founded_iff_has_max' [PartialOrder α] :
@@ -127,7 +125,7 @@ protected noncomputable def succ {r : α → α → Prop} (wf : WellFounded r) (
 #align well_founded.succ WellFounded.succ
 
 protected theorem lt_succ {r : α → α → Prop} (wf : WellFounded r) {x : α} (h : ∃ y, r x y) :
-    r x (wf.succ x) := by
+    r x (wf.succ x) := by 
   rw [WellFounded.succ, dif_pos h]
   apply min_mem
 #align well_founded.lt_succ WellFounded.lt_succ
@@ -138,7 +136,7 @@ protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {
     (y : α) : r y (wo.wf.succ x) ↔ r y x ∨ y = x := by
   constructor
   · intro h'
-    have : ¬r x y := by
+    have : ¬r x y := by 
       intro hy
       rw [WellFounded.succ, dif_pos] at h'
       exact wo.wf.not_lt_min _ h hy h'
@@ -149,7 +147,6 @@ protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {
     exact hy.symm
     left
     exact hy
-    
   rintro (hy | rfl); exact trans hy (wo.wf.lt_succ h); exact wo.wf.lt_succ h
 #align well_founded.lt_succ_iff WellFounded.lt_succ_iff
 
@@ -165,24 +162,22 @@ theorem min_le {x : β} {s : Set β} (hx : x ∈ s) (hne : s.Nonempty := ⟨x, h
 private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f)
     (hg : StrictMono g) (hfg : Set.range f = Set.range g) {b : β} (H : ∀ a < b, f a = g a) :
     f b ≤ g b := by
-  obtain ⟨c, hc⟩ : g b ∈ Set.range f := by
+  obtain ⟨c, hc⟩ : g b ∈ Set.range f := by 
     rw [hfg]
     exact Set.mem_range_self b
   cases' lt_or_le c b with hcb hbc
   · rw [H c hcb] at hc
     rw [hg.injective hc] at hcb
     exact hcb.false.elim
-    
   · rw [← hc]
     exact hf.monotone hbc
-    
 #align well_founded.eq_strict_mono_iff_eq_range_aux well_founded.eq_strict_mono_iff_eq_range_aux
 
 include h
 
 theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g) :
     Set.range f = Set.range g ↔ f = g :=
-  ⟨fun hfg => by
+  ⟨fun hfg => by 
     funext a
     apply h.induction a
     exact fun b H =>

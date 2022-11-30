@@ -98,24 +98,24 @@ def freshIndex : Preform → Nat
 
 theorem holds_constant {v w : Nat → Nat} :
     ∀ p : Preform, (∀ x < p.freshIndex, v x = w x) → (p.Holds v ↔ p.Holds w)
-  | t =* s, h1 => by
+  | t =* s, h1 => by 
     simp only [holds]
     apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
       apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
-  | t ≤* s, h1 => by
+  | t ≤* s, h1 => by 
     simp only [holds]
     apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
       apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
-  | ¬* p, h1 => by
+  | ¬* p, h1 => by 
     apply not_congr
     apply holds_constant p h1
-  | p ∨* q, h1 => by
+  | p ∨* q, h1 => by 
     simp only [holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
-  | p ∧* q, h1 => by
+  | p ∧* q, h1 => by 
     simp only [holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
@@ -149,9 +149,7 @@ theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
   constructor <;> intro h1
   · cases' h1 with v h1
     cases' h1 with h1 h1 <;> [left, right] <;> refine' ⟨v, _⟩ <;> assumption
-    
   · cases' h1 with h1 h1 <;> cases' h1 with v h1 <;> refine' ⟨v, _⟩ <;> [left, right] <;> assumption
-    
 #align omega.nat.preform.sat_or Omega.Nat.Preform.sat_or
 
 /-- There does not exist any valuation that satisfies argument -/

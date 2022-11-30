@@ -52,7 +52,8 @@ variable {C}
 and `h : Z ⟶ X⟦1⟧`.
 -/
 @[simps]
-def Triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)⟧) : Triangle C where
+def Triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)⟧) :
+    Triangle C where 
   obj₁ := X
   obj₂ := Y
   obj₃ := Z
@@ -95,7 +96,7 @@ In other words, we have a commutative diagram:
 ```
 See <https://stacks.math.columbia.edu/tag/0144>.
 -/
-@[ext.1]
+@[ext]
 structure TriangleMorphism (T₁ : Triangle C) (T₂ : Triangle C) where
   hom₁ : T₁.obj₁ ⟶ T₂.obj₁
   hom₂ : T₁.obj₂ ⟶ T₂.obj₂
@@ -117,7 +118,8 @@ attribute [simp, reassoc] triangle_morphism.comm₁ triangle_morphism.comm₂ tr
 /-- The identity triangle morphism.
 -/
 @[simps]
-def triangleMorphismId (T : Triangle C) : TriangleMorphism T T where
+def triangleMorphismId (T : Triangle C) :
+    TriangleMorphism T T where 
   hom₁ := 𝟙 T.obj₁
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
@@ -133,7 +135,7 @@ variable {T₁ T₂ T₃ : Triangle C}
 -/
 @[simps]
 def TriangleMorphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism T₂ T₃) :
-    TriangleMorphism T₁ T₃ where
+    TriangleMorphism T₁ T₃ where 
   hom₁ := f.hom₁ ≫ g.hom₁
   hom₂ := f.hom₂ ≫ g.hom₂
   hom₃ := f.hom₃ ≫ g.hom₃
@@ -143,7 +145,8 @@ def TriangleMorphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism
 /-- Triangles with triangle morphisms form a category.
 -/
 @[simps]
-instance triangleCategory : Category (Triangle C) where
+instance triangleCategory :
+    Category (Triangle C) where 
   Hom A B := TriangleMorphism A B
   id A := triangleMorphismId A
   comp A B C f g := f.comp g

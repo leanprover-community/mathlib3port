@@ -35,16 +35,14 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Copr
   constructor
   · use i
     field_simp [hn0, mul_comm (i : ℂ), mul_comm (n : ℂ)]
-    
   · simp only [hn0, mul_right_comm _ _ ↑n, mul_left_inj' two_pi_I_ne_zero, Ne.def, not_false_iff,
       mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp, field_simps]
     norm_cast
     rintro l k hk
-    have : n ∣ i * l := by
+    have : n ∣ i * l := by 
       rw [← Int.coe_nat_dvd, hk]
       apply dvd_mul_left
     exact hi.symm.dvd_of_dvd_mul_left this
-    
 #align complex.is_primitive_root_exp_of_coprime Complex.is_primitive_root_exp_of_coprime
 
 theorem is_primitive_root_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by
@@ -58,7 +56,6 @@ theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
   constructor; swap
   · rintro ⟨i, -, hi, rfl⟩
     exact is_primitive_root_exp_of_coprime i n hn hi
-    
   intro h
   obtain ⟨i, hi, rfl⟩ :=
     (is_primitive_root_exp n hn).eq_pow_of_pow_eq_one h.pow_eq_one (Nat.pos_of_ne_zero hn)
@@ -82,12 +79,10 @@ theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
     rw [← H, ← exp_nat_mul]
     congr 1
     field_simp [hn0, mul_comm (i : ℂ)]
-    
   · rintro ⟨i, hi, H⟩
     rw [← H, ← exp_nat_mul, exp_eq_one_iff]
     use i
     field_simp [hn0, mul_comm ((n : ℕ) : ℂ), mul_comm (i : ℂ)]
-    
 #align complex.mem_roots_of_unity Complex.mem_roots_of_unity
 
 theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
@@ -97,7 +92,6 @@ theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :
 theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k := by
   by_cases h : k = 0
   · simp [h]
-    
   exact (is_primitive_root_exp k h).card_primitive_roots
 #align complex.card_primitive_roots Complex.card_primitive_roots
 
@@ -138,65 +132,55 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
   obtain ⟨i, h, hin, rfl⟩ := h
   rw [mul_comm, ← mul_assoc, Complex.exp_mul_I]
   refine' ⟨if i * 2 ≤ n then i else i - n, _, _, _⟩
-  on_goal 2 =>
-  replace hin := nat.is_coprime_iff_coprime.mpr hin
-  split_ifs with _
-  · exact hin
-    
-  · convert hin.add_mul_left_left (-1)
-    rw [mul_neg_one, sub_eq_add_neg]
-    
-  on_goal 2 =>
-  split_ifs with h₂
-  · exact_mod_cast h
-    
-  suffices (i - n : ℤ).natAbs = n - i by
-    rw [this]
-    apply tsub_lt_self hn.bot_lt
-    contrapose! h₂
-    rw [Nat.eq_zero_of_le_zero h₂, zero_mul]
-    exact zero_le _
-  rw [← Int.natAbs_neg, neg_sub, Int.natAbs_eq_iff]
-  exact Or.inl (Int.ofNat_sub h.le).symm
+  on_goal 2 => 
+    replace hin := nat.is_coprime_iff_coprime.mpr hin
+    split_ifs with _
+    · exact hin
+    · convert hin.add_mul_left_left (-1)
+      rw [mul_neg_one, sub_eq_add_neg]
+  on_goal 2 => 
+    split_ifs with h₂
+    · exact_mod_cast h
+    suffices (i - n : ℤ).natAbs = n - i by 
+      rw [this]
+      apply tsub_lt_self hn.bot_lt
+      contrapose! h₂
+      rw [Nat.eq_zero_of_le_zero h₂, zero_mul]
+      exact zero_le _
+    rw [← Int.natAbs_neg, neg_sub, Int.natAbs_eq_iff]
+    exact Or.inl (Int.ofNat_sub h.le).symm
   split_ifs with h₂
   · convert Complex.arg_cos_add_sin_mul_I _
     · push_cast
-      
     · push_cast
-      
     field_simp [hn]
     refine' ⟨(neg_lt_neg Real.pi_pos).trans_le _, _⟩
     · rw [neg_zero]
       exact mul_nonneg (mul_nonneg i.cast_nonneg <| by simp [real.pi_pos.le]) (by simp)
-      
     rw [← mul_rotate', mul_div_assoc]
     rw [← mul_one n] at h₂
     exact
       mul_le_of_le_one_right real.pi_pos.le
         ((div_le_iff' <| by exact_mod_cast pos_of_gt h).mpr <| by exact_mod_cast h₂)
-    
   rw [← Complex.cos_sub_two_pi, ← Complex.sin_sub_two_pi]
   convert Complex.arg_cos_add_sin_mul_I _
   · push_cast
     rw [← sub_one_mul, sub_div, div_self]
     exact_mod_cast hn
-    
   · push_cast
     rw [← sub_one_mul, sub_div, div_self]
     exact_mod_cast hn
-    
   field_simp [hn]
   refine' ⟨_, le_trans _ real.pi_pos.le⟩
-  on_goal 2 =>
-  rw [mul_div_assoc]
-  exact
-    mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr <| by exact_mod_cast h.le)
-      (div_nonneg (by simp [real.pi_pos.le]) <| by simp)
+  on_goal 2 => 
+    rw [mul_div_assoc]
+    exact
+      mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr <| by exact_mod_cast h.le)
+        (div_nonneg (by simp [real.pi_pos.le]) <| by simp)
   rw [← mul_rotate', mul_div_assoc, neg_lt, ← mul_neg, mul_lt_iff_lt_one_right Real.pi_pos, ←
     neg_div, ← neg_mul, neg_sub, div_lt_iff, one_mul, sub_mul, sub_lt_comm, ← mul_sub_one]
   norm_num
   exact_mod_cast not_le.mp h₂
   · exact nat.cast_pos.mpr hn.bot_lt
-    
 #align is_primitive_root.arg IsPrimitiveRoot.arg
 

@@ -29,25 +29,18 @@ namespace EisensteinCriterionAux
 theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
     (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
     map (mk P) f = c ((mk P) f.leadingCoeff) * X ^ f.natDegree :=
-  Polynomial.ext fun n => by
-    by_cases hf0 : f = 0;
-    · simp [hf0]
-      
+  Polynomial.ext fun n => by 
+    by_cases hf0 : f = 0; · simp [hf0]
     rcases lt_trichotomy (↑n) (degree f) with (h | h | h)
     · erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
       rintro rfl
       exact not_lt_of_ge degree_le_nat_degree h
-      
     · have : nat_degree f = n := nat_degree_eq_of_degree_eq_some h.symm
       rw [coeff_C_mul, coeff_X_pow, if_pos this.symm, mul_one, leading_coeff, this, coeff_map]
-      
     · rw [coeff_eq_zero_of_degree_lt, coeff_eq_zero_of_degree_lt]
       · refine' lt_of_le_of_lt (degree_C_mul_X_pow_le _ _) _
         rwa [← degree_eq_nat_degree hf0]
-        
       · exact lt_of_le_of_lt (degree_map_le _ _) h
-        
-      
 #align
   polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem Polynomial.EisensteinCriterionAux.map_eq_C_mul_X_pow_of_forall_coeff_mem
 
@@ -103,7 +96,7 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
     rcases mul_eq_mul_prime_pow
         (show Prime (X : Polynomial (R ⧸ P)) from monic_X.prime_of_degree_eq_one degree_X) hf with
       ⟨m, n, b, c, hmnd, hbc, hp, hq⟩
-    have hmn : 0 < m → 0 < n → False := by
+    have hmn : 0 < m → 0 < n → False := by 
       intro hm0 hn0
       refine' h0 _
       rw [coeff_zero_eq_eval_zero, eval_mul, sq]
@@ -126,18 +119,15 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       rw [not_and_or] at hmnd
       cases hmnd
       · exact add_lt_add_of_lt_of_le (lt_of_le_of_ne hmp (Ne.symm hmnd)) hnq
-        
       · exact add_lt_add_of_le_of_lt hmp (lt_of_le_of_ne hnq (Ne.symm hmnd))
-        
     obtain rfl | rfl : m = 0 ∨ n = 0 := by
       rwa [pos_iff_ne_zero, pos_iff_ne_zero, imp_false, not_not, ← or_iff_not_imp_left] at hmn
     · exact Or.inl (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit hu hpmqn.1)
-      
-    · exact
+    ·
+      exact
         Or.inr
           (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit (by simpa only [mul_comm] using hu)
-            hpmqn.2)
-      ⟩
+            hpmqn.2)⟩
 #align polynomial.irreducible_of_eisenstein_criterion Polynomial.irreducible_of_eisenstein_criterion
 
 end Polynomial

@@ -25,16 +25,11 @@ theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
     (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : ContinuousOn (extendFrom (ioo a b) f) (icc a b) := by
   apply continuous_on_extend_from
   · rw [closure_Ioo hab]
-    
   · intro x x_in
     rcases eq_endpoints_or_mem_Ioo_of_mem_Icc x_in with (rfl | rfl | h)
     · exact ⟨la, ha.mono_left <| nhds_within_mono _ Ioo_subset_Ioi_self⟩
-      
     · exact ⟨lb, hb.mono_left <| nhds_within_mono _ Ioo_subset_Iio_self⟩
-      
     · use f x, hf x h
-      
-    
 #align continuous_on_Icc_extend_from_Ioo continuous_on_Icc_extend_from_Ioo
 
 theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
@@ -43,9 +38,7 @@ theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [D
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
     simp only [le_of_lt hab, left_mem_Icc, right_mem_Icc]
-    
   · simpa [hab]
-    
 #align eq_lim_at_left_extend_from_Ioo eq_lim_at_left_extend_from_Ioo
 
 theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
@@ -54,9 +47,7 @@ theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
     simp only [le_of_lt hab, left_mem_Icc, right_mem_Icc]
-    
   · simpa [hab]
-    
 #align eq_lim_at_right_extend_from_Ioo eq_lim_at_right_extend_from_Ioo
 
 theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
@@ -66,15 +57,11 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
   apply continuous_on_extend_from
   · rw [closure_Ioo hab.ne]
     exact Ico_subset_Icc_self
-    
   · intro x x_in
     rcases eq_left_or_mem_Ioo_of_mem_Ico x_in with (rfl | h)
     · use la
       simpa [hab]
-      
     · use f x, hf x h
-      
-    
 #align continuous_on_Ico_extend_from_Ioo continuous_on_Ico_extend_from_Ioo
 
 theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]

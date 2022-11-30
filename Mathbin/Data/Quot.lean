@@ -262,7 +262,8 @@ instance (s : Setoid α) [Inhabited α] : Inhabited (Quotient s) :=
 instance (s : Setoid α) [Subsingleton α] : Subsingleton (Quotient s) :=
   Quot.Subsingleton
 
-instance {α : Type _} [Setoid α] : IsEquiv α (· ≈ ·) where
+instance {α : Type _} [Setoid α] :
+    IsEquiv α (· ≈ ·) where 
   refl := Setoid.refl
   symm a b := Setoid.symm
   trans a b c := Setoid.trans
@@ -516,7 +517,8 @@ theorem Quotient.out_inj {s : Setoid α} {x y : Quotient s} : x.out = y.out ↔ 
 section Pi
 
 #print piSetoid /-
-instance piSetoid {ι : Sort _} {α : ι → Sort _} [∀ i, Setoid (α i)] : Setoid (∀ i, α i) where
+instance piSetoid {ι : Sort _} {α : ι → Sort _} [∀ i, Setoid (α i)] :
+    Setoid (∀ i, α i) where 
   R a b := ∀ i, a i ≈ b i
   iseqv :=
     ⟨fun a i => Setoid.refl _, fun a b h i => Setoid.symm (h _), fun a b c h₁ h₂ i =>
@@ -674,11 +676,11 @@ def map (f : α → β) (q : Trunc α) : Trunc β :=
 #align trunc.map Trunc.map
 -/
 
-instance : Monad Trunc where
+instance : Monad Trunc where 
   pure := @Trunc.mk
   bind := @Trunc.bind
 
-instance : LawfulMonad Trunc where
+instance : LawfulMonad Trunc where 
   id_map α q := Trunc.eq _ _
   pure_bind α β q f := rfl
   bind_assoc α β γ x f g := Trunc.eq _ _

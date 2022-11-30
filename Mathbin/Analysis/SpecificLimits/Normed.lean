@@ -66,7 +66,7 @@ theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜
 theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [NormedField 𝕜]
     [NormedAddCommGroup 𝔸] [NormedSpace 𝕜 𝔸] {l : Filter ι} {ε : ι → 𝕜} {f : ι → 𝔸}
     (hε : Tendsto ε l (𝓝 0)) (hf : Filter.IsBoundedUnder (· ≤ ·) l (norm ∘ f)) :
-    Tendsto (ε • f) l (𝓝 0) := by
+    Tendsto (ε • f) l (𝓝 0) := by 
   rw [← is_o_one_iff 𝕜] at hε⊢
   simpa using is_o.smul_is_O hε (hf.is_O_const (one_ne_zero : (1 : 𝕜) ≠ 0))
 #align
@@ -345,74 +345,70 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                    [])]
-                  "⟩"))]
-               [])
+            [(Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                   [])]
+                 "⟩"))]
               [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget
-                 []
-                 (Term.app
-                  `exists_between
-                  [(Term.app (Term.proj `abs_lt "." (fieldIdx "2")) [`ha])]))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hab)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hbR)])
-                      [])]
-                    "⟩")])
-                 [])])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.anonymousCtor
-                "⟨"
-                [`b
-                 ","
-                 (Term.anonymousCtor
-                  "⟨"
-                  [(Term.app (Term.proj (Term.app `abs_nonneg [`a]) "." `trans_lt) [`hab]) "," `hbR]
-                  "⟩")
-                 ","
-                 (Term.app
-                  `H.trans_is_o
-                  [(Term.app
-                    `is_o_pow_pow_of_abs_lt_left
-                    [(Term.app `hab.trans_le [(Term.app `le_abs_self [`b])])])])]
-                "⟩"))
-              [])])
+             []
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget
+                []
+                (Term.app
+                 `exists_between
+                 [(Term.app (Term.proj `abs_lt "." (fieldIdx "2")) [`ha])]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hab)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hbR)])
+                     [])]
+                   "⟩")])
+                [])])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.anonymousCtor
+               "⟨"
+               [`b
+                ","
+                (Term.anonymousCtor
+                 "⟨"
+                 [(Term.app (Term.proj (Term.app `abs_nonneg [`a]) "." `trans_lt) [`hab]) "," `hbR]
+                 "⟩")
+                ","
+                (Term.app
+                 `H.trans_is_o
+                 [(Term.app
+                   `is_o_pow_pow_of_abs_lt_left
+                   [(Term.app `hab.trans_le [(Term.app `le_abs_self [`b])])])])]
+               "⟩"))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "4"))
            []
@@ -440,96 +436,91 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "6"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                    [])]
-                  "⟩"))]
-               [])
+            [(Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                   [])]
+                 "⟩"))]
               [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget [] (Term.app `bound_of_is_O_nat_at_top [`H]))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC)])
-                      [])]
-                    "⟩")])
-                 [])])
-              [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.anonymousCtor
-                "⟨"
-                [`a
-                 ","
-                 `ha
-                 ","
-                 `C
-                 ","
-                 `hC₀
-                 ","
-                 (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.hole "_")))]
-                "⟩"))
-              [])
-             (group
-              (Std.Tactic.simpa
-               "simpa"
+             []
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget [] (Term.app `bound_of_is_O_nat_at_top [`H]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC)])
+                     [])]
+                   "⟩")])
+                [])])
+             []
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor
+               "⟨"
+               [`a
+                ","
+                `ha
+                ","
+                `C
+                ","
+                `hC₀
+                ","
+                (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.hole "_")))]
+               "⟩"))
+             []
+             (Std.Tactic.simpa
+              "simpa"
+              []
+              []
+              (Std.Tactic.simpaArgsRest
                []
                []
-               (Std.Tactic.simpaArgsRest
-                []
-                []
-                ["only"]
-                [(Tactic.simpArgs
-                  "["
-                  [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
-                   ","
-                   (Tactic.simpLemma [] [] `abs_pow)
-                   ","
-                   (Tactic.simpLemma
-                    []
-                    []
-                    (Term.app
-                     `abs_of_nonneg
-                     [(Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `le)]))]
-                  "]")]
-                ["using"
-                 (Term.app
-                  `hC
-                  [(Term.app
-                    `pow_ne_zero
-                    [`n (Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `ne')])])]))
-              [])])
+               ["only"]
+               [(Tactic.simpArgs
+                 "["
+                 [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
+                  ","
+                  (Tactic.simpLemma [] [] `abs_pow)
+                  ","
+                  (Tactic.simpLemma
+                   []
+                   []
+                   (Term.app
+                    `abs_of_nonneg
+                    [(Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `le)]))]
+                 "]")]
+               ["using"
+                (Term.app
+                 `hC
+                 [(Term.app
+                   `pow_ne_zero
+                   [`n (Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `ne')])])]))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
            []
@@ -556,208 +547,195 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "3"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₀)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                    [])]
-                  "⟩"))]
-               [])
+            [(Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₀)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                   [])]
+                 "⟩"))]
               [])
-             (group
-              (Std.Tactic.rcases
-               "rcases"
-               [(Tactic.casesTarget
-                 []
-                 (Term.app
-                  `sign_cases_of_C_mul_pow_nonneg
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`n]
-                     []
-                     "=>"
-                     (Term.app
-                      (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)
-                      [(Term.app `H [`n])])))]))]
-               ["with"
-                (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.paren
-                    "("
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed
-                      [(Std.Tactic.RCases.rcasesPat.one `rfl)
-                       "|"
-                       (Std.Tactic.RCases.rcasesPat.tuple
-                        "⟨"
-                        [(Std.Tactic.RCases.rcasesPatLo
-                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
-                          [])
-                         ","
-                         (Std.Tactic.RCases.rcasesPatLo
-                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha₀)])
-                          [])]
-                        "⟩")])
-                     [])
-                    ")")])
-                 [])])
-              [])
-             (group
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Std.Tactic.obtain
-                  "obtain"
-                  [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                  [":" («term_=_» `f "=" (num "0"))]
-                  [":="
-                   [(Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented
-                       [(Std.Tactic.Ext.«tacticExt___:_»
-                         "ext"
-                         [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `n))]
+             []
+             (Std.Tactic.rcases
+              "rcases"
+              [(Tactic.casesTarget
+                []
+                (Term.app
+                 `sign_cases_of_C_mul_pow_nonneg
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`n]
+                    []
+                    "=>"
+                    (Term.app
+                     (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)
+                     [(Term.app `H [`n])])))]))]
+              ["with"
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.paren
+                   "("
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                      "|"
+                      (Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
                          [])
-                        []
-                        (Std.Tactic.simpa
-                         "simpa"
-                         []
-                         []
-                         (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `H [`n])]))])))]])
-                 [])
-                (group
-                 (Tactic.simp
-                  "simp"
-                  []
-                  []
-                  ["only"]
-                  ["["
-                   [(Tactic.simpLemma [] [] `lt_irrefl) "," (Tactic.simpLemma [] [] `false_or_iff)]
-                   "]"]
-                  [(Tactic.location "at" (Tactic.locationHyp [`h₀] []))])
-                 [])
-                (group
-                 (Tactic.exact
-                  "exact"
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha₀)])
+                         [])]
+                       "⟩")])
+                    [])
+                   ")")])
+                [])])
+             []
+             (tactic___
+              (cdotTk (patternIgnore (token.«·» "·")))
+              [(Std.Tactic.obtain
+                "obtain"
+                [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                [":" («term_=_» `f "=" (num "0"))]
+                [":="
+                 [(Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Std.Tactic.Ext.«tacticExt___:_»
+                       "ext"
+                       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `n))]
+                       [])
+                      []
+                      (Std.Tactic.simpa
+                       "simpa"
+                       []
+                       []
+                       (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `H [`n])]))])))]])
+               []
+               (Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `lt_irrefl) "," (Tactic.simpLemma [] [] `false_or_iff)]
+                 "]"]
+                [(Tactic.location "at" (Tactic.locationHyp [`h₀] []))])
+               []
+               (Tactic.exact
+                "exact"
+                (Term.anonymousCtor
+                 "⟨"
+                 [(num "0")
+                  ","
                   (Term.anonymousCtor
                    "⟨"
-                   [(num "0")
-                    ","
-                    (Term.anonymousCtor
-                     "⟨"
-                     [(Term.app (Term.proj `neg_lt_zero "." (fieldIdx "2")) [`h₀]) "," `h₀]
-                     "⟩")
-                    ","
-                    (Term.app `is_O_zero [(Term.hole "_") (Term.hole "_")])]
-                   "⟩"))
-                 [])])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.anonymousCtor
-                "⟨"
-                [`a
-                 ","
-                 (Term.app `A [(Term.anonymousCtor "⟨" [`ha₀ "," `ha] "⟩")])
-                 ","
-                 (Term.app
-                  `is_O_of_le'
-                  [(Term.hole "_")
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`n]
-                     []
-                     "=>"
-                     («term_<|_»
-                      (Term.proj (Term.app `H [`n]) "." `trans)
-                      "<|"
-                      (Term.app
-                       `mul_le_mul_of_nonneg_left
-                       [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
-                "⟩"))
-              [])])
+                   [(Term.app (Term.proj `neg_lt_zero "." (fieldIdx "2")) [`h₀]) "," `h₀]
+                   "⟩")
+                  ","
+                  (Term.app `is_O_zero [(Term.hole "_") (Term.hole "_")])]
+                 "⟩"))])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.anonymousCtor
+               "⟨"
+               [`a
+                ","
+                (Term.app `A [(Term.anonymousCtor "⟨" [`ha₀ "," `ha] "⟩")])
+                ","
+                (Term.app
+                 `is_O_of_le'
+                 [(Term.hole "_")
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`n]
+                    []
+                    "=>"
+                    («term_<|_»
+                     (Term.proj (Term.app `H [`n]) "." `trans)
+                     "<|"
+                     (Term.app
+                      `mul_le_mul_of_nonneg_left
+                      [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
+               "⟩"))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "8"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                    [])]
-                  "⟩"))]
-               [])
+            [(Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                   [])]
+                 "⟩"))]
               [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.anonymousCtor
-                "⟨"
-                [`a
-                 ","
-                 `ha
-                 ","
-                 (Term.app
-                  (Term.proj (Term.app `H.def [`zero_lt_one]) "." `mono)
-                  [(Term.fun "fun" (Term.basicFun [`n `hn] [] "=>" (Term.hole "_")))])]
-                "⟩"))
-              [])
-             (group
-              (Std.Tactic.tacticRwa__
-               "rwa"
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule [] `Real.norm_eq_abs)
-                 ","
-                 (Tactic.rwRule [] `Real.norm_eq_abs)
-                 ","
-                 (Tactic.rwRule [] `one_mul)
-                 ","
-                 (Tactic.rwRule [] `abs_pow)
-                 ","
-                 (Tactic.rwRule [] (Term.app `abs_of_pos [(Term.proj `ha "." (fieldIdx "1"))]))]
-                "]")
-               [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
-              [])])
+             []
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor
+               "⟨"
+               [`a
+                ","
+                `ha
+                ","
+                (Term.app
+                 (Term.proj (Term.app `H.def [`zero_lt_one]) "." `mono)
+                 [(Term.fun "fun" (Term.basicFun [`n `hn] [] "=>" (Term.hole "_")))])]
+               "⟩"))
+             []
+             (Std.Tactic.tacticRwa__
+              "rwa"
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `Real.norm_eq_abs)
+                ","
+                (Tactic.rwRule [] `Real.norm_eq_abs)
+                ","
+                (Tactic.rwRule [] `one_mul)
+                ","
+                (Tactic.rwRule [] `abs_pow)
+                ","
+                (Tactic.rwRule [] (Term.app `abs_of_pos [(Term.proj `ha "." (fieldIdx "1"))]))]
+               "]")
+              [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "8") "→" (num "7"))
            []
@@ -773,81 +751,76 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
            []
            (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "3"))
            []
-           («tactic___;_»
+           (tactic___
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                    [])]
-                  "⟩"))]
-               [])
+            [(Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                   [])]
+                 "⟩"))]
               [])
-             (group
-              (Tactic.tacticHave_
-               "have"
-               (Term.haveDecl
-                (Term.haveIdDecl
-                 []
-                 [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
-                 ":="
-                 (Term.app
-                  `nonneg_of_eventually_pow_nonneg
-                  [(Term.app
-                    `H.mono
-                    [(Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`n]
-                       []
-                       "=>"
-                       (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
-              [])
-             (group
-              (Tactic.refine'
-               "refine'"
-               (Term.anonymousCtor
-                "⟨"
-                [`a
-                 ","
-                 (Term.app `A [(Term.anonymousCtor "⟨" [`this "," `ha] "⟩")])
-                 ","
-                 (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
-                "⟩"))
-              [])
-             (group
-              (Std.Tactic.simpa
-               "simpa"
+             []
+             (Tactic.tacticHave_
+              "have"
+              (Term.haveDecl
+               (Term.haveIdDecl
+                []
+                [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
+                ":="
+                (Term.app
+                 `nonneg_of_eventually_pow_nonneg
+                 [(Term.app
+                   `H.mono
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`n]
+                      []
+                      "=>"
+                      (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
+             []
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor
+               "⟨"
+               [`a
+                ","
+                (Term.app `A [(Term.anonymousCtor "⟨" [`this "," `ha] "⟩")])
+                ","
+                (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
+               "⟩"))
+             []
+             (Std.Tactic.simpa
+              "simpa"
+              []
+              []
+              (Std.Tactic.simpaArgsRest
                []
                []
-               (Std.Tactic.simpaArgsRest
-                []
-                []
-                ["only"]
-                [(Tactic.simpArgs
-                  "["
-                  [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
-                   ","
-                   (Tactic.simpLemma [] [] `one_mul)
-                   ","
-                   (Tactic.simpLemma [] [] `abs_pow)
-                   ","
-                   (Tactic.simpLemma [] [] (Term.app `abs_of_nonneg [`this]))]
-                  "]")]
-                []))
-              [])])
+               ["only"]
+               [(Tactic.simpArgs
+                 "["
+                 [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
+                  ","
+                  (Tactic.simpLemma [] [] `one_mul)
+                  ","
+                  (Tactic.simpLemma [] [] `abs_pow)
+                  ","
+                  (Tactic.simpLemma [] [] (Term.app `abs_of_nonneg [`this]))]
+                 "]")]
+               []))])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -934,74 +907,70 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget
-                []
-                (Term.app
-                 `exists_between
-                 [(Term.app (Term.proj `abs_lt "." (fieldIdx "2")) [`ha])]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hab)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hbR)])
-                     [])]
-                   "⟩")])
-                [])])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.anonymousCtor
-               "⟨"
-               [`b
-                ","
-                (Term.anonymousCtor
-                 "⟨"
-                 [(Term.app (Term.proj (Term.app `abs_nonneg [`a]) "." `trans_lt) [`hab]) "," `hbR]
-                 "⟩")
-                ","
-                (Term.app
-                 `H.trans_is_o
-                 [(Term.app
-                   `is_o_pow_pow_of_abs_lt_left
-                   [(Term.app `hab.trans_le [(Term.app `le_abs_self [`b])])])])]
-               "⟩"))
-             [])])
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget
+               []
+               (Term.app
+                `exists_between
+                [(Term.app (Term.proj `abs_lt "." (fieldIdx "2")) [`ha])]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hab)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hbR)])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [`b
+               ","
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app (Term.proj (Term.app `abs_nonneg [`a]) "." `trans_lt) [`hab]) "," `hbR]
+                "⟩")
+               ","
+               (Term.app
+                `H.trans_is_o
+                [(Term.app
+                  `is_o_pow_pow_of_abs_lt_left
+                  [(Term.app `hab.trans_le [(Term.app `le_abs_self [`b])])])])]
+              "⟩"))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "4"))
           []
@@ -1029,96 +998,91 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "6"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget [] (Term.app `bound_of_is_O_nat_at_top [`H]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC)])
-                     [])]
-                   "⟩")])
-                [])])
-             [])
-            (group
-             (Tactic.refine'
-              "refine'"
-              (Term.anonymousCtor
-               "⟨"
-               [`a
-                ","
-                `ha
-                ","
-                `C
-                ","
-                `hC₀
-                ","
-                (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.hole "_")))]
-               "⟩"))
-             [])
-            (group
-             (Std.Tactic.simpa
-              "simpa"
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget [] (Term.app `bound_of_is_O_nat_at_top [`H]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC)])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor
+              "⟨"
+              [`a
+               ","
+               `ha
+               ","
+               `C
+               ","
+               `hC₀
+               ","
+               (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.hole "_")))]
+              "⟩"))
+            []
+            (Std.Tactic.simpa
+             "simpa"
+             []
+             []
+             (Std.Tactic.simpaArgsRest
               []
               []
-              (Std.Tactic.simpaArgsRest
-               []
-               []
-               ["only"]
-               [(Tactic.simpArgs
-                 "["
-                 [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
-                  ","
-                  (Tactic.simpLemma [] [] `abs_pow)
-                  ","
-                  (Tactic.simpLemma
-                   []
-                   []
-                   (Term.app
-                    `abs_of_nonneg
-                    [(Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `le)]))]
-                 "]")]
-               ["using"
-                (Term.app
-                 `hC
-                 [(Term.app
-                   `pow_ne_zero
-                   [`n (Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `ne')])])]))
-             [])])
+              ["only"]
+              [(Tactic.simpArgs
+                "["
+                [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
+                 ","
+                 (Tactic.simpLemma [] [] `abs_pow)
+                 ","
+                 (Tactic.simpLemma
+                  []
+                  []
+                  (Term.app
+                   `abs_of_nonneg
+                   [(Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `le)]))]
+                "]")]
+              ["using"
+               (Term.app
+                `hC
+                [(Term.app
+                  `pow_ne_zero
+                  [`n (Term.proj (Term.proj `ha "." (fieldIdx "1")) "." `ne')])])]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
           []
@@ -1137,208 +1101,195 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "3"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₀)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `C)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h₀)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget
-                []
-                (Term.app
-                 `sign_cases_of_C_mul_pow_nonneg
-                 [(Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`n]
-                    []
-                    "=>"
-                    (Term.app
-                     (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)
-                     [(Term.app `H [`n])])))]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.paren
-                   "("
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.one `rfl)
-                      "|"
-                      (Std.Tactic.RCases.rcasesPat.tuple
-                       "⟨"
-                       [(Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha₀)])
-                         [])]
-                       "⟩")])
-                    [])
-                   ")")])
-                [])])
-             [])
-            (group
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group
-                (Std.Tactic.obtain
-                 "obtain"
-                 [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                 [":" («term_=_» `f "=" (num "0"))]
-                 [":="
-                  [(Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(Std.Tactic.Ext.«tacticExt___:_»
-                        "ext"
-                        [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `n))]
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget
+               []
+               (Term.app
+                `sign_cases_of_C_mul_pow_nonneg
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`n]
+                   []
+                   "=>"
+                   (Term.app
+                    (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)
+                    [(Term.app `H [`n])])))]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.paren
+                  "("
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed
+                    [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                     "|"
+                     (Std.Tactic.RCases.rcasesPat.tuple
+                      "⟨"
+                      [(Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hC₀)])
                         [])
-                       []
-                       (Std.Tactic.simpa
-                        "simpa"
-                        []
-                        []
-                        (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `H [`n])]))])))]])
-                [])
-               (group
-                (Tactic.simp
-                 "simp"
-                 []
-                 []
-                 ["only"]
-                 ["["
-                  [(Tactic.simpLemma [] [] `lt_irrefl) "," (Tactic.simpLemma [] [] `false_or_iff)]
-                  "]"]
-                 [(Tactic.location "at" (Tactic.locationHyp [`h₀] []))])
-                [])
-               (group
-                (Tactic.exact
-                 "exact"
+                       ","
+                       (Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha₀)])
+                        [])]
+                      "⟩")])
+                   [])
+                  ")")])
+               [])])
+            []
+            (tactic___
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(Std.Tactic.obtain
+               "obtain"
+               [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
+               [":" («term_=_» `f "=" (num "0"))]
+               [":="
+                [(Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Std.Tactic.Ext.«tacticExt___:_»
+                      "ext"
+                      [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `n))]
+                      [])
+                     []
+                     (Std.Tactic.simpa
+                      "simpa"
+                      []
+                      []
+                      (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `H [`n])]))])))]])
+              []
+              (Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `lt_irrefl) "," (Tactic.simpLemma [] [] `false_or_iff)]
+                "]"]
+               [(Tactic.location "at" (Tactic.locationHyp [`h₀] []))])
+              []
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(num "0")
+                 ","
                  (Term.anonymousCtor
                   "⟨"
-                  [(num "0")
-                   ","
-                   (Term.anonymousCtor
-                    "⟨"
-                    [(Term.app (Term.proj `neg_lt_zero "." (fieldIdx "2")) [`h₀]) "," `h₀]
-                    "⟩")
-                   ","
-                   (Term.app `is_O_zero [(Term.hole "_") (Term.hole "_")])]
-                  "⟩"))
-                [])])
-             [])
-            (group
-             (Tactic.exact
-              "exact"
-              (Term.anonymousCtor
-               "⟨"
-               [`a
-                ","
-                (Term.app `A [(Term.anonymousCtor "⟨" [`ha₀ "," `ha] "⟩")])
-                ","
-                (Term.app
-                 `is_O_of_le'
-                 [(Term.hole "_")
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`n]
-                    []
-                    "=>"
-                    («term_<|_»
-                     (Term.proj (Term.app `H [`n]) "." `trans)
-                     "<|"
-                     (Term.app
-                      `mul_le_mul_of_nonneg_left
-                      [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
-               "⟩"))
-             [])])
+                  [(Term.app (Term.proj `neg_lt_zero "." (fieldIdx "2")) [`h₀]) "," `h₀]
+                  "⟩")
+                 ","
+                 (Term.app `is_O_zero [(Term.hole "_") (Term.hole "_")])]
+                "⟩"))])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [`a
+               ","
+               (Term.app `A [(Term.anonymousCtor "⟨" [`ha₀ "," `ha] "⟩")])
+               ","
+               (Term.app
+                `is_O_of_le'
+                [(Term.hole "_")
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`n]
+                   []
+                   "=>"
+                   («term_<|_»
+                    (Term.proj (Term.app `H [`n]) "." `trans)
+                    "<|"
+                    (Term.app
+                     `mul_le_mul_of_nonneg_left
+                     [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
+              "⟩"))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "8"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Tactic.refine'
-              "refine'"
-              (Term.anonymousCtor
-               "⟨"
-               [`a
-                ","
-                `ha
-                ","
-                (Term.app
-                 (Term.proj (Term.app `H.def [`zero_lt_one]) "." `mono)
-                 [(Term.fun "fun" (Term.basicFun [`n `hn] [] "=>" (Term.hole "_")))])]
-               "⟩"))
-             [])
-            (group
-             (Std.Tactic.tacticRwa__
-              "rwa"
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [] `Real.norm_eq_abs)
-                ","
-                (Tactic.rwRule [] `Real.norm_eq_abs)
-                ","
-                (Tactic.rwRule [] `one_mul)
-                ","
-                (Tactic.rwRule [] `abs_pow)
-                ","
-                (Tactic.rwRule [] (Term.app `abs_of_pos [(Term.proj `ha "." (fieldIdx "1"))]))]
-               "]")
-              [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
-             [])])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor
+              "⟨"
+              [`a
+               ","
+               `ha
+               ","
+               (Term.app
+                (Term.proj (Term.app `H.def [`zero_lt_one]) "." `mono)
+                [(Term.fun "fun" (Term.basicFun [`n `hn] [] "=>" (Term.hole "_")))])]
+              "⟩"))
+            []
+            (Std.Tactic.tacticRwa__
+             "rwa"
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `Real.norm_eq_abs)
+               ","
+               (Tactic.rwRule [] `Real.norm_eq_abs)
+               ","
+               (Tactic.rwRule [] `one_mul)
+               ","
+               (Tactic.rwRule [] `abs_pow)
+               ","
+               (Tactic.rwRule [] (Term.app `abs_of_pos [(Term.proj `ha "." (fieldIdx "1"))]))]
+              "]")
+             [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "8") "→" (num "7"))
           []
@@ -1354,81 +1305,76 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
           []
           (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "3"))
           []
-          («tactic___;_»
+          (tactic___
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group
-             (Std.Tactic.rintro
-              "rintro"
-              [(Std.Tactic.RCases.rintroPat.one
-                (Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-                   [])]
-                 "⟩"))]
-              [])
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+                  [])]
+                "⟩"))]
              [])
-            (group
-             (Tactic.tacticHave_
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                []
-                [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
-                ":="
-                (Term.app
-                 `nonneg_of_eventually_pow_nonneg
-                 [(Term.app
-                   `H.mono
-                   [(Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`n]
-                      []
-                      "=>"
-                      (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
-             [])
-            (group
-             (Tactic.refine'
-              "refine'"
-              (Term.anonymousCtor
-               "⟨"
-               [`a
-                ","
-                (Term.app `A [(Term.anonymousCtor "⟨" [`this "," `ha] "⟩")])
-                ","
-                (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
-               "⟩"))
-             [])
-            (group
-             (Std.Tactic.simpa
-              "simpa"
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
+               ":="
+               (Term.app
+                `nonneg_of_eventually_pow_nonneg
+                [(Term.app
+                  `H.mono
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`n]
+                     []
+                     "=>"
+                     (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor
+              "⟨"
+              [`a
+               ","
+               (Term.app `A [(Term.anonymousCtor "⟨" [`this "," `ha] "⟩")])
+               ","
+               (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
+              "⟩"))
+            []
+            (Std.Tactic.simpa
+             "simpa"
+             []
+             []
+             (Std.Tactic.simpaArgsRest
               []
               []
-              (Std.Tactic.simpaArgsRest
-               []
-               []
-               ["only"]
-               [(Tactic.simpArgs
-                 "["
-                 [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
-                  ","
-                  (Tactic.simpLemma [] [] `one_mul)
-                  ","
-                  (Tactic.simpLemma [] [] `abs_pow)
-                  ","
-                  (Tactic.simpLemma [] [] (Term.app `abs_of_nonneg [`this]))]
-                 "]")]
-               []))
-             [])])
+              ["only"]
+              [(Tactic.simpArgs
+                "["
+                [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
+                 ","
+                 (Tactic.simpLemma [] [] `one_mul)
+                 ","
+                 (Tactic.simpLemma [] [] `abs_pow)
+                 ","
+                 (Tactic.simpLemma [] [] (Term.app `abs_of_nonneg [`this]))]
+                "]")]
+              []))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -1436,81 +1382,76 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_»
+      (tactic___
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group
-         (Std.Tactic.rintro
-          "rintro"
-          [(Std.Tactic.RCases.rintroPat.one
-            (Std.Tactic.RCases.rcasesPat.tuple
-             "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
-               [])
-              ","
-              (Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
-               [])
-              ","
-              (Std.Tactic.RCases.rcasesPatLo
-               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
-               [])]
-             "⟩"))]
-          [])
+       [(Std.Tactic.rintro
+         "rintro"
+         [(Std.Tactic.RCases.rintroPat.one
+           (Std.Tactic.RCases.rcasesPat.tuple
+            "⟨"
+            [(Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+              [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+              [])
+             ","
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+              [])]
+            "⟩"))]
          [])
-        (group
-         (Tactic.tacticHave_
-          "have"
-          (Term.haveDecl
-           (Term.haveIdDecl
-            []
-            [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
-            ":="
-            (Term.app
-             `nonneg_of_eventually_pow_nonneg
-             [(Term.app
-               `H.mono
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`n]
-                  []
-                  "=>"
-                  (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
-         [])
-        (group
-         (Tactic.refine'
-          "refine'"
-          (Term.anonymousCtor
-           "⟨"
-           [`a
-            ","
-            (Term.app `A [(Term.anonymousCtor "⟨" [`this "," `ha] "⟩")])
-            ","
-            (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
-           "⟩"))
-         [])
-        (group
-         (Std.Tactic.simpa
-          "simpa"
+        []
+        (Tactic.tacticHave_
+         "have"
+         (Term.haveDecl
+          (Term.haveIdDecl
+           []
+           [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
+           ":="
+           (Term.app
+            `nonneg_of_eventually_pow_nonneg
+            [(Term.app
+              `H.mono
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`n]
+                 []
+                 "=>"
+                 (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
+        []
+        (Tactic.refine'
+         "refine'"
+         (Term.anonymousCtor
+          "⟨"
+          [`a
+           ","
+           (Term.app `A [(Term.anonymousCtor "⟨" [`this "," `ha] "⟩")])
+           ","
+           (Term.app `is_O.of_bound [(num "1") (Term.hole "_")])]
+          "⟩"))
+        []
+        (Std.Tactic.simpa
+         "simpa"
+         []
+         []
+         (Std.Tactic.simpaArgsRest
           []
           []
-          (Std.Tactic.simpaArgsRest
-           []
-           []
-           ["only"]
-           [(Tactic.simpArgs
-             "["
-             [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
-              ","
-              (Tactic.simpLemma [] [] `one_mul)
-              ","
-              (Tactic.simpLemma [] [] `abs_pow)
-              ","
-              (Tactic.simpLemma [] [] (Term.app `abs_of_nonneg [`this]))]
-             "]")]
-           []))
-         [])])
+          ["only"]
+          [(Tactic.simpArgs
+            "["
+            [(Tactic.simpLemma [] [] `Real.norm_eq_abs)
+             ","
+             (Tactic.simpLemma [] [] `one_mul)
+             ","
+             (Tactic.simpLemma [] [] `abs_pow)
+             ","
+             (Tactic.simpLemma [] [] (Term.app `abs_of_nonneg [`this]))]
+            "]")]
+          []))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.simpa
        "simpa"
@@ -1565,7 +1506,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.refine'
        "refine'"
        (Term.anonymousCtor
@@ -1632,7 +1573,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticHave_
        "have"
        (Term.haveDecl
@@ -1743,7 +1684,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rintro
        "rintro"
        [(Std.Tactic.RCases.rintroPat.one
@@ -1923,7 +1864,6 @@ theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRi
   by_cases h0 : r₁ = 0
   · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 <| ⟨1, fun n hn => _⟩) eventually_eq.rfl
     simp [zero_pow (zero_lt_one.trans_le hn), h0]
-    
   rw [← Ne.def, ← norm_pos_iff] at h0
   have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ‖r₁‖) ^ n :=
     is_o_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
@@ -1942,10 +1882,10 @@ theorem tendsto_pow_const_div_const_pow_of_one_lt (k : ℕ) {r : ℝ} (hr : 1 < 
 theorem tendsto_pow_const_mul_const_pow_of_abs_lt_one (k : ℕ) {r : ℝ} (hr : |r| < 1) :
     Tendsto (fun n => n ^ k * r ^ n : ℕ → ℝ) atTop (𝓝 0) := by
   by_cases h0 : r = 0
-  · exact
+  ·
+    exact
       tendsto_const_nhds.congr'
         (mem_at_top_sets.2 ⟨1, fun n hn => by simp [zero_lt_one.trans_le hn, h0]⟩)
-    
   have hr' : 1 < (|r|)⁻¹ := one_lt_inv (abs_pos.2 h0) hr
   rw [tendsto_zero_iff_norm_tendsto_zero]
   simpa [div_eq_mul_inv] using tendsto_pow_const_div_const_pow_of_one_lt k hr'
@@ -1992,16 +1932,14 @@ section Geometric
 variable {K : Type _} [NormedField K] {ξ : K}
 
 theorem has_sum_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : HasSum (fun n : ℕ => ξ ^ n) (1 - ξ)⁻¹ := by
-  have xi_ne_one : ξ ≠ 1 := by
+  have xi_ne_one : ξ ≠ 1 := by 
     contrapose! h
     simp [h]
   have A : tendsto (fun n => (ξ ^ n - 1) * (ξ - 1)⁻¹) at_top (𝓝 ((0 - 1) * (ξ - 1)⁻¹)) :=
     ((tendsto_pow_at_top_nhds_0_of_norm_lt_1 h).sub tendsto_const_nhds).mul tendsto_const_nhds
   rw [has_sum_iff_tendsto_nat_of_summable_norm]
   · simpa [geom_sum_eq, xi_ne_one, neg_inv, div_eq_mul_inv] using A
-    
   · simp [norm_pow, summable_geometric_of_lt_1 (norm_nonneg _) h]
-    
 #align has_sum_geometric_of_norm_lt_1 has_sum_geometric_of_norm_lt_1
 
 theorem summable_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : Summable fun n : ℕ => ξ ^ n :=
@@ -2061,7 +1999,7 @@ theorem has_sum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜
     simpa using summable_pow_mul_geometric_of_norm_lt_1 1 hr
   have B : HasSum (pow r : ℕ → 𝕜) (1 - r)⁻¹ := has_sum_geometric_of_norm_lt_1 hr
   refine' A.has_sum_iff.2 _
-  have hr' : r ≠ 1 := by
+  have hr' : r ≠ 1 := by 
     rintro rfl
     simpa [lt_irrefl] using hr
   set s : 𝕜 := ∑' n : ℕ, n * r ^ n
@@ -2089,11 +2027,11 @@ section SummableLeGeometric
 
 variable [SeminormedAddCommGroup α] {r C : ℝ} {f : ℕ → α}
 
-theorem SeminormedAddCommGroup.cauchySeqOfLeGeometric {C : ℝ} {r : ℝ} (hr : r < 1) {u : ℕ → α}
+theorem SeminormedAddCommGroup.cauchy_seq_of_le_geometric {C : ℝ} {r : ℝ} (hr : r < 1) {u : ℕ → α}
     (h : ∀ n, ‖u n - u (n + 1)‖ ≤ C * r ^ n) : CauchySeq u :=
-  cauchySeqOfLeGeometric r C hr (by simpa [dist_eq_norm] using h)
+  cauchy_seq_of_le_geometric r C hr (by simpa [dist_eq_norm] using h)
 #align
-  seminormed_add_comm_group.cauchy_seq_of_le_geometric SeminormedAddCommGroup.cauchySeqOfLeGeometric
+  seminormed_add_comm_group.cauchy_seq_of_le_geometric SeminormedAddCommGroup.cauchy_seq_of_le_geometric
 
 theorem dist_partial_sum_le_of_le_geometric (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) (n : ℕ) :
     dist (∑ i in range n, f i) (∑ i in range (n + 1), f i) ≤ C * r ^ n := by
@@ -2103,11 +2041,11 @@ theorem dist_partial_sum_le_of_le_geometric (hf : ∀ n, ‖f n‖ ≤ C * r ^ n
 
 /-- If `‖f n‖ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` form a
 Cauchy sequence. This lemma does not assume `0 ≤ r` or `0 ≤ C`. -/
-theorem cauchySeqFinsetOfGeometricBound (hr : r < 1) (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) :
+theorem cauchy_seq_finset_of_geometric_bound (hr : r < 1) (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) :
     CauchySeq fun s : Finset ℕ => ∑ x in s, f x :=
-  cauchySeqFinsetOfNormBounded _
+  cauchy_seq_finset_of_norm_bounded _
     (aux_has_sum_of_le_geometric hr (dist_partial_sum_le_of_le_geometric hf)).Summable hf
-#align cauchy_seq_finset_of_geometric_bound cauchySeqFinsetOfGeometricBound
+#align cauchy_seq_finset_of_geometric_bound cauchy_seq_finset_of_geometric_bound
 
 /-- If `‖f n‖ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` are within
 distance `C * r ^ n / (1 - r)` of the sum of the series. This lemma does not assume `0 ≤ r` or
@@ -2131,40 +2069,38 @@ theorem dist_partial_sum' (u : ℕ → α) (n : ℕ) :
   simp [dist_eq_norm', sum_range_succ]
 #align dist_partial_sum' dist_partial_sum'
 
-theorem cauchySeriesOfLeGeometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
+theorem cauchy_series_of_le_geometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
     (h : ∀ n, ‖u n‖ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range n, u k :=
-  cauchySeqOfLeGeometric r C hr (by simp [h])
-#align cauchy_series_of_le_geometric cauchySeriesOfLeGeometric
+  cauchy_seq_of_le_geometric r C hr (by simp [h])
+#align cauchy_series_of_le_geometric cauchy_series_of_le_geometric
 
-theorem NormedAddCommGroup.cauchySeriesOfLeGeometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
+theorem NormedAddCommGroup.cauchy_series_of_le_geometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
     (h : ∀ n, ‖u n‖ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k :=
-  (cauchySeriesOfLeGeometric hr h).compTendsto <| tendsto_add_at_top_nat 1
+  (cauchy_series_of_le_geometric hr h).comp_tendsto <| tendsto_add_at_top_nat 1
 #align
-  normed_add_comm_group.cauchy_series_of_le_geometric' NormedAddCommGroup.cauchySeriesOfLeGeometric'
+  normed_add_comm_group.cauchy_series_of_le_geometric' NormedAddCommGroup.cauchy_series_of_le_geometric'
 
-theorem NormedAddCommGroup.cauchySeriesOfLeGeometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ}
+theorem NormedAddCommGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ}
     (hr₀ : 0 < r) (hr₁ : r < 1) (h : ∀ n ≥ N, ‖u n‖ ≤ C * r ^ n) :
     CauchySeq fun n => ∑ k in range (n + 1), u k := by
   set v : ℕ → α := fun n => if n < N then 0 else u n
   have hC : 0 ≤ C :=
     (zero_le_mul_right <| pow_pos hr₀ N).mp ((norm_nonneg _).trans <| h N <| le_refl N)
-  have : ∀ n ≥ N, u n = v n := by
+  have : ∀ n ≥ N, u n = v n := by 
     intro n hn
     simp [v, hn, if_neg (not_lt.mpr hn)]
-  refine' cauchySeqSumOfEventuallyEq this (NormedAddCommGroup.cauchySeriesOfLeGeometric' hr₁ _)
+  refine'
+    cauchy_seq_sum_of_eventually_eq this (NormedAddCommGroup.cauchy_series_of_le_geometric' hr₁ _)
   · exact C
-    
   intro n
   dsimp [v]
   split_ifs with H H
   · rw [norm_zero]
     exact mul_nonneg hC (pow_nonneg hr₀.le _)
-    
   · push_neg  at H
     exact h _ H
-    
 #align
-  normed_add_comm_group.cauchy_series_of_le_geometric'' NormedAddCommGroup.cauchySeriesOfLeGeometric''
+  normed_add_comm_group.cauchy_series_of_le_geometric'' NormedAddCommGroup.cauchy_series_of_le_geometric''
 
 end SummableLeGeometric
 
@@ -2237,14 +2173,12 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     refine' le_geom hr₀ n fun i _ => _
     convert hN (i + N) (N.le_add_left i) using 3
     ac_rfl
-    
   · push_neg  at hr₀
     refine' summable_of_norm_bounded_eventually 0 summable_zero _
     rw [Nat.cofinite_eq_at_top]
     filter_upwards [h] with _ hn
     by_contra' h
     exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_lt hn <| mul_neg_of_neg_of_pos hr₀ h)
-    
 #align summable_of_ratio_norm_eventually_le summable_of_ratio_norm_eventually_le
 
 theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedAddCommGroup α] [CompleteSpace α]
@@ -2273,12 +2207,10 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCom
     specialize hN₀ N hNN₀
     simp only [comp_app, zero_add] at h''
     exact hN h''.symm
-    
   · intro i
     dsimp only [comp_app]
     convert hN₀ (i + N) (hNN₀.trans (N.le_add_left i)) using 3
     ac_rfl
-    
 #align not_summable_of_ratio_norm_eventually_ge not_summable_of_ratio_norm_eventually_ge
 
 theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SeminormedAddCommGroup α]
@@ -2304,7 +2236,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {b : ℝ} {f : ℕ → ℝ} {z : ℕ → E}
 
 /-- **Dirichlet's Test** for monotone sequences. -/
-theorem Monotone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Monotone f)
+theorem Monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Monotone f)
     (hf0 : Tendsto f atTop (𝓝 0)) (hgb : ∀ n, ‖∑ i in range n, z i‖ ≤ b) :
     CauchySeq fun n => ∑ i in range (n + 1), f i • z i := by
   simp_rw [Finset.sum_range_by_parts _ _ (Nat.succ _), sub_eq_add_neg, Nat.succ_sub_succ_eq_sub,
@@ -2312,20 +2244,18 @@ theorem Monotone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Monotone f)
   apply
     (NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded hf0
           ⟨b, eventually_map.mpr <| eventually_of_forall fun n => hgb <| n + 1⟩).CauchySeq.add
-  refine' (cauchySeqRangeOfNormBounded _ _ (fun n => _ : ∀ n, _ ≤ b * |f (n + 1) - f n|)).neg
+  refine' (cauchy_seq_range_of_norm_bounded _ _ (fun n => _ : ∀ n, _ ≤ b * |f (n + 1) - f n|)).neg
   · simp_rw [abs_of_nonneg (sub_nonneg_of_le (hfa (Nat.le_succ _))), ← mul_sum]
     apply real.uniform_continuous_const_mul.comp_cauchy_seq
     simp_rw [sum_range_sub, sub_eq_add_neg]
     exact (tendsto.cauchy_seq hf0).AddConst
-    
   · rw [norm_smul, mul_comm]
     exact mul_le_mul_of_nonneg_right (hgb _) (abs_nonneg _)
-    
 #align
-  monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Monotone.cauchySeqSeriesMulOfTendstoZeroOfBounded
+  monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded
 
 /-- **Dirichlet's test** for antitone sequences. -/
-theorem Antitone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Antitone f)
+theorem Antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone f)
     (hf0 : Tendsto f atTop (𝓝 0)) (hzb : ∀ n, ‖∑ i in range n, z i‖ ≤ b) :
     CauchySeq fun n => ∑ i in range (n + 1), f i • z i := by
   have hfa' : Monotone fun n => -f n := fun _ _ hab => neg_le_neg <| hfa hab
@@ -2336,7 +2266,7 @@ theorem Antitone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Antitone f)
   funext
   simp
 #align
-  antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Antitone.cauchySeqSeriesMulOfTendstoZeroOfBounded
+  antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded
 
 theorem norm_sum_neg_one_pow_le (n : ℕ) : ‖∑ i in range n, (-1 : ℝ) ^ i‖ ≤ 1 := by
   rw [neg_one_geom_sum]
@@ -2345,35 +2275,35 @@ theorem norm_sum_neg_one_pow_le (n : ℕ) : ‖∑ i in range n, (-1 : ℝ) ^ i�
 
 /-- The **alternating series test** for monotone sequences.
 See also `tendsto_alternating_series_of_monotone_tendsto_zero`. -/
-theorem Monotone.cauchySeqAlternatingSeriesOfTendstoZero (hfa : Monotone f)
+theorem Monotone.cauchy_seq_alternating_series_of_tendsto_zero (hfa : Monotone f)
     (hf0 : Tendsto f atTop (𝓝 0)) : CauchySeq fun n => ∑ i in range (n + 1), (-1) ^ i * f i := by
   simp_rw [mul_comm]
   exact hfa.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0 norm_sum_neg_one_pow_le
 #align
-  monotone.cauchy_seq_alternating_series_of_tendsto_zero Monotone.cauchySeqAlternatingSeriesOfTendstoZero
+  monotone.cauchy_seq_alternating_series_of_tendsto_zero Monotone.cauchy_seq_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for monotone sequences. -/
 theorem Monotone.tendsto_alternating_series_of_tendsto_zero (hfa : Monotone f)
     (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchy_seq_tendsto_of_complete <| hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
+  cauchy_seq_tendsto_of_complete <| hfa.cauchy_seq_alternating_series_of_tendsto_zero hf0
 #align
   monotone.tendsto_alternating_series_of_tendsto_zero Monotone.tendsto_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for antitone sequences.
 See also `tendsto_alternating_series_of_antitone_tendsto_zero`. -/
-theorem Antitone.cauchySeqAlternatingSeriesOfTendstoZero (hfa : Antitone f)
+theorem Antitone.cauchy_seq_alternating_series_of_tendsto_zero (hfa : Antitone f)
     (hf0 : Tendsto f atTop (𝓝 0)) : CauchySeq fun n => ∑ i in range (n + 1), (-1) ^ i * f i := by
   simp_rw [mul_comm]
   exact hfa.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0 norm_sum_neg_one_pow_le
 #align
-  antitone.cauchy_seq_alternating_series_of_tendsto_zero Antitone.cauchySeqAlternatingSeriesOfTendstoZero
+  antitone.cauchy_seq_alternating_series_of_tendsto_zero Antitone.cauchy_seq_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for antitone sequences. -/
 theorem Antitone.tendsto_alternating_series_of_tendsto_zero (hfa : Antitone f)
     (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchy_seq_tendsto_of_complete <| hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
+  cauchy_seq_tendsto_of_complete <| hfa.cauchy_seq_alternating_series_of_tendsto_zero hf0
 #align
   antitone.tendsto_alternating_series_of_tendsto_zero Antitone.tendsto_alternating_series_of_tendsto_zero
 
@@ -2387,7 +2317,8 @@ end
 /-- The series `∑' n, x ^ n / n!` is summable of any `x : ℝ`. See also `exp_series_div_summable`
 for a version that also works in `ℂ`, and `exp_series_summable'` for a version that works in
 any normed algebra over `ℝ` or `ℂ`. -/
-theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n ! : ℕ → ℝ) := by
+theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n ! : ℕ → ℝ) :=
+  by
   -- We start with trivial extimates
   have A : (0 : ℝ) < ⌊‖x‖⌋₊ + 1 := zero_lt_one.trans_le (by simp)
   have B : ‖x‖ / (⌊‖x‖⌋₊ + 1) < 1 := (div_lt_one A).2 (Nat.lt_floor_add_one _)

@@ -64,7 +64,7 @@ theorem to_subgroup_eq_coe {P : Sylow p G} : P.toSubgroup = ↑P :=
   rfl
 #align sylow.to_subgroup_eq_coe Sylow.to_subgroup_eq_coe
 
-@[ext.1]
+@[ext]
 theorem ext {P Q : Sylow p G} (h : (P : Subgroup G) = Q) : P = Q := by cases P <;> cases Q <;> congr
 #align sylow.ext Sylow.ext
 
@@ -72,11 +72,12 @@ theorem ext_iff {P Q : Sylow p G} : P = Q ↔ (P : Subgroup G) = Q :=
   ⟨congr_arg coe, ext⟩
 #align sylow.ext_iff Sylow.ext_iff
 
-instance : SetLike (Sylow p G) G where
+instance : SetLike (Sylow p G) G where 
   coe := coe
   coe_injective' P Q h := ext (SetLike.coe_injective h)
 
-instance : SubgroupClass (Sylow p G) G where
+instance : SubgroupClass (Sylow p G)
+      G where 
   mul_mem s _ _ := s.mul_mem'
   one_mem s := s.one_mem'
   inv_mem s _ := s.inv_mem'
@@ -204,7 +205,9 @@ open Pointwise
 
 /-- `subgroup.pointwise_mul_action` preserves Sylow subgroups. -/
 instance Sylow.pointwiseMulAction {α : Type _} [Group α] [MulDistribMulAction α G] :
-    MulAction α (Sylow p G) where
+    MulAction α
+      (Sylow p
+        G) where 
   smul g P :=
     ⟨g • P, P.2.map _, fun Q hQ hS =>
       inv_smul_eq_iff.mp
@@ -284,35 +287,36 @@ theorem IsPGroup.sylow_mem_fixed_points_iff {P : Subgroup G} (hP : IsPGroup p P)
 /-- A generalization of **Sylow's second theorem**.
   If the number of Sylow `p`-subgroups is finite, then all Sylow `p`-subgroups are conjugate. -/
 instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G) :=
-  ⟨fun P Q => by classical
-    cases nonempty_fintype (Sylow p G)
-    have H := fun {R : Sylow p G} {S : orbit G P} =>
+  ⟨fun P Q => by
+    classical 
+      cases nonempty_fintype (Sylow p G)
+      have H := fun {R : Sylow p G} {S : orbit G P} =>
+        calc
+          S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) :=
+            forall_congr' fun a => Subtype.ext_iff
+          _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff
+          _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
+          
+      suffices Set.Nonempty (fixed_points Q (orbit G P)) by
+        exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
+      apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
+      refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
       calc
-        S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) :=
-          forall_congr' fun a => Subtype.ext_iff
-        _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff
-        _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
+        1 = card (fixed_points P (orbit G P)) := _
+        _ ≡ card (orbit G P) [MOD p] := (P.2.card_modeq_card_fixed_points (orbit G P)).symm
+        _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
         
-    suffices Set.Nonempty (fixed_points Q (orbit G P)) by
-      exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
-    apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
-    refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
-    calc
-      1 = card (fixed_points P (orbit G P)) := _
-      _ ≡ card (orbit G P) [MOD p] := (P.2.card_modeq_card_fixed_points (orbit G P)).symm
-      _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
-      
-    rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
-    refine' card_congr' (congr_arg _ (Eq.symm _))
-    rw [Set.eq_singleton_iff_unique_mem]
-    exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
+      rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
+      refine' card_congr' (congr_arg _ (Eq.symm _))
+      rw [Set.eq_singleton_iff_unique_mem]
+      exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
 
 variable (p) (G)
 
 /-- A generalization of **Sylow's third theorem**.
   If the number of Sylow `p`-subgroups is finite, then it is congruent to `1` modulo `p`. -/
 theorem card_sylow_modeq_one [Fact p.Prime] [Fintype (Sylow p G)] : card (Sylow p G) ≡ 1 [MOD p] :=
-  by
+  by 
   refine' sylow.nonempty.elim fun P : Sylow p G => _
   have : fixed_points P.1 (Sylow p G) = {P} :=
     Set.ext fun Q : Sylow p G =>
@@ -422,7 +426,7 @@ theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup 
   obtain ⟨x, hx⟩ := exists_prime_order_of_dvd_card p h
   have h := IsPGroup.of_card ((order_eq_card_zpowers.symm.trans hx).trans (pow_one p).symm)
   let Q := (zpowers x).comap (QuotientGroup.mk' (P : Subgroup G))
-  have hQ : IsPGroup p Q := by
+  have hQ : IsPGroup p Q := by 
     apply h.comap_of_ker_is_p_group
     rw [QuotientGroup.ker_mk]
     exact P.2
@@ -448,7 +452,7 @@ theorem not_dvd_index_sylow [hp : Fact p.Prime] [Finite (Sylow p G)] (P : Sylow 
   of `N`, then `N_G(P) ⊔ N = G`. -/
 theorem Sylow.normalizer_sup_eq_top {p : ℕ} [Fact p.Prime] {N : Subgroup G} [N.Normal]
     [Finite (Sylow p N)] (P : Sylow p N) : ((↑P : Subgroup N).map N.Subtype).normalizer ⊔ N = ⊤ :=
-  by
+  by 
   refine' top_le_iff.mp fun g hg => _
   obtain ⟨n, hn⟩ := exists_smul_eq N ((MulAut.conjNormal g : MulAut N) • P) P
   rw [← inv_mul_cancel_left (↑n) g, sup_comm]
@@ -493,7 +497,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
     inv_mem_iff.1
       (mem_normalizer_fintype fun n (hn : n ∈ H) =>
         have : (n⁻¹ * x)⁻¹ * x ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
-        show _ ∈ H by
+        show _ ∈ H by 
           rw [mul_inv_rev, inv_inv] at this
           convert this
           rw [inv_inv]),
@@ -516,7 +520,7 @@ def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Finite (H : Set G)] 
       normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H :=
   @subtypeQuotientEquivQuotientSubtype G (normalizer H : Set G) (id _) (id _) (fixedPoints _ _)
     (fun a => (@mem_fixed_points_mul_left_cosets_iff_mem_normalizer _ _ _ ‹_› _).symm)
-    (by
+    (by 
       intros
       rw [setoidHasEquiv]
       simp only [left_rel_apply]
@@ -529,7 +533,7 @@ theorem card_quotient_normalizer_modeq_card_quotient [Fintype G] {p : ℕ} {n : 
     {H : Subgroup G} (hH : Fintype.card H = p ^ n) :
     card (normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H) ≡
       card (G ⧸ H) [MOD p] :=
-  by
+  by 
   rw [← Fintype.card_congr (fixed_points_mul_left_cosets_equiv_quotient H)]
   exact ((IsPGroup.of_card hH).card_modeq_card_fixed_points _).symm
 #align
@@ -734,10 +738,9 @@ theorem normal_of_all_max_subgroups_normal [Finite G]
     (hnc : ∀ H : Subgroup G, IsCoatom H → H.Normal) {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)]
     (P : Sylow p G) : (↑P : Subgroup G).Normal :=
   normalizer_eq_top.mp
-    (by
+    (by 
       rcases eq_top_or_exists_le_coatom (↑P : Subgroup G).normalizer with (heq | ⟨K, hK, hNK⟩)
       · exact HEq
-        
       · haveI := hnc _ hK
         have hPK := le_trans le_normalizer hNK
         let P' := P.subtype hPK
@@ -749,8 +752,7 @@ theorem normal_of_all_max_subgroups_normal [Finite G]
             exact hNK
           _ = (map K.subtype (↑P' : Subgroup K)).normalizer ⊔ K := by simp [map_comap_eq_self, hPK]
           _ = ⊤ := normalizer_sup_eq_top P'
-          
-        )
+          )
 #align sylow.normal_of_all_max_subgroups_normal Sylow.normal_of_all_max_subgroups_normal
 
 theorem normal_of_normalizer_condition (hnc : NormalizerCondition G) {p : ℕ} [Fact p.Prime]
@@ -787,7 +789,6 @@ noncomputable def directProductOfNormal [Fintype G]
     haveI := subsingleton_of_normal _ (hn (P p))
     change (∀ P : Sylow p G, P) ≃* P p
     exact MulEquiv.piSubsingleton _ _
-    
   show (∀ p : ps, P p) ≃* G
   apply MulEquiv.ofBijective (Subgroup.noncommPiCoprod hcomm)
   apply (bijective_iff_injective_and_card _).mpr
@@ -800,9 +801,9 @@ noncomputable def directProductOfNormal [Fintype G]
     haveI hp₂' := Fact.mk (Nat.prime_of_mem_factorization hp₂)
     have hne' : p₁ ≠ p₂ := by simpa using hne
     apply IsPGroup.coprime_card_of_ne p₁ p₂ hne' _ _ (P p₁).is_p_group' (P p₂).is_p_group'
-    
   show card (∀ p : ps, P p) = card G
-  · calc
+  ·
+    calc
       card (∀ p : ps, P p) = ∏ p : ps, card ↥(P p) := Fintype.card_pi
       _ = ∏ p : ps, p.1 ^ (card G).factorization p.1 := by
         congr 1 with ⟨p, hp⟩
@@ -812,7 +813,6 @@ noncomputable def directProductOfNormal [Fintype G]
       _ = (card G).factorization.Prod pow := rfl
       _ = card G := Nat.factorization_prod_pow_eq_self Fintype.card_ne_zero
       
-    
 #align sylow.direct_product_of_normal Sylow.directProductOfNormal
 
 end Sylow

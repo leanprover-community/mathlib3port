@@ -35,7 +35,8 @@ variable {J : Type u₂} [Category.{v₂} J]
 
 /-- Turn a colimit for `F : J ⥤ C` into a limit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ`. -/
 @[simps]
-def isLimitCoconeOp (F : J ⥤ C) {c : Cocone F} (hc : IsColimit c) : IsLimit c.op where
+def isLimitCoconeOp (F : J ⥤ C) {c : Cocone F} (hc : IsColimit c) :
+    IsLimit c.op where 
   lift s := (hc.desc s.unop).op
   fac' s j := Quiver.Hom.unop_inj (by simpa)
   uniq' s m w := by
@@ -45,7 +46,8 @@ def isLimitCoconeOp (F : J ⥤ C) {c : Cocone F} (hc : IsColimit c) : IsLimit c.
 
 /-- Turn a limit for `F : J ⥤ C` into a colimit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ`. -/
 @[simps]
-def isColimitConeOp (F : J ⥤ C) {c : Cone F} (hc : IsLimit c) : IsColimit c.op where
+def isColimitConeOp (F : J ⥤ C) {c : Cone F} (hc : IsLimit c) :
+    IsColimit c.op where 
   desc s := (hc.lift s.unop).op
   fac' s j := Quiver.Hom.unop_inj (by simpa)
   uniq' s m w := by
@@ -56,7 +58,9 @@ def isColimitConeOp (F : J ⥤ C) {c : Cone F} (hc : IsLimit c) : IsColimit c.op
 /-- Turn a colimit for `F : J ⥤ Cᵒᵖ` into a limit for `F.left_op : Jᵒᵖ ⥤ C`. -/
 @[simps]
 def isLimitConeLeftOpOfCocone (F : J ⥤ Cᵒᵖ) {c : Cocone F} (hc : IsColimit c) :
-    IsLimit (coneLeftOpOfCocone c) where
+    IsLimit
+      (coneLeftOpOfCocone
+        c) where 
   lift s := (hc.desc (coconeOfConeLeftOp s)).unop
   fac' s j :=
     Quiver.Hom.op_inj <| by
@@ -71,7 +75,9 @@ def isLimitConeLeftOpOfCocone (F : J ⥤ Cᵒᵖ) {c : Cocone F} (hc : IsColimit
 /-- Turn a limit of `F : J ⥤ Cᵒᵖ` into a colimit of `F.left_op : Jᵒᵖ ⥤ C`. -/
 @[simps]
 def isColimitCoconeLeftOpOfCone (F : J ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLimit c) :
-    IsColimit (coconeLeftOpOfCone c) where
+    IsColimit
+      (coconeLeftOpOfCone
+        c) where 
   desc s := (hc.lift (coneOfCoconeLeftOp s)).unop
   fac' s j :=
     Quiver.Hom.op_inj <| by
@@ -86,7 +92,9 @@ def isColimitCoconeLeftOpOfCone (F : J ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLimit c
 /-- Turn a colimit for `F : Jᵒᵖ ⥤ C` into a limit for `F.right_op : J ⥤ Cᵒᵖ`. -/
 @[simps]
 def isLimitConeRightOpOfCocone (F : Jᵒᵖ ⥤ C) {c : Cocone F} (hc : IsColimit c) :
-    IsLimit (coneRightOpOfCocone c) where
+    IsLimit
+      (coneRightOpOfCocone
+        c) where 
   lift s := (hc.desc (coconeOfConeRightOp s)).op
   fac' s j := Quiver.Hom.unop_inj (by simpa)
   uniq' s m w := by
@@ -98,7 +106,9 @@ def isLimitConeRightOpOfCocone (F : Jᵒᵖ ⥤ C) {c : Cocone F} (hc : IsColimi
 /-- Turn a limit for `F : Jᵒᵖ ⥤ C` into a colimit for `F.right_op : J ⥤ Cᵒᵖ`. -/
 @[simps]
 def isColimitCoconeRightOpOfCone (F : Jᵒᵖ ⥤ C) {c : Cone F} (hc : IsLimit c) :
-    IsColimit (coconeRightOpOfCone c) where
+    IsColimit
+      (coconeRightOpOfCone
+        c) where 
   desc s := (hc.lift (coneOfCoconeRightOp s)).op
   fac' s j := Quiver.Hom.unop_inj (by simpa)
   uniq' s m w := by
@@ -110,7 +120,8 @@ def isColimitCoconeRightOpOfCone (F : Jᵒᵖ ⥤ C) {c : Cone F} (hc : IsLimit 
 /-- Turn a colimit for `F : Jᵒᵖ ⥤ Cᵒᵖ` into a limit for `F.unop : J ⥤ C`. -/
 @[simps]
 def isLimitConeUnopOfCocone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cocone F} (hc : IsColimit c) :
-    IsLimit (coneUnopOfCocone c) where
+    IsLimit (coneUnopOfCocone
+        c) where 
   lift s := (hc.desc (coconeOfConeUnop s)).unop
   fac' s j := Quiver.Hom.op_inj (by simpa)
   uniq' s m w := by
@@ -122,7 +133,9 @@ def isLimitConeUnopOfCocone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cocone F} (hc : IsCol
 /-- Turn a limit of `F : Jᵒᵖ ⥤ Cᵒᵖ` into a colimit of `F.unop : J ⥤ C`. -/
 @[simps]
 def isColimitCoconeUnopOfCone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLimit c) :
-    IsColimit (coconeUnopOfCone c) where
+    IsColimit
+      (coconeUnopOfCone
+        c) where 
   desc s := (hc.lift (coneOfCoconeUnop s)).unop
   fac' s j := Quiver.Hom.op_inj (by simpa)
   uniq' s m w := by
@@ -133,7 +146,8 @@ def isColimitCoconeUnopOfCone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLim
 
 /-- Turn a colimit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ` into a limit for `F : J ⥤ C`. -/
 @[simps]
-def isLimitCoconeUnop (F : J ⥤ C) {c : Cocone F.op} (hc : IsColimit c) : IsLimit c.unop where
+def isLimitCoconeUnop (F : J ⥤ C) {c : Cocone F.op} (hc : IsColimit c) :
+    IsLimit c.unop where 
   lift s := (hc.desc s.op).unop
   fac' s j := Quiver.Hom.op_inj (by simpa)
   uniq' s m w := by
@@ -143,7 +157,8 @@ def isLimitCoconeUnop (F : J ⥤ C) {c : Cocone F.op} (hc : IsColimit c) : IsLim
 
 /-- Turn a limit for `F.op : Jᵒᵖ ⥤ Cᵒᵖ` into a colimit for `F : J ⥤ C`. -/
 @[simps]
-def isColimitConeUnop (F : J ⥤ C) {c : Cone F.op} (hc : IsLimit c) : IsColimit c.unop where
+def isColimitConeUnop (F : J ⥤ C) {c : Cone F.op} (hc : IsLimit c) :
+    IsColimit c.unop where 
   desc s := (hc.lift s.op).unop
   fac' s j := Quiver.Hom.op_inj (by simpa)
   uniq' s m w := by
@@ -154,7 +169,9 @@ def isColimitConeUnop (F : J ⥤ C) {c : Cone F.op} (hc : IsLimit c) : IsColimit
 /-- Turn a colimit for `F.left_op : Jᵒᵖ ⥤ C` into a limit for `F : J ⥤ Cᵒᵖ`. -/
 @[simps]
 def isLimitConeOfCoconeLeftOp (F : J ⥤ Cᵒᵖ) {c : Cocone F.leftOp} (hc : IsColimit c) :
-    IsLimit (coneOfCoconeLeftOp c) where
+    IsLimit
+      (coneOfCoconeLeftOp
+        c) where 
   lift s := (hc.desc (coconeLeftOpOfCone s)).op
   fac' s j :=
     Quiver.Hom.unop_inj <| by
@@ -169,7 +186,9 @@ def isLimitConeOfCoconeLeftOp (F : J ⥤ Cᵒᵖ) {c : Cocone F.leftOp} (hc : Is
 /-- Turn a limit of `F.left_op : Jᵒᵖ ⥤ C` into a colimit of `F : J ⥤ Cᵒᵖ`. -/
 @[simps]
 def isColimitCoconeOfConeLeftOp (F : J ⥤ Cᵒᵖ) {c : Cone F.leftOp} (hc : IsLimit c) :
-    IsColimit (coconeOfConeLeftOp c) where
+    IsColimit
+      (coconeOfConeLeftOp
+        c) where 
   desc s := (hc.lift (coneLeftOpOfCocone s)).op
   fac' s j :=
     Quiver.Hom.unop_inj <| by
@@ -184,7 +203,9 @@ def isColimitCoconeOfConeLeftOp (F : J ⥤ Cᵒᵖ) {c : Cone F.leftOp} (hc : Is
 /-- Turn a colimit for `F.right_op : J ⥤ Cᵒᵖ` into a limit for `F : Jᵒᵖ ⥤ C`. -/
 @[simps]
 def isLimitConeOfCoconeRightOp (F : Jᵒᵖ ⥤ C) {c : Cocone F.rightOp} (hc : IsColimit c) :
-    IsLimit (coneOfCoconeRightOp c) where
+    IsLimit
+      (coneOfCoconeRightOp
+        c) where 
   lift s := (hc.desc (coconeRightOpOfCone s)).unop
   fac' s j := Quiver.Hom.op_inj (by simpa)
   uniq' s m w := by
@@ -196,7 +217,9 @@ def isLimitConeOfCoconeRightOp (F : Jᵒᵖ ⥤ C) {c : Cocone F.rightOp} (hc : 
 /-- Turn a limit for `F.right_op : J ⥤ Cᵒᵖ` into a limit for `F : Jᵒᵖ ⥤ C`. -/
 @[simps]
 def isColimitCoconeOfConeRightOp (F : Jᵒᵖ ⥤ C) {c : Cone F.rightOp} (hc : IsLimit c) :
-    IsColimit (coconeOfConeRightOp c) where
+    IsColimit
+      (coconeOfConeRightOp
+        c) where 
   desc s := (hc.lift (coneRightOpOfCocone s)).unop
   fac' s j := Quiver.Hom.op_inj (by simpa)
   uniq' s m w := by
@@ -208,7 +231,8 @@ def isColimitCoconeOfConeRightOp (F : Jᵒᵖ ⥤ C) {c : Cone F.rightOp} (hc : 
 /-- Turn a colimit for `F.unop : J ⥤ C` into a limit for `F : Jᵒᵖ ⥤ Cᵒᵖ`. -/
 @[simps]
 def isLimitConeOfCoconeUnop (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cocone F.unop} (hc : IsColimit c) :
-    IsLimit (coneOfCoconeUnop c) where
+    IsLimit (coneOfCoconeUnop
+        c) where 
   lift s := (hc.desc (coconeUnopOfCone s)).op
   fac' s j := Quiver.Hom.unop_inj (by simpa)
   uniq' s m w := by
@@ -220,7 +244,9 @@ def isLimitConeOfCoconeUnop (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cocone F.unop} (hc : 
 /-- Turn a limit for `F.unop : J ⥤ C` into a colimit for `F : Jᵒᵖ ⥤ Cᵒᵖ`. -/
 @[simps]
 def isColimitConeOfCoconeUnop (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F.unop} (hc : IsLimit c) :
-    IsColimit (coconeOfConeUnop c) where
+    IsColimit
+      (coconeOfConeUnop
+        c) where 
   desc s := (hc.lift (coneUnopOfCocone s)).op
   fac' s j := Quiver.Hom.unop_inj (by simpa)
   uniq' s m w := by
@@ -422,14 +448,14 @@ instance has_coequalizers_opposite [HasEqualizers C] : HasCoequalizers Cᵒᵖ :
   category_theory.limits.has_coequalizers_opposite CategoryTheory.Limits.has_coequalizers_opposite
 
 instance has_finite_colimits_opposite [HasFiniteLimits C] :
-    HasFiniteColimits Cᵒᵖ where out J 𝒟 𝒥 := by
+    HasFiniteColimits Cᵒᵖ where out J 𝒟 𝒥 := by 
     skip
     infer_instance
 #align
   category_theory.limits.has_finite_colimits_opposite CategoryTheory.Limits.has_finite_colimits_opposite
 
 instance has_finite_limits_opposite [HasFiniteColimits C] :
-    HasFiniteLimits Cᵒᵖ where out J 𝒟 𝒥 := by
+    HasFiniteLimits Cᵒᵖ where out J 𝒟 𝒥 := by 
     skip
     infer_instance
 #align
@@ -527,14 +553,14 @@ def op {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocone f g) : Pullbac
 
 @[simp]
 theorem op_fst {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocone f g) : c.op.fst = c.inl.op :=
-  by
+  by 
   change (_ : limits.cone _).π.app _ = _
   apply category.comp_id
 #align category_theory.limits.pushout_cocone.op_fst CategoryTheory.Limits.PushoutCocone.op_fst
 
 @[simp]
 theorem op_snd {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocone f g) : c.op.snd = c.inr.op :=
-  by
+  by 
   change (_ : limits.cone _).π.app _ = _
   apply category.comp_id
 #align category_theory.limits.pushout_cocone.op_snd CategoryTheory.Limits.PushoutCocone.op_snd
@@ -578,14 +604,14 @@ def op {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} (c : PullbackCone f g) : PushoutC
 
 @[simp]
 theorem op_inl {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} (c : PullbackCone f g) : c.op.inl = c.fst.op :=
-  by
+  by 
   change (_ : limits.cocone _).ι.app _ = _
   apply category.id_comp
 #align category_theory.limits.pullback_cone.op_inl CategoryTheory.Limits.PullbackCone.op_inl
 
 @[simp]
 theorem op_inr {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} (c : PullbackCone f g) : c.op.inr = c.snd.op :=
-  by
+  by 
   change (_ : limits.cocone _).ι.app _ = _
   apply category.id_comp
 #align category_theory.limits.pullback_cone.op_inr CategoryTheory.Limits.PullbackCone.op_inr
@@ -623,14 +649,12 @@ def isColimitEquivIsLimitOp {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : Pushout
     equiv_rw is_limit.postcompose_hom_equiv _ _
     equiv_rw(is_limit.whisker_equivalence_equiv walking_span_op_equiv.symm).symm
     exact is_limit_cocone_op _ h
-    
   · intro h
     equiv_rw is_colimit.equiv_iso_colimit c.op_unop.symm
     apply is_colimit_cone_unop
     equiv_rw is_limit.postcompose_hom_equiv _ _
     equiv_rw(is_limit.whisker_equivalence_equiv _).symm
     exact h
-    
 #align
   category_theory.limits.pushout_cocone.is_colimit_equiv_is_limit_op CategoryTheory.Limits.PushoutCocone.isColimitEquivIsLimitOp
 
@@ -644,13 +668,11 @@ def isColimitEquivIsLimitUnop {X Y Z : Cᵒᵖ} {f : X ⟶ Y} {g : X ⟶ Z} (c :
     equiv_rw is_colimit.precompose_hom_equiv _ _
     equiv_rw(is_colimit.whisker_equivalence_equiv _).symm
     exact h
-    
   · intro h
     equiv_rw is_colimit.equiv_iso_colimit c.unop_op.symm
     equiv_rw is_colimit.precompose_hom_equiv _ _
     equiv_rw(is_colimit.whisker_equivalence_equiv walking_cospan_op_equiv.symm).symm
     exact is_colimit_cone_op _ h
-    
 #align
   category_theory.limits.pushout_cocone.is_colimit_equiv_is_limit_unop CategoryTheory.Limits.PushoutCocone.isColimitEquivIsLimitUnop
 
@@ -707,7 +729,7 @@ theorem pullback_iso_unop_pushout_inv_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z
 @[simp, reassoc]
 theorem pullback_iso_unop_pushout_hom_inl {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] : pushout.inl ≫ (pullbackIsoUnopPushout f g).hom.op = pullback.fst.op :=
-  by
+  by 
   apply Quiver.Hom.unop_inj
   dsimp
   rw [← pullback_iso_unop_pushout_inv_fst, iso.hom_inv_id_assoc]
@@ -717,7 +739,7 @@ theorem pullback_iso_unop_pushout_hom_inl {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z
 @[simp, reassoc]
 theorem pullback_iso_unop_pushout_hom_inr {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] : pushout.inr ≫ (pullbackIsoUnopPushout f g).hom.op = pullback.snd.op :=
-  by
+  by 
   apply Quiver.Hom.unop_inj
   dsimp
   rw [← pullback_iso_unop_pushout_inv_snd, iso.hom_inv_id_assoc]
@@ -755,7 +777,7 @@ theorem pushout_iso_unop_pullback_inr_hom {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y
 @[simp]
 theorem pushout_iso_unop_pullback_inv_fst {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y) [HasPushout f g]
     [HasPullback f.op g.op] : (pushoutIsoUnopPullback f g).inv.op ≫ pullback.fst = pushout.inl.op :=
-  by
+  by 
   apply Quiver.Hom.unop_inj
   dsimp
   rw [← pushout_iso_unop_pullback_inl_hom, category.assoc, iso.hom_inv_id, category.comp_id]
@@ -765,7 +787,7 @@ theorem pushout_iso_unop_pullback_inv_fst {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y
 @[simp]
 theorem pushout_iso_unop_pullback_inv_snd {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y) [HasPushout f g]
     [HasPullback f.op g.op] : (pushoutIsoUnopPullback f g).inv.op ≫ pullback.snd = pushout.inr.op :=
-  by
+  by 
   apply Quiver.Hom.unop_inj
   dsimp
   rw [← pushout_iso_unop_pullback_inr_hom, category.assoc, iso.hom_inv_id, category.comp_id]

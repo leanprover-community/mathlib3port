@@ -74,7 +74,7 @@ theorem self : FiniteType R R :=
 #align algebra.finite_type.self Algebra.FiniteType.self
 
 protected theorem polynomial : FiniteType R R[X] :=
-  ⟨⟨{Polynomial.x}, by
+  ⟨⟨{Polynomial.x}, by 
       rw [Finset.coe_singleton]
       exact Polynomial.adjoin_X⟩⟩
 #align algebra.finite_type.polynomial Algebra.FiniteType.polynomial
@@ -90,7 +90,7 @@ protected theorem mvPolynomial (ι : Type _) [Finite ι] : FiniteType R (MvPolyn
 #align algebra.finite_type.mv_polynomial Algebra.FiniteType.mvPolynomial
 
 theorem ofRestrictScalarsFiniteType [Algebra A B] [IsScalarTower R A B] [hB : FiniteType R B] :
-    FiniteType A B := by
+    FiniteType A B := by 
   obtain ⟨S, hS⟩ := hB.out
   refine' ⟨⟨S, eq_top_iff.2 fun b => _⟩⟩
   have le : adjoin R (S : Set B) ≤ Subalgebra.restrictScalars R (adjoin A S) := by
@@ -104,7 +104,7 @@ theorem ofRestrictScalarsFiniteType [Algebra A B] [IsScalarTower R A B] [hB : Fi
 variable {R A B}
 
 theorem ofSurjective (hRA : FiniteType R A) (f : A →ₐ[R] B) (hf : Surjective f) : FiniteType R B :=
-  ⟨by
+  ⟨by 
     convert hRA.1.map f
     simpa only [map_top f, @eq_comm _ ⊤, eq_top_iff, AlgHom.mem_range] using hf⟩
 #align algebra.finite_type.of_surjective Algebra.FiniteType.ofSurjective
@@ -129,26 +129,22 @@ theorem iff_quotient_mv_polynomial :
     have hrw : (↑s : Set A) = fun x : A => x ∈ s.val := rfl
     rw [← Set.mem_range, ← AlgHom.coe_range, ← adjoin_eq_range, ← hrw, hs]
     exact Set.mem_univ x
-    
   · rintro ⟨s, ⟨f, hsur⟩⟩
     exact finite_type.of_surjective (finite_type.mv_polynomial R { x // x ∈ s }) f hsur
-    
 #align algebra.finite_type.iff_quotient_mv_polynomial Algebra.FiniteType.iff_quotient_mv_polynomial
 
 /-- An algebra is finitely generated if and only if it is a quotient
 of a polynomial ring whose variables are indexed by a fintype. -/
 theorem iff_quotient_mv_polynomial' :
     FiniteType R A ↔ ∃ (ι : Type u_2)(_ : Fintype ι)(f : MvPolynomial ι R →ₐ[R] A), Surjective f :=
-  by
+  by 
   constructor
   · rw [iff_quotient_mv_polynomial]
     rintro ⟨s, ⟨f, hsur⟩⟩
     use { x // x ∈ s }, by infer_instance, f, hsur
-    
   · rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
     letI : Fintype ι := hfintype
     exact finite_type.of_surjective (finite_type.mv_polynomial R ι) f hsur
-    
 #align
   algebra.finite_type.iff_quotient_mv_polynomial' Algebra.FiniteType.iff_quotient_mv_polynomial'
 
@@ -164,15 +160,13 @@ theorem iff_quotient_mv_polynomial'' :
     exact
       ⟨Fintype.card ι, AlgHom.comp f Equiv.symm,
         Function.Surjective.comp hsur (AlgEquiv.symm Equiv).Surjective⟩
-    
   · rintro ⟨n, ⟨f, hsur⟩⟩
     exact finite_type.of_surjective (finite_type.mv_polynomial R (Fin n)) f hsur
-    
 #align
   algebra.finite_type.iff_quotient_mv_polynomial'' Algebra.FiniteType.iff_quotient_mv_polynomial''
 
 instance prod [hA : FiniteType R A] [hB : FiniteType R B] : FiniteType R (A × B) :=
-  ⟨by
+  ⟨by 
     rw [← Subalgebra.prod_top]
     exact hA.1.Prod hB.1⟩
 #align algebra.finite_type.prod Algebra.FiniteType.prod
@@ -242,7 +236,7 @@ theorem of_surjective (f : A →+* B) (hf : Surjective f) : f.FiniteType := by
 theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FiniteType) (hf : f.FiniteType) :
     (g.comp f).FiniteType :=
   @Algebra.FiniteType.trans A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra g.toAlgebra
-    (by
+    (by 
       fconstructor
       intro a b c
       simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
@@ -257,7 +251,7 @@ theorem of_finite {f : A →+* B} (hf : f.Finite) : f.FiniteType :=
 alias of_finite ← _root_.ring_hom.finite.to_finite_type
 
 theorem of_comp_finite_type {f : A →+* B} {g : B →+* C} (h : (g.comp f).FiniteType) :
-    g.FiniteType := by
+    g.FiniteType := by 
   letI := f.to_algebra
   letI := g.to_algebra
   letI := (g.comp f).toAlgebra
@@ -430,28 +424,22 @@ theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M
     (hS : closure S = ⊤) :
     Function.Surjective
       (MvPolynomial.aeval fun s : S => of' R M ↑s : MvPolynomial S R → AddMonoidAlgebra R M) :=
-  by
+  by 
   refine' fun f => induction_on f (fun m => _) _ _
   · have : m ∈ closure S := hS.symm ▸ mem_top _
     refine' closure_induction this (fun m hm => _) _ _
     · exact ⟨MvPolynomial.x ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
-      
     · exact ⟨1, AlgHom.map_one _⟩
-      
     · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
       exact
         ⟨P₁ * P₂, by
           rw [AlgHom.map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single,
               one_mul] <;>
             rfl⟩
-      
-    
   · rintro f g ⟨P, rfl⟩ ⟨Q, rfl⟩
     exact ⟨P + Q, AlgHom.map_add _ _ _⟩
-    
   · rintro r f ⟨P, rfl⟩
     exact ⟨r • P, AlgHom.map_smul _ _ _⟩
-    
 #align
   add_monoid_algebra.mv_polynomial_aeval_of_surjective_of_closure AddMonoidAlgebra.mv_polynomial_aeval_of_surjective_of_closure
 
@@ -460,7 +448,7 @@ variable (R M)
 /-- If an additive monoid `M` is finitely generated then `add_monoid_algebra R M` is of finite
 type. -/
 instance finiteTypeOfFg [CommRing R] [h : AddMonoid.Fg M] : FiniteType R (AddMonoidAlgebra R M) :=
-  by
+  by 
   obtain ⟨S, hS⟩ := h.out
   exact
     (finite_type.mv_polynomial R (S : Set M)).ofSurjective
@@ -524,7 +512,7 @@ theorem support_gen_of_gen {S : Set (MonoidAlgebra R M)} (hS : Algebra.adjoin R 
   rw [← hS, adjoin_le_iff]
   intro f hf
   have hincl : of R M '' f.support ⊆ ⋃ (g : MonoidAlgebra R M) (H : g ∈ S), of R M '' g.support :=
-    by
+    by 
     intro s hs
     exact Set.mem_Union₂.2 ⟨f, ⟨hf, hs⟩⟩
   exact adjoin_mono hincl (mem_adjoin_support f)
@@ -574,7 +562,7 @@ If the image of an element `m : M` in `monoid_algebra R M` belongs the submodule
 closure of some `S : set M` then `m ∈ closure S`. -/
 theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
     (h : of R M m ∈ span R (Submonoid.closure (of R M '' S) : Set (MonoidAlgebra R M))) :
-    m ∈ closure S := by
+    m ∈ closure S := by 
   rw [← MonoidHom.map_mclosure] at h
   simpa using of_mem_span_of_iff.1 h
 #align monoid_algebra.mem_closure_of_mem_span_closure MonoidAlgebra.mem_closure_of_mem_span_closure
@@ -591,26 +579,20 @@ theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M
     (hS : closure S = ⊤) :
     Function.Surjective
       (MvPolynomial.aeval fun s : S => of R M ↑s : MvPolynomial S R → MonoidAlgebra R M) :=
-  by
+  by 
   refine' fun f => induction_on f (fun m => _) _ _
   · have : m ∈ closure S := hS.symm ▸ mem_top _
     refine' closure_induction this (fun m hm => _) _ _
     · exact ⟨MvPolynomial.x ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
-      
     · exact ⟨1, AlgHom.map_one _⟩
-      
     · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
       exact
         ⟨P₁ * P₂, by
           rw [AlgHom.map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single, one_mul]⟩
-      
-    
   · rintro f g ⟨P, rfl⟩ ⟨Q, rfl⟩
     exact ⟨P + Q, AlgHom.map_add _ _ _⟩
-    
   · rintro r f ⟨P, rfl⟩
     exact ⟨r • P, AlgHom.map_smul _ _ _⟩
-    
 #align
   monoid_algebra.mv_polynomial_aeval_of_surjective_of_closure MonoidAlgebra.mv_polynomial_aeval_of_surjective_of_closure
 
@@ -667,11 +649,11 @@ include f
 
 theorem modulePolynomialOfEndo.is_scalar_tower :
     @IsScalarTower R R[X] M _
-      (by
+      (by 
         letI := modulePolynomialOfEndo f
         infer_instance)
       _ :=
-  by
+  by 
   letI := modulePolynomialOfEndo f
   constructor
   intro x y z
@@ -691,7 +673,7 @@ theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M]
   letI := modulePolynomialOfEndo f
   haveI : IsScalarTower R R[X] M := modulePolynomialOfEndo.is_scalar_tower f
   have hfgpoly : Finite R[X] M := finite.of_restrict_scalars_finite R _ _
-  have X_mul : ∀ o, (X : R[X]) • o = f o := by
+  have X_mul : ∀ o, (X : R[X]) • o = f o := by 
     intro
     simp
   have : (⊤ : Submodule R[X] M) ≤ Ideal.span {X} • ⊤ := by
@@ -706,7 +688,7 @@ theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M]
   intro m hm
   rw [Ideal.mem_span_singleton'] at hFa
   obtain ⟨G, hG⟩ := hFa
-  suffices (F - 1) • m = 0 by
+  suffices (F - 1) • m = 0 by 
     have Fmzero := hFb m (by simp)
     rwa [← sub_add_cancel F 1, add_smul, one_smul, this, zero_add] at Fmzero
   rw [← hG, mul_smul, X_mul m, hm, smul_zero]

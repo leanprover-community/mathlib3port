@@ -92,9 +92,7 @@ theorem one_CNF {o : Ordinal} (ho : o ≠ 0) : cNF 1 o = [⟨0, o⟩] := by simp
 theorem CNF_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : cNF b o = [⟨0, o⟩] := by
   rcases le_one_iff.1 hb with (rfl | rfl)
   · exact zero_CNF ho
-    
   · exact one_CNF ho
-    
 #align ordinal.CNF_of_le_one Ordinal.CNF_of_le_one
 
 theorem CNF_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) : cNF b o = [⟨0, o⟩] := by
@@ -104,7 +102,7 @@ theorem CNF_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) : cNF b o = [⟨0,
 /-- Evaluating the Cantor normal form of an ordinal returns the ordinal. -/
 theorem CNF_foldr (b o : Ordinal) : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + r) 0 = o :=
   cNFRec b
-    (by
+    (by 
       rw [CNF_zero]
       rfl)
     (fun o ho IH => by rw [CNF_ne_zero ho, List.foldr_cons, IH, div_add_mod]) o
@@ -112,18 +110,14 @@ theorem CNF_foldr (b o : Ordinal) : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + 
 
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
 theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o → x.1 ≤ log b o :=
-  by
+  by 
   refine' CNF_rec b _ (fun o ho H => _) o
   · rw [CNF_zero]
     exact False.elim
-    
   · rw [CNF_ne_zero ho, List.mem_cons_iff]
     rintro (rfl | h)
     · exact le_rfl
-      
     · exact (H h).trans (log_mono_right _ (mod_opow_log_lt_self b ho).le)
-      
-    
 #align ordinal.CNF_fst_le_log Ordinal.CNF_fst_le_log
 
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `o`. -/
@@ -135,25 +129,17 @@ theorem CNF_fst_le {b o : Ordinal.{u}} {x : Ordinal × Ordinal} (h : x ∈ cNF b
 theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o → 0 < x.2 := by
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
-    
   · rcases eq_zero_or_pos b with (rfl | hb)
     · rw [zero_CNF ho, List.mem_singleton]
       rintro rfl
       exact Ordinal.pos_iff_ne_zero.2 ho
-      
     · rw [CNF_ne_zero ho]
       rintro (rfl | h)
       · simp
         rw [div_pos]
         · exact opow_log_le_self _ ho
-          
         · exact (opow_pos _ hb).ne'
-          
-        
       · exact IH h
-        
-      
-    
 #align ordinal.CNF_lt_snd Ordinal.CNF_lt_snd
 
 /-- Every coefficient in the Cantor normal form `CNF b o` is less than `b`. -/
@@ -161,35 +147,25 @@ theorem CNF_snd_lt {b o : Ordinal.{u}} (hb : 1 < b) {x : Ordinal × Ordinal} :
     x ∈ cNF b o → x.2 < b := by
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
-    
   · rw [CNF_ne_zero ho]
     rintro (rfl | h)
     · simpa using div_opow_log_lt o hb
-      
     · exact IH h
-      
-    
 #align ordinal.CNF_snd_lt Ordinal.CNF_snd_lt
 
 /-- The exponents of the Cantor normal form are decreasing. -/
 theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) := by
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
-    
   · cases' le_or_lt b 1 with hb hb
     · simp [CNF_of_le_one hb ho]
-      
     · cases' lt_or_le o b with hob hbo
       · simp [CNF_of_lt ho hob]
-        
       · rw [CNF_ne_zero ho, List.map_cons, List.sorted_cons]
         refine' ⟨fun a H => _, IH⟩
         rw [List.mem_map] at H
         rcases H with ⟨⟨a, a'⟩, H, rfl⟩
         exact (CNF_fst_le_log H).trans_lt (log_mod_opow_log_lt_log_self hb ho hbo)
-        
-      
-    
 #align ordinal.CNF_sorted Ordinal.CNF_sorted
 
 end Ordinal

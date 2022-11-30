@@ -161,7 +161,9 @@ theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * �
   rfl
 #align conj_act.units_smul_def ConjAct.units_smul_def
 
-instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
+instance unitsMulDistribMulAction :
+    MulDistribMulAction (ConjAct Mˣ)
+      M where 
   smul := (· • ·)
   one_smul := by simp [units_smul_def]
   mul_smul := by simp [units_smul_def, mul_assoc, mul_inv_rev]
@@ -210,7 +212,8 @@ theorem to_conj_act_zero : toConjAct (0 : G₀) = 0 :=
   rfl
 #align conj_act.to_conj_act_zero ConjAct.to_conj_act_zero
 
-instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
+instance mulAction₀ : MulAction (ConjAct G₀)
+      G₀ where 
   smul := (· • ·)
   one_smul := by simp [smul_def]
   mul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
@@ -242,7 +245,8 @@ end DivisionRing
 
 variable [Group G]
 
-instance : MulDistribMulAction (ConjAct G) G where
+instance : MulDistribMulAction (ConjAct G)
+      G where 
   smul := (· • ·)
   smul_mul := by simp [smul_def, mul_assoc]
   smul_one := by simp [smul_def]
@@ -323,7 +327,7 @@ theorem MulAut.conj_normal_coe {H : Subgroup G} [H.Normal] {h : H} :
 
 instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.Normal] {K : Subgroup H}
     [h : K.Characteristic] : (K.map H.Subtype).Normal :=
-  ⟨fun a ha b => by
+  ⟨fun a ha b => by 
     obtain ⟨a, ha, rfl⟩ := ha
     exact
       K.apply_coe_mem_map H.subtype

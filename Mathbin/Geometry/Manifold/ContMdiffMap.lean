@@ -88,7 +88,7 @@ theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f =
   cases f <;> cases g <;> cases h <;> rfl
 #align cont_mdiff_map.coe_inj ContMdiffMap.coe_inj
 
-@[ext.1]
+@[ext]
 theorem ext (h : ∀ x, f x = g x) : f = g := by cases f <;> cases g <;> congr <;> exact funext h
 #align cont_mdiff_map.ext ContMdiffMap.ext
 
@@ -98,7 +98,8 @@ def id : C^n⟮I, M; I, M⟯ :=
 #align cont_mdiff_map.id ContMdiffMap.id
 
 /-- The composition of smooth maps, as a smooth map. -/
-def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯ where
+def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) :
+    C^n⟮I, M; I'', M''⟯ where 
   toFun a := f (g a)
   contMdiffToFun := f.contMdiffToFun.comp g.contMdiffToFun
 #align cont_mdiff_map.comp ContMdiffMap.comp

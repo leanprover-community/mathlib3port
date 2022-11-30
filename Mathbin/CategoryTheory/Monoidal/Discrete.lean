@@ -26,7 +26,9 @@ variable (M : Type u) [Monoid M]
 namespace CategoryTheory
 
 @[to_additive Discrete.addMonoidal, simps tensor_obj_as tensor_unit_as]
-instance Discrete.monoidal : MonoidalCategory (Discrete M) where
+instance Discrete.monoidal :
+    MonoidalCategory (Discrete
+        M) where 
   tensorUnit := Discrete.mk 1
   tensorObj X Y := Discrete.mk (X.as * Y.as)
   tensorHom W X Y Z f g := eqToHom (by rw [eq_of_hom f, eq_of_hom g])
@@ -43,7 +45,9 @@ discrete monoidal categories.
 @[to_additive Discrete.addMonoidalFunctor
       "An additive morphism between add_monoids gives a\n  monoidal functor between the corresponding discrete monoidal categories.",
   simps]
-def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Discrete N) where
+def Discrete.monoidalFunctor (F : M →* N) :
+    MonoidalFunctor (Discrete M)
+      (Discrete N) where 
   obj X := Discrete.mk (F X.as)
   map X Y f := Discrete.eqToHom (F.congr_arg (eq_of_hom f))
   ε := Discrete.eqToHom F.map_one.symm
@@ -59,7 +63,8 @@ variable {K : Type u} [Monoid K]
       "The monoidal natural isomorphism corresponding to\ncomposing two additive morphisms."]
 def Discrete.monoidalFunctorComp (F : M →* N) (G : N →* K) :
     Discrete.monoidalFunctor F ⊗⋙ Discrete.monoidalFunctor G ≅
-      Discrete.monoidalFunctor (G.comp F) where
+      Discrete.monoidalFunctor
+        (G.comp F) where 
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.discrete.monoidal_functor_comp CategoryTheory.Discrete.monoidalFunctorComp

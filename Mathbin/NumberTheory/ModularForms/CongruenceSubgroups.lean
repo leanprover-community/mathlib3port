@@ -57,30 +57,28 @@ theorem Gamma_mem (N : ℕ) (γ : SL(2, ℤ)) :
       ((↑ₘγ 0 0 : ℤ) : Zmod N) = 1 ∧
         ((↑ₘγ 0 1 : ℤ) : Zmod N) = 0 ∧
           ((↑ₘγ 1 0 : ℤ) : Zmod N) = 0 ∧ ((↑ₘγ 1 1 : ℤ) : Zmod N) = 1 :=
-  by
+  by 
   rw [Gamma_mem']
   constructor
   · intro h
     simp [← SL_reduction_mod_hom_val N γ, h]
-    
   · intro h
     ext
     rw [SL_reduction_mod_hom_val N γ]
     fin_cases i <;> fin_cases j
     all_goals simp_rw [h]; rfl
-    
 #align Gamma_mem Gamma_mem
 
 theorem Gamma_normal (N : ℕ) : Subgroup.Normal (gamma N) :=
   SLMOD(N).normal_ker
 #align Gamma_normal Gamma_normal
 
-theorem Gamma_one_top : gamma 1 = ⊤ := by
+theorem Gamma_one_top : gamma 1 = ⊤ := by 
   ext
   simp
 #align Gamma_one_top Gamma_one_top
 
-theorem Gamma_zero_bot : gamma 0 = ⊥ := by
+theorem Gamma_zero_bot : gamma 0 = ⊥ := by 
   ext
   simp only [Gamma_mem, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply, Int.cast_id,
     Subgroup.mem_bot]
@@ -89,18 +87,18 @@ theorem Gamma_zero_bot : gamma 0 = ⊥ := by
     ext
     fin_cases i <;> fin_cases j
     any_goals simp [h]
-    
   · intro h
     simp [h]
-    
 #align Gamma_zero_bot Gamma_zero_bot
 
 /-- The congruence subgroup of `SL(2,ℤ)` of matrices whose lower left-hand entry reduces to zero
 modulo `N`. -/
-def gamma0 (N : ℕ) : Subgroup SL(2, ℤ) where
+def gamma0 (N : ℕ) :
+    Subgroup
+      SL(2, ℤ) where 
   carrier := { g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : Zmod N) = 0 }
   one_mem' := by simp
-  mul_mem' := by
+  mul_mem' := by 
     intro a b ha hb
     simp only [Set.mem_set_of_eq]
     have h := (Matrix.two_mul_expl a.1 b.1).2.2.1
@@ -108,7 +106,7 @@ def gamma0 (N : ℕ) : Subgroup SL(2, ℤ) where
       Set.mem_set_of_eq, Subtype.val_eq_coe, mul_eq_mul] at *
     rw [h]
     simp [ha, hb]
-  inv_mem' := by
+  inv_mem' := by 
     intro a ha
     simp only [Set.mem_set_of_eq, Subtype.val_eq_coe]
     rw [SL2_inv_expl a]
@@ -127,10 +125,11 @@ theorem Gamma0_det (N : ℕ) (A : gamma0 N) : (A.1.1.det : Zmod N) = 1 := by sim
 
 /-- The group homomorphism from `Gamma0` to `zmod N` given by mapping a matrix to its lower
 right-hand entry. -/
-def gamma0Map (N : ℕ) : gamma0 N →* Zmod N where
+def gamma0Map (N : ℕ) :
+    gamma0 N →* Zmod N where 
   toFun g := ((↑ₘg 1 1 : ℤ) : Zmod N)
   map_one' := by simp
-  map_mul' := by
+  map_mul' := by 
     intro A B
     have := (two_mul_expl A.1.1 B.1.1).2.2.2
     simp only [coe_coe, Subgroup.coe_mul, coe_matrix_coe, coe_mul, Int.coe_cast_ring_hom, map_apply,
@@ -157,7 +156,7 @@ theorem Gamma1_mem' (N : ℕ) (γ : gamma0 N) : γ ∈ gamma1' N ↔ (gamma0Map 
 theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : gamma0 N) :
     A ∈ gamma1' N ↔
       ((↑ₘA 0 0 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : Zmod N) = 0 :=
-  by
+  by 
   constructor
   · intro ha
     have hA := A.property
@@ -169,12 +168,10 @@ theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : gamma0 N) :
     rw [hA, ha] at adet
     simp only [mul_one, mul_zero, sub_zero] at adet
     simp only [adet, hA, ha, eq_self_iff_true, and_self_iff]
-    
   · intro ha
     simp only [Gamma1_mem', gamma0Map, MonoidHom.coe_mk, coe_coe, coe_matrix_coe,
       Int.coe_cast_ring_hom, map_apply]
     exact ha.2.1
-    
 #align Gamma1_to_Gamma0_mem Gamma1_to_Gamma0_mem
 
 /-- The congruence subgroup `Gamma1` of `SL(2,ℤ)` consisting of matrices whose bottom
@@ -187,7 +184,7 @@ def gamma1 (N : ℕ) : Subgroup SL(2, ℤ) :=
 theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
     A ∈ gamma1 N ↔
       ((↑ₘA 0 0 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : Zmod N) = 0 :=
-  by
+  by 
   constructor
   · intro ha
     simp_rw [gamma1, Subgroup.mem_map] at ha
@@ -196,7 +193,6 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
     rw [Gamma1_to_Gamma0_mem] at hx
     rw [← hxx]
     convert hx
-    
   · intro ha
     simp_rw [gamma1, Subgroup.mem_map]
     have hA : A ∈ gamma0 N := by simp [ha.right.right, Gamma0_mem, Subtype.val_eq_coe]
@@ -206,7 +202,6 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
       exact ha
     refine' ⟨(⟨(⟨A, hA⟩ : gamma0 N), HA⟩ : (gamma1' N : Subgroup (gamma0 N))), _⟩
     simp
-    
 #align Gamma1_mem Gamma1_mem
 
 theorem Gamma1_in_Gamma0 (N : ℕ) : gamma1 N ≤ gamma0 N := by

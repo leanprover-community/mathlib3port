@@ -51,7 +51,9 @@ def of (C : Type u) [Category.{v} C] : CatCat.{v, u} :=
 #align category_theory.Cat.of CategoryTheory.CatCat.of
 
 /-- Bicategory structure on `Cat` -/
-instance bicategory : Bicategory.{max v u, max v u} CatCat.{v, u} where
+instance bicategory :
+    Bicategory.{max v u, max v u}
+      CatCat.{v, u} where 
   Hom C D := C ⥤ D
   id C := 𝟭 C
   comp C D E F G := F ⋙ G
@@ -66,7 +68,9 @@ instance bicategory : Bicategory.{max v u, max v u} CatCat.{v, u} where
 #align category_theory.Cat.bicategory CategoryTheory.CatCat.bicategory
 
 /-- `Cat` is a strict bicategory. -/
-instance bicategory.strict : Bicategory.Strict CatCat.{v, u} where
+instance bicategory.strict :
+    Bicategory.Strict
+      CatCat.{v, u} where 
   id_comp' C D F := by cases F <;> rfl
   comp_id' C D F := by cases F <;> rfl
   assoc' := by intros <;> rfl
@@ -96,7 +100,7 @@ theorem comp_map {C D E : CatCat} (F : C ⟶ D) (G : D ⟶ E) {X Y : C} (f : X �
 
 /-- Functor that gets the set of objects of a category. It is not
 called `forget`, because it is not a faithful functor. -/
-def objects : Cat.{v, u} ⥤ Type u where
+def objects : Cat.{v, u} ⥤ Type u where 
   obj C := C
   map C D F := F.obj
 #align category_theory.Cat.objects CategoryTheory.CatCat.objects
@@ -106,7 +110,8 @@ section
 attribute [local simp] eq_to_hom_map
 
 /-- Any isomorphism in `Cat` induces an equivalence of the underlying categories. -/
-def equivOfIso {C D : CatCat} (γ : C ≅ D) : C ≌ D where
+def equivOfIso {C D : CatCat} (γ : C ≅ D) :
+    C ≌ D where 
   Functor := γ.Hom
   inverse := γ.inv
   unitIso := eq_to_iso <| Eq.symm γ.hom_inv_id
@@ -122,7 +127,7 @@ end CatCat
 This ought to be modelled as a 2-functor!
 -/
 @[simps]
-def typeToCat : Type u ⥤ Cat where
+def typeToCat : Type u ⥤ Cat where 
   obj X := CatCat.of (Discrete X)
   map X Y f := Discrete.functor (discrete.mk ∘ f)
   map_id' X := by apply Functor.ext; tidy
@@ -134,19 +139,18 @@ instance :
       typeToCat.{u} where map_injective' X Y f g h :=
     funext fun x => congr_arg Discrete.as (Functor.congr_obj h ⟨x⟩)
 
-instance : Full typeToCat.{u} where
+instance :
+    Full typeToCat.{u} where 
   preimage X Y F := discrete.as ∘ F.obj ∘ discrete.mk
-  witness' := by
+  witness' := by 
     intro X Y F
     apply Functor.ext
     · intro x y f
       dsimp
       ext
-      
     · rintro ⟨x⟩
       ext
       rfl
-      
 
 end CategoryTheory
 

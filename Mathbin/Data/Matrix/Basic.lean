@@ -69,7 +69,7 @@ theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
 #align matrix.ext_iff Matrix.ext_iff
 
-@[ext.1]
+@[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
   ext_iff.mp
 #align matrix.ext Matrix.ext
@@ -131,7 +131,7 @@ theorem map_id (M : Matrix m n α) : M.map id = M := by
 
 @[simp]
 theorem map_map {M : Matrix m n α} {β γ : Type _} {f : α → β} {g : β → γ} :
-    (M.map f).map g = M.map (g ∘ f) := by
+    (M.map f).map g = M.map (g ∘ f) := by 
   ext
   rfl
 #align matrix.map_map Matrix.map_map
@@ -189,7 +189,7 @@ instance [Inhabited α] : Inhabited (Matrix m n α) :=
   Pi.inhabited _
 
 instance [Add α] : Add (Matrix m n α) :=
-  Pi.hasAdd
+  Pi.instAdd
 
 instance [AddSemigroup α] : AddSemigroup (Matrix m n α) :=
   Pi.addSemigroup
@@ -198,7 +198,7 @@ instance [AddCommSemigroup α] : AddCommSemigroup (Matrix m n α) :=
   Pi.addCommSemigroup
 
 instance [Zero α] : Zero (Matrix m n α) :=
-  Pi.hasZero
+  Pi.instZero
 
 instance [AddZeroClass α] : AddZeroClass (Matrix m n α) :=
   Pi.addZeroClass
@@ -210,10 +210,10 @@ instance [AddCommMonoid α] : AddCommMonoid (Matrix m n α) :=
   Pi.addCommMonoid
 
 instance [Neg α] : Neg (Matrix m n α) :=
-  Pi.hasNeg
+  Pi.instNeg
 
 instance [Sub α] : Sub (Matrix m n α) :=
-  Pi.hasSub
+  Pi.instSub
 
 instance [AddGroup α] : AddGroup (Matrix m n α) :=
   Pi.addGroup
@@ -231,7 +231,7 @@ instance [Nonempty m] [Nonempty n] [Nontrivial α] : Nontrivial (Matrix m n α) 
   Function.nontrivial
 
 instance [HasSmul R α] : HasSmul R (Matrix m n α) :=
-  Pi.hasSmul
+  Pi.instSMul
 
 instance [HasSmul R α] [HasSmul S α] [SmulCommClass R S α] : SmulCommClass R S (Matrix m n α) :=
   Pi.smul_comm_class
@@ -282,7 +282,7 @@ theorem smul_of [HasSmul R α] (r : R) (f : m → n → α) : r • of f = of (r
 
 @[simp]
 protected theorem map_zero [Zero α] [Zero β] (f : α → β) (h : f 0 = 0) :
-    (0 : Matrix m n α).map f = 0 := by
+    (0 : Matrix m n α).map f = 0 := by 
   ext
   simp [h]
 #align matrix.map_zero Matrix.map_zero
@@ -328,13 +328,13 @@ theorem IsLeftRegular.matrix [Mul α] {k : α} (hk : IsLeftRegular k) :
 #align is_left_regular.matrix IsLeftRegular.matrix
 
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Matrix m n α) :=
-  ⟨fun M N => by
+  ⟨fun M N => by 
     ext
     exact isEmptyElim i⟩
 #align matrix.subsingleton_of_empty_left Matrix.subsingleton_of_empty_left
 
 instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Matrix m n α) :=
-  ⟨fun M N => by
+  ⟨fun M N => by 
     ext
     exact isEmptyElim j⟩
 #align matrix.subsingleton_of_empty_right Matrix.subsingleton_of_empty_right
@@ -404,9 +404,7 @@ theorem diagonal_transpose [Zero α] (v : n → α) : (diagonal v)ᵀ = diagonal
   ext (i j)
   by_cases h : i = j
   · simp [h, transpose]
-    
   · simp [h, transpose, diagonal_apply_ne' _ h]
-    
 #align matrix.diagonal_transpose Matrix.diagonal_transpose
 
 @[simp]
@@ -424,7 +422,8 @@ variable (n α)
 
 /-- `matrix.diagonal` as an `add_monoid_hom`. -/
 @[simps]
-def diagonalAddMonoidHom [AddZeroClass α] : (n → α) →+ Matrix n n α where
+def diagonalAddMonoidHom [AddZeroClass α] :
+    (n → α) →+ Matrix n n α where 
   toFun := diagonal
   map_zero' := diagonal_zero
   map_add' x y := (diagonal_add x y).symm
@@ -580,7 +579,8 @@ variable (n α)
 
 /-- `matrix.diag` as an `add_monoid_hom`. -/
 @[simps]
-def diagAddMonoidHom [AddZeroClass α] : Matrix n n α →+ n → α where
+def diagAddMonoidHom [AddZeroClass α] :
+    Matrix n n α →+ n → α where 
   toFun := diag
   map_zero' := diag_zero
   map_add' := diag_add
@@ -838,12 +838,12 @@ theorem two_mul_expl {R : Type _} [CommRing R] (A B : Matrix (Fin 2) (Fin 2) R) 
     (A * B) 0 0 = A 0 0 * B 0 0 + A 0 1 * B 1 0 ∧
       (A * B) 0 1 = A 0 0 * B 0 1 + A 0 1 * B 1 1 ∧
         (A * B) 1 0 = A 1 0 * B 0 0 + A 1 1 * B 1 0 ∧ (A * B) 1 1 = A 1 0 * B 0 1 + A 1 1 * B 1 1 :=
-  by
+  by 
   constructor; on_goal 2 => constructor; on_goal 3 => constructor
-  all_goals
-  simp only [Matrix.mul_eq_mul]
-  rw [Matrix.mul_apply, Finset.sum_fin_eq_sum_range, Finset.sum_range_succ, Finset.sum_range_succ]
-  simp
+  all_goals 
+    simp only [Matrix.mul_eq_mul]
+    rw [Matrix.mul_apply, Finset.sum_fin_eq_sum_range, Finset.sum_range_succ, Finset.sum_range_succ]
+    simp
 #align matrix.two_mul_expl Matrix.two_mul_expl
 
 section AddCommMonoid
@@ -883,13 +883,13 @@ protected theorem zero_mul [Fintype m] (M : Matrix m n α) : (0 : Matrix l m α)
 #align matrix.zero_mul Matrix.zero_mul
 
 protected theorem mul_add [Fintype n] (L : Matrix m n α) (M N : Matrix n o α) :
-    L ⬝ (M + N) = L ⬝ M + L ⬝ N := by
+    L ⬝ (M + N) = L ⬝ M + L ⬝ N := by 
   ext (i j)
   apply dot_product_add
 #align matrix.mul_add Matrix.mul_add
 
 protected theorem add_mul [Fintype m] (L M : Matrix l m α) (N : Matrix m n α) :
-    (L + M) ⬝ N = L ⬝ N + M ⬝ N := by
+    (L + M) ⬝ N = L ⬝ N + M ⬝ N := by 
   ext (i j)
   apply add_dot_product
 #align matrix.add_mul Matrix.add_mul
@@ -924,7 +924,7 @@ theorem diagonal_mul_diagonal' [Fintype n] [DecidableEq n] (d₁ d₂ : n → α
 #align matrix.diagonal_mul_diagonal' Matrix.diagonal_mul_diagonal'
 
 theorem smul_eq_diagonal_mul [Fintype m] [DecidableEq m] (M : Matrix m n α) (a : α) :
-    a • M = (diagonal fun _ => a) ⬝ M := by
+    a • M = (diagonal fun _ => a) ⬝ M := by 
   ext
   simp
 #align matrix.smul_eq_diagonal_mul Matrix.smul_eq_diagonal_mul
@@ -937,7 +937,8 @@ theorem diag_col_mul_row (a b : n → α) : diag (col a ⬝ row b) = a * b := by
 
 /-- Left multiplication by a matrix, as an `add_monoid_hom` from matrices to matrices. -/
 @[simps]
-def addMonoidHomMulLeft [Fintype m] (M : Matrix l m α) : Matrix m n α →+ Matrix l n α where
+def addMonoidHomMulLeft [Fintype m] (M : Matrix l m α) :
+    Matrix m n α →+ Matrix l n α where 
   toFun x := M ⬝ x
   map_zero' := Matrix.mul_zero _
   map_add' := Matrix.mul_add _
@@ -945,7 +946,8 @@ def addMonoidHomMulLeft [Fintype m] (M : Matrix l m α) : Matrix m n α →+ Mat
 
 /-- Right multiplication by a matrix, as an `add_monoid_hom` from matrices to matrices. -/
 @[simps]
-def addMonoidHomMulRight [Fintype m] (M : Matrix m n α) : Matrix l m α →+ Matrix l n α where
+def addMonoidHomMulRight [Fintype m] (M : Matrix m n α) :
+    Matrix l m α →+ Matrix l n α where 
   toFun x := x ⬝ M
   map_zero' := Matrix.zero_mul _
   map_add' _ _ := Matrix.add_mul _ _ _
@@ -1018,7 +1020,7 @@ section NonUnitalSemiring
 variable [NonUnitalSemiring α] [Fintype m] [Fintype n]
 
 protected theorem mul_assoc (L : Matrix l m α) (M : Matrix m n α) (N : Matrix n o α) :
-    L ⬝ M ⬝ N = L ⬝ (M ⬝ N) := by
+    L ⬝ M ⬝ N = L ⬝ (M ⬝ N) := by 
   ext
   apply dot_product_assoc
 #align matrix.mul_assoc Matrix.mul_assoc
@@ -1097,7 +1099,7 @@ sending `a` to the diagonal matrix with `a` on the diagonal.
 -/
 def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
   { (smulAddHom α _).flip (1 : Matrix n n α) with toFun := fun a => a • 1, map_one' := by simp,
-    map_mul' := by
+    map_mul' := by 
       intros
       ext
       simp [mul_assoc] }
@@ -1125,10 +1127,8 @@ theorem scalar_inj [Nonempty n] {r s : α} : scalar n r = scalar n s ↔ r = s :
   · intro h
     inhabit n
     rw [← scalar_apply_eq r (Inhabited.default n), ← scalar_apply_eq s (Inhabited.default n), h]
-    
   · rintro rfl
     rfl
-    
 #align matrix.scalar_inj Matrix.scalar_inj
 
 end Scalar
@@ -1140,7 +1140,7 @@ section CommSemiring
 variable [CommSemiring α] [Fintype n]
 
 theorem smul_eq_mul_diagonal [DecidableEq n] (M : Matrix m n α) (a : α) :
-    a • M = M ⬝ diagonal fun _ => a := by
+    a • M = M ⬝ diagonal fun _ => a := by 
   ext
   simp [mul_comm]
 #align matrix.smul_eq_mul_diagonal Matrix.smul_eq_mul_diagonal
@@ -1222,7 +1222,8 @@ namespace Equiv
 /-- The `equiv` between spaces of matrices induced by an `equiv` between their
 coefficients. This is `matrix.map` as an `equiv`. -/
 @[simps apply]
-def mapMatrix (f : α ≃ β) : Matrix m n α ≃ Matrix m n β where
+def mapMatrix (f : α ≃ β) :
+    Matrix m n α ≃ Matrix m n β where 
   toFun M := M.map f
   invFun M := M.map f.symm
   left_inv M := Matrix.ext fun _ _ => f.symm_apply_apply _
@@ -1254,7 +1255,8 @@ variable [AddZeroClass α] [AddZeroClass β] [AddZeroClass γ]
 /-- The `add_monoid_hom` between spaces of matrices induced by an `add_monoid_hom` between their
 coefficients. This is `matrix.map` as an `add_monoid_hom`. -/
 @[simps]
-def mapMatrix (f : α →+ β) : Matrix m n α →+ Matrix m n β where
+def mapMatrix (f : α →+ β) :
+    Matrix m n α →+ Matrix m n β where 
   toFun M := M.map f
   map_zero' := Matrix.map_zero f f.map_zero
   map_add' := Matrix.map_add f f.map_add
@@ -1312,7 +1314,8 @@ variable [Module R α] [Module R β] [Module R γ]
 /-- The `linear_map` between spaces of matrices induced by a `linear_map` between their
 coefficients. This is `matrix.map` as a `linear_map`. -/
 @[simps]
-def mapMatrix (f : α →ₗ[R] β) : Matrix m n α →ₗ[R] Matrix m n β where
+def mapMatrix (f : α →ₗ[R] β) :
+    Matrix m n α →ₗ[R] Matrix m n β where 
   toFun M := M.map f
   map_add' := Matrix.map_add f f.map_add
   map_smul' r := Matrix.map_smul f r (f.map_smul r)
@@ -1505,7 +1508,7 @@ def vecMulVec [Mul α] (w : m → α) (v : n → α) : Matrix m n α
 #align matrix.vec_mul_vec Matrix.vecMulVec
 
 theorem vec_mul_vec_eq [Mul α] [AddCommMonoid α] (w : m → α) (v : n → α) :
-    vecMulVec w v = col w ⬝ row v := by
+    vecMulVec w v = col w ⬝ row v := by 
   ext (i j)
   simp only [vec_mul_vec, mul_apply, Fintype.univ_punit, Finset.sum_singleton]
   rfl
@@ -1543,10 +1546,11 @@ def vecMul [Fintype m] (v : m → α) (M : Matrix m n α) : n → α
 
 /-- Left multiplication by a matrix, as an `add_monoid_hom` from vectors to vectors. -/
 @[simps]
-def mulVec.addMonoidHomLeft [Fintype n] (v : n → α) : Matrix m n α →+ m → α where
+def mulVec.addMonoidHomLeft [Fintype n] (v : n → α) :
+    Matrix m n α →+ m → α where 
   toFun M := mulVec M v
   map_zero' := by ext <;> simp [mul_vec] <;> rfl
-  map_add' x y := by
+  map_add' x y := by 
     ext m
     apply add_dot_product
 #align matrix.mul_vec.add_monoid_hom_left Matrix.mulVec.addMonoidHomLeft
@@ -1624,14 +1628,14 @@ theorem add_vec_mul [Fintype m] (A : Matrix m n α) (x y : m → α) :
 
 theorem vec_mul_smul [Fintype n] [Monoid R] [NonUnitalNonAssocSemiring S] [DistribMulAction R S]
     [IsScalarTower R S S] (M : Matrix n m S) (b : R) (v : n → S) :
-    M.vecMul (b • v) = b • M.vecMul v := by
+    M.vecMul (b • v) = b • M.vecMul v := by 
   ext i
   simp only [vec_mul, dot_product, Finset.smul_sum, Pi.smul_apply, smul_mul_assoc]
 #align matrix.vec_mul_smul Matrix.vec_mul_smul
 
 theorem mul_vec_smul [Fintype n] [Monoid R] [NonUnitalNonAssocSemiring S] [DistribMulAction R S]
     [SmulCommClass R S S] (M : Matrix m n S) (b : R) (v : n → S) :
-    M.mulVec (b • v) = b • M.mulVec v := by
+    M.mulVec (b • v) = b • M.mulVec v := by 
   ext i
   simp only [mul_vec, dot_product, Finset.smul_sum, Pi.smul_apply, mul_smul_comm]
 #align matrix.mul_vec_smul Matrix.mul_vec_smul
@@ -1770,13 +1774,13 @@ section NonUnitalCommSemiring
 variable [NonUnitalCommSemiring α]
 
 theorem mul_vec_transpose [Fintype m] (A : Matrix m n α) (x : m → α) : mulVec Aᵀ x = vecMul x A :=
-  by
+  by 
   ext
   apply dot_product_comm
 #align matrix.mul_vec_transpose Matrix.mul_vec_transpose
 
 theorem vec_mul_transpose [Fintype n] (A : Matrix m n α) (x : n → α) : vecMul x Aᵀ = mulVec A x :=
-  by
+  by 
   ext
   apply dot_product_comm
 #align matrix.vec_mul_transpose Matrix.vec_mul_transpose
@@ -1796,7 +1800,7 @@ section CommSemiring
 variable [CommSemiring α]
 
 theorem mul_vec_smul_assoc [Fintype n] (A : Matrix m n α) (b : n → α) (a : α) :
-    A.mulVec (a • b) = a • A.mulVec b := by
+    A.mulVec (a • b) = a • A.mulVec b := by 
   ext
   apply dot_product_smul
 #align matrix.mul_vec_smul_assoc Matrix.mul_vec_smul_assoc
@@ -1830,9 +1834,7 @@ theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)�
   unfold One.one transpose
   by_cases i = j
   · simp only [h, diagonal_apply_eq]
-    
   · simp only [diagonal_apply_ne _ h, diagonal_apply_ne' _ h]
-    
 #align matrix.transpose_one Matrix.transpose_one
 
 @[simp]
@@ -1856,7 +1858,7 @@ theorem transpose_mul [AddCommMonoid α] [CommSemigroup α] [Fintype n] (M : Mat
 
 @[simp]
 theorem transpose_smul {R : Type _} [HasSmul R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ :=
-  by
+  by 
   ext (i j)
   rfl
 #align matrix.transpose_smul Matrix.transpose_smul
@@ -1874,7 +1876,8 @@ variable (m n α)
 
 /-- `matrix.transpose` as an `add_equiv` -/
 @[simps apply]
-def transposeAddEquiv [Add α] : Matrix m n α ≃+ Matrix n m α where
+def transposeAddEquiv [Add α] :
+    Matrix m n α ≃+ Matrix n m α where 
   toFun := transpose
   invFun := transpose
   left_inv := transpose_transpose
@@ -2103,7 +2106,8 @@ variable (m n α)
 
 /-- `matrix.conj_transpose` as an `add_equiv` -/
 @[simps apply]
-def conjTransposeAddEquiv [AddMonoid α] [StarAddMonoid α] : Matrix m n α ≃+ Matrix n m α where
+def conjTransposeAddEquiv [AddMonoid α] [StarAddMonoid α] :
+    Matrix m n α ≃+ Matrix n m α where 
   toFun := conjTranspose
   invFun := conjTranspose
   left_inv := conj_transpose_conj_transpose
@@ -2202,7 +2206,8 @@ instance [AddMonoid α] [StarAddMonoid α] :
     StarAddMonoid (Matrix n n α) where star_add := conj_transpose_add
 
 /-- When `α` is a `*`-(semi)ring, `matrix.has_star` is also a `*`-(semi)ring. -/
-instance [Fintype n] [Semiring α] [StarRing α] : StarRing (Matrix n n α) where
+instance [Fintype n] [Semiring α] [StarRing α] :
+    StarRing (Matrix n n α) where 
   star_add := conj_transpose_add
   star_mul := conj_transpose_mul
 
@@ -2287,13 +2292,11 @@ theorem submatrix_map (f : α → β) (e₁ : l → m) (e₂ : o → n) (A : Mat
   injective, then the resulting matrix is again diagonal. -/
 theorem submatrix_diagonal [Zero α] [DecidableEq m] [DecidableEq l] (d : m → α) (e : l → m)
     (he : Function.Injective e) : (diagonal d).submatrix e e = diagonal (d ∘ e) :=
-  ext fun i j => by
+  ext fun i j => by 
     rw [submatrix_apply]
     by_cases h : i = j
     · rw [h, diagonal_apply_eq, diagonal_apply_eq]
-      
     · rw [diagonal_apply_ne _ h, diagonal_apply_ne _ (he.ne h)]
-      
 #align matrix.submatrix_diagonal Matrix.submatrix_diagonal
 
 theorem submatrix_one [Zero α] [One α] [DecidableEq m] [DecidableEq l] (e : l → m)
@@ -2371,7 +2374,9 @@ theorem one_submatrix_mul [Fintype m] [Fintype o] [NonAssocSemiring α] [Decidab
 
 /-- The natural map that reindexes a matrix's rows and columns with equivalent types is an
 equivalence. -/
-def reindex (eₘ : m ≃ l) (eₙ : n ≃ o) : Matrix m n α ≃ Matrix l o α where
+def reindex (eₘ : m ≃ l) (eₙ : n ≃ o) :
+    Matrix m n α ≃ Matrix l o
+        α where 
   toFun M := M.submatrix eₘ.symm eₙ.symm
   invFun M := M.submatrix eₘ eₙ
   left_inv M := by simp
@@ -2610,18 +2615,14 @@ theorem update_row_apply [DecidableEq m] {i' : m} :
     updateRow M i b i' j = if i' = i then b j else M i' j := by
   by_cases i' = i
   · rw [h, update_row_self, if_pos rfl]
-    
   · rwa [update_row_ne h, if_neg h]
-    
 #align matrix.update_row_apply Matrix.update_row_apply
 
 theorem update_column_apply [DecidableEq n] {j' : n} :
     updateColumn M j c i j' = if j' = j then c i else M i j' := by
   by_cases j' = j
   · rw [h, update_column_self, if_pos rfl]
-    
   · rwa [update_column_ne h, if_neg h]
-    
 #align matrix.update_column_apply Matrix.update_column_apply
 
 @[simp]
@@ -2696,17 +2697,11 @@ theorem diagonal_update_column_single [DecidableEq n] [Zero α] (v : n → α) (
   · rw [diagonal_apply_eq]
     obtain rfl | hji := eq_or_ne j i
     · rw [update_column_self, Pi.single_eq_same, Function.update_same]
-      
     · rw [update_column_ne hji, diagonal_apply_eq, Function.update_noteq hji]
-      
-    
   · rw [diagonal_apply_ne _ hjk]
     obtain rfl | hki := eq_or_ne k i
     · rw [update_column_self, Pi.single_eq_of_ne hjk]
-      
     · rw [update_column_ne hki, diagonal_apply_ne _ hjk]
-      
-    
 #align matrix.diagonal_update_column_single Matrix.diagonal_update_column_single
 
 theorem diagonal_update_row_single [DecidableEq n] [Zero α] (v : n → α) (i : n) (x : α) :

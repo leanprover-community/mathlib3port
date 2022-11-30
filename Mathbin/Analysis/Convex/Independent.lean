@@ -60,7 +60,7 @@ variable {𝕜}
 
 /-- A family with at most one point is convex independent. -/
 theorem Subsingleton.convex_independent [Subsingleton ι] (p : ι → E) : ConvexIndependent 𝕜 p :=
-  fun s x hx => by
+  fun s x hx => by 
   have : (convexHull 𝕜 (p '' s)).Nonempty := ⟨p x, hx⟩
   rw [convex_hull_nonempty_iff, Set.nonempty_image_iff] at this
   rwa [Subsingleton.mem_iff_nonempty]
@@ -68,7 +68,7 @@ theorem Subsingleton.convex_independent [Subsingleton ι] (p : ι → E) : Conve
 
 /-- A convex independent family is injective. -/
 protected theorem ConvexIndependent.injective {p : ι → E} (hc : ConvexIndependent 𝕜 p) :
-    Function.Injective p := by
+    Function.Injective p := by 
   refine' fun i j hij => hc {j} i _
   rw [hij, Set.image_singleton, convex_hull_singleton]
   exact Set.mem_singleton _
@@ -133,12 +133,10 @@ theorem convex_independent_iff_not_mem_convex_hull_diff {p : ι → E} :
   refine' ⟨fun hc i s h => _, fun h s i hi => _⟩
   · rw [hc.mem_convex_hull_iff] at h
     exact h.2 (Set.mem_singleton _)
-    
   · by_contra H
     refine' h i s _
     rw [Set.diff_singleton_eq_self H]
     exact hi
-    
 #align
   convex_independent_iff_not_mem_convex_hull_diff convex_independent_iff_not_mem_convex_hull_diff
 
@@ -149,11 +147,9 @@ theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
     refine' hc { x | ↑x ∈ t } ⟨x, hxs⟩ _
     rw [Subtype.coe_image_of_subset h]
     exact hxt
-    
   · intro hc t x h
     rw [← subtype.coe_injective.mem_set_image]
     exact hc (t.image coe) (Subtype.coe_image_subset s t) ⟨x.prop, h⟩
-    
 #align
   convex_independent_set_iff_inter_convex_hull_subset convex_independent_set_iff_inter_convex_hull_subset
 
@@ -165,11 +161,9 @@ theorem convex_independent_set_iff_not_mem_convex_hull_diff {s : Set E} :
   constructor
   · rintro hs x hxs hx
     exact (hs _ (Set.diff_subset _ _) ⟨hxs, hx⟩).2 (Set.mem_singleton _)
-    
   · rintro hs t ht x ⟨hxs, hxt⟩
     by_contra h
     exact hs _ hxs (convex_hull_mono (Set.subset_diff_singleton ht h) hxt)
-    
 #align
   convex_independent_set_iff_not_mem_convex_hull_diff convex_independent_set_iff_not_mem_convex_hull_diff
 
@@ -183,11 +177,10 @@ variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s : Set E}
 theorem convex_independent_iff_finset {p : ι → E} :
     ConvexIndependent 𝕜 p ↔
       ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.image p : Set E) → x ∈ s :=
-  by
+  by 
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
   · rwa [Finset.coe_image] at hx
-    
-  have hp : injective p := by
+  have hp : injective p := by 
     rintro a b hab
     rw [← mem_singleton]
     refine' h {b} a _
@@ -202,7 +195,6 @@ theorem convex_independent_iff_finset {p : ι → E} :
   refine' h _ x _
   rwa [t.image_preimage p (hp.inj_on _), filter_true_of_mem]
   · exact fun y hy => s.image_subset_range p (ht <| mem_coe.2 hy)
-    
 #align convex_independent_iff_finset convex_independent_iff_finset
 
 /-! ### Extreme points -/

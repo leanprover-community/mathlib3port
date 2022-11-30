@@ -34,9 +34,9 @@ by its value on objects coming from `C`. -/
 theorem nat_trans_eq {F G : Karoubi C ⥤ D} (φ : F ⟶ G) (P : Karoubi C) :
     φ.app P = F.map (decompIdI P) ≫ φ.app P.x ≫ G.map (decompIdP P) := by
   rw [← φ.naturality, ← assoc, ← F.map_comp]
-  conv =>
-  lhs
-  rw [← id_comp (φ.app P), ← F.map_id]
+  conv => 
+    lhs
+    rw [← id_comp (φ.app P), ← F.map_id]
   congr
   apply decomp_id
 #align category_theory.idempotents.nat_trans_eq CategoryTheory.Idempotents.nat_trans_eq
@@ -46,7 +46,10 @@ namespace FunctorExtension₁
 /-- The canonical extension of a functor `C ⥤ karoubi D` to a functor
 `karoubi C ⥤ karoubi D` -/
 @[simps]
-def obj (F : C ⥤ Karoubi D) : Karoubi C ⥤ Karoubi D where
+def obj (F : C ⥤ Karoubi D) :
+    Karoubi C ⥤
+      Karoubi
+        D where 
   obj P :=
     ⟨(F.obj P.x).x, (F.map P.p).f, by simpa only [F.map_comp, hom_ext] using F.congr_map P.idem⟩
   map P Q f := ⟨(F.map f.f).f, by simpa only [F.map_comp, hom_ext] using F.congr_map f.comm⟩
@@ -57,16 +60,19 @@ def obj (F : C ⥤ Karoubi D) : Karoubi C ⥤ Karoubi D where
 `C ⥤ karoubi D` to a natural transformation between the
 extension of these functors to `karoubi C ⥤ karoubi D` -/
 @[simps]
-def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) : obj F ⟶ obj G where
+def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) :
+    obj F ⟶
+      obj
+        G where 
   app P :=
     { f := (F.map P.p).f ≫ (φ.app P.x).f,
-      comm := by
+      comm := by 
         have h := φ.naturality P.p
         have h' := F.congr_map P.idem
         simp only [hom_ext, karoubi.comp, F.map_comp] at h h'
         simp only [obj_obj_p, assoc, ← h]
         slice_rhs 1 3 => rw [h', h'] }
-  naturality' P Q f := by
+  naturality' P Q f := by 
     ext
     dsimp [obj]
     have h := φ.naturality f.f
@@ -85,13 +91,15 @@ variable (C D E)
 
 /-- The canonical functor `(C ⥤ karoubi D) ⥤ (karoubi C ⥤ karoubi D)` -/
 @[simps]
-def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D where
+def functorExtension₁ :
+    (C ⥤ Karoubi D) ⥤
+      Karoubi C ⥤ Karoubi D where 
   obj := FunctorExtension₁.obj
   map F G := FunctorExtension₁.map
-  map_id' F := by
+  map_id' F := by 
     ext P
     exact comp_p (F.map P.p)
-  map_comp' F G H φ φ' := by
+  map_comp' F G H φ φ' := by 
     ext P
     simp only [comp, functor_extension₁.map_app_f, nat_trans.comp_app, assoc]
     have h := φ.naturality P.p
@@ -111,10 +119,7 @@ theorem functor_extension₁_comp_whiskering_left_to_karoubi :
       ext
       · dsimp
         rw [id_comp, comp_id, F.map_id, id_eq]
-        
       · rfl
-        
-      
     · intro X Y f
       ext
       dsimp
@@ -122,14 +127,11 @@ theorem functor_extension₁_comp_whiskering_left_to_karoubi :
         to_karoubi_obj_p, comp]
       dsimp
       simp only [Functor.map_id, id_eq, p_comp]
-      
-    
   · intro F G φ
     ext X
     dsimp
     simp only [eq_to_hom_app, F.map_id, karoubi.comp, eq_to_hom_f, id_eq, p_comp, eq_to_hom_refl,
       comp_id, comp_p, functor_extension₁.obj_obj_p, to_karoubi_obj_p, F.map_id X]
-    
 #align
   category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functor_extension₁_comp_whiskering_left_to_karoubi
 

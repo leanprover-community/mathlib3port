@@ -48,14 +48,12 @@ theorem Inf_eq_zero {s : Set ℕ} : inf s = 0 ↔ 0 ∈ s ∨ s = ∅ := by
   · subst h
     simp only [or_true_iff, eq_self_iff_true, iff_true_iff, Inf, HasInf.inf, mem_empty_iff_false,
       exists_false, dif_neg, not_false_iff]
-    
   · have := ne_empty_iff_nonempty.mpr h
     simp only [this, or_false_iff, Nat.Inf_def, h, Nat.find_eq_zero]
-    
 #align nat.Inf_eq_zero Nat.Inf_eq_zero
 
 @[simp]
-theorem Inf_empty : inf ∅ = 0 := by
+theorem Inf_empty : inf ∅ = 0 := by 
   rw [Inf_eq_zero]
   right
   rfl
@@ -75,10 +73,8 @@ theorem not_mem_of_lt_Inf {s : Set ℕ} {m : ℕ} (hm : m < inf s) : m ∉ s := 
   cases eq_empty_or_nonempty s
   · subst h
     apply not_mem_empty
-    
   · rw [Nat.Inf_def h] at hm
     exact Nat.find_min h hm
-    
 #align nat.not_mem_of_lt_Inf Nat.not_mem_of_lt_Inf
 
 protected theorem Inf_le {s : Set ℕ} {m : ℕ} (hm : m ∈ s) : inf s ≤ m := by
@@ -111,11 +107,9 @@ theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k
   · intro H
     rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_Inf_eq_succ H) hs, H, mem_Ici, mem_Ici]
     exact ⟨le_rfl, k.not_succ_le_self⟩
-    
   · rintro ⟨H, H'⟩
     rw [Inf_def (⟨_, H⟩ : s.nonempty), find_eq_iff]
     exact ⟨H, fun n hnk hns => H' <| hs n k (lt_succ_iff.mp hnk) hns⟩
-    
 #align nat.Inf_upward_closed_eq_succ_iff Nat.Inf_upward_closed_eq_succ_iff
 
 /-- This instance is necessary, otherwise the lattice operations would be derived via
@@ -148,25 +142,20 @@ theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ inf { m | p m }) :
   · rw [h, Nat.Inf_empty, zero_add]
     obtain hnp | hnp := hn.eq_or_lt
     · exact hnp
-      
     suffices hp : p (Inf { m | p m } - n + n)
     · exact (h.subset hp).elim
-      
     rw [tsub_add_cancel_of_le hn]
     exact Inf_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
-    
   · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
     rw [Nat.Inf_def ⟨m, hm⟩, Nat.Inf_def hp]
     rw [Nat.Inf_def hp] at hn
     exact find_add hn
-    
 #align nat.Inf_add Nat.Inf_add
 
 theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) :
     inf { m | p m } + n = inf { m | p (m - n) } := by
   convert Inf_add _
   · simp_rw [add_tsub_cancel_right]
-    
   obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
   refine'
     le_cInf ⟨m + n, _⟩ fun b hb =>
@@ -174,9 +163,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) :
         ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
   · dsimp
     rwa [add_tsub_cancel_right]
-    
   · exact hb
-    
 #align nat.Inf_add' Nat.Inf_add'
 
 section

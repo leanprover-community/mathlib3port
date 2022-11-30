@@ -676,7 +676,7 @@ theorem deriv_cosh : deriv cosh = sinh :=
 
 /-- `sinh` is strictly monotone. -/
 theorem sinh_strict_mono : StrictMono sinh :=
-  strict_mono_of_deriv_pos <| by
+  strict_mono_of_deriv_pos <| by 
     rw [Real.deriv_sinh]
     exact cosh_pos
 #align real.sinh_strict_mono Real.sinh_strict_mono
@@ -751,11 +751,9 @@ theorem sinh_sub_id_strict_mono : StrictMono fun x => sinh x - x := by
   refine' strict_mono_of_odd_strict_mono_on_nonneg (fun x => by simp) _
   refine' (convex_Ici _).strict_mono_on_of_deriv_pos _ fun x hx => _
   · exact (continuous_sinh.sub continuous_id).ContinuousOn
-    
   · rw [interior_Ici, mem_Ioi] at hx
     rw [deriv_sub, deriv_sinh, deriv_id'', sub_pos, one_lt_cosh]
     exacts[hx.ne', differentiable_at_sinh, differentiableAtId]
-    
 #align real.sinh_sub_id_strict_mono Real.sinh_sub_id_strict_mono
 
 @[simp]

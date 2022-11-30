@@ -87,21 +87,24 @@ variable {A : Type u₃} [Ring A] [Algebra R A] (f : L →ₗ⁅R⁆ A)
 
 /-- The universal property of the universal enveloping algebra: Lie algebra morphisms into
 associative algebras lift to associative algebra morphisms from the universal enveloping algebra. -/
-def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A) where
+def lift :
+    (L →ₗ⁅R⁆ A) ≃
+      (UniversalEnvelopingAlgebra R L →ₐ[R]
+        A) where 
   toFun f :=
     RingQuot.liftAlgHom R
-      ⟨TensorAlgebra.lift R (f : L →ₗ[R] A), by
+      ⟨TensorAlgebra.lift R (f : L →ₗ[R] A), by 
         intro a b h; induction' h with x y
         simp only [LieRing.of_associative_ring_bracket, map_add, TensorAlgebra.lift_ι_apply,
           LieHom.coe_to_linear_map, LieHom.map_lie, map_mul, sub_add_cancel]⟩
   invFun F := (F : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R)
-  left_inv f := by
+  left_inv f := by 
     ext
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linear_map,
       LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lie_hom,
       LieHom.coe_mk, Function.comp_apply, AlgHom.to_linear_map_apply,
       RingQuot.lift_alg_hom_mk_alg_hom_apply]
-  right_inv F := by
+  right_inv F := by 
     ext
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linear_map,
       LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_linear_map_comp,
@@ -131,11 +134,10 @@ theorem lift_unique (g : UniversalEnvelopingAlgebra R L →ₐ[R] A) : g ∘ ι 
     · intro h
       ext
       simp [← h]
-      
 #align universal_enveloping_algebra.lift_unique UniversalEnvelopingAlgebra.lift_unique
 
 /-- See note [partially-applied ext lemmas]. -/
-@[ext.1]
+@[ext]
 theorem hom_ext {g₁ g₂ : UniversalEnvelopingAlgebra R L →ₐ[R] A}
     (h :
       (g₁ : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R) =

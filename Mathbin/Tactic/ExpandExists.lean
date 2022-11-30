@@ -194,7 +194,8 @@ Note that without the last argument `nat_greater_nonzero`, `nat_greater_lt` woul
 ```
 -/
 @[user_attribute]
-unsafe def expand_exists_attr : user_attribute Unit (List Name) where
+unsafe def expand_exists_attr :
+    user_attribute Unit (List Name) where 
   Name := "expand_exists"
   descr :=
     "From a proof that (a) value(s) exist(s) with certain properties, " ++

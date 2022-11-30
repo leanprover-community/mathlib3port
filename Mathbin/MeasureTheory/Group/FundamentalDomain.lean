@@ -73,7 +73,7 @@ theorem mk' (h_meas : NullMeasurableSet s μ) (h_exists : ∀ x : α, ∃! g : G
     AeDisjoint := fun g hne =>
       Disjoint.aeDisjoint <|
         disjoint_left.2
-          (by
+          (by 
             rintro _ ⟨x, hx, rfl⟩ hgx
             rw [← one_smul G x] at hx
             exact hne ((h_exists x).unique hgx hx)) }
@@ -157,15 +157,13 @@ theorem preimageOfEquiv (h : IsFundamentalDomain G s μ) {f : α → α}
     (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) : IsFundamentalDomain G (f ⁻¹' s) μ :=
   { NullMeasurableSet := h.NullMeasurableSet.Preimage hf,
     ae_covers := (hf.ae h.ae_covers).mono fun x ⟨g, hg⟩ => ⟨e g, by rwa [mem_preimage, hef g x]⟩,
-    AeDisjoint := fun g hg => by
+    AeDisjoint := fun g hg => by 
       lift e to G ≃ G using he
       have : (e.symm g⁻¹)⁻¹ ≠ (e.symm 1)⁻¹ := by simp [hg]
       convert (h.pairwise_ae_disjoint this).Preimage hf using 1
       · simp only [← preimage_smul_inv, preimage_preimage, ← hef _ _, e.apply_symm_apply, inv_inv]
-        
       · ext1 x
-        simp only [mem_preimage, ← preimage_smul, ← hef _ _, e.apply_symm_apply, one_smul]
-         }
+        simp only [mem_preimage, ← preimage_smul, ← hef _ _, e.apply_symm_apply, one_smul] }
 #align
   measure_theory.is_fundamental_domain.preimage_of_equiv MeasureTheory.IsFundamentalDomain.preimageOfEquiv
 
@@ -406,10 +404,8 @@ protected theorem set_integral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFund
             (hs.pairwise_ae_disjoint.mono fun i j h => hac h) hft.integrable.integrable_on).symm
       _ = ∫ x in t, f x ∂μ := by rw [restrict_congr_set (hac hs.Union_smul_ae_eq), restrict_univ]
       
-    
   · rw [integral_undef hfs, integral_undef]
     rwa [hs.integrable_on_iff ht hf] at hfs
-    
 #align
   measure_theory.is_fundamental_domain.set_integral_eq MeasureTheory.IsFundamentalDomain.set_integral_eq
 

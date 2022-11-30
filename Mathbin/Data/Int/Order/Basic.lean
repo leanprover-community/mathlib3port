@@ -129,7 +129,8 @@ theorem one_le_abs {z : ℤ} (h₀ : z ≠ 0) : 1 ≤ |z| :=
 than `b`, and the `pred` of a number less than `b`. -/
 @[elab_as_elim]
 protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b)
-    (Hs : ∀ k, b ≤ k → C k → C (k + 1)) (Hp : ∀ k ≤ b, C k → C (k - 1)) : C z := by
+    (Hs : ∀ k, b ≤ k → C k → C (k + 1)) (Hp : ∀ k ≤ b, C k → C (k - 1)) : C z :=
+  by
   -- Note that we use `convert` here where possible as we are constructing data, and this reduces
   -- the number of times `eq.mpr` appears in the term.
   rw [← sub_add_cancel z b]
@@ -137,18 +138,13 @@ protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b)
   · induction' n with n ih
     · convert H0 using 1
       rw [of_nat_zero, zero_add]
-      
     convert Hs _ (le_add_of_nonneg_left (of_nat_nonneg _)) ih using 1
     rw [of_nat_succ, add_assoc, add_comm 1 b, ← add_assoc]
-    
   · induction' n with n ih
     · convert Hp _ le_rfl H0 using 1
       rw [neg_succ_of_nat_eq, ← of_nat_eq_coe, of_nat_zero, zero_add, neg_add_eq_sub]
-      
     · convert Hp _ (le_of_lt (add_lt_of_neg_of_le (neg_succ_lt_zero _) le_rfl)) ih using 1
       rw [neg_succ_of_nat_coe', Nat.succ_eq_add_one, ← neg_succ_of_nat_coe, sub_add_eq_add_sub]
-      
-    
 #align int.induction_on' Int.inductionOn'
 -/
 
@@ -158,14 +154,11 @@ protected theorem le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m)
   apply Int.inductionOn' n m
   · intro
     exact h0
-    
   · intro k hle hi _
     exact h1 k hle (hi hle)
-    
   · intro _ hle _ hle'
     exfalso
     exact lt_irrefl k (le_sub_one_iff.mp (hle.trans hle'))
-    
 #align int.le_induction Int.le_induction
 
 /-- See `int.induction_on'` for an induction in both directions. -/
@@ -174,14 +167,11 @@ protected theorem le_induction_down {P : ℤ → Prop} {m : ℤ} (h0 : P m)
   apply Int.inductionOn' n m
   · intro
     exact h0
-    
   · intro _ hle _ hle'
     exfalso
     exact lt_irrefl k (add_one_le_iff.mp (hle'.trans hle))
-    
   · intro k hle hi _
     exact h1 k hle (hi hle)
-    
 #align int.le_induction_down Int.le_induction_down
 
 /-! ### nat abs -/
@@ -230,7 +220,6 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
           apply congr_arg of_nat
           rw [mul_comm, Nat.mul_sub_div]
           rwa [mul_comm]
-          
         · change (↑(n * Nat.succ k) - (m + 1) : ℤ) / ↑(Nat.succ k) = ↑n - ((m / Nat.succ k : ℕ) + 1)
           rw [← sub_sub, ← sub_sub, ← neg_sub (m : ℤ), ← neg_sub _ (n : ℤ), ← Int.ofNat_sub h, ←
             Int.ofNat_sub ((Nat.le_div_iff_mul_le k.succ_pos).2 h), ← neg_succ_of_nat_coe', ←
@@ -238,8 +227,6 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
           · apply congr_arg neg_succ_of_nat
             rw [mul_comm, Nat.sub_mul_div]
             rwa [mul_comm]
-            
-          
   have : ∀ {a b c : ℤ}, 0 < c → (a + b * c) / c = a / c + b := fun a b c H =>
     match c, eq_succ_of_zero_lt H, b with
     | _, ⟨k, rfl⟩, (n : ℕ) => this
@@ -296,7 +283,6 @@ attribute [local simp] Int.zero_div Int.div_zero
 protected theorem add_div_of_dvd_right {a b c : ℤ} (H : c ∣ b) : (a + b) / c = a / c + b / c := by
   by_cases h1 : c = 0
   · simp [h1]
-    
   cases' H with k hk
   rw [hk]
   change c ≠ 0 at h1
@@ -442,16 +428,17 @@ theorem mod_self {a : ℤ} : a % a = 0 := by have := mul_mod_left 1 a <;> rwa [o
 
 @[simp]
 theorem mod_mod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m := by
-  conv =>
-  rhs
-  rw [← mod_add_div n k]
+  conv => 
+    rhs
+    rw [← mod_add_div n k]
   rcases h with ⟨t, rfl⟩; rw [mul_assoc, add_mul_mod_self_left]
 #align int.mod_mod_of_dvd Int.mod_mod_of_dvd
 
 @[simp]
-theorem mod_mod (a b : ℤ) : a % b % b = a % b := by conv =>
-  rhs
-  rw [← mod_add_div a b, add_mul_mod_self_left]
+theorem mod_mod (a b : ℤ) : a % b % b = a % b := by
+  conv => 
+    rhs
+    rw [← mod_add_div a b, add_mul_mod_self_left]
 #align int.mod_mod Int.mod_mod
 
 theorem sub_mod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n := by
@@ -464,15 +451,11 @@ protected theorem div_mod_unique {a b r q : ℤ} (h : 0 < b) :
   constructor
   · rintro ⟨rfl, rfl⟩
     exact ⟨mod_add_div a b, mod_nonneg _ h.ne.symm, mod_lt_of_pos _ h⟩
-    
   · rintro ⟨rfl, hz, hb⟩
     constructor
     · rw [Int.add_mul_div_left r q (ne_of_gt h), div_eq_zero_of_lt hz hb]
       simp
-      
     · rw [add_mul_mod_self_left, mod_eq_of_lt hz hb]
-      
-    
 #align int.div_mod_unique Int.div_mod_unique
 
 attribute [local simp] Int.zero_mod
@@ -583,7 +566,7 @@ theorem dvd_nat_abs {a b : ℤ} : a ∣ b.natAbs ↔ a ∣ b :=
 lean 3 declaration is
   DecidableRel.{1} Int (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup))
 but is expected to have type
-  DecidableRel.{1} Int (fun (x._@.Std.Data.Int.DivMod._hyg.13533 : Int) (x._@.Std.Data.Int.DivMod._hyg.13535 : Int) => Dvd.dvd.{0} Int Int.instDvdInt x._@.Std.Data.Int.DivMod._hyg.13533 x._@.Std.Data.Int.DivMod._hyg.13535)
+  DecidableRel.{1} Int (fun (x._@.Std.Data.Int.DivMod._hyg.13512 : Int) (x._@.Std.Data.Int.DivMod._hyg.13514 : Int) => Dvd.dvd.{0} Int Int.instDvdInt x._@.Std.Data.Int.DivMod._hyg.13512 x._@.Std.Data.Int.DivMod._hyg.13514)
 Case conversion may be inaccurate. Consider using '#align int.decidable_dvd Int.decidableDvdₓ'. -/
 instance decidableDvd : @DecidableRel ℤ (· ∣ ·) := fun a n =>
   decidable_of_decidable_of_iff (by infer_instance) (dvd_iff_mod_eq_zero _ _).symm
@@ -729,7 +712,6 @@ theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) :
     rw [mul_lt_mul_left hn] at h1k h2k
     rw [lt_add_one_iff, ← not_lt] at h2k
     exact h2k h1k
-    
   · intro h
     rw [dvd_iff_mod_eq_zero, ← Ne.def] at h
     have := (mod_nonneg m hn.ne.symm).lt_of_ne h.symm
@@ -737,7 +719,6 @@ theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) :
     refine' ⟨m / n, lt_add_of_pos_left _ this, _⟩
     rw [add_comm _ (1 : ℤ), left_distrib, mul_one]
     exact add_lt_add_right (mod_lt_of_pos _ hn) _
-    
 #align int.exists_lt_and_lt_iff_not_dvd Int.exists_lt_and_lt_iff_not_dvd
 
 attribute [local simp] Int.div_zero
@@ -866,7 +847,6 @@ theorem div_eq_div_of_mul_eq_mul {a b c d : ℤ} (H2 : d ∣ c) (H3 : b ≠ 0) (
 theorem div_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
   rcases eq_or_ne s 0 with (rfl | hs)
   · simpa using hst
-    
   rcases hst with ⟨c, hc⟩
   simp [hc, Int.mul_div_cancel_left _ hs]
 #align int.div_dvd_of_dvd Int.div_dvd_of_dvd

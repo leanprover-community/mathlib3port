@@ -150,12 +150,8 @@ section PartialOrder
 variable [PartialOrder α] {a b c : α}
 
 theorem Wcovby.eq_or_eq (h : a ⩿ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b := by
-  rcases h2.eq_or_lt with (h2 | h2);
-  · exact Or.inl h2.symm
-    
-  rcases h3.eq_or_lt with (h3 | h3);
-  · exact Or.inr h3
-    
+  rcases h2.eq_or_lt with (h2 | h2); · exact Or.inl h2.symm
+  rcases h3.eq_or_lt with (h3 | h3); · exact Or.inr h3
   exact (h.2 h2 h3).elim
 #align wcovby.eq_or_eq Wcovby.eq_or_eq
 
@@ -449,10 +445,8 @@ theorem wcovby_insert (x : α) (s : Set α) : s ⩿ insert x s := by
   refine' wcovby_of_eq_or_eq (subset_insert x s) fun t hst h2t => _
   by_cases h : x ∈ t
   · exact Or.inr (subset_antisymm h2t <| insert_subset.mpr ⟨h, hst⟩)
-    
   · refine' Or.inl (subset_antisymm _ hst)
     rwa [← diff_singleton_eq_self h, diff_singleton_subset_iff]
-    
 #align set.wcovby_insert Set.wcovby_insert
 
 theorem covby_insert {x : α} {s : Set α} (hx : x ∉ s) : s ⋖ insert x s :=
@@ -514,32 +508,20 @@ theorem mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b
   refine' ⟨fun h => _, _⟩
   · obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h
     · exact Or.inr ⟨mk_wcovby_mk_iff_right.1 h, rfl⟩
-      
     · exact Or.inl ⟨mk_wcovby_mk_iff_left.1 h, rfl⟩
-      
-    
   · rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
     · exact mk_wcovby_mk_iff_left.2 h
-      
     · exact mk_wcovby_mk_iff_right.2 h
-      
-    
 #align prod.mk_wcovby_mk_iff Prod.mk_wcovby_mk_iff
 
 theorem mk_covby_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b₁ = b₂ ∨ b₁ ⋖ b₂ ∧ a₁ = a₂ := by
   refine' ⟨fun h => _, _⟩
   · obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h.wcovby
     · exact Or.inr ⟨mk_covby_mk_iff_right.1 h, rfl⟩
-      
     · exact Or.inl ⟨mk_covby_mk_iff_left.1 h, rfl⟩
-      
-    
   · rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
     · exact mk_covby_mk_iff_left.2 h
-      
     · exact mk_covby_mk_iff_right.2 h
-      
-    
 #align prod.mk_covby_mk_iff Prod.mk_covby_mk_iff
 
 theorem wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 := by
