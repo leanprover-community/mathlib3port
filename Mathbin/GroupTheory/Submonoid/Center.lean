@@ -5,7 +5,6 @@ Authors: Eric Wieser
 -/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.GroupTheory.Subsemigroup.Center
-import Mathbin.Data.Fintype.Basic
 
 /-!
 # Centers of monoids
@@ -59,7 +58,8 @@ theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 #align submonoid.mem_center_iff Submonoid.mem_center_iff
 
-instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
+@[to_additive]
+instance decidableMemCenter (a) [Decidable <| ∀ b : M, b * a = a * b] : Decidable (a ∈ center M) :=
   decidable_of_iff' _ mem_center_iff
 #align submonoid.decidable_mem_center Submonoid.decidableMemCenter
 
@@ -98,3 +98,5 @@ end
 
 end Submonoid
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- Guard against import creep

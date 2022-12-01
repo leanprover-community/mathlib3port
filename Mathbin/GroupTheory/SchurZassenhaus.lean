@@ -181,7 +181,7 @@ private theorem step1 (K : Subgroup G) (hK : K ⊔ N = ⊤) : K = ⊤ := by
   contrapose! h3
   have h4 : (N.comap K.subtype).index = N.index := by
     rw [← N.relindex_top_right, ← hK]
-    exact relindex_eq_relindex_sup K N
+    exact (relindex_sup_right K N).symm
   have h5 : Fintype.card K < Fintype.card G := by
     rw [← K.index_mul_card]
     exact lt_mul_of_one_lt_left Fintype.card_pos (one_lt_index_of_ne_top h3)

@@ -281,7 +281,7 @@ theorem continuous_at_add_coe_coe (a b : ℝ) :
 
 theorem continuous_at_add_top_coe (a : ℝ) :
     ContinuousAt (fun p : Ereal × Ereal => p.1 + p.2) (⊤, a) := by
-  simp only [ContinuousAt, tendsto_nhds_top_iff_real, top_add, nhds_prod_eq]
+  simp only [ContinuousAt, tendsto_nhds_top_iff_real, top_add_coe, nhds_prod_eq]
   intro r
   rw [eventually_prod_iff]
   refine'
@@ -301,7 +301,7 @@ theorem continuous_at_add_coe_top (a : ℝ) :
 #align ereal.continuous_at_add_coe_top Ereal.continuous_at_add_coe_top
 
 theorem continuous_at_add_top_top : ContinuousAt (fun p : Ereal × Ereal => p.1 + p.2) (⊤, ⊤) := by
-  simp only [ContinuousAt, tendsto_nhds_top_iff_real, top_add, nhds_prod_eq]
+  simp only [ContinuousAt, tendsto_nhds_top_iff_real, top_add_top, nhds_prod_eq]
   intro r
   rw [eventually_prod_iff]
   refine'
@@ -314,7 +314,7 @@ theorem continuous_at_add_top_top : ContinuousAt (fun p : Ereal × Ereal => p.1 
 
 theorem continuous_at_add_bot_coe (a : ℝ) :
     ContinuousAt (fun p : Ereal × Ereal => p.1 + p.2) (⊥, a) := by
-  simp only [ContinuousAt, tendsto_nhds_bot_iff_real, nhds_prod_eq, bot_add_coe]
+  simp only [ContinuousAt, tendsto_nhds_bot_iff_real, nhds_prod_eq, bot_add]
   intro r
   rw [eventually_prod_iff]
   refine'
@@ -333,7 +333,7 @@ theorem continuous_at_add_coe_bot (a : ℝ) :
 #align ereal.continuous_at_add_coe_bot Ereal.continuous_at_add_coe_bot
 
 theorem continuous_at_add_bot_bot : ContinuousAt (fun p : Ereal × Ereal => p.1 + p.2) (⊥, ⊥) := by
-  simp only [ContinuousAt, tendsto_nhds_bot_iff_real, nhds_prod_eq, bot_add_bot]
+  simp only [ContinuousAt, tendsto_nhds_bot_iff_real, nhds_prod_eq, bot_add]
   intro r
   rw [eventually_prod_iff]
   refine'

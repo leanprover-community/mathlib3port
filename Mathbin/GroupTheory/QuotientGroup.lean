@@ -414,8 +414,7 @@ then there is a map `A / (A' ⊓ A) →* B / (B' ⊓ B)` induced by the inclusio
 def quotientMapSubgroupOfOfLe {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A).Normal]
     [hBN : (B'.subgroupOf B).Normal] (h' : A' ≤ B') (h : A ≤ B) :
     A ⧸ A'.subgroupOf A →* B ⧸ B'.subgroupOf B :=
-  map _ _ (Subgroup.inclusion h) <| by
-    simp [Subgroup.subgroupOf, Subgroup.comap_comap] <;> exact Subgroup.comap_mono h'
+  map _ _ (Subgroup.inclusion h) <| Subgroup.comap_mono h'
 #align quotient_group.quotient_map_subgroup_of_of_le QuotientGroup.quotientMapSubgroupOfOfLe
 
 @[simp, to_additive]
@@ -529,12 +528,12 @@ open _Root_.Subgroup
 @[to_additive
       "The second isomorphism theorem: given two subgroups `H` and `N` of a group `G`,\nwhere `N` is normal, defines an isomorphism between `H/(H ∩ N)` and `(H + N)/N`"]
 noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Normal] :
-    H ⧸ (H ⊓ N).comap H.Subtype ≃* _ ⧸ N.comap (H ⊔ N).Subtype :=
+    H ⧸ N.subgroupOf H ≃* _ ⧸ N.subgroupOf (H ⊔ N) :=
   let
     φ :-- φ is the natural homomorphism H →* (HN)/N.
       H →*
-      _ ⧸ N.comap (H ⊔ N).Subtype :=
-    (mk' <| N.comap (H ⊔ N).Subtype).comp (inclusion le_sup_left)
+      _ ⧸ N.subgroupOf (H ⊔ N) :=
+    (mk' <| N.subgroupOf (H ⊔ N)).comp (inclusion le_sup_left)
   have φ_surjective : Function.Surjective φ := fun x =>
     x.inductionOn' <| by 
       rintro ⟨y, hy : y ∈ ↑(H ⊔ N)⟩; rw [mul_normal H N] at hy
@@ -544,8 +543,7 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
       rw [left_rel_apply]
       change h⁻¹ * (h * n) ∈ N
       rwa [← mul_assoc, inv_mul_self, one_mul]
-  (quotientMulEquivOfEq (by simp [comap_comap, ← comap_ker])).trans
-    (quotientKerEquivOfSurjective φ φ_surjective)
+  (quotientMulEquivOfEq (by simp [← comap_ker])).trans (quotientKerEquivOfSurjective φ φ_surjective)
 #align
   quotient_group.quotient_inf_equiv_prod_normal_quotient QuotientGroup.quotientInfEquivProdNormalQuotient
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.Int.Order.Basic
-import Mathbin.Data.Nat.Pow
+import Mathbin.Data.Nat.Size
 
 /-!
 # Square root of natural numbers

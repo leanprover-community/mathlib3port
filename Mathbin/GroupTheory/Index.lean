@@ -119,8 +119,7 @@ theorem relindex_mul_relindex (hHK : H ≤ K) (hKL : K ≤ L) :
 
 @[to_additive]
 theorem inf_relindex_right : (H ⊓ K).relindex K = H.relindex K := by
-  rw [← subgroup_of_map_subtype, relindex, relindex, subgroup_of, comap_map_eq_self_of_injective]
-  exact Subtype.coe_injective
+  rw [relindex, relindex, inf_subgroup_of_right]
 #align subgroup.inf_relindex_right Subgroup.inf_relindex_right
 
 @[to_additive]
@@ -134,28 +133,26 @@ theorem relindex_inf_mul_relindex : H.relindex (K ⊓ L) * K.relindex L = (H ⊓
     inf_assoc, relindex_mul_relindex (H ⊓ (K ⊓ L)) (K ⊓ L) L inf_le_right inf_le_right]
 #align subgroup.relindex_inf_mul_relindex Subgroup.relindex_inf_mul_relindex
 
-@[to_additive]
-theorem inf_relindex_eq_relindex_sup [K.Normal] : (H ⊓ K).relindex H = K.relindex (H ⊔ K) :=
-  Cardinal.to_nat_congr (QuotientGroup.quotientInfEquivProdNormalQuotient H K).toEquiv
-#align subgroup.inf_relindex_eq_relindex_sup Subgroup.inf_relindex_eq_relindex_sup
+@[simp, to_additive]
+theorem relindex_sup_right [K.Normal] : K.relindex (H ⊔ K) = K.relindex H :=
+  Nat.card_congr (QuotientGroup.quotientInfEquivProdNormalQuotient H K).toEquiv.symm
+#align subgroup.relindex_sup_right Subgroup.relindex_sup_right
 
-@[to_additive]
-theorem relindex_eq_relindex_sup [K.Normal] : K.relindex H = K.relindex (H ⊔ K) := by
-  rw [← inf_relindex_left, inf_relindex_eq_relindex_sup]
-#align subgroup.relindex_eq_relindex_sup Subgroup.relindex_eq_relindex_sup
+@[simp, to_additive]
+theorem relindex_sup_left [K.Normal] : K.relindex (K ⊔ H) = K.relindex H := by
+  rw [sup_comm, relindex_sup_right]
+#align subgroup.relindex_sup_left Subgroup.relindex_sup_left
 
 @[to_additive]
 theorem relindex_dvd_index_of_normal [H.Normal] : H.relindex K ∣ H.index :=
-  (relindex_eq_relindex_sup K H).symm ▸ relindex_dvd_index_of_le le_sup_right
+  relindex_sup_right K H ▸ relindex_dvd_index_of_le le_sup_right
 #align subgroup.relindex_dvd_index_of_normal Subgroup.relindex_dvd_index_of_normal
 
 variable {H K}
 
 @[to_additive]
-theorem relindex_dvd_of_le_left (hHK : H ≤ K) : K.relindex L ∣ H.relindex L := by
-  apply dvd_of_mul_left_eq ((H ⊓ L).relindex (K ⊓ L))
-  rw [← inf_relindex_right H L, ← inf_relindex_right K L]
-  exact relindex_mul_relindex (H ⊓ L) (K ⊓ L) L (inf_le_inf_right L hHK) inf_le_right
+theorem relindex_dvd_of_le_left (hHK : H ≤ K) : K.relindex L ∣ H.relindex L :=
+  inf_of_le_left hHK ▸ dvd_of_mul_left_eq _ (relindex_inf_mul_relindex _ _ _)
 #align subgroup.relindex_dvd_of_le_left Subgroup.relindex_dvd_of_le_left
 
 /-- A subgroup has index two if and only if there exists `a` such that for all `b`, exactly one

@@ -3,6 +3,7 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
+import Mathbin.Data.List.Basic
 import Mathbin.Data.Nat.Bits
 import Mathbin.Tactic.Linarith.Default
 
@@ -48,7 +49,7 @@ theorem bit_tt : bit true = bit1 :=
 
 @[simp]
 theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = ff := by
-  cases b <;> norm_num [bit0_eq_zero, Nat.bit1_ne_zero]
+  cases b <;> simp [Nat.bit0_eq_zero, Nat.bit1_ne_zero]
 #align nat.bit_eq_zero Nat.bit_eq_zero
 
 theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0 := by

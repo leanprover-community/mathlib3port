@@ -5,6 +5,7 @@ Authors: Simon Hudon
 -/
 import Mathbin.Data.Bitvec.Core
 import Mathbin.Data.Fin.Basic
+import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.Tactic.NormNum
 
 namespace Bitvec

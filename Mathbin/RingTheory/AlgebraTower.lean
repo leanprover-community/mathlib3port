@@ -5,6 +5,7 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Algebra.Invertible
+import Mathbin.Algebra.Module.BigOperators
 import Mathbin.LinearAlgebra.Basis
 
 /-!

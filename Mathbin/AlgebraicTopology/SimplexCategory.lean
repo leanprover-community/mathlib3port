@@ -148,7 +148,7 @@ end Hom
 instance smallCategory :
     SmallCategory.{0}
       SimplexCategory where 
-  hom n m := SimplexCategory.Hom n m
+  Hom n m := SimplexCategory.Hom n m
   id m := SimplexCategory.Hom.id _
   comp _ _ _ f g := SimplexCategory.Hom.comp g f
 #align simplex_category.small_category SimplexCategory.smallCategory
@@ -492,7 +492,7 @@ instance :
         let f := monoEquivOfFin X aux
         have hf := (finset.univ.order_emb_of_fin aux).StrictMono
         refine'
-          { hom := ⟨fun i => f i.down, _⟩, inv := ⟨fun i => ⟨f.symm i⟩, _⟩, hom_inv_id' := _,
+          { Hom := ⟨fun i => f i.down, _⟩, inv := ⟨fun i => ⟨f.symm i⟩, _⟩, hom_inv_id' := _,
             inv_hom_id' := _ }
         · rintro ⟨i⟩ ⟨j⟩ h
           show f i ≤ f j
@@ -633,7 +633,7 @@ instance : ReflectsIsomorphisms (forget SimplexCategory) :=
     intro
     exact
       is_iso.of_iso
-        { hom := f,
+        { Hom := f,
           inv :=
             hom.mk
               { toFun := inv ((forget SimplexCategory).map f),
@@ -665,12 +665,12 @@ theorem is_iso_of_bijective {x y : SimplexCategory} {f : x ⟶ y}
 @[simp]
 def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Fin (x.len + 1) ≃o Fin (y.len + 1) :=
   Equiv.toOrderIso
-    { toFun := e.hom.toOrderHom, invFun := e.inv.toOrderHom,
+    { toFun := e.Hom.toOrderHom, invFun := e.inv.toOrderHom,
       left_inv := fun i => by
         simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
       right_inv := fun i => by
         simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
-    e.hom.toOrderHom.Monotone e.inv.toOrderHom.Monotone
+    e.Hom.toOrderHom.Monotone e.inv.toOrderHom.Monotone
 #align simplex_category.order_iso_of_iso SimplexCategory.orderIsoOfIso
 
 theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := by
@@ -685,7 +685,7 @@ theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := 
 #align simplex_category.iso_eq_iso_refl SimplexCategory.iso_eq_iso_refl
 
 theorem eq_id_of_is_iso {x : SimplexCategory} (f : x ⟶ x) [hf : IsIso f] : f = 𝟙 _ :=
-  congr_arg (fun φ : _ ≅ _ => φ.hom) (iso_eq_iso_refl (asIso f))
+  congr_arg (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
 #align simplex_category.eq_id_of_is_iso SimplexCategory.eq_id_of_is_iso
 
 theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ')
@@ -873,7 +873,7 @@ theorem image_ι_eq {Δ Δ'' : SimplexCategory} {φ : Δ ⟶ Δ''} {e : Δ ⟶ i
     {i : image φ ⟶ Δ''} [Mono i] (fac : e ≫ i = φ) : image.ι φ = i := by
   haveI := strong_epi_of_epi e
   rw [← image.iso_strong_epi_mono_hom_comp_ι e i fac,
-    SimplexCategory.eq_id_of_is_iso (image.iso_strong_epi_mono e i fac).hom, category.id_comp]
+    SimplexCategory.eq_id_of_is_iso (image.iso_strong_epi_mono e i fac).Hom, category.id_comp]
 #align simplex_category.image_ι_eq SimplexCategory.image_ι_eq
 
 theorem factor_thru_image_eq {Δ Δ'' : SimplexCategory} {φ : Δ ⟶ Δ''} {e : Δ ⟶ image φ} [Epi e]

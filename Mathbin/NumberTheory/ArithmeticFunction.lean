@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Mathbin.Algebra.BigOperators.Ring
+import Mathbin.Algebra.Module.BigOperators
 import Mathbin.NumberTheory.Divisors
 import Mathbin.Data.Nat.Squarefree
 import Mathbin.Data.Nat.Gcd.BigOperators

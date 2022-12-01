@@ -8,6 +8,7 @@ import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.Regular.Smul
 import Mathbin.Data.Finset.Preimage
 import Mathbin.Data.List.Alist
+import Mathbin.Data.Rat.BigOperators
 
 /-!
 # Miscellaneous definitions, lemmas, and constructions using finsupp

@@ -5,6 +5,7 @@ Authors: Jeremy Avigad
 -/
 import Mathbin.Data.Int.Basic
 import Mathbin.Data.Nat.Pow
+import Mathbin.Data.Nat.Size
 
 /-!
 # Bitwise operations on integers
@@ -172,25 +173,25 @@ private unsafe def bitwise_tac : tactic Unit :=
   sorry
 #align int.bitwise_tac int.bitwise_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2036206329.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_or : bitwise or = lor := by
   run_tac
     bitwise_tac
 #align int.bitwise_or Int.bitwise_or
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2036206329.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_and : bitwise and = land := by
   run_tac
     bitwise_tac
 #align int.bitwise_and Int.bitwise_and
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2036206329.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
   run_tac
     bitwise_tac
 #align int.bitwise_diff Int.bitwise_diff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.2036206329.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
 theorem bitwise_xor : bitwise xor = lxor := by
   run_tac
     bitwise_tac

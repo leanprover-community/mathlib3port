@@ -246,6 +246,7 @@ import Mathbin.Algebra.Lie.Weights
 import Mathbin.Algebra.LinearRecurrence
 import Mathbin.Algebra.Module.Algebra
 import Mathbin.Algebra.Module.Basic
+import Mathbin.Algebra.Module.BigOperators
 import Mathbin.Algebra.Module.Bimodule
 import Mathbin.Algebra.Module.DedekindDomain
 import Mathbin.Algebra.Module.Default
@@ -301,6 +302,7 @@ import Mathbin.Algebra.Order.Group.WithTop
 import Mathbin.Algebra.Order.Hom.Basic
 import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.Algebra.Order.Hom.Ring
+import Mathbin.Algebra.Order.Interval
 import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.LatticeGroup
 import Mathbin.Algebra.Order.Module
@@ -1066,6 +1068,7 @@ import Mathbin.CategoryTheory.Whiskering
 import Mathbin.CategoryTheory.WithTerminal
 import Mathbin.CategoryTheory.Yoneda
 import Mathbin.Combinatorics.Additive.Behrend
+import Mathbin.Combinatorics.Additive.Energy
 import Mathbin.Combinatorics.Additive.PluenneckeRuzsa
 import Mathbin.Combinatorics.Additive.RuzsaCovering
 import Mathbin.Combinatorics.Additive.SalemSpencer
@@ -1454,6 +1457,7 @@ import Mathbin.Data.Nat.Pow
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Nat.Psub
 import Mathbin.Data.Nat.Set
+import Mathbin.Data.Nat.Size
 import Mathbin.Data.Nat.Sqrt
 import Mathbin.Data.Nat.SqrtNormNum
 import Mathbin.Data.Nat.Squarefree
@@ -1542,6 +1546,7 @@ import Mathbin.Data.Qpf.Multivariate.Default
 import Mathbin.Data.Qpf.Univariate.Basic
 import Mathbin.Data.Quot
 import Mathbin.Data.Rat.Basic
+import Mathbin.Data.Rat.BigOperators
 import Mathbin.Data.Rat.Cast
 import Mathbin.Data.Rat.Default
 import Mathbin.Data.Rat.Defs
@@ -2412,6 +2417,7 @@ import Mathbin.RingTheory.Int.Basic
 import Mathbin.RingTheory.IntegralClosure
 import Mathbin.RingTheory.IntegralDomain
 import Mathbin.RingTheory.IntegrallyClosed
+import Mathbin.RingTheory.IsAdjoinRoot
 import Mathbin.RingTheory.IsTensorProduct
 import Mathbin.RingTheory.Jacobson
 import Mathbin.RingTheory.JacobsonIdeal

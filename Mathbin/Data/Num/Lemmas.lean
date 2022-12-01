@@ -7,6 +7,7 @@ import Mathbin.Data.Num.Bitwise
 import Mathbin.Data.Int.CharZero
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Nat.Psub
+import Mathbin.Data.Nat.Size
 
 /-!
 # Properties of the binary representation of integers

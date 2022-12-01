@@ -1355,13 +1355,13 @@ section WithTopBot
 
 If `α` is a `conditionally_complete_lattice`, then we show that `with_top α` and `with_bot α`
 also inherit the structure of conditionally complete lattices. Furthermore, we show
-that `with_top (with_bot α)` naturally inherits the structure of a complete lattice. Note that
-for α a conditionally complete lattice, `Sup` and `Inf` both return junk values
-for sets which are empty or unbounded. The extension of `Sup` to `with_top α` fixes
+that `with_top (with_bot α)` and `with_bot (with_top α)` naturally inherit the structure of a
+complete lattice. Note that for `α` a conditionally complete lattice, `Sup` and `Inf` both return
+junk values for sets which are empty or unbounded. The extension of `Sup` to `with_top α` fixes
 the unboundedness problem and the extension to `with_bot α` fixes the problem with
 the empty set.
 
-This result can be used to show that the extended reals [-∞, ∞] are a complete lattice.
+This result can be used to show that the extended reals `[-∞, ∞]` are a complete linear order.
 -/
 
 
@@ -1429,6 +1429,20 @@ noncomputable instance WithTop.WithBot.completeLinearOrder {α : Type _}
     [ConditionallyCompleteLinearOrder α] : CompleteLinearOrder (WithTop (WithBot α)) :=
   { WithTop.WithBot.completeLattice, WithTop.linearOrder with }
 #align with_top.with_bot.complete_linear_order WithTop.WithBot.completeLinearOrder
+
+noncomputable instance WithBot.WithTop.completeLattice {α : Type _}
+    [ConditionallyCompleteLattice α] : CompleteLattice (WithBot (WithTop α)) :=
+  { WithBot.hasInf, WithBot.hasSup, WithBot.boundedOrder, WithBot.lattice with
+    le_Sup := (@WithTop.WithBot.completeLattice αᵒᵈ _).Inf_le,
+    Sup_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Inf,
+    Inf_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Sup,
+    le_Inf := (@WithTop.WithBot.completeLattice αᵒᵈ _).Sup_le }
+#align with_bot.with_top.complete_lattice WithBot.WithTop.completeLattice
+
+noncomputable instance WithBot.WithTop.completeLinearOrder {α : Type _}
+    [ConditionallyCompleteLinearOrder α] : CompleteLinearOrder (WithBot (WithTop α)) :=
+  { WithBot.WithTop.completeLattice, WithBot.linearOrder with }
+#align with_bot.with_top.complete_linear_order WithBot.WithTop.completeLinearOrder
 
 theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
     (f : ι → α) : (⨆ x, (f x : WithTop α)) = ⊤ ↔ ¬BddAbove (Set.range f) := by

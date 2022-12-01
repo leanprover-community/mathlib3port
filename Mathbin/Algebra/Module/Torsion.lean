@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 -/
 import Mathbin.Algebra.DirectSum.Module
+import Mathbin.Algebra.Module.BigOperators
 import Mathbin.LinearAlgebra.Isomorphisms
 import Mathbin.GroupTheory.Torsion
 import Mathbin.RingTheory.Coprime.Ideal

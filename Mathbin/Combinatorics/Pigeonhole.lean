@@ -7,6 +7,7 @@ import Mathbin.Data.Nat.Modeq
 import Mathbin.Data.Set.Finite
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.Module.Basic
+import Mathbin.Algebra.Module.BigOperators
 
 /-!
 # Pigeonhole principles

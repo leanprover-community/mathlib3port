@@ -324,12 +324,12 @@ theorem to_sup_of_normal_left {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGr
 theorem to_sup_of_normal_right' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K)
     (hHK : H ≤ K.normalizer) : IsPGroup p (H ⊔ K : Subgroup G) :=
   let hHK' :=
-    to_sup_of_normal_right (hH.of_equiv (Subgroup.comapSubtypeEquivOfLe hHK).symm)
-      (hK.of_equiv (Subgroup.comapSubtypeEquivOfLe Subgroup.le_normalizer).symm)
+    to_sup_of_normal_right (hH.of_equiv (Subgroup.subgroupOfEquivOfLe hHK).symm)
+      (hK.of_equiv (Subgroup.subgroupOfEquivOfLe Subgroup.le_normalizer).symm)
   ((congr_arg (fun H : Subgroup K.normalizer => IsPGroup p H)
             (Subgroup.sup_subgroup_of_eq hHK Subgroup.le_normalizer)).mp
         hHK').of_equiv
-    (Subgroup.comapSubtypeEquivOfLe (sup_le hHK Subgroup.le_normalizer))
+    (Subgroup.subgroupOfEquivOfLe (sup_le hHK Subgroup.le_normalizer))
 #align is_p_group.to_sup_of_normal_right' IsPGroup.to_sup_of_normal_right'
 
 theorem to_sup_of_normal_left' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K)

@@ -85,6 +85,10 @@ theorem exists_iff_exists_finsupp (P : R[X] → Prop) :
   ⟨fun ⟨⟨p⟩, hp⟩ => ⟨p, hp⟩, fun ⟨q, hq⟩ => ⟨⟨q⟩, hq⟩⟩
 #align polynomial.exists_iff_exists_finsupp Polynomial.exists_iff_exists_finsupp
 
+@[simp]
+theorem eta (f : R[X]) : Polynomial.of_finsupp f.toFinsupp = f := by cases f <;> rfl
+#align polynomial.eta Polynomial.eta
+
 /-! ### Conversions to and from `add_monoid_algebra`
 
 Since `R[X]` is not defeq to `add_monoid_algebra R ℕ`, but instead is a structure wrapping
@@ -610,6 +614,9 @@ theorem coeff_injective : Injective (coeff : R[X] → ℕ → R) := by
 theorem coeff_inj : p.coeff = q.coeff ↔ p = q :=
   coeff_injective.eq_iff
 #align polynomial.coeff_inj Polynomial.coeff_inj
+
+theorem to_finsupp_apply (f : R[X]) (i) : f.toFinsupp i = f.coeff i := by cases f <;> rfl
+#align polynomial.to_finsupp_apply Polynomial.to_finsupp_apply
 
 theorem coeff_monomial : coeff (monomial n a) m = if n = m then a else 0 := by
   simp only [← of_finsupp_single, coeff, LinearMap.coe_mk]

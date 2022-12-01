@@ -818,9 +818,8 @@ theorem inclusion_injective {H K : Subgroup G} (h : H ≤ K) : Function.Injectiv
 
 @[simp, to_additive]
 theorem subtype_comp_inclusion {H K : Subgroup G} (hH : H ≤ K) :
-    K.Subtype.comp (inclusion hH) = H.Subtype := by
-  ext
-  simp
+    K.Subtype.comp (inclusion hH) = H.Subtype :=
+  rfl
 #align subgroup.subtype_comp_inclusion Subgroup.subtype_comp_inclusion
 
 /-- The subgroup `G` of the group `G`. -/
@@ -1523,39 +1522,33 @@ theorem comap_top (f : G →* N) : (⊤ : Subgroup N).comap f = ⊤ :=
   (gc_map_comap f).u_top
 #align subgroup.comap_top Subgroup.comap_top
 
-@[simp, to_additive]
-theorem comap_subtype_self_eq_top {G : Type _} [Group G] {H : Subgroup G} : comap H.Subtype H = ⊤ :=
-  by 
-  ext
-  simp
-#align subgroup.comap_subtype_self_eq_top Subgroup.comap_subtype_self_eq_top
-
-@[simp, to_additive]
-theorem comap_subtype_inf_left {H K : Subgroup G} : comap H.Subtype (H ⊓ K) = comap H.Subtype K :=
-  ext fun x => and_iff_right_of_imp fun _ => x.Prop
-#align subgroup.comap_subtype_inf_left Subgroup.comap_subtype_inf_left
-
-@[simp, to_additive]
-theorem comap_subtype_inf_right {H K : Subgroup G} : comap K.Subtype (H ⊓ K) = comap K.Subtype H :=
-  ext fun x => and_iff_left_of_imp fun _ => x.Prop
-#align subgroup.comap_subtype_inf_right Subgroup.comap_subtype_inf_right
-
-/-- If `H ≤ K`, then `H` as a subgroup of `K` is isomorphic to `H`. -/
-@[to_additive "If `H ≤ K`, then `H` as a subgroup of `K` is isomorphic to `H`.", simps]
-def comapSubtypeEquivOfLe {G : Type _} [Group G] {H K : Subgroup G} (h : H ≤ K) :
-    H.comap K.Subtype ≃* H where 
-  toFun g := ⟨g.1, g.2⟩
-  invFun g := ⟨⟨g.1, h g.2⟩, g.2⟩
-  left_inv g := Subtype.ext (Subtype.ext rfl)
-  right_inv g := Subtype.ext rfl
-  map_mul' g h := rfl
-#align subgroup.comap_subtype_equiv_of_le Subgroup.comapSubtypeEquivOfLe
-
 /-- For any subgroups `H` and `K`, view `H ⊓ K` as a subgroup of `K`. -/
 @[to_additive "For any subgroups `H` and `K`, view `H ⊓ K` as a subgroup of `K`."]
 def subgroupOf (H K : Subgroup G) : Subgroup K :=
   H.comap K.Subtype
 #align subgroup.subgroup_of Subgroup.subgroupOf
+
+/-- If `H ≤ K`, then `H` as a subgroup of `K` is isomorphic to `H`. -/
+@[to_additive "If `H ≤ K`, then `H` as a subgroup of `K` is isomorphic to `H`.", simps]
+def subgroupOfEquivOfLe {G : Type _} [Group G] {H K : Subgroup G} (h : H ≤ K) :
+    H.subgroupOf K ≃* H where 
+  toFun g := ⟨g.1, g.2⟩
+  invFun g := ⟨⟨g.1, h g.2⟩, g.2⟩
+  left_inv g := Subtype.ext (Subtype.ext rfl)
+  right_inv g := Subtype.ext rfl
+  map_mul' g h := rfl
+#align subgroup.subgroup_of_equiv_of_le Subgroup.subgroupOfEquivOfLe
+
+@[simp, to_additive]
+theorem comap_subtype (H K : Subgroup G) : H.comap K.Subtype = H.subgroupOf K :=
+  rfl
+#align subgroup.comap_subtype Subgroup.comap_subtype
+
+@[simp, to_additive]
+theorem comap_inclusion_subgroup_of {K₁ K₂ : Subgroup G} (h : K₁ ≤ K₂) (H : Subgroup G) :
+    (H.subgroupOf K₂).comap (inclusion h) = H.subgroupOf K₁ :=
+  rfl
+#align subgroup.comap_inclusion_subgroup_of Subgroup.comap_inclusion_subgroup_of
 
 @[to_additive]
 theorem coe_subgroup_of (H K : Subgroup G) : (H.subgroupOf K : Set K) = K.Subtype ⁻¹' H :=
@@ -1567,13 +1560,9 @@ theorem mem_subgroup_of {H K : Subgroup G} {h : K} : h ∈ H.subgroupOf K ↔ (h
   Iff.rfl
 #align subgroup.mem_subgroup_of Subgroup.mem_subgroup_of
 
-@[to_additive]
+@[simp, to_additive]
 theorem subgroup_of_map_subtype (H K : Subgroup G) : (H.subgroupOf K).map K.Subtype = H ⊓ K :=
-  SetLike.ext'
-    (by 
-      convert Set.image_preimage_eq_inter_range
-      simp only [Subtype.range_coe_subtype, coeSubtype, coe_inf]
-      rfl)
+  SetLike.ext' <| Subtype.image_preimage_coe _ _
 #align subgroup.subgroup_of_map_subtype Subgroup.subgroup_of_map_subtype
 
 @[simp, to_additive]
@@ -1598,8 +1587,34 @@ theorem subgroup_of_bot_eq_top : H.subgroupOf ⊥ = ⊤ :=
 
 @[simp, to_additive]
 theorem subgroup_of_self : H.subgroupOf H = ⊤ :=
-  top_le_iff.mp fun g hg => g.2
+  top_unique fun g hg => g.2
 #align subgroup.subgroup_of_self Subgroup.subgroup_of_self
+
+@[simp, to_additive]
+theorem subgroup_of_inj {H₁ H₂ K : Subgroup G} :
+    H₁.subgroupOf K = H₂.subgroupOf K ↔ H₁ ⊓ K = H₂ ⊓ K := by
+  simpa only [SetLike.ext_iff, mem_inf, mem_subgroup_of, and_congr_left_iff] using Subtype.forall
+#align subgroup.subgroup_of_inj Subgroup.subgroup_of_inj
+
+@[simp, to_additive]
+theorem inf_subgroup_of_right (H K : Subgroup G) : (H ⊓ K).subgroupOf K = H.subgroupOf K :=
+  subgroup_of_inj.2 inf_right_idem
+#align subgroup.inf_subgroup_of_right Subgroup.inf_subgroup_of_right
+
+@[simp, to_additive]
+theorem inf_subgroup_of_left (H K : Subgroup G) : (K ⊓ H).subgroupOf K = H.subgroupOf K := by
+  rw [inf_comm, inf_subgroup_of_right]
+#align subgroup.inf_subgroup_of_left Subgroup.inf_subgroup_of_left
+
+@[simp, to_additive]
+theorem subgroup_of_eq_bot {H K : Subgroup G} : H.subgroupOf K = ⊥ ↔ Disjoint H K := by
+  rw [disjoint_iff, ← bot_subgroup_of, subgroup_of_inj, bot_inf_eq]
+#align subgroup.subgroup_of_eq_bot Subgroup.subgroup_of_eq_bot
+
+@[simp, to_additive]
+theorem subgroup_of_eq_top {H K : Subgroup G} : H.subgroupOf K = ⊤ ↔ K ≤ H := by
+  rw [← top_subgroup_of, subgroup_of_inj, top_inf_eq, inf_eq_right]
+#align subgroup.subgroup_of_eq_top Subgroup.subgroup_of_eq_top
 
 /-- Given `subgroup`s `H`, `K` of groups `G`, `N` respectively, `H × K` as a subgroup of `G × N`. -/
 @[to_additive Prod
@@ -2091,7 +2106,7 @@ theorem le_normalizer : H ≤ normalizer H := fun x xH n => by
 #align subgroup.le_normalizer Subgroup.le_normalizer
 
 @[to_additive]
-instance (priority := 100) normal_in_normalizer : (H.comap H.normalizer.Subtype).Normal :=
+instance (priority := 100) normal_in_normalizer : (H.subgroupOf H.normalizer).Normal :=
   ⟨fun x xH g => by simpa using (g.2 x).1 xH⟩
 #align subgroup.normal_in_normalizer Subgroup.normal_in_normalizer
 
@@ -2110,10 +2125,11 @@ theorem center_le_normalizer : center G ≤ H.normalizer := fun x hx y => by
 open Classical
 
 @[to_additive]
-theorem le_normalizer_of_normal [hK : (H.comap K.Subtype).Normal] (HK : H ≤ K) : K ≤ H.normalizer :=
+theorem le_normalizer_of_normal [hK : (H.subgroupOf K).Normal] (HK : H ≤ K) : K ≤ H.normalizer :=
   fun x hx y =>
   ⟨fun yH => hK.conj_mem ⟨y, HK yH⟩ yH ⟨x, hx⟩, fun yH => by
-    simpa [mem_comap, mul_assoc] using hK.conj_mem ⟨x * y * x⁻¹, HK yH⟩ yH ⟨x⁻¹, K.inv_mem hx⟩⟩
+    simpa [mem_subgroup_of, mul_assoc] using
+      hK.conj_mem ⟨x * y * x⁻¹, HK yH⟩ yH ⟨x⁻¹, K.inv_mem hx⟩⟩
 #align subgroup.le_normalizer_of_normal Subgroup.le_normalizer_of_normal
 
 variable {N : Type _} [Group N]
@@ -2620,9 +2636,7 @@ def ker (f : G →* M) : Subgroup G :=
     inv_mem' := fun x (hx : f x = 1) =>
       calc
         f x⁻¹ = f x * f x⁻¹ := by rw [hx, one_mul]
-        _ = f (x * x⁻¹) := by rw [f.map_mul]
-        _ = f 1 := by rw [mul_right_inv]
-        _ = 1 := f.map_one
+        _ = 1 := by rw [← map_mul, mul_inv_self, map_one]
          }
 #align monoid_hom.ker MonoidHom.ker
 
@@ -2921,17 +2935,6 @@ theorem map_injective_of_ker_le {H K : Subgroup G} (hH : f.ker ≤ H) (hK : f.ke
 #align subgroup.map_injective_of_ker_le Subgroup.map_injective_of_ker_le
 
 @[to_additive]
-theorem subgroup_of_eq_bot {H K : Subgroup G} : H.subgroupOf K = ⊥ ↔ Disjoint H K := by
-  rw [← (map_injective K.subtype_injective).eq_iff, subgroup_of_map_subtype, map_bot, disjoint_iff]
-#align subgroup.subgroup_of_eq_bot Subgroup.subgroup_of_eq_bot
-
-@[to_additive]
-theorem subgroup_of_eq_top {H K : Subgroup G} : H.subgroupOf K = ⊤ ↔ K ≤ H := by
-  rw [← (map_injective K.subtype_injective).eq_iff, subgroup_of_map_subtype, ←
-    K.subtype.range_eq_map, K.subtype_range, inf_eq_right]
-#align subgroup.subgroup_of_eq_top Subgroup.subgroup_of_eq_top
-
-@[to_additive]
 theorem closure_preimage_eq_top (s : Set G) : closure ((closure s).Subtype ⁻¹' s) = ⊤ := by
   apply map_injective (closure s).subtype_injective
   rwa [MonoidHom.map_closure, ← MonoidHom.range_eq_map, subtype_range,
@@ -2959,9 +2962,15 @@ theorem comap_sup_eq (H K : Subgroup N) (hf : Function.Surjective f) :
 @[to_additive]
 theorem sup_subgroup_of_eq {H K L : Subgroup G} (hH : H ≤ L) (hK : K ≤ L) :
     H.subgroupOf L ⊔ K.subgroupOf L = (H ⊔ K).subgroupOf L :=
-  comap_sup_eq_of_le_range L.Subtype (hH.trans (ge_of_eq L.subtype_range))
-    (hK.trans (ge_of_eq L.subtype_range))
+  comap_sup_eq_of_le_range L.Subtype (hH.trans L.subtype_range.ge) (hK.trans L.subtype_range.ge)
 #align subgroup.sup_subgroup_of_eq Subgroup.sup_subgroup_of_eq
+
+@[to_additive]
+theorem codisjoint_subgroup_of_sup (H K : Subgroup G) :
+    Codisjoint (H.subgroupOf (H ⊔ K)) (K.subgroupOf (H ⊔ K)) := by
+  rw [codisjoint_iff, sup_subgroup_of_eq, subgroup_of_self]
+  exacts[le_sup_left, le_sup_right]
+#align subgroup.codisjoint_subgroup_of_sup Subgroup.codisjoint_subgroup_of_sup
 
 /-- A subgroup is isomorphic to its image under an injective function -/
 @[to_additive "An additive subgroup is isomorphic to its image under an injective function"]
@@ -3006,12 +3015,12 @@ theorem comap_normalizer_eq_of_injective_of_le_range {N : Type _} [Group N] (H :
   subgroup.comap_normalizer_eq_of_injective_of_le_range Subgroup.comap_normalizer_eq_of_injective_of_le_range
 
 @[to_additive]
-theorem comap_subtype_normalizer_eq {H N : Subgroup G} (h : H.normalizer ≤ N) :
-    comap N.Subtype H.normalizer = (comap N.Subtype H).normalizer := by
+theorem subgroup_of_normalizer_eq {H N : Subgroup G} (h : H.normalizer ≤ N) :
+    H.normalizer.subgroupOf N = (H.subgroupOf N).normalizer := by
   apply comap_normalizer_eq_of_injective_of_le_range
   exact Subtype.coe_injective
   simpa
-#align subgroup.comap_subtype_normalizer_eq Subgroup.comap_subtype_normalizer_eq
+#align subgroup.subgroup_of_normalizer_eq Subgroup.subgroup_of_normalizer_eq
 
 /-- The image of the normalizer is equal to the normalizer of the image of an isomorphism. -/
 @[to_additive
@@ -3146,14 +3155,18 @@ instance (priority := 100) Subgroup.normal_comap {H : Subgroup N} [nH : H.Normal
   nH.comap _
 #align subgroup.normal_comap Subgroup.normal_comap
 
+-- Here `H.normal` is an explicit argument so we can use dot notation with `subgroup_of`.
 @[to_additive]
-instance (priority := 100) Subgroup.normal_inf (H N : Subgroup G) [hN : N.Normal] :
-    ((H ⊓ N).comap H.Subtype).Normal :=
-  ⟨fun x hx g => by
-    simp only [Subgroup.mem_inf, coeSubtype, Subgroup.mem_comap] at hx
-    simp only [Subgroup.coe_mul, Subgroup.mem_inf, coeSubtype, Subgroup.coe_inv, Subgroup.mem_comap]
-    exact ⟨H.mul_mem (H.mul_mem g.2 hx.1) (H.inv_mem g.2), hN.1 x hx.2 g⟩⟩
-#align subgroup.normal_inf Subgroup.normal_inf
+theorem Subgroup.Normal.subgroup_of {H : Subgroup G} (hH : H.Normal) (K : Subgroup G) :
+    (H.subgroupOf K).Normal :=
+  hH.comap _
+#align subgroup.normal.subgroup_of Subgroup.Normal.subgroup_of
+
+@[to_additive]
+instance (priority := 100) Subgroup.normal_subgroup_of {H N : Subgroup G} [N.Normal] :
+    (N.subgroupOf H).Normal :=
+  Subgroup.normal_comap _
+#align subgroup.normal_subgroup_of Subgroup.normal_subgroup_of
 
 namespace Subgroup
 

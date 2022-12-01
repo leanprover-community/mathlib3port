@@ -60,8 +60,8 @@ structure IsFundamentalDomain (G : Type _) {α : Type _} [One G] [HasSmul G α] 
 
 namespace IsFundamentalDomain
 
-variable {G α E : Type _} [Group G] [MulAction G α] [MeasurableSpace α] [NormedAddCommGroup E]
-  {s t : Set α} {μ : Measure α}
+variable {G H α β E : Type _} [Group G] [Group H] [MulAction G α] [MeasurableSpace α]
+  [MulAction H β] [MeasurableSpace β] [NormedAddCommGroup E] {s t : Set α} {μ : Measure α}
 
 /-- If for each `x : α`, exactly one of `g • x`, `g : G`, belongs to a measurable set `s`, then `s`
 is a fundamental domain for the action of `G` on `α`. -/
@@ -152,13 +152,13 @@ theorem pairwise_ae_disjoint_of_ac {ν} (h : IsFundamentalDomain G s μ) (hν : 
   measure_theory.is_fundamental_domain.pairwise_ae_disjoint_of_ac MeasureTheory.IsFundamentalDomain.pairwise_ae_disjoint_of_ac
 
 @[to_additive]
-theorem preimageOfEquiv (h : IsFundamentalDomain G s μ) {f : α → α}
-    (hf : QuasiMeasurePreserving f μ μ) {e : G → G} (he : Bijective e)
-    (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) : IsFundamentalDomain G (f ⁻¹' s) μ :=
+theorem preimageOfEquiv {ν : Measure β} (h : IsFundamentalDomain G s μ) {f : β → α}
+    (hf : QuasiMeasurePreserving f ν μ) {e : G → H} (he : Bijective e)
+    (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) : IsFundamentalDomain H (f ⁻¹' s) ν :=
   { NullMeasurableSet := h.NullMeasurableSet.Preimage hf,
     ae_covers := (hf.ae h.ae_covers).mono fun x ⟨g, hg⟩ => ⟨e g, by rwa [mem_preimage, hef g x]⟩,
     AeDisjoint := fun g hg => by 
-      lift e to G ≃ G using he
+      lift e to G ≃ H using he
       have : (e.symm g⁻¹)⁻¹ ≠ (e.symm 1)⁻¹ := by simp [hg]
       convert (h.pairwise_ae_disjoint this).Preimage hf using 1
       · simp only [← preimage_smul_inv, preimage_preimage, ← hef _ _, e.apply_symm_apply, inv_inv]
@@ -168,11 +168,11 @@ theorem preimageOfEquiv (h : IsFundamentalDomain G s μ) {f : α → α}
   measure_theory.is_fundamental_domain.preimage_of_equiv MeasureTheory.IsFundamentalDomain.preimageOfEquiv
 
 @[to_additive]
-theorem imageOfEquiv (h : IsFundamentalDomain G s μ) (f : α ≃ᵐ α) (hfμ : MeasurePreserving f μ μ)
-    (e : Equiv.Perm G) (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) :
-    IsFundamentalDomain G (f '' s) μ := by
+theorem imageOfEquiv {ν : Measure β} (h : IsFundamentalDomain G s μ) (f : α ≃ β)
+    (hf : QuasiMeasurePreserving f.symm ν μ) (e : H ≃ G)
+    (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) : IsFundamentalDomain H (f '' s) ν := by
   rw [f.image_eq_preimage]
-  refine' h.preimage_of_equiv (hfμ.symm f).QuasiMeasurePreserving e.symm.bijective fun g x => _
+  refine' h.preimage_of_equiv hf e.symm.bijective fun g x => _
   rcases f.surjective x with ⟨x, rfl⟩
   rw [← hef _ _, f.symm_apply_apply, f.symm_apply_apply, e.apply_symm_apply]
 #align
@@ -180,7 +180,7 @@ theorem imageOfEquiv (h : IsFundamentalDomain G s μ) (f : α ≃ᵐ α) (hfμ :
 
 @[to_additive]
 theorem smul (h : IsFundamentalDomain G s μ) (g : G) : IsFundamentalDomain G (g • s) μ :=
-  (h.imageOfEquiv (MeasurableEquiv.smul g) (measurePreservingSmul _ _)
+  (h.imageOfEquiv (MulAction.toPerm g) (measurePreservingSmul _ _).QuasiMeasurePreserving
       ⟨fun g' => g⁻¹ * g' * g, fun g' => g * g' * g⁻¹, fun g' => by simp [mul_assoc], fun g' => by
         simp [mul_assoc]⟩)
     fun g' x => by simp [smul_smul, mul_assoc]
@@ -190,7 +190,9 @@ theorem smul (h : IsFundamentalDomain G s μ) (g : G) : IsFundamentalDomain G (g
 theorem smulOfComm {G' : Type _} [Group G'] [MulAction G' α] [MeasurableSpace G']
     [HasMeasurableSmul G' α] [SmulInvariantMeasure G' α μ] [SmulCommClass G' G α]
     (h : IsFundamentalDomain G s μ) (g : G') : IsFundamentalDomain G (g • s) μ :=
-  h.imageOfEquiv (MeasurableEquiv.smul g) (measurePreservingSmul _ _) (Equiv.refl _) <| smul_comm g
+  h.imageOfEquiv (MulAction.toPerm g) (measurePreservingSmul _ _).QuasiMeasurePreserving
+      (Equiv.refl _) <|
+    smul_comm g
 #align
   measure_theory.is_fundamental_domain.smul_of_comm MeasureTheory.IsFundamentalDomain.smulOfComm
 

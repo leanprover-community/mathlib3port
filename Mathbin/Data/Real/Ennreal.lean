@@ -2225,6 +2225,12 @@ theorem of_real_le_of_real_iff {p q : ℝ} (h : 0 ≤ q) :
 #align ennreal.of_real_le_of_real_iff Ennreal.of_real_le_of_real_iff
 
 @[simp]
+theorem of_real_eq_of_real_iff {p q : ℝ} (hp : 0 ≤ p) (hq : 0 ≤ q) :
+    Ennreal.ofReal p = Ennreal.ofReal q ↔ p = q := by
+  rw [Ennreal.ofReal, Ennreal.ofReal, coe_eq_coe, Real.to_nnreal_eq_to_nnreal_iff hp hq]
+#align ennreal.of_real_eq_of_real_iff Ennreal.of_real_eq_of_real_iff
+
+@[simp]
 theorem of_real_lt_of_real_iff {p q : ℝ} (h : 0 < q) :
     Ennreal.ofReal p < Ennreal.ofReal q ↔ p < q := by
   rw [Ennreal.ofReal, Ennreal.ofReal, coe_lt_coe, Real.to_nnreal_lt_to_nnreal_iff h]

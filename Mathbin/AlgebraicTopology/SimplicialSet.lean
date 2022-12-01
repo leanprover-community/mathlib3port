@@ -154,7 +154,7 @@ noncomputable def standardSimplex :
       SSet.Augmented where 
   obj Δ :=
     { left := SSet.standardSimplex.obj Δ, right := terminal _,
-      hom := { app := fun Δ' => terminal.from _ } }
+      Hom := { app := fun Δ' => terminal.from _ } }
   map Δ₁ Δ₂ θ := { left := SSet.standardSimplex.map θ, right := terminal.from _ }
 #align sSet.augmented.standard_simplex SSet.Augmented.standardSimplex
 

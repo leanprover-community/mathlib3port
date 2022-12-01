@@ -94,6 +94,20 @@ def lapply (a : α) : (α →₀ M) →ₗ[R] M :=
   { Finsupp.applyAddHom a with map_smul' := fun a b => rfl }
 #align finsupp.lapply Finsupp.lapply
 
+/-- Forget that a function is finitely supported.
+
+This is the linear version of `finsupp.to_fun`. -/
+@[simps]
+def lcoeFun : (α →₀ M) →ₗ[R] α → M where 
+  toFun := coeFn
+  map_add' x y := by 
+    ext
+    simp
+  map_smul' x y := by 
+    ext
+    simp
+#align finsupp.lcoe_fun Finsupp.lcoeFun
+
 section LsubtypeDomain
 
 variable (s : Set α)
@@ -479,6 +493,29 @@ theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α}
 #align finsupp.lmap_domain_disjoint_ker Finsupp.lmap_domain_disjoint_ker
 
 end LmapDomain
+
+section LcomapDomain
+
+variable {β : Type _} {R M}
+
+/-- Given `f : α → β` and a proof `hf` that `f` is injective, `lcomap_domain f hf` is the linear map
+sending  `l : β →₀ M` to the finitely supported function from `α` to `M` given by composing
+`l` with `f`.
+
+This is the linear version of `finsupp.comap_domain`. -/
+def lcomapDomain (f : α → β) (hf : Function.Injective f) :
+    (β →₀ M) →ₗ[R]
+      α →₀ M where 
+  toFun l := Finsupp.comapDomain f l (hf.InjOn _)
+  map_add' x y := by 
+    ext
+    simp
+  map_smul' c x := by 
+    ext
+    simp
+#align finsupp.lcomap_domain Finsupp.lcomapDomain
+
+end LcomapDomain
 
 section Total
 

@@ -5,6 +5,8 @@ Authors: Simon Hudon
 -/
 import Mathbin.Control.Random
 import Mathbin.Control.Uliftable
+import Mathbin.Data.List.BigOperators.Lemmas
+import Mathbin.Data.List.Perm
 
 /-!
 # `gen` Monad
@@ -79,7 +81,7 @@ def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
 
 end Rand
 
-open Nat hiding choose
+open Nat
 
 /-- Generate a `nat` example between `x` and `y`. -/
 def chooseNat (x y : ℕ) (p : x ≤ y) : Gen (x .. y) :=

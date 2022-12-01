@@ -306,7 +306,7 @@ def toArrow :
     Augmented C ⥤
       Arrow
         C where 
-  obj X := { left := drop.obj X _[0], right := point.obj X, hom := X.hom.app _ }
+  obj X := { left := drop.obj X _[0], right := point.obj X, Hom := X.Hom.app _ }
   map X Y η :=
     { left := (drop.map η).app _, right := point.map η,
       w' := by 
@@ -320,8 +320,8 @@ def toArrow :
 /-- The compatibility of a morphism with the augmentation, on 0-simplices -/
 @[reassoc]
 theorem w₀ {X Y : Augmented C} (f : X ⟶ Y) :
-    (Augmented.drop.map f).app (op (SimplexCategory.mk 0)) ≫ Y.hom.app (op (SimplexCategory.mk 0)) =
-      X.hom.app (op (SimplexCategory.mk 0)) ≫ Augmented.point.map f :=
+    (Augmented.drop.map f).app (op (SimplexCategory.mk 0)) ≫ Y.Hom.app (op (SimplexCategory.mk 0)) =
+      X.Hom.app (op (SimplexCategory.mk 0)) ≫ Augmented.point.map f :=
   by convert congr_app f.w (op (SimplexCategory.mk 0))
 #align category_theory.simplicial_object.augmented.w₀ CategoryTheory.SimplicialObject.Augmented.w₀
 
@@ -335,7 +335,7 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) :
         D where 
   obj X :=
     { left := ((whiskering _ _).obj F).obj (drop.obj X), right := F.obj (point.obj X),
-      hom := whiskerRight X.hom F ≫ (Functor.constComp _ _ _).hom }
+      Hom := whiskerRight X.Hom F ≫ (Functor.constComp _ _ _).Hom }
   map X Y η :=
     { left := whiskerRight η.left _, right := F.map η.right,
       w' := by 
@@ -374,7 +374,7 @@ def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
     SimplicialObject.Augmented C where 
   left := X
   right := X₀
-  hom :=
+  Hom :=
     { app := fun i => X.map (SimplexCategory.const i.unop 0).op ≫ f,
       naturality' := by 
         intro i j g
@@ -385,7 +385,7 @@ def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
 
 @[simp]
 theorem augment_hom_zero (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀) (w) :
-    (X.augment X₀ f w).hom.app (op [0]) = f := by
+    (X.augment X₀ f w).Hom.app (op [0]) = f := by
   dsimp
   rw [SimplexCategory.hom_zero_zero ([0].const 0), op_id, X.map_id, category.id_comp]
 #align
@@ -669,7 +669,7 @@ def toArrow :
     Augmented C ⥤
       Arrow
         C where 
-  obj X := { left := point.obj X, right := drop.obj X _[0], hom := X.hom.app _ }
+  obj X := { left := point.obj X, right := drop.obj X _[0], Hom := X.Hom.app _ }
   map X Y η :=
     { left := point.map η, right := (drop.map η).app _,
       w' := by 
@@ -690,7 +690,7 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) :
         D where 
   obj X :=
     { left := F.obj (point.obj X), right := ((whiskering _ _).obj F).obj (drop.obj X),
-      hom := (Functor.constComp _ _ _).inv ≫ whiskerRight X.hom F }
+      Hom := (Functor.constComp _ _ _).inv ≫ whiskerRight X.Hom F }
   map X Y η :=
     { left := F.map η.left, right := whiskerRight η.right _,
       w' := by 
@@ -731,7 +731,7 @@ def augment (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
     CosimplicialObject.Augmented C where 
   left := X₀
   right := X
-  hom :=
+  Hom :=
     { app := fun i => f ≫ X.map (SimplexCategory.const i 0),
       naturality' := by 
         intro i j g
@@ -741,7 +741,7 @@ def augment (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
 
 @[simp]
 theorem augment_hom_zero (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0]) (w) :
-    (X.augment X₀ f w).hom.app [0] = f := by 
+    (X.augment X₀ f w).Hom.app [0] = f := by 
   dsimp
   rw [SimplexCategory.hom_zero_zero ([0].const 0), X.map_id, category.comp_id]
 #align
@@ -771,7 +771,7 @@ def SimplicialObject.Augmented.rightOp (X : SimplicialObject.Augmented C) :
       Cᵒᵖ where 
   left := Opposite.op X.right
   right := X.left.rightOp
-  hom := X.hom.rightOp
+  Hom := X.Hom.rightOp
 #align
   category_theory.simplicial_object.augmented.right_op CategoryTheory.SimplicialObject.Augmented.rightOp
 
@@ -782,7 +782,7 @@ def CosimplicialObject.Augmented.leftOp (X : CosimplicialObject.Augmented Cᵒ�
     SimplicialObject.Augmented C where 
   left := X.right.leftOp
   right := X.left.unop
-  hom := X.hom.leftOp
+  Hom := X.Hom.leftOp
 #align
   category_theory.cosimplicial_object.augmented.left_op CategoryTheory.CosimplicialObject.Augmented.leftOp
 

@@ -59,8 +59,9 @@ theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z
 #align submonoid.mem_centralizer_iff Submonoid.mem_centralizer_iff
 
 @[to_additive]
-instance decidableMemCentralizer [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
-    DecidablePred (· ∈ centralizer S) := fun _ => decidable_of_iff' _ mem_centralizer_iff
+instance decidableMemCentralizer (a) [Decidable <| ∀ b ∈ S, b * a = a * b] :
+    Decidable (a ∈ centralizer S) :=
+  decidable_of_iff' _ mem_centralizer_iff
 #align submonoid.decidable_mem_centralizer Submonoid.decidableMemCentralizer
 
 @[to_additive]
@@ -79,3 +80,5 @@ end
 
 end Submonoid
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- Guard against import creep

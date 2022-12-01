@@ -145,52 +145,28 @@ theorem coe_zero : ⇑(0 : SlashInvariantForm Γ k) = (0 : ℍ → ℂ) :=
   rfl
 #align slash_invariant_form.coe_zero SlashInvariantForm.coe_zero
 
-instance hasCsmul : HasSmul ℂ (SlashInvariantForm Γ k) :=
+section
+
+variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
+
+instance hasSmul : HasSmul α (SlashInvariantForm Γ k) :=
   ⟨fun c f =>
     { toFun := c • f,
-      slash_action_eq' := by 
-        intro γ
-        convert SlashAction.smul_action k γ (⇑f) c
-        exact (f.slash_action_eq' γ).symm }⟩
-#align slash_invariant_form.has_csmul SlashInvariantForm.hasCsmul
+      slash_action_eq' := fun γ => by
+        rw [← smul_one_smul ℂ c ⇑f, SlashAction.smul_action k γ ⇑f, slash_action_eqn] }⟩
+#align slash_invariant_form.has_smul SlashInvariantForm.hasSmul
 
 @[simp]
-theorem coe_csmul (f : SlashInvariantForm Γ k) (n : ℂ) : ⇑(n • f) = n • f :=
+theorem coe_smul (f : SlashInvariantForm Γ k) (n : α) : ⇑(n • f) = n • f :=
   rfl
-#align slash_invariant_form.coe_csmul SlashInvariantForm.coe_csmul
+#align slash_invariant_form.coe_smul SlashInvariantForm.coe_smul
 
 @[simp]
-theorem csmul_apply (f : SlashInvariantForm Γ k) (n : ℂ) (z : ℍ) : (n • f) z = n • f z :=
+theorem smul_apply (f : SlashInvariantForm Γ k) (n : α) (z : ℍ) : (n • f) z = n • f z :=
   rfl
-#align slash_invariant_form.csmul_apply SlashInvariantForm.csmul_apply
+#align slash_invariant_form.smul_apply SlashInvariantForm.smul_apply
 
-instance hasNsmul : HasSmul ℕ (SlashInvariantForm Γ k) :=
-  ⟨fun c f => ((c : ℂ) • f).copy (c • f) (nsmul_eq_smul_cast _ _ _)⟩
-#align slash_invariant_form.has_nsmul SlashInvariantForm.hasNsmul
-
-@[simp]
-theorem coe_nsmul (f : SlashInvariantForm Γ k) (n : ℕ) : ⇑(n • f) = n • f :=
-  rfl
-#align slash_invariant_form.coe_nsmul SlashInvariantForm.coe_nsmul
-
-@[simp]
-theorem nsmul_apply (f : SlashInvariantForm Γ k) (n : ℕ) (z : ℍ) : (n • f) z = n • f z :=
-  rfl
-#align slash_invariant_form.nsmul_apply SlashInvariantForm.nsmul_apply
-
-instance hasZsmul : HasSmul ℤ (SlashInvariantForm Γ k) :=
-  ⟨fun c f => ((c : ℂ) • f).copy (c • f) (zsmul_eq_smul_cast _ _ _)⟩
-#align slash_invariant_form.has_zsmul SlashInvariantForm.hasZsmul
-
-@[simp]
-theorem coe_zsmul (f : SlashInvariantForm Γ k) (n : ℤ) : ⇑(n • f) = n • f :=
-  rfl
-#align slash_invariant_form.coe_zsmul SlashInvariantForm.coe_zsmul
-
-@[simp]
-theorem zsmul_apply (f : SlashInvariantForm Γ k) (n : ℤ) (z : ℍ) : (n • f) z = n • f z :=
-  rfl
-#align slash_invariant_form.zsmul_apply SlashInvariantForm.zsmul_apply
+end
 
 instance hasNeg : Neg (SlashInvariantForm Γ k) :=
   ⟨fun f =>
@@ -224,7 +200,7 @@ theorem sub_apply (f g : SlashInvariantForm Γ k) (z : ℍ) : (f - g) z = f z - 
 #align slash_invariant_form.sub_apply SlashInvariantForm.sub_apply
 
 instance : AddCommGroup (SlashInvariantForm Γ k) :=
-  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_nsmul coe_zsmul
+  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 /-- Additive coercion from `slash_invariant_form` to `ℍ → ℂ`.-/
 def coeHom : SlashInvariantForm Γ k →+

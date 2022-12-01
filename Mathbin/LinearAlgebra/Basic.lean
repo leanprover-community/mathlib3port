@@ -1852,11 +1852,10 @@ theorem disjoint_ker' {p : Submodule R M} :
       H x h₁ 0 (zero_mem _) (by simpa using h₂)⟩
 #align linear_map.disjoint_ker' LinearMap.disjoint_ker'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
-    ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), f x = f y → x = y := fun x hx y hy =>
+theorem inj_on_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p)
+    (hd : Disjoint p (ker f)) : Set.InjOn f s := fun x hx y hy =>
   disjoint_ker'.1 hd _ (h hx) _ (h hy)
-#align linear_map.inj_of_disjoint_ker LinearMap.inj_of_disjoint_ker
+#align linear_map.inj_on_of_disjoint_ker LinearMap.inj_on_of_disjoint_ker
 
 variable (F)
 

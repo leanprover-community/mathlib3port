@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 -/
 import Mathbin.Data.Pnat.Defs
+import Mathbin.Data.Nat.Bits
 import Mathbin.Data.Nat.Order.Basic
 import Mathbin.Data.Set.Basic
 import Mathbin.Algebra.GroupWithZero.Divisibility

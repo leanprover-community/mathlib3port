@@ -3,6 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 -/
+import Mathbin.Algebra.Module.BigOperators
 import Mathbin.LinearAlgebra.Dfinsupp
 import Mathbin.LinearAlgebra.InvariantBasisNumber
 import Mathbin.LinearAlgebra.Isomorphisms

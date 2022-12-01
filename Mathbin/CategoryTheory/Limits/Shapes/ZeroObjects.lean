@@ -118,6 +118,16 @@ theorem of_iso (hY : IsZero Y) (e : X ≅ Y) : IsZero X := by
     apply hY.eq_of_tgt
 #align category_theory.limits.is_zero.of_iso CategoryTheory.Limits.IsZero.of_iso
 
+theorem op (h : IsZero X) : IsZero (Opposite.op X) :=
+  ⟨fun Y => ⟨⟨⟨(h.from (Opposite.unop Y)).op⟩, fun f => Quiver.Hom.unop_inj (h.eq_of_tgt _ _)⟩⟩,
+    fun Y => ⟨⟨⟨(h.to (Opposite.unop Y)).op⟩, fun f => Quiver.Hom.unop_inj (h.eq_of_src _ _)⟩⟩⟩
+#align category_theory.limits.is_zero.op CategoryTheory.Limits.IsZero.op
+
+theorem unop {X : Cᵒᵖ} (h : IsZero X) : IsZero (Opposite.unop X) :=
+  ⟨fun Y => ⟨⟨⟨(h.from (Opposite.op Y)).unop⟩, fun f => Quiver.Hom.op_inj (h.eq_of_tgt _ _)⟩⟩,
+    fun Y => ⟨⟨⟨(h.to (Opposite.op Y)).unop⟩, fun f => Quiver.Hom.op_inj (h.eq_of_src _ _)⟩⟩⟩
+#align category_theory.limits.is_zero.unop CategoryTheory.Limits.IsZero.unop
+
 end IsZero
 
 end Limits
@@ -173,9 +183,17 @@ theorem is_zero_zero : IsZero (0 : C) :=
   HasZeroObject.zero.some_spec
 #align category_theory.limits.is_zero_zero CategoryTheory.Limits.is_zero_zero
 
+instance has_zero_object_op : HasZeroObject Cᵒᵖ :=
+  ⟨⟨Opposite.op 0, IsZero.op (is_zero_zero C)⟩⟩
+#align category_theory.limits.has_zero_object_op CategoryTheory.Limits.has_zero_object_op
+
 end
 
 open ZeroObject
+
+theorem has_zero_object_unop [HasZeroObject Cᵒᵖ] : HasZeroObject C :=
+  ⟨⟨Opposite.unop 0, IsZero.unop (is_zero_zero Cᵒᵖ)⟩⟩
+#align category_theory.limits.has_zero_object_unop CategoryTheory.Limits.has_zero_object_unop
 
 variable {C}
 

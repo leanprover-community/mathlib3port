@@ -32,7 +32,7 @@ open Ennreal Pointwise BigOperators TopologicalSpace
 
 open Inv Set Function MeasureTheory.Measure Filter
 
-variable {G : Type _} [MeasurableSpace G]
+variable {𝕜 G H : Type _} [MeasurableSpace G] [MeasurableSpace H]
 
 namespace MeasureTheory
 
@@ -761,6 +761,23 @@ example {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [Nontrivial E] [
   infer_instance
 
 end
+
+variable [NontriviallyNormedField 𝕜] [TopologicalSpace G] [TopologicalSpace H] [AddCommGroup G]
+  [AddCommGroup H] [TopologicalAddGroup G] [TopologicalAddGroup H] [Module 𝕜 G] [Module 𝕜 H]
+  (μ : Measure G) [IsAddHaarMeasure μ] [BorelSpace G] [BorelSpace H] [T2Space H]
+
+instance MapContinuousLinearEquiv.isAddHaarMeasure (e : G ≃L[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
+  e.toAddEquiv.isAddHaarMeasureMap _ e.Continuous e.symm.Continuous
+#align
+  measure_theory.measure.map_continuous_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapContinuousLinearEquiv.isAddHaarMeasure
+
+variable [CompleteSpace 𝕜] [T2Space G] [FiniteDimensional 𝕜 G] [HasContinuousSmul 𝕜 G]
+  [HasContinuousSmul 𝕜 H]
+
+instance MapLinearEquiv.isAddHaarMeasure (e : G ≃ₗ[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
+  MapContinuousLinearEquiv.isAddHaarMeasure _ e.toContinuousLinearEquiv
+#align
+  measure_theory.measure.map_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapLinearEquiv.isAddHaarMeasure
 
 end Measure
 

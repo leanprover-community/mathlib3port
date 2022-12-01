@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 -/
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Algebra.Hom.NonUnitalAlg
+import Mathbin.Algebra.Module.BigOperators
 import Mathbin.LinearAlgebra.Finsupp
 
 /-!

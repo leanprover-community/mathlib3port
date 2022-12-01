@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jireh Loreaux
 -/
+import Mathbin.Algebra.Ring.Defs
 import Mathbin.GroupTheory.Subsemigroup.Operations
-import Mathbin.Data.Fintype.Basic
 
 /-!
 # Centers of magmas and semigroups
@@ -38,8 +38,8 @@ theorem mem_center_iff [Mul M] {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g
   Iff.rfl
 #align set.mem_center_iff Set.mem_center_iff
 
-instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) :=
-  fun _ => decidable_of_iff' _ (mem_center_iff M)
+instance decidableMemCenter [Mul M] [∀ a : M, Decidable <| ∀ b : M, b * a = a * b] :
+    DecidablePred (· ∈ center M) := fun _ => decidable_of_iff' _ (mem_center_iff M)
 #align set.decidable_mem_center Set.decidableMemCenter
 
 @[simp, to_additive zero_mem_add_center]
@@ -149,7 +149,7 @@ theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
 #align subsemigroup.mem_center_iff Subsemigroup.mem_center_iff
 
 @[to_additive]
-instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
+instance decidableMemCenter (a) [Decidable <| ∀ b : M, b * a = a * b] : Decidable (a ∈ center M) :=
   decidable_of_iff' _ mem_center_iff
 #align subsemigroup.decidable_mem_center Subsemigroup.decidableMemCenter
 
@@ -173,3 +173,5 @@ end
 
 end Subsemigroup
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- Guard against import creep

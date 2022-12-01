@@ -5,6 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Mathbin.Order.ConditionallyCompleteLattice.Basic
 import Mathbin.Data.Set.Finite
+import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Module.Basic

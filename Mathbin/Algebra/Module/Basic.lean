@@ -37,8 +37,6 @@ semimodule, module, vector space
 
 open Function
 
-open BigOperators
-
 universe u v
 
 variable {α R k S M M₂ M₃ ι : Type _}
@@ -176,19 +174,6 @@ theorem smul_add_hom_apply (r : R) (x : M) : smulAddHom R M r x = r • x :=
 theorem Module.eq_zero_of_zero_eq_one (zero_eq_one : (0 : R) = 1) : x = 0 := by
   rw [← one_smul R x, ← zero_eq_one, zero_smul]
 #align module.eq_zero_of_zero_eq_one Module.eq_zero_of_zero_eq_one
-
-theorem List.sum_smul {l : List R} {x : M} : l.Sum • x = (l.map fun r => r • x).Sum :=
-  ((smulAddHom R M).flip x).map_list_sum l
-#align list.sum_smul List.sum_smul
-
-theorem Multiset.sum_smul {l : Multiset R} {x : M} : l.Sum • x = (l.map fun r => r • x).Sum :=
-  ((smulAddHom R M).flip x).map_multiset_sum l
-#align multiset.sum_smul Multiset.sum_smul
-
-theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} :
-    (∑ i in s, f i) • x = ∑ i in s, f i • x :=
-  ((smulAddHom R M).flip x).map_sum f s
-#align finset.sum_smul Finset.sum_smul
 
 @[simp]
 theorem smul_add_one_sub_smul {R : Type _} [Ring R] [Module R M] {r : R} {m : M} :
@@ -746,7 +731,4 @@ theorem Int.smul_one_eq_coe {R : Type _} [Ring R] (m : ℤ) : m • (1 : R) = �
   rw [zsmul_eq_mul, mul_one]
 #align int.smul_one_eq_coe Int.smul_one_eq_coe
 
-theorem Finset.cast_card [CommSemiring R] (s : Finset α) : (s.card : R) = ∑ a in s, 1 := by
-  rw [Finset.sum_const, Nat.smul_one_eq_coe]
-#align finset.cast_card Finset.cast_card
-
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/

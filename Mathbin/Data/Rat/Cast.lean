@@ -9,7 +9,6 @@ import Mathbin.Data.Int.CharZero
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.Order.Field.Basic
-import Mathbin.Algebra.BigOperators.Basic
 
 /-!
 # Casts for Rational Numbers
@@ -28,8 +27,6 @@ casting lemmas showing the well-behavedness of this injection.
 rat, rationals, field, ℚ, numerator, denominator, num, denom, cast, coercion, casting
 -/
 
-
-open BigOperators
 
 variable {F ι α β : Type _}
 
@@ -268,43 +265,7 @@ theorem cast_pow (q) (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
   (castHom α).map_pow q k
 #align rat.cast_pow Rat.cast_pow
 
-@[simp, norm_cast]
-theorem cast_list_sum (s : List ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
-  map_list_sum (Rat.castHom α) _
-#align rat.cast_list_sum Rat.cast_list_sum
-
-@[simp, norm_cast]
-theorem cast_multiset_sum (s : Multiset ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
-  map_multiset_sum (Rat.castHom α) _
-#align rat.cast_multiset_sum Rat.cast_multiset_sum
-
-@[simp, norm_cast]
-theorem cast_sum (s : Finset ι) (f : ι → ℚ) : (↑(∑ i in s, f i) : α) = ∑ i in s, f i :=
-  map_sum (Rat.castHom α) _ _
-#align rat.cast_sum Rat.cast_sum
-
-@[simp, norm_cast]
-theorem cast_list_prod (s : List ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
-  map_list_prod (Rat.castHom α) _
-#align rat.cast_list_prod Rat.cast_list_prod
-
 end WithDivRing
-
-section Field
-
-variable [Field α] [CharZero α]
-
-@[simp, norm_cast]
-theorem cast_multiset_prod (s : Multiset ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
-  map_multiset_prod (Rat.castHom α) _
-#align rat.cast_multiset_prod Rat.cast_multiset_prod
-
-@[simp, norm_cast]
-theorem cast_prod (s : Finset ι) (f : ι → ℚ) : (↑(∏ i in s, f i) : α) = ∏ i in s, f i :=
-  map_prod (Rat.castHom α) _ _
-#align rat.cast_prod Rat.cast_prod
-
-end Field
 
 section LinearOrderedField
 

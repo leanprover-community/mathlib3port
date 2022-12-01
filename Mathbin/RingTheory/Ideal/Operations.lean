@@ -1961,7 +1961,7 @@ theorem Basis.mem_ideal_iff' {ι R S : Type _} [Fintype ι] [CommRing R] [CommRi
 
 namespace RingHom
 
-variable {R : Type u} {S : Type v} {T : Type v}
+variable {R : Type u} {S : Type v} {T : Type w}
 
 section Semiring
 
@@ -2038,6 +2038,17 @@ theorem ker_equiv {F' : Type _} [RingEquivClass F' R S] (f : F') : ker f = ⊥ :
 #align ring_hom.ker_equiv RingHom.ker_equiv
 
 end Ring
+
+section RingRing
+
+variable {F : Type _} [Ring R] [Ring S] [rc : RingHomClass F R S] (f : F)
+
+include rc
+
+theorem sub_mem_ker_iff {x y} : x - y ∈ ker f ↔ f x = f y := by rw [mem_ker, map_sub, sub_eq_zero]
+#align ring_hom.sub_mem_ker_iff RingHom.sub_mem_ker_iff
+
+end RingRing
 
 section CommRing
 

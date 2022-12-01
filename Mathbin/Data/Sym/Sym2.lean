@@ -3,6 +3,7 @@ Copyright (c) 2020 Kyle Miller All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
+import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Sym.Basic
 import Mathbin.Tactic.Linarith.Default
 
@@ -42,7 +43,7 @@ symmetric square, unordered pairs, symmetric powers
 -/
 
 
-open Finset Fintype Function Sym
+open Finset Function Sym
 
 universe u
 

@@ -251,7 +251,7 @@ def iso (Δ : SimplexCategoryᵒᵖ) : coprod s.n Δ ≅ X.obj Δ :=
 /-- Via the isomorphism `s.iso Δ`, this is the inclusion of a summand
 in the direct sum decomposition given by the splitting `s : splitting X`. -/
 def ιSummand {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) : s.n A.1.unop.len ⟶ X.obj Δ :=
-  Splitting.ιCoprod s.n A ≫ (s.Iso Δ).hom
+  Splitting.ιCoprod s.n A ≫ (s.Iso Δ).Hom
 #align simplicial_object.splitting.ι_summand SimplicialObject.Splitting.ιSummand
 
 @[reassoc]
@@ -283,7 +283,7 @@ theorem ι_summand_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : Inde
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g := by
-  rw [← cancel_epi (s.iso Δ).hom]
+  rw [← cancel_epi (s.iso Δ).Hom]
   ext A
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
@@ -319,9 +319,9 @@ theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s
 @[simps]
 def ofIso (e : X ≅ Y) : Splitting Y where 
   n := s.n
-  ι n := s.ι n ≫ e.hom.app (op [n])
+  ι n := s.ι n ≫ e.Hom.app (op [n])
   map_is_iso' Δ := by
-    convert (inferInstance : is_iso ((s.iso Δ).hom ≫ e.hom.app Δ))
+    convert (inferInstance : is_iso ((s.iso Δ).Hom ≫ e.hom.app Δ))
     tidy
 #align simplicial_object.splitting.of_iso SimplicialObject.Splitting.ofIso
 
@@ -390,7 +390,7 @@ attribute [simp, reassoc] hom.comm
 end Split
 
 instance : Category (Split C) where 
-  hom := Split.Hom
+  Hom := Split.Hom
   id S := { f := 𝟙 _, f := fun n => 𝟙 _, comm' := by tidy }
   comp S₁ S₂ S₃ Φ₁₂ Φ₂₃ := { f := Φ₁₂.f ≫ Φ₂₃.f, f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n, comm' := by tidy }
 

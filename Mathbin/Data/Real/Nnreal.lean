@@ -600,6 +600,11 @@ theorem to_nnreal_le_to_nnreal_iff {r p : ℝ} (hp : 0 ≤ p) :
 #align real.to_nnreal_le_to_nnreal_iff Real.to_nnreal_le_to_nnreal_iff
 
 @[simp]
+theorem to_nnreal_eq_to_nnreal_iff {r p : ℝ} (hr : 0 ≤ r) (hp : 0 ≤ p) :
+    Real.toNnreal r = Real.toNnreal p ↔ r = p := by simp [← Nnreal.coe_eq, coe_to_nnreal, hr, hp]
+#align real.to_nnreal_eq_to_nnreal_iff Real.to_nnreal_eq_to_nnreal_iff
+
+@[simp]
 theorem to_nnreal_lt_to_nnreal_iff' {r p : ℝ} : Real.toNnreal r < Real.toNnreal p ↔ r < p ∧ 0 < p :=
   Nnreal.coe_lt_coe.symm.trans max_lt_max_left_iff
 #align real.to_nnreal_lt_to_nnreal_iff' Real.to_nnreal_lt_to_nnreal_iff'

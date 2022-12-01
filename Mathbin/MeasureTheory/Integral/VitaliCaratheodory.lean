@@ -529,7 +529,9 @@ theorem exists_lt_lower_semicontinuous_integral_lt [SigmaFinite μ] (f : α → 
       
   show ∀ᵐ x : α ∂μ, g x < ⊤
   · filter_upwards [gp_lt_top] with _ hx
-    simp [g, sub_eq_add_neg, lt_top_iff_ne_top, lt_top_iff_ne_top.1 hx]
+    simp only [g, sub_eq_add_neg, coe_coe, Ne.def, (Ereal.add_lt_top _ _).Ne, lt_top_iff_ne_top,
+      lt_top_iff_ne_top.1 hx, Ereal.coe_ennreal_eq_top_iff, not_false_iff, Ereal.neg_eq_top_iff,
+      Ereal.coe_ennreal_ne_bot]
   show ∀ x, (f x : Ereal) < g x
   · intro x
     rw [Ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal (f x)]

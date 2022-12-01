@@ -40,6 +40,24 @@ class MulZeroClass (M₀ : Type _) extends Mul M₀, Zero M₀ where
 #align mul_zero_class MulZeroClass
 -/
 
+/-- A mixin for left cancellative multiplication by nonzero elements. -/
+@[protect_proj]
+class IsLeftCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] : Prop where
+  mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
+#align is_left_cancel_mul_zero IsLeftCancelMulZero
+
+/-- A mixin for right cancellative multiplication by nonzero elements. -/
+@[protect_proj]
+class IsRightCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] : Prop where
+  mul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
+#align is_right_cancel_mul_zero IsRightCancelMulZero
+
+/-- A mixin for cancellative multiplication by nonzero elements. -/
+@[protect_proj]
+class IsCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] extends IsLeftCancelMulZero M₀,
+  IsRightCancelMulZero M₀ : Prop
+#align is_cancel_mul_zero IsCancelMulZero
+
 section MulZeroClass
 
 variable [MulZeroClass M₀] {a b : M₀}
@@ -153,6 +171,14 @@ theorem mul_left_injective₀ (hb : b ≠ 0) : Function.Injective fun a => a * b
   mul_right_cancel₀ hb
 #align mul_left_injective₀ mul_left_injective₀
 
+/-- A `cancel_monoid_with_zero` satisfies `is_cancel_mul_zero`. -/
+instance (priority := 100) CancelMonoidWithZero.to_is_cancel_mul_zero :
+    IsCancelMulZero
+      M₀ where 
+  mul_left_cancel_of_ne_zero a b c ha h := CancelMonoidWithZero.mul_left_cancel_of_ne_zero ha h
+  mul_right_cancel_of_ne_zero a b c hb h := CancelMonoidWithZero.mul_right_cancel_of_ne_zero hb h
+#align cancel_monoid_with_zero.to_is_cancel_mul_zero CancelMonoidWithZero.to_is_cancel_mul_zero
+
 end CancelMonoidWithZero
 
 #print CommMonoidWithZero /-
@@ -185,6 +211,42 @@ class GroupWithZero (G₀ : Type u) extends MonoidWithZero G₀, DivInvMonoid G�
   mul_inv_cancel : ∀ a : G₀, a ≠ 0 → a * a⁻¹ = 1
 #align group_with_zero GroupWithZero
 -/
+
+namespace CommMonoidWithZero
+
+variable [CommMonoidWithZero M₀]
+
+theorem IsLeftCancelMulZero.to_is_right_cancel_mul_zero [IsLeftCancelMulZero M₀] :
+    IsRightCancelMulZero M₀ :=
+  { mul_right_cancel_of_ne_zero := fun a b c ha h => by
+      rw [mul_comm, mul_comm c] at h
+      exact IsLeftCancelMulZero.mul_left_cancel_of_ne_zero ha h }
+#align
+  comm_monoid_with_zero.is_left_cancel_mul_zero.to_is_right_cancel_mul_zero CommMonoidWithZero.IsLeftCancelMulZero.to_is_right_cancel_mul_zero
+
+theorem IsRightCancelMulZero.to_is_left_cancel_mul_zero [IsRightCancelMulZero M₀] :
+    IsLeftCancelMulZero M₀ :=
+  { mul_left_cancel_of_ne_zero := fun a b c ha h => by
+      rw [mul_comm a, mul_comm a c] at h
+      exact IsRightCancelMulZero.mul_right_cancel_of_ne_zero ha h }
+#align
+  comm_monoid_with_zero.is_right_cancel_mul_zero.to_is_left_cancel_mul_zero CommMonoidWithZero.IsRightCancelMulZero.to_is_left_cancel_mul_zero
+
+theorem IsLeftCancelMulZero.to_is_cancel_mul_zero [IsLeftCancelMulZero M₀] : IsCancelMulZero M₀ :=
+  { mul_left_cancel_of_ne_zero := fun _ _ _ => IsLeftCancelMulZero.mul_left_cancel_of_ne_zero,
+    mul_right_cancel_of_ne_zero := fun _ _ _ =>
+      IsLeftCancelMulZero.to_is_right_cancel_mul_zero.mul_right_cancel_of_ne_zero }
+#align
+  comm_monoid_with_zero.is_left_cancel_mul_zero.to_is_cancel_mul_zero CommMonoidWithZero.IsLeftCancelMulZero.to_is_cancel_mul_zero
+
+theorem IsRightCancelMulZero.to_is_cancel_mul_zero [IsRightCancelMulZero M₀] : IsCancelMulZero M₀ :=
+  { mul_left_cancel_of_ne_zero := fun _ _ _ =>
+      IsRightCancelMulZero.to_is_left_cancel_mul_zero.mul_left_cancel_of_ne_zero,
+    mul_right_cancel_of_ne_zero := fun _ _ _ => IsRightCancelMulZero.mul_right_cancel_of_ne_zero }
+#align
+  comm_monoid_with_zero.is_right_cancel_mul_zero.to_is_cancel_mul_zero CommMonoidWithZero.IsRightCancelMulZero.to_is_cancel_mul_zero
+
+end CommMonoidWithZero
 
 section GroupWithZero
 

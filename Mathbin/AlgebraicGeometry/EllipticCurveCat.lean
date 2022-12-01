@@ -75,10 +75,10 @@ instance : Inhabited (EllipticCurveCat ℚ) :=
 
 variable {R : Type u} [CommRing R] (E : EllipticCurveCat R)
 
+section Quantity
+
 /-! ### Standard quantities -/
 
-
-section Quantity
 
 /-- The `b₂` coefficient of an elliptic curve. -/
 @[simp]
@@ -139,42 +139,131 @@ def j : R :=
 
 end Quantity
 
-/-! ### `2`-torsion polynomials -/
-
-
 section TorsionPolynomial
 
-variable (A : Type v) [CommRing A] [Algebra R A]
+/-! ### `2`-torsion polynomials -/
+
 
 /-- The polynomial whose roots over a splitting field of `R` are the `2`-torsion points of the
   elliptic curve when `R` is a field of characteristic different from `2`, and whose discriminant
   happens to be a multiple of the discriminant of the elliptic curve. -/
-def twoTorsionPolynomial : Cubic A :=
-  ⟨4, algebraMap R A E.b₂, 2 * algebraMap R A E.b₄, algebraMap R A E.b₆⟩
+def twoTorsionPolynomial : Cubic R :=
+  ⟨4, E.b₂, 2 * E.b₄, E.b₆⟩
 #align EllipticCurve.two_torsion_polynomial EllipticCurveCat.twoTorsionPolynomial
 
-theorem twoTorsionPolynomial.disc_eq : (twoTorsionPolynomial E A).disc = 16 * algebraMap R A E.Δ :=
-  by
-  simp only [two_torsion_polynomial, Cubic.disc, coe_Δ, b₂, b₄, b₆, b₈, map_neg, map_add, map_sub,
-    map_mul, map_pow, map_one, map_bit0, map_bit1]
+theorem twoTorsionPolynomial.disc_eq : E.twoTorsionPolynomial.disc = 16 * E.Δ := by
+  simp only [two_torsion_polynomial, Cubic.disc, coe_Δ, b₂, b₄, b₆, b₈]
   ring1
 #align EllipticCurve.two_torsion_polynomial.disc_eq EllipticCurveCat.twoTorsionPolynomial.disc_eq
 
-theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 : K)]
-    (E : EllipticCurveCat K) (A : Type v) [CommRing A] [Nontrivial A] [Algebra K A] :
-    (twoTorsionPolynomial E A).disc ≠ 0 := fun hdisc =>
+theorem twoTorsionPolynomial.disc_ne_zero [Nontrivial R] [Invertible (2 : R)] :
+    E.twoTorsionPolynomial.disc ≠ 0 := fun hdisc =>
   E.Δ.NeZero <|
-    mul_left_cancel₀ (pow_ne_zero 4 <| nonzero_of_invertible (2 : K)) <|
-      (algebraMap K A).Injective
-        (by 
-          simp only [map_mul, map_pow, map_bit0, map_one, map_zero]
-          linear_combination hdisc - two_torsion_polynomial.disc_eq E A)
+    (is_unit_of_invertible <| 2 ^ 4).mul_left_cancel <| by
+      linear_combination (norm := ring1) hdisc - two_torsion_polynomial.disc_eq E
 #align
   EllipticCurve.two_torsion_polynomial.disc_ne_zero EllipticCurveCat.twoTorsionPolynomial.disc_ne_zero
 
 end TorsionPolynomial
 
-/-! ### Changes of variables -/
+section BaseChange
+
+/-! ### Base changes -/
+
+
+variable (A : Type v) [CommRing A] [Algebra R A]
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+private unsafe def simp_map : tactic Unit :=
+  sorry
+#align EllipticCurve.simp_map EllipticCurve.simp_map
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/-- The elliptic curve over `R` base changed to `A`. -/
+@[simps]
+def baseChange : EllipticCurveCat
+      A where 
+  a₁ := algebraMap R A E.a₁
+  a₂ := algebraMap R A E.a₂
+  a₃ := algebraMap R A E.a₃
+  a₄ := algebraMap R A E.a₄
+  a₆ := algebraMap R A E.a₆
+  Δ := Units.map (↑(algebraMap R A)) E.Δ
+  Δ_eq := by 
+    simp only [Units.coe_map, RingHom.coe_monoid_hom, Δ_eq, Δ_aux]
+    run_tac
+      simp_map
+#align EllipticCurve.base_change EllipticCurveCat.baseChange
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+@[simp]
+theorem base_change_b₂ : (E.base_change A).b₂ = algebraMap R A E.b₂ := by
+  simp only [b₂, base_change_a₁, base_change_a₂]
+  run_tac
+    simp_map
+#align EllipticCurve.base_change_b₂ EllipticCurveCat.base_change_b₂
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+@[simp]
+theorem base_change_b₄ : (E.base_change A).b₄ = algebraMap R A E.b₄ := by
+  simp only [b₄, base_change_a₁, base_change_a₃, base_change_a₄]
+  run_tac
+    simp_map
+#align EllipticCurve.base_change_b₄ EllipticCurveCat.base_change_b₄
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+@[simp]
+theorem base_change_b₆ : (E.base_change A).b₆ = algebraMap R A E.b₆ := by
+  simp only [b₆, base_change_a₃, base_change_a₆]
+  run_tac
+    simp_map
+#align EllipticCurve.base_change_b₆ EllipticCurveCat.base_change_b₆
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+@[simp]
+theorem base_change_b₈ : (E.base_change A).b₈ = algebraMap R A E.b₈ := by
+  simp only [b₈, base_change_a₁, base_change_a₂, base_change_a₃, base_change_a₄, base_change_a₆]
+  run_tac
+    simp_map
+#align EllipticCurve.base_change_b₈ EllipticCurveCat.base_change_b₈
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+@[simp]
+theorem base_change_c₄ : (E.base_change A).c₄ = algebraMap R A E.c₄ := by
+  simp only [c₄, base_change_b₂, base_change_b₄]
+  run_tac
+    simp_map
+#align EllipticCurve.base_change_c₄ EllipticCurveCat.base_change_c₄
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+@[simp]
+theorem base_change_c₆ : (E.base_change A).c₆ = algebraMap R A E.c₆ := by
+  simp only [c₆, base_change_b₂, base_change_b₄, base_change_b₆]
+  run_tac
+    simp_map
+#align EllipticCurve.base_change_c₆ EllipticCurveCat.base_change_c₆
+
+theorem base_change_Δ_coe : ↑(E.base_change A).Δ = algebraMap R A E.Δ :=
+  rfl
+#align EllipticCurve.base_change_Δ_coe EllipticCurveCat.base_change_Δ_coe
+
+theorem base_change_Δ_inv_coe : ↑(E.base_change A).Δ⁻¹ = algebraMap R A ↑E.Δ⁻¹ :=
+  rfl
+#align EllipticCurve.base_change_Δ_inv_coe EllipticCurveCat.base_change_Δ_inv_coe
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+@[simp]
+theorem base_change_j : (E.base_change A).j = algebraMap R A E.j := by
+  simp only [j, base_change_c₄, base_change_Δ_inv_coe]
+  run_tac
+    simp_map
+#align EllipticCurve.base_change_j EllipticCurveCat.base_change_j
+
+end BaseChange
+
+section VariableChange
+
+/-! ### Variable changes -/
 
 
 variable (u : Rˣ) (r s t : R)
@@ -182,8 +271,9 @@ variable (u : Rˣ) (r s t : R)
 /-- The elliptic curve over `R` induced by an admissible linear change of variables
   `(x, y) ↦ (u²x + r, u³y + u²sx + t)` for some `u ∈ Rˣ` and some `r, s, t ∈ R`.
   When `R` is a field, any two isomorphic long Weierstrass equations are related by this. -/
-def changeOfVariable :
-    EllipticCurveCat R where 
+@[simps]
+def variableChange : EllipticCurveCat
+      R where 
   a₁ := ↑u⁻¹ * (E.a₁ + 2 * s)
   a₂ := ↑u⁻¹ ^ 2 * (E.a₂ - s * E.a₁ + 3 * r - s ^ 2)
   a₃ := ↑u⁻¹ ^ 3 * (E.a₃ + r * E.a₁ + 2 * t)
@@ -193,94 +283,69 @@ def changeOfVariable :
   Δ_eq := by 
     simp [-inv_pow]
     ring1
-#align EllipticCurve.change_of_variable EllipticCurveCat.changeOfVariable
-
-namespace ChangeOfVariable
+#align EllipticCurve.variable_change EllipticCurveCat.variableChange
 
 @[simp]
-theorem a₁_eq : (E.changeOfVariable u r s t).a₁ = ↑u⁻¹ * (E.a₁ + 2 * s) :=
-  rfl
-#align EllipticCurve.change_of_variable.a₁_eq EllipticCurveCat.changeOfVariable.a₁_eq
-
-@[simp]
-theorem a₂_eq : (E.changeOfVariable u r s t).a₂ = ↑u⁻¹ ^ 2 * (E.a₂ - s * E.a₁ + 3 * r - s ^ 2) :=
-  rfl
-#align EllipticCurve.change_of_variable.a₂_eq EllipticCurveCat.changeOfVariable.a₂_eq
-
-@[simp]
-theorem a₃_eq : (E.changeOfVariable u r s t).a₃ = ↑u⁻¹ ^ 3 * (E.a₃ + r * E.a₁ + 2 * t) :=
-  rfl
-#align EllipticCurve.change_of_variable.a₃_eq EllipticCurveCat.changeOfVariable.a₃_eq
-
-@[simp]
-theorem a₄_eq :
-    (E.changeOfVariable u r s t).a₄ =
-      ↑u⁻¹ ^ 4 * (E.a₄ - s * E.a₃ + 2 * r * E.a₂ - (t + r * s) * E.a₁ + 3 * r ^ 2 - 2 * s * t) :=
-  rfl
-#align EllipticCurve.change_of_variable.a₄_eq EllipticCurveCat.changeOfVariable.a₄_eq
-
-@[simp]
-theorem a₆_eq :
-    (E.changeOfVariable u r s t).a₆ =
-      ↑u⁻¹ ^ 6 * (E.a₆ + r * E.a₄ + r ^ 2 * E.a₂ + r ^ 3 - t * E.a₃ - t ^ 2 - r * t * E.a₁) :=
-  rfl
-#align EllipticCurve.change_of_variable.a₆_eq EllipticCurveCat.changeOfVariable.a₆_eq
-
-@[simp]
-theorem b₂_eq : (E.changeOfVariable u r s t).b₂ = ↑u⁻¹ ^ 2 * (E.b₂ + 12 * r) := by
-  simp [change_of_variable]
+theorem variable_change_b₂ : (E.variableChange u r s t).b₂ = ↑u⁻¹ ^ 2 * (E.b₂ + 12 * r) := by
+  simp only [b₂, variable_change_a₁, variable_change_a₂]
   ring1
-#align EllipticCurve.change_of_variable.b₂_eq EllipticCurveCat.changeOfVariable.b₂_eq
+#align EllipticCurve.variable_change_b₂ EllipticCurveCat.variable_change_b₂
 
 @[simp]
-theorem b₄_eq : (E.changeOfVariable u r s t).b₄ = ↑u⁻¹ ^ 4 * (E.b₄ + r * E.b₂ + 6 * r ^ 2) := by
-  simp [change_of_variable]
+theorem variable_change_b₄ :
+    (E.variableChange u r s t).b₄ = ↑u⁻¹ ^ 4 * (E.b₄ + r * E.b₂ + 6 * r ^ 2) := by
+  simp only [b₂, b₄, variable_change_a₁, variable_change_a₃, variable_change_a₄]
   ring1
-#align EllipticCurve.change_of_variable.b₄_eq EllipticCurveCat.changeOfVariable.b₄_eq
+#align EllipticCurve.variable_change_b₄ EllipticCurveCat.variable_change_b₄
 
 @[simp]
-theorem b₆_eq :
-    (E.changeOfVariable u r s t).b₆ = ↑u⁻¹ ^ 6 * (E.b₆ + 2 * r * E.b₄ + r ^ 2 * E.b₂ + 4 * r ^ 3) :=
+theorem variable_change_b₆ :
+    (E.variableChange u r s t).b₆ = ↑u⁻¹ ^ 6 * (E.b₆ + 2 * r * E.b₄ + r ^ 2 * E.b₂ + 4 * r ^ 3) :=
   by 
-  simp [change_of_variable]
+  simp only [b₂, b₄, b₆, variable_change_a₃, variable_change_a₆]
   ring1
-#align EllipticCurve.change_of_variable.b₆_eq EllipticCurveCat.changeOfVariable.b₆_eq
+#align EllipticCurve.variable_change_b₆ EllipticCurveCat.variable_change_b₆
 
 @[simp]
-theorem b₈_eq :
-    (E.changeOfVariable u r s t).b₈ =
+theorem variable_change_b₈ :
+    (E.variableChange u r s t).b₈ =
       ↑u⁻¹ ^ 8 * (E.b₈ + 3 * r * E.b₆ + 3 * r ^ 2 * E.b₄ + r ^ 3 * E.b₂ + 3 * r ^ 4) :=
-  by 
-  simp [change_of_variable]
+  by
+  simp only [b₂, b₄, b₆, b₈, variable_change_a₁, variable_change_a₂, variable_change_a₃,
+    variable_change_a₄, variable_change_a₆]
   ring1
-#align EllipticCurve.change_of_variable.b₈_eq EllipticCurveCat.changeOfVariable.b₈_eq
+#align EllipticCurve.variable_change_b₈ EllipticCurveCat.variable_change_b₈
 
 @[simp]
-theorem c₄_eq : (E.changeOfVariable u r s t).c₄ = ↑u⁻¹ ^ 4 * E.c₄ := by
-  simp [change_of_variable]
+theorem variable_change_c₄ : (E.variableChange u r s t).c₄ = ↑u⁻¹ ^ 4 * E.c₄ := by
+  simp only [c₄, variable_change_b₂, variable_change_b₄]
   ring1
-#align EllipticCurve.change_of_variable.c₄_eq EllipticCurveCat.changeOfVariable.c₄_eq
+#align EllipticCurve.variable_change_c₄ EllipticCurveCat.variable_change_c₄
 
 @[simp]
-theorem c₆_eq : (E.changeOfVariable u r s t).c₆ = ↑u⁻¹ ^ 6 * E.c₆ := by
-  simp [change_of_variable]
+theorem variable_change_c₆ : (E.variableChange u r s t).c₆ = ↑u⁻¹ ^ 6 * E.c₆ := by
+  simp only [c₆, variable_change_b₂, variable_change_b₄, variable_change_b₆]
   ring1
-#align EllipticCurve.change_of_variable.c₆_eq EllipticCurveCat.changeOfVariable.c₆_eq
+#align EllipticCurve.variable_change_c₆ EllipticCurveCat.variable_change_c₆
+
+theorem variable_change_Δ_coe : (↑(E.variableChange u r s t).Δ : R) = ↑u⁻¹ ^ 12 * E.Δ := by
+  rw [variable_change_Δ, Units.val_mul, Units.coe_pow]
+#align EllipticCurve.variable_change_Δ_coe EllipticCurveCat.variable_change_Δ_coe
+
+theorem variable_change_Δ_inv_coe : (↑(E.variableChange u r s t).Δ⁻¹ : R) = u ^ 12 * ↑E.Δ⁻¹ := by
+  rw [variable_change_Δ, mul_inv, inv_pow, inv_inv, Units.val_mul, Units.coe_pow]
+#align EllipticCurve.variable_change_Δ_inv_coe EllipticCurveCat.variable_change_Δ_inv_coe
 
 @[simp]
-theorem Δ_eq : (E.changeOfVariable u r s t).Δ = u⁻¹ ^ 12 * E.Δ :=
-  rfl
-#align EllipticCurve.change_of_variable.Δ_eq EllipticCurveCat.changeOfVariable.Δ_eq
-
-@[simp]
-theorem j_eq : (E.changeOfVariable u r s t).j = E.j := by
-  simp only [j, c₄, Δ_eq, inv_pow, mul_inv_rev, inv_inv, Units.val_mul, Units.coe_pow, c₄_eq, b₂,
-    b₄]
+theorem variable_change_j : (E.variableChange u r s t).j = E.j := by
+  simp only [b₂, b₄, c₄, j, variable_change_c₄, variable_change_Δ, mul_inv, inv_pow, inv_inv,
+    Units.val_mul, u.coe_pow]
   have hu : (u * ↑u⁻¹ : R) ^ 12 = 1 := by rw [u.mul_inv, one_pow]
-  linear_combination ↑E.Δ⁻¹ * ((E.a₁ ^ 2 + 4 * E.a₂) ^ 2 - 24 * (2 * E.a₄ + E.a₁ * E.a₃)) ^ 3 * hu
-#align EllipticCurve.change_of_variable.j_eq EllipticCurveCat.changeOfVariable.j_eq
+  linear_combination (norm := ring1)
+    ↑E.Δ⁻¹ * ((E.a₁ ^ 2 + 4 * E.a₂) ^ 2 - 24 * (2 * E.a₄ + E.a₁ * E.a₃)) ^ 3 * hu
+#align EllipticCurve.variable_change_j EllipticCurveCat.variable_change_j
 
-end ChangeOfVariable
+end VariableChange
 
 end EllipticCurveCat
 

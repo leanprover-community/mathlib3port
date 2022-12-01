@@ -5,6 +5,7 @@ Authors: Joseph Myers
 -/
 import Mathbin.Algebra.Invertible
 import Mathbin.Algebra.IndicatorFunction
+import Mathbin.Algebra.Module.BigOperators
 import Mathbin.LinearAlgebra.AffineSpace.AffineMap
 import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
 import Mathbin.LinearAlgebra.Finsupp

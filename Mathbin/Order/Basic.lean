@@ -288,17 +288,39 @@ protected theorem ge [LE α] {x y : α} (h : x ≤ y) : y ≥ x :=
 #align has_le.le.ge LE.le.ge
 -/
 
+section PartialOrder
+
+variable [PartialOrder α] {a b : α}
+
 #print LE.le.lt_iff_ne /-
-theorem lt_iff_ne [PartialOrder α] {x y : α} (h : x ≤ y) : x < y ↔ x ≠ y :=
+theorem lt_iff_ne (h : a ≤ b) : a < b ↔ a ≠ b :=
   ⟨fun h => h.Ne, h.lt_of_ne⟩
 #align has_le.le.lt_iff_ne LE.le.lt_iff_ne
 -/
 
+theorem gt_iff_ne (h : a ≤ b) : a < b ↔ b ≠ a :=
+  ⟨fun h => h.Ne.symm, h.lt_of_ne'⟩
+#align has_le.le.gt_iff_ne LE.le.gt_iff_ne
+
+theorem not_lt_iff_eq (h : a ≤ b) : ¬a < b ↔ a = b :=
+  h.lt_iff_ne.not_left
+#align has_le.le.not_lt_iff_eq LE.le.not_lt_iff_eq
+
+theorem not_gt_iff_eq (h : a ≤ b) : ¬a < b ↔ b = a :=
+  h.gt_iff_ne.not_left
+#align has_le.le.not_gt_iff_eq LE.le.not_gt_iff_eq
+
 #print LE.le.le_iff_eq /-
-theorem le_iff_eq [PartialOrder α] {x y : α} (h : x ≤ y) : y ≤ x ↔ y = x :=
+theorem le_iff_eq (h : a ≤ b) : b ≤ a ↔ b = a :=
   ⟨fun h' => h'.antisymm h, Eq.le⟩
 #align has_le.le.le_iff_eq LE.le.le_iff_eq
 -/
+
+theorem ge_iff_eq (h : a ≤ b) : b ≤ a ↔ a = b :=
+  ⟨h.antisymm, Eq.ge⟩
+#align has_le.le.ge_iff_eq LE.le.ge_iff_eq
+
+end PartialOrder
 
 #print LE.le.lt_or_le /-
 theorem lt_or_le [LinearOrder α] {a b : α} (h : a ≤ b) (c : α) : a < c ∨ c ≤ b :=
