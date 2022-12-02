@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Nat.Cast.Field
-import Mathbin.Data.Fintype.Lattice
 import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
@@ -51,11 +50,6 @@ end Nat
 section
 
 variable (M : Type _) [AddMonoidWithOne M] [CharZero M]
-
--- see Note [lower instance priority]
-instance (priority := 100) CharZero.infinite : Infinite M :=
-  Infinite.of_injective coe Nat.cast_injective
-#align char_zero.infinite CharZero.infinite
 
 instance CharZero.NeZero.two : NeZero (2 : M) :=
   ⟨by 

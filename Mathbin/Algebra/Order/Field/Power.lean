@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
 import Mathbin.Algebra.Parity
-import Mathbin.Algebra.CharZero
+import Mathbin.Algebra.CharZero.Lemmas
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Algebra.Order.Field.Basic
 

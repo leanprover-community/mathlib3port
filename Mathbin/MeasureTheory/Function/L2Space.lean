@@ -166,7 +166,7 @@ instance innerProductSpace :
       (α →₂[μ] E) where 
   norm_sq_eq_inner := norm_sq_eq_inner'
   conj_sym _ _ := by simp_rw [inner_def, ← integral_conj, inner_conj_sym]
-  addLeft := add_left'
+  add_left := add_left'
   smul_left := smul_left'
 #align measure_theory.L2.inner_product_space MeasureTheory.L2Cat.innerProductSpace
 

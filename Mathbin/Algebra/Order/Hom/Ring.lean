@@ -7,6 +7,7 @@ import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Ring.Equiv
+import Mathbin.Tactic.Wlog
 
 /-!
 # Ordered ring homomorphisms

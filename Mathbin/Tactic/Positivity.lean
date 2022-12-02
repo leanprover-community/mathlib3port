@@ -6,6 +6,7 @@ Authors: Mario Carneiro, Heather Macbeth, Yaël Dillies
 import Mathbin.Tactic.NormNum
 import Mathbin.Algebra.Order.Field.Power
 import Mathbin.Algebra.Order.Hom.Basic
+import Mathbin.Data.Nat.Factorial.Basic
 
 /-! # `positivity` tactic
 
@@ -1057,28 +1058,6 @@ unsafe def positivity_asc_factorial : expr → tactic strictness
   | e =>
     pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `nat.asc_factorial n k`"
 #align tactic.positivity_asc_factorial tactic.positivity_asc_factorial
-
-private theorem card_univ_pos (α : Type _) [Fintype α] [Nonempty α] :
-    0 < (Finset.univ : Finset α).card :=
-  Finset.univ_nonempty.card_pos
-#align tactic.card_univ_pos tactic.card_univ_pos
-
-/-- Extension for the `positivity` tactic: `finset.card s` is positive if `s` is nonempty. -/
-@[positivity]
-unsafe def positivity_finset_card : expr → tactic strictness
-  | q(Finset.card $(s)) => do
-    let p
-      ←-- TODO: Partial decision procedure for `finset.nonempty`
-            to_expr
-            ``(Finset.Nonempty $(s)) >>=
-          find_assumption
-    positive <$> mk_app `` Finset.Nonempty.card_pos [p]
-  | q(@Fintype.card $(α) $(i)) => positive <$> mk_mapp `` Fintype.card_pos [α, i, none]
-  | e =>
-    pp e >>=
-      fail ∘
-        format.bracket "The expression `" "` isn't of the form `finset.card s` or `fintype.card α`"
-#align tactic.positivity_finset_card tactic.positivity_finset_card
 
 /-- Extension for the `positivity` tactic: nonnegative maps take nonnegative values. -/
 @[positivity]

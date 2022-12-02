@@ -39,9 +39,9 @@
   {"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "ee3107033d557c196e3fe376e7d8e1cfb9db33cf",
+    "rev": "f1b3ba67c7a23f2d269485dd8aa88ae489919f71",
     "name": "lean3port",
-    "inputRev?": "ee3107033d557c196e3fe376e7d8e1cfb9db33cf"}},
+    "inputRev?": "f1b3ba67c7a23f2d269485dd8aa88ae489919f71"}},
   {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,

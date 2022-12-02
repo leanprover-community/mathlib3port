@@ -751,7 +751,7 @@ theorem IsAffineOpen.self_le_basic_open_union_iff {X : SchemeCat} {U : Opens X.c
 
 Then `P` holds for every affine open of `X`.
 
-This is also known as the **Affine communication lemma** in Vakil's "The rising sea". -/
+This is also known as the **Affine communication lemma** in [*The rising sea*][RisingSea]. -/
 @[elab_as_elim]
 theorem of_affine_open_cover {X : SchemeCat} (V : X.affineOpens) (S : Set X.affineOpens)
     {P : X.affineOpens → Prop}

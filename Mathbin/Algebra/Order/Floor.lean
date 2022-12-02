@@ -5,6 +5,7 @@ Authors: Mario Carneiro, Kevin Kappelmann
 -/
 import Mathbin.Data.Int.Lemmas
 import Mathbin.Data.Set.Intervals.Group
+import Mathbin.Data.Set.Lattice
 import Mathbin.Tactic.Abel
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Tactic.Positivity

@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Data.Nat.SuccPred
-import Mathbin.Algebra.CharZero
+import Mathbin.Algebra.CharZero.Lemmas
 import Mathbin.Algebra.Order.Sub.WithTop
 import Mathbin.Algebra.Order.Ring.WithTop
 

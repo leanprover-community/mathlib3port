@@ -12,6 +12,10 @@ import Mathbin.Logic.Equiv.Basic
 
 /-!
 # Injective functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/700
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

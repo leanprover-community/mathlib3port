@@ -8,7 +8,7 @@ import Mathbin.Algebra.Module.Ulift
 import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Ring.Aut
 import Mathbin.Algebra.Ring.Ulift
-import Mathbin.Algebra.CharZero
+import Mathbin.Algebra.CharZero.Lemmas
 import Mathbin.LinearAlgebra.Span
 import Mathbin.Tactic.Abel
 

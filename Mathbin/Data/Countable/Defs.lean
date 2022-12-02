@@ -8,6 +8,10 @@ import Mathbin.Data.Finite.Defs
 /-!
 # Countable types
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/736
+> Any changes to this file require a corresponding PR to mathlib4.
+
 In this file we define a typeclass saying that a given `Sort*` is countable. See also `encodable`
 for a version that singles out a specific encoding of elements of `α` by natural numbers.
 
@@ -118,6 +122,8 @@ instance (priority := 100) Finite.to_countable [Finite α] : Countable α :=
 instance : Countable PUnit.{u} :=
   Subsingleton.to_countable
 
+-- Since this always succeeds, there is no reason not to have this at normal priority.
+-- Perhaps the `instance_priority` linter could be clever enough to notice this itself.
 @[nolint instance_priority]
 instance PropCat.countable (p : Prop) : Countable p :=
   Subsingleton.to_countable

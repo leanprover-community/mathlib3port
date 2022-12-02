@@ -1348,6 +1348,27 @@ theorem vadd_right_mem_affine_span_pair {p₁ p₂ : P} {v : V} :
     mem_vector_span_pair]
 #align vadd_right_mem_affine_span_pair vadd_right_mem_affine_span_pair
 
+/-- The span of two points that lie in an affine subspace is contained in that subspace. -/
+theorem affine_span_pair_le_of_mem_of_mem {p₁ p₂ : P} {s : AffineSubspace k P} (hp₁ : p₁ ∈ s)
+    (hp₂ : p₂ ∈ s) : line[k, p₁, p₂] ≤ s := by
+  rw [affine_span_le, Set.insert_subset, Set.singleton_subset_iff]
+  exact ⟨hp₁, hp₂⟩
+#align affine_span_pair_le_of_mem_of_mem affine_span_pair_le_of_mem_of_mem
+
+/-- One line is contained in another differing in the first point if the first point of the first
+line is contained in the second line. -/
+theorem affine_span_pair_le_of_left_mem {p₁ p₂ p₃ : P} (h : p₁ ∈ line[k, p₂, p₃]) :
+    line[k, p₁, p₃] ≤ line[k, p₂, p₃] :=
+  affine_span_pair_le_of_mem_of_mem h (right_mem_affine_span_pair _ _ _)
+#align affine_span_pair_le_of_left_mem affine_span_pair_le_of_left_mem
+
+/-- One line is contained in another differing in the second point if the second point of the
+first line is contained in the second line. -/
+theorem affine_span_pair_le_of_right_mem {p₁ p₂ p₃ : P} (h : p₁ ∈ line[k, p₂, p₃]) :
+    line[k, p₂, p₁] ≤ line[k, p₂, p₃] :=
+  affine_span_pair_le_of_mem_of_mem (left_mem_affine_span_pair _ _ _) h
+#align affine_span_pair_le_of_right_mem affine_span_pair_le_of_right_mem
+
 variable (k)
 
 /-- `affine_span` is monotone. -/

@@ -6,9 +6,9 @@ Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Ring
+import Mathbin.Algebra.BigOperators.RingEquiv
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Algebra.Module.Pi
-import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Algebra.Star.Module
 import Mathbin.Algebra.Star.Pi
 import Mathbin.Data.Fintype.BigOperators

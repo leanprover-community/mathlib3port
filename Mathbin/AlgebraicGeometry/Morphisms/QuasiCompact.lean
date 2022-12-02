@@ -25,6 +25,8 @@ open CategoryTheory CategoryTheory.Limits Opposite TopologicalSpace
 
 universe u
 
+open AlgebraicGeometry
+
 namespace AlgebraicGeometry
 
 variable {X Y : SchemeCat.{u}} (f : X ⟶ Y)
@@ -325,6 +327,62 @@ theorem compact_open_induction_on {P : Opens X.carrier → Prop} (S : Opens X.ca
       conv_rhs => rw [supr_subtype]
       exact supr_insert
 #align algebraic_geometry.compact_open_induction_on AlgebraicGeometry.compact_open_induction_on
+
+theorem exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open (X : SchemeCat)
+    {U : Opens X.carrier} (hU : IsAffineOpen U) (x f : X.Presheaf.obj (op U))
+    (H : x |_ X.basicOpen f = 0) : ∃ n : ℕ, f ^ n * x = 0 := by
+  rw [← map_zero (X.presheaf.map (hom_of_le <| X.basic_open_le f : X.basic_open f ⟶ U).op)] at H
+  have := (is_localization_basic_open hU f).3
+  obtain ⟨⟨_, n, rfl⟩, e⟩ := this.mp H
+  exact ⟨n, by simpa [mul_comm x] using e⟩
+#align
+  algebraic_geometry.exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open AlgebraicGeometry.exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open
+
+/-- If `x : Γ(X, U)` is zero on `D(f)` for some `f : Γ(X, U)`, and `U` is quasi-compact, then
+`f ^ n * x = 0` for some `n`. -/
+theorem exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_compact (X : SchemeCat)
+    {U : Opens X.carrier} (hU : IsCompact U.1) (x f : X.Presheaf.obj (op U))
+    (H : x |_ X.basicOpen f = 0) : ∃ n : ℕ, f ^ n * x = 0 := by
+  obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union U.1).mp ⟨hU, U.2⟩
+  replace e : U = supr fun i : s => (i : opens X.carrier)
+  · ext1
+    simpa using e
+  have h₁ : ∀ i : s, i.1.1 ≤ U := by 
+    intro i
+    change (i : opens X.carrier) ≤ U
+    rw [e]
+    exact le_supr _ _
+  have H' := fun i : s =>
+    exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open X i.1.2
+      (X.presheaf.map (hom_of_le (h₁ i)).op x) (X.presheaf.map (hom_of_le (h₁ i)).op f) _
+  swap
+  · delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict at H⊢
+    convert congr_arg (X.presheaf.map (hom_of_le _).op) H
+    · simp only [← comp_apply, ← functor.map_comp]
+      congr
+    · rw [map_zero]
+    · rw [X.basic_open_res]
+      exact Set.inter_subset_right _ _
+  choose n hn using H'
+  haveI := hs.to_subtype
+  cases nonempty_fintype s
+  use finset.univ.sup n
+  suffices ∀ i : s, X.presheaf.map (hom_of_le (h₁ i)).op (f ^ finset.univ.sup n * x) = 0 by
+    subst e
+    apply X.sheaf.eq_of_locally_eq fun i : s => (i : opens X.carrier)
+    intro i
+    rw [map_zero]
+    apply this
+  intro i
+  replace hn :=
+    congr_arg (fun x => X.presheaf.map (hom_of_le (h₁ i)).op (f ^ (finset.univ.sup n - n i)) * x)
+      (hn i)
+  dsimp at hn
+  simp only [← map_mul, ← map_pow] at hn
+  rwa [mul_zero, ← mul_assoc, ← pow_add, tsub_add_cancel_of_le] at hn
+  apply Finset.le_sup (Finset.mem_univ i)
+#align
+  algebraic_geometry.exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_compact AlgebraicGeometry.exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_compact
 
 end AlgebraicGeometry
 

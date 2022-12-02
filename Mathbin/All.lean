@@ -28,6 +28,7 @@ import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.BigOperators.PartEnat
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Ring
+import Mathbin.Algebra.BigOperators.RingEquiv
 import Mathbin.Algebra.Bounds
 import Mathbin.Algebra.Category.AlgebraCat.Basic
 import Mathbin.Algebra.Category.AlgebraCat.Limits
@@ -96,8 +97,9 @@ import Mathbin.Algebra.CharP.Pi
 import Mathbin.Algebra.CharP.Quotient
 import Mathbin.Algebra.CharP.Subring
 import Mathbin.Algebra.CharP.Two
-import Mathbin.Algebra.CharZero
 import Mathbin.Algebra.CharZero.Defs
+import Mathbin.Algebra.CharZero.Infinite
+import Mathbin.Algebra.CharZero.Lemmas
 import Mathbin.Algebra.CharZero.Quotient
 import Mathbin.Algebra.ContinuedFractions.Basic
 import Mathbin.Algebra.ContinuedFractions.Computation.ApproximationCorollaries
@@ -436,6 +438,7 @@ import Mathbin.AlgebraicTopology.CechNerve
 import Mathbin.AlgebraicTopology.DoldKan.Decomposition
 import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
 import Mathbin.AlgebraicTopology.DoldKan.Faces
+import Mathbin.AlgebraicTopology.DoldKan.FunctorGamma
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
 import Mathbin.AlgebraicTopology.DoldKan.HomotopyEquivalence

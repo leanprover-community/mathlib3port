@@ -149,8 +149,8 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     simp only [mem_bUnion, mem_sdiff, not_exists, mem_image, and_imp, mem_union, exists_and_right,
       exists_imp]
     rintro x (hx | ⟨x', hx', rfl⟩) rat hs
-    · exact (hs x hx rat).elim
-    · exact ⟨⟨x', hx', rat⟩, hs⟩
+    · exact (hs x hx Rat).elim
+    · exact ⟨⟨x', hx', Rat⟩, hs⟩
   · apply bUnion_subset_bUnion_of_subset_left
     apply subset_union_left
 #align hall_marriage_theorem.hall_cond_of_compl HallMarriageTheorem.hall_cond_of_compl

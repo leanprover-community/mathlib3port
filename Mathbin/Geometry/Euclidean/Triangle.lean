@@ -3,6 +3,7 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 -/
+import Mathbin.Geometry.Euclidean.Angle.Oriented.Affine
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.Affine
 import Mathbin.Tactic.IntervalCases
 
@@ -334,6 +335,17 @@ theorem angle_add_angle_add_angle_eq_pi {p1 p2 p3 : P} (h2 : p2 ≠ p1) (h3 : p3
       h2 (vsub_eq_zero_iff_eq.1 he)
 #align
   euclidean_geometry.angle_add_angle_add_angle_eq_pi EuclideanGeometry.angle_add_angle_add_angle_eq_pi
+
+/-- The **sum of the angles of a triangle** (possibly degenerate, where the triangle is a line),
+oriented angles at point. -/
+theorem oangle_add_oangle_add_oangle_eq_pi [Module.Oriented ℝ V (Fin 2)]
+    [Fact (FiniteDimensional.finrank ℝ V = 2)] {p1 p2 p3 : P} (h21 : p2 ≠ p1) (h32 : p3 ≠ p2)
+    (h13 : p1 ≠ p3) : ∡ p1 p2 p3 + ∡ p2 p3 p1 + ∡ p3 p1 p2 = π := by
+  simpa only [neg_vsub_eq_vsub_rev] using
+    positive_orientation.oangle_add_cyc3_neg_left (vsub_ne_zero.mpr h21) (vsub_ne_zero.mpr h32)
+      (vsub_ne_zero.mpr h13)
+#align
+  euclidean_geometry.oangle_add_oangle_add_oangle_eq_pi EuclideanGeometry.oangle_add_oangle_add_oangle_eq_pi
 
 /-- **Stewart's Theorem**. -/
 theorem dist_sq_mul_dist_add_dist_sq_mul_dist (a b c p : P) (h : ∠ b p c = π) :

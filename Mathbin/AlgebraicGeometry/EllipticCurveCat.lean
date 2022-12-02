@@ -178,7 +178,7 @@ private unsafe def simp_map : tactic Unit :=
   sorry
 #align EllipticCurve.simp_map EllipticCurve.simp_map
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 /-- The elliptic curve over `R` base changed to `A`. -/
 @[simps]
 def baseChange : EllipticCurveCat
@@ -195,7 +195,7 @@ def baseChange : EllipticCurveCat
       simp_map
 #align EllipticCurve.base_change EllipticCurveCat.baseChange
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 @[simp]
 theorem base_change_b₂ : (E.base_change A).b₂ = algebraMap R A E.b₂ := by
   simp only [b₂, base_change_a₁, base_change_a₂]
@@ -203,7 +203,7 @@ theorem base_change_b₂ : (E.base_change A).b₂ = algebraMap R A E.b₂ := by
     simp_map
 #align EllipticCurve.base_change_b₂ EllipticCurveCat.base_change_b₂
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 @[simp]
 theorem base_change_b₄ : (E.base_change A).b₄ = algebraMap R A E.b₄ := by
   simp only [b₄, base_change_a₁, base_change_a₃, base_change_a₄]
@@ -211,7 +211,7 @@ theorem base_change_b₄ : (E.base_change A).b₄ = algebraMap R A E.b₄ := by
     simp_map
 #align EllipticCurve.base_change_b₄ EllipticCurveCat.base_change_b₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 @[simp]
 theorem base_change_b₆ : (E.base_change A).b₆ = algebraMap R A E.b₆ := by
   simp only [b₆, base_change_a₃, base_change_a₆]
@@ -219,7 +219,7 @@ theorem base_change_b₆ : (E.base_change A).b₆ = algebraMap R A E.b₆ := by
     simp_map
 #align EllipticCurve.base_change_b₆ EllipticCurveCat.base_change_b₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 @[simp]
 theorem base_change_b₈ : (E.base_change A).b₈ = algebraMap R A E.b₈ := by
   simp only [b₈, base_change_a₁, base_change_a₂, base_change_a₃, base_change_a₄, base_change_a₆]
@@ -227,7 +227,7 @@ theorem base_change_b₈ : (E.base_change A).b₈ = algebraMap R A E.b₈ := by
     simp_map
 #align EllipticCurve.base_change_b₈ EllipticCurveCat.base_change_b₈
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 @[simp]
 theorem base_change_c₄ : (E.base_change A).c₄ = algebraMap R A E.c₄ := by
   simp only [c₄, base_change_b₂, base_change_b₄]
@@ -235,7 +235,7 @@ theorem base_change_c₄ : (E.base_change A).c₄ = algebraMap R A E.c₄ := by
     simp_map
 #align EllipticCurve.base_change_c₄ EllipticCurveCat.base_change_c₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 @[simp]
 theorem base_change_c₆ : (E.base_change A).c₆ = algebraMap R A E.c₆ := by
   simp only [c₆, base_change_b₂, base_change_b₄, base_change_b₆]
@@ -251,7 +251,7 @@ theorem base_change_Δ_inv_coe : ↑(E.base_change A).Δ⁻¹ = algebraMap R A �
   rfl
 #align EllipticCurve.base_change_Δ_inv_coe EllipticCurveCat.base_change_Δ_inv_coe
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3257942883.simp_map -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1657808313.simp_map -/
 @[simp]
 theorem base_change_j : (E.base_change A).j = algebraMap R A E.j := by
   simp only [j, base_change_c₄, base_change_Δ_inv_coe]

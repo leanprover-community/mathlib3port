@@ -3,6 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
 -/
+import Mathbin.Algebra.CharZero.Infinite
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Div

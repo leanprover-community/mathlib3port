@@ -423,6 +423,34 @@ theorem cos_pi_div_two_sub (θ : Angle) : cos (↑(π / 2) - θ) = sin θ := by
   exact cos_pi_div_two_sub _
 #align real.angle.cos_pi_div_two_sub Real.Angle.cos_pi_div_two_sub
 
+theorem abs_sin_eq_of_two_nsmul_eq {θ ψ : Angle} (h : (2 : ℕ) • θ = (2 : ℕ) • ψ) :
+    |sin θ| = |sin ψ| := by 
+  rw [two_nsmul_eq_iff] at h
+  rcases h with (rfl | rfl)
+  · rfl
+  · rw [sin_add_pi, abs_neg]
+#align real.angle.abs_sin_eq_of_two_nsmul_eq Real.Angle.abs_sin_eq_of_two_nsmul_eq
+
+theorem abs_sin_eq_of_two_zsmul_eq {θ ψ : Angle} (h : (2 : ℤ) • θ = (2 : ℤ) • ψ) :
+    |sin θ| = |sin ψ| := by 
+  simp_rw [two_zsmul, ← two_nsmul] at h
+  exact abs_sin_eq_of_two_nsmul_eq h
+#align real.angle.abs_sin_eq_of_two_zsmul_eq Real.Angle.abs_sin_eq_of_two_zsmul_eq
+
+theorem abs_cos_eq_of_two_nsmul_eq {θ ψ : Angle} (h : (2 : ℕ) • θ = (2 : ℕ) • ψ) :
+    |cos θ| = |cos ψ| := by 
+  rw [two_nsmul_eq_iff] at h
+  rcases h with (rfl | rfl)
+  · rfl
+  · rw [cos_add_pi, abs_neg]
+#align real.angle.abs_cos_eq_of_two_nsmul_eq Real.Angle.abs_cos_eq_of_two_nsmul_eq
+
+theorem abs_cos_eq_of_two_zsmul_eq {θ ψ : Angle} (h : (2 : ℤ) • θ = (2 : ℤ) • ψ) :
+    |cos θ| = |cos ψ| := by 
+  simp_rw [two_zsmul, ← two_nsmul] at h
+  exact abs_cos_eq_of_two_nsmul_eq h
+#align real.angle.abs_cos_eq_of_two_zsmul_eq Real.Angle.abs_cos_eq_of_two_zsmul_eq
+
 @[simp]
 theorem coe_to_Ico_mod (θ ψ : ℝ) : ↑(toIcoMod ψ two_pi_pos θ) = (θ : Angle) := by
   rw [angle_eq_iff_two_pi_dvd_sub]
@@ -587,6 +615,35 @@ theorem sin_to_real (θ : Angle) : Real.sin θ.toReal = sin θ := by
 theorem cos_to_real (θ : Angle) : Real.cos θ.toReal = cos θ := by
   conv_rhs => rw [← coe_to_real θ, cos_coe]
 #align real.angle.cos_to_real Real.Angle.cos_to_real
+
+theorem cos_nonneg_iff_abs_to_real_le_pi_div_two {θ : Angle} : 0 ≤ cos θ ↔ |θ.toReal| ≤ π / 2 := by
+  nth_rw 0 [← coe_to_real θ]
+  rw [abs_le, cos_coe]
+  refine' ⟨fun h => _, cos_nonneg_of_mem_Icc⟩
+  by_contra hn
+  rw [not_and_or, not_le, not_le] at hn
+  refine' (not_lt.2 h) _
+  rcases hn with (hn | hn)
+  · rw [← Real.cos_neg]
+    refine' cos_neg_of_pi_div_two_lt_of_lt (by linarith) _
+    linarith [neg_pi_lt_to_real θ]
+  · refine' cos_neg_of_pi_div_two_lt_of_lt hn _
+    linarith [to_real_le_pi θ]
+#align
+  real.angle.cos_nonneg_iff_abs_to_real_le_pi_div_two Real.Angle.cos_nonneg_iff_abs_to_real_le_pi_div_two
+
+theorem cos_pos_iff_abs_to_real_lt_pi_div_two {θ : Angle} : 0 < cos θ ↔ |θ.toReal| < π / 2 := by
+  rw [lt_iff_le_and_ne, lt_iff_le_and_ne, cos_nonneg_iff_abs_to_real_le_pi_div_two, ←
+    and_congr_right]
+  rintro -
+  rw [Ne.def, Ne.def, not_iff_not, @eq_comm ℝ 0, abs_to_real_eq_pi_div_two_iff, cos_eq_zero_iff]
+#align
+  real.angle.cos_pos_iff_abs_to_real_lt_pi_div_two Real.Angle.cos_pos_iff_abs_to_real_lt_pi_div_two
+
+theorem cos_neg_iff_pi_div_two_lt_abs_to_real {θ : Angle} : cos θ < 0 ↔ π / 2 < |θ.toReal| := by
+  rw [← not_le, ← not_le, not_iff_not, cos_nonneg_iff_abs_to_real_le_pi_div_two]
+#align
+  real.angle.cos_neg_iff_pi_div_two_lt_abs_to_real Real.Angle.cos_neg_iff_pi_div_two_lt_abs_to_real
 
 /-- The tangent of a `real.angle`. -/
 def tan (θ : Angle) : ℝ :=

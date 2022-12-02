@@ -3,7 +3,7 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.CharZero
+import Mathbin.Algebra.CharZero.Lemmas
 import Mathbin.Order.LocallyFinite
 import Mathbin.Data.Finset.LocallyFinite
 

@@ -6,7 +6,11 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 import Mathbin.Algebra.Group.OrderSynonym
 import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 
-/-! # Ordered monoid structures on the order dual. -/
+/-! # Ordered monoid structures on the order dual. 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/786
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 universe u

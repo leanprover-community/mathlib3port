@@ -852,6 +852,18 @@ theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : F
   rw [h, eq_id_of_mono θ', category.id_comp]
 #align simplex_category.eq_δ_of_mono SimplexCategory.eq_δ_of_mono
 
+theorem len_lt_of_mono {Δ' Δ : SimplexCategory} (i : Δ' ⟶ Δ) [hi : Mono i] (hi' : Δ ≠ Δ') :
+    Δ'.len < Δ.len := by 
+  cases lt_or_eq_of_le (len_le_of_mono hi)
+  · exact h
+  · exfalso
+    exact
+      hi'
+        (by 
+          ext
+          exact h.symm)
+#align simplex_category.len_lt_of_mono SimplexCategory.len_lt_of_mono
+
 noncomputable instance : SplitEpiCategory SimplexCategory :=
   skeletalEquivalence.{0}.inverse.splitEpiCategoryImpOfIsEquivalence
 
