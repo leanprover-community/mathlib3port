@@ -235,14 +235,14 @@ theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1
 theorem CharP.neg_one_pow_char [CommRing R] (p : ℕ) [CharP R p] [Fact p.Prime] :
     (-1 : R) ^ p = -1 := by 
   rw [eq_neg_iff_add_eq_zero]
-  nth_rw 1 [← one_pow p]
+  nth_rw 2 [← one_pow p]
   rw [← add_pow_char, add_left_neg, zero_pow (Fact.out (Nat.Prime p)).Pos]
 #align char_p.neg_one_pow_char CharP.neg_one_pow_char
 
 theorem CharP.neg_one_pow_char_pow [CommRing R] (p n : ℕ) [CharP R p] [Fact p.Prime] :
     (-1 : R) ^ p ^ n = -1 := by 
   rw [eq_neg_iff_add_eq_zero]
-  nth_rw 1 [← one_pow (p ^ n)]
+  nth_rw 2 [← one_pow (p ^ n)]
   rw [← add_pow_char_pow, add_left_neg, zero_pow (pow_pos (Fact.out (Nat.Prime p)).Pos _)]
 #align char_p.neg_one_pow_char_pow CharP.neg_one_pow_char_pow
 

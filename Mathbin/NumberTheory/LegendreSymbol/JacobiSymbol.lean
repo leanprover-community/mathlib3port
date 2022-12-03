@@ -419,7 +419,7 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
   have hb' : Odd (b % (4 * a)) := hb.mod_even (Even.mul_right (by norm_num) _)
   rcases exists_eq_pow_mul_and_not_dvd ha₀ 2 (by norm_num) with ⟨e, a', ha₁', ha₂⟩
   have ha₁ := odd_iff.mpr (two_dvd_ne_zero.mp ha₁')
-  nth_rw 1 [ha₂]; nth_rw 0 [ha₂]
+  nth_rw 2 [ha₂]; nth_rw 1 [ha₂]
   rw [Nat.cast_mul, mul_left, mul_left, quadratic_reciprocity' ha₁ hb,
     quadratic_reciprocity' ha₁ hb', Nat.cast_pow, pow_left, pow_left, Nat.cast_two, at_two hb,
     at_two hb']
@@ -438,7 +438,7 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
 
 /-- The Jacobi symbol `J(a | b)` depends only on `b` mod `4*a`. -/
 theorem mod_right (a : ℤ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * a.natAbs)) := by
-  cases' Int.natAbs_eq a with ha ha <;> nth_rw 1 [ha] <;> nth_rw 0 [ha]
+  cases' Int.natAbs_eq a with ha ha <;> nth_rw 2 [ha] <;> nth_rw 1 [ha]
   · exact mod_right' a.nat_abs hb
   · have hb' : Odd (b % (4 * a.nat_abs)) := hb.mod_even (Even.mul_right (by norm_num) _)
     rw [jacobiSym.neg _ hb, jacobiSym.neg _ hb', mod_right' _ hb, χ₄_nat_mod_four,

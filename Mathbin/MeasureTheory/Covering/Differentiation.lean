@@ -969,7 +969,7 @@ theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} 
   rw [tendsto_iff_norm_tendsto_zero]
   refine' squeeze_zero' (eventually_of_forall fun a => norm_nonneg _) _ hx
   filter_upwards [h'x, v.eventually_measure_lt_top x] with a ha h'a
-  nth_rw 0 [← set_average_const ha.ne' h'a.ne (f x)]
+  nth_rw 1 [← set_average_const ha.ne' h'a.ne (f x)]
   simp_rw [set_average_eq']
   rw [← integral_sub]
   · exact norm_integral_le_integral_norm _

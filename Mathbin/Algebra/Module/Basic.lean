@@ -192,7 +192,7 @@ def Module.addCommMonoidToAddCommGroup [Ring R] [AddCommMonoid M] [Module R M] :
   { (inferInstance : AddCommMonoid M) with neg := fun a => (-1 : R) • a,
     add_left_neg := fun a =>
       show (-1 : R) • a + a = 0 by 
-        nth_rw 1 [← one_smul _ a]
+        nth_rw 2 [← one_smul _ a]
         rw [← add_smul, add_left_neg, zero_smul] }
 #align module.add_comm_monoid_to_add_comm_group Module.addCommMonoidToAddCommGroup
 

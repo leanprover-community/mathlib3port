@@ -623,7 +623,7 @@ theorem eval_multiset_prod_X_sub_C_derivative {S : Multiset R} {r : R} (hr : r �
     eval r (Multiset.map (fun a => X - c a) S).Prod.derivative =
       (Multiset.map (fun a => r - a) (S.erase r)).Prod :=
   by 
-  nth_rw 0 [← Multiset.cons_erase hr]
+  nth_rw 1 [← Multiset.cons_erase hr]
   simpa using (eval_ring_hom r).map_multiset_prod (Multiset.map (fun a => X - C a) (S.erase r))
 #align
   polynomial.eval_multiset_prod_X_sub_C_derivative Polynomial.eval_multiset_prod_X_sub_C_derivative

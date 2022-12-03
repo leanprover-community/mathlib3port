@@ -1580,6 +1580,16 @@ theorem has_sum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι �
 
 variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
 
+theorem continuous_within_at_of_dominated {F : X → α → E} {x₀ : X} {bound : α → ℝ} {s : Set X}
+    (hF_meas : ∀ᶠ x in 𝓝[s] x₀, AeStronglyMeasurable (F x) μ)
+    (h_bound : ∀ᶠ x in 𝓝[s] x₀, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
+    (h_cont : ∀ᵐ a ∂μ, ContinuousWithinAt (fun x => F x a) s x₀) :
+    ContinuousWithinAt (fun x => ∫ a, F x a ∂μ) s x₀ :=
+  continuous_within_at_set_to_fun_of_dominated (dominatedFinMeasAdditiveWeightedSmul μ) hF_meas
+    h_bound bound_integrable h_cont
+#align
+  measure_theory.continuous_within_at_of_dominated MeasureTheory.continuous_within_at_of_dominated
+
 theorem continuous_at_of_dominated {F : X → α → E} {x₀ : X} {bound : α → ℝ}
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
     (h_bound : ∀ᶠ x in 𝓝 x₀, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
@@ -1588,6 +1598,14 @@ theorem continuous_at_of_dominated {F : X → α → E} {x₀ : X} {bound : α �
   continuous_at_set_to_fun_of_dominated (dominatedFinMeasAdditiveWeightedSmul μ) hF_meas h_bound
     bound_integrable h_cont
 #align measure_theory.continuous_at_of_dominated MeasureTheory.continuous_at_of_dominated
+
+theorem continuous_on_of_dominated {F : X → α → E} {bound : α → ℝ} {s : Set X}
+    (hF_meas : ∀ x ∈ s, AeStronglyMeasurable (F x) μ)
+    (h_bound : ∀ x ∈ s, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
+    (h_cont : ∀ᵐ a ∂μ, ContinuousOn (fun x => F x a) s) : ContinuousOn (fun x => ∫ a, F x a ∂μ) s :=
+  continuous_on_set_to_fun_of_dominated (dominatedFinMeasAdditiveWeightedSmul μ) hF_meas h_bound
+    bound_integrable h_cont
+#align measure_theory.continuous_on_of_dominated MeasureTheory.continuous_on_of_dominated
 
 theorem continuous_of_dominated {F : X → α → E} {bound : α → ℝ}
     (hF_meas : ∀ x, AeStronglyMeasurable (F x) μ) (h_bound : ∀ x, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a)

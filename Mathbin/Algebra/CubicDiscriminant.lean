@@ -396,7 +396,7 @@ section Split
 
 theorem splits_iff_card_roots (ha : P.a ≠ 0) : Splits φ P.toPoly ↔ (map φ P).roots.card = 3 := by
   replace ha : (map φ P).a ≠ 0 := (_root_.map_ne_zero φ).mpr ha
-  nth_rw_lhs 0 [← RingHom.id_comp φ]
+  nth_rw_lhs 1 [← RingHom.id_comp φ]
   rw [roots, ← splits_map_iff, ← map_to_poly, splits_iff_card_roots, ←
     ((degree_eq_iff_nat_degree_eq <| ne_zero_of_a_ne_zero ha).mp <| degree_of_a_ne_zero ha : _ = 3)]
 #align cubic.splits_iff_card_roots Cubic.splits_iff_card_roots

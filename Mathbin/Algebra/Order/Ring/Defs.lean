@@ -5,11 +5,14 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Yaël Dillies
 -/
 import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Algebra.Order.Monoid.Cancel.Defs
-import Mathbin.Algebra.Order.Monoid.WithZero
+import Mathbin.Algebra.Order.Monoid.Canonical.Defs
+import Mathbin.Algebra.Order.Monoid.WithZero.Defs
 import Mathbin.Algebra.Order.Ring.Lemmas
 import Mathbin.Algebra.Ring.Defs
 import Mathbin.Order.MinMax
 import Mathbin.Tactic.Nontriviality
+import Mathbin.Data.Pi.Algebra
+import Mathbin.Algebra.Group.Units
 
 /-!
 # Ordered rings and semirings

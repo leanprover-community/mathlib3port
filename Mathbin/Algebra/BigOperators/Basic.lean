@@ -5424,7 +5424,7 @@ theorem prod_erase [DecidableEq α] (s : Finset α) {f : α → β} {a : α} (h 
 theorem sum_erase_lt_of_pos {γ : Type _} [DecidableEq α] [OrderedAddCommMonoid γ]
     [CovariantClass γ γ (· + ·) (· < ·)] {s : Finset α} {d : α} (hd : d ∈ s) {f : α → γ}
     (hdf : 0 < f d) : (∑ m : α in s.erase d, f m) < ∑ m : α in s, f m := by
-  nth_rw_rhs 0 [← Finset.insert_erase hd]
+  nth_rw_rhs 1 [← Finset.insert_erase hd]
   rw [Finset.sum_insert (Finset.not_mem_erase d s)]
   exact lt_add_of_pos_left _ hdf
 #align finset.sum_erase_lt_of_pos Finset.sum_erase_lt_of_pos

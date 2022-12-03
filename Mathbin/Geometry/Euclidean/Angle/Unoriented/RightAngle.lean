@@ -93,7 +93,7 @@ theorem angle_add_eq_arcsin_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 
         Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
   rw [angle_add_eq_arccos_of_inner_eq_zero h,
     Real.arccos_eq_arcsin (div_nonneg (norm_nonneg _) (norm_nonneg _)), div_pow, one_sub_div hxy]
-  nth_rw 0 [pow_two]
+  nth_rw 1 [pow_two]
   rw [norm_add_sq_eq_norm_sq_add_norm_sq_real h, pow_two, add_sub_cancel', ← pow_two, ← div_pow,
     Real.sqrt_sq (div_nonneg (norm_nonneg _) (norm_nonneg _))]
 #align
@@ -104,7 +104,7 @@ theorem angle_add_eq_arctan_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 
     angle x (x + y) = Real.arctan (‖y‖ / ‖x‖) := by
   rw [angle_add_eq_arcsin_of_inner_eq_zero h (Or.inl h0), Real.arctan_eq_arcsin, ←
     div_mul_eq_div_div, norm_add_eq_sqrt_iff_real_inner_eq_zero.2 h]
-  nth_rw 2 [← Real.sqrt_sq (norm_nonneg x)]
+  nth_rw 3 [← Real.sqrt_sq (norm_nonneg x)]
   rw [← Real.sqrt_mul (sq_nonneg _), div_pow, pow_two, pow_two, mul_add, mul_one, mul_div,
     mul_comm (‖x‖ * ‖x‖), ← mul_div, div_self (mul_self_pos.2 (norm_ne_zero_iff.2 h0)).ne', mul_one]
 #align
@@ -260,7 +260,7 @@ theorem angle_sub_eq_arccos_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
 theorem angle_sub_eq_arcsin_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x ≠ 0 ∨ y ≠ 0) :
     angle x (x - y) = Real.arcsin (‖y‖ / ‖x - y‖) := by
   rw [← neg_eq_zero, ← inner_neg_right] at h
-  nth_rw 1 [← neg_ne_zero]  at h0
+  nth_rw 2 [← neg_ne_zero]  at h0
   rw [sub_eq_add_neg, angle_add_eq_arcsin_of_inner_eq_zero h h0, norm_neg]
 #align
   inner_product_geometry.angle_sub_eq_arcsin_of_inner_eq_zero InnerProductGeometry.angle_sub_eq_arcsin_of_inner_eq_zero
@@ -317,7 +317,7 @@ vectors. -/
 theorem sin_angle_sub_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 : x ≠ 0 ∨ y ≠ 0) :
     Real.sin (angle x (x - y)) = ‖y‖ / ‖x - y‖ := by
   rw [← neg_eq_zero, ← inner_neg_right] at h
-  nth_rw 1 [← neg_ne_zero]  at h0
+  nth_rw 2 [← neg_ne_zero]  at h0
   rw [sub_eq_add_neg, sin_angle_add_of_inner_eq_zero h h0, norm_neg]
 #align
   inner_product_geometry.sin_angle_sub_of_inner_eq_zero InnerProductGeometry.sin_angle_sub_of_inner_eq_zero

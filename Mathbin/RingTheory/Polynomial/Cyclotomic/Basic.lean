@@ -988,7 +988,7 @@ theorem cyclotomic_mul_prime_eq_pow_of_not_dvd (R : Type _) {p n : ℕ} [hp : Fa
       this, Polynomial.map_pow]
   apply mul_right_injective₀ (cyclotomic_ne_zero n <| Zmod p)
   rw [← pow_succ, tsub_add_cancel_of_le hp.out.one_lt.le, mul_comm, ← Zmod.expand_card]
-  nth_rw 2 [← map_cyclotomic_int]
+  nth_rw 3 [← map_cyclotomic_int]
   rw [← map_expand, cyclotomic_expand_eq_cyclotomic_mul hp.out hn, Polynomial.map_mul,
     map_cyclotomic, map_cyclotomic]
 #align

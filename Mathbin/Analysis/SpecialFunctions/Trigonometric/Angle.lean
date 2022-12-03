@@ -177,7 +177,7 @@ theorem neg_ne_self_iff {θ : Angle} : -θ ≠ θ ↔ θ ≠ 0 ∧ θ ≠ π := 
 
 theorem two_nsmul_eq_pi_iff {θ : Angle} : (2 : ℕ) • θ = π ↔ θ = (π / 2 : ℝ) ∨ θ = (-π / 2 : ℝ) := by
   have h : (π : angle) = (2 : ℕ) • (π / 2 : ℝ) := by rw [two_nsmul, ← coe_add, add_halves]
-  nth_rw 0 [h]
+  nth_rw 1 [h]
   rw [two_nsmul_eq_iff]
   congr
   rw [add_comm, ← coe_add, ← sub_eq_zero, ← coe_sub, add_sub_assoc, neg_div, sub_neg_eq_add,
@@ -310,7 +310,7 @@ theorem sin_coe_pi : sin (π : Angle) = 0 := by rw [sin_coe, Real.sin_pi]
 #align real.angle.sin_coe_pi Real.Angle.sin_coe_pi
 
 theorem sin_eq_zero_iff {θ : Angle} : sin θ = 0 ↔ θ = 0 ∨ θ = π := by
-  nth_rw 0 [← sin_zero]
+  nth_rw 1 [← sin_zero]
   rw [sin_eq_iff_eq_or_add_eq_pi]
   simp
 #align real.angle.sin_eq_zero_iff Real.Angle.sin_eq_zero_iff
@@ -536,7 +536,7 @@ theorem to_real_zero : (0 : Angle).toReal = 0 := by
 
 @[simp]
 theorem to_real_eq_zero_iff {θ : Angle} : θ.toReal = 0 ↔ θ = 0 := by
-  nth_rw 0 [← to_real_zero]
+  nth_rw 1 [← to_real_zero]
   exact to_real_inj
 #align real.angle.to_real_eq_zero_iff Real.Angle.to_real_eq_zero_iff
 
@@ -617,7 +617,7 @@ theorem cos_to_real (θ : Angle) : Real.cos θ.toReal = cos θ := by
 #align real.angle.cos_to_real Real.Angle.cos_to_real
 
 theorem cos_nonneg_iff_abs_to_real_le_pi_div_two {θ : Angle} : 0 ≤ cos θ ↔ |θ.toReal| ≤ π / 2 := by
-  nth_rw 0 [← coe_to_real θ]
+  nth_rw 1 [← coe_to_real θ]
   rw [abs_le, cos_coe]
   refine' ⟨fun h => _, cos_nonneg_of_mem_Icc⟩
   by_contra hn

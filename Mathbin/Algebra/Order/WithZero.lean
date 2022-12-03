@@ -7,7 +7,7 @@ import Mathbin.Algebra.Hom.Equiv.Units.GroupWithZero
 import Mathbin.Algebra.GroupWithZero.InjSurj
 import Mathbin.Algebra.Order.Group.Units
 import Mathbin.Algebra.Order.Monoid.Basic
-import Mathbin.Algebra.Order.Monoid.WithZero
+import Mathbin.Algebra.Order.Monoid.WithZero.Defs
 import Mathbin.Algebra.Order.Group.Instances
 import Mathbin.Algebra.Order.Monoid.TypeTags
 

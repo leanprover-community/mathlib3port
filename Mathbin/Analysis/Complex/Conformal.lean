@@ -52,7 +52,7 @@ theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0
   · intro x
     simp only [LinearMap.smul_apply]
     have : x = x • 1 := by rw [smul_eq_mul, mul_one]
-    nth_rw 0 [this]
+    nth_rw 1 [this]
     rw [_root_.coe_coe map, LinearMap.coe_coe_is_scalar_tower]
     simp only [map.coe_coe, map.map_smul, norm_smul, norm_inv, norm_norm]
     field_simp only [one_mul]

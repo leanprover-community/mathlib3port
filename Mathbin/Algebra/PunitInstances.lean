@@ -5,7 +5,7 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.GcdMonoid.Basic
-import Mathbin.Algebra.GroupRingAction
+import Mathbin.Algebra.GroupRingAction.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
 
 /-!

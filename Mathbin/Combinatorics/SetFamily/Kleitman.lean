@@ -61,7 +61,7 @@ theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset
       rw [Fintype.card_finset]
       exact (hf₁ _ hj).2.1
     refine' (card_le_of_subset <| bUnion_mono fun j hj => (hf₁ _ hj).1).trans _
-    nth_rw 0 [cons_eq_insert i]
+    nth_rw 1 [cons_eq_insert i]
     rw [bUnion_insert]
     refine' (card_mono <| @le_sup_sdiff _ _ _ <| f' i).trans ((card_union_le _ _).trans _)
     rw [union_sdiff_left, sdiff_eq_inter_compl]

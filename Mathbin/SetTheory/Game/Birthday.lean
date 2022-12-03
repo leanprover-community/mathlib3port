@@ -130,7 +130,7 @@ theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, Pgame.birthday]
   simp only [lsub_empty, max_zero_right]
-  nth_rw 0 [← lsub_typein o]
+  nth_rw 1 [← lsub_typein o]
   congr with x
   exact IH _ (typein_lt_self x)
 #align pgame.to_pgame_birthday Pgame.to_pgame_birthday

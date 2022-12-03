@@ -1427,6 +1427,10 @@ instance [Zero α] [MulActionWithZero R α] (S : Subring R) : MulActionWithZero 
 instance [AddCommMonoid α] [Module R α] (S : Subring R) : Module S α :=
   S.toSubsemiring.Module
 
+/-- The action by a subsemiring is the action by the underlying ring. -/
+instance [Semiring α] [MulSemiringAction R α] (S : Subring R) : MulSemiringAction S α :=
+  S.toSubmonoid.MulSemiringAction
+
 /-- The center of a semiring acts commutatively on that semiring. -/
 instance center.smul_comm_class_left : SmulCommClass (center R) R R :=
   Subsemiring.center.smul_comm_class_left

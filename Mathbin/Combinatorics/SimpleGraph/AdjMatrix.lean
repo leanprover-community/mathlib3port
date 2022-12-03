@@ -262,7 +262,7 @@ theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ
   rw [card_set_walk_length_eq]
   induction' n with n ih generalizing u v
   · obtain rfl | h := eq_or_ne u v <;> simp [finset_walk_length, *]
-  · nth_rw 0 [Nat.succ_eq_one_add]
+  · nth_rw 1 [Nat.succ_eq_one_add]
     simp only [pow_add, pow_one, finset_walk_length, ih, mul_eq_mul, adj_matrix_mul_apply]
     rw [Finset.card_bUnion]
     · norm_cast

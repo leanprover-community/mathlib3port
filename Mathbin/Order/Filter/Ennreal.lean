@@ -30,7 +30,7 @@ theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) :
   have h_forall_le : ∀ᶠ y in f, ∀ n : ℕ, u y < f.limsup u + (1 : ℝ≥0∞) / n := by
     rw [eventually_countable_forall]
     refine' fun n => eventually_lt_of_limsup_lt _
-    nth_rw 0 [← add_zero (f.limsup u)]
+    nth_rw 1 [← add_zero (f.limsup u)]
     exact (Ennreal.add_lt_add_iff_left hx_top).mpr (by simp)
   refine' h_forall_le.mono fun y hy => le_of_forall_pos_le_add fun r hr_pos hx_top => _
   have hr_ne_zero : (r : ℝ≥0∞) ≠ 0 := by

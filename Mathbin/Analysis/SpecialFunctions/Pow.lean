@@ -1592,7 +1592,7 @@ theorem rpow_le_self_of_le_one {x : ℝ≥0} {z : ℝ} (hx : x ≤ 1) (h_one_le 
   rcases eq_bot_or_bot_lt x with (rfl | (h : 0 < x))
   · have : z ≠ 0 := by linarith
     simp [this]
-  nth_rw 1 [← Nnreal.rpow_one x]
+  nth_rw 2 [← Nnreal.rpow_one x]
   exact Nnreal.rpow_le_rpow_of_exponent_ge h hx h_one_le
 #align nnreal.rpow_le_self_of_le_one Nnreal.rpow_le_self_of_le_one
 
@@ -1650,7 +1650,7 @@ theorem continuous_at_rpow {x : ℝ≥0} {y : ℝ} (h : x ≠ 0 ∨ 0 < y) :
 
 theorem Real.to_nnreal_rpow_of_nonneg {x y : ℝ} (hx : 0 ≤ x) :
     Real.toNnreal (x ^ y) = Real.toNnreal x ^ y := by
-  nth_rw 0 [← Real.coe_to_nnreal x hx]
+  nth_rw 1 [← Real.coe_to_nnreal x hx]
   rw [← Nnreal.coe_rpow, Real.to_nnreal_coe]
 #align real.to_nnreal_rpow_of_nonneg Real.to_nnreal_rpow_of_nonneg
 
@@ -2037,20 +2037,20 @@ theorem rpow_lt_rpow_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ^ z < y ^
 #align ennreal.rpow_lt_rpow_iff Ennreal.rpow_lt_rpow_iff
 
 theorem le_rpow_one_div_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ≤ y ^ (1 / z) ↔ x ^ z ≤ y := by
-  nth_rw 0 [← rpow_one x]
-  nth_rw 0 [← @_root_.mul_inv_cancel _ _ z hz.ne']
+  nth_rw 1 [← rpow_one x]
+  nth_rw 1 [← @_root_.mul_inv_cancel _ _ z hz.ne']
   rw [rpow_mul, ← one_div, @rpow_le_rpow_iff _ _ (1 / z) (by simp [hz])]
 #align ennreal.le_rpow_one_div_iff Ennreal.le_rpow_one_div_iff
 
 theorem lt_rpow_one_div_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x < y ^ (1 / z) ↔ x ^ z < y := by
-  nth_rw 0 [← rpow_one x]
-  nth_rw 0 [← @_root_.mul_inv_cancel _ _ z (ne_of_lt hz).symm]
+  nth_rw 1 [← rpow_one x]
+  nth_rw 1 [← @_root_.mul_inv_cancel _ _ z (ne_of_lt hz).symm]
   rw [rpow_mul, ← one_div, @rpow_lt_rpow_iff _ _ (1 / z) (by simp [hz])]
 #align ennreal.lt_rpow_one_div_iff Ennreal.lt_rpow_one_div_iff
 
 theorem rpow_one_div_le_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ^ (1 / z) ≤ y ↔ x ≤ y ^ z := by
-  nth_rw 0 [← Ennreal.rpow_one y]
-  nth_rw 1 [← @_root_.mul_inv_cancel _ _ z hz.ne.symm]
+  nth_rw 1 [← Ennreal.rpow_one y]
+  nth_rw 2 [← @_root_.mul_inv_cancel _ _ z hz.ne.symm]
   rw [Ennreal.rpow_mul, ← one_div, Ennreal.rpow_le_rpow_iff (one_div_pos.2 hz)]
 #align ennreal.rpow_one_div_le_iff Ennreal.rpow_one_div_le_iff
 
@@ -2097,12 +2097,12 @@ theorem rpow_le_rpow_of_exponent_ge {x : ℝ≥0∞} {y z : ℝ} (hx1 : x ≤ 1)
 #align ennreal.rpow_le_rpow_of_exponent_ge Ennreal.rpow_le_rpow_of_exponent_ge
 
 theorem rpow_le_self_of_le_one {x : ℝ≥0∞} {z : ℝ} (hx : x ≤ 1) (h_one_le : 1 ≤ z) : x ^ z ≤ x := by
-  nth_rw 1 [← Ennreal.rpow_one x]
+  nth_rw 2 [← Ennreal.rpow_one x]
   exact Ennreal.rpow_le_rpow_of_exponent_ge hx h_one_le
 #align ennreal.rpow_le_self_of_le_one Ennreal.rpow_le_self_of_le_one
 
 theorem le_rpow_self_of_one_le {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (h_one_le : 1 ≤ z) : x ≤ x ^ z := by
-  nth_rw 0 [← Ennreal.rpow_one x]
+  nth_rw 1 [← Ennreal.rpow_one x]
   exact Ennreal.rpow_le_rpow_of_exponent_le hx h_one_le
 #align ennreal.le_rpow_self_of_one_le Ennreal.le_rpow_self_of_one_le
 

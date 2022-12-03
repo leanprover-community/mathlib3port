@@ -49,7 +49,7 @@ theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (�
   (Finset.induction_on t fun _ => is_coprime_one_left) fun b t hbt ih H => by
     rw [Finset.prod_insert hbt]
     rw [Finset.forall_mem_insert] at H
-    exact H.1.mulLeft (ih H.2)
+    exact H.1.mul_left (ih H.2)
 #align is_coprime.prod_left IsCoprime.prod_left
 
 theorem IsCoprime.prod_right : (∀ i ∈ t, IsCoprime x (s i)) → IsCoprime x (∏ i in t, s i) := by

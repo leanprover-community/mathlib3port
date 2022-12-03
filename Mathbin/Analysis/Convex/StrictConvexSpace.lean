@@ -192,7 +192,7 @@ theorem norm_add_lt_of_not_same_ray (h : ¬SameRay ℝ x y) : ‖x + y‖ < ‖x
 #align norm_add_lt_of_not_same_ray norm_add_lt_of_not_same_ray
 
 theorem lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : ‖x‖ - ‖y‖ < ‖x - y‖ := by
-  nth_rw 0 [← sub_add_cancel x y]  at h⊢
+  nth_rw 1 [← sub_add_cancel x y]  at h⊢
   exact sub_lt_iff_lt_add.2 (norm_add_lt_of_not_same_ray fun H' => h <| H'.add_left SameRay.rfl)
 #align lt_norm_sub_of_not_same_ray lt_norm_sub_of_not_same_ray
 

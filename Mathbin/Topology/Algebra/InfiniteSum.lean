@@ -1089,11 +1089,11 @@ theorem HasSum.mul_right (a₂) (hf : HasSum f a₁) : HasSum (fun b => f b * a�
 #align has_sum.mul_right HasSum.mul_right
 
 theorem Summable.mul_left (a) (hf : Summable f) : Summable fun b => a * f b :=
-  (hf.HasSum.mulLeft _).Summable
+  (hf.HasSum.mul_left _).Summable
 #align summable.mul_left Summable.mul_left
 
 theorem Summable.mul_right (a) (hf : Summable f) : Summable fun b => f b * a :=
-  (hf.HasSum.mulRight _).Summable
+  (hf.HasSum.mul_right _).Summable
 #align summable.mul_right Summable.mul_right
 
 section tsum
@@ -1101,11 +1101,11 @@ section tsum
 variable [T2Space α]
 
 theorem Summable.tsum_mul_left (a) (hf : Summable f) : (∑' b, a * f b) = a * ∑' b, f b :=
-  (hf.HasSum.mulLeft _).tsum_eq
+  (hf.HasSum.mul_left _).tsum_eq
 #align summable.tsum_mul_left Summable.tsum_mul_left
 
 theorem Summable.tsum_mul_right (a) (hf : Summable f) : (∑' b, f b * a) = (∑' b, f b) * a :=
-  (hf.HasSum.mulRight _).tsum_eq
+  (hf.HasSum.mul_right _).tsum_eq
 #align summable.tsum_mul_right Summable.tsum_mul_right
 
 theorem Commute.tsum_right (a) (h : ∀ b, Commute a (f b)) : Commute a (∑' b, f b) :=
@@ -1181,11 +1181,11 @@ theorem has_sum_mul_right_iff (h : a₂ ≠ 0) : HasSum f a₁ ↔ HasSum (fun b
 #align has_sum_mul_right_iff has_sum_mul_right_iff
 
 theorem summable_mul_left_iff (h : a ≠ 0) : Summable f ↔ Summable fun b => a * f b :=
-  ⟨fun H => H.mulLeft _, fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a⁻¹⟩
+  ⟨fun H => H.mul_left _, fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a⁻¹⟩
 #align summable_mul_left_iff summable_mul_left_iff
 
 theorem summable_mul_right_iff (h : a ≠ 0) : Summable f ↔ Summable fun b => f b * a :=
-  ⟨fun H => H.mulRight _, fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a⁻¹⟩
+  ⟨fun H => H.mul_right _, fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a⁻¹⟩
 #align summable_mul_right_iff summable_mul_right_iff
 
 theorem tsum_mul_left [T2Space α] : (∑' x, a * f x) = a * ∑' x, f x :=
@@ -1815,8 +1815,8 @@ variable [TopologicalSpace α] [T3Space α] [NonUnitalNonAssocSemiring α] [Topo
 
 theorem HasSum.mul_eq (hf : HasSum f s) (hg : HasSum g t)
     (hfg : HasSum (fun x : β × γ => f x.1 * g x.2) u) : s * t = u :=
-  have key₁ : HasSum (fun b => f b * t) (s * t) := hf.mulRight t
-  have this : ∀ b : β, HasSum (fun c : γ => f b * g c) (f b * t) := fun b => hg.mulLeft (f b)
+  have key₁ : HasSum (fun b => f b * t) (s * t) := hf.mul_right t
+  have this : ∀ b : β, HasSum (fun c : γ => f b * g c) (f b * t) := fun b => hg.mul_left (f b)
   have key₂ : HasSum (fun b => f b * t) u := HasSum.prod_fiberwise hfg this
   key₁.unique key₂
 #align has_sum.mul_eq HasSum.mul_eq

@@ -1178,7 +1178,7 @@ theorem leading_coeff_div_by_monic_of_monic {R : Type u} [CommRing R] {p q : R[X
   have h : q.leading_coeff * (p /ₘ q).leadingCoeff ≠ 0 := by
     simpa [div_by_monic_eq_zero_iff hmonic, hmonic.leading_coeff,
       Nat.WithBot.one_le_iff_zero_lt] using hdegree
-  nth_rw_rhs 0 [← mod_by_monic_add_div p hmonic]
+  nth_rw_rhs 1 [← mod_by_monic_add_div p hmonic]
   rw [leading_coeff_add_of_degree_lt, leading_coeff_monic_mul hmonic]
   rw [degree_mul' h, degree_add_div_by_monic hmonic hdegree]
   exact (degree_mod_by_monic_lt p hmonic).trans_le hdegree

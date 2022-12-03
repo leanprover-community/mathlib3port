@@ -89,7 +89,7 @@ theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ 
     map_congr (Eq.refl _)]
   intro x hx
   rw [(mem_powerset_len.mp hx).right.symm, ← prod_repeat, ← Multiset.map_const]
-  nth_rw 2 [← map_id' x]
+  nth_rw 3 [← map_id' x]
   rw [← prod_map_mul, map_congr (Eq.refl _)]
   exact fun z _ => neg_one_mul z
 #align multiset.esymm_neg Multiset.esymm_neg

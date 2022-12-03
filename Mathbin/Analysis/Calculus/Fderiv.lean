@@ -1094,6 +1094,11 @@ theorem Set.Subsingleton.differentiableOn (hs : s.Subsingleton) : Differentiable
   hs.induction_on differentiableOnEmpty fun x => differentiableOnSingleton
 #align set.subsingleton.differentiable_on Set.Subsingleton.differentiableOn
 
+theorem hasFderivAtZeroOfEventuallyConst (c : F) (hf : f =ᶠ[𝓝 x] fun y => c) :
+    HasFderivAt f (0 : E →L[𝕜] F) x :=
+  (hasFderivAtConst _ _).congr_of_eventually_eq hf
+#align has_fderiv_at_zero_of_eventually_const hasFderivAtZeroOfEventuallyConst
+
 end Const
 
 section ContinuousLinearMap

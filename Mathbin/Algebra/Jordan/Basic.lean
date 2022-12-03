@@ -249,9 +249,9 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
       by abel
     _ = 2 • ⁅L a, L (b * c)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L c, L (a * b)⁆ := by
       rw [add_left_eq_self]
-      nth_rw 1 [IsCommJordan.mul_comm a b]
-      nth_rw 0 [IsCommJordan.mul_comm c a]
-      nth_rw 1 [IsCommJordan.mul_comm b c]
+      nth_rw 2 [IsCommJordan.mul_comm a b]
+      nth_rw 1 [IsCommJordan.mul_comm c a]
+      nth_rw 2 [IsCommJordan.mul_comm b c]
       rw [two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add,
         two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add,
         two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add, ← lie_skew (L (a * a)), ←

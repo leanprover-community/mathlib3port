@@ -1206,7 +1206,7 @@ theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [Conditiona
   rw [← g.symm.symm_apply_apply <| limsup (fun x => g (u x)) f, g.symm_symm]
   refine' g.monotone _
   have hf : u = fun i => g.symm (g (u i)) := funext fun i => (g.symm_apply_apply (u i)).symm
-  nth_rw 0 [hf]
+  nth_rw 1 [hf]
   refine' g.symm.to_galois_connection.l_limsup_le _ hgu_co
   simp_rw [g.symm_apply_apply]
   exact hu

@@ -295,7 +295,7 @@ theorem prod_pow_factorization_eq_self {f : ℕ →₀ ℕ} (hf : ∀ p : ℕ, p
   have h : ∀ x : ℕ, x ∈ f.support → x ^ f x ≠ 0 := fun p hp =>
     pow_ne_zero _ (Prime.ne_zero (hf p hp))
   simp only [Finsupp.prod, factorization_prod h]
-  nth_rw_rhs 0 [(sum_single f).symm]
+  nth_rw_rhs 1 [(sum_single f).symm]
   exact sum_congr rfl fun p hp => prime.factorization_pow (hf p hp)
 #align nat.prod_pow_factorization_eq_self Nat.prod_pow_factorization_eq_self
 
@@ -866,7 +866,7 @@ theorem eq_iff_prime_padic_val_nat_eq (a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) 
 
 theorem prod_pow_prime_padic_val_nat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < m) :
     (∏ p in Finset.filter Nat.Prime (Finset.range m), p ^ padicValNat p n) = n := by
-  nth_rw_rhs 0 [← factorization_prod_pow_eq_self hn]
+  nth_rw_rhs 1 [← factorization_prod_pow_eq_self hn]
   rw [eq_comm]
   apply Finset.prod_subset_one_on_sdiff
   ·

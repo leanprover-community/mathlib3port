@@ -133,7 +133,7 @@ theorem mul_num_denom' (q r : ℚ) :
   obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ :=
     exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.num) hs
   rw [c_mul_num, mul_assoc, mul_comm]
-  nth_rw 0 [c_mul_denom]
+  nth_rw 1 [c_mul_denom]
   repeat' rw [mul_assoc]
   apply mul_eq_mul_left_iff.2
   rw [or_iff_not_imp_right]
@@ -155,7 +155,7 @@ theorem add_num_denom' (q r : ℚ) :
   obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ :=
     exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.denom + r.num * q.denom) hs
   rw [c_mul_num, mul_assoc, mul_comm]
-  nth_rw 0 [c_mul_denom]
+  nth_rw 1 [c_mul_denom]
   repeat' rw [mul_assoc]
   apply mul_eq_mul_left_iff.2
   rw [or_iff_not_imp_right]

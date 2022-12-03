@@ -133,7 +133,7 @@ theorem congr_reverse_comp {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (p.reverse ≫ p) =
       Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (𝟙 Y) :=
   by 
-  nth_rw 1 [← Quiver.Path.reverse_reverse p]
+  nth_rw 2 [← Quiver.Path.reverse_reverse p]
   apply congr_comp_reverse
 #align
   category_theory.groupoid.free.congr_reverse_comp CategoryTheory.Groupoid.Free.congr_reverse_comp

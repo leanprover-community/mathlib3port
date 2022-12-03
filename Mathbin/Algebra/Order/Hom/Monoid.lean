@@ -3,9 +3,10 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
+import Mathbin.Data.Pi.Algebra
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Order.Group.Instances
-import Mathbin.Algebra.Order.Monoid.WithZero
+import Mathbin.Algebra.Order.Monoid.WithZero.Defs
 import Mathbin.Order.Hom.Basic
 
 /-!

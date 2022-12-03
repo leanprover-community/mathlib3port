@@ -5,6 +5,7 @@ Authors: Eric Wieser
 -/
 import Mathbin.Algebra.Star.Basic
 import Mathbin.Algebra.Ring.Prod
+import Mathbin.Algebra.Module.Prod
 
 /-!
 # `star` on product types

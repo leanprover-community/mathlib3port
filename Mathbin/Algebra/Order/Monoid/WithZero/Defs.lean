@@ -3,8 +3,7 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Group.WithOne
-import Mathbin.Algebra.GroupWithZero.Basic
+import Mathbin.Algebra.Group.WithOne.Defs
 import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 
 /-!
@@ -134,17 +133,6 @@ instance covariant_class_mul_le {α : Type u} [Mul α] [Preorder α]
   rw [← coe_mul, ← coe_mul, coe_le_coe]
   exact mul_le_mul_left' hbc' a
 #align with_zero.covariant_class_mul_le WithZero.covariant_class_mul_le
-
-instance contravariant_class_mul_lt {α : Type u} [Mul α] [PartialOrder α]
-    [ContravariantClass α α (· * ·) (· < ·)] :
-    ContravariantClass (WithZero α) (WithZero α) (· * ·) (· < ·) := by
-  refine' ⟨fun a b c h => _⟩
-  have := ((zero_le _).trans_lt h).ne'
-  lift a to α using left_ne_zero_of_mul this
-  lift c to α using right_ne_zero_of_mul this
-  induction b using WithZero.recZeroCoe
-  exacts[zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' <| coe_lt_coe.mp h)]
-#align with_zero.contravariant_class_mul_lt WithZero.contravariant_class_mul_lt
 
 @[simp]
 theorem le_max_iff [LinearOrder α] {a b c : α} : (a : WithZero α) ≤ max b c ↔ a ≤ max b c := by

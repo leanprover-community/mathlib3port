@@ -408,7 +408,7 @@ theorem to_nnrat_mul (hp : 0 ≤ p) : toNnrat (p * q) = toNnrat p * toNnrat q :=
 theorem to_nnrat_inv (q : ℚ) : toNnrat q⁻¹ = (toNnrat q)⁻¹ := by
   obtain hq | hq := le_total q 0
   · rw [to_nnrat_eq_zero.mpr hq, inv_zero, to_nnrat_eq_zero.mpr (inv_nonpos.mpr hq)]
-  · nth_rw 0 [← Rat.coe_to_nnrat q hq]
+  · nth_rw 1 [← Rat.coe_to_nnrat q hq]
     rw [← coe_inv, to_nnrat_coe]
 #align rat.to_nnrat_inv Rat.to_nnrat_inv
 

@@ -28,7 +28,7 @@ theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRing R] 
     have h₃ : ¬ringChar R ∣ q := by 
       rintro ⟨r, hr⟩
       rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
-      nth_rw 0 [← mul_one (ringChar R)]  at hq
+      nth_rw 1 [← mul_one (ringChar R)]  at hq
       exact Nat.Prime.not_dvd_one hp ⟨r, mul_left_cancel₀ hR hq⟩
     have h₄ := mt (CharP.int_cast_eq_zero_iff R (ringChar R) q).mp
     apply_fun (coe : ℕ → R)  at hq

@@ -459,8 +459,8 @@ theorem monomial_zero_left (a : R) : monomial 0 a = c a :=
 #align polynomial.monomial_zero_left Polynomial.monomial_zero_left
 
 @[simp]
-theorem to_finsupp_C (a : R) : (c a).toFinsupp = single 0 a := by
-  rw [← monomial_zero_left, to_finsupp_monomial]
+theorem to_finsupp_C (a : R) : (c a).toFinsupp = single 0 a :=
+  rfl
 #align polynomial.to_finsupp_C Polynomial.to_finsupp_C
 
 theorem C_0 : c (0 : R) = 0 := by simp
@@ -525,6 +525,11 @@ theorem monomial_one_right_eq_X_pow (n : ℕ) : monomial n (1 : R) = X ^ n := by
   · simp [monomial_zero_one]
   · rw [pow_succ, ← ih, ← monomial_one_one_eq_X, monomial_mul_monomial, add_comm, one_mul]
 #align polynomial.monomial_one_right_eq_X_pow Polynomial.monomial_one_right_eq_X_pow
+
+@[simp]
+theorem to_finsupp_X : x.toFinsupp = Finsupp.single 1 (1 : R) :=
+  rfl
+#align polynomial.to_finsupp_X Polynomial.to_finsupp_X
 
 /-- `X` commutes with everything, even when the coefficients are noncommutative. -/
 theorem X_mul : X * p = p * X := by 
@@ -684,8 +689,18 @@ theorem C_mul_X_pow_eq_monomial : ∀ {n : ℕ}, c a * X ^ n = monomial n a
     rw [pow_succ', ← mul_assoc, C_mul_X_pow_eq_monomial, X, monomial_mul_monomial, mul_one]
 #align polynomial.C_mul_X_pow_eq_monomial Polynomial.C_mul_X_pow_eq_monomial
 
+@[simp]
+theorem to_finsupp_C_mul_X_pow (a : R) (n : ℕ) : (c a * X ^ n).toFinsupp = Finsupp.single n a := by
+  rw [C_mul_X_pow_eq_monomial, to_finsupp_monomial]
+#align polynomial.to_finsupp_C_mul_X_pow Polynomial.to_finsupp_C_mul_X_pow
+
 theorem C_mul_X_eq_monomial : c a * X = monomial 1 a := by rw [← C_mul_X_pow_eq_monomial, pow_one]
 #align polynomial.C_mul_X_eq_monomial Polynomial.C_mul_X_eq_monomial
+
+@[simp]
+theorem to_finsupp_C_mul_X (a : R) : (c a * X).toFinsupp = Finsupp.single 1 a := by
+  rw [C_mul_X_eq_monomial, to_finsupp_monomial]
+#align polynomial.to_finsupp_C_mul_X Polynomial.to_finsupp_C_mul_X
 
 theorem C_injective : Injective (c : R → R[X]) :=
   monomial_injective 0
@@ -819,6 +834,11 @@ theorem X_pow_eq_monomial (n) : X ^ n = monomial n (1 : R) := by
   · rw [pow_zero, monomial_zero_one]
   · rw [pow_succ', hn, X, monomial_mul_monomial, one_mul]
 #align polynomial.X_pow_eq_monomial Polynomial.X_pow_eq_monomial
+
+@[simp]
+theorem to_finsupp_X_pow (n : ℕ) : (X ^ n).toFinsupp = Finsupp.single n (1 : R) := by
+  rw [X_pow_eq_monomial, to_finsupp_monomial]
+#align polynomial.to_finsupp_X_pow Polynomial.to_finsupp_X_pow
 
 theorem smul_X_eq_monomial {n} : a • X ^ n = monomial n (a : R) := by
   rw [X_pow_eq_monomial, smul_monomial, smul_eq_mul, mul_one]

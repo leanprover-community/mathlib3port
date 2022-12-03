@@ -161,10 +161,10 @@ theorem sum_totient (n : ℕ) : n.divisors.Sum φ = n := by
   · simp
   rw [← sum_div_divisors n φ]
   have : n = ∑ d : ℕ in n.divisors, (filter (fun k : ℕ => n.gcd k = d) (range n)).card := by
-    nth_rw_lhs 0 [← card_range n]
+    nth_rw_lhs 1 [← card_range n]
     refine' card_eq_sum_card_fiberwise fun x hx => mem_divisors.2 ⟨_, hn.ne'⟩
     apply gcd_dvd_left
-  nth_rw_rhs 0 [this]
+  nth_rw_rhs 1 [this]
   exact sum_congr rfl fun x hx => totient_div_of_dvd (dvd_of_mem_divisors hx)
 #align nat.sum_totient Nat.sum_totient
 
@@ -283,7 +283,7 @@ theorem totient_mul_prod_factors (n : ℕ) :
     (φ n * ∏ p in n.factors.toFinset, p) = n * ∏ p in n.factors.toFinset, p - 1 := by
   by_cases hn : n = 0; · simp [hn]
   rw [totient_eq_prod_factorization hn]
-  nth_rw 2 [← factorization_prod_pow_eq_self hn]
+  nth_rw 3 [← factorization_prod_pow_eq_self hn]
   simp only [← prod_factorization_eq_prod_factors, ← Finsupp.prod_mul]
   refine' Finsupp.prod_congr fun p hp => _
   rw [Finsupp.mem_support_iff, ← zero_lt_iff] at hp

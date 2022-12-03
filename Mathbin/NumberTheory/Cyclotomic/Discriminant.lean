@@ -94,8 +94,8 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
         exact hptwo h
       obtain ⟨a, ha⟩ := even_sub_one_of_prime_ne_two hp.out hptwo
       rw [mul_comm ((p : ℕ) ^ k), mul_assoc, ha]
-      nth_rw 0 [← mul_one a]
-      nth_rw 4 [← mul_one a]
+      nth_rw 1 [← mul_one a]
+      nth_rw 5 [← mul_one a]
       rw [← Nat.mul_succ, mul_comm a, mul_assoc, mul_assoc 2, Nat.mul_div_cancel_left _ zero_lt_two,
         Nat.mul_div_cancel_left _ zero_lt_two, ← mul_assoc, mul_comm (a * (p : ℕ) ^ k), pow_mul, ←
         ha]
@@ -172,7 +172,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
           eq_of_prime_pow_eq (prime_iff.1 hp.out) (prime_iff.1 Nat.prime_two) (succ_pos _) hk
         rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at hk
       rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at hk
-      nth_rw 1 [← pow_one 2]  at hk
+      nth_rw 2 [← pow_one 2]  at hk
       replace hk := Nat.pow_right_injective rfl.le hk
       rw [add_left_eq_self] at hk
       simp only [hp, hk, pow_one, PNat.coe_bit0, PNat.one_coe] at hζ

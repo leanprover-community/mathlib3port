@@ -223,7 +223,7 @@ open Polynomial
 theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
   ext
   have x_eq : x = r • r⁻¹ • x := by simp
-  nth_rw 0 [x_eq]
+  nth_rw 1 [x_eq]
   rw [smul_mem_smul_iff]
   constructor
   · exact fun h => ⟨r⁻¹ • x, ⟨h, by simp⟩⟩

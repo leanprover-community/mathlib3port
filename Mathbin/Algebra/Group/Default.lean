@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Michael Howes
 -/
 import Mathbin.Algebra.Group.Conj
 import Mathbin.Algebra.Group.TypeTags
-import Mathbin.Algebra.Group.WithOne
+import Mathbin.Algebra.Group.WithOne.Basic
 import Mathbin.Algebra.Hom.Units
 
 /-!

@@ -215,7 +215,7 @@ def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op
 @[simp]
 theorem extend_hom_app (α : (inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) (i : ι) :
     (restrictHomEquivHom F F' h α).app (op (B i)) = α.app (op i) := by
-  nth_rw 1 [← (restrict_hom_equiv_hom F F' h).left_inv α]
+  nth_rw 2 [← (restrict_hom_equiv_hom F F' h).left_inv α]
   rfl
 #align Top.sheaf.extend_hom_app TopCat.Sheaf.extend_hom_app
 

@@ -45,3 +45,5 @@ instance (priority := 100) LinearOrderedField.toLinearOrderedSemifield [LinearOr
   { LinearOrderedRing.toLinearOrderedSemiring, ‹LinearOrderedField α› with }
 #align linear_ordered_field.to_linear_ordered_semifield LinearOrderedField.toLinearOrderedSemifield
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- Guard against import creep.

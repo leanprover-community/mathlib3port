@@ -187,7 +187,7 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) :
   use erase + lead
   constructor
   · simp only [hlead, herase, Polynomial.map_add]
-    nth_rw 0 [erase_lead_add_monomial_nat_degree_leading_coeff p]
+    nth_rw 1 [erase_lead_add_monomial_nat_degree_leading_coeff p]
   rw [← hdeg, erase_lead] at deg_erase
   replace deg_erase := lt_of_le_of_lt degree_le_nat_degree (WithBot.coe_lt_coe.2 deg_erase)
   rw [← deg_lead, ← herase.2] at deg_erase

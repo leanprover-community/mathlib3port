@@ -283,7 +283,7 @@ theorem IsCompactOperator.continuous_comp {f : M₁ → M₂} (hf : IsCompactOpe
     (hg : Continuous g) : IsCompactOperator (g ∘ f) := by
   rcases hf with ⟨K, hK, hKf⟩
   refine' ⟨g '' K, hK.image hg, mem_of_superset hKf _⟩
-  nth_rw 1 [preimage_comp]
+  nth_rw 2 [preimage_comp]
   exact preimage_mono (subset_preimage_image _ _)
 #align is_compact_operator.continuous_comp IsCompactOperator.continuous_comp
 

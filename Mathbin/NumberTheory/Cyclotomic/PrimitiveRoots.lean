@@ -295,7 +295,7 @@ theorem sub_one_norm_is_prime_pow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExten
         (Function.Injective.ne PNat.coe_injective h).symm)
   letI hprime : Fact (n : ℕ).minFac.Prime := ⟨min_fac_prime (IsPrimePow.ne_one hn)⟩
   rw [sub_one_norm_eq_eval_cyclotomic hζ this hirr]
-  nth_rw 0 [← IsPrimePow.min_fac_pow_factorization_eq hn]
+  nth_rw 1 [← IsPrimePow.min_fac_pow_factorization_eq hn]
   obtain ⟨k, hk⟩ : ∃ k, (n : ℕ).factorization (n : ℕ).minFac = k + 1 :=
     exists_eq_succ_of_ne_zero
       (((n : ℕ).factorization.mem_support_to_fun (n : ℕ).minFac).1 <|
@@ -356,7 +356,7 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
         · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
           exact Subalgebra.add_mem _ (subset_adjoin (mem_singleton η)) (Subalgebra.one_mem _)
         · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
-          nth_rw 0 [← add_sub_cancel η 1]
+          nth_rw 1 [← add_sub_cancel η 1]
           refine' Subalgebra.sub_mem _ (subset_adjoin (mem_singleton _)) (Subalgebra.one_mem _)
       rw [H] at this
       exact this
@@ -450,7 +450,7 @@ theorem sub_one_norm_two {k : ℕ} (hζ : IsPrimitiveRoot ζ (2 ^ k)) (hk : 2 �
     norm K (ζ - 1) = 2 := by
   have : 2 < (2 ^ k : ℕ+) := by
     simp only [← coe_lt_coe, PNat.coe_bit0, one_coe, pow_coe]
-    nth_rw 0 [← pow_one 2]
+    nth_rw 1 [← pow_one 2]
     exact pow_lt_pow one_lt_two (lt_of_lt_of_le one_lt_two hk)
   replace hirr : Irreducible (cyclotomic (2 ^ k : ℕ+) K) := by simp [hirr]
   replace hζ : IsPrimitiveRoot ζ (2 ^ k : ℕ+) := by simp [hζ]
@@ -472,7 +472,7 @@ theorem pow_sub_one_norm_prime_pow_of_one_le {k s : ℕ} (hζ : IsPrimitiveRoot 
       rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at htwo
     replace hs : s = k
     · rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at htwo
-      nth_rw 1 [← pow_one 2]  at htwo
+      nth_rw 2 [← pow_one 2]  at htwo
       replace htwo := Nat.pow_right_injective rfl.le htwo
       rw [add_left_eq_self, Nat.sub_eq_zero_iff_le] at htwo
       refine' le_antisymm hs htwo

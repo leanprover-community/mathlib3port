@@ -482,12 +482,12 @@ theorem imaginary_part_I_smul (a : A) : ℑ (I • a) = ℜ a := by
 #align imaginary_part_I_smul imaginary_part_I_smul
 
 theorem real_part_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a := by
-  nth_rw 0 [← re_add_im z]
+  nth_rw 1 [← re_add_im z]
   simp [-re_add_im, add_smul, ← smul_smul, sub_eq_add_neg]
 #align real_part_smul real_part_smul
 
 theorem imaginary_part_smul (z : ℂ) (a : A) : ℑ (z • a) = z.re • ℑ a + z.im • ℜ a := by
-  nth_rw 0 [← re_add_im z]
+  nth_rw 1 [← re_add_im z]
   simp [-re_add_im, add_smul, ← smul_smul]
 #align imaginary_part_smul imaginary_part_smul
 

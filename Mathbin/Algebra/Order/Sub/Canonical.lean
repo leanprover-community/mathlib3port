@@ -8,6 +8,10 @@ import Mathbin.Algebra.Order.Sub.Defs
 
 /-!
 # Lemmas about subtraction in canonically ordered monoids
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/814
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

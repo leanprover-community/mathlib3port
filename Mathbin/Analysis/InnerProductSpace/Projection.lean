@@ -1027,7 +1027,7 @@ theorem norm_sq_eq_add_norm_sq_projection (x : E) (S : Submodule 𝕜 E) [Comple
   have x_decomp : x = p1 x + p2 x := eq_sum_orthogonal_projection_self_orthogonal_complement S x
   have x_orth : ⟪(p1 x : E), p2 x⟫ = 0 :=
     Submodule.inner_right_of_mem_orthogonal (SetLike.coe_mem (p1 x)) (SetLike.coe_mem (p2 x))
-  nth_rw 0 [x_decomp]
+  nth_rw 1 [x_decomp]
   simp only [sq, norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (p1 x : E) (p2 x) x_orth,
     add_left_inj, mul_eq_mul_left_iff, norm_eq_zero, true_or_iff, eq_self_iff_true,
     Submodule.coe_norm, Submodule.coe_eq_zero]

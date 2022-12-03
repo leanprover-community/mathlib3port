@@ -3780,7 +3780,7 @@ theorem subset_image_iff {s : Set α} : ↑t ⊆ f '' s ↔ ∃ s' : Finset α, 
 theorem range_sdiff_zero {n : ℕ} : range (n + 1) \ {0} = (range n).image Nat.succ := by
   induction' n with k hk
   · simp
-  nth_rw 1 [range_succ]
+  nth_rw 2 [range_succ]
   rw [range_succ, image_insert, ← hk, insert_sdiff_of_not_mem]
   simp
 #align finset.range_sdiff_zero Finset.range_sdiff_zero

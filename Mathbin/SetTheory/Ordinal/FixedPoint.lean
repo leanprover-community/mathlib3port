@@ -542,7 +542,7 @@ theorem nfp_add_zero (a) : nfp ((· + ·) a) 0 = a * omega := by
   congr ; funext
   induction' n with n hn
   · rw [Nat.cast_zero, mul_zero, iterate_zero_apply]
-  · nth_rw 1 [Nat.succ_eq_one_add]
+  · nth_rw 2 [Nat.succ_eq_one_add]
     rw [Nat.cast_add, Nat.cast_one, mul_one_add, iterate_succ_apply', hn]
 #align ordinal.nfp_add_zero Ordinal.nfp_add_zero
 
@@ -560,7 +560,7 @@ theorem add_eq_right_iff_mul_omega_le {a b : Ordinal} : a + b = b ↔ a * omega 
     rw [← hc]
     exact (deriv_is_normal _).Monotone (Ordinal.zero_le _)
   · have := Ordinal.add_sub_cancel_of_le h
-    nth_rw 0 [← this]
+    nth_rw 1 [← this]
     rwa [← add_assoc, ← mul_one_add, one_add_omega]
 #align ordinal.add_eq_right_iff_mul_omega_le Ordinal.add_eq_right_iff_mul_omega_le
 
@@ -593,7 +593,7 @@ theorem nfp_mul_one {a : Ordinal} (ha : 0 < a) : nfp ((· * ·) a) 1 = (a^omega)
     funext
     induction' n with n hn
     · rw [Nat.cast_zero, opow_zero, iterate_zero_apply]
-    nth_rw 1 [Nat.succ_eq_one_add]
+    nth_rw 2 [Nat.succ_eq_one_add]
     rw [Nat.cast_add, Nat.cast_one, opow_add, opow_one, iterate_succ_apply', hn]
   · exact ha
 #align ordinal.nfp_mul_one Ordinal.nfp_mul_one

@@ -327,8 +327,8 @@ theorem IndepSets.indepSets {s : ι → Set (Set Ω)} [MeasurableSpace Ω] {μ :
       simp only [hij, Finset.prod_singleton, Finset.prod_insert, not_false_iff,
         Finset.mem_singleton]
     rw [h1]
-    nth_rw 1 [h2]
-    nth_rw 3 [h2]
+    nth_rw 2 [h2]
+    nth_rw 4 [h2]
     rw [← h_inter, ← h_prod, h_indep {i, j} hf_m]
 #align probability_theory.Indep_sets.indep_sets ProbabilityTheory.IndepSets.indepSets
 

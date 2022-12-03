@@ -930,7 +930,7 @@ theorem div_add' (a b c : ℝ≥0) (hc : c ≠ 0) : a / c + b = (a + b * c) / c 
 
 theorem Real.to_nnreal_inv {x : ℝ} : Real.toNnreal x⁻¹ = (Real.toNnreal x)⁻¹ := by
   by_cases hx : 0 ≤ x
-  · nth_rw 0 [← Real.coe_to_nnreal x hx]
+  · nth_rw 1 [← Real.coe_to_nnreal x hx]
     rw [← Nnreal.coe_inv, Real.to_nnreal_coe]
   · have hx' := le_of_not_ge hx
     rw [to_nnreal_eq_zero.mpr hx', inv_zero, to_nnreal_eq_zero.mpr (inv_nonpos.mpr hx')]

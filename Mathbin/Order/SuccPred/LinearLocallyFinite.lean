@@ -254,7 +254,7 @@ theorem to_Z_iterate_succ_of_not_is_max (n : ℕ) (hn : ¬IsMax ((succ^[n]) i0))
   let m := (toZ i0 ((succ^[n]) i0)).toNat
   have h_eq : (succ^[m]) i0 = (succ^[n]) i0 := iterate_succ_to_Z _ (le_succ_iterate _ _)
   by_cases hmn : m = n
-  · nth_rw 1 [← hmn]
+  · nth_rw 2 [← hmn]
     simp_rw [m]
     rw [Int.toNat_eq_max, to_Z_of_ge (le_succ_iterate _ _), max_eq_left]
     exact Nat.cast_nonneg _
@@ -274,7 +274,7 @@ theorem to_Z_iterate_pred_of_not_is_min (n : ℕ) (hn : ¬IsMin ((pred^[n]) i0))
   let m := (-toZ i0 ((pred^[n.succ]) i0)).toNat
   have h_eq : (pred^[m]) i0 = (pred^[n.succ]) i0 := iterate_pred_to_Z _ this
   by_cases hmn : m = n.succ
-  · nth_rw 1 [← hmn]
+  · nth_rw 2 [← hmn]
     simp_rw [m]
     rw [Int.toNat_eq_max, to_Z_of_lt this, max_eq_left, neg_neg]
     rw [neg_neg]
@@ -305,7 +305,7 @@ theorem to_Z_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j := by
     have hm : (succ^[m]) i = j := Nat.find_spec (exists_succ_iterate_of_le h_le)
     have hj_eq : j = (succ^[(toZ i0 i).toNat + m]) i0 := by
       rw [← hm, add_comm]
-      nth_rw 0 [← iterate_succ_to_Z i hi]
+      nth_rw 1 [← iterate_succ_to_Z i hi]
       rw [Function.iterate_add]
     by_contra h
     push_neg  at h
@@ -327,7 +327,7 @@ theorem to_Z_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j := by
     have hm : (pred^[m]) j = i := Nat.find_spec (exists_pred_iterate_of_le h_le)
     have hj_eq : i = (pred^[(-toZ i0 j).toNat + m]) i0 := by
       rw [← hm, add_comm]
-      nth_rw 0 [← iterate_pred_to_Z j hj]
+      nth_rw 1 [← iterate_pred_to_Z j hj]
       rw [Function.iterate_add]
     by_contra h
     push_neg  at h

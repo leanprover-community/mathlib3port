@@ -400,7 +400,7 @@ theorem diag_card : (diag s).card = s.card := by
 @[simp]
 theorem off_diag_card : (offDiag s).card = s.card * s.card - s.card := by
   suffices (diag s).card + (off_diag s).card = s.card * s.card by
-    nth_rw 2 [← s.diag_card]
+    nth_rw 3 [← s.diag_card]
     simp only [diag_card] at *
     rw [tsub_eq_of_eq_add_rev]
     rw [this]

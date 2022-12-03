@@ -440,7 +440,7 @@ theorem oangle_swap₁₂_sign (p₁ p₂ p₃ : P) : -(∡ p₁ p₂ p₃).sign
   rw [eq_comm, oangle, oangle, ← o.oangle_neg_neg, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev, ←
     vsub_sub_vsub_cancel_left p₁ p₃ p₂, ← neg_vsub_eq_vsub_rev p₃ p₂, sub_eq_add_neg,
     neg_vsub_eq_vsub_rev p₂ p₁, add_comm, ← @neg_one_smul ℝ]
-  nth_rw 1 [← one_smul ℝ (p₁ -ᵥ p₂)]
+  nth_rw 2 [← one_smul ℝ (p₁ -ᵥ p₂)]
   rw [o.oangle_sign_smul_add_smul_right]
   simp
 #align euclidean_geometry.oangle_swap₁₂_sign EuclideanGeometry.oangle_swap₁₂_sign

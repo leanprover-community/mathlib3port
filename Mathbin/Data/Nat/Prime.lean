@@ -912,7 +912,7 @@ theorem dvd_of_factors_subperm {a b : ℕ} (ha : a ≠ 0) (h : a.factors <+~ b.f
   · exact (ha rfl).elim
   · exact one_dvd _
   use (b.factors.diff a.succ.succ.factors).Prod
-  nth_rw 0 [← Nat.prod_factors ha]
+  nth_rw 1 [← Nat.prod_factors ha]
   rw [← List.prod_append,
     List.Perm.prod_eq <| List.subperm_append_diff_self_of_count_le <| list.subperm_ext_iff.mp h,
     Nat.prod_factors hb.ne']

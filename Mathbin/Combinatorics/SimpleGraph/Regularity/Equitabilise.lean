@@ -172,7 +172,7 @@ theorem card_filter_equitabilise_small (hm : m ≠ 0) :
     by 
     rw [← filter_or, filter_true_of_mem]
     exact fun x => card_eq_of_mem_parts_equitabilise
-  nth_rw 1 [hunion]
+  nth_rw 2 [hunion]
   rw [sum_union, sum_const_nat fun x hx => (mem_filter.1 hx).2,
     sum_const_nat fun x hx => (mem_filter.1 hx).2, P.card_filter_equitabilise_big]
   refine' disjoint_filter_filter' _ _ _

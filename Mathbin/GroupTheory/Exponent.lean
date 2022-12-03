@@ -289,7 +289,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   have hcoprime : (orderOf (t ^ p ^ k)).Coprime (orderOf g) := by
     rw [hg, Nat.coprime_pow_right_iff (pos_of_gt hpe), Nat.coprime_comm]
     apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp _)
-    nth_rw 0 [← pow_one p]
+    nth_rw 1 [← pow_one p]
     convert Nat.pow_succ_factorization_not_dvd (h <| t ^ p ^ k).ne' hp
     rw [hpk', Nat.factorization_div hpk]
     simp [hp]

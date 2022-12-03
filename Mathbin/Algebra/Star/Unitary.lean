@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Frédéric Dupuis
 -/
 import Mathbin.Algebra.Star.Basic
+import Mathbin.GroupTheory.Submonoid.Operations
 
 /-!
 # Unitary elements of a star monoid

@@ -233,13 +233,13 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ
 matrix is `A.adjugate`. -/
 theorem cramer_eq_adjugate_mul_vec (A : Matrix n n α) (b : n → α) :
     cramer A b = A.adjugate.mulVec b := by
-  nth_rw 1 [← A.transpose_transpose]
+  nth_rw 2 [← A.transpose_transpose]
   rw [← adjugate_transpose, adjugate_def]
   have : b = ∑ i, b i • Pi.single i 1 := by
     refine' (pi_eq_sum_univ b).trans _
     congr with j
     simp [Pi.single_apply, eq_comm]
-  nth_rw 0 [this]
+  nth_rw 1 [this]
   ext k
   simp [mul_vec, dot_product, mul_comm]
 #align matrix.cramer_eq_adjugate_mul_vec Matrix.cramer_eq_adjugate_mul_vec

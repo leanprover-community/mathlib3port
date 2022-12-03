@@ -146,7 +146,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
   have h_empty : μ ∅ ≠ ∞ := (measure_empty.le.trans_lt Ennreal.coe_lt_top).Ne
   specialize hT ∅ ∅ MeasurableSet.empty MeasurableSet.empty h_empty h_empty (Set.inter_empty ∅)
   rw [Set.union_empty] at hT
-  nth_rw 0 [← add_zero (T ∅)]  at hT
+  nth_rw 1 [← add_zero (T ∅)]  at hT
   exact (add_left_cancel hT).symm
 #align
   measure_theory.fin_meas_additive.map_empty_eq_zero MeasureTheory.FinMeasAdditive.map_empty_eq_zero
@@ -1820,7 +1820,7 @@ theorem set_to_fun_congr_measure_of_add_right {μ' : Measure α}
   by 
   refine' set_to_fun_congr_measure_of_integrable 1 one_ne_top _ hT_add hT f hf
   rw [one_smul]
-  nth_rw 0 [← add_zero μ]
+  nth_rw 1 [← add_zero μ]
   exact add_le_add le_rfl bot_le
 #align
   measure_theory.set_to_fun_congr_measure_of_add_right MeasureTheory.set_to_fun_congr_measure_of_add_right
@@ -1831,7 +1831,7 @@ theorem set_to_fun_congr_measure_of_add_left {μ' : Measure α}
   by 
   refine' set_to_fun_congr_measure_of_integrable 1 one_ne_top _ hT_add hT f hf
   rw [one_smul]
-  nth_rw 0 [← zero_add μ']
+  nth_rw 1 [← zero_add μ']
   exact add_le_add bot_le le_rfl
 #align
   measure_theory.set_to_fun_congr_measure_of_add_left MeasureTheory.set_to_fun_congr_measure_of_add_left
@@ -1964,6 +1964,16 @@ theorem tendsto_set_to_fun_filter_of_dominated_convergence (hT : DominatedFinMea
 
 variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
 
+theorem continuous_within_at_set_to_fun_of_dominated (hT : DominatedFinMeasAdditive μ T C)
+    {fs : X → α → E} {x₀ : X} {bound : α → ℝ} {s : Set X}
+    (hfs_meas : ∀ᶠ x in 𝓝[s] x₀, AeStronglyMeasurable (fs x) μ)
+    (h_bound : ∀ᶠ x in 𝓝[s] x₀, ∀ᵐ a ∂μ, ‖fs x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
+    (h_cont : ∀ᵐ a ∂μ, ContinuousWithinAt (fun x => fs x a) s x₀) :
+    ContinuousWithinAt (fun x => setToFun μ T hT (fs x)) s x₀ :=
+  tendsto_set_to_fun_filter_of_dominated_convergence hT bound ‹_› ‹_› ‹_› ‹_›
+#align
+  measure_theory.continuous_within_at_set_to_fun_of_dominated MeasureTheory.continuous_within_at_set_to_fun_of_dominated
+
 theorem continuous_at_set_to_fun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E}
     {x₀ : X} {bound : α → ℝ} (hfs_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (fs x) μ)
     (h_bound : ∀ᶠ x in 𝓝 x₀, ∀ᵐ a ∂μ, ‖fs x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
@@ -1972,6 +1982,19 @@ theorem continuous_at_set_to_fun_of_dominated (hT : DominatedFinMeasAdditive μ 
   tendsto_set_to_fun_filter_of_dominated_convergence hT bound ‹_› ‹_› ‹_› ‹_›
 #align
   measure_theory.continuous_at_set_to_fun_of_dominated MeasureTheory.continuous_at_set_to_fun_of_dominated
+
+theorem continuous_on_set_to_fun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E}
+    {bound : α → ℝ} {s : Set X} (hfs_meas : ∀ x ∈ s, AeStronglyMeasurable (fs x) μ)
+    (h_bound : ∀ x ∈ s, ∀ᵐ a ∂μ, ‖fs x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
+    (h_cont : ∀ᵐ a ∂μ, ContinuousOn (fun x => fs x a) s) :
+    ContinuousOn (fun x => setToFun μ T hT (fs x)) s := by
+  intro x hx
+  refine' continuous_within_at_set_to_fun_of_dominated hT _ _ bound_integrable _
+  · filter_upwards [self_mem_nhds_within] with x hx using hfs_meas x hx
+  · filter_upwards [self_mem_nhds_within] with x hx using h_bound x hx
+  · filter_upwards [h_cont] with a ha using ha x hx
+#align
+  measure_theory.continuous_on_set_to_fun_of_dominated MeasureTheory.continuous_on_set_to_fun_of_dominated
 
 theorem continuous_set_to_fun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E}
     {bound : α → ℝ} (hfs_meas : ∀ x, AeStronglyMeasurable (fs x) μ)

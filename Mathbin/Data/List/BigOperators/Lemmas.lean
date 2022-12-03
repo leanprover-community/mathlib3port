@@ -29,7 +29,7 @@ theorem list_sum_right [NonUnitalNonAssocSemiring R] (a : R) (l : List R)
   induction' l with x xs ih
   · exact Commute.zero_right _
   · rw [List.sum_cons]
-    exact (h _ <| mem_cons_self _ _).addRight (ih fun j hj => h _ <| mem_cons_of_mem _ hj)
+    exact (h _ <| mem_cons_self _ _).add_right (ih fun j hj => h _ <| mem_cons_of_mem _ hj)
 #align commute.list_sum_right Commute.list_sum_right
 
 theorem list_sum_left [NonUnitalNonAssocSemiring R] (b : R) (l : List R)

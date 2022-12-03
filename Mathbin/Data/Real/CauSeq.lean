@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Algebra.BigOperators.Order
+import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.Order.Group.MinMax
 import Mathbin.Algebra.Order.Field.Basic
@@ -28,8 +28,6 @@ This is a concrete implementation that is useful for simplicity and computabilit
 sequence, cauchy, abs val, absolute value
 -/
 
-
-open BigOperators
 
 open IsAbsoluteValue
 
@@ -73,18 +71,18 @@ theorem rat_mul_continuous_lemma {ε K₁ K₂ : α} (ε0 : 0 < ε) :
     lt_of_le_of_lt (abv_add abv _ _) this
 #align rat_mul_continuous_lemma rat_mul_continuous_lemma
 
-theorem rat_inv_continuous_lemma {β : Type _} [Field β] (abv : β → α) [IsAbsoluteValue abv]
+theorem rat_inv_continuous_lemma {β : Type _} [DivisionRing β] (abv : β → α) [IsAbsoluteValue abv]
     {ε K : α} (ε0 : 0 < ε) (K0 : 0 < K) :
     ∃ δ > 0, ∀ {a b : β}, K ≤ abv a → K ≤ abv b → abv (a - b) < δ → abv (a⁻¹ - b⁻¹) < ε := by
-  have KK := mul_pos K0 K0
-  have εK := mul_pos ε0 KK
-  refine' ⟨_, εK, fun a b ha hb h => _⟩
-  have a0 := lt_of_lt_of_le K0 ha
-  have b0 := lt_of_lt_of_le K0 hb
-  rw [inv_sub_inv ((abv_pos abv).1 a0) ((abv_pos abv).1 b0), abv_div abv, abv_mul abv, mul_comm,
-    abv_sub abv, ← mul_div_cancel ε (ne_of_gt KK)]
-  exact
-    div_lt_div h (mul_le_mul hb ha (le_of_lt K0) (abv_nonneg abv _)) (le_of_lt <| mul_pos ε0 KK) KK
+  refine' ⟨K * ε * K, mul_pos (mul_pos K0 ε0) K0, fun a b ha hb h => _⟩
+  have a0 := K0.trans_le ha
+  have b0 := K0.trans_le hb
+  rw [inv_sub_inv' ((abv_pos abv).1 a0) ((abv_pos abv).1 b0), abv_mul abv, abv_mul abv, abv_inv abv,
+    abv_inv abv, abv_sub abv]
+  refine' lt_of_mul_lt_mul_left (lt_of_mul_lt_mul_right _ b0.le) a0.le
+  rw [mul_assoc, inv_mul_cancel_right₀ b0.ne', ← mul_assoc, mul_inv_cancel a0.ne', one_mul]
+  refine' h.trans_le _
+  exact mul_le_mul (mul_le_mul ha le_rfl ε0.le a0.le) hb K0.le (mul_nonneg a0.le ε0.le)
 #align rat_inv_continuous_lemma rat_inv_continuous_lemma
 
 end
@@ -182,18 +180,16 @@ theorem cauchy₃ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j ≥ i, ∀ 
 
 theorem bounded (f : CauSeq β abv) : ∃ r, ∀ i, abv (f i) < r := by
   cases' f.cauchy zero_lt_one with i h
-  let R := ∑ j in Finset.range (i + 1), abv (f j)
-  have : ∀ j ≤ i, abv (f j) ≤ R := by 
-    intro j ij
-    change (fun j => abv (f j)) j ≤ R
-    apply Finset.single_le_sum
-    · intros
-      apply abv_nonneg abv
-    · rwa [Finset.mem_range, Nat.lt_succ_iff]
-  refine' ⟨R + 1, fun j => _⟩
+  set R : ℕ → α := @Nat.rec (fun n => α) (abv (f 0)) fun i c => max c (abv (f i.succ)) with hR
+  have : ∀ i, ∀ j ≤ i, abv (f j) ≤ R i := by
+    refine' Nat.rec (by simp [hR]) _
+    rintro i hi j (rfl | hj)
+    · simp
+    exact (hi j hj).trans (le_max_left _ _)
+  refine' ⟨R i + 1, fun j => _⟩
   cases' lt_or_le j i with ij ij
-  · exact lt_of_le_of_lt (this _ (le_of_lt ij)) (lt_add_one _)
-  · have := lt_of_le_of_lt (abv_add abv _ _) (add_lt_add_of_le_of_lt (this _ le_rfl) (h _ ij))
+  · exact lt_of_le_of_lt (this i _ (le_of_lt ij)) (lt_add_one _)
+  · have := lt_of_le_of_lt (abv_add abv _ _) (add_lt_add_of_le_of_lt (this i _ le_rfl) (h _ ij))
     rw [add_sub, add_comm] at this
     simpa
 #align cau_seq.bounded CauSeq.bounded
@@ -533,6 +529,12 @@ theorem mul_equiv_zero (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : g 
   show LimZero (g * f - 0) by simpa
 #align cau_seq.mul_equiv_zero CauSeq.mul_equiv_zero
 
+theorem mul_equiv_zero' (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : f * g ≈ 0 :=
+  have : LimZero (f - 0) := hf
+  have : LimZero (f * g) := mulLimZeroLeft _ <| by simpa
+  show LimZero (f * g - 0) by simpa
+#align cau_seq.mul_equiv_zero' CauSeq.mul_equiv_zero'
+
 theorem mul_not_equiv_zero {f g : CauSeq _ abv} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) : ¬f * g ≈ 0 :=
   fun this : LimZero (f * g - 0) => by
   have hlz : LimZero (f * g) := by simpa
@@ -558,23 +560,13 @@ theorem const_equiv {x y : β} : const x ≈ const y ↔ x = y :=
   show LimZero _ ↔ _ by rw [← const_sub, const_lim_zero, sub_eq_zero]
 #align cau_seq.const_equiv CauSeq.const_equiv
 
-end Ring
-
-section CommRing
-
-variable [CommRing β] {abv : β → α} [IsAbsoluteValue abv]
-
-theorem mul_equiv_zero' (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : f * g ≈ 0 := by
-  rw [mul_comm] <;> apply mul_equiv_zero _ hf
-#align cau_seq.mul_equiv_zero' CauSeq.mul_equiv_zero'
-
 theorem mul_equiv_mul {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 ≈ g2) :
     f1 * g1 ≈ f2 * g2 := by
-  simpa only [mul_sub, mul_comm, sub_add_sub_cancel] using
-    add_lim_zero (mul_lim_zero_right g1 hf) (mul_lim_zero_right f2 hg)
+  simpa only [mul_sub, sub_mul, sub_add_sub_cancel] using
+    add_lim_zero (mul_lim_zero_left g1 hf) (mul_lim_zero_right f2 hg)
 #align cau_seq.mul_equiv_mul CauSeq.mul_equiv_mul
 
-end CommRing
+end Ring
 
 section IsDomain
 
@@ -593,9 +585,9 @@ theorem one_not_equiv_zero : ¬const abv 1 ≈ const abv 0 := fun h =>
 
 end IsDomain
 
-section Field
+section DivisionRing
 
-variable [Field β] {abv : β → α} [IsAbsoluteValue abv]
+variable [DivisionRing β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem inv_aux {f : CauSeq β abv} (hf : ¬LimZero f) :
     ∀ ε > 0, ∃ i, ∀ j ≥ i, abv ((f j)⁻¹ - (f i)⁻¹) < ε
@@ -629,12 +621,17 @@ theorem inv_mul_cancel {f : CauSeq β abv} (hf) : inv f hf * f ≈ 1 := fun ε �
   ⟨i, fun j ij => by simpa [(abv_pos abv).1 (lt_of_lt_of_le K0 (H _ ij)), abv_zero abv] using ε0⟩
 #align cau_seq.inv_mul_cancel CauSeq.inv_mul_cancel
 
+theorem mul_inv_cancel {f : CauSeq β abv} (hf) : f * inv f hf ≈ 1 := fun ε ε0 =>
+  let ⟨K, K0, i, H⟩ := abv_pos_of_not_lim_zero hf
+  ⟨i, fun j ij => by simpa [(abv_pos abv).1 (lt_of_lt_of_le K0 (H _ ij)), abv_zero abv] using ε0⟩
+#align cau_seq.mul_inv_cancel CauSeq.mul_inv_cancel
+
 theorem const_inv {x : β} (hx : x ≠ 0) :
     const abv x⁻¹ = inv (const abv x) (by rwa [const_lim_zero]) :=
   rfl
 #align cau_seq.const_inv CauSeq.const_inv
 
-end Field
+end DivisionRing
 
 section Abs
 

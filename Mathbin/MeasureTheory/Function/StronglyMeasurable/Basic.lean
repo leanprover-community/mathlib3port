@@ -236,7 +236,7 @@ theorem tendsto_approx_bounded_of_norm_le {β} {f : α → β} [NormedAddCommGro
   have : min 1 (c / ‖f x‖) = 1 := by
     rw [min_eq_left_iff, one_le_div (lt_of_le_of_ne (norm_nonneg _) (Ne.symm hfx0))]
     exact hfx
-  nth_rw 0 [this.symm]
+  nth_rw 1 [this.symm]
   refine' tendsto.min tendsto_const_nhds _
   refine' tendsto.div tendsto_const_nhds h_tendsto.norm hfx0
 #align

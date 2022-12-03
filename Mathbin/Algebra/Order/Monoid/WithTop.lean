@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Order.Monoid.OrderDual
-import Mathbin.Algebra.Order.Monoid.WithZero
+import Mathbin.Algebra.Order.Monoid.WithZero.Basic
 import Mathbin.Data.Nat.Cast.Defs
 
 /-! # Adjoining top/bottom elements to ordered monoids. -/

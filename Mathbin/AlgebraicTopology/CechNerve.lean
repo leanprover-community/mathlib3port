@@ -213,7 +213,7 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
     ext
     · dsimp
       erw [wide_pullback.lift_π]
-      nth_rw 1 [← category.id_comp A.left]
+      nth_rw 2 [← category.id_comp A.left]
       congr 1
       convert X.left.map_id _
       rw [← op_id]
@@ -457,7 +457,7 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
     · rfl
     · dsimp
       erw [wide_pushout.ι_desc]
-      nth_rw 1 [← category.comp_id A.right]
+      nth_rw 2 [← category.comp_id A.right]
       congr 1
       convert X.right.map_id _
       ext ⟨a, ha⟩

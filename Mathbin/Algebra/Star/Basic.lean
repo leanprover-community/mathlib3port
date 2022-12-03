@@ -3,6 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
+import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Ring.Aut
 import Mathbin.Algebra.Ring.CompTypeclasses
 import Mathbin.Data.Rat.Cast
@@ -421,7 +422,7 @@ theorem star_mul_self_nonneg {r : R} : 0 ≤ star r * r :=
 #align star_mul_self_nonneg star_mul_self_nonneg
 
 theorem star_mul_self_nonneg' {r : R} : 0 ≤ r * star r := by
-  nth_rw_rhs 0 [← star_star r]
+  nth_rw_rhs 1 [← star_star r]
   exact star_mul_self_nonneg
 #align star_mul_self_nonneg' star_mul_self_nonneg'
 

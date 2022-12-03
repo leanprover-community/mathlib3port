@@ -143,7 +143,7 @@ theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
 
 theorem decay_neg_aux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n (-f) x‖ = ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ := by
-  nth_rw 3 [← norm_neg]
+  nth_rw 4 [← norm_neg]
   congr
   exact iterated_fderiv_neg_apply
 #align schwartz_map.decay_neg_aux SchwartzMap.decay_neg_aux

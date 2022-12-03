@@ -63,8 +63,8 @@ theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
   have y_pos : 0 < y := by linarith
   have x_nonneg : 0 ≤ x := le_trans (le_of_lt (exp_pos (1 / a))) hex
   have y_nonneg : 0 ≤ y := by linarith
-  nth_rw 0 [← rpow_one y]
-  nth_rw 0 [← rpow_one x]
+  nth_rw 1 [← rpow_one y]
+  nth_rw 1 [← rpow_one x]
   rw [← div_self (ne_of_lt ha).symm, div_eq_mul_one_div a a, rpow_mul y_nonneg, rpow_mul x_nonneg,
     log_rpow (rpow_pos_of_pos y_pos a), log_rpow (rpow_pos_of_pos x_pos a), mul_div_assoc,
     mul_div_assoc, mul_le_mul_left (one_div_pos.mpr ha)]

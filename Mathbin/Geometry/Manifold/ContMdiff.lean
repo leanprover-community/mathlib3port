@@ -334,8 +334,8 @@ theorem cont_mdiff_within_at_iff' :
   rw [cont_mdiff_within_at_iff, and_congr_right_iff]
   set e := extChartAt I x; set e' := extChartAt I' (f x)
   refine' fun hc => cont_diff_within_at_congr_nhds _
-  rw [← e.image_source_inter_eq', ← ext_chart_at_map_nhds_within_eq_image, ←
-    ext_chart_at_map_nhds_within, inter_comm, nhds_within_inter_of_mem]
+  rw [← e.image_source_inter_eq', ← map_ext_chart_at_nhds_within_eq_image, ←
+    map_ext_chart_at_nhds_within, inter_comm, nhds_within_inter_of_mem]
   exact hc (ext_chart_at_source_mem_nhds _ _)
 #align cont_mdiff_within_at_iff' cont_mdiff_within_at_iff'
 
@@ -356,7 +356,7 @@ theorem cont_mdiff_within_at_iff_target :
     exact
       inter_mem self_mem_nhds_within
         (h.preimage_mem_nhds_within <| (chart_at _ _).open_source.mem_nhds <| mem_chart_source _ _)
-  simp_rw [cont, ContDiffWithinAtProp, extChartAt, LocalEquiv.coe_trans,
+  simp_rw [cont, ContDiffWithinAtProp, extChartAt, LocalHomeomorph.extend, LocalEquiv.coe_trans,
     ModelWithCorners.to_local_equiv_coe, LocalHomeomorph.coe_coe, model_with_corners_self_coe,
     chart_at_self_eq, LocalHomeomorph.refl_apply, comp.left_id]
 #align cont_mdiff_within_at_iff_target cont_mdiff_within_at_iff_target
@@ -415,9 +415,9 @@ theorem cont_mdiff_within_at_iff_of_mem_source' {x' : M} {y : M'} (hx : x' ∈ (
   rw [and_congr_right_iff]
   set e := extChartAt I x; set e' := extChartAt I' (f x)
   refine' fun hc => cont_diff_within_at_congr_nhds _
-  rw [← e.image_source_inter_eq', ← ext_chart_at_map_nhds_within_eq_image' I x hx, ←
-    ext_chart_at_map_nhds_within' I x hx, inter_comm, nhds_within_inter_of_mem]
-  exact hc ((ext_chart_at_open_source _ _).mem_nhds hy)
+  rw [← e.image_source_inter_eq', ← map_ext_chart_at_nhds_within_eq_image' I x hx, ←
+    map_ext_chart_at_nhds_within' I x hx, inter_comm, nhds_within_inter_of_mem]
+  exact hc (ext_chart_at_source_mem_nhds' _ _ hy)
 #align cont_mdiff_within_at_iff_of_mem_source' cont_mdiff_within_at_iff_of_mem_source'
 
 theorem cont_mdiff_at_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (chartAt H x).source)
@@ -445,7 +445,7 @@ theorem cont_mdiff_within_at_iff_target_of_mem_source {x : M} {y : M'}
   simp_rw [StructureGroupoid.lift_prop_within_at_self_target]
   simp_rw [((chart_at H' y).ContinuousAt hy).comp_continuous_within_at hf]
   rw [← ext_chart_at_source I'] at hy
-  simp_rw [(ext_chart_at_continuous_at' I' _ hy).comp_continuous_within_at hf]
+  simp_rw [(continuous_at_ext_chart_at' I' _ hy).comp_continuous_within_at hf]
   rfl
 #align cont_mdiff_within_at_iff_target_of_mem_source cont_mdiff_within_at_iff_target_of_mem_source
 
@@ -515,7 +515,7 @@ theorem contMdiffAtExtChartAt' {x' : M} (h : x' ∈ (chartAt H x).source) :
     ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) x' := by
   refine' (cont_mdiff_at_iff_of_mem_source h (mem_chart_source _ _)).mpr _
   rw [← ext_chart_at_source I] at h
-  refine' ⟨ext_chart_at_continuous_at' _ _ h, _⟩
+  refine' ⟨continuous_at_ext_chart_at' _ _ h, _⟩
   refine' cont_diff_within_at_id.congr_of_eventually_eq _ _
   · refine' eventually_eq_of_mem (ext_chart_at_target_mem_nhds_within' I x h) fun x₂ hx₂ => _
     simp_rw [Function.comp_apply, (extChartAt I x).right_inv hx₂]
@@ -556,7 +556,7 @@ theorem cont_mdiff_on_iff_of_subset_source {x : M} {y : M'} (hs : s ⊆ (chartAt
     refine' (h2 _ <| mem_image_of_mem _ hx').mono_of_mem _
     rw [← ext_chart_at_source I] at hs
     rw [(extChartAt I x).image_eq_target_inter_inv_preimage hs]
-    refine' inter_mem _ (ext_chart_preimage_mem_nhds_within' I x (hs hx') self_mem_nhds_within)
+    refine' inter_mem _ (ext_chart_at_preimage_mem_nhds_within' I x (hs hx') self_mem_nhds_within)
     have := ext_chart_at_target_mem_nhds_within' I x (hs hx')
     refine' nhds_within_mono _ (inter_subset_right _ _) this
 #align cont_mdiff_on_iff_of_subset_source cont_mdiff_on_iff_of_subset_source
@@ -602,7 +602,7 @@ theorem cont_mdiff_on_iff_target :
   by 
   inhabit E'
   simp only [cont_mdiff_on_iff, ModelWithCorners.source_eq, chart_at_self_eq,
-    LocalHomeomorph.refl_local_equiv, LocalEquiv.refl_trans, extChartAt.equations._eqn_1,
+    LocalHomeomorph.refl_local_equiv, LocalEquiv.refl_trans, extChartAt, LocalHomeomorph.extend,
     Set.preimage_univ, Set.inter_univ, and_congr_right_iff]
   intro h
   constructor
@@ -866,7 +866,7 @@ theorem cont_mdiff_within_at_iff_cont_mdiff_on_nhds {n : ℕ} :
     · rw [nhds_within_restrict _ xo o_open]
       refine' Filter.inter_mem self_mem_nhds_within _
       suffices : u ∈ 𝓝[extChartAt I x '' (insert x s ∩ o)] extChartAt I x x
-      exact (ext_chart_at_continuous_at I x).ContinuousWithinAt.preimage_mem_nhds_within' this
+      exact (continuous_at_ext_chart_at I x).ContinuousWithinAt.preimage_mem_nhds_within' this
       apply nhds_within_mono _ _ u_nhds
       rw [image_subset_iff]
       intro y hy
@@ -877,9 +877,9 @@ theorem cont_mdiff_within_at_iff_cont_mdiff_on_nhds {n : ℕ} :
     · intro y hy
       have : ContinuousWithinAt f v y := by
         apply
-          (((ext_chart_at_continuous_on_symm I' (f x) _ _).comp'
+          (((continuous_on_ext_chart_at_symm I' (f x) _ _).comp'
                   (hu _ hy.2).ContinuousWithinAt).comp'
-              (ext_chart_at_continuous_on I x _ _)).congr_mono
+              (continuous_on_ext_chart_at I x _ _)).congr_mono
         · intro z hz
           simp only [v_incl hz, v_incl' z hz, mfld_simps]
         · intro z hz
@@ -1003,7 +1003,7 @@ theorem ContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M)
     ∀ᶠ y in 𝓝[e.symm ⁻¹' s ∩ range I] e x,
       y ∈ e.target ∧ f (e.symm y) ∈ t ∧ f (e.symm y) ∈ e'.source ∧ g (f (e.symm y)) ∈ e''.source :=
     by 
-    simp only [← ext_chart_at_map_nhds_within, eventually_map]
+    simp only [← map_ext_chart_at_nhds_within, eventually_map]
     filter_upwards [hf.1.Tendsto (ext_chart_at_source_mem_nhds I' (f x)),
       (hg.1.comp hf.1 st).Tendsto (ext_chart_at_source_mem_nhds I'' (g (f x))),
       inter_mem_nhds_within s (ext_chart_at_source_mem_nhds I x)]
@@ -1670,7 +1670,7 @@ theorem cont_mdiff_within_at_pi_space :
       ∀ i, ContMdiffWithinAt I 𝓘(𝕜, Fi i) n (fun x => φ x i) s x :=
   by
   simp only [cont_mdiff_within_at_iff, continuous_within_at_pi, cont_diff_within_at_pi, forall_and,
-    writtenInExtChartAt, ext_chart_model_space_eq_id, (· ∘ ·), LocalEquiv.refl_coe, id]
+    writtenInExtChartAt, ext_chart_at_model_space_eq_id, (· ∘ ·), LocalEquiv.refl_coe, id]
 #align cont_mdiff_within_at_pi_space cont_mdiff_within_at_pi_space
 
 theorem cont_mdiff_on_pi_space :

@@ -148,8 +148,8 @@ theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
   · intro hT v
     apply is_symmetric.conj_inner_sym hT
   · intro h x y
-    nth_rw 1 [← inner_conj_sym]
-    nth_rw 1 [inner_map_polarization]
+    nth_rw 2 [← inner_conj_sym]
+    nth_rw 2 [inner_map_polarization]
     simp only [star_ring_end_apply, star_div', star_sub, star_add, star_mul]
     simp only [← star_ring_end_apply]
     rw [h (x + y), h (x - y), h (x + Complex.i • y), h (x - Complex.i • y)]

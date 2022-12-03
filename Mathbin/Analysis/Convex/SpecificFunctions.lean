@@ -274,7 +274,7 @@ theorem deriv2_sqrt_mul_log (x : ℝ) :
       (((has_deriv_at_log hx.ne').const_add 2).div ((has_deriv_at_sqrt hx.ne').const_mul 2) <|
           mul_ne_zero two_ne_zero h₀).deriv using
       1
-    nth_rw 2 [← mul_self_sqrt hx.le]
+    nth_rw 3 [← mul_self_sqrt hx.le]
     field_simp
     ring
 #align deriv2_sqrt_mul_log deriv2_sqrt_mul_log

@@ -2691,40 +2691,60 @@ theorem boundedRangeOfTendsto (u : ℕ → α) {x : α} (hu : Tendsto u atTop (�
   hu.CauchySeq.boundedRange
 #align metric.bounded_range_of_tendsto Metric.boundedRangeOfTendsto
 
-/-- If a function is continuous at every point of a compact set `k`, then it is bounded on
-some open neighborhood of `k`. -/
-theorem exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at [TopologicalSpace β]
-    {k : Set β} {f : β → α} (hk : IsCompact k) (hf : ∀ x ∈ k, ContinuousAt f x) :
-    ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) := by
+/-- If a function is continuous within a set `s` at every point of a compact set `k`, then it is
+bounded on some open neighborhood of `k` in `s`. -/
+theorem exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at
+    [TopologicalSpace β] {k s : Set β} {f : β → α} (hk : IsCompact k)
+    (hf : ∀ x ∈ k, ContinuousWithinAt f s x) : ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' (t ∩ s)) := by
   apply hk.induction_on
-  · refine' ⟨∅, subset.refl _, is_open_empty, by simp only [image_empty, bounded_empty]⟩
+  · exact ⟨∅, subset.refl _, is_open_empty, by simp only [image_empty, bounded_empty, empty_inter]⟩
   · rintro s s' hss' ⟨t, s't, t_open, t_bounded⟩
     exact ⟨t, hss'.trans s't, t_open, t_bounded⟩
   · rintro s s' ⟨t, st, t_open, t_bounded⟩ ⟨t', s't', t'_open, t'_bounded⟩
     refine' ⟨t ∪ t', union_subset_union st s't', t_open.union t'_open, _⟩
-    rw [image_union]
+    rw [union_inter_distrib_right, image_union]
     exact t_bounded.union t'_bounded
   · intro x hx
     have A : ball (f x) 1 ∈ 𝓝 (f x) := ball_mem_nhds _ zero_lt_one
-    have B : f ⁻¹' ball (f x) 1 ∈ 𝓝 x := hf x hx A
-    obtain ⟨u, uf, u_open, xu⟩ : ∃ (u : Set β)(H : u ⊆ f ⁻¹' ball (f x) 1), IsOpen u ∧ x ∈ u
-    exact _root_.mem_nhds_iff.1 B
+    have B : f ⁻¹' ball (f x) 1 ∈ 𝓝[s] x := hf x hx A
+    obtain ⟨u, u_open, xu, uf⟩ : ∃ u : Set β, IsOpen u ∧ x ∈ u ∧ u ∩ s ⊆ f ⁻¹' ball (f x) 1
+    exact _root_.mem_nhds_within.1 B
     refine' ⟨u, _, u, subset.refl _, u_open, _⟩
     · apply nhds_within_le_nhds
       exact u_open.mem_nhds xu
     · apply bounded.mono (image_subset _ uf)
       exact bounded_ball.mono (image_preimage_subset _ _)
 #align
+  metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at Metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at
+
+/-- If a function is continuous at every point of a compact set `k`, then it is bounded on
+some open neighborhood of `k`. -/
+theorem exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at [TopologicalSpace β]
+    {k : Set β} {f : β → α} (hk : IsCompact k) (hf : ∀ x ∈ k, ContinuousAt f x) :
+    ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) := by
+  simp_rw [← continuous_within_at_univ] at hf
+  simpa only [inter_univ] using
+    exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at hk hf
+#align
   metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at Metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at
+
+/-- If a function is continuous on a set `s` containing a compact set `k`, then it is bounded on
+some open neighborhood of `k` in `s`. -/
+theorem exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on [TopologicalSpace β]
+    {k s : Set β} {f : β → α} (hk : IsCompact k) (hks : k ⊆ s) (hf : ContinuousOn f s) :
+    ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' (t ∩ s)) :=
+  exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at hk fun x hx =>
+    hf x (hks hx)
+#align
+  metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on Metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on
 
 /-- If a function is continuous on a neighborhood of a compact set `k`, then it is bounded on
 some open neighborhood of `k`. -/
 theorem exists_is_open_bounded_image_of_is_compact_of_continuous_on [TopologicalSpace β]
     {k s : Set β} {f : β → α} (hk : IsCompact k) (hs : IsOpen s) (hks : k ⊆ s)
-    (hf : ContinuousOn f s) : ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) := by
-  apply
-    exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at hk fun x hx =>
-      hf.continuous_at (hs.mem_nhds (hks hx))
+    (hf : ContinuousOn f s) : ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) :=
+  exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at hk fun x hx =>
+    hf.ContinuousAt (hs.mem_nhds (hks hx))
 #align
   metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on Metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on
 

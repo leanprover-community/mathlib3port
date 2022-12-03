@@ -2277,7 +2277,7 @@ theorem morphism_restrict_ι {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrie
 theorem is_pullback_morphism_restrict {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrier) :
     IsPullback (f ∣_ U) (X.of_restrict _) (Y.of_restrict _) f := by
   delta morphism_restrict
-  nth_rw 0 [← category.id_comp f]
+  nth_rw 1 [← category.id_comp f]
   refine'
     (is_pullback.of_horiz_is_iso ⟨_⟩).paste_horiz
       (is_pullback.of_has_pullback f (Y.of_restrict U.open_embedding)).flip

@@ -498,7 +498,7 @@ theorem snorm_norm_rpow (f : α → F) (hq_pos : 0 < q) :
       essSup (fun x : α => (‖‖f x‖ ^ q‖₊ : ℝ≥0∞)) μ = essSup (fun x : α => ↑‖f x‖₊ ^ q) μ := by
       congr
       ext1 x
-      nth_rw 1 [← nnnorm_norm]
+      nth_rw 2 [← nnnorm_norm]
       rw [Ennreal.coe_rpow_of_nonneg _ hq_pos.le, Ennreal.coe_eq_coe]
       ext
       push_cast
@@ -1014,7 +1014,7 @@ theorem snorm'_le_snorm_ess_sup_mul_rpow_measure_univ (hq_pos : 0 < q) {f : α �
     have h_nnnorm_le_snorm_ess_sup := coe_nnnorm_ae_le_snorm_ess_sup f μ
     refine' h_nnnorm_le_snorm_ess_sup.mono fun x hx => Ennreal.rpow_le_rpow hx (le_of_lt hq_pos)
   rw [snorm', ← Ennreal.rpow_one (snorm_ess_sup f μ)]
-  nth_rw 1 [← mul_inv_cancel (ne_of_lt hq_pos).symm]
+  nth_rw 2 [← mul_inv_cancel (ne_of_lt hq_pos).symm]
   rw [Ennreal.rpow_mul, one_div, ← Ennreal.mul_rpow_of_nonneg _ _ (by simp [hq_pos.le] : 0 ≤ q⁻¹)]
   refine' Ennreal.rpow_le_rpow _ (by simp [hq_pos.le])
   rwa [lintegral_const] at h_le

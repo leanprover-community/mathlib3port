@@ -1541,14 +1541,14 @@ theorem insertWith.valid_aux [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ 
       suffices H
       · refine' ⟨vl.balance_l h.right H, _⟩
         rw [size_balance_l vl.3 h.3.2.2 vl.2 h.2.2.2 H, h.2.size_eq]
-        refine' (e.add_right _).addRight _
+        refine' (e.add_right _).add_right _
       · exact Or.inl ⟨_, e, h.3.1⟩
     · have : y < x := lt_of_le_not_le ((total_of (· ≤ ·) _ _).resolve_left h_1) h_1
       rcases insert_with.valid_aux h.right this br with ⟨vr, e⟩
       suffices H
       · refine' ⟨h.left.balance_r vr H, _⟩
         rw [size_balance_r h.3.2.1 vr.3 h.2.2.1 vr.2 H, h.2.size_eq]
-        refine' (e.add_left _).addRight _
+        refine' (e.add_left _).add_right _
       · exact Or.inr ⟨_, e, h.3.1⟩
 #align ordnode.insert_with.valid_aux Ordnode.insertWith.valid_aux
 

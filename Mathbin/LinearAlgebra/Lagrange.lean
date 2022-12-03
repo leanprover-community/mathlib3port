@@ -404,7 +404,7 @@ def funEquivDegreeLt (hvs : Set.InjOn v s) :
     rintro ⟨f, hf⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]
     rw [mem_degree_lt] at hf
-    nth_rw_rhs 0 [eq_interpolate hvs hf]
+    nth_rw_rhs 1 [eq_interpolate hvs hf]
     exact interpolate_eq_of_values_eq_on _ _ fun _ hi => if_pos hi
   right_inv := by 
     intro f

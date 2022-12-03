@@ -241,7 +241,7 @@ theorem dist_of_re_eq (h : z.re = w.re) : dist z w = dist (log z.im) (log w.im) 
   rw [dist_eq_iff_dist_coe_center_eq, Real.dist_eq, ← abs_sinh, ← log_div z.im_ne_zero w.im_ne_zero,
       sinh_log h₀, dist_of_re_eq, coe_im, coe_im, center_im, cosh_abs, cosh_log h₀, inv_div] <;>
     [skip, exact h]
-  nth_rw 3 [← abs_of_pos w.im_pos]
+  nth_rw 4 [← abs_of_pos w.im_pos]
   simp only [← _root_.abs_mul, coe_im, Real.dist_eq]
   congr 1
   field_simp [z.im_pos, w.im_pos, z.im_ne_zero, w.im_ne_zero]

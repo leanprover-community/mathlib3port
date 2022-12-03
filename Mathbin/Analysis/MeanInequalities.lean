@@ -281,8 +281,8 @@ theorem young_inequality (a b : ℝ≥0) {p q : ℝ≥0} (hp : 1 < p) (hpq : 1 /
 /-- Young's inequality, `ℝ≥0` version with real conjugate exponents. -/
 theorem young_inequality_real (a b : ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
     a * b ≤ a ^ p / Real.toNnreal p + b ^ q / Real.toNnreal q := by
-  nth_rw 0 [← Real.coe_to_nnreal p hpq.nonneg]
-  nth_rw 0 [← Real.coe_to_nnreal q hpq.symm.nonneg]
+  nth_rw 1 [← Real.coe_to_nnreal p hpq.nonneg]
+  nth_rw 1 [← Real.coe_to_nnreal q hpq.symm.nonneg]
   exact young_inequality a b hpq.one_lt_nnreal hpq.inv_add_inv_conj_nnreal
 #align nnreal.young_inequality_real Nnreal.young_inequality_real
 

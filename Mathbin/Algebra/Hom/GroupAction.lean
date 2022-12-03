@@ -3,8 +3,9 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.GroupRingAction
+import Mathbin.Algebra.GroupRingAction.Invariant
 import Mathbin.GroupTheory.GroupAction.Defs
+import Mathbin.GroupTheory.Subgroup.Basic
 
 /-!
 # Equivariant homomorphisms

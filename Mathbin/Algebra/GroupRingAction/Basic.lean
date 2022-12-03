@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Ring.Equiv
+import Mathbin.Algebra.Field.Defs
 import Mathbin.GroupTheory.GroupAction.Group
-import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # Group action on rings
@@ -28,8 +28,6 @@ group action, invariant subring
 
 
 universe u v
-
-open BigOperators
 
 /-- Typeclass for multiplicative actions by monoids on semirings.
 
@@ -82,36 +80,6 @@ def MulSemiringAction.compHom (f : N →* M) [MulSemiringAction M R] : MulSemiri
 
 end
 
-section
-
-variable {M G R}
-
-/-- A stronger version of `submonoid.distrib_mul_action`. -/
-instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) :
-    MulSemiringAction H R :=
-  { H.MulDistribMulAction, H.DistribMulAction with smul := (· • ·) }
-#align submonoid.mul_semiring_action Submonoid.mulSemiringAction
-
-/-- A stronger version of `subgroup.distrib_mul_action`. -/
-instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) :
-    MulSemiringAction H R :=
-  H.toSubmonoid.MulSemiringAction
-#align subgroup.mul_semiring_action Subgroup.mulSemiringAction
-
-/-- A stronger version of `subsemiring.distrib_mul_action`. -/
-instance Subsemiring.mulSemiringAction {R'} [Semiring R'] [MulSemiringAction R' R]
-    (H : Subsemiring R') : MulSemiringAction H R :=
-  H.toSubmonoid.MulSemiringAction
-#align subsemiring.mul_semiring_action Subsemiring.mulSemiringAction
-
-/-- A stronger version of `subring.distrib_mul_action`. -/
-instance Subring.mulSemiringAction {R'} [Ring R'] [MulSemiringAction R' R] (H : Subring R') :
-    MulSemiringAction H R :=
-  H.toSubsemiring.MulSemiringAction
-#align subring.mul_semiring_action Subring.mulSemiringAction
-
-end
-
 section SimpLemmas
 
 variable {M G A R F}
@@ -128,31 +96,4 @@ theorem smul_inv'' [MulSemiringAction M F] (x : M) (m : F) : x • m⁻¹ = (x �
 end SimpLemmas
 
 end Semiring
-
-section Ring
-
-variable (M : Type u) [Monoid M] {R : Type v} [Ring R] [MulSemiringAction M R]
-
-variable (S : Subring R)
-
-open MulAction
-
-/-- A typeclass for subrings invariant under a `mul_semiring_action`. -/
-class IsInvariantSubring : Prop where
-  smul_mem : ∀ (m : M) {x : R}, x ∈ S → m • x ∈ S
-#align is_invariant_subring IsInvariantSubring
-
-instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] :
-    MulSemiringAction M
-      S where 
-  smul m x := ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩
-  one_smul s := Subtype.eq <| one_smul M s
-  mul_smul m₁ m₂ s := Subtype.eq <| mul_smul m₁ m₂ s
-  smul_add m s₁ s₂ := Subtype.eq <| smul_add m s₁ s₂
-  smul_zero m := Subtype.eq <| smul_zero m
-  smul_one m := Subtype.eq <| smul_one m
-  smul_mul m s₁ s₂ := Subtype.eq <| smul_mul' m s₁ s₂
-#align is_invariant_subring.to_mul_semiring_action IsInvariantSubring.toMulSemiringAction
-
-end Ring
 

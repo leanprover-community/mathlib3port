@@ -5,7 +5,7 @@ Authors: Julian Kuelshammer
 -/
 import Mathbin.Algebra.Category.MonCat.Basic
 import Mathbin.Algebra.Category.SemigroupCat.Basic
-import Mathbin.Algebra.Group.WithOne
+import Mathbin.Algebra.Group.WithOne.Basic
 import Mathbin.Algebra.FreeMonoid.Basic
 
 /-!

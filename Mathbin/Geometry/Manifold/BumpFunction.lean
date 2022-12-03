@@ -115,7 +115,7 @@ theorem support_eq_inter_preimage :
 
 theorem is_open_support : IsOpen (support f) := by
   rw [support_eq_inter_preimage]
-  exact ext_chart_preimage_open_of_open I c is_open_ball
+  exact is_open_ext_chart_at_preimage I c is_open_ball
 #align smooth_bump_function.is_open_support SmoothBumpFunction.is_open_support
 
 theorem support_eq_symm_image :
@@ -167,7 +167,7 @@ theorem le_one : f x ≤ 1 :=
 
 theorem eventually_eq_one_of_dist_lt (hs : x ∈ (chartAt H c).source)
     (hd : dist (extChartAt I c x) (extChartAt I c c) < f.R) : f =ᶠ[𝓝 x] 1 := by
-  filter_upwards [IsOpen.mem_nhds (ext_chart_preimage_open_of_open I c is_open_ball) ⟨hs, hd⟩]
+  filter_upwards [IsOpen.mem_nhds (is_open_ext_chart_at_preimage I c is_open_ball) ⟨hs, hd⟩]
   rintro z ⟨hzs, hzd : _ < _⟩
   exact f.one_of_dist_le hzs hzd.le
 #align
@@ -205,7 +205,7 @@ theorem nonempty_support : (support f).Nonempty :=
 theorem compact_symm_image_closed_ball :
     IsCompact ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I)) :=
   (Euclidean.is_compact_closed_ball.inter_right I.closedRange).image_of_continuous_on <|
-    (ext_chart_at_continuous_on_symm _ _).mono f.closed_ball_subset
+    (continuous_on_ext_chart_at_symm _ _).mono f.closed_ball_subset
 #align
   smooth_bump_function.compact_symm_image_closed_ball SmoothBumpFunction.compact_symm_image_closed_ball
 
@@ -232,7 +232,7 @@ theorem isClosedImageOfIsClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ suppo
   rw [f.image_eq_inter_preimage_of_subset_support hs]
   refine'
     ContinuousOn.preimageClosedOfClosed
-      ((ext_chart_continuous_on_symm _ _).mono f.closed_ball_subset) _ hsc
+      ((continuous_on_ext_chart_at_symm _ _).mono f.closed_ball_subset) _ hsc
   exact IsClosed.inter is_closed_closed_ball I.closed_range
 #align smooth_bump_function.is_closed_image_of_is_closed SmoothBumpFunction.isClosedImageOfIsClosed
 
@@ -322,7 +322,7 @@ theorem nhds_basis_tsupport :
     (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => True) fun f =>
       (extChartAt I c).symm '' (closed_ball (extChartAt I c c) f.r ∩ range I) :=
     by 
-    rw [← ext_chart_at_symm_map_nhds_within_range I c]
+    rw [← map_ext_chart_at_symm_nhds_within_range I c]
     exact nhds_within_range_basis.map _
   refine'
     this.to_has_basis' (fun f hf => ⟨f, trivial, f.tsupport_subset_symm_image_closed_ball⟩)

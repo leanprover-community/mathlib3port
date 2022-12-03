@@ -150,7 +150,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
         use f
         rw [mul_comm]
         rw [← mul_smul, Algebra.smul_def] at hf
-        nth_rw 1 [← one_mul b]  at hf
+        nth_rw 2 [← one_mul b]  at hf
         rw [← (algebraMap A K).map_one] at hf
         exact
           IsFractionRing.injective _ _

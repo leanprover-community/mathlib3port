@@ -87,12 +87,12 @@ protected def e2 {n k : ℕ} :
   left_inv s := by 
     obtain ⟨s, hs⟩ := s
     simp only [map_map, comp_app]
-    nth_rw_rhs 0 [← map_id' s]
+    nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     simp [Fin.pred_above_zero (ne_of_mem_of_not_mem hv hs)]
   right_inv s := by 
     simp only [Fin.zero_succ_above, map_map, comp_app]
-    nth_rw_rhs 0 [← map_id' s]
+    nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     rw [← Fin.zero_succ_above v, ← Fin.cast_succ_zero, Fin.pred_above_succ_above 0 v]
 #align sym.E2 Sym.e2

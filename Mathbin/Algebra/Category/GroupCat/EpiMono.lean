@@ -138,7 +138,7 @@ theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
   by 
   congr
   change b *l f.range = f.range
-  nth_rw 1 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
+  nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
   rw [left_coset_eq_iff, mul_one]
   exact Subgroup.inv_mem _ hb
 #align
@@ -151,7 +151,7 @@ theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
   intro r
   simp only [Subtype.mk_eq_mk] at r
   change b *l f.range = f.range at r
-  nth_rw 1 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]  at r
+  nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]  at r
   rw [left_coset_eq_iff, mul_one] at r
   exact hb (inv_inv b ▸ Subgroup.inv_mem _ r)
 #align

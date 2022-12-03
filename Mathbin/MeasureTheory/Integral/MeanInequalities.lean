@@ -119,7 +119,7 @@ theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.IsC
     _ ≤ npf * nqg := by
       rw [lintegral_mul_const' (npf * nqg) _
           (by simp [hf_nontop, hg_nontop, hf_nonzero, hg_nonzero])]
-      nth_rw 1 [← one_mul (npf * nqg)]
+      nth_rw 2 [← one_mul (npf * nqg)]
       refine' mul_le_mul _ (le_refl (npf * nqg))
       have hf1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.pos hf_nonzero hf_nontop
       have hg1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.symm.pos hg_nonzero hg_nontop
@@ -300,7 +300,7 @@ theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add {p q : ℝ}
       · rw [h_top, Ennreal.top_rpow_of_pos hpq.sub_one_pos, Ennreal.top_mul_top]
         exact le_top
       refine' le_of_eq _
-      nth_rw 1 [← Ennreal.rpow_one ((f + g) a)]
+      nth_rw 2 [← Ennreal.rpow_one ((f + g) a)]
       rw [← Ennreal.rpow_add _ _ h_zero h_top, add_sub_cancel'_right]
     _ = (∫⁻ a : α, f a * (f + g) a ^ (p - 1) ∂μ) + ∫⁻ a : α, g a * (f + g) a ^ (p - 1) ∂μ := by
       have h_add_m : AeMeasurable (fun a : α => (f + g) a ^ (p - 1)) μ := (hf.add hg).pow_const _
@@ -349,12 +349,12 @@ private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.IsConjugateExponent
         (∫⁻ a : α, (f + g) a ^ p ∂μ) ^ (1 / q) :=
     lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add hpq hf hf_top hg hg_top
   have h_one_div_q : 1 / q = 1 - 1 / p := by
-    nth_rw 1 [← hpq.inv_add_inv_conj]
+    nth_rw 2 [← hpq.inv_add_inv_conj]
     ring
   simp_rw [h_one_div_q, sub_eq_add_neg 1 (1 / p), Ennreal.rpow_add _ _ h_add_zero h_add_top,
     rpow_one] at h
-  nth_rw 1 [mul_comm]  at h
-  nth_rw 0 [← one_mul (∫⁻ a : α, (f + g) a ^ p ∂μ)]  at h
+  nth_rw 2 [mul_comm]  at h
+  nth_rw 1 [← one_mul (∫⁻ a : α, (f + g) a ^ p ∂μ)]  at h
   rwa [← mul_assoc, Ennreal.mul_le_mul_right h_add_zero h_add_top, mul_comm] at h
 #align ennreal.lintegral_Lp_add_le_aux ennreal.lintegral_Lp_add_le_aux
 

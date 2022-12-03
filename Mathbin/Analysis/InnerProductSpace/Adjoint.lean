@@ -99,7 +99,7 @@ theorem adjoint_aux_norm (A : E →L[𝕜] F) : ‖adjointAux A‖ = ‖A‖ := 
   · refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
-  · nth_rw_lhs 0 [← adjoint_aux_adjoint_aux A]
+  · nth_rw_lhs 1 [← adjoint_aux_adjoint_aux A]
     refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
@@ -323,7 +323,7 @@ theorem conj_orthogonal_projection {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (
       (U.subtypeL ∘L orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U) :=
   by 
   rw [← ContinuousLinearMap.comp_assoc]
-  nth_rw 0 [← (orthogonal_projection_is_self_adjoint U).adjoint_eq]
+  nth_rw 1 [← (orthogonal_projection_is_self_adjoint U).adjoint_eq]
   refine' hT.adjoint_conj _
 #align is_self_adjoint.conj_orthogonal_projection IsSelfAdjoint.conj_orthogonal_projection
 

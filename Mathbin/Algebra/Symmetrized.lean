@@ -330,12 +330,12 @@ instance [Ring α] [Invertible (2 : α)] :
       mul_assoc, mul_assoc, ← mul_add, ← mul_assoc, add_mul, mul_add (unsym (a * a)), ← add_assoc, ←
       mul_assoc, ← mul_assoc]
     -- Rearrange RHS
-    nth_rw_rhs 0 [mul_def]
-    nth_rw_rhs 0 [mul_def]
-    nth_rw_rhs 2 [mul_def]
+    nth_rw_rhs 1 [mul_def]
+    nth_rw_rhs 1 [mul_def]
+    nth_rw_rhs 3 [mul_def]
     rw [unsym_sym, sym_inj, ← mul_assoc, ← commute_half_left (unsym a), mul_assoc (⅟ 2) (unsym a),
       mul_assoc (⅟ 2) _ (unsym a), ← mul_add, ← mul_assoc]
-    nth_rw_rhs 0 [mul_add (unsym a)]
+    nth_rw_rhs 1 [mul_add (unsym a)]
     rw [add_mul, ← add_assoc, ← mul_assoc, ← mul_assoc]
     rw [unsym_mul_self]
     rw [← mul_assoc, ← mul_assoc, ← mul_assoc, ← mul_assoc, ← sub_eq_zero, ← mul_sub]

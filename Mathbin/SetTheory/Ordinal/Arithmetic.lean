@@ -363,7 +363,7 @@ theorem bounded_singleton {r : α → α → Prop} [IsWellOrder α r] (hr : (typ
   refine' ⟨enum r (succ (typein r x)) (hr.2 _ (typein_lt_type r x)), _⟩
   intro b hb
   rw [mem_singleton_iff.1 hb]
-  nth_rw 0 [← enum_typein r x]
+  nth_rw 1 [← enum_typein r x]
   rw [@enum_lt_enum _ r]
   apply lt_succ
 #align ordinal.bounded_singleton Ordinal.bounded_singleton
@@ -1642,7 +1642,7 @@ theorem lsub_typein (o : Ordinal) : lsub.{u, u} (typein ((· < ·) : o.out.α �
   (lsub_le.{u, u} typein_lt_self).antisymm
     (by 
       by_contra' h
-      nth_rw 0 [← type_lt o]  at h
+      nth_rw 1 [← type_lt o]  at h
       simpa [typein_enum] using lt_lsub.{u, u} (typein (· < ·)) (enum (· < ·) _ h))
 #align ordinal.lsub_typein Ordinal.lsub_typein
 
@@ -2317,7 +2317,7 @@ theorem opow_le_opow_left {a b : Ordinal} (c) (ab : a ≤ b) : (a^c) ≤ (b^c) :
 #align ordinal.opow_le_opow_left Ordinal.opow_le_opow_left
 
 theorem left_le_opow (a : Ordinal) {b : Ordinal} (b1 : 0 < b) : a ≤ (a^b) := by
-  nth_rw 0 [← opow_one a]
+  nth_rw 1 [← opow_one a]
   cases' le_or_gt a 1 with a1 a1
   · cases' lt_or_eq_of_le a1 with a0 a1
     · rw [lt_one_iff_zero] at a0

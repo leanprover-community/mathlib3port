@@ -947,7 +947,7 @@ theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrim
     rw [hd, pow_mul, ha.pow_eq_one, one_pow]
   · apply le_of_eq
     rw [h.card_nth_roots_finset, Finset.card_bUnion]
-    · nth_rw_lhs 0 [← Nat.sum_totient n]
+    · nth_rw_lhs 1 [← Nat.sum_totient n]
       refine' sum_congr rfl _
       simp only [Nat.mem_divisors]
       rintro k ⟨⟨d, hd⟩, -⟩

@@ -7,6 +7,7 @@ import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Algebra.Ring.Prod
 import Mathbin.Algebra.Order.Ring.InjSurj
+import Mathbin.Algebra.GroupRingAction.Subobjects
 import Mathbin.Data.Set.Finite
 import Mathbin.GroupTheory.Submonoid.Centralizer
 import Mathbin.GroupTheory.Submonoid.Membership
@@ -1334,6 +1335,10 @@ instance [Zero α] [MulActionWithZero R' α] (S : Subsemiring R') : MulActionWit
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [AddCommMonoid α] [Module R' α] (S : Subsemiring R') : Module S α :=
   { Module.compHom _ S.Subtype with smul := (· • ·) }
+
+/-- The action by a subsemiring is the action by the underlying semiring. -/
+instance [Semiring α] [MulSemiringAction R' α] (S : Subsemiring R') : MulSemiringAction S α :=
+  S.toSubmonoid.MulSemiringAction
 
 /-- The center of a semiring acts commutatively on that semiring. -/
 instance center.smul_comm_class_left : SmulCommClass (center R') R' R' :=

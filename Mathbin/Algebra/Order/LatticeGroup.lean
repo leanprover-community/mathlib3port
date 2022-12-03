@@ -310,7 +310,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
     _ = a * (b / a ⊓ 1) := by rw [inf_comm]
     _ = a * ((a / b)⁻¹ ⊓ 1) := by 
       rw [div_eq_mul_inv]
-      nth_rw 0 [← inv_inv b]
+      nth_rw 1 [← inv_inv b]
       rw [← mul_inv, mul_comm b⁻¹, ← div_eq_mul_inv]
     _ = a * ((a / b)⁻¹ ⊓ 1⁻¹) := by rw [inv_one]
     _ = a / (a / b ⊔ 1) := by rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
@@ -344,7 +344,7 @@ theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁻
 
 @[to_additive pos_abs]
 theorem m_pos_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁺ = |a| := by
-  nth_rw 1 [← pos_div_neg (|a|)]
+  nth_rw 2 [← pos_div_neg (|a|)]
   rw [div_eq_mul_inv]
   symm
   rw [mul_right_eq_self, inv_eq_one]
@@ -363,9 +363,9 @@ theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤
 theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a| = a⁺ * a⁻ := by
   refine' le_antisymm _ _
   · refine' sup_le _ _
-    · nth_rw 0 [← mul_one a]
+    · nth_rw 1 [← mul_one a]
       exact mul_le_mul' (m_le_pos a) (one_le_neg a)
-    · nth_rw 0 [← one_mul a⁻¹]
+    · nth_rw 1 [← one_mul a⁻¹]
       exact mul_le_mul' (one_le_pos a) (inv_le_neg a)
   · rw [← inf_mul_sup, pos_inf_neg_eq_one, one_mul, ← m_pos_abs a]
     apply sup_le
@@ -379,9 +379,9 @@ theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a| 
 theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) :
     (a ⊔ b) / (a ⊓ b) = |b / a| := by
   rw [sup_eq_mul_pos_div, inf_comm, inf_eq_div_pos_div, div_eq_mul_inv]
-  nth_rw 1 [div_eq_mul_inv]
+  nth_rw 2 [div_eq_mul_inv]
   rw [mul_inv_rev, inv_inv, mul_comm, ← mul_assoc, inv_mul_cancel_right, pos_eq_neg_inv (a / b)]
-  nth_rw 1 [div_eq_mul_inv]
+  nth_rw 2 [div_eq_mul_inv]
   rw [mul_inv_rev, ← div_eq_mul_inv, inv_inv, ← pos_mul_neg]
 #align
   lattice_ordered_comm_group.sup_div_inf_eq_abs_div LatticeOrderedCommGroup.sup_div_inf_eq_abs_div
@@ -443,9 +443,9 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
       rw [sup_div_inf_eq_abs_div (b ⊓ c) (a ⊓ c)]
     _ = (b ⊔ a ⊔ c) / (b ⊓ a ⊔ c) * (((b ⊔ a) ⊓ c) / (b ⊓ a ⊓ c)) := by
       rw [← sup_inf_right, ← inf_sup_right, sup_assoc]
-      nth_rw 1 [sup_comm]
+      nth_rw 2 [sup_comm]
       rw [sup_right_idem, sup_assoc, inf_assoc]
-      nth_rw 3 [inf_comm]
+      nth_rw 4 [inf_comm]
       rw [inf_right_idem, inf_assoc]
     _ = (b ⊔ a ⊔ c) * ((b ⊔ a) ⊓ c) / ((b ⊓ a ⊔ c) * (b ⊓ a ⊓ c)) := by rw [div_mul_div_comm]
     _ = (b ⊔ a) * c / ((b ⊓ a) * c) := by

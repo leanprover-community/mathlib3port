@@ -298,7 +298,7 @@ theorem StarConvex.preimage_smul {c : 𝕜} (hs : StarConvex 𝕜 (c • x) s) :
 
 theorem StarConvex.affinity (hs : StarConvex 𝕜 x s) (z : E) (c : 𝕜) :
     StarConvex 𝕜 (z + c • x) ((fun x => z + c • x) '' s) := by
-  have h := (hs.smul c).addLeft z
+  have h := (hs.smul c).add_left z
   rwa [← image_smul, image_image] at h
 #align star_convex.affinity StarConvex.affinity
 

@@ -347,7 +347,7 @@ theorem unique_mdiff_within_at_iff {s : Set M} {x : M} :
         ((extChartAt I x) x) :=
   by 
   apply unique_diff_within_at_congr
-  rw [nhds_within_inter, nhds_within_inter, nhds_within_ext_chart_target_eq]
+  rw [nhds_within_inter, nhds_within_inter, nhds_within_ext_chart_at_target_eq]
 #align unique_mdiff_within_at_iff unique_mdiff_within_at_iff
 
 theorem UniqueMdiffWithinAt.mono (h : UniqueMdiffWithinAt I s x) (st : s ⊆ t) :
@@ -357,14 +357,14 @@ theorem UniqueMdiffWithinAt.mono (h : UniqueMdiffWithinAt I s x) (st : s ⊆ t) 
 
 theorem UniqueMdiffWithinAt.inter' (hs : UniqueMdiffWithinAt I s x) (ht : t ∈ 𝓝[s] x) :
     UniqueMdiffWithinAt I (s ∩ t) x := by
-  rw [UniqueMdiffWithinAt, ext_chart_preimage_inter_eq]
-  exact UniqueDiffWithinAt.inter' hs (ext_chart_preimage_mem_nhds_within I x ht)
+  rw [UniqueMdiffWithinAt, ext_chart_at_preimage_inter_eq]
+  exact UniqueDiffWithinAt.inter' hs (ext_chart_at_preimage_mem_nhds_within I x ht)
 #align unique_mdiff_within_at.inter' UniqueMdiffWithinAt.inter'
 
 theorem UniqueMdiffWithinAt.inter (hs : UniqueMdiffWithinAt I s x) (ht : t ∈ 𝓝 x) :
     UniqueMdiffWithinAt I (s ∩ t) x := by
-  rw [UniqueMdiffWithinAt, ext_chart_preimage_inter_eq]
-  exact UniqueDiffWithinAt.inter hs (ext_chart_preimage_mem_nhds I x ht)
+  rw [UniqueMdiffWithinAt, ext_chart_at_preimage_inter_eq]
+  exact UniqueDiffWithinAt.inter hs (ext_chart_at_preimage_mem_nhds I x ht)
 #align unique_mdiff_within_at.inter UniqueMdiffWithinAt.inter
 
 theorem IsOpen.uniqueMdiffWithinAt (xs : x ∈ s) (hs : IsOpen s) : UniqueMdiffWithinAt I s x := by
@@ -418,7 +418,7 @@ theorem mdifferentiable_within_at_iff {f : M → M'} {s : Set M} {x : M} :
   by 
   refine' and_congr Iff.rfl (exists_congr fun f' => _)
   rw [inter_comm]
-  simp only [HasFderivWithinAt, nhds_within_inter, nhds_within_ext_chart_target_eq]
+  simp only [HasFderivWithinAt, nhds_within_inter, nhds_within_ext_chart_at_target_eq]
 #align mdifferentiable_within_at_iff mdifferentiable_within_at_iff
 
 include Is I's
@@ -481,16 +481,16 @@ theorem has_mfderiv_at_unique (h₀ : HasMfderivAt I I' f x f₀') (h₁ : HasMf
 
 theorem has_mfderiv_within_at_inter' (h : t ∈ 𝓝[s] x) :
     HasMfderivWithinAt I I' f (s ∩ t) x f' ↔ HasMfderivWithinAt I I' f s x f' := by
-  rw [HasMfderivWithinAt, HasMfderivWithinAt, ext_chart_preimage_inter_eq,
+  rw [HasMfderivWithinAt, HasMfderivWithinAt, ext_chart_at_preimage_inter_eq,
     has_fderiv_within_at_inter', continuous_within_at_inter' h]
-  exact ext_chart_preimage_mem_nhds_within I x h
+  exact ext_chart_at_preimage_mem_nhds_within I x h
 #align has_mfderiv_within_at_inter' has_mfderiv_within_at_inter'
 
 theorem has_mfderiv_within_at_inter (h : t ∈ 𝓝 x) :
     HasMfderivWithinAt I I' f (s ∩ t) x f' ↔ HasMfderivWithinAt I I' f s x f' := by
-  rw [HasMfderivWithinAt, HasMfderivWithinAt, ext_chart_preimage_inter_eq,
+  rw [HasMfderivWithinAt, HasMfderivWithinAt, ext_chart_at_preimage_inter_eq,
     has_fderiv_within_at_inter, continuous_within_at_inter h]
-  exact ext_chart_preimage_mem_nhds I x h
+  exact ext_chart_at_preimage_mem_nhds I x h
 #align has_mfderiv_within_at_inter has_mfderiv_within_at_inter
 
 theorem HasMfderivWithinAt.union (hs : HasMfderivWithinAt I I' f s x f')
@@ -575,16 +575,16 @@ theorem mdifferentiable_within_at_univ :
 
 theorem mdifferentiable_within_at_inter (ht : t ∈ 𝓝 x) :
     MdifferentiableWithinAt I I' f (s ∩ t) x ↔ MdifferentiableWithinAt I I' f s x := by
-  rw [MdifferentiableWithinAt, MdifferentiableWithinAt, ext_chart_preimage_inter_eq,
+  rw [MdifferentiableWithinAt, MdifferentiableWithinAt, ext_chart_at_preimage_inter_eq,
     differentiable_within_at_inter, continuous_within_at_inter ht]
-  exact ext_chart_preimage_mem_nhds I x ht
+  exact ext_chart_at_preimage_mem_nhds I x ht
 #align mdifferentiable_within_at_inter mdifferentiable_within_at_inter
 
 theorem mdifferentiable_within_at_inter' (ht : t ∈ 𝓝[s] x) :
     MdifferentiableWithinAt I I' f (s ∩ t) x ↔ MdifferentiableWithinAt I I' f s x := by
-  rw [MdifferentiableWithinAt, MdifferentiableWithinAt, ext_chart_preimage_inter_eq,
+  rw [MdifferentiableWithinAt, MdifferentiableWithinAt, ext_chart_at_preimage_inter_eq,
     differentiable_within_at_inter', continuous_within_at_inter' ht]
-  exact ext_chart_preimage_mem_nhds_within I x ht
+  exact ext_chart_at_preimage_mem_nhds_within I x ht
 #align mdifferentiable_within_at_inter' mdifferentiable_within_at_inter'
 
 theorem MdifferentiableAt.mdifferentiableWithinAt (h : MdifferentiableAt I I' f x) :
@@ -631,8 +631,9 @@ theorem mfderiv_within_univ : mfderivWithin I I' f univ = mfderiv I I' f := by
 
 theorem mfderiv_within_inter (ht : t ∈ 𝓝 x) (hs : UniqueMdiffWithinAt I s x) :
     mfderivWithin I I' f (s ∩ t) x = mfderivWithin I I' f s x := by
-  rw [mfderivWithin, mfderivWithin, ext_chart_preimage_inter_eq, mdifferentiable_within_at_inter ht,
-    fderiv_within_inter (ext_chart_preimage_mem_nhds I x ht) hs]
+  rw [mfderivWithin, mfderivWithin, ext_chart_at_preimage_inter_eq,
+    mdifferentiable_within_at_inter ht,
+    fderiv_within_inter (ext_chart_at_preimage_mem_nhds I x ht) hs]
 #align mfderiv_within_inter mfderiv_within_inter
 
 theorem mdifferentiable_at_iff_of_mem_source {x' : M} {y : M'}
@@ -732,7 +733,7 @@ theorem HasMfderivWithinAt.congrOfEventuallyEq (h : HasMfderivWithinAt I I' f s 
   · have :
       (extChartAt I x).symm ⁻¹' { y | f₁ y = f y } ∈
         𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
-      ext_chart_preimage_mem_nhds_within I x h₁
+      ext_chart_at_preimage_mem_nhds_within I x h₁
     apply Filter.mem_of_superset this fun y => _
     simp (config := { contextual := true }) only [hx, mfld_simps]
   · simp only [hx, mfld_simps]
@@ -847,7 +848,7 @@ theorem written_in_ext_chart_comp (h : ContinuousWithinAt f s x) :
   by
   apply
     @Filter.mem_of_superset _ _ (f ∘ (extChartAt I x).symm ⁻¹' (extChartAt I' (f x)).source) _
-      (ext_chart_preimage_mem_nhds_within I x
+      (ext_chart_at_preimage_mem_nhds_within I x
         (h.preimage_mem_nhds_within (ext_chart_at_source_mem_nhds _ _)))
   mfld_set_tac
 #align written_in_ext_chart_comp written_in_ext_chart_comp
@@ -868,10 +869,10 @@ theorem HasMfderivWithinAt.comp (hg : HasMfderivWithinAt I' I'' g u (f x) g')
     have :
       (extChartAt I x).symm ⁻¹' (f ⁻¹' (extChartAt I' (f x)).source) ∈
         𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
-      ext_chart_preimage_mem_nhds_within I x
+      ext_chart_at_preimage_mem_nhds_within I x
         (hf.1.preimage_mem_nhds_within (ext_chart_at_source_mem_nhds _ _))
     unfold HasMfderivWithinAt at *
-    rw [← has_fderiv_within_at_inter' this, ← ext_chart_preimage_inter_eq] at hf⊢
+    rw [← has_fderiv_within_at_inter' this, ← ext_chart_at_preimage_inter_eq] at hf⊢
     have : writtenInExtChartAt I I' x f ((extChartAt I x) x) = (extChartAt I' (f x)) (f x) := by
       simp only [mfld_simps]
     rw [← this] at hg
@@ -1693,7 +1694,7 @@ theorem UniqueMdiffOn.uniqueMdiffOnPreimage [SmoothManifoldWithCorners I' M']
     have : UniqueMdiffWithinAt I s z := hs _ hx.2
     have S : e.source ∩ e ⁻¹' (extChartAt I' x).source ∈ 𝓝 z := by
       apply IsOpen.mem_nhds
-      apply e.continuous_on.preimage_open_of_open e.open_source (ext_chart_at_open_source I' x)
+      apply e.continuous_on.preimage_open_of_open e.open_source (is_open_ext_chart_at_source I' x)
       simp only [z_source, zx, mfld_simps]
     have := this.inter S
     rw [unique_mdiff_within_at_iff] at this
@@ -1772,7 +1773,7 @@ theorem UniqueMdiffOn.uniqueDiffOnInterPreimage (hs : UniqueMdiffOn I s) (x : M)
     intro z hz
     apply (hs z hz.1).inter'
     apply (hf z hz.1).preimage_mem_nhds_within
-    exact IsOpen.mem_nhds (ext_chart_at_open_source I' y) hz.2
+    exact (is_open_ext_chart_at_source I' y).mem_nhds hz.2
   this.unique_diff_on_target_inter _
 #align unique_mdiff_on.unique_diff_on_inter_preimage UniqueMdiffOn.uniqueDiffOnInterPreimage
 

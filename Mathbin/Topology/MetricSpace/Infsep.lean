@@ -222,7 +222,7 @@ section PseudoEmetricSpace
 variable [PseudoEmetricSpace α] {x y z : α} {s t : Set α}
 
 theorem einfsep_pair (hxy : x ≠ y) : ({x, y} : Set α).einfsep = edist x y := by
-  nth_rw 0 [← min_self (edist x y)]
+  nth_rw 1 [← min_self (edist x y)]
   convert einfsep_pair_eq_inf hxy using 2
   rw [edist_comm]
 #align set.einfsep_pair Set.einfsep_pair

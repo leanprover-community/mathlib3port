@@ -377,7 +377,7 @@ theorem normalize_eq_of_nonzero (nonzero : μ ≠ 0) (s : Set Ω) : μ.normalize
 
 theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) :
     μ.normalize.toFiniteMeasure = μ.mass⁻¹ • μ := by
-  nth_rw 2 [μ.self_eq_mass_smul_normalize]
+  nth_rw 3 [μ.self_eq_mass_smul_normalize]
   rw [← smul_assoc]
   simp only [μ.mass_nonzero_iff.mpr nonzero, Algebra.id.smul_eq_mul, inv_mul_cancel, Ne.def,
     not_false_iff, one_smul]
@@ -420,7 +420,7 @@ variable [TopologicalSpace Ω]
 
 theorem test_against_nn_eq_mass_mul (f : Ω →ᵇ ℝ≥0) :
     μ.testAgainstNn f = μ.mass * μ.normalize.toFiniteMeasure.testAgainstNn f := by
-  nth_rw 0 [μ.self_eq_mass_smul_normalize]
+  nth_rw 1 [μ.self_eq_mass_smul_normalize]
   rw [μ.normalize.to_finite_measure.smul_test_against_nn_apply μ.mass f, smul_eq_mul]
 #align
   measure_theory.finite_measure.test_against_nn_eq_mass_mul MeasureTheory.FiniteMeasure.test_against_nn_eq_mass_mul

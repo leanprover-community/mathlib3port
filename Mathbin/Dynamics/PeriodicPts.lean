@@ -580,8 +580,8 @@ theorem periodic_orbit_chain (r : α → α → Prop) {f : α → α} {x : α} :
       · rwa [hM', hM, iterate_minimal_period]
       · exact H _ hM'
     · rw [iterate_zero_apply]
-      nth_rw 2 [← @iterate_minimal_period α f x]
-      nth_rw 1 [← hM]
+      nth_rw 3 [← @iterate_minimal_period α f x]
+      nth_rw 2 [← hM]
       exact H _ (Nat.lt_succ_self _)
   · rw [periodic_orbit_eq_nil_of_not_periodic_pt hx, minimal_period_eq_zero_of_nmem_periodic_pts hx]
     simp
@@ -592,7 +592,7 @@ theorem periodic_orbit_chain' (r : α → α → Prop) {f : α → α} {x : α} 
   rw [periodic_orbit_chain r]
   refine' ⟨fun H n => _, fun H n _ => H n⟩
   rw [iterate_succ_apply, ← iterate_mod_minimal_period_eq]
-  nth_rw 1 [← iterate_mod_minimal_period_eq]
+  nth_rw 2 [← iterate_mod_minimal_period_eq]
   rw [← iterate_succ_apply, minimal_period_apply hx]
   exact H _ (mod_lt _ (minimal_period_pos_of_mem_periodic_pts hx))
 #align function.periodic_orbit_chain' Function.periodic_orbit_chain'

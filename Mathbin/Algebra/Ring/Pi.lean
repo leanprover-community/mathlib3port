@@ -115,40 +115,30 @@ homomorphism `pi.non_unital_ring_hom f : γ →+* Π a, β a` given by
 `pi.non_unital_ring_hom f x b = f b x`. -/
 @[simps]
 protected def nonUnitalRingHom {γ : Type w} [∀ i, NonUnitalNonAssocSemiring (f i)]
-    [NonUnitalNonAssocSemiring γ] (g : ∀ i, γ →ₙ+* f i) :
-    γ →ₙ+* ∀ i, f i where 
-  toFun x b := g b x
-  map_add' x y := funext fun z => map_add (g z) x y
-  map_mul' x y := funext fun z => map_mul (g z) x y
-  map_zero' := funext fun z => map_zero (g z)
+    [NonUnitalNonAssocSemiring γ] (g : ∀ i, γ →ₙ+* f i) : γ →ₙ+* ∀ i, f i :=
+  { Pi.mulHom fun i => (g i).toMulHom, Pi.addMonoidHom fun i => (g i).toAddMonoidHom with
+    toFun := fun x b => g b x }
 #align pi.non_unital_ring_hom Pi.nonUnitalRingHom
 
 theorem non_unital_ring_hom_injective {γ : Type w} [Nonempty I]
     [∀ i, NonUnitalNonAssocSemiring (f i)] [NonUnitalNonAssocSemiring γ] (g : ∀ i, γ →ₙ+* f i)
     (hg : ∀ i, Function.Injective (g i)) : Function.Injective (Pi.nonUnitalRingHom g) :=
-  fun x y h =>
-  let ⟨i⟩ := ‹Nonempty I›
-  hg i ((Function.funext_iff.mp h : _) i)
+  mul_hom_injective (fun i => (g i).toMulHom) hg
 #align pi.non_unital_ring_hom_injective Pi.non_unital_ring_hom_injective
 
 /-- A family of ring homomorphisms `f a : γ →+* β a` defines a ring homomorphism
 `pi.ring_hom f : γ →+* Π a, β a` given by `pi.ring_hom f x b = f b x`. -/
 @[simps]
 protected def ringHom {γ : Type w} [∀ i, NonAssocSemiring (f i)] [NonAssocSemiring γ]
-    (g : ∀ i, γ →+* f i) : γ →+*
-      ∀ i, f i where 
-  toFun x b := g b x
-  map_add' x y := funext fun z => (g z).map_add x y
-  map_mul' x y := funext fun z => (g z).map_mul x y
-  map_one' := funext fun z => (g z).map_one
-  map_zero' := funext fun z => (g z).map_zero
+    (g : ∀ i, γ →+* f i) : γ →+* ∀ i, f i :=
+  { Pi.monoidHom fun i => (g i).toMonoidHom, Pi.addMonoidHom fun i => (g i).toAddMonoidHom with
+    toFun := fun x b => g b x }
 #align pi.ring_hom Pi.ringHom
 
 theorem ring_hom_injective {γ : Type w} [Nonempty I] [∀ i, NonAssocSemiring (f i)]
     [NonAssocSemiring γ] (g : ∀ i, γ →+* f i) (hg : ∀ i, Function.Injective (g i)) :
-    Function.Injective (Pi.ringHom g) := fun x y h =>
-  let ⟨i⟩ := ‹Nonempty I›
-  hg i ((Function.funext_iff.mp h : _) i)
+    Function.Injective (Pi.ringHom g) :=
+  monoid_hom_injective (fun i => (g i).toMonoidHom) hg
 #align pi.ring_hom_injective Pi.ring_hom_injective
 
 end Pi

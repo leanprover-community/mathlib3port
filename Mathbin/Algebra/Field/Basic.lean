@@ -154,6 +154,11 @@ theorem sub_div (a b c : K) : (a - b) / c = a / c - b / c :=
   (div_sub_div_same _ _ _).symm
 #align sub_div sub_div
 
+/-- See `inv_sub_inv` for the more convenient version when `K` is commutative. -/
+theorem inv_sub_inv' {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ - b⁻¹ = a⁻¹ * (b - a) * b⁻¹ := by
+  rw [mul_sub, sub_mul, mul_inv_cancel_right₀ hb, inv_mul_cancel ha, one_mul]
+#align inv_sub_inv' inv_sub_inv'
+
 theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : b ≠ 0) :
     1 / a * (b - a) * (1 / b) = 1 / a - 1 / b := by
   rw [mul_sub_left_distrib (1 / a), one_div_mul_cancel ha, mul_sub_right_distrib, one_mul,

@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.Subgroup.Basic
-import Mathbin.Algebra.GroupRingAction
+import Mathbin.Algebra.GroupRingAction.Basic
 
 /-!
 # Conjugation action of a group on itself

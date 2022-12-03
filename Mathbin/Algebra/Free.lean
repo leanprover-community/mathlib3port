@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Hom.Group
+import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Control.Applicative
 import Mathbin.Control.Traversable.Basic
 import Mathbin.Logic.Equiv.Defs

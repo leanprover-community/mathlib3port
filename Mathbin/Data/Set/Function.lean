@@ -1061,6 +1061,15 @@ theorem inv_fun_on_neg (h : ¬∃ a ∈ s, f a = b) : invFunOn f s b = Classical
   by rw [bex_def] at h <;> rw [inv_fun_on, dif_neg h]
 #align function.inv_fun_on_neg Function.inv_fun_on_neg
 
+@[simp]
+theorem inv_fun_on_apply_mem (h : a ∈ s) : invFunOn f s (f a) ∈ s :=
+  inv_fun_on_mem ⟨a, h, rfl⟩
+#align function.inv_fun_on_apply_mem Function.inv_fun_on_apply_mem
+
+theorem inv_fun_on_apply_eq (h : a ∈ s) : f (invFunOn f s (f a)) = f a :=
+  inv_fun_on_eq ⟨a, h, rfl⟩
+#align function.inv_fun_on_apply_eq Function.inv_fun_on_apply_eq
+
 end Function
 
 open Function
@@ -1070,9 +1079,7 @@ namespace Set
 variable {s s₁ s₂ : Set α} {t : Set β} {f : α → β}
 
 theorem InjOn.left_inv_on_inv_fun_on [Nonempty α] (h : InjOn f s) : LeftInvOn (invFunOn f s) f s :=
-  fun a ha =>
-  have : ∃ a' ∈ s, f a' = f a := ⟨a, ha, rfl⟩
-  h (inv_fun_on_mem this) ha (inv_fun_on_eq this)
+  fun a ha => h (inv_fun_on_apply_mem ha) ha (inv_fun_on_apply_eq ha)
 #align set.inj_on.left_inv_on_inv_fun_on Set.InjOn.left_inv_on_inv_fun_on
 
 theorem InjOn.inv_fun_on_image [Nonempty α] (h : InjOn f s₂) (ht : s₁ ⊆ s₂) :

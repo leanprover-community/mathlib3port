@@ -177,6 +177,42 @@ end MulHom
 
 section MulHom
 
+/-- A family of mul_hom `f a : γ →ₙ* β a` defines a mul_hom `pi.mul_hom f : γ →ₙ* Π a, β a`
+given by `pi.mul_hom f x b = f b x`. -/
+@[to_additive
+      "A family of add_hom `f a : γ → β a` defines a add_hom `pi.add_hom\nf : γ → Π a, β a` given by `pi.add_hom f x b = f b x`.",
+  simps]
+def Pi.mulHom {γ : Type w} [∀ i, Mul (f i)] [Mul γ] (g : ∀ i, γ →ₙ* f i) :
+    γ →ₙ* ∀ i, f i where 
+  toFun x i := g i x
+  map_mul' x y := funext fun i => (g i).map_mul x y
+#align pi.mul_hom Pi.mulHom
+
+@[to_additive]
+theorem Pi.mul_hom_injective {γ : Type w} [Nonempty I] [∀ i, Mul (f i)] [Mul γ] (g : ∀ i, γ →ₙ* f i)
+    (hg : ∀ i, Function.Injective (g i)) : Function.Injective (Pi.mulHom g) := fun x y h =>
+  let ⟨i⟩ := ‹Nonempty I›
+  hg i ((Function.funext_iff.mp h : _) i)
+#align pi.mul_hom_injective Pi.mul_hom_injective
+
+/-- A family of monoid homomorphisms `f a : γ →* β a` defines a monoid homomorphism
+`pi.monoid_mul_hom f : γ →* Π a, β a` given by `pi.monoid_mul_hom f x b = f b x`. -/
+@[to_additive
+      "A family of additive monoid homomorphisms `f a : γ →+ β a` defines a monoid\nhomomorphism `pi.add_monoid_hom f : γ →+ Π a, β a` given by `pi.add_monoid_hom f x b\n= f b x`.",
+  simps]
+def Pi.monoidHom {γ : Type w} [∀ i, MulOneClass (f i)] [MulOneClass γ] (g : ∀ i, γ →* f i) :
+    γ →* ∀ i, f i :=
+  { Pi.mulHom fun i => (g i).toMulHom with toFun := fun x i => g i x,
+    map_one' := funext fun i => (g i).map_one }
+#align pi.monoid_hom Pi.monoidHom
+
+@[to_additive]
+theorem Pi.monoid_hom_injective {γ : Type w} [Nonempty I] [∀ i, MulOneClass (f i)] [MulOneClass γ]
+    (g : ∀ i, γ →* f i) (hg : ∀ i, Function.Injective (g i)) :
+    Function.Injective (Pi.monoidHom g) :=
+  Pi.mul_hom_injective (fun i => (g i).toMulHom) hg
+#align pi.monoid_hom_injective Pi.monoid_hom_injective
+
 variable (f) [∀ i, Mul (f i)]
 
 /-- Evaluation of functions into an indexed collection of semigroups at a point is a semigroup

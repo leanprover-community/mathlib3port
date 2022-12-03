@@ -465,8 +465,8 @@ instance [CommMonoid R] [NonUnitalSemiring A] [DistribMulAction R A] [IsScalarTo
           by
           simp only [smul_add, mul_add, add_mul, smul_smul, smul_mul_assoc, mul_smul_comm,
             mul_assoc]
-          nth_rw 1 [mul_comm]
           nth_rw 2 [mul_comm]
+          nth_rw 3 [mul_comm]
           abel }
 
 instance [CommMonoid R] [NonUnitalCommSemiring A] [DistribMulAction R A] [IsScalarTower R A A]

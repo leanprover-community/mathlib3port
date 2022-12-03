@@ -340,7 +340,7 @@ theorem wbtw_swap_left_iff [NoZeroSmulDivisors R V] {x y : P} (z : P) :
     rw [← @vsub_eq_zero_iff_eq V, vadd_vsub, vsub_vadd_eq_vsub_sub, smul_sub, smul_smul, ← sub_smul,
       ← add_smul, smul_eq_zero] at hx
     rcases hx with (h | h)
-    · nth_rw 0 [← mul_one tx]  at h
+    · nth_rw 1 [← mul_one tx]  at h
       rw [← mul_sub, add_eq_zero_iff_neg_eq] at h
       have h' : ty = 0 := by 
         refine' le_antisymm _ hty.1
@@ -355,8 +355,8 @@ theorem wbtw_swap_left_iff [NoZeroSmulDivisors R V] {x y : P} (z : P) :
 
 theorem wbtw_swap_right_iff [NoZeroSmulDivisors R V] (x : P) {y z : P} :
     Wbtw R x y z ∧ Wbtw R x z y ↔ y = z := by
-  nth_rw 0 [wbtw_comm]
   nth_rw 1 [wbtw_comm]
+  nth_rw 2 [wbtw_comm]
   rw [eq_comm]
   exact wbtw_swap_left_iff R x
 #align wbtw_swap_right_iff wbtw_swap_right_iff
@@ -540,7 +540,7 @@ theorem Wbtw.trans_left_right {w x y z : P} (h₁ : Wbtw R w y z) (h₂ : Wbtw R
       _⟩
   simp only [line_map_apply, smul_smul, ← add_vadd, vsub_vadd_eq_vsub_sub, smul_sub, ← sub_smul, ←
     add_smul, vadd_vsub, vadd_right_cancel_iff, div_mul_eq_mul_div, div_sub_div_same]
-  nth_rw 0 [← mul_one (t₁ - t₂ * t₁)]
+  nth_rw 1 [← mul_one (t₁ - t₂ * t₁)]
   rw [← mul_sub, mul_div_assoc]
   by_cases h : 1 - t₂ * t₁ = 0
   · rw [sub_eq_zero, eq_comm] at h
@@ -594,7 +594,7 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
   rcases hz with ⟨tz, rfl⟩
   rcases lt_trichotomy ty 0 with (hy0 | rfl | hy0)
   · rcases lt_trichotomy tz 0 with (hz0 | rfl | hz0)
-    · nth_rw 1 [wbtw_comm]
+    · nth_rw 2 [wbtw_comm]
       rw [← or_assoc']
       exact Or.inl (wbtw_or_wbtw_smul_vadd_of_nonpos _ _ hy0.le hz0.le)
     · simp
@@ -603,7 +603,7 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
   · rcases lt_trichotomy tz 0 with (hz0 | rfl | hz0)
     · refine' Or.inr (Or.inr (wbtw_smul_vadd_smul_vadd_of_nonpos_of_nonneg _ _ hz0.le hy0.le))
     · simp
-    · nth_rw 1 [wbtw_comm]
+    · nth_rw 2 [wbtw_comm]
       rw [← or_assoc']
       exact Or.inl (wbtw_or_wbtw_smul_vadd_of_nonneg _ _ hy0.le hz0.le)
 #align collinear.wbtw_or_wbtw_or_wbtw Collinear.wbtw_or_wbtw_or_wbtw
@@ -639,7 +639,7 @@ theorem wbtw_point_reflection (x y : P) : Wbtw R y x (pointReflection R x y) := 
 
 theorem sbtw_point_reflection_of_ne {x y : P} (h : x ≠ y) : Sbtw R y x (pointReflection R x y) := by
   refine' ⟨wbtw_point_reflection _ _ _, h, _⟩
-  nth_rw 0 [← point_reflection_self R x]
+  nth_rw 1 [← point_reflection_self R x]
   exact (point_reflection_involutive R x).Injective.Ne h
 #align sbtw_point_reflection_of_ne sbtw_point_reflection_of_ne
 

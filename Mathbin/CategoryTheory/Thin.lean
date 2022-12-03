@@ -9,6 +9,10 @@ import Mathbin.CategoryTheory.Isomorphism
 /-!
 # Thin categories
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/822
+> Any changes to this file require a corresponding PR to mathlib4.
+
 A thin category (also known as a sparse category) is a category with at most one morphism between
 each pair of objects.
 

@@ -333,7 +333,7 @@ theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun
   by 
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
-  nth_rw 0 [← Nat.factorization_prod_pow_eq_self hn]
+  nth_rw 1 [← Nat.factorization_prod_pow_eq_self hn]
   rw [Finsupp.prod, Nat.cast_prod, log_prod _ _ fun p hp => _, Finsupp.sum]
   · simp_rw [Nat.cast_pow, log_pow]
   · norm_cast

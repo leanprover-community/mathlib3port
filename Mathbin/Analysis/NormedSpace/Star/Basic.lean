@@ -116,7 +116,7 @@ instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
 #align cstar_ring.to_normed_star_group CstarRing.toNormedStarGroup
 
 theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ := by
-  nth_rw 0 [← star_star x]
+  nth_rw 1 [← star_star x]
   simp only [norm_star_mul_self, norm_star]
 #align cstar_ring.norm_self_mul_star CstarRing.norm_self_mul_star
 
@@ -277,7 +277,7 @@ theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing 
   induction' n with k hk
   · simp only [pow_zero, pow_one]
   · rw [pow_succ, pow_mul', sq]
-    nth_rw 0 [← self_adjoint.mem_iff.mp hx]
+    nth_rw 1 [← self_adjoint.mem_iff.mp hx]
     rw [← star_pow, CstarRing.nnnorm_star_mul_self, ← sq, hk, pow_mul']
 #align is_self_adjoint.nnnorm_pow_two_pow IsSelfAdjoint.nnnorm_pow_two_pow
 

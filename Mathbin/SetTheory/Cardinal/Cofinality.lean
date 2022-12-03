@@ -941,7 +941,7 @@ theorem mk_subset_mk_lt_cof {α : Type _} (h : ∀ x < #α, (2^x) < (#α)) :
   rcases ord_eq α with ⟨r, wo, hr⟩
   haveI := wo
   apply le_antisymm
-  · nth_rw_rhs 0 [← mk_bounded_subset h hr]
+  · nth_rw_rhs 1 [← mk_bounded_subset h hr]
     apply mk_le_mk_of_subset fun s hs => _
     rw [hr] at hs
     exact lt_cof_type hs

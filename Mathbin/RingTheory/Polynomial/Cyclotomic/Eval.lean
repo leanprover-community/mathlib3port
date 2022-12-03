@@ -155,7 +155,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ}
   haveI := Fact.mk hp
   have hpn : p ∣ n := by 
     apply hpe.trans
-    nth_rw 1 [← Int.natAbs_ofNat n]
+    nth_rw 2 [← Int.natAbs_ofNat n]
     rw [Int.nat_abs_dvd_iff_dvd, ← one_geom_sum, ← eval_geom_sum, ← prod_cyclotomic_eq_geom_sum hn']
     apply eval_dvd
     apply Finset.dvd_prod_of_mem

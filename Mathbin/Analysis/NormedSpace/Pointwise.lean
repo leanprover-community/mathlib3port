@@ -98,8 +98,8 @@ theorem smul_unit_ball_of_pos {r : ℝ} (hr : 0 < r) : r • ball 0 1 = ball (0 
 theorem exists_dist_eq (x z : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
     ∃ y, dist x y = b * dist x z ∧ dist y z = a * dist x z := by
   use a • x + b • z
-  nth_rw 0 [← one_smul ℝ x]
-  nth_rw 3 [← one_smul ℝ z]
+  nth_rw 1 [← one_smul ℝ x]
+  nth_rw 4 [← one_smul ℝ z]
   simp [dist_eq_norm, ← hab, add_smul, ← smul_sub, norm_smul_of_nonneg, ha, hb]
 #align exists_dist_eq exists_dist_eq
 

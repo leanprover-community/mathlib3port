@@ -1216,7 +1216,7 @@ theorem exists_seq_of_forall_finset_exists {α : Type _} (P : α → Prop) (r : 
             (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
             (by simp [IH'])).1
     refine' ⟨f, A, fun m n hmn => _⟩
-    nth_rw 1 [hf]
+    nth_rw 2 [hf]
     rw [seqOfForallFinsetExistsAux]
     apply
       (Classical.choose_spec
