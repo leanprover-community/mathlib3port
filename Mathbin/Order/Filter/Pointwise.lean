@@ -3,7 +3,7 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 -/
-import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Order.Filter.NAry
 import Mathbin.Order.Filter.Ultrafilter
 

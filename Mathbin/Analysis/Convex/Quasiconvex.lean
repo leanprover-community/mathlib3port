@@ -21,11 +21,6 @@ quasiconcavity, and monotonicity implies quasilinearity.
 * `quasilinear_on 𝕜 s f`: Quasilinearity of the function `f` on the set `s` with scalars `𝕜`. This
   means that `f` is both quasiconvex and quasiconcave.
 
-## TODO
-
-Prove that a quasilinear function between two linear orders is either monotone or antitone. This is
-not hard but quite a pain to go about as there are many cases to consider.
-
 ## References
 
 * https://en.wikipedia.org/wiki/Quasiconvex_function
@@ -251,4 +246,23 @@ theorem Antitone.quasilinear_on (hf : Antitone f) : QuasilinearOn 𝕜 univ f :=
 end LinearOrderedAddCommMonoid
 
 end OrderedSemiring
+
+section LinearOrderedField
+
+variable [LinearOrderedField 𝕜] [LinearOrderedAddCommMonoid β] {s : Set 𝕜} {f : 𝕜 → β}
+
+theorem QuasilinearOn.monotone_on_or_antitone_on (hf : QuasilinearOn 𝕜 s f) :
+    MonotoneOn f s ∨ AntitoneOn f s := by
+  simp_rw [monotone_on_or_antitone_on_iff_interval, ← segment_eq_interval]
+  rintro a ha b hb c hc h
+  refine' ⟨((hf.2 _).segment_subset _ _ h).2, ((hf.1 _).segment_subset _ _ h).2⟩ <;> simp [*]
+#align quasilinear_on.monotone_on_or_antitone_on QuasilinearOn.monotone_on_or_antitone_on
+
+theorem quasilinear_on_iff_monotone_on_or_antitone_on (hs : Convex 𝕜 s) :
+    QuasilinearOn 𝕜 s f ↔ MonotoneOn f s ∨ AntitoneOn f s :=
+  ⟨fun h => h.monotone_on_or_antitone_on, fun h =>
+    h.elim (fun h => h.QuasilinearOn hs) fun h => h.QuasilinearOn hs⟩
+#align quasilinear_on_iff_monotone_on_or_antitone_on quasilinear_on_iff_monotone_on_or_antitone_on
+
+end LinearOrderedField
 

@@ -69,7 +69,7 @@ def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) :
       comm := by 
         have h := φ.naturality P.p
         have h' := F.congr_map P.idem
-        simp only [hom_ext, karoubi.comp, F.map_comp] at h h'
+        simp only [hom_ext, karoubi.comp_f, F.map_comp] at h h'
         simp only [obj_obj_p, assoc, ← h]
         slice_rhs 1 3 => rw [h', h'] }
   naturality' P Q f := by 
@@ -78,7 +78,7 @@ def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) :
     have h := φ.naturality f.f
     have h' := F.congr_map (comp_p f)
     have h'' := F.congr_map (p_comp f)
-    simp only [hom_ext, functor.map_comp, comp] at h h' h''⊢
+    simp only [hom_ext, functor.map_comp, comp_f] at h h' h''⊢
     slice_rhs 2 3 => rw [← h]
     slice_lhs 1 2 => rw [h']
     slice_rhs 1 2 => rw [h'']
@@ -101,10 +101,10 @@ def functorExtension₁ :
     exact comp_p (F.map P.p)
   map_comp' F G H φ φ' := by 
     ext P
-    simp only [comp, functor_extension₁.map_app_f, nat_trans.comp_app, assoc]
+    simp only [comp_f, functor_extension₁.map_app_f, nat_trans.comp_app, assoc]
     have h := φ.naturality P.p
     have h' := F.congr_map P.idem
-    simp only [hom_ext, comp, F.map_comp] at h h'
+    simp only [hom_ext, comp_f, F.map_comp] at h h'
     slice_rhs 2 3 => rw [← h]
     slice_rhs 1 2 => rw [h']
     simp only [assoc]
@@ -124,14 +124,14 @@ theorem functor_extension₁_comp_whiskering_left_to_karoubi :
       ext
       dsimp
       simp only [comp_id, eq_to_hom_f, eq_to_hom_refl, comp_p, functor_extension₁.obj_obj_p,
-        to_karoubi_obj_p, comp]
+        to_karoubi_obj_p, comp_f]
       dsimp
       simp only [Functor.map_id, id_eq, p_comp]
   · intro F G φ
     ext X
     dsimp
-    simp only [eq_to_hom_app, F.map_id, karoubi.comp, eq_to_hom_f, id_eq, p_comp, eq_to_hom_refl,
-      comp_id, comp_p, functor_extension₁.obj_obj_p, to_karoubi_obj_p, F.map_id X]
+    simp only [eq_to_hom_app, F.map_id, comp_f, eq_to_hom_f, id_eq, p_comp, eq_to_hom_refl, comp_id,
+      comp_p, functor_extension₁.obj_obj_p, to_karoubi_obj_p, F.map_id X]
 #align
   category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functor_extension₁_comp_whiskering_left_to_karoubi
 

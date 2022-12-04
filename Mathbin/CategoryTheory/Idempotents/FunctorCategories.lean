@@ -30,7 +30,31 @@ namespace CategoryTheory
 
 namespace Idempotents
 
-variable (J C : Type _) [Category J] [Category C]
+variable {J C : Type _} [Category J] [Category C] (P Q : Karoubi (J ⥤ C)) (f : P ⟶ Q) (X : J)
+
+@[simp, reassoc]
+theorem app_idem : P.p.app X ≫ P.p.app X = P.p.app X :=
+  congr_app P.idem X
+#align category_theory.idempotents.app_idem CategoryTheory.Idempotents.app_idem
+
+variable {P Q}
+
+@[simp, reassoc]
+theorem app_p_comp : P.p.app X ≫ f.f.app X = f.f.app X :=
+  congr_app (p_comp f) X
+#align category_theory.idempotents.app_p_comp CategoryTheory.Idempotents.app_p_comp
+
+@[simp, reassoc]
+theorem app_comp_p : f.f.app X ≫ Q.p.app X = f.f.app X :=
+  congr_app (comp_p f) X
+#align category_theory.idempotents.app_comp_p CategoryTheory.Idempotents.app_comp_p
+
+@[reassoc]
+theorem app_p_comm : P.p.app X ≫ f.f.app X = f.f.app X ≫ Q.p.app X :=
+  congr_app (p_comm f) X
+#align category_theory.idempotents.app_p_comm CategoryTheory.Idempotents.app_p_comm
+
+variable (J C)
 
 instance functor_category_is_idempotent_complete [IsIdempotentComplete C] :
     IsIdempotentComplete (J ⥤ C) := by 
@@ -89,34 +113,13 @@ def obj (P : Karoubi (J ⥤ C)) :
         have h := congr_app P.idem j
         rw [nat_trans.comp_app] at h
         slice_rhs 1 3 => erw [h, h] }
-  map_id' j := by 
-    ext
-    simp only [Functor.map_id, comp_id, id_eq]
-  map_comp' j j' j'' φ φ' := by 
-    ext
-    have h := congr_app P.idem j
-    rw [nat_trans.comp_app] at h
-    simp only [assoc, nat_trans.naturality_assoc, functor.map_comp, comp]
-    slice_rhs 1 2 => rw [h]
-    rw [assoc]
 #align
   category_theory.idempotents.karoubi_functor_category_embedding.obj CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.obj
 
 /-- Tautological action on maps of the functor `karoubi (J ⥤ C) ⥤ (J ⥤ karoubi C)`. -/
 @[simps]
 def map {P Q : Karoubi (J ⥤ C)} (f : P ⟶ Q) :
-    obj P ⟶ obj Q where 
-  app j := ⟨f.f.app j, congr_app f.comm j⟩
-  naturality' j j' φ := by 
-    ext
-    simp only [comp]
-    have h := congr_app (comp_p f) j
-    have h' := congr_app (p_comp f) j'
-    dsimp at h h'⊢
-    slice_rhs 1 2 => erw [h]
-    rw [← P.p.naturality]
-    slice_lhs 2 3 => erw [h']
-    rw [f.f.naturality]
+    obj P ⟶ obj Q where app j := ⟨f.f.app j, congr_app f.comm j⟩
 #align
   category_theory.idempotents.karoubi_functor_category_embedding.map CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.map
 
@@ -131,8 +134,6 @@ def karoubiFunctorCategoryEmbedding :
       J ⥤ Karoubi C where 
   obj := KaroubiFunctorCategoryEmbedding.obj
   map P Q := KaroubiFunctorCategoryEmbedding.map
-  map_id' P := rfl
-  map_comp' P Q R f g := rfl
 #align
   category_theory.idempotents.karoubi_functor_category_embedding CategoryTheory.Idempotents.karoubiFunctorCategoryEmbedding
 
@@ -143,12 +144,12 @@ instance :
   preimage P Q f :=
     { f :=
         { app := fun j => (f.app j).f,
-          naturality' := fun j j' φ => by
-            slice_rhs 1 1 => rw [← karoubi.comp_p]
+          naturality' := fun j j' φ => by 
+            rw [← karoubi.comp_p_assoc]
             have h := hom_ext.mp (f.naturality φ)
-            simp only [comp] at h
-            dsimp [karoubi_functor_category_embedding] at h⊢
-            erw [assoc, ← h, ← P.p.naturality φ, assoc, p_comp (f.app j')] },
+            simp only [comp_f] at h
+            dsimp [karoubi_functor_category_embedding] at h
+            erw [← h, assoc, ← P.p.naturality_assoc φ, p_comp (f.app j')] },
       comm := by 
         ext j
         exact (f.app j).comm }
@@ -185,30 +186,6 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
       rfl
 #align
   category_theory.idempotents.to_karoubi_comp_karoubi_functor_category_embedding CategoryTheory.Idempotents.to_karoubi_comp_karoubi_functor_category_embedding
-
-variable {J C} (P Q : Karoubi (J ⥤ C)) (f : P ⟶ Q) (X : J)
-
-@[simp, reassoc]
-theorem app_idem (X : J) : P.p.app X ≫ P.p.app X = P.p.app X :=
-  congr_app P.idem X
-#align category_theory.idempotents.app_idem CategoryTheory.Idempotents.app_idem
-
-variable {P Q}
-
-@[simp, reassoc]
-theorem app_p_comp : P.p.app X ≫ f.f.app X = f.f.app X :=
-  congr_app (p_comp f) X
-#align category_theory.idempotents.app_p_comp CategoryTheory.Idempotents.app_p_comp
-
-@[simp, reassoc]
-theorem app_comp_p : f.f.app X ≫ Q.p.app X = f.f.app X :=
-  congr_app (comp_p f) X
-#align category_theory.idempotents.app_comp_p CategoryTheory.Idempotents.app_comp_p
-
-@[reassoc]
-theorem app_p_comm : P.p.app X ≫ f.f.app X = f.f.app X ≫ Q.p.app X :=
-  congr_app (p_comm f) X
-#align category_theory.idempotents.app_p_comm CategoryTheory.Idempotents.app_p_comm
 
 end Idempotents
 

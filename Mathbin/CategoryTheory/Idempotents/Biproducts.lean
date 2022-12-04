@@ -65,11 +65,11 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
   ι_π j j' := by 
     split_ifs
     · subst h
-      simp only [biproduct.bicone_ι, biproduct.ι_map, biproduct.bicone_π, biproduct.ι_π_self_assoc,
-        comp, category.assoc, eq_to_hom_refl, id_eq, biproduct.map_π, (F j).idem]
+      simp only [assoc, idem, biproduct.map_π, biproduct.map_π_assoc, eq_to_hom_refl, id_eq,
+        hom_ext, comp_f, biproduct.ι_π_self_assoc]
     ·
-      simpa only [hom_ext, biproduct.ι_π_ne_assoc _ h, assoc, biproduct.map_π,
-        biproduct.map_π_assoc, zero_comp, comp]
+      simp only [biproduct.ι_π_ne_assoc _ h, assoc, biproduct.map_π, biproduct.map_π_assoc, hom_ext,
+        comp_f, zero_comp, quiver.hom.add_comm_group_zero_f]
 #align
   category_theory.idempotents.karoubi.biproducts.bicone CategoryTheory.Idempotents.Karoubi.Biproducts.bicone
 
@@ -86,8 +86,8 @@ theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiprodu
             rw [sum_hom, comp_sum, Finset.sum_eq_single j]
             rotate_left
             · intro j' h1 h2
-              simp only [biproduct.ι_map, biproducts.bicone_ι_f, biproducts.bicone_π_f, assoc, comp,
-                biproduct.map_π]
+              simp only [biproduct.ι_map, biproducts.bicone_ι_f, biproducts.bicone_π_f, assoc,
+                comp_f, biproduct.map_π]
               slice_lhs 1 2 => rw [biproduct.ι_π]
               split_ifs
               · exfalso
@@ -96,8 +96,8 @@ theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiprodu
             · intro h
               exfalso
               simpa only [Finset.mem_univ, not_true] using h
-            · simp only [biproducts.bicone_π_f, comp, biproduct.ι_map, assoc, biproducts.bicone_ι_f,
-                biproduct.map_π]
+            · simp only [biproducts.bicone_π_f, comp_f, biproduct.ι_map, assoc,
+                biproducts.bicone_ι_f, biproduct.map_π]
               slice_lhs 1 2 => rw [biproduct.ι_π]
               split_ifs
               swap
@@ -128,11 +128,11 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
     { x := P.x, fst := P.decompIdP, snd := P.complement.decompIdP, inl := P.decompIdI,
       inr := P.complement.decompIdI, inl_fst' := P.decomp_id.symm,
       inl_snd' := by
-        simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp, hom_ext,
+        simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp_f, hom_ext,
           quiver.hom.add_comm_group_zero_f, P.idem]
         erw [comp_id, sub_self],
       inr_fst' := by
-        simp only [decomp_id_i_f, complement_p, decomp_id_p_f, sub_comp, comp, hom_ext,
+        simp only [decomp_id_i_f, complement_p, decomp_id_p_f, sub_comp, comp_f, hom_ext,
           quiver.hom.add_comm_group_zero_f, P.idem]
         erw [id_comp, sub_self],
       inr_snd' := P.complement.decomp_id.symm }
@@ -155,14 +155,14 @@ def decomposition (P : Karoubi C) :
         add_right_eq_self]
       convert zero_comp
       ext
-      simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp,
+      simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp_f,
         quiver.hom.add_comm_group_zero_f, P.idem]
       erw [comp_id, sub_self]
     · simp only [← assoc, biprod.inr_desc, biprod.lift_eq, comp_add, ← decomp_id, comp_id, id_comp,
         add_left_eq_self]
       convert zero_comp
       ext
-      simp only [decomp_id_i_f, decomp_id_p_f, complement_p, sub_comp, comp,
+      simp only [decomp_id_i_f, decomp_id_p_f, complement_p, sub_comp, comp_f,
         quiver.hom.add_comm_group_zero_f, P.idem]
       erw [id_comp, sub_self]
   inv_hom_id' := by 

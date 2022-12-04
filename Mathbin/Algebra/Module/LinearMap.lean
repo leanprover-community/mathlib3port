@@ -7,7 +7,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
 import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.Star.Basic
-import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Algebra.Ring.CompTypeclasses
 
 /-!

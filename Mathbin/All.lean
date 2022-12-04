@@ -151,6 +151,7 @@ import Mathbin.Algebra.Group.Basic
 import Mathbin.Algebra.Group.Commutator
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.Group.Conj
+import Mathbin.Algebra.Group.ConjFinite
 import Mathbin.Algebra.Group.Default
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Algebra.Group.Ext
@@ -389,6 +390,7 @@ import Mathbin.Algebra.RingQuot
 import Mathbin.Algebra.SmulWithZero
 import Mathbin.Algebra.Squarefree
 import Mathbin.Algebra.Star.Basic
+import Mathbin.Algebra.Star.BigOperators
 import Mathbin.Algebra.Star.Chsh
 import Mathbin.Algebra.Star.Free
 import Mathbin.Algebra.Star.Module
@@ -1099,6 +1101,7 @@ import Mathbin.Combinatorics.Quiver.Arborescence
 import Mathbin.Combinatorics.Quiver.Basic
 import Mathbin.Combinatorics.Quiver.ConnectedComponent
 import Mathbin.Combinatorics.Quiver.Path
+import Mathbin.Combinatorics.Quiver.Push
 import Mathbin.Combinatorics.Quiver.Subquiver
 import Mathbin.Combinatorics.SetFamily.Compression.Down
 import Mathbin.Combinatorics.SetFamily.Compression.Uv
@@ -1634,7 +1637,9 @@ import Mathbin.Data.Set.Opposite
 import Mathbin.Data.Set.Pairwise
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.Set.Pointwise.BigOperators
+import Mathbin.Data.Set.Pointwise.Finite
 import Mathbin.Data.Set.Pointwise.Interval
+import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Data.Set.Pointwise.Support
 import Mathbin.Data.Set.Prod
 import Mathbin.Data.Set.Semiring

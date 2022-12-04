@@ -3,6 +3,7 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
+import Mathbin.Algebra.Group.ConjFinite
 import Mathbin.GroupTheory.Perm.Fin
 import Mathbin.Tactic.IntervalCases
 

@@ -2858,6 +2858,14 @@ theorem nonempty_range_succ : (range <| n + 1).Nonempty :=
   nonempty_range_iff.2 n.succ_ne_zero
 #align finset.nonempty_range_succ Finset.nonempty_range_succ
 
+@[simp]
+theorem range_filter_eq {n m : ℕ} : (range n).filter (· = m) = if m < n then {m} else ∅ := by
+  convert filter_eq (range n) m
+  · ext
+    exact comm
+  · simp
+#align finset.range_filter_eq Finset.range_filter_eq
+
 end Range
 
 -- useful rules for calculations with quantifiers

@@ -204,5 +204,9 @@ theorem divp_sub_divp [CommRing α] (a b : α) (u₁ u₂ : αˣ) :
   simp_rw [sub_eq_add_neg, neg_divp, divp_add_divp, mul_neg]
 #align units.divp_sub_divp Units.divp_sub_divp
 
+theorem add_eq_mul_one_add_div [Semiring R] {a : Rˣ} {b : R} : ↑a + b = a * (1 + ↑a⁻¹ * b) := by
+  rwa [mul_add, mul_one, ← mul_assoc, Units.mul_inv, one_mul]
+#align units.add_eq_mul_one_add_div Units.add_eq_mul_one_add_div
+
 end Units
 

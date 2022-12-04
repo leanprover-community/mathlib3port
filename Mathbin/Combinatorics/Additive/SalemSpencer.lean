@@ -329,8 +329,8 @@ theorem mul_roth_number_le : mulRothNumber s ≤ s.card := by convert Nat.find_g
 @[to_additive]
 theorem mul_roth_number_spec :
     ∃ (t : _)(_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
-  @Nat.find_greatest_spec _
-    (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) _ _ (Nat.zero_le _)
+  @Nat.find_greatest_spec _ _
+    (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) _ (Nat.zero_le _)
     ⟨∅, empty_subset _, card_empty, mul_salem_spencer_empty⟩
 #align mul_roth_number_spec mul_roth_number_spec
 

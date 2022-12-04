@@ -3,7 +3,6 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Ring.Aut
 import Mathbin.Algebra.Ring.CompTypeclasses
 import Mathbin.Data.Rat.Cast
@@ -40,6 +39,8 @@ advantage of not requiring a topology.
 -/
 
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 universe u v
 
 open MulOpposite
@@ -182,18 +183,6 @@ theorem star_div [CommGroup R] [StarSemigroup R] (x y : R) : star (x / y) = star
   map_div (starMulAut : R ≃* R) _ _
 #align star_div star_div
 
-section
-
-open BigOperators
-
-@[simp]
-theorem star_prod [CommMonoid R] [StarSemigroup R] {α : Type _} (s : Finset α) (f : α → R) :
-    star (∏ x in s, f x) = ∏ x in s, star (f x) :=
-  map_prod (starMulAut : R ≃* R) _ _
-#align star_prod star_prod
-
-end
-
 /-- Any commutative monoid admits the trivial `*`-structure.
 
 See note [reducible non-instances].
@@ -271,18 +260,6 @@ theorem star_nsmul [AddMonoid R] [StarAddMonoid R] (x : R) (n : ℕ) : star (n �
 theorem star_zsmul [AddGroup R] [StarAddMonoid R] (x : R) (n : ℤ) : star (n • x) = n • star x :=
   (starAddEquiv : R ≃+ R).toAddMonoidHom.map_zsmul _ _
 #align star_zsmul star_zsmul
-
-section
-
-open BigOperators
-
-@[simp]
-theorem star_sum [AddCommMonoid R] [StarAddMonoid R] {α : Type _} (s : Finset α) (f : α → R) :
-    star (∑ x in s, f x) = ∑ x in s, star (f x) :=
-  (starAddEquiv : R ≃+ R).map_sum _ _
-#align star_sum star_sum
-
-end
 
 /-- A `*`-ring `R` is a (semi)ring with an involutive `star` operation which is additive
 which makes `R` with its multiplicative structure into a `*`-semigroup

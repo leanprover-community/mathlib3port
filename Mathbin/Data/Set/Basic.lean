@@ -3048,7 +3048,25 @@ theorem univ_eq_true_false : univ = ({True, False} : Set Prop) :=
 
 section Preorder
 
-variable [Preorder α] [Preorder β] (f : α → β)
+variable [Preorder α] [Preorder β] {f : α → β}
+
+theorem monotone_on_iff_monotone : MonotoneOn f s ↔ Monotone fun a : s => f a := by
+  simp [Monotone, MonotoneOn]
+#align set.monotone_on_iff_monotone Set.monotone_on_iff_monotone
+
+theorem antitone_on_iff_antitone : AntitoneOn f s ↔ Antitone fun a : s => f a := by
+  simp [Antitone, AntitoneOn]
+#align set.antitone_on_iff_antitone Set.antitone_on_iff_antitone
+
+theorem strict_mono_on_iff_strict_mono : StrictMonoOn f s ↔ StrictMono fun a : s => f a := by
+  simp [StrictMono, StrictMonoOn]
+#align set.strict_mono_on_iff_strict_mono Set.strict_mono_on_iff_strict_mono
+
+theorem strict_anti_on_iff_strict_anti : StrictAntiOn f s ↔ StrictAnti fun a : s => f a := by
+  simp [StrictAnti, StrictAntiOn]
+#align set.strict_anti_on_iff_strict_anti Set.strict_anti_on_iff_strict_anti
+
+variable (f)
 
 /-! ### Monotonicity on singletons -/
 
@@ -3090,6 +3108,38 @@ theorem strict_anti_on_singleton : StrictAntiOn f {a} :=
 #align set.strict_anti_on_singleton Set.strict_anti_on_singleton
 
 end Preorder
+
+section LinearOrder
+
+variable [LinearOrder α] [LinearOrder β] {f : α → β}
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
+downright. -/
+theorem not_monotone_on_not_antitone_on_iff_exists_le_le :
+    ¬MonotoneOn f s ∧ ¬AntitoneOn f s ↔
+      ∃ (a b c : _)(_ : a ∈ s)(_ : b ∈ s)(_ : c ∈ s),
+        a ≤ b ∧ b ≤ c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
+  by
+  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
+    not_monotone_not_antitone_iff_exists_le_le, @and_left_comm (_ ∈ s)]
+#align
+  set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotone_on_not_antitone_on_iff_exists_le_le
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
+downright. -/
+theorem not_monotone_on_not_antitone_on_iff_exists_lt_lt :
+    ¬MonotoneOn f s ∧ ¬AntitoneOn f s ↔
+      ∃ (a b c : _)(_ : a ∈ s)(_ : b ∈ s)(_ : c ∈ s),
+        a < b ∧ b < c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
+  by
+  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
+    not_monotone_not_antitone_iff_exists_lt_lt, @and_left_comm (_ ∈ s)]
+#align
+  set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotone_on_not_antitone_on_iff_exists_lt_lt
+
+end LinearOrder
 
 /-! ### Lemmas about range of a function. -/
 

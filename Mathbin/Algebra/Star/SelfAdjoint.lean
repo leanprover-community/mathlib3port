@@ -292,7 +292,7 @@ variable [CommRing R] [StarRing R]
 
 instance : CommRing (selfAdjoint R) :=
   Function.Injective.commRing _ Subtype.coe_injective (selfAdjoint R).coe_zero coe_one
-    (selfAdjoint R).coe_add coe_mul (selfAdjoint R).coe_neg (selfAdjoint R).coe_sub
+    (selfAdjoint R).coe_add coe_mul (selfAdjoint R).CoeNeg (selfAdjoint R).coe_sub
     (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul coe_pow (fun _ => rfl) fun _ => rfl
 
 end CommRing
@@ -346,7 +346,7 @@ theorem coe_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R
 
 instance : Field (selfAdjoint R) :=
   Function.Injective.field _ Subtype.coe_injective (selfAdjoint R).coe_zero coe_one
-    (selfAdjoint R).coe_add coe_mul (selfAdjoint R).coe_neg (selfAdjoint R).coe_sub coe_inv coe_div
+    (selfAdjoint R).coe_add coe_mul (selfAdjoint R).CoeNeg (selfAdjoint R).coe_sub coe_inv coe_div
     (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul coe_rat_smul coe_pow coe_zpow (fun _ => rfl)
     (fun _ => rfl) coe_rat_cast
 

@@ -418,7 +418,7 @@ variable [Preorder α]
 
 section Preorder
 
-variable [Preorder β] {f : α → β} {a b : α}
+variable [Preorder β] {f : α → β} {s : Set α} {a b : α}
 
 /-!
 These four lemmas are there to strip off the semi-implicit arguments `⦃a b : α⦄`. This is useful
@@ -460,12 +460,14 @@ protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : Antitone
 #align antitone.antitone_on Antitone.antitone_on
 
 #print monotoneOn_univ /-
+@[simp]
 theorem monotoneOn_univ : MonotoneOn f Set.univ ↔ Monotone f :=
   ⟨fun h a b => h trivial trivial, fun h => h.MonotoneOn _⟩
 #align monotone_on_univ monotoneOn_univ
 -/
 
 #print antitoneOn_univ /-
+@[simp]
 theorem antitoneOn_univ : AntitoneOn f Set.univ ↔ Antitone f :=
   ⟨fun h a b => h trivial trivial, fun h => h.AntitoneOn _⟩
 #align antitone_on_univ antitoneOn_univ
@@ -484,12 +486,14 @@ protected theorem StrictAnti.strictAntiOn (hf : StrictAnti f) (s : Set α) : Str
 -/
 
 #print strictMonoOn_univ /-
+@[simp]
 theorem strictMonoOn_univ : StrictMonoOn f Set.univ ↔ StrictMono f :=
   ⟨fun h a b => h trivial trivial, fun h => h.StrictMonoOn _⟩
 #align strict_mono_on_univ strictMonoOn_univ
 -/
 
 #print strictAntiOn_univ /-
+@[simp]
 theorem strictAntiOn_univ : StrictAntiOn f Set.univ ↔ StrictAnti f :=
   ⟨fun h a b => h trivial trivial, fun h => h.StrictAntiOn _⟩
 #align strict_anti_on_univ strictAntiOn_univ
@@ -1130,12 +1134,58 @@ theorem Antitone.strictAnti_iff_injective (hf : Antitone f) : StrictAnti f ↔ I
 
 end PartialOrder
 
+variable [LinearOrder β] {f : α → β} {s : Set α} {x y : α}
+
+/-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
+downright. -/
+theorem not_monotone_not_antitone_iff_exists_le_le :
+    ¬Monotone f ∧ ¬Antitone f ↔
+      ∃ a b c, a ≤ b ∧ b ≤ c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
+  by 
+  simp_rw [Monotone, Antitone, not_forall, not_le]
+  refine' Iff.symm ⟨_, _⟩
+  · rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩
+    exacts[⟨⟨_, _, hbc, hfcb⟩, _, _, hab, hfab⟩, ⟨⟨_, _, hab, hfba⟩, _, _, hbc, hfbc⟩]
+  rintro ⟨⟨a, b, hab, hfba⟩, c, d, hcd, hfcd⟩
+  obtain hda | had := le_total d a
+  · obtain hfad | hfda := le_total (f a) (f d)
+    · exact ⟨c, d, b, hcd, hda.trans hab, Or.inl ⟨hfcd, hfba.trans_le hfad⟩⟩
+    · exact ⟨c, a, b, hcd.trans hda, hab, Or.inl ⟨hfcd.trans_le hfda, hfba⟩⟩
+  obtain hac | hca := le_total a c
+  · obtain hfdb | hfbd := le_or_lt (f d) (f b)
+    · exact ⟨a, c, d, hac, hcd, Or.inr ⟨hfcd.trans <| hfdb.trans_lt hfba, hfcd⟩⟩
+    obtain hfca | hfac := lt_or_le (f c) (f a)
+    · exact ⟨a, c, d, hac, hcd, Or.inr ⟨hfca, hfcd⟩⟩
+    obtain hbd | hdb := le_total b d
+    · exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
+    · exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
+  · obtain hfdb | hfbd := le_or_lt (f d) (f b)
+    · exact ⟨c, a, b, hca, hab, Or.inl ⟨hfcd.trans <| hfdb.trans_lt hfba, hfba⟩⟩
+    obtain hfca | hfac := lt_or_le (f c) (f a)
+    · exact ⟨c, a, b, hca, hab, Or.inl ⟨hfca, hfba⟩⟩
+    obtain hbd | hdb := le_total b d
+    · exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
+    · exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
+#align not_monotone_not_antitone_iff_exists_le_le not_monotone_not_antitone_iff_exists_le_le
+
+/-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
+downright. -/
+theorem not_monotone_not_antitone_iff_exists_lt_lt :
+    ¬Monotone f ∧ ¬Antitone f ↔
+      ∃ a b c, a < b ∧ b < c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
+  by 
+  simp_rw [not_monotone_not_antitone_iff_exists_le_le, ← and_assoc']
+  refine'
+        exists₃_congr fun a b c =>
+          and_congr_left fun h => (Ne.le_iff_lt _).And <| Ne.le_iff_lt _ <;>
+      rintro rfl <;>
+    simpa using h
+#align not_monotone_not_antitone_iff_exists_lt_lt not_monotone_not_antitone_iff_exists_lt_lt
+
 /-!
 ### Strictly monotone functions and `cmp`
 -/
 
-
-variable [LinearOrder β] {f : α → β} {s : Set α} {x y : α}
 
 #print StrictMonoOn.cmp_map_eq /-
 theorem StrictMonoOn.cmp_map_eq (hf : StrictMonoOn f s) (hx : x ∈ s) (hy : y ∈ s) :

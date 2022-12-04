@@ -5,7 +5,7 @@ Authors: Floris van Doorn, Yaël Dillies
 -/
 import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Finset.Preimage
-import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Pointwise.Smul
 
 /-!
 # Pointwise operations of finsets

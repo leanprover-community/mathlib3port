@@ -6,7 +6,7 @@ Authors: Chris Hughes
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.GroupAction.Group
 import Mathbin.Data.Setoid.Basic
-import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.GroupTheory.Subgroup.Basic
 
 /-!

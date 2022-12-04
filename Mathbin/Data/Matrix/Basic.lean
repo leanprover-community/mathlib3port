@@ -9,6 +9,7 @@ import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.RingEquiv
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Algebra.Module.Pi
+import Mathbin.Algebra.Star.BigOperators
 import Mathbin.Algebra.Star.Module
 import Mathbin.Algebra.Star.Pi
 import Mathbin.Data.Fintype.BigOperators

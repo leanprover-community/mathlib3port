@@ -7,8 +7,6 @@ import Mathbin.Algebra.Group.Semiconj
 import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.Hom.Aut
 import Mathbin.Algebra.Hom.Group
-import Mathbin.Data.Finite.Basic
-import Mathbin.Data.Fintype.Units
 
 /-!
 # Conjugacy of group elements
@@ -215,12 +213,6 @@ theorem map_surjective {f : α →* β} (hf : Function.Surjective f) :
   exact ⟨ConjClasses.mk a, rfl⟩
 #align conj_classes.map_surjective ConjClasses.map_surjective
 
-instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
-  Quotient.fintype (IsConj.setoid α)
-
-instance [Finite α] : Finite (ConjClasses α) :=
-  Quotient.finite _
-
 library_note "slow-failing instance priority"/--
 Certain instances trigger further searches when they are considered as candidate instances;
 these instances should be assigned a priority lower than the default of 1000 (for example, 900).
@@ -254,10 +246,6 @@ the instance priority should be even lower, see Note [lower instance priority].
 -- see Note [slow-failing instance priority]
 instance (priority := 900) [DecidableRel (IsConj : α → α → Prop)] : DecidableEq (ConjClasses α) :=
   Quotient.decidableEq
-
-instance [DecidableEq α] [Fintype α] : DecidableRel (IsConj : α → α → Prop) := fun a b => by
-  delta IsConj SemiconjBy
-  infer_instance
 
 end Monoid
 
@@ -308,9 +296,6 @@ theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ conjugatesOf a 
     rwa [← h] at ha⟩
 #align is_conj_iff_conjugates_of_eq is_conj_iff_conjugates_of_eq
 
-instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintype (conjugatesOf a) :=
-  @Subtype.fintype _ _ (‹DecidableRel IsConj› a) _
-
 end Monoid
 
 namespace ConjClasses
@@ -341,14 +326,6 @@ theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.carrier = ConjClasses.mk
   Set.ext fun x => mem_carrier_iff_mk_eq
 #align conj_classes.carrier_eq_preimage_mk ConjClasses.carrier_eq_preimage_mk
 
-section Fintype
-
-variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
-
-instance {x : ConjClasses α} : Fintype (carrier x) :=
-  (Quotient.recOnSubsingleton x) fun a => conjugatesOf.fintype
-
-end Fintype
-
 end ConjClasses
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Algebra.Order.Group.Defs
-import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Order.UpperLower
 
 /-!
@@ -69,12 +69,12 @@ theorem IsUpperSet.mul_right (hs : IsUpperSet s) : IsUpperSet (s * t) := by
 
 @[to_additive]
 theorem IsLowerSet.mul_left (ht : IsLowerSet t) : IsLowerSet (s * t) :=
-  ht.ofDual.mulLeft
+  ht.ofDual.mul_left
 #align is_lower_set.mul_left IsLowerSet.mul_left
 
 @[to_additive]
 theorem IsLowerSet.mul_right (hs : IsLowerSet s) : IsLowerSet (s * t) :=
-  hs.ofDual.mulRight
+  hs.ofDual.mul_right
 #align is_lower_set.mul_right IsLowerSet.mul_right
 
 @[to_additive]
@@ -99,12 +99,12 @@ theorem IsUpperSet.div_right (hs : IsUpperSet s) : IsUpperSet (s / t) := by
 
 @[to_additive]
 theorem IsLowerSet.div_left (ht : IsLowerSet t) : IsUpperSet (s / t) :=
-  ht.ofDual.divLeft
+  ht.ofDual.div_left
 #align is_lower_set.div_left IsLowerSet.div_left
 
 @[to_additive]
 theorem IsLowerSet.div_right (hs : IsLowerSet s) : IsLowerSet (s / t) :=
-  hs.ofDual.divRight
+  hs.ofDual.div_right
 #align is_lower_set.div_right IsLowerSet.div_right
 
 namespace UpperSet
@@ -115,11 +115,11 @@ instance : One (UpperSet α) :=
 
 @[to_additive]
 instance : Mul (UpperSet α) :=
-  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mulRight⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
 
 @[to_additive]
 instance : Div (UpperSet α) :=
-  ⟨fun s t => ⟨image2 (· / ·) s t, s.2.divRight⟩⟩
+  ⟨fun s t => ⟨image2 (· / ·) s t, s.2.div_right⟩⟩
 
 @[to_additive]
 instance : HasSmul α (UpperSet α) :=
@@ -184,11 +184,11 @@ instance : One (LowerSet α) :=
 
 @[to_additive]
 instance : Mul (LowerSet α) :=
-  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mulRight⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
 
 @[to_additive]
 instance : Div (LowerSet α) :=
-  ⟨fun s t => ⟨image2 (· / ·) s t, s.2.divRight⟩⟩
+  ⟨fun s t => ⟨image2 (· / ·) s t, s.2.div_right⟩⟩
 
 @[to_additive]
 instance : HasSmul α (LowerSet α) :=

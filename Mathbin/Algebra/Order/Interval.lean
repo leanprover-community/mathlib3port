@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Algebra.BigOperators.Order
+import Mathbin.Algebra.Group.Prod
 import Mathbin.Data.Option.NAry
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Order.Interval

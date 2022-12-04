@@ -1,0 +1,100 @@
+/-
+Copyright (c) 2022 Rémi Bottinelli. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémi Bottinelli
+-/
+import Mathbin.Combinatorics.Quiver.Basic
+
+/-!
+
+# Pushing a quiver structure along a map
+
+Given a map `σ : V → W` and a `quiver` instance on `V`, this files defines a `quiver` instance
+on `W` by associating to each arrow `v ⟶ v'` in `V` an arrow `σ v ⟶ σ v'` in `W`.
+
+-/
+
+
+universe v v₁ v₂ u u₁ u₂
+
+variable {V : Type _} [Quiver V] {W : Type _} (σ : V → W)
+
+/-- The `quiver` instance obtained by pushing arrows of `V` along the map `σ : V → W` -/
+@[nolint unused_arguments]
+def Push (σ : V → W) :=
+  W
+#align push Push
+
+instance [h : Nonempty W] : Nonempty (Push σ) :=
+  h
+
+/-- The quiver structure obtained by pushing arrows of `V` along the map `σ : V → W` -/
+@[nolint has_nonempty_instance]
+inductive PushQuiver {V : Type u} [Quiver.{v} V] {W : Type u₂} (σ : V → W) : W → W → Type max u u₂ v
+  | arrow {X Y : V} (f : X ⟶ Y) : PushQuiver (σ X) (σ Y)
+#align push_quiver PushQuiver
+
+instance : Quiver (Push σ) :=
+  ⟨PushQuiver σ⟩
+
+namespace Push
+
+/-- The prefunctor induced by pushing arrows via `σ` -/
+def of : V ⥤q Push σ where 
+  obj := σ
+  map X Y f := PushQuiver.arrow f
+#align push.of Push.of
+
+@[simp]
+theorem of_obj : (of σ).obj = σ :=
+  rfl
+#align push.of_obj Push.of_obj
+
+variable {W' : Type _} [Quiver W'] (φ : V ⥤q W') (τ : W → W') (h : ∀ x, φ.obj x = τ (σ x))
+
+include φ h
+
+/-- Given a function `τ : W → W'` and a prefunctor `φ : V ⥤q W'`, one can extend `τ` to be
+a prefunctor `W ⥤q W'` if `τ` and `σ` factorize `φ` at the level of objects, where `W` is given
+the pushforward quiver structure `push σ`. -/
+def lift : Push σ ⥤q W' where 
+  obj := τ
+  map :=
+    @PushQuiver.rec V _ W σ (fun X Y f => τ X ⟶ τ Y) fun X Y f => by
+      rw [← h X, ← h Y]
+      exact φ.map f
+#align push.lift Push.lift
+
+theorem lift_obj : (lift σ φ τ h).obj = τ :=
+  rfl
+#align push.lift_obj Push.lift_obj
+
+theorem lift_comp : (of σ ⋙q lift σ φ τ h) = φ := by
+  fapply Prefunctor.ext
+  · rintro
+    simp only [Prefunctor.comp_obj]
+    symm
+    exact h X
+  · rintro _ _ f
+    simp only [Prefunctor.comp_map]
+    apply eq_of_heq
+    iterate 2 apply (cast_heq _ _).trans
+    symm
+    iterate 2 apply (eq_rec_heq _ _).trans
+    rfl
+#align push.lift_comp Push.lift_comp
+
+theorem lift_unique (Φ : Push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : (of σ ⋙q Φ) = φ) :
+    Φ = lift σ φ τ h := by 
+  dsimp only [of, lift]
+  fapply Prefunctor.ext
+  · rintro
+    simp_rw [← Φ₀]
+  · rintro _ _ ⟨⟩
+    subst_vars
+    simp only [Prefunctor.comp_map, cast_eq]
+    rfl
+#align push.lift_unique Push.lift_unique
+
+end Push
+

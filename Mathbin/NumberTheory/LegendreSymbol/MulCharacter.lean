@@ -5,6 +5,7 @@ Authors: Michael Stoll
 -/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Algebra.EuclideanDomain.Instances
+import Mathbin.Algebra.Group.ConjFinite
 
 /-!
 # Multiplicative characters of finite rings and fields

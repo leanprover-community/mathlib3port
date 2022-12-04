@@ -3,7 +3,9 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+import Mathbin.Algebra.Order.Group.OrderIso
 import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Order.Bounds.OrderIso
 import Mathbin.Order.ConditionallyCompleteLattice.Basic
 
 /-!
@@ -18,7 +20,7 @@ open Function Set
 
 open Pointwise
 
-section inv_neg
+section InvNeg
 
 variable {G : Type _} [Group G] [Preorder G] [CovariantClass G G (· * ·) (· ≤ ·)]
   [CovariantClass G G (swap (· * ·)) (· ≤ ·)] {s : Set G} {a : G}
@@ -73,7 +75,7 @@ theorem IsLub.inv (h : IsLub s a) : IsGlb s⁻¹ a⁻¹ :=
   is_glb_inv'.2 h
 #align is_lub.inv IsLub.inv
 
-end inv_neg
+end InvNeg
 
 section mul_add
 

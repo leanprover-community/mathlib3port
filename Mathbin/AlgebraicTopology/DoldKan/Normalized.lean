@@ -141,10 +141,10 @@ def n₁IsoNormalizedMooreComplexCompToKaroubi :
   hom_inv_id' := by 
     ext X : 3
     simp only [P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
-      nat_trans.comp_app, karoubi.comp, N₁_obj_p, nat_trans.id_app, karoubi.id_eq]
+      nat_trans.comp_app, karoubi.comp_f, N₁_obj_p, nat_trans.id_app, karoubi.id_eq]
   inv_hom_id' := by 
     ext X : 3
-    simp only [← cancel_mono (inclusion_of_Moore_complex_map X), nat_trans.comp_app, karoubi.comp,
+    simp only [← cancel_mono (inclusion_of_Moore_complex_map X), nat_trans.comp_app, karoubi.comp_f,
       assoc, nat_trans.id_app, karoubi.id_eq,
       P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
       inclusion_of_Moore_complex_map_comp_P_infty]

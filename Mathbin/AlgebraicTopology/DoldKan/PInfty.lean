@@ -233,10 +233,10 @@ theorem karoubi_P_infty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
   -- We use the three equalities h₃₂, h₄₃, h₁₄.
   rw [← h₃₂, ← h₄₃, h₁₄]
   simp only [karoubi_functor_category_embedding.map_app_f, karoubi.decomp_id_p_f,
-    karoubi.decomp_id_i_f, karoubi.comp]
+    karoubi.decomp_id_i_f, karoubi.comp_f]
   let π : Y₄ ⟶ Y₄ := (to_karoubi _ ⋙ karoubi_functor_category_embedding _ _).map Y.p
   have eq := karoubi.hom_ext.mp (P_infty_f_naturality n π)
-  simp only [karoubi.comp] at eq
+  simp only [karoubi.comp_f] at eq
   dsimp [π] at eq
   rw [← Eq, reassoc_of (app_idem Y (op [n]))]
 #align algebraic_topology.dold_kan.karoubi_P_infty_f AlgebraicTopology.DoldKan.karoubi_P_infty_f

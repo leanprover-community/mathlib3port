@@ -364,6 +364,10 @@ theorem is_open_map_of_finite_dimensional (f : F →ₗ[𝕜] E) (hf : Function.
   · simp only [map_sub, map_add, ← comp_apply f g, hg, id_apply, sub_add_cancel]
 #align linear_map.is_open_map_of_finite_dimensional LinearMap.is_open_map_of_finite_dimensional
 
+instance canLiftContinuousLinearMap : CanLift (E →ₗ[𝕜] F) (E →L[𝕜] F) coe fun _ => True :=
+  ⟨fun f _ => ⟨f.toContinuousLinearMap, rfl⟩⟩
+#align linear_map.can_lift_continuous_linear_map LinearMap.canLiftContinuousLinearMap
+
 end LinearMap
 
 namespace LinearEquiv
@@ -419,6 +423,11 @@ theorem to_linear_equiv_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
   rfl
 #align
   linear_equiv.to_linear_equiv_to_continuous_linear_equiv_symm LinearEquiv.to_linear_equiv_to_continuous_linear_equiv_symm
+
+instance canLiftContinuousLinearEquiv :
+    CanLift (E ≃ₗ[𝕜] F) (E ≃L[𝕜] F) ContinuousLinearEquiv.toLinearEquiv fun _ => True :=
+  ⟨fun f _ => ⟨_, f.to_linear_equiv_to_continuous_linear_equiv⟩⟩
+#align linear_equiv.can_lift_continuous_linear_equiv LinearEquiv.canLiftContinuousLinearEquiv
 
 end LinearEquiv
 

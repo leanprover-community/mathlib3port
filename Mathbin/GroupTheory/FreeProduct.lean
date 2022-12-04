@@ -8,7 +8,7 @@ import Mathbin.GroupTheory.Congruence
 import Mathbin.GroupTheory.IsFreeGroup
 import Mathbin.Data.List.Chain
 import Mathbin.SetTheory.Cardinal.Ordinal
-import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Pointwise.Smul
 
 /-!
 # The free product of groups or monoids

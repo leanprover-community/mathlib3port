@@ -55,6 +55,22 @@ instance OrderedCommGroup.to_covariant_class_left_le (α : Type u) [OrderedCommG
 example (α : Type u) [OrderedAddCommGroup α] : CovariantClass α α (swap (· + ·)) (· < ·) :=
   AddRightCancelSemigroup.covariant_swap_add_lt_of_covariant_swap_add_le α
 
+/-- A choice-free shortcut instance. -/
+@[to_additive "A choice-free shortcut instance."]
+instance OrderedCommGroup.to_contravariant_class_left_le (α : Type u) [OrderedCommGroup α] :
+    ContravariantClass α α (· * ·)
+      (· ≤ ·) where elim a b c bc := by simpa using mul_le_mul_left' bc a⁻¹
+#align
+  ordered_comm_group.to_contravariant_class_left_le OrderedCommGroup.to_contravariant_class_left_le
+
+/-- A choice-free shortcut instance. -/
+@[to_additive "A choice-free shortcut instance."]
+instance OrderedCommGroup.to_contravariant_class_right_le (α : Type u) [OrderedCommGroup α] :
+    ContravariantClass α α (swap (· * ·))
+      (· ≤ ·) where elim a b c bc := by simpa using mul_le_mul_right' bc a⁻¹
+#align
+  ordered_comm_group.to_contravariant_class_right_le OrderedCommGroup.to_contravariant_class_right_le
+
 section Group
 
 variable [Group α]

@@ -26,8 +26,6 @@ make the notation available.
 -/
 
 
-universe u
-
 open Function
 
 open OrderDual (toDual ofDual)
@@ -36,7 +34,8 @@ namespace Set
 
 section LinearOrder
 
-variable {α : Type u} [LinearOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
+variable {α β : Type _} [LinearOrder α] [LinearOrder β] {f : α → β} {s : Set α}
+  {a a₁ a₂ b b₁ b₂ c x : α}
 
 /-- `interval a b` is the set of elements lying between `a` and `b`, with `a` and `b` included. -/
 def interval (a b : α) :=
@@ -191,6 +190,27 @@ theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) :
   · rintro ⟨a, b, h⟩
     exact ⟨min a b, max a b, h⟩
 #align set.bdd_below_bdd_above_iff_subset_interval Set.bdd_below_bdd_above_iff_subset_interval
+
+theorem monotone_or_antitone_iff_interval :
+    Monotone f ∨ Antitone f ↔ ∀ a b c, c ∈ [a, b] → f c ∈ [f a, f b] := by
+  constructor
+  · rintro (hf | hf) a b c <;> simp_rw [interval, ← hf.map_min, ← hf.map_max]
+    exacts[fun hc => ⟨hf hc.1, hf hc.2⟩, fun hc => ⟨hf hc.2, hf hc.1⟩]
+  contrapose!
+  rw [not_monotone_not_antitone_iff_exists_le_le]
+  rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩
+  · exact ⟨a, c, b, Icc_subset_interval ⟨hab, hbc⟩, fun h => h.2.not_lt <| max_lt hfab hfcb⟩
+  · exact ⟨a, c, b, Icc_subset_interval ⟨hab, hbc⟩, fun h => h.1.not_lt <| lt_min hfba hfbc⟩
+#align set.monotone_or_antitone_iff_interval Set.monotone_or_antitone_iff_interval
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+theorem monotone_on_or_antitone_on_iff_interval :
+    MonotoneOn f s ∨ AntitoneOn f s ↔
+      ∀ (a b c) (_ : a ∈ s) (_ : b ∈ s) (_ : c ∈ s), c ∈ [a, b] → f c ∈ [f a, f b] :=
+  by
+  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, monotone_or_antitone_iff_interval,
+    mem_interval]
+#align set.monotone_on_or_antitone_on_iff_interval Set.monotone_on_or_antitone_on_iff_interval
 
 /-- The open-closed interval with unordered bounds. -/
 def intervalOc : α → α → Set α := fun a b => ioc (min a b) (max a b)
