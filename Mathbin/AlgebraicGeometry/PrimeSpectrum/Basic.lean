@@ -312,9 +312,8 @@ theorem zero_locus_empty_iff_eq_top {I : Ideal R} : zeroLocus (I : Set R) = ∅ 
   constructor
   · contrapose!
     intro h
-    apply set.ne_empty_iff_nonempty.mpr
     rcases Ideal.exists_le_maximal I h with ⟨M, hM, hIM⟩
-    exact ⟨⟨M, hM.is_prime⟩, hIM⟩
+    exact Set.Nonempty.ne_empty ⟨⟨M, hM.is_prime⟩, hIM⟩
   · rintro rfl
     apply zero_locus_empty_of_one_mem
     trivial
@@ -544,7 +543,7 @@ theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.IsRadical
     IsIrreducible (zeroLocus (I : Set R)) ↔ I.IsPrime := by
   rw [Ideal.is_prime_iff, IsIrreducible]
   apply and_congr
-  · rw [← Set.ne_empty_iff_nonempty, Ne.def, zero_locus_empty_iff_eq_top]
+  · rw [Set.nonempty_iff_ne_empty, Ne.def, zero_locus_empty_iff_eq_top]
   · trans ∀ x y : Ideal R, Z(I) ⊆ Z(x) ∪ Z(y) → Z(I) ⊆ Z(x) ∨ Z(I) ⊆ Z(y)
     · simp_rw [is_preirreducible_iff_closed_union_closed, is_closed_iff_zero_locus_ideal]
       constructor

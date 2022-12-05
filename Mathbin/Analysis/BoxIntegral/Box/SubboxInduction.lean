@@ -170,7 +170,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this
     refine' tendsto_pi_nhds.2 fun i => _
     simpa [hJsub] using
-      tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt <| @one_lt_two ℝ _)
+      tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
   replace hJlz : tendsto (fun m => (J m).lower) at_top (𝓝[Icc I.lower I.upper] z)
   exact
     tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)

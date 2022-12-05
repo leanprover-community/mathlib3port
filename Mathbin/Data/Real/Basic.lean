@@ -3,12 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Bounds
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Star.Basic
 import Mathbin.Data.Real.CauSeqCompletion
-import Mathbin.Order.ConditionallyCompleteLattice.Basic
 
 /-!
 # Real numbers from Cauchy sequences
@@ -19,6 +17,9 @@ lifting everything to `ℚ`.
 -/
 
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 open Pointwise
 
 /-- The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational
@@ -244,8 +245,6 @@ instance : CommSemigroup ℝ := by infer_instance
 instance : Semigroup ℝ := by infer_instance
 
 instance : Sub ℝ := by infer_instance
-
-instance : Module ℝ ℝ := by infer_instance
 
 instance : Inhabited ℝ :=
   ⟨0⟩

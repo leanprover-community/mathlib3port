@@ -260,7 +260,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     · refine' fun n hn => ⟨n + 1, trivial, fun x hx => _⟩
       rw [mem_set_of_eq] at hx
       contrapose! hx
-      refine' le_trans _ ((div_le_iff' (@two_pos ℝ _ _)).2 (hd_le x.1 x.2))
+      refine' le_trans _ ((div_le_iff' (zero_lt_two' ℝ)).2 (hd_le x.1 x.2))
       rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ',
         mul_one_div, Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d,
         Prod.mk.eta]

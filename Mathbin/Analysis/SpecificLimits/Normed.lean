@@ -85,7 +85,7 @@ theorem continuous_at_zpow {𝕜 : Type _} [NontriviallyNormedField 𝕜] {m : �
 @[simp]
 theorem continuous_at_inv {𝕜 : Type _} [NontriviallyNormedField 𝕜] {x : 𝕜} :
     ContinuousAt Inv.inv x ↔ x ≠ 0 := by
-  simpa [(@zero_lt_one ℤ _ _).not_le] using @continuous_at_zpow _ _ (-1) x
+  simpa [(zero_lt_one' ℤ).not_le] using @continuous_at_zpow _ _ (-1) x
 #align normed_field.continuous_at_inv NormedField.continuous_at_inv
 
 end NormedField

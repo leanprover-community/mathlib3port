@@ -285,9 +285,17 @@ theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) :
 #align subgroup.mem_smul_pointwise_iff_exists Subgroup.mem_smul_pointwise_iff_exists
 
 @[simp]
-theorem smul_bot (a : α) : a • (⊥ : Subgroup G) = ⊥ := by
-  simp [SetLike.ext_iff, mem_smul_pointwise_iff_exists, eq_comm]
+theorem smul_bot (a : α) : a • (⊥ : Subgroup G) = ⊥ :=
+  map_bot _
 #align subgroup.smul_bot Subgroup.smul_bot
+
+theorem smul_sup (a : α) (S T : Subgroup G) : a • (S ⊔ T) = a • S ⊔ a • T :=
+  map_sup _ _ _
+#align subgroup.smul_sup Subgroup.smul_sup
+
+theorem smul_closure (a : α) (s : Set G) : a • closure s = closure (a • s) :=
+  MonoidHom.map_closure _ _
+#align subgroup.smul_closure Subgroup.smul_closure
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ G] [IsCentralScalar α G] :
     IsCentralScalar α (Subgroup G) :=

@@ -381,6 +381,44 @@ theorem Monotone.map_liminf_of_continuous_at {f : R → S} (f_incr : Monotone f)
 
 end Monotone
 
+section InfiAndSupr
+
+open TopologicalSpace
+
+open Filter Set
+
+variable {ι : Type _} {R : Type _} [CompleteLinearOrder R] [TopologicalSpace R] [OrderTopology R]
+
+theorem infi_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (x_le : ∀ i, x ≤ as i) {F : Filter ι}
+    [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) : (⨅ i, as i) = x := by
+  refine' infi_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => x_le i) _
+  apply fun w x_lt_w => ‹Filter.NeBot F›.nonempty_of_mem (eventually_lt_of_tendsto_lt x_lt_w as_lim)
+#align infi_eq_of_forall_le_of_tendsto infi_eq_of_forall_le_of_tendsto
+
+theorem supr_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (le_x : ∀ i, as i ≤ x) {F : Filter ι}
+    [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) : (⨆ i, as i) = x :=
+  @infi_eq_of_forall_le_of_tendsto ι (OrderDual R) _ _ _ x as le_x F _ as_lim
+#align supr_eq_of_forall_le_of_tendsto supr_eq_of_forall_le_of_tendsto
+
+theorem Union_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
+    {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
+    (⋃ i : ι, ici (as i)) = ioi x := by
+  have obs : x ∉ range as := by 
+    intro maybe_x_is
+    rcases mem_range.mp maybe_x_is with ⟨i, hi⟩
+    simpa only [hi, lt_self_iff_false] using x_lt i
+  rw [← infi_eq_of_forall_le_of_tendsto (fun i => (x_lt i).le) as_lim] at *
+  exact Union_Ici_eq_Ioi_infi obs
+#align Union_Ici_eq_Ioi_of_lt_of_tendsto Union_Ici_eq_Ioi_of_lt_of_tendsto
+
+theorem Union_Iic_eq_Iio_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)
+    {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
+    (⋃ i : ι, iic (as i)) = iio x :=
+  @Union_Ici_eq_Ioi_of_lt_of_tendsto (OrderDual R) _ _ _ ι x as lt_x F _ as_lim
+#align Union_Iic_eq_Iio_of_lt_of_tendsto Union_Iic_eq_Iio_of_lt_of_tendsto
+
+end InfiAndSupr
+
 section Indicator
 
 open BigOperators

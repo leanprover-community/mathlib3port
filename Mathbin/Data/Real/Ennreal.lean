@@ -443,7 +443,7 @@ protected theorem zero_lt_one : 0 < (1 : ℝ≥0∞) :=
 
 @[simp]
 theorem one_lt_two : (1 : ℝ≥0∞) < 2 :=
-  coe_one ▸ coe_two ▸ by exact_mod_cast @one_lt_two ℕ _
+  coe_one ▸ coe_two ▸ by exact_mod_cast (one_lt_two : 1 < 2)
 #align ennreal.one_lt_two Ennreal.one_lt_two
 
 @[simp]

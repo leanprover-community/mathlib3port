@@ -1852,16 +1852,16 @@ theorem neg_star : -star = star := by simp [star]
 #align pgame.neg_star Pgame.neg_star
 
 @[simp]
-theorem zero_lt_one : (0 : Pgame) < 1 :=
+protected theorem zero_lt_one : (0 : Pgame) < 1 :=
   lt_of_le_of_lf (zero_le_of_is_empty_right_moves 1) (zero_lf_le.2 ⟨default, le_rfl⟩)
 #align pgame.zero_lt_one Pgame.zero_lt_one
 
 instance : ZeroLeOneClass Pgame :=
-  ⟨zero_lt_one.le⟩
+  ⟨Pgame.zero_lt_one.le⟩
 
 @[simp]
 theorem zero_lf_one : (0 : Pgame) ⧏ 1 :=
-  zero_lt_one.Lf
+  Pgame.zero_lt_one.Lf
 #align pgame.zero_lf_one Pgame.zero_lf_one
 
 end Pgame

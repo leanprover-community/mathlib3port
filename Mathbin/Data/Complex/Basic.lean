@@ -808,7 +808,7 @@ private theorem abs_add (z w : ℂ) : (abs z + w) ≤ (abs z) + abs w :=
   (mul_self_le_mul_self_iff (abs_nonneg' (z + w)) (add_nonneg (abs_nonneg' z) (abs_nonneg' w))).2 <|
     by
     rw [mul_self_abs, add_mul_self_eq, mul_self_abs, mul_self_abs, add_right_comm, norm_sq_add,
-      add_le_add_iff_left, mul_assoc, mul_le_mul_left (@zero_lt_two ℝ _ _), ←
+      add_le_add_iff_left, mul_assoc, mul_le_mul_left (zero_lt_two' ℝ), ←
       Real.sqrt_mul <| norm_sq_nonneg z, ← norm_sq_conj w, ← map_mul]
     exact re_le_abs (z * conj w)
 #align complex.abs_theory.abs_add complex.abs_theory.abs_add

@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.MeasureTheory.Measure.NullMeasurable
 import Mathbin.MeasureTheory.MeasurableSpace
+import Mathbin.Topology.Algebra.Order.LiminfLimsup
 
 /-!
 # Measure spaces
@@ -185,6 +186,20 @@ theorem measure_bUnion_finset {s : Finset ι} {f : ι → Set α} (hd : Pairwise
     (hm : ∀ b ∈ s, MeasurableSet (f b)) : μ (⋃ b ∈ s, f b) = ∑ p in s, μ (f p) :=
   measure_bUnion_finset₀ hd.AeDisjoint fun b hb => (hm b hb).NullMeasurableSet
 #align measure_theory.measure_bUnion_finset MeasureTheory.measure_bUnion_finset
+
+/-- The measure of a disjoint union (even uncountable) of measurable sets is at least the sum of
+the measures of the sets. -/
+theorem tsum_meas_le_meas_Union_of_disjoint {ι : Type _} [MeasurableSpace α] (μ : Measure α)
+    {As : ι → Set α} (As_mble : ∀ i : ι, MeasurableSet (As i))
+    (As_disj : Pairwise (Disjoint on As)) : (∑' i, μ (As i)) ≤ μ (⋃ i, As i) := by
+  rcases show Summable fun i => μ (As i) from Ennreal.summable with ⟨S, hS⟩
+  rw [hS.tsum_eq]
+  refine' tendsto_le_of_eventually_le hS tendsto_const_nhds (eventually_of_forall _)
+  intro s
+  rw [← measure_bUnion_finset (fun i hi j hj hij => As_disj hij) fun i _ => As_mble i]
+  exact measure_mono (Union₂_subset_Union (fun i : ι => i ∈ s) fun i : ι => As i)
+#align
+  measure_theory.tsum_meas_le_meas_Union_of_disjoint MeasureTheory.tsum_meas_le_meas_Union_of_disjoint
 
 /-- If `s` is a countable set, then the measure of its preimage can be found as the sum of measures
 of the fibers `f ⁻¹' {y}`. -/
@@ -3462,6 +3477,81 @@ theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : Mea
   exact (measure_mono (inter_subset_right _ _)).trans_lt (measure_spanning_sets_lt_top _ _)
 #align
   measure_theory.measure.exists_subset_measure_lt_top MeasureTheory.Measure.exists_subset_measure_lt_top
+
+/-- A set in a σ-finite space has zero measure if and only if its intersection with
+all members of the countable family of finite measure spanning sets has zero measure. -/
+theorem forall_measure_inter_spanning_sets_eq_zero [MeasurableSpace α] {μ : Measure α}
+    [SigmaFinite μ] (s : Set α) : (∀ n, μ (s ∩ spanningSets μ n) = 0) ↔ μ s = 0 := by
+  nth_rw
+    1 [show s = ⋃ n, s ∩ spanning_sets μ n by rw [← inter_Union, Union_spanning_sets, inter_univ]]
+  rw [measure_Union_null_iff]
+#align
+  measure_theory.measure.forall_measure_inter_spanning_sets_eq_zero MeasureTheory.Measure.forall_measure_inter_spanning_sets_eq_zero
+
+/-- A set in a σ-finite space has positive measure if and only if its intersection with
+some member of the countable family of finite measure spanning sets has positive measure. -/
+theorem exists_measure_inter_spanning_sets_pos [MeasurableSpace α] {μ : Measure α} [SigmaFinite μ]
+    (s : Set α) : (∃ n, 0 < μ (s ∩ spanningSets μ n)) ↔ 0 < μ s := by
+  rw [← not_iff_not]
+  simp only [not_exists, not_lt, nonpos_iff_eq_zero]
+  exact forall_measure_inter_spanning_sets_eq_zero s
+#align
+  measure_theory.measure.exists_measure_inter_spanning_sets_pos MeasureTheory.Measure.exists_measure_inter_spanning_sets_pos
+
+/-- If the union of disjoint measurable sets has finite measure, then there are only
+finitely many members of the union whose measure exceeds any given positive number. -/
+theorem finite_const_le_meas_of_disjoint_Union {ι : Type _} [MeasurableSpace α] (μ : Measure α)
+    {ε : ℝ≥0∞} (ε_pos : 0 < ε) {As : ι → Set α} (As_mble : ∀ i : ι, MeasurableSet (As i))
+    (As_disj : Pairwise (Disjoint on As)) (Union_As_finite : μ (⋃ i, As i) ≠ ∞) :
+    Set.Finite { i : ι | ε ≤ μ (As i) } := by
+  by_contra con
+  have aux :=
+    lt_of_le_of_lt (tsum_meas_le_meas_Union_of_disjoint μ As_mble As_disj)
+      (lt_top_iff_ne_top.mpr Union_As_finite)
+  exact Con (Ennreal.finite_const_le_of_tsum_ne_top aux.ne ε_pos.ne.symm)
+#align
+  measure_theory.measure.finite_const_le_meas_of_disjoint_Union MeasureTheory.Measure.finite_const_le_meas_of_disjoint_Union
+
+/-- If the union of disjoint measurable sets has finite measure, then there are only
+countably many members of the union whose measure is positive. -/
+theorem countable_meas_pos_of_disjoint_of_meas_Union_ne_top {ι : Type _} [MeasurableSpace α]
+    (μ : Measure α) {As : ι → Set α} (As_mble : ∀ i : ι, MeasurableSet (As i))
+    (As_disj : Pairwise (Disjoint on As)) (Union_As_finite : μ (⋃ i, As i) ≠ ∞) :
+    Set.Countable { i : ι | 0 < μ (As i) } := by
+  set posmeas := { i : ι | 0 < μ (As i) } with posmeas_def
+  rcases exists_seq_strict_anti_tendsto' Ennreal.zero_lt_one with ⟨as, ⟨as_decr, ⟨as_mem, as_lim⟩⟩⟩
+  set fairmeas := fun n : ℕ => { i : ι | as n ≤ μ (As i) } with fairmeas_def
+  have countable_union : posmeas = ⋃ n, fairmeas n := by
+    have fairmeas_eq : ∀ n, fairmeas n = (fun i => μ (As i)) ⁻¹' Ici (as n) := fun n => by
+      simpa only [fairmeas_def]
+    simpa only [fairmeas_eq, posmeas_def, ← preimage_Union,
+      Union_Ici_eq_Ioi_of_lt_of_tendsto (0 : ℝ≥0∞) (fun n => (as_mem n).1) as_lim]
+  rw [countable_union]
+  refine' countable_Union fun n => finite.countable _
+  refine' finite_const_le_meas_of_disjoint_Union μ (as_mem n).1 As_mble As_disj Union_As_finite
+#align
+  measure_theory.measure.countable_meas_pos_of_disjoint_of_meas_Union_ne_top MeasureTheory.Measure.countable_meas_pos_of_disjoint_of_meas_Union_ne_top
+
+/-- In a σ-finite space, among disjoint measurable sets, only countably many can have positive
+measure. -/
+theorem countable_meas_pos_of_disjoint_Union {ι : Type _} [MeasurableSpace α] {μ : Measure α}
+    [SigmaFinite μ] {As : ι → Set α} (As_mble : ∀ i : ι, MeasurableSet (As i))
+    (As_disj : Pairwise (Disjoint on As)) : Set.Countable { i : ι | 0 < μ (As i) } := by
+  have obs : { i : ι | 0 < μ (As i) } ⊆ ⋃ n, { i : ι | 0 < μ (As i ∩ spanning_sets μ n) } := by
+    intro i i_in_nonzeroes
+    by_contra con
+    simp only [mem_Union, mem_set_of_eq, not_exists, not_lt, nonpos_iff_eq_zero] at *
+    simpa [(forall_measure_inter_spanning_sets_eq_zero _).mp Con] using i_in_nonzeroes
+  apply countable.mono obs
+  refine' countable_Union fun n => countable_meas_pos_of_disjoint_of_meas_Union_ne_top μ _ _ _
+  · exact fun i => MeasurableSet.inter (As_mble i) (measurable_spanning_sets μ n)
+  ·
+    exact fun i j i_ne_j b hbi hbj =>
+      As_disj i_ne_j (hbi.trans (inter_subset_left _ _)) (hbj.trans (inter_subset_left _ _))
+  · refine' (lt_of_le_of_lt (measure_mono _) (measure_spanning_sets_lt_top μ n)).Ne
+    exact Union_subset fun i => inter_subset_right _ _
+#align
+  measure_theory.measure.countable_meas_pos_of_disjoint_Union MeasureTheory.Measure.countable_meas_pos_of_disjoint_Union
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)

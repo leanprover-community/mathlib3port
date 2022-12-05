@@ -299,10 +299,9 @@ theorem coe_lt_iff (n : ℕ) (x : PartEnat) : (n : PartEnat) < x ↔ ∀ h : x.D
   rfl
 #align part_enat.coe_lt_iff PartEnat.coe_lt_iff
 
-protected theorem zero_lt_one : (0 : PartEnat) < 1 := by
-  norm_cast
-  norm_num
-#align part_enat.zero_lt_one PartEnat.zero_lt_one
+instance NeZero.one : NeZero (1 : PartEnat) :=
+  ⟨coe_inj.Not.mpr (by decide)⟩
+#align part_enat.ne_zero.one PartEnat.NeZero.one
 
 instance semilatticeSup : SemilatticeSup PartEnat :=
   { PartEnat.partialOrder with sup := (· ⊔ ·),

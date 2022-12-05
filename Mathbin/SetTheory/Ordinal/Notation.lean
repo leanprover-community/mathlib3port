@@ -161,7 +161,8 @@ theorem eq_of_cmp_eq : ∀ {o₁ o₂}, cmp o₁ o₂ = Ordering.eq → o₁ = o
     simp
 #align onote.eq_of_cmp_eq Onote.eq_of_cmp_eq
 
-theorem zero_lt_one : (0 : Onote) < 1 := by rw [lt_def, repr, repr_one] <;> exact zero_lt_one
+protected theorem zero_lt_one : (0 : Onote) < 1 := by
+  rw [lt_def, repr, repr_one] <;> exact zero_lt_one
 #align onote.zero_lt_one Onote.zero_lt_one
 
 /-- `NF_below o b` says that `o` is a normal form ordinal notation
@@ -266,7 +267,7 @@ theorem NF.below_of_lt' : ∀ {o b}, repr o < ω ^ b → NF o → NFBelow o b
 
 theorem NF_below_of_nat : ∀ n, NFBelow (ofNat n) 1
   | 0 => NFBelow.zero
-  | Nat.succ n => NFBelow.oadd NF.zero NFBelow.zero Ordinal.zero_lt_one
+  | Nat.succ n => NFBelow.oadd NF.zero NFBelow.zero zero_lt_one
 #align onote.NF_below_of_nat Onote.NF_below_of_nat
 
 instance NF_of_nat (n) : NF (ofNat n) :=
@@ -967,7 +968,7 @@ local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 private theorem exists_lt_omega_opow' {α} {o b : Ordinal} (hb : 1 < b) (ho : o.IsLimit)
     {f : α → Ordinal} (H : ∀ ⦃a⦄, a < o → ∃ i, a < f i) ⦃a⦄ (h : a < (b^o)) : ∃ i, a < (b^f i) := by
-  obtain ⟨d, hd, h'⟩ := (lt_opow_of_limit (ordinal.zero_lt_one.trans hb).ne' ho).1 h
+  obtain ⟨d, hd, h'⟩ := (lt_opow_of_limit (zero_lt_one.trans hb).ne' ho).1 h
   exact (H hd).imp fun i hi => h'.trans <| (opow_lt_opow_iff_right hb).2 hi
 #align onote.exists_lt_omega_opow' onote.exists_lt_omega_opow'
 

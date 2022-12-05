@@ -73,7 +73,7 @@ theorem is_internal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsi
   by 
   obtain ⟨I, hI, hM'⟩ := is_torsion_by_ideal_of_finite_of_is_torsion hM
   refine' is_internal_prime_power_torsion_of_is_torsion_by_ideal _ hM'
-  rw [Set.ne_empty_iff_nonempty] at hI; rw [Submodule.ne_bot_iff]
+  rw [← Set.nonempty_iff_ne_empty] at hI; rw [Submodule.ne_bot_iff]
   obtain ⟨x, H, hx⟩ := hI; exact ⟨x, H, nonZeroDivisors.ne_zero hx⟩
 #align submodule.is_internal_prime_power_torsion Submodule.is_internal_prime_power_torsion
 

@@ -632,11 +632,6 @@ instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
       (induction_on₂ a b) fun α β => by
         simpa only [mul_def, mk_eq_zero_iff, isEmpty_prod] using id }
 
-@[simp]
-theorem zero_lt_one : (0 : Cardinal) < 1 :=
-  lt_of_le_of_ne (zero_le _) zero_ne_one
-#align cardinal.zero_lt_one Cardinal.zero_lt_one
-
 theorem zero_power_le (c : Cardinal.{u}) : ((0 : Cardinal.{u})^c) ≤ 1 := by
   by_cases h : c = 0
   rw [h, power_zero]

@@ -243,6 +243,19 @@ theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) :
   (Set.mem_smul_set : m ∈ a • (S : Set M) ↔ _)
 #align submonoid.mem_smul_pointwise_iff_exists Submonoid.mem_smul_pointwise_iff_exists
 
+@[simp]
+theorem smul_bot (a : α) : a • (⊥ : Submonoid M) = ⊥ :=
+  map_bot _
+#align submonoid.smul_bot Submonoid.smul_bot
+
+theorem smul_sup (a : α) (S T : Submonoid M) : a • (S ⊔ T) = a • S ⊔ a • T :=
+  map_sup _ _ _
+#align submonoid.smul_sup Submonoid.smul_sup
+
+theorem smul_closure (a : α) (s : Set M) : a • closure s = closure (a • s) :=
+  MonoidHom.map_mclosure _ _
+#align submonoid.smul_closure Submonoid.smul_closure
+
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
   ⟨fun a S => (congr_arg fun f : Monoid.EndCat M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
@@ -367,6 +380,25 @@ theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S 
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set A))
 #align add_submonoid.smul_mem_pointwise_smul AddSubmonoid.smul_mem_pointwise_smul
 
+theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubmonoid A) :
+    m ∈ a • S ↔ ∃ s : A, s ∈ S ∧ a • s = m :=
+  (Set.mem_smul_set : m ∈ a • (S : Set A) ↔ _)
+#align add_submonoid.mem_smul_pointwise_iff_exists AddSubmonoid.mem_smul_pointwise_iff_exists
+
+@[simp]
+theorem smul_bot (a : α) : a • (⊥ : AddSubmonoid A) = ⊥ :=
+  map_bot _
+#align add_submonoid.smul_bot AddSubmonoid.smul_bot
+
+theorem smul_sup (a : α) (S T : AddSubmonoid A) : a • (S ⊔ T) = a • S ⊔ a • T :=
+  map_sup _ _ _
+#align add_submonoid.smul_sup AddSubmonoid.smul_sup
+
+@[simp]
+theorem smul_closure (a : α) (s : Set A) : a • closure s = closure (a • s) :=
+  AddMonoidHom.map_mclosure _ _
+#align add_submonoid.smul_closure AddSubmonoid.smul_closure
+
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
   ⟨fun a S =>
@@ -391,11 +423,6 @@ theorem mem_pointwise_smul_iff_inv_smul_mem {a : α} {S : AddSubmonoid A} {x : A
   mem_smul_set_iff_inv_smul_mem
 #align
   add_submonoid.mem_pointwise_smul_iff_inv_smul_mem AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem
-
-theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubmonoid A) :
-    m ∈ a • S ↔ ∃ s : A, s ∈ S ∧ a • s = m :=
-  (Set.mem_smul_set : m ∈ a • (S : Set A) ↔ _)
-#align add_submonoid.mem_smul_pointwise_iff_exists AddSubmonoid.mem_smul_pointwise_iff_exists
 
 theorem mem_inv_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : x ∈ a⁻¹ • S ↔ a • x ∈ S :=
   mem_inv_smul_set_iff

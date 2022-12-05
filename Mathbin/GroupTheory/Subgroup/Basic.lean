@@ -2803,6 +2803,14 @@ namespace Subgroup
 variable {N : Type _} [Group N] (H : Subgroup G)
 
 @[to_additive]
+theorem Normal.map {H : Subgroup G} (h : H.Normal) (f : G →* N) (hf : Function.Surjective f) :
+    (H.map f).Normal := by
+  rw [← normalizer_eq_top, ← top_le_iff, ← f.range_top_of_surjective hf, f.range_eq_map, ←
+    normalizer_eq_top.2 h]
+  exact le_normalizer_map _
+#align subgroup.normal.map Subgroup.Normal.map
+
+@[to_additive]
 theorem map_eq_bot_iff {f : G →* N} : H.map f = ⊥ ↔ H ≤ f.ker :=
   (gc_map_comap f).l_eq_bot
 #align subgroup.map_eq_bot_iff Subgroup.map_eq_bot_iff

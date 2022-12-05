@@ -492,8 +492,19 @@ theorem Nonempty.forall_const {s : Finset α} (h : s.Nonempty) {p : Prop} : (∀
   ⟨fun h => h x hx, fun h x hx => h⟩
 #align finset.nonempty.forall_const Finset.Nonempty.forall_const
 
+theorem Nonempty.to_subtype {s : Finset α} : s.Nonempty → Nonempty s :=
+  nonempty_coe_sort.2
+#align finset.nonempty.to_subtype Finset.Nonempty.to_subtype
+
+theorem Nonempty.to_type {s : Finset α} : s.Nonempty → Nonempty α := fun ⟨x, hx⟩ => ⟨x⟩
+#align finset.nonempty.to_type Finset.Nonempty.to_type
+
 /-! ### empty -/
 
+
+section Empty
+
+variable {s : Finset α}
 
 /-- The empty finset -/
 protected def empty : Finset α :=
@@ -610,8 +621,21 @@ theorem bot_eq_empty : (⊥ : Finset α) = ∅ :=
   rfl
 #align finset.bot_eq_empty Finset.bot_eq_empty
 
+@[simp]
+theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
+  (@bot_lt_iff_ne_bot (Finset α) _ _ _).trans nonempty_iff_ne_empty.symm
+#align finset.empty_ssubset Finset.empty_ssubset
+
+alias empty_ssubset ↔ _ nonempty.empty_ssubset
+
+end Empty
+
 /-! ### singleton -/
 
+
+section Singleton
+
+variable {a : α}
 
 /-- `{a} : finset a` is the set `{a}` containing `a` and nothing else.
 
@@ -659,6 +683,10 @@ theorem singleton_nonempty (a : α) : ({a} : Finset α).Nonempty :=
 theorem singleton_ne_empty (a : α) : ({a} : Finset α) ≠ ∅ :=
   (singleton_nonempty a).ne_empty
 #align finset.singleton_ne_empty Finset.singleton_ne_empty
+
+theorem empty_ssubset_singleton : (∅ : Finset α) ⊂ {a} :=
+  (singleton_nonempty _).empty_ssubset
+#align finset.empty_ssubset_singleton Finset.empty_ssubset_singleton
 
 @[simp, norm_cast]
 theorem coe_singleton (a : α) : (({a} : Finset α) : Set α) = {a} := by
@@ -740,6 +768,8 @@ instance [IsEmpty α] : Unique (Finset
         α) where 
   default := ∅
   uniq s := eq_empty_of_forall_not_mem isEmptyElim
+
+end Singleton
 
 /-! ### cons -/
 

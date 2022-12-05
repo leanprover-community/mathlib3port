@@ -48,8 +48,7 @@ theorem Inf_eq_zero {s : Set ℕ} : inf s = 0 ↔ 0 ∈ s ∨ s = ∅ := by
   · subst h
     simp only [or_true_iff, eq_self_iff_true, iff_true_iff, Inf, HasInf.inf, mem_empty_iff_false,
       exists_false, dif_neg, not_false_iff]
-  · have := ne_empty_iff_nonempty.mpr h
-    simp only [this, or_false_iff, Nat.Inf_def, h, Nat.find_eq_zero]
+  · simp only [h.ne_empty, or_false_iff, Nat.Inf_def, h, Nat.find_eq_zero]
 #align nat.Inf_eq_zero Nat.Inf_eq_zero
 
 @[simp]

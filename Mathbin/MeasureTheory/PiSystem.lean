@@ -442,7 +442,7 @@ theorem is_pi_system_pi_Union_Inter (π : ι → Set (Set α)) (hpi : ∀ x, IsP
   refine' ⟨fun n hn => _, h_inter_eq⟩
   simp_rw [g]
   split_ifs with hn1 hn2
-  · refine' hpi n (f1 n) (hf1m n hn1) (f2 n) (hf2m n hn2) (set.ne_empty_iff_nonempty.mp fun h => _)
+  · refine' hpi n (f1 n) (hf1m n hn1) (f2 n) (hf2m n hn2) (Set.nonempty_iff_ne_empty.2 fun h => _)
     rw [h_inter_eq] at h_nonempty
     suffices h_empty : (⋂ i ∈ p1 ∪ p2, g i) = ∅
     exact (set.not_nonempty_iff_eq_empty.mpr h_empty) h_nonempty

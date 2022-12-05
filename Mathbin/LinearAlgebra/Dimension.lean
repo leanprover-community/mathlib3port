@@ -277,8 +277,8 @@ theorem dim_punit : Module.rank R PUnit = 0 := by
   apply cardinal.mk_emptyc_iff.mpr
   simp only [Subtype.coe_mk]
   by_contra h
-  have ne : s.nonempty := ne_empty_iff_nonempty.mp h
-  simpa using LinearIndependent.ne_zero (⟨_, ne.some_mem⟩ : s) li
+  obtain ⟨a, ha⟩ := nonempty_iff_ne_empty.2 h
+  simpa using LinearIndependent.ne_zero (⟨a, ha⟩ : s) li
 #align dim_punit dim_punit
 
 @[simp]
@@ -473,7 +473,7 @@ theorem dim_zero_iff_forall_zero : Module.rank R M = 0 ↔ ∀ x : M, x = 0 := b
     obtain ⟨x, hx⟩ := h
     suffices 1 ≤ Module.rank R M by 
       intro h
-      exact lt_irrefl _ (lt_of_lt_of_le Cardinal.zero_lt_one (h ▸ this))
+      exact this.not_lt (h.symm ▸ zero_lt_one)
     suffices LinearIndependent R fun y : ({x} : Set M) => ↑y by
       simpa using cardinal_le_dim_of_linear_independent this
     exact linear_independent_singleton hx

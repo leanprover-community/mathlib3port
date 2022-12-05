@@ -422,7 +422,7 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
     simp_rw [Algebra.algebra_map_eq_smul_one, smul_assoc, one_smul]
   rw [← e, this] at hx₁
   replace hx₁ := congr_arg (Submodule.span R) hx₁
-  rw [Submodule.span_smul_eq] at hx₁
+  rw [Submodule.span_smul] at hx₁
   replace hx : _ ∈ y' • Submodule.span R (s : Set S') := Set.smul_mem_smul_set hx
   rw [hx₁] at hx
   erw [← g.map_smul, ← Submodule.map_span (g : S →ₗ[R] S')] at hx

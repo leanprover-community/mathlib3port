@@ -229,7 +229,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
     refine' ⟨max N (k - 1), fun n hn_ge => lt_of_le_of_lt _ hk_lt_ε⟩
     specialize hNx n ((le_max_left _ _).trans hn_ge)
     have h_inv_n_le_k : (2 : ℝ)⁻¹ ^ n ≤ 2 * 2⁻¹ ^ k := by
-      rw [mul_comm, ← inv_mul_le_iff' (@two_pos ℝ _ _)]
+      rw [mul_comm, ← inv_mul_le_iff' (zero_lt_two' ℝ)]
       conv_lhs => 
         congr
         rw [← pow_one (2 : ℝ)⁻¹]

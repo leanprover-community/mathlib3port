@@ -189,7 +189,7 @@ theorem measure_empty : μ ∅ = 0 :=
 #align measure_theory.measure_empty MeasureTheory.measure_empty
 
 theorem nonempty_of_measure_ne_zero (h : μ s ≠ 0) : s.Nonempty :=
-  ne_empty_iff_nonempty.1 fun h' => h <| h'.symm ▸ measure_empty
+  nonempty_iff_ne_empty.2 fun h' => h <| h'.symm ▸ measure_empty
 #align measure_theory.nonempty_of_measure_ne_zero MeasureTheory.nonempty_of_measure_ne_zero
 
 theorem measure_mono (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ :=

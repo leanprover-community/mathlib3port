@@ -103,7 +103,7 @@ theorem convex_hull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ := by
 
 @[simp]
 theorem convex_hull_nonempty_iff : (convexHull 𝕜 s).Nonempty ↔ s.Nonempty := by
-  rw [← ne_empty_iff_nonempty, ← ne_empty_iff_nonempty, Ne.def, Ne.def]
+  rw [nonempty_iff_ne_empty, nonempty_iff_ne_empty, Ne.def, Ne.def]
   exact not_congr convex_hull_empty_iff
 #align convex_hull_nonempty_iff convex_hull_nonempty_iff
 

@@ -243,11 +243,6 @@ theorem ideal_span_singleton_smul (r : R) (N : Submodule R M) :
   simpa
 #align submodule.ideal_span_singleton_smul Submodule.ideal_span_singleton_smul
 
-theorem span_smul_eq (r : R) (s : Set M) : span R (r • s) = r • span R s := by
-  rw [← ideal_span_singleton_smul, span_smul_span, ← Set.image2_eq_Union, Set.image2_singleton_left,
-    Set.image_smul]
-#align submodule.span_smul_eq Submodule.span_smul_eq
-
 theorem mem_of_span_top_of_smul_mem (M' : Submodule R M) (s : Set R) (hs : Ideal.span s = ⊤) (x : M)
     (H : ∀ r : s, (r : R) • x ∈ M') : x ∈ M' := by
   suffices (⊤ : Ideal R) • span R ({x} : Set M) ≤ M' by

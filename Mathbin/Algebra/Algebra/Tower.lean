@@ -335,7 +335,7 @@ theorem smul_mem_span_smul' {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S
     fun c x hx => smul_comm c k x ▸ smul_mem _ _ hx
 #align submodule.smul_mem_span_smul' Submodule.smul_mem_span_smul'
 
-theorem span_smul {s : Set S} (hs : span R s = ⊤) (t : Set A) :
+theorem span_smul_of_span_eq_top {s : Set S} (hs : span R s = ⊤) (t : Set A) :
     span R (s • t) = (span S t).restrictScalars R :=
   (le_antisymm
       (span_le.2 fun x hx =>
@@ -344,7 +344,7 @@ theorem span_smul {s : Set S} (hs : span R s = ⊤) (t : Set A) :
     fun p hp =>
     span_induction hp (fun x hx => one_smul S x ▸ smul_mem_span_smul hs (subset_span hx))
       (zero_mem _) (fun _ _ => add_mem) fun k x hx => smul_mem_span_smul' hs hx
-#align submodule.span_smul Submodule.span_smul
+#align submodule.span_smul_of_span_eq_top Submodule.span_smul_of_span_eq_top
 
 end Module
 

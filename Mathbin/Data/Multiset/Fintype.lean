@@ -51,7 +51,7 @@ instance : CoeSort (Multiset α) (Type _) :=
   ⟨Multiset.ToType⟩
 
 @[simp]
-theorem Multiset.coe_sort_eq : m.ToType = m :=
+theorem Multiset.coe_sort_eq : m.to_type = m :=
   rfl
 #align multiset.coe_sort_eq Multiset.coe_sort_eq
 

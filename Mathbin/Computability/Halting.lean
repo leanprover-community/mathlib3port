@@ -326,7 +326,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                              []
                              ":="
                              (Term.app
-                              (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1"))
+                              (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2"))
                               [`C0])))
                            []
                            («term_<|_»
@@ -486,7 +486,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                             []
                             ":="
                             (Term.app
-                             (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1"))
+                             (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2"))
                              [`C0])))
                           []
                           («term_<|_»
@@ -634,7 +634,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                         []
                         []
                         ":="
-                        (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                        (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
                       []
                       («term_<|_»
                        (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -777,7 +777,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                        []
                        []
                        ":="
-                       (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                       (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
                      []
                      («term_<|_»
                       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -914,7 +914,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                       []
                       []
                       ":="
-                      (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                      (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
                     []
                     («term_<|_»
                      (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1013,7 +1013,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                      []
                      []
                      ":="
-                     (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                     (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
                    []
                    («term_<|_»
                     (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1342,7 +1342,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                    []
                    []
                    ":="
-                   (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                   (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
                  []
                  («term_<|_»
                   (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1387,7 +1387,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                  []
                  []
                  ":="
-                 (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                 (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
                []
                («term_<|_»
                 (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1432,7 +1432,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                []
                []
                ":="
-               (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+               (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
              []
              («term_<|_»
               (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1469,7 +1469,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
              []
              []
              ":="
-             (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+             (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
            []
            («term_<|_»
             (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1506,7 +1506,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
            []
            []
            ":="
-           (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+           (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
          []
          («term_<|_»
           (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1533,7 +1533,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
          []
          []
          ":="
-         (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+         (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])))
        []
        («term_<|_»
         (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -1787,7 +1787,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])
+      (Term.app (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2")) [`C0])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1795,9 +1795,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1"))
+      (Term.proj `Set.nonempty_iff_ne_empty "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `Set.ne_empty_iff_nonempty
+      `Set.nonempty_iff_ne_empty
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1022, term)
@@ -2081,7 +2081,7 @@ theorem
                               cg
                                 =>
                                 let
-                                  ⟨ cf , fC ⟩ := Set.ne_empty_iff_nonempty . 1 C0
+                                  ⟨ cf , fC ⟩ := Set.nonempty_iff_ne_empty . 2 C0
                                   hC _ . 2
                                     <|
                                     rice

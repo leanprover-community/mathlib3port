@@ -279,19 +279,17 @@ theorem lt_inv (ha : 0 < a) (hb : 0 < b) : a < b⁻¹ ↔ b < a⁻¹ :=
 #align lt_inv lt_inv
 
 theorem inv_lt_one (ha : 1 < a) : a⁻¹ < 1 := by
-  rwa [inv_lt ((@zero_lt_one α _ _).trans ha) zero_lt_one, inv_one]
+  rwa [inv_lt (zero_lt_one.trans ha) zero_lt_one, inv_one]
 #align inv_lt_one inv_lt_one
 
-theorem one_lt_inv (h₁ : 0 < a) (h₂ : a < 1) : 1 < a⁻¹ := by
-  rwa [lt_inv (@zero_lt_one α _ _) h₁, inv_one]
+theorem one_lt_inv (h₁ : 0 < a) (h₂ : a < 1) : 1 < a⁻¹ := by rwa [lt_inv zero_lt_one h₁, inv_one]
 #align one_lt_inv one_lt_inv
 
 theorem inv_le_one (ha : 1 ≤ a) : a⁻¹ ≤ 1 := by
-  rwa [inv_le ((@zero_lt_one α _ _).trans_le ha) zero_lt_one, inv_one]
+  rwa [inv_le (zero_lt_one.trans_le ha) zero_lt_one, inv_one]
 #align inv_le_one inv_le_one
 
-theorem one_le_inv (h₁ : 0 < a) (h₂ : a ≤ 1) : 1 ≤ a⁻¹ := by
-  rwa [le_inv (@zero_lt_one α _ _) h₁, inv_one]
+theorem one_le_inv (h₁ : 0 < a) (h₂ : a ≤ 1) : 1 ≤ a⁻¹ := by rwa [le_inv zero_lt_one h₁, inv_one]
 #align one_le_inv one_le_inv
 
 theorem inv_lt_one_iff_of_pos (h₀ : 0 < a) : a⁻¹ < 1 ↔ 1 < a :=
@@ -461,11 +459,11 @@ theorem one_div_lt_one_div (ha : 0 < a) (hb : 0 < b) : 1 / a < 1 / b ↔ b < a :
 #align one_div_lt_one_div one_div_lt_one_div
 
 theorem one_lt_one_div (h1 : 0 < a) (h2 : a < 1) : 1 < 1 / a := by
-  rwa [lt_one_div (@zero_lt_one α _ _) h1, one_div_one]
+  rwa [lt_one_div zero_lt_one h1, one_div_one]
 #align one_lt_one_div one_lt_one_div
 
 theorem one_le_one_div (h1 : 0 < a) (h2 : a ≤ 1) : 1 ≤ 1 / a := by
-  rwa [le_one_div (@zero_lt_one α _ _) h1, one_div_one]
+  rwa [le_one_div zero_lt_one h1, one_div_one]
 #align one_le_one_div one_le_one_div
 
 /-!
@@ -495,7 +493,7 @@ theorem one_half_pos : (0 : α) < 1 / 2 :=
 #align one_half_pos one_half_pos
 
 theorem div_two_lt_of_pos (h : 0 < a) : a / 2 < a := by
-  rw [div_lt_iff (@zero_lt_two α _ _)]
+  rw [div_lt_iff (zero_lt_two' α)]
   exact lt_mul_of_one_lt_right h one_lt_two
 #align div_two_lt_of_pos div_two_lt_of_pos
 
@@ -883,7 +881,7 @@ theorem div_two_sub_self (a : α) : a / 2 - a = -(a / 2) := by
 
 theorem add_sub_div_two_lt (h : a < b) : a + (b - a) / 2 < b := by
   rwa [← div_sub_div_same, sub_eq_add_neg, add_comm (b / 2), ← add_assoc, ← sub_eq_add_neg, ←
-    lt_sub_iff_add_lt, sub_self_div_two, sub_self_div_two, div_lt_div_right (@zero_lt_two α _ _)]
+    lt_sub_iff_add_lt, sub_self_div_two, sub_self_div_two, div_lt_div_right (zero_lt_two' α)]
 #align add_sub_div_two_lt add_sub_div_two_lt
 
 /-- An inequality involving `2`. -/

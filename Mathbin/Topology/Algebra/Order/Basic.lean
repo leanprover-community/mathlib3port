@@ -1323,7 +1323,7 @@ theorem countable_of_isolated_right [SecondCountableTopology α] :
     intro x z xs hz
     have A : Ioo x (y x) = ∅ := h'y _ xs
     contrapose! A
-    exact ne_empty_iff_nonempty.2 ⟨z, A, hz⟩
+    exact nonempty.ne_empty ⟨z, A, hz⟩
   suffices H : ∀ a : Set α, IsOpen a → Set.Countable { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a }
   · have : s ⊆ ⋃ a ∈ countable_basis α, { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a } := by
       intro x hx

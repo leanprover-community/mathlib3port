@@ -99,7 +99,7 @@ theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α)
   refine'
     subsingleton_of_subsingleton.intersecting.trans
       ⟨not_imp_comm.2 fun h => subsingleton_of_subsingleton.eq_singleton_of_mem _, _⟩
-  · obtain ⟨a, ha⟩ := ne_empty_iff_nonempty.1 h
+  · obtain ⟨a, ha⟩ := nonempty_iff_ne_empty.2 h
     rwa [Subsingleton.elim ⊥ a]
   · rintro rfl
     exact (Set.singleton_nonempty _).ne_empty.symm
@@ -193,7 +193,7 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
           exact intersecting_singleton.2 top_ne_bot)
     rw [compl_bot] at ha
     rw [coe_eq_empty.1 ((hs.is_upper_set' h).not_top_mem.1 ha.2)] at this
-    exact singleton_ne_empty _ (this <| empty_subset _).symm
+    exact Finset.singleton_ne_empty _ (this <| empty_subset _).symm
 #align set.intersecting.is_max_iff_card_eq Set.Intersecting.is_max_iff_card_eq
 
 theorem Intersecting.exists_card_eq (hs : (s : Set α).Intersecting) :

@@ -192,7 +192,7 @@ theorem arg_one : arg 1 = 0 := by simp [arg, zero_le_one]
 #align complex.arg_one Complex.arg_one
 
 @[simp]
-theorem arg_neg_one : arg (-1) = π := by simp [arg, le_refl, not_le.2 (@zero_lt_one ℝ _ _)]
+theorem arg_neg_one : arg (-1) = π := by simp [arg, le_refl, not_le.2 (zero_lt_one' ℝ)]
 #align complex.arg_neg_one Complex.arg_neg_one
 
 @[simp]

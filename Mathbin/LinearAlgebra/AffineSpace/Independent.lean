@@ -434,14 +434,11 @@ theorem AffineIndependent.exists_mem_inter_of_exists_mem_inter_affine_span [Nont
 by disjoint subsets of the index type are disjoint, if the underlying
 ring is nontrivial. -/
 theorem AffineIndependent.affine_span_disjoint_of_disjoint [Nontrivial k] {p : ι → P}
-    (ha : AffineIndependent k p) {s1 s2 : Set ι} (hd : s1 ∩ s2 = ∅) :
-    (affineSpan k (p '' s1) : Set P) ∩ affineSpan k (p '' s2) = ∅ := by
-  by_contra hne
-  change (affineSpan k (p '' s1) : Set P) ∩ affineSpan k (p '' s2) ≠ ∅ at hne
-  rw [Set.ne_empty_iff_nonempty] at hne
-  rcases hne with ⟨p0, hp0s1, hp0s2⟩
+    (ha : AffineIndependent k p) {s1 s2 : Set ι} (hd : Disjoint s1 s2) :
+    Disjoint (affineSpan k (p '' s1) : Set P) (affineSpan k (p '' s2)) := by
+  refine' Set.disjoint_left.2 fun p0 hp0s1 hp0s2 => _
   cases' ha.exists_mem_inter_of_exists_mem_inter_affine_span hp0s1 hp0s2 with i hi
-  exact Set.not_mem_empty i (hd ▸ hi)
+  exact Set.disjoint_iff.1 hd hi
 #align
   affine_independent.affine_span_disjoint_of_disjoint AffineIndependent.affine_span_disjoint_of_disjoint
 

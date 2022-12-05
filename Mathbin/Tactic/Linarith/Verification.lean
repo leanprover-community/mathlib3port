@@ -109,8 +109,8 @@ unsafe def ineq_prf_tp (prf : expr) : tactic expr :=
 where the numerals are natively of type `tp`.
 -/
 unsafe def mk_neg_one_lt_zero_pf (tp : expr) : tactic expr := do
-  let zero_lt_one ← mk_mapp `zero_lt_one [tp, none, none]
-  mk_app `neg_neg_of_pos [zero_lt_one]
+  let h ← mk_mapp `linarith.zero_lt_one [tp, none, none]
+  mk_app `neg_neg_of_pos [h]
 #align linarith.mk_neg_one_lt_zero_pf linarith.mk_neg_one_lt_zero_pf
 
 /-- If `e` is a proof that `t = 0`, `mk_neg_eq_zero_pf e` returns a proof that `-t = 0`.

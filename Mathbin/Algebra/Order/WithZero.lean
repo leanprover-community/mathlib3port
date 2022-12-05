@@ -109,10 +109,6 @@ end LinearOrderedCommMonoid
 
 variable [LinearOrderedCommGroupWithZero α]
 
-theorem zero_lt_one₀ : (0 : α) < 1 :=
-  lt_of_le_of_ne zero_le_one zero_ne_one
-#align zero_lt_one₀ zero_lt_one₀
-
 -- TODO: Do we really need the following two?
 /-- Alias of `mul_le_one'` for unification. -/
 theorem mul_le_one₀ (ha : a ≤ 1) (hb : b ≤ 1) : a * b ≤ 1 :=

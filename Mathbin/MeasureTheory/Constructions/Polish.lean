@@ -515,7 +515,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
     choose s hs hxs using C1
     have C2 : ∀ n, (s n).1.Nonempty := by 
       intro n
-      rw [← ne_empty_iff_nonempty]
+      rw [nonempty_iff_ne_empty]
       intro hn
       have := (s n).2
       rw [hn] at this

@@ -874,7 +874,7 @@ theorem is_lub_empty [Preorder γ] [OrderBot γ] : IsLub ∅ (⊥ : γ) :=
 
 theorem IsLub.nonempty [NoMinOrder α] (hs : IsLub s a) : s.Nonempty :=
   let ⟨a', ha'⟩ := exists_lt a
-  ne_empty_iff_nonempty.1 fun h =>
+  nonempty_iff_ne_empty.2 fun h =>
     not_le_of_lt ha' <| hs.right <| by simp only [h, upper_bounds_empty]
 #align is_lub.nonempty IsLub.nonempty
 

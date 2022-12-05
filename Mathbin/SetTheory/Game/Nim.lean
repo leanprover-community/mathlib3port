@@ -166,24 +166,22 @@ noncomputable instance uniqueNimOneRightMoves : Unique (nim 1).RightMoves :=
 
 @[simp]
 theorem default_nim_one_left_moves_eq :
-    (default : (nim 1).LeftMoves) = @toLeftMovesNim 1 ⟨0, Ordinal.zero_lt_one⟩ :=
+    (default : (nim 1).LeftMoves) = @toLeftMovesNim 1 ⟨0, zero_lt_one⟩ :=
   rfl
 #align pgame.default_nim_one_left_moves_eq Pgame.default_nim_one_left_moves_eq
 
 @[simp]
 theorem default_nim_one_right_moves_eq :
-    (default : (nim 1).RightMoves) = @toRightMovesNim 1 ⟨0, Ordinal.zero_lt_one⟩ :=
+    (default : (nim 1).RightMoves) = @toRightMovesNim 1 ⟨0, zero_lt_one⟩ :=
   rfl
 #align pgame.default_nim_one_right_moves_eq Pgame.default_nim_one_right_moves_eq
 
 @[simp]
-theorem to_left_moves_nim_one_symm (i) : (@toLeftMovesNim 1).symm i = ⟨0, Ordinal.zero_lt_one⟩ := by
-  simp
+theorem to_left_moves_nim_one_symm (i) : (@toLeftMovesNim 1).symm i = ⟨0, zero_lt_one⟩ := by simp
 #align pgame.to_left_moves_nim_one_symm Pgame.to_left_moves_nim_one_symm
 
 @[simp]
-theorem to_right_moves_nim_one_symm (i) : (@toRightMovesNim 1).symm i = ⟨0, Ordinal.zero_lt_one⟩ :=
-  by simp
+theorem to_right_moves_nim_one_symm (i) : (@toRightMovesNim 1).symm i = ⟨0, zero_lt_one⟩ := by simp
 #align pgame.to_right_moves_nim_one_symm Pgame.to_right_moves_nim_one_symm
 
 theorem nim_one_move_left (x) : (nim 1).moveLeft x = nim 0 := by simp

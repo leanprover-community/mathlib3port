@@ -817,7 +817,7 @@ instance : Nontrivial (AffineSubspace k P) :=
   ⟨⟨⊥, ⊤, bot_ne_top k V P⟩⟩
 
 theorem nonempty_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : s.Nonempty := by
-  rw [← Set.ne_empty_iff_nonempty]
+  rw [Set.nonempty_iff_ne_empty]
   rintro rfl
   rw [AffineSubspace.span_empty] at h
   exact bot_ne_top k V P h
@@ -885,7 +885,7 @@ theorem coe_eq_univ_iff (Q : AffineSubspace k P) : (Q : Set P) = univ ↔ Q = �
 #align affine_subspace.coe_eq_univ_iff AffineSubspace.coe_eq_univ_iff
 
 theorem nonempty_iff_ne_bot (Q : AffineSubspace k P) : (Q : Set P).Nonempty ↔ Q ≠ ⊥ := by
-  rw [← ne_empty_iff_nonempty]
+  rw [nonempty_iff_ne_empty]
   exact not_congr Q.coe_eq_bot_iff
 #align affine_subspace.nonempty_iff_ne_bot AffineSubspace.nonempty_iff_ne_bot
 

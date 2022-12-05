@@ -54,7 +54,7 @@ noncomputable instance [IsIntegral X] : Field X.functionField := by
   replace ha := ne_of_apply_ne _ ha
   have hs : genericPoint X.carrier ∈ RingedSpace.basic_open _ s := by
     rw [← opens.mem_coe, (generic_point_spec X.carrier).mem_open_set_iff, Set.top_eq_univ,
-      Set.univ_inter, ← Set.ne_empty_iff_nonempty, Ne.def, ← opens.coe_bot,
+      Set.univ_inter, Set.nonempty_iff_ne_empty, Ne.def, ← opens.coe_bot,
       subtype.coe_injective.eq_iff, ← opens.empty_eq]
     erw [basic_open_eq_bot_iff]
     exacts[ha, (RingedSpace.basic_open _ _).Prop]

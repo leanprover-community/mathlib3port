@@ -479,7 +479,7 @@ theorem has_basis_to_filter_distortion (l : IntegrationParams) (I : Box ι) (c :
     (fun r₁ hr₁ r₂ hr₂ =>
       ⟨_, hr₁.min hr₂, fun _ => MemBaseSet.mono _ le_rfl le_rfl fun x hx => min_le_left _ _,
         fun _ => MemBaseSet.mono _ le_rfl le_rfl fun x hx => min_le_right _ _⟩)
-    ⟨fun _ => ⟨1, @zero_lt_one ℝ _ _⟩, fun _ _ => rfl⟩
+    ⟨fun _ => ⟨1, zero_lt_one⟩, fun _ _ => rfl⟩
 #align
   box_integral.integration_params.has_basis_to_filter_distortion BoxIntegral.IntegrationParams.has_basis_to_filter_distortion
 

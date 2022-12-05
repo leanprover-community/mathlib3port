@@ -260,7 +260,7 @@ theorem LocallyFinite.finite_nonempty_inter_compact {ι : Type _} {f : ι → Se
 theorem IsCompact.inter_Inter_nonempty {s : Set α} {ι : Type v} (hs : IsCompact s) (Z : ι → Set α)
     (hZc : ∀ i, IsClosed (Z i)) (hsZ : ∀ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i).Nonempty) :
     (s ∩ ⋂ i, Z i).Nonempty := by
-  simp only [← ne_empty_iff_nonempty] at hsZ⊢
+  simp only [nonempty_iff_ne_empty] at hsZ⊢
   apply mt (hs.elim_finite_subfamily_closed Z hZc); push_neg; exact hsZ
 #align is_compact.inter_Inter_nonempty IsCompact.inter_Inter_nonempty
 
@@ -274,7 +274,7 @@ theorem IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed {ι : Type 
   let Z' i := Z i ∩ Z i₀
   suffices (⋂ i, Z' i).Nonempty by
     exact this.mono (Inter_mono fun i => inter_subset_left (Z i) (Z i₀))
-  rw [← ne_empty_iff_nonempty]
+  rw [nonempty_iff_ne_empty]
   intro H
   obtain ⟨t, ht⟩ : ∃ t : Finset ι, (Z i₀ ∩ ⋂ i ∈ t, Z' i) = ∅
   exact
@@ -287,7 +287,7 @@ theorem IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed {ι : Type 
     intro j hj
     exact subset_inter (subset.trans hi₁ (hi j hj)) hi₁₀
   suffices (Z i₀ ∩ ⋂ i ∈ t, Z' i).Nonempty by
-    rw [← ne_empty_iff_nonempty] at this
+    rw [nonempty_iff_ne_empty] at this
     contradiction
   exact (hZn i₁).mono (subset_inter hi₁.left <| subset_Inter₂ hi₁.right)
 #align

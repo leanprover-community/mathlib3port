@@ -491,7 +491,7 @@ theorem null_iff_of_is_mul_left_invariant [Regular μ] {s : Set G} (hs : IsOpen 
 @[to_additive]
 theorem measure_ne_zero_iff_nonempty_of_is_mul_left_invariant [Regular μ] (hμ : μ ≠ 0) {s : Set G}
     (hs : IsOpen s) : μ s ≠ 0 ↔ s.Nonempty := by
-  simpa [null_iff_of_is_mul_left_invariant hs, hμ] using ne_empty_iff_nonempty
+  simpa [null_iff_of_is_mul_left_invariant hs, hμ] using nonempty_iff_ne_empty.symm
 #align
   measure_theory.measure_ne_zero_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_ne_zero_iff_nonempty_of_is_mul_left_invariant
 

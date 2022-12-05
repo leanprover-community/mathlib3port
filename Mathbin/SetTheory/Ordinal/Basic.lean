@@ -395,13 +395,12 @@ theorem eq_zero_or_pos : ∀ a : Ordinal, a = 0 ∨ 0 < a :=
   eq_bot_or_bot_lt
 #align ordinal.eq_zero_or_pos Ordinal.eq_zero_or_pos
 
-@[simp]
-theorem zero_lt_one : (0 : Ordinal) < 1 :=
-  PrincipalSeg.pemptyToPunit.ordinal_type_lt
-#align ordinal.zero_lt_one Ordinal.zero_lt_one
-
 instance : ZeroLeOneClass Ordinal :=
-  ⟨zero_lt_one.le⟩
+  ⟨Ordinal.zero_le _⟩
+
+instance NeZero.one : NeZero (1 : Ordinal) :=
+  ⟨Ordinal.one_ne_zero⟩
+#align ordinal.ne_zero.one Ordinal.NeZero.one
 
 /-- Given two ordinals `α ≤ β`, then `initial_seg_out α β` is the initial segment embedding
 of `α` to `β`, as map from a model type for `α` to a model type for `β`. -/

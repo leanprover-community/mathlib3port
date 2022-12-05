@@ -114,7 +114,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   by_cases hS : S = ∅
   · refine' fun k hk => Fintype.card_congr _
     rw [hS, empty_pow (ne_of_gt (lt_of_lt_of_le hG hk)), empty_pow (ne_of_gt hG)]
-  obtain ⟨a, ha⟩ := set.ne_empty_iff_nonempty.mp hS
+  obtain ⟨a, ha⟩ := Set.nonempty_iff_ne_empty.2 hS
   classical!
   have key : ∀ (a) (s t : Set G), (∀ b : G, b ∈ s → a * b ∈ t) → Fintype.card s ≤ Fintype.card t :=
     by 

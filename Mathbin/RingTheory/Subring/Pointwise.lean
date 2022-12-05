@@ -80,6 +80,19 @@ theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subring R) :
   (Set.mem_smul_set : r ∈ m • (S : Set R) ↔ _)
 #align subring.mem_smul_pointwise_iff_exists Subring.mem_smul_pointwise_iff_exists
 
+@[simp]
+theorem smul_bot (a : M) : a • (⊥ : Subring R) = ⊥ :=
+  map_bot _
+#align subring.smul_bot Subring.smul_bot
+
+theorem smul_sup (a : M) (S T : Subring R) : a • (S ⊔ T) = a • S ⊔ a • T :=
+  map_sup _ _ _
+#align subring.smul_sup Subring.smul_sup
+
+theorem smul_closure (a : M) (s : Set R) : a • closure s = closure (a • s) :=
+  RingHom.map_closure _ _
+#align subring.smul_closure Subring.smul_closure
+
 instance pointwise_central_scalar [MulSemiringAction Mᵐᵒᵖ R] [IsCentralScalar M R] :
     IsCentralScalar M (Subring R) :=
   ⟨fun a S => (congr_arg fun f => S.map f) <| RingHom.ext <| op_smul_eq_smul _⟩

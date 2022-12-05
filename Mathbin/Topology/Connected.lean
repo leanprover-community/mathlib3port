@@ -879,8 +879,8 @@ theorem is_clopen_iff [PreconnectedSpace α] {s : Set α} : IsClopen s ↔ s = �
         ⟨mt Or.inl h,
           mt (fun h2 => Or.inr <| (by rw [← compl_compl s, h2, compl_empty] : s = univ)) h⟩
       let ⟨_, h2, h3⟩ :=
-        nonempty_inter hs.1 hs.2.is_open_compl (union_compl_self s) (ne_empty_iff_nonempty.1 h1.1)
-          (ne_empty_iff_nonempty.1 h1.2)
+        nonempty_inter hs.1 hs.2.is_open_compl (union_compl_self s) (nonempty_iff_ne_empty.2 h1.1)
+          (nonempty_iff_ne_empty.2 h1.2)
       h3 h2,
     by rintro (rfl | rfl) <;> [exact is_clopen_empty, exact is_clopen_univ]⟩
 #align is_clopen_iff is_clopen_iff
@@ -897,7 +897,7 @@ theorem frontier_eq_empty_iff [PreconnectedSpace α] {s : Set α} :
 
 theorem nonempty_frontier_iff [PreconnectedSpace α] {s : Set α} :
     (frontier s).Nonempty ↔ s.Nonempty ∧ s ≠ univ := by
-  simp only [← ne_empty_iff_nonempty, Ne.def, frontier_eq_empty_iff, not_or]
+  simp only [nonempty_iff_ne_empty, Ne.def, frontier_eq_empty_iff, not_or]
 #align nonempty_frontier_iff nonempty_frontier_iff
 
 theorem Subtype.preconnected_space {s : Set α} (h : IsPreconnected s) : PreconnectedSpace s :=
@@ -935,18 +935,18 @@ theorem is_preconnected_iff_subset_of_disjoint {s : Set α} :
   · intro u v hu hv hs huv
     specialize h u v hu hv hs
     contrapose! huv
-    rw [ne_empty_iff_nonempty]
+    rw [← nonempty_iff_ne_empty]
     simp [not_subset] at huv
     rcases huv with ⟨⟨x, hxs, hxu⟩, ⟨y, hys, hyv⟩⟩
     have hxv : x ∈ v := or_iff_not_imp_left.mp (hs hxs) hxu
     have hyu : y ∈ u := or_iff_not_imp_right.mp (hs hys) hyv
     exact h ⟨y, hys, hyu⟩ ⟨x, hxs, hxv⟩
   · intro u v hu hv hs hsu hsv
-    rw [← ne_empty_iff_nonempty]
+    rw [nonempty_iff_ne_empty]
     intro H
     specialize h u v hu hv hs H
     contrapose H
-    apply ne_empty_iff_nonempty.mpr
+    apply nonempty.ne_empty
     cases h
     · rcases hsv with ⟨x, hxs, hxv⟩
       exact ⟨x, hxs, ⟨h hxs, hxv⟩⟩
@@ -992,7 +992,7 @@ theorem is_connected_iff_sUnion_disjoint_open {s : Set α} :
         · contradiction
         · exact ⟨x, hxs, hxu, hxv⟩
   · constructor
-    · rw [← ne_empty_iff_nonempty]
+    · rw [nonempty_iff_ne_empty]
       by_contra hs
       subst hs
       simpa using h ∅ _ _ _ <;> simp
@@ -1001,7 +1001,7 @@ theorem is_connected_iff_sUnion_disjoint_open {s : Set α} :
     · rw [Finset.mem_insert, Finset.mem_singleton] at ht
       rcases ht with (rfl | rfl) <;> tauto
     · intro t₁ t₂ ht₁ ht₂ hst
-      rw [← ne_empty_iff_nonempty] at hst
+      rw [nonempty_iff_ne_empty] at hst
       rw [Finset.mem_insert, Finset.mem_singleton] at ht₁ ht₂
       rcases ht₁ with (rfl | rfl) <;> rcases ht₂ with (rfl | rfl)
       all_goals first |rfl|contradiction|skip
@@ -1042,7 +1042,7 @@ theorem is_preconnected_iff_subset_of_disjoint_closed :
     rw [is_preconnected_closed_iff] at h
     specialize h u v hu hv hs
     contrapose! huv
-    rw [ne_empty_iff_nonempty]
+    rw [← nonempty_iff_ne_empty]
     simp [not_subset] at huv
     rcases huv with ⟨⟨x, hxs, hxu⟩, ⟨y, hys, hyv⟩⟩
     have hxv : x ∈ v := or_iff_not_imp_left.mp (hs hxs) hxu
@@ -1050,11 +1050,11 @@ theorem is_preconnected_iff_subset_of_disjoint_closed :
     exact h ⟨y, hys, hyu⟩ ⟨x, hxs, hxv⟩
   · rw [is_preconnected_closed_iff]
     intro u v hu hv hs hsu hsv
-    rw [← ne_empty_iff_nonempty]
+    rw [nonempty_iff_ne_empty]
     intro H
     specialize h u v hu hv hs H
     contrapose H
-    apply ne_empty_iff_nonempty.mpr
+    apply nonempty.ne_empty
     cases h
     · rcases hsv with ⟨x, hxs, hxv⟩
       exact ⟨x, hxs, ⟨h hxs, hxv⟩⟩

@@ -839,7 +839,7 @@ theorem inv_eq_of_lf_zero {x : Pgame} (h : x ⧏ 0) : x⁻¹ = -inv' (-x) :=
 
 /-- `1⁻¹` has exactly the same moves as `1`. -/
 def invOne : 1⁻¹ ≡r 1 := by 
-  rw [inv_eq_of_pos zero_lt_one]
+  rw [inv_eq_of_pos Pgame.zero_lt_one]
   exact inv'_one
 #align pgame.inv_one Pgame.invOne
 

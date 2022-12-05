@@ -662,8 +662,7 @@ theorem is_torsion_by_ideal_of_finite_of_is_torsion [Module.Finite R M]
     ∃ I : Ideal R, (I : Set R) ∩ R⁰ ≠ ∅ ∧ Module.IsTorsionBySet R M I := by
   cases' (module.finite_def.mp inferInstance : (⊤ : Submodule R M).Fg) with S h
   refine' ⟨∏ x in S, Ideal.torsionOf R M x, _, _⟩
-  · rw [Set.ne_empty_iff_nonempty]
-    refine' ⟨_, _, (∏ x in S, (@hM x).some : R⁰).2⟩
+  · refine' Set.Nonempty.ne_empty ⟨_, _, (∏ x in S, (@hM x).some : R⁰).2⟩
     rw [Subtype.val_eq_coe, Submonoid.coe_finset_prod]
     apply Ideal.prod_mem_prod
     exact fun x _ => (@hM x).some_spec

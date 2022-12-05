@@ -459,6 +459,34 @@ theorem collinear_iff_not_affine_independent {p : Fin 3 → P} :
     finrank_vector_span_le_iff_not_affine_independent k p (Fintype.card_fin 3)]
 #align collinear_iff_not_affine_independent collinear_iff_not_affine_independent
 
+/-- Three points are affinely independent if and only if they are not collinear. -/
+theorem affine_independent_iff_not_collinear_set {p₁ p₂ p₃ : P} :
+    AffineIndependent k ![p₁, p₂, p₃] ↔ ¬Collinear k ({p₁, p₂, p₃} : Set P) := by
+  simp [affine_independent_iff_not_collinear, -Set.union_singleton]
+#align affine_independent_iff_not_collinear_set affine_independent_iff_not_collinear_set
+
+/-- Three points are collinear if and only if they are not affinely independent. -/
+theorem collinear_iff_not_affine_independent_set {p₁ p₂ p₃ : P} :
+    Collinear k ({p₁, p₂, p₃} : Set P) ↔ ¬AffineIndependent k ![p₁, p₂, p₃] :=
+  affine_independent_iff_not_collinear_set.not_left.symm
+#align collinear_iff_not_affine_independent_set collinear_iff_not_affine_independent_set
+
+/-- Three points are affinely independent if and only if they are not collinear. -/
+theorem affine_independent_iff_not_collinear_of_ne {p : Fin 3 → P} {i₁ i₂ i₃ : Fin 3}
+    (h₁₂ : i₁ ≠ i₂) (h₁₃ : i₁ ≠ i₃) (h₂₃ : i₂ ≠ i₃) :
+    AffineIndependent k p ↔ ¬Collinear k ({p i₁, p i₂, p i₃} : Set P) := by
+  have hu : (Finset.univ : Finset (Fin 3)) = {i₁, i₂, i₃} := by decide!
+  rw [affine_independent_iff_not_collinear, ← Set.image_univ, ← Finset.coe_univ, hu,
+    Finset.coe_insert, Finset.coe_insert, Finset.coe_singleton, Set.image_insert_eq, Set.image_pair]
+#align affine_independent_iff_not_collinear_of_ne affine_independent_iff_not_collinear_of_ne
+
+/-- Three points are collinear if and only if they are not affinely independent. -/
+theorem collinear_iff_not_affine_independent_of_ne {p : Fin 3 → P} {i₁ i₂ i₃ : Fin 3}
+    (h₁₂ : i₁ ≠ i₂) (h₁₃ : i₁ ≠ i₃) (h₂₃ : i₂ ≠ i₃) :
+    Collinear k ({p i₁, p i₂, p i₃} : Set P) ↔ ¬AffineIndependent k p :=
+  (affine_independent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃).not_left.symm
+#align collinear_iff_not_affine_independent_of_ne collinear_iff_not_affine_independent_of_ne
+
 /-- If three points are not collinear, the first and second are different. -/
 theorem ne₁₂_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear k ({p₁, p₂, p₃} : Set P)) : p₁ ≠ p₂ :=
   by 

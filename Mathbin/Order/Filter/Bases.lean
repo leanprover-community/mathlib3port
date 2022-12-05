@@ -379,7 +379,7 @@ theorem HasBasis.ne_bot_iff (hl : l.HasBasis p s) : NeBot l ↔ ∀ {i}, p i →
 theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s i = ∅ :=
   not_iff_not.1 <|
     ne_bot_iff.symm.trans <|
-      hl.ne_bot_iff.trans <| by simp only [not_exists, not_and, ← ne_empty_iff_nonempty]
+      hl.ne_bot_iff.trans <| by simp only [not_exists, not_and, nonempty_iff_ne_empty]
 #align filter.has_basis.eq_bot_iff Filter.HasBasis.eq_bot_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -636,7 +636,7 @@ theorem HasBasis.disjoint_iff (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
     Disjoint l l' ↔ ∃ (i : _)(hi : p i)(i' : _)(hi' : p' i'), Disjoint (s i) (s' i') :=
   not_iff_not.mp <| by
     simp only [disjoint_iff, ← Ne.def, ← ne_bot_iff, hl.inf_basis_ne_bot_iff hl', not_exists,
-      bot_eq_empty, ne_empty_iff_nonempty, inf_eq_inter]
+      bot_eq_empty, ← nonempty_iff_ne_empty, inf_eq_inter]
 #align filter.has_basis.disjoint_iff Filter.HasBasis.disjoint_iff
 
 theorem Disjoint.exists_mem_filter_basis (h : Disjoint l l') (hl : l.HasBasis p s)

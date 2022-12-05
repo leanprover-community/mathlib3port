@@ -256,8 +256,7 @@ theorem oangle_ne_zero_and_ne_pi_iff_affine_independent {p₁ p₂ p₃ : P} :
 theorem oangle_eq_zero_or_eq_pi_iff_collinear {p₁ p₂ p₃ : P} :
     ∡ p₁ p₂ p₃ = 0 ∨ ∡ p₁ p₂ p₃ = π ↔ Collinear ℝ ({p₁, p₂, p₃} : Set P) := by
   rw [← not_iff_not, not_or, oangle_ne_zero_and_ne_pi_iff_affine_independent,
-    affine_independent_iff_not_collinear]
-  simp [-Set.union_singleton]
+    affine_independent_iff_not_collinear_set]
 #align
   euclidean_geometry.oangle_eq_zero_or_eq_pi_iff_collinear EuclideanGeometry.oangle_eq_zero_or_eq_pi_iff_collinear
 

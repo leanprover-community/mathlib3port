@@ -931,7 +931,7 @@ end Fintype
 namespace Set
 
 theorem is_atom_singleton (x : α) : IsAtom ({x} : Set α) :=
-  ⟨(singleton_nonempty x).ne_empty, fun s hs => ssubset_singleton_iff.mp hs⟩
+  ⟨singleton_ne_empty _, fun s hs => ssubset_singleton_iff.mp hs⟩
 #align set.is_atom_singleton Set.is_atom_singleton
 
 theorem is_atom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} := by
@@ -939,12 +939,12 @@ theorem is_atom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} := by
     ⟨_, by 
       rintro ⟨x, rfl⟩
       exact is_atom_singleton x⟩
-  rintro ⟨hs₁, hs₂⟩
-  obtain ⟨x, hx⟩ := ne_empty_iff_nonempty.mp hs₁
-  have := singleton_subset_iff.mpr hx
-  refine' ⟨x, subset.antisymm _ this⟩
-  by_contra h
-  exact (singleton_nonempty x).ne_empty (hs₂ {x} (ssubset_of_subset_not_subset this h))
+  rw [is_atom_iff, bot_eq_empty, ← nonempty_iff_ne_empty]
+  rintro ⟨⟨x, hx⟩, hs⟩
+  exact
+    ⟨x,
+      eq_singleton_iff_unique_mem.2
+        ⟨hx, fun y hy => (hs {y} (singleton_ne_empty _) (singleton_subset_iff.2 hy) hx).symm⟩⟩
 #align set.is_atom_iff Set.is_atom_iff
 
 theorem is_coatom_iff (s : Set α) : IsCoatom s ↔ ∃ x, s = {x}ᶜ := by

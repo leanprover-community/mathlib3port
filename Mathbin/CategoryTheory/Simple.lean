@@ -77,6 +77,10 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
         infer_instance }
 #align category_theory.simple.of_iso CategoryTheory.Simple.of_iso
 
+theorem Simple.iff_of_iso {X Y : C} (i : X ≅ Y) : Simple X ↔ Simple Y :=
+  ⟨fun h => simple.of_iso i.symm, fun h => simple.of_iso i⟩
+#align category_theory.simple.iff_of_iso CategoryTheory.Simple.iff_of_iso
+
 theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f]
     (w : f ≠ 0) : kernel.ι f = 0 := by
   classical 

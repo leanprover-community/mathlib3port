@@ -1565,7 +1565,7 @@ theorem nnnorm_coe_nat (n : ℕ) : ‖(n : ℝ)‖₊ = n :=
 
 @[simp]
 theorem norm_two : ‖(2 : ℝ)‖ = 2 :=
-  abs_of_pos (@zero_lt_two ℝ _ _)
+  abs_of_pos zero_lt_two
 #align real.norm_two Real.norm_two
 
 @[simp]

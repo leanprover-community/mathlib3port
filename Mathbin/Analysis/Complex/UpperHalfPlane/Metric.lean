@@ -61,7 +61,7 @@ theorem cosh_half_dist (z w : ℍ) :
 theorem tanh_half_dist (z w : ℍ) : tanh (dist z w / 2) = dist (z : ℂ) w / dist (z : ℂ) (conj ↑w) :=
   by
   rw [tanh_eq_sinh_div_cosh, sinh_half_dist, cosh_half_dist, div_div_div_comm, div_self, div_one]
-  exact (mul_pos two_pos (sqrt_pos.2 <| mul_pos z.im_pos w.im_pos)).ne'
+  exact (mul_pos (zero_lt_two' ℝ) (sqrt_pos.2 <| mul_pos z.im_pos w.im_pos)).ne'
 #align upper_half_plane.tanh_half_dist UpperHalfPlane.tanh_half_dist
 
 theorem exp_half_dist (z w : ℍ) :
@@ -95,7 +95,7 @@ protected theorem dist_comm (z w : ℍ) : dist z w = dist w z := by
 
 theorem dist_le_iff_le_sinh :
     dist z w ≤ r ↔ dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) ≤ sinh (r / 2) := by
-  rw [← div_le_div_right (@two_pos ℝ _ _), ← sinh_le_sinh, sinh_half_dist]
+  rw [← div_le_div_right (zero_lt_two' ℝ), ← sinh_le_sinh, sinh_half_dist]
 #align upper_half_plane.dist_le_iff_le_sinh UpperHalfPlane.dist_le_iff_le_sinh
 
 theorem dist_eq_iff_eq_sinh :

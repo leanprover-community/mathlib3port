@@ -15,6 +15,10 @@ If you find yourself looking for a theorem here, you might be in the wrong place
 
 namespace Linarith
 
+theorem zero_lt_one {α} [OrderedSemiring α] [Nontrivial α] : (0 : α) < 1 :=
+  zero_lt_one
+#align linarith.zero_lt_one Linarith.zero_lt_one
+
 /- warning: linarith.eq_of_eq_of_eq -> Linarith.eq_of_eq_of_eq is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : OrderedSemiring.{u_1} α] {a : α} {b : α}, (Eq.{succ u_1} α a (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (MulZeroClass.toHasZero.{u_1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α (OrderedSemiring.toSemiring.{u_1} α _inst_1))))))))) -> (Eq.{succ u_1} α b (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (MulZeroClass.toHasZero.{u_1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α (OrderedSemiring.toSemiring.{u_1} α _inst_1))))))))) -> (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (Distrib.toHasAdd.{u_1} α (NonUnitalNonAssocSemiring.toDistrib.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α (OrderedSemiring.toSemiring.{u_1} α _inst_1)))))) a b) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α (MulZeroClass.toHasZero.{u_1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α (OrderedSemiring.toSemiring.{u_1} α _inst_1)))))))))

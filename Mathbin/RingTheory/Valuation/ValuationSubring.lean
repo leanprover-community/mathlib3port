@@ -681,7 +681,7 @@ def principalUnitGroup :
     rw [← one_mul (A.valuation (b - 1)), ← A.valuation.map_one_add_of_lt ha, add_sub_cancel'_right,
       ← Valuation.map_mul, mul_sub_one, ← sub_add_sub_cancel]
     exact A.valuation.map_add _ _
-  one_mem' := by simpa using zero_lt_one₀
+  one_mem' := by simp
   inv_mem' := by 
     dsimp
     intro a ha

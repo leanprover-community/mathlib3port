@@ -790,7 +790,7 @@ theorem re_eq_self_of_le {a : K} (h : abs a ≤ re a) : (re a : K) = a := by
 theorem abs_add (z w : K) : abs (z + w) ≤ abs z + abs w :=
   (mul_self_le_mul_self_iff (abs_nonneg _) (add_nonneg (abs_nonneg _) (abs_nonneg _))).2 <| by
     rw [mul_self_abs, add_mul_self_eq, mul_self_abs, mul_self_abs, add_right_comm, norm_sq_add,
-      add_le_add_iff_left, mul_assoc, mul_le_mul_left (@zero_lt_two ℝ _ _)]
+      add_le_add_iff_left, mul_assoc, mul_le_mul_left (zero_lt_two' ℝ)]
     simpa [-mul_re, is_R_or_C_simps] using re_le_abs (z * conj w)
 #align is_R_or_C.abs_add IsROrC.abs_add
 

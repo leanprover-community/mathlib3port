@@ -804,7 +804,7 @@ theorem subset_set_smul_iff : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
 @[to_additive]
 theorem smul_inter_ne_empty_iff {s t : Set α} {x : α} :
     x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ t ∧ b ∈ s) ∧ a * b⁻¹ = x := by
-  rw [ne_empty_iff_nonempty]
+  rw [← nonempty_iff_ne_empty]
   constructor
   · rintro ⟨a, h, ha⟩
     obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h
@@ -822,7 +822,7 @@ theorem smul_inter_ne_empty_iff' {s t : Set α} {x : α} :
 @[to_additive]
 theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
     x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ s ∧ b ∈ t) ∧ a⁻¹ * b = MulOpposite.unop x := by
-  rw [ne_empty_iff_nonempty]
+  rw [← nonempty_iff_ne_empty]
   constructor
   · rintro ⟨a, h, ha⟩
     obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h

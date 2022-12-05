@@ -54,7 +54,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
     div_pos (mul_pos h (rpow_pos_of_pos (mul_pos two_pos h) _)) (rpow_pos_of_pos four_pos _)
   have hf : ∀ x, 0 < x → f x = log (x * (2 * x) ^ sqrt (2 * x) / 4 ^ (x / 3)) := by
     intro x h5
-    have h6 := mul_pos two_pos h5
+    have h6 := mul_pos (zero_lt_two' ℝ) h5
     have h7 := rpow_pos_of_pos h6 (sqrt (2 * x))
     rw [log_div (mul_pos h5 h7).ne' (rpow_pos_of_pos four_pos _).ne', log_mul h5.ne' h7.ne',
       log_rpow h6, log_rpow zero_lt_four, ← mul_div_right_comm, ← mul_div, mul_comm x]
@@ -140,7 +140,7 @@ theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
     (no_prime : ¬∃ p : ℕ, Nat.Prime p ∧ n < p ∧ p ≤ 2 * n) :
     centralBinom n ≤ (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) := by
   have n_pos : 0 < n := (Nat.zero_le _).trans_lt n_big
-  have n2_pos : 1 ≤ 2 * n := mul_pos two_pos n_pos
+  have n2_pos : 1 ≤ 2 * n := mul_pos (zero_lt_two' ℕ) n_pos
   let S := (Finset.range (2 * n / 3 + 1)).filter Nat.Prime
   let f x := x ^ n.central_binom.factorization x
   have : (∏ x : ℕ in S, f x) = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x := by

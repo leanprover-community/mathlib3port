@@ -503,7 +503,7 @@ scoped[Modular] notation "𝒟" => ModularGroup.fd
 scoped[Modular] notation "𝒟ᵒ" => ModularGroup.fdo
 
 theorem abs_two_mul_re_lt_one_of_mem_fdo (h : z ∈ 𝒟ᵒ) : |2 * z.re| < 1 := by
-  rw [abs_mul, abs_two, ← lt_div_iff' (@two_pos ℝ _ _)]
+  rw [abs_mul, abs_two, ← lt_div_iff' (zero_lt_two' ℝ)]
   exact h.2
 #align modular_group.abs_two_mul_re_lt_one_of_mem_fdo ModularGroup.abs_two_mul_re_lt_one_of_mem_fdo
 

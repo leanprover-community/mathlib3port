@@ -30,7 +30,7 @@ requiring users to write `Module' ℤ A` when `A` is merely a ring.)
 -/
 
 
-universe v u
+universe v u w
 
 open CategoryTheory
 
@@ -38,7 +38,7 @@ namespace ModuleCat
 
 variable {k : Type u} [Field k]
 
-variable {A : Type u} [Ring A] [Algebra k A]
+variable {A : Type w} [Ring A] [Algebra k A]
 
 /-- Type synonym for considering a module over a `k`-algebra as a `k`-module.
 -/

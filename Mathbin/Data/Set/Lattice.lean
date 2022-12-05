@@ -749,12 +749,12 @@ theorem Inter_eq_univ : (⋂ i, s i) = univ ↔ ∀ i, s i = univ :=
 
 @[simp]
 theorem nonempty_Union : (⋃ i, s i).Nonempty ↔ ∃ i, (s i).Nonempty := by
-  simp [← ne_empty_iff_nonempty]
+  simp [nonempty_iff_ne_empty]
 #align set.nonempty_Union Set.nonempty_Union
 
 @[simp]
 theorem nonempty_bUnion {t : Set α} {s : α → Set β} :
-    (⋃ i ∈ t, s i).Nonempty ↔ ∃ i ∈ t, (s i).Nonempty := by simp [← ne_empty_iff_nonempty]
+    (⋃ i ∈ t, s i).Nonempty ↔ ∃ i ∈ t, (s i).Nonempty := by simp [nonempty_iff_ne_empty]
 #align set.nonempty_bUnion Set.nonempty_bUnion
 
 theorem Union_nonempty_index (s : Set α) (t : s.Nonempty → Set β) :
@@ -1159,7 +1159,7 @@ theorem sInter_eq_univ {S : Set (Set α)} : ⋂₀ S = univ ↔ ∀ s ∈ S, s =
 
 @[simp]
 theorem nonempty_sUnion {S : Set (Set α)} : (⋃₀S).Nonempty ↔ ∃ s ∈ S, Set.Nonempty s := by
-  simp [← ne_empty_iff_nonempty]
+  simp [nonempty_iff_ne_empty]
 #align set.nonempty_sUnion Set.nonempty_sUnion
 
 theorem Nonempty.of_sUnion {s : Set (Set α)} (h : (⋃₀s).Nonempty) : s.Nonempty :=
@@ -1260,7 +1260,7 @@ theorem sInter_eq_empty_iff {c : Set (Set α)} : ⋂₀ c = ∅ ↔ ∀ a, ∃ b
 -- classical
 @[simp]
 theorem nonempty_Inter {f : ι → Set α} : (⋂ i, f i).Nonempty ↔ ∃ x, ∀ i, x ∈ f i := by
-  simp [← ne_empty_iff_nonempty, Inter_eq_empty_iff]
+  simp [nonempty_iff_ne_empty, Inter_eq_empty_iff]
 #align set.nonempty_Inter Set.nonempty_Inter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -1268,13 +1268,13 @@ theorem nonempty_Inter {f : ι → Set α} : (⋂ i, f i).Nonempty ↔ ∃ x, �
 @[simp]
 theorem nonempty_Inter₂ {s : ∀ i, κ i → Set α} :
     (⋂ (i) (j), s i j).Nonempty ↔ ∃ a, ∀ i j, a ∈ s i j := by
-  simp [← ne_empty_iff_nonempty, Inter_eq_empty_iff]
+  simp [nonempty_iff_ne_empty, Inter_eq_empty_iff]
 #align set.nonempty_Inter₂ Set.nonempty_Inter₂
 
 -- classical
 @[simp]
 theorem nonempty_sInter {c : Set (Set α)} : (⋂₀ c).Nonempty ↔ ∃ a, ∀ b ∈ c, a ∈ b := by
-  simp [← ne_empty_iff_nonempty, sInter_eq_empty_iff]
+  simp [nonempty_iff_ne_empty, sInter_eq_empty_iff]
 #align set.nonempty_sInter Set.nonempty_sInter
 
 -- classical

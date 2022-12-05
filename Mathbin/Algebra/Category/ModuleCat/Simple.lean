@@ -5,7 +5,9 @@ Authors: Pierre-Alexandre Bazin, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Simple
 import Mathbin.Algebra.Category.ModuleCat.Subobject
+import Mathbin.Algebra.Category.ModuleCat.Algebra
 import Mathbin.RingTheory.SimpleModule
+import Mathbin.LinearAlgebra.FiniteDimensional
 
 /-!
 # Simple objects in the category of `R`-modules
@@ -22,6 +24,10 @@ theorem simple_iff_is_simple_module : Simple (of R M) ↔ IsSimpleModule R M :=
   (simple_iff_subobject_is_simple_order _).trans (subobjectModule (of R M)).is_simple_order_iff
 #align simple_iff_is_simple_module simple_iff_is_simple_module
 
+theorem simple_iff_is_simple_module' (M : ModuleCat R) : Simple M ↔ IsSimpleModule R M :=
+  (Simple.iff_of_iso (ofSelfIso M).symm).trans simple_iff_is_simple_module
+#align simple_iff_is_simple_module' simple_iff_is_simple_module'
+
 /-- A simple module is a simple object in the category of modules. -/
 instance simple_of_is_simple_module [IsSimpleModule R M] : Simple (of R M) :=
   simple_iff_is_simple_module.mpr ‹_›
@@ -31,4 +37,14 @@ instance simple_of_is_simple_module [IsSimpleModule R M] : Simple (of R M) :=
 instance is_simple_module_of_simple (M : ModuleCat R) [Simple M] : IsSimpleModule R M :=
   simple_iff_is_simple_module.mp (Simple.of_iso (ofSelfIso M))
 #align is_simple_module_of_simple is_simple_module_of_simple
+
+open FiniteDimensional
+
+attribute [local instance] module_of_algebra_Module is_scalar_tower_of_algebra_Module
+
+/-- Any `k`-algebra module which is 1-dimensional over `k` is simple. -/
+theorem simple_of_finrank_eq_one {k : Type _} [Field k] [Algebra k R] {V : ModuleCat R}
+    (h : finrank k V = 1) : Simple V :=
+  (simple_iff_is_simple_module' V).mpr (is_simple_module_of_finrank_eq_one h)
+#align simple_of_finrank_eq_one simple_of_finrank_eq_one
 

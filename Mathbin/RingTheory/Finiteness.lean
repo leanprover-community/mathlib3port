@@ -579,7 +579,7 @@ theorem trans {R : Type _} (A B : Type _) [CommSemiring R] [CommSemiring A] [Alg
     ⟨Submodule.fg_def.2
         ⟨Set.image2 (· • ·) (↑s : Set A) (↑t : Set B),
           Set.Finite.image2 _ s.finite_to_set t.finite_to_set, by
-          rw [Set.image2_smul, Submodule.span_smul hs (↑t : Set B), ht,
+          rw [Set.image2_smul, Submodule.span_smul_of_span_eq_top hs (↑t : Set B), ht,
             Submodule.restrict_scalars_top]⟩⟩
 #align module.finite.trans Module.Finite.trans
 

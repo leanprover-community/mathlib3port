@@ -320,87 +320,9 @@ theorem Monotone.mul (hf : Monotone f) (hg : Monotone g) (hf₀ : ∀ x, 0 ≤ f
 
 end Monotone
 
-section Nontrivial
-
-variable [Nontrivial α]
-
-/- warning: zero_lt_one -> zero_lt_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : OrderedSemiring.{u} α] [_inst_2 : Nontrivial.{u} α], LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α (AddMonoidWithOne.toOne.{u} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u} α (NonAssocSemiring.toAddCommMonoidWithOne.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1))))))))
-but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292 : OrderedSemiring.{u_1} α] [inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.295 : Nontrivial.{u_1} α], LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))))) (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (Semiring.toOne.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))))
-Case conversion may be inaccurate. Consider using '#align zero_lt_one zero_lt_oneₓ'. -/
-/-- See `zero_lt_one'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_one : (0 : α) < 1 :=
-  zero_le_one.lt_of_ne zero_ne_one
-#align zero_lt_one zero_lt_one
-
-/-- See `zero_lt_two'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_two : (0 : α) < 2 :=
-  zero_lt_one.trans_le one_le_two
-#align zero_lt_two zero_lt_two
-
-/-- See `zero_lt_three'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_three : (0 : α) < 3 :=
-  zero_lt_one.trans_le <| bit1_zero.symm.trans_le <| bit1_mono zero_le_one
-#align zero_lt_three zero_lt_three
-
-/-- See `zero_lt_four'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_four : (0 : α) < 4 :=
-  zero_lt_two.trans_le <| bit0_mono one_le_two
-#align zero_lt_four zero_lt_four
-
-instance ZeroLeOneClass.NeZero.two : NeZero (2 : α) :=
-  ⟨zero_lt_two.ne'⟩
-#align zero_le_one_class.ne_zero.two ZeroLeOneClass.NeZero.two
-
-instance ZeroLeOneClass.NeZero.three : NeZero (3 : α) :=
-  ⟨zero_lt_three.ne'⟩
-#align zero_le_one_class.ne_zero.three ZeroLeOneClass.NeZero.three
-
-instance ZeroLeOneClass.NeZero.four : NeZero (4 : α) :=
-  ⟨zero_lt_four.ne'⟩
-#align zero_le_one_class.ne_zero.four ZeroLeOneClass.NeZero.four
-
-alias zero_lt_one ← one_pos
-
-alias zero_lt_two ← two_pos
-
-alias zero_lt_three ← three_pos
-
-alias zero_lt_four ← four_pos
-
-theorem bit1_pos (h : 0 ≤ a) : 0 < bit1 a :=
+theorem bit1_pos [Nontrivial α] (h : 0 ≤ a) : 0 < bit1 a :=
   zero_lt_one.trans_le <| bit1_zero.symm.trans_le <| bit1_mono h
 #align bit1_pos bit1_pos
-
-variable (α)
-
-/-- See `zero_lt_one` for a version with the type implicit. -/
-theorem zero_lt_one' : (0 : α) < 1 :=
-  zero_lt_one
-#align zero_lt_one' zero_lt_one'
-
-/-- See `zero_lt_two` for a version with the type implicit. -/
-theorem zero_lt_two' : (0 : α) < 2 :=
-  zero_lt_two
-#align zero_lt_two' zero_lt_two'
-
-/-- See `zero_lt_three` for a version with the type implicit. -/
-theorem zero_lt_three' : (0 : α) < 3 :=
-  zero_lt_three
-#align zero_lt_three' zero_lt_three'
-
-/-- See `zero_lt_four` for a version with the type implicit. -/
-theorem zero_lt_four' : (0 : α) < 4 :=
-  zero_lt_four
-#align zero_lt_four' zero_lt_four'
-
-end Nontrivial
 
 theorem bit1_pos' (h : 0 < a) : 0 < bit1 a := by
   nontriviality
@@ -778,18 +700,6 @@ theorem StrictMono.mul (hf : StrictMono f) (hg : StrictMono g) (hf₀ : ∀ x, 0
 #align strict_mono.mul StrictMono.mul
 
 end Monotone
-
-theorem lt_one_add (a : α) : a < 1 + a :=
-  lt_add_of_pos_left _ zero_lt_one
-#align lt_one_add lt_one_add
-
-theorem lt_add_one (a : α) : a < a + 1 :=
-  lt_add_of_pos_right _ zero_lt_one
-#align lt_add_one lt_add_one
-
-theorem one_lt_two : (1 : α) < 2 :=
-  lt_add_one _
-#align one_lt_two one_lt_two
 
 theorem lt_two_mul_self (ha : 0 < a) : a < 2 * a :=
   lt_mul_of_one_lt_left ha one_lt_two
@@ -1227,12 +1137,12 @@ theorem mul_self_nonneg (a : α) : 0 ≤ a * a :=
 
 @[simp]
 theorem neg_le_self_iff : -a ≤ a ↔ 0 ≤ a := by
-  simp [neg_le_iff_add_nonneg, ← two_mul, mul_nonneg_iff, zero_le_one, (@zero_lt_two α _ _).not_le]
+  simp [neg_le_iff_add_nonneg, ← two_mul, mul_nonneg_iff, zero_le_one, (zero_lt_two' α).not_le]
 #align neg_le_self_iff neg_le_self_iff
 
 @[simp]
 theorem neg_lt_self_iff : -a < a ↔ 0 < a := by
-  simp [neg_lt_iff_pos_add, ← two_mul, mul_pos_iff, zero_lt_one, (@zero_lt_two α _ _).not_lt]
+  simp [neg_lt_iff_pos_add, ← two_mul, mul_pos_iff, zero_lt_one, (zero_lt_two' α).not_lt]
 #align neg_lt_self_iff neg_lt_self_iff
 
 @[simp]

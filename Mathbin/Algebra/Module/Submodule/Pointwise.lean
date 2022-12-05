@@ -225,6 +225,25 @@ theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S �
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set M))
 #align submodule.smul_mem_pointwise_smul Submodule.smul_mem_pointwise_smul
 
+/-- See also `submodule.smul_bot`. -/
+@[simp]
+theorem smul_bot' (a : α) : a • (⊥ : Submodule R M) = ⊥ :=
+  map_bot _
+#align submodule.smul_bot' Submodule.smul_bot'
+
+/-- See also `submodule.smul_sup`. -/
+theorem smul_sup' (a : α) (S T : Submodule R M) : a • (S ⊔ T) = a • S ⊔ a • T :=
+  map_sup _ _ _
+#align submodule.smul_sup' Submodule.smul_sup'
+
+theorem smul_span (a : α) (s : Set M) : a • span R s = span R (a • s) :=
+  map_span _ _
+#align submodule.smul_span Submodule.smul_span
+
+theorem span_smul (a : α) (s : Set M) : span R (a • s) = a • span R s :=
+  Eq.symm (span_image _).symm
+#align submodule.span_smul Submodule.span_smul
+
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SmulCommClass αᵐᵒᵖ R M]
     [IsCentralScalar α M] : IsCentralScalar α (Submodule R M) :=
   ⟨fun a S =>

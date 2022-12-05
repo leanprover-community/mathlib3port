@@ -234,7 +234,7 @@ protected theorem IsClosed.balancedCore (hU : IsClosed U) : IsClosed (balancedCo
     refine' is_closed_map_smul_of_ne_zero ha' U hU
   convert isClosedEmpty
   contrapose! h
-  exact balanced_core_nonempty_iff.mp (set.ne_empty_iff_nonempty.mp h)
+  exact balanced_core_nonempty_iff.mp (Set.nonempty_iff_ne_empty.2 h)
 #align is_closed.balanced_core IsClosed.balancedCore
 
 theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : balancedCore 𝕜 U ∈ 𝓝 (0 : E) :=

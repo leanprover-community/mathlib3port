@@ -396,11 +396,11 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
   by_cases hs : s = ∅
   · simp [hs]
   have : Nonempty { u // Monotone u ∧ ∀ i : ℕ, u i ∈ s } :=
-    nonempty_monotone_mem (ne_empty_iff_nonempty.1 hs)
+    nonempty_monotone_mem (nonempty_iff_ne_empty.2 hs)
   by_cases ht : t = ∅
   · simp [ht]
   have : Nonempty { u // Monotone u ∧ ∀ i : ℕ, u i ∈ t } :=
-    nonempty_monotone_mem (ne_empty_iff_nonempty.1 ht)
+    nonempty_monotone_mem (nonempty_iff_ne_empty.2 ht)
   refine' Ennreal.supr_add_supr_le _
   /- We start from two sequences `u` and `v` along `s` and `t` respectively, and we build a new
     sequence `w` along `s ∪ t` by juxtaposing them. Its variation is larger than the sum of the

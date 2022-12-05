@@ -367,9 +367,8 @@ theorem derived_length_zero (I : LieIdeal R L) [hI : IsSolvable R I] :
   let s := { k | derived_series_of_ideal R L k I = ⊥ }
   change Inf s = 0 ↔ _
   have hne : s ≠ ∅ := by 
-    rw [Set.ne_empty_iff_nonempty]
     obtain ⟨k, hk⟩ := id hI
-    use k
+    refine' Set.Nonempty.ne_empty ⟨k, _⟩
     rw [derived_series_def, LieIdeal.derived_series_eq_bot_iff] at hk
     exact hk
   simp [hne]

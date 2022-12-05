@@ -514,9 +514,12 @@ theorem univ_nonempty : ∀ [h : Nonempty α], (univ : Set α).Nonempty
   | ⟨x⟩ => ⟨x, trivial⟩
 #align set.univ_nonempty Set.univ_nonempty
 
-theorem Nonempty.to_subtype (h : s.Nonempty) : Nonempty s :=
-  nonempty_subtype.2 h
+theorem Nonempty.to_subtype : s.Nonempty → Nonempty s :=
+  nonempty_subtype.2
 #align set.nonempty.to_subtype Set.Nonempty.to_subtype
+
+theorem Nonempty.to_type : s.Nonempty → Nonempty α := fun ⟨x, hx⟩ => ⟨x⟩
+#align set.nonempty.to_type Set.Nonempty.to_type
 
 instance [Nonempty α] : Nonempty (Set.univ : Set α) :=
   Set.univ_nonempty.to_subtype
@@ -574,17 +577,17 @@ instance uniqueEmpty [IsEmpty α] :
   uniq := eq_empty_of_is_empty
 #align set.unique_empty Set.uniqueEmpty
 
-/-- See also `set.ne_empty_iff_nonempty`. -/
+/-- See also `set.nonempty_iff_ne_empty`. -/
 theorem not_nonempty_iff_eq_empty {s : Set α} : ¬s.Nonempty ↔ s = ∅ := by
   simp only [Set.Nonempty, eq_empty_iff_forall_not_mem, not_exists]
 #align set.not_nonempty_iff_eq_empty Set.not_nonempty_iff_eq_empty
 
 /-- See also `set.not_nonempty_iff_eq_empty`. -/
-theorem ne_empty_iff_nonempty : s ≠ ∅ ↔ s.Nonempty :=
-  not_iff_comm.1 not_nonempty_iff_eq_empty
-#align set.ne_empty_iff_nonempty Set.ne_empty_iff_nonempty
+theorem nonempty_iff_ne_empty : s.Nonempty ↔ s ≠ ∅ :=
+  not_nonempty_iff_eq_empty.not_right
+#align set.nonempty_iff_ne_empty Set.nonempty_iff_ne_empty
 
-alias ne_empty_iff_nonempty ↔ _ nonempty.ne_empty
+alias nonempty_iff_ne_empty ↔ nonempty.ne_empty _
 
 @[simp]
 theorem not_nonempty_empty : ¬(∅ : Set α).Nonempty := fun ⟨x, hx⟩ => hx
@@ -592,11 +595,11 @@ theorem not_nonempty_empty : ¬(∅ : Set α).Nonempty := fun ⟨x, hx⟩ => hx
 
 @[simp]
 theorem is_empty_coe_sort {s : Set α} : IsEmpty ↥s ↔ s = ∅ :=
-  not_iff_not.1 <| by simpa using ne_empty_iff_nonempty.symm
+  not_iff_not.1 <| by simpa using nonempty_iff_ne_empty
 #align set.is_empty_coe_sort Set.is_empty_coe_sort
 
 theorem eq_empty_or_nonempty (s : Set α) : s = ∅ ∨ s.Nonempty :=
-  or_iff_not_imp_left.2 ne_empty_iff_nonempty.1
+  or_iff_not_imp_left.2 nonempty_iff_ne_empty.2
 #align set.eq_empty_or_nonempty Set.eq_empty_or_nonempty
 
 theorem subset_eq_empty {s t : Set α} (h : t ⊆ s) (e : s = ∅) : t = ∅ :=
@@ -612,8 +615,10 @@ instance (α : Type u) : IsEmpty.{u + 1} (∅ : Set α) :=
 
 @[simp]
 theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
-  (@bot_lt_iff_ne_bot (Set α) _ _ _).trans ne_empty_iff_nonempty
+  (@bot_lt_iff_ne_bot (Set α) _ _ _).trans nonempty_iff_ne_empty.symm
 #align set.empty_ssubset Set.empty_ssubset
+
+alias empty_ssubset ↔ _ nonempty.empty_ssubset
 
 /-!
 
@@ -1248,6 +1253,16 @@ theorem singleton_nonempty (a : α) : ({a} : Set α).Nonempty :=
 #align set.singleton_nonempty Set.singleton_nonempty
 
 @[simp]
+theorem singleton_ne_empty (a : α) : ({a} : Set α) ≠ ∅ :=
+  (singleton_nonempty _).ne_empty
+#align set.singleton_ne_empty Set.singleton_ne_empty
+
+@[simp]
+theorem empty_ssubset_singleton : (∅ : Set α) ⊂ {a} :=
+  (singleton_nonempty _).empty_ssubset
+#align set.empty_ssubset_singleton Set.empty_ssubset_singleton
+
+@[simp]
 theorem singleton_subset_iff {a : α} {s : Set α} : {a} ⊆ s ↔ a ∈ s :=
   forall_eq
 #align set.singleton_subset_iff Set.singleton_subset_iff
@@ -1287,7 +1302,7 @@ theorem inter_singleton_eq_empty : s ∩ {a} = ∅ ↔ a ∉ s := by
 #align set.inter_singleton_eq_empty Set.inter_singleton_eq_empty
 
 theorem nmem_singleton_empty {s : Set α} : s ∉ ({∅} : Set (Set α)) ↔ s.Nonempty :=
-  ne_empty_iff_nonempty
+  nonempty_iff_ne_empty.symm
 #align set.nmem_singleton_empty Set.nmem_singleton_empty
 
 instance uniqueSingleton (a : α) : Unique ↥({a} : Set α) :=
@@ -1428,7 +1443,7 @@ theorem subset_singleton_iff {α : Type _} {s : Set α} {x : α} : s ⊆ {x} ↔
 theorem subset_singleton_iff_eq {s : Set α} {x : α} : s ⊆ {x} ↔ s = ∅ ∨ s = {x} := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   use ⟨fun _ => Or.inl rfl, fun _ => empty_subset _⟩
-  simp [eq_singleton_iff_nonempty_unique_mem, hs, ne_empty_iff_nonempty.2 hs]
+  simp [eq_singleton_iff_nonempty_unique_mem, hs, hs.ne_empty]
 #align set.subset_singleton_iff_eq Set.subset_singleton_iff_eq
 
 theorem Nonempty.subset_singleton_iff (h : s.Nonempty) : s ⊆ {a} ↔ s = {a} :=
@@ -1438,8 +1453,7 @@ theorem Nonempty.subset_singleton_iff (h : s.Nonempty) : s ⊆ {a} ↔ s = {a} :
 theorem ssubset_singleton_iff {s : Set α} {x : α} : s ⊂ {x} ↔ s = ∅ := by
   rw [ssubset_iff_subset_ne, subset_singleton_iff_eq, or_and_right, and_not_self_iff, or_false_iff,
     and_iff_left_iff_imp]
-  rintro rfl
-  refine' ne_comm.1 (ne_empty_iff_nonempty.2 (singleton_nonempty _))
+  exact fun h => ne_of_eq_of_ne h (singleton_ne_empty _).symm
 #align set.ssubset_singleton_iff Set.ssubset_singleton_iff
 
 theorem eq_empty_of_ssubset_singleton {s : Set α} {x : α} (hs : s ⊂ {x}) : s = ∅ :=
@@ -1536,10 +1550,10 @@ theorem compl_univ_iff {s : Set α} : sᶜ = univ ↔ s = ∅ :=
 #align set.compl_univ_iff Set.compl_univ_iff
 
 theorem compl_ne_univ : sᶜ ≠ univ ↔ s.Nonempty :=
-  compl_univ_iff.Not.trans ne_empty_iff_nonempty
+  compl_univ_iff.Not.trans nonempty_iff_ne_empty.symm
 #align set.compl_ne_univ Set.compl_ne_univ
 
-theorem nonempty_compl {s : Set α} : sᶜ.Nonempty ↔ s ≠ univ :=
+theorem nonempty_compl : sᶜ.Nonempty ↔ s ≠ univ :=
   (ne_univ_iff_exists_not_mem s).symm
 #align set.nonempty_compl Set.nonempty_compl
 
@@ -1919,8 +1933,8 @@ theorem mem_diff_singleton {x y : α} {s : Set α} : x ∈ s \ {y} ↔ x ∈ s �
   Iff.rfl
 #align set.mem_diff_singleton Set.mem_diff_singleton
 
-theorem mem_diff_singleton_empty {s : Set α} {t : Set (Set α)} : s ∈ t \ {∅} ↔ s ∈ t ∧ s.Nonempty :=
-  mem_diff_singleton.trans <| Iff.rfl.And ne_empty_iff_nonempty
+theorem mem_diff_singleton_empty {t : Set (Set α)} : s ∈ t \ {∅} ↔ s ∈ t ∧ s.Nonempty :=
+  mem_diff_singleton.trans <| and_congr_right' nonempty_iff_ne_empty.symm
 #align set.mem_diff_singleton_empty Set.mem_diff_singleton_empty
 
 theorem union_eq_diff_union_diff_union_inter (s t : Set α) : s ∪ t = s \ t ∪ t \ s ∪ s ∩ t :=
@@ -1949,7 +1963,7 @@ theorem symm_diff_eq_empty : s ∆ t = ∅ ↔ s = t :=
 
 @[simp]
 theorem symm_diff_nonempty : (s ∆ t).Nonempty ↔ s ≠ t :=
-  ne_empty_iff_nonempty.symm.trans symm_diff_eq_empty.Not
+  nonempty_iff_ne_empty.trans symm_diff_eq_empty.Not
 #align set.symm_diff_nonempty Set.symm_diff_nonempty
 
 theorem inter_symm_diff_distrib_left (s t u : Set α) : s ∩ t ∆ u = (s ∩ t) ∆ (s ∩ u) :=
@@ -3741,7 +3755,7 @@ theorem Surjective.range_comp {ι' : Sort _} {f : ι → ι'} (hf : Surjective f
 
 theorem Injective.nonempty_apply_iff {f : Set α → Set β} (hf : Injective f) (h2 : f ∅ = ∅)
     {s : Set α} : (f s).Nonempty ↔ s.Nonempty := by
-  rw [← ne_empty_iff_nonempty, ← h2, ← ne_empty_iff_nonempty, hf.ne_iff]
+  rw [nonempty_iff_ne_empty, ← h2, nonempty_iff_ne_empty, hf.ne_iff]
 #align function.injective.nonempty_apply_iff Function.Injective.nonempty_apply_iff
 
 theorem Injective.mem_range_iff_exists_unique (hf : Injective f) {b : β} :

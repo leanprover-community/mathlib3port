@@ -513,7 +513,7 @@ theorem closure_empty_iff (s : Set α) : closure s = ∅ ↔ s = ∅ :=
 
 @[simp]
 theorem closure_nonempty_iff {s : Set α} : (closure s).Nonempty ↔ s.Nonempty := by
-  simp only [← ne_empty_iff_nonempty, Ne.def, closure_empty_iff]
+  simp only [nonempty_iff_ne_empty, Ne.def, closure_empty_iff]
 #align closure_nonempty_iff closure_nonempty_iff
 
 alias closure_nonempty_iff ↔ Set.Nonempty.of_closure Set.Nonempty.closure

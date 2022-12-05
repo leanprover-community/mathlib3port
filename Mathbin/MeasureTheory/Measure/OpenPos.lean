@@ -45,7 +45,7 @@ theorem IsOpen.measure_pos (hU : IsOpen U) (hne : U.Nonempty) : 0 < μ U :=
 #align is_open.measure_pos IsOpen.measure_pos
 
 theorem IsOpen.measure_pos_iff (hU : IsOpen U) : 0 < μ U ↔ U.Nonempty :=
-  ⟨fun h => ne_empty_iff_nonempty.1 fun he => h.ne' <| he.symm ▸ measure_empty, hU.measure_pos μ⟩
+  ⟨fun h => nonempty_iff_ne_empty.2 fun he => h.ne' <| he.symm ▸ measure_empty, hU.measure_pos μ⟩
 #align is_open.measure_pos_iff IsOpen.measure_pos_iff
 
 theorem IsOpen.measure_eq_zero_iff (hU : IsOpen U) : μ U = 0 ↔ U = ∅ := by

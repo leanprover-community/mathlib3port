@@ -555,14 +555,9 @@ variable (M : Subgroup G) [nM : M.Normal]
 
 include nM nN
 
-@[to_additive QuotientAddGroup.map_normal]
-instance map_normal :
-    (M.map
-        (QuotientGroup.mk'
-          N)).Normal where conj_mem := by
-    rintro _ ⟨x, hx, rfl⟩ y
-    refine' induction_on' y fun y => ⟨y * x * y⁻¹, Subgroup.Normal.conj_mem nM x hx y, _⟩
-    simp only [mk'_apply, coe_mul, coe_inv]
+@[to_additive]
+instance map_normal : (M.map (QuotientGroup.mk' N)).Normal :=
+  nM.map _ mk_surjective
 #align quotient_group.map_normal QuotientGroup.map_normal
 
 variable (h : N ≤ M)

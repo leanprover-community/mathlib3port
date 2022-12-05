@@ -671,20 +671,14 @@ theorem set_to_simple_func_indicator (T : Set α → F →L[ℝ] F') (hT_empty :
         (SimpleFunc.piecewise s hs (SimpleFunc.const α x) (SimpleFunc.const α 0)) =
       T s x :=
   by 
-  by_cases hs_empty : s = ∅
+  obtain rfl | hs_empty := s.eq_empty_or_nonempty
   ·
-    simp only [hs_empty, hT_empty, ContinuousLinearMap.zero_apply, piecewise_empty, const_zero,
+    simp only [hT_empty, ContinuousLinearMap.zero_apply, piecewise_empty, const_zero,
       set_to_simple_func_zero_apply]
-  by_cases hs_univ : s = univ
-  · cases hα : isEmpty_or_nonempty α
-    · refine' absurd _ hs_empty
-      have : Subsingleton (Set α) := by 
-        unfold Set
-        infer_instance
-      exact Subsingleton.elim s ∅
-    simp [hs_univ, set_to_simple_func]
   simp_rw [set_to_simple_func]
-  rw [← Ne.def, Set.ne_empty_iff_nonempty] at hs_empty
+  obtain rfl | hs_univ := eq_or_ne s univ
+  · haveI hα := hs_empty.to_type
+    simp
   rw [range_indicator hs hs_empty hs_univ]
   by_cases hx0 : x = 0
   · simp_rw [hx0]

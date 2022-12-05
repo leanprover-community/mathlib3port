@@ -101,7 +101,7 @@ theorem mul_support_eq_empty_iff {f : α → M} : mulSupport f = ∅ ↔ f = 1 :
 
 @[simp, to_additive]
 theorem mul_support_nonempty_iff {f : α → M} : (mulSupport f).Nonempty ↔ f ≠ 1 := by
-  rw [← ne_empty_iff_nonempty, Ne.def, mul_support_eq_empty_iff]
+  rw [nonempty_iff_ne_empty, Ne.def, mul_support_eq_empty_iff]
 #align function.mul_support_nonempty_iff Function.mul_support_nonempty_iff
 
 @[to_additive]

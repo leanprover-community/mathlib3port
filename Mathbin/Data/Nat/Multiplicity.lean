@@ -253,7 +253,7 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
     by_cases hn : n = 0
     · subst hn
       simp at h
-      simp [h, one_right h2.not_unit, PartEnat.zero_lt_one]
+      simp [h, one_right h2.not_unit]
     have : multiplicity 2 (2 * n)! < (2 * n : ℕ) := by
       rw [prime_two.multiplicity_factorial_mul]
       refine' (PartEnat.add_lt_add_right (ih hn) (PartEnat.coe_ne_top _)).trans_le _

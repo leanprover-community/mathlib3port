@@ -109,7 +109,9 @@ theorem LinearMap.IsSymmetric.hasStrictFderivAtReApplyInnerSelf {T : F →L[ℝ]
     HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL (T x₀) : F →L[ℝ] ℝ)) x₀ := by
   convert T.has_strict_fderiv_at.inner (hasStrictFderivAtId x₀)
   ext y
-  simp [_root_.bit0, hT.apply_clm x₀ y, real_inner_comm x₀]
+  simp_rw [_root_.bit0, ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply,
+    innerSL_apply, fderiv_inner_clm_apply, id.def, ContinuousLinearMap.prod_apply,
+    ContinuousLinearMap.id_apply, hT.apply_clm x₀ y, real_inner_comm _ x₀]
 #align
   linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self LinearMap.IsSymmetric.hasStrictFderivAtReApplyInnerSelf
 
