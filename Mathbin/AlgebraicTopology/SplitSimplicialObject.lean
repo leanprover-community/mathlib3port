@@ -59,7 +59,7 @@ def mk {Δ Δ' : SimplexCategory} (f : Δ ⟶ Δ') [Epi f] : IndexSet (op Δ) :=
   ⟨op Δ', f, inferInstance⟩
 #align simplicial_object.splitting.index_set.mk SimplicialObject.Splitting.IndexSet.mk
 
-variable {Δ' Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ)
+variable {Δ' Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) (θ : Δ ⟶ Δ')
 
 /-- The epimorphism in `simplex_category` associated to `A : splitting.index_set Δ` -/
 def e :=
@@ -180,6 +180,18 @@ def epiComp {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ�
     IndexSet Δ₂ :=
   ⟨A.1, ⟨p.unop ≫ A.e, epi_comp _ _⟩⟩
 #align simplicial_object.splitting.index_set.epi_comp SimplicialObject.Splitting.IndexSet.epiComp
+
+/-- When `A : index_set Δ` and `θ : Δ → Δ'` is a morphism in `simplex_categoryᵒᵖ`,
+an element in `index_set Δ'` can be defined by using the epi-mono factorisation
+of `θ.unop ≫ A.e`. -/
+def pull : IndexSet Δ' :=
+  mk (factorThruImage (θ.unop ≫ A.e))
+#align simplicial_object.splitting.index_set.pull SimplicialObject.Splitting.IndexSet.pull
+
+@[reassoc]
+theorem fac_pull : (A.pull θ).e ≫ image.ι (θ.unop ≫ A.e) = θ.unop ≫ A.e :=
+  image.fac _
+#align simplicial_object.splitting.index_set.fac_pull SimplicialObject.Splitting.IndexSet.fac_pull
 
 end IndexSet
 

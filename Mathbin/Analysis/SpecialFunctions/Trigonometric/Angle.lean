@@ -733,6 +733,20 @@ theorem cos_neg_iff_pi_div_two_lt_abs_to_real {θ : Angle} : cos θ < 0 ↔ π /
 #align
   real.angle.cos_neg_iff_pi_div_two_lt_abs_to_real Real.Angle.cos_neg_iff_pi_div_two_lt_abs_to_real
 
+theorem abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi {θ ψ : Angle}
+    (h : (2 : ℕ) • θ + (2 : ℕ) • ψ = π) : |cos θ| = |sin ψ| := by
+  rw [← eq_sub_iff_add_eq, ← two_nsmul_coe_div_two, ← nsmul_sub, two_nsmul_eq_iff] at h
+  rcases h with (rfl | rfl) <;> simp [cos_pi_div_two_sub]
+#align
+  real.angle.abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi Real.Angle.abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi
+
+theorem abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi {θ ψ : Angle}
+    (h : (2 : ℤ) • θ + (2 : ℤ) • ψ = π) : |cos θ| = |sin ψ| := by
+  simp_rw [two_zsmul, ← two_nsmul] at h
+  exact abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi h
+#align
+  real.angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi Real.Angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi
+
 /-- The tangent of a `real.angle`. -/
 def tan (θ : Angle) : ℝ :=
   sin θ / cos θ

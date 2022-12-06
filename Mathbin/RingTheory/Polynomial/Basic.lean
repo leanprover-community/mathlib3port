@@ -1180,8 +1180,10 @@ instance {R : Type u} [CommSemiring R] [NoZeroDivisors R] {σ : Type v} :
     all_goals simpa using congr_arg (rename Subtype.val) this⟩
 
 /-- The multivariate polynomial ring over an integral domain is an integral domain. -/
-instance {R : Type u} {σ : Type v} [CommRing R] [IsDomain R] : IsDomain (MvPolynomial σ R) :=
-  { MvPolynomial.no_zero_divisors, AddMonoidAlgebra.nontrivial with }
+instance {R : Type u} {σ : Type v} [CommRing R] [IsDomain R] : IsDomain (MvPolynomial σ R) := by
+  apply NoZeroDivisors.to_is_domain _
+  exact AddMonoidAlgebra.nontrivial
+  exact MvPolynomial.no_zero_divisors
 
 theorem map_mv_polynomial_eq_eval₂ {S : Type _} [CommRing S] [Finite σ] (ϕ : MvPolynomial σ R →+* S)
     (p : MvPolynomial σ R) :

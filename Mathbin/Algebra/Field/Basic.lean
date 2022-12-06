@@ -168,7 +168,7 @@ theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
 
 -- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.is_domain : IsDomain K :=
-  { ‹DivisionRing K›, (by infer_instance : NoZeroDivisors K) with }
+  NoZeroDivisors.to_is_domain _
 #align division_ring.is_domain DivisionRing.is_domain
 
 end DivisionRing

@@ -1829,10 +1829,10 @@ end CommRing
 
 section Domain
 
-variable [Ring R] [IsDomain R]
+variable [Ring R]
 
-theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : φ * ψ = 0) : φ = 0 ∨ ψ = 0 :=
-  by 
+theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : PowerSeries R) (h : φ * ψ = 0) :
+    φ = 0 ∨ ψ = 0 := by 
   rw [or_iff_not_imp_left]
   intro H
   have ex : ∃ m, coeff R m φ ≠ 0 := by 
@@ -1872,9 +1872,12 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : φ * ψ =
     rw [Finset.Nat.mem_antidiagonal]
 #align power_series.eq_zero_or_eq_zero_of_mul_eq_zero PowerSeries.eq_zero_or_eq_zero_of_mul_eq_zero
 
-instance : IsDomain (PowerSeries R) :=
-  { PowerSeries.nontrivial with
-    eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_mul_eq_zero }
+instance [NoZeroDivisors R] :
+    NoZeroDivisors
+      (PowerSeries R) where eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_mul_eq_zero
+
+instance [IsDomain R] : IsDomain (PowerSeries R) :=
+  NoZeroDivisors.to_is_domain _
 
 end Domain
 

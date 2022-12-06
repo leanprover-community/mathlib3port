@@ -70,6 +70,22 @@ theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.S
   mem_sigma.2 ⟨hs hi, ht i ha⟩
 #align finset.sigma_mono Finset.sigma_mono
 
+theorem pairwise_disjoint_map_sigma_mk :
+    (s : Set ι).PairwiseDisjoint fun i => (t i).map (Embedding.sigmaMk i) := by
+  intro i hi j hj hij
+  rw [Function.onFun, disjoint_left]
+  simp_rw [mem_map, Function.Embedding.sigma_mk_apply]
+  rintro _ ⟨y, hy, rfl⟩ ⟨z, hz, hz'⟩
+  exact hij (congr_arg Sigma.fst hz'.symm)
+#align finset.pairwise_disjoint_map_sigma_mk Finset.pairwise_disjoint_map_sigma_mk
+
+@[simp]
+theorem disj_Union_map_sigma_mk :
+    s.disjUnion (fun i => (t i).map (Embedding.sigmaMk i)) pairwise_disjoint_map_sigma_mk =
+      s.Sigma t :=
+  rfl
+#align finset.disj_Union_map_sigma_mk Finset.disj_Union_map_sigma_mk
+
 theorem sigma_eq_bUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
     s.Sigma t = s.bUnion fun i => (t i).map <| Embedding.sigmaMk i := by
   ext ⟨x, y⟩

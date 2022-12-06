@@ -270,7 +270,7 @@ section Ring
 variable [Ring R] [IsDomain R] {p q : R[X]}
 
 instance : IsDomain R[X] :=
-  { Polynomial.no_zero_divisors, Polynomial.nontrivial with }
+  NoZeroDivisors.to_is_domain _
 
 end Ring
 

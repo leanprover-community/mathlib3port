@@ -509,6 +509,14 @@ theorem coe_bot : ((⊥ : UpperSet α) : Set α) = univ :=
 #align upper_set.coe_bot UpperSet.coe_bot
 
 @[simp, norm_cast]
+theorem coe_eq_univ : (s : Set α) = univ ↔ s = ⊥ := by simp [SetLike.ext'_iff]
+#align upper_set.coe_eq_univ UpperSet.coe_eq_univ
+
+@[simp, norm_cast]
+theorem coe_eq_empty : (s : Set α) = ∅ ↔ s = ⊤ := by simp [SetLike.ext'_iff]
+#align upper_set.coe_eq_empty UpperSet.coe_eq_empty
+
+@[simp, norm_cast]
 theorem coe_sup (s t : UpperSet α) : (↑(s ⊔ t) : Set α) = s ∩ t :=
   rfl
 #align upper_set.coe_sup UpperSet.coe_sup
@@ -604,6 +612,11 @@ theorem mem_infi₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨅ (i) (j), 
   simp_rw [mem_infi_iff]
 #align upper_set.mem_infi₂_iff UpperSet.mem_infi₂_iff
 
+@[simp, norm_cast]
+theorem codisjoint_coe : Codisjoint (s : Set α) t ↔ Disjoint s t := by
+  simp [disjoint_iff, codisjoint_iff, SetLike.ext'_iff]
+#align upper_set.codisjoint_coe UpperSet.codisjoint_coe
+
 end UpperSet
 
 namespace LowerSet
@@ -649,6 +662,14 @@ theorem coe_top : ((⊤ : LowerSet α) : Set α) = univ :=
 theorem coe_bot : ((⊥ : LowerSet α) : Set α) = ∅ :=
   rfl
 #align lower_set.coe_bot LowerSet.coe_bot
+
+@[simp, norm_cast]
+theorem coe_eq_univ : (s : Set α) = univ ↔ s = ⊤ := by simp [SetLike.ext'_iff]
+#align lower_set.coe_eq_univ LowerSet.coe_eq_univ
+
+@[simp, norm_cast]
+theorem coe_eq_empty : (s : Set α) = ∅ ↔ s = ⊥ := by simp [SetLike.ext'_iff]
+#align lower_set.coe_eq_empty LowerSet.coe_eq_empty
 
 @[simp, norm_cast]
 theorem coe_sup (s t : LowerSet α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
@@ -747,6 +768,11 @@ theorem mem_supr₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨆ (i) (j), 
 theorem mem_infi₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
   simp_rw [mem_infi_iff]
 #align lower_set.mem_infi₂_iff LowerSet.mem_infi₂_iff
+
+@[simp, norm_cast]
+theorem disjoint_coe : Disjoint (s : Set α) t ↔ Disjoint s t := by
+  simp [disjoint_iff, SetLike.ext'_iff]
+#align lower_set.disjoint_coe LowerSet.disjoint_coe
 
 end LowerSet
 
@@ -1648,7 +1674,11 @@ end Closure
 
 section Preorder
 
-variable [Preorder α] [Preorder β] {s : Set α} {t : Set β} {x : α × β}
+variable [Preorder α] [Preorder β]
+
+section
+
+variable {s : Set α} {t : Set β} {x : α × β}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsUpperSet.prod (hs : IsUpperSet s) (ht : IsUpperSet t) : IsUpperSet (s ×ˢ t) :=
@@ -1660,11 +1690,15 @@ theorem IsLowerSet.prod (hs : IsLowerSet s) (ht : IsLowerSet t) : IsLowerSet (s 
   fun a b h ha => ⟨hs h.1 ha.1, ht h.2 ha.2⟩
 #align is_lower_set.prod IsLowerSet.prod
 
+end
+
 namespace UpperSet
+
+variable (s s₁ s₂ : UpperSet α) (t t₁ t₂ : UpperSet β) {x : α × β}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two upper sets as an upper set. -/
-def prod (s : UpperSet α) (t : UpperSet β) : UpperSet (α × β) :=
+def prod : UpperSet (α × β) :=
   ⟨s ×ˢ t, s.2.Prod t.2⟩
 #align upper_set.prod UpperSet.prod
 
@@ -1673,8 +1707,8 @@ infixr:82 " ×ˢ " => prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem coe_prod (s : UpperSet α) (t : UpperSet β) : (↑(s ×ˢ t) : Set (α × β)) = s ×ˢ t :=
+@[simp, norm_cast]
+theorem coe_prod : (↑(s ×ˢ t) : Set (α × β)) = s ×ˢ t :=
   rfl
 #align upper_set.coe_prod UpperSet.coe_prod
 
@@ -1697,13 +1731,13 @@ theorem Ici_prod_Ici (a : α) (b : β) : ici a ×ˢ ici b = ici (a, b) :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_top (s : UpperSet α) : s ×ˢ (⊤ : UpperSet β) = ⊤ :=
+theorem prod_top : s ×ˢ (⊤ : UpperSet β) = ⊤ :=
   ext prod_empty
 #align upper_set.prod_top UpperSet.prod_top
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem top_prod (t : UpperSet β) : (⊤ : UpperSet α) ×ˢ t = ⊤ :=
+theorem top_prod : (⊤ : UpperSet α) ×ˢ t = ⊤ :=
   ext empty_prod
 #align upper_set.top_prod UpperSet.top_prod
 
@@ -1713,13 +1747,108 @@ theorem bot_prod_bot : (⊥ : UpperSet α) ×ˢ (⊥ : UpperSet β) = ⊥ :=
   ext univ_prod_univ
 #align upper_set.bot_prod_bot UpperSet.bot_prod_bot
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sup_prod : (s₁ ⊔ s₂) ×ˢ t = s₁ ×ˢ t ⊔ s₂ ×ˢ t :=
+  ext inter_prod
+#align upper_set.sup_prod UpperSet.sup_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_sup : s ×ˢ (t₁ ⊔ t₂) = s ×ˢ t₁ ⊔ s ×ˢ t₂ :=
+  ext prod_inter
+#align upper_set.prod_sup UpperSet.prod_sup
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem inf_prod : (s₁ ⊓ s₂) ×ˢ t = s₁ ×ˢ t ⊓ s₂ ×ˢ t :=
+  ext union_prod
+#align upper_set.inf_prod UpperSet.inf_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_inf : s ×ˢ (t₁ ⊓ t₂) = s ×ˢ t₁ ⊓ s ×ˢ t₂ :=
+  ext prod_union
+#align upper_set.prod_inf UpperSet.prod_inf
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_sup_prod : s₁ ×ˢ t₁ ⊔ s₂ ×ˢ t₂ = (s₁ ⊔ s₂) ×ˢ (t₁ ⊔ t₂) :=
+  ext prod_inter_prod
+#align upper_set.prod_sup_prod UpperSet.prod_sup_prod
+
+variable {s s₁ s₂ t t₁ t₂}
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_mono : s₁ ≤ s₂ → t₁ ≤ t₂ → s₁ ×ˢ t₁ ≤ s₂ ×ˢ t₂ :=
+  prod_mono
+#align upper_set.prod_mono UpperSet.prod_mono
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_mono_left : s₁ ≤ s₂ → s₁ ×ˢ t ≤ s₂ ×ˢ t :=
+  prod_mono_left
+#align upper_set.prod_mono_left UpperSet.prod_mono_left
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_mono_right : t₁ ≤ t₂ → s ×ˢ t₁ ≤ s ×ˢ t₂ :=
+  prod_mono_right
+#align upper_set.prod_mono_right UpperSet.prod_mono_right
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_self_le_prod_self : s₁ ×ˢ s₁ ≤ s₂ ×ˢ s₂ ↔ s₁ ≤ s₂ :=
+  prod_self_subset_prod_self
+#align upper_set.prod_self_le_prod_self UpperSet.prod_self_le_prod_self
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_self_lt_prod_self : s₁ ×ˢ s₁ < s₂ ×ˢ s₂ ↔ s₁ < s₂ :=
+  prod_self_ssubset_prod_self
+#align upper_set.prod_self_lt_prod_self UpperSet.prod_self_lt_prod_self
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_le_prod_iff : s₁ ×ˢ t₁ ≤ s₂ ×ˢ t₂ ↔ s₁ ≤ s₂ ∧ t₁ ≤ t₂ ∨ s₂ = ⊤ ∨ t₂ = ⊤ :=
+  prod_subset_prod_iff.trans <| by simp
+#align upper_set.prod_le_prod_iff UpperSet.prod_le_prod_iff
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_eq_top : s ×ˢ t = ⊤ ↔ s = ⊤ ∨ t = ⊤ := by
+  simp_rw [SetLike.ext'_iff]
+  exact prod_eq_empty_iff
+#align upper_set.prod_eq_top UpperSet.prod_eq_top
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem codisjoint_prod : Codisjoint (s₁ ×ˢ t₁) (s₂ ×ˢ t₂) ↔ Codisjoint s₁ s₂ ∨ Codisjoint t₁ t₂ :=
+  by simp_rw [codisjoint_iff, prod_sup_prod, prod_eq_top]
+#align upper_set.codisjoint_prod UpperSet.codisjoint_prod
+
 end UpperSet
 
 namespace LowerSet
 
+variable (s s₁ s₂ : LowerSet α) (t t₁ t₂ : LowerSet β) {x : α × β}
+
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two lower sets as a lower set. -/
-def prod (s : LowerSet α) (t : LowerSet β) : LowerSet (α × β) :=
+def prod : LowerSet (α × β) :=
   ⟨s ×ˢ t, s.2.Prod t.2⟩
 #align lower_set.prod LowerSet.prod
 
@@ -1728,8 +1857,8 @@ infixr:82 " ×ˢ " => LowerSet.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem coe_prod (s : LowerSet α) (t : LowerSet β) : (↑(s ×ˢ t) : Set (α × β)) = s ×ˢ t :=
+@[simp, norm_cast]
+theorem coe_prod : (↑(s ×ˢ t) : Set (α × β)) = s ×ˢ t :=
   rfl
 #align lower_set.coe_prod LowerSet.coe_prod
 
@@ -1752,13 +1881,13 @@ theorem Ici_prod_Ici (a : α) (b : β) : iic a ×ˢ iic b = iic (a, b) :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_bot (s : LowerSet α) : s ×ˢ (⊥ : LowerSet β) = ⊥ :=
+theorem prod_bot : s ×ˢ (⊥ : LowerSet β) = ⊥ :=
   ext prod_empty
 #align lower_set.prod_bot LowerSet.prod_bot
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem bot_prod (t : LowerSet β) : (⊥ : LowerSet α) ×ˢ t = ⊥ :=
+theorem bot_prod : (⊥ : LowerSet α) ×ˢ t = ⊥ :=
   ext empty_prod
 #align lower_set.bot_prod LowerSet.bot_prod
 
@@ -1767,6 +1896,99 @@ theorem bot_prod (t : LowerSet β) : (⊥ : LowerSet α) ×ˢ t = ⊥ :=
 theorem top_prod_top : (⊤ : LowerSet α) ×ˢ (⊤ : LowerSet β) = ⊤ :=
   ext univ_prod_univ
 #align lower_set.top_prod_top LowerSet.top_prod_top
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem inf_prod : (s₁ ⊓ s₂) ×ˢ t = s₁ ×ˢ t ⊓ s₂ ×ˢ t :=
+  ext inter_prod
+#align lower_set.inf_prod LowerSet.inf_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_inf : s ×ˢ (t₁ ⊓ t₂) = s ×ˢ t₁ ⊓ s ×ˢ t₂ :=
+  ext prod_inter
+#align lower_set.prod_inf LowerSet.prod_inf
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sup_prod : (s₁ ⊔ s₂) ×ˢ t = s₁ ×ˢ t ⊔ s₂ ×ˢ t :=
+  ext union_prod
+#align lower_set.sup_prod LowerSet.sup_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_sup : s ×ˢ (t₁ ⊔ t₂) = s ×ˢ t₁ ⊔ s ×ˢ t₂ :=
+  ext prod_union
+#align lower_set.prod_sup LowerSet.prod_sup
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_inf_prod : s₁ ×ˢ t₁ ⊓ s₂ ×ˢ t₂ = (s₁ ⊓ s₂) ×ˢ (t₁ ⊓ t₂) :=
+  ext prod_inter_prod
+#align lower_set.prod_inf_prod LowerSet.prod_inf_prod
+
+variable {s s₁ s₂ t t₁ t₂}
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_mono : s₁ ≤ s₂ → t₁ ≤ t₂ → s₁ ×ˢ t₁ ≤ s₂ ×ˢ t₂ :=
+  prod_mono
+#align lower_set.prod_mono LowerSet.prod_mono
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_mono_left : s₁ ≤ s₂ → s₁ ×ˢ t ≤ s₂ ×ˢ t :=
+  prod_mono_left
+#align lower_set.prod_mono_left LowerSet.prod_mono_left
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_mono_right : t₁ ≤ t₂ → s ×ˢ t₁ ≤ s ×ˢ t₂ :=
+  prod_mono_right
+#align lower_set.prod_mono_right LowerSet.prod_mono_right
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_self_le_prod_self : s₁ ×ˢ s₁ ≤ s₂ ×ˢ s₂ ↔ s₁ ≤ s₂ :=
+  prod_self_subset_prod_self
+#align lower_set.prod_self_le_prod_self LowerSet.prod_self_le_prod_self
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_self_lt_prod_self : s₁ ×ˢ s₁ < s₂ ×ˢ s₂ ↔ s₁ < s₂ :=
+  prod_self_ssubset_prod_self
+#align lower_set.prod_self_lt_prod_self LowerSet.prod_self_lt_prod_self
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem prod_le_prod_iff : s₁ ×ˢ t₁ ≤ s₂ ×ˢ t₂ ↔ s₁ ≤ s₂ ∧ t₁ ≤ t₂ ∨ s₁ = ⊥ ∨ t₁ = ⊥ :=
+  prod_subset_prod_iff.trans <| by simp
+#align lower_set.prod_le_prod_iff LowerSet.prod_le_prod_iff
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem prod_eq_bot : s ×ˢ t = ⊥ ↔ s = ⊥ ∨ t = ⊥ := by
+  simp_rw [SetLike.ext'_iff]
+  exact prod_eq_empty_iff
+#align lower_set.prod_eq_bot LowerSet.prod_eq_bot
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem disjoint_prod : Disjoint (s₁ ×ˢ t₁) (s₂ ×ˢ t₂) ↔ Disjoint s₁ s₂ ∨ Disjoint t₁ t₂ := by
+  simp_rw [disjoint_iff, prod_inf_prod, prod_eq_bot]
+#align lower_set.disjoint_prod LowerSet.disjoint_prod
 
 end LowerSet
 

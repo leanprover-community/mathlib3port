@@ -768,8 +768,11 @@ end RingHom
 
 /-- Pullback `is_domain` instance along an injective function. -/
 protected theorem Function.Injective.is_domain [Ring α] [IsDomain α] [Ring β] (f : β →+* α)
-    (hf : Injective f) : IsDomain β :=
-  { pullback_nonzero f f.map_zero f.map_one, hf.NoZeroDivisors f f.map_zero f.map_mul with }
+    (hf : Injective f) : IsDomain β := by
+  haveI := pullback_nonzero f f.map_zero f.map_one
+  haveI := IsRightCancelMulZero.to_no_zero_divisors α
+  haveI := hf.no_zero_divisors f f.map_zero f.map_mul
+  exact NoZeroDivisors.to_is_domain β
 #align function.injective.is_domain Function.Injective.is_domain
 
 namespace AddMonoidHom

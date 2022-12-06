@@ -158,6 +158,19 @@ instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : 
 #align
   category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additive
 
+instance Functor.map_homological_complex_reflects_iso (F : V ⥤ W) [F.Additive]
+    [ReflectsIsomorphisms F] (c : ComplexShape ι) :
+    ReflectsIsomorphisms (F.mapHomologicalComplex c) :=
+  ⟨fun X Y f => by 
+    intro
+    haveI : ∀ n : ι, is_iso (F.map (f.f n)) := fun n =>
+      is_iso.of_iso
+        ((HomologicalComplex.eval W c n).mapIso (as_iso ((F.map_homological_complex c).map f)))
+    haveI := fun n => is_iso_of_reflects_iso (f.f n) F
+    exact HomologicalComplex.Hom.is_iso_of_components f⟩
+#align
+  category_theory.functor.map_homological_complex_reflects_iso CategoryTheory.Functor.map_homological_complex_reflects_iso
+
 /-- A natural transformation between functors induces a natural transformation
 between those functors applied to homological complexes.
 -/

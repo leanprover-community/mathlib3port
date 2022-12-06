@@ -230,20 +230,23 @@ section Ring
 variable {R A : Type _} [CommSemiring R] [Ring A] [Algebra R A]
 
 theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
-    Function.Injective (mulLeft R x) :=
-  letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-  mul_right_injective₀ hx
+    Function.Injective (mulLeft R x) := by
+  letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
+  letI := NoZeroDivisors.to_is_domain A
+  exact mul_right_injective₀ hx
 #align linear_map.mul_left_injective LinearMap.mul_left_injective
 
 theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
-    Function.Injective (mulRight R x) :=
-  letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-  mul_left_injective₀ hx
+    Function.Injective (mulRight R x) := by
+  letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
+  letI := NoZeroDivisors.to_is_domain A
+  exact mul_left_injective₀ hx
 #align linear_map.mul_right_injective LinearMap.mul_right_injective
 
-theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) :=
-  letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-  mul_right_injective₀ hx
+theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) := by
+  letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
+  letI := NoZeroDivisors.to_is_domain A
+  exact mul_right_injective₀ hx
 #align linear_map.mul_injective LinearMap.mul_injective
 
 end Ring

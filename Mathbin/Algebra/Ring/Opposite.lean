@@ -85,7 +85,7 @@ instance [Zero α] [Mul α] [NoZeroDivisors α] :
       (fun hy => Or.inr <| unop_injective <| hy) fun hx => Or.inl <| unop_injective <| hx
 
 instance [Ring α] [IsDomain α] : IsDomain αᵐᵒᵖ :=
-  { MulOpposite.no_zero_divisors α, MulOpposite.ring α, MulOpposite.nontrivial α with }
+  NoZeroDivisors.to_is_domain _
 
 instance [GroupWithZero α] : GroupWithZero αᵐᵒᵖ :=
   { MulOpposite.monoidWithZero α, MulOpposite.divInvMonoid α, MulOpposite.nontrivial α with
@@ -161,7 +161,7 @@ instance [Zero α] [Mul α] [NoZeroDivisors α] :
       (@eq_zero_or_eq_zero_of_mul_eq_zero α _ _ _ _ _ <| op_injective H)
 
 instance [Ring α] [IsDomain α] : IsDomain αᵃᵒᵖ :=
-  { AddOpposite.no_zero_divisors α, AddOpposite.ring α, AddOpposite.nontrivial α with }
+  NoZeroDivisors.to_is_domain _
 
 instance [GroupWithZero α] : GroupWithZero αᵃᵒᵖ :=
   { AddOpposite.monoidWithZero α, AddOpposite.divInvMonoid α, AddOpposite.nontrivial α with

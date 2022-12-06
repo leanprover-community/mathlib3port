@@ -171,7 +171,7 @@ open MeasureTheory Set Classical Filter Function
 
 open Classical TopologicalSpace Filter Ennreal BigOperators Interval Nnreal
 
-variable {ι 𝕜 E F : Type _} [NormedAddCommGroup E]
+variable {ι 𝕜 E F A : Type _} [NormedAddCommGroup E]
 
 /-!
 ### Integrability at an interval
@@ -398,7 +398,7 @@ protected theorem aeStronglyMeasurable' (h : IntervalIntegrable f μ a b) :
 
 end
 
-variable {f g : ℝ → E} {a b : ℝ} {μ : Measure ℝ}
+variable [NormedRing A] {f g : ℝ → E} {a b : ℝ} {μ : Measure ℝ}
 
 theorem smul [NormedField 𝕜] [NormedSpace 𝕜 E] {f : ℝ → E} {a b : ℝ} {μ : Measure ℝ}
     (h : IntervalIntegrable f μ a b) (r : 𝕜) : IntervalIntegrable (r • f) μ a b :=
@@ -422,23 +422,24 @@ theorem sum (s : Finset ι) {f : ι → ℝ → E} (h : ∀ i ∈ s, IntervalInt
   ⟨integrableFinsetSum' s fun i hi => (h i hi).1, integrableFinsetSum' s fun i hi => (h i hi).2⟩
 #align interval_integrable.sum IntervalIntegrable.sum
 
-theorem mulContinuousOn {f g : ℝ → ℝ} (hf : IntervalIntegrable f μ a b)
+theorem mulContinuousOn {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
     (hg : ContinuousOn g [a, b]) : IntervalIntegrable (fun x => f x * g x) μ a b := by
   rw [interval_integrable_iff] at hf⊢
   exact hf.mul_continuous_on_of_subset hg measurableSetIoc is_compact_interval Ioc_subset_Icc_self
 #align interval_integrable.mul_continuous_on IntervalIntegrable.mulContinuousOn
 
-theorem continuousOnMul {f g : ℝ → ℝ} (hf : IntervalIntegrable f μ a b)
+theorem continuousOnMul {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
     (hg : ContinuousOn g [a, b]) : IntervalIntegrable (fun x => g x * f x) μ a b := by
-  simpa [mul_comm] using hf.mul_continuous_on hg
+  rw [interval_integrable_iff] at hf⊢
+  exact hf.continuous_on_mul_of_subset hg is_compact_interval measurableSetIoc Ioc_subset_Icc_self
 #align interval_integrable.continuous_on_mul IntervalIntegrable.continuousOnMul
 
-theorem constMul {f : ℝ → ℝ} {a b : ℝ} {μ : Measure ℝ} (hf : IntervalIntegrable f μ a b) (c : ℝ) :
+theorem constMul {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
     IntervalIntegrable (fun x => c * f x) μ a b :=
   hf.continuousOnMul continuous_on_const
 #align interval_integrable.const_mul IntervalIntegrable.constMul
 
-theorem mulConst {f : ℝ → ℝ} {a b : ℝ} {μ : Measure ℝ} (hf : IntervalIntegrable f μ a b) (c : ℝ) :
+theorem mulConst {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
     IntervalIntegrable (fun x => f x * c) μ a b :=
   hf.mulContinuousOn continuous_on_const
 #align interval_integrable.mul_const IntervalIntegrable.mulConst
@@ -2772,7 +2773,11 @@ theorem intervalIntegrableDerivOfNonneg (hcont : ContinuousOn g (interval a b))
 -/
 
 
-theorem integral_deriv_mul_eq_sub {u v u' v' : ℝ → ℝ}
+section Parts
+
+variable [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+
+theorem integral_deriv_mul_eq_sub {u v u' v' : ℝ → A}
     (hu : ∀ x ∈ interval a b, HasDerivAt u (u' x) x)
     (hv : ∀ x ∈ interval a b, HasDerivAt v (v' x) x) (hu' : IntervalIntegrable u' volume a b)
     (hv' : IntervalIntegrable v' volume a b) :
@@ -2782,20 +2787,22 @@ theorem integral_deriv_mul_eq_sub {u v u' v' : ℝ → ℝ}
       (hv'.continuousOnMul (HasDerivAt.continuous_on hu))
 #align interval_integral.integral_deriv_mul_eq_sub intervalIntegral.integral_deriv_mul_eq_sub
 
-theorem integral_mul_deriv_eq_deriv_mul {u v u' v' : ℝ → ℝ}
+theorem integral_mul_deriv_eq_deriv_mul {u v u' v' : ℝ → A}
     (hu : ∀ x ∈ interval a b, HasDerivAt u (u' x) x)
     (hv : ∀ x ∈ interval a b, HasDerivAt v (v' x) x) (hu' : IntervalIntegrable u' volume a b)
     (hv' : IntervalIntegrable v' volume a b) :
-    (∫ x in a..b, u x * v' x) = u b * v b - u a * v a - ∫ x in a..b, v x * u' x := by
+    (∫ x in a..b, u x * v' x) = u b * v b - u a * v a - ∫ x in a..b, u' x * v x := by
   rw [← integral_deriv_mul_eq_sub hu hv hu' hv', ← integral_sub]
-  · exact integral_congr fun x hx => by simp only [mul_comm, add_sub_cancel']
+  · exact integral_congr fun x hx => by simp only [add_sub_cancel']
   ·
     exact
       (hu'.mul_continuous_on (HasDerivAt.continuous_on hv)).add
         (hv'.continuous_on_mul (HasDerivAt.continuous_on hu))
-  · exact hu'.continuous_on_mul (HasDerivAt.continuous_on hv)
+  · exact hu'.mul_continuous_on (HasDerivAt.continuous_on hv)
 #align
   interval_integral.integral_mul_deriv_eq_deriv_mul intervalIntegral.integral_mul_deriv_eq_deriv_mul
+
+end Parts
 
 /-!
 ### Integration by substitution / Change of variables

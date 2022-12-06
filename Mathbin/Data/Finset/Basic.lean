@@ -4001,6 +4001,18 @@ theorem disj_Union_disj_Union (s : Finset α) (f : α → Finset β) (g : β →
   eq_of_veq <| Multiset.bind_assoc.trans (Multiset.attach_bind_coe _ _).symm
 #align finset.disj_Union_disj_Union Finset.disj_Union_disj_Union
 
+theorem disj_Union_filter_eq_of_maps_to [DecidableEq β] {s : Finset α} {t : Finset β} {f : α → β}
+    (h : ∀ x ∈ s, f x ∈ t) :
+    (t.disjUnion (fun a => s.filter fun c => f c = a) fun x' hx y' hy hne =>
+        disjoint_filter_filter' _ _
+          (by 
+            simp_rw [Pi.disjoint_iff, PropCat.disjoint_iff]
+            rintro i ⟨rfl, rfl⟩
+            exact hne rfl)) =
+      s :=
+  ext fun b => by simpa using h b
+#align finset.disj_Union_filter_eq_of_maps_to Finset.disj_Union_filter_eq_of_maps_to
+
 end DisjUnion
 
 section BUnion
@@ -4157,8 +4169,8 @@ theorem filter_bUnion (s : Finset α) (f : α → Finset β) (p : β → Prop) [
 #align finset.filter_bUnion Finset.filter_bUnion
 
 theorem bUnion_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset β} {f : α → β}
-    (h : ∀ x ∈ s, f x ∈ t) : (t.bUnion fun a => s.filter fun c => f c = a) = s :=
-  ext fun b => by simpa using h b
+    (h : ∀ x ∈ s, f x ∈ t) : (t.bUnion fun a => s.filter fun c => f c = a) = s := by
+  simpa only [disj_Union_eq_bUnion] using disj_Union_filter_eq_of_maps_to h
 #align finset.bUnion_filter_eq_of_maps_to Finset.bUnion_filter_eq_of_maps_to
 
 theorem image_bUnion_filter_eq [DecidableEq α] (s : Finset β) (g : β → α) :

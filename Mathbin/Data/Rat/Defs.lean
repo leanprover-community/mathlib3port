@@ -562,7 +562,7 @@ instance : CommGroupWithZero ℚ :=
     mul_inv_cancel := Rat.mul_inv_cancel, mul_zero := mul_zero, zero_mul := zero_mul }
 
 instance : IsDomain ℚ :=
-  { Rat.commGroupWithZero, (inferInstance : NoZeroDivisors ℚ) with }
+  NoZeroDivisors.to_is_domain _
 
 -- Extra instances to short-circuit type class resolution 
 -- TODO(Mario): this instance slows down data.real.basic

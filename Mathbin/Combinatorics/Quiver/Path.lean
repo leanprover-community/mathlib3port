@@ -37,7 +37,27 @@ def Hom.toPath {V} [Quiver V] {a b : V} (e : a ⟶ b) : Path a b :=
 
 namespace Path
 
-variable {V : Type u} [Quiver V] {a b c : V}
+variable {V : Type u} [Quiver V] {a b c d : V}
+
+theorem nil_ne_cons (p : Path a b) (e : b ⟶ a) : path.nil ≠ p.cons e :=
+  fun.
+#align quiver.path.nil_ne_cons Quiver.Path.nil_ne_cons
+
+theorem cons_ne_nil (p : Path a b) (e : b ⟶ a) : p.cons e ≠ path.nil :=
+  fun.
+#align quiver.path.cons_ne_nil Quiver.Path.cons_ne_nil
+
+theorem obj_eq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
+    (h : p.cons e = p'.cons e') : b = c := by injection h
+#align quiver.path.obj_eq_of_cons_eq_cons Quiver.Path.obj_eq_of_cons_eq_cons
+
+theorem heq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
+    (h : p.cons e = p'.cons e') : HEq p p' := by injection h
+#align quiver.path.heq_of_cons_eq_cons Quiver.Path.heq_of_cons_eq_cons
+
+theorem hom_heq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
+    (h : p.cons e = p'.cons e') : HEq e e' := by injection h
+#align quiver.path.hom_heq_of_cons_eq_cons Quiver.Path.hom_heq_of_cons_eq_cons
 
 /-- The length of a path is the number of arrows it uses. -/
 def length {a : V} : ∀ {b : V}, Path a b → ℕ

@@ -408,10 +408,10 @@ import Mathbin.Algebra.Tropical.Basic
 import Mathbin.Algebra.Tropical.BigOperators
 import Mathbin.Algebra.Tropical.Lattice
 import Mathbin.AlgebraicGeometry.AffineSchemeCat
-import Mathbin.AlgebraicGeometry.EllipticCurveCat
 import Mathbin.AlgebraicGeometry.GammaSpecAdjunction
 import Mathbin.AlgebraicGeometry.SchemeCat
 import Mathbin.AlgebraicGeometry.SpecCat
+import Mathbin.AlgebraicGeometry.EllipticCurve.Weierstrass
 import Mathbin.AlgebraicGeometry.FunctionField
 import Mathbin.AlgebraicGeometry.Gluing
 import Mathbin.AlgebraicGeometry.Limits
@@ -1099,6 +1099,7 @@ import Mathbin.Combinatorics.Partition
 import Mathbin.Combinatorics.Pigeonhole
 import Mathbin.Combinatorics.Quiver.Arborescence
 import Mathbin.Combinatorics.Quiver.Basic
+import Mathbin.Combinatorics.Quiver.Cast
 import Mathbin.Combinatorics.Quiver.ConnectedComponent
 import Mathbin.Combinatorics.Quiver.Path
 import Mathbin.Combinatorics.Quiver.Push

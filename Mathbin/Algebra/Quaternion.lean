@@ -995,11 +995,14 @@ theorem norm_sq_le_zero : normSq a ≤ 0 ↔ a = 0 := by
 
 instance : Nontrivial ℍ[R] where exists_pair_ne := ⟨0, 1, mt (congr_arg re) zero_ne_one⟩
 
-instance : IsDomain ℍ[R] :=
+instance : NoZeroDivisors ℍ[R] :=
   { Quaternion.nontrivial with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b hab =>
       have : normSq a * normSq b = 0 := by rwa [← norm_sq.map_mul, norm_sq_eq_zero]
       (eq_zero_or_eq_zero_of_mul_eq_zero this).imp norm_sq_eq_zero.1 norm_sq_eq_zero.1 }
+
+instance : IsDomain ℍ[R] :=
+  NoZeroDivisors.to_is_domain _
 
 end LinearOrderedCommRing
 

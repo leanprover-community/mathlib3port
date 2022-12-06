@@ -277,20 +277,26 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.carri
 
 theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleSpace X.carrier] :
     IsIntegral X := by 
-  constructor;
-  refine' fun U hU =>
-    ⟨fun a b e => _, (@LocallyRingedSpace.component_nontrivial X.to_LocallyRingedSpace U hU).1⟩
-  simp_rw [← basic_open_eq_bot_iff, ← opens.not_nonempty_iff_eq_bot]
-  by_contra' h
-  obtain ⟨_, ⟨x, hx₁, rfl⟩, ⟨x, hx₂, e'⟩⟩ :=
-    @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
-  replace e' := Subtype.eq e'
-  subst e'
-  replace e := congr_arg (X.presheaf.germ x) e
-  rw [RingHom.map_mul, RingHom.map_zero] at e
-  refine' zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 _)
-  convert hx₁.mul hx₂
-  exact e.symm
+  constructor
+  intro U hU
+  haveI := (@LocallyRingedSpace.component_nontrivial X.to_LocallyRingedSpace U hU).1
+  have :
+    NoZeroDivisors
+      (X.to_LocallyRingedSpace.to_SheafedSpace.to_PresheafedSpace.presheaf.obj (op U)) :=
+    by 
+    refine' ⟨fun a b e => _⟩
+    simp_rw [← basic_open_eq_bot_iff, ← opens.not_nonempty_iff_eq_bot]
+    by_contra' h
+    obtain ⟨_, ⟨x, hx₁, rfl⟩, ⟨x, hx₂, e'⟩⟩ :=
+      @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
+    replace e' := Subtype.eq e'
+    subst e'
+    replace e := congr_arg (X.presheaf.germ x) e
+    rw [RingHom.map_mul, RingHom.map_zero] at e
+    refine' zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 _)
+    convert hx₁.mul hx₂
+    exact e.symm
+  exact NoZeroDivisors.to_is_domain _
 #align
   algebraic_geometry.is_integral_of_is_irreducible_is_reduced AlgebraicGeometry.is_integral_of_is_irreducible_is_reduced
 

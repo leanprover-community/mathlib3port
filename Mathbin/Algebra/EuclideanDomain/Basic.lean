@@ -7,6 +7,7 @@ import Mathbin.Algebra.EuclideanDomain.Defs
 import Mathbin.Algebra.Ring.Divisibility
 import Mathbin.Algebra.Ring.Regular
 import Mathbin.Algebra.GroupWithZero.Divisibility
+import Mathbin.Algebra.Ring.Basic
 
 /-!
 # Lemmas about Euclidean domains
@@ -227,11 +228,14 @@ theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b :=
 #align euclidean_domain.gcd_eq_gcd_ab EuclideanDomain.gcd_eq_gcd_ab
 
 -- see Note [lower instance priority]
-instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R :=
+instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : NoZeroDivisors R :=
   haveI := Classical.decEq R
-  { e with
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>
+  { eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>
       or_iff_not_and_not.2 fun h0 => h0.1 <| by rw [← mul_div_cancel a h0.2, h, zero_div] }
+
+-- see Note [lower instance priority]
+instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R :=
+  { e, NoZeroDivisors.to_is_domain R with }
 
 end Gcd
 

@@ -275,15 +275,29 @@ theorem powerset_len_self (s : Finset α) : powersetLen s.card s = {s} := by
     simp
 #align finset.powerset_len_self Finset.powerset_len_self
 
-theorem powerset_card_bUnion [DecidableEq (Finset α)] (s : Finset α) :
-    Finset.powerset s = (range (s.card + 1)).bUnion fun i => powersetLen i s := by
+theorem pairwise_disjoint_powerset_len (s : Finset α) :
+    Pairwise fun i j => Disjoint (s.powersetLen i) (s.powersetLen j) := fun i j hij =>
+  Finset.disjoint_left.mpr fun x hi hj =>
+    hij <| (mem_powerset_len.mp hi).2.symm.trans (mem_powerset_len.mp hj).2
+#align finset.pairwise_disjoint_powerset_len Finset.pairwise_disjoint_powerset_len
+
+theorem powerset_card_disj_Union (s : Finset α) :
+    Finset.powerset s =
+      (range (s.card + 1)).disjUnion (fun i => powersetLen i s)
+        (s.pairwise_disjoint_powerset_len.set_pairwise _) :=
+  by 
   refine' ext fun a => ⟨fun ha => _, fun ha => _⟩
-  · rw [mem_bUnion]
+  · rw [mem_disj_Union]
     exact
       ⟨a.card, mem_range.mpr (Nat.lt_succ_of_le (card_le_of_subset (mem_powerset.mp ha))),
         mem_powerset_len.mpr ⟨mem_powerset.mp ha, rfl⟩⟩
-  · rcases mem_bUnion.mp ha with ⟨i, hi, ha⟩
+  · rcases mem_disj_Union.mp ha with ⟨i, hi, ha⟩
     exact mem_powerset.mpr (mem_powerset_len.mp ha).1
+#align finset.powerset_card_disj_Union Finset.powerset_card_disj_Union
+
+theorem powerset_card_bUnion [DecidableEq (Finset α)] (s : Finset α) :
+    Finset.powerset s = (range (s.card + 1)).bUnion fun i => powersetLen i s := by
+  simpa only [disj_Union_eq_bUnion] using powerset_card_disj_Union s
 #align finset.powerset_card_bUnion Finset.powerset_card_bUnion
 
 theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) :

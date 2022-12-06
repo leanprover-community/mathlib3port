@@ -303,6 +303,11 @@ theorem decomp_id_p_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
 #align
   category_theory.idempotents.karoubi.decomp_id_p_naturality CategoryTheory.Idempotents.Karoubi.decomp_id_p_naturality
 
+@[simp]
+theorem zsmul_hom [Preadditive C] {P Q : Karoubi C} (n : ℤ) (f : P ⟶ Q) : (n • f).f = n • f.f :=
+  map_zsmul (inclusionHom P Q) n f
+#align category_theory.idempotents.karoubi.zsmul_hom CategoryTheory.Idempotents.Karoubi.zsmul_hom
+
 end Karoubi
 
 end Idempotents

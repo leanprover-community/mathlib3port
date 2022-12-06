@@ -1200,12 +1200,12 @@ variable {S Q M}
 
 variable (A : Type _) [CommRing A] [IsDomain A]
 
-/-- A `comm_ring` `S` which is the localization of an integral domain `R` at a subset of
-non-zero elements is an integral domain.
+/-- A `comm_ring` `S` which is the localization of a ring `R` without zero divisors at a subset of
+non-zero elements does not have zero divisors.
 See note [reducible non-instances]. -/
 @[reducible]
-theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLocalization M S]
-    (hM : M ≤ nonZeroDivisors A) : IsDomain S :=
+theorem no_zero_divisors_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A}
+    [IsLocalization M S] (hM : M ≤ nonZeroDivisors A) : NoZeroDivisors S :=
   { eq_zero_or_eq_zero_of_mul_eq_zero := by 
       intro z w h
       cases' surj M z with x hx
@@ -1216,10 +1216,22 @@ theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLoc
       rw [h, zero_mul, zero_mul, ← (algebraMap A S).map_mul] at this
       cases' eq_zero_or_eq_zero_of_mul_eq_zero ((to_map_eq_zero_iff S hM).mp this.symm) with H H
       · exact Or.inl (eq_zero_of_fst_eq_zero hx H)
-      · exact Or.inr (eq_zero_of_fst_eq_zero hy H),
-    exists_pair_ne :=
-      ⟨(algebraMap A S) 0, (algebraMap A S) 1, fun h =>
-        zero_ne_one (IsLocalization.injective S hM h)⟩ }
+      · exact Or.inr (eq_zero_of_fst_eq_zero hy H) }
+#align
+  is_localization.no_zero_divisors_of_le_non_zero_divisors IsLocalization.no_zero_divisors_of_le_non_zero_divisors
+
+/-- A `comm_ring` `S` which is the localization of an integral domain `R` at a subset of
+non-zero elements is an integral domain.
+See note [reducible non-instances]. -/
+@[reducible]
+theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLocalization M S]
+    (hM : M ≤ nonZeroDivisors A) : IsDomain S := by
+  apply NoZeroDivisors.to_is_domain _
+  ·
+    exact
+      ⟨⟨(algebraMap A S) 0, (algebraMap A S) 1, fun h =>
+          zero_ne_one (IsLocalization.injective S hM h)⟩⟩
+  · exact no_zero_divisors_of_le_non_zero_divisors _ hM
 #align
   is_localization.is_domain_of_le_non_zero_divisors IsLocalization.is_domain_of_le_non_zero_divisors
 

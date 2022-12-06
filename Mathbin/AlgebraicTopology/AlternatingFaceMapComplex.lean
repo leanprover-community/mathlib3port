@@ -7,6 +7,7 @@ import Mathbin.Algebra.Homology.Additive
 import Mathbin.AlgebraicTopology.MooreComplex
 import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.CategoryTheory.Preadditive.Opposite
+import Mathbin.CategoryTheory.Idempotents.FunctorCategories
 import Mathbin.Tactic.EquivRw
 
 /-!
@@ -35,7 +36,7 @@ when `A` is an abelian category.
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Subobject
 
-open CategoryTheory.Preadditive CategoryTheory.Category
+open CategoryTheory.Preadditive CategoryTheory.Category CategoryTheory.Idempotents
 
 open Opposite
 
@@ -232,6 +233,16 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
       rfl
 #align
   algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternating_face_map_complex
+
+theorem karoubi_alternating_face_map_complex_d (P : Karoubi (SimplicialObject C)) (n : ℕ) :
+    ((AlternatingFaceMapComplex.obj (KaroubiFunctorCategoryEmbedding.obj P)).d (n + 1) n).f =
+      P.p.app (op [n + 1]) ≫ (AlternatingFaceMapComplex.obj P.x).d (n + 1) n :=
+  by 
+  dsimp
+  simpa only [alternating_face_map_complex.obj_d_eq, karoubi.sum_hom, preadditive.comp_sum,
+    karoubi.zsmul_hom, preadditive.comp_zsmul]
+#align
+  algebraic_topology.karoubi_alternating_face_map_complex_d AlgebraicTopology.karoubi_alternating_face_map_complex_d
 
 namespace AlternatingFaceMapComplex
 

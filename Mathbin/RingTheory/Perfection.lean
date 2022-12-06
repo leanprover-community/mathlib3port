@@ -690,14 +690,15 @@ theorem map_eq_zero {f : PreTilt K v O hv p} : val K v O hv p f = 0 ↔ f = 0 :=
 
 end Classical
 
-instance : IsDomain (PreTilt K v O hv p) :=
-  { (inferInstance : CommRing (PreTilt K v O hv p)) with
-    exists_pair_ne := (CharP.nontrivial_of_char_ne_one hp.1.ne_one).1,
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun f g hfg => by
+instance : IsDomain (PreTilt K v O hv p) := by
+  haveI : Nontrivial (PreTilt K v O hv p) := ⟨(CharP.nontrivial_of_char_ne_one hp.1.ne_one).1⟩
+  haveI : NoZeroDivisors (PreTilt K v O hv p) :=
+    ⟨fun f g hfg => by 
       simp_rw [← map_eq_zero] at hfg⊢
       contrapose! hfg
       rw [Valuation.map_mul]
-      exact mul_ne_zero hfg.1 hfg.2 }
+      exact mul_ne_zero hfg.1 hfg.2⟩
+  exact NoZeroDivisors.to_is_domain _
 
 end PreTilt
 

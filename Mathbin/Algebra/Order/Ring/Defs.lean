@@ -1096,7 +1096,7 @@ instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup :
   linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
 
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
+instance (priority := 100) LinearOrderedRing.no_zero_divisors : NoZeroDivisors α :=
   { ‹LinearOrderedRing α› with
     eq_zero_or_eq_zero_of_mul_eq_zero := by 
       intro a b hab
@@ -1104,6 +1104,18 @@ instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
       exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne,
         (mul_neg_of_pos_of_neg ha hb).Ne, (mul_pos ha hb).Ne.symm] }
+#align linear_ordered_ring.no_zero_divisors LinearOrderedRing.no_zero_divisors
+
+-- see Note [lower instance priority]
+--We don't want to import `algebra.ring.basic`, so we cannot use `no_zero_divisors.to_is_domain`.
+instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
+  { (inferInstance : Nontrivial α) with
+    mul_left_cancel_of_ne_zero := fun a b c ha h => by
+      rw [← sub_eq_zero, ← mul_sub] at h
+      exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha),
+    mul_right_cancel_of_ne_zero := fun a b c hb h => by
+      rw [← sub_eq_zero, ← sub_mul] at h
+      exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb) }
 #align linear_ordered_ring.is_domain LinearOrderedRing.is_domain
 
 theorem mul_pos_iff : 0 < a * b ↔ 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 :=

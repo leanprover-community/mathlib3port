@@ -74,7 +74,10 @@ section IsDomain
 -- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelMonoidWithZero [Ring α] [IsDomain α] :
     CancelMonoidWithZero α :=
-  NoZeroDivisors.toCancelMonoidWithZero
+  { Semiring.toMonoidWithZero α with
+    mul_left_cancel_of_ne_zero := fun a b c ha h => IsCancelMulZero.mul_left_cancel_of_ne_zero ha h,
+    mul_right_cancel_of_ne_zero := fun a b c ha h =>
+      IsCancelMulZero.mul_right_cancel_of_ne_zero ha h }
 #align is_domain.to_cancel_monoid_with_zero IsDomain.toCancelMonoidWithZero
 
 variable [CommRing α] [IsDomain α]

@@ -6,17 +6,16 @@ Authors: Joël Riou
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 import Mathbin.AlgebraicTopology.DoldKan.Decomposition
 import Mathbin.CategoryTheory.Idempotents.HomologicalComplex
+import Mathbin.CategoryTheory.Idempotents.KaroubiKaroubi
 
 /-!
 
 # N₁ and N₂ reflects isomorphisms
 
-In this file, it is shown that the functor
-`N₁ : simplicial_object C ⥤ karoubi (chain_complex C ℕ)`
-reflects isomorphisms for any preadditive category `C`.
-
-TODO @joelriou: deduce that `N₂ : karoubi (simplicial_object C) ⥤ karoubi (chain_complex C ℕ)`
-also reflects isomorphisms.
+In this file, it is shown that the functors
+`N₁ : simplicial_object C ⥤ karoubi (chain_complex C ℕ)` and
+`N₂ : karoubi (simplicial_object C) ⥤ karoubi (chain_complex C ℕ))`
+reflect isomorphisms for any preadditive category `C`.
 
 -/
 
@@ -73,6 +72,58 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
         P_infty_f_naturality_assoc, is_iso.hom_inv_id_assoc, assoc, is_iso.inv_hom_id_assoc,
         simplicial_object.σ_naturality, h₁, h₂, h₃]
       tauto⟩
+
+theorem compatibility_N₂_N₁_karoubi :
+    N₂ ⋙ (karoubiChainComplexEquivalence C ℕ).Functor =
+      karoubiFunctorCategoryEmbedding SimplexCategoryᵒᵖ C ⋙
+        N₁ ⋙
+          (karoubiChainComplexEquivalence (Karoubi C) ℕ).Functor ⋙
+            Functor.mapHomologicalComplex (KaroubiKaroubi.equivalence C).inverse _ :=
+  by 
+  refine' CategoryTheory.Functor.ext (fun P => _) fun P Q f => _
+  · refine' HomologicalComplex.ext _ _
+    · ext n
+      · dsimp
+        simp only [karoubi_P_infty_f, comp_id, P_infty_f_naturality, id_comp]
+      · rfl
+    · rintro _ n (rfl : n + 1 = _)
+      ext
+      have h := (alternating_face_map_complex.map P.p).comm (n + 1) n
+      dsimp [N₂, karoubi_chain_complex_equivalence, karoubi_karoubi.inverse,
+        karoubi_homological_complex_equivalence.functor.obj] at h⊢
+      simp only [karoubi.comp_f, assoc, karoubi.eq_to_hom_f, eq_to_hom_refl, id_comp, comp_id,
+        karoubi_alternating_face_map_complex_d, karoubi_P_infty_f, ←
+        HomologicalComplex.Hom.comm_assoc, ← h, app_idem_assoc]
+  · ext n
+    dsimp [karoubi_karoubi.inverse, karoubi_functor_category_embedding,
+      karoubi_functor_category_embedding.map]
+    simp only [karoubi.comp_f, karoubi_P_infty_f, HomologicalComplex.eq_to_hom_f,
+      karoubi.eq_to_hom_f, assoc, comp_id, P_infty_f_naturality, app_p_comp,
+      karoubi_chain_complex_equivalence_functor_obj_X_p, N₂_obj_p_f, eq_to_hom_refl,
+      P_infty_f_naturality_assoc, app_comp_p, P_infty_f_idem_assoc]
+#align
+  algebraic_topology.dold_kan.compatibility_N₂_N₁_karoubi AlgebraicTopology.DoldKan.compatibility_N₂_N₁_karoubi
+
+/-- We deduce that `N₂ : karoubi (simplicial_object C) ⥤ karoubi (chain_complex C ℕ))`
+reflects isomorphisms from the fact that
+`N₁ : simplicial_object (karoubi C) ⥤ karoubi (chain_complex (karoubi C) ℕ)` does. -/
+instance : ReflectsIsomorphisms (n₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ)) :=
+  ⟨fun X Y f => by 
+    intro
+    -- The following functor `F` reflects isomorphism because it is
+    -- a composition of four functors which reflects isomorphisms.
+    -- Then, it suffices to show that `F.map f` is an isomorphism.
+    let F :=
+      karoubi_functor_category_embedding SimplexCategoryᵒᵖ C ⋙
+        N₁ ⋙
+          (karoubi_chain_complex_equivalence (karoubi C) ℕ).Functor ⋙
+            functor.map_homological_complex (karoubi_karoubi.equivalence C).inverse
+              (ComplexShape.down ℕ)
+    have : is_iso (F.map f) := by 
+      dsimp only [F]
+      rw [← compatibility_N₂_N₁_karoubi, functor.comp_map]
+      apply functor.map_is_iso
+    exact is_iso_of_reflects_iso f F⟩
 
 end DoldKan
 

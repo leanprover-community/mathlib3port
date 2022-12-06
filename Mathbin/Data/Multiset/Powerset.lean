@@ -295,10 +295,11 @@ theorem powerset_len_map {β : Type _} (f : α → β) (n : ℕ) (s : Multiset �
   · cases n <;> simp [ih, map_comp_cons]
 #align multiset.powerset_len_map Multiset.powerset_len_map
 
-theorem disjoint_powerset_len (s : Multiset α) {i j : ℕ} (h : i ≠ j) :
-    Multiset.Disjoint (s.powersetLen i) (s.powersetLen j) := fun x hi hj =>
+theorem pairwise_disjoint_powerset_len (s : Multiset α) :
+    Pairwise fun i j => Multiset.Disjoint (s.powersetLen i) (s.powersetLen j) :=
+  fun i j h x hi hj =>
   h (Eq.trans (Multiset.mem_powerset_len.mp hi).right.symm (Multiset.mem_powerset_len.mp hj).right)
-#align multiset.disjoint_powerset_len Multiset.disjoint_powerset_len
+#align multiset.pairwise_disjoint_powerset_len Multiset.pairwise_disjoint_powerset_len
 
 theorem bind_powerset_len {α : Type _} (S : Multiset α) :
     (bind (Multiset.range (S.card + 1)) fun k => S.powersetLen k) = S.powerset := by

@@ -161,23 +161,30 @@ theorem quotient_ring_saturate (I : Ideal R) (s : Set R) :
       ⟨a, ha, by rw [← Eq, sub_add_eq_sub_sub_swap, sub_self, zero_sub] <;> exact I.neg_mem hi⟩⟩
 #align ideal.quotient.quotient_ring_saturate Ideal.Quotient.quotient_ring_saturate
 
+instance no_zero_divisors (I : Ideal R) [hI : I.IsPrime] :
+    NoZeroDivisors
+      (R ⧸
+        I) where eq_zero_or_eq_zero_of_mul_eq_zero a b :=
+    (Quotient.inductionOn₂' a b) fun a b hab =>
+      (hI.mem_or_mem (eq_zero_iff_mem.1 hab)).elim (Or.inl ∘ eq_zero_iff_mem.2)
+        (Or.inr ∘ eq_zero_iff_mem.2)
+#align ideal.quotient.no_zero_divisors Ideal.Quotient.no_zero_divisors
+
 instance is_domain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
-  { Quotient.nontrivial hI.1 with
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b =>
-      (Quotient.inductionOn₂' a b) fun a b hab =>
-        (hI.mem_or_mem (eq_zero_iff_mem.1 hab)).elim (Or.inl ∘ eq_zero_iff_mem.2)
-          (Or.inr ∘ eq_zero_iff_mem.2) }
+  let _ := Quotient.nontrivial hI.1
+  NoZeroDivisors.to_is_domain _
 #align ideal.quotient.is_domain Ideal.Quotient.is_domain
 
-theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
-  ⟨fun ⟨h1, h2⟩ =>
-    haveI : Nontrivial _ := ⟨h2⟩
-    ⟨zero_ne_one_iff.1 zero_ne_one, fun x y h => by
-      simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
-      exact h1 h⟩,
-    fun h => by 
-    skip
-    infer_instance⟩
+theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime := by
+  refine'
+    ⟨fun H => ⟨zero_ne_one_iff.1 _, fun x y h => _⟩, fun h => by
+      skip
+      infer_instance⟩
+  · haveI : Nontrivial (R ⧸ I) := ⟨H.3⟩
+    exact zero_ne_one
+  · simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
+    haveI := @IsDomain.to_no_zero_divisors (R ⧸ I) _ H
+    exact eq_zero_or_eq_zero_of_mul_eq_zero h
 #align ideal.quotient.is_domain_iff_prime Ideal.Quotient.is_domain_iff_prime
 
 theorem exists_inv {I : Ideal R} [hI : I.IsMaximal] :

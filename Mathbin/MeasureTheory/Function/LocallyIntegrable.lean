@@ -25,7 +25,7 @@ open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace
 
 open TopologicalSpace Interval
 
-variable {X Y E : Type _} [MeasurableSpace X] [TopologicalSpace X]
+variable {X Y E R : Type _} [MeasurableSpace X] [TopologicalSpace X]
 
 variable [MeasurableSpace Y] [TopologicalSpace Y]
 
@@ -85,9 +85,10 @@ theorem locally_integrable_map_homeomorph [BorelSpace X] [BorelSpace Y] (e : X �
 #align
   measure_theory.locally_integrable_map_homeomorph MeasureTheory.locally_integrable_map_homeomorph
 
-section Real
+section Mul
 
-variable [OpensMeasurableSpace X] {A K : Set X} {g g' : X → ℝ}
+variable [OpensMeasurableSpace X] [NormedRing R] [SecondCountableTopologyEither X R] {A K : Set X}
+  {g g' : X → R}
 
 theorem IntegrableOn.mulContinuousOnOfSubset (hg : IntegrableOn g A μ) (hg' : ContinuousOn g' K)
     (hA : MeasurableSet A) (hK : IsCompact K) (hAK : A ⊆ K) :
@@ -96,12 +97,11 @@ theorem IntegrableOn.mulContinuousOnOfSubset (hg : IntegrableOn g A μ) (hg' : C
   rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hg⊢
   have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g x‖ := by
     filter_upwards [ae_restrict_mem hA] with x hx
-    rw [Real.norm_eq_abs, abs_mul, mul_comm, Real.norm_eq_abs]
-    apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (abs_nonneg _)
+    refine' (norm_mul_le _ _).trans _
+    rw [mul_comm]
+    apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
   exact
-    mem_ℒp.of_le_mul hg
-      (hg.ae_strongly_measurable.ae_measurable.mul
-          ((hg'.mono hAK).AeMeasurable hA)).AeStronglyMeasurable
+    mem_ℒp.of_le_mul hg (hg.ae_strongly_measurable.mul <| (hg'.mono hAK).AeStronglyMeasurable hA)
       this
 #align
   measure_theory.integrable_on.mul_continuous_on_of_subset MeasureTheory.IntegrableOn.mulContinuousOnOfSubset
@@ -114,16 +114,24 @@ theorem IntegrableOn.mulContinuousOn [T2Space X] (hg : IntegrableOn g K μ) (hg'
 theorem IntegrableOn.continuousOnMulOfSubset (hg : ContinuousOn g K) (hg' : IntegrableOn g' A μ)
     (hK : IsCompact K) (hA : MeasurableSet A) (hAK : A ⊆ K) :
     IntegrableOn (fun x => g x * g' x) A μ := by
-  simpa [mul_comm] using hg'.mul_continuous_on_of_subset hg hA hK hAK
+  rcases IsCompact.exists_bound_of_continuous_on hK hg with ⟨C, hC⟩
+  rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hg'⊢
+  have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g' x‖ := by
+    filter_upwards [ae_restrict_mem hA] with x hx
+    refine' (norm_mul_le _ _).trans _
+    apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
+  exact
+    mem_ℒp.of_le_mul hg' (((hg.mono hAK).AeStronglyMeasurable hA).mul hg'.ae_strongly_measurable)
+      this
 #align
   measure_theory.integrable_on.continuous_on_mul_of_subset MeasureTheory.IntegrableOn.continuousOnMulOfSubset
 
 theorem IntegrableOn.continuousOnMul [T2Space X] (hg : ContinuousOn g K) (hg' : IntegrableOn g' K μ)
     (hK : IsCompact K) : IntegrableOn (fun x => g x * g' x) K μ :=
-  IntegrableOn.continuousOnMulOfSubset hg hg' hK hK.MeasurableSet Subset.rfl
+  hg'.continuousOnMulOfSubset hg hK hK.MeasurableSet Subset.rfl
 #align measure_theory.integrable_on.continuous_on_mul MeasureTheory.IntegrableOn.continuousOnMul
 
-end Real
+end Mul
 
 end MeasureTheory
 

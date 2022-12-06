@@ -25,16 +25,12 @@ set of subsets of `α` which is closed under finite intersections.
 variable {α : Type _} (S : Set (Set α))
 
 /-- A structure encapsulating the fact that a set of sets is closed under finite intersection. -/
-structure HasFiniteInter where
+structure HasFiniteInter : Prop where
   univ_mem : Set.univ ∈ S
   inter_mem : ∀ ⦃s⦄, s ∈ S → ∀ ⦃t⦄, t ∈ S → s ∩ t ∈ S
 #align has_finite_inter HasFiniteInter
 
 namespace HasFiniteInter
-
--- Satisfying the inhabited linter...
-instance : Inhabited (HasFiniteInter ({Set.univ} : Set (Set α))) :=
-  ⟨⟨by tauto, fun _ h1 _ h2 => by simp [Set.mem_singleton_iff.1 h1, Set.mem_singleton_iff.1 h2]⟩⟩
 
 /-- The smallest set of sets containing `S` which is closed under finite intersections. -/
 inductive finiteInterClosure : Set (Set α)
@@ -43,14 +39,10 @@ inductive finiteInterClosure : Set (Set α)
   | inter {s t} : finite_inter_closure s → finite_inter_closure t → finite_inter_closure (s ∩ t)
 #align has_finite_inter.finite_inter_closure HasFiniteInter.finiteInterClosure
 
-/-- Defines `has_finite_inter` for `finite_inter_closure S`. -/
-def finiteInterClosureHasFiniteInter :
-    HasFiniteInter
-      (finiteInterClosure S) where 
-  univ_mem := finiteInterClosure.univ
-  inter_mem _ h _ := finiteInterClosure.inter h
+theorem finite_inter_closure_has_finite_inter : HasFiniteInter (finiteInterClosure S) :=
+  { univ_mem := finiteInterClosure.univ, inter_mem := fun _ h _ => finiteInterClosure.inter h }
 #align
-  has_finite_inter.finite_inter_closure_has_finite_inter HasFiniteInter.finiteInterClosureHasFiniteInter
+  has_finite_inter.finite_inter_closure_has_finite_inter HasFiniteInter.finite_inter_closure_has_finite_inter
 
 variable {S}
 

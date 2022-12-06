@@ -145,3 +145,52 @@ theorem pred_ne_self [NonAssocRing α] [Nontrivial α] (a : α) : a - 1 ≠ a :=
   one_ne_zero (neg_injective ((add_right_inj a).mp (by simpa [sub_eq_add_neg] using h)))
 #align pred_ne_self pred_ne_self
 
+section NoZeroDivisors
+
+variable (α)
+
+theorem IsLeftCancelMulZero.to_no_zero_divisors [Ring α] [IsLeftCancelMulZero α] :
+    NoZeroDivisors α := by 
+  refine' ⟨fun x y h => _⟩
+  by_cases hx : x = 0
+  · left
+    exact hx
+  · right
+    rw [← sub_zero (x * y), ← mul_zero x, ← mul_sub] at h
+    convert IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hx h
+    rw [sub_zero]
+#align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.to_no_zero_divisors
+
+theorem IsRightCancelMulZero.to_no_zero_divisors [Ring α] [IsRightCancelMulZero α] :
+    NoZeroDivisors α := by 
+  refine' ⟨fun x y h => _⟩
+  by_cases hy : y = 0
+  · right
+    exact hy
+  · left
+    rw [← sub_zero (x * y), ← zero_mul y, ← sub_mul] at h
+    convert IsRightCancelMulZero.mul_right_cancel_of_ne_zero hy h
+    rw [sub_zero]
+#align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.to_no_zero_divisors
+
+instance (priority := 100) NoZeroDivisors.to_is_cancel_mul_zero [Ring α] [NoZeroDivisors α] :
+    IsCancelMulZero
+      α where 
+  mul_left_cancel_of_ne_zero a b c ha h := by
+    rw [← sub_eq_zero, ← mul_sub] at h
+    exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
+  mul_right_cancel_of_ne_zero a b c hb h := by
+    rw [← sub_eq_zero, ← sub_mul] at h
+    exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb)
+#align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.to_is_cancel_mul_zero
+
+theorem NoZeroDivisors.to_is_domain [Ring α] [h : Nontrivial α] [NoZeroDivisors α] : IsDomain α :=
+  { NoZeroDivisors.to_is_cancel_mul_zero α, h with }
+#align no_zero_divisors.to_is_domain NoZeroDivisors.to_is_domain
+
+instance (priority := 100) IsDomain.to_no_zero_divisors [Ring α] [IsDomain α] : NoZeroDivisors α :=
+  IsRightCancelMulZero.to_no_zero_divisors α
+#align is_domain.to_no_zero_divisors IsDomain.to_no_zero_divisors
+
+end NoZeroDivisors
+

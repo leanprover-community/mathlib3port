@@ -751,13 +751,15 @@ instance (priority := 100) CommRing.toNonUnitalCommRing [s : CommRing α] : NonU
 -/
 
 #print IsDomain /-
-/-- A domain is a nontrivial ring with no zero divisors, i.e. satisfying
-  the condition `a * b = 0 ↔ a = 0 ∨ b = 0`.
+/-- A domain is a nontrivial ring such multiplication by a non zero element is cancellative,
+  on both sides. In other words, a nontrivial ring `R` satisfying
+  `∀ {a b c : R}, a ≠ 0 → a * b = a * c → b = c` and
+  `∀ {a b c : R}, b ≠ 0 → a * b = c * b → a = c`.
 
   This is implemented as a mixin for `ring α`.
   To obtain an integral domain use `[comm_ring α] [is_domain α]`. -/
 @[protect_proj]
-class IsDomain (α : Type u) [Ring α] extends NoZeroDivisors α, Nontrivial α : Prop
+class IsDomain (α : Type u) [Ring α] extends IsCancelMulZero α, Nontrivial α : Prop
 #align is_domain IsDomain
 -/
 

@@ -9,27 +9,24 @@ import Mathbin.AlgebraicTopology.DoldKan.SplitSimplicialObject
 
 # Construction of the inverse functor of the Dold-Kan equivalence
 
-@TODO @joelriou: construct the functor `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`
-which shall be the inverse functor of the Dold-Kan equivalence in the case of abelian categories,
-and more generally pseudoabelian categories. Extend this functor `Γ₀` as a functor
-`Γ₂ : karoubi (chain_complex C ℕ) ⥤ karoubi (simplicial_object C)` on the idempotent
-completion, show that this functor shall be an equivalence of categories when `C` is any additive
-category.
 
-Currently, this file contains the definition of `Γ₀.obj.obj₂ K Δ` for
-`K : chain_complex C ℕ` and `Δ : simplex_categoryᵒᵖ`. By definition, `Γ₀.obj.obj₂ K Δ`
-is a certain coproduct indexed by the set `splitting.index_set Δ` whose elements
-consists of epimorphisms `e : Δ.unop ⟶ Δ'.unop` (with `Δ' : simplex_categoryᵒᵖ`).
-Some morphisms between the summands of these coproducts are also studied.
-When the simplicial operations are defined using the epi-mono factorisations in
-`simplex_category`, the simplicial object `Γ₀.obj K` we get will be a split simplicial object.
+In this file, we construct the functor `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`
+which shall be the inverse functor of the Dold-Kan equivalence in the case of abelian categories,
+and more generally pseudoabelian categories.
+
+By definition, when `K` is a chain_complex, `Γ₀.obj K` is a simplicial object which
+sends `Δ : simplex_categoryᵒᵖ` to a certain coproduct indexed by the set
+`splitting.index_set Δ` whose elements consists of epimorphisms `e : Δ.unop ⟶ Δ'.unop`
+(with `Δ' : simplex_categoryᵒᵖ`); the summand attached to such an `e` is `K.X Δ'.unop.len`.
+By construction, `Γ₀.obj K` is a split simplicial object whose splitting is `Γ₀.splitting K`.
 
 -/
 
 
 noncomputable section
 
-open CategoryTheory CategoryTheory.Category CategoryTheory.Limits SimplexCategory SimplicialObject
+open
+  CategoryTheory CategoryTheory.Category CategoryTheory.Limits SimplexCategory SimplicialObject Opposite
 
 open Simplicial
 
@@ -177,9 +174,192 @@ theorem map_mono_comp : mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) :=
 
 end Termwise
 
+variable [HasFiniteCoproducts C]
+
+/-- The simplicial morphism on the simplicial object `Γ₀.obj K` induced by
+a morphism `Δ' → Δ` in `simplex_category` is defined on each summand
+associated to an `A : Γ_index_set Δ` in terms of the epi-mono factorisation
+of `θ ≫ A.e`. -/
+def map (K : ChainComplex C ℕ) {Δ' Δ : SimplexCategoryᵒᵖ} (θ : Δ ⟶ Δ') : obj₂ K Δ ⟶ obj₂ K Δ' :=
+  Sigma.desc fun A =>
+    Termwise.mapMono K (image.ι (θ.unop ≫ A.e)) ≫ Sigma.ι (summand K Δ') (A.pull θ)
+#align algebraic_topology.dold_kan.Γ₀.obj.map AlgebraicTopology.DoldKan.Γ₀.Obj.map
+
+@[reassoc]
+theorem map_on_summand₀ {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) {θ : Δ ⟶ Δ'}
+    {Δ'' : SimplexCategory} {e : Δ'.unop ⟶ Δ''} {i : Δ'' ⟶ A.1.unop} [Epi e] [Mono i]
+    (fac : e ≫ i = θ.unop ≫ A.e) :
+    Sigma.ι (summand K Δ) A ≫ map K θ =
+      Termwise.mapMono K i ≫ Sigma.ι (summand K Δ') (Splitting.IndexSet.mk e) :=
+  by 
+  simp only [map, colimit.ι_desc, cofan.mk_ι_app]
+  have h := SimplexCategory.image_eq fac
+  subst h
+  congr
+  · exact SimplexCategory.image_ι_eq fac
+  · dsimp only [SimplicialObject.Splitting.IndexSet.pull]
+    congr
+    exact SimplexCategory.factor_thru_image_eq fac
+#align
+  algebraic_topology.dold_kan.Γ₀.obj.map_on_summand₀ AlgebraicTopology.DoldKan.Γ₀.Obj.map_on_summand₀
+
+@[reassoc]
+theorem map_on_summand₀' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ') :
+    Sigma.ι (summand K Δ) A ≫ map K θ =
+      Termwise.mapMono K (image.ι (θ.unop ≫ A.e)) ≫ Sigma.ι (summand K _) (A.pull θ) :=
+  map_on_summand₀ K A (A.fac_pull θ)
+#align
+  algebraic_topology.dold_kan.Γ₀.obj.map_on_summand₀' AlgebraicTopology.DoldKan.Γ₀.Obj.map_on_summand₀'
+
 end Obj
 
+variable [HasFiniteCoproducts C]
+
+/-- The functor `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`, on objects. -/
+@[simps]
+def obj (K : ChainComplex C ℕ) :
+    SimplicialObject C where 
+  obj Δ := Obj.obj₂ K Δ
+  map Δ Δ' θ := Obj.map K θ
+  map_id' Δ := by 
+    ext A
+    cases A
+    have fac : A.e ≫ 𝟙 A.1.unop = (𝟙 Δ).unop ≫ A.e := by rw [unop_id, comp_id, id_comp]
+    erw [obj.map_on_summand₀ K A fac, obj.termwise.map_mono_id, id_comp, comp_id]
+    rcases A with ⟨Δ', ⟨e, he⟩⟩
+    rfl
+  map_comp' Δ'' Δ' Δ θ' θ := by 
+    ext A
+    cases A
+    have fac : θ.unop ≫ θ'.unop ≫ A.e = (θ' ≫ θ).unop ≫ A.e := by rw [unop_comp, assoc]
+    rw [← image.fac (θ'.unop ≫ A.e), ← assoc, ←
+      image.fac (θ.unop ≫ factor_thru_image (θ'.unop ≫ A.e)), assoc] at fac
+    simpa only [obj.map_on_summand₀'_assoc K A θ', obj.map_on_summand₀' K _ θ,
+      obj.termwise.map_mono_comp_assoc, obj.map_on_summand₀ K A fac]
+#align algebraic_topology.dold_kan.Γ₀.obj AlgebraicTopology.DoldKan.Γ₀.obj
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
+theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
+    SimplicialObject.Splitting.map (Γ₀.obj K)
+        (fun n : ℕ => Sigma.ι (Γ₀.Obj.summand K (op [n])) (Splitting.IndexSet.id (op [n]))) Δ =
+      𝟙 _ :=
+  by 
+  ext A
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
+  induction Δ using Opposite.rec
+  induction' Δ with n
+  dsimp
+  simp only [colimit.ι_desc, cofan.mk_ι_app, comp_id, Γ₀.obj_map]
+  rw [Γ₀.obj.map_on_summand₀ K (SimplicialObject.Splitting.IndexSet.id A.1)
+      (show A.e ≫ 𝟙 _ = A.e.op.unop ≫ 𝟙 _ by rfl),
+    Γ₀.obj.termwise.map_mono_id, A.ext']
+  apply id_comp
+#align
+  algebraic_topology.dold_kan.Γ₀.splitting_map_eq_id AlgebraicTopology.DoldKan.Γ₀.splitting_map_eq_id
+
+/-- By construction, the simplicial `Γ₀.obj K` is equipped with a splitting. -/
+def splitting (K : ChainComplex C ℕ) :
+    SimplicialObject.Splitting (Γ₀.obj
+        K) where 
+  n n := K.x n
+  ι n := Sigma.ι (Γ₀.Obj.summand K (op [n])) (Splitting.IndexSet.id (op [n]))
+  map_is_iso' Δ := by 
+    rw [Γ₀.splitting_map_eq_id]
+    apply is_iso.id
+#align algebraic_topology.dold_kan.Γ₀.splitting AlgebraicTopology.DoldKan.Γ₀.splitting
+
+@[simp]
+theorem splitting_iso_hom_eq_id (Δ : SimplexCategoryᵒᵖ) : ((splitting K).Iso Δ).Hom = 𝟙 _ :=
+  splitting_map_eq_id K Δ
+#align
+  algebraic_topology.dold_kan.Γ₀.splitting_iso_hom_eq_id AlgebraicTopology.DoldKan.Γ₀.splitting_iso_hom_eq_id
+
+@[reassoc]
+theorem obj.map_on_summand {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ')
+    {Δ'' : SimplexCategory} {e : Δ'.unop ⟶ Δ''} {i : Δ'' ⟶ A.1.unop} [Epi e] [Mono i]
+    (fac : e ≫ i = θ.unop ≫ A.e) :
+    (Γ₀.splitting K).ιSummand A ≫ (Γ₀.obj K).map θ =
+      Γ₀.Obj.Termwise.mapMono K i ≫ (Γ₀.splitting K).ιSummand (Splitting.IndexSet.mk e) :=
+  by 
+  dsimp only [SimplicialObject.Splitting.ιSummand, SimplicialObject.Splitting.ιCoprod]
+  simp only [assoc, Γ₀.splitting_iso_hom_eq_id, id_comp, comp_id]
+  exact Γ₀.obj.map_on_summand₀ K A fac
+#align
+  algebraic_topology.dold_kan.Γ₀.obj.map_on_summand AlgebraicTopology.DoldKan.Γ₀.obj.map_on_summand
+
+@[reassoc]
+theorem obj.map_on_summand' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ') :
+    (splitting K).ιSummand A ≫ (obj K).map θ =
+      Obj.Termwise.mapMono K (image.ι (θ.unop ≫ A.e)) ≫ (splitting K).ιSummand (A.pull θ) :=
+  by 
+  apply obj.map_on_summand
+  apply image.fac
+#align
+  algebraic_topology.dold_kan.Γ₀.obj.map_on_summand' AlgebraicTopology.DoldKan.Γ₀.obj.map_on_summand'
+
+@[reassoc]
+theorem obj.map_mono_on_summand_id {Δ Δ' : SimplexCategory} (i : Δ' ⟶ Δ) [Mono i] :
+    (splitting K).ιSummand (Splitting.IndexSet.id (op Δ)) ≫ (obj K).map i.op =
+      Obj.Termwise.mapMono K i ≫ (splitting K).ιSummand (Splitting.IndexSet.id (op Δ')) :=
+  obj.map_on_summand K (Splitting.IndexSet.id (op Δ)) i.op (rfl : 𝟙 _ ≫ i = i ≫ 𝟙 _)
+#align
+  algebraic_topology.dold_kan.Γ₀.obj.map_mono_on_summand_id AlgebraicTopology.DoldKan.Γ₀.obj.map_mono_on_summand_id
+
+@[reassoc]
+theorem obj.map_epi_on_summand_id {Δ Δ' : SimplexCategory} (e : Δ' ⟶ Δ) [Epi e] :
+    (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op Δ)) ≫ (Γ₀.obj K).map e.op =
+      (Γ₀.splitting K).ιSummand (Splitting.IndexSet.mk e) :=
+  by
+  simpa only [Γ₀.obj.map_on_summand K (splitting.index_set.id (op Δ)) e.op
+      (rfl : e ≫ 𝟙 Δ = e ≫ 𝟙 Δ),
+    Γ₀.obj.termwise.map_mono_id] using id_comp _
+#align
+  algebraic_topology.dold_kan.Γ₀.obj.map_epi_on_summand_id AlgebraicTopology.DoldKan.Γ₀.obj.map_epi_on_summand_id
+
+/-- The functor `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`, on morphisms. -/
+@[simps]
+def map {K K' : ChainComplex C ℕ} (f : K ⟶ K') :
+    obj K ⟶
+      obj
+        K' where 
+  app Δ := (Γ₀.splitting K).desc Δ fun A => f.f A.1.unop.len ≫ (Γ₀.splitting K').ιSummand A
+  naturality' Δ' Δ θ := by 
+    apply (Γ₀.splitting K).hom_ext'
+    intro A
+    simp only [(splitting K).ι_desc_assoc, obj.map_on_summand'_assoc K _ θ, (splitting K).ι_desc,
+      assoc, obj.map_on_summand' K' _ θ]
+    apply obj.termwise.map_mono_naturality_assoc
+#align algebraic_topology.dold_kan.Γ₀.map AlgebraicTopology.DoldKan.Γ₀.map
+
 end Γ₀
+
+variable [HasFiniteCoproducts C]
+
+/-- The functor `Γ₀' : chain_complex C ℕ ⥤ simplicial_object.split C`
+that induces `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`, which
+shall be the inverse functor of the Dold-Kan equivalence for
+abelian or pseudo-abelian categories. -/
+@[simps]
+def Γ₀' :
+    ChainComplex C ℕ ⥤
+      SimplicialObject.Split
+        C where 
+  obj K := SimplicialObject.Split.mk' (Γ₀.splitting K)
+  map K K' f :=
+    { f := Γ₀.map f, f := f.f,
+      comm' := fun n => by 
+        dsimp
+        simpa only [← splitting.ι_summand_id, (Γ₀.splitting K).ι_desc] }
+#align algebraic_topology.dold_kan.Γ₀' AlgebraicTopology.DoldKan.Γ₀'
+
+/-- The functor `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`, which is
+the inverse functor of the Dold-Kan equivalence when `C` is an abelian
+category, or more generally a pseudoabelian category. -/
+@[simps]
+def Γ₀ : ChainComplex C ℕ ⥤ SimplicialObject C :=
+  Γ₀' ⋙ Split.forget _
+#align algebraic_topology.dold_kan.Γ₀ AlgebraicTopology.DoldKan.Γ₀
 
 end DoldKan
 
