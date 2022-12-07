@@ -117,6 +117,41 @@ theorem Filter.Tendsto.mul_const (b : M) {c : M} {f : α → M} {l : Filter α}
   h.mul tendsto_const_nhds
 #align filter.tendsto.mul_const Filter.Tendsto.mul_const
 
+section tendsto_nhds
+
+variable {𝕜 : Type _} [Preorder 𝕜] [Zero 𝕜] [Mul 𝕜] [TopologicalSpace 𝕜] [HasContinuousMul 𝕜]
+  {l : Filter α} {f : α → 𝕜} {b c : 𝕜} (hb : 0 < b)
+
+theorem Filter.TendstoNhdsWithinIoi.const_mul [PosMulStrictMono 𝕜] [PosMulReflectLT 𝕜]
+    (h : Tendsto f l (𝓝[>] c)) : Tendsto (fun a => b * f a) l (𝓝[>] (b * c)) :=
+  tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _
+      ((tendsto_nhds_of_tendsto_nhds_within h).const_mul b) <|
+    (tendsto_nhds_within_iff.mp h).2.mono fun j => (mul_lt_mul_left hb).mpr
+#align filter.tendsto_nhds_within_Ioi.const_mul Filter.TendstoNhdsWithinIoi.const_mul
+
+theorem Filter.TendstoNhdsWithinIio.const_mul [PosMulStrictMono 𝕜] [PosMulReflectLT 𝕜]
+    (h : Tendsto f l (𝓝[<] c)) : Tendsto (fun a => b * f a) l (𝓝[<] (b * c)) :=
+  tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _
+      ((tendsto_nhds_of_tendsto_nhds_within h).const_mul b) <|
+    (tendsto_nhds_within_iff.mp h).2.mono fun j => (mul_lt_mul_left hb).mpr
+#align filter.tendsto_nhds_within_Iio.const_mul Filter.TendstoNhdsWithinIio.const_mul
+
+theorem Filter.TendstoNhdsWithinIoi.mul_const [MulPosStrictMono 𝕜] [MulPosReflectLT 𝕜]
+    (h : Tendsto f l (𝓝[>] c)) : Tendsto (fun a => f a * b) l (𝓝[>] (c * b)) :=
+  tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _
+      ((tendsto_nhds_of_tendsto_nhds_within h).mul_const b) <|
+    (tendsto_nhds_within_iff.mp h).2.mono fun j => (mul_lt_mul_right hb).mpr
+#align filter.tendsto_nhds_within_Ioi.mul_const Filter.TendstoNhdsWithinIoi.mul_const
+
+theorem Filter.TendstoNhdsWithinIio.mul_const [MulPosStrictMono 𝕜] [MulPosReflectLT 𝕜]
+    (h : Tendsto f l (𝓝[<] c)) : Tendsto (fun a => f a * b) l (𝓝[<] (c * b)) :=
+  tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _
+      ((tendsto_nhds_of_tendsto_nhds_within h).mul_const b) <|
+    (tendsto_nhds_within_iff.mp h).2.mono fun j => (mul_lt_mul_right hb).mpr
+#align filter.tendsto_nhds_within_Iio.mul_const Filter.TendstoNhdsWithinIio.mul_const
+
+end tendsto_nhds
+
 /-- Construct a unit from limits of units and their inverses. -/
 @[to_additive Filter.Tendsto.addUnits
       "Construct an additive unit from limits of additive units\nand their negatives.",
@@ -127,8 +162,12 @@ def Filter.Tendsto.units [TopologicalSpace N] [Monoid N] [HasContinuousMul N] [T
     Nˣ where 
   val := r₁
   inv := r₂
-  val_inv := tendsto_nhds_unique (by simpa using h₁.mul h₂) tendsto_const_nhds
-  inv_val := tendsto_nhds_unique (by simpa using h₂.mul h₁) tendsto_const_nhds
+  val_inv := by 
+    symm
+    simpa using h₁.mul h₂
+  inv_val := by 
+    symm
+    simpa using h₂.mul h₁
 #align filter.tendsto.units Filter.Tendsto.units
 
 @[to_additive]

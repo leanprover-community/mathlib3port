@@ -164,6 +164,10 @@ theorem coe_zero : ((0 : ℤ_[p]) : ℚ_[p]) = 0 :=
 theorem coe_eq_zero (z : ℤ_[p]) : (z : ℚ_[p]) = 0 ↔ z = 0 := by rw [← coe_zero, Subtype.coe_inj]
 #align padic_int.coe_eq_zero PadicInt.coe_eq_zero
 
+theorem coe_ne_zero (z : ℤ_[p]) : (z : ℚ_[p]) ≠ 0 ↔ z ≠ 0 :=
+  z.coe_eq_zero.Not
+#align padic_int.coe_ne_zero PadicInt.coe_ne_zero
+
 instance : AddCommGroup ℤ_[p] :=
   (by infer_instance : AddCommGroup (subring p))
 
@@ -690,7 +694,7 @@ end Dvr
 section FractionRing
 
 instance algebra : Algebra ℤ_[p] ℚ_[p] :=
-  RingHom.toAlgebra PadicInt.Coe.ringHom
+  Algebra.ofSubring (subring p)
 #align padic_int.algebra PadicInt.algebra
 
 @[simp]
@@ -702,8 +706,8 @@ instance is_fraction_ring :
     IsFractionRing ℤ_[p]
       ℚ_[p] where 
   map_units := fun ⟨x, hx⟩ => by
-    rw [SetLike.coe_mk, algebra_map_apply, isUnit_iff_ne_zero, Ne.def, PadicInt.coe_eq_zero]
-    exact mem_non_zero_divisors_iff_ne_zero.mp hx
+    rwa [SetLike.coe_mk, algebra_map_apply, isUnit_iff_ne_zero, PadicInt.coe_ne_zero, ←
+      mem_non_zero_divisors_iff_ne_zero]
   surj x := by 
     by_cases hx : ‖x‖ ≤ 1
     · use (⟨x, hx⟩, 1)
@@ -720,8 +724,8 @@ instance is_fraction_ring :
           intro h0
           rw [h0, norm_zero] at hx
           exact hx zero_le_one
-        rw [ha, padicNormE.mul, ← zpow_coe_nat, padicNormE.norm_p_pow, Padic.norm_eq_pow_val hx, ←
-          zpow_add', hn_coe, neg_neg, add_left_neg, zpow_zero]
+        rw [ha, padicNormE.mul, padicNormE.norm_p_pow, Padic.norm_eq_pow_val hx, ← zpow_add',
+          hn_coe, neg_neg, add_left_neg, zpow_zero]
         exact Or.inl (nat.cast_ne_zero.mpr (NeZero.ne p))
       use
         (⟨a, le_of_eq ha_norm⟩,

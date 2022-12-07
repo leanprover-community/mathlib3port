@@ -183,6 +183,93 @@ theorem ne_zero_of_d_ne_zero (hd : P.d ≠ 0) : P.toPoly ≠ 0 :=
   (or_imp.mp (or_imp.mp (or_imp.mp NeZero).2).2).2 hd
 #align cubic.ne_zero_of_d_ne_zero Cubic.ne_zero_of_d_ne_zero
 
+@[simp]
+theorem leading_coeff_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.leadingCoeff = P.a :=
+  leading_coeff_cubic ha
+#align cubic.leading_coeff_of_a_ne_zero Cubic.leading_coeff_of_a_ne_zero
+
+@[simp]
+theorem leading_coeff_of_a_ne_zero' (ha : a ≠ 0) : (toPoly ⟨a, b, c, d⟩).leadingCoeff = a :=
+  leading_coeff_of_a_ne_zero ha
+#align cubic.leading_coeff_of_a_ne_zero' Cubic.leading_coeff_of_a_ne_zero'
+
+@[simp]
+theorem leading_coeff_of_b_ne_zero (ha : P.a = 0) (hb : P.b ≠ 0) : P.toPoly.leadingCoeff = P.b := by
+  rw [of_a_eq_zero ha, leading_coeff_quadratic hb]
+#align cubic.leading_coeff_of_b_ne_zero Cubic.leading_coeff_of_b_ne_zero
+
+@[simp]
+theorem leading_coeff_of_b_ne_zero' (hb : b ≠ 0) : (toPoly ⟨0, b, c, d⟩).leadingCoeff = b :=
+  leading_coeff_of_b_ne_zero rfl hb
+#align cubic.leading_coeff_of_b_ne_zero' Cubic.leading_coeff_of_b_ne_zero'
+
+@[simp]
+theorem leading_coeff_of_c_ne_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c ≠ 0) :
+    P.toPoly.leadingCoeff = P.c := by rw [of_b_eq_zero ha hb, leading_coeff_linear hc]
+#align cubic.leading_coeff_of_c_ne_zero Cubic.leading_coeff_of_c_ne_zero
+
+@[simp]
+theorem leading_coeff_of_c_ne_zero' (hc : c ≠ 0) : (toPoly ⟨0, 0, c, d⟩).leadingCoeff = c :=
+  leading_coeff_of_c_ne_zero rfl rfl hc
+#align cubic.leading_coeff_of_c_ne_zero' Cubic.leading_coeff_of_c_ne_zero'
+
+@[simp]
+theorem leading_coeff_of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) :
+    P.toPoly.leadingCoeff = P.d := by rw [of_c_eq_zero ha hb hc, leading_coeff_C]
+#align cubic.leading_coeff_of_c_eq_zero Cubic.leading_coeff_of_c_eq_zero
+
+@[simp]
+theorem leading_coeff_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).leadingCoeff = d :=
+  leading_coeff_of_c_eq_zero rfl rfl rfl
+#align cubic.leading_coeff_of_c_eq_zero' Cubic.leading_coeff_of_c_eq_zero'
+
+theorem monic_of_a_eq_one (ha : P.a = 1) : P.toPoly.Monic := by
+  nontriviality
+  rw [monic,
+    leading_coeff_of_a_ne_zero <| by 
+      rw [ha]
+      exact one_ne_zero,
+    ha]
+#align cubic.monic_of_a_eq_one Cubic.monic_of_a_eq_one
+
+theorem monic_of_a_eq_one' : (toPoly ⟨1, b, c, d⟩).Monic :=
+  monic_of_a_eq_one rfl
+#align cubic.monic_of_a_eq_one' Cubic.monic_of_a_eq_one'
+
+theorem monic_of_b_eq_one (ha : P.a = 0) (hb : P.b = 1) : P.toPoly.Monic := by
+  nontriviality
+  rw [monic,
+    leading_coeff_of_b_ne_zero ha <| by 
+      rw [hb]
+      exact one_ne_zero,
+    hb]
+#align cubic.monic_of_b_eq_one Cubic.monic_of_b_eq_one
+
+theorem monic_of_b_eq_one' : (toPoly ⟨0, 1, c, d⟩).Monic :=
+  monic_of_b_eq_one rfl rfl
+#align cubic.monic_of_b_eq_one' Cubic.monic_of_b_eq_one'
+
+theorem monic_of_c_eq_one (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 1) : P.toPoly.Monic := by
+  nontriviality
+  rw [monic,
+    leading_coeff_of_c_ne_zero ha hb <| by 
+      rw [hc]
+      exact one_ne_zero,
+    hc]
+#align cubic.monic_of_c_eq_one Cubic.monic_of_c_eq_one
+
+theorem monic_of_c_eq_one' : (toPoly ⟨0, 0, 1, d⟩).Monic :=
+  monic_of_c_eq_one rfl rfl rfl
+#align cubic.monic_of_c_eq_one' Cubic.monic_of_c_eq_one'
+
+theorem monic_of_d_eq_one (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) (hd : P.d = 1) :
+    P.toPoly.Monic := by rw [monic, leading_coeff_of_c_eq_zero ha hb hc, hd]
+#align cubic.monic_of_d_eq_one Cubic.monic_of_d_eq_one
+
+theorem monic_of_d_eq_one' : (toPoly ⟨0, 0, 0, 1⟩).Monic :=
+  monic_of_d_eq_one rfl rfl rfl rfl
+#align cubic.monic_of_d_eq_one' Cubic.monic_of_d_eq_one'
+
 end Coeff
 
 /-! ### Degrees -/
@@ -286,44 +373,65 @@ theorem degree_of_zero : (0 : Cubic R).toPoly.degree = ⊥ :=
 #align cubic.degree_of_zero Cubic.degree_of_zero
 
 @[simp]
-theorem leading_coeff_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.leadingCoeff = P.a :=
-  leading_coeff_cubic ha
-#align cubic.leading_coeff_of_a_ne_zero Cubic.leading_coeff_of_a_ne_zero
+theorem nat_degree_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.natDegree = 3 :=
+  nat_degree_cubic ha
+#align cubic.nat_degree_of_a_ne_zero Cubic.nat_degree_of_a_ne_zero
 
 @[simp]
-theorem leading_coeff_of_a_ne_zero' (ha : a ≠ 0) : (toPoly ⟨a, b, c, d⟩).leadingCoeff = a :=
-  leading_coeff_of_a_ne_zero ha
-#align cubic.leading_coeff_of_a_ne_zero' Cubic.leading_coeff_of_a_ne_zero'
+theorem nat_degree_of_a_ne_zero' (ha : a ≠ 0) : (toPoly ⟨a, b, c, d⟩).natDegree = 3 :=
+  nat_degree_of_a_ne_zero ha
+#align cubic.nat_degree_of_a_ne_zero' Cubic.nat_degree_of_a_ne_zero'
+
+theorem nat_degree_of_a_eq_zero (ha : P.a = 0) : P.toPoly.natDegree ≤ 2 := by
+  simpa only [of_a_eq_zero ha] using nat_degree_quadratic_le
+#align cubic.nat_degree_of_a_eq_zero Cubic.nat_degree_of_a_eq_zero
+
+theorem nat_degree_of_a_eq_zero' : (toPoly ⟨0, b, c, d⟩).natDegree ≤ 2 :=
+  nat_degree_of_a_eq_zero rfl
+#align cubic.nat_degree_of_a_eq_zero' Cubic.nat_degree_of_a_eq_zero'
 
 @[simp]
-theorem leading_coeff_of_b_ne_zero (ha : P.a = 0) (hb : P.b ≠ 0) : P.toPoly.leadingCoeff = P.b := by
-  rw [of_a_eq_zero ha, leading_coeff_quadratic hb]
-#align cubic.leading_coeff_of_b_ne_zero Cubic.leading_coeff_of_b_ne_zero
+theorem nat_degree_of_b_ne_zero (ha : P.a = 0) (hb : P.b ≠ 0) : P.toPoly.natDegree = 2 := by
+  rw [of_a_eq_zero ha, nat_degree_quadratic hb]
+#align cubic.nat_degree_of_b_ne_zero Cubic.nat_degree_of_b_ne_zero
 
 @[simp]
-theorem leading_coeff_of_b_ne_zero' (hb : b ≠ 0) : (toPoly ⟨0, b, c, d⟩).leadingCoeff = b :=
-  leading_coeff_of_b_ne_zero rfl hb
-#align cubic.leading_coeff_of_b_ne_zero' Cubic.leading_coeff_of_b_ne_zero'
+theorem nat_degree_of_b_ne_zero' (hb : b ≠ 0) : (toPoly ⟨0, b, c, d⟩).natDegree = 2 :=
+  nat_degree_of_b_ne_zero rfl hb
+#align cubic.nat_degree_of_b_ne_zero' Cubic.nat_degree_of_b_ne_zero'
+
+theorem nat_degree_of_b_eq_zero (ha : P.a = 0) (hb : P.b = 0) : P.toPoly.natDegree ≤ 1 := by
+  simpa only [of_b_eq_zero ha hb] using nat_degree_linear_le
+#align cubic.nat_degree_of_b_eq_zero Cubic.nat_degree_of_b_eq_zero
+
+theorem nat_degree_of_b_eq_zero' : (toPoly ⟨0, 0, c, d⟩).natDegree ≤ 1 :=
+  nat_degree_of_b_eq_zero rfl rfl
+#align cubic.nat_degree_of_b_eq_zero' Cubic.nat_degree_of_b_eq_zero'
 
 @[simp]
-theorem leading_coeff_of_c_ne_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c ≠ 0) :
-    P.toPoly.leadingCoeff = P.c := by rw [of_b_eq_zero ha hb, leading_coeff_linear hc]
-#align cubic.leading_coeff_of_c_ne_zero Cubic.leading_coeff_of_c_ne_zero
+theorem nat_degree_of_c_ne_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c ≠ 0) :
+    P.toPoly.natDegree = 1 := by rw [of_b_eq_zero ha hb, nat_degree_linear hc]
+#align cubic.nat_degree_of_c_ne_zero Cubic.nat_degree_of_c_ne_zero
 
 @[simp]
-theorem leading_coeff_of_c_ne_zero' (hc : c ≠ 0) : (toPoly ⟨0, 0, c, d⟩).leadingCoeff = c :=
-  leading_coeff_of_c_ne_zero rfl rfl hc
-#align cubic.leading_coeff_of_c_ne_zero' Cubic.leading_coeff_of_c_ne_zero'
+theorem nat_degree_of_c_ne_zero' (hc : c ≠ 0) : (toPoly ⟨0, 0, c, d⟩).natDegree = 1 :=
+  nat_degree_of_c_ne_zero rfl rfl hc
+#align cubic.nat_degree_of_c_ne_zero' Cubic.nat_degree_of_c_ne_zero'
 
 @[simp]
-theorem leading_coeff_of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) :
-    P.toPoly.leadingCoeff = P.d := by rw [of_c_eq_zero ha hb hc, leading_coeff_C]
-#align cubic.leading_coeff_of_c_eq_zero Cubic.leading_coeff_of_c_eq_zero
+theorem nat_degree_of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) :
+    P.toPoly.natDegree = 0 := by rw [of_c_eq_zero ha hb hc, nat_degree_C]
+#align cubic.nat_degree_of_c_eq_zero Cubic.nat_degree_of_c_eq_zero
 
 @[simp]
-theorem leading_coeff_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).leadingCoeff = d :=
-  leading_coeff_of_c_eq_zero rfl rfl rfl
-#align cubic.leading_coeff_of_c_eq_zero' Cubic.leading_coeff_of_c_eq_zero'
+theorem nat_degree_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).natDegree = 0 :=
+  nat_degree_of_c_eq_zero rfl rfl rfl
+#align cubic.nat_degree_of_c_eq_zero' Cubic.nat_degree_of_c_eq_zero'
+
+@[simp]
+theorem nat_degree_of_zero : (0 : Cubic R).toPoly.natDegree = 0 :=
+  nat_degree_of_c_eq_zero'
+#align cubic.nat_degree_of_zero Cubic.nat_degree_of_zero
 
 end Degree
 

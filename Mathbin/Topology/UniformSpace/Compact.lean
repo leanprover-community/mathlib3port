@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 -/
 import Mathbin.Topology.UniformSpace.UniformConvergence
+import Mathbin.Topology.UniformSpace.Equicontinuity
 import Mathbin.Topology.Separation
 
 /-!
@@ -192,7 +193,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
 -/
 
 
-/-- Heine-Cantor: a continuous function on a compact separated uniform space is uniformly
+/-- Heine-Cantor: a continuous function on a compact uniform space is uniformly
 continuous. -/
 theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α → β}
     (h : Continuous f) : UniformContinuous f :=
@@ -237,4 +238,18 @@ theorem Continuous.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] 
     (f : α → β → γ) (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
   h.ContinuousOn.TendstoUniformly univ_mem
 #align continuous.tendsto_uniformly Continuous.tendsto_uniformly
+
+section UniformConvergence
+
+/-- An equicontinuous family of functions defined on a compact uniform space is automatically
+uniformly equicontinuous. -/
+theorem CompactSpace.uniform_equicontinuous_of_equicontinuous {ι : Type _} {F : ι → β → α}
+    [CompactSpace β] (h : Equicontinuous F) : UniformEquicontinuous F := by
+  rw [equicontinuous_iff_continuous] at h
+  rw [uniform_equicontinuous_iff_uniform_continuous]
+  exact CompactSpace.uniform_continuous_of_continuous h
+#align
+  compact_space.uniform_equicontinuous_of_equicontinuous CompactSpace.uniform_equicontinuous_of_equicontinuous
+
+end UniformConvergence
 

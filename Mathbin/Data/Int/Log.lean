@@ -90,13 +90,10 @@ theorem log_of_right_le_zero (b : ℕ) {r : R} (hr : r ≤ 0) : log b r = 0 := b
 theorem zpow_log_le_self {b : ℕ} {r : R} (hb : 1 < b) (hr : 0 < r) : (b : R) ^ log b r ≤ r := by
   cases' le_total 1 r with hr1 hr1
   · rw [log_of_one_le_right _ hr1]
-    refine' le_trans _ (Nat.floor_le hr.le)
-    rw [zpow_coe_nat, ← Nat.cast_pow, Nat.cast_le]
-    exact Nat.pow_log_le_self hb (nat.floor_pos.mpr hr1)
+    rw [zpow_coe_nat, ← Nat.cast_pow, ← Nat.le_floor_iff hr.le]
+    exact Nat.pow_log_le_self b (nat.floor_pos.mpr hr1).ne'
   · rw [log_of_right_le_one _ hr1, zpow_neg, zpow_coe_nat, ← Nat.cast_pow]
-    apply inv_le_of_inv_le hr
-    refine' (Nat.le_ceil _).trans (Nat.cast_le.2 _)
-    exact Nat.le_pow_clog hb _
+    exact inv_le_of_inv_le hr (Nat.ceil_le.1 <| Nat.le_pow_clog hb _)
 #align int.zpow_log_le_self Int.zpow_log_le_self
 
 theorem lt_zpow_succ_log_self {b : ℕ} (hb : 1 < b) (r : R) : r < (b : R) ^ (log b r + 1) := by

@@ -775,6 +775,45 @@ theorem range_face_points {n : ℕ} (s : Simplex k P n) {fs : Finset (Fin (n + 1
   rw [face_points', Set.range_comp, Finset.range_order_emb_of_fin]
 #align affine.simplex.range_face_points Affine.Simplex.range_face_points
 
+/-- Remap a simplex along an `equiv` of index types. -/
+@[simps]
+def reindex {m n : ℕ} (s : Simplex k P m) (e : Fin (m + 1) ≃ Fin (n + 1)) : Simplex k P n :=
+  ⟨s.points ∘ e.symm, (affine_independent_equiv e.symm).2 s.Independent⟩
+#align affine.simplex.reindex Affine.Simplex.reindex
+
+/-- Reindexing by `equiv.refl` yields the original simplex. -/
+@[simp]
+theorem reindex_refl {n : ℕ} (s : Simplex k P n) : s.reindex (Equiv.refl (Fin (n + 1))) = s :=
+  ext fun _ => rfl
+#align affine.simplex.reindex_refl Affine.Simplex.reindex_refl
+
+/-- Reindexing by the composition of two equivalences is the same as reindexing twice. -/
+@[simp]
+theorem reindex_trans {n₁ n₂ n₃ : ℕ} (e₁₂ : Fin (n₁ + 1) ≃ Fin (n₂ + 1))
+    (e₂₃ : Fin (n₂ + 1) ≃ Fin (n₃ + 1)) (s : Simplex k P n₁) :
+    s.reindex (e₁₂.trans e₂₃) = (s.reindex e₁₂).reindex e₂₃ :=
+  rfl
+#align affine.simplex.reindex_trans Affine.Simplex.reindex_trans
+
+/-- Reindexing by an equivalence and its inverse yields the original simplex. -/
+@[simp]
+theorem reindex_reindex_symm {m n : ℕ} (s : Simplex k P m) (e : Fin (m + 1) ≃ Fin (n + 1)) :
+    (s.reindex e).reindex e.symm = s := by rw [← reindex_trans, Equiv.self_trans_symm, reindex_refl]
+#align affine.simplex.reindex_reindex_symm Affine.Simplex.reindex_reindex_symm
+
+/-- Reindexing by the inverse of an equivalence and that equivalence yields the original simplex. -/
+@[simp]
+theorem reindex_symm_reindex {m n : ℕ} (s : Simplex k P m) (e : Fin (n + 1) ≃ Fin (m + 1)) :
+    (s.reindex e.symm).reindex e = s := by rw [← reindex_trans, Equiv.symm_trans_self, reindex_refl]
+#align affine.simplex.reindex_symm_reindex Affine.Simplex.reindex_symm_reindex
+
+/-- Reindexing a simplex produces one with the same set of points. -/
+@[simp]
+theorem reindex_range_points {m n : ℕ} (s : Simplex k P m) (e : Fin (m + 1) ≃ Fin (n + 1)) :
+    Set.range (s.reindex e).points = Set.range s.points := by
+  rw [reindex, Set.range_comp, Equiv.range_eq_univ, Set.image_univ]
+#align affine.simplex.reindex_range_points Affine.Simplex.reindex_range_points
+
 end Simplex
 
 end Affine

@@ -103,12 +103,12 @@ theorem derivative_C_mul_X_sq (a : R) : derivative (c a * X ^ 2) = c (a * 2) * X
 #align polynomial.derivative_C_mul_X_sq Polynomial.derivative_C_mul_X_sq
 
 @[simp]
-theorem derivative_X_pow (n : ℕ) : derivative (X ^ n : R[X]) = (n : R[X]) * X ^ (n - 1) := by
+theorem derivative_X_pow (n : ℕ) : derivative (X ^ n : R[X]) = c ↑n * X ^ (n - 1) := by
   convert derivative_C_mul_X_pow (1 : R) n <;> simp
 #align polynomial.derivative_X_pow Polynomial.derivative_X_pow
 
 @[simp]
-theorem derivative_X_sq : derivative (X ^ 2 : R[X]) = (2 : R[X]) * X := by
+theorem derivative_X_sq : derivative (X ^ 2 : R[X]) = c 2 * X := by
   rw [derivative_X_pow, Nat.cast_two, pow_one]
 #align polynomial.derivative_X_sq Polynomial.derivative_X_sq
 
@@ -483,7 +483,7 @@ theorem iterate_derivative_X_pow_eq_nat_cast_mul (n k : ℕ) :
   induction' k with k ih
   · rw [Function.iterate_zero_apply, tsub_zero, Nat.desc_factorial_zero, Nat.cast_one, one_mul]
   ·
-    rw [Function.iterate_succ_apply', ih, derivative_nat_cast_mul, derivative_X_pow,
+    rw [Function.iterate_succ_apply', ih, derivative_nat_cast_mul, derivative_X_pow, C_eq_nat_cast,
       Nat.succ_eq_add_one, Nat.desc_factorial_succ, Nat.sub_sub, Nat.cast_mul, ← mul_assoc,
       mul_comm ↑(Nat.descFactorial _ _)]
 #align

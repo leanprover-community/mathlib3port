@@ -406,6 +406,46 @@ theorem sbtw_line_map_iff [NoZeroSmulDivisors R V] {x y : P} {r : R} :
   rw [(line_map_injective R hxy).mem_set_image]
 #align sbtw_line_map_iff sbtw_line_map_iff
 
+omit V
+
+@[simp]
+theorem wbtw_mul_sub_add_iff [NoZeroDivisors R] {x y r : R} :
+    Wbtw R x (r * (y - x) + x) y ↔ x = y ∨ r ∈ Set.icc (0 : R) 1 :=
+  wbtw_line_map_iff
+#align wbtw_mul_sub_add_iff wbtw_mul_sub_add_iff
+
+@[simp]
+theorem sbtw_mul_sub_add_iff [NoZeroDivisors R] {x y r : R} :
+    Sbtw R x (r * (y - x) + x) y ↔ x ≠ y ∧ r ∈ Set.ioo (0 : R) 1 :=
+  sbtw_line_map_iff
+#align sbtw_mul_sub_add_iff sbtw_mul_sub_add_iff
+
+@[simp]
+theorem wbtw_zero_one_iff {x : R} : Wbtw R 0 x 1 ↔ x ∈ Set.icc (0 : R) 1 := by
+  simp_rw [Wbtw, affineSegment, Set.mem_image, line_map_apply_ring]
+  simp
+#align wbtw_zero_one_iff wbtw_zero_one_iff
+
+@[simp]
+theorem wbtw_one_zero_iff {x : R} : Wbtw R 1 x 0 ↔ x ∈ Set.icc (0 : R) 1 := by
+  rw [wbtw_comm, wbtw_zero_one_iff]
+#align wbtw_one_zero_iff wbtw_one_zero_iff
+
+@[simp]
+theorem sbtw_zero_one_iff {x : R} : Sbtw R 0 x 1 ↔ x ∈ Set.ioo (0 : R) 1 := by
+  rw [Sbtw, wbtw_zero_one_iff, Set.mem_Icc, Set.mem_Ioo]
+  exact
+    ⟨fun h => ⟨h.1.1.lt_of_ne (Ne.symm h.2.1), h.1.2.lt_of_ne h.2.2⟩, fun h =>
+      ⟨⟨h.1.le, h.2.le⟩, h.1.ne', h.2.Ne⟩⟩
+#align sbtw_zero_one_iff sbtw_zero_one_iff
+
+@[simp]
+theorem sbtw_one_zero_iff {x : R} : Sbtw R 1 x 0 ↔ x ∈ Set.ioo (0 : R) 1 := by
+  rw [sbtw_comm, sbtw_zero_one_iff]
+#align sbtw_one_zero_iff sbtw_one_zero_iff
+
+include V
+
 theorem Wbtw.trans_left {w x y z : P} (h₁ : Wbtw R w y z) (h₂ : Wbtw R w x y) : Wbtw R w x z := by
   rcases h₁ with ⟨t₁, ht₁, rfl⟩
   rcases h₂ with ⟨t₂, ht₂, rfl⟩
@@ -441,6 +481,28 @@ theorem Sbtw.trans_right [NoZeroSmulDivisors R V] {w x y z : P} (h₁ : Sbtw R w
     (h₂ : Sbtw R x y z) : Sbtw R w y z :=
   h₁.Wbtw.trans_sbtw_right h₂
 #align sbtw.trans_right Sbtw.trans_right
+
+theorem Wbtw.trans_left_ne [NoZeroSmulDivisors R V] {w x y z : P} (h₁ : Wbtw R w y z)
+    (h₂ : Wbtw R w x y) (h : y ≠ z) : x ≠ z := by
+  rintro rfl
+  exact h (h₁.swap_right_iff.1 h₂)
+#align wbtw.trans_left_ne Wbtw.trans_left_ne
+
+theorem Wbtw.trans_right_ne [NoZeroSmulDivisors R V] {w x y z : P} (h₁ : Wbtw R w x z)
+    (h₂ : Wbtw R x y z) (h : w ≠ x) : w ≠ y := by
+  rintro rfl
+  exact h (h₁.swap_left_iff.1 h₂)
+#align wbtw.trans_right_ne Wbtw.trans_right_ne
+
+theorem Sbtw.trans_wbtw_left_ne [NoZeroSmulDivisors R V] {w x y z : P} (h₁ : Sbtw R w y z)
+    (h₂ : Wbtw R w x y) : x ≠ z :=
+  h₁.Wbtw.trans_left_ne h₂ h₁.ne_right
+#align sbtw.trans_wbtw_left_ne Sbtw.trans_wbtw_left_ne
+
+theorem Sbtw.trans_wbtw_right_ne [NoZeroSmulDivisors R V] {w x y z : P} (h₁ : Sbtw R w x z)
+    (h₂ : Wbtw R x y z) : w ≠ y :=
+  h₁.Wbtw.trans_right_ne h₂ h₁.left_ne
+#align sbtw.trans_wbtw_right_ne Sbtw.trans_wbtw_right_ne
 
 end OrderedRing
 

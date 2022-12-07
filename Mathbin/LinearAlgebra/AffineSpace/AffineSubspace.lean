@@ -1216,6 +1216,13 @@ theorem affine_span_nonempty (s : Set P) : (affineSpan k s : Set P).Nonempty ↔
 instance {s : Set P} [Nonempty s] : Nonempty (affineSpan k s) :=
   ((affine_span_nonempty k s).mpr (nonempty_subtype.mp ‹_›)).to_subtype
 
+/-- The affine span of a set is `⊥` if and only if that set is empty. -/
+@[simp]
+theorem affine_span_eq_bot {s : Set P} : affineSpan k s = ⊥ ↔ s = ∅ := by
+  rw [← not_iff_not, ← Ne.def, ← Ne.def, ← nonempty_iff_ne_bot, affine_span_nonempty,
+    nonempty_iff_ne_empty]
+#align affine_span_eq_bot affine_span_eq_bot
+
 variable {k}
 
 /-- Suppose a set of vectors spans `V`.  Then a point `p`, together
@@ -1785,6 +1792,28 @@ theorem parallel_iff_direction_eq_and_eq_bot_iff_eq_bot {s₁ s₂ : AffineSubsp
       · simpa using hd.symm
 #align
   affine_subspace.parallel_iff_direction_eq_and_eq_bot_iff_eq_bot AffineSubspace.parallel_iff_direction_eq_and_eq_bot_iff_eq_bot
+
+theorem Parallel.vector_span_eq {s₁ s₂ : Set P} (h : affineSpan k s₁ ∥ affineSpan k s₂) :
+    vectorSpan k s₁ = vectorSpan k s₂ := by
+  simp_rw [← direction_affine_span]
+  exact h.direction_eq
+#align affine_subspace.parallel.vector_span_eq AffineSubspace.Parallel.vector_span_eq
+
+theorem affine_span_parallel_iff_vector_span_eq_and_eq_empty_iff_eq_empty {s₁ s₂ : Set P} :
+    affineSpan k s₁ ∥ affineSpan k s₂ ↔ vectorSpan k s₁ = vectorSpan k s₂ ∧ (s₁ = ∅ ↔ s₂ = ∅) := by
+  simp_rw [← direction_affine_span, ← affine_span_eq_bot k]
+  exact parallel_iff_direction_eq_and_eq_bot_iff_eq_bot
+#align
+  affine_subspace.affine_span_parallel_iff_vector_span_eq_and_eq_empty_iff_eq_empty AffineSubspace.affine_span_parallel_iff_vector_span_eq_and_eq_empty_iff_eq_empty
+
+theorem affine_span_pair_parallel_iff_vector_span_eq {p₁ p₂ p₃ p₄ : P} :
+    line[k, p₁, p₂] ∥ line[k, p₃, p₄] ↔
+      vectorSpan k ({p₁, p₂} : Set P) = vectorSpan k ({p₃, p₄} : Set P) :=
+  by
+  simp [affine_span_parallel_iff_vector_span_eq_and_eq_empty_iff_eq_empty, ←
+    not_nonempty_iff_eq_empty]
+#align
+  affine_subspace.affine_span_pair_parallel_iff_vector_span_eq AffineSubspace.affine_span_pair_parallel_iff_vector_span_eq
 
 end AffineSubspace
 

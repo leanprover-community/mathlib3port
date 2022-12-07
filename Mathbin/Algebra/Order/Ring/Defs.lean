@@ -6,6 +6,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Yaël Dillies
 import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 import Mathbin.Algebra.Order.Monoid.Canonical.Defs
+import Mathbin.Algebra.Order.Monoid.NatCast
 import Mathbin.Algebra.Order.Monoid.WithZero.Defs
 import Mathbin.Algebra.Order.Ring.Lemmas
 import Mathbin.Algebra.Ring.Defs

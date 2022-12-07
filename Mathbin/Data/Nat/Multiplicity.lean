@@ -61,15 +61,13 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
           Finset.ext fun i => by
             rw [mem_filter, mem_Ico, mem_Ico, lt_succ_iff, ← @PartEnat.coe_le_coe i,
               PartEnat.coe_get, ← pow_dvd_iff_le_multiplicity, and_right_comm]
-            refine' (and_iff_left_of_imp fun h => _).symm
+            refine' (and_iff_left_of_imp fun h => lt_of_le_of_lt _ hb).symm
             cases m
             · rw [zero_pow, zero_dvd_iff] at h
-              exact (hn.ne' h.2).elim
-              · exact h.1
+              exacts[(hn.ne' h.2).elim, h.1]
             exact
-              ((pow_le_iff_le_log (succ_lt_succ <| Nat.pos_of_ne_zero <| succ_ne_succ.1 hm) hn).1 <|
-                    le_of_dvd hn h.2).trans_lt
-                hb
+              le_log_of_pow_le (one_lt_iff_ne_zero_and_ne_one.2 ⟨m.succ_ne_zero, hm⟩)
+                (le_of_dvd hn h.2)
     
 #align nat.multiplicity_eq_card_pow_dvd Nat.multiplicity_eq_card_pow_dvd
 

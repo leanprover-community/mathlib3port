@@ -85,6 +85,16 @@ theorem weighted_vsub_of_point_apply_const (w : ι → k) (p : P) (b : P) :
   rw [weighted_vsub_of_point_apply, sum_smul]
 #align finset.weighted_vsub_of_point_apply_const Finset.weighted_vsub_of_point_apply_const
 
+/-- `weighted_vsub_of_point` gives equal results for two families of weights and two families of
+points that are equal on `s`. -/
+theorem weighted_vsub_of_point_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i = w₂ i) {p₁ p₂ : ι → P}
+    (hp : ∀ i ∈ s, p₁ i = p₂ i) (b : P) :
+    s.weightedVsubOfPoint p₁ b w₁ = s.weightedVsubOfPoint p₂ b w₂ := by
+  simp_rw [weighted_vsub_of_point_apply]
+  convert sum_congr rfl fun i hi => _
+  rw [hw i hi, hp i hi]
+#align finset.weighted_vsub_of_point_congr Finset.weighted_vsub_of_point_congr
+
 /-- Given a family of points, if we use a member of the family as a base point, the
 `weighted_vsub_of_point` does not depend on the value of the weights at this point. -/
 theorem weighted_vsub_of_point_eq_of_weights_eq (p : ι → P) (j : ι) (w₁ w₂ : ι → k)
@@ -275,6 +285,13 @@ theorem weighted_vsub_empty (w : ι → k) (p : ι → P) : (∅ : Finset ι).we
   by simp [weighted_vsub_apply]
 #align finset.weighted_vsub_empty Finset.weighted_vsub_empty
 
+/-- `weighted_vsub` gives equal results for two families of weights and two families of points
+that are equal on `s`. -/
+theorem weighted_vsub_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i = w₂ i) {p₁ p₂ : ι → P}
+    (hp : ∀ i ∈ s, p₁ i = p₂ i) : s.weightedVsub p₁ w₁ = s.weightedVsub p₂ w₂ :=
+  s.weighted_vsub_of_point_congr hw hp _
+#align finset.weighted_vsub_congr Finset.weighted_vsub_congr
+
 /-- The weighted sum is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
 theorem weighted_vsub_indicator_subset (w : ι → k) (p : ι → P) {s₁ s₂ : Finset ι} (h : s₁ ⊆ s₂) :
@@ -380,6 +397,13 @@ theorem affine_combination_apply_const (w : ι → k) (p : P) (h : (∑ i in s, 
     s.affineCombination (fun _ => p) w = p := by
   rw [affine_combination_apply, s.weighted_vsub_of_point_apply_const, h, one_smul, vsub_vadd]
 #align finset.affine_combination_apply_const Finset.affine_combination_apply_const
+
+/-- `affine_combination` gives equal results for two families of weights and two families of
+points that are equal on `s`. -/
+theorem affine_combination_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i = w₂ i) {p₁ p₂ : ι → P}
+    (hp : ∀ i ∈ s, p₁ i = p₂ i) : s.affineCombination p₁ w₁ = s.affineCombination p₂ w₂ := by
+  simp_rw [affine_combination_apply, s.weighted_vsub_of_point_congr hw hp]
+#align finset.affine_combination_congr Finset.affine_combination_congr
 
 /-- `affine_combination` gives the sum with any base point, when the
 sum of the weights is 1. -/

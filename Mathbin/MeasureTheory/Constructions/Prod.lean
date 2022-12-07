@@ -318,7 +318,7 @@ theorem MeasureTheory.StronglyMeasurable.integralProdRight [SigmaFinite ν] ⦃f
       · refine' eventually_of_forall fun y => simple_func.tendsto_approx_on _ _ _
         apply subset_closure
         simp [-uncurry_apply_pair]
-    · simpa [f', hfx, integral_undef] using @tendsto_const_nhds _ _ _ (0 : E) _
+    · simp [f', hfx, integral_undef]
   exact stronglyMeasurableOfTendsto _ hf' h2f'
 #align
   measure_theory.strongly_measurable.integral_prod_right MeasureTheory.StronglyMeasurable.integralProdRight

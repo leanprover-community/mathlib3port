@@ -579,19 +579,19 @@ def piCongrRight {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ 
     map_mul' := fun x y => funext fun j => (es j).map_mul (x j) (y j) }
 #align mul_equiv.Pi_congr_right MulEquiv.piCongrRight
 
-@[simp]
+@[simp, to_additive]
 theorem Pi_congr_right_refl {η : Type _} {Ms : η → Type _} [∀ j, Mul (Ms j)] :
     (piCongrRight fun j => MulEquiv.refl (Ms j)) = MulEquiv.refl _ :=
   rfl
 #align mul_equiv.Pi_congr_right_refl MulEquiv.Pi_congr_right_refl
 
-@[simp]
+@[simp, to_additive]
 theorem Pi_congr_right_symm {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)]
     (es : ∀ j, Ms j ≃* Ns j) : (piCongrRight es).symm = Pi_congr_right fun i => (es i).symm :=
   rfl
 #align mul_equiv.Pi_congr_right_symm MulEquiv.Pi_congr_right_symm
 
-@[simp]
+@[simp, to_additive]
 theorem Pi_congr_right_trans {η : Type _} {Ms Ns Ps : η → Type _} [∀ j, Mul (Ms j)]
     [∀ j, Mul (Ns j)] [∀ j, Mul (Ps j)] (es : ∀ j, Ms j ≃* Ns j) (fs : ∀ j, Ns j ≃* Ps j) :
     (piCongrRight es).trans (piCongrRight fs) = Pi_congr_right fun i => (es i).trans (fs i) :=

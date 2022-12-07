@@ -433,5 +433,34 @@ theorem angle_eq_zero_iff_eq_and_ne_or_sbtw {p₁ p₂ p₃ : P} :
 #align
   euclidean_geometry.angle_eq_zero_iff_eq_and_ne_or_sbtw EuclideanGeometry.angle_eq_zero_iff_eq_and_ne_or_sbtw
 
+/-- Three points are collinear if and only if the first or third point equals the second or the
+angle between them is 0 or π. -/
+theorem collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ : P} :
+    Collinear ℝ ({p₁, p₂, p₃} : Set P) ↔ p₁ = p₂ ∨ p₃ = p₂ ∨ ∠ p₁ p₂ p₃ = 0 ∨ ∠ p₁ p₂ p₃ = π := by
+  refine' ⟨fun h => _, fun h => _⟩
+  · replace h := h.wbtw_or_wbtw_or_wbtw
+    by_cases h₁₂ : p₁ = p₂
+    · exact Or.inl h₁₂
+    by_cases h₃₂ : p₃ = p₂
+    · exact Or.inr (Or.inl h₃₂)
+    rw [or_iff_right h₁₂, or_iff_right h₃₂]
+    rcases h with (h | h | h)
+    · exact Or.inr (angle_eq_pi_iff_sbtw.2 ⟨h, Ne.symm h₁₂, Ne.symm h₃₂⟩)
+    · exact Or.inl (h.angle₃₁₂_eq_zero_of_ne h₃₂)
+    · exact Or.inl (h.angle₂₃₁_eq_zero_of_ne h₁₂)
+  · rcases h with (rfl | rfl | h | h)
+    · simpa using collinearPair ℝ p₁ p₃
+    · simpa using collinearPair ℝ p₁ p₃
+    · rw [angle_eq_zero_iff_ne_and_wbtw] at h
+      rcases h with (⟨-, h⟩ | ⟨-, h⟩)
+      · rw [Set.insert_comm]
+        exact h.collinear
+      · rw [Set.insert_comm, Set.pair_comm]
+        exact h.collinear
+    · rw [angle_eq_pi_iff_sbtw] at h
+      exact h.wbtw.collinear
+#align
+  euclidean_geometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi EuclideanGeometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi
+
 end EuclideanGeometry
 

@@ -883,10 +883,12 @@ def mkContinuous₂ (f : E →ₛₗ[σ₁₃] F →ₛₗ[σ₂₃] G) (C : ℝ
       { toFun := fun x => (f x).mkContinuous (C * ‖x‖) (hC x),
         map_add' := fun x y => by 
           ext z
-          simp,
+          rw [ContinuousLinearMap.add_apply, mk_continuous_apply, mk_continuous_apply,
+            mk_continuous_apply, map_add, add_apply],
         map_smul' := fun c x => by 
           ext z
-          simp }
+          rw [ContinuousLinearMap.smul_apply, mk_continuous_apply, mk_continuous_apply, map_smulₛₗ,
+            smul_apply] }
       (max C 0))
     fun x =>
     (mk_continuous_norm_le' _ _).trans_eq <| by rw [max_mul_of_nonneg _ _ (norm_nonneg x), zero_mul]

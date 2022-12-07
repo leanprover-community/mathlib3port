@@ -5,22 +5,16 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Group.WithOne.Defs
 import Mathbin.Algebra.Order.Monoid.Canonical.Defs
+import Mathbin.Algebra.Order.ZeroLeOne
 
 /-!
 # Adjoining a zero element to an ordered monoid.
 -/
 
 
-open Function
-
 universe u
 
 variable {α : Type u}
-
-/-- Typeclass for expressing that the `0` of a type is less or equal to its `1`. -/
-class ZeroLeOneClass (α : Type _) [Zero α] [One α] [LE α] where
-  zero_le_one : (0 : α) ≤ 1
-#align zero_le_one_class ZeroLeOneClass
 
 /-- A linearly ordered commutative monoid with a zero element. -/
 class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMonoid α,
@@ -39,152 +33,6 @@ instance (priority := 100) CanonicallyOrderedAddMonoid.toZeroLeOneClass
   ⟨zero_le 1⟩
 #align
   canonically_ordered_add_monoid.to_zero_le_one_class CanonicallyOrderedAddMonoid.toZeroLeOneClass
-
-/-- `zero_le_one` with the type argument implicit. -/
-@[simp]
-theorem zero_le_one [Zero α] [One α] [LE α] [ZeroLeOneClass α] : (0 : α) ≤ 1 :=
-  ZeroLeOneClass.zero_le_one
-#align zero_le_one zero_le_one
-
-/-- `zero_le_one` with the type argument explicit. -/
-theorem zero_le_one' (α) [Zero α] [One α] [LE α] [ZeroLeOneClass α] : (0 : α) ≤ 1 :=
-  zero_le_one
-#align zero_le_one' zero_le_one'
-
-theorem zero_le_two [Preorder α] [One α] [AddZeroClass α] [ZeroLeOneClass α]
-    [CovariantClass α α (· + ·) (· ≤ ·)] : (0 : α) ≤ 2 :=
-  add_nonneg zero_le_one zero_le_one
-#align zero_le_two zero_le_two
-
-theorem zero_le_three [Preorder α] [One α] [AddZeroClass α] [ZeroLeOneClass α]
-    [CovariantClass α α (· + ·) (· ≤ ·)] : (0 : α) ≤ 3 :=
-  add_nonneg zero_le_two zero_le_one
-#align zero_le_three zero_le_three
-
-theorem zero_le_four [Preorder α] [One α] [AddZeroClass α] [ZeroLeOneClass α]
-    [CovariantClass α α (· + ·) (· ≤ ·)] : (0 : α) ≤ 4 :=
-  add_nonneg zero_le_two zero_le_two
-#align zero_le_four zero_le_four
-
-theorem one_le_two [LE α] [One α] [AddZeroClass α] [ZeroLeOneClass α]
-    [CovariantClass α α (· + ·) (· ≤ ·)] : (1 : α) ≤ 2 :=
-  calc
-    1 = 1 + 0 := (add_zero 1).symm
-    _ ≤ 1 + 1 := add_le_add_left zero_le_one _
-    
-#align one_le_two one_le_two
-
-theorem one_le_two' [LE α] [One α] [AddZeroClass α] [ZeroLeOneClass α]
-    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] : (1 : α) ≤ 2 :=
-  calc
-    1 = 0 + 1 := (zero_add 1).symm
-    _ ≤ 1 + 1 := add_le_add_right zero_le_one _
-    
-#align one_le_two' one_le_two'
-
-section
-
-variable [Zero α] [One α] [PartialOrder α] [ZeroLeOneClass α] [NeZero (1 : α)]
-
-/- warning: zero_lt_one -> zero_lt_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Zero.{u} α] [_inst_2 : One.{u} α] [_inst_3 : PartialOrder.{u} α] [_inst_4 : ZeroLeOneClass.{u} α _inst_1 _inst_2 (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α _inst_3))] [_inst_5 : NeZero.{u} α _inst_1 (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α _inst_2)))], LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α _inst_3)) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α _inst_1))) (OfNat.ofNat.{u} α 1 (OfNat.mk.{u} α 1 (One.one.{u} α _inst_2)))
-but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292 : OrderedSemiring.{u_1} α] [inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.295 : Nontrivial.{u_1} α], LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))))) (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α (Semiring.toOne.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Linarith.Lemmas._hyg.292))))
-Case conversion may be inaccurate. Consider using '#align zero_lt_one zero_lt_oneₓ'. -/
-/-- See `zero_lt_one'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_one : (0 : α) < 1 :=
-  zero_le_one.lt_of_ne (NeZero.ne' 1)
-#align zero_lt_one zero_lt_one
-
-variable (α)
-
-/-- See `zero_lt_one` for a version with the type implicit. -/
-theorem zero_lt_one' : (0 : α) < 1 :=
-  zero_lt_one
-#align zero_lt_one' zero_lt_one'
-
-end
-
-section
-
-variable [One α] [AddZeroClass α] [PartialOrder α] [ZeroLeOneClass α] [NeZero (1 : α)]
-
-section
-
-variable [CovariantClass α α (· + ·) (· ≤ ·)]
-
-/-- See `zero_lt_two'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_two : (0 : α) < 2 :=
-  zero_lt_one.trans_le one_le_two
-#align zero_lt_two zero_lt_two
-
-/-- See `zero_lt_three'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_three : (0 : α) < 3 :=
-  lt_add_of_lt_of_nonneg zero_lt_two zero_le_one
-#align zero_lt_three zero_lt_three
-
-/-- See `zero_lt_four'` for a version with the type explicit. -/
-@[simp]
-theorem zero_lt_four : (0 : α) < 4 :=
-  lt_add_of_lt_of_nonneg zero_lt_two zero_le_two
-#align zero_lt_four zero_lt_four
-
-variable (α)
-
-/-- See `zero_lt_two` for a version with the type implicit. -/
-theorem zero_lt_two' : (0 : α) < 2 :=
-  zero_lt_two
-#align zero_lt_two' zero_lt_two'
-
-/-- See `zero_lt_three` for a version with the type implicit. -/
-theorem zero_lt_three' : (0 : α) < 3 :=
-  zero_lt_three
-#align zero_lt_three' zero_lt_three'
-
-/-- See `zero_lt_four` for a version with the type implicit. -/
-theorem zero_lt_four' : (0 : α) < 4 :=
-  zero_lt_four
-#align zero_lt_four' zero_lt_four'
-
-instance ZeroLeOneClass.NeZero.two : NeZero (2 : α) :=
-  ⟨zero_lt_two.ne'⟩
-#align zero_le_one_class.ne_zero.two ZeroLeOneClass.NeZero.two
-
-instance ZeroLeOneClass.NeZero.three : NeZero (3 : α) :=
-  ⟨zero_lt_three.ne'⟩
-#align zero_le_one_class.ne_zero.three ZeroLeOneClass.NeZero.three
-
-instance ZeroLeOneClass.NeZero.four : NeZero (4 : α) :=
-  ⟨zero_lt_four.ne'⟩
-#align zero_le_one_class.ne_zero.four ZeroLeOneClass.NeZero.four
-
-end
-
-theorem lt_add_one [CovariantClass α α (· + ·) (· < ·)] (a : α) : a < a + 1 :=
-  lt_add_of_pos_right _ zero_lt_one
-#align lt_add_one lt_add_one
-
-theorem lt_one_add [CovariantClass α α (swap (· + ·)) (· < ·)] (a : α) : a < 1 + a :=
-  lt_add_of_pos_left _ zero_lt_one
-#align lt_one_add lt_one_add
-
-theorem one_lt_two [CovariantClass α α (· + ·) (· < ·)] : (1 : α) < 2 :=
-  lt_add_one _
-#align one_lt_two one_lt_two
-
-end
-
-alias zero_lt_one ← one_pos
-
-alias zero_lt_two ← two_pos
-
-alias zero_lt_three ← three_pos
-
-alias zero_lt_four ← four_pos
 
 namespace WithZero
 

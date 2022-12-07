@@ -1861,6 +1861,10 @@ theorem div_eq_div_iff (ha : a ≠ 0) (ha' : a ≠ ∞) (hb : b ≠ 0) (hb' : b 
   rw [← eq_div_iff hb hb', mul_div_assoc, eq_comm]
 #align ennreal.div_eq_div_iff Ennreal.div_eq_div_iff
 
+theorem div_eq_one_iff {a b : ℝ≥0∞} (hb₀ : b ≠ 0) (hb₁ : b ≠ ∞) : a / b = 1 ↔ a = b :=
+  ⟨fun h => by rw [← (eq_div_iff hb₀ hb₁).mp h.symm, mul_one], fun h => h.symm ▸ div_self hb₀ hb₁⟩
+#align ennreal.div_eq_one_iff Ennreal.div_eq_one_iff
+
 theorem inv_two_add_inv_two : (2 : ℝ≥0∞)⁻¹ + 2⁻¹ = 1 := by
   rw [← two_mul, ← div_eq_mul_inv, div_self two_ne_zero two_ne_top]
 #align ennreal.inv_two_add_inv_two Ennreal.inv_two_add_inv_two

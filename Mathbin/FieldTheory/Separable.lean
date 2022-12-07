@@ -400,9 +400,8 @@ theorem X_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔
   rw [separable_def', derivative_sub, derivative_X_pow, derivative_one, sub_zero]
   -- Suppose `(n : F) = 0`, then the derivative is `0`, so `X ^ n - 1` is a unit, contradiction.
   rintro (h : IsCoprime _ _) hn'
-  rw [← C_eq_nat_cast, hn', C.map_zero, zero_mul, is_coprime_zero_right] at h
-  have := not_is_unit_X_pow_sub_one F n
-  contradiction
+  rw [hn', C_0, zero_mul, is_coprime_zero_right] at h
+  exact not_is_unit_X_pow_sub_one F n h
 #align polynomial.X_pow_sub_one_separable_iff Polynomial.X_pow_sub_one_separable_iff
 
 section Splits

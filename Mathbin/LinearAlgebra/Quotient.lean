@@ -94,7 +94,7 @@ theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by simpa using (Quotien
 #align submodule.quotient.mk_eq_zero Submodule.Quotient.mk_eq_zero
 
 instance addCommGroup : AddCommGroup (M ⧸ p) :=
-  QuotientAddGroup.addCommGroup p.toAddSubgroup
+  QuotientAddGroup.Quotient.addCommGroup p.toAddSubgroup
 #align submodule.quotient.add_comm_group Submodule.Quotient.addCommGroup
 
 @[simp]

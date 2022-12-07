@@ -189,9 +189,14 @@ theorem nat_degree_eq_zero_of_is_unit (h : IsUnit p) : natDegree p = 0 := by
 #align polynomial.nat_degree_eq_zero_of_is_unit Polynomial.nat_degree_eq_zero_of_is_unit
 
 theorem degree_eq_zero_of_is_unit [Nontrivial R] (h : IsUnit p) : degree p = 0 :=
-  le_antisymm (nat_degree_eq_zero_iff_degree_le_zero.mp (nat_degree_eq_zero_of_is_unit h))
+  (nat_degree_eq_zero_iff_degree_le_zero.mp <| nat_degree_eq_zero_of_is_unit h).antisymm
     (zero_le_degree_iff.mpr h.NeZero)
 #align polynomial.degree_eq_zero_of_is_unit Polynomial.degree_eq_zero_of_is_unit
+
+@[simp]
+theorem degree_coe_units [Nontrivial R] (u : R[X]ˣ) : degree (u : R[X]) = 0 :=
+  degree_eq_zero_of_is_unit ⟨u, rfl⟩
+#align polynomial.degree_coe_units Polynomial.degree_coe_units
 
 theorem is_unit_iff : IsUnit p ↔ ∃ r : R, IsUnit r ∧ c r = p :=
   ⟨fun hp =>
@@ -242,18 +247,64 @@ variable [CommSemiring R] [NoZeroDivisors R] {p q : R[X]}
 theorem irreducible_of_monic (hp : p.Monic) (hp1 : p ≠ 1) :
     Irreducible p ↔ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → f = 1 ∨ g = 1 := by
   refine'
-    ⟨fun h f g hf hg hp =>
-      (h.2 f g hp.symm).elim (Or.inl ∘ hf.eq_one_of_is_unit) (Or.inr ∘ hg.eq_one_of_is_unit),
-      fun h =>
+    ⟨fun h f g hf hg hp => (h.2 f g hp.symm).imp hf.eq_one_of_is_unit hg.eq_one_of_is_unit, fun h =>
       ⟨hp1 ∘ hp.eq_one_of_is_unit, fun f g hfg =>
-        (h (g * C f.leadingCoeff) (f * C g.leadingCoeff) _ _ _).elim
-          (Or.inr ∘ isUnit_of_mul_eq_one g _) (Or.inl ∘ isUnit_of_mul_eq_one f _)⟩⟩
+        (h (g * C f.leadingCoeff) (f * C g.leadingCoeff) _ _ _).symm.imp (isUnit_of_mul_eq_one f _)
+          (isUnit_of_mul_eq_one g _)⟩⟩
   · rwa [monic, leading_coeff_mul, leading_coeff_C, ← leading_coeff_mul, mul_comm, ← hfg, ← monic]
   · rwa [monic, leading_coeff_mul, leading_coeff_C, ← leading_coeff_mul, ← hfg, ← monic]
   ·
     rw [mul_mul_mul_comm, ← C_mul, ← leading_coeff_mul, ← hfg, hp.leading_coeff, C_1, mul_one,
       mul_comm, ← hfg]
 #align polynomial.irreducible_of_monic Polynomial.irreducible_of_monic
+
+theorem Monic.irreducible_iff_nat_degree (hp : p.Monic) :
+    Irreducible p ↔
+      p ≠ 1 ∧ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → f.natDegree = 0 ∨ g.natDegree = 0 :=
+  by 
+  by_cases hp1 : p = 1; · simp [hp1]
+  rw [irreducible_of_monic hp hp1, and_iff_right hp1]
+  refine' forall₄_congr fun a b ha hb => _
+  rw [ha.nat_degree_eq_zero_iff_eq_one, hb.nat_degree_eq_zero_iff_eq_one]
+#align polynomial.monic.irreducible_iff_nat_degree Polynomial.Monic.irreducible_iff_nat_degree
+
+theorem Monic.irreducible_iff_nat_degree' (hp : p.Monic) :
+    Irreducible p ↔
+      p ≠ 1 ∧ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → g.natDegree ∉ ioc 0 (p.natDegree / 2) :=
+  by 
+  simp_rw [hp.irreducible_iff_nat_degree, mem_Ioc, Nat.le_div_iff_mul_le zero_lt_two, mul_two]
+  apply and_congr_right'
+  constructor <;> intro h f g hf hg he <;> subst he
+  · rw [hf.nat_degree_mul hg, add_le_add_iff_right]
+    exact fun ha => (h f g hf hg rfl).elim (ha.1.trans_le ha.2).ne' ha.1.ne'
+  · simp_rw [hf.nat_degree_mul hg, pos_iff_ne_zero] at h
+    contrapose! h
+    obtain hl | hl := le_total f.nat_degree g.nat_degree
+    · exact ⟨g, f, hg, hf, mul_comm g f, h.1, add_le_add_left hl _⟩
+    · exact ⟨f, g, hf, hg, rfl, h.2, add_le_add_right hl _⟩
+#align polynomial.monic.irreducible_iff_nat_degree' Polynomial.Monic.irreducible_iff_nat_degree'
+
+theorem Monic.not_irreducible_iff_exists_add_mul_eq_coeff (hm : p.Monic) (hnd : p.natDegree = 2) :
+    ¬Irreducible p ↔ ∃ c₁ c₂, p.coeff 0 = c₁ * c₂ ∧ p.coeff 1 = c₁ + c₂ := by
+  cases subsingleton_or_nontrivial R
+  · simpa only [nat_degree_of_subsingleton] using hnd
+  rw [hm.irreducible_iff_nat_degree', and_iff_right, hnd]
+  push_neg; constructor
+  · rintro ⟨a, b, ha, hb, rfl, hdb | ⟨⟨⟩⟩⟩
+    have hda := hnd
+    rw [ha.nat_degree_mul hb, hdb] at hda
+    use a.coeff 0, b.coeff 0, mul_coeff_zero a b
+    simpa only [next_coeff, hnd, add_right_cancel hda, hdb] using ha.next_coeff_mul hb
+  · rintro ⟨c₁, c₂, hmul, hadd⟩
+    refine'
+      ⟨X + C c₁, X + C c₂, monic_X_add_C _, monic_X_add_C _, _, Or.inl <| nat_degree_X_add_C _⟩
+    rw [p.as_sum_range_C_mul_X_pow, hnd, Finset.sum_range_succ, Finset.sum_range_succ,
+      Finset.sum_range_one, ← hnd, hm.coeff_nat_degree, hnd, hmul, hadd, C_mul, C_add, C_1]
+    ring
+  · rintro rfl
+    simpa only [nat_degree_one] using hnd
+#align
+  polynomial.monic.not_irreducible_iff_exists_add_mul_eq_coeff Polynomial.Monic.not_irreducible_iff_exists_add_mul_eq_coeff
 
 theorem root_mul : IsRoot (p * q) a ↔ IsRoot p a ∨ IsRoot q a := by
   simp_rw [is_root, eval_mul, mul_eq_zero]
@@ -314,11 +365,6 @@ section Roots
 
 open Multiset
 
-@[simp]
-theorem degree_coe_units (u : R[X]ˣ) : degree (u : R[X]) = 0 :=
-  degree_eq_zero_of_is_unit ⟨u, rfl⟩
-#align polynomial.degree_coe_units Polynomial.degree_coe_units
-
 theorem prime_X_sub_C (r : R) : Prime (X - c r) :=
   ⟨X_sub_C_ne_zero r, not_is_unit_X_sub_C r, fun _ _ => by
     simp_rw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]
@@ -350,10 +396,10 @@ theorem Monic.irreducible_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) :
 theorem eq_of_monic_of_associated (hp : p.Monic) (hq : q.Monic) (hpq : Associated p q) : p = q := by
   obtain ⟨u, hu⟩ := hpq
   unfold monic at hp hq
-  rw [eq_C_of_degree_le_zero (le_of_eq <| degree_coe_units _)] at hu
+  rw [eq_C_of_degree_le_zero (degree_coe_units _).le] at hu
   rw [← hu, leading_coeff_mul, hp, one_mul, leading_coeff_C] at hq
   rwa [hq, C_1, mul_one] at hu
-  infer_instance
+  all_goals infer_instance
 #align polynomial.eq_of_monic_of_associated Polynomial.eq_of_monic_of_associated
 
 theorem root_multiplicity_mul {p q : R[X]} {x : R} (hpq : p * q ≠ 0) :

@@ -233,6 +233,10 @@ theorem Monic.eq_one_of_is_unit (hm : Monic p) (hpu : IsUnit p) : p = 1 := by
   exact hm.nat_degree_eq_zero_iff_eq_one.mp this.1
 #align polynomial.monic.eq_one_of_is_unit Polynomial.Monic.eq_one_of_is_unit
 
+theorem Monic.is_unit_iff (hm : p.Monic) : IsUnit p ↔ p = 1 :=
+  ⟨hm.eq_one_of_is_unit, fun h => h.symm ▸ isUnit_one⟩
+#align polynomial.monic.is_unit_iff Polynomial.Monic.is_unit_iff
+
 end Semiring
 
 section CommSemiring

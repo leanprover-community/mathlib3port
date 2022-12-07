@@ -298,8 +298,8 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
     rw [separable_def]
     convert is_coprime_one_right.neg_right using 1
     ·
-      rw [derivative_sub, derivative_X, derivative_X_pow, ← C_eq_nat_cast,
-        C_eq_zero.mpr (CharP.cast_card_eq_zero K), zero_mul, zero_sub]
+      rw [derivative_sub, derivative_X, derivative_X_pow, CharP.cast_card_eq_zero K, C_0, zero_mul,
+        zero_sub]
 #align finite_field.roots_X_pow_card_sub_X FiniteField.roots_X_pow_card_sub_X
 
 instance (F : Type _) [Field F] [Algebra F K] :

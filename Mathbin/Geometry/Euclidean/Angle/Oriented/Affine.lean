@@ -24,7 +24,7 @@ noncomputable section
 
 open FiniteDimensional Complex
 
-open EuclideanGeometry Real RealInnerProductSpace ComplexConjugate
+open Affine EuclideanGeometry Real RealInnerProductSpace ComplexConjugate
 
 namespace EuclideanGeometry
 
@@ -278,6 +278,27 @@ theorem collinear_iff_of_two_zsmul_oangle_eq {p₁ p₂ p₃ p₄ p₅ p₆ : P}
 #align
   euclidean_geometry.collinear_iff_of_two_zsmul_oangle_eq EuclideanGeometry.collinear_iff_of_two_zsmul_oangle_eq
 
+/-- If corresponding pairs of points in two angles have the same vector span, twice those angles
+are equal. -/
+theorem two_zsmul_oangle_of_vector_span_eq {p₁ p₂ p₃ p₄ p₅ p₆ : P}
+    (h₁₂₄₅ : vectorSpan ℝ ({p₁, p₂} : Set P) = vectorSpan ℝ ({p₄, p₅} : Set P))
+    (h₃₂₆₅ : vectorSpan ℝ ({p₃, p₂} : Set P) = vectorSpan ℝ ({p₆, p₅} : Set P)) :
+    (2 : ℤ) • ∡ p₁ p₂ p₃ = (2 : ℤ) • ∡ p₄ p₅ p₆ := by
+  simp_rw [vector_span_pair] at h₁₂₄₅ h₃₂₆₅
+  exact o.two_zsmul_oangle_of_span_eq_of_span_eq h₁₂₄₅ h₃₂₆₅
+#align
+  euclidean_geometry.two_zsmul_oangle_of_vector_span_eq EuclideanGeometry.two_zsmul_oangle_of_vector_span_eq
+
+/-- If the lines determined by corresponding pairs of points in two angles are parallel, twice
+those angles are equal. -/
+theorem two_zsmul_oangle_of_parallel {p₁ p₂ p₃ p₄ p₅ p₆ : P}
+    (h₁₂₄₅ : line[ℝ, p₁, p₂] ∥ line[ℝ, p₄, p₅]) (h₃₂₆₅ : line[ℝ, p₃, p₂] ∥ line[ℝ, p₆, p₅]) :
+    (2 : ℤ) • ∡ p₁ p₂ p₃ = (2 : ℤ) • ∡ p₄ p₅ p₆ := by
+  rw [AffineSubspace.affine_span_pair_parallel_iff_vector_span_eq] at h₁₂₄₅ h₃₂₆₅
+  exact two_zsmul_oangle_of_vector_span_eq h₁₂₄₅ h₃₂₆₅
+#align
+  euclidean_geometry.two_zsmul_oangle_of_parallel EuclideanGeometry.two_zsmul_oangle_of_parallel
+
 /-- Given three points not equal to `p`, the angle between the first and the second at `p` plus
 the angle between the second and the third equals the angle between the first and the third. -/
 @[simp]
@@ -339,6 +360,22 @@ theorem oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq {p₁ p₂ p₃ : P} (hn : 
   · simpa using hn
 #align
   euclidean_geometry.oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq EuclideanGeometry.oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq
+
+/-- A base angle of an isosceles triangle is acute, oriented angle-at-point form. -/
+theorem abs_oangle_right_to_real_lt_pi_div_two_of_dist_eq {p₁ p₂ p₃ : P}
+    (h : dist p₁ p₂ = dist p₁ p₃) : |(∡ p₁ p₂ p₃).toReal| < π / 2 := by
+  simp_rw [dist_eq_norm_vsub] at h
+  rw [oangle, ← vsub_sub_vsub_cancel_left p₃ p₂ p₁]
+  exact o.abs_oangle_sub_right_to_real_lt_pi_div_two h
+#align
+  euclidean_geometry.abs_oangle_right_to_real_lt_pi_div_two_of_dist_eq EuclideanGeometry.abs_oangle_right_to_real_lt_pi_div_two_of_dist_eq
+
+/-- A base angle of an isosceles triangle is acute, oriented angle-at-point form. -/
+theorem abs_oangle_left_to_real_lt_pi_div_two_of_dist_eq {p₁ p₂ p₃ : P}
+    (h : dist p₁ p₂ = dist p₁ p₃) : |(∡ p₂ p₃ p₁).toReal| < π / 2 :=
+  oangle_eq_oangle_of_dist_eq h ▸ abs_oangle_right_to_real_lt_pi_div_two_of_dist_eq h
+#align
+  euclidean_geometry.abs_oangle_left_to_real_lt_pi_div_two_of_dist_eq EuclideanGeometry.abs_oangle_left_to_real_lt_pi_div_two_of_dist_eq
 
 /-- The cosine of the oriented angle at `p` between two points not equal to `p` equals that of the
 unoriented angle. -/

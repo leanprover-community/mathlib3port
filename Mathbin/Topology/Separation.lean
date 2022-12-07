@@ -1444,7 +1444,8 @@ theorem continuous_at_of_tendsto_nhds [TopologicalSpace β] [T1Space β] {f : α
   show Tendsto f (𝓝 a) (𝓝 <| f a) by rwa [eq_of_tendsto_nhds h]
 #align continuous_at_of_tendsto_nhds continuous_at_of_tendsto_nhds
 
-theorem tendsto_const_nhds_iff [T1Space α] {l : Filter α} [NeBot l] {c d : α} :
+@[simp]
+theorem tendsto_const_nhds_iff [T1Space α] {l : Filter β} [NeBot l] {c d : α} :
     Tendsto (fun x => c) l (𝓝 d) ↔ c = d := by simp_rw [tendsto, Filter.map_const, pure_le_nhds_iff]
 #align tendsto_const_nhds_iff tendsto_const_nhds_iff
 

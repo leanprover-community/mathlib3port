@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
 -/
 import Mathbin.Data.Set.Basic
+import Mathbin.Data.Set.NAry
 
 /-!
 # Sets in product and pi types

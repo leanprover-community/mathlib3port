@@ -118,15 +118,19 @@ theorem coeff_mul (p q : R[X]) (n : ℕ) :
 theorem mul_coeff_zero (p q : R[X]) : coeff (p * q) 0 = coeff p 0 * coeff q 0 := by simp [coeff_mul]
 #align polynomial.mul_coeff_zero Polynomial.mul_coeff_zero
 
--- TODO: golf using `constant_coeff` once #17664 is merged
+/-- `constant_coeff p` returns the constant term of the polynomial `p`,
+  defined as `coeff p 0`. This is a ring homomorphism. -/
+@[simps]
+def constantCoeff : R[X] →+* R where 
+  toFun p := coeff p 0
+  map_one' := coeff_one_zero
+  map_mul' := mul_coeff_zero
+  map_zero' := coeff_zero 0
+  map_add' p q := coeff_add p q 0
+#align polynomial.constant_coeff Polynomial.constantCoeff
+
 theorem is_unit_C {x : R} : IsUnit (c x) ↔ IsUnit x :=
-  ⟨by 
-    rintro ⟨⟨q, p, hqp, hpq⟩, rfl : q = C x⟩
-    exact
-      ⟨⟨(C x).coeff 0, p.coeff 0, by rw [← mul_coeff_zero, hqp, coeff_one_zero], by
-          rw [← mul_coeff_zero, hpq, coeff_one_zero]⟩,
-        coeff_C_zero⟩,
-    IsUnit.map c⟩
+  ⟨fun h => (congr_arg IsUnit coeff_C_zero).mp (h.map <| @constantCoeff R _), fun h => h.map c⟩
 #align polynomial.is_unit_C Polynomial.is_unit_C
 
 theorem coeff_mul_X_zero (p : R[X]) : coeff (p * X) 0 = 0 := by simp

@@ -390,6 +390,27 @@ theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) :
         hr i (Set.mem_univ _)).symm
 #align affine.simplex.circumcenter_eq_centroid Affine.Simplex.circumcenter_eq_centroid
 
+/-- Reindexing a simplex along an `equiv` of index types does not change the circumsphere. -/
+@[simp]
+theorem circumsphere_reindex {m n : ℕ} (s : Simplex ℝ P m) (e : Fin (m + 1) ≃ Fin (n + 1)) :
+    (s.reindex e).circumsphere = s.circumsphere := by
+  refine' s.circumsphere_unique_dist_eq.2 _ ⟨_, _⟩ <;> rw [← s.reindex_range_points e]
+  · exact (s.reindex e).circumsphere_unique_dist_eq.1.1
+  · exact (s.reindex e).circumsphere_unique_dist_eq.1.2
+#align affine.simplex.circumsphere_reindex Affine.Simplex.circumsphere_reindex
+
+/-- Reindexing a simplex along an `equiv` of index types does not change the circumcenter. -/
+@[simp]
+theorem circumcenter_reindex {m n : ℕ} (s : Simplex ℝ P m) (e : Fin (m + 1) ≃ Fin (n + 1)) :
+    (s.reindex e).circumcenter = s.circumcenter := by simp_rw [← circumcenter, circumsphere_reindex]
+#align affine.simplex.circumcenter_reindex Affine.Simplex.circumcenter_reindex
+
+/-- Reindexing a simplex along an `equiv` of index types does not change the circumradius. -/
+@[simp]
+theorem circumradius_reindex {m n : ℕ} (s : Simplex ℝ P m) (e : Fin (m + 1) ≃ Fin (n + 1)) :
+    (s.reindex e).circumradius = s.circumradius := by simp_rw [← circumradius, circumsphere_reindex]
+#align affine.simplex.circumradius_reindex Affine.Simplex.circumradius_reindex
+
 attribute [local instance] AffineSubspace.toAddTorsor
 
 /-- The orthogonal projection of a point `p` onto the hyperplane spanned by the simplex's points. -/
@@ -888,6 +909,52 @@ theorem circumcenter_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional
   rw [hr sx₁ hsx₁, hr sx₂ hsx₂]
 #align
   euclidean_geometry.circumcenter_eq_of_cospherical EuclideanGeometry.circumcenter_eq_of_cospherical
+
+/-- All n-simplices among cospherical points in an n-dimensional
+subspace have the same circumsphere. -/
+theorem exists_circumsphere_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : Set P}
+    (h : ps ⊆ s) [Nonempty s] {n : ℕ} [FiniteDimensional ℝ s.direction]
+    (hd : finrank ℝ s.direction = n) (hc : Cospherical ps) :
+    ∃ c : Sphere P, ∀ sx : Simplex ℝ P n, Set.range sx.points ⊆ ps → sx.circumsphere = c := by
+  obtain ⟨r, hr⟩ := exists_circumradius_eq_of_cospherical_subset h hd hc
+  obtain ⟨c, hc⟩ := exists_circumcenter_eq_of_cospherical_subset h hd hc
+  exact ⟨⟨c, r⟩, fun sx hsx => sphere.ext _ _ (hc sx hsx) (hr sx hsx)⟩
+#align
+  euclidean_geometry.exists_circumsphere_eq_of_cospherical_subset EuclideanGeometry.exists_circumsphere_eq_of_cospherical_subset
+
+/-- Two n-simplices among cospherical points in an n-dimensional
+subspace have the same circumsphere. -/
+theorem circumsphere_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s)
+    [Nonempty s] {n : ℕ} [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n)
+    (hc : Cospherical ps) {sx₁ sx₂ : Simplex ℝ P n} (hsx₁ : Set.range sx₁.points ⊆ ps)
+    (hsx₂ : Set.range sx₂.points ⊆ ps) : sx₁.circumsphere = sx₂.circumsphere := by
+  rcases exists_circumsphere_eq_of_cospherical_subset h hd hc with ⟨r, hr⟩
+  rw [hr sx₁ hsx₁, hr sx₂ hsx₂]
+#align
+  euclidean_geometry.circumsphere_eq_of_cospherical_subset EuclideanGeometry.circumsphere_eq_of_cospherical_subset
+
+/-- All n-simplices among cospherical points in n-space have the same
+circumsphere. -/
+theorem exists_circumsphere_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V]
+    (hd : finrank ℝ V = n) (hc : Cospherical ps) :
+    ∃ c : Sphere P, ∀ sx : Simplex ℝ P n, Set.range sx.points ⊆ ps → sx.circumsphere = c := by
+  haveI : Nonempty (⊤ : AffineSubspace ℝ P) := Set.univ.nonempty
+  rw [← finrank_top, ← direction_top ℝ V P] at hd
+  refine' exists_circumsphere_eq_of_cospherical_subset _ hd hc
+  exact Set.subset_univ _
+#align
+  euclidean_geometry.exists_circumsphere_eq_of_cospherical EuclideanGeometry.exists_circumsphere_eq_of_cospherical
+
+/-- Two n-simplices among cospherical points in n-space have the same
+circumsphere. -/
+theorem circumsphere_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V]
+    (hd : finrank ℝ V = n) (hc : Cospherical ps) {sx₁ sx₂ : Simplex ℝ P n}
+    (hsx₁ : Set.range sx₁.points ⊆ ps) (hsx₂ : Set.range sx₂.points ⊆ ps) :
+    sx₁.circumsphere = sx₂.circumsphere := by
+  rcases exists_circumsphere_eq_of_cospherical hd hc with ⟨r, hr⟩
+  rw [hr sx₁ hsx₁, hr sx₂ hsx₂]
+#align
+  euclidean_geometry.circumsphere_eq_of_cospherical EuclideanGeometry.circumsphere_eq_of_cospherical
 
 /-- Suppose all distances from `p₁` and `p₂` to the points of a
 simplex are equal, and that `p₁` and `p₂` lie in the affine span of

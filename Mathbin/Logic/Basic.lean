@@ -1619,7 +1619,7 @@ theorem not_and' : ¬(a ∧ b) ↔ b → ¬a :=
 /-- One of de Morgan's laws: the negation of a disjunction is logically equivalent to the
 conjunction of the negations. -/
 theorem not_or : ¬(a ∨ b) ↔ ¬a ∧ ¬b :=
-  ⟨fun h => ⟨fun ha => h (Or.inl ha), fun hb => h (Or.inr hb)⟩, fun ⟨h₁, h₂⟩ h => Or.elim h h₁ h₂⟩
+  or_imp
 #align not_or_distrib not_or
 -/
 

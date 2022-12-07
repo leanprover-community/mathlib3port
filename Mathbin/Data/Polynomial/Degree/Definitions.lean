@@ -427,13 +427,17 @@ theorem eq_X_add_C_of_degree_le_one (h : degree p ≤ 1) : p = c (p.coeff 1) * X
 
 theorem eq_X_add_C_of_degree_eq_one (h : degree p = 1) : p = c p.leadingCoeff * X + c (p.coeff 0) :=
   (eq_X_add_C_of_degree_le_one (show degree p ≤ 1 from h ▸ le_rfl)).trans
-    (by simp [leading_coeff, nat_degree_eq_of_degree_eq_some h])
+    (by simp only [leading_coeff, nat_degree_eq_of_degree_eq_some h])
 #align polynomial.eq_X_add_C_of_degree_eq_one Polynomial.eq_X_add_C_of_degree_eq_one
 
 theorem eq_X_add_C_of_nat_degree_le_one (h : natDegree p ≤ 1) :
     p = c (p.coeff 1) * X + c (p.coeff 0) :=
   eq_X_add_C_of_degree_le_one <| degree_le_of_nat_degree_le h
 #align polynomial.eq_X_add_C_of_nat_degree_le_one Polynomial.eq_X_add_C_of_nat_degree_le_one
+
+theorem Monic.eq_X_add_C (hm : p.Monic) (hnd : p.natDegree = 1) : p = X + c (p.coeff 0) := by
+  rw [← one_mul X, ← C_1, ← hm.coeff_nat_degree, hnd, ← eq_X_add_C_of_nat_degree_le_one hnd.le]
+#align polynomial.monic.eq_X_add_C Polynomial.Monic.eq_X_add_C
 
 theorem exists_eq_X_add_C_of_nat_degree_le_one (h : natDegree p ≤ 1) : ∃ a b, p = c a * X + c b :=
   ⟨p.coeff 1, p.coeff 0, eq_X_add_C_of_nat_degree_le_one h⟩
@@ -1374,6 +1378,14 @@ theorem nat_degree_X_pow_add_C {n : ℕ} {r : R} : (X ^ n + c r).natDegree = n :
   · rw [hn, pow_zero, ← C_1, ← RingHom.map_add, nat_degree_C]
   · exact nat_degree_eq_of_degree_eq_some (degree_X_pow_add_C (pos_iff_ne_zero.mpr hn) r)
 #align polynomial.nat_degree_X_pow_add_C Polynomial.nat_degree_X_pow_add_C
+
+theorem X_pow_add_C_ne_one {n : ℕ} (hn : 0 < n) (a : R) : (x : R[X]) ^ n + c a ≠ 1 := fun h =>
+  hn.ne' <| by simpa only [nat_degree_X_pow_add_C, nat_degree_one] using congr_arg nat_degree h
+#align polynomial.X_pow_add_C_ne_one Polynomial.X_pow_add_C_ne_one
+
+theorem X_add_C_ne_one (r : R) : X + c r ≠ 1 :=
+  pow_one (x : R[X]) ▸ X_pow_add_C_ne_one zero_lt_one r
+#align polynomial.X_add_C_ne_one Polynomial.X_add_C_ne_one
 
 end Semiring
 

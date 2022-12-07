@@ -60,13 +60,8 @@ theorem erase_lead_zero : eraseLead (0 : R[X]) = 0 := by simp only [erase_lead, 
 
 @[simp]
 theorem erase_lead_add_monomial_nat_degree_leading_coeff (f : R[X]) :
-    f.eraseLead + monomial f.natDegree f.leadingCoeff = f := by
-  ext i
-  simp only [erase_lead_coeff, coeff_monomial, coeff_add, @eq_comm _ _ i]
-  split_ifs with h
-  · subst i
-    simp only [leading_coeff, zero_add]
-  · exact add_zero _
+    f.eraseLead + monomial f.natDegree f.leadingCoeff = f :=
+  (add_comm _ _).trans (f.monomial_add_erase _)
 #align
   polynomial.erase_lead_add_monomial_nat_degree_leading_coeff Polynomial.erase_lead_add_monomial_nat_degree_leading_coeff
 
@@ -90,7 +85,7 @@ theorem self_sub_C_mul_X_pow {R : Type _} [Ring R] (f : R[X]) :
 #align polynomial.self_sub_C_mul_X_pow Polynomial.self_sub_C_mul_X_pow
 
 theorem erase_lead_ne_zero (f0 : 2 ≤ f.support.card) : eraseLead f ≠ 0 := by
-  rw [Ne.def, ← card_support_eq_zero, erase_lead_support]
+  rw [Ne, ← card_support_eq_zero, erase_lead_support]
   exact
     (zero_lt_one.trans_le <| (tsub_le_tsub_right f0 1).trans Finset.pred_card_le_card_erase).Ne.symm
 #align polynomial.erase_lead_ne_zero Polynomial.erase_lead_ne_zero
@@ -98,7 +93,7 @@ theorem erase_lead_ne_zero (f0 : 2 ≤ f.support.card) : eraseLead f ≠ 0 := by
 theorem lt_nat_degree_of_mem_erase_lead_support {a : ℕ} (h : a ∈ (eraseLead f).support) :
     a < f.natDegree := by 
   rw [erase_lead_support, mem_erase] at h
-  exact lt_of_le_of_ne (le_nat_degree_of_mem_supp a h.2) h.1
+  exact (le_nat_degree_of_mem_supp a h.2).lt_of_ne h.1
 #align
   polynomial.lt_nat_degree_of_mem_erase_lead_support Polynomial.lt_nat_degree_of_mem_erase_lead_support
 
@@ -182,12 +177,8 @@ theorem erase_lead_add_of_nat_degree_lt_right {p q : R[X]} (pq : p.natDegree < q
 #align
   polynomial.erase_lead_add_of_nat_degree_lt_right Polynomial.erase_lead_add_of_nat_degree_lt_right
 
-theorem erase_lead_degree_le : (eraseLead f).degree ≤ f.degree := by
-  rw [degree_le_iff_coeff_zero]
-  intro i hi
-  rw [erase_lead_coeff]
-  split_ifs with h; · rfl
-  apply coeff_eq_zero_of_degree_lt hi
+theorem erase_lead_degree_le : (eraseLead f).degree ≤ f.degree :=
+  f.degree_erase_le _
 #align polynomial.erase_lead_degree_le Polynomial.erase_lead_degree_le
 
 theorem erase_lead_nat_degree_le_aux : (eraseLead f).natDegree ≤ f.natDegree :=

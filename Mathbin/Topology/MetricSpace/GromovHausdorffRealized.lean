@@ -338,7 +338,7 @@ private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) := by
     · have : tendsto (fun t : ℝ => 2 * (max_var X Y : ℝ) * t) (𝓝 0) (𝓝 (2 * max_var X Y * 0)) :=
         tendsto_const_nhds.mul tendsto_id
       simpa using this
-    · intro x y f hf
+    · rintro x y ⟨f, hf⟩
       exact (candidates_lipschitz hf).dist_le_mul _ _
 #align Gromov_Hausdorff.is_compact_candidates_b Gromov_Hausdorff.is_compact_candidates_b
 

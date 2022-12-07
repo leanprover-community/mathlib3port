@@ -321,6 +321,7 @@ import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 import Mathbin.Algebra.Order.Monoid.Defs
 import Mathbin.Algebra.Order.Monoid.Lemmas
 import Mathbin.Algebra.Order.Monoid.MinMax
+import Mathbin.Algebra.Order.Monoid.NatCast
 import Mathbin.Algebra.Order.Monoid.OrderDual
 import Mathbin.Algebra.Order.Monoid.Prod
 import Mathbin.Algebra.Order.Monoid.ToMulBot
@@ -352,6 +353,7 @@ import Mathbin.Algebra.Order.Sub.WithTop
 import Mathbin.Algebra.Order.ToIntervalMod
 import Mathbin.Algebra.Order.UpperLower
 import Mathbin.Algebra.Order.WithZero
+import Mathbin.Algebra.Order.ZeroLeOne
 import Mathbin.Algebra.Parity
 import Mathbin.Algebra.PemptyInstances
 import Mathbin.Algebra.Periodic
@@ -1634,12 +1636,14 @@ import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.Data.Set.Intervals.WithBotTop
 import Mathbin.Data.Set.Lattice
 import Mathbin.Data.Set.MulAntidiagonal
+import Mathbin.Data.Set.NAry
 import Mathbin.Data.Set.Opposite
 import Mathbin.Data.Set.Pairwise
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.Set.Pointwise.BigOperators
 import Mathbin.Data.Set.Pointwise.Finite
 import Mathbin.Data.Set.Pointwise.Interval
+import Mathbin.Data.Set.Pointwise.Iterate
 import Mathbin.Data.Set.Pointwise.Smul
 import Mathbin.Data.Set.Pointwise.Support
 import Mathbin.Data.Set.Prod
@@ -1687,6 +1691,7 @@ import Mathbin.Deprecated.Subgroup
 import Mathbin.Deprecated.Submonoid
 import Mathbin.Deprecated.Subring
 import Mathbin.Dynamics.Circle.RotationNumber.TranslationNumber
+import Mathbin.Dynamics.Ergodic.AddCircle
 import Mathbin.Dynamics.Ergodic.Conservative
 import Mathbin.Dynamics.Ergodic.Ergodic
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
@@ -2884,6 +2889,7 @@ import Mathbin.Topology.MetricSpace.Completion
 import Mathbin.Topology.MetricSpace.Contracting
 import Mathbin.Topology.MetricSpace.EmetricParacompact
 import Mathbin.Topology.MetricSpace.EmetricSpace
+import Mathbin.Topology.MetricSpace.Equicontinuity
 import Mathbin.Topology.MetricSpace.Gluing
 import Mathbin.Topology.MetricSpace.GromovHausdorff
 import Mathbin.Topology.MetricSpace.GromovHausdorffRealized
@@ -2958,6 +2964,7 @@ import Mathbin.Topology.UniformSpace.CompactConvergence
 import Mathbin.Topology.UniformSpace.CompareReals
 import Mathbin.Topology.UniformSpace.CompleteSeparated
 import Mathbin.Topology.UniformSpace.Completion
+import Mathbin.Topology.UniformSpace.Equicontinuity
 import Mathbin.Topology.UniformSpace.Equiv
 import Mathbin.Topology.UniformSpace.Matrix
 import Mathbin.Topology.UniformSpace.Pi

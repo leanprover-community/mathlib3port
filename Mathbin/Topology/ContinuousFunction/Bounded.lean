@@ -8,6 +8,7 @@ import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Data.Real.Sqrt
 import Mathbin.Topology.ContinuousFunction.Algebra
+import Mathbin.Topology.MetricSpace.Equicontinuity
 
 /-!
 # Bounded continuous functions
@@ -20,7 +21,7 @@ the uniform distance.
 
 noncomputable section
 
-open TopologicalSpace Classical Nnreal
+open TopologicalSpace Classical Nnreal uniformity UniformConvergence
 
 open Set Filter Metric Function
 
@@ -286,6 +287,20 @@ theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → α →ᵇ β} {f
 #align
   bounded_continuous_function.tendsto_iff_tendsto_uniformly BoundedContinuousFunction.tendsto_iff_tendsto_uniformly
 
+/-- The topology on `α →ᵇ β` is exactly the topology induced by the natural map to `α →ᵤ β`. -/
+theorem inducing_coe_fn : Inducing (UniformFun.ofFun ∘ coeFn : (α →ᵇ β) → α →ᵤ β) := by
+  rw [inducing_iff_nhds]
+  refine' fun f => eq_of_forall_le_iff fun l => _
+  rw [← tendsto_iff_comap, ← tendsto_id', tendsto_iff_tendsto_uniformly,
+    UniformFun.tendsto_iff_tendsto_uniformly]
+  rfl
+#align bounded_continuous_function.inducing_coe_fn BoundedContinuousFunction.inducing_coe_fn
+
+-- TODO: upgrade to a `uniform_embedding`
+theorem embedding_coe_fn : Embedding (UniformFun.ofFun ∘ coeFn : (α →ᵇ β) → α →ᵤ β) :=
+  ⟨inducing_coe_fn, fun f g h => ext fun x => congr_fun h x⟩
+#align bounded_continuous_function.embedding_coe_fn BoundedContinuousFunction.embedding_coe_fn
+
 variable (α) {β}
 
 /-- Constant as a continuous bounded function. -/
@@ -511,18 +526,14 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
 subset for the topology of uniform convergence. In this section, we prove this theorem
 and several useful variations around it. -/
 /-- First version, with pointwise equicontinuity and range in a compact space -/
 theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
-    (H :
-      ∀ (x : α),
-        ∀ ε > 0,
-          ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
-    IsCompact A := by 
+    (H : Equicontinuous (coeFn : A → α → β)) : IsCompact A := by
+  simp_rw [Equicontinuous, Metric.equicontinuous_at_iff_pair] at H
   refine' is_compact_of_totally_bounded_is_closed _ closed
   refine' totally_bounded_of_finite_discretization fun ε ε0 => _
   rcases exists_between ε0 with ⟨ε₁, ε₁0, εε₁⟩
@@ -543,7 +554,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
     fun x =>
     let ⟨U, nhdsU, hU⟩ := H x _ ε₂0
     let ⟨V, VU, openV, xV⟩ := _root_.mem_nhds_iff.1 nhdsU
-    ⟨V, xV, openV, fun y hy z hz f hf => hU y (VU hy) z (VU hz) f hf⟩
+    ⟨V, xV, openV, fun y hy z hz f hf => hU y (VU hy) z (VU hz) ⟨f, hf⟩⟩
   choose U hU using this
   /- For all x, the set hU x is an open set containing x on which the elements of A
     fluctuate by at most ε₂.
@@ -584,14 +595,9 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       
 #align bounded_continuous_function.arzela_ascoli₁ BoundedContinuousFunction.arzela_ascoli₁
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
 theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (closed : IsClosed A)
-    (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
-    (H :
-      ∀ (x : α),
-        ∀ ε > 0,
-          ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
+    (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s) (H : Equicontinuous (coeFn : A → α → β)) :
     IsCompact A :=
   by
   /- This version is deduced from the previous one by restricting to the compact type in the target,
@@ -602,28 +608,18 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     is_compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).image (continuous_comp M)) closed
       fun f hf => _
   · haveI : CompactSpace s := is_compact_iff_compact_space.1 hs
-    refine'
-      arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) fun x ε ε0 =>
-        BEx.imp_right (fun U U_nhds hU y hy z hz f hf => _) (H x ε ε0)
-    calc
-      dist (f y) (f z) = dist (F f y) (F f z) := rfl
-      _ < ε := hU y hy z hz (F f) hf
-      
+    refine' arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) _
+    rw [uniform_embedding_subtype_coe.to_uniform_inducing.equicontinuous_iff]
+    exact H.comp (A.restrict_preimage F)
   · let g := cod_restrict s f fun x => in_s f x hf
     rw [show f = F g by ext <;> rfl] at hf⊢
     exact ⟨g, hf, rfl⟩
 #align bounded_continuous_function.arzela_ascoli₂ BoundedContinuousFunction.arzela_ascoli₂
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
 theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β))
-    (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
-    (H :
-      ∀ (x : α),
-        ∀ ε > 0,
-          ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
+    (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s) (H : Equicontinuous (coeFn : A → α → β)) :
     IsCompact (closure A) :=
   /- This version is deduced from the previous one by checking that the closure of A, in
     addition to being closed, still satisfies the properties of compact range and equicontinuity -/
@@ -633,47 +629,8 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
       (mem_of_closed' hs.IsClosed).2 fun ε ε0 =>
         let ⟨g, gA, dist_fg⟩ := Metric.mem_closure_iff.1 hf ε ε0
         ⟨g x, in_s g x gA, lt_of_le_of_lt (dist_coe_le_dist _) dist_fg⟩)
-    fun x ε ε0 =>
-    show
-      ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U), ∀ f : α →ᵇ β, f ∈ closure A → dist (f y) (f z) < ε
-      by 
-      refine' BEx.imp_right (fun U U_set hU y hy z hz f hf => _) (H x (ε / 2) (half_pos ε0))
-      rcases Metric.mem_closure_iff.1 hf (ε / 2 / 2) (half_pos (half_pos ε0)) with ⟨g, gA, dist_fg⟩
-      replace dist_fg := fun x => lt_of_le_of_lt (dist_coe_le_dist x) dist_fg
-      calc
-        dist (f y) (f z) ≤ dist (f y) (g y) + dist (f z) (g z) + dist (g y) (g z) :=
-          dist_triangle4_right _ _ _ _
-        _ < ε / 2 / 2 + ε / 2 / 2 + ε / 2 :=
-          add_lt_add (add_lt_add (dist_fg y) (dist_fg z)) (hU y hy z hz g gA)
-        _ = ε := by rw [add_halves, add_halves]
-        
+    (H.closure' continuous_coe)
 #align bounded_continuous_function.arzela_ascoli BoundedContinuousFunction.arzela_ascoli
-
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » U) -/
-/- To apply the previous theorems, one needs to check the equicontinuity. An important
-instance is when the source space is a metric space, and there is a fixed modulus of continuity
-for all the functions in the set A -/
-theorem equicontinuous_of_continuity_modulus {α : Type u} [PseudoMetricSpace α] (b : ℝ → ℝ)
-    (b_lim : Tendsto b (𝓝 0) (𝓝 0)) (A : Set (α →ᵇ β))
-    (H : ∀ (x y : α) (f : α →ᵇ β), f ∈ A → dist (f x) (f y) ≤ b (dist x y)) (x : α) (ε : ℝ)
-    (ε0 : 0 < ε) :
-    ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε := by
-  rcases tendsto_nhds_nhds.1 b_lim ε ε0 with ⟨δ, δ0, hδ⟩
-  refine' ⟨ball x (δ / 2), ball_mem_nhds x (half_pos δ0), fun y hy z hz f hf => _⟩
-  have : dist y z < δ :=
-    calc
-      dist y z ≤ dist y x + dist z x := dist_triangle_right _ _ _
-      _ < δ / 2 + δ / 2 := add_lt_add hy hz
-      _ = δ := add_halves _
-      
-  calc
-    dist (f y) (f z) ≤ b (dist y z) := H y z f hf
-    _ ≤ |b (dist y z)| := le_abs_self _
-    _ = dist (b (dist y z)) 0 := by simp [Real.dist_eq]
-    _ < ε := hδ (by simpa [Real.dist_eq] using this)
-    
-#align
-  bounded_continuous_function.equicontinuous_of_continuity_modulus BoundedContinuousFunction.equicontinuous_of_continuity_modulus
 
 end ArzelaAscoli
 

@@ -848,8 +848,12 @@ theorem norm_p_lt_one : ‖(p : ℚ_[p])‖ < 1 := by
 #align padic_norm_e.norm_p_lt_one padicNormE.norm_p_lt_one
 
 @[simp]
-theorem norm_p_pow (n : ℤ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n) := by
-  rw [norm_zpow, norm_p] <;> field_simp
+theorem norm_p_zpow (n : ℤ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n) := by
+  rw [norm_zpow, norm_p, zpow_neg, inv_zpow]
+#align padic_norm_e.norm_p_zpow padicNormE.norm_p_zpow
+
+@[simp]
+theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_coe_nat]
 #align padic_norm_e.norm_p_pow padicNormE.norm_p_pow
 
 instance : NontriviallyNormedField ℚ_[p] :=
