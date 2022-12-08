@@ -233,7 +233,7 @@ def baseChange : WeierstrassCurve A :=
     algebraMap R A C.a₆⟩
 #align weierstrass_curve.base_change WeierstrassCurve.baseChange
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp]
 theorem base_change_b₂ : (C.base_change A).b₂ = algebraMap R A C.b₂ := by
   simp only [b₂, base_change_a₁, base_change_a₂]
@@ -241,7 +241,7 @@ theorem base_change_b₂ : (C.base_change A).b₂ = algebraMap R A C.b₂ := by
     map_simp
 #align weierstrass_curve.base_change_b₂ WeierstrassCurve.base_change_b₂
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp]
 theorem base_change_b₄ : (C.base_change A).b₄ = algebraMap R A C.b₄ := by
   simp only [b₄, base_change_a₁, base_change_a₃, base_change_a₄]
@@ -249,7 +249,7 @@ theorem base_change_b₄ : (C.base_change A).b₄ = algebraMap R A C.b₄ := by
     map_simp
 #align weierstrass_curve.base_change_b₄ WeierstrassCurve.base_change_b₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp]
 theorem base_change_b₆ : (C.base_change A).b₆ = algebraMap R A C.b₆ := by
   simp only [b₆, base_change_a₃, base_change_a₆]
@@ -257,7 +257,7 @@ theorem base_change_b₆ : (C.base_change A).b₆ = algebraMap R A C.b₆ := by
     map_simp
 #align weierstrass_curve.base_change_b₆ WeierstrassCurve.base_change_b₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp]
 theorem base_change_b₈ : (C.base_change A).b₈ = algebraMap R A C.b₈ := by
   simp only [b₈, base_change_a₁, base_change_a₂, base_change_a₃, base_change_a₄, base_change_a₆]
@@ -265,7 +265,7 @@ theorem base_change_b₈ : (C.base_change A).b₈ = algebraMap R A C.b₈ := by
     map_simp
 #align weierstrass_curve.base_change_b₈ WeierstrassCurve.base_change_b₈
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp]
 theorem base_change_c₄ : (C.base_change A).c₄ = algebraMap R A C.c₄ := by
   simp only [c₄, base_change_b₂, base_change_b₄]
@@ -273,7 +273,7 @@ theorem base_change_c₄ : (C.base_change A).c₄ = algebraMap R A C.c₄ := by
     map_simp
 #align weierstrass_curve.base_change_c₄ WeierstrassCurve.base_change_c₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp]
 theorem base_change_c₆ : (C.base_change A).c₆ = algebraMap R A C.c₆ := by
   simp only [c₆, base_change_b₂, base_change_b₄, base_change_b₆]
@@ -281,7 +281,7 @@ theorem base_change_c₆ : (C.base_change A).c₆ = algebraMap R A C.c₆ := by
     map_simp
 #align weierstrass_curve.base_change_c₆ WeierstrassCurve.base_change_c₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp, nolint simp_nf]
 theorem base_change_Δ : (C.base_change A).Δ = algebraMap R A C.Δ := by
   simp only [Δ, base_change_b₂, base_change_b₄, base_change_b₆, base_change_b₈]
@@ -406,7 +406,7 @@ theorem coe_base_change_Δ'_inv : ↑(E.base_change A).Δ'⁻¹ = algebraMap R A
   rfl
 #align elliptic_curve.coe_base_change_Δ'_inv EllipticCurve.coe_base_change_Δ'_inv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3496252457.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.286927073.map_simp -/
 @[simp]
 theorem base_change_j : (E.base_change A).j = algebraMap R A E.j := by
   simp only [j, coe_base_change_Δ'_inv, base_change_to_weierstrass_curve, E.base_change_c₄]

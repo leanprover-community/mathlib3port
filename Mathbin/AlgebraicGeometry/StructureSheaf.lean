@@ -1038,7 +1038,7 @@ instance is_iso_to_global : IsIso (toOpen R ⊤) := by
   algebraic_geometry.structure_sheaf.is_iso_to_global AlgebraicGeometry.StructureSheaf.is_iso_to_global
 
 /-- The ring isomorphism between the ring `R` and the global sections `Γ(X, 𝒪ₓ)`. -/
-@[simps]
+@[simps (config := { rhsMd := Tactic.Transparency.semireducible })]
 def globalSectionsIso : CommRingCat.of R ≅ (structureSheaf R).1.obj (op ⊤) :=
   asIso (toOpen R ⊤)
 #align

@@ -7,6 +7,7 @@ import Mathbin.Algebra.Category.RingCat.Constructions
 import Mathbin.Algebra.Category.RingCat.Colimits
 import Mathbin.CategoryTheory.Isomorphism
 import Mathbin.RingTheory.Localization.Away
+import Mathbin.RingTheory.IsTensorProduct
 
 /-!
 # Properties of ring homomorphisms
@@ -116,11 +117,47 @@ section StableUnderBaseChange
 /-- A morphism property `P` is `stable_under_base_change` if `P(S →+* A)` implies
 `P(B →+* A ⊗[S] B)`. -/
 def StableUnderBaseChange : Prop :=
-  ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T],
-    ∀ [Algebra R S] [Algebra R T],
-      P (algebraMap R T) →
-        P (algebra.tensor_product.include_left.to_ring_hom : S →+* TensorProduct R S T)
+  ∀ (R S R' S') [CommRing R] [CommRing S] [CommRing R'] [CommRing S'],
+    ∀ [Algebra R S] [Algebra R R'] [Algebra R S'] [Algebra S S'] [Algebra R' S'],
+      ∀ [IsScalarTower R S S'] [IsScalarTower R R' S'],
+        ∀ [Algebra.IsPushout R S R' S'], P (algebraMap R S) → P (algebraMap R' S')
 #align ring_hom.stable_under_base_change RingHom.StableUnderBaseChange
+
+theorem StableUnderBaseChange.mk (h₁ : RespectsIso @P)
+    (h₂ :
+      ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T],
+        ∀ [Algebra R S] [Algebra R T],
+          P (algebraMap R T) →
+            P (algebra.tensor_product.include_left.to_ring_hom : S →+* TensorProduct R S T)) :
+    StableUnderBaseChange @P := by 
+  introv R h H
+  skip
+  let e := h.symm.1.Equiv
+  let f' :=
+    Algebra.TensorProduct.productMap (IsScalarTower.toAlgHom R R' S')
+      (IsScalarTower.toAlgHom R S S')
+  have : ∀ x, e x = f' x := by 
+    intro x
+    change e.to_linear_map.restrict_scalars R x = f'.to_linear_map x
+    congr 1
+    apply TensorProduct.ext'
+    intro x y
+    simp [IsBaseChange.equiv_tmul, Algebra.smul_def]
+  convert h₁.1 _ _ (h₂ H : P (_ : R' →+* _))
+  swap
+  · refine' { e with map_mul' := fun x y => _ }
+    change e (x * y) = e x * e y
+    simp_rw [this]
+    exact map_mul f' _ _
+  · ext
+    change _ = e (x ⊗ₜ[R] 1)
+    dsimp only [e]
+    rw [h.symm.1.equiv_tmul, Algebra.smul_def, AlgHom.to_linear_map_apply, map_one, mul_one]
+#align ring_hom.stable_under_base_change.mk RingHom.StableUnderBaseChange.mk
+
+omit P
+
+attribute [local instance] Algebra.TensorProduct.rightAlgebra
 
 theorem StableUnderBaseChange.pushout_inl (hP : RingHom.StableUnderBaseChange @P)
     (hP' : RingHom.RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S) (g : R ⟶ T) (H : P g) :
@@ -130,7 +167,10 @@ theorem StableUnderBaseChange.pushout_inl (hP : RingHom.StableUnderBaseChange @P
       colimit.iso_colimit_cocone_ι_inv ⟨_, CommRingCat.pushoutCoconeIsColimit f g⟩
         walking_span.left,
     hP'.cancel_right_is_iso]
-  apply hP
+  letI := f.to_algebra
+  letI := g.to_algebra
+  dsimp only [CommRingCat.pushout_cocone_inl, pushout_cocone.ι_app_left]
+  apply hP R T S (TensorProduct R S T)
   exact H
 #align ring_hom.stable_under_base_change.pushout_inl RingHom.StableUnderBaseChange.pushout_inl
 

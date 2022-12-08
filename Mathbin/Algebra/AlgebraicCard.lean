@@ -53,11 +53,11 @@ theorem cardinal_mk_lift_le_mul :
     exact (Classical.choose_spec x.1.2).1 hx
   let h : g ⁻¹' {f} → f.down.root_set A := fun x =>
     ⟨x.1.1.1,
-      (mem_root_set_iff hf x.1.1.1).2
-        (by 
+      mem_root_set.2
+        ⟨hf, by 
           have key' : g x = f := x.2
           simp_rw [← key']
-          exact (Classical.choose_spec x.1.1.2).2)⟩
+          exact (Classical.choose_spec x.1.1.2).2⟩⟩
   apply Fintype.ofInjective h fun _ _ H => _
   simp only [Subtype.val_eq_coe, Subtype.mk_eq_mk] at H
   exact Subtype.ext (ULift.down_injective (Subtype.ext H))

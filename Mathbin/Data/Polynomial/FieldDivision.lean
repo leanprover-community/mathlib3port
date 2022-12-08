@@ -360,11 +360,6 @@ theorem mem_roots_map [CommRing k] [IsDomain k] {f : R →+* k} {x : k} (hp : p 
   rw [mem_roots (map_ne_zero hp), is_root, Polynomial.eval_map] <;> infer_instance
 #align polynomial.mem_roots_map Polynomial.mem_roots_map
 
-theorem mem_root_set [CommRing k] [IsDomain k] [Algebra R k] {x : k} (hp : p ≠ 0) :
-    x ∈ p.rootSet k ↔ aeval x p = 0 :=
-  Iff.trans Multiset.mem_to_finset (mem_roots_map hp)
-#align polynomial.mem_root_set Polynomial.mem_root_set
-
 theorem root_set_monomial [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
     (ha : a ≠ 0) : (monomial n a).rootSet S = {0} := by
   rw [root_set, map_monomial, roots_monomial ((_root_.map_ne_zero (algebraMap R S)).2 ha),

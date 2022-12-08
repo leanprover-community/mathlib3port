@@ -94,12 +94,11 @@ theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).
   · rw [hn, pow_zero, sub_self]
     exact gal_zero_is_solvable
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
-  have hn'' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))
+  have hn'' : (X ^ n - 1 : F[X]) ≠ 0 := X_pow_sub_C_ne_zero hn' 1
   apply is_solvable_of_comm
   intro σ τ
   ext (a ha)
-  rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
+  simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
   have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m := by
     intro σ
     lift n to ℕ+ using hn'
@@ -120,10 +119,8 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F)
   · rw [hn, pow_zero, ← C_1, ← C_sub]
     exact gal_C_is_solvable (1 - a)
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
-  have hn'' : X ^ n - C a ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_arg leading_coeff h))
-  have hn''' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))
+  have hn'' : X ^ n - C a ≠ 0 := X_pow_sub_C_ne_zero hn' a
+  have hn''' : (X ^ n - 1 : F[X]) ≠ 0 := X_pow_sub_C_ne_zero hn' 1
   have mem_range : ∀ {c}, c ^ n = 1 → ∃ d, algebraMap F (X ^ n - C a).SplittingField d = c :=
     fun c hc =>
     ring_hom.mem_range.mp
@@ -134,7 +131,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F)
   apply is_solvable_of_comm
   intro σ τ
   ext (b hb)
-  rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hb
+  simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hb
   have hb' : b ≠ 0 := by 
     intro hb'
     rw [hb', zero_pow hn'] at hb

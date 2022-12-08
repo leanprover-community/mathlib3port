@@ -9,6 +9,10 @@ import Mathbin.Algebra.Order.Monoid.OrderDual
 /-!
 # Additional instances for ordered commutative groups.
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/890
+> Any changes to this file require a corresponding PR to mathlib4.
+
 -/
 
 

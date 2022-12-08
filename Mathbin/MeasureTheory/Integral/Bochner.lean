@@ -399,7 +399,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
                  (Term.proj
                   (Term.app
                    `μ
-                   [(Set.Data.Set.Basic.«term_⁻¹'_»
+                   [(Set.Data.Set.Image.«term_⁻¹'_»
                      (Term.app `const [`α `y])
                      " ⁻¹' "
                      («term{_}» "{" [`z] "}"))])
@@ -457,7 +457,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
                 (Term.proj
                  (Term.app
                   `μ
-                  [(Set.Data.Set.Basic.«term_⁻¹'_»
+                  [(Set.Data.Set.Image.«term_⁻¹'_»
                     (Term.app `const [`α `y])
                     " ⁻¹' "
                     («term{_}» "{" [`z] "}"))])
@@ -506,7 +506,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
             (Term.proj
              (Term.app
               `μ
-              [(Set.Data.Set.Basic.«term_⁻¹'_»
+              [(Set.Data.Set.Image.«term_⁻¹'_»
                 (Term.app `const [`α `y])
                 " ⁻¹' "
                 («term{_}» "{" [`z] "}"))])
@@ -547,7 +547,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
            (Term.proj
             (Term.app
              `μ
-             [(Set.Data.Set.Basic.«term_⁻¹'_»
+             [(Set.Data.Set.Image.«term_⁻¹'_»
                (Term.app `const [`α `y])
                " ⁻¹' "
                («term{_}» "{" [`z] "}"))])
@@ -697,7 +697,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
          (Term.proj
           (Term.app
            `μ
-           [(Set.Data.Set.Basic.«term_⁻¹'_»
+           [(Set.Data.Set.Image.«term_⁻¹'_»
              (Term.app `const [`α `y])
              " ⁻¹' "
              («term{_}» "{" [`z] "}"))])
@@ -716,7 +716,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
         (Term.proj
          (Term.app
           `μ
-          [(Set.Data.Set.Basic.«term_⁻¹'_»
+          [(Set.Data.Set.Image.«term_⁻¹'_»
             (Term.app `const [`α `y])
             " ⁻¹' "
             («term{_}» "{" [`z] "}"))])
@@ -729,7 +729,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
        (Term.proj
         (Term.app
          `μ
-         [(Set.Data.Set.Basic.«term_⁻¹'_»
+         [(Set.Data.Set.Image.«term_⁻¹'_»
            (Term.app `const [`α `y])
            " ⁻¹' "
            («term{_}» "{" [`z] "}"))])
@@ -745,7 +745,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
       (Term.proj
        (Term.app
         `μ
-        [(Set.Data.Set.Basic.«term_⁻¹'_»
+        [(Set.Data.Set.Image.«term_⁻¹'_»
           (Term.app `const [`α `y])
           " ⁻¹' "
           («term{_}» "{" [`z] "}"))])
@@ -754,14 +754,14 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app
        `μ
-       [(Set.Data.Set.Basic.«term_⁻¹'_»
+       [(Set.Data.Set.Image.«term_⁻¹'_»
          (Term.app `const [`α `y])
          " ⁻¹' "
          («term{_}» "{" [`z] "}"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.«term_⁻¹'_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.«term_⁻¹'_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Image.«term_⁻¹'_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Image.«term_⁻¹'_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Set.Data.Set.Basic.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
+      (Set.Data.Set.Image.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term{_}» "{" [`z] "}")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -792,7 +792,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 81, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Set.Data.Set.Basic.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
+     (Set.Data.Set.Image.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `μ
@@ -805,7 +805,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
       `μ
       [(Term.paren
         "("
-        (Set.Data.Set.Basic.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
+        (Set.Data.Set.Image.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
         ")")])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)

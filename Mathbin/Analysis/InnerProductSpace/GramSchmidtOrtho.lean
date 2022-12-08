@@ -194,12 +194,12 @@ theorem gram_schmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f
     rw [coe_eq_zero]
     suffices span 𝕜 (f '' Set.iic j) ≤ (𝕜 ∙ f i)ᗮ by
       apply orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero
-      apply mem_orthogonal_singleton_of_inner_left
-      apply inner_right_of_mem_orthogonal_singleton
+      rw [mem_orthogonal_singleton_iff_inner_left]
+      rw [← mem_orthogonal_singleton_iff_inner_right]
       exact this (gram_schmidt_mem_span 𝕜 f (le_refl j))
     rw [span_le]
     rintro - ⟨k, hk, rfl⟩
-    apply mem_orthogonal_singleton_of_inner_left
+    rw [SetLike.mem_coe, mem_orthogonal_singleton_iff_inner_left]
     apply hf
     refine' (lt_of_le_of_lt hk _).Ne
     simpa using hj
@@ -371,14 +371,14 @@ theorem gram_schmidt_orthonormal_basis_apply_of_orthogonal {f : ι → E}
 
 theorem inner_gram_schmidt_orthonormal_basis_eq_zero {f : ι → E} {i : ι}
     (hi : gramSchmidtNormed 𝕜 f i = 0) (j : ι) : ⟪gramSchmidtOrthonormalBasis h f i, f j⟫ = 0 := by
-  apply inner_right_of_mem_orthogonal_singleton
+  rw [← mem_orthogonal_singleton_iff_inner_right]
   suffices span 𝕜 (gramSchmidtNormed 𝕜 f '' Iic j) ≤ (𝕜 ∙ gramSchmidtOrthonormalBasis h f i)ᗮ by
     apply this
     rw [span_gram_schmidt_normed]
     simpa using mem_span_gram_schmidt 𝕜 f (le_refl j)
   rw [span_le]
   rintro - ⟨k, -, rfl⟩
-  apply mem_orthogonal_singleton_of_inner_left
+  rw [SetLike.mem_coe, mem_orthogonal_singleton_iff_inner_left]
   by_cases hk : gramSchmidtNormed 𝕜 f k = 0
   · simp [hk]
   rw [← gram_schmidt_orthonormal_basis_apply h hk]

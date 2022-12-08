@@ -995,7 +995,7 @@ theorem reflection_sub [CompleteSpace F] {v w : F} (h : ‖v‖ = ‖w‖) :
   have h₁ : R (v - w) = -(v - w) := reflection_orthogonal_complement_singleton_eq_neg (v - w)
   have h₂ : R (v + w) = v + w := by
     apply reflection_mem_subspace_eq_self
-    apply mem_orthogonal_singleton_of_inner_left
+    rw [Submodule.mem_orthogonal_singleton_iff_inner_left]
     rw [real_inner_add_sub_eq_zero_iff]
     exact h
   convert congr_arg₂ (· + ·) h₂ h₁ using 1
@@ -1180,7 +1180,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
       apply hV
       rw [hW w hw]
       refine' reflection_mem_subspace_eq_self _
-      apply mem_orthogonal_singleton_of_inner_left
+      rw [Submodule.mem_orthogonal_singleton_iff_inner_left]
       exact Submodule.sub_mem _ v.prop hφv _ hw
     -- `v` is also fixed by `φ.trans ρ`
     have H₁V : (v : F) ∈ V := by 

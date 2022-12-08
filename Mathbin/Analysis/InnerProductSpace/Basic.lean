@@ -5331,29 +5331,22 @@ theorem Submodule.inner_left_of_mem_orthogonal {u v : E} (hu : u ∈ K) (hv : v 
   by rw [inner_eq_zero_sym] <;> exact Submodule.inner_right_of_mem_orthogonal hu hv
 #align submodule.inner_left_of_mem_orthogonal Submodule.inner_left_of_mem_orthogonal
 
-/-- A vector in `(𝕜 ∙ u)ᗮ` is orthogonal to `u`. -/
-theorem inner_right_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (𝕜 ∙ u)ᗮ) : ⟪u, v⟫ = 0 :=
-  Submodule.inner_right_of_mem_orthogonal (Submodule.mem_span_singleton_self u) hv
-#align inner_right_of_mem_orthogonal_singleton inner_right_of_mem_orthogonal_singleton
-
-/-- A vector in `(𝕜 ∙ u)ᗮ` is orthogonal to `u`. -/
-theorem inner_left_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (𝕜 ∙ u)ᗮ) : ⟪v, u⟫ = 0 :=
-  Submodule.inner_left_of_mem_orthogonal (Submodule.mem_span_singleton_self u) hv
-#align inner_left_of_mem_orthogonal_singleton inner_left_of_mem_orthogonal_singleton
-
-/-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
-theorem mem_orthogonal_singleton_of_inner_right (u : E) {v : E} (hv : ⟪u, v⟫ = 0) : v ∈ (𝕜 ∙ u)ᗮ :=
+/-- A vector is in `(𝕜 ∙ u)ᗮ` iff it is orthogonal to `u`. -/
+theorem Submodule.mem_orthogonal_singleton_iff_inner_right {u v : E} : v ∈ (𝕜 ∙ u)ᗮ ↔ ⟪u, v⟫ = 0 :=
   by 
-  intro w hw
+  refine' ⟨Submodule.inner_right_of_mem_orthogonal (Submodule.mem_span_singleton_self u), _⟩
+  intro hv w hw
   rw [Submodule.mem_span_singleton] at hw
   obtain ⟨c, rfl⟩ := hw
   simp [inner_smul_left, hv]
-#align mem_orthogonal_singleton_of_inner_right mem_orthogonal_singleton_of_inner_right
+#align
+  submodule.mem_orthogonal_singleton_iff_inner_right Submodule.mem_orthogonal_singleton_iff_inner_right
 
-/-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
-theorem mem_orthogonal_singleton_of_inner_left (u : E) {v : E} (hv : ⟪v, u⟫ = 0) : v ∈ (𝕜 ∙ u)ᗮ :=
-  mem_orthogonal_singleton_of_inner_right u <| inner_eq_zero_sym.2 hv
-#align mem_orthogonal_singleton_of_inner_left mem_orthogonal_singleton_of_inner_left
+/-- A vector in `(𝕜 ∙ u)ᗮ` is orthogonal to `u`. -/
+theorem Submodule.mem_orthogonal_singleton_iff_inner_left {u v : E} : v ∈ (𝕜 ∙ u)ᗮ ↔ ⟪v, u⟫ = 0 :=
+  by rw [Submodule.mem_orthogonal_singleton_iff_inner_right, inner_eq_zero_sym]
+#align
+  submodule.mem_orthogonal_singleton_iff_inner_left Submodule.mem_orthogonal_singleton_iff_inner_left
 
 theorem Submodule.sub_mem_orthogonal_of_inner_left {x y : E} (h : ∀ v : K, ⟪x, v⟫ = ⟪y, v⟫) :
     x - y ∈ Kᗮ := by 

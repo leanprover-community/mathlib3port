@@ -9,6 +9,10 @@ import Mathbin.Logic.Equiv.Basic
 /-!
 # Symmetric difference and bi-implication
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/842
+> Any changes to this file require a corresponding PR to mathlib4.
+
 This file defines the symmetric difference and bi-implication operators in (co-)Heyting algebras.
 
 ## Examples

@@ -38,6 +38,27 @@ and the set of factors of `a`.
 
 variable {M : Type _} [CancelCommMonoidWithZero M]
 
+theorem Associates.is_atom_iff {p : Associates M} (h₁ : p ≠ 0) : IsAtom p ↔ Irreducible p :=
+  ⟨fun hp =>
+    ⟨by simpa only [Associates.is_unit_iff_eq_one] using hp.1, fun a b h =>
+      (hp.le_iff.mp ⟨_, h⟩).casesOn (fun ha => Or.inl (a.is_unit_iff_eq_one.mpr ha)) fun ha =>
+        Or.inr
+          (show IsUnit b by 
+            rw [ha] at h
+            apply is_unit_of_associated_mul (show Associated (p * b) p by conv_rhs => rw [h]) h₁)⟩,
+    fun hp =>
+    ⟨by simpa only [Associates.is_unit_iff_eq_one, Associates.bot_eq_one] using hp.1,
+      fun b ⟨⟨a, hab⟩, hb⟩ =>
+      (hp.is_unit_or_is_unit hab).casesOn
+        (fun hb => show b = ⊥ by rwa [Associates.is_unit_iff_eq_one, ← Associates.bot_eq_one] at hb)
+        fun ha =>
+        absurd
+          (show p ∣ b from
+            ⟨(ha.Unit⁻¹ : Units _), by
+              simp [hab] <;> rw [mul_assoc] <;> rw [IsUnit.mul_val_inv ha] <;> rw [mul_one]⟩)
+          hb⟩⟩
+#align associates.is_atom_iff Associates.is_atom_iff
+
 open UniqueFactorizationMonoid multiplicity Irreducible Associates
 
 namespace DivisorChain

@@ -199,10 +199,10 @@ theorem unit_left (a : α) (u : αˣ) : multiplicity (u : α) a = ⊤ :=
   is_unit_left a u.IsUnit
 #align multiplicity.unit_left multiplicity.unit_left
 
-theorem multiplicity_eq_zero_of_not_dvd {a b : α} (ha : ¬a ∣ b) : multiplicity a b = 0 := by
+theorem multiplicity_eq_zero {a b : α} : multiplicity a b = 0 ↔ ¬a ∣ b := by
   rw [← Nat.cast_zero, eq_coe_iff]
-  simpa
-#align multiplicity.multiplicity_eq_zero_of_not_dvd multiplicity.multiplicity_eq_zero_of_not_dvd
+  simp
+#align multiplicity.multiplicity_eq_zero multiplicity.multiplicity_eq_zero
 
 theorem eq_top_iff_not_finite {a b : α} : multiplicity a b = ⊤ ↔ ¬Finite a b :=
   Part.eq_none_iff'
@@ -355,9 +355,8 @@ protected theorem zero (a : α) : multiplicity a 0 = ⊤ :=
 #align multiplicity.zero multiplicity.zero
 
 @[simp]
-theorem multiplicity_zero_eq_zero_of_ne_zero (a : α) (ha : a ≠ 0) : multiplicity 0 a = 0 := by
-  apply multiplicity.multiplicity_eq_zero_of_not_dvd
-  rwa [zero_dvd_iff]
+theorem multiplicity_zero_eq_zero_of_ne_zero (a : α) (ha : a ≠ 0) : multiplicity 0 a = 0 :=
+  multiplicity.multiplicity_eq_zero.2 <| mt zero_dvd_iff.1 ha
 #align
   multiplicity.multiplicity_zero_eq_zero_of_ne_zero multiplicity.multiplicity_zero_eq_zero_of_ne_zero
 

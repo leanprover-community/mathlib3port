@@ -53,34 +53,24 @@ theorem mem_list_primes_of_dvd_prod {p : M} (hp : Prime p) {L : List M} (hL : �
   rwa [(prime_dvd_prime_iff_eq hp (hL x hx1)).mp hx2]
 #align mem_list_primes_of_dvd_prod mem_list_primes_of_dvd_prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem perm_of_prod_eq_prod :
     ∀ {l₁ l₂ : List M}, l₁.Prod = l₂.Prod → (∀ p ∈ l₁, Prime p) → (∀ p ∈ l₂, Prime p) → Perm l₁ l₂
   | [], [], _, _, _ => Perm.nil
-  | [], a::l, h₁, h₂, h₃ =>
+  | [], a :: l, h₁, h₂, h₃ =>
     have ha : a ∣ 1 := @prod_nil M _ ▸ h₁.symm ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _
     absurd ha (Prime.not_dvd_one (h₃ a (mem_cons_self _ _)))
-  | a::l, [], h₁, h₂, h₃ =>
+  | a :: l, [], h₁, h₂, h₃ =>
     have ha : a ∣ 1 := @prod_nil M _ ▸ h₁ ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _
     absurd ha (Prime.not_dvd_one (h₂ a (mem_cons_self _ _)))
-  | a::l₁, b::l₂, h, hl₁, hl₂ => by
+  | a :: l₁, b :: l₂, h, hl₁, hl₂ => by
     classical 
       have hl₁' : ∀ p ∈ l₁, Prime p := fun p hp => hl₁ p (mem_cons_of_mem _ hp)
-      have hl₂' : ∀ p ∈ (b::l₂).erase a, Prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
-      have ha : a ∈ b::l₂ :=
+      have hl₂' : ∀ p ∈ (b :: l₂).erase a, Prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
+      have ha : a ∈ b :: l₂ :=
         mem_list_primes_of_dvd_prod (hl₁ a (mem_cons_self _ _)) hl₂
           (h ▸ by rw [prod_cons] <;> exact dvd_mul_right _ _)
-      have hb : (b::l₂) ~ a::(b::l₂).erase a := perm_cons_erase ha
-      have hl : Prod l₁ = Prod ((b::l₂).erase a) :=
+      have hb : b :: l₂ ~ a :: (b :: l₂).erase a := perm_cons_erase ha
+      have hl : Prod l₁ = Prod ((b :: l₂).erase a) :=
         (mul_right_inj' (hl₁ a (mem_cons_self _ _)).NeZero).1 <| by
           rwa [← prod_cons, ← prod_cons, ← hb.prod_eq]
       exact perm.trans ((perm_of_prod_eq_prod hl hl₁' hl₂').cons _) hb.symm

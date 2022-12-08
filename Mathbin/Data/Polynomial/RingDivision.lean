@@ -522,15 +522,20 @@ theorem count_roots (p : R[X]) : p.roots.count a = rootMultiplicity a p := by
 #align polynomial.count_roots Polynomial.count_roots
 
 @[simp]
-theorem mem_roots (hp : p ≠ 0) : a ∈ p.roots ↔ IsRoot p a := by
-  rw [← count_pos, count_roots p, root_multiplicity_pos hp]
+theorem mem_roots' : a ∈ p.roots ↔ p ≠ 0 ∧ IsRoot p a := by
+  rw [← count_pos, count_roots p, root_multiplicity_pos']
+#align polynomial.mem_roots' Polynomial.mem_roots'
+
+theorem mem_roots (hp : p ≠ 0) : a ∈ p.roots ↔ IsRoot p a :=
+  mem_roots'.trans <| and_iff_right hp
 #align polynomial.mem_roots Polynomial.mem_roots
 
-theorem ne_zero_of_mem_roots (h : a ∈ p.roots) : p ≠ 0 := fun hp => by rwa [hp, roots_zero] at h
+theorem ne_zero_of_mem_roots (h : a ∈ p.roots) : p ≠ 0 :=
+  (mem_roots'.1 h).1
 #align polynomial.ne_zero_of_mem_roots Polynomial.ne_zero_of_mem_roots
 
 theorem is_root_of_mem_roots (h : a ∈ p.roots) : IsRoot p a :=
-  (mem_roots <| ne_zero_of_mem_roots h).mp h
+  (mem_roots'.1 h).2
 #align polynomial.is_root_of_mem_roots Polynomial.is_root_of_mem_roots
 
 theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ p.roots) :
@@ -572,13 +577,13 @@ theorem roots.le_of_dvd (h : q ≠ 0) : p ∣ q → roots p ≤ roots q := by
   exact multiset.le_iff_exists_add.mpr ⟨k.roots, roots_mul h⟩
 #align polynomial.roots.le_of_dvd Polynomial.roots.le_of_dvd
 
-@[simp]
+theorem mem_roots_sub_C' {p : R[X]} {a x : R} : x ∈ (p - c a).roots ↔ p ≠ c a ∧ p.eval x = a := by
+  rw [mem_roots', is_root.def, sub_ne_zero, eval_sub, sub_eq_zero, eval_C]
+#align polynomial.mem_roots_sub_C' Polynomial.mem_roots_sub_C'
+
 theorem mem_roots_sub_C {p : R[X]} {a x : R} (hp0 : 0 < degree p) :
     x ∈ (p - c a).roots ↔ p.eval x = a :=
-  (mem_roots
-        (show p - c a ≠ 0 from
-          (mt sub_eq_zero.1) fun h => not_le_of_gt hp0 <| h.symm ▸ degree_C_le)).trans
-    (by rw [is_root.def, eval_sub, eval_C, sub_eq_zero])
+  mem_roots_sub_C'.trans <| and_iff_right fun hp => hp0.not_le <| hp.symm ▸ degree_C_le
 #align polynomial.mem_roots_sub_C Polynomial.mem_roots_sub_C
 
 @[simp]
@@ -1156,39 +1161,49 @@ theorem bUnion_roots_finite {R S : Type _} [Semiring R] [CommRing S] [IsDomain S
     fun i hi => Finset.finite_to_set _
 #align polynomial.bUnion_roots_finite Polynomial.bUnion_roots_finite
 
-theorem mem_root_set_iff' {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra T S]
-    (hp : p.map (algebraMap T S) ≠ 0) (a : S) :
-    a ∈ p.rootSet S ↔ (p.map (algebraMap T S)).eval a = 0 := by
-  change a ∈ Multiset.toFinset _ ↔ _
-  rw [mem_to_finset, mem_roots hp]
-  rfl
-#align polynomial.mem_root_set_iff' Polynomial.mem_root_set_iff'
+theorem mem_root_set' {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra T S] {a : S} :
+    a ∈ p.rootSet S ↔ p.map (algebraMap T S) ≠ 0 ∧ aeval a p = 0 := by
+  rw [root_set, Finset.mem_coe, mem_to_finset, mem_roots', is_root.def, ← eval₂_eq_eval_map,
+    aeval_def]
+#align polynomial.mem_root_set' Polynomial.mem_root_set'
 
-theorem mem_root_set_iff {p : T[X]} (hp : p ≠ 0) {S : Type _} [CommRing S] [IsDomain S]
-    [Algebra T S] [NoZeroSmulDivisors T S] (a : S) : a ∈ p.rootSet S ↔ aeval a p = 0 := by
-  rw [mem_root_set_iff', ← eval₂_eq_eval_map]
-  · rfl
-  intro h
-  rw [← Polynomial.map_zero (algebraMap T S)] at h
-  exact hp (map_injective _ (NoZeroSmulDivisors.algebra_map_injective T S) h)
-#align polynomial.mem_root_set_iff Polynomial.mem_root_set_iff
+theorem mem_root_set {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra T S]
+    [NoZeroSmulDivisors T S] {a : S} : a ∈ p.rootSet S ↔ p ≠ 0 ∧ aeval a p = 0 := by
+  rw [mem_root_set',
+    (map_injective _ (NoZeroSmulDivisors.algebra_map_injective T S)).ne_iff'
+      (Polynomial.map_zero _)]
+#align polynomial.mem_root_set Polynomial.mem_root_set
 
-theorem root_set_maps_to {p : T[X]} {S S'} [CommRing S] [IsDomain S] [Algebra T S] [CommRing S']
-    [IsDomain S'] [Algebra T S'] (hp : p.map (algebraMap T S') ≠ 0) (f : S →ₐ[T] S') :
-    (p.rootSet S).MapsTo f (p.rootSet S') := fun x hx => by
-  rw [mem_root_set_iff' hp, ← f.comp_algebra_map, ← map_map, eval_map]
-  erw [eval₂_hom, (mem_root_set_iff' (mt (fun h => _) hp) x).1 hx, _root_.map_zero]
-  rw [← f.comp_algebra_map, ← map_map, h, Polynomial.map_zero]
-#align polynomial.root_set_maps_to Polynomial.root_set_maps_to
+theorem mem_root_set_of_ne {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra T S]
+    [NoZeroSmulDivisors T S] (hp : p ≠ 0) {a : S} : a ∈ p.rootSet S ↔ aeval a p = 0 :=
+  mem_root_set.trans <| and_iff_right hp
+#align polynomial.mem_root_set_of_ne Polynomial.mem_root_set_of_ne
+
+theorem root_set_maps_to' {p : T[X]} {S S'} [CommRing S] [IsDomain S] [Algebra T S] [CommRing S']
+    [IsDomain S'] [Algebra T S'] (hp : p.map (algebraMap T S') = 0 → p.map (algebraMap T S) = 0)
+    (f : S →ₐ[T] S') : (p.rootSet S).MapsTo f (p.rootSet S') := fun x hx => by
+  rw [mem_root_set'] at hx⊢
+  rw [aeval_alg_hom, AlgHom.comp_apply, hx.2, _root_.map_zero]
+  exact ⟨mt hp hx.1, rfl⟩
+#align polynomial.root_set_maps_to' Polynomial.root_set_maps_to'
 
 theorem ne_zero_of_mem_root_set {p : T[X]} [CommRing S] [IsDomain S] [Algebra T S] {a : S}
     (h : a ∈ p.rootSet S) : p ≠ 0 := fun hf => by rwa [hf, root_set_zero] at h
 #align polynomial.ne_zero_of_mem_root_set Polynomial.ne_zero_of_mem_root_set
 
-theorem aeval_eq_zero_of_mem_root_set {p : T[X]} [CommRing S] [IsDomain S] [Algebra T S]
-    [NoZeroSmulDivisors T S] {a : S} (hx : a ∈ p.rootSet S) : aeval a p = 0 :=
-  (mem_root_set_iff (ne_zero_of_mem_root_set hx) a).mp hx
+theorem aeval_eq_zero_of_mem_root_set {p : T[X]} [CommRing S] [IsDomain S] [Algebra T S] {a : S}
+    (hx : a ∈ p.rootSet S) : aeval a p = 0 :=
+  (mem_root_set'.1 hx).2
 #align polynomial.aeval_eq_zero_of_mem_root_set Polynomial.aeval_eq_zero_of_mem_root_set
+
+theorem root_set_maps_to {p : T[X]} {S S'} [CommRing S] [IsDomain S] [Algebra T S] [CommRing S']
+    [IsDomain S'] [Algebra T S'] [NoZeroSmulDivisors T S'] (f : S →ₐ[T] S') :
+    (p.rootSet S).MapsTo f (p.rootSet S') := by
+  refine' root_set_maps_to' (fun h₀ => _) f
+  obtain rfl : p = 0 :=
+    map_injective _ (NoZeroSmulDivisors.algebra_map_injective T S') (by rwa [Polynomial.map_zero])
+  exact Polynomial.map_zero _
+#align polynomial.root_set_maps_to Polynomial.root_set_maps_to
 
 end Roots
 

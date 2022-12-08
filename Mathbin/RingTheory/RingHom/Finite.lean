@@ -30,8 +30,9 @@ theorem finite_respects_iso : RespectsIso @Finite := by
 #align ring_hom.finite_respects_iso RingHom.finite_respects_iso
 
 theorem finite_stable_under_base_change : StableUnderBaseChange @Finite := by
+  refine' stable_under_base_change.mk _ finite_respects_iso _
   classical 
-    introv R h
+    introv h
     skip
     replace h : Module.Finite R T := by 
       convert h

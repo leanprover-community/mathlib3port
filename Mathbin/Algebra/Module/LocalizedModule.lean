@@ -1057,6 +1057,37 @@ theorem mk'_surjective : Function.Surjective (Function.uncurry <| mk' f : M × S
   exact ⟨⟨m, s⟩, mk'_eq_iff.mpr e.symm⟩
 #align is_localized_module.mk'_surjective IsLocalizedModule.mk'_surjective
 
+section Algebra
+
+theorem mk_of_algebra {R S S' : Type _} [CommRing R] [CommRing S] [CommRing S'] [Algebra R S]
+    [Algebra R S'] (M : Submonoid R) (f : S →ₐ[R] S') (h₁ : ∀ x ∈ M, IsUnit (algebraMap R S' x))
+    (h₂ : ∀ y, ∃ x : S × M, x.2 • y = f x.1) (h₃ : ∀ x, f x = 0 → ∃ m : M, m • x = 0) :
+    IsLocalizedModule M f.toLinearMap := by
+  replace h₃ := fun x =>
+    Iff.intro (h₃ x) fun ⟨⟨m, hm⟩, e⟩ =>
+      (h₁ m hm).mul_left_cancel <| by 
+        rw [← Algebra.smul_def]
+        simpa [Submonoid.smul_def] using f.congr_arg e
+  constructor
+  · intro x
+    rw [Module.End_is_unit_iff]
+    constructor
+    · rintro a b (e : x • a = x • b)
+      simp_rw [Submonoid.smul_def, Algebra.smul_def] at e
+      exact (h₁ x x.2).mul_left_cancel e
+    · intro a
+      refine' ⟨((h₁ x x.2).Unit⁻¹ : _) * a, _⟩
+      change (x : R) • (_ * a) = _
+      rw [Algebra.smul_def, ← mul_assoc, IsUnit.mul_val_inv, one_mul]
+  · exact h₂
+  · intros
+    dsimp
+    rw [eq_comm, ← sub_eq_zero, ← map_sub, h₃]
+    simp_rw [smul_sub, sub_eq_zero]
+#align is_localized_module.mk_of_algebra IsLocalizedModule.mk_of_algebra
+
+end Algebra
+
 end IsLocalizedModule
 
 end IsLocalizedModule

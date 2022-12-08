@@ -5,7 +5,7 @@ Authors: Stuart Presnell
 -/
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Data.Finsupp.Multiset
-import Mathbin.Data.Nat.Prime
+import Mathbin.Data.Nat.PrimeFin
 import Mathbin.NumberTheory.Padics.PadicVal
 import Mathbin.Data.Nat.Interval
 import Mathbin.Tactic.IntervalCases

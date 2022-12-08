@@ -146,8 +146,8 @@ variable [IsDomain R] [@DecidableRel R (· ∣ ·)]
 
 theorem pow_sub_pow_of_prime {p : R} (hp : Prime p) {x y : R} (hxy : p ∣ x - y) (hx : ¬p ∣ x)
     {n : ℕ} (hn : ¬p ∣ n) : multiplicity p (x ^ n - y ^ n) = multiplicity p (x - y) := by
-  rw [← geom_sum₂_mul, multiplicity.mul hp,
-    multiplicity_eq_zero_of_not_dvd (not_dvd_geom_sum₂ hp hxy hx hn), zero_add]
+  rw [← geom_sum₂_mul, multiplicity.mul hp, multiplicity_eq_zero.2 (not_dvd_geom_sum₂ hp hxy hx hn),
+    zero_add]
 #align multiplicity.pow_sub_pow_of_prime multiplicity.pow_sub_pow_of_prime
 
 variable (hp : Prime (p : R)) (hp1 : Odd p) (hxy : ↑p ∣ x - y) (hx : ¬↑p ∣ x)

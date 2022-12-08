@@ -267,7 +267,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                     («term_∈_»
                      (Term.app `eval [`f])
                      "∈"
-                     (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                     (Set.Data.Set.Image.term_''_ `eval " '' " `C)))))]
                 ":="
                 (Term.fun
                  "fun"
@@ -334,7 +334,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                             "<|"
                             (Term.app
                              `rice
-                             [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                             [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                               (Term.app (Term.proj `h "." `of_eq) [`hC])
                               («term_<|_»
                                (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -427,7 +427,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                    («term_∈_»
                     (Term.app `eval [`f])
                     "∈"
-                    (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                    (Set.Data.Set.Image.term_''_ `eval " '' " `C)))))]
                ":="
                (Term.fun
                 "fun"
@@ -494,7 +494,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                            "<|"
                            (Term.app
                             `rice
-                            [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                            [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                              (Term.app (Term.proj `h "." `of_eq) [`hC])
                              («term_<|_»
                               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -579,7 +579,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                («term_∈_»
                 (Term.app `eval [`f])
                 "∈"
-                (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                (Set.Data.Set.Image.term_''_ `eval " '' " `C)))))]
            ":="
            (Term.fun
             "fun"
@@ -641,7 +641,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                        "<|"
                        (Term.app
                         `rice
-                        [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                        [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                          (Term.app (Term.proj `h "." `of_eq) [`hC])
                          («term_<|_»
                           (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -722,7 +722,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
               («term_∈_»
                (Term.app `eval [`f])
                "∈"
-               (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+               (Set.Data.Set.Image.term_''_ `eval " '' " `C)))))]
           ":="
           (Term.fun
            "fun"
@@ -784,7 +784,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                       "<|"
                       (Term.app
                        `rice
-                       [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                       [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                         (Term.app (Term.proj `h "." `of_eq) [`hC])
                         («term_<|_»
                          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -859,7 +859,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
             («term_↔_»
              («term_∈_» `f "∈" `C)
              "↔"
-             («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+             («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Image.term_''_ `eval " '' " `C)))))]
          ":="
          (Term.fun
           "fun"
@@ -921,7 +921,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                      "<|"
                      (Term.app
                       `rice
-                      [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                      [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                        (Term.app (Term.proj `h "." `of_eq) [`hC])
                        («term_<|_»
                         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1020,7 +1020,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                     "<|"
                     (Term.app
                      `rice
-                     [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                     [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                       (Term.app (Term.proj `h "." `of_eq) [`hC])
                       («term_<|_»
                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1349,7 +1349,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                   "<|"
                   (Term.app
                    `rice
-                   [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                   [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                     (Term.app (Term.proj `h "." `of_eq) [`hC])
                     («term_<|_»
                      (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1394,7 +1394,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                 "<|"
                 (Term.app
                  `rice
-                 [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                 [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                   (Term.app (Term.proj `h "." `of_eq) [`hC])
                   («term_<|_»
                    (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1439,7 +1439,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
               "<|"
               (Term.app
                `rice
-               [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+               [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
                 (Term.app (Term.proj `h "." `of_eq) [`hC])
                 («term_<|_»
                  (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1476,7 +1476,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
             "<|"
             (Term.app
              `rice
-             [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+             [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
               (Term.app (Term.proj `h "." `of_eq) [`hC])
               («term_<|_»
                (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1513,7 +1513,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
           "<|"
           (Term.app
            `rice
-           [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+           [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
             (Term.app (Term.proj `h "." `of_eq) [`hC])
             («term_<|_»
              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1540,7 +1540,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
         "<|"
         (Term.app
          `rice
-         [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+         [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
           (Term.app (Term.proj `h "." `of_eq) [`hC])
           («term_<|_»
            (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1557,7 +1557,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
        "<|"
        (Term.app
         `rice
-        [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+        [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
          (Term.app (Term.proj `h "." `of_eq) [`hC])
          («term_<|_»
           (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1571,7 +1571,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `rice
-       [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+       [(Set.Data.Set.Image.term_''_ `eval " '' " `C)
         (Term.app (Term.proj `h "." `of_eq) [`hC])
         («term_<|_»
          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
@@ -1745,10 +1745,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
      "("
      (Term.app (Term.proj `h "." `of_eq) [`hC])
      ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.term_''_', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.term_''_', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Image.term_''_', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Image.term_''_', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+      (Set.Data.Set.Image.term_''_ `eval " '' " `C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none,
@@ -1759,7 +1759,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 81, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+     (Set.Data.Set.Image.term_''_ `eval " '' " `C)
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `rice
@@ -1996,16 +1996,16 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
        («term_↔_»
         («term_∈_» `f "∈" `C)
         "↔"
-        («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C))))
+        («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Image.term_''_ `eval " '' " `C))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_↔_»
        («term_∈_» `f "∈" `C)
        "↔"
-       («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))
+       («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Image.term_''_ `eval " '' " `C)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C))
+      («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Image.term_''_ `eval " '' " `C))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+      (Set.Data.Set.Image.term_''_ `eval " '' " `C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none,

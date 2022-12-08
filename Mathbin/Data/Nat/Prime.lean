@@ -8,10 +8,10 @@ import Mathbin.Data.List.Sort
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Nat.Order.Lemmas
 import Mathbin.Data.Int.Units
-import Mathbin.Data.Set.Finite
 import Mathbin.Algebra.Parity
 import Mathbin.Data.Nat.Sqrt
 import Mathbin.Tactic.NormNum
+import Mathbin.Tactic.Wlog
 
 /-!
 # Prime numbers
@@ -24,7 +24,8 @@ This file deals with prime numbers: natural numbers `p ≥ 2` whose only divisor
 - `nat.primes`: the subtype of natural numbers that are prime
 - `nat.min_fac n`: the minimal prime factor of a natural number `n ≠ 1`
 - `nat.exists_infinite_primes`: Euclid's theorem that there exist infinitely many prime numbers.
-  This also appears as `nat.not_bdd_above_set_of_prime` and `nat.infinite_set_of_prime`.
+  This also appears as `nat.not_bdd_above_set_of_prime` and `nat.infinite_set_of_prime` (the latter
+  in `data.nat.prime_fin`).
 - `nat.factors n`: the prime factorization of `n`
 - `nat.factors_unique`: uniqueness of the prime factorisation
 - `nat.prime_iff`: `nat.prime` coincides with the general definition of `prime`
@@ -480,11 +481,6 @@ theorem not_bdd_above_set_of_prime : ¬BddAbove { p | Prime p } := by
   exact ⟨p, hp, hi⟩
 #align nat.not_bdd_above_set_of_prime Nat.not_bdd_above_set_of_prime
 
-/-- A version of `nat.exists_infinite_primes` using the `set.infinite` predicate. -/
-theorem infinite_set_of_prime : { p | Prime p }.Infinite :=
-  Set.infinite_of_not_bdd_above not_bdd_above_set_of_prime
-#align nat.infinite_set_of_prime Nat.infinite_set_of_prime
-
 theorem Prime.eq_two_or_odd {p : ℕ} (hp : Prime p) : p = 2 ∨ p % 2 = 1 :=
   p.mod_two_eq_zero_or_one.imp_left fun h =>
     ((hp.eq_one_or_self_of_dvd 2 (dvd_of_mod_eq_zero h)).resolve_left (by decide)).symm
@@ -526,7 +522,6 @@ theorem factors_lemma {k} : (k + 2) / minFac (k + 2) < k + 2 :=
   div_lt_self (by decide) (min_fac_prime (by decide)).one_lt
 #align nat.factors_lemma Nat.factors_lemma
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `factors n` is the prime factorization of `n`, listed in increasing order. -/
 def factors : ℕ → List ℕ
   | 0 => []
@@ -534,7 +529,7 @@ def factors : ℕ → List ℕ
   | n@(k + 2) =>
     let m := minFac n
     have : n / m < n := factors_lemma
-    m::factors (n / m)
+    m :: factors (n / m)
 #align nat.factors Nat.factors
 
 @[simp]
@@ -597,19 +592,17 @@ theorem factors_chain_2 (n) : List.Chain (· ≤ ·) 2 (factors n) :=
   factors_chain fun p pp _ => pp.two_le
 #align nat.factors_chain_2 Nat.factors_chain_2
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_chain' (n) : List.Chain' (· ≤ ·) (factors n) :=
-  @List.Chain'.tail _ _ (_::_) (factors_chain_2 _)
+  @List.Chain'.tail _ _ (_ :: _) (factors_chain_2 _)
 #align nat.factors_chain' Nat.factors_chain'
 
 theorem factors_sorted (n : ℕ) : List.Sorted (· ≤ ·) (factors n) :=
   List.chain'_iff_pairwise.1 (factors_chain' _)
 #align nat.factors_sorted Nat.factors_sorted
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `factors` can be constructed inductively by extracting `min_fac`, for sufficiently large `n`. -/
 theorem factors_add_two (n : ℕ) :
-    factors (n + 2) = minFac (n + 2)::factors ((n + 2) / minFac (n + 2)) := by rw [factors]
+    factors (n + 2) = minFac (n + 2) :: factors ((n + 2) / minFac (n + 2)) := by rw [factors]
 #align nat.factors_add_two Nat.factors_add_two
 
 @[simp]
@@ -1133,18 +1126,16 @@ theorem factors_helper_nil (a : ℕ) : FactorsHelper 1 a [] := fun pa =>
   ⟨List.Chain.nil, by rintro _ ⟨⟩, List.prod_nil⟩
 #align tactic.norm_num.factors_helper_nil Tactic.NormNum.factors_helper_nil
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_cons' (n m a b : ℕ) (l : List ℕ) (h₁ : b * m = n) (h₂ : a ≤ b)
-    (h₃ : Nat.minFac b = b) (H : FactorsHelper m b l) : FactorsHelper n a (b::l) := fun pa =>
+    (h₃ : Nat.minFac b = b) (H : FactorsHelper m b l) : FactorsHelper n a (b :: l) := fun pa =>
   have pb : b.Prime := Nat.prime_def_min_fac.2 ⟨le_trans pa.two_le h₂, h₃⟩
   let ⟨f₁, f₂, f₃⟩ := H pb
   ⟨List.Chain.cons h₂ f₁, fun c h => h.elim (fun e => e.symm ▸ pb) (f₂ _), by
     rw [List.prod_cons, f₃, h₁]⟩
 #align tactic.norm_num.factors_helper_cons' Tactic.NormNum.factors_helper_cons'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_cons (n m a b : ℕ) (l : List ℕ) (h₁ : b * m = n) (h₂ : a < b)
-    (h₃ : Nat.minFac b = b) (H : FactorsHelper m b l) : FactorsHelper n a (b::l) :=
+    (h₃ : Nat.minFac b = b) (H : FactorsHelper m b l) : FactorsHelper n a (b :: l) :=
   factors_helper_cons' _ _ _ _ _ h₁ h₂.le h₃ H
 #align tactic.norm_num.factors_helper_cons Tactic.NormNum.factors_helper_cons
 
@@ -1152,9 +1143,8 @@ theorem factors_helper_sn (n a : ℕ) (h₁ : a < n) (h₂ : Nat.minFac n = n) :
   factors_helper_cons _ _ _ _ _ (mul_one _) h₁ h₂ (factors_helper_nil _)
 #align tactic.norm_num.factors_helper_sn Tactic.NormNum.factors_helper_sn
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_same (n m a : ℕ) (l : List ℕ) (h : a * m = n) (H : FactorsHelper m a l) :
-    FactorsHelper n a (a::l) := fun pa =>
+    FactorsHelper n a (a :: l) := fun pa =>
   factors_helper_cons' _ _ _ _ _ h le_rfl (Nat.prime_def_min_fac.1 pa).2 H pa
 #align tactic.norm_num.factors_helper_same Tactic.NormNum.factors_helper_same
 
@@ -1162,15 +1152,12 @@ theorem factors_helper_same_sn (a : ℕ) : FactorsHelper a a [a] :=
   factors_helper_same _ _ _ _ (mul_one _) (factors_helper_nil _)
 #align tactic.norm_num.factors_helper_same_sn Tactic.NormNum.factors_helper_same_sn
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem factors_helper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : Nat.factors n = l :=
   let ⟨h₁, h₂, h₃⟩ := H Nat.prime_two
-  have := List.chain'_iff_pairwise.1 (@List.Chain'.tail _ _ (_::_) h₁)
+  have := List.chain'_iff_pairwise.1 (@List.Chain'.tail _ _ (_ :: _) h₁)
   (List.eq_of_perm_of_sorted (Nat.factors_unique h₃ h₂) this (Nat.factors_sorted _)).symm
 #align tactic.norm_num.factors_helper_end Tactic.NormNum.factors_helper_end
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Given `n` and `a` natural numerals, returns `(l, ⊢ factors_helper n a l)`. -/ unsafe
   def
@@ -1296,34 +1283,6 @@ theorem mem_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) {p : ℕ} :
   simpa only [and_congr_right_iff] using prime.dvd_mul
 #align nat.mem_factors_mul Nat.mem_factors_mul
 
-/-- If `a`, `b` are positive, the prime divisors of `a * b` are the union of those of `a` and `b` -/
-theorem factors_mul_to_finset {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
-    (a * b).factors.toFinset = a.factors.toFinset ∪ b.factors.toFinset :=
-  (List.toFinset.ext fun x => (mem_factors_mul ha hb).trans List.mem_union.symm).trans <|
-    List.to_finset_union _ _
-#align nat.factors_mul_to_finset Nat.factors_mul_to_finset
-
-theorem pow_succ_factors_to_finset (n k : ℕ) :
-    (n ^ (k + 1)).factors.toFinset = n.factors.toFinset := by
-  rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
-  induction' k with k ih
-  · simp
-  rw [pow_succ, factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
-#align nat.pow_succ_factors_to_finset Nat.pow_succ_factors_to_finset
-
-theorem pow_factors_to_finset (n : ℕ) {k : ℕ} (hk : k ≠ 0) :
-    (n ^ k).factors.toFinset = n.factors.toFinset := by
-  cases k
-  · simpa using hk
-  rw [pow_succ_factors_to_finset]
-#align nat.pow_factors_to_finset Nat.pow_factors_to_finset
-
-/-- The only prime divisor of positive prime power `p^k` is `p` itself -/
-theorem prime_pow_prime_divisor {p k : ℕ} (hk : k ≠ 0) (hp : Prime p) :
-    (p ^ k).factors.toFinset = {p} := by simp [pow_factors_to_finset p hk, factors_prime hp]
-#align nat.prime_pow_prime_divisor Nat.prime_pow_prime_divisor
-
 /-- The sets of factors of coprime `a` and `b` are disjoint -/
 theorem coprime_factors_disjoint {a b : ℕ} (hab : a.Coprime b) :
     List.Disjoint a.factors b.factors := by 
@@ -1341,11 +1300,6 @@ theorem mem_factors_mul_of_coprime {a b : ℕ} (hab : Coprime a b) (p : ℕ) :
   · simp [(coprime_zero_right _).mp hab]
   rw [mem_factors_mul ha.ne' hb.ne', List.mem_union]
 #align nat.mem_factors_mul_of_coprime Nat.mem_factors_mul_of_coprime
-
-theorem factors_mul_to_finset_of_coprime {a b : ℕ} (hab : Coprime a b) :
-    (a * b).factors.toFinset = a.factors.toFinset ∪ b.factors.toFinset :=
-  (List.toFinset.ext <| mem_factors_mul_of_coprime hab).trans <| List.to_finset_union _ _
-#align nat.factors_mul_to_finset_of_coprime Nat.factors_mul_to_finset_of_coprime
 
 open List
 
@@ -1387,3 +1341,4 @@ theorem prime_three : Prime (3 : ℤ) :=
 
 end Int
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Mathbin.Algebra.GcdMonoid.Basic
+import Mathbin.Data.Multiset.FinsetOps
+import Mathbin.Data.Multiset.Fold
 
 /-!
 # GCD and LCM operations on multisets

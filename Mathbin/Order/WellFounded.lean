@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 -/
 import Mathbin.Tactic.ByContra
-import Mathbin.Data.Set.Basic
+import Mathbin.Data.Set.Image
 
 /-!
 # Well-founded relations

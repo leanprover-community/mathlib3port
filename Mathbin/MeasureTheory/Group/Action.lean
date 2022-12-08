@@ -140,7 +140,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
               («term_=_»
                (Term.app
                 `μ
-                [(Set.Data.Set.Basic.«term_⁻¹'_»
+                [(Set.Data.Set.Image.«term_⁻¹'_»
                   (Term.app
                    (Term.paren
                     "("
@@ -175,7 +175,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              («term_=_»
               (Term.app
                `μ
-               [(Set.Data.Set.Basic.«term_⁻¹'_»
+               [(Set.Data.Set.Image.«term_⁻¹'_»
                  (Term.app
                   (Term.paren
                    "("

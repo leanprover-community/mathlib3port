@@ -20,15 +20,18 @@ sends `Δ : simplex_categoryᵒᵖ` to a certain coproduct indexed by the set
 (with `Δ' : simplex_categoryᵒᵖ`); the summand attached to such an `e` is `K.X Δ'.unop.len`.
 By construction, `Γ₀.obj K` is a split simplicial object whose splitting is `Γ₀.splitting K`.
 
+We also construct `Γ₂ : karoubi (chain_complex C ℕ) ⥤ karoubi (simplicial_object C)`
+which shall be an equivalence for any additive category `C`.
+
 -/
 
 
 noncomputable section
 
 open
-  CategoryTheory CategoryTheory.Category CategoryTheory.Limits SimplexCategory SimplicialObject Opposite
+  CategoryTheory CategoryTheory.Category CategoryTheory.Limits SimplexCategory SimplicialObject Opposite CategoryTheory.Idempotents
 
-open Simplicial
+open Simplicial DoldKan
 
 namespace AlgebraicTopology
 
@@ -360,6 +363,38 @@ category, or more generally a pseudoabelian category. -/
 def Γ₀ : ChainComplex C ℕ ⥤ SimplicialObject C :=
   Γ₀' ⋙ Split.forget _
 #align algebraic_topology.dold_kan.Γ₀ AlgebraicTopology.DoldKan.Γ₀
+
+/-- The extension of `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`
+on the idempotent completions. It shall be an equivalence of categories
+for any additive category `C`. -/
+@[simps]
+def Γ₂ : Karoubi (ChainComplex C ℕ) ⥤ Karoubi (SimplicialObject C) :=
+  (CategoryTheory.Idempotents.functorExtension₂ _ _).obj Γ₀
+#align algebraic_topology.dold_kan.Γ₂ AlgebraicTopology.DoldKan.Γ₂
+
+theorem HigherFacesVanish.on_Γ₀_summand_id (K : ChainComplex C ℕ) (n : ℕ) :
+    HigherFacesVanish (n + 1) ((Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n + 1]))) := by
+  intro j hj
+  have eq := Γ₀.obj.map_mono_on_summand_id K (SimplexCategory.δ j.succ)
+  rw [Γ₀.obj.termwise.map_mono_eq_zero K, zero_comp] at eq; rotate_left
+  · intro h
+    exact (Nat.succ_ne_self n) (congr_arg SimplexCategory.len h)
+  · exact fun h => Fin.succ_ne_zero j (by simpa only [is_δ₀.iff] using h)
+  exact Eq
+#align
+  algebraic_topology.dold_kan.higher_faces_vanish.on_Γ₀_summand_id AlgebraicTopology.DoldKan.HigherFacesVanish.on_Γ₀_summand_id
+
+@[simp, reassoc]
+theorem P_infty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : ℕ} :
+    (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) ≫ (pInfty : K[Γ₀.obj K] ⟶ _).f n =
+      (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) :=
+  by 
+  rw [P_infty_f]
+  cases n
+  · simpa only [P_f_0_eq] using comp_id _
+  · exact (higher_faces_vanish.on_Γ₀_summand_id K n).comp_P_eq_self
+#align
+  algebraic_topology.dold_kan.P_infty_on_Γ₀_splitting_summand_eq_self AlgebraicTopology.DoldKan.P_infty_on_Γ₀_splitting_summand_eq_self
 
 end DoldKan
 

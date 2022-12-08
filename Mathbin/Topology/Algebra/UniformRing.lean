@@ -253,3 +253,48 @@ instance topological_ring [CommRing α] [UniformSpace α] [UniformAddGroup α] [
 
 end UniformSpace
 
+section UniformExtension
+
+variable {α : Type _} [UniformSpace α] [Semiring α]
+
+variable {β : Type _} [UniformSpace β] [Semiring β] [TopologicalSemiring β]
+
+variable {γ : Type _} [UniformSpace γ] [Semiring γ] [TopologicalSemiring γ]
+
+variable [T2Space γ] [CompleteSpace γ]
+
+/-- The dense inducing extension as a ring homomorphism. -/
+noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ} (ue : UniformInducing i)
+    (dr : DenseRange i) (hf : UniformContinuous f) :
+    β →+* γ where 
+  toFun := (ue.DenseInducing dr).extend f
+  map_one' := by 
+    convert DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous 1
+    exacts[i.map_one.symm, f.map_one.symm]
+  map_zero' := by
+    convert DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous 0
+    exacts[i.map_zero.symm, f.map_zero.symm]
+  map_add' := by 
+    have h := (uniform_continuous_uniformly_extend ue dr hf).Continuous
+    refine' fun x y => DenseRange.inductionOn₂ dr _ (fun a b => _) x y
+    ·
+      exact
+        isClosedEq (Continuous.comp h continuous_add)
+          ((h.comp continuous_fst).add (h.comp continuous_snd))
+    ·
+      simp_rw [← i.map_add, DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous _, ←
+        f.map_add]
+  map_mul' := by 
+    have h := (uniform_continuous_uniformly_extend ue dr hf).Continuous
+    refine' fun x y => DenseRange.inductionOn₂ dr _ (fun a b => _) x y
+    ·
+      exact
+        isClosedEq (Continuous.comp h continuous_mul)
+          ((h.comp continuous_fst).mul (h.comp continuous_snd))
+    ·
+      simp_rw [← i.map_mul, DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous _, ←
+        f.map_mul]
+#align dense_inducing.extend_ring_hom DenseInducing.extendRingHom
+
+end UniformExtension
+

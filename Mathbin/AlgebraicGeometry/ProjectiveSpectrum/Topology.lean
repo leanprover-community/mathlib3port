@@ -31,8 +31,7 @@ It is naturally endowed with a topology: the Zariski topology.
   `projective_spectrum 𝒜` is the intersection of points in `t` (viewed as relevant homogeneous prime
   ideals).
 * `projective_spectrum.Top`: the topological space of `projective_spectrum 𝒜` endowed with the
-  Zariski topology
-
+  Zariski topology.
 -/
 
 
@@ -48,48 +47,26 @@ variable [CommSemiring R] [CommRing A] [Algebra R A]
 
 variable (𝒜 : ℕ → Submodule R A) [GradedAlgebra 𝒜]
 
-/--
-The projective spectrum of a graded commutative ring is the subtype of all homogenous ideals that
-are prime and do not contain the irrelevant ideal.
--/
-@[nolint has_nonempty_instance]
-def ProjectiveSpectrum :=
-  { I : HomogeneousIdeal 𝒜 // I.toIdeal.IsPrime ∧ ¬HomogeneousIdeal.irrelevant 𝒜 ≤ I }
+/-- The projective spectrum of a graded commutative ring is the subtype of all homogenous ideals
+that are prime and do not contain the irrelevant ideal. -/
+@[ext, nolint has_nonempty_instance]
+structure ProjectiveSpectrum where
+  asHomogeneousIdeal : HomogeneousIdeal 𝒜
+  IsPrime : as_homogeneous_ideal.toIdeal.IsPrime
+  not_irrelevant_le : ¬HomogeneousIdeal.irrelevant 𝒜 ≤ as_homogeneous_ideal
 #align projective_spectrum ProjectiveSpectrum
+
+attribute [instance] ProjectiveSpectrum.is_prime
 
 namespace ProjectiveSpectrum
 
-variable {𝒜}
-
-/-- A method to view a point in the projective spectrum of a graded ring
-as a homogeneous ideal of that ring. -/
-abbrev asHomogeneousIdeal (x : ProjectiveSpectrum 𝒜) : HomogeneousIdeal 𝒜 :=
-  x.1
-#align projective_spectrum.as_homogeneous_ideal ProjectiveSpectrum.asHomogeneousIdeal
-
-theorem as_homogeneous_ideal_def (x : ProjectiveSpectrum 𝒜) : x.asHomogeneousIdeal = x.1 :=
-  rfl
-#align projective_spectrum.as_homogeneous_ideal_def ProjectiveSpectrum.as_homogeneous_ideal_def
-
-instance is_prime (x : ProjectiveSpectrum 𝒜) : x.asHomogeneousIdeal.toIdeal.IsPrime :=
-  x.2.1
-#align projective_spectrum.is_prime ProjectiveSpectrum.is_prime
-
-@[ext]
-theorem ext {x y : ProjectiveSpectrum 𝒜} : x = y ↔ x.asHomogeneousIdeal = y.asHomogeneousIdeal :=
-  Subtype.ext_iff_val
-#align projective_spectrum.ext ProjectiveSpectrum.ext
-
-variable (𝒜)
-
-/-- The zero locus of a set `s` of elements of a commutative ring `A`
-is the set of all relevant homogeneous prime ideals of the ring that contain the set `s`.
+/-- The zero locus of a set `s` of elements of a commutative ring `A` is the set of all relevant
+homogeneous prime ideals of the ring that contain the set `s`.
 
 An element `f` of `A` can be thought of as a dependent function on the projective spectrum of `𝒜`.
-At a point `x` (a homogeneous prime ideal)
-the function (i.e., element) `f` takes values in the quotient ring `A` modulo the prime ideal `x`.
-In this manner, `zero_locus s` is exactly the subset of `projective_spectrum 𝒜`
-where all "functions" in `s` vanish simultaneously. -/
+At a point `x` (a homogeneous prime ideal) the function (i.e., element) `f` takes values in the
+quotient ring `A` modulo the prime ideal `x`. In this manner, `zero_locus s` is exactly the subset
+of `projective_spectrum 𝒜` where all "functions" in `s` vanish simultaneously. -/
 def zeroLocus (s : Set A) : Set (ProjectiveSpectrum 𝒜) :=
   { x | s ⊆ x.asHomogeneousIdeal }
 #align projective_spectrum.zero_locus ProjectiveSpectrum.zeroLocus
@@ -108,15 +85,13 @@ theorem zero_locus_span (s : Set A) : zeroLocus 𝒜 (Ideal.span s) = zeroLocus 
 
 variable {𝒜}
 
-/-- The vanishing ideal of a set `t` of points
-of the prime spectrum of a commutative ring `R`
-is the intersection of all the prime ideals in the set `t`.
+/-- The vanishing ideal of a set `t` of points of the projective spectrum of a commutative ring `R`
+is the intersection of all the relevant homogeneous prime ideals in the set `t`.
 
 An element `f` of `A` can be thought of as a dependent function on the projective spectrum of `𝒜`.
-At a point `x` (a homogeneous prime ideal)
-the function (i.e., element) `f` takes values in the quotient ring `A` modulo the prime ideal `x`.
-In this manner, `vanishing_ideal t` is exactly the ideal of `A`
-consisting of all "functions" that vanish on all of `t`. -/
+At a point `x` (a homogeneous prime ideal) the function (i.e., element) `f` takes values in the
+quotient ring `A` modulo the prime ideal `x`. In this manner, `vanishing_ideal t` is exactly the
+ideal of `A` consisting of all "functions" that vanish on all of `t`. -/
 def vanishingIdeal (t : Set (ProjectiveSpectrum 𝒜)) : HomogeneousIdeal 𝒜 :=
   ⨅ (x : ProjectiveSpectrum 𝒜) (h : x ∈ t), x.asHomogeneousIdeal
 #align projective_spectrum.vanishing_ideal ProjectiveSpectrum.vanishingIdeal
@@ -310,7 +285,7 @@ theorem vanishing_ideal_Union {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 
 
 theorem zero_locus_inf (I J : Ideal A) :
     zeroLocus 𝒜 ((I ⊓ J : Ideal A) : Set A) = zeroLocus 𝒜 I ∪ zeroLocus 𝒜 J :=
-  Set.ext fun x => x.2.1.inf_le
+  Set.ext fun x => x.IsPrime.inf_le
 #align projective_spectrum.zero_locus_inf ProjectiveSpectrum.zero_locus_inf
 
 theorem union_zero_locus (s s' : Set A) :
@@ -321,24 +296,24 @@ theorem union_zero_locus (s s' : Set A) :
 
 theorem zero_locus_mul_ideal (I J : Ideal A) :
     zeroLocus 𝒜 ((I * J : Ideal A) : Set A) = zeroLocus 𝒜 I ∪ zeroLocus 𝒜 J :=
-  Set.ext fun x => x.2.1.mul_le
+  Set.ext fun x => x.IsPrime.mul_le
 #align projective_spectrum.zero_locus_mul_ideal ProjectiveSpectrum.zero_locus_mul_ideal
 
 theorem zero_locus_mul_homogeneous_ideal (I J : HomogeneousIdeal 𝒜) :
     zeroLocus 𝒜 ((I * J : HomogeneousIdeal 𝒜) : Set A) = zeroLocus 𝒜 I ∪ zeroLocus 𝒜 J :=
-  Set.ext fun x => x.2.1.mul_le
+  Set.ext fun x => x.IsPrime.mul_le
 #align
   projective_spectrum.zero_locus_mul_homogeneous_ideal ProjectiveSpectrum.zero_locus_mul_homogeneous_ideal
 
 theorem zero_locus_singleton_mul (f g : A) :
     zeroLocus 𝒜 ({f * g} : Set A) = zeroLocus 𝒜 {f} ∪ zeroLocus 𝒜 {g} :=
-  Set.ext fun x => by simpa using x.2.1.mul_mem_iff_mem_or_mem
+  Set.ext fun x => by simpa using x.is_prime.mul_mem_iff_mem_or_mem
 #align projective_spectrum.zero_locus_singleton_mul ProjectiveSpectrum.zero_locus_singleton_mul
 
 @[simp]
 theorem zero_locus_singleton_pow (f : A) (n : ℕ) (hn : 0 < n) :
     zeroLocus 𝒜 ({f ^ n} : Set A) = zeroLocus 𝒜 {f} :=
-  Set.ext fun x => by simpa using x.2.1.pow_mem_iff_mem n hn
+  Set.ext fun x => by simpa using x.is_prime.pow_mem_iff_mem n hn
 #align projective_spectrum.zero_locus_singleton_pow ProjectiveSpectrum.zero_locus_singleton_pow
 
 theorem sup_vanishing_ideal_le (t t' : Set (ProjectiveSpectrum 𝒜)) :
@@ -357,9 +332,8 @@ theorem mem_compl_zero_locus_iff_not_mem {f : A} {I : ProjectiveSpectrum 𝒜} :
 #align
   projective_spectrum.mem_compl_zero_locus_iff_not_mem ProjectiveSpectrum.mem_compl_zero_locus_iff_not_mem
 
-/-- The Zariski topology on the prime spectrum of a commutative ring
-is defined via the closed sets of the topology:
-they are exactly those sets that are the zero locus of a subset of the ring. -/
+/-- The Zariski topology on the prime spectrum of a commutative ring is defined via the closed sets
+of the topology: they are exactly those sets that are the zero locus of a subset of the ring. -/
 instance zariskiTopology : TopologicalSpace (ProjectiveSpectrum 𝒜) :=
   TopologicalSpace.ofClosed (Set.range (ProjectiveSpectrum.zeroLocus 𝒜)) ⟨Set.univ, by simp⟩
     (by 
@@ -374,8 +348,7 @@ instance zariskiTopology : TopologicalSpace (ProjectiveSpectrum 𝒜) :=
       exact ⟨_, (union_zero_locus 𝒜 s t).symm⟩)
 #align projective_spectrum.zariski_topology ProjectiveSpectrum.zariskiTopology
 
-/-- The underlying topology of `Proj` is the projective spectrum of graded ring `A`.
--/
+/-- The underlying topology of `Proj` is the projective spectrum of graded ring `A`. -/
 def top : TopCat :=
   TopCat.of (ProjectiveSpectrum 𝒜)
 #align projective_spectrum.Top ProjectiveSpectrum.top
@@ -523,18 +496,18 @@ where `x ≤ y` if and only if `y ∈ closure {x}`.
 
 
 instance : PartialOrder (ProjectiveSpectrum 𝒜) :=
-  Subtype.partialOrder _
+  (PartialOrder.lift asHomogeneousIdeal) fun ⟨_, _, _⟩ ⟨_, _, _⟩ => mk.inj_eq.mpr
 
 @[simp]
 theorem as_ideal_le_as_ideal (x y : ProjectiveSpectrum 𝒜) :
     x.asHomogeneousIdeal ≤ y.asHomogeneousIdeal ↔ x ≤ y :=
-  Subtype.coe_le_coe
+  Iff.rfl
 #align projective_spectrum.as_ideal_le_as_ideal ProjectiveSpectrum.as_ideal_le_as_ideal
 
 @[simp]
 theorem as_ideal_lt_as_ideal (x y : ProjectiveSpectrum 𝒜) :
     x.asHomogeneousIdeal < y.asHomogeneousIdeal ↔ x < y :=
-  Subtype.coe_lt_coe
+  Iff.rfl
 #align projective_spectrum.as_ideal_lt_as_ideal ProjectiveSpectrum.as_ideal_lt_as_ideal
 
 theorem le_iff_mem_closure (x y : ProjectiveSpectrum 𝒜) :

@@ -139,13 +139,7 @@ section RootsAction
 /-- The function taking `roots p p.splitting_field` to `roots p E`. This is actually a bijection,
 see `polynomial.gal.map_roots_bijective`. -/
 def mapRoots [Fact (p.Splits (algebraMap F E))] : rootSet p p.SplittingField → rootSet p E :=
-  fun x =>
-  ⟨IsScalarTower.toAlgHom F p.SplittingField E x, by
-    have key := Subtype.mem x
-    by_cases p = 0
-    · simp only [h, root_set_zero] at key
-      exact False.ndrec _ key
-    · rw [mem_root_set h, aeval_alg_hom_apply, (mem_root_set h).mp key, AlgHom.map_zero]⟩
+  Set.MapsTo.restrict (IsScalarTower.toAlgHom F p.SplittingField E) _ _ <| root_set_maps_to _
 #align polynomial.gal.map_roots Polynomial.Gal.mapRoots
 
 theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] :
@@ -173,16 +167,7 @@ instance galActionAux :
     MulAction p.Gal
       (rootSet p
         p.SplittingField) where 
-  smul ϕ x :=
-    ⟨ϕ x, by 
-      have key := Subtype.mem x
-      --simp only [root_set, finset.mem_coe, multiset.mem_to_finset] at *,
-      by_cases p = 0
-      · simp only [h, root_set_zero] at key
-        exact False.ndrec _ key
-      · rw [mem_root_set h]
-        change aeval (ϕ.to_alg_hom x) p = 0
-        rw [aeval_alg_hom_apply, (mem_root_set h).mp key, AlgHom.map_zero]⟩
+  smul ϕ := Set.MapsTo.restrict ϕ _ _ <| root_set_maps_to ϕ.toAlgHom
   one_smul _ := by 
     ext
     rfl
@@ -424,10 +409,13 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   let b : Finset ℂ := _
   let c : Finset ℂ := _
   change a.card = b.card + c.card
-  have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0 := fun z => by rw [Set.mem_to_finset, mem_root_set hp]
+  have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0 := by 
+    intro z
+    rw [Set.mem_to_finset, mem_root_set_of_ne hp]
+    infer_instance
   have hb : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0 := by
     intro z
-    simp_rw [Finset.mem_image, exists_prop, Set.mem_to_finset, mem_root_set hp]
+    simp_rw [Finset.mem_image, exists_prop, Set.mem_to_finset, mem_root_set_of_ne hp]
     constructor
     · rintro ⟨w, hw, rfl⟩
       exact ⟨by rw [aeval_alg_hom_apply, hw, AlgHom.map_zero], rfl⟩
@@ -450,9 +438,9 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     simp_rw [Finset.mem_image, exists_prop]
     constructor
     · rintro ⟨w, hw, rfl⟩
-      exact ⟨(mem_root_set hp).mp w.2, mt (hc0 w).mpr (equiv.perm.mem_support.mp hw)⟩
+      exact ⟨(mem_root_set.mp w.2).2, mt (hc0 w).mpr (equiv.perm.mem_support.mp hw)⟩
     · rintro ⟨hz1, hz2⟩
-      exact ⟨⟨z, (mem_root_set hp).mpr hz1⟩, equiv.perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
+      exact ⟨⟨z, mem_root_set.mpr ⟨hp, hz1⟩⟩, equiv.perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
   rw [← Finset.card_disjoint_union]
   · apply congr_arg Finset.card
     simp_rw [Finset.ext_iff, Finset.mem_union, ha, hb, hc]

@@ -421,6 +421,7 @@ import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
 import Mathbin.AlgebraicGeometry.Morphisms.Basic
 import Mathbin.AlgebraicGeometry.Morphisms.FiniteType
+import Mathbin.AlgebraicGeometry.Morphisms.OpenImmersion
 import Mathbin.AlgebraicGeometry.Morphisms.QuasiCompact
 import Mathbin.AlgebraicGeometry.Morphisms.QuasiSeparated
 import Mathbin.AlgebraicGeometry.Morphisms.RingHomProperties
@@ -450,8 +451,10 @@ import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
 import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.AlgebraicTopology.DoldKan.FunctorGamma
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
+import Mathbin.AlgebraicTopology.DoldKan.GammaCompN
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
 import Mathbin.AlgebraicTopology.DoldKan.HomotopyEquivalence
+import Mathbin.AlgebraicTopology.DoldKan.NCompGamma
 import Mathbin.AlgebraicTopology.DoldKan.NReflectsIso
 import Mathbin.AlgebraicTopology.DoldKan.Normalized
 import Mathbin.AlgebraicTopology.DoldKan.Notations
@@ -499,6 +502,7 @@ import Mathbin.Analysis.BoxIntegral.Partition.Split
 import Mathbin.Analysis.BoxIntegral.Partition.SubboxInduction
 import Mathbin.Analysis.BoxIntegral.Partition.Tagged
 import Mathbin.Analysis.Calculus.AffineMap
+import Mathbin.Analysis.Calculus.BumpFunctionFindim
 import Mathbin.Analysis.Calculus.Conformal.InnerProduct
 import Mathbin.Analysis.Calculus.Conformal.NormedSpace
 import Mathbin.Analysis.Calculus.ContDiff
@@ -578,6 +582,7 @@ import Mathbin.Analysis.Convex.SpecificFunctions
 import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.Convex.StoneSeparation
 import Mathbin.Analysis.Convex.Strict
+import Mathbin.Analysis.Convex.StrictConvexBetween
 import Mathbin.Analysis.Convex.StrictConvexSpace
 import Mathbin.Analysis.Convex.Topology
 import Mathbin.Analysis.Convex.Uniform
@@ -1187,6 +1192,7 @@ import Mathbin.Data.Bitvec.Basic
 import Mathbin.Data.Bitvec.Core
 import Mathbin.Data.Bool.AllAny
 import Mathbin.Data.Bool.Basic
+import Mathbin.Data.Bool.Count
 import Mathbin.Data.Bool.Set
 import Mathbin.Data.Bracket
 import Mathbin.Data.Buffer.Basic
@@ -1470,6 +1476,7 @@ import Mathbin.Data.Nat.PartEnat
 import Mathbin.Data.Nat.Periodic
 import Mathbin.Data.Nat.Pow
 import Mathbin.Data.Nat.Prime
+import Mathbin.Data.Nat.PrimeFin
 import Mathbin.Data.Nat.Psub
 import Mathbin.Data.Nat.Set
 import Mathbin.Data.Nat.Size
@@ -1611,6 +1618,7 @@ import Mathbin.Data.Seq.Wseq
 import Mathbin.Data.Set.UnionLift
 import Mathbin.Data.Set.Accumulate
 import Mathbin.Data.Set.Basic
+import Mathbin.Data.Set.BoolIndicator
 import Mathbin.Data.Set.Constructions
 import Mathbin.Data.Set.Countable
 import Mathbin.Data.Set.Default
@@ -1619,6 +1627,7 @@ import Mathbin.Data.Set.Equitable
 import Mathbin.Data.Set.Finite
 import Mathbin.Data.Set.Function
 import Mathbin.Data.Set.Functor
+import Mathbin.Data.Set.Image
 import Mathbin.Data.Set.Intervals.Basic
 import Mathbin.Data.Set.Intervals.Default
 import Mathbin.Data.Set.Intervals.Disjoint
@@ -2423,6 +2432,7 @@ import Mathbin.RingTheory.GradedAlgebra.HomogeneousLocalization
 import Mathbin.RingTheory.GradedAlgebra.Radical
 import Mathbin.RingTheory.HahnSeries
 import Mathbin.RingTheory.Henselian
+import Mathbin.RingTheory.Ideal.AssociatedPrime
 import Mathbin.RingTheory.Ideal.Basic
 import Mathbin.RingTheory.Ideal.Cotangent
 import Mathbin.RingTheory.Ideal.IdempotentFg

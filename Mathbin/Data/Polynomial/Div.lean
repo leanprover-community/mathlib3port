@@ -513,28 +513,30 @@ theorem root_multiplicity_zero {x : R} : rootMultiplicity x 0 = 0 :=
   dif_pos rfl
 #align polynomial.root_multiplicity_zero Polynomial.root_multiplicity_zero
 
+@[simp]
+theorem root_multiplicity_eq_zero_iff {p : R[X]} {x : R} :
+    rootMultiplicity x p = 0 ↔ IsRoot p x → p = 0 := by
+  simp only [root_multiplicity_eq_multiplicity, dite_eq_left_iff, PartEnat.get_eq_iff_eq_coe,
+    Nat.cast_zero, multiplicity.multiplicity_eq_zero, dvd_iff_is_root, not_imp_not]
+#align polynomial.root_multiplicity_eq_zero_iff Polynomial.root_multiplicity_eq_zero_iff
+
 theorem root_multiplicity_eq_zero {p : R[X]} {x : R} (h : ¬IsRoot p x) : rootMultiplicity x p = 0 :=
-  by 
-  rw [root_multiplicity_eq_multiplicity]
-  split_ifs; · rfl
-  rw [← PartEnat.coe_inj, PartEnat.coe_get, multiplicity.multiplicity_eq_zero_of_not_dvd,
-    Nat.cast_zero]
-  intro hdvd
-  exact h (dvd_iff_is_root.mp hdvd)
+  root_multiplicity_eq_zero_iff.2 fun h' => (h h').elim
 #align polynomial.root_multiplicity_eq_zero Polynomial.root_multiplicity_eq_zero
 
+@[simp]
+theorem root_multiplicity_pos' {p : R[X]} {x : R} : 0 < rootMultiplicity x p ↔ p ≠ 0 ∧ IsRoot p x :=
+  by rw [pos_iff_ne_zero, Ne.def, root_multiplicity_eq_zero_iff, not_imp, and_comm]
+#align polynomial.root_multiplicity_pos' Polynomial.root_multiplicity_pos'
+
 theorem root_multiplicity_pos {p : R[X]} (hp : p ≠ 0) {x : R} :
-    0 < rootMultiplicity x p ↔ IsRoot p x := by
-  rw [← dvd_iff_is_root, root_multiplicity_eq_multiplicity, dif_neg hp, ← PartEnat.coe_lt_coe,
-    PartEnat.coe_get]
-  exact multiplicity.dvd_iff_multiplicity_pos
+    0 < rootMultiplicity x p ↔ IsRoot p x :=
+  root_multiplicity_pos'.trans (and_iff_right hp)
 #align polynomial.root_multiplicity_pos Polynomial.root_multiplicity_pos
 
 @[simp]
 theorem root_multiplicity_C (r a : R) : rootMultiplicity a (c r) = 0 := by
-  rcases eq_or_ne r 0 with (rfl | hr)
-  · simp
-  · exact root_multiplicity_eq_zero (not_is_root_C _ _ hr)
+  simp only [root_multiplicity_eq_zero_iff, is_root, eval_C, C_eq_zero, imp_self]
 #align polynomial.root_multiplicity_C Polynomial.root_multiplicity_C
 
 theorem pow_root_multiplicity_dvd (p : R[X]) (a : R) : (X - c a) ^ rootMultiplicity a p ∣ p :=

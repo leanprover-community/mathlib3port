@@ -34,10 +34,10 @@ theorem surjective_respects_iso : RespectsIso surjective := by
 #align ring_hom.surjective_respects_iso RingHom.surjective_respects_iso
 
 theorem surjective_stable_under_base_change : StableUnderBaseChange surjective := by
+  refine' stable_under_base_change.mk _ surjective_respects_iso _
   classical 
-    introv R h
+    introv h x
     skip
-    intro x
     induction' x using TensorProduct.induction_on with x y x y ex ey
     · exact ⟨0, map_zero _⟩
     · obtain ⟨y, rfl⟩ := h y

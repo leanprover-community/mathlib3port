@@ -7,7 +7,11 @@ import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 
-/-! # Ordered monoid structures on `multiplicative α` and `additive α`. -/
+/-! # Ordered monoid structures on `multiplicative α` and `additive α`. 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/873
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 universe u

@@ -1119,9 +1119,9 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P}
          [`he]
          [":"
           («term_=_»
-           (Set.Data.Set.Basic.term_''_ `p " '' " (coeNotation "↑" `s))
+           (Set.Data.Set.Image.term_''_ `p " '' " (coeNotation "↑" `s))
            "="
-           (Set.Data.Set.Basic.term_''_ `p₂ " '' " (coeNotation "↑" `s₂)))]
+           (Set.Data.Set.Image.term_''_ `p₂ " '' " (coeNotation "↑" `s₂)))]
          []
          ")")]
        (Term.typeSpec

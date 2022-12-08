@@ -467,7 +467,7 @@ theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
     refine'
       le_supr (fun x => adjoin F ((minpoly F x).rootSet L)) x
         (subset_adjoin F ((minpoly F x).rootSet L) _)
-    rw [Polynomial.mem_root_set, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom,
+    rw [mem_root_set_of_ne, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom,
       Polynomial.aeval_alg_hom_apply, minpoly.aeval, map_zero]
     exact
       minpoly.ne_zero

@@ -92,6 +92,21 @@ instance : DecidablePred (Even : ℕ → Prop) := fun n => decidable_of_iff _ ev
 
 instance : DecidablePred (Odd : ℕ → Prop) := fun n => decidable_of_iff _ odd_iff_not_even.symm
 
+theorem mod_two_add_add_odd_mod_two (m : ℕ) {n : ℕ} (hn : Odd n) : m % 2 + (m + n) % 2 = 1 :=
+  ((even_or_odd m).elim fun hm => by rw [even_iff.1 hm, odd_iff.1 (hm.add_odd hn)]) fun hm => by
+    rw [odd_iff.1 hm, even_iff.1 (hm.add_odd hn)]
+#align nat.mod_two_add_add_odd_mod_two Nat.mod_two_add_add_odd_mod_two
+
+@[simp]
+theorem mod_two_add_succ_mod_two (m : ℕ) : m % 2 + (m + 1) % 2 = 1 :=
+  mod_two_add_add_odd_mod_two m odd_one
+#align nat.mod_two_add_succ_mod_two Nat.mod_two_add_succ_mod_two
+
+@[simp]
+theorem succ_mod_two_add_mod_two (m : ℕ) : (m + 1) % 2 + m % 2 = 1 := by
+  rw [add_comm, mod_two_add_succ_mod_two]
+#align nat.succ_mod_two_add_mod_two Nat.succ_mod_two_add_mod_two
+
 /- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 [PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
      [(Command.docComment "/--" "Simp attribute for lemmas about `even` -/")]

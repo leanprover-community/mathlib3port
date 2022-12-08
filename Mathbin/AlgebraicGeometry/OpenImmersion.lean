@@ -11,6 +11,7 @@ import Mathbin.AlgebraicGeometry.SchemeCat
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.Algebra.Category.RingCat.Instances
+import Mathbin.Topology.LocalAtTarget
 
 /-!
 # Open immersions of structured spaces
@@ -2310,6 +2311,11 @@ theorem morphism_restrict_base_coe {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.
     (morphism_restrict_ι f U)
 #align algebraic_geometry.morphism_restrict_base_coe AlgebraicGeometry.morphism_restrict_base_coe
 
+theorem morphism_restrict_val_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrier) :
+    ⇑(f ∣_ U).1.base = U.1.restrictPreimage f.1.base :=
+  funext fun x => Subtype.ext (morphism_restrict_base_coe f U x)
+#align algebraic_geometry.morphism_restrict_val_base AlgebraicGeometry.morphism_restrict_val_base
+
 theorem image_morphism_restrict_preimage {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrier)
     (V : Opens U) :
     ((Opens.map f.val.base).obj U).OpenEmbedding.IsOpenMap.Functor.obj
@@ -2440,6 +2446,30 @@ def morphismRestrictRestrictBasicOpen {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens
   exact Y.basic_open_le r
 #align
   algebraic_geometry.morphism_restrict_restrict_basic_open AlgebraicGeometry.morphismRestrictRestrictBasicOpen
+
+/-- The stalk map of a restriction of a morphism is isomorphic to the stalk map of the original map.
+-/
+def morphismRestrictStalkMap {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrier) (x) :
+    Arrow.mk (PresheafedSpaceCat.stalkMap (f ∣_ U).1 x) ≅
+      Arrow.mk (PresheafedSpaceCat.stalkMap f.1 x.1) :=
+  by 
+  fapply arrow.iso_mk'
+  · refine' Y.restrict_stalk_iso U.open_embedding ((f ∣_ U).1 x) ≪≫ TopCat.Presheaf.stalkCongr _ _
+    apply Inseparable.of_eq
+    exact morphism_restrict_base_coe f U x
+  · exact X.restrict_stalk_iso _ _
+  · apply TopCat.Presheaf.stalk_hom_ext
+    intro V hxV
+    simp only [TopCat.Presheaf.stalk_congr_hom, CategoryTheory.Category.assoc,
+      CategoryTheory.Iso.trans_hom]
+    erw [PresheafedSpace.restrict_stalk_iso_hom_eq_germ_assoc]
+    erw [PresheafedSpace.stalk_map_germ_assoc _ _ ⟨_, _⟩]
+    rw [TopCat.Presheaf.germ_stalk_specializes'_assoc]
+    erw [PresheafedSpace.stalk_map_germ _ _ ⟨_, _⟩]
+    erw [PresheafedSpace.restrict_stalk_iso_hom_eq_germ]
+    rw [morphism_restrict_c_app, category.assoc, TopCat.Presheaf.germ_res]
+    rfl
+#align algebraic_geometry.morphism_restrict_stalk_map AlgebraicGeometry.morphismRestrictStalkMap
 
 instance {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrier) [IsOpenImmersion f] :
     IsOpenImmersion (f ∣_ U) := by 

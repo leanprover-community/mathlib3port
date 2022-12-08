@@ -307,7 +307,7 @@ variable [CommSemiring R] [LocalRing R] [CommSemiring S] [LocalRing S]
            [(Term.app `IsLocalRingHom [`f])
             ","
             («term_⊆_»
-             (Set.Data.Set.Basic.term_''_
+             (Set.Data.Set.Image.term_''_
               `f
               " '' "
               (Term.proj (Term.app `maximalIdeal [`R]) "." (fieldIdx "1")))

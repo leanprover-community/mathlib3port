@@ -297,6 +297,19 @@ noncomputable instance : IsEquivalence ((whiskeringLeft C (Karoubi C) D).obj (to
       change is_equivalence (karoubi_universal C D).inverse
       infer_instance)
 
+variable {C D}
+
+theorem whiskering_left_obj_preimage_app {F G : Karoubi C ⥤ D}
+    (τ : toKaroubi _ ⋙ F ⟶ toKaroubi _ ⋙ G) (P : Karoubi C) :
+    (((whiskeringLeft _ _ _).obj (toKaroubi _)).preimage τ).app P =
+      F.map P.decompIdI ≫ τ.app P.x ≫ G.map P.decompIdP :=
+  by 
+  rw [nat_trans_eq]
+  congr 2
+  exact congr_app (((whiskering_left _ _ _).obj (to_karoubi _)).image_preimage τ) P.X
+#align
+  category_theory.idempotents.whiskering_left_obj_preimage_app CategoryTheory.Idempotents.whiskering_left_obj_preimage_app
+
 end IsIdempotentComplete
 
 end Idempotents

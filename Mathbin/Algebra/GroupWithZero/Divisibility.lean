@@ -10,6 +10,10 @@ import Mathbin.Algebra.Divisibility.Units
 /-!
 # Divisibility in groups with zero.
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/870
+> Any changes to this file require a corresponding PR to mathlib4.
+
 Lemmas about divisibility in groups and monoids with zero.
 
 -/

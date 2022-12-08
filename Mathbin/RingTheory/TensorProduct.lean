@@ -592,6 +592,23 @@ instance : CommRing (A ⊗[R] B) :=
       · intro x₁ x₂ h₁ h₂
         simp [mul_add, add_mul, h₁, h₂] }
 
+section RightAlgebra
+
+/-- `S ⊗[R] T` has a `T`-algebra structure. This is not a global instance or else the action of
+`S` on `S ⊗[R] S` would be ambiguous. -/
+@[reducible]
+def rightAlgebra : Algebra B (A ⊗[R] B) :=
+  (Algebra.TensorProduct.includeRight.toRingHom : B →+* A ⊗[R] B).toAlgebra
+#align algebra.tensor_product.right_algebra Algebra.TensorProduct.rightAlgebra
+
+attribute [local instance] tensor_product.right_algebra
+
+instance right_is_scalar_tower : IsScalarTower R B (A ⊗[R] B) :=
+  IsScalarTower.of_algebra_map_eq fun r => (Algebra.TensorProduct.includeRight.commutes r).symm
+#align algebra.tensor_product.right_is_scalar_tower Algebra.TensorProduct.right_is_scalar_tower
+
+end RightAlgebra
+
 end CommRing
 
 /-- Verify that typeclass search finds the ring structure on `A ⊗[ℤ] B`

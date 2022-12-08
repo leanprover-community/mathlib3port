@@ -805,6 +805,10 @@ theorem Specializes.trans : x ⤳ y → y ⤳ z → x ⤳ z :=
   le_trans
 #align specializes.trans Specializes.trans
 
+theorem specializes_of_eq (e : x = y) : x ⤳ y :=
+  e ▸ specializes_refl x
+#align specializes_of_eq specializes_of_eq
+
 theorem specializes_of_nhds_within (h₁ : 𝓝[s] x ≤ 𝓝[s] y) (h₂ : x ∈ s) : x ⤳ y :=
   specializes_iff_pure.2 <|
     calc
@@ -977,6 +981,10 @@ theorem refl (x : X) : x ~ x :=
 theorem rfl : x ~ x :=
   refl x
 #align inseparable.rfl Inseparable.rfl
+
+theorem of_eq (e : x = y) : Inseparable x y :=
+  e ▸ refl x
+#align inseparable.of_eq Inseparable.of_eq
 
 @[symm]
 theorem symm (h : x ~ y) : y ~ x :=

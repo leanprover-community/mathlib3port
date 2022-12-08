@@ -263,12 +263,11 @@ theorem IsAlgebraic.alg_hom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →�
     Function.Bijective f := by
   refine' ⟨f.to_ring_hom.injective, fun b => _⟩
   obtain ⟨p, hp, he⟩ := ha b
-  let f' : p.root_set L → p.root_set L :=
-    Set.MapsTo.restrict f _ _ (root_set_maps_to (map_ne_zero hp) f)
+  let f' : p.root_set L → p.root_set L := (root_set_maps_to' id f).restrict f _ _
   have : Function.Surjective f' :=
     Finite.injective_iff_surjective.1 fun _ _ h =>
       Subtype.eq <| f.to_ring_hom.injective <| Subtype.ext_iff.1 h
-  obtain ⟨a, ha⟩ := this ⟨b, (mem_root_set_iff hp b).2 he⟩
+  obtain ⟨a, ha⟩ := this ⟨b, mem_root_set.2 ⟨hp, he⟩⟩
   exact ⟨a, Subtype.ext_iff.1 ha⟩
 #align algebra.is_algebraic.alg_hom_bijective Algebra.IsAlgebraic.alg_hom_bijective
 

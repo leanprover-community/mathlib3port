@@ -7,6 +7,7 @@ import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.Algebra.GroupRingAction.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
+import Mathbin.Order.CompleteBooleanAlgebra
 
 /-!
 # Instances on punit

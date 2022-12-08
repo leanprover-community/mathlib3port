@@ -7,6 +7,7 @@ import Mathbin.Order.Filter.Pi
 import Mathbin.Topology.Bases
 import Mathbin.Data.Finset.Order
 import Mathbin.Data.Set.Accumulate
+import Mathbin.Data.Set.BoolIndicator
 import Mathbin.Topology.Bornology.Basic
 import Mathbin.Order.Minimal
 

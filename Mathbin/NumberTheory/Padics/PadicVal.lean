@@ -80,9 +80,14 @@ theorem self (hp : 1 < p) : padicValNat p p = 1 := by
   simp [padicValNat, neq_one, eq_zero_false]
 #align padic_val_nat.self padicValNat.self
 
-theorem eq_zero_of_not_dvd {n : ℕ} (h : ¬p ∣ n) : padicValNat p n = 0 := by
-  rw [padicValNat]
-  split_ifs <;> simp [multiplicity_eq_zero_of_not_dvd h]
+@[simp]
+theorem eq_zero_iff {n : ℕ} : padicValNat p n = 0 ↔ p = 1 ∨ n = 0 ∨ ¬p ∣ n := by
+  simp only [padicValNat, dite_eq_right_iff, PartEnat.get_eq_iff_eq_coe, Nat.cast_zero,
+    multiplicity_eq_zero, and_imp, pos_iff_ne_zero, Ne.def, ← or_iff_not_imp_left]
+#align padic_val_nat.eq_zero_iff padicValNat.eq_zero_iff
+
+theorem eq_zero_of_not_dvd {n : ℕ} (h : ¬p ∣ n) : padicValNat p n = 0 :=
+  eq_zero_iff.2 <| Or.inr <| Or.inr h
 #align padic_val_nat.eq_zero_of_not_dvd padicValNat.eq_zero_of_not_dvd
 
 end padicValNat
@@ -132,7 +137,7 @@ theorem self (hp : 1 < p) : padicValInt p p = 1 := by simp [padicValNat.self hp]
 
 theorem eq_zero_of_not_dvd {z : ℤ} (h : ¬(p : ℤ) ∣ z) : padicValInt p z = 0 := by
   rw [padicValInt, padicValNat]
-  split_ifs <;> simp [multiplicity.Int.nat_abs, multiplicity_eq_zero_of_not_dvd h]
+  split_ifs <;> simp [multiplicity.Int.nat_abs, multiplicity_eq_zero.2 h]
 #align padic_val_int.eq_zero_of_not_dvd padicValInt.eq_zero_of_not_dvd
 
 end padicValInt

@@ -235,8 +235,16 @@ theorem TensorProduct.is_base_change : IsBaseChange S (TensorProduct.mk R S M 1)
 variable {R M N S}
 
 /-- The base change of `M` along `R → S` is linearly equivalent to `S ⊗[R] M`. -/
-noncomputable def IsBaseChange.equiv : S ⊗[R] M ≃ₗ[R] N :=
-  h.Equiv
+noncomputable def IsBaseChange.equiv : S ⊗[R] M ≃ₗ[S] N :=
+  { h.Equiv with
+    map_smul' := fun r x => by 
+      change h.equiv (r • x) = r • h.equiv x
+      apply TensorProduct.induction_on x
+      · rw [smul_zero, map_zero, smul_zero]
+      · intro x y
+        simp [smul_tmul', Algebra.of_id_apply]
+      · intro x y hx hy
+        rw [map_add, smul_add, map_add, smul_add, hx, hy] }
 #align is_base_change.equiv IsBaseChange.equiv
 
 theorem IsBaseChange.equiv_tmul (s : S) (m : M) : h.Equiv (s ⊗ₜ m) = s • f m :=
@@ -428,6 +436,18 @@ theorem Algebra.IsPushout.comm : Algebra.IsPushout R S R' S' ↔ Algebra.IsPusho
 #align algebra.is_pushout.comm Algebra.IsPushout.comm
 
 variable {R S R'}
+
+attribute [local instance] Algebra.TensorProduct.rightAlgebra
+
+instance TensorProduct.is_pushout {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R S] [Algebra R T] : Algebra.IsPushout R S T (TensorProduct R S T) :=
+  ⟨TensorProduct.is_base_change R T S⟩
+#align tensor_product.is_pushout TensorProduct.is_pushout
+
+instance TensorProduct.is_pushout' {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R S] [Algebra R T] : Algebra.IsPushout R T S (TensorProduct R S T) :=
+  Algebra.IsPushout.symm inferInstance
+#align tensor_product.is_pushout' TensorProduct.is_pushout'
 
 /-- If `S' = S ⊗[R] R'`, then any pair of `R`-algebra homomorphisms `f : S → A` and `g : R' → A`
 such that `f x` and `g y` commutes for all `x, y` descends to a (unique) homomoprhism `S' → A`.

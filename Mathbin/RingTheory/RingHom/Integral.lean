@@ -34,7 +34,8 @@ theorem is_integral_respects_iso : RespectsIso fun R S _ _ f => f.is_integral :=
 
 theorem is_integral_stable_under_base_change :
     StableUnderBaseChange fun R S _ _ f => f.is_integral := by
-  introv R h x
+  refine' stable_under_base_change.mk _ is_integral_respects_iso _
+  introv h x
   skip
   apply TensorProduct.induction_on x
   · apply is_integral_zero

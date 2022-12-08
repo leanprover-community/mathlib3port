@@ -133,8 +133,9 @@ theorem stereo_inv_fun_aux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v
   suffices ‖(4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v‖ ^ 2 = (‖w‖ ^ 2 + 4) ^ 2 by
     have h₃ : 0 ≤ ‖stereoInvFunAux v w‖ := norm_nonneg _
     simpa [h₁, h₃, -one_pow] using this
-  simp [norm_add_sq_real, norm_smul, inner_smul_left, inner_smul_right,
-    inner_left_of_mem_orthogonal_singleton _ hw, mul_pow, Real.norm_eq_abs, hv]
+  rw [Submodule.mem_orthogonal_singleton_iff_inner_left] at hw
+  simp [norm_add_sq_real, norm_smul, inner_smul_left, inner_smul_right, hw, mul_pow,
+    Real.norm_eq_abs, hv]
   ring
 #align stereo_inv_fun_aux_mem stereo_inv_fun_aux_mem
 
@@ -194,7 +195,7 @@ theorem stereo_inv_fun_ne_north_pole (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) :
     stereoInvFun hv w ≠ (⟨v, by simp [hv]⟩ : sphere (0 : E) 1) := by
   refine' Subtype.ne_of_val_ne _
   rw [← inner_lt_one_iff_real_of_norm_one _ hv]
-  · have hw : ⟪v, w⟫_ℝ = 0 := inner_right_of_mem_orthogonal_singleton v w.2
+  · have hw : ⟪v, w⟫_ℝ = 0 := submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
     have hw' : (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4) < 1 := by
       refine' (inv_mul_lt_iff' _).mpr _
       · nlinarith
@@ -220,7 +221,7 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
   have split : ↑x = a • v + ↑y := by
     convert eq_sum_orthogonal_projection_self_orthogonal_complement (ℝ ∙ v) x
     exact (orthogonal_projection_unit_singleton ℝ hv x).symm
-  have hvy : ⟪v, y⟫_ℝ = 0 := inner_right_of_mem_orthogonal_singleton v y.2
+  have hvy : ⟪v, y⟫_ℝ = 0 := submodule.mem_orthogonal_singleton_iff_inner_right.mp y.2
   have pythag : 1 = a ^ 2 + ‖y‖ ^ 2 := by
     have hvy' : ⟪a • v, y⟫_ℝ = 0 := by simp [inner_smul_left, hvy]
     convert norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero _ _ hvy' using 2
@@ -267,7 +268,7 @@ theorem stereo_right_inv (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v
   · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 :=
       orthogonal_projection_orthogonal_complement_singleton_eq_zero v
     have h₂ : orthogonalProjection (ℝ ∙ v)ᗮ w = w := orthogonal_projection_mem_subspace_eq_self w
-    have h₃ : innerSL v w = (0 : ℝ) := inner_right_of_mem_orthogonal_singleton v w.2
+    have h₃ : innerSL v w = (0 : ℝ) := submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
     have h₄ : innerSL v v = (1 : ℝ) := by simp [real_inner_self_eq_norm_mul_norm, hv]
     simp [h₁, h₂, h₃, h₄, ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, mul_smul]
   · simp

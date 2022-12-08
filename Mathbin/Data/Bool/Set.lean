@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
 import Mathbin.Data.Bool.Basic
-import Mathbin.Data.Set.Basic
+import Mathbin.Data.Set.Image
 
 /-!
 # Booleans and set operations

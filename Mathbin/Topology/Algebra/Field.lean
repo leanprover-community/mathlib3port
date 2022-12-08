@@ -6,6 +6,7 @@ Authors: Patrick Massot, Scott Morrison
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.GroupWithZero
 import Mathbin.Topology.LocalExtr
+import Mathbin.FieldTheory.Subfield
 
 /-!
 # Topological fields
@@ -135,6 +136,42 @@ theorem continuous_units_inv : Continuous fun x : Kˣ => (↑x⁻¹ : K) :=
 #align topological_division_ring.continuous_units_inv TopologicalDivisionRing.continuous_units_inv
 
 end TopologicalDivisionRing
+
+section Subfield
+
+variable {α : Type _} [Field α] [TopologicalSpace α] [TopologicalDivisionRing α]
+
+/-- The (topological-space) closure of a subfield of a topological field is
+itself a subfield. -/
+def Subfield.topologicalClosure (K : Subfield α) : Subfield α :=
+  { K.toSubring.topologicalClosure with carrier := closure (K : Set α),
+    inv_mem' := by 
+      intro x hx
+      by_cases h : x = 0
+      · rwa [h, inv_zero, ← h]
+      · convert mem_closure_image (continuous_at_inv₀ h) hx using 2
+        ext x
+        constructor
+        · exact fun hx => ⟨x⁻¹, ⟨K.inv_mem hx, inv_inv x⟩⟩
+        · rintro ⟨y, ⟨hy, rfl⟩⟩
+          exact K.inv_mem hy }
+#align subfield.topological_closure Subfield.topologicalClosure
+
+theorem Subfield.le_topological_closure (s : Subfield α) : s ≤ s.topologicalClosure :=
+  subset_closure
+#align subfield.le_topological_closure Subfield.le_topological_closure
+
+theorem Subfield.isClosedTopologicalClosure (s : Subfield α) :
+    IsClosed (s.topologicalClosure : Set α) :=
+  isClosedClosure
+#align subfield.is_closed_topological_closure Subfield.isClosedTopologicalClosure
+
+theorem Subfield.topological_closure_minimal (s : Subfield α) {t : Subfield α} (h : s ≤ t)
+    (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=
+  closure_minimal h ht
+#align subfield.topological_closure_minimal Subfield.topological_closure_minimal
+
+end Subfield
 
 section affineHomeomorph
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Mathbin.Algebra.CharP.Basic
+import Mathbin.Data.Nat.Parity
 import Mathbin.Algebra.Group.ConjFinite
 import Mathbin.Tactic.FinCases
 
@@ -809,6 +810,34 @@ theorem val_eq_zero : ∀ {n : ℕ} (a : Zmod n), a.val = 0 ↔ a = 0
     exact Iff.rfl
 #align zmod.val_eq_zero Zmod.val_eq_zero
 
+theorem neg_eq_self_iff {n : ℕ} (a : Zmod n) : -a = a ↔ a = 0 ∨ 2 * a.val = n := by
+  rw [neg_eq_iff_add_eq_zero, ← two_mul]
+  cases n
+  · rw [@mul_eq_zero ℤ, @mul_eq_zero ℕ, val_eq_zero]
+    exact
+      ⟨fun h => h.elim (by decide) Or.inl, fun h =>
+        Or.inr ((h.elim id) fun h => h.elim (by decide) id)⟩
+  conv_lhs =>
+    rw [← a.nat_cast_zmod_val, ← Nat.cast_two, ← Nat.cast_mul, nat_coe_zmod_eq_zero_iff_dvd]
+  constructor
+  · rintro ⟨m, he⟩
+    cases m
+    · rw [mul_zero, mul_eq_zero] at he
+      rcases he with (⟨⟨⟩⟩ | he)
+      exact Or.inl (a.val_eq_zero.1 he)
+    cases m
+    · right
+      rwa [mul_one] at he
+    refine' (a.val_lt.not_le <| Nat.le_of_mul_le_mul_left _ zero_lt_two).elim
+    rw [he, mul_comm]
+    apply Nat.mul_le_mul_left
+    decide
+  · rintro (rfl | h)
+    · rw [val_zero, mul_zero]
+      apply dvd_zero
+    · rw [h]
+#align zmod.neg_eq_self_iff Zmod.neg_eq_self_iff
+
 theorem val_cast_of_lt {n : ℕ} {a : ℕ} (h : a < n) : (a : Zmod n).val = a := by
   rw [val_nat_cast, Nat.mod_eq_of_lt h]
 #align zmod.val_cast_of_lt Zmod.val_cast_of_lt
@@ -863,29 +892,64 @@ theorem coe_val_min_abs : ∀ {n : ℕ} (x : Zmod n), (x.valMinAbs : Zmod n) = x
     · rw [Int.cast_sub, Int.cast_ofNat, nat_cast_zmod_val, Int.cast_ofNat, nat_cast_self, sub_zero]
 #align zmod.coe_val_min_abs Zmod.coe_val_min_abs
 
+theorem injective_val_min_abs {n : ℕ} : (valMinAbs : Zmod n → ℤ).Injective :=
+  Function.injective_iff_has_left_inverse.2 ⟨_, coe_val_min_abs⟩
+#align zmod.injective_val_min_abs Zmod.injective_val_min_abs
+
+theorem Nat.le_div_two_iff_mul_two_le {n m : ℕ} : m ≤ n / 2 ↔ (m : ℤ) * 2 ≤ n := by
+  rw [Nat.le_div_iff_mul_le zero_lt_two, ← Int.coe_nat_le, Int.ofNat_mul, Nat.cast_two]
+#align nat.le_div_two_iff_mul_two_le Nat.le_div_two_iff_mul_two_le
+
+theorem val_min_abs_nonneg_iff {n : ℕ} [NeZero n] (x : Zmod n) : 0 ≤ x.valMinAbs ↔ x.val ≤ n / 2 :=
+  by 
+  rw [val_min_abs_def_pos]; split_ifs
+  · exact iff_of_true (Nat.cast_nonneg _) h
+  · exact iff_of_false (sub_lt_zero.2 <| Int.coe_nat_lt.2 x.val_lt).not_le h
+#align zmod.val_min_abs_nonneg_iff Zmod.val_min_abs_nonneg_iff
+
+theorem val_min_abs_mul_two_eq_iff {n : ℕ} (a : Zmod n) : a.valMinAbs * 2 = n ↔ 2 * a.val = n := by
+  cases n; · simp
+  by_cases a.val ≤ n.succ / 2
+  · rw [val_min_abs, if_pos h, ← Int.coe_nat_inj', Nat.cast_mul, Nat.cast_two, mul_comm]
+  apply iff_of_false (fun he => _) (mt _ h)
+  · rw [← a.val_min_abs_nonneg_iff, ← mul_nonneg_iff_left_nonneg_of_pos, he] at h
+    exacts[h (Nat.cast_nonneg _), zero_lt_two]
+  · rw [mul_comm]
+    exact fun h => (Nat.le_div_iff_mul_le zero_lt_two).2 h.le
+#align zmod.val_min_abs_mul_two_eq_iff Zmod.val_min_abs_mul_two_eq_iff
+
+theorem val_min_abs_mem_Ioc {n : ℕ} [NeZero n] (x : Zmod n) :
+    x.valMinAbs * 2 ∈ Set.ioc (-n : ℤ) n := by
+  simp_rw [val_min_abs_def_pos, Nat.le_div_two_iff_mul_two_le]; split_ifs
+  · refine' ⟨(neg_lt_zero.2 <| by exact_mod_cast NeZero.pos n).trans_le (mul_nonneg _ _), h⟩
+    exacts[Nat.cast_nonneg _, zero_le_two]
+  · refine' ⟨_, trans (mul_nonpos_of_nonpos_of_nonneg _ zero_le_two) <| Nat.cast_nonneg _⟩
+    · linarith only [h]
+    · rw [sub_nonpos, Int.coe_nat_le]
+      exact x.val_lt.le
+#align zmod.val_min_abs_mem_Ioc Zmod.val_min_abs_mem_Ioc
+
+theorem val_min_abs_spec {n : ℕ} [NeZero n] (x : Zmod n) (y : ℤ) :
+    x.valMinAbs = y ↔ x = y ∧ y * 2 ∈ Set.ioc (-n : ℤ) n :=
+  ⟨by 
+    rintro rfl
+    exact ⟨x.coe_val_min_abs.symm, x.val_min_abs_mem_Ioc⟩, fun h => by
+    rw [← sub_eq_zero]
+    apply @Int.eq_zero_of_abs_lt_dvd n
+    · rw [← int_coe_zmod_eq_zero_iff_dvd, Int.cast_sub, coe_val_min_abs, h.1, sub_self]
+    rw [← mul_lt_mul_right (@zero_lt_two ℤ _ _ _ _ _)]
+    nth_rw 1 [← abs_eq_self.2 (@zero_le_two ℤ _ _ _ _)]
+    rw [← abs_mul, sub_mul, abs_lt];
+    constructor <;> linarith only [x.val_min_abs_mem_Ioc.1, x.val_min_abs_mem_Ioc.2, h.2.1, h.2.2]⟩
+#align zmod.val_min_abs_spec Zmod.val_min_abs_spec
+
 theorem nat_abs_val_min_abs_le {n : ℕ} [NeZero n] (x : Zmod n) : x.valMinAbs.natAbs ≤ n / 2 := by
-  rw [Zmod.val_min_abs_def_pos]
-  split_ifs with h
-  · exact h
-  have : (x.val - n : ℤ) ≤ 0 := by 
-    rw [sub_nonpos, Int.coe_nat_le]
-    exact x.val_le
-  rw [← Int.coe_nat_le, Int.ofNat_natAbs_of_nonpos this, neg_sub]
-  conv_lhs => 
-    congr
-    rw [← Nat.mod_add_div n 2, Int.ofNat_add, Int.ofNat_mul, Int.ofNat_bit0, Int.ofNat_one]
-  suffices ((n % 2 : ℕ) + n / 2 : ℤ) ≤ val x by
-    rw [← sub_nonneg] at this⊢
-    apply le_trans this (le_of_eq _)
-    ring
-  norm_cast
-  calc
-    (n : ℕ) % 2 + n / 2 ≤ 1 + n / 2 :=
-      Nat.add_le_add_right (Nat.le_of_lt_succ (Nat.mod_lt _ (by decide))) _
-    _ ≤ x.val := by 
-      rw [add_comm]
-      exact Nat.succ_le_of_lt (lt_of_not_ge h)
-    
+  rw [Nat.le_div_two_iff_mul_two_le]
+  cases x.val_min_abs.nat_abs_eq
+  · rw [← h]
+    exact x.val_min_abs_mem_Ioc.2
+  · rw [← neg_le_neg_iff, ← neg_mul, ← h]
+    exact x.val_min_abs_mem_Ioc.1.le
 #align zmod.nat_abs_val_min_abs_le Zmod.nat_abs_val_min_abs_le
 
 @[simp]
@@ -897,17 +961,8 @@ theorem val_min_abs_zero : ∀ n, (0 : Zmod n).valMinAbs = 0
 @[simp]
 theorem val_min_abs_eq_zero {n : ℕ} (x : Zmod n) : x.valMinAbs = 0 ↔ x = 0 := by
   cases n; · simp
-  constructor
-  · simp only [val_min_abs_def_pos, Int.ofNat_succ]
-    split_ifs with h h <;> intro h0
-    · apply val_injective
-      rwa [Int.coe_nat_eq_zero] at h0
-    · apply absurd h0
-      rw [sub_eq_zero]
-      apply ne_of_lt
-      exact_mod_cast x.val_lt
-  · rintro rfl
-    rw [val_min_abs_zero]
+  rw [← val_min_abs_zero n.succ]
+  apply injective_val_min_abs.eq_iff
 #align zmod.val_min_abs_eq_zero Zmod.val_min_abs_eq_zero
 
 theorem nat_cast_nat_abs_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
@@ -915,48 +970,37 @@ theorem nat_cast_nat_abs_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
   have : (a.val : ℤ) - n ≤ 0 := by 
     erw [sub_nonpos, Int.coe_nat_le]
     exact a.val_le
-  rw [Zmod.val_min_abs_def_pos]
+  rw [val_min_abs_def_pos]
   split_ifs
   · rw [Int.natAbs_ofNat, nat_cast_zmod_val]
-  · rw [← Int.cast_ofNat, Int.ofNat_natAbs_of_nonpos this, Int.cast_neg, Int.cast_sub]
-    rw [Int.cast_ofNat, Int.cast_ofNat, nat_cast_self, sub_zero, nat_cast_zmod_val]
+  ·
+    rw [← Int.cast_ofNat, Int.ofNat_natAbs_of_nonpos this, Int.cast_neg, Int.cast_sub,
+      Int.cast_ofNat, Int.cast_ofNat, nat_cast_self, sub_zero, nat_cast_zmod_val]
 #align zmod.nat_cast_nat_abs_val_min_abs Zmod.nat_cast_nat_abs_val_min_abs
+
+theorem val_min_abs_neg_of_ne_half {n : ℕ} {a : Zmod n} (ha : 2 * a.val ≠ n) :
+    (-a).valMinAbs = -a.valMinAbs := by
+  cases eq_zero_or_neZero n;
+  · subst h
+    rfl
+  refine' (val_min_abs_spec _ _).2 ⟨_, _, _⟩
+  · rw [Int.cast_neg, coe_val_min_abs]
+  · rw [neg_mul, neg_lt_neg_iff]
+    exact a.val_min_abs_mem_Ioc.2.lt_of_ne (mt a.val_min_abs_mul_two_eq_iff.1 ha)
+  · linarith only [a.val_min_abs_mem_Ioc.1]
+#align zmod.val_min_abs_neg_of_ne_half Zmod.val_min_abs_neg_of_ne_half
 
 @[simp]
 theorem nat_abs_val_min_abs_neg {n : ℕ} (a : Zmod n) : (-a).valMinAbs.natAbs = a.valMinAbs.natAbs :=
   by 
-  cases n
-  · simp only [Int.natAbs_neg, val_min_abs_def_zero]
-  by_cases ha0 : a = 0
-  · rw [ha0, neg_zero]
-  by_cases haa : -a = a
-  · rw [haa]
-  suffices hpa : (n + 1 : ℕ) - a.val ≤ (n + 1) / 2 ↔ (n + 1 : ℕ) / 2 < a.val
-  · rw [val_min_abs_def_pos, val_min_abs_def_pos]
-    rw [← not_le] at hpa
-    simp only [if_neg ha0, neg_val, hpa, Int.ofNat_sub a.val_le]
-    split_ifs
-    all_goals rw [← Int.natAbs_neg]; congr 1; ring
-  suffices (n + 1 : ℕ) % 2 + 2 * ((n + 1) / 2) - a.val ≤ (n + 1) / 2 ↔ (n + 1 : ℕ) / 2 < a.val by
-    rwa [Nat.mod_add_div] at this
-  suffices (n + 1) % 2 + (n + 1) / 2 ≤ val a ↔ (n + 1) / 2 < val a by
-    rw [tsub_le_iff_tsub_le, two_mul, ← add_assoc, add_tsub_cancel_right, this]
-  cases' (n + 1 : ℕ).mod_two_eq_zero_or_one with hn0 hn1
-  · constructor
-    · intro h
-      apply lt_of_le_of_ne (le_trans (Nat.le_add_left _ _) h)
-      contrapose! haa
-      rw [← Zmod.nat_cast_zmod_val a, ← haa, neg_eq_iff_add_eq_zero, ← Nat.cast_add]
-      rw [CharP.cast_eq_zero_iff (Zmod (n + 1)) (n + 1)]
-      rw [← two_mul, ← zero_add (2 * _), ← hn0, Nat.mod_add_div]
-    · rw [hn0, zero_add]
-      exact le_of_lt
-  · rw [hn1, add_comm, Nat.succ_le_iff]
+  by_cases h2a : 2 * a.val = n
+  · rw [a.neg_eq_self_iff.2 (Or.inr h2a)]
+  · rw [val_min_abs_neg_of_ne_half h2a, Int.natAbs_neg]
 #align zmod.nat_abs_val_min_abs_neg Zmod.nat_abs_val_min_abs_neg
 
 theorem val_eq_ite_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
     (a.val : ℤ) = a.valMinAbs + if a.val ≤ n / 2 then 0 else n := by
-  rw [Zmod.val_min_abs_def_pos]
+  rw [val_min_abs_def_pos]
   split_ifs <;> simp only [add_zero, sub_add_cancel]
 #align zmod.val_eq_ite_val_min_abs Zmod.val_eq_ite_val_min_abs
 
@@ -966,9 +1010,48 @@ theorem prime_ne_zero (p q : ℕ) [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq :
     hp.1.coprime_iff_not_dvd, Nat.coprime_primes hp.1 hq.1]
 #align zmod.prime_ne_zero Zmod.prime_ne_zero
 
-end Zmod
+theorem val_min_abs_nat_abs_eq_min {n : ℕ} [hpos : NeZero n] (a : Zmod n) :
+    a.valMinAbs.natAbs = min a.val (n - a.val) := by
+  rw [val_min_abs_def_pos]
+  split_ifs with h h
+  · rw [Int.natAbs_ofNat]
+    symm
+    apply
+      min_eq_left (le_trans h (le_trans (Nat.half_le_of_sub_le_half _) (Nat.sub_le_sub_left n h)))
+    rw [Nat.sub_sub_self (Nat.div_le_self _ _)]
+  · rw [← Int.natAbs_neg, neg_sub, ← Nat.cast_sub a.val_le]
+    symm
+    apply
+      min_eq_right
+        (le_trans (le_trans (Nat.sub_le_sub_left n (lt_of_not_ge h)) (Nat.le_half_of_half_lt_sub _))
+          (le_of_not_ge h))
+    rw [Nat.sub_sub_self (Nat.div_lt_self (lt_of_le_of_ne' (Nat.zero_le _) hpos.1) one_lt_two)]
+    apply Nat.lt_succ_self
+#align zmod.val_min_abs_nat_abs_eq_min Zmod.val_min_abs_nat_abs_eq_min
 
-namespace Zmod
+theorem nat_abs_min_of_le_div_two (n : ℕ) (x y : ℤ) (he : (x : Zmod n) = y)
+    (hl : x.natAbs ≤ n / 2) : x.natAbs ≤ y.natAbs := by
+  rw [int_coe_eq_int_coe_iff_dvd_sub] at he
+  obtain ⟨m, he⟩ := he
+  rw [sub_eq_iff_eq_add] at he
+  subst he
+  obtain rfl | hm := eq_or_ne m 0
+  · rw [mul_zero, zero_add]
+  apply hl.trans
+  rw [← add_le_add_iff_right x.nat_abs]
+  refine' trans (trans ((add_le_add_iff_left _).2 hl) _) (Int.natAbs_sub_le _ _)
+  rw [add_sub_cancel, Int.natAbs_mul, Int.natAbs_ofNat]
+  refine' trans _ (Nat.le_mul_of_pos_right <| Int.natAbs_pos_of_ne_zero hm)
+  rw [← mul_two]; apply Nat.div_mul_le_self
+#align zmod.nat_abs_min_of_le_div_two Zmod.nat_abs_min_of_le_div_two
+
+theorem nat_abs_val_min_abs_add_le {n : ℕ} (a b : Zmod n) :
+    (a + b).valMinAbs.natAbs ≤ (a.valMinAbs + b.valMinAbs).natAbs := by
+  cases n; · rfl
+  apply nat_abs_min_of_le_div_two n.succ
+  · simp_rw [Int.cast_add, coe_val_min_abs]
+  · apply nat_abs_val_min_abs_le
+#align zmod.nat_abs_val_min_abs_add_le Zmod.nat_abs_val_min_abs_add_le
 
 variable (p : ℕ) [Fact p.Prime]
 

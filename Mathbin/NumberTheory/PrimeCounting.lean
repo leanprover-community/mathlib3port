@@ -3,7 +3,7 @@ Copyright (c) 2021 Bolton Bailey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 -/
-import Mathbin.Data.Nat.Prime
+import Mathbin.Data.Nat.PrimeFin
 import Mathbin.Data.Nat.Totient
 import Mathbin.Data.Finset.LocallyFinite
 import Mathbin.Data.Nat.Count

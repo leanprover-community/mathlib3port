@@ -295,6 +295,10 @@ theorem dense_image {s : Set α} : Dense (e '' s) ↔ Dense s :=
 
 end DenseEmbedding
 
+theorem dense_embedding_id {α : Type _} [TopologicalSpace α] : DenseEmbedding (id : α → α) :=
+  { embedding_id with dense := dense_range_id }
+#align dense_embedding_id dense_embedding_id
+
 theorem Dense.dense_embedding_coe [TopologicalSpace α] {s : Set α} (hs : Dense s) :
     DenseEmbedding (coe : s → α) :=
   { embedding_subtype_coe with dense := hs.dense_range_coe }

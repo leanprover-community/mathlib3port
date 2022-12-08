@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Mathbin.Order.Hom.Basic
 import Mathbin.Logic.Equiv.Set
-import Mathbin.Data.Set.Basic
+import Mathbin.Data.Set.Image
 
 /-!
 # Order homomorphisms and sets

@@ -202,8 +202,7 @@ theorem inner_right_angle_rotation_aux₁_right (x y : E) :
 /-- Auxiliary construction for `orientation.right_angle_rotation`, rotation by 90 degrees in an
 oriented real inner product space of dimension 2. -/
 def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
-  { -- hw'₀,
-      o.rightAngleRotationAux₁ with
+  { o.rightAngleRotationAux₁ with
     norm_map' := fun x => by 
       dsimp
       refine' le_antisymm _ _
@@ -224,7 +223,7 @@ def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
           have : finrank ℝ E = 2 := Fact.out _
           linarith
         obtain ⟨w, hw₀⟩ : ∃ w : Kᗮ, w ≠ 0 := exists_ne 0
-        have hw' : ⟪x, (w : E)⟫ = 0 := inner_right_of_mem_orthogonal_singleton x w.2
+        have hw' : ⟪x, (w : E)⟫ = 0 := submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
         have hw : (w : E) ≠ 0 := fun h => hw₀ (submodule.coe_eq_zero.mp h)
         refine' le_of_mul_le_mul_right _ (by rwa [norm_pos_iff] : 0 < ‖(w : E)‖)
         rw [← o.abs_area_form_of_orthogonal hw']

@@ -9,6 +9,7 @@ import Mathbin.Logic.Equiv.TransferInstance
 import Mathbin.RingTheory.Localization.LocalizationLocalization
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.Topology.Sheaves.Functors
+import Mathbin.Algebra.Module.LocalizedModule
 
 /-!
 # $Spec$ as a functor to locally ringed spaces.
@@ -287,7 +288,7 @@ section SpecΓ
 open AlgebraicGeometry.LocallyRingedSpaceCat
 
 /-- The counit morphism `R ⟶ Γ(Spec R)` given by `algebraic_geometry.structure_sheaf.to_open`.  -/
-@[simps]
+@[simps (config := { rhsMd := Tactic.Transparency.semireducible })]
 def toSpecΓ (R : CommRingCat) : R ⟶ Γ.obj (op (SpecCat.toLocallyRingedSpace.obj (op R))) :=
   StructureSheaf.toOpen R ⊤
 #align algebraic_geometry.to_Spec_Γ AlgebraicGeometry.toSpecΓ
@@ -334,6 +335,121 @@ theorem Spec_map_localization_is_iso (R : CommRingCat) (M : Submonoid R)
   infer_instance
 #align
   algebraic_geometry.Spec_map_localization_is_iso AlgebraicGeometry.Spec_map_localization_is_iso
+
+namespace StructureSheaf
+
+variable {R S : CommRingCat.{u}} (f : R ⟶ S) (p : PrimeSpectrum R)
+
+/-- For an algebra `f : R →+* S`, this is the ring homomorphism `S →+* (f∗ 𝒪ₛ)ₚ` for a `p : Spec R`.
+This is shown to be the localization at `p` in `is_localized_module_to_pushforward_stalk_alg_hom`.
+-/
+def toPushforwardStalk : S ⟶ (SpecCat.topMap f _* (structureSheaf S).1).stalk p :=
+  StructureSheaf.toOpen S ⊤ ≫
+    @TopCat.Presheaf.germ _ _ _ _ (SpecCat.topMap f _* (structureSheaf S).1) ⊤ ⟨p, trivial⟩
+#align
+  algebraic_geometry.structure_sheaf.to_pushforward_stalk AlgebraicGeometry.StructureSheaf.toPushforwardStalk
+
+@[reassoc]
+theorem to_pushforward_stalk_comp :
+    f ≫ StructureSheaf.toPushforwardStalk f p =
+      StructureSheaf.toStalk R p ≫
+        (TopCat.Presheaf.stalkFunctor _ _).map (SpecCat.sheafedSpaceMap f).c :=
+  by 
+  rw [structure_sheaf.to_stalk]
+  erw [category.assoc]
+  rw [TopCat.Presheaf.stalk_functor_map_germ]
+  exact Spec_Γ_naturality_assoc f _
+#align
+  algebraic_geometry.structure_sheaf.to_pushforward_stalk_comp AlgebraicGeometry.StructureSheaf.to_pushforward_stalk_comp
+
+instance : Algebra R ((SpecCat.topMap f _* (structureSheaf S).1).stalk p) :=
+  (f ≫ StructureSheaf.toPushforwardStalk f p).toAlgebra
+
+theorem algebra_map_pushforward_stalk :
+    algebraMap R ((SpecCat.topMap f _* (structureSheaf S).1).stalk p) =
+      f ≫ StructureSheaf.toPushforwardStalk f p :=
+  rfl
+#align
+  algebraic_geometry.structure_sheaf.algebra_map_pushforward_stalk AlgebraicGeometry.StructureSheaf.algebra_map_pushforward_stalk
+
+variable (R S) [Algebra R S]
+
+/--
+This is the `alg_hom` version of `to_pushforward_stalk`, which is the map `S ⟶ (f∗ 𝒪ₛ)ₚ` for some
+algebra `R ⟶ S` and some `p : Spec R`.
+-/
+@[simps]
+def toPushforwardStalkAlgHom :
+    S →ₐ[R] (SpecCat.topMap (algebraMap R S) _* (structureSheaf S).1).stalk p :=
+  { StructureSheaf.toPushforwardStalk (algebraMap R S) p with commutes' := fun _ => rfl }
+#align
+  algebraic_geometry.structure_sheaf.to_pushforward_stalk_alg_hom AlgebraicGeometry.StructureSheaf.toPushforwardStalkAlgHom
+
+theorem is_localized_module_to_pushforward_stalk_alg_hom_aux (y) :
+    ∃ x : S × p.asIdeal.primeCompl, x.2 • y = toPushforwardStalkAlgHom R S p x.1 := by
+  obtain ⟨U, hp, s, e⟩ := TopCat.Presheaf.germ_exist _ _ y
+  obtain ⟨_, ⟨r, rfl⟩, hpr, hrU⟩ :=
+    PrimeSpectrum.is_topological_basis_basic_opens.exists_subset_of_mem_open (show p ∈ U.1 from hp)
+      U.2
+  change PrimeSpectrum.basicOpen r ≤ U at hrU
+  replace e :=
+    ((Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).germ_res_apply (hom_of_le hrU)
+          ⟨p, hpr⟩ _).trans
+      e
+  set s' := (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).map (hom_of_le hrU).op s with h
+  rw [← h] at e
+  clear_value s'; clear! U
+  obtain ⟨⟨s, ⟨_, n, rfl⟩⟩, hsn⟩ :=
+    @IsLocalization.surj _ _ _ _ _ _
+      (structure_sheaf.is_localization.to_basic_open S <| algebraMap R S r) s'
+  refine' ⟨⟨s, ⟨r, hpr⟩ ^ n⟩, _⟩
+  rw [Submonoid.smul_def, Algebra.smul_def, algebra_map_pushforward_stalk, to_pushforward_stalk,
+    comp_apply, comp_apply]
+  iterate 2
+    erw [←
+      (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).germ_res_apply (hom_of_le le_top)
+        ⟨p, hpr⟩]
+  rw [← e, ← map_mul, mul_comm]
+  dsimp only [Subtype.coe_mk] at hsn
+  rw [← map_pow (algebraMap R S)] at hsn
+  congr 1
+#align
+  algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom_aux AlgebraicGeometry.StructureSheaf.is_localized_module_to_pushforward_stalk_alg_hom_aux
+
+instance is_localized_module_to_pushforward_stalk_alg_hom :
+    IsLocalizedModule p.asIdeal.primeCompl (toPushforwardStalkAlgHom R S p).toLinearMap := by
+  apply IsLocalizedModule.mk_of_algebra
+  · intro x hx
+    rw [algebra_map_pushforward_stalk, to_pushforward_stalk_comp, comp_apply]
+    exact (IsLocalization.map_units ((structure_sheaf R).Presheaf.stalk p) ⟨x, hx⟩).map _
+  · apply is_localized_module_to_pushforward_stalk_alg_hom_aux
+  · intro x hx
+    rw [to_pushforward_stalk_alg_hom_apply, RingHom.to_fun_eq_coe, ←
+      (to_pushforward_stalk (algebraMap R S) p).map_zero, to_pushforward_stalk, comp_apply,
+      comp_apply, map_zero] at hx
+    obtain ⟨U, hpU, i₁, i₂, e⟩ := TopCat.Presheaf.germ_eq _ _ _ _ _ _ hx
+    obtain ⟨_, ⟨r, rfl⟩, hpr, hrU⟩ :=
+      PrimeSpectrum.is_topological_basis_basic_opens.exists_subset_of_mem_open
+        (show p ∈ U.1 from hpU) U.2
+    change PrimeSpectrum.basicOpen r ≤ U at hrU
+    apply_fun (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).map (hom_of_le hrU).op  at e
+    simp only [TopCat.Presheaf.pushforward_obj_map, functor.op_map, map_zero, ← comp_apply,
+      to_open_res] at e
+    have : to_open S (PrimeSpectrum.basicOpen <| algebraMap R S r) x = 0 := by
+      refine' Eq.trans _ e
+      rfl
+    have :=
+      (@IsLocalization.mk'_one _ _ _ _ _ _
+            (structure_sheaf.is_localization.to_basic_open S <| algebraMap R S r) x).trans
+        this
+    obtain ⟨⟨_, n, rfl⟩, e⟩ := (IsLocalization.mk'_eq_zero_iff _ _).mp this
+    refine' ⟨⟨r, hpr⟩ ^ n, _⟩
+    rw [Submonoid.smul_def, Algebra.smul_def, Submonoid.coe_pow, Subtype.coe_mk, mul_comm, map_pow]
+    exact e
+#align
+  algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom AlgebraicGeometry.StructureSheaf.is_localized_module_to_pushforward_stalk_alg_hom
+
+end StructureSheaf
 
 end AlgebraicGeometry
 

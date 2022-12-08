@@ -6,7 +6,6 @@ Authors: Johannes Hölzl, Jens Wagemaker
 import Mathbin.Algebra.Divisibility.Basic
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Parity
-import Mathbin.Order.Atoms
 
 /-!
 # Associated, prime, and irreducible elements.
@@ -1169,28 +1168,6 @@ theorem is_unit_of_associated_mul [CancelCommMonoidWithZero α] {p b : α} (h : 
   rwa [← mul_assoc, mul_one]
 #align is_unit_of_associated_mul is_unit_of_associated_mul
 
-theorem Associates.is_atom_iff [CancelCommMonoidWithZero α] {p : Associates α} (h₁ : p ≠ 0) :
-    IsAtom p ↔ Irreducible p :=
-  ⟨fun hp =>
-    ⟨by simpa only [Associates.is_unit_iff_eq_one] using hp.1, fun a b h =>
-      (hp.le_iff.mp ⟨_, h⟩).casesOn (fun ha => Or.inl (a.is_unit_iff_eq_one.mpr ha)) fun ha =>
-        Or.inr
-          (show IsUnit b by 
-            rw [ha] at h
-            apply is_unit_of_associated_mul (show Associated (p * b) p by conv_rhs => rw [h]) h₁)⟩,
-    fun hp =>
-    ⟨by simpa only [Associates.is_unit_iff_eq_one, Associates.bot_eq_one] using hp.1,
-      fun b ⟨⟨a, hab⟩, hb⟩ =>
-      (hp.is_unit_or_is_unit hab).casesOn
-        (fun hb => show b = ⊥ by rwa [Associates.is_unit_iff_eq_one, ← Associates.bot_eq_one] at hb)
-        fun ha =>
-        absurd
-          (show p ∣ b from
-            ⟨(ha.Unit⁻¹ : Units _), by
-              simp [hab] <;> rw [mul_assoc] <;> rw [IsUnit.mul_val_inv ha] <;> rw [mul_one]⟩)
-          hb⟩⟩
-#align associates.is_atom_iff Associates.is_atom_iff
-
 theorem DvdNotUnit.not_associated [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q) :
     ¬Associated p q := by 
   rintro ⟨a, rfl⟩
@@ -1231,3 +1208,4 @@ theorem dvd_prime_pow [CancelCommMonoidWithZero α] {p q : α} (hp : Prime p) (n
 
 end CancelCommMonoidWithZero
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/

@@ -90,7 +90,7 @@ namespace IsLocallyConstant
              ","
              (Term.app
               `IsOpen
-              [(Set.Data.Set.Basic.«term_⁻¹'_» `f " ⁻¹' " («term{_}» "{" [`y] "}"))]))
+              [(Set.Data.Set.Image.«term_⁻¹'_» `f " ⁻¹' " («term{_}» "{" [`y] "}"))]))
             ","
             (Term.forall
              "∀"

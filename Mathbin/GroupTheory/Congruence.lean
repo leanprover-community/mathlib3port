@@ -1017,6 +1017,12 @@ protected theorem pow {M : Type _} [Monoid M] (c : Con M) :
 instance {M : Type _} [MulOneClass M] (c : Con M) :
     One c.Quotient where one := ((1 : M) : c.Quotient)
 
+@[to_additive]
+theorem smul {α M : Type _} [MulOneClass M] [HasSmul α M] [IsScalarTower α M M] (c : Con M) (a : α)
+    {w x : M} (h : c w x) : c (a • w) (a • x) := by
+  simpa only [smul_one_mul] using c.mul (c.refl' (a • 1 : M)) h
+#align con.smul Con.smul
+
 instance AddCon.Quotient.hasNsmul {M : Type _} [AddMonoid M] (c : AddCon M) :
     HasSmul ℕ c.Quotient where smul n := (Quotient.map' ((· • ·) n)) fun x y => c.nsmul n
 #align add_con.quotient.has_nsmul AddCon.Quotient.hasNsmul
@@ -1166,6 +1172,35 @@ theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient
 #align con.induction_on_units Con.induction_on_units
 
 end Units
+
+section Actions
+
+@[to_additive]
+instance hasSmul {α M : Type _} [MulOneClass M] [HasSmul α M] [IsScalarTower α M M] (c : Con M) :
+    HasSmul α c.Quotient where smul a := (Quotient.map' ((· • ·) a)) fun x y => c.smul a
+#align con.has_smul Con.hasSmul
+
+@[to_additive]
+theorem coe_smul {α M : Type _} [MulOneClass M] [HasSmul α M] [IsScalarTower α M M] (c : Con M)
+    (a : α) (x : M) : (↑(a • x) : c.Quotient) = a • ↑x :=
+  rfl
+#align con.coe_smul Con.coe_smul
+
+@[to_additive]
+instance mulAction {α M : Type _} [Monoid α] [MulOneClass M] [MulAction α M] [IsScalarTower α M M]
+    (c : Con M) : MulAction α c.Quotient where 
+  smul := (· • ·)
+  one_smul := Quotient.ind' fun x => congr_arg Quotient.mk' <| one_smul _ _
+  mul_smul a₁ a₂ := Quotient.ind' fun x => congr_arg Quotient.mk' <| mul_smul _ _ _
+#align con.mul_action Con.mulAction
+
+instance mulDistribMulAction {α M : Type _} [Monoid α] [Monoid M] [MulDistribMulAction α M]
+    [IsScalarTower α M M] (c : Con M) : MulDistribMulAction α c.Quotient :=
+  { c.MulAction with smul := (· • ·), smul_one := fun r => congr_arg Quotient.mk' <| smul_one _,
+    smul_mul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk' <| smul_mul' _ _ _ }
+#align con.mul_distrib_mul_action Con.mulDistribMulAction
+
+end Actions
 
 end Con
 

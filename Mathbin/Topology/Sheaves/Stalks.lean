@@ -335,6 +335,21 @@ theorem germ_stalk_specializes' (F : X.Presheaf C) {U : Opens X} {x y : X} (h : 
   colimit.ι_desc _ _
 #align Top.presheaf.germ_stalk_specializes' TopCat.Presheaf.germ_stalk_specializes'
 
+@[simp]
+theorem stalk_specializes_refl {C : Type _} [Category C] [Limits.HasColimits C] {X : TopCat}
+    (F : X.Presheaf C) (x : X) : F.stalkSpecializes (specializes_refl x) = 𝟙 _ :=
+  F.stalk_hom_ext fun _ _ => by 
+    dsimp
+    simpa
+#align Top.presheaf.stalk_specializes_refl TopCat.Presheaf.stalk_specializes_refl
+
+@[simp, reassoc, elementwise]
+theorem stalk_specializes_comp {C : Type _} [Category C] [Limits.HasColimits C] {X : TopCat}
+    (F : X.Presheaf C) {x y z : X} (h : x ⤳ y) (h' : y ⤳ z) :
+    F.stalkSpecializes h' ≫ F.stalkSpecializes h = F.stalkSpecializes (h.trans h') :=
+  F.stalk_hom_ext fun _ _ => by simp
+#align Top.presheaf.stalk_specializes_comp TopCat.Presheaf.stalk_specializes_comp
+
 @[simp, reassoc, elementwise]
 theorem stalk_specializes_stalk_functor_map {F G : X.Presheaf C} (f : F ⟶ G) {x y : X} (h : x ⤳ y) :
     F.stalkSpecializes h ≫ (stalkFunctor C x).map f =
@@ -356,6 +371,13 @@ theorem stalk_specializes_stalk_pushforward (f : X ⟶ Y) (F : X.Presheaf C) {x 
   simpa [stalk_specializes]
 #align
   Top.presheaf.stalk_specializes_stalk_pushforward TopCat.Presheaf.stalk_specializes_stalk_pushforward
+
+/-- The stalks are isomorphic on inseparable points -/
+@[simps]
+def stalkCongr {X : TopCat} {C : Type _} [Category C] [HasColimits C] (F : X.Presheaf C) {x y : X}
+    (e : Inseparable x y) : F.stalk x ≅ F.stalk y :=
+  ⟨F.stalkSpecializes e.ge, F.stalkSpecializes e.le, by simp, by simp⟩
+#align Top.presheaf.stalk_congr TopCat.Presheaf.stalkCongr
 
 end StalkSpecializes
 

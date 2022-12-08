@@ -527,7 +527,7 @@ theorem Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly {F K} (A) [Field F] [
     [IsAlgClosed A] [Algebra F K] (hK : Algebra.IsAlgebraic F K) [Algebra F A] (x : K) :
     (Set.range fun ψ : K →ₐ[F] A => ψ x) = (minpoly F x).rootSet A := by
   have := Algebra.is_algebraic_iff_is_integral.1 hK
-  ext a; rw [mem_root_set_iff (minpoly.ne_zero <| this x) a]
+  ext a; rw [mem_root_set_of_ne (minpoly.ne_zero (this x))] <;> [skip, infer_instance]
   refine' ⟨_, fun ha => _⟩
   · rintro ⟨ψ, rfl⟩
     rw [aeval_alg_hom_apply ψ x, minpoly.aeval, map_zero]
