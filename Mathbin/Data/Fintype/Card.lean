@@ -2215,8 +2215,23 @@ theorem of_surjective {α β} [Infinite β] (f : α → β) (hf : Surjective f) 
 
 end Infinite
 
+instance : Infinite ℕ :=
+  Infinite.of_not_fintype <| by 
+    intro h
+    exact (Finset.range _).card_le_univ.not_lt ((Nat.lt_succ_self _).trans_eq (card_range _).symm)
+
+instance : Infinite ℤ :=
+  Infinite.of_injective Int.ofNat fun _ _ => Int.ofNat.inj
+
+instance [Nonempty α] : Infinite (Multiset α) :=
+  let ⟨x⟩ := ‹Nonempty α›
+  Infinite.of_injective (Multiset.repeat x) (Multiset.repeat_injective _)
+
+instance [Nonempty α] : Infinite (List α) :=
+  Infinite.of_surjective (coe : List α → Multiset α) (surjective_quot_mk _)
+
 instance Infinite.set [Infinite α] : Infinite (Set α) :=
-  Infinite.of_injective singleton fun a b => Set.singleton_eq_singleton_iff.1
+  Infinite.of_injective singleton Set.singleton_injective
 #align infinite.set Infinite.set
 
 instance [Infinite α] : Infinite (Finset α) :=

@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric W
 -/
 import Mathbin.LinearAlgebra.Span
 import Mathbin.Order.PartialSups
-import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.Algebra.Prod
 
 /-! ### Products of modules
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.Algebra.CharZero.Defs
-import Mathbin.Data.Fintype.Lattice
+import Mathbin.Data.Fintype.Card
 
 /-! # A characteristic-zero semiring is infinite -/
 

@@ -620,7 +620,7 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     orderOf (ωUnit (p' + 2)) = 2 ^ (p' + 2) := by
   apply Nat.eq_prime_pow_of_dvd_least_prime_pow
   -- the order of ω divides 2^p
-  · norm_num
+  · exact Nat.prime_two
   · intro o
     have ω_pow := order_of_dvd_iff_pow_eq_one.1 o
     replace ω_pow :=

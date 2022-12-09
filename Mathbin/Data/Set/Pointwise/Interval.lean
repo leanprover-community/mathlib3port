@@ -36,48 +36,11 @@ TODO : move as much as possible in this file to the setting of this weaker typec
 -/
 
 
-variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] (a b d : α)
-
-theorem Icc_add_bij : BijOn (· + d) (icc a b) (icc (a + d) (b + d)) := by
-  refine'
-    ⟨fun _ h => ⟨add_le_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h =>
-      add_right_cancel h, fun _ h => _⟩
-  obtain ⟨c, rfl⟩ := exists_add_of_le h.1
-  rw [mem_Icc, add_right_comm, add_le_add_iff_right, add_le_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_comm]⟩
-#align set.Icc_add_bij Set.Icc_add_bij
-
-theorem Ioo_add_bij : BijOn (· + d) (ioo a b) (ioo (a + d) (b + d)) := by
-  refine'
-    ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h =>
-      add_right_cancel h, fun _ h => _⟩
-  obtain ⟨c, rfl⟩ := exists_add_of_le h.1.le
-  rw [mem_Ioo, add_right_comm, add_lt_add_iff_right, add_lt_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_comm]⟩
-#align set.Ioo_add_bij Set.Ioo_add_bij
-
-theorem Ioc_add_bij : BijOn (· + d) (ioc a b) (ioc (a + d) (b + d)) := by
-  refine'
-    ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h =>
-      add_right_cancel h, fun _ h => _⟩
-  obtain ⟨c, rfl⟩ := exists_add_of_le h.1.le
-  rw [mem_Ioc, add_right_comm, add_lt_add_iff_right, add_le_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_comm]⟩
-#align set.Ioc_add_bij Set.Ioc_add_bij
-
-theorem Ico_add_bij : BijOn (· + d) (ico a b) (ico (a + d) (b + d)) := by
-  refine'
-    ⟨fun _ h => ⟨add_le_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h =>
-      add_right_cancel h, fun _ h => _⟩
-  obtain ⟨c, rfl⟩ := exists_add_of_le h.1
-  rw [mem_Ico, add_right_comm, add_le_add_iff_right, add_lt_add_iff_right] at h
-  exact ⟨a + c, h, by rw [add_right_comm]⟩
-#align set.Ico_add_bij Set.Ico_add_bij
+variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] (a b c d : α)
 
 theorem Ici_add_bij : BijOn (· + d) (ici a) (ici (a + d)) := by
   refine'
-    ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h =>
-      _⟩
+    ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, (add_left_injective d).InjOn _, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ici.mp h)
   rw [mem_Ici, add_right_comm, add_le_add_iff_right] at h
   exact ⟨a + c, h, by rw [add_right_comm]⟩
@@ -91,6 +54,104 @@ theorem Ioi_add_bij : BijOn (· + d) (ioi a) (ioi (a + d)) := by
   rw [mem_Ioi, add_right_comm, add_lt_add_iff_right] at h
   exact ⟨a + c, h, by rw [add_right_comm]⟩
 #align set.Ioi_add_bij Set.Ioi_add_bij
+
+theorem Icc_add_bij : BijOn (· + d) (icc a b) (icc (a + d) (b + d)) := by
+  rw [← Ici_inter_Iic, ← Ici_inter_Iic]
+  exact
+    (Ici_add_bij a d).inter_maps_to (fun x hx => add_le_add_right hx _) fun x hx =>
+      le_of_add_le_add_right hx.2
+#align set.Icc_add_bij Set.Icc_add_bij
+
+theorem Ioo_add_bij : BijOn (· + d) (ioo a b) (ioo (a + d) (b + d)) := by
+  rw [← Ioi_inter_Iio, ← Ioi_inter_Iio]
+  exact
+    (Ioi_add_bij a d).inter_maps_to (fun x hx => add_lt_add_right hx _) fun x hx =>
+      lt_of_add_lt_add_right hx.2
+#align set.Ioo_add_bij Set.Ioo_add_bij
+
+theorem Ioc_add_bij : BijOn (· + d) (ioc a b) (ioc (a + d) (b + d)) := by
+  rw [← Ioi_inter_Iic, ← Ioi_inter_Iic]
+  exact
+    (Ioi_add_bij a d).inter_maps_to (fun x hx => add_le_add_right hx _) fun x hx =>
+      le_of_add_le_add_right hx.2
+#align set.Ioc_add_bij Set.Ioc_add_bij
+
+theorem Ico_add_bij : BijOn (· + d) (ico a b) (ico (a + d) (b + d)) := by
+  rw [← Ici_inter_Iio, ← Ici_inter_Iio]
+  exact
+    (Ici_add_bij a d).inter_maps_to (fun x hx => add_lt_add_right hx _) fun x hx =>
+      lt_of_add_lt_add_right hx.2
+#align set.Ico_add_bij Set.Ico_add_bij
+
+/-!
+### Images under `x ↦ x + a`
+-/
+
+
+@[simp]
+theorem image_add_const_Ici : (fun x => x + a) '' ici b = ici (b + a) :=
+  (Ici_add_bij _ _).image_eq
+#align set.image_add_const_Ici Set.image_add_const_Ici
+
+@[simp]
+theorem image_add_const_Ioi : (fun x => x + a) '' ioi b = ioi (b + a) :=
+  (Ioi_add_bij _ _).image_eq
+#align set.image_add_const_Ioi Set.image_add_const_Ioi
+
+@[simp]
+theorem image_add_const_Icc : (fun x => x + a) '' icc b c = icc (b + a) (c + a) :=
+  (Icc_add_bij _ _ _).image_eq
+#align set.image_add_const_Icc Set.image_add_const_Icc
+
+@[simp]
+theorem image_add_const_Ico : (fun x => x + a) '' ico b c = ico (b + a) (c + a) :=
+  (Ico_add_bij _ _ _).image_eq
+#align set.image_add_const_Ico Set.image_add_const_Ico
+
+@[simp]
+theorem image_add_const_Ioc : (fun x => x + a) '' ioc b c = ioc (b + a) (c + a) :=
+  (Ioc_add_bij _ _ _).image_eq
+#align set.image_add_const_Ioc Set.image_add_const_Ioc
+
+@[simp]
+theorem image_add_const_Ioo : (fun x => x + a) '' ioo b c = ioo (b + a) (c + a) :=
+  (Ioo_add_bij _ _ _).image_eq
+#align set.image_add_const_Ioo Set.image_add_const_Ioo
+
+/-!
+### Images under `x ↦ a + x`
+-/
+
+
+@[simp]
+theorem image_const_add_Ici : (fun x => a + x) '' ici b = ici (a + b) := by
+  simp only [add_comm a, image_add_const_Ici]
+#align set.image_const_add_Ici Set.image_const_add_Ici
+
+@[simp]
+theorem image_const_add_Ioi : (fun x => a + x) '' ioi b = ioi (a + b) := by
+  simp only [add_comm a, image_add_const_Ioi]
+#align set.image_const_add_Ioi Set.image_const_add_Ioi
+
+@[simp]
+theorem image_const_add_Icc : (fun x => a + x) '' icc b c = icc (a + b) (a + c) := by
+  simp only [add_comm a, image_add_const_Icc]
+#align set.image_const_add_Icc Set.image_const_add_Icc
+
+@[simp]
+theorem image_const_add_Ico : (fun x => a + x) '' ico b c = ico (a + b) (a + c) := by
+  simp only [add_comm a, image_add_const_Ico]
+#align set.image_const_add_Ico Set.image_const_add_Ico
+
+@[simp]
+theorem image_const_add_Ioc : (fun x => a + x) '' ioc b c = ioc (a + b) (a + c) := by
+  simp only [add_comm a, image_add_const_Ioc]
+#align set.image_const_add_Ioc Set.image_const_add_Ioc
+
+@[simp]
+theorem image_const_add_Ioo : (fun x => a + x) '' ioo b c = ioo (a + b) (a + c) := by
+  simp only [add_comm a, image_add_const_Ioo]
+#align set.image_const_add_Ioo Set.image_const_add_Ioo
 
 end HasExistsAddOfLe
 
@@ -327,10 +388,6 @@ theorem preimage_const_sub_Ioo : (fun x => a - x) ⁻¹' ioo b c = ioo (a - c) (
 
 
 @[simp]
-theorem image_const_add_Ici : (fun x => a + x) '' ici b = ici (a + b) := by simp [add_comm]
-#align set.image_const_add_Ici Set.image_const_add_Ici
-
-@[simp]
 theorem image_const_add_Iic : (fun x => a + x) '' iic b = iic (a + b) := by simp [add_comm]
 #align set.image_const_add_Iic Set.image_const_add_Iic
 
@@ -338,38 +395,10 @@ theorem image_const_add_Iic : (fun x => a + x) '' iic b = iic (a + b) := by simp
 theorem image_const_add_Iio : (fun x => a + x) '' iio b = iio (a + b) := by simp [add_comm]
 #align set.image_const_add_Iio Set.image_const_add_Iio
 
-@[simp]
-theorem image_const_add_Ioi : (fun x => a + x) '' ioi b = ioi (a + b) := by simp [add_comm]
-#align set.image_const_add_Ioi Set.image_const_add_Ioi
-
-@[simp]
-theorem image_const_add_Icc : (fun x => a + x) '' icc b c = icc (a + b) (a + c) := by
-  simp [add_comm]
-#align set.image_const_add_Icc Set.image_const_add_Icc
-
-@[simp]
-theorem image_const_add_Ico : (fun x => a + x) '' ico b c = ico (a + b) (a + c) := by
-  simp [add_comm]
-#align set.image_const_add_Ico Set.image_const_add_Ico
-
-@[simp]
-theorem image_const_add_Ioc : (fun x => a + x) '' ioc b c = ioc (a + b) (a + c) := by
-  simp [add_comm]
-#align set.image_const_add_Ioc Set.image_const_add_Ioc
-
-@[simp]
-theorem image_const_add_Ioo : (fun x => a + x) '' ioo b c = ioo (a + b) (a + c) := by
-  simp [add_comm]
-#align set.image_const_add_Ioo Set.image_const_add_Ioo
-
 /-!
 ### Images under `x ↦ x + a`
 -/
 
-
-@[simp]
-theorem image_add_const_Ici : (fun x => x + a) '' ici b = ici (b + a) := by simp
-#align set.image_add_const_Ici Set.image_add_const_Ici
 
 @[simp]
 theorem image_add_const_Iic : (fun x => x + a) '' iic b = iic (b + a) := by simp
@@ -378,26 +407,6 @@ theorem image_add_const_Iic : (fun x => x + a) '' iic b = iic (b + a) := by simp
 @[simp]
 theorem image_add_const_Iio : (fun x => x + a) '' iio b = iio (b + a) := by simp
 #align set.image_add_const_Iio Set.image_add_const_Iio
-
-@[simp]
-theorem image_add_const_Ioi : (fun x => x + a) '' ioi b = ioi (b + a) := by simp
-#align set.image_add_const_Ioi Set.image_add_const_Ioi
-
-@[simp]
-theorem image_add_const_Icc : (fun x => x + a) '' icc b c = icc (b + a) (c + a) := by simp
-#align set.image_add_const_Icc Set.image_add_const_Icc
-
-@[simp]
-theorem image_add_const_Ico : (fun x => x + a) '' ico b c = ico (b + a) (c + a) := by simp
-#align set.image_add_const_Ico Set.image_add_const_Ico
-
-@[simp]
-theorem image_add_const_Ioc : (fun x => x + a) '' ioc b c = ioc (b + a) (c + a) := by simp
-#align set.image_add_const_Ioc Set.image_add_const_Ioc
-
-@[simp]
-theorem image_add_const_Ioo : (fun x => x + a) '' ioo b c = ioo (b + a) (c + a) := by simp
-#align set.image_add_const_Ioo Set.image_add_const_Ioo
 
 /-!
 ### Images under `x ↦ -x`
@@ -519,18 +528,12 @@ theorem image_sub_const_Ioo : (fun x => x - a) '' ioo b c = ioo (b - a) (c - a) 
 -/
 
 
-theorem Iic_add_bij : BijOn (· + a) (iic b) (iic (b + a)) := by
-  refine'
-    ⟨fun x h => add_le_add_right (mem_Iic.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h =>
-      _⟩
-  simpa [add_comm a] using h
+theorem Iic_add_bij : BijOn (· + a) (iic b) (iic (b + a)) :=
+  image_add_const_Iic a b ▸ ((add_left_injective _).InjOn _).bij_on_image
 #align set.Iic_add_bij Set.Iic_add_bij
 
-theorem Iio_add_bij : BijOn (· + a) (iio b) (iio (b + a)) := by
-  refine'
-    ⟨fun x h => add_lt_add_right (mem_Iio.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h =>
-      _⟩
-  simpa [add_comm a] using h
+theorem Iio_add_bij : BijOn (· + a) (iio b) (iio (b + a)) :=
+  image_add_const_Iio a b ▸ ((add_left_injective _).InjOn _).bij_on_image
 #align set.Iio_add_bij Set.Iio_add_bij
 
 end OrderedAddCommGroup

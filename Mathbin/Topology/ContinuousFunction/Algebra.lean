@@ -8,6 +8,7 @@ import Mathbin.Topology.ContinuousFunction.Ordered
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.UniformSpace.CompactConvergence
 import Mathbin.Topology.Algebra.Star
+import Mathbin.Algebra.Algebra.Pi
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Algebra.Star.StarAlgHom

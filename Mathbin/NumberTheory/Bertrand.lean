@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
 -/
 import Mathbin.Data.Nat.Choose.Factorization
+import Mathbin.Data.Nat.PrimeNormNum
 import Mathbin.NumberTheory.Primorial
 import Mathbin.Analysis.Convex.SpecificFunctions
 

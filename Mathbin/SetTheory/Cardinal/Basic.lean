@@ -817,6 +817,21 @@ theorem mk_le_mk_mul_of_mk_preimage_le {c : Cardinal} (f : α → β) (hf : ∀ 
     sum_le_sum _ _ hf
 #align cardinal.mk_le_mk_mul_of_mk_preimage_le Cardinal.mk_le_mk_mul_of_mk_preimage_le
 
+theorem lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le {α : Type u} {β : Type v} {c : Cardinal}
+    (f : α → β) (hf : ∀ b : β, lift.{v} (#f ⁻¹' {b}) ≤ c) : lift.{v} (#α) ≤ lift.{u} (#β) * c :=
+  (mk_le_mk_mul_of_mk_preimage_le fun x : ULift.{v} α => ULift.up.{u} (f x.1)) <|
+    ULift.forall.2 fun b =>
+      (mk_congr <|
+            (Equiv.ulift.image _).trans
+              (Equiv.trans
+                (by 
+                  rw [Equiv.image_eq_preimage]
+                  simp [Set.preimage])
+                Equiv.ulift.symm)).trans_le
+        (hf b)
+#align
+  cardinal.lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le Cardinal.lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le
+
 /-- The range of an indexed cardinal function, whose outputs live in a higher universe than the
     inputs, is always bounded above. -/
 theorem bdd_above_range {ι : Type u} (f : ι → Cardinal.{max u v}) : BddAbove (Set.range f) :=

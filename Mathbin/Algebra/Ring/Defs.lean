@@ -750,16 +750,20 @@ instance (priority := 100) CommRing.toNonUnitalCommRing [s : CommRing α] : NonU
 #align comm_ring.to_non_unital_comm_ring CommRing.toNonUnitalCommRing
 -/
 
-#print IsDomain /-
-/-- A domain is a nontrivial ring such multiplication by a non zero element is cancellative,
-  on both sides. In other words, a nontrivial ring `R` satisfying
+/- warning: is_domain -> IsDomain is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u}) [_inst_1 : Semiring.{u} α], Prop
+but is expected to have type
+  forall (α : Type.{u}) [inst._@.Mathlib.Algebra.Ring.Defs._hyg.3421 : Ring.{u} α], Prop
+Case conversion may be inaccurate. Consider using '#align is_domain IsDomainₓ'. -/
+/-- A domain is a nontrivial semiring such multiplication by a non zero element is cancellative,
+  on both sides. In other words, a nontrivial semiring `R` satisfying
   `∀ {a b c : R}, a ≠ 0 → a * b = a * c → b = c` and
   `∀ {a b c : R}, b ≠ 0 → a * b = c * b → a = c`.
 
-  This is implemented as a mixin for `ring α`.
+  This is implemented as a mixin for `semiring α`.
   To obtain an integral domain use `[comm_ring α] [is_domain α]`. -/
 @[protect_proj]
-class IsDomain (α : Type u) [Ring α] extends IsCancelMulZero α, Nontrivial α : Prop
+class IsDomain (α : Type u) [Semiring α] extends IsCancelMulZero α, Nontrivial α : Prop
 #align is_domain IsDomain
--/
 

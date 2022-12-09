@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 -/
 import Mathbin.Algebra.EuclideanDomain.Basic
-import Mathbin.Data.Nat.Prime
+import Mathbin.Data.Nat.Factors
 import Mathbin.RingTheory.Coprime.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
 

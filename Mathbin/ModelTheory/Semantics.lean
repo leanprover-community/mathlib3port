@@ -3,7 +3,7 @@ Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
-import Mathbin.Data.List.ProdSigma
+import Mathbin.Data.Finset.Basic
 import Mathbin.ModelTheory.Syntax
 
 /-!
@@ -507,6 +507,17 @@ theorem realize_constants_vars_equiv [L[[α]].StructureCat M]
 #align
   first_order.language.bounded_formula.realize_constants_vars_equiv FirstOrder.Language.BoundedFormula.realize_constants_vars_equiv
 
+@[simp]
+theorem realize_relabel_equiv {g : α ≃ β} {k} {φ : L.BoundedFormula α k} {v : β → M}
+    {xs : Fin k → M} : (relabelEquiv g φ).realize v xs ↔ φ.realize (v ∘ g) xs := by
+  simp only [relabel_equiv, map_term_rel_equiv_apply, Equiv.coe_refl]
+  refine' realize_map_term_rel_id (fun n t xs => _) fun _ _ _ => rfl
+  simp only [relabel_equiv_apply, term.realize_relabel]
+  refine' congr (congr rfl _) rfl
+  ext (i | i) <;> rfl
+#align
+  first_order.language.bounded_formula.realize_relabel_equiv FirstOrder.Language.BoundedFormula.realize_relabel_equiv
+
 variable [Nonempty M]
 
 theorem realize_all_lift_at_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M}
@@ -737,6 +748,39 @@ infixl:51
 theorem Sentence.realize_not {φ : L.Sentence} : M ⊨ φ.Not ↔ ¬M ⊨ φ :=
   Iff.rfl
 #align first_order.language.sentence.realize_not FirstOrder.Language.Sentence.realize_not
+
+namespace Formula
+
+@[simp]
+theorem realize_equiv_sentence_symm_con [L[[α]].StructureCat M]
+    [(L.lhomWithConstants α).IsExpansionOn M] (φ : L[[α]].Sentence) :
+    ((equivSentence.symm φ).realize fun a => (L.con a : M)) ↔ φ.realize M := by
+  simp only [equiv_sentence, Equiv.symm_symm, Equiv.coe_trans, realize,
+    bounded_formula.realize_relabel_equiv]
+  refine' trans _ bounded_formula.realize_constants_vars_equiv
+  congr with (i | i)
+  · rfl
+  · exact i.elim
+#align
+  first_order.language.formula.realize_equiv_sentence_symm_con FirstOrder.Language.Formula.realize_equiv_sentence_symm_con
+
+@[simp]
+theorem realize_equiv_sentence [L[[α]].StructureCat M] [(L.lhomWithConstants α).IsExpansionOn M]
+    (φ : L.Formula α) : (equivSentence φ).realize M ↔ φ.realize fun a => (L.con a : M) := by
+  rw [← realize_equiv_sentence_symm_con M (equiv_sentence φ), _root_.equiv.symm_apply_apply]
+#align
+  first_order.language.formula.realize_equiv_sentence FirstOrder.Language.Formula.realize_equiv_sentence
+
+theorem realize_equiv_sentence_symm (φ : L[[α]].Sentence) (v : α → M) :
+    (equivSentence.symm φ).realize v ↔
+      @Sentence.Realize _ M (@Language.withConstantsStructure L M _ α (constantsOn.structure v))
+        φ :=
+  letI := constants_on.Structure v
+  realize_equiv_sentence_symm_con M φ
+#align
+  first_order.language.formula.realize_equiv_sentence_symm FirstOrder.Language.Formula.realize_equiv_sentence_symm
+
+end Formula
 
 @[simp]
 theorem LhomCat.realize_on_sentence [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
@@ -1093,15 +1137,15 @@ instance model_nonempty [h : Nonempty M] : M ⊨ L.nonemptyTheory :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem model_distinct_constants_theory {M : Type w} [L[[α]].StructureCat M] (s : Set α) :
     M ⊨ L.distinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s := by
-  simp only [distinct_constants_theory, Theory.model_iff, Set.mem_image, Set.mem_inter_iff,
-    Set.mem_prod, Set.mem_compl_iff, Prod.exists, forall_exists_index, and_imp]
+  simp only [distinct_constants_theory, Theory.model_iff, Set.mem_image, Set.mem_inter,
+    Set.mem_prod, Set.mem_compl, Prod.exists, forall_exists_index, and_imp]
   refine' ⟨fun h a as b bs ab => _, _⟩
   · contrapose! ab
-    have h' := h _ a b as bs ab rfl
+    have h' := h _ a b ⟨⟨as, bs⟩, ab⟩ rfl
     simp only [sentence.realize, formula.realize_not, formula.realize_equal,
       term.realize_constants] at h'
     exact h'
-  · rintro h φ a b as bs ab rfl
+  · rintro h φ a b ⟨⟨as, bs⟩, ab⟩ rfl
     simp only [sentence.realize, formula.realize_not, formula.realize_equal, term.realize_constants]
     exact fun contra => ab (h as bs contra)
 #align

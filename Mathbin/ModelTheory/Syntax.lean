@@ -3,6 +3,7 @@ Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
+import Mathbin.Data.List.ProdSigma
 import Mathbin.Data.Set.Prod
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.ModelTheory.LanguageMap
@@ -679,6 +680,12 @@ def relabel (g : α → Sum β (Fin n)) {k} (φ : L.BoundedFormula α k) : L.Bou
     castLe (ge_of_eq (add_assoc _ _ _))
 #align first_order.language.bounded_formula.relabel FirstOrder.Language.BoundedFormula.relabel
 
+/-- Relabels a bounded formula's free variables along a bijection. -/
+def relabelEquiv (g : α ≃ β) {k} : L.BoundedFormula α k ≃ L.BoundedFormula β k :=
+  mapTermRelEquiv (fun n => Term.relabelEquiv (g.sumCongr (Equiv.refl _))) fun n => Equiv.refl _
+#align
+  first_order.language.bounded_formula.relabel_equiv FirstOrder.Language.BoundedFormula.relabelEquiv
+
 @[simp]
 theorem relabel_falsum (g : α → Sum β (Fin n)) {k} :
     (falsum : L.BoundedFormula α k).relabel g = falsum :=
@@ -1174,6 +1181,22 @@ protected def iff (φ ψ : L.Formula α) : L.Formula α :=
 theorem is_atomic_graph (f : L.Functions n) : (graph f).IsAtomic :=
   BoundedFormula.IsAtomic.equal _ _
 #align first_order.language.formula.is_atomic_graph FirstOrder.Language.Formula.is_atomic_graph
+
+/-- A bijection sending formulas to sentences with constants. -/
+def equivSentence : L.Formula α ≃ L[[α]].Sentence :=
+  (BoundedFormula.constantsVarsEquiv.trans (BoundedFormula.relabelEquiv (Equiv.sumEmpty _ _))).symm
+#align first_order.language.formula.equiv_sentence FirstOrder.Language.Formula.equivSentence
+
+theorem equiv_sentence_not (φ : L.Formula α) : equivSentence φ.Not = (equivSentence φ).Not :=
+  rfl
+#align
+  first_order.language.formula.equiv_sentence_not FirstOrder.Language.Formula.equiv_sentence_not
+
+theorem equiv_sentence_inf (φ ψ : L.Formula α) :
+    equivSentence (φ ⊓ ψ) = equivSentence φ ⊓ equivSentence ψ :=
+  rfl
+#align
+  first_order.language.formula.equiv_sentence_inf FirstOrder.Language.Formula.equiv_sentence_inf
 
 end Formula
 

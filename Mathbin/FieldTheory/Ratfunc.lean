@@ -368,6 +368,12 @@ theorem of_fraction_ring_mul (p q : FractionRing K[X]) :
 
 include hdomain
 
+/- warning: ratfunc.div -> Ratfunc.div is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u}} [hring : CommRing.{u} K] [hdomain : IsDomain.{u} K (Ring.toSemiring.{u} K (CommRing.toRing.{u} K hring))], (Ratfunc.{u} K hring) -> (Ratfunc.{u} K hring) -> (Ratfunc.{u} K hring)
+but is expected to have type
+  PUnit.{succ (succ u)}
+Case conversion may be inaccurate. Consider using '#align ratfunc.div Ratfunc.divₓ'. -/
 /-- Division of rational functions. -/
 protected irreducible_def div : Ratfunc K → Ratfunc K → Ratfunc K
   | ⟨p⟩, ⟨q⟩ => ⟨p / q⟩
@@ -381,6 +387,12 @@ theorem of_fraction_ring_div (p q : FractionRing K[X]) :
   unfold Div.div Ratfunc.div
 #align ratfunc.of_fraction_ring_div Ratfunc.of_fraction_ring_div
 
+/- warning: ratfunc.inv -> Ratfunc.inv is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u}} [hring : CommRing.{u} K] [hdomain : IsDomain.{u} K (Ring.toSemiring.{u} K (CommRing.toRing.{u} K hring))], (Ratfunc.{u} K hring) -> (Ratfunc.{u} K hring)
+but is expected to have type
+  PUnit.{succ (succ u)}
+Case conversion may be inaccurate. Consider using '#align ratfunc.inv Ratfunc.invₓ'. -/
 /-- Multiplicative inverse of a rational function. -/
 protected irreducible_def inv : Ratfunc K → Ratfunc K
   | ⟨p⟩ => ⟨p⁻¹⟩

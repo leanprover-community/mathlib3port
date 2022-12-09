@@ -36,8 +36,6 @@ See the implementation notes for remarks about non-associative and non-unital al
 * `algebra.of_id R A : R →ₐ[R] A`: the canonical map from `R` to `A`, as n `alg_hom`.
 * Instances of `algebra` in this file:
   * `algebra.id`
-  * `pi.algebra`
-  * `prod.algebra`
   * `algebra_nat`
   * `algebra_int`
   * `algebra_rat`
@@ -508,32 +506,6 @@ theorem ULift.down_algebra_map (r : R) : (algebraMap R (ULift A) r).down = algeb
 #align ulift.down_algebra_map ULift.down_algebra_map
 
 end ULift
-
-section Prod
-
-variable (R A B)
-
-instance Prod.algebra : Algebra R (A × B) :=
-  { Prod.module, RingHom.prod (algebraMap R A) (algebraMap R B) with
-    commutes' := by 
-      rintro r ⟨a, b⟩
-      dsimp
-      rw [commutes r a, commutes r b],
-    smul_def' := by 
-      rintro r ⟨a, b⟩
-      dsimp
-      rw [smul_def r a, smul_def r b] }
-#align prod.algebra Prod.algebra
-
-variable {R A B}
-
-@[simp]
-theorem algebra_map_prod_apply (r : R) :
-    algebraMap R (A × B) r = (algebraMap R A r, algebraMap R B r) :=
-  rfl
-#align algebra.algebra_map_prod_apply Algebra.algebra_map_prod_apply
-
-end Prod
 
 /-- Algebra over a subsemiring. This builds upon `subsemiring.module`. -/
 instance ofSubsemiring (S : Subsemiring R) : Algebra S A :=
@@ -1108,62 +1080,6 @@ theorem one_apply (x : A) : (1 : A →ₐ[R] A) x = x :=
 theorem mul_apply (φ ψ : A →ₐ[R] A) (x : A) : (φ * ψ) x = φ (ψ x) :=
   rfl
 #align alg_hom.mul_apply AlgHom.mul_apply
-
-section Prod
-
-variable (R A B)
-
-/-- First projection as `alg_hom`. -/
-def fst : A × B →ₐ[R] A :=
-  { RingHom.fst A B with commutes' := fun r => rfl }
-#align alg_hom.fst AlgHom.fst
-
-/-- Second projection as `alg_hom`. -/
-def snd : A × B →ₐ[R] B :=
-  { RingHom.snd A B with commutes' := fun r => rfl }
-#align alg_hom.snd AlgHom.snd
-
-variable {R A B}
-
-/-- The `pi.prod` of two morphisms is a morphism. -/
-@[simps]
-def prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : A →ₐ[R] B × C :=
-  { f.toRingHom.Prod g.toRingHom with
-    commutes' := fun r => by
-      simp only [to_ring_hom_eq_coe, RingHom.to_fun_eq_coe, RingHom.prod_apply, coe_to_ring_hom,
-        commutes, Algebra.algebra_map_prod_apply] }
-#align alg_hom.prod AlgHom.prod
-
-theorem coe_prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
-  rfl
-#align alg_hom.coe_prod AlgHom.coe_prod
-
-@[simp]
-theorem fst_prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : (fst R B C).comp (prod f g) = f := by ext <;> rfl
-#align alg_hom.fst_prod AlgHom.fst_prod
-
-@[simp]
-theorem snd_prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : (snd R B C).comp (prod f g) = g := by ext <;> rfl
-#align alg_hom.snd_prod AlgHom.snd_prod
-
-@[simp]
-theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
-  FunLike.coe_injective Pi.prod_fst_snd
-#align alg_hom.prod_fst_snd AlgHom.prod_fst_snd
-
-/-- Taking the product of two maps with the same domain is equivalent to taking the product of
-their codomains. -/
-@[simps]
-def prodEquiv :
-    (A →ₐ[R] B) × (A →ₐ[R] C) ≃
-      (A →ₐ[R] B × C) where 
-  toFun f := f.1.Prod f.2
-  invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv f := by ext <;> rfl
-  right_inv f := by ext <;> rfl
-#align alg_hom.prod_equiv AlgHom.prodEquiv
-
-end Prod
 
 theorem algebra_map_eq_apply (f : A →ₐ[R] B) {y : R} {x : A} (h : algebraMap R A y = x) :
     algebraMap R B y = f x :=
@@ -2194,132 +2110,6 @@ end Field
 
 end NoZeroSmulDivisors
 
-/-!
-The R-algebra structure on `Π i : I, A i` when each `A i` is an R-algebra.
-
-We couldn't set this up back in `algebra.pi_instances` because this file imports it.
--/
-
-
-namespace Pi
-
-variable {I : Type u}
-
--- The indexing type
-variable {R : Type _}
-
--- The scalar type
-variable {f : I → Type v}
-
--- The family of types already equipped with instances
-variable (x y : ∀ i, f i) (i : I)
-
-variable (I f)
-
-instance algebra {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] :
-    Algebra R (∀ i : I, f i) :=
-  { (Pi.ringHom fun i => algebraMap R (f i) : R →+* ∀ i : I, f i) with
-    commutes' := fun a f => by ext; simp [Algebra.commutes],
-    smul_def' := fun a f => by ext; simp [Algebra.smul_def] }
-#align pi.algebra Pi.algebra
-
-theorem algebra_map_def {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)]
-    (a : R) : algebraMap R (∀ i, f i) a = fun i => algebraMap R (f i) a :=
-  rfl
-#align pi.algebra_map_def Pi.algebra_map_def
-
-@[simp]
-theorem algebra_map_apply {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)]
-    (a : R) (i : I) : algebraMap R (∀ i, f i) a i = algebraMap R (f i) a :=
-  rfl
-#align pi.algebra_map_apply Pi.algebra_map_apply
-
--- One could also build a `Π i, R i`-algebra structure on `Π i, A i`,
--- when each `A i` is an `R i`-algebra, although I'm not sure that it's useful.
-variable {I} (R) (f)
-
-/-- `function.eval` as an `alg_hom`. The name matches `pi.eval_ring_hom`, `pi.eval_monoid_hom`,
-etc. -/
-@[simps]
-def evalAlgHom {r : CommSemiring R} [∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] (i : I) :
-    (∀ i, f i) →ₐ[R] f i :=
-  { Pi.evalRingHom f i with toFun := fun f => f i, commutes' := fun r => rfl }
-#align pi.eval_alg_hom Pi.evalAlgHom
-
-variable (A B : Type _) [CommSemiring R] [Semiring B] [Algebra R B]
-
-/-- `function.const` as an `alg_hom`. The name matches `pi.const_ring_hom`, `pi.const_monoid_hom`,
-etc. -/
-@[simps]
-def constAlgHom : B →ₐ[R] A → B :=
-  { Pi.constRingHom A B with toFun := Function.const _, commutes' := fun r => rfl }
-#align pi.const_alg_hom Pi.constAlgHom
-
-/-- When `R` is commutative and permits an `algebra_map`, `pi.const_ring_hom` is equal to that
-map. -/
-@[simp]
-theorem const_ring_hom_eq_algebra_map : constRingHom A R = algebraMap R (A → R) :=
-  rfl
-#align pi.const_ring_hom_eq_algebra_map Pi.const_ring_hom_eq_algebra_map
-
-@[simp]
-theorem const_alg_hom_eq_algebra_of_id : constAlgHom R A R = Algebra.ofId R (A → R) :=
-  rfl
-#align pi.const_alg_hom_eq_algebra_of_id Pi.const_alg_hom_eq_algebra_of_id
-
-end Pi
-
-/-- A special case of `pi.algebra` for non-dependent types. Lean struggles to elaborate
-definitions elsewhere in the library without this, -/
-instance Function.algebra {R : Type _} (I : Type _) (A : Type _) [CommSemiring R] [Semiring A]
-    [Algebra R A] : Algebra R (I → A) :=
-  Pi.algebra _ _
-#align function.algebra Function.algebra
-
-namespace AlgEquiv
-
-/-- A family of algebra equivalences `Π j, (A₁ j ≃ₐ A₂ j)` generates a
-multiplicative equivalence between `Π j, A₁ j` and `Π j, A₂ j`.
-
-This is the `alg_equiv` version of `equiv.Pi_congr_right`, and the dependent version of
-`alg_equiv.arrow_congr`.
--/
-@[simps apply]
-def piCongrRight {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R] [∀ i, Semiring (A₁ i)]
-    [∀ i, Semiring (A₂ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)]
-    (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (∀ i, A₁ i) ≃ₐ[R] ∀ i, A₂ i :=
-  { @RingEquiv.piCongrRight ι A₁ A₂ _ _ fun i => (e i).toRingEquiv with
-    toFun := fun x j => e j (x j), invFun := fun x j => (e j).symm (x j),
-    commutes' := fun r => by 
-      ext i
-      simp }
-#align alg_equiv.Pi_congr_right AlgEquiv.piCongrRight
-
-@[simp]
-theorem Pi_congr_right_refl {R ι : Type _} {A : ι → Type _} [CommSemiring R] [∀ i, Semiring (A i)]
-    [∀ i, Algebra R (A i)] :
-    (piCongrRight fun i => (AlgEquiv.refl : A i ≃ₐ[R] A i)) = AlgEquiv.refl :=
-  rfl
-#align alg_equiv.Pi_congr_right_refl AlgEquiv.Pi_congr_right_refl
-
-@[simp]
-theorem Pi_congr_right_symm {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R]
-    [∀ i, Semiring (A₁ i)] [∀ i, Semiring (A₂ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)]
-    (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
-  rfl
-#align alg_equiv.Pi_congr_right_symm AlgEquiv.Pi_congr_right_symm
-
-@[simp]
-theorem Pi_congr_right_trans {R ι : Type _} {A₁ A₂ A₃ : ι → Type _} [CommSemiring R]
-    [∀ i, Semiring (A₁ i)] [∀ i, Semiring (A₂ i)] [∀ i, Semiring (A₃ i)] [∀ i, Algebra R (A₁ i)]
-    [∀ i, Algebra R (A₂ i)] [∀ i, Algebra R (A₃ i)] (e₁ : ∀ i, A₁ i ≃ₐ[R] A₂ i)
-    (e₂ : ∀ i, A₂ i ≃ₐ[R] A₃ i) :
-    (piCongrRight e₁).trans (piCongrRight e₂) = Pi_congr_right fun i => (e₁ i).trans (e₂ i) :=
-  rfl
-#align alg_equiv.Pi_congr_right_trans AlgEquiv.Pi_congr_right_trans
-
-end AlgEquiv
-
 section IsScalarTower
 
 variable {R : Type _} [CommSemiring R]
@@ -2452,26 +2242,6 @@ theorem span_eq_restrict_scalars (X : Set M) (hsur : Function.Surjective (algebr
 #align submodule.span_eq_restrict_scalars Submodule.span_eq_restrict_scalars
 
 end Submodule
-
-namespace AlgHom
-
-variable {R : Type u} {A : Type v} {B : Type w} {I : Type _}
-
-variable [CommSemiring R] [Semiring A] [Semiring B]
-
-variable [Algebra R A] [Algebra R B]
-
-/-- `R`-algebra homomorphism between the function spaces `I → A` and `I → B`, induced by an
-`R`-algebra homomorphism `f` between `A` and `B`. -/
-@[simps]
-protected def compLeft (f : A →ₐ[R] B) (I : Type _) : (I → A) →ₐ[R] I → B :=
-  { f.toRingHom.compLeft I with toFun := fun h => f ∘ h,
-    commutes' := fun c => by 
-      ext
-      exact f.commutes' c }
-#align alg_hom.comp_left AlgHom.compLeft
-
-end AlgHom
 
 example {R A} [CommSemiring R] [Semiring A] [Module R A] [SmulCommClass R A A]
     [IsScalarTower R A A] : Algebra R A :=

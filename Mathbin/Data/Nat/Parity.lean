@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 -/
 import Mathbin.Data.Nat.Modeq
-import Mathbin.Data.Nat.Prime
+import Mathbin.Data.Nat.Factors
 import Mathbin.Algebra.Parity
 
 /-!

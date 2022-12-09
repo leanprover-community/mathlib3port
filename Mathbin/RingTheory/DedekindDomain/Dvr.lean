@@ -51,7 +51,7 @@ TODO: prove the equivalence.
 -/
 structure IsDedekindDomainDvr : Prop where
   IsNoetherianRing : IsNoetherianRing A
-  is_dvr_at_nonzero_prime :
+  isDvrAtNonzeroPrime :
     ∀ (P) (_ : P ≠ (⊥ : Ideal A)), P.IsPrime → DiscreteValuationRing (Localization.AtPrime P)
 #align is_dedekind_domain_dvr IsDedekindDomainDvr
 

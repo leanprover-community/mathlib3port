@@ -5,6 +5,7 @@ Authors: Neil Strickland
 -/
 import Mathbin.Algebra.BigOperators.Multiset.Basic
 import Mathbin.Data.Pnat.Prime
+import Mathbin.Data.Nat.Factors
 import Mathbin.Data.Multiset.Sort
 
 /-!

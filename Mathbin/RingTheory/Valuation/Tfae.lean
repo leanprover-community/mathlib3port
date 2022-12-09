@@ -297,7 +297,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     ":="
                     `ufm_of_gcd_of_wf_dvd_monoid)))
                  []
-                 (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+                 (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
                  []
                  (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
@@ -1026,7 +1026,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                    ":="
                    `ufm_of_gcd_of_wf_dvd_monoid)))
                 []
-                (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+                (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
                 []
                 (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
@@ -1729,7 +1729,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                ":="
                `ufm_of_gcd_of_wf_dvd_monoid)))
             []
-            (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+            (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
             []
             (tactic___
              (cdotTk (patternIgnore (token.«·» "·")))
@@ -2793,7 +2793,7 @@ theorem
               intro
                 haveI := IsBezout.toGcdDomain R
                 haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wf_dvd_monoid
-                apply DiscreteValuationRing.of_ufd_of_unique_irreducible
+                apply DiscreteValuationRing.ofUfdOfUniqueIrreducible
                 ·
                   obtain ⟨ x , hx₁ , hx₂ ⟩ := Ring.exists_not_is_unit_of_not_is_field h
                     obtain ⟨ p , hp₁ , hp₂ ⟩ := WfDvdMonoid.exists_irreducible_factor hx₂ hx₁

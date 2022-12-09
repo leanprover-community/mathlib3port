@@ -3,6 +3,8 @@ import Mathbin.Algebra.AddTorsor
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Algebra.Bilinear
 import Mathbin.Algebra.Algebra.Operations
+import Mathbin.Algebra.Algebra.Pi
+import Mathbin.Algebra.Algebra.Prod
 import Mathbin.Algebra.Algebra.RestrictScalars
 import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
@@ -1246,6 +1248,7 @@ import Mathbin.Data.Finset.Fin
 import Mathbin.Data.Finset.Finsupp
 import Mathbin.Data.Finset.Fold
 import Mathbin.Data.Finset.Functor
+import Mathbin.Data.Finset.Image
 import Mathbin.Data.Finset.Interval
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Finset.LocallyFinite
@@ -1459,6 +1462,7 @@ import Mathbin.Data.Nat.Factorial.BigOperators
 import Mathbin.Data.Nat.Factorial.Cast
 import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Data.Nat.Factorization.PrimePow
+import Mathbin.Data.Nat.Factors
 import Mathbin.Data.Nat.Fib
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Nat.Gcd.BigOperators
@@ -1477,6 +1481,7 @@ import Mathbin.Data.Nat.Periodic
 import Mathbin.Data.Nat.Pow
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Nat.PrimeFin
+import Mathbin.Data.Nat.PrimeNormNum
 import Mathbin.Data.Nat.Psub
 import Mathbin.Data.Nat.Set
 import Mathbin.Data.Nat.Size

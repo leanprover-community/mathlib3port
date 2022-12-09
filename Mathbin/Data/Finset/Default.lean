@@ -1,5 +1,6 @@
 import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Finset.Fold
+import Mathbin.Data.Finset.Image
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Finset.LocallyFinite
 import Mathbin.Data.Finset.NatAntidiagonal

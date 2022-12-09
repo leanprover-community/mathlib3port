@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Order.Hom.Basic
 import Mathbin.Algebra.Order.Sub.Defs
-import Mathbin.Algebra.Order.Monoid.Defs
+import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 
 /-!
 # Ordered groups
@@ -55,6 +55,15 @@ instance OrderedCommGroup.to_covariant_class_left_le (α : Type u) [OrderedCommG
     CovariantClass α α (· * ·)
       (· ≤ ·) where elim a b c bc := OrderedCommGroup.mul_le_mul_left b c bc a
 #align ordered_comm_group.to_covariant_class_left_le OrderedCommGroup.to_covariant_class_left_le
+
+#print OrderedCommGroup.toOrderedCancelCommMonoid /-
+-- See note [lower instance priority]
+@[to_additive]
+instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid [OrderedCommGroup α] :
+    OrderedCancelCommMonoid α :=
+  { ‹OrderedCommGroup α› with le_of_mul_le_mul_left := fun a b c => le_of_mul_le_mul_left' }
+#align ordered_comm_group.to_ordered_cancel_comm_monoid OrderedCommGroup.toOrderedCancelCommMonoid
+-/
 
 example (α : Type u) [OrderedAddCommGroup α] : CovariantClass α α (swap (· + ·)) (· < ·) :=
   AddRightCancelSemigroup.covariant_swap_add_lt_of_covariant_swap_add_le α
@@ -973,6 +982,14 @@ instance (priority := 100) LinearOrderedCommGroup.to_no_min_order [Nontrivial α
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩
 #align linear_ordered_comm_group.to_no_min_order LinearOrderedCommGroup.to_no_min_order
+
+-- See note [lower instance priority]
+@[to_additive]
+instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid :
+    LinearOrderedCancelCommMonoid α :=
+  { ‹LinearOrderedCommGroup α›, OrderedCommGroup.toOrderedCancelCommMonoid with }
+#align
+  linear_ordered_comm_group.to_linear_ordered_cancel_comm_monoid LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid
 
 end LinearOrderedCommGroup
 

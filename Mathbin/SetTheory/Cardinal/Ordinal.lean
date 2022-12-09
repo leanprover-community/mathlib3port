@@ -616,6 +616,10 @@ theorem mul_eq_max_of_aleph_0_le_left {a b : Cardinal} (h : ℵ₀ ≤ a) (h' : 
   rw [mul_one]
 #align cardinal.mul_eq_max_of_aleph_0_le_left Cardinal.mul_eq_max_of_aleph_0_le_left
 
+theorem mul_le_max_of_aleph_0_le_right {a b : Cardinal} (h : ℵ₀ ≤ b) : a * b ≤ max a b := by
+  simpa only [mul_comm, max_comm] using mul_le_max_of_aleph_0_le_left h
+#align cardinal.mul_le_max_of_aleph_0_le_right Cardinal.mul_le_max_of_aleph_0_le_right
+
 theorem mul_eq_max_of_aleph_0_le_right {a b : Cardinal} (h' : a ≠ 0) (h : ℵ₀ ≤ b) :
     a * b = max a b := by 
   rw [mul_comm, max_comm]

@@ -5,7 +5,7 @@ Authors: Aaron Anderson
 -/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Data.Nat.Interval
-import Mathbin.Data.Nat.Prime
+import Mathbin.Data.Nat.Factors
 
 /-!
 # Divisor finsets

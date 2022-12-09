@@ -805,6 +805,18 @@ theorem bij_on_empty (f : α → β) : BijOn f ∅ ∅ :=
   ⟨maps_to_empty f ∅, inj_on_empty f, surj_on_empty f ∅⟩
 #align set.bij_on_empty Set.bij_on_empty
 
+theorem BijOn.inter_maps_to (h₁ : BijOn f s₁ t₁) (h₂ : MapsTo f s₂ t₂) (h₃ : s₁ ∩ f ⁻¹' t₂ ⊆ s₂) :
+    BijOn f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
+  ⟨h₁.MapsTo.inter_inter h₂, h₁.InjOn.mono <| inter_subset_left _ _, fun y hy =>
+    let ⟨x, hx, hxy⟩ := h₁.SurjOn hy.1
+    ⟨x, ⟨hx, h₃ ⟨hx, hxy.symm.recOn hy.2⟩⟩, hxy⟩⟩
+#align set.bij_on.inter_maps_to Set.BijOn.inter_maps_to
+
+theorem MapsTo.inter_bij_on (h₁ : MapsTo f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h₃ : s₂ ∩ f ⁻¹' t₁ ⊆ s₁) :
+    BijOn f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
+  inter_comm s₂ s₁ ▸ inter_comm t₂ t₁ ▸ h₂.inter_maps_to h₁ h₃
+#align set.maps_to.inter_bij_on Set.MapsTo.inter_bij_on
+
 theorem BijOn.inter (h₁ : BijOn f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h : InjOn f (s₁ ∪ s₂)) :
     BijOn f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
   ⟨h₁.MapsTo.inter_inter h₂.MapsTo, h₁.InjOn.mono <| inter_subset_left _ _,
@@ -840,8 +852,7 @@ theorem BijOn.comp (hg : BijOn g t p) (hf : BijOn f s t) : BijOn (g ∘ f) s p :
   BijOn.mk (hg.MapsTo.comp hf.MapsTo) (hg.InjOn.comp hf.InjOn hf.MapsTo) (hg.SurjOn.comp hf.SurjOn)
 #align set.bij_on.comp Set.BijOn.comp
 
-theorem BijOn.bijective (h : BijOn f s t) :
-    Bijective ((t.codRestrict (s.restrict f)) fun x => h.MapsTo x.val_prop) :=
+theorem BijOn.bijective (h : BijOn f s t) : Bijective (h.MapsTo.restrict f s t) :=
   ⟨fun x y h' => Subtype.ext <| h.InjOn x.2 y.2 <| Subtype.ext_iff.1 h', fun ⟨y, hy⟩ =>
     let ⟨x, hx, hxy⟩ := h.SurjOn hy
     ⟨⟨x, hx⟩, Subtype.eq hxy⟩⟩

@@ -211,8 +211,8 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     exact
       int.gcd_eq_one_iff_coprime.mpr (Int.coprime_of_sq_sum' (int.gcd_eq_one_iff_coprime.mp htt4))
   -- b is even because b ^ 2 = 2 * m * n.
-  have hb2 : 2 ∣ b := by
-    apply @Int.Prime.dvd_pow' _ 2 _ (by norm_num : Nat.Prime 2)
+  have hb2 : 2 ∣ b := by 
+    apply @Int.Prime.dvd_pow' _ 2 _ Nat.prime_two
     rw [ht2, mul_assoc]
     exact dvd_mul_right 2 (m * n)
   cases' hb2 with b' hb2'

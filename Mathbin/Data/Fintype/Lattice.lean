@@ -69,22 +69,3 @@ theorem Finite.exists_min [Finite α] [Nonempty α] [LinearOrder β] (f : α →
   simpa using exists_min_image univ f univ_nonempty
 #align finite.exists_min Finite.exists_min
 
-section
-
-open Classical
-
-instance : Infinite ℕ :=
-  Infinite.of_not_fintype fun ⟨s, hs⟩ => Finset.not_mem_range_self <| s.subset_range_sup_succ (hs _)
-
-instance : Infinite ℤ :=
-  Infinite.of_injective Int.ofNat fun _ _ => Int.ofNat.inj
-
-instance [Nonempty α] : Infinite (Multiset α) := by
-  inhabit α
-  exact Infinite.of_injective (Multiset.repeat default) (Multiset.repeat_injective _)
-
-instance [Nonempty α] : Infinite (List α) :=
-  Infinite.of_surjective (coe : List α → Multiset α) (surjective_quot_mk _)
-
-end
-

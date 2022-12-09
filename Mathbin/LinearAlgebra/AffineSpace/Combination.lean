@@ -244,6 +244,13 @@ theorem weighted_vsub_of_point_filter_of_ne (w : ι → k) (p : ι → P) (b : P
   simpa [hw] using hne
 #align finset.weighted_vsub_of_point_filter_of_ne Finset.weighted_vsub_of_point_filter_of_ne
 
+/-- A constant multiplier of the weights in `weighted_vsub_of_point` may be moved outside the
+sum. -/
+theorem weighted_vsub_of_point_const_smul (w : ι → k) (p : ι → P) (b : P) (c : k) :
+    s.weightedVsubOfPoint p b (c • w) = c • s.weightedVsubOfPoint p b w := by
+  simp_rw [weighted_vsub_of_point_apply, smul_sum, Pi.smul_apply, smul_smul, smul_eq_mul]
+#align finset.weighted_vsub_of_point_const_smul Finset.weighted_vsub_of_point_const_smul
+
 /-- A weighted sum of the results of subtracting a default base point
 from the given points, as a linear map on the weights.  This is
 intended to be used when the sum of the weights is 0; that condition
@@ -355,6 +362,12 @@ theorem weighted_vsub_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι → 
     (h : ∀ i ∈ s, w i ≠ 0 → pred i) : (s.filter pred).weightedVsub p w = s.weightedVsub p w :=
   s.weighted_vsub_of_point_filter_of_ne _ _ _ h
 #align finset.weighted_vsub_filter_of_ne Finset.weighted_vsub_filter_of_ne
+
+/-- A constant multiplier of the weights in `weighted_vsub_of` may be moved outside the sum. -/
+theorem weighted_vsub_const_smul (w : ι → k) (p : ι → P) (c : k) :
+    s.weightedVsub p (c • w) = c • s.weightedVsub p w :=
+  s.weighted_vsub_of_point_const_smul _ _ _ _
+#align finset.weighted_vsub_const_smul Finset.weighted_vsub_const_smul
 
 /-- A weighted sum of the results of subtracting a default base point
 from the given points, added to that base point, as an affine map on
@@ -852,6 +865,150 @@ theorem map_affine_combination {V₂ P₂ : Type _} [AddCommGroup V₂] [Module 
   simp only [weighted_vsub_of_point_apply, RingHom.id_apply, AffineMap.map_vadd,
     LinearMap.map_smulₛₗ, AffineMap.linear_map_vsub, LinearMap.map_sum]
 #align finset.map_affine_combination Finset.map_affine_combination
+
+variable (k)
+
+omit S
+
+/-- Weights for expressing a single point as an affine combination. -/
+def affineCombinationSingleWeights [DecidableEq ι] (i : ι) : ι → k :=
+  Function.update (Function.const ι 0) i 1
+#align finset.affine_combination_single_weights Finset.affineCombinationSingleWeights
+
+@[simp]
+theorem affine_combination_single_weights_apply_self [DecidableEq ι] (i : ι) :
+    affineCombinationSingleWeights k i i = 1 := by simp [affine_combination_single_weights]
+#align
+  finset.affine_combination_single_weights_apply_self Finset.affine_combination_single_weights_apply_self
+
+@[simp]
+theorem affine_combination_single_weights_apply_of_ne [DecidableEq ι] {i j : ι} (h : j ≠ i) :
+    affineCombinationSingleWeights k i j = 0 := by simp [affine_combination_single_weights, h]
+#align
+  finset.affine_combination_single_weights_apply_of_ne Finset.affine_combination_single_weights_apply_of_ne
+
+@[simp]
+theorem sum_affine_combination_single_weights [DecidableEq ι] {i : ι} (h : i ∈ s) :
+    (∑ j in s, affineCombinationSingleWeights k i j) = 1 := by
+  rw [← affine_combination_single_weights_apply_self k i]
+  exact sum_eq_single_of_mem i h fun j _ hj => affine_combination_single_weights_apply_of_ne k hj
+#align finset.sum_affine_combination_single_weights Finset.sum_affine_combination_single_weights
+
+/-- Weights for expressing the subtraction of two points as a `weighted_vsub`. -/
+def weightedVsubVsubWeights [DecidableEq ι] (i j : ι) : ι → k :=
+  affineCombinationSingleWeights k i - affineCombinationSingleWeights k j
+#align finset.weighted_vsub_vsub_weights Finset.weightedVsubVsubWeights
+
+@[simp]
+theorem weighted_vsub_vsub_weights_self [DecidableEq ι] (i : ι) :
+    weightedVsubVsubWeights k i i = 0 := by simp [weighted_vsub_vsub_weights]
+#align finset.weighted_vsub_vsub_weights_self Finset.weighted_vsub_vsub_weights_self
+
+@[simp]
+theorem weighted_vsub_vsub_weights_apply_left [DecidableEq ι] {i j : ι} (h : i ≠ j) :
+    weightedVsubVsubWeights k i j i = 1 := by simp [weighted_vsub_vsub_weights, h]
+#align finset.weighted_vsub_vsub_weights_apply_left Finset.weighted_vsub_vsub_weights_apply_left
+
+@[simp]
+theorem weighted_vsub_vsub_weights_apply_right [DecidableEq ι] {i j : ι} (h : i ≠ j) :
+    weightedVsubVsubWeights k i j j = -1 := by simp [weighted_vsub_vsub_weights, h.symm]
+#align finset.weighted_vsub_vsub_weights_apply_right Finset.weighted_vsub_vsub_weights_apply_right
+
+@[simp]
+theorem weighted_vsub_vsub_weights_apply_of_ne [DecidableEq ι] {i j t : ι} (hi : t ≠ i)
+    (hj : t ≠ j) : weightedVsubVsubWeights k i j t = 0 := by
+  simp [weighted_vsub_vsub_weights, hi, hj]
+#align finset.weighted_vsub_vsub_weights_apply_of_ne Finset.weighted_vsub_vsub_weights_apply_of_ne
+
+@[simp]
+theorem sum_weighted_vsub_vsub_weights [DecidableEq ι] {i j : ι} (hi : i ∈ s) (hj : j ∈ s) :
+    (∑ t in s, weightedVsubVsubWeights k i j t) = 0 := by
+  simp_rw [weighted_vsub_vsub_weights, Pi.sub_apply, sum_sub_distrib]
+  simp [hi, hj]
+#align finset.sum_weighted_vsub_vsub_weights Finset.sum_weighted_vsub_vsub_weights
+
+variable {k}
+
+/-- Weights for expressing `line_map` as an affine combination. -/
+def affineCombinationLineMapWeights [DecidableEq ι] (i j : ι) (c : k) : ι → k :=
+  c • weightedVsubVsubWeights k j i + affineCombinationSingleWeights k i
+#align finset.affine_combination_line_map_weights Finset.affineCombinationLineMapWeights
+
+@[simp]
+theorem affine_combination_line_map_weights_self [DecidableEq ι] (i : ι) (c : k) :
+    affineCombinationLineMapWeights i i c = affineCombinationSingleWeights k i := by
+  simp [affine_combination_line_map_weights]
+#align
+  finset.affine_combination_line_map_weights_self Finset.affine_combination_line_map_weights_self
+
+@[simp]
+theorem affine_combination_line_map_weights_apply_left [DecidableEq ι] {i j : ι} (h : i ≠ j)
+    (c : k) : affineCombinationLineMapWeights i j c i = 1 - c := by
+  simp [affine_combination_line_map_weights, h.symm, sub_eq_neg_add]
+#align
+  finset.affine_combination_line_map_weights_apply_left Finset.affine_combination_line_map_weights_apply_left
+
+@[simp]
+theorem affine_combination_line_map_weights_apply_right [DecidableEq ι] {i j : ι} (h : i ≠ j)
+    (c : k) : affineCombinationLineMapWeights i j c j = c := by
+  simp [affine_combination_line_map_weights, h.symm]
+#align
+  finset.affine_combination_line_map_weights_apply_right Finset.affine_combination_line_map_weights_apply_right
+
+@[simp]
+theorem affine_combination_line_map_weights_apply_of_ne [DecidableEq ι] {i j t : ι} (hi : t ≠ i)
+    (hj : t ≠ j) (c : k) : affineCombinationLineMapWeights i j c t = 0 := by
+  simp [affine_combination_line_map_weights, hi, hj]
+#align
+  finset.affine_combination_line_map_weights_apply_of_ne Finset.affine_combination_line_map_weights_apply_of_ne
+
+@[simp]
+theorem sum_affine_combination_line_map_weights [DecidableEq ι] {i j : ι} (hi : i ∈ s) (hj : j ∈ s)
+    (c : k) : (∑ t in s, affineCombinationLineMapWeights i j c t) = 1 := by
+  simp_rw [affine_combination_line_map_weights, Pi.add_apply, sum_add_distrib]
+  simp [hi, hj, ← mul_sum]
+#align finset.sum_affine_combination_line_map_weights Finset.sum_affine_combination_line_map_weights
+
+include S
+
+variable (k)
+
+/-- An affine combination with `affine_combination_single_weights` gives the specified point. -/
+@[simp]
+theorem affine_combination_affine_combination_single_weights [DecidableEq ι] (p : ι → P) {i : ι}
+    (hi : i ∈ s) : s.affineCombination p (affineCombinationSingleWeights k i) = p i := by
+  refine' s.affine_combination_of_eq_one_of_eq_zero _ _ hi (by simp) _
+  rintro j - hj
+  simp [hj]
+#align
+  finset.affine_combination_affine_combination_single_weights Finset.affine_combination_affine_combination_single_weights
+
+/-- A weighted subtraction with `weighted_vsub_vsub_weights` gives the result of subtracting the
+specified points. -/
+@[simp]
+theorem weighted_vsub_weighted_vsub_vsub_weights [DecidableEq ι] (p : ι → P) {i j : ι} (hi : i ∈ s)
+    (hj : j ∈ s) : s.weightedVsub p (weightedVsubVsubWeights k i j) = p i -ᵥ p j := by
+  rw [weighted_vsub_vsub_weights, ← affine_combination_vsub,
+    s.affine_combination_affine_combination_single_weights k p hi,
+    s.affine_combination_affine_combination_single_weights k p hj]
+#align
+  finset.weighted_vsub_weighted_vsub_vsub_weights Finset.weighted_vsub_weighted_vsub_vsub_weights
+
+variable {k}
+
+/-- An affine combination with `affine_combination_line_map_weights` gives the result of
+`line_map`. -/
+@[simp]
+theorem affine_combination_affine_combination_line_map_weights [DecidableEq ι] (p : ι → P) {i j : ι}
+    (hi : i ∈ s) (hj : j ∈ s) (c : k) :
+    s.affineCombination p (affineCombinationLineMapWeights i j c) =
+      AffineMap.lineMap (p i) (p j) c :=
+  by
+  rw [affine_combination_line_map_weights, ← weighted_vsub_vadd_affine_combination,
+    weighted_vsub_const_smul, s.affine_combination_affine_combination_single_weights k p hi,
+    s.weighted_vsub_weighted_vsub_vsub_weights k p hj hi, AffineMap.line_map_apply]
+#align
+  finset.affine_combination_affine_combination_line_map_weights Finset.affine_combination_affine_combination_line_map_weights
 
 end Finset
 

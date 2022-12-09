@@ -5,6 +5,7 @@ Authors: Jireh Loreaux
 -/
 import Mathbin.Algebra.Hom.NonUnitalAlg
 import Mathbin.Algebra.Star.Prod
+import Mathbin.Algebra.Algebra.Prod
 
 /-!
 # Morphisms of star algebras

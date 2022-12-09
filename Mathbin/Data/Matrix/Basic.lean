@@ -3,7 +3,7 @@ Copyright (c) 2018 Ellen Arlt. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 -/
-import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.Algebra.Pi
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.RingEquiv

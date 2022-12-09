@@ -5,6 +5,7 @@ Authors: Anatole Dedecker, Alexey Soloyev, Junyan Xu
 -/
 import Mathbin.Data.Real.Irrational
 import Mathbin.Data.Nat.Fib
+import Mathbin.Data.Nat.PrimeNormNum
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Tactic.RingExp
 import Mathbin.Algebra.LinearRecurrence

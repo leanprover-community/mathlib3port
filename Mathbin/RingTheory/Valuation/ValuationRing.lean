@@ -621,14 +621,13 @@ protected
 
 end
 
-theorem Function.Surjective.valuation_ring {R S : Type _} [CommRing R] [IsDomain R]
-    [ValuationRing R] [CommRing S] [IsDomain S] (f : R →+* S) (hf : Function.Surjective f) :
-    ValuationRing S :=
+theorem Function.Surjective.valuationRing {R S : Type _} [CommRing R] [IsDomain R] [ValuationRing R]
+    [CommRing S] [IsDomain S] (f : R →+* S) (hf : Function.Surjective f) : ValuationRing S :=
   ⟨fun a b => by 
     obtain ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩ := hf a, hf b
     obtain ⟨c, rfl | rfl⟩ := ValuationRing.cond a b
     exacts[⟨f c, Or.inl <| (map_mul _ _ _).symm⟩, ⟨f c, Or.inr <| (map_mul _ _ _).symm⟩]⟩
-#align function.surjective.valuation_ring Function.Surjective.valuation_ring
+#align function.surjective.valuation_ring Function.Surjective.valuationRing
 
 section
 
@@ -639,7 +638,7 @@ include hh
 
 /-- If `𝒪` satisfies `v.integers 𝒪` where `v` is a valuation on a field, then `𝒪`
 is a valuation ring. -/
-theorem of_integers : ValuationRing 𝒪 := by 
+theorem ofIntegers : ValuationRing 𝒪 := by 
   constructor
   intro a b
   cases le_total (v (algebraMap 𝒪 K a)) (v (algebraMap 𝒪 K b))
@@ -649,7 +648,7 @@ theorem of_integers : ValuationRing 𝒪 := by
   · obtain ⟨c, hc⟩ := Valuation.Integers.dvd_of_le hh h
     use c
     exact Or.inl hc.symm
-#align valuation_ring.of_integers ValuationRing.of_integers
+#align valuation_ring.of_integers ValuationRing.ofIntegers
 
 end
 
@@ -658,7 +657,7 @@ section
 variable (K : Type u) [Field K]
 
 /-- A field is a valuation ring. -/
-instance (priority := 100) of_field : ValuationRing K := by
+instance (priority := 100) ofField : ValuationRing K := by
   constructor
   intro a b
   by_cases b = 0
@@ -669,7 +668,7 @@ instance (priority := 100) of_field : ValuationRing K := by
     right
     field_simp
     rw [mul_comm]
-#align valuation_ring.of_field ValuationRing.of_field
+#align valuation_ring.of_field ValuationRing.ofField
 
 end
 
@@ -678,7 +677,7 @@ section
 variable (A : Type u) [CommRing A] [IsDomain A] [DiscreteValuationRing A]
 
 /-- A DVR is a valuation ring. -/
-instance (priority := 100) of_discrete_valuation_ring : ValuationRing A := by
+instance (priority := 100) ofDiscreteValuationRing : ValuationRing A := by
   constructor
   intro a b
   by_cases ha : a = 0;
@@ -705,7 +704,7 @@ instance (priority := 100) of_discrete_valuation_ring : ValuationRing A := by
     simp only [Units.mul_inv, mul_one, mul_comm _ (u : A), mul_assoc, ← pow_add]
     congr 2
     linarith
-#align valuation_ring.of_discrete_valuation_ring ValuationRing.of_discrete_valuation_ring
+#align valuation_ring.of_discrete_valuation_ring ValuationRing.ofDiscreteValuationRing
 
 end
 

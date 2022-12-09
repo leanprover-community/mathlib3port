@@ -365,10 +365,61 @@ theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfia
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem ModelsBoundedFormula.realize_sentence {φ : L.Sentence} (h : T ⊨ φ) (M : Type _)
+    [L.StructureCat M] [M ⊨ T] [Nonempty M] : M ⊨ φ := by
+  rw [models_iff_not_satisfiable] at h
+  contrapose! h
+  have : M ⊨ T ∪ {formula.not φ} := by
+    simp only [Set.union_singleton, model_iff, Set.mem_insert_iff, forall_eq_or_imp,
+      sentence.realize_not]
+    rw [← model_iff]
+    exact ⟨h, inferInstance⟩
+  exact model.is_satisfiable M
+#align
+  first_order.language.Theory.models_bounded_formula.realize_sentence FirstOrder.Language.TheoryCat.ModelsBoundedFormula.realize_sentence
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A theory is complete when it is satisfiable and models each sentence or its negation. -/
 def IsComplete (T : L.TheoryCat) : Prop :=
   T.IsSatisfiable ∧ ∀ φ : L.Sentence, T ⊨ φ ∨ T ⊨ φ.Not
 #align first_order.language.Theory.is_complete FirstOrder.Language.TheoryCat.IsComplete
+
+namespace IsComplete
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem models_not_iff (h : T.IsComplete) (φ : L.Sentence) : T ⊨ φ.Not ↔ ¬T ⊨ φ := by
+  cases' h.2 φ with hφ hφn
+  · simp only [hφ, not_true, iff_false_iff]
+    rw [models_sentence_iff, not_forall]
+    refine' ⟨h.1.some, _⟩
+    simp only [sentence.realize_not, not_not]
+    exact models_sentence_iff.1 hφ _
+  · simp only [hφn, true_iff_iff]
+    intro hφ
+    rw [models_sentence_iff] at *
+    exact hφn h.1.some (hφ _)
+#align
+  first_order.language.Theory.is_complete.models_not_iff FirstOrder.Language.TheoryCat.IsComplete.models_not_iff
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem realize_sentence_iff (h : T.IsComplete) (φ : L.Sentence) (M : Type _) [L.StructureCat M]
+    [M ⊨ T] [Nonempty M] : M ⊨ φ ↔ T ⊨ φ := by
+  cases' h.2 φ with hφ hφn
+  · exact iff_of_true (hφ.realize_sentence M) hφ
+  ·
+    exact
+      iff_of_false ((sentence.realize_not M).1 (hφn.realize_sentence M))
+        ((h.models_not_iff φ).1 hφn)
+#align
+  first_order.language.Theory.is_complete.realize_sentence_iff FirstOrder.Language.TheoryCat.IsComplete.realize_sentence_iff
+
+end IsComplete
 
 /-- A theory is maximal when it is satisfiable and contains each sentence or its negation.
   Maximal theories are complete. -/
