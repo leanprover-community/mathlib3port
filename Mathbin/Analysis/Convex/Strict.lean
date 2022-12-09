@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Analysis.Convex.Basic
-import Mathbin.Topology.Algebra.Order.Basic
+import Mathbin.Topology.Order.Basic
 
 /-!
 # Strictly convex sets

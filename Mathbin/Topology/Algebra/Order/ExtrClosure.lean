@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
 import Mathbin.Topology.LocalExtr
-import Mathbin.Topology.Algebra.Order.Basic
+import Mathbin.Topology.Order.Basic
 
 /-!
 # Maximum/minimum on the closure of a set

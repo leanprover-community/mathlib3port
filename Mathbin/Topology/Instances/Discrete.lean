@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
 import Mathbin.Order.SuccPred.Basic
-import Mathbin.Topology.Algebra.Order.Basic
+import Mathbin.Topology.Order.Basic
 import Mathbin.Topology.MetricSpace.MetrizableUniformity
 
 /-!

@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Data.Part
-import Mathbin.Data.Enat.Basic
+import Mathbin.Data.Enat.Lattice
 import Mathbin.Tactic.NormNum
 
 /-!

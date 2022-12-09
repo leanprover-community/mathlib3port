@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 -/
 import Mathbin.Algebra.Order.Floor
-import Mathbin.Topology.Algebra.Order.Basic
+import Mathbin.Topology.Order.Basic
 
 /-!
 # Topological facts about `int.floor`, `int.ceil` and `int.fract`

@@ -1222,6 +1222,7 @@ import Mathbin.Data.Dfinsupp.WellFounded
 import Mathbin.Data.Dlist.Basic
 import Mathbin.Data.Dlist.Instances
 import Mathbin.Data.Enat.Basic
+import Mathbin.Data.Enat.Lattice
 import Mathbin.Data.Erased
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Fin.Fin2
@@ -2782,7 +2783,6 @@ import Mathbin.Topology.Algebra.Nonarchimedean.Bases
 import Mathbin.Topology.Algebra.Nonarchimedean.Basic
 import Mathbin.Topology.Algebra.OpenSubgroup
 import Mathbin.Topology.Algebra.Order.Archimedean
-import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Topology.Algebra.Order.Compact
 import Mathbin.Topology.Algebra.Order.ExtendFrom
 import Mathbin.Topology.Algebra.Order.ExtrClosure
@@ -2927,6 +2927,7 @@ import Mathbin.Topology.NhdsSet
 import Mathbin.Topology.NoetherianSpace
 import Mathbin.Topology.OmegaCompletePartialOrder
 import Mathbin.Topology.Order
+import Mathbin.Topology.Order.Basic
 import Mathbin.Topology.Order.Hom.Basic
 import Mathbin.Topology.Order.Hom.Esakia
 import Mathbin.Topology.Order.Lattice

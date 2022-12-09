@@ -1050,18 +1050,10 @@ theorem MultilinearMap.dom_coprod_alternization (a : MultilinearMap R' (fun _ : 
     change Quotient.mk' _ = Quotient.mk' _
     rw [QuotientGroup.eq']
   -- eliminate a multiplication
-  have : @Finset.univ (perm (Sum ιa ιb)) _ = finset.univ.image ((· * ·) σ) :=
-    (finset.eq_univ_iff_forall.mpr fun a =>
-        let ⟨a', ha'⟩ := mul_left_surjective σ a
-        finset.mem_image.mpr ⟨a', Finset.mem_univ _, ha'⟩).symm
-  rw [this, Finset.image_filter]
-  simp only [Function.comp, mul_inv_rev, inv_mul_cancel_right, Subgroup.inv_mem_iff]
-  simp only [MonoidHom.mem_range]
-  -- needs to be separate from the above `simp only`
-  rw [Finset.filter_congr_decidable, Finset.univ_filter_exists (perm.sum_congr_hom ιa ιb),
-    Finset.sum_image fun x _ y _ (h : _ = _) => mul_right_injective _ h,
-    Finset.sum_image fun x _ y _ (h : _ = _) => perm.sum_congr_hom_injective h]
-  dsimp only
+  rw [← Finset.map_univ_equiv (Equiv.mulLeft σ), Finset.filter_map, Finset.sum_map]
+  simp_rw [Equiv.coe_toEmbedding, Equiv.coe_mul_left, (· ∘ ·), mul_inv_rev, inv_mul_cancel_right,
+    Subgroup.inv_mem_iff, MonoidHom.mem_range, Finset.univ_filter_exists,
+    Finset.sum_image (perm.sum_congr_hom_injective.inj_on _)]
   -- now we're ready to clean up the RHS, pulling out the summation
   rw [dom_coprod.summand_mk', MultilinearMap.dom_coprod_alternization_coe, ← Finset.sum_product',
     Finset.univ_product_univ, ← MultilinearMap.dom_dom_congr_equiv_apply, AddEquiv.map_sum,

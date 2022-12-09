@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.Order.LiminfLimsup
 import Mathbin.Order.Filter.Archimedean
-import Mathbin.Topology.Algebra.Order.Basic
+import Mathbin.Topology.Order.Basic
 
 /-!
 # Lemmas about liminf and limsup in an order topology.

@@ -3,7 +3,6 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Data.Nat.Lattice
 import Mathbin.Data.Nat.SuccPred
 import Mathbin.Algebra.CharZero.Lemmas
 import Mathbin.Algebra.Order.Sub.WithTop
@@ -22,8 +21,7 @@ about this type.
 def Enat : Type :=
   WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial,
   LinearOrder, OrderBot, OrderTop, Bot, Top, CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub,
-  CompleteLinearOrder, LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt,
-  WellFoundedRelation, CharZero,
+  LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt, WellFoundedRelation, CharZero,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 #align enat Enat
 

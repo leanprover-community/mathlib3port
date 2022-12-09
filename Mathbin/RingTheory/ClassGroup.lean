@@ -297,8 +297,7 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
     change Setoid.r _ _
     rw [QuotientGroup.left_rel_apply]
     refine' ⟨Units.mk0 (algebraMap R _ a) fa_ne_zero, _⟩
-    apply @mul_left_cancel _ _ I
-    rw [← mul_assoc, mul_right_inv, one_mul, eq_comm, mul_comm I]
+    rw [_root_.eq_inv_mul_iff_mul_eq, eq_comm, mul_comm I]
     apply Units.ext
     simp only [FractionalIdeal.coe_mk0, FractionalIdeal.map_canonical_equiv_mk0, SetLike.coe_mk,
       Units.val_mk0, coe_to_principal_ideal, coe_coe, Units.val_mul,
