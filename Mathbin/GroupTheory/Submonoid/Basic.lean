@@ -527,6 +527,11 @@ def eqMlocus (f g : M →* N) :
   mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align monoid_hom.eq_mlocus MonoidHom.eqMlocus
 
+@[simp, to_additive]
+theorem eq_mlocus_same (f : M →* N) : f.eqMlocus f = ⊤ :=
+  SetLike.ext fun _ => eq_self_iff_true _
+#align monoid_hom.eq_mlocus_same MonoidHom.eq_mlocus_same
+
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its submonoid closure. -/
 @[to_additive
       "If two monoid homomorphisms are equal on a set, then they are equal on its submonoid\nclosure."]

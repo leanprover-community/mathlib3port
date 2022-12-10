@@ -372,6 +372,7 @@ import Mathbin.Algebra.Quotient
 import Mathbin.Algebra.Regular.Basic
 import Mathbin.Algebra.Regular.Pow
 import Mathbin.Algebra.Regular.Smul
+import Mathbin.Algebra.Ring.AddAut
 import Mathbin.Algebra.Ring.Aut
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Ring.BooleanRing

@@ -1187,6 +1187,11 @@ def eqLocus (f g : R →+* S) : Subring R :=
   { (f : R →* S).eqMlocus g, (f : R →+ S).eqLocus g with carrier := { x | f x = g x } }
 #align ring_hom.eq_locus RingHom.eqLocus
 
+@[simp]
+theorem eq_locus_same (f : R →+* S) : f.eqLocus f = ⊤ :=
+  SetLike.ext fun _ => eq_self_iff_true _
+#align ring_hom.eq_locus_same RingHom.eq_locus_same
+
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subring closure. -/
 theorem eq_on_set_closure {f g : R →+* S} {s : Set R} (h : Set.EqOn f g s) :
     Set.EqOn f g (closure s) :=

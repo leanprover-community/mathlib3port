@@ -1154,6 +1154,11 @@ def eqSlocus (f g : R →+* S) : Subsemiring R :=
   { (f : R →* S).eqMlocus g, (f : R →+ S).eqMlocus g with carrier := { x | f x = g x } }
 #align ring_hom.eq_slocus RingHom.eqSlocus
 
+@[simp]
+theorem eq_slocus_same (f : R →+* S) : f.eqSlocus f = ⊤ :=
+  SetLike.ext fun _ => eq_self_iff_true _
+#align ring_hom.eq_slocus_same RingHom.eq_slocus_same
+
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subsemiring closure. -/
 theorem eq_on_sclosure {f g : R →+* S} {s : Set R} (h : Set.EqOn f g s) :
     Set.EqOn f g (closure s) :=

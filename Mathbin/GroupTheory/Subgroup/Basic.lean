@@ -2740,6 +2740,11 @@ def eqLocus (f g : G →* M) : Subgroup G :=
   { eqMlocus f g with inv_mem' := fun x => eq_on_inv f g }
 #align monoid_hom.eq_locus MonoidHom.eqLocus
 
+@[simp, to_additive]
+theorem eq_locus_same (f : G →* N) : f.eqLocus f = ⊤ :=
+  SetLike.ext fun _ => eq_self_iff_true _
+#align monoid_hom.eq_locus_same MonoidHom.eq_locus_same
+
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its subgroup closure. -/
 @[to_additive
       "If two monoid homomorphisms are equal on a set, then they are equal on its subgroup\nclosure."]
@@ -3296,6 +3301,12 @@ theorem int_cast_mem_zmultiples_one : ↑(k : ℤ) ∈ zmultiples (1 : R) :=
 end Ring
 
 end AddSubgroup
+
+@[simp, to_additive map_zmultiples]
+theorem MonoidHom.map_zpowers (f : G →* N) (x : G) :
+    (Subgroup.zpowers x).map f = Subgroup.zpowers (f x) := by
+  rw [Subgroup.zpowers_eq_closure, Subgroup.zpowers_eq_closure, f.map_closure, Set.image_singleton]
+#align monoid_hom.map_zpowers MonoidHom.map_zpowers
 
 theorem Int.mem_zmultiples_iff {a b : ℤ} : b ∈ AddSubgroup.zmultiples a ↔ a ∣ b :=
   exists_congr fun k => by rw [mul_comm, eq_comm, ← smul_eq_mul]

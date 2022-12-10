@@ -1608,6 +1608,28 @@ theorem range_neg {R : Type _} {R₂ : Type _} {M : Type _} {M₂ : Type _} [Sem
   rw [range_comp, Submodule.map_neg, Submodule.map_id]
 #align linear_map.range_neg LinearMap.range_neg
 
+/-- A linear map version of `add_monoid_hom.eq_locus` -/
+def eqLocus (f g : M →ₛₗ[τ₁₂] M₂) : Submodule R M :=
+  { f.toAddMonoidHom.eqMlocus g.toAddMonoidHom with carrier := { x | f x = g x },
+    smul_mem' := fun r x (hx : _ = _) =>
+      show _ = _ by simpa only [LinearMap.map_smulₛₗ] using congr_arg ((· • ·) (τ₁₂ r)) hx }
+#align linear_map.eq_locus LinearMap.eqLocus
+
+@[simp]
+theorem mem_eq_locus {x : M} {f g : M →ₛₗ[τ₁₂] M₂} : x ∈ f.eqLocus g ↔ f x = g x :=
+  Iff.rfl
+#align linear_map.mem_eq_locus LinearMap.mem_eq_locus
+
+theorem eq_locus_to_add_submonoid (f g : M →ₛₗ[τ₁₂] M₂) :
+    (f.eqLocus g).toAddSubmonoid = (f : M →+ M₂).eqMlocus g :=
+  rfl
+#align linear_map.eq_locus_to_add_submonoid LinearMap.eq_locus_to_add_submonoid
+
+@[simp]
+theorem eq_locus_same (f : M →ₛₗ[τ₁₂] M₂) : f.eqLocus f = ⊤ :=
+  SetLike.ext fun _ => eq_self_iff_true _
+#align linear_map.eq_locus_same LinearMap.eq_locus_same
+
 end
 
 /-- The decreasing sequence of submodules consisting of the ranges of the iterates of a linear map.
@@ -1838,6 +1860,10 @@ theorem range_to_add_subgroup [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ�
 theorem ker_to_add_subgroup (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubgroup = f.toAddMonoidHom.ker :=
   rfl
 #align linear_map.ker_to_add_subgroup LinearMap.ker_to_add_subgroup
+
+theorem eq_locus_eq_ker_sub (f g : M →ₛₗ[τ₁₂] M₂) : f.eqLocus g = (f - g).ker :=
+  SetLike.ext fun v => sub_eq_zero.symm
+#align linear_map.eq_locus_eq_ker_sub LinearMap.eq_locus_eq_ker_sub
 
 include sc
 

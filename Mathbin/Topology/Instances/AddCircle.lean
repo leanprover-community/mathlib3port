@@ -3,6 +3,7 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
+import Mathbin.Algebra.Ring.AddAut
 import Mathbin.GroupTheory.Divisible
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.RingTheory.Int.Basic
@@ -131,27 +132,11 @@ section LinearOrderedField
 
 variable [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p q : 𝕜)
 
-/-- An auxiliary definition used only for constructing `add_circle.equiv_add_circle`. -/
-private def equiv_add_circle_aux (hp : p ≠ 0) : AddCircle p →+ AddCircle q :=
-  QuotientAddGroup.lift _
-    ((QuotientAddGroup.mk' (zmultiples q)).comp <| AddMonoidHom.mulRight (p⁻¹ * q)) fun x h => by
-    obtain ⟨z, rfl⟩ := mem_zmultiples_iff.1 h <;> simp [hp, mul_assoc (z : 𝕜), ← mul_assoc p]
-#align add_circle.equiv_add_circle_aux add_circle.equiv_add_circle_aux
-
 /-- The rescaling equivalence between additive circles with different periods. -/
 def equivAddCircle (hp : p ≠ 0) (hq : q ≠ 0) : AddCircle p ≃+ AddCircle q :=
-  { equivAddCircleAux p q hp with toFun := equivAddCircleAux p q hp,
-    invFun := equivAddCircleAux q p hq,
-    left_inv := by 
-      rintro ⟨x⟩
-      show QuotientAddGroup.mk _ = _
-      congr
-      field_simp [hp, hq] ,
-    right_inv := by 
-      rintro ⟨x⟩
-      show QuotientAddGroup.mk _ = _
-      congr
-      field_simp [hp, hq] }
+  QuotientAddGroup.congr _ _ (AddAut.mulRight <| (Units.mk0 p hp)⁻¹ * Units.mk0 q hq) <| by
+    rw [AddMonoidHom.map_zmultiples, AddMonoidHom.coe_coe, AddAut.mul_right_apply, Units.val_mul,
+      Units.val_mk0, Units.val_inv_eq_inv_val, Units.val_mk0, mul_inv_cancel_left₀ hp]
 #align add_circle.equiv_add_circle AddCircle.equivAddCircle
 
 @[simp]
