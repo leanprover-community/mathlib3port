@@ -144,21 +144,23 @@ theorem is_closed_map_to_add : IsClosedMap (toAdd : Multiplicative α → α) :=
   IsClosedMap.id
 #align is_closed_map_to_add is_closed_map_to_add
 
-attribute [local semireducible] nhds
-
-theorem nhds_of_mul (a : α) : 𝓝 (ofMul a) = map ofMul (𝓝 a) :=
+theorem nhds_of_mul (a : α) : 𝓝 (ofMul a) = map ofMul (𝓝 a) := by
+  unfold nhds
   rfl
 #align nhds_of_mul nhds_of_mul
 
-theorem nhds_of_add (a : α) : 𝓝 (ofAdd a) = map ofAdd (𝓝 a) :=
+theorem nhds_of_add (a : α) : 𝓝 (ofAdd a) = map ofAdd (𝓝 a) := by
+  unfold nhds
   rfl
 #align nhds_of_add nhds_of_add
 
-theorem nhds_to_mul (a : Additive α) : 𝓝 (toMul a) = map toMul (𝓝 a) :=
+theorem nhds_to_mul (a : Additive α) : 𝓝 (toMul a) = map toMul (𝓝 a) := by
+  unfold nhds
   rfl
 #align nhds_to_mul nhds_to_mul
 
-theorem nhds_to_add (a : Multiplicative α) : 𝓝 (toAdd a) = map toAdd (𝓝 a) :=
+theorem nhds_to_add (a : Multiplicative α) : 𝓝 (toAdd a) = map toAdd (𝓝 a) := by
+  unfold nhds
   rfl
 #align nhds_to_add nhds_to_add
 
@@ -207,13 +209,13 @@ theorem is_closed_map_of_dual : IsClosedMap (ofDual : αᵒᵈ → α) :=
   IsClosedMap.id
 #align is_closed_map_of_dual is_closed_map_of_dual
 
-attribute [local semireducible] nhds
-
-theorem nhds_to_dual (a : α) : 𝓝 (toDual a) = map toDual (𝓝 a) :=
+theorem nhds_to_dual (a : α) : 𝓝 (toDual a) = map toDual (𝓝 a) := by
+  unfold nhds
   rfl
 #align nhds_to_dual nhds_to_dual
 
-theorem nhds_of_dual (a : α) : 𝓝 (ofDual a) = map ofDual (𝓝 a) :=
+theorem nhds_of_dual (a : α) : 𝓝 (ofDual a) = map ofDual (𝓝 a) := by
+  unfold nhds
   rfl
 #align nhds_of_dual nhds_of_dual
 

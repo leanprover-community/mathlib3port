@@ -306,8 +306,6 @@ theorem modeq_cancel_right_of_coprime {a b c m : ℕ} (hmc : gcd m c = 1)
 
 end Modeq
 
-attribute [local semireducible] Int.NonNeg
-
 /-- The natural number less than `lcm n m` congruent to `a` mod `n` and `b` mod `m` -/
 def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
   if hn : n = 0 then ⟨a, by rw [hn, gcd_zero_left] at h; constructor; rfl; exact h⟩

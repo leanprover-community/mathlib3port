@@ -2,6 +2,8 @@ import Mathbin.Algebra.Abs
 import Mathbin.Algebra.AddTorsor
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Algebra.Bilinear
+import Mathbin.Algebra.Algebra.Equiv
+import Mathbin.Algebra.Algebra.Hom
 import Mathbin.Algebra.Algebra.Operations
 import Mathbin.Algebra.Algebra.Pi
 import Mathbin.Algebra.Algebra.Prod
@@ -1640,6 +1642,7 @@ import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.Data.Set.Intervals.Group
 import Mathbin.Data.Set.Intervals.Infinite
 import Mathbin.Data.Set.Intervals.Instances
+import Mathbin.Data.Set.Intervals.Monoid
 import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.Data.Set.Intervals.OrdConnected
 import Mathbin.Data.Set.Intervals.OrdConnectedComponent

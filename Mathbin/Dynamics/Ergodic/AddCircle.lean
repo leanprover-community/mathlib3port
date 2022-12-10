@@ -13,16 +13,16 @@ import Mathbin.Data.Set.Pointwise.Iterate
 
 This file contains proofs of ergodicity for maps of the additive circle.
 
-# Main definitions:
+## Main definitions:
 
  * `add_circle.ergodic_zsmul`: given `n : ℤ` such that `1 < |n|`, the self map `y ↦ n • y` on
    the additive circle is ergodic (wrt the Haar measure).
  * `add_circle.ergodic_nsmul`: given `n : ℕ` such that `1 < n`, the self map `y ↦ n • y` on
    the additive circle is ergodic (wrt the Haar measure).
-
-# TODO
-
- * Show that the map `y ↦ n • y + x` is ergodic for any `x` (and `1 < |n|`).
+ * `add_circle.ergodic_zsmul_add`: given `n : ℤ` such that `1 < |n|` and `x : add_circle T`, the
+   self map `y ↦ n • y + x` on the additive circle is ergodic (wrt the Haar measure).
+ * `add_circle.ergodic_nsmul_add`: given `n : ℕ` such that `1 < n` and `x : add_circle T`, the
+   self map `y ↦ n • y + x` on the additive circle is ergodic (wrt the Haar measure).
 
 -/
 
@@ -125,6 +125,32 @@ theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n
 theorem ergodicNsmul {n : ℕ} (hn : 1 < n) : Ergodic fun y : AddCircle T => n • y :=
   ergodicZsmul (by simp [hn] : 1 < |(n : ℤ)|)
 #align add_circle.ergodic_nsmul AddCircle.ergodicNsmul
+
+theorem ergodicZsmulAdd (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun y => n • y + x := by
+  set f : AddCircle T → AddCircle T := fun y => n • y + x
+  let e : AddCircle T ≃ᵐ AddCircle T := MeasurableEquiv.addLeft (DivisibleBy.div x <| n - 1)
+  have he : measure_preserving e volume volume := measure_preserving_add_left volume _
+  suffices e ∘ f ∘ e.symm = fun y => n • y by
+    rw [← he.ergodic_conjugate_iff, this]
+    exact ergodic_zsmul h
+  replace h : n - 1 ≠ 0
+  · rw [← abs_one] at h
+    rw [sub_ne_zero]
+    exact ne_of_apply_ne _ (ne_of_gt h)
+  have hnx : n • DivisibleBy.div x (n - 1) = x + DivisibleBy.div x (n - 1) := by
+    conv_rhs => 
+      congr
+      rw [← DivisibleBy.div_cancel x h]
+    rw [sub_smul, one_smul, sub_add_cancel]
+  ext y
+  simp only [f, hnx, MeasurableEquiv.coe_add_left, MeasurableEquiv.symm_add_left, comp_app,
+    smul_add, zsmul_neg', neg_smul, neg_add_rev]
+  abel
+#align add_circle.ergodic_zsmul_add AddCircle.ergodicZsmulAdd
+
+theorem ergodicNsmulAdd (x : AddCircle T) {n : ℕ} (h : 1 < n) : Ergodic fun y => n • y + x :=
+  ergodicZsmulAdd x (by simp [h] : 1 < |(n : ℤ)|)
+#align add_circle.ergodic_nsmul_add AddCircle.ergodicNsmulAdd
 
 end AddCircle
 

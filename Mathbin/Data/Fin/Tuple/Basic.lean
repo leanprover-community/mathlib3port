@@ -138,18 +138,60 @@ theorem cons_self_tail : cons (q 0) (tail q) = q := by
 
 /-- Recurse on an `n+1`-tuple by splitting it into a single element and an `n`-tuple. -/
 @[elab_as_elim]
-def consInduction {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x))
+def consCases {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x))
     (x : ∀ i : Fin n.succ, α i) : P x :=
   cast (by rw [cons_self_tail]) <| h (x 0) (tail x)
-#align fin.cons_induction Fin.consInduction
+#align fin.cons_cases Fin.consCases
 
 @[simp]
-theorem cons_induction_cons {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x))
-    (x₀ : α 0) (x : ∀ i : Fin n, α i.succ) : @consInduction _ _ _ h (cons x₀ x) = h x₀ x := by
-  rw [cons_induction, cast_eq]
+theorem cons_cases_cons {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x))
+    (x₀ : α 0) (x : ∀ i : Fin n, α i.succ) : @consCases _ _ _ h (cons x₀ x) = h x₀ x := by
+  rw [cons_cases, cast_eq]
   congr
   exact tail_cons _ _
-#align fin.cons_induction_cons Fin.cons_induction_cons
+#align fin.cons_cases_cons Fin.cons_cases_cons
+
+/- warning: fin.cons_induction -> Fin.consInduction is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {P : forall {n : Nat}, ((Fin n) -> α) -> Sort.{v}}, (P (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Fin.elim0ₓ.{succ u_1} (fun (ᾰ : Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => α))) -> (forall {n : Nat} (x₀ : α) (x : (Fin n) -> α), (P n x) -> (P (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Fin.cons.{u_1} n (fun (ᾰ : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => α) x₀ x))) -> (forall {n : Nat} (x : (Fin n) -> α), P n x)
+but is expected to have type
+  forall {α : Type.{_aux_param_0}} {P : forall {n : Nat}, ((Fin n) -> α) -> Sort.{v}}, (P (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Fin.elim0ₓ.{succ _aux_param_0} (fun (ᾰ : Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => α))) -> (forall {n : Nat} (x₀ : α) (x : (Fin n) -> α), (P n x) -> (P (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Fin.cons.{_aux_param_0} n (fun (ᾰ : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => α) x₀ x))) -> (forall {n : Nat} (x : (Fin n) -> α), P n x)
+Case conversion may be inaccurate. Consider using '#align fin.cons_induction Fin.consInductionₓ'. -/
+/-- Recurse on an tuple by splitting into `fin.elim0` and `fin.cons`. -/
+@[elab_as_elim]
+def consInduction {α : Type _} {P : ∀ {n : ℕ}, (Fin n → α) → Sort v} (h0 : P Fin.elim0)
+    (h : ∀ {n} (x₀) (x : Fin n → α), P x → P (Fin.cons x₀ x)) : ∀ {n : ℕ} (x : Fin n → α), P x
+  | 0, x => by convert h0
+  | n + 1, x => consCases (fun x₀ x => h _ _ <| cons_induction _) x
+#align fin.cons_induction Fin.consInduction
+
+theorem cons_injective_of_injective {α} {x₀ : α} {x : Fin n → α} (hx₀ : x₀ ∉ Set.range x)
+    (hx : Function.Injective x) : Function.Injective (cons x₀ x : Fin n.succ → α) := by
+  refine' Fin.cases _ _
+  · refine' Fin.cases _ _
+    · intro
+      rfl
+    · intro j h
+      rw [cons_zero, cons_succ] at h
+      exact hx₀.elim ⟨_, h.symm⟩
+  · intro i
+    refine' Fin.cases _ _
+    · intro h
+      rw [cons_zero, cons_succ] at h
+      exact hx₀.elim ⟨_, h⟩
+    · intro j h
+      rw [cons_succ, cons_succ] at h
+      exact congr_arg _ (hx h)
+#align fin.cons_injective_of_injective Fin.cons_injective_of_injective
+
+theorem cons_injective_iff {α} {x₀ : α} {x : Fin n → α} :
+    Function.Injective (cons x₀ x : Fin n.succ → α) ↔ x₀ ∉ Set.range x ∧ Function.Injective x := by
+  refine' ⟨fun h => ⟨_, _⟩, And.ndrec cons_injective_of_injective⟩
+  · rintro ⟨i, hi⟩
+    replace h := @h i.succ 0
+    simpa [hi, succ_ne_zero] using h
+  · simpa [Function.comp] using h.comp (Fin.succ_injective _)
+#align fin.cons_injective_iff Fin.cons_injective_iff
 
 @[simp]
 theorem forall_fin_zero_pi {α : Fin 0 → Sort _} {P : (∀ i, α i) → Prop} :
@@ -164,7 +206,7 @@ theorem exists_fin_zero_pi {α : Fin 0 → Sort _} {P : (∀ i, α i) → Prop} 
 #align fin.exists_fin_zero_pi Fin.exists_fin_zero_pi
 
 theorem forall_fin_succ_pi {P : (∀ i, α i) → Prop} : (∀ x, P x) ↔ ∀ a v, P (Fin.cons a v) :=
-  ⟨fun h a v => h (Fin.cons a v), consInduction⟩
+  ⟨fun h a v => h (Fin.cons a v), consCases⟩
 #align fin.forall_fin_succ_pi Fin.forall_fin_succ_pi
 
 theorem exists_fin_succ_pi {P : (∀ i, α i) → Prop} : (∃ x, P x) ↔ ∃ a v, P (Fin.cons a v) :=

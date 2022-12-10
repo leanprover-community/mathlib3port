@@ -8,13 +8,6 @@ import Mathbin.Data.Finset.Lattice
 
 /-!
 # Lemmas relating fintypes and order/lattice structure.
-
-## Instances
-
-We provide `infinite` instances for
-* specific types: `ℕ`, `ℤ`
-* type constructors: `multiset α`, `list α`
-
 -/
 
 

@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.Algebra.Equiv
 import Mathbin.Algebra.Ring.Equiv
 import Mathbin.GroupTheory.MonoidLocalization
 import Mathbin.RingTheory.Ideal.Basic
@@ -866,12 +866,12 @@ private unsafe def tac :=
   sorry
 #align localization.tac localization.tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1717185221.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1717185221.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1717185221.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1717185221.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1717185221.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.1717185221.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3307293445.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3307293445.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3307293445.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3307293445.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3307293445.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.3307293445.tac -/
 instance : CommSemiring (Localization M) :=
   { Localization.commMonoidWithZero M with zero := 0, one := 1, add := (· + ·), mul := (· * ·),
     npow := Localization.npow _, nsmul := (· • ·),

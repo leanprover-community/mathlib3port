@@ -923,6 +923,27 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
 #align
   euclidean_geometry.cospherical.affine_independent EuclideanGeometry.Cospherical.affine_independent
 
+/-- Any three points in a cospherical set are affinely independent. -/
+theorem Cospherical.affine_independent_of_mem_of_ne {s : Set P} (hs : Cospherical s) {p₁ p₂ p₃ : P}
+    (h₁ : p₁ ∈ s) (h₂ : p₂ ∈ s) (h₃ : p₃ ∈ s) (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) :
+    AffineIndependent ℝ ![p₁, p₂, p₃] := by
+  refine' hs.affine_independent _ _
+  · simp [h₁, h₂, h₃, Set.insert_subset]
+  · erw [Fin.cons_injective_iff, Fin.cons_injective_iff]
+    simp [h₁₂, h₁₃, h₂₃, Function.Injective]
+#align
+  euclidean_geometry.cospherical.affine_independent_of_mem_of_ne EuclideanGeometry.Cospherical.affine_independent_of_mem_of_ne
+
+/-- The three points of a cospherical set are affinely independent. -/
+theorem Cospherical.affine_independent_of_ne {p₁ p₂ p₃ : P}
+    (hs : Cospherical ({p₁, p₂, p₃} : Set P)) (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) :
+    AffineIndependent ℝ ![p₁, p₂, p₃] :=
+  hs.affine_independent_of_mem_of_ne (Set.mem_insert _ _)
+    (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
+    (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))) h₁₂ h₁₃ h₂₃
+#align
+  euclidean_geometry.cospherical.affine_independent_of_ne EuclideanGeometry.Cospherical.affine_independent_of_ne
+
 /-- Suppose that `p₁` and `p₂` lie in spheres `s₁` and `s₂`.  Then the vector between the centers
 of those spheres is orthogonal to that between `p₁` and `p₂`; this is a version of
 `inner_vsub_vsub_of_dist_eq_of_dist_eq` for bundled spheres.  (In two dimensions, this says that

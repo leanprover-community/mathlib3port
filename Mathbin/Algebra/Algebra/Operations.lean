@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Algebra.Bilinear
+import Mathbin.Algebra.Algebra.Equiv
 import Mathbin.Algebra.Module.Submodule.Pointwise
 import Mathbin.Algebra.Module.Submodule.Bilinear
 import Mathbin.Algebra.Module.Opposites

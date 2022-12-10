@@ -75,6 +75,46 @@ theorem ofIterate (n : ℕ) (hf : PreErgodic (f^[n]) μ) : PreErgodic f μ :=
 
 end PreErgodic
 
+namespace MeasureTheory.MeasurePreserving
+
+variable {β : Type _} {m' : MeasurableSpace β} {μ' : Measure β} {s' : Set β} {g : α → β}
+
+theorem preErgodicOfPreErgodicConjugate (hg : MeasurePreserving g μ μ') (hf : PreErgodic f μ)
+    {f' : β → β} (h_comm : g ∘ f = f' ∘ g) : PreErgodic f' μ' :=
+  ⟨by 
+    intro s hs₀ hs₁
+    replace hs₁ : f ⁻¹' (g ⁻¹' s) = g ⁻¹' s; · rw [← preimage_comp, h_comm, preimage_comp, hs₁]
+    cases' hf.ae_empty_or_univ (hg.measurable hs₀) hs₁ with hs₂ hs₂ <;> [left, right]
+    · simpa only [ae_eq_empty, hg.measure_preimage hs₀] using hs₂
+    · simpa only [ae_eq_univ, ← preimage_compl, hg.measure_preimage hs₀.compl] using hs₂⟩
+#align
+  measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodicOfPreErgodicConjugate
+
+theorem pre_ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
+    PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ := by
+  refine'
+    ⟨fun hf => pre_ergodic_of_pre_ergodic_conjugate (h.symm e) hf _, fun hf =>
+      pre_ergodic_of_pre_ergodic_conjugate h hf _⟩
+  · change (e.symm ∘ e) ∘ f ∘ e.symm = f ∘ e.symm
+    rw [MeasurableEquiv.symm_comp_self, comp.left_id]
+  · change e ∘ f = e ∘ f ∘ e.symm ∘ e
+    rw [MeasurableEquiv.symm_comp_self, comp.right_id]
+#align
+  measure_theory.measure_preserving.pre_ergodic_conjugate_iff MeasureTheory.MeasurePreserving.pre_ergodic_conjugate_iff
+
+theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
+    Ergodic (e ∘ f ∘ e.symm) μ' ↔ Ergodic f μ := by
+  have : measure_preserving (e ∘ f ∘ e.symm) μ' μ' ↔ measure_preserving f μ μ := by
+    rw [h.comp_left_iff, (measure_preserving.symm e h).comp_right_iff]
+  replace h : PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ := h.pre_ergodic_conjugate_iff
+  exact
+    ⟨fun hf => { this.mp hf.toMeasurePreserving, h.mp hf.toPreErgodic with }, fun hf =>
+      { this.mpr hf.toMeasurePreserving, h.mpr hf.toPreErgodic with }⟩
+#align
+  measure_theory.measure_preserving.ergodic_conjugate_iff MeasureTheory.MeasurePreserving.ergodic_conjugate_iff
+
+end MeasureTheory.MeasurePreserving
+
 namespace Ergodic
 
 /-- An ergodic map is quasi ergodic. -/

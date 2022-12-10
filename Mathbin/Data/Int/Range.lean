@@ -20,8 +20,6 @@ This could be unified with `data.list.intervals`. See the TODOs there.
 
 namespace Int
 
-attribute [local semireducible] Int.NonNeg
-
 /-- List enumerating `[m, n)`. This is the ℤ variant of `list.Ico`. -/
 def range (m n : ℤ) : List ℤ :=
   (List.range (toNat (n - m))).map fun r => m + r
@@ -31,7 +29,7 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
   ⟨fun H =>
     let ⟨s, h1, h2⟩ := List.mem_map.1 H
     h2 ▸
-      ⟨le_add_of_nonneg_right trivial,
+      ⟨le_add_of_nonneg_right (ofNat_zero_le s),
         add_lt_of_lt_sub_left <|
           match n - m, h1 with
           | (k : ℕ), h1 => by rwa [List.mem_range, to_nat_coe_nat, ← coe_nat_lt] at h1⟩,

@@ -505,13 +505,13 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
                 "("
                 (Order.BoundedOrder.«term⊤» "⊤")
                 ":"
-                [(Term.app `Subgroup [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])]
+                [(Term.app `Subgroup [(Algebra.Algebra.Equiv.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])]
                 ")")])
              "="
              (Order.BoundedOrder.«term⊥» "⊥"))
             ","
             («term_=_»
-             (Term.app `Fintype.card [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])
+             (Term.app `Fintype.card [(Algebra.Algebra.Equiv.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])
              "="
              (Term.app `finrank [`F `E]))
             ","

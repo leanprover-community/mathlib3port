@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 -/
 import Mathbin.Order.LocallyFinite
+import Mathbin.Data.Set.Intervals.Monoid
 
 /-!
 # Intervals as finsets
@@ -795,80 +796,109 @@ end LinearOrder
 
 section OrderedCancelAddCommMonoid
 
-variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [DecidableEq α] [LocallyFiniteOrder α]
+variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α]
 
+@[simp]
+theorem map_add_left_Icc (a b c : α) : (icc a b).map (addLeftEmbedding c) = icc (c + a) (c + b) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Icc, coe_Icc]
+  exact Set.image_const_add_Icc _ _ _
+#align finset.map_add_left_Icc Finset.map_add_left_Icc
+
+@[simp]
+theorem map_add_right_Icc (a b c : α) : (icc a b).map (addRightEmbedding c) = icc (a + c) (b + c) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Icc, coe_Icc]
+  exact Set.image_add_const_Icc _ _ _
+#align finset.map_add_right_Icc Finset.map_add_right_Icc
+
+@[simp]
+theorem map_add_left_Ico (a b c : α) : (ico a b).map (addLeftEmbedding c) = ico (c + a) (c + b) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Ico, coe_Ico]
+  exact Set.image_const_add_Ico _ _ _
+#align finset.map_add_left_Ico Finset.map_add_left_Ico
+
+@[simp]
+theorem map_add_right_Ico (a b c : α) : (ico a b).map (addRightEmbedding c) = ico (a + c) (b + c) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Ico, coe_Ico]
+  exact Set.image_add_const_Ico _ _ _
+#align finset.map_add_right_Ico Finset.map_add_right_Ico
+
+@[simp]
+theorem map_add_left_Ioc (a b c : α) : (ioc a b).map (addLeftEmbedding c) = ioc (c + a) (c + b) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Ioc, coe_Ioc]
+  exact Set.image_const_add_Ioc _ _ _
+#align finset.map_add_left_Ioc Finset.map_add_left_Ioc
+
+@[simp]
+theorem map_add_right_Ioc (a b c : α) : (ioc a b).map (addRightEmbedding c) = ioc (a + c) (b + c) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Ioc, coe_Ioc]
+  exact Set.image_add_const_Ioc _ _ _
+#align finset.map_add_right_Ioc Finset.map_add_right_Ioc
+
+@[simp]
+theorem map_add_left_Ioo (a b c : α) : (ioo a b).map (addLeftEmbedding c) = ioo (c + a) (c + b) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Ioo, coe_Ioo]
+  exact Set.image_const_add_Ioo _ _ _
+#align finset.map_add_left_Ioo Finset.map_add_left_Ioo
+
+@[simp]
+theorem map_add_right_Ioo (a b c : α) : (ioo a b).map (addRightEmbedding c) = ioo (a + c) (b + c) :=
+  by 
+  rw [← coe_inj, coe_map, coe_Ioo, coe_Ioo]
+  exact Set.image_add_const_Ioo _ _ _
+#align finset.map_add_right_Ioo Finset.map_add_right_Ioo
+
+variable [DecidableEq α]
+
+@[simp]
 theorem image_add_left_Icc (a b c : α) : (icc a b).image ((· + ·) c) = icc (c + a) (c + b) := by
-  ext x
-  rw [mem_image, mem_Icc]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    rw [mem_Icc] at hy
-    exact ⟨add_le_add_left hy.1 c, add_le_add_left hy.2 c⟩
-  · intro hx
-    obtain ⟨y, hy⟩ := exists_add_of_le hx.1
-    rw [add_assoc] at hy
-    rw [hy] at hx
-    exact ⟨a + y, mem_Icc.2 ⟨le_of_add_le_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
+  rw [← map_add_left_Icc, map_eq_image]
+  rfl
 #align finset.image_add_left_Icc Finset.image_add_left_Icc
 
+@[simp]
 theorem image_add_left_Ico (a b c : α) : (ico a b).image ((· + ·) c) = ico (c + a) (c + b) := by
-  ext x
-  rw [mem_image, mem_Ico]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    rw [mem_Ico] at hy
-    exact ⟨add_le_add_left hy.1 c, add_lt_add_left hy.2 c⟩
-  · intro hx
-    obtain ⟨y, hy⟩ := exists_add_of_le hx.1
-    rw [add_assoc] at hy
-    rw [hy] at hx
-    exact ⟨a + y, mem_Ico.2 ⟨le_of_add_le_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
+  rw [← map_add_left_Ico, map_eq_image]
+  rfl
 #align finset.image_add_left_Ico Finset.image_add_left_Ico
 
+@[simp]
 theorem image_add_left_Ioc (a b c : α) : (ioc a b).image ((· + ·) c) = ioc (c + a) (c + b) := by
-  ext x
-  rw [mem_image, mem_Ioc]
-  refine' ⟨_, fun hx => _⟩
-  · rintro ⟨y, hy, rfl⟩
-    rw [mem_Ioc] at hy
-    exact ⟨add_lt_add_left hy.1 c, add_le_add_left hy.2 c⟩
-  · obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
-    rw [add_assoc] at hy
-    rw [hy] at hx
-    exact ⟨a + y, mem_Ioc.2 ⟨lt_of_add_lt_add_left hx.1, le_of_add_le_add_left hx.2⟩, hy.symm⟩
+  rw [← map_add_left_Ioc, map_eq_image]
+  rfl
 #align finset.image_add_left_Ioc Finset.image_add_left_Ioc
 
+@[simp]
 theorem image_add_left_Ioo (a b c : α) : (ioo a b).image ((· + ·) c) = ioo (c + a) (c + b) := by
-  ext x
-  rw [mem_image, mem_Ioo]
-  refine' ⟨_, fun hx => _⟩
-  · rintro ⟨y, hy, rfl⟩
-    rw [mem_Ioo] at hy
-    exact ⟨add_lt_add_left hy.1 c, add_lt_add_left hy.2 c⟩
-  · obtain ⟨y, hy⟩ := exists_add_of_le hx.1.le
-    rw [add_assoc] at hy
-    rw [hy] at hx
-    exact ⟨a + y, mem_Ioo.2 ⟨lt_of_add_lt_add_left hx.1, lt_of_add_lt_add_left hx.2⟩, hy.symm⟩
+  rw [← map_add_left_Ioo, map_eq_image]
+  rfl
 #align finset.image_add_left_Ioo Finset.image_add_left_Ioo
 
+@[simp]
 theorem image_add_right_Icc (a b c : α) : (icc a b).image (· + c) = icc (a + c) (b + c) := by
-  simp_rw [add_comm _ c]
-  exact image_add_left_Icc a b c
+  rw [← map_add_right_Icc, map_eq_image]
+  rfl
 #align finset.image_add_right_Icc Finset.image_add_right_Icc
 
 theorem image_add_right_Ico (a b c : α) : (ico a b).image (· + c) = ico (a + c) (b + c) := by
-  simp_rw [add_comm _ c]
-  exact image_add_left_Ico a b c
+  rw [← map_add_right_Ico, map_eq_image]
+  rfl
 #align finset.image_add_right_Ico Finset.image_add_right_Ico
 
 theorem image_add_right_Ioc (a b c : α) : (ioc a b).image (· + c) = ioc (a + c) (b + c) := by
-  simp_rw [add_comm _ c]
-  exact image_add_left_Ioc a b c
+  rw [← map_add_right_Ioc, map_eq_image]
+  rfl
 #align finset.image_add_right_Ioc Finset.image_add_right_Ioc
 
 theorem image_add_right_Ioo (a b c : α) : (ioo a b).image (· + c) = ioo (a + c) (b + c) := by
-  simp_rw [add_comm _ c]
-  exact image_add_left_Ioo a b c
+  rw [← map_add_right_Ioo, map_eq_image]
+  rfl
 #align finset.image_add_right_Ioo Finset.image_add_right_Ioo
 
 end OrderedCancelAddCommMonoid

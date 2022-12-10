@@ -473,7 +473,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
                 []
                 [(Term.typeSpec
                   ":"
-                  (Algebra.Algebra.Basic.«term_→ₐ[_]_»
+                  (Algebra.Algebra.Hom.«term_→ₐ[_]_»
                    (Term.app `FreeAlgebra [`R `X])
                    " →ₐ["
                    `R
@@ -580,7 +580,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
                []
                [(Term.typeSpec
                  ":"
-                 (Algebra.Algebra.Basic.«term_→ₐ[_]_»
+                 (Algebra.Algebra.Hom.«term_→ₐ[_]_»
                   (Term.app `FreeAlgebra [`R `X])
                   " →ₐ["
                   `R
@@ -673,7 +673,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
              []
              [(Term.typeSpec
                ":"
-               (Algebra.Algebra.Basic.«term_→ₐ[_]_»
+               (Algebra.Algebra.Hom.«term_→ₐ[_]_»
                 (Term.app `FreeAlgebra [`R `X])
                 " →ₐ["
                 `R
@@ -762,12 +762,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
            []
            [(Term.typeSpec
              ":"
-             (Algebra.Algebra.Basic.«term_→ₐ[_]_»
-              (Term.app `FreeAlgebra [`R `X])
-              " →ₐ["
-              `R
-              "] "
-              `R))]
+             (Algebra.Algebra.Hom.«term_→ₐ[_]_» (Term.app `FreeAlgebra [`R `X]) " →ₐ[" `R "] " `R))]
            ":="
            (Term.app
             `lift
@@ -841,7 +836,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
          []
          [(Term.typeSpec
            ":"
-           (Algebra.Algebra.Basic.«term_→ₐ[_]_» (Term.app `FreeAlgebra [`R `X]) " →ₐ[" `R "] " `R))]
+           (Algebra.Algebra.Hom.«term_→ₐ[_]_» (Term.app `FreeAlgebra [`R `X]) " →ₐ[" `R "] " `R))]
          ":="
          (Term.app
           `lift
