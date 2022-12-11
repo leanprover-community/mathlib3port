@@ -3,7 +3,9 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 -/
+import Mathbin.Algebra.Hom.Embedding
 import Mathbin.Data.Finset.Basic
+import Mathbin.Data.Int.Order.Basic
 
 /-! # Image and map operations on finite sets
 

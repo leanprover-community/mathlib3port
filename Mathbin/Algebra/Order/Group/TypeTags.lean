@@ -6,7 +6,11 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 import Mathbin.Algebra.Order.Group.Instances
 import Mathbin.Algebra.Order.Monoid.TypeTags
 
-/-! # Ordered group structures on `multiplicative α` and `additive α`. -/
+/-! # Ordered group structures on `multiplicative α` and `additive α`. 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/921
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 variable {α : Type _}

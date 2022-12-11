@@ -8,6 +8,10 @@ import Mathbin.Algebra.Order.Ring.Defs
 
 /-!
 # Strict ordered semiring have characteristic zero
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/905
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

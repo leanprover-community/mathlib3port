@@ -9,6 +9,10 @@ import Mathbin.Algebra.Order.Ring.Defs
 /-!
 # Linear ordered (semi)fields
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/905
+> Any changes to this file require a corresponding PR to mathlib4.
+
 A linear ordered (semi)field is a (semi)field equipped with a linear order such that
 * addition respects the order: `a ≤ b → c + a ≤ c + b`;
 * multiplication of positives is positive: `0 < a → 0 < b → 0 < a * b`;

@@ -3,9 +3,7 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 -/
-import Mathbin.Data.Int.Order.Basic
 import Mathbin.Data.Multiset.FinsetOps
-import Mathbin.Algebra.Hom.Embedding
 import Mathbin.Tactic.Apply
 import Mathbin.Tactic.NthRewrite.Default
 import Mathbin.Tactic.Monotonicity.Default

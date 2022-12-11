@@ -453,6 +453,7 @@ import Mathbin.AlgebraicTopology.AlternatingFaceMapComplex
 import Mathbin.AlgebraicTopology.CechNerve
 import Mathbin.AlgebraicTopology.DoldKan.Decomposition
 import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
+import Mathbin.AlgebraicTopology.DoldKan.EquivalenceAdditive
 import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.AlgebraicTopology.DoldKan.FunctorGamma
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN

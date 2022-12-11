@@ -176,7 +176,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ}
   rw [Finset.prod_singleton, ht, mul_left_comm, mul_comm, ← mul_assoc, mul_assoc] at this
   have : (p ^ padicValNat p n * p : ℤ) ∣ n := ⟨_, this⟩
   simp only [← pow_succ', ← Int.nat_abs_dvd_iff_dvd, Int.natAbs_ofNat, Int.nat_abs_pow] at this
-  exact pow_succ_padic_val_nat_not_dvd hn' this
+  exact pow_succ_padic_val_nat_not_dvd hn'.ne' this
   · rintro x - y - hxy
     apply Nat.succ_injective
     exact Nat.pow_right_injective hp.two_le hxy

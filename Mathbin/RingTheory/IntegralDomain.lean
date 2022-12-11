@@ -57,6 +57,31 @@ def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [Decidab
     inv_zero := by simp [Inv.inv, dif_pos rfl] }
 #align fintype.group_with_zero_of_cancel Fintype.groupWithZeroOfCancel
 
+theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [IsDomain R]
+    [GcdMonoid R] [Unique Rˣ] {a b c : R} {n : ℕ} (cp : IsCoprime a b) (h : a * b = c ^ n) :
+    ∃ d : R, a = d ^ n := by
+  refine' exists_eq_pow_of_mul_eq_pow (is_unit_of_dvd_one _ _) h
+  obtain ⟨x, y, hxy⟩ := cp
+  rw [← hxy]
+  exact
+    dvd_add (dvd_mul_of_dvd_right (gcd_dvd_left _ _) _) (dvd_mul_of_dvd_right (gcd_dvd_right _ _) _)
+#align exists_eq_pow_of_mul_eq_pow_of_coprime exists_eq_pow_of_mul_eq_pow_of_coprime
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemiring R] [IsDomain R]
+    [GcdMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}
+    (h : ∀ (i j) (_ : i ∈ s) (_ : j ∈ s), i ≠ j → IsCoprime (f i) (f j))
+    (hprod : (∏ i in s, f i) = c ^ n) : ∀ i ∈ s, ∃ d : R, f i = d ^ n := by
+  classical 
+    intro i hi
+    rw [← insert_erase hi, prod_insert (not_mem_erase i s)] at hprod
+    refine'
+      exists_eq_pow_of_mul_eq_pow_of_coprime
+        (IsCoprime.prod_right fun j hj => h i hi j (erase_subset i s hj) fun hij => _) hprod
+    rw [hij] at hj
+    exact (s.not_mem_erase _) hj
+#align finset.exists_eq_pow_of_mul_eq_pow_of_coprime Finset.exists_eq_pow_of_mul_eq_pow_of_coprime
+
 end CancelMonoidWithZero
 
 variable {R : Type _} {G : Type _}

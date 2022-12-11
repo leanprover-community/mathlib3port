@@ -8,7 +8,11 @@ import Mathbin.Algebra.Order.Monoid.OrderDual
 import Mathbin.Algebra.Order.Monoid.WithZero.Basic
 import Mathbin.Data.Nat.Cast.Defs
 
-/-! # Adjoining top/bottom elements to ordered monoids. -/
+/-! # Adjoining top/bottom elements to ordered monoids. 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/902
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 universe u v

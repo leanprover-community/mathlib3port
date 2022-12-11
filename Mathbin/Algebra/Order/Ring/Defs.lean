@@ -18,6 +18,10 @@ import Mathbin.Algebra.Group.Units
 /-!
 # Ordered rings and semirings
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/905
+> Any changes to this file require a corresponding PR to mathlib4.
+
 This file develops the basics of ordered (semi)rings.
 
 Each typeclass here comprises

@@ -632,6 +632,10 @@ instance Ideal.cancelCommMonoidWithZero : CancelCommMonoidWithZero (Ideal A) :=
       (RingHom.map_pow _) with }
 #align ideal.cancel_comm_monoid_with_zero Ideal.cancelCommMonoidWithZero
 
+instance Ideal.is_domain : IsDomain (Ideal A) :=
+  { (inferInstance : IsCancelMulZero _), Ideal.nontrivial with }
+#align ideal.is_domain Ideal.is_domain
+
 /-- For ideals in a Dedekind domain, to divide is to contain. -/
 theorem Ideal.dvd_iff_le {I J : Ideal A} : I ∣ J ↔ J ≤ I :=
   ⟨Ideal.le_of_dvd, fun h => by 

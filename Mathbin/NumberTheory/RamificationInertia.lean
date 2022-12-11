@@ -829,6 +829,8 @@ theorem Factors.pi_quotient_equiv_map (p : Ideal R) (hp : map (algebraMap R S) p
   rfl
 #align ideal.factors.pi_quotient_equiv_map Ideal.Factors.pi_quotient_equiv_map
 
+variable (S)
+
 /-- **Chinese remainder theorem** for a ring of integers: if the prime ideal `p : ideal R`
 factors in `S` as `∏ i, P i ^ e i`,
 then `S ⧸ I` factors `R ⧸ I`-linearly as `Π i, R ⧸ (P i ^ e i)`. -/
@@ -845,6 +847,8 @@ noncomputable def Factors.piQuotientLinearEquiv (p : Ideal R) (hp : map (algebra
         Ideal.Quotient.mk_eq_mk, Algebra.smul_def, _root_.map_mul, RingHomCompTriple.comp_apply]
       congr }
 #align ideal.factors.pi_quotient_linear_equiv Ideal.Factors.piQuotientLinearEquiv
+
+variable {S}
 
 open BigOperators
 
@@ -885,7 +889,7 @@ theorem sum_ramification_inertia (K L : Type _) [Field K] [Field L] [IsDomain R]
   · rw [← Finset.sum_attach]
     refine' Finset.sum_congr rfl fun P _ => _
     rw [factors.finrank_pow_ramification_idx]
-  · refine' LinearEquiv.finrank_eq (factors.pi_quotient_linear_equiv p _).symm
+  · refine' LinearEquiv.finrank_eq (factors.pi_quotient_linear_equiv S p _).symm
     rwa [Ne.def, Ideal.map_eq_bot_iff_le_ker, (RingHom.injective_iff_ker_eq_bot _).mp inj_RS,
       le_bot_iff]
   · exact finrank_quotient_map p K L

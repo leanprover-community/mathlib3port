@@ -72,7 +72,7 @@ def NoZeroDivisors.toCancelCommMonoidWithZero [CommRing α] [NoZeroDivisors α] 
 section IsDomain
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsDomain.toCancelMonoidWithZero [Ring α] [IsDomain α] :
+instance (priority := 100) IsDomain.toCancelMonoidWithZero [Semiring α] [IsDomain α] :
     CancelMonoidWithZero α :=
   { Semiring.toMonoidWithZero α with
     mul_left_cancel_of_ne_zero := fun a b c ha h => IsCancelMulZero.mul_left_cancel_of_ne_zero ha h,
@@ -80,11 +80,13 @@ instance (priority := 100) IsDomain.toCancelMonoidWithZero [Ring α] [IsDomain �
       IsCancelMulZero.mul_right_cancel_of_ne_zero ha h }
 #align is_domain.to_cancel_monoid_with_zero IsDomain.toCancelMonoidWithZero
 
-variable [CommRing α] [IsDomain α]
+variable [CommSemiring α] [IsDomain α]
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelCommMonoidWithZero : CancelCommMonoidWithZero α :=
-  NoZeroDivisors.toCancelCommMonoidWithZero
+  { (inferInstance : CommSemiring α) with
+    mul_left_cancel_of_ne_zero := fun a b c ha H => IsDomain.mul_left_cancel_of_ne_zero ha H,
+    mul_right_cancel_of_ne_zero := fun a b c hb H => IsDomain.mul_right_cancel_of_ne_zero hb H }
 #align is_domain.to_cancel_comm_monoid_with_zero IsDomain.toCancelCommMonoidWithZero
 
 end IsDomain
