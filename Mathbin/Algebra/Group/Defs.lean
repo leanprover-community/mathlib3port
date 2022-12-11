@@ -165,6 +165,127 @@ class IsCancelAdd (G : Type u) [Add G] extends IsLeftCancelAdd G, IsRightCancelA
 
 attribute [to_additive] IsCancelMul
 
+section IsLeftCancelMul
+
+variable [IsLeftCancelMul G] {a b c : G}
+
+/- warning: mul_left_cancel -> mul_left_cancel is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsLeftCancelMul.{u_1} G _inst_1] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a c)) -> (Eq.{succ u_1} G b c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3334 : LeftCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3334))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3334))) a c)) -> (Eq.{succ u_1} G b c)
+Case conversion may be inaccurate. Consider using '#align mul_left_cancel mul_left_cancelₓ'. -/
+@[to_additive]
+theorem mul_left_cancel : a * b = a * c → b = c :=
+  IsLeftCancelMul.mul_left_cancel a b c
+#align mul_left_cancel mul_left_cancel
+
+/- warning: mul_left_cancel_iff -> mul_left_cancel_iff is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsLeftCancelMul.{u_1} G _inst_1] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a c)) (Eq.{succ u_1} G b c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3361 : LeftCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3361))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3361))) a c)) (Eq.{succ u_1} G b c)
+Case conversion may be inaccurate. Consider using '#align mul_left_cancel_iff mul_left_cancel_iffₓ'. -/
+@[to_additive]
+theorem mul_left_cancel_iff : a * b = a * c ↔ b = c :=
+  ⟨mul_left_cancel, congr_arg _⟩
+#align mul_left_cancel_iff mul_left_cancel_iff
+
+/- warning: mul_right_injective -> mul_right_injective is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsLeftCancelMul.{u_1} G _inst_1] (a : G), Function.Injective.{succ u_1, succ u_1} G G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3391 : LeftCancelSemigroup.{u_1} G] (a : G), Function.Injective.{succ u_1, succ u_1} G G ((fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3405 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3407 : G) => HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3391))) x._@.Mathlib.Algebra.Group.Defs._hyg.3405 x._@.Mathlib.Algebra.Group.Defs._hyg.3407) a)
+Case conversion may be inaccurate. Consider using '#align mul_right_injective mul_right_injectiveₓ'. -/
+@[to_additive]
+theorem mul_right_injective (a : G) : Function.Injective ((· * ·) a) := fun b c => mul_left_cancel
+#align mul_right_injective mul_right_injective
+
+/- warning: mul_right_inj -> mul_right_inj is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsLeftCancelMul.{u_1} G _inst_1] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a c)) (Eq.{succ u_1} G b c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3429 : LeftCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3429))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3429))) a c)) (Eq.{succ u_1} G b c)
+Case conversion may be inaccurate. Consider using '#align mul_right_inj mul_right_injₓ'. -/
+@[simp, to_additive]
+theorem mul_right_inj (a : G) {b c : G} : a * b = a * c ↔ b = c :=
+  (mul_right_injective a).eq_iff
+#align mul_right_inj mul_right_inj
+
+/- warning: mul_ne_mul_right -> mul_ne_mul_right is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsLeftCancelMul.{u_1} G _inst_1] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a c)) (Ne.{succ u_1} G b c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3462 : LeftCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3462))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3462))) a c)) (Ne.{succ u_1} G b c)
+Case conversion may be inaccurate. Consider using '#align mul_ne_mul_right mul_ne_mul_rightₓ'. -/
+@[to_additive]
+theorem mul_ne_mul_right (a : G) {b c : G} : a * b ≠ a * c ↔ b ≠ c :=
+  (mul_right_injective a).ne_iff
+#align mul_ne_mul_right mul_ne_mul_right
+
+end IsLeftCancelMul
+
+section IsRightCancelMul
+
+variable [IsRightCancelMul G] {a b c : G}
+
+/- warning: mul_right_cancel -> mul_right_cancel is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsRightCancelMul.{u_1} G _inst_1] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) c b)) -> (Eq.{succ u_1} G a c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3594 : RightCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3594))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3594))) c b)) -> (Eq.{succ u_1} G a c)
+Case conversion may be inaccurate. Consider using '#align mul_right_cancel mul_right_cancelₓ'. -/
+@[to_additive]
+theorem mul_right_cancel : a * b = c * b → a = c :=
+  IsRightCancelMul.mul_right_cancel a b c
+#align mul_right_cancel mul_right_cancel
+
+/- warning: mul_right_cancel_iff -> mul_right_cancel_iff is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsRightCancelMul.{u_1} G _inst_1] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) c a)) (Eq.{succ u_1} G b c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3621 : RightCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3621))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3621))) c a)) (Eq.{succ u_1} G b c)
+Case conversion may be inaccurate. Consider using '#align mul_right_cancel_iff mul_right_cancel_iffₓ'. -/
+@[to_additive]
+theorem mul_right_cancel_iff : b * a = c * a ↔ b = c :=
+  ⟨mul_right_cancel, congr_arg _⟩
+#align mul_right_cancel_iff mul_right_cancel_iff
+
+/- warning: mul_left_injective -> mul_left_injective is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsRightCancelMul.{u_1} G _inst_1] (a : G), Function.Injective.{succ u_1, succ u_1} G G (fun (x : G) => HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) x a)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3662 : RightCancelSemigroup.{u_1} G] (a : G), Function.Injective.{succ u_1, succ u_1} G G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3673 : G) => HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3662))) x._@.Mathlib.Algebra.Group.Defs._hyg.3673 a)
+Case conversion may be inaccurate. Consider using '#align mul_left_injective mul_left_injectiveₓ'. -/
+@[to_additive]
+theorem mul_left_injective (a : G) : Function.Injective fun x => x * a := fun b c =>
+  mul_right_cancel
+#align mul_left_injective mul_left_injective
+
+/- warning: mul_left_inj -> mul_left_inj is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsRightCancelMul.{u_1} G _inst_1] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) c a)) (Eq.{succ u_1} G b c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3693 : RightCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3693))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3693))) c a)) (Eq.{succ u_1} G b c)
+Case conversion may be inaccurate. Consider using '#align mul_left_inj mul_left_injₓ'. -/
+@[simp, to_additive]
+theorem mul_left_inj (a : G) {b c : G} : b * a = c * a ↔ b = c :=
+  (mul_left_injective a).eq_iff
+#align mul_left_inj mul_left_inj
+
+/- warning: mul_ne_mul_left -> mul_ne_mul_left is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u_1}} [_inst_1 : Mul.{u_1} G] [_inst_2 : IsRightCancelMul.{u_1} G _inst_1] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G _inst_1) c a)) (Ne.{succ u_1} G b c)
+but is expected to have type
+  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3726 : RightCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3726))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3726))) c a)) (Ne.{succ u_1} G b c)
+Case conversion may be inaccurate. Consider using '#align mul_ne_mul_left mul_ne_mul_leftₓ'. -/
+@[to_additive]
+theorem mul_ne_mul_left (a : G) {b c : G} : b * a ≠ c * a ↔ b ≠ c :=
+  (mul_left_injective a).ne_iff
+#align mul_ne_mul_left mul_ne_mul_left
+
+end IsRightCancelMul
+
 end Mul
 
 #print Semigroup /-
@@ -251,9 +372,7 @@ instance CommSemigroup.to_is_commutative : IsCommutative G (· * ·) :=
       "Any\n`add_comm_semigroup G` that satisfies `is_right_cancel_add G` also satisfies\n`is_right_cancel_add G`."]
 theorem CommSemigroup.IsRightCancelMul.to_is_left_cancel_mul (G : Type u) [CommSemigroup G]
     [IsRightCancelMul G] : IsLeftCancelMul G :=
-  { mul_left_cancel := fun a b c h => by
-      rw [mul_comm a b, mul_comm a c] at h
-      exact IsRightCancelMul.mul_right_cancel _ _ _ h }
+  ⟨fun a b c h => mul_right_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
 #align
   comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.to_is_left_cancel_mul
 
@@ -263,9 +382,7 @@ theorem CommSemigroup.IsRightCancelMul.to_is_left_cancel_mul (G : Type u) [CommS
       "Any\n`add_comm_semigroup G` that satisfies `is_left_cancel_add G` also satisfies\n`is_left_cancel_add G`."]
 theorem CommSemigroup.IsLeftCancelMul.to_is_right_cancel_mul (G : Type u) [CommSemigroup G]
     [IsLeftCancelMul G] : IsRightCancelMul G :=
-  { mul_right_cancel := fun a b c h => by
-      rw [mul_comm a b, mul_comm c b] at h
-      exact IsLeftCancelMul.mul_left_cancel _ _ _ h }
+  ⟨fun a b c h => mul_left_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
 #align
   comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.to_is_right_cancel_mul
 
@@ -275,10 +392,7 @@ theorem CommSemigroup.IsLeftCancelMul.to_is_right_cancel_mul (G : Type u) [CommS
       "Any `add_comm_semigroup G`\nthat satisfies `is_left_cancel_add G` also satisfies `is_cancel_add G`."]
 theorem CommSemigroup.IsLeftCancelMul.to_is_cancel_mul (G : Type u) [CommSemigroup G]
     [IsLeftCancelMul G] : IsCancelMul G :=
-  { mul_left_cancel := IsLeftCancelMul.mul_left_cancel,
-    mul_right_cancel := fun a b c h => by
-      rw [mul_comm a b, mul_comm c b] at h
-      exact IsLeftCancelMul.mul_left_cancel _ _ _ h }
+  { ‹IsLeftCancelMul G›, CommSemigroup.IsLeftCancelMul.to_is_right_cancel_mul G with }
 #align
   comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.to_is_cancel_mul
 
@@ -288,10 +402,7 @@ theorem CommSemigroup.IsLeftCancelMul.to_is_cancel_mul (G : Type u) [CommSemigro
       "Any `add_comm_semigroup G`\nthat satisfies `is_right_cancel_add G` also satisfies `is_cancel_add G`."]
 theorem CommSemigroup.IsRightCancelMul.to_is_cancel_mul (G : Type u) [CommSemigroup G]
     [IsRightCancelMul G] : IsCancelMul G :=
-  { mul_left_cancel := fun a b c h => by
-      rw [mul_comm a b, mul_comm a c] at h
-      exact IsRightCancelMul.mul_right_cancel _ _ _ h,
-    mul_right_cancel := IsRightCancelMul.mul_right_cancel }
+  { ‹IsRightCancelMul G›, CommSemigroup.IsRightCancelMul.to_is_left_cancel_mul G with }
 #align
   comm_semigroup.is_right_cancel_mul.to_is_cancel_mul CommSemigroup.IsRightCancelMul.to_is_cancel_mul
 
@@ -316,72 +427,12 @@ class AddLeftCancelSemigroup (G : Type u) extends AddSemigroup G where
 
 attribute [to_additive AddLeftCancelSemigroup] LeftCancelSemigroup
 
-section LeftCancelSemigroup
-
-variable [LeftCancelSemigroup G] {a b c : G}
-
-/- warning: mul_left_cancel -> mul_left_cancel is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : LeftCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a c)) -> (Eq.{succ u_1} G b c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3334 : LeftCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3334))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3334))) a c)) -> (Eq.{succ u_1} G b c)
-Case conversion may be inaccurate. Consider using '#align mul_left_cancel mul_left_cancelₓ'. -/
-@[to_additive]
-theorem mul_left_cancel : a * b = a * c → b = c :=
-  LeftCancelSemigroup.mul_left_cancel a b c
-#align mul_left_cancel mul_left_cancel
-
-/- warning: mul_left_cancel_iff -> mul_left_cancel_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : LeftCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a c)) (Eq.{succ u_1} G b c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3361 : LeftCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3361))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3361))) a c)) (Eq.{succ u_1} G b c)
-Case conversion may be inaccurate. Consider using '#align mul_left_cancel_iff mul_left_cancel_iffₓ'. -/
-@[to_additive]
-theorem mul_left_cancel_iff : a * b = a * c ↔ b = c :=
-  ⟨mul_left_cancel, congr_arg _⟩
-#align mul_left_cancel_iff mul_left_cancel_iff
-
-/- warning: mul_right_injective -> mul_right_injective is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : LeftCancelSemigroup.{u_1} G] (a : G), Function.Injective.{succ u_1, succ u_1} G G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3391 : LeftCancelSemigroup.{u_1} G] (a : G), Function.Injective.{succ u_1, succ u_1} G G ((fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3405 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3407 : G) => HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3391))) x._@.Mathlib.Algebra.Group.Defs._hyg.3405 x._@.Mathlib.Algebra.Group.Defs._hyg.3407) a)
-Case conversion may be inaccurate. Consider using '#align mul_right_injective mul_right_injectiveₓ'. -/
-@[to_additive]
-theorem mul_right_injective (a : G) : Function.Injective ((· * ·) a) := fun b c => mul_left_cancel
-#align mul_right_injective mul_right_injective
-
-/- warning: mul_right_inj -> mul_right_inj is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : LeftCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a c)) (Eq.{succ u_1} G b c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3429 : LeftCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3429))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3429))) a c)) (Eq.{succ u_1} G b c)
-Case conversion may be inaccurate. Consider using '#align mul_right_inj mul_right_injₓ'. -/
-@[simp, to_additive]
-theorem mul_right_inj (a : G) {b c : G} : a * b = a * c ↔ b = c :=
-  (mul_right_injective a).eq_iff
-#align mul_right_inj mul_right_inj
-
-/- warning: mul_ne_mul_right -> mul_ne_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : LeftCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a c)) (Ne.{succ u_1} G b c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3462 : LeftCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3462))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (LeftCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3462))) a c)) (Ne.{succ u_1} G b c)
-Case conversion may be inaccurate. Consider using '#align mul_ne_mul_right mul_ne_mul_rightₓ'. -/
-@[to_additive]
-theorem mul_ne_mul_right (a : G) {b c : G} : a * b ≠ a * c ↔ b ≠ c :=
-  (mul_right_injective a).ne_iff
-#align mul_ne_mul_right mul_ne_mul_right
-
 /-- Any `left_cancel_semigroup` satisfies `is_left_cancel_mul`. -/
 @[to_additive "Any `add_left_cancel_semigroup` satisfies `is_left_cancel_add`."]
 instance (priority := 100) LeftCancelSemigroup.to_is_left_cancel_mul (G : Type u)
     [LeftCancelSemigroup G] :
     IsLeftCancelMul G where mul_left_cancel := LeftCancelSemigroup.mul_left_cancel
 #align left_cancel_semigroup.to_is_left_cancel_mul LeftCancelSemigroup.to_is_left_cancel_mul
-
-end LeftCancelSemigroup
 
 #print RightCancelSemigroup /-
 /-- A `right_cancel_semigroup` is a semigroup such that `a * b = c * b` implies `a = c`. -/
@@ -402,73 +453,12 @@ class AddRightCancelSemigroup (G : Type u) extends AddSemigroup G where
 
 attribute [to_additive AddRightCancelSemigroup] RightCancelSemigroup
 
-section RightCancelSemigroup
-
-variable [RightCancelSemigroup G] {a b c : G}
-
-/- warning: mul_right_cancel -> mul_right_cancel is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : RightCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) c b)) -> (Eq.{succ u_1} G a c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3594 : RightCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3594))) a b) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3594))) c b)) -> (Eq.{succ u_1} G a c)
-Case conversion may be inaccurate. Consider using '#align mul_right_cancel mul_right_cancelₓ'. -/
-@[to_additive]
-theorem mul_right_cancel : a * b = c * b → a = c :=
-  RightCancelSemigroup.mul_right_cancel a b c
-#align mul_right_cancel mul_right_cancel
-
-/- warning: mul_right_cancel_iff -> mul_right_cancel_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : RightCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) c a)) (Eq.{succ u_1} G b c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3621 : RightCancelSemigroup.{u_1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3621))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3621))) c a)) (Eq.{succ u_1} G b c)
-Case conversion may be inaccurate. Consider using '#align mul_right_cancel_iff mul_right_cancel_iffₓ'. -/
-@[to_additive]
-theorem mul_right_cancel_iff : b * a = c * a ↔ b = c :=
-  ⟨mul_right_cancel, congr_arg _⟩
-#align mul_right_cancel_iff mul_right_cancel_iff
-
-/- warning: mul_left_injective -> mul_left_injective is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : RightCancelSemigroup.{u_1} G] (a : G), Function.Injective.{succ u_1, succ u_1} G G (fun (x : G) => HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) x a)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3662 : RightCancelSemigroup.{u_1} G] (a : G), Function.Injective.{succ u_1, succ u_1} G G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3673 : G) => HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3662))) x._@.Mathlib.Algebra.Group.Defs._hyg.3673 a)
-Case conversion may be inaccurate. Consider using '#align mul_left_injective mul_left_injectiveₓ'. -/
-@[to_additive]
-theorem mul_left_injective (a : G) : Function.Injective fun x => x * a := fun b c =>
-  mul_right_cancel
-#align mul_left_injective mul_left_injective
-
-/- warning: mul_left_inj -> mul_left_inj is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : RightCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) c a)) (Eq.{succ u_1} G b c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3693 : RightCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Eq.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3693))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3693))) c a)) (Eq.{succ u_1} G b c)
-Case conversion may be inaccurate. Consider using '#align mul_left_inj mul_left_injₓ'. -/
-@[simp, to_additive]
-theorem mul_left_inj (a : G) {b c : G} : b * a = c * a ↔ b = c :=
-  (mul_left_injective a).eq_iff
-#align mul_left_inj mul_left_inj
-
-/- warning: mul_ne_mul_left -> mul_ne_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u_1}} [_inst_1 : RightCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toHasMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G _inst_1))) c a)) (Ne.{succ u_1} G b c)
-but is expected to have type
-  forall {G : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Defs._hyg.3726 : RightCancelSemigroup.{u_1} G] (a : G) {b : G} {c : G}, Iff (Ne.{succ u_1} G (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3726))) b a) (HMul.hMul.{u_1, u_1, u_1} G G G (instHMul.{u_1} G (Semigroup.toMul.{u_1} G (RightCancelSemigroup.toSemigroup.{u_1} G inst._@.Mathlib.Algebra.Group.Defs._hyg.3726))) c a)) (Ne.{succ u_1} G b c)
-Case conversion may be inaccurate. Consider using '#align mul_ne_mul_left mul_ne_mul_leftₓ'. -/
-@[to_additive]
-theorem mul_ne_mul_left (a : G) {b c : G} : b * a ≠ c * a ↔ b ≠ c :=
-  (mul_left_injective a).ne_iff
-#align mul_ne_mul_left mul_ne_mul_left
-
 /-- Any `right_cancel_semigroup` satisfies `is_right_cancel_mul`. -/
 @[to_additive "Any `add_right_cancel_semigroup` satisfies `is_right_cancel_add`."]
 instance (priority := 100) RightCancelSemigroup.to_is_right_cancel_mul (G : Type u)
     [RightCancelSemigroup G] :
     IsRightCancelMul G where mul_right_cancel := RightCancelSemigroup.mul_right_cancel
 #align right_cancel_semigroup.to_is_right_cancel_mul RightCancelSemigroup.to_is_right_cancel_mul
-
-end RightCancelSemigroup
 
 #print MulOneClass /-
 /-- Typeclass for expressing that a type `M` with multiplication and a one satisfies
@@ -844,8 +834,7 @@ class CancelCommMonoid (M : Type u) extends LeftCancelMonoid M, CommMonoid M
 @[to_additive]
 instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelCommMonoid M] :
     CancelMonoid M :=
-  { ‹CancelCommMonoid M› with
-    mul_right_cancel := fun a b c h => mul_left_cancel <| by rw [mul_comm, h, mul_comm] }
+  { ‹CancelCommMonoid M›, CommSemigroup.IsLeftCancelMul.to_is_right_cancel_mul M with }
 #align cancel_comm_monoid.to_cancel_monoid CancelCommMonoid.toCancelMonoid
 -/
 

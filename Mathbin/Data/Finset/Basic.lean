@@ -3618,3 +3618,7 @@ theorem disjoint_to_finset_iff_disjoint : Disjoint l.toFinset l'.toFinset ↔ l.
 
 end List
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- Assert that we define `finset` without the material on `list.sublists`.
+-- Note that we cannot use `list.sublists` itself as that is defined very early.

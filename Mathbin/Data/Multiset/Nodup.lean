@@ -3,8 +3,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
+import Mathbin.Data.List.Nodup
 import Mathbin.Data.Multiset.Bind
-import Mathbin.Data.Multiset.Powerset
 import Mathbin.Data.Multiset.Range
 
 /-!
@@ -216,21 +216,6 @@ theorem nodup_union [DecidableEq α] {s t : Multiset α} : Nodup (s ∪ t) ↔ N
       rw [count_union] <;>
         exact max_le (nodup_iff_count_le_one.1 h₁ a) (nodup_iff_count_le_one.1 h₂ a)⟩
 #align multiset.nodup_union Multiset.nodup_union
-
-@[simp]
-theorem nodup_powerset {s : Multiset α} : Nodup (powerset s) ↔ Nodup s :=
-  ⟨fun h => (nodup_of_le (map_single_le_powerset _) h).of_map _,
-    (Quotient.induction_on s) fun l h => by
-      simp <;> refine' (nodup_sublists'.2 h).map_on _ <;>
-        exact fun x sx y sy e =>
-          (h.sublist_ext (mem_sublists'.1 sx) (mem_sublists'.1 sy)).1 (Quotient.exact e)⟩
-#align multiset.nodup_powerset Multiset.nodup_powerset
-
-alias nodup_powerset ↔ nodup.of_powerset nodup.powerset
-
-protected theorem Nodup.powerset_len {n : ℕ} (h : Nodup s) : Nodup (powersetLen n s) :=
-  nodup_of_le (powerset_len_le_powerset _ _) (nodup_powerset.2 h)
-#align multiset.nodup.powerset_len Multiset.Nodup.powerset_len
 
 @[simp]
 theorem nodup_bind {s : Multiset α} {t : α → Multiset β} :

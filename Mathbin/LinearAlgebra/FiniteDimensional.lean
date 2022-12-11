@@ -936,7 +936,7 @@ noncomputable def LinearEquiv.quotEquivOfEquiv {p : Subspace K V} {q : Subspace 
     (f₁ : p ≃ₗ[K] q) (f₂ : V ≃ₗ[K] V₂) : (V ⧸ p) ≃ₗ[K] V₂ ⧸ q :=
   LinearEquiv.ofFinrankEq _ _
     (by
-      rw [← @add_right_cancel_iff _ _ (finrank K p), Submodule.finrank_quotient_add_finrank,
+      rw [← @add_right_cancel_iff _ _ _ (finrank K p), Submodule.finrank_quotient_add_finrank,
         LinearEquiv.finrank_eq f₁, Submodule.finrank_quotient_add_finrank,
         LinearEquiv.finrank_eq f₂])
 #align

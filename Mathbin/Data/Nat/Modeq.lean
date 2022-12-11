@@ -396,9 +396,9 @@ theorem mod_mul_left_mod (a b c : ℕ) : a % (b * c) % c = a % c :=
 theorem div_mod_eq_mod_mul_div (a b c : ℕ) : a / b % c = a % (b * c) / b :=
   if hb0 : b = 0 then by simp [hb0]
   else by
-    rw [← @add_right_cancel_iff _ _ (c * (a / b / c)), mod_add_div, Nat.div_div_eq_div_mul, ←
-      mul_right_inj' hb0, ← @add_left_cancel_iff _ _ (a % b), mod_add_div, mul_add, ←
-      @add_left_cancel_iff _ _ (a % (b * c) % b), add_left_comm, ← add_assoc (a % (b * c) % b),
+    rw [← @add_right_cancel_iff _ _ _ (c * (a / b / c)), mod_add_div, Nat.div_div_eq_div_mul, ←
+      mul_right_inj' hb0, ← @add_left_cancel_iff _ _ _ (a % b), mod_add_div, mul_add, ←
+      @add_left_cancel_iff _ _ _ (a % (b * c) % b), add_left_comm, ← add_assoc (a % (b * c) % b),
       mod_add_div, ← mul_assoc, mod_add_div, mod_mul_right_mod]
 #align nat.div_mod_eq_mod_mul_div Nat.div_mod_eq_mod_mul_div
 
@@ -417,7 +417,7 @@ theorem add_mod_add_ite (a b c : ℕ) :
                 add_lt_add (Nat.mod_lt _ (Nat.pos_of_ne_zero hc0))
                   (Nat.mod_lt _ (Nat.pos_of_ne_zero hc0)))
       have h0 : 0 < (a % c + b % c) / c := Nat.div_pos h (Nat.pos_of_ne_zero hc0)
-      rw [← @add_right_cancel_iff _ _ (c * ((a % c + b % c) / c)), add_comm _ c, add_assoc,
+      rw [← @add_right_cancel_iff _ _ _ (c * ((a % c + b % c) / c)), add_comm _ c, add_assoc,
         mod_add_div, le_antisymm (le_of_lt_succ h2) h0, mul_one, add_comm]
     · rw [Nat.mod_eq_of_lt (lt_of_not_ge h), add_zero]
 #align nat.add_mod_add_ite Nat.add_mod_add_ite
@@ -432,7 +432,7 @@ theorem add_mod_add_of_le_add_mod {a b c : ℕ} (hc : c ≤ a % c + b % c) :
 
 theorem add_div {a b c : ℕ} (hc0 : 0 < c) :
     (a + b) / c = a / c + b / c + if c ≤ a % c + b % c then 1 else 0 := by
-  rw [← mul_right_inj' hc0.ne', ← @add_left_cancel_iff _ _ ((a + b) % c + a % c + b % c)]
+  rw [← mul_right_inj' hc0.ne', ← @add_left_cancel_iff _ _ _ ((a + b) % c + a % c + b % c)]
   suffices
     (a + b) % c + c * ((a + b) / c) + a % c + b % c =
       (a % c + c * (a / c) + (b % c + c * (b / c)) + c * if c ≤ a % c + b % c then 1 else 0) +

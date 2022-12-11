@@ -4,9 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.List.Sublists
-import Mathbin.Data.Multiset.Basic
-import Mathbin.Data.Multiset.Range
-import Mathbin.Data.Multiset.Bind
+import Mathbin.Data.Multiset.Nodup
 
 /-!
 # The powerset of a multiset
@@ -308,6 +306,22 @@ theorem bind_powerset_len {α : Type _} (S : Multiset α) :
     coe_card]
   exact coe_eq_coe.mpr ((List.range_bind_sublists_len_perm S).map _)
 #align multiset.bind_powerset_len Multiset.bind_powerset_len
+
+@[simp]
+theorem nodup_powerset {s : Multiset α} : Nodup (powerset s) ↔ Nodup s :=
+  ⟨fun h => (nodup_of_le (map_single_le_powerset _) h).of_map _,
+    (Quotient.induction_on s) fun l h => by
+      simp <;> refine' (nodup_sublists'.2 h).map_on _ <;>
+        exact fun x sx y sy e =>
+          (h.sublist_ext (mem_sublists'.1 sx) (mem_sublists'.1 sy)).1 (Quotient.exact e)⟩
+#align multiset.nodup_powerset Multiset.nodup_powerset
+
+alias nodup_powerset ↔ nodup.of_powerset nodup.powerset
+
+protected theorem Nodup.powerset_len {n : ℕ} {s : Multiset α} (h : Nodup s) :
+    Nodup (powersetLen n s) :=
+  nodup_of_le (powerset_len_le_powerset _ _) (nodup_powerset.2 h)
+#align multiset.nodup.powerset_len Multiset.Nodup.powerset_len
 
 end Multiset
 

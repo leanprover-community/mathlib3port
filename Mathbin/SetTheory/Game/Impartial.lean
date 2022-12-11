@@ -168,13 +168,13 @@ theorem mk_add_self : ⟦G⟧ + ⟦G⟧ = 0 :=
 
 /-- This lemma doesn't require `H` to be impartial. -/
 theorem equiv_iff_add_equiv_zero (H : Pgame) : (H ≈ G) ↔ (H + G ≈ 0) := by
-  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_right_cancel_iff _ _ (-⟦G⟧)]
+  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_right_cancel_iff _ _ _ (-⟦G⟧)]
   simpa
 #align pgame.impartial.equiv_iff_add_equiv_zero Pgame.Impartial.equiv_iff_add_equiv_zero
 
 /-- This lemma doesn't require `H` to be impartial. -/
 theorem equiv_iff_add_equiv_zero' (H : Pgame) : (G ≈ H) ↔ (G + H ≈ 0) := by
-  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_left_cancel_iff _ _ (-⟦G⟧), eq_comm]
+  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_left_cancel_iff _ _ _ (-⟦G⟧), eq_comm]
   simpa
 #align pgame.impartial.equiv_iff_add_equiv_zero' Pgame.Impartial.equiv_iff_add_equiv_zero'
 

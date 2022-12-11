@@ -11,6 +11,7 @@ import Mathbin.Algebra.Ring.Opposite
 import Mathbin.Data.Finset.Sum
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Finset.Sigma
+import Mathbin.Data.Multiset.Powerset
 import Mathbin.Data.Set.Pairwise
 
 /-!

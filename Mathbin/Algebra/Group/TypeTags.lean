@@ -175,17 +175,35 @@ instance [CommSemigroup α] : AddCommSemigroup (Additive α) :=
 instance [AddCommSemigroup α] : CommSemigroup (Multiplicative α) :=
   { Multiplicative.semigroup with mul_comm := @add_comm _ _ }
 
+instance [Mul α] [IsLeftCancelMul α] :
+    IsLeftCancelAdd (Additive α) where add_left_cancel := @mul_left_cancel α _ _
+
+instance [Add α] [IsLeftCancelAdd α] :
+    IsLeftCancelMul (Multiplicative α) where mul_left_cancel := @add_left_cancel α _ _
+
+instance [Mul α] [IsRightCancelMul α] :
+    IsRightCancelAdd (Additive α) where add_right_cancel := @mul_right_cancel α _ _
+
+instance [Add α] [IsRightCancelAdd α] :
+    IsRightCancelMul (Multiplicative α) where mul_right_cancel := @add_right_cancel α _ _
+
+instance [Mul α] [IsCancelMul α] : IsCancelAdd (Additive α) :=
+  { Additive.is_left_cancel_add, Additive.is_right_cancel_add with }
+
+instance [Add α] [IsCancelAdd α] : IsCancelMul (Multiplicative α) :=
+  { Multiplicative.is_left_cancel_mul, Multiplicative.is_right_cancel_mul with }
+
 instance [LeftCancelSemigroup α] : AddLeftCancelSemigroup (Additive α) :=
-  { Additive.addSemigroup with add_left_cancel := @mul_left_cancel _ _ }
+  { Additive.addSemigroup, Additive.is_left_cancel_add with }
 
 instance [AddLeftCancelSemigroup α] : LeftCancelSemigroup (Multiplicative α) :=
-  { Multiplicative.semigroup with mul_left_cancel := @add_left_cancel _ _ }
+  { Multiplicative.semigroup, Multiplicative.is_left_cancel_mul with }
 
 instance [RightCancelSemigroup α] : AddRightCancelSemigroup (Additive α) :=
-  { Additive.addSemigroup with add_right_cancel := @mul_right_cancel _ _ }
+  { Additive.addSemigroup, Additive.is_right_cancel_add with }
 
 instance [AddRightCancelSemigroup α] : RightCancelSemigroup (Multiplicative α) :=
-  { Multiplicative.semigroup with mul_right_cancel := @add_right_cancel _ _ }
+  { Multiplicative.semigroup, Multiplicative.is_right_cancel_mul with }
 
 instance [One α] : Zero (Additive α) :=
   ⟨Additive.ofMul 1⟩

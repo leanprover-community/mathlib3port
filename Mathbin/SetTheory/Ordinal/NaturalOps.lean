@@ -411,19 +411,19 @@ theorem nadd_le_nadd_iff_right : ∀ (a) {b c}, b ♯ a ≤ c ♯ a ↔ b ≤ c 
 #align ordinal.nadd_le_nadd_iff_right Ordinal.nadd_le_nadd_iff_right
 
 theorem nadd_left_cancel : ∀ {a b c}, a ♯ b = a ♯ c → b = c :=
-  @add_left_cancel NatOrdinal _
+  @add_left_cancel NatOrdinal _ _
 #align ordinal.nadd_left_cancel Ordinal.nadd_left_cancel
 
 theorem nadd_right_cancel : ∀ {a b c}, a ♯ b = c ♯ b → a = c :=
-  @add_right_cancel NatOrdinal _
+  @add_right_cancel NatOrdinal _ _
 #align ordinal.nadd_right_cancel Ordinal.nadd_right_cancel
 
 theorem nadd_left_cancel_iff : ∀ {a b c}, a ♯ b = a ♯ c ↔ b = c :=
-  @add_left_cancel_iff NatOrdinal _
+  @add_left_cancel_iff NatOrdinal _ _
 #align ordinal.nadd_left_cancel_iff Ordinal.nadd_left_cancel_iff
 
 theorem nadd_right_cancel_iff : ∀ {a b c}, b ♯ a = c ♯ a ↔ b = c :=
-  @add_right_cancel_iff NatOrdinal _
+  @add_right_cancel_iff NatOrdinal _ _
 #align ordinal.nadd_right_cancel_iff Ordinal.nadd_right_cancel_iff
 
 end Ordinal

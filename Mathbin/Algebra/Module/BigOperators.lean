@@ -1,10 +1,10 @@
 /-
-Copyright (c) 2015 Nathaniel Thomas. All rights reserved.
+Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
+Authors: Chris Hughes, Yury Kudryashov, Yaël Dillies
 -/
 import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.GroupTheory.GroupAction.BigOperators
 
 /-!
 # Finite sums over modules over a ring
@@ -13,15 +13,11 @@ import Mathbin.Algebra.BigOperators.Basic
 
 open BigOperators
 
-universe u v
-
-variable {α R k S M M₂ M₃ ι : Type _}
+variable {α β R M ι : Type _}
 
 section AddCommMonoid
 
 variable [Semiring R] [AddCommMonoid M] [Module R M] (r s : R) (x y : M)
-
-variable {R M}
 
 theorem List.sum_smul {l : List R} {x : M} : l.Sum • x = (l.map fun r => r • x).Sum :=
   ((smulAddHom R M).flip x).map_list_sum l
@@ -31,10 +27,26 @@ theorem Multiset.sum_smul {l : Multiset R} {x : M} : l.Sum • x = (l.map fun r 
   ((smulAddHom R M).flip x).map_multiset_sum l
 #align multiset.sum_smul Multiset.sum_smul
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Multiset.sum_smul_sum {s : Multiset R} {t : Multiset M} :
+    s.Sum • t.Sum = ((s ×ˢ t).map fun p : R × M => p.fst • p.snd).Sum := by
+  induction' s using Multiset.induction with a s ih
+  · simp
+  · simp [add_smul, ih, ← Multiset.smul_sum]
+#align multiset.sum_smul_sum Multiset.sum_smul_sum
+
 theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} :
     (∑ i in s, f i) • x = ∑ i in s, f i • x :=
   ((smulAddHom R M).flip x).map_sum f s
 #align finset.sum_smul Finset.sum_smul
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Finset.sum_smul_sum {f : α → R} {g : β → M} {s : Finset α} {t : Finset β} :
+    ((∑ i in s, f i) • ∑ i in t, g i) = ∑ p in s ×ˢ t, f p.fst • g p.snd := by
+  rw [Finset.sum_product, Finset.sum_smul, Finset.sum_congr rfl]
+  intros
+  rw [Finset.smul_sum]
+#align finset.sum_smul_sum Finset.sum_smul_sum
 
 end AddCommMonoid
 
