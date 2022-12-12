@@ -779,6 +779,12 @@ theorem mem_nhds_right (y : α) {s : Set (α × α)} (h : s ∈ 𝓤 α) : { x :
   mem_nhds_left _ (symm_le_uniformity h)
 #align mem_nhds_right mem_nhds_right
 
+theorem exists_mem_nhds_ball_subset_of_mem_nhds {a : α} {U : Set α} (h : U ∈ 𝓝 a) :
+    ∃ V ∈ 𝓝 a, ∃ t ∈ 𝓤 α, ∀ a' ∈ V, UniformSpace.ball a' t ⊆ U :=
+  let ⟨t, ht, htU⟩ := comp_mem_uniformity_sets (mem_nhds_uniformity_iff_right.1 h)
+  ⟨_, mem_nhds_left a ht, t, ht, fun a₁ h₁ a₂ h₂ => @htU (a, a₂) ⟨a₁, h₁, h₂⟩ rfl⟩
+#align exists_mem_nhds_ball_subset_of_mem_nhds exists_mem_nhds_ball_subset_of_mem_nhds
+
 theorem IsCompact.nhds_set_basis_uniformity {p : ι → Prop} {s : ι → Set (α × α)}
     (hU : (𝓤 α).HasBasis p s) {K : Set α} (hK : IsCompact K) :
     (𝓝ˢ K).HasBasis p fun i => ⋃ x ∈ K, ball x (s i) := by

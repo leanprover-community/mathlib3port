@@ -358,6 +358,16 @@ instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSe
 
 end AlgebraicStructure
 
+section Uniform
+
+variable [UniformSpace β] [UniformSpace γ] [Zero γ] [ZeroAtInftyContinuousMapClass F β γ]
+
+theorem uniform_continuous (f : F) : UniformContinuous (f : β → γ) :=
+  (map_continuous f).uniform_continuous_of_zero_at_infty (zero_at_infty f)
+#align zero_at_infty_continuous_map.uniform_continuous ZeroAtInftyContinuousMap.uniform_continuous
+
+end Uniform
+
 /-! ### Metric structure
 
 When `β` is a metric space, then every element of `C₀(α, β)` is bounded, and so there is a natural

@@ -218,6 +218,43 @@ theorem IsCompact.uniform_continuous_on_of_continuous {s : Set α} {f : α → �
   exact CompactSpace.uniform_continuous_of_continuous hf
 #align is_compact.uniform_continuous_on_of_continuous IsCompact.uniform_continuous_on_of_continuous
 
+/-- If `s` is compact and `f` is continuous at all points of `s`, then `f` is
+"uniformly continuous at the set `s`", i.e. `f x` is close to `f y` whenever `x ∈ s` and `y` is
+close to `x` (even if `y` is not itself in `s`, so this is a stronger assertion than
+`uniform_continuous_on s`). -/
+theorem IsCompact.uniform_continuous_at_of_continuous_at {r : Set (β × β)} {s : Set α}
+    (hs : IsCompact s) (f : α → β) (hf : ∀ a ∈ s, ContinuousAt f a) (hr : r ∈ 𝓤 β) :
+    { x : α × α | x.1 ∈ s → (f x.1, f x.2) ∈ r } ∈ 𝓤 α := by
+  obtain ⟨t, ht, htsymm, htr⟩ := comp_symm_mem_uniformity_sets hr
+  choose U hU T hT hb using fun a ha =>
+    exists_mem_nhds_ball_subset_of_mem_nhds ((hf a ha).preimage_mem_nhds <| mem_nhds_left _ ht)
+  obtain ⟨fs, hsU⟩ := hs.elim_nhds_subcover' U hU
+  apply mem_of_superset ((bInter_finset_mem fs).2 fun a _ => hT a a.2)
+  rintro ⟨a₁, a₂⟩ h h₁
+  obtain ⟨a, ha, haU⟩ := Set.mem_Union₂.1 (hsU h₁)
+  apply htr
+  refine' ⟨f a, htsymm.mk_mem_comm.1 (hb _ _ _ haU _), hb _ _ _ haU _⟩
+  exacts[mem_ball_self _ (hT a a.2), mem_Inter₂.1 h a ha]
+#align
+  is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniform_continuous_at_of_continuous_at
+
+theorem Continuous.uniform_continuous_of_zero_at_infty {f : α → β} [Zero β] (h_cont : Continuous f)
+    (h_zero : Tendsto f (cocompact α) (𝓝 0)) : UniformContinuous f :=
+  uniform_continuous_def.2 fun r hr => by
+    obtain ⟨t, ht, htsymm, htr⟩ := comp_symm_mem_uniformity_sets hr
+    obtain ⟨s, hs, hst⟩ := mem_cocompact.1 (h_zero <| mem_nhds_left 0 ht)
+    apply
+      mem_of_superset
+        (symmetrize_mem_uniformity <|
+          (hs.uniform_continuous_at_of_continuous_at f fun _ _ => h_cont.continuous_at) <|
+            symmetrize_mem_uniformity hr)
+    rintro ⟨b₁, b₂⟩ h
+    by_cases h₁ : b₁ ∈ s; · exact (h.1 h₁).1
+    by_cases h₂ : b₂ ∈ s; · exact (h.2 h₂).2
+    apply htr
+    exact ⟨0, htsymm.mk_mem_comm.1 (hst h₁), hst h₂⟩
+#align continuous.uniform_continuous_of_zero_at_infty Continuous.uniform_continuous_of_zero_at_infty
+
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is locally compact,
