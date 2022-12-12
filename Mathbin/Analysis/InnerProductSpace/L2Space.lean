@@ -393,7 +393,7 @@ theorem Submodule.isHilbertSumOrthogonal (K : Submodule 𝕜 E) [hK : CompleteSp
     intro b
     cases b <;> first |exact orthogonal.complete_space K|assumption
   refine' IsHilbertSum.mkInternal _ K.orthogonal_family_self _
-  refine' le_trans _ (Submodule.submodule_topological_closure _)
+  refine' le_trans _ (Submodule.le_topological_closure _)
   rw [supr_bool_eq, cond, cond]
   refine' Codisjoint.top_le _
   exact submodule.is_compl_orthogonal_of_complete_space.codisjoint

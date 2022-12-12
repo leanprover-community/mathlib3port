@@ -1364,6 +1364,7 @@ import Mathbin.Data.List.Default
 import Mathbin.Data.List.Defs
 import Mathbin.Data.List.Destutter
 import Mathbin.Data.List.Duplicate
+import Mathbin.Data.List.FinRange
 import Mathbin.Data.List.Forall2
 import Mathbin.Data.List.Func
 import Mathbin.Data.List.Indexes

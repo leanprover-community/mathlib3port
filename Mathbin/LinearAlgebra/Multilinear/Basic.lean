@@ -7,6 +7,7 @@ import Mathbin.LinearAlgebra.Basic
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.BigOperators.Ring
+import Mathbin.Data.List.FinRange
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Fintype.Sort
 

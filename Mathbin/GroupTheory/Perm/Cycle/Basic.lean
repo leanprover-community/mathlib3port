@@ -1060,7 +1060,7 @@ theorem IsCycle.is_cycle_pow_pos_of_lt_prime_order [Finite β] {f : Perm β} (hf
 
 /-- `f.cycle_of x` is the cycle of the permutation `f` to which `x` belongs. -/
 def cycleOf [Fintype α] (f : Perm α) (x : α) : Perm α :=
-  ofSubtype (@subtypePerm _ f (SameCycle f x) fun _ => same_cycle_apply.symm)
+  ofSubtype (subtypePerm f fun _ => same_cycle_apply.symm : Perm { y // SameCycle f x y })
 #align equiv.perm.cycle_of Equiv.Perm.cycleOf
 
 theorem cycle_of_apply [Fintype α] (f : Perm α) (x y : α) :

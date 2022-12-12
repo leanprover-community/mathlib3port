@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Scott Morrison
 -/
 import Mathbin.Data.List.Chain
-import Mathbin.Data.List.Nodup
-import Mathbin.Data.List.OfFn
 import Mathbin.Data.List.Zip
 
 /-!
@@ -246,8 +244,8 @@ theorem pairwise_gt_iota (n : ℕ) : Pairwise (· > ·) (iota n) := by
   simp only [iota_eq_reverse_range', pairwise_reverse, pairwise_lt_range']
 #align list.pairwise_gt_iota List.pairwise_gt_iota
 
-theorem nodup_iota (n : ℕ) : Nodup (iota n) := by
-  simp only [iota_eq_reverse_range', nodup_reverse, nodup_range']
+theorem nodup_iota (n : ℕ) : Nodup (iota n) :=
+  (pairwise_gt_iota n).imp fun a b => ne_of_gt
 #align list.nodup_iota List.nodup_iota
 
 theorem mem_iota {m n : ℕ} : m ∈ iota n ↔ 1 ≤ m ∧ m ≤ n := by
@@ -280,13 +278,16 @@ theorem fin_range_zero : finRange 0 = [] :=
 #print List.mem_fin_range /-
 @[simp]
 theorem mem_fin_range {n : ℕ} (a : Fin n) : a ∈ finRange n :=
-  mem_pmap.2 ⟨a.1, mem_range.2 a.2, Fin.eta _ _⟩
+  mem_pmap.2
+    ⟨a.1, mem_range.2 a.2, by 
+      cases a
+      rfl⟩
 #align list.mem_fin_range List.mem_fin_range
 -/
 
 #print List.nodup_fin_range /-
 theorem nodup_fin_range (n : ℕ) : (finRange n).Nodup :=
-  (nodup_range _).pmap fun _ _ _ _ => Fin.veq_of_eq
+  (Pairwise.pmap (nodup_range n) _) fun _ _ _ _ => @Fin.ne_of_vne _ ⟨_, _⟩ ⟨_, _⟩
 #align list.nodup_fin_range List.nodup_fin_range
 -/
 
@@ -299,20 +300,6 @@ theorem length_fin_range (n : ℕ) : (finRange n).length = n := by
 theorem fin_range_eq_nil {n : ℕ} : finRange n = [] ↔ n = 0 := by
   rw [← length_eq_zero, length_fin_range]
 #align list.fin_range_eq_nil List.fin_range_eq_nil
-
-@[simp]
-theorem map_coe_fin_range (n : ℕ) : (finRange n).map coe = List.range n := by
-  simp_rw [fin_range, map_pmap, Fin.coe_mk, pmap_eq_map]
-  exact List.map_id _
-#align list.map_coe_fin_range List.map_coe_fin_range
-
-theorem fin_range_succ_eq_map (n : ℕ) : finRange n.succ = 0 :: (finRange n).map Fin.succ := by
-  apply map_injective_iff.mpr Fin.coe_injective
-  rw [map_cons, map_coe_fin_range, range_succ_eq_map, Fin.coe_zero, ← map_coe_fin_range, map_map,
-    map_map, Function.comp, Function.comp]
-  congr 2 with x
-  exact (Fin.coe_succ _).symm
-#align list.fin_range_succ_eq_map List.fin_range_succ_eq_map
 
 @[to_additive]
 theorem prod_range_succ {α : Type u} [Monoid α] (f : ℕ → α) (n : ℕ) :
@@ -370,51 +357,6 @@ theorem nth_le_fin_range {n : ℕ} {i : ℕ} (h) :
     (finRange n).nthLe i h = ⟨i, length_fin_range n ▸ h⟩ := by
   simp only [fin_range, nth_le_range, nth_le_pmap]
 #align list.nth_le_fin_range List.nth_le_fin_range
-
-@[simp]
-theorem map_nth_le (l : List α) : ((finRange l.length).map fun n => l.nthLe n n.2) = l :=
-  (ext_le (by rw [length_map, length_fin_range])) fun n _ h => by
-    rw [← nth_le_map_rev]
-    congr
-    · rw [nth_le_fin_range]
-      rfl
-    · rw [length_fin_range]
-      exact h
-#align list.map_nth_le List.map_nth_le
-
-theorem of_fn_eq_pmap {α n} {f : Fin n → α} :
-    ofFn f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 := by
-  rw [pmap_eq_map_attach] <;>
-    exact
-      ext_le (by simp) fun i hi1 hi2 => by 
-        simp at hi1
-        simp [nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
-#align list.of_fn_eq_pmap List.of_fn_eq_pmap
-
-theorem of_fn_id (n) : ofFn id = finRange n :=
-  of_fn_eq_pmap
-#align list.of_fn_id List.of_fn_id
-
-theorem of_fn_eq_map {α n} {f : Fin n → α} : ofFn f = (finRange n).map f := by
-  rw [← of_fn_id, map_of_fn, Function.right_id]
-#align list.of_fn_eq_map List.of_fn_eq_map
-
-theorem nodup_of_fn_of_injective {α n} {f : Fin n → α} (hf : Function.Injective f) :
-    Nodup (ofFn f) := by 
-  rw [of_fn_eq_pmap]
-  exact (nodup_range n).pmap fun _ _ _ _ H => Fin.veq_of_eq <| hf H
-#align list.nodup_of_fn_of_injective List.nodup_of_fn_of_injective
-
-theorem nodup_of_fn {α n} {f : Fin n → α} : Nodup (ofFn f) ↔ Function.Injective f := by
-  refine' ⟨_, nodup_of_fn_of_injective⟩
-  refine' Fin.consInduction _ (fun n x₀ xs ih => _) f
-  · intro h
-    exact Function.injective_of_subsingleton _
-  · intro h
-    rw [Fin.cons_injective_iff]
-    simp_rw [of_fn_succ, Fin.cons_succ, nodup_cons, Fin.cons_zero, mem_of_fn] at h
-    exact h.imp_right ih
-#align list.nodup_of_fn List.nodup_of_fn
 
 end List
 

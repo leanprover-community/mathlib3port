@@ -92,7 +92,7 @@ variable [TopologicalSemiring A]
 /-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
   { s.toSubsemiring.topologicalClosure with carrier := closure (s : Set A),
-    algebra_map_mem' := fun r => s.toSubsemiring.subring_topological_closure (s.algebra_map_mem r) }
+    algebra_map_mem' := fun r => s.toSubsemiring.le_topological_closure (s.algebra_map_mem r) }
 #align subalgebra.topological_closure Subalgebra.topologicalClosure
 
 @[simp]
@@ -105,9 +105,9 @@ instance Subalgebra.topological_semiring (s : Subalgebra R A) : TopologicalSemir
   s.toSubsemiring.TopologicalSemiring
 #align subalgebra.topological_semiring Subalgebra.topological_semiring
 
-theorem Subalgebra.subalgebra_topological_closure (s : Subalgebra R A) : s ≤ s.topologicalClosure :=
+theorem Subalgebra.le_topological_closure (s : Subalgebra R A) : s ≤ s.topologicalClosure :=
   subset_closure
-#align subalgebra.subalgebra_topological_closure Subalgebra.subalgebra_topological_closure
+#align subalgebra.le_topological_closure Subalgebra.le_topological_closure
 
 theorem Subalgebra.isClosedTopologicalClosure (s : Subalgebra R A) :
     IsClosed (s.topologicalClosure : Set A) := by convert isClosedClosure
@@ -168,7 +168,7 @@ def Algebra.elementalAlgebra (x : A) : Subalgebra R A :=
 #align algebra.elemental_algebra Algebra.elementalAlgebra
 
 theorem Algebra.self_mem_elemental_algebra (x : A) : x ∈ Algebra.elementalAlgebra R x :=
-  SetLike.le_def.mp (Subalgebra.subalgebra_topological_closure (Algebra.adjoin R ({x} : Set A))) <|
+  SetLike.le_def.mp (Subalgebra.le_topological_closure (Algebra.adjoin R ({x} : Set A))) <|
     Algebra.self_mem_adjoin_singleton R x
 #align algebra.self_mem_elemental_algebra Algebra.self_mem_elemental_algebra
 

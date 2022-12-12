@@ -158,7 +158,7 @@ theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A
     le_antisymm
       (Subalgebra.topological_closure_minimal _ le_rfl
         (gelfandTransformIsometry A).ClosedEmbedding.closedRange)
-      (Subalgebra.subalgebra_topological_closure _)
+      (Subalgebra.le_topological_closure _)
   refine'
     h ▸
       ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points _

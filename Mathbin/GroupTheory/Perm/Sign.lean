@@ -678,9 +678,9 @@ theorem sign_bij [DecidableEq β] [Fintype β] {f : Perm α} {g : Perm β} (i : 
     (h : ∀ x hx hx', i (f x) hx' = g (i x hx)) (hi : ∀ x₁ x₂ hx₁ hx₂, i x₁ hx₁ = i x₂ hx₂ → x₁ = x₂)
     (hg : ∀ y, g y ≠ y → ∃ x hx, i x hx = y) : sign f = sign g :=
   calc
-    sign f = sign (@subtypePerm _ f (fun x => f x ≠ x) (by simp)) :=
+    sign f = sign (subtypePerm f <| by simp : Perm { x // f x ≠ x }) :=
       (sign_subtype_perm _ _ fun _ => id).symm
-    _ = sign (@subtypePerm _ g (fun x => g x ≠ x) (by simp)) :=
+    _ = sign (subtypePerm g <| by simp : Perm { x // g x ≠ x }) :=
       sign_eq_sign_of_equiv _ _
         (Equiv.ofBijective
           (fun x : { x // f x ≠ x } =>

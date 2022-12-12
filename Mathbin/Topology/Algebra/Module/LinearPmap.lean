@@ -125,7 +125,7 @@ theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure := by
   by_cases hf : f.is_closable
   · refine' le_of_le_graph _
     rw [← hf.graph_closure_eq_closure_graph]
-    exact (graph f).submodule_topological_closure
+    exact (graph f).le_topological_closure
   rw [closure_def' hf]
 #align linear_pmap.le_closure LinearPmap.le_closure
 

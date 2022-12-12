@@ -124,9 +124,9 @@ theorem Subsemiring.topological_closure_coe (s : Subsemiring α) :
   rfl
 #align subsemiring.topological_closure_coe Subsemiring.topological_closure_coe
 
-theorem Subsemiring.subring_topological_closure (s : Subsemiring α) : s ≤ s.topologicalClosure :=
+theorem Subsemiring.le_topological_closure (s : Subsemiring α) : s ≤ s.topologicalClosure :=
   subset_closure
-#align subsemiring.subring_topological_closure Subsemiring.subring_topological_closure
+#align subsemiring.le_topological_closure Subsemiring.le_topological_closure
 
 theorem Subsemiring.isClosedTopologicalClosure (s : Subsemiring α) :
     IsClosed (s.topologicalClosure : Set α) := by convert isClosedClosure
@@ -292,9 +292,9 @@ def Subring.topologicalClosure (S : Subring α) : Subring α :=
     carrier := closure (S : Set α) }
 #align subring.topological_closure Subring.topologicalClosure
 
-theorem Subring.subring_topological_closure (s : Subring α) : s ≤ s.topologicalClosure :=
+theorem Subring.le_topological_closure (s : Subring α) : s ≤ s.topologicalClosure :=
   subset_closure
-#align subring.subring_topological_closure Subring.subring_topological_closure
+#align subring.le_topological_closure Subring.le_topological_closure
 
 theorem Subring.isClosedTopologicalClosure (s : Subring α) :
     IsClosed (s.topologicalClosure : Set α) := by convert isClosedClosure

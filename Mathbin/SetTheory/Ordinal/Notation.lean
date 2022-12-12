@@ -330,7 +330,7 @@ theorem NF.of_dvd_omega_opow {b e n a} (h : NF (oadd e n a)) (d : ω ^ b ∣ rep
   have := mt repr_inj.1 (fun h => by injection h : oadd e n a ≠ 0)
   have L := le_of_not_lt fun l => not_le_of_lt (h.below_of_lt l).repr_lt (le_of_dvd this d)
   simp at d
-  exact ⟨L, (dvd_add_iff <| (opow_dvd_opow _ L).mul_right _).1 d⟩
+  exact ⟨L, (dvd_add_iff <| (opow_dvd_opow _ L).mulRight _).1 d⟩
 #align onote.NF.of_dvd_omega_opow Onote.NF.of_dvd_omega_opow
 
 theorem NF.of_dvd_omega {e n a} (h : NF (oadd e n a)) :

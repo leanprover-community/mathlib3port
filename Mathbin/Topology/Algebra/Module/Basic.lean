@@ -220,9 +220,9 @@ theorem Submodule.topological_closure_coe (s : Submodule R M) :
   rfl
 #align submodule.topological_closure_coe Submodule.topological_closure_coe
 
-theorem Submodule.submodule_topological_closure (s : Submodule R M) : s ≤ s.topologicalClosure :=
+theorem Submodule.le_topological_closure (s : Submodule R M) : s ≤ s.topologicalClosure :=
   subset_closure
-#align submodule.submodule_topological_closure Submodule.submodule_topological_closure
+#align submodule.le_topological_closure Submodule.le_topological_closure
 
 theorem Submodule.isClosedTopologicalClosure (s : Submodule R M) :
     IsClosed (s.topologicalClosure : Set M) := by convert isClosedClosure
@@ -235,14 +235,13 @@ theorem Submodule.topological_closure_minimal (s : Submodule R M) {t : Submodule
 
 theorem Submodule.topological_closure_mono {s : Submodule R M} {t : Submodule R M} (h : s ≤ t) :
     s.topologicalClosure ≤ t.topologicalClosure :=
-  s.topological_closure_minimal (h.trans t.submodule_topological_closure)
-    t.isClosedTopologicalClosure
+  s.topological_closure_minimal (h.trans t.le_topological_closure) t.isClosedTopologicalClosure
 #align submodule.topological_closure_mono Submodule.topological_closure_mono
 
 /-- The topological closure of a closed submodule `s` is equal to `s`. -/
 theorem IsClosed.submodule_topological_closure_eq {s : Submodule R M} (hs : IsClosed (s : Set M)) :
     s.topologicalClosure = s :=
-  le_antisymm (s.topological_closure_minimal rfl.le hs) s.submodule_topological_closure
+  le_antisymm (s.topological_closure_minimal rfl.le hs) s.le_topological_closure
 #align is_closed.submodule_topological_closure_eq IsClosed.submodule_topological_closure_eq
 
 /-- A subspace is dense iff its topological closure is the entire space. -/
@@ -261,7 +260,7 @@ instance {M' : Type _} [AddCommMonoid M'] [Module R M'] [UniformSpace M'] [HasCo
 is either closed or dense. -/
 theorem Submodule.is_closed_or_dense_of_is_coatom (s : Submodule R M) (hs : IsCoatom s) :
     IsClosed (s : Set M) ∨ Dense (s : Set M) :=
-  (hs.le_iff.mp s.submodule_topological_closure).swap.imp (isClosedOfClosureSubset ∘ Eq.le)
+  (hs.le_iff.mp s.le_topological_closure).swap.imp (isClosedOfClosureSubset ∘ Eq.le)
     Submodule.dense_iff_topological_closure_eq_top.mpr
 #align submodule.is_closed_or_dense_of_is_coatom Submodule.is_closed_or_dense_of_is_coatom
 

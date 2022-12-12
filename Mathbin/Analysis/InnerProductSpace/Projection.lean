@@ -800,7 +800,7 @@ theorem Submodule.orthogonal_orthogonal [CompleteSpace K] : Kᗮᗮ = K := by
 theorem Submodule.orthogonal_orthogonal_eq_closure [CompleteSpace E] : Kᗮᗮ = K.topologicalClosure :=
   by 
   refine' le_antisymm _ _
-  · convert Submodule.orthogonal_orthogonal_monotone K.submodule_topological_closure
+  · convert Submodule.orthogonal_orthogonal_monotone K.le_topological_closure
     haveI : CompleteSpace K.topological_closure :=
       K.is_closed_topological_closure.complete_space_coe
     rw [K.topological_closure.orthogonal_orthogonal]
@@ -884,7 +884,7 @@ theorem orthogonal_projection_tendsto_closure_supr [CompleteSpace E] {ι : Type 
   let y := (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)
   have proj_x : ∀ i, orthogonalProjection (U i) x = orthogonalProjection (U i) y := fun i =>
     (orthogonal_projection_orthogonal_projection_of_le
-        ((le_supr U i).trans (supr U).submodule_topological_closure) _).symm
+        ((le_supr U i).trans (supr U).le_topological_closure) _).symm
   suffices ∀ ε > 0, ∃ I, ∀ i ≥ I, ‖(orthogonalProjection (U i) y : E) - y‖ < ε by
     simpa only [proj_x, NormedAddCommGroup.tendsto_at_top] using this
   intro ε hε

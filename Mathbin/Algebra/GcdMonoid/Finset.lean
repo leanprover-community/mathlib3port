@@ -241,7 +241,7 @@ theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f
     · simp
     intro b t hbt h
     rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
-    apply ((normalize_associated a).mul_right _).gcd_eq_right
+    apply ((normalize_associated a).mulRight _).gcd_eq_right
 #align finset.gcd_mul_left Finset.gcd_mul_left
 
 theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize a := by
@@ -250,7 +250,7 @@ theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize 
     · simp
     intro b t hbt h
     rw [gcd_insert, gcd_insert, h, ← gcd_mul_right]
-    apply ((normalize_associated a).mul_left _).gcd_eq_right
+    apply ((normalize_associated a).mulLeft _).gcd_eq_right
 #align finset.gcd_mul_right Finset.gcd_mul_right
 
 theorem extract_gcd' (f g : β → α) (hs : ∃ x, x ∈ s ∧ f x ≠ 0) (hg : ∀ b ∈ s, f b = s.gcd f * g b) :

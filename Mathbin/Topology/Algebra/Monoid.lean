@@ -367,9 +367,9 @@ def Submonoid.topologicalClosure (s : Submonoid M) :
 #align submonoid.topological_closure Submonoid.topologicalClosure
 
 @[to_additive]
-theorem Submonoid.submonoid_topological_closure (s : Submonoid M) : s ≤ s.topologicalClosure :=
+theorem Submonoid.le_topological_closure (s : Submonoid M) : s ≤ s.topologicalClosure :=
   subset_closure
-#align submonoid.submonoid_topological_closure Submonoid.submonoid_topological_closure
+#align submonoid.le_topological_closure Submonoid.le_topological_closure
 
 @[to_additive]
 theorem Submonoid.isClosedTopologicalClosure (s : Submonoid M) :

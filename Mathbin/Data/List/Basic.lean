@@ -1005,15 +1005,6 @@ theorem subset_singleton_iff {a : α} : ∀ L : List α, L ⊆ [a] ↔ ∃ n, L 
 #align list.subset_singleton_iff List.subset_singleton_iff
 
 @[simp]
-theorem map_const (l : List α) (b : β) : map (Function.const α b) l = repeat b l.length := by
-  induction l <;> [rfl, simp only [*, map]] <;> constructor <;> rfl
-#align list.map_const List.map_const
-
-theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) :
-    b₁ = b₂ := by rw [map_const] at h <;> exact eq_of_mem_repeat h
-#align list.eq_of_mem_map_const List.eq_of_mem_map_const
-
-@[simp]
 theorem map_repeat (f : α → β) (a : α) (n) : map f (repeat a n) = repeat (f a) n := by
   induction n <;> [rfl, simp only [*, repeat, map]] <;> constructor <;> rfl
 #align list.map_repeat List.map_repeat
@@ -2726,12 +2717,31 @@ theorem map_filter_eq_foldr (f : α → β) (p : α → Prop) [DecidablePred p] 
 
 theorem last_map (f : α → β) {l : List α} (hl : l ≠ []) :
     (l.map f).last (mt eq_nil_of_map_eq_nil hl) = f (l.last hl) := by
-  induction' l with l_ih l_tl l_ih
+  induction' l with l_hd l_tl l_ih
   · apply (hl rfl).elim
   · cases l_tl
     · simp
     · simpa using l_ih
 #align list.last_map List.last_map
+
+theorem map_eq_repeat_iff {l : List α} {f : α → β} {b : β} :
+    l.map f = repeat b l.length ↔ ∀ x ∈ l, f x = b := by
+  induction' l with x l' ih
+  ·
+    simp only [repeat, length, not_mem_nil, IsEmpty.forall_iff, imp_true_iff, map_nil,
+      eq_self_iff_true]
+  · simp only [map, length, mem_cons_iff, forall_eq_or_imp, repeat_succ, and_congr_right_iff]
+    exact fun _ => ih
+#align list.map_eq_repeat_iff List.map_eq_repeat_iff
+
+@[simp]
+theorem map_const (l : List α) (b : β) : map (Function.const α b) l = repeat b l.length :=
+  map_eq_repeat_iff.mpr fun x _ => rfl
+#align list.map_const List.map_const
+
+theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) :
+    b₁ = b₂ := by rw [map_const] at h <;> exact eq_of_mem_repeat h
+#align list.eq_of_mem_map_const List.eq_of_mem_map_const
 
 /-! ### map₂ -/
 

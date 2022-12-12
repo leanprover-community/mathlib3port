@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Data.List.BigOperators.Basic
-import Mathbin.Data.List.Range
+import Mathbin.Data.List.FinRange
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.Data.SetLike.Basic

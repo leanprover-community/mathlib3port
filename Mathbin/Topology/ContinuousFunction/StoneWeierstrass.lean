@@ -124,8 +124,8 @@ theorem inf_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
   refine'
     A.topological_closure.smul_mem
       (A.topological_closure.sub_mem
-        (A.topological_closure.add_mem (A.subalgebra_topological_closure f.property)
-          (A.subalgebra_topological_closure g.property))
+        (A.topological_closure.add_mem (A.le_topological_closure f.property)
+          (A.le_topological_closure g.property))
         _)
       _
   exact_mod_cast abs_mem_subalgebra_closure A _
@@ -146,8 +146,8 @@ theorem sup_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
   refine'
     A.topological_closure.smul_mem
       (A.topological_closure.add_mem
-        (A.topological_closure.add_mem (A.subalgebra_topological_closure f.property)
-          (A.subalgebra_topological_closure g.property))
+        (A.topological_closure.add_mem (A.le_topological_closure f.property)
+          (A.le_topological_closure g.property))
         _)
       _
   exact_mod_cast abs_mem_subalgebra_closure A _
@@ -284,14 +284,13 @@ theorem subalgebra_topological_closure_eq_top_of_separates_points (A : Subalgebr
   -- so we can apply `sublattice_closure_eq_top`.
   apply SetLike.ext'
   let L := A.topological_closure
-  have n : Set.Nonempty (L : Set C(X, ℝ)) :=
-    ⟨(1 : C(X, ℝ)), A.subalgebra_topological_closure A.one_mem⟩
+  have n : Set.Nonempty (L : Set C(X, ℝ)) := ⟨(1 : C(X, ℝ)), A.le_topological_closure A.one_mem⟩
   convert
     sublattice_closure_eq_top (L : Set C(X, ℝ)) n
       (fun f fm g gm => inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (fun f fm g gm => sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (Subalgebra.SeparatesPoints.strongly
-        (Subalgebra.separates_points_monotone A.subalgebra_topological_closure w))
+        (Subalgebra.separates_points_monotone A.le_topological_closure w))
   · simp
 #align
   continuous_map.subalgebra_topological_closure_eq_top_of_separates_points ContinuousMap.subalgebra_topological_closure_eq_top_of_separates_points

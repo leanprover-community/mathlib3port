@@ -618,9 +618,9 @@ theorem Subgroup.topological_closure_coe {s : Subgroup G} :
 #align subgroup.topological_closure_coe Subgroup.topological_closure_coe
 
 @[to_additive]
-theorem Subgroup.subgroup_topological_closure (s : Subgroup G) : s ≤ s.topologicalClosure :=
+theorem Subgroup.le_topological_closure (s : Subgroup G) : s ≤ s.topologicalClosure :=
   subset_closure
-#align subgroup.subgroup_topological_closure Subgroup.subgroup_topological_closure
+#align subgroup.le_topological_closure Subgroup.le_topological_closure
 
 @[to_additive]
 theorem Subgroup.isClosedTopologicalClosure (s : Subgroup G) :

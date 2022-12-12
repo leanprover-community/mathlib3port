@@ -4,12 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Mathbin.Data.List.Dedup
-import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Permutation
-import Mathbin.Data.List.Zip
 import Mathbin.Data.List.Range
 import Mathbin.Data.Nat.Factorial.Basic
-import Mathbin.Logic.Relation
 
 /-!
 # List Permutations
@@ -1504,20 +1501,4 @@ theorem nodup_permutations (s : List α) (hs : Nodup s) : Nodup s.permutations :
 end Permutations
 
 end List
-
-open List
-
-theorem Equiv.Perm.map_fin_range_perm {n : ℕ} (σ : Equiv.Perm (Fin n)) :
-    map σ (finRange n) ~ finRange n := by
-  rw [perm_ext ((nodup_fin_range n).map σ.injective) <| nodup_fin_range n]
-  simpa only [mem_map, mem_fin_range, true_and_iff, iff_true_iff] using σ.surjective
-#align equiv.perm.map_fin_range_perm Equiv.Perm.map_fin_range_perm
-
-/-- The list obtained from a permutation of a tuple `f` is permutation equivalent to
-the list obtained from `f`. -/
-theorem Equiv.Perm.of_fn_comp_perm {n : ℕ} {α : Type uu} (σ : Equiv.Perm (Fin n)) (f : Fin n → α) :
-    ofFn (f ∘ σ) ~ ofFn f := by
-  rw [of_fn_eq_map, of_fn_eq_map, ← map_map]
-  exact σ.map_fin_range_perm.map f
-#align equiv.perm.of_fn_comp_perm Equiv.Perm.of_fn_comp_perm
 

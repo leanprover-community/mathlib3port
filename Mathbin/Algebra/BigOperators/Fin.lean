@@ -5,6 +5,7 @@ Authors: Yury Kudryashov, Anne Baanen
 -/
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Fintype.Fin
+import Mathbin.Data.List.FinRange
 import Mathbin.Logic.Equiv.Fin
 
 /-!

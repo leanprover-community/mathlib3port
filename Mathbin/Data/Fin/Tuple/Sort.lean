@@ -3,8 +3,8 @@ Copyright (c) 2021 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Finset.Sort
+import Mathbin.Data.List.FinRange
 import Mathbin.Data.Prod.Lex
 import Mathbin.GroupTheory.Perm.Basic
 

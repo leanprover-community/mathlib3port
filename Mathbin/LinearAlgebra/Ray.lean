@@ -201,7 +201,7 @@ theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z
 
 /-- If `y` and `z` are on the same ray as `x`, then so is `y + z`. -/
 theorem add_right (hy : SameRay R x y) (hz : SameRay R x z) : SameRay R x (y + z) :=
-  (hy.symm.add_left hz.symm).symm
+  (hy.symm.addLeft hz.symm).symm
 #align same_ray.add_right SameRay.add_right
 
 end SameRay
