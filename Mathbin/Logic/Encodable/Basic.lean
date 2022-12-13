@@ -459,6 +459,7 @@ theorem nonempty_encodable : Nonempty (Encodable α) ↔ Countable α :=
 
 end Encodable
 
+/-- See also `nonempty_fintype`, `nonempty_denumerable`. -/
 theorem nonempty_encodable (α : Type _) [Countable α] : Nonempty (Encodable α) :=
   ⟨Encodable.ofCountable _⟩
 #align nonempty_encodable nonempty_encodable

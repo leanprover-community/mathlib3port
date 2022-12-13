@@ -42,6 +42,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
             fapply eq_mk_of_comm
             · apply LinearEquiv.toModuleIso'Left
               apply LinearEquiv.ofBijective (LinearMap.codRestrict S.arrow.range S.arrow _)
+              constructor
               ·
                 simpa only [← LinearMap.ker_eq_bot, LinearMap.ker_cod_restrict] using
                   ker_eq_bot_of_mono _

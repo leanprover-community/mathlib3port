@@ -1425,6 +1425,11 @@ theorem aleph_0_le_mk (α : Type u) [Infinite α] : ℵ₀ ≤ (#α) :=
   infinite_iff.1 ‹_›
 #align cardinal.aleph_0_le_mk Cardinal.aleph_0_le_mk
 
+@[simp]
+theorem mk_eq_aleph_0 (α : Type _) [Countable α] [Infinite α] : (#α) = ℵ₀ :=
+  mk_le_aleph_0.antisymm <| aleph_0_le_mk _
+#align cardinal.mk_eq_aleph_0 Cardinal.mk_eq_aleph_0
+
 theorem denumerable_iff {α : Type u} : Nonempty (Denumerable α) ↔ (#α) = ℵ₀ :=
   ⟨fun ⟨h⟩ => mk_congr ((@Denumerable.eqv α h).trans Equiv.ulift.symm), fun h => by
     cases' Quotient.exact h with f

@@ -11,7 +11,7 @@ import Mathbin.GroupTheory.GroupAction.ConjAct
 /-!
 # Congruence subgroups
 
-This defines congruence subgroups of `SL(2,ℤ)` such as `Γ(N)`, `Γ₀(N)` and `Γ₁(N)` for `N` a
+This defines congruence subgroups of `SL(2, ℤ)` such as `Γ(N)`, `Γ₀(N)` and `Γ₁(N)` for `N` a
 natural number.
 
 It also contains basic results about congruence subgroups.
@@ -41,7 +41,7 @@ theorem SL_reduction_mod_hom_val (N : ℕ) (γ : SL(2, ℤ)) :
   fun i j => rfl
 #align SL_reduction_mod_hom_val SL_reduction_mod_hom_val
 
-/-- The full level `N` congruence subgroup of `SL(2,ℤ)` of matrices that reduce to the identity
+/-- The full level `N` congruence subgroup of `SL(2, ℤ)` of matrices that reduce to the identity
 modulo `N`.-/
 def gamma (N : ℕ) : Subgroup SL(2, ℤ) :=
   SLMOD(N).ker
@@ -91,7 +91,7 @@ theorem Gamma_zero_bot : gamma 0 = ⊥ := by
     simp [h]
 #align Gamma_zero_bot Gamma_zero_bot
 
-/-- The congruence subgroup of `SL(2,ℤ)` of matrices whose lower left-hand entry reduces to zero
+/-- The congruence subgroup of `SL(2, ℤ)` of matrices whose lower left-hand entry reduces to zero
 modulo `N`. -/
 def gamma0 (N : ℕ) :
     Subgroup
@@ -174,7 +174,7 @@ theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : gamma0 N) :
     exact ha.2.1
 #align Gamma1_to_Gamma0_mem Gamma1_to_Gamma0_mem
 
-/-- The congruence subgroup `Gamma1` of `SL(2,ℤ)` consisting of matrices whose bottom
+/-- The congruence subgroup `Gamma1` of `SL(2, ℤ)` consisting of matrices whose bottom
 row is congruent to `(0,1)` modulo `N`. -/
 def gamma1 (N : ℕ) : Subgroup SL(2, ℤ) :=
   Subgroup.map ((gamma0 N).Subtype.comp (gamma1' N).Subtype) ⊤
@@ -212,7 +212,7 @@ theorem Gamma1_in_Gamma0 (N : ℕ) : gamma1 N ≤ gamma0 N := by
 
 section CongruenceSubgroup
 
-/-- A congruence subgroup is a subgroup of `SL(2,ℤ)` which contains some `Gamma N` for some
+/-- A congruence subgroup is a subgroup of `SL(2, ℤ)` which contains some `Gamma N` for some
 `(N : ℕ+)`. -/
 def IsCongruenceSubgroup (Γ : Subgroup SL(2, ℤ)) : Prop :=
   ∃ N : ℕ+, gamma N ≤ Γ

@@ -18,8 +18,6 @@ about these definitions.
 
 variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
-noncomputable section
-
 open Filter Metric Function Set
 
 open TopologicalSpace BigOperators Nnreal Ennreal uniformity Pointwise
@@ -59,6 +57,10 @@ instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] :
   dist_pair_smul' x₁ x₂ y := by
     simpa [dist_eq_norm, sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
 #align normed_space.has_bounded_smul NormedSpace.hasBoundedSmul
+
+-- Shortcut instance, as otherwise this will be found by `normed_space.to_module` and be
+-- noncomputable.
+instance : Module ℝ ℝ := by infer_instance
 
 instance NormedField.toNormedSpace :
     NormedSpace α α where norm_smul_le a b := le_of_eq (norm_mul a b)
@@ -208,7 +210,7 @@ In many cases the actual implementation is not important, so we don't mark the p
 See also `cont_diff_homeomorph_unit_ball` and `cont_diff_on_homeomorph_unit_ball_symm` for
 smoothness properties that hold when `E` is an inner-product space. -/
 @[simps (config := { attrs := [] })]
-def homeomorphUnitBall [NormedSpace ℝ E] :
+noncomputable def homeomorphUnitBall [NormedSpace ℝ E] :
     E ≃ₜ
       ball (0 : E)
         1 where 

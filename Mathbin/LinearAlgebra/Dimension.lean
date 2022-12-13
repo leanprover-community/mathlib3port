@@ -1217,7 +1217,7 @@ theorem dim_add_dim_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd : 
     rw [← dim_prod, dim_eq_of_surjective _ hf]
   congr 1
   apply LinearEquiv.dim_eq
-  refine' LinearEquiv.ofBijective _ _ _
+  refine' LinearEquiv.ofBijective _ ⟨_, _⟩
   · refine' cod_restrict _ (Prod cd (-ce)) _
     · intro c
       simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, Pi.prod, coprod_apply,

@@ -655,9 +655,8 @@ protected theorem surjective (e : L₁ ≃ₗ⁅R⁆ L₂) :
 
 /-- A bijective morphism of Lie algebras yields an equivalence of Lie algebras. -/
 @[simps]
-noncomputable def ofBijective (f : L₁ →ₗ⁅R⁆ L₂) (h₁ : Function.Injective f)
-    (h₂ : Function.Surjective f) : L₁ ≃ₗ⁅R⁆ L₂ :=
-  { LinearEquiv.ofBijective (f : L₁ →ₗ[R] L₂) h₁ h₂ with toFun := f, map_lie' := f.map_lie }
+noncomputable def ofBijective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Bijective f) : L₁ ≃ₗ⁅R⁆ L₂ :=
+  { LinearEquiv.ofBijective (f : L₁ →ₗ[R] L₂) h with toFun := f, map_lie' := f.map_lie }
 #align lie_equiv.of_bijective LieEquiv.ofBijective
 
 end LieEquiv

@@ -2621,14 +2621,14 @@ theorem of_injective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ
 #align linear_equiv.of_injective_apply LinearEquiv.of_injective_apply
 
 /-- A bijective linear map is a linear equivalence. -/
-noncomputable def ofBijective [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (hf₁ : Injective f)
-    (hf₂ : Surjective f) : M ≃ₛₗ[σ₁₂] M₂ :=
-  (ofInjective f hf₁).trans (ofTop _ <| LinearMap.range_eq_top.2 hf₂)
+noncomputable def ofBijective [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (hf : Bijective f) :
+    M ≃ₛₗ[σ₁₂] M₂ :=
+  (ofInjective f hf.Injective).trans (ofTop _ <| LinearMap.range_eq_top.2 hf.Surjective)
 #align linear_equiv.of_bijective LinearEquiv.ofBijective
 
 @[simp]
-theorem of_bijective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {hf₁ hf₂} (x : M) :
-    ofBijective f hf₁ hf₂ x = f x :=
+theorem of_bijective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {hf} (x : M) :
+    ofBijective f hf x = f x :=
   rfl
 #align linear_equiv.of_bijective_apply LinearEquiv.of_bijective_apply
 

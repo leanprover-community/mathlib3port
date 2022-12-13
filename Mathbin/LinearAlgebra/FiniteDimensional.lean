@@ -1046,7 +1046,7 @@ variable [FiniteDimensional K V]
 
 /-- The linear equivalence corresponging to an injective endomorphism. -/
 noncomputable def ofInjectiveEndo (f : V →ₗ[K] V) (h_inj : Injective f) : V ≃ₗ[K] V :=
-  LinearEquiv.ofBijective f h_inj <| LinearMap.injective_iff_surjective.mp h_inj
+  LinearEquiv.ofBijective f ⟨h_inj, LinearMap.injective_iff_surjective.mp h_inj⟩
 #align linear_equiv.of_injective_endo LinearEquiv.ofInjectiveEndo
 
 @[simp]
@@ -1149,8 +1149,8 @@ theorem finrank_le_finrank_of_injective [FiniteDimensional K V] [FiniteDimension
 between the two vector spaces. -/
 noncomputable def linearEquivOfInjective [FiniteDimensional K V] [FiniteDimensional K V₂]
     (f : V →ₗ[K] V₂) (hf : Injective f) (hdim : finrank K V = finrank K V₂) : V ≃ₗ[K] V₂ :=
-  LinearEquiv.ofBijective f hf <|
-    (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim).mp hf
+  LinearEquiv.ofBijective f
+    ⟨hf, (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim).mp hf⟩
 #align linear_map.linear_equiv_of_injective LinearMap.linearEquivOfInjective
 
 @[simp]

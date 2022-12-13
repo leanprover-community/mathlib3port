@@ -2440,6 +2440,15 @@ alias not_nontrivial_iff ↔ _ subsingleton.not_nontrivial
 
 alias not_subsingleton_iff ↔ _ nontrivial.not_subsingleton
 
+protected theorem subsingleton_or_nontrivial (s : Set α) : s.Subsingleton ∨ s.Nontrivial := by
+  simp [or_iff_not_imp_right]
+#align set.subsingleton_or_nontrivial Set.subsingleton_or_nontrivial
+
+theorem eq_singleton_or_nontrivial (ha : a ∈ s) : s = {a} ∨ s.Nontrivial := by
+  rw [← subsingleton_iff_singleton ha]
+  exact s.subsingleton_or_nontrivial
+#align set.eq_singleton_or_nontrivial Set.eq_singleton_or_nontrivial
+
 theorem univ_eq_true_false : univ = ({True, False} : Set Prop) :=
   Eq.symm <| eq_univ_of_forall <| Classical.cases (by simp) (by simp)
 #align set.univ_eq_true_false Set.univ_eq_true_false

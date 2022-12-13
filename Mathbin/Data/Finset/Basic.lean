@@ -631,7 +631,7 @@ end Empty
 
 section Singleton
 
-variable {a : α}
+variable {s : Finset α} {a : α}
 
 /-- `{a} : finset a` is the set `{a}` containing `a` and nothing else.
 
@@ -756,6 +756,11 @@ theorem ssubset_singleton_iff {s : Finset α} {a : α} : s ⊂ {a} ↔ s = ∅ :
 theorem eq_empty_of_ssubset_singleton {s : Finset α} {x : α} (hs : s ⊂ {x}) : s = ∅ :=
   ssubset_singleton_iff.1 hs
 #align finset.eq_empty_of_ssubset_singleton Finset.eq_empty_of_ssubset_singleton
+
+theorem eq_singleton_or_nontrivial (ha : a ∈ s) : s = {a} ∨ (s : Set α).Nontrivial := by
+  rw [← coe_eq_singleton]
+  exact Set.eq_singleton_or_nontrivial ha
+#align finset.eq_singleton_or_nontrivial Finset.eq_singleton_or_nontrivial
 
 instance [Nonempty α] : Nontrivial (Finset α) :=
   ‹Nonempty α›.elim fun a => ⟨⟨{a}, ∅, singleton_ne_empty _⟩⟩

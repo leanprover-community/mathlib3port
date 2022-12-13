@@ -133,8 +133,8 @@ theorem not_infinite {s : Set α} : ¬s.Infinite ↔ s.Finite :=
   not_not
 #align set.not_infinite Set.not_infinite
 
-/-- See also `fintype_or_infinite`. -/
-theorem finite_or_infinite {s : Set α} : s.Finite ∨ s.Infinite :=
+/-- See also `finite_or_infinite`, `fintype_or_infinite`. -/
+protected theorem finite_or_infinite (s : Set α) : s.Finite ∨ s.Infinite :=
   em _
 #align set.finite_or_infinite Set.finite_or_infinite
 

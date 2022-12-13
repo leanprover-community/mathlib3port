@@ -355,10 +355,9 @@ theorem surjective_range_restrict : Function.Surjective f.range_restrict := by
 /-- A Lie algebra is equivalent to its range under an injective Lie algebra morphism. -/
 noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅R⁆ f.range :=
   LieEquiv.ofBijective f.range_restrict
-    (fun x y hxy => by 
+    ⟨fun x y hxy => by 
       simp only [Subtype.mk_eq_mk, range_restrict_apply] at hxy
-      exact h hxy)
-    f.surjective_range_restrict
+      exact h hxy, f.surjective_range_restrict⟩
 #align lie_hom.equiv_range_of_injective LieHom.equivRangeOfInjective
 
 @[simp]

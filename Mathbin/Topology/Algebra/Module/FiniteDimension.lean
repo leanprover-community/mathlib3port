@@ -170,7 +170,7 @@ theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : Is
     have hs : Function.Surjective (l.ker.liftq l (le_refl _)) := by
       rw [← LinearMap.range_eq_top, Submodule.range_liftq]
       exact eq_top_of_finrank_eq ((finrank_self 𝕜).symm ▸ this)
-    let φ : (E ⧸ l.ker) ≃ₗ[𝕜] 𝕜 := LinearEquiv.ofBijective (l.ker.liftq l (le_refl _)) hi hs
+    let φ : (E ⧸ l.ker) ≃ₗ[𝕜] 𝕜 := LinearEquiv.ofBijective (l.ker.liftq l (le_refl _)) ⟨hi, hs⟩
     have hlφ : (l : E → 𝕜) = φ ∘ l.ker.mkq := by ext <;> rfl
     -- Since the quotient map `E →ₗ[𝕜] (E ⧸ l.ker)` is continuous, the continuity of `l` will follow
     -- form the continuity of `φ`.

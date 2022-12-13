@@ -137,7 +137,7 @@ theorem add_apply (f g : SlashInvariantForm Γ k) (z : ℍ) : (f + g) z = f z + 
 #align slash_invariant_form.add_apply SlashInvariantForm.add_apply
 
 instance hasZero : Zero (SlashInvariantForm Γ k) :=
-  ⟨{ toFun := 0, slash_action_eq' := SlashAction.mul_zero _ }⟩
+  ⟨{ toFun := 0, slash_action_eq' := SlashAction.zero_slash _ }⟩
 #align slash_invariant_form.has_zero SlashInvariantForm.hasZero
 
 @[simp]
@@ -219,6 +219,11 @@ instance : Module ℂ (SlashInvariantForm Γ k) :=
 
 instance : One (SlashInvariantForm Γ 0) :=
   ⟨{ toFun := 1, slash_action_eq' := fun A => ModularForm.is_invariant_one A }⟩
+
+@[simp]
+theorem one_coe_eq_one : ((1 : SlashInvariantForm Γ 0) : ℍ → ℂ) = 1 :=
+  rfl
+#align slash_invariant_form.one_coe_eq_one SlashInvariantForm.one_coe_eq_one
 
 instance : Inhabited (SlashInvariantForm Γ k) :=
   ⟨0⟩

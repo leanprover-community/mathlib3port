@@ -1113,7 +1113,7 @@ include σ₂₁
 /-- Construct a linear isometry equiv from a surjective linear isometry. -/
 noncomputable def ofSurjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Function.Surjective f) :
     F ≃ₛₗᵢ[σ₁₂] E₂ :=
-  { LinearEquiv.ofBijective f.toLinearMap f.Injective hfr with norm_map' := f.norm_map }
+  { LinearEquiv.ofBijective f.toLinearMap ⟨f.Injective, hfr⟩ with norm_map' := f.norm_map }
 #align linear_isometry_equiv.of_surjective LinearIsometryEquiv.ofSurjective
 
 @[simp]

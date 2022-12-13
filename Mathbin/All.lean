@@ -2210,6 +2210,7 @@ import Mathbin.NumberTheory.Liouville.Residual
 import Mathbin.NumberTheory.LucasLehmer
 import Mathbin.NumberTheory.LucasPrimality
 import Mathbin.NumberTheory.Modular
+import Mathbin.NumberTheory.ModularForms.Basic
 import Mathbin.NumberTheory.ModularForms.CongruenceSubgroups
 import Mathbin.NumberTheory.ModularForms.SlashActions
 import Mathbin.NumberTheory.ModularForms.SlashInvariantForms

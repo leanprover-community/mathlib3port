@@ -752,6 +752,7 @@ variable (hv : LinearIndependent R v)
 def LinearIndependent.totalEquiv (hv : LinearIndependent R v) : (ι →₀ R) ≃ₗ[R] span R (range v) :=
   by
   apply LinearEquiv.ofBijective (LinearMap.codRestrict (span R (range v)) (Finsupp.total ι M R v) _)
+  constructor
   · rw [← LinearMap.ker_eq_bot, LinearMap.ker_cod_restrict]
     apply hv
   · rw [← LinearMap.range_eq_top, LinearMap.range_eq_map, LinearMap.map_cod_restrict, ←

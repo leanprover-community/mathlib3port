@@ -212,7 +212,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   use m
   let F₀ : standard_one_dim_isocrystal p k m →ₗ[K(p, k)] V := LinearMap.toSpanSingleton K(p, k) V x
   let F : standard_one_dim_isocrystal p k m ≃ₗ[K(p, k)] V := by
-    refine' LinearEquiv.ofBijective F₀ _ _
+    refine' LinearEquiv.ofBijective F₀ ⟨_, _⟩
     · rw [← LinearMap.ker_eq_bot]
       exact LinearMap.ker_to_span_singleton K(p, k) V hx
     · rw [← LinearMap.range_eq_top]

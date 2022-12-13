@@ -967,7 +967,7 @@ theorem PartiallyWellOrderedOn.image_of_monotone_on (hs : s.PartiallyWellOrdered
 
 theorem IsAntichain.finite_of_partially_well_ordered_on (ha : IsAntichain r s)
     (hp : s.PartiallyWellOrderedOn r) : s.Finite := by
-  refine' finite_or_infinite.resolve_right fun hi => _
+  refine' not_infinite.1 fun hi => _
   obtain ⟨m, n, hmn, h⟩ := hp (fun n => hi.nat_embedding _ n) fun n => (hi.nat_embedding _ n).2
   exact
     hmn.ne

@@ -73,8 +73,8 @@ open LinearMap
 def quotientEquivOfIsCompl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
   LinearEquiv.symm <|
     LinearEquiv.ofBijective (p.mkq.comp q.Subtype)
-      (by rw [← ker_eq_bot, ker_comp, ker_mkq, disjoint_iff_comap_eq_bot.1 h.symm.disjoint])
-      (by rw [← range_eq_top, range_comp, range_subtype, map_mkq_eq_top, h.sup_eq_top])
+      ⟨by rw [← ker_eq_bot, ker_comp, ker_mkq, disjoint_iff_comap_eq_bot.1 h.symm.disjoint], by
+        rw [← range_eq_top, range_comp, range_subtype, map_mkq_eq_top, h.sup_eq_top]⟩
 #align submodule.quotient_equiv_of_is_compl Submodule.quotientEquivOfIsCompl
 
 @[simp]
@@ -101,6 +101,7 @@ theorem mk_quotient_equiv_of_is_compl_apply (h : IsCompl p q) (x : E ⧸ p) :
 linear map `f : E → p` such that `f x = x` for `x ∈ p` and `f x = 0` for `x ∈ q`. -/
 def prodEquivOfIsCompl (h : IsCompl p q) : (p × q) ≃ₗ[R] E := by
   apply LinearEquiv.ofBijective (p.subtype.coprod q.subtype)
+  constructor
   · rw [← ker_eq_bot, ker_coprod_of_disjoint_range, ker_subtype, ker_subtype, prod_bot]
     rw [range_subtype, range_subtype]
     exact h.1
@@ -333,10 +334,10 @@ their kernels are complement of each other, then `x ↦ (f x, g x)` defines
 a linear equivalence `E ≃ₗ[R] F × G`. -/
 def equivProdOfSurjectiveOfIsCompl (f : E →ₗ[R] F) (g : E →ₗ[R] G) (hf : f.range = ⊤)
     (hg : g.range = ⊤) (hfg : IsCompl f.ker g.ker) : E ≃ₗ[R] F × G :=
-  LinearEquiv.ofBijective (f.Prod g) (by simp [← ker_eq_bot, hfg.inf_eq_bot])
-    (by 
+  LinearEquiv.ofBijective (f.Prod g)
+    ⟨by simp [← ker_eq_bot, hfg.inf_eq_bot], by
       rw [← range_eq_top]
-      simp [range_prod_eq hfg.sup_eq_top, *])
+      simp [range_prod_eq hfg.sup_eq_top, *]⟩
 #align linear_map.equiv_prod_of_surjective_of_is_compl LinearMap.equivProdOfSurjectiveOfIsCompl
 
 @[simp]

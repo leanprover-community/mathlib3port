@@ -361,7 +361,7 @@ noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type
     (v : ∀ i, Basis (α i) R (A i)) :
     Basis (Σi, α i) R
       M where repr :=
-    ((LinearEquiv.ofBijective (DirectSum.coeLinearMap A) h.Injective h.Surjective).symm ≪≫ₗ
+    ((LinearEquiv.ofBijective (DirectSum.coeLinearMap A) h).symm ≪≫ₗ
         Dfinsupp.mapRange.linearEquiv fun i => (v i).repr) ≪≫ₗ
       (sigmaFinsuppLequivDfinsupp R).symm
 #align direct_sum.is_internal.collected_basis DirectSum.IsInternal.collectedBasis

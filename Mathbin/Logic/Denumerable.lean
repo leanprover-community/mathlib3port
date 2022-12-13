@@ -22,6 +22,8 @@ typeclass.
 -/
 
 
+variable {α β : Type _}
+
 /-- A denumerable type is (constructively) bijective with `ℕ`. Typeclass equivalent of `α ≃ ℕ`. -/
 class Denumerable (α : Type _) extends Encodable α where
   decode_inv : ∀ n, ∃ a ∈ decode n, encode a = n
@@ -33,7 +35,7 @@ namespace Denumerable
 
 section
 
-variable {α : Type _} {β : Type _} [Denumerable α] [Denumerable β]
+variable [Denumerable α] [Denumerable β]
 
 open Encodable
 
@@ -357,4 +359,16 @@ def ofEncodableOfInfinite (α : Type _) [Encodable α] [Infinite α] : Denumerab
 #align denumerable.of_encodable_of_infinite Denumerable.ofEncodableOfInfinite
 
 end Denumerable
+
+/-- See also `nonempty_encodable`, `nonempty_fintype`. -/
+theorem nonempty_denumerable (α : Type _) [Countable α] [Infinite α] : Nonempty (Denumerable α) :=
+  (nonempty_encodable α).map fun h => Denumerable.ofEncodableOfInfinite _
+#align nonempty_denumerable nonempty_denumerable
+
+instance nonempty_equiv_of_countable [Countable α] [Infinite α] [Countable β] [Infinite β] :
+    Nonempty (α ≃ β) := by 
+  cases nonempty_denumerable α
+  cases nonempty_denumerable β
+  exact ⟨(Denumerable.eqv _).trans (Denumerable.eqv _).symm⟩
+#align nonempty_equiv_of_countable nonempty_equiv_of_countable
 

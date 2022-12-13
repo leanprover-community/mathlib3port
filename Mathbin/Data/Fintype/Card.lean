@@ -411,6 +411,7 @@ theorem finite_iff_nonempty_fintype (α : Type _) : Finite α ↔ Nonempty (Fint
     fun ⟨_⟩ => inferInstance⟩
 #align finite_iff_nonempty_fintype finite_iff_nonempty_fintype
 
+/-- See also `nonempty_encodable`, `nonempty_denumerable`. -/
 theorem nonempty_fintype (α : Type _) [Finite α] : Nonempty (Fintype α) :=
   (finite_iff_nonempty_fintype α).mp ‹_›
 #align nonempty_fintype nonempty_fintype

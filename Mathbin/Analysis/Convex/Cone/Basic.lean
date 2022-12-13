@@ -493,6 +493,73 @@ end Module
 
 end OrderedSemiring
 
+end ConvexCone
+
+namespace Submodule
+
+/-! ### Submodules are cones -/
+
+
+section OrderedSemiring
+
+variable [OrderedSemiring 𝕜]
+
+section AddCommMonoid
+
+variable [AddCommMonoid E] [Module 𝕜 E]
+
+/-- Every submodule is trivially a convex cone. -/
+def toConvexCone (S : Submodule 𝕜 E) :
+    ConvexCone 𝕜 E where 
+  carrier := S
+  smul_mem' c hc x hx := S.smul_mem c hx
+  add_mem' x hx y hy := S.add_mem hx hy
+#align submodule.to_convex_cone Submodule.toConvexCone
+
+@[simp]
+theorem coe_to_convex_cone (S : Submodule 𝕜 E) : ↑S.toConvexCone = (S : Set E) :=
+  rfl
+#align submodule.coe_to_convex_cone Submodule.coe_to_convex_cone
+
+@[simp]
+theorem mem_to_convex_cone {x : E} {S : Submodule 𝕜 E} : x ∈ S.toConvexCone ↔ x ∈ S :=
+  Iff.rfl
+#align submodule.mem_to_convex_cone Submodule.mem_to_convex_cone
+
+@[simp]
+theorem to_convex_cone_le_iff {S T : Submodule 𝕜 E} : S.toConvexCone ≤ T.toConvexCone ↔ S ≤ T :=
+  Iff.rfl
+#align submodule.to_convex_cone_le_iff Submodule.to_convex_cone_le_iff
+
+@[simp]
+theorem to_convex_cone_bot : (⊥ : Submodule 𝕜 E).toConvexCone = 0 :=
+  rfl
+#align submodule.to_convex_cone_bot Submodule.to_convex_cone_bot
+
+@[simp]
+theorem to_convex_cone_top : (⊤ : Submodule 𝕜 E).toConvexCone = ⊤ :=
+  rfl
+#align submodule.to_convex_cone_top Submodule.to_convex_cone_top
+
+@[simp]
+theorem to_convex_cone_inf (S T : Submodule 𝕜 E) :
+    (S ⊓ T).toConvexCone = S.toConvexCone ⊓ T.toConvexCone :=
+  rfl
+#align submodule.to_convex_cone_inf Submodule.to_convex_cone_inf
+
+@[simp]
+theorem pointed_to_convex_cone (S : Submodule 𝕜 E) : S.toConvexCone.Pointed :=
+  S.zero_mem
+#align submodule.pointed_to_convex_cone Submodule.pointed_to_convex_cone
+
+end AddCommMonoid
+
+end OrderedSemiring
+
+end Submodule
+
+namespace ConvexCone
+
 /-! ### Positive cone of an ordered module -/
 
 

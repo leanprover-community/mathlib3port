@@ -373,8 +373,9 @@ variable [CompleteSpace E]
 to a continuous linear equivalence. -/
 noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) :
     E ≃L[𝕜] F :=
-  (LinearEquiv.ofBijective (↑f) (LinearMap.ker_eq_bot.mp hinj)
-        (LinearMap.range_eq_top.mp hsurj)).toContinuousLinearEquivOfContinuous
+  (LinearEquiv.ofBijective ↑f
+        ⟨LinearMap.ker_eq_bot.mp hinj,
+          LinearMap.range_eq_top.mp hsurj⟩).toContinuousLinearEquivOfContinuous
     f.Continuous
 #align continuous_linear_equiv.of_bijective ContinuousLinearEquiv.ofBijective
 
