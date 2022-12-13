@@ -259,9 +259,11 @@ unsafe def assoc_rw (q : parse rw_rules) (l : parse location) : tactic Unit :=
 #align tactic.interactive.assoc_rw tactic.interactive.assoc_rw
 
 add_tactic_doc
-  { Name := "assoc_rewrite", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.assoc_rewrite, `tactic.interactive.assoc_rw],
-    tags := ["rewriting"], inheritDescriptionFrom := `tactic.interactive.assoc_rewrite }
+  { Name := "assoc_rewrite"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.assoc_rewrite, `tactic.interactive.assoc_rw]
+    tags := ["rewriting"]
+    inheritDescriptionFrom := `tactic.interactive.assoc_rewrite }
 
 end Interactive
 

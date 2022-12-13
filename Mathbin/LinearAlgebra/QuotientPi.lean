@@ -83,12 +83,12 @@ theorem quotient_pi_lift_mk (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →
 def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
     ((∀ i, Ms i) ⧸ pi Set.univ p) ≃ₗ[R] ∀ i, Ms i ⧸ p i :=
   { quotientPiLift p (fun i => (p i).mkq) fun i => by simp with
-    toFun := quotientPiLift p (fun i => (p i).mkq) fun i => by simp,
-    invFun := piQuotientLift p (pi Set.univ p) single fun i => le_comap_single_pi p,
+    toFun := quotientPiLift p (fun i => (p i).mkq) fun i => by simp
+    invFun := piQuotientLift p (pi Set.univ p) single fun i => le_comap_single_pi p
     left_inv := fun x =>
       Quotient.inductionOn' x fun x' => by
         simp_rw [Quotient.mk'_eq_mk, quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk,
-          lsum_single, id_apply],
+          lsum_single, id_apply]
     right_inv := by 
       rw [Function.rightInverse_iff_comp, ← coe_comp, ← @id_coe R]
       refine' congr_arg _ (pi_ext fun i x => Quotient.inductionOn' x fun x' => funext fun j => _)

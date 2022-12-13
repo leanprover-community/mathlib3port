@@ -134,25 +134,27 @@ attribute [local reducible] endofunctor_monoidal_category Discrete.addMonoidal
 /-- Constructs a `has_shift C A` instance from `shift_mk_core`. -/
 @[simps]
 def hasShiftMk (h : ShiftMkCore C A) : HasShift C A :=
-  ⟨{ Discrete.functor h.f with ε := h.ε.Hom, μ := fun m n => (h.μ m.as n.as).Hom,
+  ⟨{ Discrete.functor h.f with 
+      ε := h.ε.Hom
+      μ := fun m n => (h.μ m.as n.as).Hom
       μ_natural' := by 
         rintro ⟨X⟩ ⟨Y⟩ ⟨X'⟩ ⟨Y'⟩ ⟨⟨⟨rfl⟩⟩⟩ ⟨⟨⟨rfl⟩⟩⟩
         ext
         dsimp
         simp
         dsimp
-        simp,
+        simp
       associativity' := by 
         introv
         ext
         dsimp
-        simpa using h.associativity _ _ _ _,
+        simpa using h.associativity _ _ _ _
       left_unitality' := by 
         rintro ⟨X⟩
         ext
         dsimp
         rw [category.id_comp, ← category.assoc, h.left_unitality]
-        simp,
+        simp
       right_unitality' := by 
         rintro ⟨X⟩
         ext
@@ -392,7 +394,8 @@ variable (C)
 /-- Shifting by `n` and shifting by `-n` forms an equivalence. -/
 @[simps]
 def shiftEquiv (n : A) : C ≌ C :=
-  { addNegEquiv (shiftMonoidalFunctor C A) n with Functor := shiftFunctor C n,
+  { addNegEquiv (shiftMonoidalFunctor C A) n with
+    Functor := shiftFunctor C n
     inverse := shiftFunctor C (-n) }
 #align category_theory.shift_equiv CategoryTheory.shiftEquiv
 
@@ -464,7 +467,7 @@ with shift functors on `D`, we can promote that family to shift functors on `C`.
 def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i) :
     HasShift C A :=
   hasShiftMk C A
-    { f := s,
+    { f := s
       ε :=
         natIsoOfCompFullyFaithful F
           (calc
@@ -472,7 +475,7 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
             _ ≅ F ⋙ 𝟭 D := (Functor.rightUnitor _).symm
             _ ≅ F ⋙ shiftFunctor D (0 : A) := isoWhiskerLeft F (shiftFunctorZero D A).symm
             _ ≅ s 0 ⋙ F := (i 0).symm
-            ),
+            )
       μ := fun a b =>
         natIsoOfCompFullyFaithful F
           (calc
@@ -483,7 +486,7 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
             _ ≅ F ⋙ shiftFunctor D a ⋙ shiftFunctor D b := Functor.associator _ _ _
             _ ≅ F ⋙ shiftFunctor D (a + b) := isoWhiskerLeft _ (shiftFunctorAdd D a b).symm
             _ ≅ s (a + b) ⋙ F := (i (a + b)).symm
-            ),
+            )
       associativity := by 
         intros ; apply F.map_injective; dsimp
         simp only [category.comp_id, category.id_comp, category.assoc,
@@ -502,7 +505,7 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
         congr 1
         have := dcongr_arg (fun a => (i a).inv.app X) (add_assoc m₁ m₂ m₃)
         dsimp at this
-        simp [this],
+        simp [this]
       left_unitality := by 
         intros ; apply F.map_injective; dsimp
         simp only [category.comp_id, category.id_comp, category.assoc,
@@ -516,7 +519,7 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
         simp only [category.id_comp, μ_inv_hom_app_assoc, CategoryTheory.Functor.map_id]
         have := dcongr_arg (fun a => (i a).inv.app X) (zero_add n)
         dsimp at this
-        simp [this],
+        simp [this]
       right_unitality := by 
         intros ; apply F.map_injective; dsimp
         simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_app_assoc,

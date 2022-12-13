@@ -145,7 +145,9 @@ protected theorem mono (f : F) : Monotone (f : α → β) := fun _ _ => map_rel 
 #align order_hom_class.mono OrderHomClass.mono
 
 instance : CoeTC F (α →o β) :=
-  ⟨fun f => { toFun := f, monotone' := OrderHomClass.mono _ }⟩
+  ⟨fun f =>
+    { toFun := f
+      monotone' := OrderHomClass.mono _ }⟩
 
 end OrderHomClass
 
@@ -644,7 +646,8 @@ protected def dual : αᵒᵈ ↪o βᵒᵈ :=
 /-- A version of `with_bot.map` for order embeddings. -/
 @[simps (config := { fullyApplied := false })]
 protected def withBotMap (f : α ↪o β) : WithBot α ↪o WithBot β :=
-  { f.toEmbedding.option_map with toFun := WithBot.map f,
+  { f.toEmbedding.option_map with 
+    toFun := WithBot.map f
     map_rel_iff' := WithBot.map_le_iff f fun a b => f.map_rel_iff }
 #align order_embedding.with_bot_map OrderEmbedding.withBotMap
 
@@ -1015,10 +1018,12 @@ def ofCmpEqCmp {α β} [LinearOrder α] [LinearOrder β] (f : α → β) (g : β
   have gf : ∀ a : α, a = g (f a) := by 
     intro
     rw [← cmp_eq_eq_iff, h, cmp_self_eq_eq]
-  { toFun := f, invFun := g, left_inv := fun a => (gf a).symm,
+  { toFun := f
+    invFun := g
+    left_inv := fun a => (gf a).symm
     right_inv := by 
       intro
-      rw [← cmp_eq_eq_iff, ← h, cmp_self_eq_eq],
+      rw [← cmp_eq_eq_iff, ← h, cmp_self_eq_eq]
     map_rel_iff' := by 
       intros
       apply le_iff_le_of_cmp_eq_cmp
@@ -1093,8 +1098,11 @@ variable (f : α → β) (h_mono : StrictMono f) (h_surj : Function.Surjective f
 /-- A strictly monotone function with a right inverse is an order isomorphism. -/
 @[simps (config := { fullyApplied := False })]
 def orderIsoOfRightInverse (g : β → α) (hg : Function.RightInverse g f) : α ≃o β :=
-  { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g,
-    left_inv := fun x => h_mono.Injective <| hg _, right_inv := hg }
+  { OrderEmbedding.ofStrictMono f h_mono with 
+    toFun := f
+    invFun := g
+    left_inv := fun x => h_mono.Injective <| hg _
+    right_inv := hg }
 #align strict_mono.order_iso_of_right_inverse StrictMono.orderIsoOfRightInverse
 
 end StrictMono

@@ -239,7 +239,8 @@ theorem infi_sup_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (· ≤ 
 #align infi_sup_of_antitone infi_sup_of_antitone
 
 instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
-  { Pi.completeLattice with inf := inf,
+  { Pi.completeLattice with 
+    inf := inf
     infi_sup_le_sup_Inf := fun a s i => by
       simp only [← sup_infi_eq, Inf_apply, ← infi_subtype'', infi_apply, Pi.sup_apply] }
 #align pi.coframe Pi.coframe
@@ -278,7 +279,7 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _}
 instance PropCat.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { PropCat.booleanAlgebra, PropCat.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
-      Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq],
+      Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq]
     inf_Sup_le_supr_inf := fun p s =>
       Iff.mp <| by simp only [CompleteLattice.sup, exists_and_left, inf_Prop_eq, supr_Prop_eq] }
 #align Prop.complete_boolean_algebra PropCat.completeBooleanAlgebra
@@ -378,7 +379,10 @@ namespace PUnit
 variable (s : Set PUnit.{u + 1}) (x y : PUnit.{u + 1})
 
 instance : CompleteBooleanAlgebra PUnit := by
-  refine_struct { PUnit.booleanAlgebra with sup := fun _ => star, inf := fun _ => star } <;>
+  refine_struct
+        { PUnit.booleanAlgebra with 
+          sup := fun _ => star
+          inf := fun _ => star } <;>
       intros <;>
     first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
 

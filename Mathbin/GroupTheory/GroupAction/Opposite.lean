@@ -29,18 +29,19 @@ namespace MulOpposite
 
 @[to_additive]
 instance (R : Type _) [Monoid R] [MulAction R α] : MulAction R αᵐᵒᵖ :=
-  { MulOpposite.hasSmul α R with one_smul := fun x => unop_injective <| one_smul R (unop x),
+  { MulOpposite.hasSmul α R with
+    one_smul := fun x => unop_injective <| one_smul R (unop x)
     mul_smul := fun r₁ r₂ x => unop_injective <| mul_smul r₁ r₂ (unop x) }
 
 instance (R : Type _) [Monoid R] [AddMonoid α] [DistribMulAction R α] : DistribMulAction R αᵐᵒᵖ :=
   { MulOpposite.mulAction α R with
-    smul_add := fun r x₁ x₂ => unop_injective <| smul_add r (unop x₁) (unop x₂),
+    smul_add := fun r x₁ x₂ => unop_injective <| smul_add r (unop x₁) (unop x₂)
     smul_zero := fun r => unop_injective <| smul_zero r }
 
 instance (R : Type _) [Monoid R] [Monoid α] [MulDistribMulAction R α] :
     MulDistribMulAction R αᵐᵒᵖ :=
   { MulOpposite.mulAction α R with
-    smul_mul := fun r x₁ x₂ => unop_injective <| smul_mul' r (unop x₂) (unop x₁),
+    smul_mul := fun r x₁ x₂ => unop_injective <| smul_mul' r (unop x₂) (unop x₁)
     smul_one := fun r => unop_injective <| smul_one r }
 
 @[to_additive]

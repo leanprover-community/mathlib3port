@@ -49,7 +49,9 @@ def single (j : ι) :
     V ⥤
       HomologicalComplex V
         c where 
-  obj A := { x := fun i => if i = j then A else 0, d := fun i j => 0 }
+  obj A :=
+    { x := fun i => if i = j then A else 0
+      d := fun i j => 0 }
   map A B f :=
     { f := fun i =>
         if h : i = j then
@@ -137,12 +139,14 @@ as chain complexes supported in degree 0.
 This is naturally isomorphic to `single V _ 0`, but has better definitional properties.
 -/
 def single₀ :
-    V ⥤ ChainComplex V ℕ where 
+    V ⥤
+      ChainComplex V
+        ℕ where 
   obj X :=
     { x := fun n =>
         match n with
         | 0 => X
-        | n + 1 => 0,
+        | n + 1 => 0
       d := fun i j => 0 }
   map X Y f :=
     { f := fun n =>
@@ -254,7 +258,7 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
     { f := fun i =>
         match i with
         | 0 => f.1
-        | n + 1 => 0,
+        | n + 1 => 0
       comm' := fun i j h => by
         rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;>
           simp only [comp_zero, zero_comp, single₀_obj_X_d]
@@ -292,7 +296,7 @@ def fromSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
     { f := fun i =>
         match i with
         | 0 => f
-        | n + 1 => 0,
+        | n + 1 => 0
       comm' := fun i j h => by
         cases i <;> cases j <;> unfold_aux <;>
           simp only [shape, ComplexShape.down_rel, Nat.one_ne_zero, not_false_iff, comp_zero,
@@ -311,12 +315,12 @@ variable (V)
 def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
     (fun X =>
-      { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ },
-        inv := { f := fun i => by cases i <;> simpa using 𝟙 _ },
+      { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ }
+        inv := { f := fun i => by cases i <;> simpa using 𝟙 _ }
         hom_inv_id' := by
           ext (_ | i) <;>
             · dsimp
-              simp,
+              simp
         inv_hom_id' := by 
           ext (_ | i)
           · apply category.id_comp
@@ -345,12 +349,14 @@ as cochain complexes supported in degree 0.
 This is naturally isomorphic to `single V _ 0`, but has better definitional properties.
 -/
 def single₀ :
-    V ⥤ CochainComplex V ℕ where 
+    V ⥤
+      CochainComplex V
+        ℕ where 
   obj X :=
     { x := fun n =>
         match n with
         | 0 => X
-        | n + 1 => 0,
+        | n + 1 => 0
       d := fun i j => 0 }
   map X Y f :=
     { f := fun n =>
@@ -461,7 +467,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
     { f := fun i =>
         match i with
         | 0 => f.1
-        | n + 1 => 0,
+        | n + 1 => 0
       comm' := fun i j h => by
         rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;>
           simp only [comp_zero, zero_comp, single₀_obj_X_d]
@@ -487,12 +493,12 @@ variable (V)
 def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
     (fun X =>
-      { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ },
-        inv := { f := fun i => by cases i <;> simpa using 𝟙 _ },
+      { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ }
+        inv := { f := fun i => by cases i <;> simpa using 𝟙 _ }
         hom_inv_id' := by
           ext (_ | i) <;>
             · dsimp
-              simp,
+              simp
         inv_hom_id' := by 
           ext (_ | i)
           · apply category.id_comp

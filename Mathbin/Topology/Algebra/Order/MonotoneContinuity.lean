@@ -326,7 +326,9 @@ protected theorem continuous (e : α ≃o β) : Continuous e := by
 
 /-- An order isomorphism between two linear order `order_topology` spaces is a homeomorphism. -/
 def toHomeomorph (e : α ≃o β) : α ≃ₜ β :=
-  { e with continuous_to_fun := e.Continuous, continuous_inv_fun := e.symm.Continuous }
+  { e with 
+    continuous_to_fun := e.Continuous
+    continuous_inv_fun := e.symm.Continuous }
 #align order_iso.to_homeomorph OrderIso.toHomeomorph
 
 @[simp]

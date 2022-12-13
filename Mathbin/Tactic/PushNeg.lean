@@ -281,7 +281,9 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
 #align tactic.interactive.push_neg tactic.interactive.push_neg
 
 add_tactic_doc
-  { Name := "push_neg", category := DocCategory.tactic, declNames := [`tactic.interactive.push_neg],
+  { Name := "push_neg"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.push_neg]
     tags := ["logic"] }
 
 theorem imp_of_not_imp_not (P Q : Prop) : (¬Q → ¬P) → P → Q := fun h hP =>
@@ -338,8 +340,10 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
 #align tactic.interactive.contrapose tactic.interactive.contrapose
 
 add_tactic_doc
-  { Name := "contrapose", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.contrapose], tags := ["logic"] }
+  { Name := "contrapose"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.contrapose]
+    tags := ["logic"] }
 
 /-!
 ## `#push_neg` command
@@ -391,7 +395,9 @@ unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
 #align tactic.push_neg_cmd tactic.push_neg_cmd
 
 add_tactic_doc
-  { Name := "#push_neg", category := DocCategory.cmd, declNames := [`tactic.push_neg_cmd],
+  { Name := "#push_neg"
+    category := DocCategory.cmd
+    declNames := [`tactic.push_neg_cmd]
     tags := ["logic"] }
 
 end Tactic

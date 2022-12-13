@@ -338,8 +338,9 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
 /-- Any infinite set of naturals is denumerable. -/
 def denumerable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : Denumerable s :=
   Denumerable.ofEquiv ℕ
-    { toFun := toFunAux, invFun := ofNat s,
-      left_inv := leftInverse_of_surjective_of_rightInverse of_nat_surjective right_inverse_aux,
+    { toFun := toFunAux
+      invFun := ofNat s
+      left_inv := leftInverse_of_surjective_of_rightInverse of_nat_surjective right_inverse_aux
       right_inv := right_inverse_aux }
 #align nat.subtype.denumerable Nat.Subtype.denumerable
 

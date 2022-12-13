@@ -186,7 +186,9 @@ unsafe def elementwise_attr :
 #align tactic.elementwise_attr tactic.elementwise_attr
 
 add_tactic_doc
-  { Name := "elementwise", category := DocCategory.attr, declNames := [`tactic.elementwise_attr],
+  { Name := "elementwise"
+    category := DocCategory.attr
+    declNames := [`tactic.elementwise_attr]
     tags := ["category theory"] }
 
 namespace Interactive
@@ -246,6 +248,8 @@ Although `elementwise_of` is not a tactic or a meta program, its type is generat
 through meta-programming to make it usable inside normal expressions.
 -/
 add_tactic_doc
-  { Name := "category_theory.elementwise_of", category := DocCategory.tactic,
-    declNames := [`category_theory.elementwise_of], tags := ["category theory"] }
+  { Name := "category_theory.elementwise_of"
+    category := DocCategory.tactic
+    declNames := [`category_theory.elementwise_of]
+    tags := ["category theory"] }
 

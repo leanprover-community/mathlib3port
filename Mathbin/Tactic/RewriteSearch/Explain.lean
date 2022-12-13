@@ -243,7 +243,10 @@ private unsafe def check_if_simple_rewrite_succeeds (rewrites : List (expr × Bo
   lock_tactic_state do
     let m ← mk_meta_var goal
     set_goals [m]
-    rewrites fun q => rewrite_target q.1 { symm := q.2, md := semireducible }
+    rewrites fun q =>
+        rewrite_target q.1
+          { symm := q.2
+            md := semireducible }
     reflexivity reducible >> return ff <|> reflexivity >> return tt
 #align
   tactic.rewrite_search.check_if_simple_rewrite_succeeds tactic.rewrite_search.check_if_simple_rewrite_succeeds

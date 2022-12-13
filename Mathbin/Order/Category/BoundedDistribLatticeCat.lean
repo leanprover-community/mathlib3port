@@ -68,7 +68,8 @@ instance : ConcreteCategory BoundedDistribLatticeCat :=
 instance hasForgetToDistribLattice :
     HasForget₂ BoundedDistribLatticeCat
       DistribLatticeCat where forget₂ :=
-    { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
+    { obj := fun X => ⟨X⟩
+      map := fun X Y => BoundedLatticeHom.toLatticeHom }
 #align
   BoundedDistribLattice.has_forget_to_DistribLattice BoundedDistribLatticeCat.hasForgetToDistribLattice
 

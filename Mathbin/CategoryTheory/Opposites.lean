@@ -212,7 +212,7 @@ variable (C D)
 def opHom : (C ⥤ D)ᵒᵖ ⥤ Cᵒᵖ ⥤ Dᵒᵖ where 
   obj F := (unop F).op
   map F G α :=
-    { app := fun X => (α.unop.app (unop X)).op,
+    { app := fun X => (α.unop.app (unop X)).op
       naturality' := fun X Y f => Quiver.Hom.unop_inj (α.unop.naturality f.unop).symm }
 #align category_theory.functor.op_hom CategoryTheory.Functor.opHom
 
@@ -223,7 +223,7 @@ def opInv : (Cᵒᵖ ⥤ Dᵒᵖ) ⥤ (C ⥤ D)ᵒᵖ where
   obj F := op F.unop
   map F G α :=
     Quiver.Hom.op
-      { app := fun X => (α.app (op X)).unop,
+      { app := fun X => (α.app (op X)).unop
         naturality' := fun X Y f => Quiver.Hom.op_inj <| (α.naturality f.op).symm }
 #align category_theory.functor.op_inv CategoryTheory.Functor.opInv
 
@@ -640,8 +640,12 @@ def leftOpRightOpEquiv :
     (Cᵒᵖ ⥤ D)ᵒᵖ ≌
       C ⥤
         Dᵒᵖ where 
-  Functor := { obj := fun F => F.unop.rightOp, map := fun F G η => η.unop.rightOp }
-  inverse := { obj := fun F => op F.leftOp, map := fun F G η => η.leftOp.op }
+  Functor :=
+    { obj := fun F => F.unop.rightOp
+      map := fun F G η => η.unop.rightOp }
+  inverse :=
+    { obj := fun F => op F.leftOp
+      map := fun F G η => η.leftOp.op }
   unitIso :=
     NatIso.ofComponents (fun F => F.unop.rightOpLeftOpIso.op)
       (by 

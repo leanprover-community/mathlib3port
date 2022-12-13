@@ -204,7 +204,8 @@ instance : AddGroupWithOne (ColimitType F) :=
   { ColimitType.addGroup F with one := Quot.mk _ one }
 
 instance : CommRing (ColimitType F) :=
-  { ColimitType.addGroupWithOne F with one := Quot.mk _ one,
+  { ColimitType.addGroupWithOne F with 
+    one := Quot.mk _ one
     mul := by 
       fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
       · intro x
@@ -220,19 +221,19 @@ instance : CommRing (ColimitType F) :=
         dsimp
         apply Quot.sound
         · exact relation.mul_1 _ _ _ r
-        · rfl,
+        · rfl
     one_mul := fun x => by 
       induction x
       dsimp
       apply Quot.sound
       apply relation.one_mul
-      rfl,
+      rfl
     mul_one := fun x => by 
       induction x
       dsimp
       apply Quot.sound
       apply relation.mul_one
-      rfl,
+      rfl
     add_comm := fun x y => by 
       induction x
       induction y
@@ -240,7 +241,7 @@ instance : CommRing (ColimitType F) :=
       apply Quot.sound
       apply relation.add_comm
       rfl
-      rfl,
+      rfl
     mul_comm := fun x y => by 
       induction x
       induction y
@@ -248,7 +249,7 @@ instance : CommRing (ColimitType F) :=
       apply Quot.sound
       apply relation.mul_comm
       rfl
-      rfl,
+      rfl
     add_assoc := fun x y z => by 
       induction x
       induction y
@@ -258,7 +259,7 @@ instance : CommRing (ColimitType F) :=
       apply relation.add_assoc
       rfl
       rfl
-      rfl,
+      rfl
     mul_assoc := fun x y z => by 
       induction x
       induction y
@@ -268,7 +269,7 @@ instance : CommRing (ColimitType F) :=
       apply relation.mul_assoc
       rfl
       rfl
-      rfl,
+      rfl
     left_distrib := fun x y z => by 
       induction x
       induction y
@@ -278,7 +279,7 @@ instance : CommRing (ColimitType F) :=
       apply relation.left_distrib
       rfl
       rfl
-      rfl,
+      rfl
     right_distrib := fun x y z => by 
       induction x
       induction y
@@ -465,7 +466,9 @@ instance has_colimits_CommRing :
     HasColimits
       CommRingCat where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F =>
-        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
+        has_colimit.mk
+          { Cocone := colimit_cocone F
+            IsColimit := colimit_is_colimit F } }
 #align CommRing.colimits.has_colimits_CommRing CommRingCat.Colimits.has_colimits_CommRing
 
 end CommRingCat.Colimits

@@ -52,34 +52,34 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
       -- constructing a partially applied analogue of `associator_nat_iso`.
       tensoringRight
       C with
-    ε := (rightUnitorNatIso C).inv,
+    ε := (rightUnitorNatIso C).inv
     μ := fun X Y =>
-      { app := fun Z => (α_ Z X Y).Hom,
+      { app := fun Z => (α_ Z X Y).Hom
         naturality' := fun Z Z' f => by 
           dsimp
           rw [associator_naturality]
-          simp },
+          simp }
     μ_natural' := fun X Y X' Y' f g => by 
       ext Z
       dsimp
       simp only [← id_tensor_comp_tensor_id g f, id_tensor_comp, ← tensor_id, category.assoc,
-        associator_naturality, associator_naturality_assoc],
+        associator_naturality, associator_naturality_assoc]
     associativity' := fun X Y Z => by 
       ext W
       dsimp
-      simp [pentagon],
+      simp [pentagon]
     left_unitality' := fun X => by 
       ext Y
       dsimp
       rw [category.id_comp, triangle, ← tensor_comp]
-      simp,
+      simp
     right_unitality' := fun X => by 
       ext Y; dsimp
       rw [tensor_id, category.comp_id, right_unitor_tensor_inv, category.assoc,
-        iso.inv_hom_id_assoc, ← id_tensor_comp, iso.inv_hom_id, tensor_id],
-    ε_is_iso := by infer_instance,
+        iso.inv_hom_id_assoc, ← id_tensor_comp, iso.inv_hom_id, tensor_id]
+    ε_is_iso := by infer_instance
     μ_is_iso := fun X Y =>
-      ⟨⟨{ app := fun Z => (α_ Z X Y).inv,
+      ⟨⟨{   app := fun Z => (α_ Z X Y).inv
             naturality' := fun Z Z' f => by 
               dsimp
               rw [← associator_inv_naturality]

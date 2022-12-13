@@ -88,21 +88,23 @@ namespace SetLike
 instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetLike σ R]
     [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.HasGradedMul A] :
     DirectSum.GnonUnitalNonAssocSemiring fun i => A i :=
-  { SetLike.ghasMul A with mul_zero := fun i j _ => Subtype.ext (mul_zero _),
-    zero_mul := fun i j _ => Subtype.ext (zero_mul _),
-    mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _),
+  { SetLike.ghasMul A with 
+    mul_zero := fun i j _ => Subtype.ext (mul_zero _)
+    zero_mul := fun i j _ => Subtype.ext (zero_mul _)
+    mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
     add_mul := fun i j _ _ _ => Subtype.ext (add_mul _ _ _) }
 #align set_like.gnon_unital_non_assoc_semiring SetLike.gnonUnitalNonAssocSemiring
 
 /-- Build a `gsemiring` instance for a collection of additive submonoids. -/
 instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.Gsemiring fun i => A i :=
-  { SetLike.gmonoid A with mul_zero := fun i j _ => Subtype.ext (mul_zero _),
-    zero_mul := fun i j _ => Subtype.ext (zero_mul _),
-    mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _),
-    add_mul := fun i j _ _ _ => Subtype.ext (add_mul _ _ _),
-    natCast := fun n => ⟨n, SetLike.nat_cast_mem_graded _ _⟩,
-    nat_cast_zero := Subtype.ext Nat.cast_zero,
+  { SetLike.gmonoid A with 
+    mul_zero := fun i j _ => Subtype.ext (mul_zero _)
+    zero_mul := fun i j _ => Subtype.ext (zero_mul _)
+    mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
+    add_mul := fun i j _ _ _ => Subtype.ext (add_mul _ _ _)
+    natCast := fun n => ⟨n, SetLike.nat_cast_mem_graded _ _⟩
+    nat_cast_zero := Subtype.ext Nat.cast_zero
     nat_cast_succ := fun n => Subtype.ext (Nat.cast_succ n) }
 #align set_like.gsemiring SetLike.gsemiring
 
@@ -115,8 +117,9 @@ instance gcommSemiring [AddCommMonoid ι] [CommSemiring R] [SetLike σ R] [AddSu
 /-- Build a `gring` instance for a collection of additive subgroups. -/
 instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.Gring fun i => A i :=
-  { SetLike.gsemiring A with intCast := fun z => ⟨z, SetLike.int_cast_mem_graded _ _⟩,
-    int_cast_of_nat := fun n => Subtype.ext <| Int.cast_of_nat _,
+  { SetLike.gsemiring A with
+    intCast := fun z => ⟨z, SetLike.int_cast_mem_graded _ _⟩
+    int_cast_of_nat := fun n => Subtype.ext <| Int.cast_of_nat _
     int_cast_neg_succ_of_nat := fun n => Subtype.ext <| Int.cast_negSucc n }
 #align set_like.gring SetLike.gring
 

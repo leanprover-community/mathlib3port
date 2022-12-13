@@ -370,7 +370,11 @@ unsafe def to_local_collection (l : expr) : tactic local_collection :=
   tactic.unsafe.type_context.run do
     let lctx ← tactic.unsafe.type_context.get_local_context
     let some ldecl ← pure <| lctx.get_local_decl l.local_uniq_name
-    pure { key := l, locals := [l], type := ldecl, value := ldecl }
+    pure
+        { key := l
+          locals := [l]
+          type := ldecl
+          value := ldecl }
 #align widget_override.to_local_collection widget_override.to_local_collection
 
 /-- Groups consecutive local collections by type -/

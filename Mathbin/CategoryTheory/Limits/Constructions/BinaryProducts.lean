@@ -84,7 +84,7 @@ noncomputable def limitConeOfTerminalAndPullbacks [HasTerminal C] [HasPullbacks 
   Cone :=
     { x :=
         pullback (terminal.from (F.obj ⟨WalkingPair.left⟩))
-          (terminal.from (F.obj ⟨WalkingPair.right⟩)),
+          (terminal.from (F.obj ⟨WalkingPair.right⟩))
       π :=
         Discrete.natTrans fun x =>
           Discrete.casesOn x fun x => WalkingPair.casesOn x pullback.fst pullback.snd }
@@ -183,7 +183,7 @@ noncomputable def colimitCoconeOfInitialAndPushouts [HasInitial C] [HasPushouts 
     ColimitCocone
       F where 
   Cocone :=
-    { x := pushout (initial.to (F.obj ⟨WalkingPair.left⟩)) (initial.to (F.obj ⟨WalkingPair.right⟩)),
+    { x := pushout (initial.to (F.obj ⟨WalkingPair.left⟩)) (initial.to (F.obj ⟨WalkingPair.right⟩))
       ι :=
         Discrete.natTrans fun x =>
           Discrete.casesOn x fun x => WalkingPair.casesOn x pushout.inl pushout.inr }

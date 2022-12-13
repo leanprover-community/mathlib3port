@@ -42,7 +42,7 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
             i.y)) where 
   x := E.x
   π :=
-    { app := fun k => E.π.app k ≫ multiequalizer.ι (W.index (F.obj k)) i,
+    { app := fun k => E.π.app k ≫ multiequalizer.ι (W.index (F.obj k)) i
       naturality' := by 
         intro a b f
         dsimp
@@ -80,7 +80,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
     PreservesLimit F (J.diagramFunctor D X) :=
   (preservesLimitOfEvaluation _ _) fun W =>
     preservesLimitOfPreservesLimitCone (limit.isLimit _)
-      { lift := fun E => liftToDiagramLimitObj F E,
+      { lift := fun E => liftToDiagramLimitObj F E
         fac' := by 
           intro E k
           dsimp [diagram_nat_trans]
@@ -89,7 +89,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
           change (_ ≫ _) ≫ _ = _
           dsimp [evaluate_combined_cones]
           erw [category.comp_id, category.assoc, ← nat_trans.comp_app, limit.lift_π, limit.lift_π]
-          rfl,
+          rfl
         uniq' := by 
           intro E m hm
           ext

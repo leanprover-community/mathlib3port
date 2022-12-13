@@ -87,9 +87,9 @@ open Finset
 
 /- warning: first_order.language.term.var_finset -> FirstOrder.Language.Term.varFinset is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u, v, u'} L α) -> (Finset.{u'} α)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} [_inst_4 : DecidableEq.{succ u3} α], (FirstOrder.Language.Term.{u1, u2, u3} L α) -> (Finset.{u3} α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u, v, u'} L α) -> (Finset.{u'} α)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} α], (FirstOrder.Language.Term.{u1, u3, u2} L α) -> (Finset.{u2} α)
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.var_finset FirstOrder.Language.Term.varFinsetₓ'. -/
 /-- The `finset` of variables used in a given term. -/
 @[simp]
@@ -100,9 +100,9 @@ def varFinset [DecidableEq α] : L.term α → Finset α
 
 /- warning: first_order.language.term.var_finset_left -> FirstOrder.Language.Term.varFinsetLeft is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u, v, max u' v'} L (Sum.{u', v'} α β)) -> (Finset.{u'} α)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {β : Type.{u4}} [_inst_4 : DecidableEq.{succ u3} α], (FirstOrder.Language.Term.{u1, u2, max u3 u4} L (Sum.{u3, u4} α β)) -> (Finset.{u3} α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α], (FirstOrder.Language.Term.{u, v, max u' v'} L (Sum.{u', v'} α β)) -> (Finset.{u'} α)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {β : Type.{u4}} [_inst_4 : DecidableEq.{succ u2} α], (FirstOrder.Language.Term.{u1, u3, max u2 u4} L (Sum.{u2, u4} α β)) -> (Finset.{u2} α)
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.var_finset_left FirstOrder.Language.Term.varFinsetLeftₓ'. -/
 /-- The `finset` of variables from the left side of a sum used in a given term. -/
 @[simp]
@@ -114,9 +114,9 @@ def varFinsetLeft [DecidableEq α] : L.term (Sum α β) → Finset α
 
 /- warning: first_order.language.term.relabel -> FirstOrder.Language.Term.relabel is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}}, (α -> β) -> (FirstOrder.Language.Term.{u, v, u'} L α) -> (FirstOrder.Language.Term.{u, v, v'} L β)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {β : Type.{u4}}, (α -> β) -> (FirstOrder.Language.Term.{u1, u2, u3} L α) -> (FirstOrder.Language.Term.{u1, u2, u4} L β)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}}, (α -> β) -> (FirstOrder.Language.Term.{u, v, u'} L α) -> (FirstOrder.Language.Term.{u, v, v'} L β)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {β : Type.{u4}}, (α -> β) -> (FirstOrder.Language.Term.{u1, u3, u2} L α) -> (FirstOrder.Language.Term.{u1, u3, u4} L β)
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.relabel FirstOrder.Language.Term.relabelₓ'. -/
 /-- Relabels a term's variables along a particular function. -/
 @[simp]
@@ -158,9 +158,9 @@ def relabelEquiv (g : α ≃ β) : L.term α ≃ L.term β :=
 
 /- warning: first_order.language.term.restrict_var -> FirstOrder.Language.Term.restrictVar is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α] (t : FirstOrder.Language.Term.{u, v, u'} L α), ((coeSort.{succ u', succ (succ u')} (Finset.{u'} α) Type.{u'} (Finset.hasCoeToSort.{u'} α) (FirstOrder.Language.Term.varFinset.{u, v, u'} L α (fun (a : α) (b : α) => _inst_4 a b) t)) -> β) -> (FirstOrder.Language.Term.{u, v, v'} L β)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {β : Type.{u4}} [_inst_4 : DecidableEq.{succ u3} α] (t : FirstOrder.Language.Term.{u1, u2, u3} L α), ((coeSort.{succ u3, succ (succ u3)} (Finset.{u3} α) Type.{u3} (Finset.hasCoeToSort.{u3} α) (FirstOrder.Language.Term.varFinset.{u1, u2, u3} L α (fun (a : α) (b : α) => _inst_4 a b) t)) -> β) -> (FirstOrder.Language.Term.{u1, u2, u4} L β)
 but is expected to have type
-  PUnit.{max (max (max (succ (succ u)) (succ (succ u'))) (succ (succ v))) (succ (succ v'))}
+  PUnit.{max (max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))) (succ (succ u4))}
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.restrict_var FirstOrder.Language.Term.restrictVarₓ'. -/
 /-- Restricts a term to use only a set of the given variables. -/
 def restrictVar [DecidableEq α] : ∀ (t : L.term α) (f : t.varFinset → β), L.term β
@@ -171,9 +171,9 @@ def restrictVar [DecidableEq α] : ∀ (t : L.term α) (f : t.varFinset → β),
 
 /- warning: first_order.language.term.restrict_var_left -> FirstOrder.Language.Term.restrictVarLeft is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α] {γ : Type.{u_1}} (t : FirstOrder.Language.Term.{u, v, max u' u_1} L (Sum.{u', u_1} α γ)), ((coeSort.{succ u', succ (succ u')} (Finset.{u'} α) Type.{u'} (Finset.hasCoeToSort.{u'} α) (FirstOrder.Language.Term.varFinsetLeft.{u, v, u', u_1} L α γ (fun (a : α) (b : α) => _inst_4 a b) t)) -> β) -> (FirstOrder.Language.Term.{u, v, max v' u_1} L (Sum.{v', u_1} β γ))
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {β : Type.{u4}} [_inst_4 : DecidableEq.{succ u3} α] {γ : Type.{u5}} (t : FirstOrder.Language.Term.{u1, u2, max u3 u5} L (Sum.{u3, u5} α γ)), ((coeSort.{succ u3, succ (succ u3)} (Finset.{u3} α) Type.{u3} (Finset.hasCoeToSort.{u3} α) (FirstOrder.Language.Term.varFinsetLeft.{u1, u2, u3, u5} L α γ (fun (a : α) (b : α) => _inst_4 a b) t)) -> β) -> (FirstOrder.Language.Term.{u1, u2, max u4 u5} L (Sum.{u4, u5} β γ))
 but is expected to have type
-  PUnit.{max (max (max (max (succ (succ _aux_param_0)) (succ (succ u))) (succ (succ u'))) (succ (succ v))) (succ (succ v'))}
+  PUnit.{max (max (max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))) (succ (succ u4))) (succ (succ u5))}
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.restrict_var_left FirstOrder.Language.Term.restrictVarLeftₓ'. -/
 /-- Restricts a term to use only a set of the given variables on the left side of a sum. -/
 def restrictVarLeft [DecidableEq α] {γ : Type _} :
@@ -205,9 +205,9 @@ namespace Term
 
 /- warning: first_order.language.term.constants_to_vars -> FirstOrder.Language.Term.constantsToVars is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{max u u_5, v, u'} (FirstOrder.Language.withConstants.{u, v, u_5} L γ) α) -> (FirstOrder.Language.Term.{u, v, max u_5 u'} L (Sum.{u_5, u'} γ α))
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {γ : Type.{u4}}, (FirstOrder.Language.Term.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L γ) α) -> (FirstOrder.Language.Term.{u1, u2, max u4 u3} L (Sum.{u4, u3} γ α))
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{max u u_5, v, u'} (FirstOrder.Language.withConstants.{u, v, u_5} L γ) α) -> (FirstOrder.Language.Term.{u, v, max u_5 u'} L (Sum.{u_5, u'} γ α))
+  forall {L : FirstOrder.Language.{u1, u4}} {α : Type.{u2}} {γ : Type.{u3}}, (FirstOrder.Language.Term.{max u1 u3, u4, u2} (FirstOrder.Language.withConstants.{u1, u4, u3} L γ) α) -> (FirstOrder.Language.Term.{u1, u4, max u3 u2} L (Sum.{u3, u2} γ α))
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.constants_to_vars FirstOrder.Language.Term.constantsToVarsₓ'. -/
 /-- Sends a term with constants to a term with extra variables. -/
 @[simp]
@@ -221,9 +221,9 @@ def constantsToVars : L[[γ]].term α → L.term (Sum γ α)
 
 /- warning: first_order.language.term.vars_to_constants -> FirstOrder.Language.Term.varsToConstants is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{u, v, max u_5 u'} L (Sum.{u_5, u'} γ α)) -> (FirstOrder.Language.Term.{max u u_5, v, u'} (FirstOrder.Language.withConstants.{u, v, u_5} L γ) α)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {γ : Type.{u4}}, (FirstOrder.Language.Term.{u1, u2, max u4 u3} L (Sum.{u4, u3} γ α)) -> (FirstOrder.Language.Term.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L γ) α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {γ : Type.{u_5}}, (FirstOrder.Language.Term.{u, v, max u_5 u'} L (Sum.{u_5, u'} γ α)) -> (FirstOrder.Language.Term.{max u u_5, v, u'} (FirstOrder.Language.withConstants.{u, v, u_5} L γ) α)
+  forall {L : FirstOrder.Language.{u1, u4}} {α : Type.{u2}} {γ : Type.{u3}}, (FirstOrder.Language.Term.{u1, u4, max u3 u2} L (Sum.{u3, u2} γ α)) -> (FirstOrder.Language.Term.{max u1 u3, u4, u2} (FirstOrder.Language.withConstants.{u1, u4, u3} L γ) α)
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.vars_to_constants FirstOrder.Language.Term.varsToConstantsₓ'. -/
 /-- Sends a term with extra variables to a term with constants. -/
 @[simp]
@@ -289,9 +289,9 @@ def liftAt {n : ℕ} (n' m : ℕ) : L.term (Sum α (Fin n)) → L.term (Sum α (
 
 /- warning: first_order.language.term.subst -> FirstOrder.Language.Term.subst is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}}, (FirstOrder.Language.Term.{u, v, u'} L α) -> (α -> (FirstOrder.Language.Term.{u, v, v'} L β)) -> (FirstOrder.Language.Term.{u, v, v'} L β)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {β : Type.{u4}}, (FirstOrder.Language.Term.{u1, u2, u3} L α) -> (α -> (FirstOrder.Language.Term.{u1, u2, u4} L β)) -> (FirstOrder.Language.Term.{u1, u2, u4} L β)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}}, (FirstOrder.Language.Term.{u, v, u'} L α) -> (α -> (FirstOrder.Language.Term.{u, v, v'} L β)) -> (FirstOrder.Language.Term.{u, v, v'} L β)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {β : Type.{u4}}, (FirstOrder.Language.Term.{u1, u3, u2} L α) -> (α -> (FirstOrder.Language.Term.{u1, u3, u4} L β)) -> (FirstOrder.Language.Term.{u1, u3, u4} L β)
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.subst FirstOrder.Language.Term.substₓ'. -/
 /-- Substitutes the variables in a given term with terms. -/
 @[simp]
@@ -309,9 +309,9 @@ namespace LhomCat
 
 /- warning: first_order.language.Lhom.on_term -> FirstOrder.Language.LhomCat.onTerm is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {L' : FirstOrder.Language.{u_1, u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u, v, u_1, u_2} L L') -> (FirstOrder.Language.Term.{u, v, u'} L α) -> (FirstOrder.Language.Term.{u_1, u_2, u'} L' α)
+  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} {α : Type.{u3}}, (FirstOrder.Language.LhomCat.{u1, u2, u4, u5} L L') -> (FirstOrder.Language.Term.{u1, u2, u3} L α) -> (FirstOrder.Language.Term.{u4, u5, u3} L' α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {L' : FirstOrder.Language.{u_1, u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u, v, u_1, u_2} L L') -> (FirstOrder.Language.Term.{u, v, u'} L α) -> (FirstOrder.Language.Term.{u_1, u_2, u'} L' α)
+  forall {L : FirstOrder.Language.{u1, u5}} {L' : FirstOrder.Language.{u3, u4}} {α : Type.{u2}}, (FirstOrder.Language.LhomCat.{u1, u5, u3, u4} L L') -> (FirstOrder.Language.Term.{u1, u5, u2} L α) -> (FirstOrder.Language.Term.{u3, u4, u2} L' α)
 Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_term FirstOrder.Language.LhomCat.onTermₓ'. -/
 /-- Maps a term's symbols along a language map. -/
 @[simp]
@@ -467,9 +467,9 @@ open Finset
 
 /- warning: first_order.language.bounded_formula.free_var_finset -> FirstOrder.Language.BoundedFormula.freeVarFinset is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α] {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (Finset.{u'} α)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} [_inst_4 : DecidableEq.{succ u3} α] {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (Finset.{u3} α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} [_inst_4 : DecidableEq.{succ u'} α] {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (Finset.{u'} α)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} α] {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (Finset.{u2} α)
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.free_var_finset FirstOrder.Language.BoundedFormula.freeVarFinsetₓ'. -/
 /-- The `finset` of variables used in a given formula. -/
 @[simp]
@@ -484,9 +484,9 @@ def freeVarFinset [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finset �
 
 /- warning: first_order.language.bounded_formula.cast_le -> FirstOrder.Language.BoundedFormula.castLe is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α m) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α m) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α m) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α m) -> (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.cast_le FirstOrder.Language.BoundedFormula.castLeₓ'. -/
 /-- Casts `L.bounded_formula α m` as `L.bounded_formula α n`, where `m ≤ n`. -/
 @[simp]
@@ -536,9 +536,9 @@ theorem cast_le_comp_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) :
 
 /- warning: first_order.language.bounded_formula.restrict_free_var -> FirstOrder.Language.BoundedFormula.restrictFreeVar is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {β : Type.{v'}} [_inst_4 : DecidableEq.{succ u'} α] {n : Nat} (φ : FirstOrder.Language.BoundedFormula.{u, v, u'} L α n), ((coeSort.{succ u', succ (succ u')} (Finset.{u'} α) Type.{u'} (Finset.hasCoeToSort.{u'} α) (FirstOrder.Language.BoundedFormula.freeVarFinset.{u, v, u'} L α (fun (a : α) (b : α) => _inst_4 a b) n φ)) -> β) -> (FirstOrder.Language.BoundedFormula.{u, v, v'} L β n)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {β : Type.{u4}} [_inst_4 : DecidableEq.{succ u3} α] {n : Nat} (φ : FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n), ((coeSort.{succ u3, succ (succ u3)} (Finset.{u3} α) Type.{u3} (Finset.hasCoeToSort.{u3} α) (FirstOrder.Language.BoundedFormula.freeVarFinset.{u1, u2, u3} L α (fun (a : α) (b : α) => _inst_4 a b) n φ)) -> β) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L β n)
 but is expected to have type
-  PUnit.{max (max (max (succ (succ u)) (succ (succ u'))) (succ (succ v))) (succ (succ v'))}
+  PUnit.{max (max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))) (succ (succ u4))}
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.restrict_free_var FirstOrder.Language.BoundedFormula.restrictFreeVarₓ'. -/
 /-- Restricts a bounded formula to only use a particular set of free variables. -/
 def restrictFreeVar [DecidableEq α] :
@@ -558,9 +558,9 @@ def restrictFreeVar [DecidableEq α] :
 
 /- warning: first_order.language.bounded_formula.alls -> FirstOrder.Language.BoundedFormula.alls is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.Formula.{u, v, u'} L α)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.Formula.{u1, u2, u3} L α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.Formula.{u, v, u'} L α)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.Formula.{u1, u3, u2} L α)
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.alls FirstOrder.Language.BoundedFormula.allsₓ'. -/
 /-- Places universal quantifiers on all extra variables of a bounded formula. -/
 def alls : ∀ {n}, L.BoundedFormula α n → L.Formula α
@@ -570,9 +570,9 @@ def alls : ∀ {n}, L.BoundedFormula α n → L.Formula α
 
 /- warning: first_order.language.bounded_formula.exs -> FirstOrder.Language.BoundedFormula.exs is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.Formula.{u, v, u'} L α)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.Formula.{u1, u2, u3} L α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.Formula.{u, v, u'} L α)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.Formula.{u1, u3, u2} L α)
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.exs FirstOrder.Language.BoundedFormula.exsₓ'. -/
 /-- Places existential quantifiers on all extra variables of a bounded formula. -/
 def exs : ∀ {n}, L.BoundedFormula α n → L.Formula α
@@ -582,9 +582,9 @@ def exs : ∀ {n}, L.BoundedFormula α n → L.Formula α
 
 /- warning: first_order.language.bounded_formula.map_term_rel -> FirstOrder.Language.BoundedFormula.mapTermRel is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {L' : FirstOrder.Language.{u_1, u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u, v, u'} L (Sum.{u', 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1, u_2, v'} L' (Sum.{v', 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u, v} L n) -> (FirstOrder.Language.Relations.{u_1, u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1, u_2, v'} L' β (g (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (FirstOrder.Language.BoundedFormula.{u_1, u_2, v'} L' β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1, u_2, v'} L' β (g n)))
+  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u5, u6}} {α : Type.{u3}} {β : Type.{u4}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))) -> (FirstOrder.Language.Term.{u5, u6, u4} L' (Sum.{u4, 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u1, u2} L n) -> (FirstOrder.Language.Relations.{u5, u6} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u5, u6, u4} L' β (g (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (FirstOrder.Language.BoundedFormula.{u5, u6, u4} L' β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.BoundedFormula.{u5, u6, u4} L' β (g n)))
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {L' : FirstOrder.Language.{u_1, u_2}} {α : Type.{u'}} {β : Type.{v'}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u, v, u'} L (Sum.{u', 0} α (Fin n))) -> (FirstOrder.Language.Term.{u_1, u_2, v'} L' (Sum.{v', 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u, v} L n) -> (FirstOrder.Language.Relations.{u_1, u_2} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u_1, u_2, v'} L' β (g (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (FirstOrder.Language.BoundedFormula.{u_1, u_2, v'} L' β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u_1, u_2, v'} L' β (g n)))
+  forall {L : FirstOrder.Language.{u1, u5}} {L' : FirstOrder.Language.{u3, u4}} {α : Type.{u2}} {β : Type.{u6}} {g : Nat -> Nat}, (forall (n : Nat), (FirstOrder.Language.Term.{u1, u5, u2} L (Sum.{u2, 0} α (Fin n))) -> (FirstOrder.Language.Term.{u3, u4, u6} L' (Sum.{u6, 0} β (Fin (g n))))) -> (forall (n : Nat), (FirstOrder.Language.Relations.{u1, u5} L n) -> (FirstOrder.Language.Relations.{u3, u4} L' n)) -> (forall (n : Nat), (FirstOrder.Language.BoundedFormula.{u3, u4, u6} L' β (g (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (FirstOrder.Language.BoundedFormula.{u3, u4, u6} L' β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (g n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u5, u2} L α n) -> (FirstOrder.Language.BoundedFormula.{u3, u4, u6} L' β (g n)))
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.map_term_rel FirstOrder.Language.BoundedFormula.mapTermRelₓ'. -/
 /-- Maps bounded formulas along a map of terms and a map of relations. -/
 def mapTermRel {g : ℕ → ℕ} (ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (g n))))
@@ -753,9 +753,9 @@ def constantsVarsEquiv : L[[γ]].BoundedFormula α n ≃ L.BoundedFormula (Sum �
 
 /- warning: first_order.language.bounded_formula.to_formula -> FirstOrder.Language.BoundedFormula.toFormula is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.Formula.{u, v, u'} L (Sum.{u', 0} α (Fin n)))
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.Formula.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n)))
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.Formula.{u, v, u'} L (Sum.{u', 0} α (Fin n)))
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.Formula.{u1, u3, u2} L (Sum.{u2, 0} α (Fin n)))
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_formula FirstOrder.Language.BoundedFormula.toFormulaₓ'. -/
 /-- Turns the extra variables of a bounded formula into free variables. -/
 @[simp]
@@ -906,9 +906,9 @@ theorem IsPrenex.lift_at {k m : ℕ} (h : IsPrenex φ) : (φ.liftAt k m).IsPrene
 
 /- warning: first_order.language.bounded_formula.to_prenex_imp_right -> FirstOrder.Language.BoundedFormula.toPrenexImpRight is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_prenex_imp_right FirstOrder.Language.BoundedFormula.toPrenexImpRightₓ'. -/
 /-- An auxiliary operation to `first_order.language.bounded_formula.to_prenex`.
   If `φ` is quantifier-free and `ψ` is in prenex normal form, then `φ.to_prenex_imp_right ψ`
@@ -944,9 +944,9 @@ theorem is_prenex_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQ
 
 /- warning: first_order.language.bounded_formula.to_prenex_imp -> FirstOrder.Language.BoundedFormula.toPrenexImp is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_prenex_imp FirstOrder.Language.BoundedFormula.toPrenexImpₓ'. -/
 /-- An auxiliary operation to `first_order.language.bounded_formula.to_prenex`.
   If `φ` and `ψ` are in prenex normal form, then `φ.to_prenex_imp ψ`
@@ -982,9 +982,9 @@ theorem is_prenex_to_prenex_imp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex 
 
 /- warning: first_order.language.bounded_formula.to_prenex -> FirstOrder.Language.BoundedFormula.toPrenex is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {α : Type.{u'}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n) -> (FirstOrder.Language.BoundedFormula.{u, v, u'} L α n)
+  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.to_prenex FirstOrder.Language.BoundedFormula.toPrenexₓ'. -/
 /-- For any bounded formula `φ`, `φ.to_prenex` is a semantically-equivalent formula in prenex normal
   form. -/
@@ -1011,9 +1011,9 @@ open BoundedFormula
 
 /- warning: first_order.language.Lhom.on_bounded_formula -> FirstOrder.Language.LhomCat.onBoundedFormula is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {L' : FirstOrder.Language.{u_1, u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u, v, u_1, u_2} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α k) -> (FirstOrder.Language.BoundedFormula.{u_1, u_2, u'} L' α k))
+  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} {α : Type.{u3}}, (FirstOrder.Language.LhomCat.{u1, u2, u4, u5} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α k) -> (FirstOrder.Language.BoundedFormula.{u4, u5, u3} L' α k))
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {L' : FirstOrder.Language.{u_1, u_2}} {α : Type.{u'}}, (FirstOrder.Language.LhomCat.{u, v, u_1, u_2} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α k) -> (FirstOrder.Language.BoundedFormula.{u_1, u_2, u'} L' α k))
+  forall {L : FirstOrder.Language.{u1, u5}} {L' : FirstOrder.Language.{u3, u4}} {α : Type.{u2}}, (FirstOrder.Language.LhomCat.{u1, u5, u3, u4} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u5, u2} L α k) -> (FirstOrder.Language.BoundedFormula.{u3, u4, u2} L' α k))
 Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_bounded_formula FirstOrder.Language.LhomCat.onBoundedFormulaₓ'. -/
 /-- Maps a bounded formula's symbols along a language map. -/
 @[simp]

@@ -166,10 +166,11 @@ and `m → A` corresponding to `M.vec_mul` and `M'.vec_mul`. -/
 @[simps]
 def Matrix.toLinearEquivRight'OfInv [Fintype n] [DecidableEq n] {M : Matrix m n R}
     {M' : Matrix n m R} (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : (n → R) ≃ₗ[R] m → R :=
-  { LinearMap.toMatrixRight'.symm M' with toFun := M'.toLinearMapRight',
-    invFun := M.toLinearMapRight',
+  { LinearMap.toMatrixRight'.symm M' with
+    toFun := M'.toLinearMapRight'
+    invFun := M.toLinearMapRight'
     left_inv := fun x => by
-      rw [← Matrix.to_linear_map_right'_mul_apply, hM'M, Matrix.to_linear_map_right'_one, id_apply],
+      rw [← Matrix.to_linear_map_right'_mul_apply, hM'M, Matrix.to_linear_map_right'_one, id_apply]
     right_inv := fun x => by
       rw [← Matrix.to_linear_map_right'_mul_apply, hMM', Matrix.to_linear_map_right'_one,
         id_apply] }
@@ -336,8 +337,10 @@ and `n → A` corresponding to `M.mul_vec` and `M'.mul_vec`. -/
 @[simps]
 def Matrix.toLin'OfInv [Fintype m] [DecidableEq m] {M : Matrix m n R} {M' : Matrix n m R}
     (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : (m → R) ≃ₗ[R] n → R :=
-  { Matrix.toLin' M' with toFun := Matrix.toLin' M', invFun := M.toLin',
-    left_inv := fun x => by rw [← Matrix.to_lin'_mul_apply, hMM', Matrix.to_lin'_one, id_apply],
+  { Matrix.toLin' M' with 
+    toFun := Matrix.toLin' M'
+    invFun := M.toLin'
+    left_inv := fun x => by rw [← Matrix.to_lin'_mul_apply, hMM', Matrix.to_lin'_one, id_apply]
     right_inv := fun x => by rw [← Matrix.to_lin'_mul_apply, hM'M, Matrix.to_lin'_one, id_apply] }
 #align matrix.to_lin'_of_inv Matrix.toLin'OfInv
 
@@ -610,8 +613,10 @@ form a linear equivalence. -/
 @[simps]
 def Matrix.toLinOfInv [DecidableEq m] {M : Matrix m n R} {M' : Matrix n m R} (hMM' : M ⬝ M' = 1)
     (hM'M : M' ⬝ M = 1) : M₁ ≃ₗ[R] M₂ :=
-  { Matrix.toLin v₁ v₂ M with toFun := Matrix.toLin v₁ v₂ M, invFun := Matrix.toLin v₂ v₁ M',
-    left_inv := fun x => by rw [← Matrix.to_lin_mul_apply, hM'M, Matrix.to_lin_one, id_apply],
+  { Matrix.toLin v₁ v₂ M with 
+    toFun := Matrix.toLin v₁ v₂ M
+    invFun := Matrix.toLin v₂ v₁ M'
+    left_inv := fun x => by rw [← Matrix.to_lin_mul_apply, hM'M, Matrix.to_lin_one, id_apply]
     right_inv := fun x => by rw [← Matrix.to_lin_mul_apply, hMM', Matrix.to_lin_one, id_apply] }
 #align matrix.to_lin_of_inv Matrix.toLinOfInv
 
@@ -723,23 +728,23 @@ theorem Matrix.to_lin_alg_equiv_mul (A B : Matrix n n R) :
 #align matrix.to_lin_alg_equiv_mul Matrix.to_lin_alg_equiv_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 @[simp]
 theorem Matrix.to_lin_fin_two_prod_apply (a b c d : R) (x : R × R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
+          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")
         x =
       (a * x.fst + b * x.snd, c * x.fst + d * x.snd) :=
   by simp [Matrix.to_lin_apply, Matrix.mulVec, Matrix.dotProduct]
 #align matrix.to_lin_fin_two_prod_apply Matrix.to_lin_fin_two_prod_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem Matrix.to_lin_fin_two_prod (a b c d : R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
+          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation") =
       (a • LinearMap.fst R R R + b • LinearMap.snd R R R).Prod
         (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
   LinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
@@ -922,8 +927,9 @@ variable [AddCommGroup M₁] [Module R M₁] [AddCommGroup M₂] [Module R M₂]
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the algebra structures. -/
 def algEquivMatrix' [Fintype n] : Module.EndCat R (n → R) ≃ₐ[R] Matrix n n R :=
-  { LinearMap.toMatrix' with map_mul' := LinearMap.to_matrix'_comp,
-    map_add' := LinearMap.toMatrix'.map_add,
+  { LinearMap.toMatrix' with 
+    map_mul' := LinearMap.to_matrix'_comp
+    map_add' := LinearMap.toMatrix'.map_add
     commutes' := fun r => by
       change (r • (LinearMap.id : Module.EndCat R _)).toMatrix' = r • 1
       rw [← LinearMap.to_matrix'_id]
@@ -934,7 +940,9 @@ def algEquivMatrix' [Fintype n] : Module.EndCat R (n → R) ≃ₐ[R] Matrix n n
 /-- A linear equivalence of two modules induces an equivalence of algebras of their
 endomorphisms. -/
 def LinearEquiv.algConj (e : M₁ ≃ₗ[R] M₂) : Module.EndCat R M₁ ≃ₐ[R] Module.EndCat R M₂ :=
-  { e.conj with map_mul' := fun f g => by apply e.arrow_congr_comp, map_add' := e.conj.map_add,
+  { e.conj with 
+    map_mul' := fun f g => by apply e.arrow_congr_comp
+    map_add' := e.conj.map_add
     commutes' := fun r => by
       change e.conj (r • LinearMap.id) = r • LinearMap.id
       rw [LinearEquiv.map_smul, LinearEquiv.conj_id] }

@@ -417,7 +417,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
 
 /-- Any continuous map between Compacta is a morphism of compacta. -/
 def homOfContinuous {X Y : CompactumCat} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
-  { f,
+  { f
     h' := by 
       rw [continuous_iff_ultrafilter] at cont
       ext (F : Ultrafilter X)
@@ -432,7 +432,9 @@ end CompactumCat
 def compactumToCompHaus :
     CompactumCat ⥤ CompHausCat where 
   obj X := { toTop := { α := X } }
-  map X Y f := { toFun := f, continuous_to_fun := CompactumCat.continuous_of_hom _ }
+  map X Y f :=
+    { toFun := f
+      continuous_to_fun := CompactumCat.continuous_of_hom _ }
 #align Compactum_to_CompHaus compactumToCompHaus
 
 namespace compactumToCompHaus
@@ -451,13 +453,13 @@ def isoOfTopologicalSpace {D : CompHausCat} :
     compactumToCompHaus.obj (CompactumCat.ofTopologicalSpace D) ≅
       D where 
   Hom :=
-    { toFun := id,
+    { toFun := id
       continuous_to_fun :=
         continuous_def.2 fun _ h => by
           rw [is_open_iff_ultrafilter'] at h
           exact h }
   inv :=
-    { toFun := id,
+    { toFun := id
       continuous_to_fun :=
         continuous_def.2 fun _ h1 => by 
           rw [is_open_iff_ultrafilter']

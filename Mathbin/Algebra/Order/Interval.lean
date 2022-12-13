@@ -268,7 +268,8 @@ instance [OrderedCommMonoid α] :
 
 @[to_additive]
 instance [OrderedCommMonoid α] : CommMonoid (Interval α) :=
-  { Interval.mulOneClass with mul_comm := fun _ _ => Option.map₂_comm mul_comm,
+  { Interval.mulOneClass with
+    mul_comm := fun _ _ => Option.map₂_comm mul_comm
     mul_assoc := fun _ _ _ => Option.map₂_assoc mul_assoc }
 
 namespace NonemptyInterval
@@ -497,20 +498,24 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pur
 #align nonempty_interval.mul_eq_one_iff NonemptyInterval.mul_eq_one_iff
 
 instance {α : Type u} [OrderedAddCommGroup α] : SubtractionCommMonoid (NonemptyInterval α) :=
-  { NonemptyInterval.addCommMonoid with neg := Neg.neg, sub := Sub.sub,
-    sub_eq_add_neg := fun s t => by ext <;> exact sub_eq_add_neg _ _,
-    neg_neg := fun s => by ext <;> exact neg_neg _,
-    neg_add_rev := fun s t => by ext <;> exact neg_add_rev _ _,
+  { NonemptyInterval.addCommMonoid with 
+    neg := Neg.neg
+    sub := Sub.sub
+    sub_eq_add_neg := fun s t => by ext <;> exact sub_eq_add_neg _ _
+    neg_neg := fun s => by ext <;> exact neg_neg _
+    neg_add_rev := fun s t => by ext <;> exact neg_add_rev _ _
     neg_eq_of_add := fun s t h => by
       obtain ⟨a, b, rfl, rfl, hab⟩ := NonemptyInterval.add_eq_zero_iff.1 h
       rw [neg_pure, neg_eq_of_add_eq_zero_right hab] }
 
 @[to_additive NonemptyInterval.subtractionCommMonoid]
 instance : DivisionCommMonoid (NonemptyInterval α) :=
-  { NonemptyInterval.commMonoid with inv := Inv.inv, div := (· / ·),
-    div_eq_mul_inv := fun s t => by ext <;> exact div_eq_mul_inv _ _,
-    inv_inv := fun s => by ext <;> exact inv_inv _,
-    mul_inv_rev := fun s t => by ext <;> exact mul_inv_rev _ _,
+  { NonemptyInterval.commMonoid with 
+    inv := Inv.inv
+    div := (· / ·)
+    div_eq_mul_inv := fun s t => by ext <;> exact div_eq_mul_inv _ _
+    inv_inv := fun s => by ext <;> exact inv_inv _
+    mul_inv_rev := fun s t => by ext <;> exact mul_inv_rev _ _
     inv_eq_of_mul := fun s t h => by
       obtain ⟨a, b, rfl, rfl, hab⟩ := NonemptyInterval.mul_eq_one_iff.1 h
       rw [inv_pure, inv_eq_of_mul_eq_one_right hab] }
@@ -531,11 +536,13 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pur
 #align interval.mul_eq_one_iff Interval.mul_eq_one_iff
 
 instance {α : Type u} [OrderedAddCommGroup α] : SubtractionCommMonoid (Interval α) :=
-  { Interval.addCommMonoid with neg := Neg.neg, sub := Sub.sub,
+  { Interval.addCommMonoid with 
+    neg := Neg.neg
+    sub := Sub.sub
     sub_eq_add_neg := by
-      rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (sub_eq_add_neg _ _),
-    neg_neg := by rintro (_ | s) <;> first |rfl|exact congr_arg some (neg_neg _),
-    neg_add_rev := by rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (neg_add_rev _ _),
+      rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (sub_eq_add_neg _ _)
+    neg_neg := by rintro (_ | s) <;> first |rfl|exact congr_arg some (neg_neg _)
+    neg_add_rev := by rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (neg_add_rev _ _)
     neg_eq_of_add := by
       rintro (_ | s) (_ | t) h <;>
         first
@@ -543,11 +550,13 @@ instance {α : Type u} [OrderedAddCommGroup α] : SubtractionCommMonoid (Interva
 
 @[to_additive Interval.subtractionCommMonoid]
 instance : DivisionCommMonoid (Interval α) :=
-  { Interval.commMonoid with inv := Inv.inv, div := (· / ·),
+  { Interval.commMonoid with 
+    inv := Inv.inv
+    div := (· / ·)
     div_eq_mul_inv := by
-      rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (div_eq_mul_inv _ _),
-    inv_inv := by rintro (_ | s) <;> first |rfl|exact congr_arg some (inv_inv _),
-    mul_inv_rev := by rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (mul_inv_rev _ _),
+      rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (div_eq_mul_inv _ _)
+    inv_inv := by rintro (_ | s) <;> first |rfl|exact congr_arg some (inv_inv _)
+    mul_inv_rev := by rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (mul_inv_rev _ _)
     inv_eq_of_mul := by
       rintro (_ | s) (_ | t) h <;>
         first

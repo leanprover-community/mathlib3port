@@ -160,9 +160,9 @@ open Quiver
 
 /- warning: category_theory.compose_path -> CategoryTheory.composePath is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y)
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C}, (Quiver.Path.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) -> (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y)
 but is expected to have type
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y)
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {X : C} {Y : C}, (Quiver.Path.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X Y) -> (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X Y)
 Case conversion may be inaccurate. Consider using '#align category_theory.compose_path CategoryTheory.composePathₓ'. -/
 /-- A path in a category can be composed to a single morphism. -/
 @[simp]

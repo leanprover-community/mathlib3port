@@ -59,7 +59,8 @@ instance hasLt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) :=
 #align psigma.lex.has_lt PSigma.Lex.hasLt
 
 instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, α i) :=
-  { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl,
+  { Lex.hasLe, Lex.hasLt with 
+    le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl
     le_trans := by 
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁r⟩ ⟨h₂r⟩
       · left
@@ -71,7 +72,7 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, �
         assumption
       · right
         apply le_trans
-        repeat' assumption,
+        repeat' assumption
     lt_iff_le_not_le := by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, _⟩, _⟩
       · rintro (⟨i, a, hji⟩ | ⟨i, hba⟩) <;> obtain ⟨_, _, hij⟩ | ⟨_, hab⟩ := hab
@@ -105,8 +106,9 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
       · obtain hab | hba := le_total a b
         · exact Or.inl (lex.right _ hab)
         · exact Or.inr (lex.right _ hba)
-      · exact Or.inr (lex.left _ _ hji),
-    DecidableEq := PSigma.decidableEq, decidableLe := Lex.decidable _ _,
+      · exact Or.inr (lex.left _ _ hji)
+    DecidableEq := PSigma.decidableEq
+    decidableLe := Lex.decidable _ _
     decidableLt := Lex.decidable _ _ }
 #align psigma.lex.linear_order PSigma.Lex.linearOrder
 

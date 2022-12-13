@@ -199,7 +199,8 @@ def mapDifferentialObject (F : C ⥤ D)
       DifferentialObject
         D where 
   obj X :=
-    { x := F.obj X.x, d := F.map X.d ≫ η.app X.x,
+    { x := F.obj X.x
+      d := F.map X.d ≫ η.app X.x
       d_squared' := by
         rw [functor.map_comp, ← functor.comp_map F (shift_functor D (1 : ℤ))]
         slice_lhs 2 3 => rw [← η.naturality X.d]
@@ -207,7 +208,7 @@ def mapDifferentialObject (F : C ⥤ D)
         slice_lhs 1 2 => rw [← F.map_comp, X.d_squared, hF]
         rw [zero_comp, zero_comp] }
   map X Y f :=
-    { f := F.map f.f,
+    { f := F.map f.f
       comm' := by 
         dsimp
         slice_lhs 2 3 => rw [← functor.comp_map F (shift_functor D (1 : ℤ)), ← η.naturality f.f]
@@ -276,12 +277,13 @@ def shiftFunctor (n : ℤ) :
       DifferentialObject
         C where 
   obj X :=
-    { x := X.x⟦n⟧, d := X.d⟦n⟧' ≫ (shiftComm _ _ _).Hom,
+    { x := X.x⟦n⟧
+      d := X.d⟦n⟧' ≫ (shiftComm _ _ _).Hom
       d_squared' := by
         rw [functor.map_comp, category.assoc, shift_comm_hom_comp_assoc, ← functor.map_comp_assoc,
           X.d_squared, functor.map_zero, zero_comp] }
   map X Y f :=
-    { f := f.f⟦n⟧',
+    { f := f.f⟦n⟧'
       comm' := by 
         dsimp
         rw [category.assoc, shift_comm_hom_comp, ← functor.map_comp_assoc, f.comm,
@@ -346,7 +348,9 @@ attribute [local simp] eq_to_hom_map
 
 instance : HasShift (DifferentialObject C) ℤ :=
   hasShiftMk _ _
-    { f := shiftFunctor C, ε := shiftε C, μ := fun m n => (shiftFunctorAdd C m n).symm }
+    { f := shiftFunctor C
+      ε := shiftε C
+      μ := fun m n => (shiftFunctorAdd C m n).symm }
 
 end DifferentialObject
 

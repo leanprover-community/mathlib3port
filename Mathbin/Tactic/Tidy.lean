@@ -20,7 +20,9 @@ unsafe def tidy_attribute : user_attribute where
 #align tactic.tidy.tidy_attribute tactic.tidy.tidy_attribute
 
 add_tactic_doc
-  { Name := "tidy", category := DocCategory.attr, declNames := [`tactic.tidy.tidy_attribute],
+  { Name := "tidy"
+    category := DocCategory.attr
+    declNames := [`tactic.tidy.tidy_attribute]
     tags := ["search"] }
 
 unsafe def run_tactics : tactic String := do
@@ -104,7 +106,9 @@ unsafe def tidy (trace : parse <| optional (tk "?")) (cfg : tidy.cfg := {  }) :=
 end Interactive
 
 add_tactic_doc
-  { Name := "tidy", category := DocCategory.tactic, declNames := [`tactic.interactive.tidy],
+  { Name := "tidy"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.tidy]
     tags := ["search", "Try this", "finishing"] }
 
 /-- Invoking the hole command `tidy` ("Use `tidy` to complete the goal") runs the tactic of
@@ -120,7 +124,9 @@ unsafe def tidy_hole_cmd : hole_command where
 #align tactic.tidy_hole_cmd tactic.tidy_hole_cmd
 
 add_tactic_doc
-  { Name := "tidy", category := DocCategory.hole_cmd, declNames := [`tactic.tidy_hole_cmd],
+  { Name := "tidy"
+    category := DocCategory.hole_cmd
+    declNames := [`tactic.tidy_hole_cmd]
     tags := ["search"] }
 
 end Tactic

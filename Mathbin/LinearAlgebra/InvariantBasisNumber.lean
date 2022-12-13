@@ -269,7 +269,9 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
     `R^n/I^n ≃ R^m/I^m`. -/
 private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
     ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' := by
-  refine' { toFun := induced_map I e, invFun := induced_map I e.symm.. }
+  refine'
+    { toFun := induced_map I e
+      invFun := induced_map I e.symm.. }
   all_goals 
     first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _

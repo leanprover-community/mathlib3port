@@ -136,11 +136,11 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
     le_refl := by 
       rintro ⟨⟩
       use 1
-      rw [one_smul],
+      rw [one_smul]
     le_trans := by 
       rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ ⟨e, rfl⟩ ⟨f, rfl⟩
       use e * f
-      rw [mul_smul],
+      rw [mul_smul]
     le_antisymm := by 
       rintro ⟨a⟩ ⟨b⟩ ⟨e, rfl⟩ ⟨f, hf⟩
       by_cases hb : b = 0
@@ -156,51 +156,52 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
           IsFractionRing.injective _ _
             (CancelCommMonoidWithZero.mul_right_cancel_of_ne_zero hb hf).symm
       apply Quotient.sound'
-      use this.unit, rfl,
-    le_total := ValuationRing.le_total _ _, decidableLe := by classical infer_instance,
+      use this.unit, rfl
+    le_total := ValuationRing.le_total _ _
+    decidableLe := by classical infer_instance
     mul_assoc := by 
       rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
       apply Quotient.sound'
       rw [mul_assoc]
-      apply Setoid.refl',
+      apply Setoid.refl'
     one_mul := by 
       rintro ⟨a⟩
       apply Quotient.sound'
       rw [one_mul]
-      apply Setoid.refl',
+      apply Setoid.refl'
     mul_one := by 
       rintro ⟨a⟩
       apply Quotient.sound'
       rw [mul_one]
-      apply Setoid.refl',
+      apply Setoid.refl'
     mul_comm := by 
       rintro ⟨a⟩ ⟨b⟩
       apply Quotient.sound'
       rw [mul_comm]
-      apply Setoid.refl',
+      apply Setoid.refl'
     mul_le_mul_left := by 
       rintro ⟨a⟩ ⟨b⟩ ⟨c, rfl⟩ ⟨d⟩
-      use c; simp only [Algebra.smul_def]; ring,
+      use c; simp only [Algebra.smul_def]; ring
     zero_mul := by 
       rintro ⟨a⟩
       apply Quotient.sound'
       rw [zero_mul]
-      apply Setoid.refl',
+      apply Setoid.refl'
     mul_zero := by 
       rintro ⟨a⟩
       apply Quotient.sound'
       rw [mul_zero]
-      apply Setoid.refl',
-    zero_le_one := ⟨0, by rw [zero_smul]⟩,
+      apply Setoid.refl'
+    zero_le_one := ⟨0, by rw [zero_smul]⟩
     exists_pair_ne := by 
       use 0, 1
       intro c; obtain ⟨d, hd⟩ := Quotient.exact' c
       apply_fun fun t => d⁻¹ • t  at hd
-      simpa using hd,
+      simpa using hd
     inv_zero := by 
       apply Quotient.sound'
       rw [inv_zero]
-      apply Setoid.refl',
+      apply Setoid.refl'
     mul_inv_cancel := by 
       rintro ⟨a⟩ ha
       apply Quotient.sound'
@@ -256,13 +257,13 @@ theorem mem_integer_iff (x : K) : x ∈ (valuation A K).integer ↔ ∃ a : A, a
 noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
   RingEquiv.ofBijective
     (show A →ₙ+* (valuation A K).integer from
-      { toFun := fun a => ⟨algebraMap A K a, (mem_integer_iff _ _ _).mpr ⟨a, rfl⟩⟩,
+      { toFun := fun a => ⟨algebraMap A K a, (mem_integer_iff _ _ _).mpr ⟨a, rfl⟩⟩
         map_mul' := fun _ _ => by 
           ext1
-          exact (algebraMap A K).map_mul _ _,
+          exact (algebraMap A K).map_mul _ _
         map_zero' := by 
           ext1
-          exact (algebraMap A K).map_zero,
+          exact (algebraMap A K).map_zero
         map_add' := fun _ _ => by 
           ext1
           exact (algebraMap A K).map_add _ _ })
@@ -322,7 +323,7 @@ instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrd
       · exfalso
         apply h₂
         rw [← h]
-        apply Ideal.mul_mem_right _ _ hb,
+        apply Ideal.mul_mem_right _ _ hb
     decidableLe := inferInstance }
 
 end

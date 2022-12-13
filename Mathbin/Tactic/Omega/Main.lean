@@ -144,6 +144,8 @@ but it may fail if a real solution exists, even if there is no integer/natural n
 You can enable `set_option trace.omega true` to see how `omega` interprets your goal.
 -/
 add_tactic_doc
-  { Name := "omega", category := DocCategory.tactic, declNames := [`tactic.interactive.omega],
+  { Name := "omega"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.omega]
     tags := ["finishing", "arithmetic", "decision procedure"] }
 

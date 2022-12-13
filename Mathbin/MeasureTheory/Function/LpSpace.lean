@@ -1831,7 +1831,9 @@ theorem norm_le_of_ae_bound [IsFiniteMeasure μ] {f : lp E p μ} {C : ℝ} (hC :
 
 instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p μ) :=
   { AddGroupNorm.toNormedAddCommGroup
-      { toFun := (norm : lp E p μ → ℝ), map_zero' := norm_zero, neg' := by simp,
+      { toFun := (norm : lp E p μ → ℝ)
+        map_zero' := norm_zero
+        neg' := by simp
         add_le' := fun f g => by 
           simp only [norm_def]
           rw [← Ennreal.to_real_add (snorm_ne_top f) (snorm_ne_top g)]
@@ -1839,10 +1841,10 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p μ) :=
           · rwa [Ennreal.to_real_le_to_real (snorm_ne_top (f + g))]
             exact ennreal.add_ne_top.mpr ⟨snorm_ne_top f, snorm_ne_top g⟩
           rw [snorm_congr_ae (coe_fn_add _ _)]
-          exact snorm_add_le (Lp.ae_strongly_measurable f) (Lp.ae_strongly_measurable g) hp.1,
+          exact snorm_add_le (Lp.ae_strongly_measurable f) (Lp.ae_strongly_measurable g) hp.1
         eq_zero_of_map_eq_zero' := fun f =>
           (norm_eq_zero_iff <| Ennreal.zero_lt_one.trans_le hp.1).1 } with
-    edist := edist,
+    edist := edist
     edist_dist := fun f g => by
       rw [edist_def, dist_def, ← snorm_congr_ae (coe_fn_sub _ _),
         Ennreal.of_real_to_real (snorm_ne_top (f - g))] }

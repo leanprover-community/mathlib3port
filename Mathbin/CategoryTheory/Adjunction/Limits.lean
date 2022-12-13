@@ -89,7 +89,10 @@ def functorialityIsLeftAdjoint :
       (Cocones.functoriality K
         F) where 
   right := functorialityRightAdjoint adj K
-  adj := mkOfUnitCounit { Unit := functorialityUnit adj K, counit := functorialityCounit adj K }
+  adj :=
+    mkOfUnitCounit
+      { Unit := functorialityUnit adj K
+        counit := functorialityCounit adj K }
 #align
   category_theory.adjunction.functoriality_is_left_adjoint CategoryTheory.Adjunction.functorialityIsLeftAdjoint
 
@@ -136,7 +139,8 @@ instance (priority := 100) isEquivalenceCreatesColimits (H : D ⥤ C) [IsEquival
       H where CreatesColimitsOfShape J 𝒥 :=
     { CreatesColimit := fun F =>
         { lifts := fun c t =>
-            { liftedCocone := H.map_cocone_inv c, validLift := H.map_cocone_map_cocone_inv c } } }
+            { liftedCocone := H.map_cocone_inv c
+              validLift := H.map_cocone_map_cocone_inv c } } }
 #align
   category_theory.adjunction.is_equivalence_creates_colimits CategoryTheory.Adjunction.isEquivalenceCreatesColimits
 
@@ -148,7 +152,7 @@ example (E : C ⥤ D) [IsEquivalence E] (c : Cocone K) (h : IsColimit c) :
 theorem has_colimit_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit K] :
     HasColimit (K ⋙ E) :=
   HasColimit.mk
-    { Cocone := E.mapCocone (Colimit.cocone K),
+    { Cocone := E.mapCocone (Colimit.cocone K)
       IsColimit := PreservesColimit.preserves (colimit.isColimit K) }
 #align
   category_theory.adjunction.has_colimit_comp_equivalence CategoryTheory.Adjunction.has_colimit_comp_equivalence
@@ -221,7 +225,10 @@ def functorialityIsRightAdjoint :
       (Cones.functoriality K
         G) where 
   left := functorialityLeftAdjoint adj K
-  adj := mkOfUnitCounit { Unit := functorialityUnit' adj K, counit := functorialityCounit' adj K }
+  adj :=
+    mkOfUnitCounit
+      { Unit := functorialityUnit' adj K
+        counit := functorialityCounit' adj K }
 #align
   category_theory.adjunction.functoriality_is_right_adjoint CategoryTheory.Adjunction.functorialityIsRightAdjoint
 
@@ -267,7 +274,8 @@ instance (priority := 100) isEquivalenceCreatesLimits (H : D ⥤ C) [IsEquivalen
       H where CreatesLimitsOfShape J 𝒥 :=
     { CreatesLimit := fun F =>
         { lifts := fun c t =>
-            { liftedCone := H.map_cone_inv c, validLift := H.map_cone_map_cone_inv c } } }
+            { liftedCone := H.map_cone_inv c
+              validLift := H.map_cone_map_cone_inv c } } }
 #align
   category_theory.adjunction.is_equivalence_creates_limits CategoryTheory.Adjunction.isEquivalenceCreatesLimits
 
@@ -277,7 +285,8 @@ example (E : D ⥤ C) [IsEquivalence E] (c : Cone K) [h : IsLimit c] : IsLimit (
 
 theorem has_limit_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit K] : HasLimit (K ⋙ E) :=
   HasLimit.mk
-    { Cone := E.mapCone (Limit.cone K), IsLimit := PreservesLimit.preserves (limit.isLimit K) }
+    { Cone := E.mapCone (Limit.cone K)
+      IsLimit := PreservesLimit.preserves (limit.isLimit K) }
 #align
   category_theory.adjunction.has_limit_comp_equivalence CategoryTheory.Adjunction.has_limit_comp_equivalence
 
@@ -371,7 +380,9 @@ the functor associating to each `Y` the cocones over `K` with cone point `G.obj 
 def coconesIso {J : Type u} [Category.{v} J] {K : J ⥤ C} :
     (cocones J D).obj (op (K ⋙ F)) ≅ G ⋙ (cocones J C).obj (op K) :=
   NatIso.ofComponents
-    (fun Y => { Hom := coconesIsoComponentHom adj Y, inv := coconesIsoComponentInv adj Y })
+    (fun Y =>
+      { Hom := coconesIsoComponentHom adj Y
+        inv := coconesIsoComponentInv adj Y })
     (by tidy)
 #align category_theory.adjunction.cocones_iso CategoryTheory.Adjunction.coconesIso
 
@@ -384,7 +395,10 @@ the functor associating to each `X` the cones over `K ⋙ G` with cone point `X`
 def conesIso {J : Type u} [Category.{v} J] {K : J ⥤ D} :
     F.op ⋙ (cones J D).obj K ≅ (cones J C).obj (K ⋙ G) :=
   NatIso.ofComponents
-    (fun X => { Hom := conesIsoComponentHom adj X, inv := conesIsoComponentInv adj X }) (by tidy)
+    (fun X =>
+      { Hom := conesIsoComponentHom adj X
+        inv := conesIsoComponentInv adj X })
+    (by tidy)
 #align category_theory.adjunction.cones_iso CategoryTheory.Adjunction.conesIso
 
 end CategoryTheory.Adjunction

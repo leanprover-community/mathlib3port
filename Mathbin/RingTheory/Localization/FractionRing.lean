@@ -143,8 +143,10 @@ protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def toField : Field K :=
-  { IsFractionRing.is_domain A, show CommRing K by infer_instance with inv := IsFractionRing.inv A,
-    mul_inv_cancel := IsFractionRing.mul_inv_cancel A, inv_zero := dif_pos rfl }
+  { IsFractionRing.is_domain A, show CommRing K by infer_instance with
+    inv := IsFractionRing.inv A
+    mul_inv_cancel := IsFractionRing.mul_inv_cancel A
+    inv_zero := dif_pos rfl }
 #align is_fraction_ring.to_field IsFractionRing.toField
 
 end CommRing
@@ -306,9 +308,16 @@ instance [Nontrivial R] : Nontrivial (FractionRing R) :=
 variable {A}
 
 noncomputable instance : Field (FractionRing A) :=
-  { Localization.commRing, IsFractionRing.toField A with add := (· + ·), mul := (· * ·),
-    neg := Neg.neg, sub := Sub.sub, one := 1, zero := 0, nsmul := AddMonoid.nsmul,
-    zsmul := SubNegMonoid.zsmul, npow := Localization.npow _ }
+  { Localization.commRing, IsFractionRing.toField A with
+    add := (· + ·)
+    mul := (· * ·)
+    neg := Neg.neg
+    sub := Sub.sub
+    one := 1
+    zero := 0
+    nsmul := AddMonoid.nsmul
+    zsmul := SubNegMonoid.zsmul
+    npow := Localization.npow _ }
 
 @[simp]
 theorem mk_eq_div {r s} :

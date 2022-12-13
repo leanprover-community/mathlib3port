@@ -69,7 +69,9 @@ theorem contractible_iff_id_nullhomotopic (Y : Type _) [TopologicalSpace Y] :
     apply id_nullhomotopic
   rintro ⟨p, h⟩
   refine_struct
-    { hequiv_unit := ⟨{ toFun := ContinuousMap.const _ (), invFun := ContinuousMap.const _ p }⟩ }
+    { hequiv_unit :=
+        ⟨{  toFun := ContinuousMap.const _ ()
+            invFun := ContinuousMap.const _ p }⟩ }
   · exact h.symm;
   · convert homotopic.refl (ContinuousMap.id Unit)
     ext

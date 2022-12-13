@@ -56,13 +56,15 @@ instance :
 instance hasForgetToBipointed :
     HasForget₂ GroupWithZeroCat
       BipointedCat where forget₂ :=
-    { obj := fun X => ⟨X, 0, 1⟩, map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
+    { obj := fun X => ⟨X, 0, 1⟩
+      map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
 #align GroupWithZero.has_forget_to_Bipointed GroupWithZeroCat.hasForgetToBipointed
 
 instance hasForgetToMon :
     HasForget₂ GroupWithZeroCat
       MonCat where forget₂ :=
-    { obj := fun X => ⟨X⟩, map := fun X Y => MonoidWithZeroHom.toMonoidHom }
+    { obj := fun X => ⟨X⟩
+      map := fun X Y => MonoidWithZeroHom.toMonoidHom }
 #align GroupWithZero.has_forget_to_Mon GroupWithZeroCat.hasForgetToMon
 
 /-- Constructs an isomorphism of groups with zero from a group isomorphism between them. -/

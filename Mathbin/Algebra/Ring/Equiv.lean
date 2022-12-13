@@ -74,22 +74,32 @@ instance (priority := 100) toAddEquivClass (F R S : Type _) [Mul R] [Add R] [Mul
 -- See note [lower instance priority]
 instance (priority := 100) toRingHomClass (F R S : Type _) [NonAssocSemiring R] [NonAssocSemiring S]
     [h : RingEquivClass F R S] : RingHomClass F R S :=
-  { h with coe := coeFn, coe_injective' := FunLike.coe_injective, map_zero := map_zero,
+  { h with 
+    coe := coeFn
+    coe_injective' := FunLike.coe_injective
+    map_zero := map_zero
     map_one := map_one }
 #align ring_equiv_class.to_ring_hom_class RingEquivClass.toRingHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) toNonUnitalRingHomClass (F R S : Type _) [NonUnitalNonAssocSemiring R]
     [NonUnitalNonAssocSemiring S] [h : RingEquivClass F R S] : NonUnitalRingHomClass F R S :=
-  { h with coe := coeFn, coe_injective' := FunLike.coe_injective, map_zero := map_zero }
+  { h with 
+    coe := coeFn
+    coe_injective' := FunLike.coe_injective
+    map_zero := map_zero }
 #align ring_equiv_class.to_non_unital_ring_hom_class RingEquivClass.toNonUnitalRingHomClass
 
 end RingEquivClass
 
 instance [Mul α] [Add α] [Mul β] [Add β] [RingEquivClass F α β] : CoeTC F (α ≃+* β) :=
   ⟨fun f =>
-    { toFun := f, invFun := EquivLike.inv f, left_inv := EquivLike.left_inv f,
-      right_inv := EquivLike.right_inv f, map_mul' := map_mul f, map_add' := map_add f }⟩
+    { toFun := f
+      invFun := EquivLike.inv f
+      left_inv := EquivLike.left_inv f
+      right_inv := EquivLike.right_inv f
+      map_mul' := map_mul f
+      map_add' := map_add f }⟩
 
 namespace RingEquiv
 
@@ -264,7 +274,10 @@ theorem mk_coe' (e : R ≃+* S) (f h₁ h₂ h₃ h₄) :
 
 @[simp]
 theorem symm_mk (f : R → S) (g h₁ h₂ h₃ h₄) :
-    (mk f g h₁ h₂ h₃ h₄).symm = { (mk f g h₁ h₂ h₃ h₄).symm with toFun := g, invFun := f } :=
+    (mk f g h₁ h₂ h₃ h₄).symm =
+      { (mk f g h₁ h₂ h₃ h₄).symm with 
+        toFun := g
+        invFun := f } :=
   rfl
 #align ring_equiv.symm_mk RingEquiv.symm_mk
 
@@ -365,7 +378,8 @@ variable (R) [NonUnitalCommSemiring R]
 
 /-- A non-unital commutative ring is isomorphic to its opposite. -/
 def toOpposite : R ≃+* Rᵐᵒᵖ :=
-  { MulOpposite.opEquiv with map_add' := fun x y => rfl,
+  { MulOpposite.opEquiv with 
+    map_add' := fun x y => rfl
     map_mul' := fun x y => mul_comm (op y) (op x) }
 #align ring_equiv.to_opposite RingEquiv.toOpposite
 
@@ -405,7 +419,9 @@ theorem map_ne_zero_iff : f x ≠ 0 ↔ x ≠ 0 :=
 /-- Produce a ring isomorphism from a bijective ring homomorphism. -/
 noncomputable def ofBijective [NonUnitalRingHomClass F R S] (f : F) (hf : Function.Bijective f) :
     R ≃+* S :=
-  { Equiv.ofBijective f hf with map_mul' := map_mul f, map_add' := map_add f }
+  { Equiv.ofBijective f hf with 
+    map_mul' := map_mul f
+    map_add' := map_add f }
 #align ring_equiv.of_bijective RingEquiv.ofBijective
 
 @[simp]
@@ -429,7 +445,8 @@ This is the `ring_equiv` version of `equiv.Pi_congr_right`, and the dependent ve
 def piCongrRight {ι : Type _} {R S : ι → Type _} [∀ i, NonUnitalNonAssocSemiring (R i)]
     [∀ i, NonUnitalNonAssocSemiring (S i)] (e : ∀ i, R i ≃+* S i) : (∀ i, R i) ≃+* ∀ i, S i :=
   { @MulEquiv.piCongrRight ι R S _ _ fun i => (e i).toMulEquiv,
-    @AddEquiv.piCongrRight ι R S _ _ fun i => (e i).toAddEquiv with toFun := fun x j => e j (x j),
+    @AddEquiv.piCongrRight ι R S _ _ fun i => (e i).toAddEquiv with
+    toFun := fun x j => e j (x j)
     invFun := fun x j => (e j).symm (x j) }
 #align ring_equiv.Pi_congr_right RingEquiv.piCongrRight
 

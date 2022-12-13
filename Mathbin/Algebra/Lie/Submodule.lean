@@ -479,14 +479,19 @@ theorem Inf_glb (S : Set (LieSubmodule R L M)) : IsGlb S (inf S) := by
 We provide explicit values for the fields `bot`, `top`, `inf` to get more convenient definitions
 than we would otherwise obtain from `complete_lattice_of_Inf`.  -/
 instance : CompleteLattice (LieSubmodule R L M) :=
-  { SetLike.partialOrder, completeLatticeOfInf _ Inf_glb with le := (· ≤ ·), lt := (· < ·),
-    bot := ⊥,
+  { SetLike.partialOrder, completeLatticeOfInf _ Inf_glb with
+    le := (· ≤ ·)
+    lt := (· < ·)
+    bot := ⊥
     bot_le := fun N _ h => by 
       rw [mem_bot] at h
       rw [h]
-      exact N.zero_mem',
-    top := ⊤, le_top := fun _ _ _ => trivial, inf := (· ⊓ ·),
-    le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩, inf_le_left := fun _ _ _ => And.left,
+      exact N.zero_mem'
+    top := ⊤
+    le_top := fun _ _ _ => trivial
+    inf := (· ⊓ ·)
+    le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩
+    inf_le_left := fun _ _ _ => And.left
     inf_le_right := fun _ _ _ => And.right }
 
 instance : AddCommMonoid (LieSubmodule R L
@@ -559,7 +564,8 @@ theorem well_founded_of_noetherian [IsNoetherian R M] :
   let f :
     ((· > ·) : LieSubmodule R L M → LieSubmodule R L M → Prop) →r
       ((· > ·) : Submodule R M → Submodule R M → Prop) :=
-    { toFun := coe, map_rel' := fun N N' h => h }
+    { toFun := coe
+      map_rel' := fun N N' h => h }
   RelHomClass.well_founded f (is_noetherian_iff_well_founded.mp inferInstance)
 #align lie_submodule.well_founded_of_noetherian LieSubmodule.well_founded_of_noetherian
 
@@ -1328,10 +1334,11 @@ variable [CommRing R] [LieRing L] [LieAlgebra R L]
 
 This is the Lie subalgebra version of `submodule.top_equiv`. -/
 def LieSubalgebra.topEquiv : (⊤ : LieSubalgebra R L) ≃ₗ⁅R⁆ L :=
-  { (⊤ : LieSubalgebra R L).incl with invFun := fun x => ⟨x, Set.mem_univ x⟩,
+  { (⊤ : LieSubalgebra R L).incl with
+    invFun := fun x => ⟨x, Set.mem_univ x⟩
     left_inv := fun x => by 
       ext
-      rfl,
+      rfl
     right_inv := fun x => rfl }
 #align lie_subalgebra.top_equiv LieSubalgebra.topEquiv
 

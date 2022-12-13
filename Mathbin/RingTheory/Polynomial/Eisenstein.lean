@@ -219,7 +219,9 @@ theorem Polynomial.Monic.leading_coeff_not_mem (hf : f.Monic) (h : 𝓟 ≠ ⊤)
 theorem Polynomial.Monic.isEisensteinAtOfMemOfNotMem (hf : f.Monic) (h : 𝓟 ≠ ⊤)
     (hmem : ∀ {n}, n < f.natDegree → f.coeff n ∈ 𝓟) (hnot_mem : f.coeff 0 ∉ 𝓟 ^ 2) :
     f.IsEisensteinAt 𝓟 :=
-  { leading := hf.leading_coeff_not_mem h, Mem := fun n hn => hmem hn, not_mem := hnot_mem }
+  { leading := hf.leading_coeff_not_mem h
+    Mem := fun n hn => hmem hn
+    not_mem := hnot_mem }
 #align
   polynomial.monic.is_eisenstein_at_of_mem_of_not_mem Polynomial.Monic.isEisensteinAtOfMemOfNotMem
 

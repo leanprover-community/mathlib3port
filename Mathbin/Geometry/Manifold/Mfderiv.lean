@@ -143,7 +143,7 @@ theorem differentiable_within_at_local_invariant_prop :
       have : u ∈ 𝓝 (I.symm (I x)) := by
         rw [ModelWithCorners.left_inv]
         exact IsOpen.mem_nhds u_open xu
-      apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this,
+      apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this
     right_invariance' := by 
       intro s x f e he hx h
       rw [DifferentiableWithinAtProp] at h⊢
@@ -158,14 +158,14 @@ theorem differentiable_within_at_local_invariant_prop :
         mem_nhds_within.mpr
           ⟨I.symm ⁻¹' e.target, e.open_target.preimage I.continuous_symm, by
             simp_rw [Set.mem_preimage, I.left_inv, e.maps_to hx], _⟩
-      mfld_set_tac,
+      mfld_set_tac
     congr_of_forall := by 
       intro s x f g h hx hf
       apply hf.congr
       · intro y hy
         simp only [mfld_simps] at hy
         simp only [h, hy, mfld_simps]
-      · simp only [hx, mfld_simps],
+      · simp only [hx, mfld_simps]
     left_invariance' := by 
       intro s x f e' he' hs hx h
       rw [DifferentiableWithinAtProp] at h⊢
@@ -1563,13 +1563,14 @@ theorem comp_symm_deriv {x : M'} (hx : x ∈ e.target) :
 /-- The derivative of a differentiable local homeomorphism, as a continuous linear equivalence
 between the tangent spaces at `x` and `e x`. -/
 protected def mfderiv {x : M} (hx : x ∈ e.source) : TangentSpace I x ≃L[𝕜] TangentSpace I' (e x) :=
-  { mfderiv I I' e x with invFun := mfderiv I' I e.symm (e x),
-    continuous_to_fun := (mfderiv I I' e x).cont,
-    continuous_inv_fun := (mfderiv I' I e.symm (e x)).cont,
+  { mfderiv I I' e x with 
+    invFun := mfderiv I' I e.symm (e x)
+    continuous_to_fun := (mfderiv I I' e x).cont
+    continuous_inv_fun := (mfderiv I' I e.symm (e x)).cont
     left_inv := fun y => by
       have : (ContinuousLinearMap.id _ _ : TangentSpace I x →L[𝕜] TangentSpace I x) y = y := rfl
       conv_rhs => rw [← this, ← he.symm_comp_deriv hx]
-      rfl,
+      rfl
     right_inv := fun y => by
       have :
         (ContinuousLinearMap.id 𝕜 _ : TangentSpace I' (e x) →L[𝕜] TangentSpace I' (e x)) y = y :=

@@ -357,7 +357,8 @@ theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfia
   contrapose! h
   rw [← sentence.realize_not] at h
   refine'
-    ⟨{ carrier := M, is_model := ⟨fun ψ hψ => hψ.elim (realize_sentence_of_mem _) fun h' => _⟩ }⟩
+    ⟨{  carrier := M
+        is_model := ⟨fun ψ hψ => hψ.elim (realize_sentence_of_mem _) fun h' => _⟩ }⟩
   rw [Set.mem_singleton_iff.1 h']
   exact h
 #align

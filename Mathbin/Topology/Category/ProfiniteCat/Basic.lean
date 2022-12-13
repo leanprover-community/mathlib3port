@@ -136,7 +136,8 @@ See: https://stacks.math.columbia.edu/tag/0900
 def CompHausCat.toProfiniteObj (X : CompHausCat.{u}) :
     ProfiniteCat.{u} where 
   toCompHaus :=
-    { toTop := TopCat.of (ConnectedComponents X), IsCompact := Quotient.compact_space,
+    { toTop := TopCat.of (ConnectedComponents X)
+      IsCompact := Quotient.compact_space
       isHausdorff := ConnectedComponents.t2 }
   IsTotallyDisconnected := ConnectedComponents.totally_disconnected_space
 #align CompHaus.to_Profinite_obj CompHausCat.toProfiniteObj
@@ -151,7 +152,7 @@ def ProfiniteCat.toCompHausEquivalence (X : CompHausCat.{u}) (Y : ProfiniteCat.{
           Y) where 
   toFun f := f.comp ⟨Quotient.mk', continuous_quotient_mk⟩
   invFun g :=
-    { toFun := Continuous.connectedComponentsLift g.2,
+    { toFun := Continuous.connectedComponentsLift g.2
       continuous_to_fun := Continuous.connected_components_lift_continuous g.2 }
   left_inv f := ContinuousMap.ext <| ConnectedComponents.surjective_coe.forall.2 fun a => rfl
   right_inv f := ContinuousMap.ext fun x => rfl
@@ -201,7 +202,7 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) :
     Limits.Cone
       F where 
   x :=
-    { toCompHaus := (CompHausCat.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).x,
+    { toCompHaus := (CompHausCat.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).x
       IsTotallyDisconnected := by
         change TotallyDisconnectedSpace ↥{ u : ∀ j : J, F.obj j | _ }
         exact Subtype.totally_disconnected_space }

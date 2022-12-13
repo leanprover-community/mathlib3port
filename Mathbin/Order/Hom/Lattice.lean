@@ -298,11 +298,18 @@ instance [HasInf α] [HasInf β] [Top α] [Top β] [InfTopHomClass F α β] : Co
   ⟨fun f => ⟨f, map_top f⟩⟩
 
 instance [Lattice α] [Lattice β] [LatticeHomClass F α β] : CoeTC F (LatticeHom α β) :=
-  ⟨fun f => { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f }⟩
+  ⟨fun f =>
+    { toFun := f
+      map_sup' := map_sup f
+      map_inf' := map_inf f }⟩
 
 instance [Lattice α] [Lattice β] [BoundedOrder α] [BoundedOrder β] [BoundedLatticeHomClass F α β] :
     CoeTC F (BoundedLatticeHom α β) :=
-  ⟨fun f => { (f : LatticeHom α β) with toFun := f, map_top' := map_top f, map_bot' := map_bot f }⟩
+  ⟨fun f =>
+    { (f : LatticeHom α β) with 
+      toFun := f
+      map_top' := map_top f
+      map_bot' := map_bot f }⟩
 
 /-! ### Supremum homomorphisms -/
 
@@ -1140,7 +1147,7 @@ def toLatticeHomClass : LatticeHomClass F α β :=
     map_sup := fun f a b => by 
       obtain h | h := le_total a b
       · rw [sup_eq_right.2 h, sup_eq_right.2 (OrderHomClass.mono f h : f a ≤ f b)]
-      · rw [sup_eq_left.2 h, sup_eq_left.2 (OrderHomClass.mono f h : f b ≤ f a)],
+      · rw [sup_eq_left.2 h, sup_eq_left.2 (OrderHomClass.mono f h : f b ≤ f a)]
     map_inf := fun f a b => by 
       obtain h | h := le_total a b
       · rw [inf_eq_left.2 h, inf_eq_left.2 (OrderHomClass.mono f h : f a ≤ f b)]

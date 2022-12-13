@@ -273,7 +273,8 @@ theorem continuous_test_against_nn_eval (f : Ω →ᵇ ℝ≥0) :
 theorem to_finite_measure_embedding (Ω : Type _) [MeasurableSpace Ω] [TopologicalSpace Ω]
     [OpensMeasurableSpace Ω] :
     Embedding (toFiniteMeasure : ProbabilityMeasure Ω → FiniteMeasure Ω) :=
-  { induced := rfl, inj := fun μ ν h => Subtype.eq (by convert congr_arg coe h) }
+  { induced := rfl
+    inj := fun μ ν h => Subtype.eq (by convert congr_arg coe h) }
 #align
   measure_theory.probability_measure.to_finite_measure_embedding MeasureTheory.ProbabilityMeasure.to_finite_measure_embedding
 
@@ -340,7 +341,7 @@ total mass. -/
 def normalize : ProbabilityMeasure Ω :=
   if zero : μ.mass = 0 then ⟨Measure.dirac ‹Nonempty Ω›.some, Measure.dirac.isProbabilityMeasure⟩
   else
-    { val := μ.mass⁻¹ • μ,
+    { val := μ.mass⁻¹ • μ
       property := by 
         refine' ⟨_⟩
         simp only [mass, measure.coe_nnreal_smul_apply, ←

@@ -192,7 +192,9 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 /-- The identity lax monoidal functor. -/
 @[simps]
 def id : LaxMonoidalFunctor.{v₁, v₁} C C :=
-  { 𝟭 C with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
+  { 𝟭 C with 
+    ε := 𝟙 _
+    μ := fun X Y => 𝟙 _ }
 #align category_theory.lax_monoidal_functor.id CategoryTheory.LaxMonoidalFunctor.id
 
 instance : Inhabited (LaxMonoidalFunctor C C) :=
@@ -309,7 +311,9 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 /-- The identity monoidal functor. -/
 @[simps]
 def id : MonoidalFunctor.{v₁, v₁} C C :=
-  { 𝟭 C with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
+  { 𝟭 C with 
+    ε := 𝟙 _
+    μ := fun X Y => 𝟙 _ }
 #align category_theory.monoidal_functor.id CategoryTheory.MonoidalFunctor.id
 
 instance : Inhabited (MonoidalFunctor C C) :=
@@ -333,12 +337,13 @@ variable (F : LaxMonoidalFunctor.{v₁, v₂} C D) (G : LaxMonoidalFunctor.{v₂
 /-- The composition of two lax monoidal functors is again lax monoidal. -/
 @[simps]
 def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
-  { F.toFunctor ⋙ G.toFunctor with ε := G.ε ≫ G.map F.ε,
-    μ := fun X Y => G.μ (F.obj X) (F.obj Y) ≫ G.map (F.μ X Y),
+  { F.toFunctor ⋙ G.toFunctor with 
+    ε := G.ε ≫ G.map F.ε
+    μ := fun X Y => G.μ (F.obj X) (F.obj Y) ≫ G.map (F.μ X Y)
     μ_natural' := fun _ _ _ _ f g => by
       simp only [functor.comp_map, assoc]
       rw [← category.assoc, lax_monoidal_functor.μ_natural, category.assoc, ← map_comp, ← map_comp,
-        ← lax_monoidal_functor.μ_natural],
+        ← lax_monoidal_functor.μ_natural]
     associativity' := fun X Y Z => by 
       dsimp
       rw [id_tensor_comp]
@@ -348,13 +353,13 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       slice_lhs 2 3 => rw [← G.to_functor.map_id, G.μ_natural]
       rw [category.assoc, category.assoc, category.assoc, category.assoc, category.assoc, ←
         G.to_functor.map_comp, ← G.to_functor.map_comp, ← G.to_functor.map_comp, ←
-        G.to_functor.map_comp, F.associativity],
+        G.to_functor.map_comp, F.associativity]
     left_unitality' := fun X => by 
       dsimp
       rw [G.left_unitality, comp_tensor_id, category.assoc, category.assoc]
       apply congr_arg
       rw [F.left_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ←
-        lax_monoidal_functor.μ_natural, nat_trans.id_app, map_id, ← category.assoc, map_comp],
+        lax_monoidal_functor.μ_natural, nat_trans.id_app, map_id, ← category.assoc, map_comp]
     right_unitality' := fun X => by 
       dsimp
       rw [G.right_unitality, id_tensor_comp, category.assoc, category.assoc]
@@ -381,7 +386,9 @@ attribute [local simp] μ_natural associativity left_unitality right_unitality
 /-- The cartesian product of two lax monoidal functors is lax monoidal. -/
 @[simps]
 def prod : LaxMonoidalFunctor (B × D) (C × E) :=
-  { F.toFunctor.Prod G.toFunctor with ε := (ε F, ε G), μ := fun X Y => (μ F X.1 Y.1, μ G X.2 Y.2) }
+  { F.toFunctor.Prod G.toFunctor with 
+    ε := (ε F, ε G)
+    μ := fun X Y => (μ F X.1 Y.1, μ G X.2 Y.2) }
 #align category_theory.lax_monoidal_functor.prod CategoryTheory.LaxMonoidalFunctor.prod
 
 end LaxMonoidalFunctor
@@ -393,7 +400,9 @@ variable (C)
 /-- The diagonal functor as a monoidal functor. -/
 @[simps]
 def diag : MonoidalFunctor C (C × C) :=
-  { Functor.diag C with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
+  { Functor.diag C with 
+    ε := 𝟙 _
+    μ := fun X Y => 𝟙 _ }
 #align category_theory.monoidal_functor.diag CategoryTheory.MonoidalFunctor.diag
 
 end MonoidalFunctor
@@ -438,7 +447,7 @@ def comp : MonoidalFunctor.{v₁, v₃} C E :=
   { F.toLaxMonoidalFunctor.comp G.toLaxMonoidalFunctor with
     ε_is_iso := by 
       dsimp
-      infer_instance,
+      infer_instance
     μ_is_iso := by 
       dsimp
       infer_instance }
@@ -463,7 +472,7 @@ variable (F : MonoidalFunctor.{v₀, v₁} B C) (G : MonoidalFunctor.{v₂, v₃
 @[simps]
 def prod : MonoidalFunctor (B × D) (C × E) :=
   { F.toLaxMonoidalFunctor.Prod G.toLaxMonoidalFunctor with
-    ε_is_iso := (is_iso_prod_iff C E).mpr ⟨ε_is_iso F, ε_is_iso G⟩,
+    ε_is_iso := (is_iso_prod_iff C E).mpr ⟨ε_is_iso F, ε_is_iso G⟩
     μ_is_iso := fun X Y => (is_iso_prod_iff C E).mpr ⟨μ_is_iso F X.1 Y.1, μ_is_iso G X.2 Y.2⟩ }
 #align category_theory.monoidal_functor.prod CategoryTheory.MonoidalFunctor.prod
 

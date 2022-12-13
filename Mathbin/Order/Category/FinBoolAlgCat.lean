@@ -85,7 +85,7 @@ instance forget_to_BoolAlg_faithful : Faithful (forget₂ FinBoolAlgCat BoolAlgC
 instance hasForgetToFinPartialOrder :
     HasForget₂ FinBoolAlgCat
       FinPartialOrderCat where forget₂ :=
-    { obj := fun X => FinPartialOrderCat.of X,
+    { obj := fun X => FinPartialOrderCat.of X
       map := fun X Y f => show OrderHom X Y from ↑(show BoundedLatticeHom X Y from f) }
 #align FinBoolAlg.has_forget_to_FinPartialOrder FinBoolAlgCat.hasForgetToFinPartialOrder
 

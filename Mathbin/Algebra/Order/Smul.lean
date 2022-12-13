@@ -55,11 +55,13 @@ variable {ι 𝕜 R M N : Type _}
 namespace OrderDual
 
 instance [Zero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
-  { OrderDual.hasSmul with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
+  { OrderDual.hasSmul with 
+    zero_smul := fun m => OrderDual.rec (zero_smul _) m
     smul_zero := fun r => OrderDual.rec smul_zero r }
 
 instance [Monoid R] [MulAction R M] : MulAction R Mᵒᵈ :=
-  { OrderDual.hasSmul with one_smul := fun m => OrderDual.rec (one_smul _) m,
+  { OrderDual.hasSmul with 
+    one_smul := fun m => OrderDual.rec (one_smul _) m
     mul_smul := fun r => OrderDual.rec mul_smul r }
 
 instance [MonoidWithZero R] [AddMonoid M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
@@ -162,7 +164,7 @@ end OrderedSmul
 axiom of `ordered_smul`. -/
 theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [SmulWithZero 𝕜 M]
     (h : ∀ ⦃c : 𝕜⦄, 0 < c → StrictMono fun a : M => c • a) : OrderedSmul 𝕜 M :=
-  { smul_lt_smul_of_pos := fun a b c hab hc => h hc hab,
+  { smul_lt_smul_of_pos := fun a b c hab hc => h hc hab
     lt_of_smul_lt_smul_of_pos := fun a b c hab hc => (h hc).lt_iff_lt.1 hab }
 #align ordered_smul.mk'' OrderedSmul.mk''
 

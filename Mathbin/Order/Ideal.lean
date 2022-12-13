@@ -346,17 +346,18 @@ variable [SemilatticeSup P] [IsDirected P (· ≥ ·)] {x : P} {I J K s t : Idea
 /-- The infimum of two ideals of a co-directed order is their intersection. -/
 instance : HasInf (Ideal P) :=
   ⟨fun I J =>
-    { toLowerSet := I.toLowerSet ⊓ J.toLowerSet, nonempty' := inter_nonempty I J,
+    { toLowerSet := I.toLowerSet ⊓ J.toLowerSet
+      nonempty' := inter_nonempty I J
       directed' := fun x hx y hy => ⟨x ⊔ y, ⟨sup_mem hx.1 hy.1, sup_mem hx.2 hy.2⟩, by simp⟩ }⟩
 
 /-- The supremum of two ideals of a co-directed order is the union of the down sets of the pointwise
 supremum of `I` and `J`. -/
 instance : HasSup (Ideal P) :=
   ⟨fun I J =>
-    { carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j },
+    { carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j }
       nonempty' := by 
         cases inter_nonempty I J
-        exact ⟨w, w, h.1, w, h.2, le_sup_left⟩,
+        exact ⟨w, w, h.1, w, h.2, le_sup_left⟩
       directed' := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
         ⟨x ⊔ y,
           ⟨xi ⊔ yi, sup_mem ‹_› ‹_›, xj ⊔ yj, sup_mem ‹_› ‹_›,
@@ -369,23 +370,26 @@ instance : HasSup (Ideal P) :=
                 y ≤ yi ⊔ yj := ‹_›
                 _ ≤ xi ⊔ yi ⊔ (xj ⊔ yj) := sup_le_sup le_sup_right le_sup_right
                 )⟩,
-          le_sup_left, le_sup_right⟩,
+          le_sup_left, le_sup_right⟩
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∈ » I) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
-  { Ideal.partialOrder with sup := (· ⊔ ·),
+  { Ideal.partialOrder with 
+    sup := (· ⊔ ·)
     le_sup_left := fun I J i (_ : i ∈ I) => by
       cases J.nonempty
-      exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩,
+      exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩
     le_sup_right := fun I J j (_ : j ∈ J) => by
       cases I.nonempty
-      exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩,
+      exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩
     sup_le := fun I J K hIK hJK a ⟨i, hi, j, hj, ha⟩ =>
-      K.lower ha <| sup_mem (mem_of_mem_of_le hi hIK) (mem_of_mem_of_le hj hJK),
-    inf := (· ⊓ ·), inf_le_left := fun I J => inter_subset_left I J,
-    inf_le_right := fun I J => inter_subset_right I J, le_inf := fun I J K => subset_inter }
+      K.lower ha <| sup_mem (mem_of_mem_of_le hi hIK) (mem_of_mem_of_le hj hJK)
+    inf := (· ⊓ ·)
+    inf_le_left := fun I J => inter_subset_left I J
+    inf_le_right := fun I J => inter_subset_right I J
+    le_inf := fun I J K => subset_inter }
 
 @[simp]
 theorem coe_sup : ↑(s ⊔ t) = { x | ∃ a ∈ s, ∃ b ∈ t, x ≤ a ⊔ b } :=
@@ -419,11 +423,11 @@ variable [SemilatticeSup P] [OrderBot P] {x : P} {I J K : Ideal P}
 
 instance : HasInf (Ideal P) :=
   ⟨fun S =>
-    { toLowerSet := ⨅ s ∈ S, toLowerSet s,
+    { toLowerSet := ⨅ s ∈ S, toLowerSet s
       nonempty' :=
         ⟨⊥, by 
           rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_Inter₂]
-          exact fun s _ => s.bot_mem⟩,
+          exact fun s _ => s.bot_mem⟩
       directed' := fun a ha b hb =>
         ⟨a ⊔ b,
           ⟨by 
@@ -506,7 +510,8 @@ namespace Cofinal
 variable [Preorder P]
 
 instance : Inhabited (Cofinal P) :=
-  ⟨{ carrier := univ, mem_gt := fun x => ⟨x, trivial, le_rfl⟩ }⟩
+  ⟨{  carrier := univ
+      mem_gt := fun x => ⟨x, trivial, le_rfl⟩ }⟩
 
 instance : Membership P (Cofinal P) :=
   ⟨fun x D => x ∈ D.carrier⟩

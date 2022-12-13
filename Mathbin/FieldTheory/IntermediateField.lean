@@ -280,7 +280,9 @@ end IntermediateField
 /-- Turn a subalgebra closed under inverses into an intermediate field -/
 def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x ∈ S, x⁻¹ ∈ S) :
     IntermediateField K L :=
-  { S with neg_mem' := fun x => S.neg_mem, inv_mem' := inv_mem }
+  { S with 
+    neg_mem' := fun x => S.neg_mem
+    inv_mem' := inv_mem }
 #align subalgebra.to_intermediate_field Subalgebra.toIntermediateField
 
 @[simp]
@@ -407,7 +409,7 @@ def map (f : L →ₐ[K] L') (S : IntermediateField K L) : IntermediateField K L
   { S.toSubalgebra.map f with
     inv_mem' := by 
       rintro _ ⟨x, hx, rfl⟩
-      exact ⟨x⁻¹, S.inv_mem hx, map_inv₀ f x⟩,
+      exact ⟨x⁻¹, S.inv_mem hx, map_inv₀ f x⟩
     neg_mem' := fun x hx => (S.toSubalgebra.map f).neg_mem hx }
 #align intermediate_field.map IntermediateField.map
 

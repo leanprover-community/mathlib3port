@@ -146,7 +146,9 @@ def liftedLimitIsLimit {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone 
 /-- If `F` creates the limit of `K` and `K ⋙ F` has a limit, then `K` has a limit. -/
 theorem has_limit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasLimit (K ⋙ F)] [CreatesLimit K F] :
     HasLimit K :=
-  HasLimit.mk { Cone := liftLimit (limit.isLimit (K ⋙ F)), IsLimit := liftedLimitIsLimit _ }
+  HasLimit.mk
+    { Cone := liftLimit (limit.isLimit (K ⋙ F))
+      IsLimit := liftedLimitIsLimit _ }
 #align category_theory.has_limit_of_created CategoryTheory.has_limit_of_created
 
 /-- If `F` creates limits of shape `J`, and `D` has limits of shape `J`, then
@@ -188,7 +190,8 @@ def liftedColimitIsColimit {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c :
 theorem has_colimit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasColimit (K ⋙ F)] [CreatesColimit K F] :
     HasColimit K :=
   HasColimit.mk
-    { Cocone := liftColimit (colimit.isColimit (K ⋙ F)), IsColimit := liftedColimitIsColimit _ }
+    { Cocone := liftColimit (colimit.isColimit (K ⋙ F))
+      IsColimit := liftedColimitIsColimit _ }
 #align category_theory.has_colimit_of_created CategoryTheory.has_colimit_of_created
 
 /-- If `F` creates colimits of shape `J`, and `D` has colimits of shape `J`, then
@@ -282,7 +285,8 @@ of a limit cone for `K ⋙ F`.
 def createsLimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
     {l : Cone (K ⋙ F)} (hl : IsLimit l) (c : Cone K) (i : F.mapCone c ≅ l) : CreatesLimit K F :=
   createsLimitOfReflectsIso fun c' t =>
-    { liftedCone := c, validLift := i ≪≫ IsLimit.uniqueUpToIso hl t,
+    { liftedCone := c
+      validLift := i ≪≫ IsLimit.uniqueUpToIso hl t
       makesLimit :=
         IsLimit.ofFaithful F (IsLimit.ofIsoLimit hl i.symm) _ fun s => F.image_preimage _ }
 #align
@@ -310,9 +314,9 @@ limit point is in the essential image of `F`.
 def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
     {l : Cone (K ⋙ F)} (hl : IsLimit l) (X : C) (i : F.obj X ≅ l.x) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfLift' hl
-    { x,
+    { x
       π :=
-        { app := fun j => F.preimage (i.Hom ≫ l.π.app j),
+        { app := fun j => F.preimage (i.Hom ≫ l.π.app j)
           naturality' := fun Y Z f =>
             F.map_injective <| by 
               dsimp
@@ -395,7 +399,8 @@ def createsColimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [F
     {l : Cocone (K ⋙ F)} (hl : IsColimit l) (c : Cocone K) (i : F.mapCocone c ≅ l) :
     CreatesColimit K F :=
   createsColimitOfReflectsIso fun c' t =>
-    { liftedCocone := c, validLift := i ≪≫ IsColimit.uniqueUpToIso hl t,
+    { liftedCocone := c
+      validLift := i ≪≫ IsColimit.uniqueUpToIso hl t
       makesColimit :=
         IsColimit.ofFaithful F (IsColimit.ofIsoColimit hl i.symm) _ fun s => F.image_preimage _ }
 #align
@@ -425,9 +430,9 @@ a colimit point is in the essential image of `F`.
 def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
     {l : Cocone (K ⋙ F)} (hl : IsColimit l) (X : C) (i : F.obj X ≅ l.x) : CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfLift' hl
-    { x,
+    { x
       ι :=
-        { app := fun j => F.preimage (l.ι.app j ≫ i.inv),
+        { app := fun j => F.preimage (l.ι.app j ≫ i.inv)
           naturality' := fun Y Z f =>
             F.map_injective <| by 
               dsimp
@@ -484,7 +489,7 @@ def createsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K
   { reflectsLimitOfIsoDiagram F h with
     lifts := fun c t =>
       let t' := (IsLimit.postcomposeInvEquiv (isoWhiskerRight h F : _) c).symm t
-      { liftedCone := (Cones.postcompose h.Hom).obj (liftLimit t'),
+      { liftedCone := (Cones.postcompose h.Hom).obj (liftLimit t')
         validLift :=
           F.mapConePostcompose ≪≫
             (Cones.postcompose (isoWhiskerRight h F).Hom).mapIso (liftedLimitMapsToOriginal t') ≪≫
@@ -499,7 +504,7 @@ def createsLimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimit K F] :
     CreatesLimit K
       G where 
   lifts c t :=
-    { liftedCone := liftLimit ((IsLimit.postcomposeInvEquiv (isoWhiskerLeft K h : _) c).symm t),
+    { liftedCone := liftLimit ((IsLimit.postcomposeInvEquiv (isoWhiskerLeft K h : _) c).symm t)
       validLift := by 
         refine' (is_limit.map_cone_equiv h _).uniqueUpToIso t
         apply is_limit.of_iso_limit _ (lifted_limit_maps_to_original _).symm
@@ -525,7 +530,7 @@ def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅
   { reflectsColimitOfIsoDiagram F h with
     lifts := fun c t =>
       let t' := (IsColimit.precomposeHomEquiv (isoWhiskerRight h F : _) c).symm t
-      { liftedCocone := (Cocones.precompose h.inv).obj (liftColimit t'),
+      { liftedCocone := (Cocones.precompose h.inv).obj (liftColimit t')
         validLift :=
           F.mapCoconePrecompose ≪≫
             (Cocones.precompose (isoWhiskerRight h F).inv).mapIso
@@ -541,8 +546,7 @@ def createsColimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimit K F] :
     CreatesColimit K
       G where 
   lifts c t :=
-    { liftedCocone :=
-        liftColimit ((IsColimit.precomposeHomEquiv (isoWhiskerLeft K h : _) c).symm t),
+    { liftedCocone := liftColimit ((IsColimit.precomposeHomEquiv (isoWhiskerLeft K h : _) c).symm t)
       validLift := by 
         refine' (is_colimit.map_cocone_equiv h _).uniqueUpToIso t
         apply is_colimit.of_iso_colimit _ (lifted_colimit_maps_to_original _).symm
@@ -586,7 +590,9 @@ def liftsToColimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F] (c 
 def idLiftsCone (c : Cone (K ⋙ 𝟭 C)) :
     LiftableCone K (𝟭 C)
       c where 
-  liftedCone := { x := c.x, π := c.π ≫ K.rightUnitor.Hom }
+  liftedCone :=
+    { x := c.x
+      π := c.π ≫ K.rightUnitor.Hom }
   validLift := Cones.ext (Iso.refl _) (by tidy)
 #align category_theory.id_lifts_cone CategoryTheory.idLiftsCone
 
@@ -602,7 +608,9 @@ instance idCreatesLimits :
 def idLiftsCocone (c : Cocone (K ⋙ 𝟭 C)) :
     LiftableCocone K (𝟭 C)
       c where 
-  liftedCocone := { x := c.x, ι := K.rightUnitor.inv ≫ c.ι }
+  liftedCocone :=
+    { x := c.x
+      ι := K.rightUnitor.inv ≫ c.ι }
   validLift := Cocones.ext (Iso.refl _) (by tidy)
 #align category_theory.id_lifts_cocone CategoryTheory.idLiftsCocone
 
@@ -644,7 +652,7 @@ instance compCreatesLimit [CreatesLimit K F] [CreatesLimit (K ⋙ F) G] :
     CreatesLimit K
       (F ⋙
         G) where lifts c t :=
-    { liftedCone := liftLimit (liftedLimitIsLimit t),
+    { liftedCone := liftLimit (liftedLimitIsLimit t)
       validLift :=
         (Cones.functoriality (K ⋙ F) G).mapIso (liftedLimitMapsToOriginal (liftedLimitIsLimit t)) ≪≫
           liftedLimitMapsToOriginal t }
@@ -662,7 +670,7 @@ instance compCreatesColimit [CreatesColimit K F] [CreatesColimit (K ⋙ F) G] :
     CreatesColimit K
       (F ⋙
         G) where lifts c t :=
-    { liftedCocone := liftColimit (liftedColimitIsColimit t),
+    { liftedCocone := liftColimit (liftedColimitIsColimit t)
       validLift :=
         (Cocones.functoriality (K ⋙ F) G).mapIso
             (liftedColimitMapsToOriginal (liftedColimitIsColimit t)) ≪≫

@@ -56,7 +56,9 @@ def lmk (s : Finset ι) :
 
 /-- `dfinsupp.single` as a `linear_map` -/
 def lsingle (i) : M i →ₗ[R] Π₀ i, M i :=
-  { Dfinsupp.singleAddHom _ _ with toFun := single i, map_smul' := single_smul }
+  { Dfinsupp.singleAddHom _ _ with 
+    toFun := single i
+    map_smul' := single_smul }
 #align dfinsupp.lsingle Dfinsupp.lsingle
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere. -/
@@ -136,8 +138,8 @@ def lsum [Semiring S] [Module S N] [SmulCommClass R S N] :
       (Π₀ i, M i) →ₗ[R]
         N where 
   toFun F :=
-    { toFun := sumAddHom fun i => (F i).toAddMonoidHom,
-      map_add' := (liftAddHom fun i => (F i).toAddMonoidHom).map_add,
+    { toFun := sumAddHom fun i => (F i).toAddMonoidHom
+      map_add' := (liftAddHom fun i => (F i).toAddMonoidHom).map_add
       map_smul' := fun c f => by 
         dsimp
         apply Dfinsupp.induction f
@@ -195,7 +197,7 @@ theorem map_range_smul (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) 
 @[simps apply]
 def mapRange.linearMap (f : ∀ i, β₁ i →ₗ[R] β₂ i) : (Π₀ i, β₁ i) →ₗ[R] Π₀ i, β₂ i :=
   { mapRange.addMonoidHom fun i => (f i).toAddMonoidHom with
-    toFun := mapRange (fun i x => f i x) fun i => (f i).map_zero,
+    toFun := mapRange (fun i x => f i x) fun i => (f i).map_zero
     map_smul' := fun r => map_range_smul _ _ _ fun i => (f i).map_smul r }
 #align dfinsupp.map_range.linear_map Dfinsupp.mapRange.linearMap
 
@@ -228,7 +230,7 @@ omit dec_ι
 @[simps apply]
 def mapRange.linearEquiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β₁ i) ≃ₗ[R] Π₀ i, β₂ i :=
   { mapRange.addEquiv fun i => (e i).toAddEquiv, mapRange.linearMap fun i => (e i).toLinearMap with
-    toFun := mapRange (fun i x => e i x) fun i => (e i).map_zero,
+    toFun := mapRange (fun i x => e i x) fun i => (e i).map_zero
     invFun := mapRange (fun i x => (e i).symm x) fun i => (e i).symm.map_zero }
 #align dfinsupp.map_range.linear_equiv Dfinsupp.mapRange.linearEquiv
 

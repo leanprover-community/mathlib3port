@@ -127,9 +127,11 @@ unsafe def nth_rewrite_rhs (n : parse small_nat) (q : parse rw_rules) (l : parse
 attribute [inherit_doc.1nth_rewrite] nth_rewrite_lhs nth_rewrite_rhs
 
 add_tactic_doc
-  { Name := "nth_rewrite / nth_rewrite_lhs / nth_rewrite_rhs", category := DocCategory.tactic,
-    inheritDescriptionFrom := `` nth_rewrite,
-    declNames := [`` nth_rewrite, `` nth_rewrite_lhs, `` nth_rewrite_rhs], tags := ["rewriting"] }
+  { Name := "nth_rewrite / nth_rewrite_lhs / nth_rewrite_rhs"
+    category := DocCategory.tactic
+    inheritDescriptionFrom := `` nth_rewrite
+    declNames := [`` nth_rewrite, `` nth_rewrite_lhs, `` nth_rewrite_rhs]
+    tags := ["rewriting"] }
 
 end Interactive
 

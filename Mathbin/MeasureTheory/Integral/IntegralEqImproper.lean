@@ -90,19 +90,19 @@ theorem aeCoverIcc : AeCover μ l fun i => icc (a i) (b i) :=
   { ae_eventually_mem :=
       ae_of_all μ fun x =>
         (ha.Eventually <| eventually_le_at_bot x).mp <|
-          (hb.Eventually <| eventually_ge_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩,
+          (hb.Eventually <| eventually_ge_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩
     Measurable := fun i => measurableSetIcc }
 #align measure_theory.ae_cover_Icc MeasureTheory.aeCoverIcc
 
 theorem aeCoverIci : AeCover μ l fun i => Ici <| a i :=
   { ae_eventually_mem :=
-      ae_of_all μ fun x => (ha.Eventually <| eventually_le_at_bot x).mono fun i hai => hai,
+      ae_of_all μ fun x => (ha.Eventually <| eventually_le_at_bot x).mono fun i hai => hai
     Measurable := fun i => measurableSetIci }
 #align measure_theory.ae_cover_Ici MeasureTheory.aeCoverIci
 
 theorem aeCoverIic : AeCover μ l fun i => Iic <| b i :=
   { ae_eventually_mem :=
-      ae_of_all μ fun x => (hb.Eventually <| eventually_ge_at_top x).mono fun i hbi => hbi,
+      ae_of_all μ fun x => (hb.Eventually <| eventually_ge_at_top x).mono fun i hbi => hbi
     Measurable := fun i => measurableSetIic }
 #align measure_theory.ae_cover_Iic MeasureTheory.aeCoverIic
 
@@ -117,7 +117,7 @@ theorem aeCoverIoo [NoMinOrder α] [NoMaxOrder α] : AeCover μ l fun i => ioo (
   { ae_eventually_mem :=
       ae_of_all μ fun x =>
         (ha.Eventually <| eventually_lt_at_bot x).mp <|
-          (hb.Eventually <| eventually_gt_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩,
+          (hb.Eventually <| eventually_gt_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩
     Measurable := fun i => measurableSetIoo }
 #align measure_theory.ae_cover_Ioo MeasureTheory.aeCoverIoo
 
@@ -125,7 +125,7 @@ theorem aeCoverIoc [NoMinOrder α] : AeCover μ l fun i => ioc (a i) (b i) :=
   { ae_eventually_mem :=
       ae_of_all μ fun x =>
         (ha.Eventually <| eventually_lt_at_bot x).mp <|
-          (hb.Eventually <| eventually_ge_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩,
+          (hb.Eventually <| eventually_ge_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩
     Measurable := fun i => measurableSetIoc }
 #align measure_theory.ae_cover_Ioc MeasureTheory.aeCoverIoc
 
@@ -133,19 +133,19 @@ theorem aeCoverIco [NoMaxOrder α] : AeCover μ l fun i => ico (a i) (b i) :=
   { ae_eventually_mem :=
       ae_of_all μ fun x =>
         (ha.Eventually <| eventually_le_at_bot x).mp <|
-          (hb.Eventually <| eventually_gt_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩,
+          (hb.Eventually <| eventually_gt_at_top x).mono fun i hbi hai => ⟨hai, hbi⟩
     Measurable := fun i => measurableSetIco }
 #align measure_theory.ae_cover_Ico MeasureTheory.aeCoverIco
 
 theorem aeCoverIoi [NoMinOrder α] : AeCover μ l fun i => Ioi <| a i :=
   { ae_eventually_mem :=
-      ae_of_all μ fun x => (ha.Eventually <| eventually_lt_at_bot x).mono fun i hai => hai,
+      ae_of_all μ fun x => (ha.Eventually <| eventually_lt_at_bot x).mono fun i hai => hai
     Measurable := fun i => measurableSetIoi }
 #align measure_theory.ae_cover_Ioi MeasureTheory.aeCoverIoi
 
 theorem aeCoverIio [NoMaxOrder α] : AeCover μ l fun i => Iio <| b i :=
   { ae_eventually_mem :=
-      ae_of_all μ fun x => (hb.Eventually <| eventually_gt_at_top x).mono fun i hbi => hbi,
+      ae_of_all μ fun x => (hb.Eventually <| eventually_gt_at_top x).mono fun i hbi => hbi
     Measurable := fun i => measurableSetIio }
 #align measure_theory.ae_cover_Iio MeasureTheory.aeCoverIio
 
@@ -161,7 +161,7 @@ theorem aeCoverIooOfIcc : AeCover (μ.restrict <| ioo A B) l fun i => icc (a i) 
       (ae_restrict_iff' measurableSetIoo).mpr
         (ae_of_all μ fun x hx =>
           (ha.Eventually <| eventually_le_nhds hx.left).mp <|
-            (hb.Eventually <| eventually_ge_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+            (hb.Eventually <| eventually_ge_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩)
     Measurable := fun i => measurableSetIcc }
 #align measure_theory.ae_cover_Ioo_of_Icc MeasureTheory.aeCoverIooOfIcc
 
@@ -170,7 +170,7 @@ theorem aeCoverIooOfIco : AeCover (μ.restrict <| ioo A B) l fun i => ico (a i) 
       (ae_restrict_iff' measurableSetIoo).mpr
         (ae_of_all μ fun x hx =>
           (ha.Eventually <| eventually_le_nhds hx.left).mp <|
-            (hb.Eventually <| eventually_gt_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+            (hb.Eventually <| eventually_gt_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩)
     Measurable := fun i => measurableSetIco }
 #align measure_theory.ae_cover_Ioo_of_Ico MeasureTheory.aeCoverIooOfIco
 
@@ -179,7 +179,7 @@ theorem aeCoverIooOfIoc : AeCover (μ.restrict <| ioo A B) l fun i => ioc (a i) 
       (ae_restrict_iff' measurableSetIoo).mpr
         (ae_of_all μ fun x hx =>
           (ha.Eventually <| eventually_lt_nhds hx.left).mp <|
-            (hb.Eventually <| eventually_ge_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+            (hb.Eventually <| eventually_ge_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩)
     Measurable := fun i => measurableSetIoc }
 #align measure_theory.ae_cover_Ioo_of_Ioc MeasureTheory.aeCoverIooOfIoc
 
@@ -188,7 +188,7 @@ theorem aeCoverIooOfIoo : AeCover (μ.restrict <| ioo A B) l fun i => ioo (a i) 
       (ae_restrict_iff' measurableSetIoo).mpr
         (ae_of_all μ fun x hx =>
           (ha.Eventually <| eventually_lt_nhds hx.left).mp <|
-            (hb.Eventually <| eventually_gt_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+            (hb.Eventually <| eventually_gt_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩)
     Measurable := fun i => measurableSetIoo }
 #align measure_theory.ae_cover_Ioo_of_Ioo MeasureTheory.aeCoverIooOfIoo
 
@@ -258,13 +258,15 @@ end FiniteIntervals
 
 theorem AeCover.restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α} :
     AeCover (μ.restrict s) l φ :=
-  { ae_eventually_mem := ae_restrict_of_ae hφ.ae_eventually_mem, Measurable := hφ.Measurable }
+  { ae_eventually_mem := ae_restrict_of_ae hφ.ae_eventually_mem
+    Measurable := hφ.Measurable }
 #align measure_theory.ae_cover.restrict MeasureTheory.AeCover.restrict
 
 theorem aeCoverRestrictOfAeImp {s : Set α} {φ : ι → Set α} (hs : MeasurableSet s)
     (ae_eventually_mem : ∀ᵐ x ∂μ, x ∈ s → ∀ᶠ n in l, x ∈ φ n)
     (measurable : ∀ n, MeasurableSet <| φ n) : AeCover (μ.restrict s) l φ :=
-  { ae_eventually_mem := by rwa [ae_restrict_iff' hs], Measurable }
+  { ae_eventually_mem := by rwa [ae_restrict_iff' hs]
+    Measurable }
 #align measure_theory.ae_cover_restrict_of_ae_imp MeasureTheory.aeCoverRestrictOfAeImp
 
 theorem AeCover.interRestrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α}
@@ -306,7 +308,7 @@ end AeCover
 theorem AeCover.compTendsto {α ι ι' : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι}
     {l' : Filter ι'} {φ : ι → Set α} (hφ : AeCover μ l φ) {u : ι' → ι} (hu : Tendsto u l' l) :
     AeCover μ l' (φ ∘ u) :=
-  { ae_eventually_mem := hφ.ae_eventually_mem.mono fun x hx => hu.Eventually hx,
+  { ae_eventually_mem := hφ.ae_eventually_mem.mono fun x hx => hu.Eventually hx
     Measurable := fun i => hφ.Measurable (u i) }
 #align measure_theory.ae_cover.comp_tendsto MeasureTheory.AeCover.compTendsto
 
@@ -317,7 +319,7 @@ variable {α ι : Type _} [Countable ι] [MeasurableSpace α] {μ : Measure α}
 theorem AeCover.bUnionIicAeCover [Preorder ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
     AeCover μ atTop fun n : ι => ⋃ (k) (h : k ∈ iic n), φ k :=
   { ae_eventually_mem :=
-      hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_bUnion right_mem_Iic hi,
+      hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_bUnion right_mem_Iic hi
     Measurable := fun i => MeasurableSet.bUnion (to_countable _) fun n _ => hφ.Measurable n }
 #align measure_theory.ae_cover.bUnion_Iic_ae_cover MeasureTheory.AeCover.bUnionIicAeCover
 
@@ -331,7 +333,7 @@ theorem AeCover.bInterIciAeCover [SemilatticeSup ι] [Nonempty ι] {φ : ι → 
           rcases h with ⟨i, hi⟩
           use i
           intro j hj
-          exact mem_bInter fun k hk => hi k (le_trans hj hk)),
+          exact mem_bInter fun k hk => hi k (le_trans hj hk))
     Measurable := fun i => MeasurableSet.bInter (to_countable _) fun n _ => hφ.Measurable n }
 #align measure_theory.ae_cover.bInter_Ici_ae_cover MeasureTheory.AeCover.bInterIciAeCover
 

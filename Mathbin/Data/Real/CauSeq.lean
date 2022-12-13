@@ -366,18 +366,25 @@ end HasSmul
 
 instance : AddGroup (CauSeq β abv) := by
   refine_struct
-            { add := (· + ·), neg := Neg.neg, zero := (0 : CauSeq β abv), sub := Sub.sub,
-              zsmul := (· • ·), nsmul := (· • ·) } <;>
+            { add := (· + ·)
+              neg := Neg.neg
+              zero := (0 : CauSeq β abv)
+              sub := Sub.sub
+              zsmul := (· • ·)
+              nsmul := (· • ·) } <;>
           intros <;>
         try rfl <;>
       apply ext <;>
     simp [add_comm, add_left_comm, sub_eq_add_neg, add_mul]
 
 instance : AddGroupWithOne (CauSeq β abv) :=
-  { CauSeq.addGroup with one := 1, natCast := fun n => const n,
-    nat_cast_zero := congr_arg const Nat.cast_zero,
-    nat_cast_succ := fun n => congr_arg const (Nat.cast_succ n), intCast := fun n => const n,
-    int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n),
+  { CauSeq.addGroup with 
+    one := 1
+    natCast := fun n => const n
+    nat_cast_zero := congr_arg const Nat.cast_zero
+    nat_cast_succ := fun n => congr_arg const (Nat.cast_succ n)
+    intCast := fun n => const n
+    int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n)
     int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_negSucc n) }
 
 instance : Pow (CauSeq β abv) ℕ :=
@@ -400,8 +407,12 @@ theorem const_pow (x : β) (n : ℕ) : const (x ^ n) = const x ^ n :=
 
 instance : Ring (CauSeq β abv) := by
   refine_struct
-            { CauSeq.addGroupWithOne with add := (· + ·), zero := (0 : CauSeq β abv),
-              mul := (· * ·), one := 1, npow := fun n f => f ^ n } <;>
+            { CauSeq.addGroupWithOne with 
+              add := (· + ·)
+              zero := (0 : CauSeq β abv)
+              mul := (· * ·)
+              one := 1
+              npow := fun n f => f ^ n } <;>
           intros <;>
         try rfl <;>
       apply ext <;>

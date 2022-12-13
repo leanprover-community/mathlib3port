@@ -143,7 +143,7 @@ def skyscraperPresheafCoconeOfSpecializes {y : X} (h : p₀ ⤳ y) :
         skyscraperPresheaf p₀ A) where 
   x := A
   ι :=
-    { app := fun U => eq_to_hom <| if_pos <| h.mem_open U.unop.1.2 U.unop.2,
+    { app := fun U => eq_to_hom <| if_pos <| h.mem_open U.unop.1.2 U.unop.2
       naturality' := fun U V inc => by 
         change dite _ _ _ ≫ _ = _; rw [dif_pos]
         · erw [category.comp_id, eq_to_hom_trans]
@@ -190,7 +190,7 @@ def skyscraperPresheafCocone (y : X) :
         skyscraperPresheaf p₀ A) where 
   x := terminal C
   ι :=
-    { app := fun U => terminal.from _,
+    { app := fun U => terminal.from _
       naturality' := fun U V inc => terminalIsTerminal.hom_ext _ _ }
 #align skyscraper_presheaf_cocone skyscraperPresheafCocone
 
@@ -203,14 +203,14 @@ noncomputable def skyscraperPresheafCoconeIsColimitOfNotSpecializes {y : X} (h :
   let h1 : ∃ U : OpenNhds y, p₀ ∉ U.1 :=
     let ⟨U, ho, h₀, hy⟩ := not_specializes_iff_exists_open.mp h
     ⟨⟨⟨U, ho⟩, h₀⟩, hy⟩
-  { desc := fun c => eqToHom (if_neg h1.some_spec).symm ≫ c.ι.app (op h1.some),
+  { desc := fun c => eqToHom (if_neg h1.some_spec).symm ≫ c.ι.app (op h1.some)
     fac' := fun c U => by 
       change _ = c.ι.app (op U.unop)
       simp only [← c.w (hom_of_le <| @inf_le_left _ _ h1.some U.unop).op, ←
         c.w (hom_of_le <| @inf_le_right _ _ h1.some U.unop).op, ← category.assoc]
       congr 1
       refine' ((if_neg _).symm.rec terminal_is_terminal).hom_ext _ _
-      exact fun h => h1.some_spec h.1,
+      exact fun h => h1.some_spec h.1
     uniq' := fun c f H => by 
       rw [← category.id_comp f, ← H, ← category.assoc]
       congr 1; apply terminal_is_terminal.hom_ext }
@@ -734,7 +734,7 @@ def toSkyscraperPresheaf {𝓕 : Presheaf C X} {c : C} (f : 𝓕.stalk p₀ ⟶ 
 def fromStalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ skyscraperPresheaf p₀ c) : 𝓕.stalk p₀ ⟶ c :=
   let χ : Cocone ((OpenNhds.inclusion p₀).op ⋙ 𝓕) :=
     Cocone.mk c <|
-      { app := fun U => f.app (op U.unop.1) ≫ eqToHom (if_pos U.unop.2),
+      { app := fun U => f.app (op U.unop.1) ≫ eqToHom (if_pos U.unop.2)
         naturality' := fun U V inc => by 
           dsimp;
           erw [category.comp_id, ← category.assoc, comp_eq_to_hom_iff, category.assoc,
@@ -829,8 +829,10 @@ def skyscraperPresheafStalkAdjunction [HasColimits C] :
       skyscraperPresheafFunctor
         p₀ where 
   homEquiv c 𝓕 :=
-    { toFun := toSkyscraperPresheaf _, invFun := fromStalk _,
-      left_inv := from_stalk_to_skyscraper _, right_inv := to_skyscraper_from_stalk _ }
+    { toFun := toSkyscraperPresheaf _
+      invFun := fromStalk _
+      left_inv := from_stalk_to_skyscraper _
+      right_inv := to_skyscraper_from_stalk _ }
   Unit := StalkSkyscraperPresheafAdjunctionAuxs.unit _
   counit := StalkSkyscraperPresheafAdjunctionAuxs.counit _
   hom_equiv_unit' 𝓕 c α := by 
@@ -868,7 +870,7 @@ def stalkSkyscraperSheafAdjunction [HasColimits C] :
       ext1
       apply to_skyscraper_from_stalk⟩
   Unit :=
-    { app := fun 𝓕 => ⟨(StalkSkyscraperPresheafAdjunctionAuxs.unit p₀).app 𝓕.1⟩,
+    { app := fun 𝓕 => ⟨(StalkSkyscraperPresheafAdjunctionAuxs.unit p₀).app 𝓕.1⟩
       naturality' := fun 𝓐 𝓑 ⟨f⟩ => by 
         ext1
         apply (StalkSkyscraperPresheafAdjunctionAuxs.unit p₀).naturality }

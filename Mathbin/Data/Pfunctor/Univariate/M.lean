@@ -194,7 +194,8 @@ theorem M.default_consistent [Inhabited F.A] : ∀ n, Agree (default : CofixA F 
 #align pfunctor.M.default_consistent Pfunctor.M.default_consistent
 
 instance M.inhabited [Inhabited F.A] : Inhabited (M F) :=
-  ⟨{ approx := default, consistent := M.default_consistent _ }⟩
+  ⟨{  approx := default
+      consistent := M.default_consistent _ }⟩
 #align pfunctor.M.inhabited Pfunctor.M.inhabited
 
 instance MIntl.inhabited [Inhabited F.A] : Inhabited (MIntl F) :=
@@ -233,7 +234,7 @@ def head (x : M F) :=
 /-- return all the subtrees of the root of a tree `x : M F` -/
 def children (x : M F) (i : F.B (head x)) : M F :=
   let H := fun n : ℕ => @head_succ' _ n 0 x.1 x.2
-  { approx := fun n => children' (x.1 _) (cast (congr_arg _ <| by simp only [head, H] <;> rfl) i),
+  { approx := fun n => children' (x.1 _) (cast (congr_arg _ <| by simp only [head, H] <;> rfl) i)
     consistent := by 
       intro
       have P' := x.2 (succ n)

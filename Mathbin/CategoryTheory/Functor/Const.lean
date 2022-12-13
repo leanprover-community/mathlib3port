@@ -31,9 +31,12 @@ variable {C : Type u₂} [Category.{v₂} C]
 /-- The functor sending `X : C` to the constant functor `J ⥤ C` sending everything to `X`.
 -/
 @[simps]
-def const : C ⥤
-      J ⥤ C where 
-  obj X := { obj := fun j => X, map := fun j j' f => 𝟙 X }
+def const :
+    C ⥤ J ⥤
+        C where 
+  obj X :=
+    { obj := fun j => X
+      map := fun j j' f => 𝟙 X }
   map X Y f := { app := fun j => f }
 #align category_theory.functor.const CategoryTheory.Functor.const
 

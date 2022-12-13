@@ -493,7 +493,9 @@ theorem norm_neg ⦃f : lp E p⦄ : ‖-f‖ = ‖f‖ := by
 
 instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p) :=
   AddGroupNorm.toNormedAddCommGroup
-    { toFun := norm, map_zero' := norm_zero, neg' := norm_neg,
+    { toFun := norm
+      map_zero' := norm_zero
+      neg' := norm_neg
       add_le' := fun f g => by 
         rcases p.dichotomy with (rfl | hp')
         · cases isEmpty_or_nonempty α
@@ -517,7 +519,7 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p) :=
           rw [← Real.rpow_le_rpow_iff (norm_nonneg' (f + g)) hC₁ hp'']
           refine' has_sum_le _ (lp.has_sum_norm hp'' (f + g)) hCfg
           intro i
-          exact Real.rpow_le_rpow (norm_nonneg _) (norm_add_le _ _) hp''.le,
+          exact Real.rpow_le_rpow (norm_nonneg _) (norm_add_le _ _) hp''.le
       eq_zero_of_map_eq_zero' := fun f => norm_eq_zero_iff.1 }
 
 -- TODO: define an `ennreal` version of `is_conjugate_exponent`, and then express this inequality
@@ -823,7 +825,9 @@ variable (B)
 /-- The `𝕜`-subring of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
 with extra structure. -/
 def lpInftySubring : Subring (PreLp B) :=
-  { lp B ∞ with carrier := { f | Memℓp f ∞ }, one_mem' := oneMemℓpInfty,
+  { lp B ∞ with 
+    carrier := { f | Memℓp f ∞ }
+    one_mem' := oneMemℓpInfty
     mul_mem' := fun f g hf hg => hf.inftyMul hg }
 #align lp_infty_subring lpInftySubring
 
@@ -921,7 +925,9 @@ variable (𝕜 B)
 /-- The `𝕜`-subalgebra of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
 with extra structure. -/
 def lpInftySubalgebra : Subalgebra 𝕜 (PreLp B) :=
-  { lpInftySubring B with carrier := { f | Memℓp f ∞ }, algebra_map_mem' := algebraMapMemℓpInfty }
+  { lpInftySubring B with 
+    carrier := { f | Memℓp f ∞ }
+    algebra_map_mem' := algebraMapMemℓpInfty }
 #align lp_infty_subalgebra lpInftySubalgebra
 
 variable {𝕜 B}

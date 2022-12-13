@@ -496,7 +496,8 @@ instance :
     HasSmul R
       (NormedAddGroupHom V₁
         V₂) where smul r f :=
-    { toFun := r • f, map_add' := (r • f.toAddMonoidHom).map_add',
+    { toFun := r • f
+      map_add' := (r • f.toAddMonoidHom).map_add'
       bound' :=
         let ⟨b, hb⟩ := f.bound'
         ⟨dist r 0 * b, fun x => by 
@@ -535,7 +536,8 @@ instance hasNatScalar :
     HasSmul ℕ
       (NormedAddGroupHom V₁
         V₂) where smul n f :=
-    { toFun := n • f, map_add' := (n • f.toAddMonoidHom).map_add',
+    { toFun := n • f
+      map_add' := (n • f.toAddMonoidHom).map_add'
       bound' :=
         let ⟨b, hb⟩ := f.bound'
         ⟨n • b, fun v => by 
@@ -557,7 +559,8 @@ instance hasIntScalar :
     HasSmul ℤ
       (NormedAddGroupHom V₁
         V₂) where smul z f :=
-    { toFun := z • f, map_add' := (z • f.toAddMonoidHom).map_add',
+    { toFun := z • f
+      map_add' := (z • f.toAddMonoidHom).map_add'
       bound' :=
         let ⟨b, hb⟩ := f.bound'
         ⟨‖z‖ • b, fun v => by 
@@ -587,7 +590,10 @@ instance : AddCommGroup (NormedAddGroupHom V₁ V₂) :=
     the operator norm. -/
 instance toSeminormedAddCommGroup : SeminormedAddCommGroup (NormedAddGroupHom V₁ V₂) :=
   AddGroupSeminorm.toSeminormedAddCommGroup
-    { toFun := opNorm, map_zero' := op_norm_zero, neg' := op_norm_neg, add_le' := op_norm_add_le }
+    { toFun := opNorm
+      map_zero' := op_norm_zero
+      neg' := op_norm_neg
+      add_le' := op_norm_add_le }
 #align normed_add_group_hom.to_seminormed_add_comm_group NormedAddGroupHom.toSeminormedAddCommGroup
 
 /-- Normed group homomorphisms themselves form a normed group with respect to
@@ -595,7 +601,10 @@ instance toSeminormedAddCommGroup : SeminormedAddCommGroup (NormedAddGroupHom V�
 instance toNormedAddCommGroup {V₁ V₂ : Type _} [NormedAddCommGroup V₁] [NormedAddCommGroup V₂] :
     NormedAddCommGroup (NormedAddGroupHom V₁ V₂) :=
   AddGroupNorm.toNormedAddCommGroup
-    { toFun := opNorm, map_zero' := op_norm_zero, neg' := op_norm_neg, add_le' := op_norm_add_le,
+    { toFun := opNorm
+      map_zero' := op_norm_zero
+      neg' := op_norm_neg
+      add_le' := op_norm_add_le
       eq_zero_of_map_eq_zero' := fun f => op_norm_zero_iff.1 }
 #align normed_add_group_hom.to_normed_add_comm_group NormedAddGroupHom.toNormedAddCommGroup
 

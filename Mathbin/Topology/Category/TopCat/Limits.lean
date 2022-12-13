@@ -45,7 +45,7 @@ def limitCone (F : J ⥤ TopCat.{max v u}) :
   x := TopCat.of { u : ∀ j : J, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j }
   π :=
     { app := fun j =>
-        { toFun := fun u => u.val j,
+        { toFun := fun u => u.val j
           continuous_to_fun :=
             show Continuous ((fun u : ∀ j : J, F.obj j => u j) ∘ Subtype.val) by continuity } }
 #align Top.limit_cone TopCat.limitCone
@@ -63,7 +63,7 @@ def limitConeInfi (F : J ⥤ TopCat.{max v u}) :
       ⨅ j, (F.obj j).str.induced ((Types.limitCone (F ⋙ forget)).π.app j)⟩
   π :=
     { app := fun j =>
-        ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infi_le _ _)⟩,
+        ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infi_le _ _)⟩
       naturality' := fun j j' f =>
         ContinuousMap.coe_injective ((Types.limitCone (F ⋙ forget)).π.naturality f) }
 #align Top.limit_cone_infi TopCat.limitConeInfi
@@ -104,7 +104,10 @@ instance Top_has_limits_of_size :
     HasLimitsOfSize.{v}
       TopCat.{max v
           u} where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
+    { HasLimit := fun F =>
+        has_limit.mk
+          { Cone := limit_cone F
+            IsLimit := limit_cone_is_limit F } }
 #align Top.Top_has_limits_of_size TopCat.Top_has_limits_of_size
 
 instance Top_has_limits : HasLimits TopCat.{u} :=
@@ -139,7 +142,7 @@ def colimitCocone (F : J ⥤ TopCat.{max v u}) :
       ⨆ j, (F.obj j).str.coinduced ((Types.colimitCocone (F ⋙ forget)).ι.app j)⟩
   ι :=
     { app := fun j =>
-        ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supr _ j)⟩,
+        ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supr _ j)⟩
       naturality' := fun j j' f =>
         ContinuousMap.coe_injective ((Types.colimitCocone (F ⋙ forget)).ι.naturality f) }
 #align Top.colimit_cocone TopCat.colimitCocone
@@ -163,7 +166,9 @@ instance Top_has_colimits_of_size :
       TopCat.{max v
           u} where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F =>
-        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+        has_colimit.mk
+          { Cocone := colimit_cocone F
+            IsColimit := colimit_cocone_is_colimit F } }
 #align Top.Top_has_colimits_of_size TopCat.Top_has_colimits_of_size
 
 instance Top_has_colimits : HasColimits TopCat.{u} :=
@@ -253,7 +258,7 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) :
       (sigmaCofan
         α) where 
   desc S :=
-    { toFun := fun s => S.ι.app ⟨s.1⟩ s.2,
+    { toFun := fun s => S.ι.app ⟨s.1⟩ s.2
       continuous_to_fun := continuous_sigma fun i => map_continuous (S.ι.app ⟨i⟩) }
   uniq' := by 
     intro S m h
@@ -731,12 +736,13 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {
   by
   let this : (pullback f g : TopCat) ≃ₜ X :=
     (Homeomorph.ofEmbedding _ (fst_embedding_of_right_embedding f hg)).trans
-      { toFun := coe,
+      { toFun := coe
         invFun := fun x =>
           ⟨x, by 
             rw [pullback_fst_range]
-            exact ⟨_, (H (Set.mem_range_self x)).some_spec.symm⟩⟩,
-        left_inv := fun ⟨_, _⟩ => rfl, right_inv := fun x => rfl }
+            exact ⟨_, (H (Set.mem_range_self x)).some_spec.symm⟩⟩
+        left_inv := fun ⟨_, _⟩ => rfl
+        right_inv := fun x => rfl }
   convert is_iso.of_iso (iso_of_homeo this)
   ext
   rfl
@@ -746,12 +752,13 @@ theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat} {f : X ⟶ S} (h
     (g : Y ⟶ S) (H : Set.range g ⊆ Set.range f) : IsIso (pullback.snd : pullback f g ⟶ Y) := by
   let this : (pullback f g : TopCat) ≃ₜ Y :=
     (Homeomorph.ofEmbedding _ (snd_embedding_of_left_embedding hf g)).trans
-      { toFun := coe,
+      { toFun := coe
         invFun := fun x =>
           ⟨x, by 
             rw [pullback_snd_range]
-            exact ⟨_, (H (Set.mem_range_self x)).some_spec⟩⟩,
-        left_inv := fun ⟨_, _⟩ => rfl, right_inv := fun x => rfl }
+            exact ⟨_, (H (Set.mem_range_self x)).some_spec⟩⟩
+        left_inv := fun ⟨_, _⟩ => rfl
+        right_inv := fun x => rfl }
   convert is_iso.of_iso (iso_of_homeo this)
   ext
   rfl

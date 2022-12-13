@@ -201,11 +201,11 @@ def isoOfIso {X Y : Mon_ C} {P Q : BimodCat X Y} (f : P.x ≅ Q.x)
     P ≅ Q where 
   Hom := ⟨f.Hom⟩
   inv :=
-    { Hom := f.inv,
+    { Hom := f.inv
       left_act_hom' := by
         rw [← cancel_mono f.hom, category.assoc, category.assoc, iso.inv_hom_id, category.comp_id,
           f_left_act_hom, ← category.assoc, ← id_tensor_comp, iso.inv_hom_id,
-          monoidal_category.tensor_id, category.id_comp],
+          monoidal_category.tensor_id, category.id_comp]
       right_act_hom' := by
         rw [← cancel_mono f.hom, category.assoc, category.assoc, iso.inv_hom_id, category.comp_id,
           f_right_act_hom, ← category.assoc, ← comp_tensor_id, iso.inv_hom_id,
@@ -827,8 +827,9 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 noncomputable def associatorBimod {W X Y Z : Mon_ C} (L : BimodCat W X) (M : BimodCat X Y)
     (N : BimodCat Y Z) : (L.tensorBimod M).tensorBimod N ≅ L.tensorBimod (M.tensorBimod N) :=
   isoOfIso
-    { Hom := AssociatorBimod.hom L M N, inv := AssociatorBimod.inv L M N,
-      hom_inv_id' := AssociatorBimod.hom_inv_id L M N,
+    { Hom := AssociatorBimod.hom L M N
+      inv := AssociatorBimod.inv L M N
+      hom_inv_id' := AssociatorBimod.hom_inv_id L M N
       inv_hom_id' := AssociatorBimod.inv_hom_id L M N }
     (AssociatorBimod.hom_left_act_hom' L M N) (AssociatorBimod.hom_right_act_hom' L M N)
 #align Bimod.associator_Bimod BimodCat.associatorBimod
@@ -837,8 +838,10 @@ noncomputable def associatorBimod {W X Y Z : Mon_ C} (L : BimodCat W X) (M : Bim
 noncomputable def leftUnitorBimod {X Y : Mon_ C} (M : BimodCat X Y) :
     (regular X).tensorBimod M ≅ M :=
   isoOfIso
-    { Hom := LeftUnitorBimod.hom M, inv := LeftUnitorBimod.inv M,
-      hom_inv_id' := LeftUnitorBimod.hom_inv_id M, inv_hom_id' := LeftUnitorBimod.inv_hom_id M }
+    { Hom := LeftUnitorBimod.hom M
+      inv := LeftUnitorBimod.inv M
+      hom_inv_id' := LeftUnitorBimod.hom_inv_id M
+      inv_hom_id' := LeftUnitorBimod.inv_hom_id M }
     (LeftUnitorBimod.hom_left_act_hom' M) (LeftUnitorBimod.hom_right_act_hom' M)
 #align Bimod.left_unitor_Bimod BimodCat.leftUnitorBimod
 
@@ -846,8 +849,10 @@ noncomputable def leftUnitorBimod {X Y : Mon_ C} (M : BimodCat X Y) :
 noncomputable def rightUnitorBimod {X Y : Mon_ C} (M : BimodCat X Y) :
     M.tensorBimod (regular Y) ≅ M :=
   isoOfIso
-    { Hom := RightUnitorBimod.hom M, inv := RightUnitorBimod.inv M,
-      hom_inv_id' := RightUnitorBimod.hom_inv_id M, inv_hom_id' := RightUnitorBimod.inv_hom_id M }
+    { Hom := RightUnitorBimod.hom M
+      inv := RightUnitorBimod.inv M
+      hom_inv_id' := RightUnitorBimod.hom_inv_id M
+      inv_hom_id' := RightUnitorBimod.inv_hom_id M }
     (RightUnitorBimod.hom_left_act_hom' M) (RightUnitorBimod.hom_right_act_hom' M)
 #align Bimod.right_unitor_Bimod BimodCat.rightUnitorBimod
 

@@ -1046,7 +1046,8 @@ theorem comp (hg : MeasurableEmbedding g) (hf : MeasurableEmbedding f) :
 #align measurable_embedding.comp MeasurableEmbedding.comp
 
 theorem subtypeCoe {s : Set α} (hs : MeasurableSet s) : MeasurableEmbedding (coe : s → α) :=
-  { Injective := Subtype.coe_injective, Measurable := measurableSubtypeCoe,
+  { Injective := Subtype.coe_injective
+    Measurable := measurableSubtypeCoe
     measurableSetImage' := fun _ => MeasurableSet.subtypeImage hs }
 #align measurable_embedding.subtype_coe MeasurableEmbedding.subtypeCoe
 
@@ -1267,7 +1268,8 @@ theorem measurable_set_image (e : α ≃ᵐ β) {s : Set α} : MeasurableSet (e 
 
 /-- A measurable equivalence is a measurable embedding. -/
 protected theorem measurableEmbedding (e : α ≃ᵐ β) : MeasurableEmbedding e :=
-  { Injective := e.Injective, Measurable := e.Measurable,
+  { Injective := e.Injective
+    Measurable := e.Measurable
     measurableSetImage' := fun s => e.measurable_set_image.2 }
 #align measurable_equiv.measurable_embedding MeasurableEquiv.measurableEmbedding
 
@@ -1757,13 +1759,15 @@ instance : PartialOrder (Subtype (MeasurableSet : Set α → Prop)) :=
   PartialOrder.lift _ Subtype.coe_injective
 
 instance : DistribLattice (Subtype (MeasurableSet : Set α → Prop)) :=
-  { MeasurableSet.Subtype.partialOrder with sup := (· ∪ ·),
-    le_sup_left := fun a b => show (a : Set α) ≤ a ⊔ b from le_sup_left,
-    le_sup_right := fun a b => show (b : Set α) ≤ a ⊔ b from le_sup_right,
-    sup_le := fun a b c ha hb => show (a ⊔ b : Set α) ≤ c from sup_le ha hb, inf := (· ∩ ·),
-    inf_le_left := fun a b => show (a ⊓ b : Set α) ≤ a from inf_le_left,
-    inf_le_right := fun a b => show (a ⊓ b : Set α) ≤ b from inf_le_right,
-    le_inf := fun a b c ha hb => show (a : Set α) ≤ b ⊓ c from le_inf ha hb,
+  { MeasurableSet.Subtype.partialOrder with 
+    sup := (· ∪ ·)
+    le_sup_left := fun a b => show (a : Set α) ≤ a ⊔ b from le_sup_left
+    le_sup_right := fun a b => show (b : Set α) ≤ a ⊔ b from le_sup_right
+    sup_le := fun a b c ha hb => show (a ⊔ b : Set α) ≤ c from sup_le ha hb
+    inf := (· ∩ ·)
+    inf_le_left := fun a b => show (a ⊓ b : Set α) ≤ a from inf_le_left
+    inf_le_right := fun a b => show (a ⊓ b : Set α) ≤ b from inf_le_right
+    le_inf := fun a b c ha hb => show (a : Set α) ≤ b ⊓ c from le_inf ha hb
     le_sup_inf := fun x y z => show ((x ⊔ y) ⊓ (x ⊔ z) : Set α) ≤ x ⊔ y ⊓ z from le_sup_inf }
 
 instance : BoundedOrder
@@ -1775,10 +1779,11 @@ instance : BoundedOrder
   bot_le a := show (⊥ : Set α) ≤ a from bot_le
 
 instance : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
-  { MeasurableSet.Subtype.boundedOrder, MeasurableSet.Subtype.distribLattice with sdiff := (· \ ·),
-    compl := HasCompl.compl,
-    inf_compl_le_bot := fun a => BooleanAlgebra.inf_compl_le_bot (a : Set α),
-    top_le_sup_compl := fun a => BooleanAlgebra.top_le_sup_compl (a : Set α),
+  { MeasurableSet.Subtype.boundedOrder, MeasurableSet.Subtype.distribLattice with
+    sdiff := (· \ ·)
+    compl := HasCompl.compl
+    inf_compl_le_bot := fun a => BooleanAlgebra.inf_compl_le_bot (a : Set α)
+    top_le_sup_compl := fun a => BooleanAlgebra.top_le_sup_compl (a : Set α)
     sdiff_eq := fun a b => Subtype.eq <| sdiff_eq }
 
 @[measurability]

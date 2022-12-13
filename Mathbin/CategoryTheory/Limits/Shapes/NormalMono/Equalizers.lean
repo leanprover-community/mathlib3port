@@ -51,7 +51,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
     { Cone :=
         PullbackCone.mk a' b' <| by 
           simp at ha' hb'
-          rw [ha', hb'],
+          rw [ha', hb']
       IsLimit :=
         PullbackCone.IsLimit.mk _
           (fun s =>
@@ -125,7 +125,7 @@ irreducible_def has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasLimit (pa
       
   have huu : (pullback.fst : p f g ⟶ X) ≫ f = pullback.fst ≫ g := by rw [hvu, ← huv]
   HasLimit.mk
-    { Cone := Fork.ofι pullback.fst huu,
+    { Cone := Fork.ofι pullback.fst huu
       IsLimit :=
         Fork.IsLimit.mk _
           (fun s =>
@@ -216,7 +216,7 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
     { Cocone :=
         PushoutCocone.mk a' b' <| by 
           simp only [cofork.π_of_π] at ha' hb'
-          rw [ha', hb'],
+          rw [ha', hb']
       IsColimit :=
         PushoutCocone.IsColimit.mk _
           (fun s =>
@@ -292,7 +292,7 @@ irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasColimit
       
   have huu : f ≫ (pushout.inl : Y ⟶ q f g) = g ≫ pushout.inl := by rw [hvu, huv]
   HasColimit.mk
-    { Cocone := Cofork.ofπ pushout.inl huu,
+    { Cocone := Cofork.ofπ pushout.inl huu
       IsColimit :=
         Cofork.IsColimit.mk _
           (fun s =>

@@ -85,7 +85,11 @@ class NonUnitalRingHomClass (F : Type _) (α β : outParam (Type _)) [NonUnitalN
 variable [NonUnitalNonAssocSemiring α] [NonUnitalNonAssocSemiring β] [NonUnitalRingHomClass F α β]
 
 instance : CoeTC F (α →ₙ+* β) :=
-  ⟨fun f => { toFun := f, map_zero' := map_zero f, map_mul' := map_mul f, map_add' := map_add f }⟩
+  ⟨fun f =>
+    { toFun := f
+      map_zero' := map_zero f
+      map_mul' := map_mul f
+      map_add' := map_add f }⟩
 
 end NonUnitalRingHomClass
 
@@ -211,7 +215,9 @@ protected def id (α : Type _) [NonUnitalNonAssocSemiring α] : α →ₙ+* α :
 include rα rβ
 
 instance : Zero (α →ₙ+* β) :=
-  ⟨{ toFun := 0, map_mul' := fun x y => (mul_zero (0 : β)).symm, map_zero' := rfl,
+  ⟨{  toFun := 0
+      map_mul' := fun x y => (mul_zero (0 : β)).symm
+      map_zero' := rfl
       map_add' := fun x y => (add_zero (0 : β)).symm }⟩
 
 instance : Inhabited (α →ₙ+* β) :=
@@ -401,7 +407,10 @@ theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) := by simp [b
 
 instance : CoeTC F (α →+* β) :=
   ⟨fun f =>
-    { toFun := f, map_zero' := map_zero f, map_one' := map_one f, map_mul' := map_mul f,
+    { toFun := f
+      map_zero' := map_zero f
+      map_one' := map_one f
+      map_mul' := map_mul f
       map_add' := map_add f }⟩
 
 instance (priority := 100) RingHomClass.toNonUnitalRingHomClass : NonUnitalRingHomClass F α β :=
@@ -694,7 +703,9 @@ include rβ rγ
 
 /-- Composition of ring homomorphisms is a ring homomorphism. -/
 def comp (g : β →+* γ) (f : α →+* β) : α →+* γ :=
-  { g.toNonUnitalRingHom.comp f.toNonUnitalRingHom with toFun := g ∘ f, map_one' := by simp }
+  { g.toNonUnitalRingHom.comp f.toNonUnitalRingHom with
+    toFun := g ∘ f
+    map_one' := by simp }
 #align ring_hom.comp RingHom.comp
 
 /-- Composition of semiring homomorphisms is associative. -/
@@ -784,7 +795,8 @@ integral domain that commutes with self multiplication, assumes that two is nonz
 to `1`. -/
 def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2 : α) ≠ 0)
     (h_one : f 1 = 1) : β →+* α :=
-  { f with map_one' := h_one,
+  { f with 
+    map_one' := h_one
     map_mul' := fun x y => by 
       have hxy := h (x + y)
       rw [mul_add, add_mul, add_mul, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mul,

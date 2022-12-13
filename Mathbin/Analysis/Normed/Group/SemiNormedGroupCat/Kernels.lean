@@ -63,7 +63,7 @@ instance :
     HasCokernels
       SemiNormedGroup₁Cat.{u} where HasColimit X Y f :=
     HasColimit.mk
-      { Cocone := cokernelCocone f,
+      { Cocone := cokernelCocone f
         IsColimit :=
           isColimitAux _ (cokernelLift f)
             (fun s => by 
@@ -100,7 +100,7 @@ instance has_limit_parallel_pair {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) 
       (parallelPair f
         g) where exists_limit :=
     Nonempty.intro
-      { Cone := fork f g,
+      { Cone := fork f g
         IsLimit :=
           Fork.IsLimit.mk _
             (fun c =>
@@ -160,7 +160,9 @@ def isColimitCokernelCocone {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) :
 instance :
     HasCokernels
       SemiNormedGroupCat.{u} where HasColimit X Y f :=
-    HasColimit.mk { Cocone := cokernelCocone f, IsColimit := isColimitCokernelCocone f }
+    HasColimit.mk
+      { Cocone := cokernelCocone f
+        IsColimit := isColimitCokernelCocone f }
 
 -- Sanity check
 example : HasCokernels SemiNormedGroupCat := by infer_instance

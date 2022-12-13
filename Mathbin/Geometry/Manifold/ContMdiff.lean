@@ -121,7 +121,7 @@ theorem cont_diff_within_at_local_invariant_prop (n : ℕ∞) :
       have : u ∈ 𝓝 (I.symm (I x)) := by
         rw [ModelWithCorners.left_inv]
         exact IsOpen.mem_nhds u_open xu
-      apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this,
+      apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this
     right_invariance' := by 
       intro s x f e he hx h
       rw [ContDiffWithinAtProp] at h⊢
@@ -136,14 +136,14 @@ theorem cont_diff_within_at_local_invariant_prop (n : ℕ∞) :
         mem_nhds_within.mpr
           ⟨I.symm ⁻¹' e.target, e.open_target.preimage I.continuous_symm, by
             simp_rw [mem_preimage, I.left_inv, e.maps_to hx], _⟩
-      mfld_set_tac,
+      mfld_set_tac
     congr_of_forall := by 
       intro s x f g h hx hf
       apply hf.congr
       · intro y hy
         simp only [mfld_simps] at hy
         simp only [h, hy, mfld_simps]
-      · simp only [hx, mfld_simps],
+      · simp only [hx, mfld_simps]
     left_invariance' := by 
       intro s x f e' he' hs hx h
       rw [ContDiffWithinAtProp] at h⊢

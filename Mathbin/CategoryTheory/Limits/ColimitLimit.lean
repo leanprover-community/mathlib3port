@@ -59,20 +59,20 @@ $\colim_k \lim_j F(j,k) → \lim_j \colim_k F(j, k)$.
 noncomputable def colimitLimitToLimitColimit :
     colimit (curry.obj (swap K J ⋙ F) ⋙ lim) ⟶ limit (curry.obj F ⋙ colim) :=
   limit.lift (curry.obj F ⋙ colim)
-    { x := _,
+    { x := _
       π :=
         { app := fun j =>
             colimit.desc (curry.obj (swap K J ⋙ F) ⋙ lim)
-              { x := _,
+              { x := _
                 ι :=
                   { app := fun k =>
                       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫
-                        colimit.ι ((curry.obj F).obj j) k,
+                        colimit.ι ((curry.obj F).obj j) k
                     naturality' := by 
                       dsimp
                       intro k k' f
                       simp only [functor.comp_map, curry_obj_map_app, limits.lim_map_π_assoc,
-                        swap_map, category.comp_id, map_id_left_eq_curry_map, colimit.w] } },
+                        swap_map, category.comp_id, map_id_left_eq_curry_map, colimit.w] } }
           naturality' := by 
             dsimp
             intro j j' f

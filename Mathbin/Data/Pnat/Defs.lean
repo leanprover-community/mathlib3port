@@ -271,9 +271,9 @@ instance : WellFoundedRelation ℕ+ :=
 
 /- warning: pnat.strong_induction_on -> PNat.strongInductionOn is a dubious translation:
 lean 3 declaration is
-  forall {p : PNat -> Sort.{u_1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
+  forall {p : PNat -> Sort.{u1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
 but is expected to have type
-  forall {p : PNat -> Sort.{u_1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
+  forall {p : PNat -> Sort.{u1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
 Case conversion may be inaccurate. Consider using '#align pnat.strong_induction_on PNat.strongInductionOnₓ'. -/
 /-- Strong induction on `ℕ+`. -/
 def strongInductionOn {p : ℕ+ → Sort _} : ∀ (n : ℕ+) (h : ∀ k, (∀ m, m < k → p m) → p k), p n

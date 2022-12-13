@@ -49,9 +49,8 @@ section Initial
 /-- The map from the empty scheme. -/
 @[simps]
 def SchemeCat.emptyTo (X : SchemeCat.{u}) : ∅ ⟶ X :=
-  ⟨{ base := ⟨fun x => PEmpty.elim x, by continuity⟩,
-      c := { app := fun U => CommRingCat.punitIsTerminal.from _ } },
-    fun x => PEmpty.elim x⟩
+  ⟨{  base := ⟨fun x => PEmpty.elim x, by continuity⟩
+      c := { app := fun U => CommRingCat.punitIsTerminal.from _ } }, fun x => PEmpty.elim x⟩
 #align algebraic_geometry.Scheme.empty_to AlgebraicGeometry.SchemeCat.emptyTo
 
 @[ext]

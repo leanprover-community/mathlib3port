@@ -482,7 +482,8 @@ variable [Module R M] [HasContinuousConstSmul R M] [TopologicalAddGroup M]
 
 /-- The `R`-submodule of continuous maps `α → M`. -/
 def continuousSubmodule : Submodule R (α → M) :=
-  { continuousAddSubgroup α M with carrier := { f : α → M | Continuous f },
+  { continuousAddSubgroup α M with
+    carrier := { f : α → M | Continuous f }
     smul_mem' := fun c f hf => hf.const_smul c }
 #align continuous_submodule continuousSubmodule
 
@@ -572,7 +573,9 @@ protected def ContinuousLinearMap.compLeftContinuous (α : Type _) [TopologicalS
 /-- Coercion to a function as a `linear_map`. -/
 @[simps]
 def coeFnLinearMap : C(α, M) →ₗ[R] α → M :=
-  { (coeFnAddMonoidHom : C(α, M) →+ _) with toFun := coeFn, map_smul' := coe_smul }
+  { (coeFnAddMonoidHom : C(α, M) →+ _) with 
+    toFun := coeFn
+    map_smul' := coe_smul }
 #align continuous_map.coe_fn_linear_map ContinuousMap.coeFnLinearMap
 
 end ContinuousMap
@@ -596,7 +599,8 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiring R] {A : 
 
 /-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
-  { continuousSubsemiring α A with carrier := { f : α → A | Continuous f },
+  { continuousSubsemiring α A with
+    carrier := { f : α → A | Continuous f }
     algebra_map_mem' := fun r => (continuous_const : Continuous fun x : α => algebraMap R A r) }
 #align continuous_subalgebra continuousSubalgebra
 
@@ -674,7 +678,9 @@ variable {A}
 /-- Coercion to a function as an `alg_hom`. -/
 @[simps]
 def ContinuousMap.coeFnAlgHom : C(α, A) →ₐ[R] α → A :=
-  { (ContinuousMap.coeFnRingHom : C(α, A) →+* _) with toFun := coeFn, commutes' := fun r => rfl }
+  { (ContinuousMap.coeFnRingHom : C(α, A) →+* _) with
+    toFun := coeFn
+    commutes' := fun r => rfl }
 #align continuous_map.coe_fn_alg_hom ContinuousMap.coeFnAlgHom
 
 variable {R}
@@ -965,14 +971,15 @@ variable [HasContinuousStar A] [Algebra 𝕜 A]
 actually a homeomorphism. -/
 @[simps]
 def compStarAlgEquiv' (f : X ≃ₜ Y) : C(Y, A) ≃⋆ₐ[𝕜] C(X, A) :=
-  { f.toContinuousMap.compStarAlgHom' 𝕜 A with toFun := (f : C(X, Y)).compStarAlgHom' 𝕜 A,
-    invFun := (f.symm : C(Y, X)).compStarAlgHom' 𝕜 A,
+  { f.toContinuousMap.compStarAlgHom' 𝕜 A with
+    toFun := (f : C(X, Y)).compStarAlgHom' 𝕜 A
+    invFun := (f.symm : C(Y, X)).compStarAlgHom' 𝕜 A
     left_inv := fun g => by
       simp only [ContinuousMap.comp_star_alg_hom'_apply, ContinuousMap.comp_assoc,
-        to_continuous_map_comp_symm, ContinuousMap.comp_id],
+        to_continuous_map_comp_symm, ContinuousMap.comp_id]
     right_inv := fun g => by
       simp only [ContinuousMap.comp_star_alg_hom'_apply, ContinuousMap.comp_assoc,
-        symm_comp_to_continuous_map, ContinuousMap.comp_id],
+        symm_comp_to_continuous_map, ContinuousMap.comp_id]
     map_smul' := fun k a => map_smul (f.toContinuousMap.compStarAlgHom' 𝕜 A) k a }
 #align homeomorph.comp_star_alg_equiv' Homeomorph.compStarAlgEquiv'
 

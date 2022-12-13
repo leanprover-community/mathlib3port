@@ -386,7 +386,7 @@ def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
     { app := fun x =>
         match x with
         | walking_multicospan.left a => ι _
-        | walking_multicospan.right b => ι (I.fstTo b) ≫ I.fst b,
+        | walking_multicospan.right b => ι (I.fstTo b) ≫ I.fst b
       naturality' := by 
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals symm; dsimp; rw [category.id_comp]; apply category.comp_id
@@ -409,14 +409,14 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x)
     (fac : ∀ (E : Multifork I) (i : I.L), lift E ≫ K.ι i = E.ι i)
     (uniq : ∀ (E : Multifork I) (m : E.x ⟶ K.x), (∀ i : I.L, m ≫ K.ι i = E.ι i) → m = lift E) :
     IsLimit K :=
-  { lift,
+  { lift
     fac' := by 
       rintro E (a | b)
       · apply fac
       · rw [← E.w (walking_multicospan.hom.fst b), ← K.w (walking_multicospan.hom.fst b), ←
           category.assoc]
         congr 1
-        apply fac,
+        apply fac
     uniq' := by 
       rintro E m hm
       apply uniq
@@ -444,7 +444,7 @@ noncomputable def toPiFork (K : Multifork I) :
     { app := fun x =>
         match x with
         | walking_parallel_pair.zero => Pi.lift K.ι
-        | walking_parallel_pair.one => Pi.lift K.ι ≫ I.fstPiMap,
+        | walking_parallel_pair.one => Pi.lift K.ι ≫ I.fstPiMap
       naturality' := by 
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals symm; dsimp; rw [category.id_comp]; apply category.comp_id
@@ -475,7 +475,7 @@ noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) :
     { app := fun x =>
         match x with
         | walking_multicospan.left a => c.ι ≫ Pi.π _ _
-        | walking_multicospan.right b => c.ι ≫ I.fstPiMap ≫ Pi.π _ _,
+        | walking_multicospan.right b => c.ι ≫ I.fstPiMap ≫ Pi.π _ _
       naturality' := by 
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals symm; dsimp; rw [category.id_comp]; apply category.comp_id
@@ -515,7 +515,7 @@ noncomputable def toPiForkFunctor :
         I.sndPiMap where 
   obj := Multifork.toPiFork
   map K₁ K₂ f :=
-    { Hom := f.Hom,
+    { Hom := f.Hom
       w' := by 
         rintro (_ | _)
         · ext
@@ -534,7 +534,9 @@ noncomputable def ofPiForkFunctor :
     Fork I.fstPiMap I.sndPiMap ⥤
       Multifork I where 
   obj := Multifork.ofPiFork I
-  map K₁ K₂ f := { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
+  map K₁ K₂ f :=
+    { Hom := f.Hom
+      w' := by rintro (_ | _) <;> simp }
 #align
   category_theory.limits.multicospan_index.of_pi_fork_functor CategoryTheory.Limits.MulticospanIndex.ofPiForkFunctor
 
@@ -613,7 +615,7 @@ def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
     { app := fun x =>
         match x with
         | walking_multispan.left a => I.fst a ≫ π _
-        | walking_multispan.right b => π _,
+        | walking_multispan.right b => π _
       naturality' := by 
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals dsimp; rw [category.comp_id]; apply category.id_comp
@@ -636,14 +638,14 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x)
     (fac : ∀ (E : Multicofork I) (i : I.R), K.π i ≫ desc E = E.π i)
     (uniq : ∀ (E : Multicofork I) (m : K.x ⟶ E.x), (∀ i : I.R, K.π i ≫ m = E.π i) → m = desc E) :
     IsColimit K :=
-  { desc,
+  { desc
     fac' := by 
       rintro S (a | b)
       · rw [← K.w (walking_multispan.hom.fst a), ← S.w (walking_multispan.hom.fst a),
           category.assoc]
         congr 1
         apply fac
-      · apply fac,
+      · apply fac
     uniq' := by 
       intro S m hm
       apply uniq
@@ -673,7 +675,7 @@ noncomputable def toSigmaCofork (K : Multicofork I) :
     { app := fun x =>
         match x with
         | walking_parallel_pair.zero => I.fstSigmaMap ≫ Sigma.desc K.π
-        | walking_parallel_pair.one => Sigma.desc K.π,
+        | walking_parallel_pair.one => Sigma.desc K.π
       naturality' := by 
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals dsimp; rw [category.comp_id]; apply category.id_comp
@@ -698,7 +700,7 @@ noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) :
     { app := fun x =>
         match x with
         | walking_multispan.left a => (Sigma.ι I.left a : _) ≫ I.fstSigmaMap ≫ c.π
-        | walking_multispan.right b => (Sigma.ι I.right b : _) ≫ c.π,
+        | walking_multispan.right b => (Sigma.ι I.right b : _) ≫ c.π
       naturality' := by 
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals dsimp; rw [category.comp_id]; apply category.id_comp
@@ -752,7 +754,9 @@ noncomputable def ofSigmaCoforkFunctor :
     Cofork I.fstSigmaMap I.sndSigmaMap ⥤
       Multicofork I where 
   obj := Multicofork.ofSigmaCofork I
-  map K₁ K₂ f := { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
+  map K₁ K₂ f :=
+    { Hom := f.Hom
+      w' := by rintro (_ | _) <;> simp }
 #align
   category_theory.limits.multispan_index.of_sigma_cofork_functor CategoryTheory.Limits.MultispanIndex.ofSigmaCoforkFunctor
 

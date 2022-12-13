@@ -61,7 +61,9 @@ theorem as_coe (X : SheafedSpaceCat.{v} C) : X.carrier = (X : TopCat.{v}) :=
 
 @[simp]
 theorem mk_coe (carrier) (presheaf) (h) :
-    (({ carrier, Presheaf, IsSheaf := h } : SheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
+    (({     carrier
+            Presheaf
+            IsSheaf := h } : SheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
   rfl
 #align algebraic_geometry.SheafedSpace.mk_coe AlgebraicGeometry.SheafedSpaceCat.mk_coe
 

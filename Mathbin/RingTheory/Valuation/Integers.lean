@@ -57,7 +57,8 @@ instance : Algebra v.integer R :=
   Algebra.ofSubring v.integer
 
 theorem integer.integers : v.Integers v.integer :=
-  { hom_inj := Subtype.coe_injective, map_le_one := fun r => r.2,
+  { hom_inj := Subtype.coe_injective
+    map_le_one := fun r => r.2
     exists_of_le_one := fun r hr => ⟨⟨r, hr⟩, rfl⟩ }
 #align valuation.integer.integers Valuation.integer.integers
 

@@ -88,7 +88,7 @@ def augmentedCechNerve :
   left := f.cechNerve
   right := f.right
   Hom :=
-    { app := fun i => widePullback.base _,
+    { app := fun i => widePullback.base _
       naturality' := fun x y f => by 
         dsimp
         simp }
@@ -180,7 +180,7 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
           (fun i => X.left.map (SimplexCategory.const x.unop i).op ≫ G.left) fun i => by
           dsimp
           erw [category.assoc, arrow.w, augmented.to_arrow_obj_hom, nat_trans.naturality_assoc,
-            functor.const_obj_map, category.id_comp],
+            functor.const_obj_map, category.id_comp]
       naturality' := by 
         intro x y f
         ext
@@ -243,11 +243,11 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
 /-- The augmented Čech nerve construction is right adjoint to the `to_arrow` functor. -/
 abbrev cechNerveAdjunction : (Augmented.toArrow : _ ⥤ Arrow C) ⊣ augmented_cech_nerve :=
   Adjunction.mkOfHomEquiv
-    { homEquiv := cechNerveEquiv,
+    { homEquiv := cechNerveEquiv
       hom_equiv_naturality_left_symm' := fun x y f g h => by
         ext
         · simp
-        · simp,
+        · simp
       hom_equiv_naturality_right' := fun x y f g h => by
         ext
         · simp
@@ -309,7 +309,7 @@ def augmentedCechConerve :
   left := f.left
   right := f.cechConerve
   Hom :=
-    { app := fun i => widePushout.head _,
+    { app := fun i => widePushout.head _
       naturality' := fun x y f => by 
         dsimp
         simp }
@@ -410,7 +410,7 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
             have t := X.hom.naturality (x.const j)
             dsimp at t⊢
             simp only [category.id_comp] at t
-            rw [← t]),
+            rw [← t])
       naturality' := by 
         intro x y f
         ext
@@ -470,12 +470,12 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
 /-- The augmented Čech conerve construction is left adjoint to the `to_arrow` functor. -/
 abbrev cechConerveAdjunction : augmented_cech_conerve ⊣ (Augmented.toArrow : _ ⥤ Arrow C) :=
   Adjunction.mkOfHomEquiv
-    { homEquiv := cechConerveEquiv,
+    { homEquiv := cechConerveEquiv
       hom_equiv_naturality_left_symm' := fun x y f g h => by
         ext
         · rfl
         · simp
-        · simp,
+        · simp
       hom_equiv_naturality_right' := fun x y f g h => by
         ext
         · simp
@@ -527,9 +527,9 @@ def wideCospan.limitCone [Fintype ι] (X : C) :
       (wideCospan ι
         X) where 
   Cone :=
-    { x := ∏ fun i : ι => X,
+    { x := ∏ fun i : ι => X
       π :=
-        { app := fun X => Option.casesOn X (terminal.from _) fun i => limit.π _ ⟨i⟩,
+        { app := fun X => Option.casesOn X (terminal.from _) fun i => limit.π _ ⟨i⟩
           naturality' := fun i j f => by 
             cases f
             · cases i
@@ -538,8 +538,8 @@ def wideCospan.limitCone [Fintype ι] (X : C) :
               simp only [terminal.comp_from]
               exact Subsingleton.elim _ _ } }
   IsLimit :=
-    { lift := fun s => Limits.Pi.lift fun j => s.π.app (some j),
-      fac' := fun s j => Option.casesOn j (Subsingleton.elim _ _) fun j => limit.lift_π _ _,
+    { lift := fun s => Limits.Pi.lift fun j => s.π.app (some j)
+      fac' := fun s j => Option.casesOn j (Subsingleton.elim _ _) fun j => limit.lift_π _ _
       uniq' := fun s f h => by 
         ext j
         dsimp only [limits.pi.lift]

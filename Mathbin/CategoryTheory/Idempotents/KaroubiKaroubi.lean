@@ -57,28 +57,28 @@ def counitIso :
   Hom :=
     { app := fun P =>
         { f :=
-            { f := P.p.1,
+            { f := P.p.1
               comm := by 
                 have h := P.idem
                 simp only [hom_ext, comp_f] at h
-                erw [← assoc, h, comp_p] },
+                erw [← assoc, h, comp_p] }
           comm := by 
             have h := P.idem
             simp only [hom_ext, comp_f] at h⊢
-            erw [h, h] },
+            erw [h, h] }
       naturality' := fun P Q f => by simpa only [hom_ext] using (p_comm f).symm }
   inv :=
     { app := fun P =>
         { f :=
-            { f := P.p.1,
+            { f := P.p.1
               comm := by 
                 have h := P.idem
                 simp only [hom_ext, comp_f] at h
-                erw [h, p_comp] },
+                erw [h, p_comp] }
           comm := by 
             have h := P.idem
             simp only [hom_ext, comp_f] at h⊢
-            erw [h, h] },
+            erw [h, h] }
       naturality' := fun P Q f => by simpa only [hom_ext] using (p_comm f).symm }
   hom_inv_id' := by 
     ext P

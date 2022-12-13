@@ -122,12 +122,12 @@ def diagramIsoWideCospan (F : WidePullbackShape J ⥤ C) :
 @[simps]
 def mkCone {F : WidePullbackShape J ⥤ C} {X : C} (f : X ⟶ F.obj none) (π : ∀ j, X ⟶ F.obj (some j))
     (w : ∀ j, π j ≫ F.map (Hom.term j) = f) : Cone F :=
-  { x,
+  { x
     π :=
       { app := fun j =>
           match j with
           | none => f
-          | some j => π j,
+          | some j => π j
         naturality' := fun j j' f => by
           cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp <;> simp [w] } }
 #align
@@ -234,12 +234,12 @@ def diagramIsoWideSpan (F : WidePushoutShape J ⥤ C) :
 @[simps]
 def mkCocone {F : WidePushoutShape J ⥤ C} {X : C} (f : F.obj none ⟶ X) (ι : ∀ j, F.obj (some j) ⟶ X)
     (w : ∀ j, F.map (Hom.init j) ≫ ι j = f) : Cocone F :=
-  { x,
+  { x
     ι :=
       { app := fun j =>
           match j with
           | none => f
-          | some j => ι j,
+          | some j => ι j
         naturality' := fun j j' f => by
           cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp <;> simp [w] } }
 #align

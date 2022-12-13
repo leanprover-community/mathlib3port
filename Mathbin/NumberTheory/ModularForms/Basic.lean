@@ -157,7 +157,8 @@ variable {F : Type _} {Γ : Subgroup SL(2, ℤ)} {k : ℤ}
 
 instance hasAdd : Add (ModularForm Γ k) :=
   ⟨fun f g =>
-    { (f : SlashInvariantForm Γ k) + g with holo' := f.holo'.add g.holo',
+    { (f : SlashInvariantForm Γ k) + g with
+      holo' := f.holo'.add g.holo'
       bdd_at_infty' := fun A => by simpa using (f.bdd_at_infty' A).add (g.bdd_at_infty' A) }⟩
 #align modular_form.has_add ModularForm.hasAdd
 
@@ -172,7 +173,8 @@ theorem add_apply (f g : ModularForm Γ k) (z : ℍ) : (f + g) z = f z + g z :=
 #align modular_form.add_apply ModularForm.add_apply
 
 instance hasZero : Zero (ModularForm Γ k) :=
-  ⟨{ (0 : SlashInvariantForm Γ k) with holo' := fun _ => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ),
+  ⟨{ (0 : SlashInvariantForm Γ k) with
+      holo' := fun _ => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       bdd_at_infty' := fun A => by simpa using zero_form_is_bounded_at_im_infty }⟩
 #align modular_form.has_zero ModularForm.hasZero
 
@@ -192,8 +194,9 @@ variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
 
 instance hasSmul : HasSmul α (ModularForm Γ k) :=
   ⟨fun c f =>
-    { c • (f : SlashInvariantForm Γ k) with toFun := c • f,
-      holo' := by simpa using f.holo'.const_smul (c • (1 : ℂ)),
+    { c • (f : SlashInvariantForm Γ k) with 
+      toFun := c • f
+      holo' := by simpa using f.holo'.const_smul (c • (1 : ℂ))
       bdd_at_infty' := fun A => by simpa using (f.bdd_at_infty' A).const_smul_left (c • (1 : ℂ)) }⟩
 #align modular_form.has_smul ModularForm.hasSmul
 
@@ -211,7 +214,9 @@ end
 
 instance hasNeg : Neg (ModularForm Γ k) :=
   ⟨fun f =>
-    { -(f : SlashInvariantForm Γ k) with toFun := -f, holo' := f.holo'.neg,
+    { -(f : SlashInvariantForm Γ k) with 
+      toFun := -f
+      holo' := f.holo'.neg
       bdd_at_infty' := fun A => by simpa using (f.bdd_at_infty' A).neg }⟩
 #align modular_form.has_neg ModularForm.hasNeg
 
@@ -273,7 +278,8 @@ theorem mul_coe {k_1 k_2 : ℤ} {Γ : Subgroup SL(2, ℤ)} (f : ModularForm Γ k
 #align modular_form.mul_coe ModularForm.mul_coe
 
 instance : One (ModularForm Γ 0) :=
-  ⟨{ (1 : SlashInvariantForm Γ 0) with holo' := fun x => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ),
+  ⟨{ (1 : SlashInvariantForm Γ 0) with
+      holo' := fun x => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       bdd_at_infty' := fun A => by simpa using at_im_infty.const_bounded_at_filter (1 : ℂ) }⟩
 
 @[simp]
@@ -291,7 +297,9 @@ variable {F : Type _} {Γ : Subgroup SL(2, ℤ)} {k : ℤ}
 
 instance hasAdd : Add (CuspForm Γ k) :=
   ⟨fun f g =>
-    { (f : SlashInvariantForm Γ k) + g with toFun := f + g, holo' := f.holo'.add g.holo',
+    { (f : SlashInvariantForm Γ k) + g with 
+      toFun := f + g
+      holo' := f.holo'.add g.holo'
       zero_at_infty' := fun A => by simpa using (f.zero_at_infty' A).add (g.zero_at_infty' A) }⟩
 #align cusp_form.has_add CuspForm.hasAdd
 
@@ -306,8 +314,9 @@ theorem add_apply (f g : CuspForm Γ k) (z : ℍ) : (f + g) z = f z + g z :=
 #align cusp_form.add_apply CuspForm.add_apply
 
 instance hasZero : Zero (CuspForm Γ k) :=
-  ⟨{ (0 : SlashInvariantForm Γ k) with toFun := 0,
-      holo' := fun _ => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ),
+  ⟨{ (0 : SlashInvariantForm Γ k) with 
+      toFun := 0
+      holo' := fun _ => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       zero_at_infty' := by simpa using Filter.zero_zero_at_filter _ }⟩
 #align cusp_form.has_zero CuspForm.hasZero
 
@@ -327,8 +336,9 @@ variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
 
 instance hasSmul : HasSmul α (CuspForm Γ k) :=
   ⟨fun c f =>
-    { c • (f : SlashInvariantForm Γ k) with toFun := c • f,
-      holo' := by simpa using f.holo'.const_smul (c • (1 : ℂ)),
+    { c • (f : SlashInvariantForm Γ k) with 
+      toFun := c • f
+      holo' := by simpa using f.holo'.const_smul (c • (1 : ℂ))
       zero_at_infty' := fun A => by simpa using (f.zero_at_infty' A).smul (c • (1 : ℂ)) }⟩
 #align cusp_form.has_smul CuspForm.hasSmul
 
@@ -346,7 +356,9 @@ end
 
 instance hasNeg : Neg (CuspForm Γ k) :=
   ⟨fun f =>
-    { -(f : SlashInvariantForm Γ k) with toFun := -f, holo' := f.holo'.neg,
+    { -(f : SlashInvariantForm Γ k) with 
+      toFun := -f
+      holo' := f.holo'.neg
       zero_at_infty' := fun A => by simpa using (f.zero_at_infty' A).neg }⟩
 #align cusp_form.has_neg CuspForm.hasNeg
 

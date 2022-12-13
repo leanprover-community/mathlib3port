@@ -261,13 +261,18 @@ instance : Monoid (X q) :=
     mul_assoc := fun x y z => by
       ext <;>
         · dsimp
-          ring,
-    one := ⟨1, 0⟩, one_mul := fun x => by ext <;> simp, mul_one := fun x => by ext <;> simp }
+          ring
+    one := ⟨1, 0⟩
+    one_mul := fun x => by ext <;> simp
+    mul_one := fun x => by ext <;> simp }
 
 instance : AddGroupWithOne (X q) :=
-  { X.monoid, X.addCommGroup _ with natCast := fun n => ⟨n, 0⟩, nat_cast_zero := by simp,
-    nat_cast_succ := by simp [Nat.cast, Monoid.one], intCast := fun n => ⟨n, 0⟩,
-    int_cast_of_nat := fun n => by simp <;> rfl,
+  { X.monoid, X.addCommGroup _ with 
+    natCast := fun n => ⟨n, 0⟩
+    nat_cast_zero := by simp
+    nat_cast_succ := by simp [Nat.cast, Monoid.one]
+    intCast := fun n => ⟨n, 0⟩
+    int_cast_of_nat := fun n => by simp <;> rfl
     int_cast_neg_succ_of_nat := fun n => by ext <;> simp <;> rfl }
 
 theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by
@@ -284,7 +289,8 @@ theorem right_distrib (x y z : X q) : (x + y) * z = x * z + y * z := by
 
 instance : Ring (X q) :=
   { X.addGroupWithOne, (inferInstance : AddCommGroup (X q)), (inferInstance : Monoid (X q)) with
-    left_distrib := left_distrib, right_distrib := right_distrib }
+    left_distrib := left_distrib
+    right_distrib := right_distrib }
 
 instance : CommRing (X q) :=
   { (inferInstance : Ring (X q)) with

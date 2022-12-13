@@ -148,12 +148,15 @@ def commRingYoneda :
       TopCat.{u}ᵒᵖ ⥤
         CommRingCat.{u} where 
   obj R :=
-    { obj := fun X => continuousFunctions X R, map := fun X Y f => continuousFunctions.pullback f R,
+    { obj := fun X => continuousFunctions X R
+      map := fun X Y f => continuousFunctions.pullback f R
       map_id' := fun X => by 
         ext
-        rfl,
+        rfl
       map_comp' := fun X Y Z f g => rfl }
-  map R S φ := { app := fun X => continuousFunctions.map X φ, naturality' := fun X Y f => rfl }
+  map R S φ :=
+    { app := fun X => continuousFunctions.map X φ
+      naturality' := fun X Y f => rfl }
   map_id' X := by 
     ext
     rfl

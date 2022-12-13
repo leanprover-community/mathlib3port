@@ -148,10 +148,10 @@ theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [Com
     IsLocalization.Away r S :=
   { map_units := by 
       rintro ⟨_, n, rfl⟩
-      exact (algebraMap R S).is_unit_map (hr.pow _),
+      exact (algebraMap R S).is_unit_map (hr.pow _)
     surj := fun z => by 
       obtain ⟨z', rfl⟩ := H.2 z
-      exact ⟨⟨z', 1⟩, by simp⟩,
+      exact ⟨⟨z', 1⟩, by simp⟩
     eq_iff_exists := fun x y => by 
       erw [H.1.eq_iff]
       constructor

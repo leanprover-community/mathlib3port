@@ -53,7 +53,8 @@ theorem InducedUnits.continuous_coe [InducedUnits R] : Continuous (coe : Rˣ →
 #align topological_ring.induced_units.continuous_coe TopologicalRing.InducedUnits.continuous_coe
 
 theorem units_embedding [InducedUnits R] : Embedding (coe : Rˣ → R) :=
-  { induced := units_topology_eq R, inj := fun x y h => Units.ext h }
+  { induced := units_topology_eq R
+    inj := fun x y h => Units.ext h }
 #align topological_ring.units_embedding TopologicalRing.units_embedding
 
 instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuousMul Rˣ :=
@@ -144,7 +145,8 @@ variable {α : Type _} [Field α] [TopologicalSpace α] [TopologicalDivisionRing
 /-- The (topological-space) closure of a subfield of a topological field is
 itself a subfield. -/
 def Subfield.topologicalClosure (K : Subfield α) : Subfield α :=
-  { K.toSubring.topologicalClosure with carrier := closure (K : Set α),
+  { K.toSubring.topologicalClosure with
+    carrier := closure (K : Set α)
     inv_mem' := by 
       intro x hx
       by_cases h : x = 0

@@ -40,8 +40,9 @@ def yoneda :
         Type
           v₁ where 
   obj X :=
-    { obj := fun Y => unop Y ⟶ X, map := fun Y Y' f g => f.unop ≫ g,
-      map_comp' := fun _ _ _ f g => by ext; dsimp; erw [category.assoc],
+    { obj := fun Y => unop Y ⟶ X
+      map := fun Y Y' f g => f.unop ≫ g
+      map_comp' := fun _ _ _ f g => by ext; dsimp; erw [category.assoc]
       map_id' := fun Y => by ext; dsimp; erw [category.id_comp] }
   map X X' f := { app := fun Y g => g ≫ f }
 #align category_theory.yoneda CategoryTheory.yoneda
@@ -54,7 +55,9 @@ def coyoneda :
       C ⥤
         Type
           v₁ where 
-  obj X := { obj := fun Y => unop X ⟶ Y, map := fun Y Y' f g => g ≫ f }
+  obj X :=
+    { obj := fun Y => unop X ⟶ Y
+      map := fun Y Y' f g => g ≫ f }
   map X X' f := { app := fun Y g => f.unop ≫ g }
 #align category_theory.coyoneda CategoryTheory.coyoneda
 
@@ -104,7 +107,12 @@ functions are inverses and natural in `Z`.
 def ext (X Y : C) (p : ∀ {Z : C}, (Z ⟶ X) → (Z ⟶ Y)) (q : ∀ {Z : C}, (Z ⟶ Y) → (Z ⟶ X))
     (h₁ : ∀ {Z : C} (f : Z ⟶ X), q (p f) = f) (h₂ : ∀ {Z : C} (f : Z ⟶ Y), p (q f) = f)
     (n : ∀ {Z Z' : C} (f : Z' ⟶ Z) (g : Z ⟶ X), p (f ≫ g) = f ≫ p g) : X ≅ Y :=
-  yoneda.preimageIso (NatIso.ofComponents (fun Z => { Hom := p, inv := q }) (by tidy))
+  yoneda.preimageIso
+    (NatIso.ofComponents
+      (fun Z =>
+        { Hom := p
+          inv := q })
+      (by tidy))
 #align category_theory.yoneda.ext CategoryTheory.yoneda.ext
 
 /-- If `yoneda.map f` is an isomorphism, so was `f`.
@@ -146,7 +154,11 @@ theorem is_iso {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso (coyoneda.map f)] : IsIso f 
 
 /-- The identity functor on `Type` is isomorphic to the coyoneda functor coming from `punit`. -/
 def punitIso : coyoneda.obj (Opposite.op PUnit) ≅ 𝟭 (Type v₁) :=
-  NatIso.ofComponents (fun X => { Hom := fun f => f ⟨⟩, inv := fun x _ => x }) (by tidy)
+  NatIso.ofComponents
+    (fun X =>
+      { Hom := fun f => f ⟨⟩
+        inv := fun x _ => x })
+    (by tidy)
 #align category_theory.coyoneda.punit_iso CategoryTheory.coyoneda.punitIso
 
 /-- Taking the `unop` of morphisms is a natural isomorphism. -/
@@ -201,9 +213,9 @@ noncomputable def reprF : yoneda.obj F.reprX ⟶ F :=
 /- warning: category_theory.functor.repr_x clashes with category_theory.functor.repr_X -> CategoryTheory.Functor.reprX
 warning: category_theory.functor.repr_x -> CategoryTheory.Functor.reprX is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] (F : CategoryTheory.Functor.{v₁, v₁, u₁, succ v₁} (Opposite.{succ u₁} C) (CategoryTheory.Category.opposite.{v₁, u₁} C _inst_1) Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Representable.{v₁, u₁} C _inst_1 F], CategoryTheory.Functor.obj.{v₁, v₁, u₁, succ v₁} (Opposite.{succ u₁} C) (CategoryTheory.Category.opposite.{v₁, u₁} C _inst_1) Type.{v₁} CategoryTheory.types.{v₁} F (Opposite.op.{succ u₁} C (CategoryTheory.Functor.reprX.{v₁, u₁} C _inst_1 F _inst_2))
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (F : CategoryTheory.Functor.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) [_inst_2 : CategoryTheory.Functor.Representable.{u1, u2} C _inst_1 F], CategoryTheory.Functor.obj.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1} F (Opposite.op.{succ u2} C (CategoryTheory.Functor.reprX.{u1, u2} C _inst_1 F _inst_2))
 but is expected to have type
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] (F : CategoryTheory.Functor.{v₁, v₁, u₁, succ v₁} (Opposite.{succ u₁} C) (CategoryTheory.Category.opposite.{v₁, u₁} C _inst_1) Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Representable.{v₁, u₁} C _inst_1 F], C
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (F : CategoryTheory.Functor.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) [_inst_2 : CategoryTheory.Functor.Representable.{u1, u2} C _inst_1 F], C
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.repr_x CategoryTheory.Functor.reprXₓ'. -/
 /-- The representing element for the representable functor `F`, sometimes called the universal
 element of the functor.
@@ -256,9 +268,9 @@ noncomputable def coreprF : coyoneda.obj (op F.coreprX) ⟶ F :=
 /- warning: category_theory.functor.corepr_x clashes with category_theory.functor.corepr_X -> CategoryTheory.Functor.coreprX
 warning: category_theory.functor.corepr_x -> CategoryTheory.Functor.coreprX is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] (F : CategoryTheory.Functor.{v₁, v₁, u₁, succ v₁} C _inst_1 Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Corepresentable.{v₁, u₁} C _inst_1 F], CategoryTheory.Functor.obj.{v₁, v₁, u₁, succ v₁} C _inst_1 Type.{v₁} CategoryTheory.types.{v₁} F (CategoryTheory.Functor.coreprX.{v₁, u₁} C _inst_1 F _inst_2)
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (F : CategoryTheory.Functor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) [_inst_2 : CategoryTheory.Functor.Corepresentable.{u1, u2} C _inst_1 F], CategoryTheory.Functor.obj.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F (CategoryTheory.Functor.coreprX.{u1, u2} C _inst_1 F _inst_2)
 but is expected to have type
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] (F : CategoryTheory.Functor.{v₁, v₁, u₁, succ v₁} C _inst_1 Type.{v₁} CategoryTheory.types.{v₁}) [_inst_2 : CategoryTheory.Functor.Corepresentable.{v₁, u₁} C _inst_1 F], C
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (F : CategoryTheory.Functor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) [_inst_2 : CategoryTheory.Functor.Corepresentable.{u1, u2} C _inst_1 F], C
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.corepr_x CategoryTheory.Functor.coreprXₓ'. -/
 /-- The representing element for the corepresentable functor `F`, sometimes called the universal
 element of the functor.
@@ -355,17 +367,17 @@ def yonedaLemma :
       yonedaEvaluation
         C where 
   Hom :=
-    { app := fun F x => ULift.up ((x.app F.1) (𝟙 (unop F.1))),
+    { app := fun F x => ULift.up ((x.app F.1) (𝟙 (unop F.1)))
       naturality' := by 
         intro X Y f; ext; dsimp
         erw [category.id_comp, ← functor_to_types.naturality]
         simp only [category.comp_id, yoneda_obj_map] }
   inv :=
     { app := fun F x =>
-        { app := fun X a => (F.2.map a.op) x.down,
+        { app := fun X a => (F.2.map a.op) x.down
           naturality' := by 
             intro X Y f; ext; dsimp
-            rw [functor_to_types.map_comp_apply] },
+            rw [functor_to_types.map_comp_apply] }
       naturality' := by 
         intro X Y f; ext; dsimp
         rw [← functor_to_types.naturality, functor_to_types.map_comp_apply] }

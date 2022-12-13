@@ -96,7 +96,10 @@ instance : AddCommMonoid PartEnat where
   add_assoc x y z := Part.ext' and_assoc fun _ _ => add_assoc _ _ _
 
 instance : AddMonoidWithOne PartEnat :=
-  { PartEnat.addCommMonoid with one := 1, natCast := some, nat_cast_zero := rfl,
+  { PartEnat.addCommMonoid with 
+    one := 1
+    natCast := some
+    nat_cast_zero := rfl
     nat_cast_succ := fun _ => Part.ext' (true_and_iff _).symm fun _ _ => rfl }
 
 theorem some_eq_coe (n : ℕ) : some n = n :=
@@ -304,9 +307,10 @@ instance NeZero.one : NeZero (1 : PartEnat) :=
 #align part_enat.ne_zero.one PartEnat.NeZero.one
 
 instance semilatticeSup : SemilatticeSup PartEnat :=
-  { PartEnat.partialOrder with sup := (· ⊔ ·),
-    le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
-    le_sup_right := fun _ _ => ⟨And.right, fun _ => le_sup_right⟩,
+  { PartEnat.partialOrder with 
+    sup := (· ⊔ ·)
+    le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩
+    le_sup_right := fun _ _ => ⟨And.right, fun _ => le_sup_right⟩
     sup_le := fun x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ =>
       ⟨fun hz => ⟨hx₁ hz, hy₁ hz⟩, fun _ => sup_le (hx₂ _) (hy₂ _)⟩ }
 #align part_enat.semilattice_sup PartEnat.semilatticeSup
@@ -483,15 +487,21 @@ instance :
         (le_total x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2))
 
 noncomputable instance : LinearOrder PartEnat :=
-  { PartEnat.partialOrder with le_total := IsTotal.total, decidableLe := Classical.decRel _,
-    max := (· ⊔ ·), max_def := @sup_eq_maxDefault _ _ (id _) _ }
+  { PartEnat.partialOrder with 
+    le_total := IsTotal.total
+    decidableLe := Classical.decRel _
+    max := (· ⊔ ·)
+    max_def := @sup_eq_maxDefault _ _ (id _) _ }
 
 instance : BoundedOrder PartEnat :=
   { PartEnat.orderTop, PartEnat.orderBot with }
 
 noncomputable instance : Lattice PartEnat :=
-  { PartEnat.semilatticeSup with inf := min, inf_le_left := min_le_left,
-    inf_le_right := min_le_right, le_inf := fun _ _ _ => le_min }
+  { PartEnat.semilatticeSup with 
+    inf := min
+    inf_le_left := min_le_left
+    inf_le_right := min_le_right
+    le_inf := fun _ _ _ => le_min }
 
 instance : OrderedAddCommMonoid PartEnat :=
   { PartEnat.linearOrder, PartEnat.addCommMonoid with
@@ -505,7 +515,7 @@ instance : CanonicallyOrderedAddMonoid PartEnat :=
     le_self_add := fun a b =>
       (PartEnat.cases_on b (le_top.trans_eq (add_top _).symm)) fun b =>
         (PartEnat.cases_on a (top_add _).ge) fun a =>
-          (coe_le_coe.2 le_self_add).trans_eq (Nat.cast_add _ _),
+          (coe_le_coe.2 le_self_add).trans_eq (Nat.cast_add _ _)
     exists_add_of_le := fun a b =>
       (PartEnat.cases_on b fun _ => ⟨⊤, (add_top _).symm⟩) fun b =>
         (PartEnat.cases_on a fun h => ((coe_lt_top _).not_le h).elim) fun a h =>
@@ -792,7 +802,12 @@ noncomputable instance : LinearOrderedAddCommMonoidWithTop PartEnat :=
 
 noncomputable instance : CompleteLinearOrder PartEnat :=
   { PartEnat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice,
-    PartEnat.linearOrder with inf := (· ⊓ ·), sup := (· ⊔ ·), top := ⊤, bot := ⊥, le := (· ≤ ·),
+    PartEnat.linearOrder with 
+    inf := (· ⊓ ·)
+    sup := (· ⊔ ·)
+    top := ⊤
+    bot := ⊥
+    le := (· ≤ ·)
     lt := (· < ·) }
 
 end PartEnat

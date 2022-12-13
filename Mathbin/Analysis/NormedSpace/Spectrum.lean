@@ -302,8 +302,8 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
         · by_cases ‖a‖₊ = 0
           · simp only [h, zero_mul, zero_le', pow_succ]
           · rw [← coe_inv h, coe_lt_coe, Nnreal.lt_inv_iff_mul_lt h] at hr
-            simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ,
-    r_pos := Ennreal.inv_pos.mpr coe_ne_top,
+            simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ
+    r_pos := Ennreal.inv_pos.mpr coe_ne_top
     HasSum := fun y hy => by
       have norm_lt : ‖y • a‖ < 1 := by 
         by_cases h : ‖a‖₊ = 0
@@ -498,11 +498,12 @@ to the quotient of a complex Banach algebra by a maximal ideal. In the case when
 @[simps]
 noncomputable def NormedRing.algEquivComplexOfComplete [CompleteSpace A] : ℂ ≃ₐ[ℂ] A :=
   let nt : Nontrivial A := ⟨⟨1, 0, hA.mp ⟨⟨1, 1, mul_one _, mul_one _⟩, rfl⟩⟩⟩
-  { Algebra.ofId ℂ A with toFun := algebraMap ℂ A,
-    invFun := fun a => (@spectrum.nonempty _ _ _ _ nt a).some,
+  { Algebra.ofId ℂ A with 
+    toFun := algebraMap ℂ A
+    invFun := fun a => (@spectrum.nonempty _ _ _ _ nt a).some
     left_inv := fun z => by
       simpa only [@scalar_eq _ _ _ _ _ nt _] using
-        (@spectrum.nonempty _ _ _ _ nt <| algebraMap ℂ A z).some_mem,
+        (@spectrum.nonempty _ _ _ _ nt <| algebraMap ℂ A z).some_mem
     right_inv := fun a => algebra_map_eq_of_mem (@hA) (@spectrum.nonempty _ _ _ _ nt a).some_mem }
 #align normed_ring.alg_equiv_complex_of_complete NormedRing.algEquivComplexOfComplete
 
@@ -618,7 +619,7 @@ def equivAlgHom : characterSpace 𝕜 A ≃
       (A →ₐ[𝕜] 𝕜) where 
   toFun := toAlgHom
   invFun f :=
-    { val := f.toContinuousLinearMap,
+    { val := f.toContinuousLinearMap
       property := by 
         rw [eq_set_map_one_map_mul]
         exact ⟨map_one f, map_mul f⟩ }

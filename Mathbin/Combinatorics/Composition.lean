@@ -766,8 +766,9 @@ def compositionAsSetEquiv (n : ℕ) :
   invFun s :=
     { boundaries :=
         { i : Fin n.succ |
-            i = 0 ∨ i = Fin.last n ∨ ∃ (j : Fin (n - 1))(hj : j ∈ s), (i : ℕ) = j + 1 }.toFinset,
-      zero_mem := by simp, last_mem := by simp }
+            i = 0 ∨ i = Fin.last n ∨ ∃ (j : Fin (n - 1))(hj : j ∈ s), (i : ℕ) = j + 1 }.toFinset
+      zero_mem := by simp
+      last_mem := by simp }
   left_inv := by 
     intro c
     ext i

@@ -18,8 +18,9 @@ namespace Prod
 variable [AddMonoidWithOne α] [AddMonoidWithOne β]
 
 instance : AddMonoidWithOne (α × β) :=
-  { Prod.addMonoid, Prod.hasOne with natCast := fun n => (n, n),
-    nat_cast_zero := congr_arg₂ Prod.mk Nat.cast_zero Nat.cast_zero,
+  { Prod.addMonoid, Prod.hasOne with 
+    natCast := fun n => (n, n)
+    nat_cast_zero := congr_arg₂ Prod.mk Nat.cast_zero Nat.cast_zero
     nat_cast_succ := fun n => congr_arg₂ Prod.mk (Nat.cast_succ _) (Nat.cast_succ _) }
 
 @[simp]

@@ -243,7 +243,9 @@ theorem ext {S T : Subring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy of a subring with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : Subring R) (s : Set R) (hs : s = ↑S) : Subring R :=
-  { S.toSubsemiring.copy s hs with carrier := s, neg_mem' := fun _ => hs.symm ▸ S.neg_mem' }
+  { S.toSubsemiring.copy s hs with 
+    carrier := s
+    neg_mem' := fun _ => hs.symm ▸ S.neg_mem' }
 #align subring.copy Subring.copy
 
 @[simp]
@@ -640,7 +642,8 @@ theorem gc_map_comap (f : R →+* S) : GaloisConnection (map f) (comap f) := fun
 
 /-- A subring is isomorphic to its image under an injective function -/
 noncomputable def equivMapOfInjective (f : R →+* S) (hf : Function.Injective f) : s ≃+* s.map f :=
-  { Equiv.Set.image f s hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _),
+  { Equiv.Set.image f s hf with
+    map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _)
     map_add' := fun _ _ => Subtype.ext (f.map_add _ _) }
 #align subring.equiv_map_of_injective Subring.equivMapOfInjective
 
@@ -773,12 +776,16 @@ instance : CompleteLattice (Subring R) :=
   { completeLatticeOfInf (Subring R) fun s =>
       IsGlb.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
         is_glb_binfi with
-    bot := ⊥,
+    bot := ⊥
     bot_le := fun s x hx =>
       let ⟨n, hn⟩ := mem_bot.1 hx
-      hn ▸ coe_int_mem s n,
-    top := ⊤, le_top := fun s x hx => trivial, inf := (· ⊓ ·), inf_le_left := fun s t x => And.left,
-    inf_le_right := fun s t x => And.right, le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
+      hn ▸ coe_int_mem s n
+    top := ⊤
+    le_top := fun s x hx => trivial
+    inf := (· ⊓ ·)
+    inf_le_left := fun s t x => And.left
+    inf_le_right := fun s t x => And.right
+    le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
 
 theorem eq_top_iff' (A : Subring R) : A = ⊤ ↔ ∀ x : R, x ∈ A :=
   eq_top_iff.trans ⟨fun h m => h <| mem_top m, fun h m _ => h m⟩
@@ -793,7 +800,9 @@ variable (R)
 
 /-- The center of a ring `R` is the set of elements that commute with everything in `R` -/
 def center : Subring R :=
-  { Subsemiring.center R with carrier := Set.center R, neg_mem' := fun a => Set.neg_mem_center }
+  { Subsemiring.center R with 
+    carrier := Set.center R
+    neg_mem' := fun a => Set.neg_mem_center }
 #align subring.center Subring.center
 
 theorem coe_center : ↑(center R) = Set.center R :=
@@ -831,10 +840,11 @@ section DivisionRing
 variable {K : Type u} [DivisionRing K]
 
 instance : Field (center K) :=
-  { (center K).Nontrivial, center.commRing with inv := fun a => ⟨a⁻¹, Set.inv_mem_center₀ a.Prop⟩,
-    mul_inv_cancel := fun ⟨a, ha⟩ h => Subtype.ext <| mul_inv_cancel <| Subtype.coe_injective.Ne h,
-    div := fun a b => ⟨a / b, Set.div_mem_center₀ a.Prop b.Prop⟩,
-    div_eq_mul_inv := fun a b => Subtype.ext <| div_eq_mul_inv _ _,
+  { (center K).Nontrivial, center.commRing with
+    inv := fun a => ⟨a⁻¹, Set.inv_mem_center₀ a.Prop⟩
+    mul_inv_cancel := fun ⟨a, ha⟩ h => Subtype.ext <| mul_inv_cancel <| Subtype.coe_injective.Ne h
+    div := fun a b => ⟨a / b, Set.div_mem_center₀ a.Prop b.Prop⟩
+    div_eq_mul_inv := fun a b => Subtype.ext <| div_eq_mul_inv _ _
     inv_zero := Subtype.ext inv_zero }
 
 @[simp]
@@ -1096,7 +1106,9 @@ theorem top_prod_top : (⊤ : Subring R).Prod (⊤ : Subring S) = ⊤ :=
 
 /-- Product of subrings is isomorphic to their product as rings. -/
 def prodEquiv (s : Subring R) (t : Subring S) : s.Prod t ≃+* s × t :=
-  { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl, map_add' := fun x y => rfl }
+  { Equiv.Set.prod ↑s ↑t with 
+    map_mul' := fun x y => rfl
+    map_add' := fun x y => rfl }
 #align subring.prod_equiv Subring.prodEquiv
 
 /-- The underlying set of a non-empty directed Sup of subrings is just a union of the subrings.
@@ -1264,14 +1276,18 @@ variable {s t : Subring R}
 /-- Makes the identity isomorphism from a proof two subrings of a multiplicative
     monoid are equal. -/
 def subringCongr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equiv.setCongr <| congr_arg _ h with
+    map_mul' := fun _ _ => rfl
+    map_add' := fun _ _ => rfl }
 #align ring_equiv.subring_congr RingEquiv.subringCongr
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.range`. -/
 def ofLeftInverse {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) : R ≃+* f.range :=
-  { f.range_restrict with toFun := fun x => f.range_restrict x,
-    invFun := fun x => (g ∘ f.range.Subtype) x, left_inv := h,
+  { f.range_restrict with 
+    toFun := fun x => f.range_restrict x
+    invFun := fun x => (g ∘ f.range.Subtype) x
+    left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := RingHom.mem_range.mp x.Prop
@@ -1454,7 +1470,8 @@ end Actions
 -- both ordered ring structures and submonoids available
 /-- The subgroup of positive units of a linear ordered semiring. -/
 def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup Rˣ :=
-  { (posSubmonoid R).comap (Units.coeHom R) with carrier := { x | (0 : R) < x },
+  { (posSubmonoid R).comap (Units.coeHom R) with
+    carrier := { x | (0 : R) < x }
     inv_mem' := fun x => Units.inv_pos.mpr }
 #align units.pos_subgroup Units.posSubgroup
 

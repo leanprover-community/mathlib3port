@@ -747,7 +747,8 @@ variable {M' : Type _} [AddCommMonoid M'] [Module R M'] (q₁ q₁' : Submodule 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two submodules is a submodule. -/
 def prod : Submodule R (M × M') :=
-  { p.toAddSubmonoid.Prod q₁.toAddSubmonoid with carrier := p ×ˢ q₁,
+  { p.toAddSubmonoid.Prod q₁.toAddSubmonoid with
+    carrier := p ×ˢ q₁
     smul_mem' := by rintro a ⟨x, y⟩ ⟨hx, hy⟩ <;> exact ⟨smul_mem _ a hx, smul_mem _ a hy⟩ }
 #align submodule.prod Submodule.prod
 

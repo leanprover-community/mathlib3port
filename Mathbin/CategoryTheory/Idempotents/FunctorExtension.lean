@@ -73,7 +73,7 @@ def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) :
       obj
         G where 
   app P :=
-    { f := (F.map P.p).f ≫ (φ.app P.x).f,
+    { f := (F.map P.p).f ≫ (φ.app P.x).f
       comm := by 
         have h := φ.naturality P.p
         have h' := F.congr_map P.idem
@@ -160,26 +160,25 @@ def KaroubiUniversal₁.counitIso :
     (fun G =>
       { Hom :=
           { app := fun P =>
-              { f := (G.map (decompIdP P)).f,
+              { f := (G.map (decompIdP P)).f
                 comm := by
                   simpa only [hom_ext, G.map_comp, G.map_id] using
                     G.congr_map
-                      (show P.decomp_id_p = (to_karoubi C).map P.p ≫ P.decomp_id_p ≫ 𝟙 _ by simp) },
+                      (show P.decomp_id_p = (to_karoubi C).map P.p ≫ P.decomp_id_p ≫ 𝟙 _ by simp) }
             naturality' := fun P Q f => by
-              simpa only [hom_ext, G.map_comp] using
-                (G.congr_map (decomp_id_p_naturality f)).symm },
+              simpa only [hom_ext, G.map_comp] using (G.congr_map (decomp_id_p_naturality f)).symm }
         inv :=
           { app := fun P =>
-              { f := (G.map (decompIdI P)).f,
+              { f := (G.map (decompIdI P)).f
                 comm := by
                   simpa only [hom_ext, G.map_comp, G.map_id] using
                     G.congr_map
-                      (show P.decomp_id_i = 𝟙 _ ≫ P.decomp_id_i ≫ (to_karoubi C).map P.p by simp) },
+                      (show P.decomp_id_i = 𝟙 _ ≫ P.decomp_id_i ≫ (to_karoubi C).map P.p by simp) }
             naturality' := fun P Q f => by
-              simpa only [hom_ext, G.map_comp] using G.congr_map (decomp_id_i_naturality f) },
+              simpa only [hom_ext, G.map_comp] using G.congr_map (decomp_id_i_naturality f) }
         hom_inv_id' := by 
           ext P
-          simpa only [hom_ext, G.map_comp, G.map_id] using G.congr_map P.decomp_p.symm,
+          simpa only [hom_ext, G.map_comp, G.map_id] using G.congr_map P.decomp_p.symm
         inv_hom_id' := by 
           ext P
           simpa only [hom_ext, G.map_comp, G.map_id] using G.congr_map P.decomp_id.symm })

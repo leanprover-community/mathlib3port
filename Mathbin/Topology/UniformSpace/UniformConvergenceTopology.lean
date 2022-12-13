@@ -437,7 +437,7 @@ protected theorem postcomp_uniform_inducing [UniformSpace γ] {f : γ → β} (h
 post-composing. -/
 protected def congrRight [UniformSpace γ] (e : γ ≃ᵤ β) : (α →ᵤ γ) ≃ᵤ (α →ᵤ β) :=
   { Equiv.piCongrRight fun a => e.toEquiv with
-    uniform_continuous_to_fun := UniformFun.postcomp_uniform_continuous e.UniformContinuous,
+    uniform_continuous_to_fun := UniformFun.postcomp_uniform_continuous e.UniformContinuous
     uniform_continuous_inv_fun := UniformFun.postcomp_uniform_continuous e.symm.UniformContinuous }
 #align uniform_fun.congr_right UniformFun.congrRight
 
@@ -462,7 +462,7 @@ protected theorem precomp_uniform_continuous {f : γ → α} :
 `(γ →ᵤ β) ≃ᵤ (α →ᵤ β)` by pre-composing. -/
 protected def congrLeft (e : γ ≃ α) : (γ →ᵤ β) ≃ᵤ (α →ᵤ β) :=
   { Equiv.arrowCongr e (Equiv.refl _) with
-    uniform_continuous_to_fun := UniformFun.precomp_uniform_continuous,
+    uniform_continuous_to_fun := UniformFun.precomp_uniform_continuous
     uniform_continuous_inv_fun := UniformFun.precomp_uniform_continuous }
 #align uniform_fun.congr_left UniformFun.congrLeft
 
@@ -791,7 +791,7 @@ protected theorem postcomp_uniform_inducing [UniformSpace γ] {f : γ → β} (h
 by post-composing. -/
 protected def congrRight [UniformSpace γ] (e : γ ≃ᵤ β) : (α →ᵤ[𝔖] γ) ≃ᵤ (α →ᵤ[𝔖] β) :=
   { Equiv.piCongrRight fun a => e.toEquiv with
-    uniform_continuous_to_fun := UniformOnFun.postcomp_uniform_continuous e.UniformContinuous,
+    uniform_continuous_to_fun := UniformOnFun.postcomp_uniform_continuous e.UniformContinuous
     uniform_continuous_inv_fun :=
       UniformOnFun.postcomp_uniform_continuous e.symm.UniformContinuous }
 #align uniform_on_fun.congr_right UniformOnFun.congrRight
@@ -840,7 +840,7 @@ protected def congrLeft {𝔗 : Set (Set γ)} (e : γ ≃ α) (he : 𝔗 ⊆ ima
           intro s hs
           change e.symm '' s ∈ 𝔗
           rw [← preimage_equiv_eq_image_symm]
-          exact he' hs),
+          exact he' hs)
     uniform_continuous_inv_fun := UniformOnFun.precomp_uniform_continuous he }
 #align uniform_on_fun.congr_left UniformOnFun.congrLeft
 

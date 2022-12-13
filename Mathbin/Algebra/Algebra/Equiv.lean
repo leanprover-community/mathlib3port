@@ -56,7 +56,10 @@ namespace AlgEquivClass
 -- See note [lower instance priority]
 instance (priority := 100) toAlgHomClass (F R A B : Type _) [CommSemiring R] [Semiring A]
     [Semiring B] [Algebra R A] [Algebra R B] [h : AlgEquivClass F R A B] : AlgHomClass F R A B :=
-  { h with coe := coeFn, coe_injective' := FunLike.coe_injective, map_zero := map_zero,
+  { h with 
+    coe := coeFn
+    coe_injective' := FunLike.coe_injective
+    map_zero := map_zero
     map_one := map_one }
 #align alg_equiv_class.to_alg_hom_class AlgEquivClass.toAlgHomClass
 
@@ -71,7 +74,9 @@ instance (F R A B : Type _) [CommSemiring R] [Semiring A] [Semiring B] [Algebra 
     CoeTC F
       (A ≃ₐ[R]
         B) where coe f :=
-    { (f : A ≃+* B) with toFun := f, invFun := EquivLike.inv f,
+    { (f : A ≃+* B) with 
+      toFun := f
+      invFun := EquivLike.inv f
       commutes' := AlgHomClass.commutes f }
 
 end AlgEquivClass
@@ -217,7 +222,9 @@ theorem map_finsupp_sum {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α)
 This definition is included for symmetry with the other `to_*_hom` projections.
 The `simp` normal form is to use the coercion of the `alg_hom_class.has_coe_t` instance. -/
 def toAlgHom : A₁ →ₐ[R] A₂ :=
-  { e with map_one' := e.map_one, map_zero' := e.map_zero }
+  { e with 
+    map_one' := e.map_one
+    map_zero' := e.map_zero }
 #align alg_equiv.to_alg_hom AlgEquiv.toAlgHom
 
 @[simp]
@@ -328,7 +335,9 @@ theorem mk_coe' (e : A₁ ≃ₐ[R] A₂) (f h₁ h₂ h₃ h₄ h₅) :
 @[simp]
 theorem symm_mk (f f') (h₁ h₂ h₃ h₄ h₅) :
     (⟨f, f', h₁, h₂, h₃, h₄, h₅⟩ : A₁ ≃ₐ[R] A₂).symm =
-      { (⟨f, f', h₁, h₂, h₃, h₄, h₅⟩ : A₁ ≃ₐ[R] A₂).symm with toFun := f', invFun := f } :=
+      { (⟨f, f', h₁, h₂, h₃, h₄, h₅⟩ : A₁ ≃ₐ[R] A₂).symm with
+        toFun := f'
+        invFun := f } :=
   rfl
 #align alg_equiv.symm_mk AlgEquiv.symm_mk
 
@@ -453,7 +462,10 @@ theorem arrow_congr_symm {A₁' A₂' : Type _} [Semiring A₁'] [Semiring A₂'
 /-- If an algebra morphism has an inverse, it is a algebra isomorphism. -/
 def ofAlgHom (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ : f.comp g = AlgHom.id R A₂)
     (h₂ : g.comp f = AlgHom.id R A₁) : A₁ ≃ₐ[R] A₂ :=
-  { f with toFun := f, invFun := g, left_inv := AlgHom.ext_iff.1 h₂,
+  { f with 
+    toFun := f
+    invFun := g
+    left_inv := AlgHom.ext_iff.1 h₂
     right_inv := AlgHom.ext_iff.1 h₁ }
 #align alg_equiv.of_alg_hom AlgEquiv.ofAlgHom
 
@@ -492,7 +504,10 @@ theorem of_bijective_apply {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f}
 /-- Forgetting the multiplicative structures, an equivalence of algebras is a linear equivalence. -/
 @[simps apply]
 def toLinearEquiv (e : A₁ ≃ₐ[R] A₂) : A₁ ≃ₗ[R] A₂ :=
-  { e with toFun := e, map_smul' := e.map_smul, invFun := e.symm }
+  { e with 
+    toFun := e
+    map_smul' := e.map_smul
+    invFun := e.symm }
 #align alg_equiv.to_linear_equiv AlgEquiv.toLinearEquiv
 
 @[simp]
@@ -556,7 +571,11 @@ given that it distributes over multiplication and action of scalars.
 -/
 @[simps apply]
 def ofLinearEquiv : A₁ ≃ₐ[R] A₂ :=
-  { l with toFun := l, invFun := l.symm, map_mul' := map_mul, commutes' := commutes }
+  { l with 
+    toFun := l
+    invFun := l.symm
+    map_mul' := map_mul
+    commutes' := commutes }
 #align alg_equiv.of_linear_equiv AlgEquiv.ofLinearEquiv
 
 @[simp]
@@ -588,7 +607,10 @@ section OfRingEquiv
 @[simps]
 def ofRingEquiv {f : A₁ ≃+* A₂} (hf : ∀ x, f (algebraMap R A₁ x) = algebraMap R A₂ x) :
     A₁ ≃ₐ[R] A₂ :=
-  { f with toFun := f, invFun := f.symm, commutes' := hf }
+  { f with 
+    toFun := f
+    invFun := f.symm
+    commutes' := hf }
 #align alg_equiv.of_ring_equiv AlgEquiv.ofRingEquiv
 
 end OfRingEquiv

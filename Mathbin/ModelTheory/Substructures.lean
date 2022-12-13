@@ -157,7 +157,8 @@ theorem constants_mem (c : L.Constants) : ↑c ∈ S :=
 
 /-- The substructure `M` of the structure `M`. -/
 instance : Top (L.Substructure M) :=
-  ⟨{ carrier := Set.univ, fun_mem := fun n f x h => Set.mem_univ _ }⟩
+  ⟨{  carrier := Set.univ
+      fun_mem := fun n f x h => Set.mem_univ _ }⟩
 
 instance : Inhabited (L.Substructure M) :=
   ⟨⊤⟩
@@ -174,7 +175,9 @@ theorem coe_top : ((⊤ : L.Substructure M) : Set M) = Set.univ :=
 
 /-- The inf of two substructures is their intersection. -/
 instance : HasInf (L.Substructure M) :=
-  ⟨fun S₁ S₂ => { carrier := S₁ ∩ S₂, fun_mem := fun n f => (S₁.fun_mem f).inf (S₂.fun_mem f) }⟩
+  ⟨fun S₁ S₂ =>
+    { carrier := S₁ ∩ S₂
+      fun_mem := fun n f => (S₁.fun_mem f).inf (S₂.fun_mem f) }⟩
 
 @[simp]
 theorem coe_inf (p p' : L.Substructure M) : ((p ⊓ p' : L.Substructure M) : Set M) = p ∩ p' :=
@@ -188,7 +191,7 @@ theorem mem_inf {p p' : L.Substructure M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p �
 
 instance : HasInf (L.Substructure M) :=
   ⟨fun s =>
-    { carrier := ⋂ t ∈ s, ↑t,
+    { carrier := ⋂ t ∈ s, ↑t
       fun_mem := fun n f =>
         ClosedUnder.Inf
           (by 
@@ -220,9 +223,15 @@ instance : CompleteLattice (L.Substructure M) :=
   { (completeLatticeOfInf (L.Substructure M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
         is_glb_binfi with
-    le := (· ≤ ·), lt := (· < ·), top := ⊤, le_top := fun S x hx => mem_top x, inf := (· ⊓ ·),
-    inf := HasInf.inf, le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩,
-    inf_le_left := fun a b x => And.left, inf_le_right := fun a b x => And.right }
+    le := (· ≤ ·)
+    lt := (· < ·)
+    top := ⊤
+    le_top := fun S x hx => mem_top x
+    inf := (· ⊓ ·)
+    inf := HasInf.inf
+    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
+    inf_le_left := fun a b x => And.left
+    inf_le_right := fun a b x => And.right }
 
 variable (L)
 
@@ -738,7 +747,7 @@ def substructureReduct :
       L.Substructure
         M where 
   toFun S :=
-    { carrier := S,
+    { carrier := S
       fun_mem := fun n f x hx => by
         have h := S.fun_mem (φ.on_function f) x hx
         simp only [Lhom.map_on_function, substructure.mem_carrier] at h

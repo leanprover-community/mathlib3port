@@ -111,7 +111,9 @@ structure AlmostMono {α ι κ : Type _} (C : (ι → Option α) → κ) where
 
 instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] :
     Inhabited (AlmostMono fun v : ι → Option α => (default : κ)) :=
-  ⟨{ line := default, Color := default, has_color := fun _ => rfl }⟩
+  ⟨{  line := default
+      Color := default
+      has_color := fun _ => rfl }⟩
 
 /-- The type of collections of lines such that
 - each line is only one color except possibly at its endpoint

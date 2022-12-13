@@ -239,9 +239,9 @@ def stalkPullbackHom (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) :
 def germToPullbackStalk (f : X ⟶ Y) (F : Y.Presheaf C) (U : Opens X) (x : U) :
     (pullbackObj f F).obj (op U) ⟶ F.stalk (f x) :=
   colimit.desc (LanCat.diagram (Opens.map f).op F (op U))
-    { x := F.stalk (f x),
+    { x := F.stalk (f x)
       ι :=
-        { app := fun V => F.germ ⟨f x, V.Hom.unop.le x.2⟩,
+        { app := fun V => F.germ ⟨f x, V.Hom.unop.le x.2⟩
           naturality' := fun _ _ i => by 
             erw [category.comp_id]
             exact F.germ_res i.left.unop _ } }
@@ -251,9 +251,9 @@ def germToPullbackStalk (f : X ⟶ Y) (F : Y.Presheaf C) (U : Opens X) (x : U) :
 def stalkPullbackInv (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) :
     (pullbackObj f F).stalk x ⟶ F.stalk (f x) :=
   colimit.desc ((OpenNhds.inclusion x).op ⋙ Presheaf.pullbackObj f F)
-    { x := F.stalk (f x),
+    { x := F.stalk (f x)
       ι :=
-        { app := fun U => F.germToPullbackStalk _ f (unop U).1 ⟨x, (unop U).2⟩,
+        { app := fun U => F.germToPullbackStalk _ f (unop U).1 ⟨x, (unop U).2⟩
           naturality' := fun _ _ _ => by
             erw [colimit.pre_desc, category.comp_id]
             congr } }

@@ -266,8 +266,10 @@ theorem norm_def {z : ℤ_[p]} : ‖z‖ = ‖(z : ℚ_[p])‖ :=
 variable (p)
 
 instance : NormedCommRing ℤ_[p] :=
-  { PadicInt.commRing, PadicInt.metricSpace p with dist_eq := fun ⟨_, _⟩ ⟨_, _⟩ => rfl,
-    norm_mul := by simp [norm_def], norm := norm }
+  { PadicInt.commRing, PadicInt.metricSpace p with
+    dist_eq := fun ⟨_, _⟩ ⟨_, _⟩ => rfl
+    norm_mul := by simp [norm_def]
+    norm := norm }
 
 instance : NormOneClass ℤ_[p] :=
   ⟨norm_def.trans norm_one⟩

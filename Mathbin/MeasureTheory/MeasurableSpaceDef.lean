@@ -475,8 +475,9 @@ theorem generate_from_singleton_univ : generateFrom {Set.univ} = (⊥ : Measurab
 
 theorem measurable_set_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = ∅ ∨ s = univ :=
   let b : MeasurableSpace α :=
-    { MeasurableSet' := fun s => s = ∅ ∨ s = univ, measurableSetEmpty := Or.inl rfl,
-      measurableSetCompl := by simp (config := { contextual := true }) [or_imp],
+    { MeasurableSet' := fun s => s = ∅ ∨ s = univ
+      measurableSetEmpty := Or.inl rfl
+      measurableSetCompl := by simp (config := { contextual := true }) [or_imp]
       measurableSetUnion := fun f hf =>
         Classical.by_cases
           (fun h : ∃ i, f i = univ =>

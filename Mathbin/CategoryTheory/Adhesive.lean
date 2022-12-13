@@ -309,7 +309,10 @@ instance Type.adhesive : Adhesive (Type u) := by
 noncomputable instance (priority := 100) Adhesive.toRegularMonoCategory [Adhesive C] :
     RegularMonoCategory C :=
   ⟨fun X Y f hf =>
-    { z := pushout f f, left := pushout.inl, right := pushout.inr, w := pushout.condition,
+    { z := pushout f f
+      left := pushout.inl
+      right := pushout.inr
+      w := pushout.condition
       IsLimit :=
         (adhesive.is_pullback_of_is_pushout_of_mono_left
             (is_pushout.of_has_pushout f f)).isLimitFork }⟩

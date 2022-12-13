@@ -117,13 +117,13 @@ between the categories of module objects.
 @[simps]
 def comap {A B : Mon_ C} (f : A ⟶ B) :
     ModCat B ⥤
-      ModCat
-        A where 
+      ModCat A where 
   obj M :=
-    { x := M.x, act := (f.Hom ⊗ 𝟙 M.x) ≫ M.act,
+    { x := M.x
+      act := (f.Hom ⊗ 𝟙 M.x) ≫ M.act
       one_act' := by 
         slice_lhs 1 2 => rw [← comp_tensor_id]
-        rw [f.one_hom, one_act],
+        rw [f.one_hom, one_act]
       assoc' :=
         by
         -- oh, for homotopy.io in a widget!
@@ -137,7 +137,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) :
         slice_rhs 1 2 => rw [← comp_tensor_id, ← f.mul_hom]
         rw [comp_tensor_id, category.assoc] }
   map M N g :=
-    { Hom := g.Hom,
+    { Hom := g.Hom
       act_hom' := by 
         dsimp
         slice_rhs 1 2 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]

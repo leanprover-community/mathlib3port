@@ -233,11 +233,12 @@ instance uniqueOfIsEmpty [IsEmpty ι] : Unique (⨁ i, β i) :=
 protected def id (M : Type v) (ι : Type _ := PUnit) [AddCommMonoid M] [Unique ι] :
     (⨁ _ : ι, M) ≃+ M :=
   { DirectSum.toAddMonoid fun _ => AddMonoidHom.id M with
-    toFun := DirectSum.toAddMonoid fun _ => AddMonoidHom.id M, invFun := of (fun _ => M) default,
+    toFun := DirectSum.toAddMonoid fun _ => AddMonoidHom.id M
+    invFun := of (fun _ => M) default
     left_inv := fun x =>
       DirectSum.induction_on x (by rw [AddMonoidHom.map_zero, AddMonoidHom.map_zero])
         (fun p x => by rw [Unique.default_eq p, to_add_monoid_of] <;> rfl) fun x y ihx ihy => by
-        rw [AddMonoidHom.map_add, AddMonoidHom.map_add, ihx, ihy],
+        rw [AddMonoidHom.map_add, AddMonoidHom.map_add, ihx, ihy]
     right_inv := fun x => to_add_monoid_of _ _ _ }
 #align direct_sum.id DirectSum.id
 

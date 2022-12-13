@@ -27,11 +27,14 @@ instance Nat.orderBot : OrderBot ℕ where
 #align nat.order_bot Nat.orderBot
 
 instance : LinearOrderedCommSemiring ℕ :=
-  { Nat.commSemiring, Nat.linearOrder with lt := Nat.lt, add_le_add_left := @Nat.add_le_add_left,
-    le_of_add_le_add_left := @Nat.le_of_add_le_add_left,
-    zero_le_one := Nat.le_of_lt (Nat.zero_lt_succ 0),
-    mul_lt_mul_of_pos_left := @Nat.mul_lt_mul_of_pos_left,
-    mul_lt_mul_of_pos_right := @Nat.mul_lt_mul_of_pos_right, DecidableEq := Nat.decidableEq,
+  { Nat.commSemiring, Nat.linearOrder with 
+    lt := Nat.lt
+    add_le_add_left := @Nat.add_le_add_left
+    le_of_add_le_add_left := @Nat.le_of_add_le_add_left
+    zero_le_one := Nat.le_of_lt (Nat.zero_lt_succ 0)
+    mul_lt_mul_of_pos_left := @Nat.mul_lt_mul_of_pos_left
+    mul_lt_mul_of_pos_right := @Nat.mul_lt_mul_of_pos_right
+    DecidableEq := Nat.decidableEq
     exists_pair_ne := ⟨0, 1, ne_of_lt Nat.zero_lt_one⟩ }
 
 instance : LinearOrderedCommMonoidWithZero ℕ :=
@@ -63,8 +66,8 @@ instance : LinearOrderedCancelAddCommMonoid ℕ :=
 instance : CanonicallyOrderedCommSemiring ℕ :=
   { Nat.nontrivial, Nat.orderBot, (inferInstance : OrderedAddCommMonoid ℕ),
     (inferInstance : LinearOrderedSemiring ℕ), (inferInstance : CommSemiring ℕ) with
-    exists_add_of_le := fun a b h => (Nat.le.dest h).imp fun _ => Eq.symm,
-    le_self_add := Nat.le_add_right,
+    exists_add_of_le := fun a b h => (Nat.le.dest h).imp fun _ => Eq.symm
+    le_self_add := Nat.le_add_right
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero }
 
 instance : CanonicallyLinearOrderedAddMonoid ℕ :=

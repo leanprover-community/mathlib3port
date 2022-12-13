@@ -655,10 +655,10 @@ protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pur
 @[to_additive "`filter α` is a subtraction monoid under pointwise\noperations if `α` is."]
 protected def divisionMonoid : DivisionMonoid (Filter α) :=
   { Filter.monoid, Filter.hasInvolutiveInv, Filter.hasDiv, Filter.hasZpow with
-    mul_inv_rev := fun s t => map_map₂_antidistrib mul_inv_rev,
+    mul_inv_rev := fun s t => map_map₂_antidistrib mul_inv_rev
     inv_eq_of_mul := fun s t h => by
       obtain ⟨a, b, rfl, rfl, hab⟩ := Filter.mul_eq_one_iff.1 h
-      rw [inv_pure, inv_eq_of_mul_eq_one_right hab],
+      rw [inv_pure, inv_eq_of_mul_eq_one_right hab]
     div_eq_mul_inv := fun f g => map_map₂_distrib_right div_eq_mul_inv }
 #align filter.division_monoid Filter.divisionMonoid
 
@@ -685,7 +685,8 @@ protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (F
 
 /-- `filter α` has distributive negation if `α` has. -/
 protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Filter α) :=
-  { Filter.hasInvolutiveNeg with neg_mul := fun _ _ => map₂_map_left_comm neg_mul,
+  { Filter.hasInvolutiveNeg with
+    neg_mul := fun _ _ => map₂_map_left_comm neg_mul
     mul_neg := fun _ _ => map_map₂_right_comm mul_neg }
 #align filter.has_distrib_neg Filter.hasDistribNeg
 

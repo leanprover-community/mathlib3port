@@ -73,7 +73,7 @@ def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPre
               dsimp
               simp only [← category.assoc]
               congr 1
-              apply S.condition),
+              apply S.condition)
       naturality' := by 
         intro i j f
         dsimp [presheaf.is_limit_of_is_sheaf]
@@ -147,16 +147,16 @@ instance (F : K ⥤ SheafCat J D) : CreatesLimit F (sheafToPresheaf J D) :=
   creates_limit_of_reflects_iso fun E hE =>
     { liftedCone :=
         ⟨⟨E.x, is_sheaf_of_is_limit _ _ hE⟩,
-          ⟨fun t => ⟨E.π.app _⟩, fun u v e => SheafCat.Hom.ext _ _ <| E.π.naturality _⟩⟩,
+          ⟨fun t => ⟨E.π.app _⟩, fun u v e => SheafCat.Hom.ext _ _ <| E.π.naturality _⟩⟩
       validLift :=
         (Cones.ext (eqToIso rfl)) fun j => by 
           dsimp
-          simp,
+          simp
       makesLimit :=
-        { lift := fun S => ⟨hE.lift ((sheafToPresheaf J D).mapCone S)⟩,
+        { lift := fun S => ⟨hE.lift ((sheafToPresheaf J D).mapCone S)⟩
           fac' := fun S j => by 
             ext1
-            apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j,
+            apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j
           uniq' := fun S m hm => by 
             ext1
             exact
@@ -210,7 +210,7 @@ def sheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J
       F where 
   x := ⟨J.sheafify E.x, GrothendieckTopology.Plus.isSheafPlusPlus _ _⟩
   ι :=
-    { app := fun k => ⟨E.ι.app k ≫ J.toSheafify E.x⟩,
+    { app := fun k => ⟨E.ι.app k ≫ J.toSheafify E.x⟩
       naturality' := fun i j f => by 
         ext1
         dsimp

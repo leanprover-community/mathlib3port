@@ -55,7 +55,7 @@ Note this is not an instance as it forms a typeclass loop. -/
 def NoZeroDivisors.toCancelMonoidWithZero [Ring α] [NoZeroDivisors α] : CancelMonoidWithZero α :=
   { (by infer_instance : MonoidWithZero α) with
     mul_left_cancel_of_ne_zero := fun a b c ha =>
-      @IsRegular.left _ _ _ (is_regular_of_ne_zero' ha) _ _,
+      @IsRegular.left _ _ _ (is_regular_of_ne_zero' ha) _ _
     mul_right_cancel_of_ne_zero := fun a b c hb =>
       @IsRegular.right _ _ _ (is_regular_of_ne_zero' hb) _ _ }
 #align no_zero_divisors.to_cancel_monoid_with_zero NoZeroDivisors.toCancelMonoidWithZero
@@ -75,7 +75,7 @@ section IsDomain
 instance (priority := 100) IsDomain.toCancelMonoidWithZero [Semiring α] [IsDomain α] :
     CancelMonoidWithZero α :=
   { Semiring.toMonoidWithZero α with
-    mul_left_cancel_of_ne_zero := fun a b c ha h => IsCancelMulZero.mul_left_cancel_of_ne_zero ha h,
+    mul_left_cancel_of_ne_zero := fun a b c ha h => IsCancelMulZero.mul_left_cancel_of_ne_zero ha h
     mul_right_cancel_of_ne_zero := fun a b c ha h =>
       IsCancelMulZero.mul_right_cancel_of_ne_zero ha h }
 #align is_domain.to_cancel_monoid_with_zero IsDomain.toCancelMonoidWithZero
@@ -85,7 +85,7 @@ variable [CommSemiring α] [IsDomain α]
 -- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelCommMonoidWithZero : CancelCommMonoidWithZero α :=
   { (inferInstance : CommSemiring α) with
-    mul_left_cancel_of_ne_zero := fun a b c ha H => IsDomain.mul_left_cancel_of_ne_zero ha H,
+    mul_left_cancel_of_ne_zero := fun a b c ha H => IsDomain.mul_left_cancel_of_ne_zero ha H
     mul_right_cancel_of_ne_zero := fun a b c hb H => IsDomain.mul_right_cancel_of_ne_zero hb H }
 #align is_domain.to_cancel_comm_monoid_with_zero IsDomain.toCancelCommMonoidWithZero
 

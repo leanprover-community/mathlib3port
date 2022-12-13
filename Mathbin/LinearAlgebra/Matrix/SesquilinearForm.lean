@@ -164,8 +164,9 @@ variable {σ₁ : R₁ →+* R} {σ₂ : R₂ →+* R}
 def LinearMap.toMatrixₛₗ₂' : ((n → R₁) →ₛₗ[σ₁] (m → R₂) →ₛₗ[σ₂] R) ≃ₗ[R] Matrix n m R :=
   { LinearMap.toMatrix₂Aux (fun i => stdBasis R₁ (fun _ => R₁) i 1) fun j =>
       stdBasis R₂ (fun _ => R₂) j 1 with
-    toFun := LinearMap.toMatrix₂Aux _ _, invFun := Matrix.toLinearMap₂'Aux σ₁ σ₂,
-    left_inv := LinearMap.to_linear_map₂'_aux_to_matrix₂_aux,
+    toFun := LinearMap.toMatrix₂Aux _ _
+    invFun := Matrix.toLinearMap₂'Aux σ₁ σ₂
+    left_inv := LinearMap.to_linear_map₂'_aux_to_matrix₂_aux
     right_inv := Matrix.to_matrix₂_aux_to_linear_map₂'_aux }
 #align linear_map.to_matrixₛₗ₂' LinearMap.toMatrixₛₗ₂'
 

@@ -135,8 +135,12 @@ theorem leibniz_cross (u v w : Fin 3 → R) : u ×₃ (v ×₃ w) = u ×₃ v ×
     Note we do not make this an instance as a conflicting one already exists
     via `lie_ring.of_associative_ring`. -/
 def Cross.lieRing : LieRing (Fin 3 → R) :=
-  { Pi.addCommGroup with bracket := fun u v => u ×₃ v, add_lie := LinearMap.map_add₂ _,
-    lie_add := fun u => LinearMap.map_add _, lie_self := cross_self, leibniz_lie := leibniz_cross }
+  { Pi.addCommGroup with 
+    bracket := fun u v => u ×₃ v
+    add_lie := LinearMap.map_add₂ _
+    lie_add := fun u => LinearMap.map_add _
+    lie_self := cross_self
+    leibniz_lie := leibniz_cross }
 #align cross.lie_ring Cross.lieRing
 
 attribute [local instance] Cross.lieRing

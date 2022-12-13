@@ -203,10 +203,11 @@ def g :
     B →*
       SX' where 
   toFun β :=
-    { toFun := fun x => β • x, invFun := fun x => β⁻¹ • x,
+    { toFun := fun x => β • x
+      invFun := fun x => β⁻¹ • x
       left_inv := fun x => by 
         dsimp only
-        rw [← mul_smul, mul_left_inv, one_smul],
+        rw [← mul_smul, mul_left_inv, one_smul]
       right_inv := fun x => by 
         dsimp only
         rw [← mul_smul, mul_right_inv, one_smul] }

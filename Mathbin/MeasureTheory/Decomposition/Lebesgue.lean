@@ -889,7 +889,7 @@ instance haveLebesgueDecompositionSmulReal (s : SignedMeasure α) (μ : Measure 
     refine'
       { posPart := by
           rw [to_jordan_decomposition_smul_real, jordan_decomposition.real_smul_pos_part_neg _ _ hr]
-          infer_instance,
+          infer_instance
         negPart := by
           rw [to_jordan_decomposition_smul_real, jordan_decomposition.real_smul_neg_part_neg _ _ hr]
           infer_instance }
@@ -1075,7 +1075,7 @@ private theorem have_lebesgue_decomposition_mk' (μ : Measure α) {f : α → �
     { posPart := by
         use ⟨t.to_jordan_decomposition.pos_part, fun x => Ennreal.ofReal (f x)⟩
         refine' ⟨hf.ennreal_of_real, htμ.1, _⟩
-        rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd],
+        rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
       negPart := by
         use ⟨t.to_jordan_decomposition.neg_part, fun x => Ennreal.ofReal (-f x)⟩
         refine' ⟨hf.neg.ennreal_of_real, htμ.2, _⟩

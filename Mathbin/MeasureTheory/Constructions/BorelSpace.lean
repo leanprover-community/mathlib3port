@@ -234,7 +234,9 @@ unsafe def borelize (ts : parse pexpr_list_or_texpr) : tactic Unit :=
 #align tactic.interactive.borelize tactic.interactive.borelize
 
 add_tactic_doc
-  { Name := "borelize", category := DocCategory.tactic, declNames := [`tactic.interactive.borelize],
+  { Name := "borelize"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.borelize]
     tags := ["type class"] }
 
 end Interactive
@@ -1857,7 +1859,7 @@ theorem measurableOfMeasurableNnreal {f : ℝ≥0∞ → α} (h : Measurable fun
 /-- `ℝ≥0∞` is `measurable_equiv` to `ℝ≥0 ⊕ unit`. -/
 def ennrealEquivSum : ℝ≥0∞ ≃ᵐ Sum ℝ≥0 Unit :=
   { Equiv.optionEquivSumPUnit ℝ≥0 with
-    measurableToFun := measurableOfMeasurableNnreal measurableInl,
+    measurableToFun := measurableOfMeasurableNnreal measurableInl
     measurableInvFun :=
       measurableSum measurableCoeNnrealEnnreal (@measurableConst ℝ≥0∞ Unit _ _ ∞) }
 #align ennreal.ennreal_equiv_sum Ennreal.ennrealEquivSum

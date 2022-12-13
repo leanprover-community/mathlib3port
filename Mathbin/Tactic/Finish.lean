@@ -696,9 +696,9 @@ All accept an optional list of simplifier rules, typically definitions that shou
 list of `ematch` lemmas, which must be preceded by `using`.
 -/
 add_tactic_doc
-  { Name := "finish / clarify / safe", category := DocCategory.tactic,
-    declNames :=
-      [`tactic.interactive.finish, `tactic.interactive.clarify, `tactic.interactive.safe],
+  { Name := "finish / clarify / safe"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.finish, `tactic.interactive.clarify, `tactic.interactive.safe]
     tags := ["logic", "finishing"] }
 
 end Interactive

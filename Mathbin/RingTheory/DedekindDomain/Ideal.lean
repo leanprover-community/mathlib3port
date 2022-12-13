@@ -608,8 +608,10 @@ open Ideal
 
 noncomputable instance FractionalIdeal.semifield : Semifield (FractionalIdeal A⁰ K) :=
   { FractionalIdeal.commSemiring, (coe_to_fractional_ideal_injective le_rfl).Nontrivial with
-    inv := fun I => I⁻¹, inv_zero := inv_zero' _, div := (· / ·),
-    div_eq_mul_inv := FractionalIdeal.div_eq_mul_inv,
+    inv := fun I => I⁻¹
+    inv_zero := inv_zero' _
+    div := (· / ·)
+    div_eq_mul_inv := FractionalIdeal.div_eq_mul_inv
     mul_inv_cancel := fun I => FractionalIdeal.mul_inv_cancel }
 #align fractional_ideal.semifield FractionalIdeal.semifield
 
@@ -866,14 +868,17 @@ theorem sup_mul_inf (I J : Ideal A) : (I ⊔ J) * (I ⊓ J) = I * J := by
 /-- Ideals in a Dedekind domain have gcd and lcm operators that (trivially) are compatible with
 the normalization operator. -/
 instance : NormalizedGcdMonoid (Ideal A) :=
-  { Ideal.normalizationMonoid with gcd := (· ⊔ ·),
-    gcd_dvd_left := fun _ _ => by simpa only [dvd_iff_le] using le_sup_left,
-    gcd_dvd_right := fun _ _ => by simpa only [dvd_iff_le] using le_sup_right,
-    dvd_gcd := fun _ _ _ => by simpa only [dvd_iff_le] using sup_le, lcm := (· ⊓ ·),
-    lcm_zero_left := fun _ => by simp only [zero_eq_bot, bot_inf_eq],
-    lcm_zero_right := fun _ => by simp only [zero_eq_bot, inf_bot_eq],
-    gcd_mul_lcm := fun _ _ => by rw [associated_iff_eq, sup_mul_inf],
-    normalize_gcd := fun _ _ => normalize_eq _, normalize_lcm := fun _ _ => normalize_eq _ }
+  { Ideal.normalizationMonoid with 
+    gcd := (· ⊔ ·)
+    gcd_dvd_left := fun _ _ => by simpa only [dvd_iff_le] using le_sup_left
+    gcd_dvd_right := fun _ _ => by simpa only [dvd_iff_le] using le_sup_right
+    dvd_gcd := fun _ _ _ => by simpa only [dvd_iff_le] using sup_le
+    lcm := (· ⊓ ·)
+    lcm_zero_left := fun _ => by simp only [zero_eq_bot, bot_inf_eq]
+    lcm_zero_right := fun _ => by simp only [zero_eq_bot, inf_bot_eq]
+    gcd_mul_lcm := fun _ _ => by rw [associated_iff_eq, sup_mul_inf]
+    normalize_gcd := fun _ _ => normalize_eq _
+    normalize_lcm := fun _ _ => normalize_eq _ }
 
 -- In fact, any lawful gcd and lcm would equal sup and inf respectively.
 @[simp]

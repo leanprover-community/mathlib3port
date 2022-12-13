@@ -31,30 +31,30 @@ instance functorCategoryLinear :
         D) where 
   homModule F G :=
     { smul := fun r α =>
-        { app := fun X => r • α.app X,
+        { app := fun X => r • α.app X
           naturality' := by 
             intros
-            rw [comp_smul, smul_comp, α.naturality] },
+            rw [comp_smul, smul_comp, α.naturality] }
       one_smul := by 
         intros
         ext
-        apply one_smul,
+        apply one_smul
       zero_smul := by 
         intros
         ext
-        apply zero_smul,
+        apply zero_smul
       smul_zero := by 
         intros
         ext
-        apply smul_zero,
+        apply smul_zero
       add_smul := by 
         intros
         ext
-        apply add_smul,
+        apply add_smul
       smul_add := by 
         intros
         ext
-        apply smul_add,
+        apply smul_add
       mul_smul := by 
         intros
         ext

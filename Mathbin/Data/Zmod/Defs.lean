@@ -49,7 +49,7 @@ instance (n : ℕ) : CommSemigroup (Fin (n + 1)) :=
           a * b % (n + 1) * c ≡ a * b * c [MOD n + 1] := (Nat.mod_modeq _ _).mul_right _
           _ ≡ a * (b * c) [MOD n + 1] := by rw [mul_assoc]
           _ ≡ a * (b * c % (n + 1)) [MOD n + 1] := (Nat.mod_modeq _ _).symm.mul_left _
-          ),
+          )
     mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ =>
       Fin.eq_of_veq (show a * b % (n + 1) = b * a % (n + 1) by rw [mul_comm]) }
 
@@ -66,8 +66,10 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin (n + 1), a * (b + c
 
 /-- Commutative ring structure on `fin (n+1)`. -/
 instance (n : ℕ) : CommRing (Fin (n + 1)) :=
-  { Fin.addMonoidWithOne, Fin.addCommGroup n, Fin.commSemigroup n with one_mul := Fin.one_mul,
-    mul_one := Fin.mul_one, left_distrib := left_distrib_aux n,
+  { Fin.addMonoidWithOne, Fin.addCommGroup n, Fin.commSemigroup n with
+    one_mul := Fin.one_mul
+    mul_one := Fin.mul_one
+    left_distrib := left_distrib_aux n
     right_distrib := fun a b c => by
       rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
 

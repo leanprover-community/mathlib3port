@@ -113,10 +113,11 @@ theorem ext {c1 c2 : NumDenomSameDeg 𝒜 x} (hdeg : c1.deg = c2.deg) (hnum : (c
 #align homogeneous_localization.num_denom_same_deg.ext HomogeneousLocalization.NumDenomSameDeg.ext
 
 instance :
-    One
-      (NumDenomSameDeg 𝒜
-        x) where one :=
-    { deg := 0, num := ⟨1, one_mem⟩, denom := ⟨1, one_mem⟩, denom_mem := Submonoid.one_mem _ }
+    One (NumDenomSameDeg 𝒜 x) where one :=
+    { deg := 0
+      num := ⟨1, one_mem⟩
+      denom := ⟨1, one_mem⟩
+      denom_mem := Submonoid.one_mem _ }
 
 @[simp]
 theorem deg_one : (1 : NumDenomSameDeg 𝒜 x).deg = 0 :=
@@ -157,11 +158,11 @@ theorem denom_zero : ((0 : NumDenomSameDeg 𝒜 x).denom : A) = 1 :=
   homogeneous_localization.num_denom_same_deg.denom_zero HomogeneousLocalization.NumDenomSameDeg.denom_zero
 
 instance :
-    Mul
-      (NumDenomSameDeg 𝒜
+    Mul (NumDenomSameDeg 𝒜
         x) where mul p q :=
-    { deg := p.deg + q.deg, num := ⟨p.num * q.num, mul_mem p.num.Prop q.num.Prop⟩,
-      denom := ⟨p.denom * q.denom, mul_mem p.denom.Prop q.denom.Prop⟩,
+    { deg := p.deg + q.deg
+      num := ⟨p.num * q.num, mul_mem p.num.Prop q.num.Prop⟩
+      denom := ⟨p.denom * q.denom, mul_mem p.denom.Prop q.denom.Prop⟩
       denom_mem := Submonoid.mul_mem _ p.denom_mem q.denom_mem }
 
 @[simp]
@@ -183,15 +184,14 @@ theorem denom_mul (c1 c2 : NumDenomSameDeg 𝒜 x) : ((c1 * c2).denom : A) = c1.
   homogeneous_localization.num_denom_same_deg.denom_mul HomogeneousLocalization.NumDenomSameDeg.denom_mul
 
 instance :
-    Add
-      (NumDenomSameDeg 𝒜
+    Add (NumDenomSameDeg 𝒜
         x) where add c1 c2 :=
-    { deg := c1.deg + c2.deg,
+    { deg := c1.deg + c2.deg
       num :=
         ⟨c1.denom * c2.num + c2.denom * c1.num,
           add_mem (mul_mem c1.denom.2 c2.num.2)
-            (add_comm c2.deg c1.deg ▸ mul_mem c2.denom.2 c1.num.2)⟩,
-      denom := ⟨c1.denom * c2.denom, mul_mem c1.denom.2 c2.denom.2⟩,
+            (add_comm c2.deg c1.deg ▸ mul_mem c2.denom.2 c1.num.2)⟩
+      denom := ⟨c1.denom * c2.denom, mul_mem c1.denom.2 c2.denom.2⟩
       denom_mem := Submonoid.mul_mem _ c1.denom_mem c2.denom_mem }
 
 @[simp]
@@ -578,7 +578,7 @@ theorem eq_num_div_denom (f : HomogeneousLocalization 𝒜 x) :
 #align homogeneous_localization.eq_num_div_denom HomogeneousLocalization.eq_num_div_denom
 
 theorem ext_iff_val (f g : HomogeneousLocalization 𝒜 x) : f = g ↔ f.val = g.val :=
-  { mp := fun h => h ▸ rfl,
+  { mp := fun h => h ▸ rfl
     mpr := fun h => by 
       induction f using Quotient.induction_on
       induction g using Quotient.induction_on

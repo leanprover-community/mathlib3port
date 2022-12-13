@@ -21,9 +21,15 @@ Instances on `Prop` such as `distrib_lattice`, `bounded_order`, `linear_order`.
 
 /-- Propositions form a distributive lattice. -/
 instance PropCat.distribLattice : DistribLattice Prop :=
-  { PropCat.partialOrder with sup := Or, le_sup_left := @Or.inl, le_sup_right := @Or.inr,
-    sup_le := fun a b c => Or.ndrec, inf := And, inf_le_left := @And.left,
-    inf_le_right := @And.right, le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha),
+  { PropCat.partialOrder with 
+    sup := Or
+    le_sup_left := @Or.inl
+    le_sup_right := @Or.inr
+    sup_le := fun a b c => Or.ndrec
+    inf := And
+    inf_le_left := @And.left
+    inf_le_right := @And.right
+    le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha)
     le_sup_inf := fun a b c => or_and_left.2 }
 #align Prop.distrib_lattice PropCat.distribLattice
 

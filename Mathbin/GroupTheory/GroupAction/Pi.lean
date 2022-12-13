@@ -187,7 +187,8 @@ theorem single_smul₀ {g : I → Type _} [∀ i, MonoidWithZero (f i)] [∀ i, 
 instance mulDistribMulAction (α) {m : Monoid α} {n : ∀ i, Monoid <| f i}
     [∀ i, MulDistribMulAction α <| f i] :
     @MulDistribMulAction α (∀ i : I, f i) m (@Pi.monoid I f n) :=
-  { Pi.mulAction _ with smul_one := fun c => funext fun i => smul_one _,
+  { Pi.mulAction _ with 
+    smul_one := fun c => funext fun i => smul_one _
     smul_mul := fun c f g => funext fun i => smul_mul' _ _ _ }
 #align pi.mul_distrib_mul_action Pi.mulDistribMulAction
 

@@ -60,15 +60,15 @@ This isn't an instance because most of the time we'll prove closedness for all o
 rather than just for this one.
 -/
 def unitClosed :
-    Closed
-      (𝟙_
-        C) where isAdj :=
-    { right := 𝟭 C,
+    Closed (𝟙_ C) where isAdj :=
+    { right := 𝟭 C
       adj :=
         Adjunction.mkOfHomEquiv
           { homEquiv := fun X _ =>
-              { toFun := fun a => (leftUnitor X).inv ≫ a, invFun := fun a => (leftUnitor X).Hom ≫ a,
-                left_inv := by tidy, right_inv := by tidy },
+              { toFun := fun a => (leftUnitor X).inv ≫ a
+                invFun := fun a => (leftUnitor X).Hom ≫ a
+                left_inv := by tidy
+                right_inv := by tidy }
             hom_equiv_naturality_left_symm' := fun X' X Y f g => by
               dsimp
               rw [left_unitor_naturality_assoc] } }

@@ -134,8 +134,10 @@ unsafe def transport (s : parse texpr ?) (e : parse <| tk "using" *> texpr) : it
 #align tactic.interactive.transport tactic.interactive.transport
 
 add_tactic_doc
-  { Name := "transport", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.transport], tags := ["rewriting", "equiv", "transport"] }
+  { Name := "transport"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.transport]
+    tags := ["rewriting", "equiv", "transport"] }
 
 end Interactive
 

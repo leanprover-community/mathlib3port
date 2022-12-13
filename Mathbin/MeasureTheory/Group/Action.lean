@@ -82,7 +82,7 @@ variable {m : MeasurableSpace α} [MeasurableSpace M] [HasSmul M α] [HasMeasura
 
 @[simp, to_additive]
 theorem measurePreservingSmul : MeasurePreserving ((· • ·) c) μ μ :=
-  { Measurable := measurableConstSmul c,
+  { Measurable := measurableConstSmul c
     map_eq := by 
       ext1 s hs
       rw [map_apply (measurable_const_smul c) hs]

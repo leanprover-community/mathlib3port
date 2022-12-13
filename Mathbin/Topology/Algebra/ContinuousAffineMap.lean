@@ -153,7 +153,9 @@ variable (R P)
 
 /-- The constant map is a continuous affine map. -/
 def const (q : Q) : P →A[R] Q :=
-  { AffineMap.const R P q with toFun := AffineMap.const R P q, cont := continuous_const }
+  { AffineMap.const R P q with 
+    toFun := AffineMap.const R P q
+    cont := continuous_const }
 #align continuous_affine_map.const ContinuousAffineMap.const
 
 @[simp]

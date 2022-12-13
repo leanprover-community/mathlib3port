@@ -519,7 +519,7 @@ instance : Lattice (Interval α) :=
           some
             ⟨⟨s.fst ⊔ t.fst, s.snd ⊓ t.snd⟩,
               sup_le (le_inf s.fst_le_snd h.1) <| le_inf h.2 t.fst_le_snd⟩
-        else ⊥,
+        else ⊥
     inf_le_left := fun s t =>
       match s, t with
       | ⊥, ⊥ => bot_le
@@ -529,7 +529,7 @@ instance : Lattice (Interval α) :=
         change dite _ _ _ ≤ _
         split_ifs
         · exact WithBot.some_le_some.2 ⟨le_sup_left, inf_le_left⟩
-        · exact bot_le,
+        · exact bot_le
     inf_le_right := fun s t =>
       match s, t with
       | ⊥, ⊥ => bot_le
@@ -539,7 +539,7 @@ instance : Lattice (Interval α) :=
         change dite _ _ _ ≤ _
         split_ifs
         · exact WithBot.some_le_some.2 ⟨le_sup_right, inf_le_right⟩
-        · exact bot_le,
+        · exact bot_le
     le_inf := fun s t c =>
       match s, t, c with
       | ⊥, t, c => fun _ _ => bot_le
@@ -760,7 +760,7 @@ variable [CompleteLattice α]
                              `infi₂_le_of_le
                              [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                       "⟩")])))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `le_Sup [])
                 ":="
@@ -798,7 +798,7 @@ variable [CompleteLattice α]
                              ","
                              (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
                             "⟩")]))])]))))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `Sup_le [])
                 ":="
@@ -887,7 +887,7 @@ variable [CompleteLattice α]
                                 "."
                                 (fieldIdx "2"))))])]
                           "⟩")]))]))))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `inf [])
                 ":="
@@ -990,7 +990,7 @@ variable [CompleteLattice α]
                       "⟩")])
                    "else"
                    (Order.BoundedOrder.«term⊥» "⊥")))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `Inf_le [])
                 ":="
@@ -1029,7 +1029,7 @@ variable [CompleteLattice α]
                       (tactic___
                        (cdotTk (patternIgnore (token.«·» "·")))
                        [(Tactic.exact "exact" `bot_le)])]))))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `le_Inf [])
                 ":="
@@ -1268,7 +1268,7 @@ variable [CompleteLattice α]
                             `infi₂_le_of_le
                             [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                      "⟩")])))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `le_Sup [])
                ":="
@@ -1306,7 +1306,7 @@ variable [CompleteLattice α]
                             ","
                             (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
                            "⟩")]))])]))))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `Sup_le [])
                ":="
@@ -1393,7 +1393,7 @@ variable [CompleteLattice α]
                                "."
                                (fieldIdx "2"))))])]
                          "⟩")]))]))))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `inf [])
                ":="
@@ -1496,7 +1496,7 @@ variable [CompleteLattice α]
                      "⟩")])
                   "else"
                   (Order.BoundedOrder.«term⊥» "⊥")))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `Inf_le [])
                ":="
@@ -1535,7 +1535,7 @@ variable [CompleteLattice α]
                      (tactic___
                       (cdotTk (patternIgnore (token.«·» "·")))
                       [(Tactic.exact "exact" `bot_le)])]))))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `le_Inf [])
                ":="
@@ -1763,7 +1763,7 @@ variable [CompleteLattice α]
                         `infi₂_le_of_le
                         [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                  "⟩")])))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `le_Sup [])
            ":="
@@ -1801,7 +1801,7 @@ variable [CompleteLattice α]
                         ","
                         (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
                        "⟩")]))])]))))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `Sup_le [])
            ":="
@@ -1888,7 +1888,7 @@ variable [CompleteLattice α]
                            "."
                            (fieldIdx "2"))))])]
                      "⟩")]))]))))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `inf [])
            ":="
@@ -1983,7 +1983,7 @@ variable [CompleteLattice α]
                  "⟩")])
               "else"
               (Order.BoundedOrder.«term⊥» "⊥")))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `Inf_le [])
            ":="
@@ -2022,7 +2022,7 @@ variable [CompleteLattice α]
                  (tactic___
                   (cdotTk (patternIgnore (token.«·» "·")))
                   [(Tactic.exact "exact" `bot_le)])]))))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `le_Inf [])
            ":="
@@ -2238,7 +2238,7 @@ variable [CompleteLattice α]
                        `infi₂_le_of_le
                        [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                 "⟩")])))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `le_Sup [])
           ":="
@@ -2276,7 +2276,7 @@ variable [CompleteLattice α]
                        ","
                        (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
                       "⟩")]))])]))))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `Sup_le [])
           ":="
@@ -2363,7 +2363,7 @@ variable [CompleteLattice α]
                           "."
                           (fieldIdx "2"))))])]
                     "⟩")]))]))))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `inf [])
           ":="
@@ -2458,7 +2458,7 @@ variable [CompleteLattice α]
                 "⟩")])
              "else"
              (Order.BoundedOrder.«term⊥» "⊥")))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `Inf_le [])
           ":="
@@ -2497,7 +2497,7 @@ variable [CompleteLattice α]
                 (tactic___
                  (cdotTk (patternIgnore (token.«·» "·")))
                  [(Tactic.exact "exact" `bot_le)])]))))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `le_Inf [])
           ":="
@@ -2711,7 +2711,7 @@ variable [CompleteLattice α]
                       `infi₂_le_of_le
                       [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                "⟩")])))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `le_Sup [])
          ":="
@@ -2747,7 +2747,7 @@ variable [CompleteLattice α]
                       ","
                       (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
                      "⟩")]))])]))))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `Sup_le [])
          ":="
@@ -2831,7 +2831,7 @@ variable [CompleteLattice α]
                          "."
                          (fieldIdx "2"))))])]
                    "⟩")]))]))))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `inf [])
          ":="
@@ -2926,7 +2926,7 @@ variable [CompleteLattice α]
                "⟩")])
             "else"
             (Order.BoundedOrder.«term⊥» "⊥")))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `Inf_le [])
          ":="
@@ -2964,7 +2964,7 @@ variable [CompleteLattice α]
                (tactic___
                 (cdotTk (patternIgnore (token.«·» "·")))
                 [(Tactic.exact "exact" `bot_le)])]))))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `le_Inf [])
          ":="
@@ -6536,7 +6536,6 @@ noncomputable
                                   lift s to NonemptyInterval α using ha
                                   exact infi₂_le_of_le s hs le_supr₂_of_le s hs s.fst_le_snd
                             ⟩
-                ,
                 le_Sup
                   :=
                   fun
@@ -6551,7 +6550,6 @@ noncomputable
                             exact
                               WithBot.some_le_some . 2
                                 ⟨ infi₂_le _ ha , le_supr₂_of_le _ ha le_rfl ⟩
-                ,
                 Sup_le
                   :=
                   fun
@@ -6569,7 +6567,6 @@ noncomputable
                                   ,
                                   supr₂_le fun c hc => WithBot.coe_le_coe . 1 <| ha _ hc . 2
                                 ⟩
-                ,
                 inf
                   :=
                   fun
@@ -6597,7 +6594,6 @@ noncomputable
                             ⟩
                         else
                         ⊥
-                ,
                 Inf_le
                   :=
                   fun
@@ -6609,7 +6605,6 @@ noncomputable
                             lift s to NonemptyInterval α using ne_of_mem_of_not_mem ha h . 1
                               exact WithBot.coe_le_coe . 2 ⟨ le_supr₂ s ha , infi₂_le s ha ⟩
                           · exact bot_le
-                ,
                 le_Inf
                   :=
                   fun

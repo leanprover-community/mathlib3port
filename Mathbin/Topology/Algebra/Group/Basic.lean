@@ -55,7 +55,8 @@ variable [TopologicalSpace G] [Group G] [HasContinuousMul G]
 /-- Multiplication from the left in a topological group as a homeomorphism. -/
 @[to_additive "Addition from the left in a topological additive group as a homeomorphism."]
 protected def Homeomorph.mulLeft (a : G) : G ≃ₜ G :=
-  { Equiv.mulLeft a with continuous_to_fun := continuous_const.mul continuous_id,
+  { Equiv.mulLeft a with 
+    continuous_to_fun := continuous_const.mul continuous_id
     continuous_inv_fun := continuous_const.mul continuous_id }
 #align homeomorph.mul_left Homeomorph.mulLeft
 
@@ -94,7 +95,8 @@ theorem IsClosed.leftCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (left
 /-- Multiplication from the right in a topological group as a homeomorphism. -/
 @[to_additive "Addition from the right in a topological additive group as a homeomorphism."]
 protected def Homeomorph.mulRight (a : G) : G ≃ₜ G :=
-  { Equiv.mulRight a with continuous_to_fun := continuous_id.mul continuous_const,
+  { Equiv.mulRight a with
+    continuous_to_fun := continuous_id.mul continuous_const
     continuous_inv_fun := continuous_id.mul continuous_const }
 #align homeomorph.mul_right Homeomorph.mulRight
 
@@ -293,7 +295,9 @@ variable (G)
 @[to_additive "Negation in a topological group as a homeomorphism."]
 protected def Homeomorph.inv (G : Type _) [TopologicalSpace G] [HasInvolutiveInv G]
     [HasContinuousInv G] : G ≃ₜ G :=
-  { Equiv.inv G with continuous_to_fun := continuous_inv, continuous_inv_fun := continuous_inv }
+  { Equiv.inv G with 
+    continuous_to_fun := continuous_inv
+    continuous_inv_fun := continuous_inv }
 #align homeomorph.inv Homeomorph.inv
 
 @[to_additive]
@@ -562,7 +566,7 @@ theorem nhds_one_symm : comap Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a homeomorphism.\nThis is a shear mapping."]
 protected def Homeomorph.shearMulRight : G × G ≃ₜ G × G :=
   { Equiv.prodShear (Equiv.refl _) Equiv.mulLeft with
-    continuous_to_fun := continuous_fst.prod_mk continuous_mul,
+    continuous_to_fun := continuous_fst.prod_mk continuous_mul
     continuous_inv_fun := continuous_fst.prod_mk <| continuous_fst.inv.mul continuous_snd }
 #align homeomorph.shear_mul_right Homeomorph.shearMulRight
 
@@ -583,7 +587,7 @@ variable {G}
 @[to_additive]
 protected theorem Inducing.topological_group {F : Type _} [Group H] [TopologicalSpace H]
     [MonoidHomClass F H G] (f : F) (hf : Inducing f) : TopologicalGroup H :=
-  { to_has_continuous_mul := hf.HasContinuousMul _,
+  { to_has_continuous_mul := hf.HasContinuousMul _
     to_has_continuous_inv := hf.HasContinuousInv (map_inv f) }
 #align inducing.topological_group Inducing.topological_group
 
@@ -607,7 +611,8 @@ itself a subgroup. -/
 @[to_additive
       "The (topological-space) closure of an additive subgroup of a space `M` with\n`has_continuous_add` is itself an additive subgroup."]
 def Subgroup.topologicalClosure (s : Subgroup G) : Subgroup G :=
-  { s.toSubmonoid.topologicalClosure with carrier := closure (s : Set G),
+  { s.toSubmonoid.topologicalClosure with
+    carrier := closure (s : Set G)
     inv_mem' := fun g m => by simpa [← Set.mem_inv, inv_closure] using m }
 #align subgroup.topological_closure Subgroup.topologicalClosure
 
@@ -773,7 +778,7 @@ theorem TopologicalGroup.of_nhds_one' {G : Type u} [Group G] [TopologicalSpace G
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1))
     (hright : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) : TopologicalGroup G := by
   refine'
-    { continuous_mul := (HasContinuousMul.of_nhds_one hmul hleft hright).continuous_mul,
+    { continuous_mul := (HasContinuousMul.of_nhds_one hmul hleft hright).continuous_mul
       continuous_inv := TopologicalGroup.of_nhds_aux hinv hleft _ }
   intro x₀
   suffices map (fun x : G => x₀ * x * x₀⁻¹) (𝓝 1) = 𝓝 1 by simp [this, le_refl]
@@ -823,7 +828,7 @@ theorem TopologicalGroup.of_nhds_one {G : Type u} [Group G] [TopologicalSpace G]
           rw [Filter.map_map]
         _ ≤ map (fun x => x₀ * y₀ * x) (𝓝 1) := map_mono hmul
         _ = 𝓝 (x₀ * y₀) := (hleft _).symm
-        ,
+        
     continuous_inv := TopologicalGroup.of_nhds_aux hinv hleft hconj }
 #align topological_group.of_nhds_one TopologicalGroup.of_nhds_one
 
@@ -1012,7 +1017,8 @@ variable [Group G] [TopologicalSpace G] [TopologicalGroup G]
 @[to_additive " A version of `homeomorph.add_left a (-b)` that is defeq to `a - b`. ",
   simps (config := { simpRhs := true })]
 def Homeomorph.divLeft (x : G) : G ≃ₜ G :=
-  { Equiv.divLeft x with continuous_to_fun := continuous_const.div' continuous_id,
+  { Equiv.divLeft x with
+    continuous_to_fun := continuous_const.div' continuous_id
     continuous_inv_fun := continuous_inv.mul continuous_const }
 #align homeomorph.div_left Homeomorph.divLeft
 
@@ -1030,7 +1036,8 @@ theorem is_closed_map_div_left (a : G) : IsClosedMap ((· / ·) a) :=
 @[to_additive " A version of `homeomorph.add_right (-a) b` that is defeq to `b - a`. ",
   simps (config := { simpRhs := true })]
 def Homeomorph.divRight (x : G) : G ≃ₜ G :=
-  { Equiv.divRight x with continuous_to_fun := continuous_id.div' continuous_const,
+  { Equiv.divRight x with
+    continuous_to_fun := continuous_id.div' continuous_const
     continuous_inv_fun := continuous_id.mul continuous_const }
 #align homeomorph.div_right Homeomorph.divRight
 
@@ -1552,7 +1559,7 @@ theorem topological_group_Inf {ts : Set (TopologicalSpace G)}
     (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (inf ts) _ :=
   { to_has_continuous_inv :=
       (@has_continuous_inv_Inf _ _ _) fun t ht =>
-        @TopologicalGroup.to_has_continuous_inv G t _ <| h t ht,
+        @TopologicalGroup.to_has_continuous_inv G t _ <| h t ht
     to_has_continuous_mul :=
       (@has_continuous_mul_Inf _ _ _) fun t ht =>
         @TopologicalGroup.to_has_continuous_mul G t _ <| h t ht }
@@ -1659,7 +1666,9 @@ theorem to_topological_space_le {x y : GroupTopology α} :
 
 @[to_additive]
 instance : Top (GroupTopology α) :=
-  ⟨{ toTopologicalSpace := ⊤, continuous_mul := continuous_top, continuous_inv := continuous_top }⟩
+  ⟨{  toTopologicalSpace := ⊤
+      continuous_mul := continuous_top
+      continuous_inv := continuous_top }⟩
 
 @[simp, to_additive]
 theorem to_topological_space_top : (⊤ : GroupTopology α).toTopologicalSpace = ⊤ :=
@@ -1668,7 +1677,9 @@ theorem to_topological_space_top : (⊤ : GroupTopology α).toTopologicalSpace =
 
 @[to_additive]
 instance : Bot (GroupTopology α) :=
-  ⟨{ toTopologicalSpace := ⊥, continuous_mul := by continuity, continuous_inv := continuous_bot }⟩
+  ⟨{  toTopologicalSpace := ⊥
+      continuous_mul := by continuity
+      continuous_inv := continuous_bot }⟩
 
 @[simp, to_additive]
 theorem to_topological_space_bot : (⊥ : GroupTopology α).toTopologicalSpace = ⊥ :=
@@ -1734,7 +1745,7 @@ topologies contained in the intersection of `s` and `t`. -/
       "Group topologies on `γ` form a complete lattice, with `⊥` the discrete topology and\n`⊤` the indiscrete topology.\n\nThe infimum of a collection of group topologies is the topology generated by all their open sets\n(which is a group topology).\n\nThe supremum of two group topologies `s` and `t` is the infimum of the family of all group\ntopologies contained in the intersection of `s` and `t`."]
 instance : CompleteSemilatticeInf (GroupTopology α) :=
   { GroupTopology.hasInf, GroupTopology.partialOrder with
-    Inf_le := fun S a haS => to_topological_space_le.1 <| Inf_le ⟨a, haS, rfl⟩,
+    Inf_le := fun S a haS => to_topological_space_le.1 <| Inf_le ⟨a, haS, rfl⟩
     le_Inf := by 
       intro S a hab
       apply topological_space.complete_lattice.le_Inf
@@ -1744,7 +1755,10 @@ instance : CompleteSemilatticeInf (GroupTopology α) :=
 @[to_additive]
 instance : CompleteLattice (GroupTopology α) :=
   { GroupTopology.boundedOrder, GroupTopology.semilatticeInf,
-    completeLatticeOfCompleteSemilatticeInf _ with inf := (· ⊓ ·), top := ⊤, bot := ⊥ }
+    completeLatticeOfCompleteSemilatticeInf _ with
+    inf := (· ⊓ ·)
+    top := ⊤
+    bot := ⊥ }
 
 /-- Given `f : α → β` and a topology on `α`, the coinduced group topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological group. -/

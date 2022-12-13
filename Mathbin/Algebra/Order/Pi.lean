@@ -55,22 +55,30 @@ instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i
 instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] :
     OrderedCancelCommMonoid (∀ i : I, f i) := by
   refine_struct
-      { Pi.partialOrder, Pi.monoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·),
-        lt := (· < ·), npow := Monoid.npow } <;>
+      { Pi.partialOrder, Pi.monoid with 
+        mul := (· * ·)
+        one := (1 : ∀ i, f i)
+        le := (· ≤ ·)
+        lt := (· < ·)
+        npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align pi.ordered_cancel_comm_monoid Pi.orderedCancelCommMonoid
 
 @[to_additive]
 instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (∀ i : I, f i) :=
-  { Pi.commGroup, Pi.orderedCommMonoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·),
-    lt := (· < ·), npow := Monoid.npow }
+  { Pi.commGroup, Pi.orderedCommMonoid with 
+    mul := (· * ·)
+    one := (1 : ∀ i, f i)
+    le := (· ≤ ·)
+    lt := (· < ·)
+    npow := Monoid.npow }
 #align pi.ordered_comm_group Pi.orderedCommGroup
 
 instance [∀ i, OrderedSemiring (f i)] : OrderedSemiring (∀ i, f i) :=
   { Pi.semiring, Pi.partialOrder with
-    add_le_add_left := fun a b hab c i => add_le_add_left (hab _) _,
-    zero_le_one := fun _ => zero_le_one,
-    mul_le_mul_of_nonneg_left := fun a b c hab hc i => mul_le_mul_of_nonneg_left (hab _) <| hc _,
+    add_le_add_left := fun a b hab c i => add_le_add_left (hab _) _
+    zero_le_one := fun _ => zero_le_one
+    mul_le_mul_of_nonneg_left := fun a b c hab hc i => mul_le_mul_of_nonneg_left (hab _) <| hc _
     mul_le_mul_of_nonneg_right := fun a b c hab hc i => mul_le_mul_of_nonneg_right (hab _) <| hc _ }
 
 instance [∀ i, OrderedCommSemiring (f i)] : OrderedCommSemiring (∀ i, f i) :=

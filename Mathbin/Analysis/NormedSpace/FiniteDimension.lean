@@ -315,7 +315,7 @@ def Basis.equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
   { v.equivFun with
     continuous_to_fun :=
       haveI : FiniteDimensional 𝕜 E := FiniteDimensional.ofFintypeBasis v
-      v.equiv_fun.to_linear_map.continuous_of_finite_dimensional,
+      v.equiv_fun.to_linear_map.continuous_of_finite_dimensional
     continuous_inv_fun := by 
       change Continuous v.equiv_fun.symm.to_fun
       exact v.equiv_fun.symm.to_linear_map.continuous_of_finite_dimensional }
@@ -617,7 +617,7 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
   { LinearMap.toContinuousLinearMap.symm.trans (LinearEquiv.piRing 𝕜 E ι 𝕜) with
     continuous_to_fun := by 
       refine' continuous_pi fun i => _
-      exact (ContinuousLinearMap.apply 𝕜 E (Pi.single i 1)).Continuous,
+      exact (ContinuousLinearMap.apply 𝕜 E (Pi.single i 1)).Continuous
     continuous_inv_fun := by
       simp_rw [LinearEquiv.inv_fun_eq_symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
       change

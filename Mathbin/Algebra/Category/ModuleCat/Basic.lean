@@ -92,14 +92,17 @@ instance moduleConcreteCategory :
     ConcreteCategory.{v}
       (ModuleCat.{v}
         R) where 
-  forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
+  forget :=
+    { obj := fun R => R
+      map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 #align Module.Module_concrete_category ModuleCat.moduleConcreteCategory
 
 instance hasForgetToAddCommGroup :
     HasForget₂ (ModuleCat R)
       AddCommGroupCat where forget₂ :=
-    { obj := fun M => AddCommGroupCat.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
+    { obj := fun M => AddCommGroupCat.of M
+      map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
 #align Module.has_forget_to_AddCommGroup ModuleCat.hasForgetToAddCommGroup
 
 instance (M N : ModuleCat R) : LinearMapClass (M ⟶ N) R M N :=

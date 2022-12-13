@@ -111,7 +111,7 @@ theorem Nat.eq_of_mul_eq_mul_right {n m k : ℕ} (Hm : 0 < m) (H : n * m = k * m
 instance Nat.cancelCommMonoidWithZero : CancelCommMonoidWithZero ℕ :=
   { (inferInstance : CommMonoidWithZero ℕ) with
     mul_left_cancel_of_ne_zero := fun _ _ _ h1 h2 =>
-      Nat.eq_of_mul_eq_mul_left (Nat.pos_of_ne_zero h1) h2,
+      Nat.eq_of_mul_eq_mul_left (Nat.pos_of_ne_zero h1) h2
     mul_right_cancel_of_ne_zero := fun _ _ _ h1 h2 =>
       Nat.eq_of_mul_eq_mul_right (Nat.pos_of_ne_zero h1) h2 }
 #align nat.cancel_comm_monoid_with_zero Nat.cancelCommMonoidWithZero
@@ -335,7 +335,7 @@ theorem pred_sub (n m : ℕ) : pred n - m = pred (n - m) := by
 lean 3 declaration is
   forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat Nat.hasLt m n) -> (LE.le.{0} Nat Nat.hasLe m (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall {m : Nat} {n : Nat}, (LT.lt.{0} Nat instLTNat m n) -> (LE.le.{0} Nat instLENat m (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat instLTNat n m) -> (LE.le.{0} Nat instLENat n (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align nat.le_pred_of_lt Nat.le_pred_of_ltₓ'. -/
 theorem le_pred_of_lt {n m : ℕ} (h : m < n) : m ≤ n - 1 :=
   Nat.sub_le_sub_right h 1

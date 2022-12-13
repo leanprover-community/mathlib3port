@@ -126,9 +126,9 @@ def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : Fork f g :=
 /-- The equalizer fork is a limit. -/
 def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
   (Fork.IsLimit.mk' _) fun s =>
-    ⟨{ toFun := fun x => ⟨s.ι x, by apply continuous_hom.congr_fun s.condition⟩,
-        monotone' := fun x y h => s.ι.Monotone h, cont := fun x => Subtype.ext (s.ι.Continuous x) },
-      by 
+    ⟨{  toFun := fun x => ⟨s.ι x, by apply continuous_hom.congr_fun s.condition⟩
+        monotone' := fun x y h => s.ι.Monotone h
+        cont := fun x => Subtype.ext (s.ι.Continuous x) }, by
       ext
       rfl, fun m hm => by 
       ext

@@ -105,7 +105,7 @@ def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m �
     m_Union := fun f hf hd =>
       show inducedOuterMeasure m _ m0 (union f) = ∑' i, inducedOuterMeasure m _ m0 (f i) by
         rw [induced_outer_measure_eq m0 mU, mU hf hd]
-        congr ; funext n; rw [induced_outer_measure_eq m0 mU],
+        congr ; funext n; rw [induced_outer_measure_eq m0 mU]
     trimmed :=
       show (inducedOuterMeasure m _ m0).trim = inducedOuterMeasure m _ m0 by
         unfold outer_measure.trim

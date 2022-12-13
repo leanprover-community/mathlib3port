@@ -72,11 +72,11 @@ variable {H : Type _} [Group H]
 given by those generators. -/
 def lift : (Generators G → H) ≃ (G →* H) :=
   FreeGroup.lift.trans
-    { toFun := fun f => f.comp (mulEquiv G).symm.toMonoidHom,
-      invFun := fun f => f.comp (mulEquiv G).toMonoidHom,
+    { toFun := fun f => f.comp (mulEquiv G).symm.toMonoidHom
+      invFun := fun f => f.comp (mulEquiv G).toMonoidHom
       left_inv := fun f => by 
         ext
-        simp,
+        simp
       right_inv := fun f => by 
         ext
         simp }
@@ -138,8 +138,9 @@ noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G
     (h : ∀ {H : Type u} [Group H] (f : X → H), ∃! F : G →* H, ∀ a, F (of a) = f a) :
     IsFreeGroup G :=
   let lift {H : Type u} [Group H] : (X → H) ≃ (G →* H) :=
-    { toFun := fun f => Classical.choose (h f), invFun := fun F => F ∘ of,
-      left_inv := fun f => funext (Classical.choose_spec (h f)).left,
+    { toFun := fun f => Classical.choose (h f)
+      invFun := fun F => F ∘ of
+      left_inv := fun f => funext (Classical.choose_spec (h f)).left
       right_inv := fun F => ((Classical.choose_spec (h (F ∘ of))).right F fun _ => rfl).symm }
   let lift_of {H : Type u} [Group H] (f : X → H) (a : X) : lift f (of a) = f a :=
     congr_fun (lift.symm_apply_apply f) a

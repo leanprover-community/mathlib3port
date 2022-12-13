@@ -128,8 +128,8 @@ theorem localization_localization_eq_iff_exists [IsLocalization N T] (x y : R) :
 -/
 theorem localization_localization_is_localization [IsLocalization N T] :
     IsLocalization (localizationLocalizationSubmodule M N) T :=
-  { map_units := localization_localization_map_units M N T,
-    surj := localization_localization_surj M N T,
+  { map_units := localization_localization_map_units M N T
+    surj := localization_localization_surj M N T
     eq_iff_exists := localization_localization_eq_iff_exists M N T }
 #align
   is_localization.localization_localization_is_localization IsLocalization.localization_localization_is_localization
@@ -222,11 +222,11 @@ theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoc
   { map_units := by 
       rintro ⟨_, ⟨y, hy, rfl⟩⟩
       convert IsLocalization.map_units T ⟨y, hy⟩
-      exact (IsScalarTower.algebra_map_apply _ _ _ _).symm,
+      exact (IsScalarTower.algebra_map_apply _ _ _ _).symm
     surj := fun y => by 
       obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj N y
       refine' ⟨⟨algebraMap _ _ x, _, _, s.prop, rfl⟩, _⟩
-      simpa [← IsScalarTower.algebra_map_apply] using e,
+      simpa [← IsScalarTower.algebra_map_apply] using e
     eq_iff_exists := fun x₁ x₂ => by
       obtain ⟨⟨y₁, s₁⟩, e₁⟩ := IsLocalization.surj M x₁
       obtain ⟨⟨y₂, s₂⟩, e₂⟩ := IsLocalization.surj M x₂
@@ -263,10 +263,10 @@ theorem is_localization_of_is_exists_mul_mem (M N : Submonoid R) [IsLocalization
       obtain ⟨m, hm⟩ := h' y
       have := IsLocalization.map_units S ⟨_, hm⟩
       erw [map_mul] at this
-      exact (is_unit.mul_iff.mp this).2,
+      exact (is_unit.mul_iff.mp this).2
     surj := fun z => by 
       obtain ⟨⟨y, s⟩, e⟩ := IsLocalization.surj M z
-      exact ⟨⟨y, _, h s.prop⟩, e⟩,
+      exact ⟨⟨y, _, h s.prop⟩, e⟩
     eq_iff_exists := fun x₁ x₂ => by
       rw [IsLocalization.eq_iff_exists M]
       refine' ⟨fun ⟨x, hx⟩ => ⟨⟨_, h x.Prop⟩, hx⟩, _⟩

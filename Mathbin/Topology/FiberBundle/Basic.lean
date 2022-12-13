@@ -847,7 +847,8 @@ theorem is_open_target_of_mem_pretrivialization_atlas_inter (e e' : Pretrivializ
 /-- Promotion from a `pretrivialization` to a `trivialization`. -/
 def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtlas) :
     @Trivialization B F _ _ _ a.totalSpaceTopology (π E) :=
-  { e with open_source := a.is_open_source e,
+  { e with 
+    open_source := a.is_open_source e
     continuous_to_fun := by 
       letI := a.total_space_topology
       refine'
@@ -865,7 +866,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtl
           simp only [preimage_inter, inter_univ, Subtype.coe_preimage_self, hu3.symm]
           rfl⟩
       rw [inter_assoc]
-      exact hu1.inter (a.is_open_target_of_mem_pretrivialization_atlas_inter e e' he'),
+      exact hu1.inter (a.is_open_target_of_mem_pretrivialization_atlas_inter e e' he')
     continuous_inv_fun := a.continuous_symm_of_mem_pretrivialization_atlas he }
 #align
   fiber_prebundle.trivialization_of_mem_pretrivialization_atlas FiberPrebundle.trivializationOfMemPretrivializationAtlas

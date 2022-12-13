@@ -104,9 +104,15 @@ unsafe def parse_props : parse_ctx_props → expr → tactic Unit
       | [n] => parse_one_prop ctx (app (app (const `and []) p) q)
       | n :: tail =>
         parse_one_prop
-            { ctx with names := [n], project_proof := (fun p => (const `and.left []) p) ∘ ctx } p >>
+            { ctx with 
+              names := [n]
+              project_proof := (fun p => (const `and.left []) p) ∘ ctx }
+            p >>
           parse_props
-            { ctx with names := tail, project_proof := (fun p => (const `and.right []) p) ∘ ctx } q
+            { ctx with 
+              names := tail
+              project_proof := (fun p => (const `and.right []) p) ∘ ctx }
+            q
       | [] => fail "missing name for proposition"
   | ctx, p => parse_one_prop ctx p
 #align tactic.expand_exists.parse_props tactic.expand_exists.parse_props
@@ -130,7 +136,11 @@ unsafe def parse_exists : parse_ctx_exists → expr → tactic Unit
     ctx False n type value
     let exists_decls := ctx.exists_decls.concat n
     let some_spec : pexpr := (const `classical.some_spec [lvl]) ctx.spec_chain
-    let ctx : parse_ctx_exists := { ctx with names, spec_chain := some_spec, exists_decls }
+    let ctx : parse_ctx_exists :=
+      { ctx with 
+        names
+        spec_chain := some_spec
+        exists_decls }
     parse_exists ctx body
   | ctx, e => parse_props { ctx with } e
 #align tactic.expand_exists.parse_exists tactic.expand_exists.parse_exists
@@ -142,12 +152,17 @@ unsafe def parse_pis : parse_ctx → expr → tactic Unit
     pi n bi ty body =>-- When making a declaration, wrap in an equivalent pi expression.
     let decl is_theorem name type val :=
       ctx.decl is_theorem Name (pi n bi ty type) (lam n bi (to_pexpr ty) val)
-    parse_pis { ctx with decl, pis_depth := ctx.pis_depth + 1 } body
+    parse_pis
+      { ctx with 
+        decl
+        pis_depth := ctx.pis_depth + 1 }
+      body
   | ctx, app (app (const "Exists" [lvl]) type) p =>
     let with_args := fun e : expr =>
       (List.range ctx.pis_depth).foldr (fun n (e : expr) => e (var n)) e
     parse_exists
-      { ctx with with_args,
+      { ctx with 
+        with_args
         spec_chain :=
           to_pexpr (with_args <| const ctx.original_decl.to_name ctx.original_decl.univ_levels) }
       (app (app (const "Exists" [lvl]) type) p)
@@ -206,19 +221,21 @@ unsafe def expand_exists_attr :
       let d ← get_decl decl
       let names ← expand_exists_attr.get_param decl
       expand_exists.parse_pis
-          { original_decl := d,
+          { original_decl := d
             decl := fun is_t n ty val =>
               tactic.to_expr val >>= fun val =>
                 tactic.add_decl
                   (if is_t then declaration.thm n d ty (pure val)
-                  else declaration.defn n d ty val default tt),
+                  else declaration.defn n d ty val default tt)
             names }
           d
 #align tactic.expand_exists_attr tactic.expand_exists_attr
 
 add_tactic_doc
-  { Name := "expand_exists", category := DocCategory.attr,
-    declNames := [`tactic.expand_exists_attr], tags := ["lemma derivation", "environment"] }
+  { Name := "expand_exists"
+    category := DocCategory.attr
+    declNames := [`tactic.expand_exists_attr]
+    tags := ["lemma derivation", "environment"] }
 
 end Tactic
 

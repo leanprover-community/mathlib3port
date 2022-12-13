@@ -306,9 +306,13 @@ def toArrow :
     Augmented C ⥤
       Arrow
         C where 
-  obj X := { left := drop.obj X _[0], right := point.obj X, Hom := X.Hom.app _ }
+  obj X :=
+    { left := drop.obj X _[0]
+      right := point.obj X
+      Hom := X.Hom.app _ }
   map X Y η :=
-    { left := (drop.map η).app _, right := point.map η,
+    { left := (drop.map η).app _
+      right := point.map η
       w' := by 
         dsimp
         rw [← nat_trans.comp_app]
@@ -334,10 +338,12 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) :
       Augmented
         D where 
   obj X :=
-    { left := ((whiskering _ _).obj F).obj (drop.obj X), right := F.obj (point.obj X),
+    { left := ((whiskering _ _).obj F).obj (drop.obj X)
+      right := F.obj (point.obj X)
       Hom := whiskerRight X.Hom F ≫ (Functor.constComp _ _ _).Hom }
   map X Y η :=
-    { left := whiskerRight η.left _, right := F.map η.right,
+    { left := whiskerRight η.left _
+      right := F.map η.right
       w' := by 
         ext
         dsimp
@@ -355,7 +361,8 @@ def whiskering (D : Type u') [Category.{v'} D] :
   obj := whiskeringObj _ _
   map X Y η :=
     { app := fun A =>
-        { left := whiskerLeft _ η, right := η.app _,
+        { left := whiskerLeft _ η
+          right := η.app _
           w' := by 
             ext n
             dsimp
@@ -375,7 +382,7 @@ def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
   left := X
   right := X₀
   Hom :=
-    { app := fun i => X.map (SimplexCategory.const i.unop 0).op ≫ f,
+    { app := fun i => X.map (SimplexCategory.const i.unop 0).op ≫ f
       naturality' := by 
         intro i j g
         dsimp
@@ -669,9 +676,13 @@ def toArrow :
     Augmented C ⥤
       Arrow
         C where 
-  obj X := { left := point.obj X, right := drop.obj X _[0], Hom := X.Hom.app _ }
+  obj X :=
+    { left := point.obj X
+      right := drop.obj X _[0]
+      Hom := X.Hom.app _ }
   map X Y η :=
-    { left := point.map η, right := (drop.map η).app _,
+    { left := point.map η
+      right := (drop.map η).app _
       w' := by 
         dsimp
         rw [← nat_trans.comp_app]
@@ -689,10 +700,12 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) :
       Augmented
         D where 
   obj X :=
-    { left := F.obj (point.obj X), right := ((whiskering _ _).obj F).obj (drop.obj X),
+    { left := F.obj (point.obj X)
+      right := ((whiskering _ _).obj F).obj (drop.obj X)
       Hom := (Functor.constComp _ _ _).inv ≫ whiskerRight X.Hom F }
   map X Y η :=
-    { left := F.map η.left, right := whiskerRight η.right _,
+    { left := F.map η.left
+      right := whiskerRight η.right _
       w' := by 
         ext
         dsimp
@@ -710,7 +723,8 @@ def whiskering (D : Type u') [Category.{v'} D] :
   obj := whiskeringObj _ _
   map X Y η :=
     { app := fun A =>
-        { left := η.app _, right := whiskerLeft _ η,
+        { left := η.app _
+          right := whiskerLeft _ η
           w' := by 
             ext n
             dsimp
@@ -732,7 +746,7 @@ def augment (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
   left := X₀
   right := X
   Hom :=
-    { app := fun i => f ≫ X.map (SimplexCategory.const i 0),
+    { app := fun i => f ≫ X.map (SimplexCategory.const i 0)
       naturality' := by 
         intro i j g
         dsimp
@@ -814,7 +828,8 @@ def simplicialToCosimplicialAugmented :
         Cᵒᵖ where 
   obj X := X.unop.rightOp
   map X Y f :=
-    { left := f.unop.right.op, right := f.unop.left.rightOp,
+    { left := f.unop.right.op
+      right := f.unop.left.rightOp
       w' := by 
         ext x
         dsimp
@@ -833,7 +848,8 @@ def cosimplicialToSimplicialAugmented :
   obj X := Opposite.op X.leftOp
   map X Y f :=
     Quiver.Hom.op <|
-      { left := f.right.leftOp, right := f.left.unop,
+      { left := f.right.leftOp
+        right := f.left.unop
         w' := by 
           ext x
           dsimp

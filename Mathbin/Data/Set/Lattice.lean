@@ -98,7 +98,7 @@ theorem mem_sUnion {x : α} {S : Set (Set α)} : x ∈ ⋃₀S ↔ ∃ t ∈ S, 
 lean 3 declaration is
   forall {β : Type.{u_2}} {ι : Sort.{u_4}}, (ι -> (Set.{u_2} β)) -> (Set.{u_2} β)
 but is expected to have type
-  forall {α : Type.{u_1}}, (Set.{u_1} α) -> (Set.{u_1} α) -> (Set.{u_1} α)
+  forall {β : Type.{u_1}}, (Set.{u_1} β) -> (Set.{u_1} β) -> (Set.{u_1} β)
 Case conversion may be inaccurate. Consider using '#align set.Union Set.unionₓ'. -/
 /-- Indexed union of a family of sets -/
 def union (s : ι → Set β) : Set β :=
@@ -109,7 +109,7 @@ def union (s : ι → Set β) : Set β :=
 lean 3 declaration is
   forall {β : Type.{u_2}} {ι : Sort.{u_4}}, (ι -> (Set.{u_2} β)) -> (Set.{u_2} β)
 but is expected to have type
-  forall {α : Type.{u_1}}, (Set.{u_1} α) -> (Set.{u_1} α) -> (Set.{u_1} α)
+  forall {β : Type.{u_1}}, (Set.{u_1} β) -> (Set.{u_1} β) -> (Set.{u_1} β)
 Case conversion may be inaccurate. Consider using '#align set.Inter Set.interₓ'. -/
 /-- Indexed intersection of a family of sets -/
 def inter (s : ι → Set β) : Set β :=
@@ -185,11 +185,14 @@ theorem mem_Inter₂_of_mem {s : ∀ i, κ i → Set α} {a : α} (h : ∀ i j, 
 #align set.mem_Inter₂_of_mem Set.mem_Inter₂_of_mem
 
 instance : CompleteBooleanAlgebra (Set α) :=
-  { Set.booleanAlgebra with sup := sup, inf := inf,
-    le_Sup := fun s t t_in a a_in => ⟨t, ⟨t_in, a_in⟩⟩,
-    Sup_le := fun s t h a ⟨t', ⟨t'_in, a_in⟩⟩ => h t' t'_in a_in,
-    le_Inf := fun s t h a a_in t' t'_in => h t' t'_in a_in, Inf_le := fun s t t_in a h => h _ t_in,
-    infi_sup_le_sup_Inf := fun s S x => Iff.mp <| by simp [forall_or_left],
+  { Set.booleanAlgebra with 
+    sup := sup
+    inf := inf
+    le_Sup := fun s t t_in a a_in => ⟨t, ⟨t_in, a_in⟩⟩
+    Sup_le := fun s t h a ⟨t', ⟨t'_in, a_in⟩⟩ => h t' t'_in a_in
+    le_Inf := fun s t h a a_in t' t'_in => h t' t'_in a_in
+    Inf_le := fun s t t_in a h => h _ t_in
+    infi_sup_le_sup_Inf := fun s S x => Iff.mp <| by simp [forall_or_left]
     inf_Sup_le_supr_inf := fun s S x => Iff.mp <| by simp [exists_and_left] }
 
 /-- `set.image` is monotone. See `set.image_image` for the statement in terms of `⊆`. -/

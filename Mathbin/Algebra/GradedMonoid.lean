@@ -444,11 +444,11 @@ structure. -/
 @[simps gnpow]
 instance Monoid.gmonoid [AddMonoid ι] [Monoid R] : GradedMonoid.Gmonoid fun i : ι => R :=
   { One.ghasOne ι, Mul.ghasMul ι with
-    one_mul := fun a => Sigma.ext (zero_add _) (heq_of_eq (one_mul _)),
-    mul_one := fun a => Sigma.ext (add_zero _) (heq_of_eq (mul_one _)),
-    mul_assoc := fun a b c => Sigma.ext (add_assoc _ _ _) (heq_of_eq (mul_assoc _ _ _)),
-    gnpow := fun n i a => a ^ n,
-    gnpow_zero' := fun a => Sigma.ext (zero_nsmul _) (heq_of_eq (Monoid.npow_zero _)),
+    one_mul := fun a => Sigma.ext (zero_add _) (heq_of_eq (one_mul _))
+    mul_one := fun a => Sigma.ext (add_zero _) (heq_of_eq (mul_one _))
+    mul_assoc := fun a b c => Sigma.ext (add_assoc _ _ _) (heq_of_eq (mul_assoc _ _ _))
+    gnpow := fun n i a => a ^ n
+    gnpow_zero' := fun a => Sigma.ext (zero_nsmul _) (heq_of_eq (Monoid.npow_zero _))
     gnpow_succ' := fun n ⟨i, a⟩ => Sigma.ext (succ_nsmul _ _) (heq_of_eq (Monoid.npow_succ _ _)) }
 #align monoid.gmonoid Monoid.gmonoid
 
@@ -566,12 +566,12 @@ end SetLike
 instance SetLike.gmonoid {S : Type _} [SetLike S R] [Monoid R] [AddMonoid ι] (A : ι → S)
     [SetLike.GradedMonoid A] : GradedMonoid.Gmonoid fun i => A i :=
   { SetLike.ghasOne A, SetLike.ghasMul A with
-    one_mul := fun ⟨i, a, h⟩ => Sigma.subtype_ext (zero_add _) (one_mul _),
-    mul_one := fun ⟨i, a, h⟩ => Sigma.subtype_ext (add_zero _) (mul_one _),
+    one_mul := fun ⟨i, a, h⟩ => Sigma.subtype_ext (zero_add _) (one_mul _)
+    mul_one := fun ⟨i, a, h⟩ => Sigma.subtype_ext (add_zero _) (mul_one _)
     mul_assoc := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ ⟨k, c, hc⟩ =>
-      Sigma.subtype_ext (add_assoc _ _ _) (mul_assoc _ _ _),
-    gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.Prop⟩,
-    gnpow_zero' := fun n => Sigma.subtype_ext (zero_nsmul _) (pow_zero _),
+      Sigma.subtype_ext (add_assoc _ _ _) (mul_assoc _ _ _)
+    gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.Prop⟩
+    gnpow_zero' := fun n => Sigma.subtype_ext (zero_nsmul _) (pow_zero _)
     gnpow_succ' := fun n a => Sigma.subtype_ext (succ_nsmul _ _) (pow_succ _ _) }
 #align set_like.gmonoid SetLike.gmonoid
 

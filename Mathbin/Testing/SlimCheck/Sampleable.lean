@@ -162,9 +162,9 @@ unsafe def sampleable.mk_trivial_interp : tactic Unit :=
 
 /- warning: slim_check.sampleable_ext -> SlimCheck.SampleableExt is a dubious translation:
 lean 3 declaration is
-  Sort.{u} -> Sort.{max (imax (succ v) u) (succ (succ v))}
+  Sort.{u1} -> Sort.{max (imax (succ u2) u1) (succ (succ u2))}
 but is expected to have type
-  Sort.{u} -> Sort.{max u (succ (succ v))}
+  Sort.{u1} -> Sort.{max u1 (succ (succ u2))}
 Case conversion may be inaccurate. Consider using '#align slim_check.sampleable_ext SlimCheck.SampleableExtₓ'. -/
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/

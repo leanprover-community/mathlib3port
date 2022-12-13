@@ -146,10 +146,10 @@ def restrictRootsOfUnity [RingHomClass F R S] (σ : F) (n : ℕ+) :
       ⟨@unitOfInvertible _ _ _ (invertibleOfPowEqOne _ _ (h ξ) n.NeZero), by
         ext
         rw [Units.coe_pow]
-        exact h ξ⟩,
+        exact h ξ⟩
     map_one' := by 
       ext
-      exact map_one σ,
+      exact map_one σ
     map_mul' := fun ξ₁ ξ₂ => by 
       ext
       rw [Subgroup.coe_mul, Units.val_mul]
@@ -209,8 +209,10 @@ because `roots_of_unity` is a subgroup of the group of units,
 whereas `nth_roots` is a multiset. -/
 def rootsOfUnityEquivNthRoots : rootsOfUnity k R ≃ { x // x ∈ nthRoots k (1 : R) } := by
   refine'
-    { toFun := fun x => ⟨x, mem_roots_of_unity_iff_mem_nth_roots.mp x.2⟩,
-      invFun := fun x => ⟨⟨x, x ^ (k - 1 : ℕ), _, _⟩, _⟩, left_inv := _, right_inv := _ }
+    { toFun := fun x => ⟨x, mem_roots_of_unity_iff_mem_nth_roots.mp x.2⟩
+      invFun := fun x => ⟨⟨x, x ^ (k - 1 : ℕ), _, _⟩, _⟩
+      left_inv := _
+      right_inv := _ }
   pick_goal 4;
   · rintro ⟨x, hx⟩
     ext
@@ -394,7 +396,8 @@ theorem pow_inj (h : IsPrimitiveRoot ζ k) ⦃i j : ℕ⦄ (hi : i < k) (hj : j 
 #align is_primitive_root.pow_inj IsPrimitiveRoot.pow_inj
 
 theorem one : IsPrimitiveRoot (1 : M) 1 :=
-  { pow_eq_one := pow_one _, dvd_of_pow_eq_one := fun l hl => one_dvd _ }
+  { pow_eq_one := pow_one _
+    dvd_of_pow_eq_one := fun l hl => one_dvd _ }
 #align is_primitive_root.one IsPrimitiveRoot.one
 
 @[simp]
@@ -426,7 +429,8 @@ theorem pow_of_coprime (h : IsPrimitiveRoot ζ k) (i : ℕ) (hi : i.Coprime k) :
   rw [← Units.coe_pow]
   rw [coe_units_iff] at h⊢
   refine'
-    { pow_eq_one := by rw [← pow_mul', pow_mul, h.pow_eq_one, one_pow], dvd_of_pow_eq_one := _ }
+    { pow_eq_one := by rw [← pow_mul', pow_mul, h.pow_eq_one, one_pow]
+      dvd_of_pow_eq_one := _ }
   intro l hl
   apply h.dvd_of_pow_eq_one
   rw [← pow_one ζ, ← zpow_coe_nat ζ, ← hi.gcd_eq_one, Nat.gcd_eq_gcd_ab, zpow_add, mul_pow, ←
@@ -510,7 +514,7 @@ open Function
 
 theorem map_of_injective [MonoidHomClass F M N] (h : IsPrimitiveRoot ζ k) (hf : Injective f) :
     IsPrimitiveRoot (f ζ) k :=
-  { pow_eq_one := by rw [← map_pow, h.pow_eq_one, _root_.map_one],
+  { pow_eq_one := by rw [← map_pow, h.pow_eq_one, _root_.map_one]
     dvd_of_pow_eq_one := by 
       rw [h.eq_order_of]
       intro l hl
@@ -522,7 +526,7 @@ theorem of_map_of_injective [MonoidHomClass F M N] (h : IsPrimitiveRoot (f ζ) k
     (hf : Injective f) : IsPrimitiveRoot ζ k :=
   { pow_eq_one := by 
       apply_fun f
-      rw [map_pow, _root_.map_one, h.pow_eq_one],
+      rw [map_pow, _root_.map_one, h.pow_eq_one]
     dvd_of_pow_eq_one := by 
       rw [h.eq_order_of]
       intro l hl
@@ -579,7 +583,7 @@ theorem zpow_eq_one_iff_dvd (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1 �
 #align is_primitive_root.zpow_eq_one_iff_dvd IsPrimitiveRoot.zpow_eq_one_iff_dvd
 
 theorem inv (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot ζ⁻¹ k :=
-  { pow_eq_one := by simp only [h.pow_eq_one, inv_one, eq_self_iff_true, inv_pow],
+  { pow_eq_one := by simp only [h.pow_eq_one, inv_one, eq_self_iff_true, inv_pow]
     dvd_of_pow_eq_one := by 
       intro l hl
       apply h.dvd_of_pow_eq_one l
@@ -695,10 +699,10 @@ and the powers of a primitive root of unity `ζ`. -/
 def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup.zpowers ζ) :=
   AddEquiv.ofBijective
     (AddMonoidHom.liftOfRightInverse (Int.castAddHom <| Zmod k) _ Zmod.int_cast_right_inverse
-      ⟨{ toFun := fun i => Additive.ofMul (⟨_, i, rfl⟩ : Subgroup.zpowers ζ),
+      ⟨{  toFun := fun i => Additive.ofMul (⟨_, i, rfl⟩ : Subgroup.zpowers ζ)
           map_zero' := by 
             simp only [zpow_zero]
-            rfl,
+            rfl
           map_add' := by 
             intro i j
             simp only [zpow_add]
@@ -1204,7 +1208,7 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
   have ho : orderOf μ' = n := by
     rw [hμ.eq_order_of, ← hμ.coe_to_roots_of_unity_coe, order_of_units, order_of_subgroup]
   MonoidHom.toHomUnits
-    { toFun := fun σ => (map_root_of_unity_eq_pow_self σ.toAlgHom μ').some,
+    { toFun := fun σ => (map_root_of_unity_eq_pow_self σ.toAlgHom μ').some
       map_one' := by 
         generalize_proofs h1
         have h := h1.some_spec
@@ -1214,7 +1218,7 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
           rootsOfUnity.coe_injective (by simpa only [rootsOfUnity.coe_pow] using h)
         rw [← pow_one μ'] at h
         rw [← @Nat.cast_one <| Zmod n, Zmod.nat_coe_eq_nat_coe_iff, ← ho, ← pow_eq_pow_iff_modeq μ',
-          h],
+          h]
       map_mul' := by 
         generalize_proofs hxy' hx' hy'
         have hxy := hxy'.some_spec

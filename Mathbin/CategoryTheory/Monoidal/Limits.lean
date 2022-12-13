@@ -51,13 +51,17 @@ variable [MonoidalCategory.{v} C]
 @[simps]
 instance limitLaxMonoidal :
     LaxMonoidal fun F : J ⥤ C =>
-      limit F where 
-  ε := limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } }
+      limit
+        F where 
+  ε :=
+    limit.lift _
+      { x := _
+        π := { app := fun j => 𝟙 _ } }
   μ F G :=
     limit.lift (F ⊗ G)
-      { x := limit F ⊗ limit G,
+      { x := limit F ⊗ limit G
         π :=
-          { app := fun j => limit.π F j ⊗ limit.π G j,
+          { app := fun j => limit.π F j ⊗ limit.π G j
             naturality' := fun j j' f => by 
               dsimp
               simp only [category.id_comp, ← tensor_comp, limit.w] } }
@@ -123,7 +127,10 @@ theorem lim_lax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α 
 
 @[simp]
 theorem lim_lax_ε :
-    (@limLax J _ C _ _ _).ε = limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } } :=
+    (@limLax J _ C _ _ _).ε =
+      limit.lift _
+        { x := _
+          π := { app := fun j => 𝟙 _ } } :=
   rfl
 #align category_theory.limits.lim_lax_ε CategoryTheory.Limits.lim_lax_ε
 
@@ -134,9 +141,9 @@ theorem lim_lax_ε :
 theorem lim_lax_μ (F G : J ⥤ C) :
     (@limLax J _ C _ _ _).μ F G =
       limit.lift (F ⊗ G)
-        { x := limit F ⊗ limit G,
+        { x := limit F ⊗ limit G
           π :=
-            { app := fun j => limit.π F j ⊗ limit.π G j,
+            { app := fun j => limit.π F j ⊗ limit.π G j
               naturality' := fun j j' f => by 
                 dsimp
                 simp only [category.id_comp, ← tensor_comp, limit.w] } } :=

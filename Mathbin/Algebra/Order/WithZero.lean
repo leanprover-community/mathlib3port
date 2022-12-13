@@ -42,18 +42,22 @@ variable {a b c d x y z : α}
 instance [LinearOrderedAddCommMonoidWithTop α] :
     LinearOrderedCommMonoidWithZero (Multiplicative αᵒᵈ) :=
   { Multiplicative.orderedCommMonoid, Multiplicative.linearOrder with
-    zero := Multiplicative.ofAdd (⊤ : α), zero_mul := top_add, mul_zero := add_top,
+    zero := Multiplicative.ofAdd (⊤ : α)
+    zero_mul := top_add
+    mul_zero := add_top
     zero_le_one := (le_top : (0 : α) ≤ ⊤) }
 
 instance [LinearOrderedAddCommGroupWithTop α] :
     LinearOrderedCommGroupWithZero (Multiplicative αᵒᵈ) :=
   { Multiplicative.divInvMonoid, Multiplicative.linearOrderedCommMonoidWithZero,
-    Multiplicative.nontrivial with inv_zero := LinearOrderedAddCommGroupWithTop.neg_top,
+    Multiplicative.nontrivial with
+    inv_zero := LinearOrderedAddCommGroupWithTop.neg_top
     mul_inv_cancel := LinearOrderedAddCommGroupWithTop.add_neg_cancel }
 
 instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoidWithZero (WithZero α) :=
   { WithZero.linearOrder, WithZero.commMonoidWithZero with
-    mul_le_mul_left := fun x y => mul_le_mul_left', zero_le_one := WithZero.zero_le _ }
+    mul_le_mul_left := fun x y => mul_le_mul_left'
+    zero_le_one := WithZero.zero_le _ }
 
 instance [LinearOrderedCommGroup α] : LinearOrderedCommGroupWithZero (WithZero α) :=
   { WithZero.linearOrderedCommMonoidWithZero, WithZero.commGroupWithZero with }
@@ -102,8 +106,10 @@ theorem ne_zero_of_lt (h : b < a) : a ≠ 0 := fun h1 => not_lt_zero' <| show b 
 #align ne_zero_of_lt ne_zero_of_lt
 
 instance : LinearOrderedAddCommMonoidWithTop (Additive αᵒᵈ) :=
-  { Additive.orderedAddCommMonoid, Additive.linearOrder with top := (0 : α),
-    top_add' := fun a => (zero_mul a : (0 : α) * a = 0), le_top := fun _ => zero_le' }
+  { Additive.orderedAddCommMonoid, Additive.linearOrder with
+    top := (0 : α)
+    top_add' := fun a => (zero_mul a : (0 : α) * a = 0)
+    le_top := fun _ => zero_le' }
 
 end LinearOrderedCommMonoid
 
@@ -269,5 +275,6 @@ theorem OrderIso.mul_right₀'_symm {a : α} (ha : a ≠ 0) :
 
 instance : LinearOrderedAddCommGroupWithTop (Additive αᵒᵈ) :=
   { Additive.subNegMonoid, Additive.linearOrderedAddCommMonoidWithTop, Additive.nontrivial with
-    neg_top := inv_zero, add_neg_cancel := fun a ha => mul_inv_cancel ha }
+    neg_top := inv_zero
+    add_neg_cancel := fun a ha => mul_inv_cancel ha }
 

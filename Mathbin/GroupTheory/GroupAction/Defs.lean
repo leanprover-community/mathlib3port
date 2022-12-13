@@ -700,7 +700,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.distribSmul [AddZeroClass B] [HasSmul M B] (f : B →+ A)
     (hf : Injective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribSmul M B :=
-  { hf.SmulZeroClass f.toZeroHom smul with smul := (· • ·),
+  { hf.SmulZeroClass f.toZeroHom smul with 
+    smul := (· • ·)
     smul_add := fun c x y => hf <| by simp only [smul, map_add, smul_add] }
 #align function.injective.distrib_smul Function.Injective.distribSmul
 
@@ -710,7 +711,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.distribSmul [AddZeroClass B] [HasSmul M B] (f : A →+ B)
     (hf : Surjective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribSmul M B :=
-  { f.toZeroHom.SmulZeroClass smul with smul := (· • ·),
+  { f.toZeroHom.SmulZeroClass smul with 
+    smul := (· • ·)
     smul_add := fun c x y => by 
       rcases hf x with ⟨x, rfl⟩
       rcases hf y with ⟨y, rfl⟩
@@ -725,7 +727,8 @@ See also `function.surjective.distrib_mul_action_left`.
 def Function.Surjective.distribSmulLeft {R S M : Type _} [AddZeroClass M] [DistribSmul R M]
     [HasSmul S M] (f : R → S) (hf : Function.Surjective f)
     (hsmul : ∀ (c) (x : M), f c • x = c • x) : DistribSmul S M :=
-  { hf.smulZeroClassLeft f hsmul with smul := (· • ·),
+  { hf.smulZeroClassLeft f hsmul with 
+    smul := (· • ·)
     smul_add := hf.forall.mpr fun c x y => by simp only [hsmul, smul_add] }
 #align function.surjective.distrib_smul_left Function.Surjective.distribSmulLeft
 
@@ -735,14 +738,17 @@ variable (A)
 See note [reducible non-instances]. -/
 @[reducible]
 def DistribSmul.compFun (f : N → M) : DistribSmul N A :=
-  { SmulZeroClass.compFun A f with smul := HasSmul.Comp.smul f,
+  { SmulZeroClass.compFun A f with 
+    smul := HasSmul.Comp.smul f
     smul_add := fun x => smul_add (f x) }
 #align distrib_smul.comp_fun DistribSmul.compFun
 
 /-- Each element of the scalars defines a additive monoid homomorphism. -/
 @[simps]
 def DistribSmul.toAddMonoidHom (x : M) : A →+ A :=
-  { SmulZeroClass.toZeroHom A x with toFun := (· • ·) x, map_add' := smul_add x }
+  { SmulZeroClass.toZeroHom A x with 
+    toFun := (· • ·) x
+    map_add' := smul_add x }
 #align distrib_smul.to_add_monoid_hom DistribSmul.toAddMonoidHom
 
 end DistribSmul
@@ -891,8 +897,9 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulDistribMulAction [Monoid B] [HasSmul M B] (f : B →* A)
     (hf : Injective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulDistribMulAction M B :=
-  { hf.MulAction f smul with smul := (· • ·),
-    smul_mul := fun c x y => hf <| by simp only [smul, f.map_mul, smul_mul'],
+  { hf.MulAction f smul with 
+    smul := (· • ·)
+    smul_mul := fun c x y => hf <| by simp only [smul, f.map_mul, smul_mul']
     smul_one := fun c => hf <| by simp only [smul, f.map_one, smul_one] }
 #align function.injective.mul_distrib_mul_action Function.Injective.mulDistribMulAction
 
@@ -902,11 +909,12 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulDistribMulAction [Monoid B] [HasSmul M B] (f : A →* B)
     (hf : Surjective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulDistribMulAction M B :=
-  { hf.MulAction f smul with smul := (· • ·),
+  { hf.MulAction f smul with 
+    smul := (· • ·)
     smul_mul := fun c x y => by 
       rcases hf x with ⟨x, rfl⟩
       rcases hf y with ⟨y, rfl⟩
-      simp only [smul_mul', ← smul, ← f.map_mul],
+      simp only [smul_mul', ← smul, ← f.map_mul]
     smul_one := fun c => by simp only [← f.map_one, ← smul, smul_one] }
 #align function.surjective.mul_distrib_mul_action Function.Surjective.mulDistribMulAction
 
@@ -916,7 +924,9 @@ variable (A)
 See note [reducible non-instances]. -/
 @[reducible]
 def MulDistribMulAction.compHom [Monoid N] (f : N →* M) : MulDistribMulAction N A :=
-  { MulAction.compHom A f with smul := HasSmul.Comp.smul f, smul_one := fun x => smul_one (f x),
+  { MulAction.compHom A f with 
+    smul := HasSmul.Comp.smul f
+    smul_one := fun x => smul_one (f x)
     smul_mul := fun x => smul_mul' (f x) }
 #align mul_distrib_mul_action.comp_hom MulDistribMulAction.compHom
 

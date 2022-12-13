@@ -49,7 +49,7 @@ def toDfinsupp :
       Π₀ a : α,
         ℕ where 
   toFun s :=
-    { toFun := fun n => s.count n,
+    { toFun := fun n => s.count n
       support' := Trunc.mk ⟨s, fun i => (em (i ∈ s)).imp_right Multiset.count_eq_zero_of_not_mem⟩ }
   map_zero' := rfl
   map_add' s t := Dfinsupp.ext fun _ => Multiset.count_add _ _ _

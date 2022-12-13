@@ -81,7 +81,7 @@ def limitCone (F : J ⥤ MonCat.{max v u}) :
     Cone F where 
   x := MonCat.of (Types.limitCone (F ⋙ forget _)).x
   π :=
-    { app := limitπMonoidHom F,
+    { app := limitπMonoidHom F
       naturality' := fun j j' f =>
         MonoidHom.coe_inj ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
 #align Mon.has_limits.limit_cone MonCat.HasLimits.limitCone
@@ -107,7 +107,10 @@ instance has_limits_of_size :
     HasLimitsOfSize.{v}
       MonCat.{max v
           u} where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
+    { HasLimit := fun F =>
+        has_limit.mk
+          { Cone := limit_cone F
+            IsLimit := limit_cone_is_limit F } }
 #align Mon.has_limits_of_size MonCat.has_limits_of_size
 
 @[to_additive]
@@ -164,13 +167,13 @@ and then reuse the existing limit. -/
 instance (F : J ⥤ CommMonCat.{max v u}) : CreatesLimit F (forget₂ CommMonCat MonCat.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := CommMonCat.of (Types.limitCone (F ⋙ forget CommMonCat)).x,
+        { x := CommMonCat.of (Types.limitCone (F ⋙ forget CommMonCat)).x
           π :=
-            { app := MonCat.limitπMonoidHom (F ⋙ forget₂ CommMonCat MonCat.{max v u}),
+            { app := MonCat.limitπMonoidHom (F ⋙ forget₂ CommMonCat MonCat.{max v u})
               naturality' :=
                 (MonCat.HasLimits.limitCone
-                      (F ⋙ forget₂ CommMonCat MonCat.{max v u})).π.naturality } },
-      validLift := by apply is_limit.unique_up_to_iso (MonCat.HasLimits.limitConeIsLimit _) t,
+                      (F ⋙ forget₂ CommMonCat MonCat.{max v u})).π.naturality } }
+      validLift := by apply is_limit.unique_up_to_iso (MonCat.HasLimits.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ CommMonCat MonCat.{max v u})
           (MonCat.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }

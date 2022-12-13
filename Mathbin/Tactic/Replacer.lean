@@ -136,7 +136,9 @@ unsafe def def_replacer_cmd (_ : parse <| tk "def_replacer") : lean.parser Unit 
 #align tactic.def_replacer_cmd tactic.def_replacer_cmd
 
 add_tactic_doc
-  { Name := "def_replacer", category := DocCategory.cmd, declNames := [`tactic.def_replacer_cmd],
+  { Name := "def_replacer"
+    category := DocCategory.cmd
+    declNames := [`tactic.def_replacer_cmd]
     tags := ["environment", "renaming"] }
 
 unsafe def unprime : Name → tactic Name

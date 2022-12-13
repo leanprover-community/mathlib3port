@@ -28,7 +28,8 @@ namespace TopCat
 @[simps Unit counit]
 def adj₁ : discrete ⊣ forget TopCat.{u} :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun X => id }, counit := { app := fun X => ⟨id, continuous_bot⟩ } }
+    { Unit := { app := fun X => id }
+      counit := { app := fun X => ⟨id, continuous_bot⟩ } }
 #align Top.adj₁ TopCat.adj₁
 
 /-- Equipping a type with the trivial topology is right adjoint to the forgetful functor
@@ -36,7 +37,8 @@ def adj₁ : discrete ⊣ forget TopCat.{u} :=
 @[simps Unit counit]
 def adj₂ : forget TopCat.{u} ⊣ trivial :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun X => ⟨id, continuous_top⟩ }, counit := { app := fun X => id } }
+    { Unit := { app := fun X => ⟨id, continuous_top⟩ }
+      counit := { app := fun X => id } }
 #align Top.adj₂ TopCat.adj₂
 
 instance : IsRightAdjoint (forget TopCat.{u}) :=

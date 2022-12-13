@@ -95,7 +95,7 @@ theorem interior_compact_eq_empty [T2Space β] (di : DenseInducing i) (hd : Dens
 protected theorem prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ}
     (de₁ : DenseInducing e₁) (de₂ : DenseInducing e₂) :
     DenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) :=
-  { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced,
+  { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced
     dense := de₁.dense.prod_map de₂.dense }
 #align dense_inducing.prod DenseInducing.prod
 
@@ -223,7 +223,7 @@ theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ closure (ra
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
       (induced_iff_nhds_eq i).2 fun a =>
-        le_antisymm (tendsto_iff_comap.1 <| c.Tendsto _) (by simpa [Filter.le_def] using H a),
+        le_antisymm (tendsto_iff_comap.1 <| c.Tendsto _) (by simpa [Filter.le_def] using H a)
     dense }
 #align dense_inducing.mk' DenseInducing.mk'
 
@@ -254,7 +254,8 @@ theorem inj_iff {x y} : e x = e y ↔ x = y :=
 #align dense_embedding.inj_iff DenseEmbedding.inj_iff
 
 theorem to_embedding : Embedding e :=
-  { induced := de.induced, inj := de.inj }
+  { induced := de.induced
+    inj := de.inj }
 #align dense_embedding.to_embedding DenseEmbedding.to_embedding
 
 /-- If the domain of a `dense_embedding` is a separable space, then so is its codomain. -/
@@ -281,8 +282,8 @@ protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
       dense_iff_closure_eq.2 <| by 
         ext ⟨x, hx⟩
         rw [image_eq_range] at hx
-        simpa [closure_subtype, ← range_comp, (· ∘ ·)] ,
-    inj := (de.inj.comp Subtype.coe_injective).codRestrict _,
+        simpa [closure_subtype, ← range_comp, (· ∘ ·)]
+    inj := (de.inj.comp Subtype.coe_injective).codRestrict _
     induced :=
       (induced_iff_nhds_eq _).2 fun ⟨x, hx⟩ => by
         simp [subtype_emb, nhds_subtype_eq_comap, de.to_inducing.nhds_eq_comap, comap_comap,

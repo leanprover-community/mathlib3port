@@ -497,8 +497,10 @@ protected theorem le_add_right (d₁ d₂ : ManyOneDegree) : d₂ ≤ d₁ + d�
 #align many_one_degree.le_add_right ManyOneDegree.le_add_right
 
 instance : SemilatticeSup ManyOneDegree :=
-  { ManyOneDegree.partialOrder with sup := (· + ·), le_sup_left := ManyOneDegree.le_add_left,
-    le_sup_right := ManyOneDegree.le_add_right,
+  { ManyOneDegree.partialOrder with 
+    sup := (· + ·)
+    le_sup_left := ManyOneDegree.le_add_left
+    le_sup_right := ManyOneDegree.le_add_right
     sup_le := fun a b c h₁ h₂ => ManyOneDegree.add_le.2 ⟨h₁, h₂⟩ }
 
 end ManyOneDegree

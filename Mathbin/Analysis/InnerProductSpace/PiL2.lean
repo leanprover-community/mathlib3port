@@ -1131,7 +1131,9 @@ noncomputable def LinearIsometry.extend (L : S →ₗᵢ[𝕜] V) : V →ₗᵢ[
     simp only [LinearIsometry.norm_map, p1, p2, ContinuousLinearMap.to_linear_map_eq_coe,
       add_left_inj, mul_eq_mul_left_iff, norm_eq_zero, true_or_iff, eq_self_iff_true,
       ContinuousLinearMap.coe_coe, Submodule.coe_norm, Submodule.coe_eq_zero]
-  exact { toLinearMap := M, norm_map' := M_norm_map }
+  exact
+    { toLinearMap := M
+      norm_map' := M_norm_map }
 #align linear_isometry.extend LinearIsometry.extend
 
 theorem LinearIsometry.extend_apply (L : S →ₗᵢ[𝕜] V) (s : S) : L.extend s = L s := by

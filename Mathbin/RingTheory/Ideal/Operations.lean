@@ -2083,11 +2083,13 @@ variable {f}
 
 /-- The **first isomorphism theorem** for commutative rings, computable version. -/
 def quotientKerEquivOfRightInverse {g : S → R} (hf : Function.RightInverse g f) : R ⧸ f.ker ≃+* S :=
-  { kerLift f with toFun := kerLift f, invFun := Ideal.Quotient.mk f.ker ∘ g,
+  { kerLift f with 
+    toFun := kerLift f
+    invFun := Ideal.Quotient.mk f.ker ∘ g
     left_inv := by 
       rintro ⟨x⟩
       apply ker_lift_injective
-      simp [hf (f x)],
+      simp [hf (f x)]
     right_inv := hf }
 #align ring_hom.quotient_ker_equiv_of_right_inverse RingHom.quotientKerEquivOfRightInverse
 
@@ -2299,10 +2301,11 @@ variable [Algebra R₁ A] [Algebra R₂ A] [Algebra R₁ B]
 /-- The `R₁`-algebra structure on `A/I` for an `R₁`-algebra `A` -/
 instance Quotient.algebra {I : Ideal A} : Algebra R₁ (A ⧸ I) :=
   { RingHom.comp (Ideal.Quotient.mk I) (algebraMap R₁ A) with
-    toFun := fun x => Ideal.Quotient.mk I (algebraMap R₁ A x), smul := (· • ·),
+    toFun := fun x => Ideal.Quotient.mk I (algebraMap R₁ A x)
+    smul := (· • ·)
     smul_def' := fun r x =>
       (Quotient.inductionOn' x) fun x =>
-        ((Quotient.mk I).congr_arg <| Algebra.smul_def _ _).trans (RingHom.map_mul _ _ _),
+        ((Quotient.mk I).congr_arg <| Algebra.smul_def _ _).trans (RingHom.map_mul _ _ _)
     commutes' := fun _ _ => mul_comm _ _ }
 #align ideal.quotient.algebra Ideal.Quotient.algebra
 
@@ -2489,10 +2492,10 @@ def quotientEquiv (I : Ideal R) (J : Ideal S) (f : R ≃+* S) (hIJ : J = I.map (
       quotientMap I (↑f.symm)
         (by 
           rw [hIJ]
-          exact le_of_eq (map_comap_of_equiv I f)),
+          exact le_of_eq (map_comap_of_equiv I f))
     left_inv := by 
       rintro ⟨r⟩
-      simp,
+      simp
     right_inv := by 
       rintro ⟨s⟩
       simp }
@@ -2620,12 +2623,12 @@ variable (f : A →+* B) (f_inv : B → A)
 def liftOfRightInverseAux (hf : Function.RightInverse f_inv f) (g : A →+* C) (hg : f.ker ≤ g.ker) :
     B →+* C :=
   { AddMonoidHom.liftOfRightInverse f.toAddMonoidHom f_inv hf ⟨g.toAddMonoidHom, hg⟩ with
-    toFun := fun b => g (f_inv b),
+    toFun := fun b => g (f_inv b)
     map_one' := by 
       rw [← g.map_one, ← sub_eq_zero, ← g.map_sub, ← g.mem_ker]
       apply hg
       rw [f.mem_ker, f.map_sub, sub_eq_zero, f.map_one]
-      exact hf 1,
+      exact hf 1
     map_mul' := by 
       intro x y
       rw [← g.map_mul, ← sub_eq_zero, ← g.map_sub, ← g.mem_ker]

@@ -118,7 +118,8 @@ local notation "π₂⁻¹ " i ", " j ", " k =>
 
 /-- The glue data of topological spaces associated to a family of glue data of PresheafedSpaces. -/
 abbrev toTopGlueData : TopCat.GlueData :=
-  { f_open := fun i j => (D.f_open i j).base_open, toGlueData := 𝖣.mapGlueData (forget C) }
+  { f_open := fun i j => (D.f_open i j).base_open
+    toGlueData := 𝖣.mapGlueData (forget C) }
 #align
   algebraic_geometry.PresheafedSpace.glue_data.to_Top_glue_data AlgebraicGeometry.PresheafedSpaceCat.GlueData.toTopGlueData
 
@@ -334,9 +335,9 @@ This forms the inverse of `(𝖣.ι i).c.app (op U)`. -/
 def ιInvApp {i : D.J} (U : Opens (D.U i).carrier) :
     (D.U i).Presheaf.obj (op U) ⟶ limit (D.diagramOverOpen U) :=
   limit.lift (D.diagramOverOpen U)
-    { x := (D.U i).Presheaf.obj (op U),
+    { x := (D.U i).Presheaf.obj (op U)
       π :=
-        { app := fun j => D.ιInvAppπApp U (unop j),
+        { app := fun j => D.ιInvAppπApp U (unop j)
           naturality' := fun X Y f' => by
             induction X using Opposite.rec
             induction Y using Opposite.rec
@@ -568,7 +569,8 @@ local notation "𝖣" => D.toGlueData
 
 /-- The glue data of presheafed spaces associated to a family of glue data of sheafed spaces. -/
 abbrev toPresheafedSpaceGlueData : PresheafedSpaceCat.GlueData C :=
-  { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToPresheafedSpace }
+  { f_open := D.f_open
+    toGlueData := 𝖣.mapGlueData forgetToPresheafedSpace }
 #align
   algebraic_geometry.SheafedSpace.glue_data.to_PresheafedSpace_glue_data AlgebraicGeometry.SheafedSpaceCat.GlueData.toPresheafedSpaceGlueData
 
@@ -652,7 +654,8 @@ local notation "𝖣" => D.toGlueData
 
 /-- The glue data of ringed spaces associated to a family of glue data of locally ringed spaces. -/
 abbrev toSheafedSpaceGlueData : SheafedSpaceCat.GlueData CommRingCat :=
-  { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToSheafedSpace }
+  { f_open := D.f_open
+    toGlueData := 𝖣.mapGlueData forgetToSheafedSpace }
 #align
   algebraic_geometry.LocallyRingedSpace.glue_data.to_SheafedSpace_glue_data AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.toSheafedSpaceGlueData
 

@@ -104,9 +104,8 @@ theorem cells_ssubset_iff {μ ν : YoungDiagram} : μ.cells ⊂ ν.cells ↔ μ 
 #align young_diagram.cells_ssubset_iff YoungDiagram.cells_ssubset_iff
 
 instance :
-    HasSup
-      YoungDiagram where sup μ ν :=
-    { cells := μ.cells ∪ ν.cells,
+    HasSup YoungDiagram where sup μ ν :=
+    { cells := μ.cells ∪ ν.cells
       IsLowerSet := by 
         rw [Finset.coe_union]
         exact μ.is_lower_set.union ν.is_lower_set }
@@ -127,9 +126,8 @@ theorem mem_sup {μ ν : YoungDiagram} {x : ℕ × ℕ} : x ∈ μ ⊔ ν ↔ x 
 #align young_diagram.mem_sup YoungDiagram.mem_sup
 
 instance :
-    HasInf
-      YoungDiagram where inf μ ν :=
-    { cells := μ.cells ∩ ν.cells,
+    HasInf YoungDiagram where inf μ ν :=
+    { cells := μ.cells ∩ ν.cells
       IsLowerSet := by 
         rw [Finset.coe_inter]
         exact μ.is_lower_set.inter ν.is_lower_set }
@@ -153,7 +151,9 @@ theorem mem_inf {μ ν : YoungDiagram} {x : ℕ × ℕ} : x ∈ μ ⊓ ν ↔ x 
 instance :
     OrderBot
       YoungDiagram where 
-  bot := { cells := ∅, IsLowerSet := fun _ _ _ => False.elim }
+  bot :=
+    { cells := ∅
+      IsLowerSet := fun _ _ _ => False.elim }
   bot_le _ _ := False.elim
 
 @[simp]

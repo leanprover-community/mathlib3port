@@ -230,12 +230,15 @@ protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
 /-- The submonoid `M` of the monoid `M`. -/
 @[to_additive "The additive submonoid `M` of the `add_monoid M`."]
 instance : Top (Submonoid M) :=
-  ⟨{ carrier := Set.univ, one_mem' := Set.mem_univ 1, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
+  ⟨{  carrier := Set.univ
+      one_mem' := Set.mem_univ 1
+      mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
 
 /-- The trivial submonoid `{1}` of an monoid `M`. -/
 @[to_additive "The trivial `add_submonoid` `{0}` of an `add_monoid` `M`."]
 instance : Bot (Submonoid M) :=
-  ⟨{ carrier := {1}, one_mem' := Set.mem_singleton 1,
+  ⟨{  carrier := {1}
+      one_mem' := Set.mem_singleton 1
       mul_mem' := fun a b ha hb => by
         simp only [Set.mem_singleton_iff] at *
         rw [ha, hb, mul_one] }⟩
@@ -268,7 +271,8 @@ theorem coe_bot : ((⊥ : Submonoid M) : Set M) = {1} :=
 @[to_additive "The inf of two `add_submonoid`s is their intersection."]
 instance : HasInf (Submonoid M) :=
   ⟨fun S₁ S₂ =>
-    { carrier := S₁ ∩ S₂, one_mem' := ⟨S₁.one_mem, S₂.one_mem⟩,
+    { carrier := S₁ ∩ S₂
+      one_mem' := ⟨S₁.one_mem, S₂.one_mem⟩
       mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
 @[simp, to_additive]
@@ -284,7 +288,8 @@ theorem mem_inf {p p' : Submonoid M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x 
 @[to_additive]
 instance : HasInf (Submonoid M) :=
   ⟨fun s =>
-    { carrier := ⋂ t ∈ s, ↑t, one_mem' := Set.mem_bInter fun i h => i.one_mem,
+    { carrier := ⋂ t ∈ s, ↑t
+      one_mem' := Set.mem_bInter fun i h => i.one_mem
       mul_mem' := fun x y hx hy =>
         Set.mem_bInter fun i h =>
           i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
@@ -315,9 +320,16 @@ instance : CompleteLattice (Submonoid M) :=
   { (completeLatticeOfInf (Submonoid M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
         is_glb_binfi with
-    le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem,
-    top := ⊤, le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInf.inf,
-    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
+    le := (· ≤ ·)
+    lt := (· < ·)
+    bot := ⊥
+    bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem
+    top := ⊤
+    le_top := fun S x hx => mem_top x
+    inf := (· ⊓ ·)
+    inf := HasInf.inf
+    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
+    inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right }
 
 @[simp, to_additive]

@@ -187,11 +187,11 @@ variable {H : Type _} [Group H]
 def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAutArrow] G :=
   have F_map_eq : ∀ {a b} {f : a ⟶ b}, F.map f = (F.map (homOfPair b.back f.val) : H) :=
     ActionCategory.cases fun _ _ => rfl
-  { toFun := fun g => ⟨fun b => F.map (homOfPair b g), g⟩,
+  { toFun := fun g => ⟨fun b => F.map (homOfPair b g), g⟩
     map_one' := by 
       congr
       funext
-      exact F_map_eq.symm.trans (F.map_id b),
+      exact F_map_eq.symm.trans (F.map_id b)
     map_mul' := by 
       intro g h
       congr ; funext

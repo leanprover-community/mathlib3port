@@ -29,8 +29,9 @@ unsafe def noncomm_ring :=
 -- Pull `zsmul n` out the front so `abel` can see them.
 -- Pull out negations.
 add_tactic_doc
-  { Name := "noncomm_ring", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.noncomm_ring],
+  { Name := "noncomm_ring"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.noncomm_ring]
     tags := ["arithmetic", "simplification", "decision procedure"] }
 
 end Interactive

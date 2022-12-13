@@ -2270,9 +2270,9 @@ theorem card_eq_three [DecidableEq α] :
 
 /- warning: finset.strong_induction -> Finset.strongInduction is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {p : (Finset.{u_1} α) -> Sort.{u_2}}, (forall (s : Finset.{u_1} α), (forall (t : Finset.{u_1} α), (HasSSubset.SSubset.{u_1} (Finset.{u_1} α) (Finset.hasSsubset.{u_1} α) t s) -> (p t)) -> (p s)) -> (forall (s : Finset.{u_1} α), p s)
+  forall {α : Type.{u1}} {p : (Finset.{u1} α) -> Sort.{u2}}, (forall (s : Finset.{u1} α), (forall (t : Finset.{u1} α), (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) t s) -> (p t)) -> (p s)) -> (forall (s : Finset.{u1} α), p s)
 but is expected to have type
-  forall {α : Type.{u_1}} {p : (Finset.{u_1} α) -> Sort.{_aux_param_0}}, (forall (s : Finset.{u_1} α), (forall (t : Finset.{u_1} α), (HasSSubset.SSubset.{u_1} (Finset.{u_1} α) (Finset.hasSsubset.{u_1} α) t s) -> (p t)) -> (p s)) -> (forall (s : Finset.{u_1} α), p s)
+  forall {α : Type.{u2}} {p : (Finset.{u2} α) -> Sort.{u1}}, (forall (s : Finset.{u2} α), (forall (t : Finset.{u2} α), (HasSSubset.SSubset.{u2} (Finset.{u2} α) (Finset.hasSsubset.{u2} α) t s) -> (p t)) -> (p s)) -> (forall (s : Finset.{u2} α), p s)
 Case conversion may be inaccurate. Consider using '#align finset.strong_induction Finset.strongInductionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
@@ -2319,9 +2319,9 @@ theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : 
 
 /- warning: finset.strong_downward_induction -> Finset.strongDownwardInduction is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {p : (Finset.{u_1} α) -> Sort.{u_2}} {n : Nat}, (forall (t₁ : Finset.{u_1} α), (forall {t₂ : Finset.{u_1} α}, (LE.le.{0} Nat Nat.hasLe (Finset.card.{u_1} α t₂) n) -> (HasSSubset.SSubset.{u_1} (Finset.{u_1} α) (Finset.hasSsubset.{u_1} α) t₁ t₂) -> (p t₂)) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u_1} α t₁) n) -> (p t₁)) -> (forall (s : Finset.{u_1} α), (LE.le.{0} Nat Nat.hasLe (Finset.card.{u_1} α s) n) -> (p s))
+  forall {α : Type.{u1}} {p : (Finset.{u1} α) -> Sort.{u2}} {n : Nat}, (forall (t₁ : Finset.{u1} α), (forall {t₂ : Finset.{u1} α}, (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α t₂) n) -> (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) t₁ t₂) -> (p t₂)) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α t₁) n) -> (p t₁)) -> (forall (s : Finset.{u1} α), (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α s) n) -> (p s))
 but is expected to have type
-  forall {α : Type.{u_1}} {p : (Finset.{u_1} α) -> Sort.{_aux_param_0}} {n : Nat}, (forall (t₁ : Finset.{u_1} α), (forall {t₂ : Finset.{u_1} α}, (LE.le.{0} Nat Nat.hasLe (Finset.card.{u_1} α t₂) n) -> (HasSSubset.SSubset.{u_1} (Finset.{u_1} α) (Finset.hasSsubset.{u_1} α) t₁ t₂) -> (p t₂)) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u_1} α t₁) n) -> (p t₁)) -> (forall (s : Finset.{u_1} α), (LE.le.{0} Nat Nat.hasLe (Finset.card.{u_1} α s) n) -> (p s))
+  forall {α : Type.{u2}} {p : (Finset.{u2} α) -> Sort.{u1}} {n : Nat}, (forall (t₁ : Finset.{u2} α), (forall {t₂ : Finset.{u2} α}, (LE.le.{0} Nat Nat.hasLe (Finset.card.{u2} α t₂) n) -> (HasSSubset.SSubset.{u2} (Finset.{u2} α) (Finset.hasSsubset.{u2} α) t₁ t₂) -> (p t₂)) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u2} α t₁) n) -> (p t₁)) -> (forall (s : Finset.{u2} α), (LE.le.{0} Nat Nat.hasLe (Finset.card.{u2} α s) n) -> (p s))
 Case conversion may be inaccurate. Consider using '#align finset.strong_downward_induction Finset.strongDownwardInductionₓ'. -/
 /-- Suppose that, given that `p t` can be defined on all supersets of `s` of cardinality less than
 `n`, one knows how to define `p s`. Then one can inductively define `p s` for all finsets `s` of

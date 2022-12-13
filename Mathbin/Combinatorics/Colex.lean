@@ -201,14 +201,16 @@ instance decidableLt [LinearOrder α] : ∀ {A B : Finset.Colex α}, Decidable (
 #align colex.decidable_lt Colex.decidableLt
 
 instance [LinearOrder α] : LinearOrder (Finset.Colex α) :=
-  { Finset.Colex.hasLt, Finset.Colex.hasLe with le_refl := fun A => Or.inr rfl,
-    le_trans := le_trans,
+  { Finset.Colex.hasLt, Finset.Colex.hasLe with
+    le_refl := fun A => Or.inr rfl
+    le_trans := le_trans
     le_antisymm := fun A B AB BA =>
-      AB.elim (fun k => BA.elim (fun t => (asymm k t).elim) fun t => t.symm) id,
+      AB.elim (fun k => BA.elim (fun t => (asymm k t).elim) fun t => t.symm) id
     le_total := fun A B =>
-      (lt_trichotomy A B).elim3 (Or.inl ∘ Or.inl) (Or.inl ∘ Or.inr) (Or.inr ∘ Or.inl),
-    decidableLe := fun A B => by infer_instance, decidableLt := fun A B => by infer_instance,
-    DecidableEq := fun A B => by infer_instance,
+      (lt_trichotomy A B).elim3 (Or.inl ∘ Or.inl) (Or.inl ∘ Or.inr) (Or.inr ∘ Or.inl)
+    decidableLe := fun A B => by infer_instance
+    decidableLt := fun A B => by infer_instance
+    DecidableEq := fun A B => by infer_instance
     lt_iff_le_not_le := fun A B => by 
       constructor
       · intro t

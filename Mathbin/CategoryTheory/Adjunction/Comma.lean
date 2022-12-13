@@ -53,8 +53,10 @@ def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) :
     change comma_morphism.right (initial.to B') = _
     rw [this]
     rfl
-  right_inv f := by 
-    let B' : structured_arrow A G := { right := B, Hom := f }
+  right_inv f := by
+    let B' : structured_arrow A G :=
+      { right := B
+        Hom := f }
     apply (comma_morphism.w (initial.to B')).symm.trans (category.id_comp _)
 #align
   category_theory.left_adjoint_of_structured_arrow_initials_aux CategoryTheory.leftAdjointOfStructuredArrowInitialsAux

@@ -645,7 +645,9 @@ def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ (x y) (_ : x ∈ s) (_ : y �
     let ⟨x, hx⟩ := hsn
     simpa using hs x hx x hx
   have inv_mem : ∀ x, x ∈ s → x⁻¹ ∈ s := fun x hx => by simpa using hs 1 one_mem x hx
-  { carrier := s, one_mem' := one_mem, inv_mem' := inv_mem,
+  { carrier := s
+    one_mem' := one_mem
+    inv_mem' := inv_mem
     mul_mem' := fun x y hx hy => by simpa using hs x hx y⁻¹ (inv_mem y hy) }
 #align subgroup.of_div Subgroup.ofDiv
 
@@ -1034,9 +1036,13 @@ instance : CompleteLattice (Subgroup G) :=
   { (completeLatticeOfInf (Subgroup G)) fun s =>
       IsGlb.of_image (fun H K => show (H : Set G) ≤ K ↔ H ≤ K from SetLike.coe_subset_coe)
         is_glb_binfi with
-    bot := ⊥, bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem, top := ⊤,
-    le_top := fun S x hx => mem_top x, inf := (· ⊓ ·),
-    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
+    bot := ⊥
+    bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem
+    top := ⊤
+    le_top := fun S x hx => mem_top x
+    inf := (· ⊓ ·)
+    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
+    inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right }
 
 @[to_additive]
@@ -1328,7 +1334,8 @@ variable {N : Type _} [Group N] {P : Type _} [Group P]
 @[to_additive
       "The preimage of an `add_subgroup` along an `add_monoid` homomorphism\nis an `add_subgroup`."]
 def comap {N : Type _} [Group N] (f : G →* N) (H : Subgroup N) : Subgroup G :=
-  { H.toSubmonoid.comap f with carrier := f ⁻¹' H,
+  { H.toSubmonoid.comap f with 
+    carrier := f ⁻¹' H
     inv_mem' := fun a ha => show f a⁻¹ ∈ H by rw [f.map_inv] <;> exact H.inv_mem ha }
 #align subgroup.comap Subgroup.comap
 
@@ -1363,7 +1370,8 @@ theorem comap_id (K : Subgroup N) : K.comap (MonoidHom.id _) = K := by
 @[to_additive
       "The image of an `add_subgroup` along an `add_monoid` homomorphism\nis an `add_subgroup`."]
 def map (f : G →* N) (H : Subgroup G) : Subgroup N :=
-  { H.toSubmonoid.map f with carrier := f '' H,
+  { H.toSubmonoid.map f with 
+    carrier := f '' H
     inv_mem' := by 
       rintro _ ⟨x, hx, rfl⟩
       exact ⟨x⁻¹, H.inv_mem hx, f.map_inv x⟩ }
@@ -1987,7 +1995,9 @@ variable (G)
 @[to_additive
       "The center of an additive group `G` is the set of elements that commute with\neverything in `G`"]
 def center : Subgroup G :=
-  { Submonoid.center G with carrier := Set.center G, inv_mem' := fun a => Set.inv_mem_center }
+  { Submonoid.center G with 
+    carrier := Set.center G
+    inv_mem' := fun a => Set.inv_mem_center }
 #align subgroup.center Subgroup.center
 
 @[to_additive]
@@ -2193,7 +2203,8 @@ section Centralizer
 @[to_additive
       "The `centralizer` of `H` is the additive subgroup of `g : G` commuting with\nevery `h : H`."]
 def centralizer : Subgroup G :=
-  { Submonoid.centralizer ↑H with carrier := Set.centralizer H,
+  { Submonoid.centralizer ↑H with 
+    carrier := Set.centralizer H
     inv_mem' := fun g => Set.inv_mem_centralizer }
 #align subgroup.centralizer Subgroup.centralizer
 
@@ -2589,7 +2600,10 @@ theorem subgroup_of_range_eq_of_le {G₁ G₂ : Type _} [Group G₁] [Group G₂
 /-- Computable alternative to `monoid_hom.of_injective`. -/
 @[to_additive "Computable alternative to `add_monoid_hom.of_injective`."]
 def ofLeftInverse {f : G →* N} {g : N →* G} (h : Function.LeftInverse g f) : G ≃* f.range :=
-  { f.range_restrict with toFun := f.range_restrict, invFun := g ∘ f.range.Subtype, left_inv := h,
+  { f.range_restrict with 
+    toFun := f.range_restrict
+    invFun := g ∘ f.range.Subtype
+    left_inv := h
     right_inv := by 
       rintro ⟨x, y, rfl⟩
       apply Subtype.ext
@@ -3776,11 +3790,15 @@ def opposite :
       Subgroup
         Gᵐᵒᵖ where 
   toFun H :=
-    { carrier := MulOpposite.unop ⁻¹' (H : Set G), one_mem' := H.one_mem,
-      mul_mem' := fun a b ha hb => H.mul_mem hb ha, inv_mem' := fun a => H.inv_mem }
+    { carrier := MulOpposite.unop ⁻¹' (H : Set G)
+      one_mem' := H.one_mem
+      mul_mem' := fun a b ha hb => H.mul_mem hb ha
+      inv_mem' := fun a => H.inv_mem }
   invFun H :=
-    { carrier := MulOpposite.op ⁻¹' (H : Set Gᵐᵒᵖ), one_mem' := H.one_mem,
-      mul_mem' := fun a b ha hb => H.mul_mem hb ha, inv_mem' := fun a => H.inv_mem }
+    { carrier := MulOpposite.op ⁻¹' (H : Set Gᵐᵒᵖ)
+      one_mem' := H.one_mem
+      mul_mem' := fun a b ha hb => H.mul_mem hb ha
+      inv_mem' := fun a => H.inv_mem }
   left_inv H := SetLike.coe_injective rfl
   right_inv H := SetLike.coe_injective rfl
 #align subgroup.opposite Subgroup.opposite

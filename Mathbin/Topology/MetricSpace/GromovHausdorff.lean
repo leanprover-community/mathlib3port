@@ -1056,20 +1056,27 @@ structure AuxGluingStruct (A : Type) [MetricSpace A] : Type 1 where
 #align Gromov_Hausdorff.aux_gluing_struct GromovHausdorff.AuxGluingStruct
 
 instance (A : Type) [MetricSpace A] : Inhabited (AuxGluingStruct A) :=
-  ⟨{ Space := A, metric := by infer_instance, embed := id, isom := fun x y => rfl }⟩
+  ⟨{  Space := A
+      metric := by infer_instance
+      embed := id
+      isom := fun x y => rfl }⟩
 
 /-- Auxiliary sequence of metric spaces, containing copies of `X 0`, ..., `X n`, where each
 `X i` is glued to `X (i+1)` in an optimal way. The space at step `n+1` is obtained from the space
 at step `n` by adding `X (n+1)`, glued in an optimal way to the `X n` already sitting there. -/
 def auxGluing (n : ℕ) : AuxGluingStruct (X n) :=
-  Nat.recOn n { Space := X 0, metric := by infer_instance, embed := id, isom := fun x y => rfl }
+  Nat.recOn n
+    { Space := X 0
+      metric := by infer_instance
+      embed := id
+      isom := fun x y => rfl }
     fun n Y =>
     letI : MetricSpace Y.space := Y.metric
-    { Space := glue_space Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1))),
-      metric := by infer_instance,
+    { Space := glue_space Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1)))
+      metric := by infer_instance
       embed :=
         to_glue_r Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1))) ∘
-          optimal_GH_injr (X n) (X (n + 1)),
+          optimal_GH_injr (X n) (X (n + 1))
       isom := (to_glue_r_isometry _ _).comp (isometry_optimal_GH_injr (X n) (X (n + 1))) }
 #align Gromov_Hausdorff.aux_gluing GromovHausdorff.auxGluing
 

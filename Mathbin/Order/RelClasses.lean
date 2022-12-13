@@ -284,7 +284,7 @@ def linearOrderOfSTO (r) [IsStrictTotalOrder α r] [∀ x y, Decidable ¬r x y] 
       match y, trichotomous_of r x y with
       | y, Or.inl h => Or.inl (Or.inr h)
       | _, Or.inr (Or.inl rfl) => Or.inl (Or.inl rfl)
-      | _, Or.inr (Or.inr h) => Or.inr (Or.inr h),
+      | _, Or.inr (Or.inr h) => Or.inr (Or.inr h)
     decidableLe := fun x y =>
       decidable_of_iff (¬r y x)
         ⟨fun h => ((trichotomous_of r y x).resolve_left h).imp Eq.symm id, fun h =>
@@ -322,7 +322,7 @@ theorem IsOrderConnected.neg_trans {r : α → α → Prop} [IsOrderConnected α
 theorem isStrictWeakOrder_of_isOrderConnected [IsAsymm α r] [IsOrderConnected α r] :
     IsStrictWeakOrder α r :=
   { @IsAsymm.is_irrefl α r _ with
-    trans := fun a b c h₁ h₂ => (IsOrderConnected.conn _ c _ h₁).resolve_right (asymm h₂),
+    trans := fun a b c h₁ h₂ => (IsOrderConnected.conn _ c _ h₁).resolve_right (asymm h₂)
     incomp_trans := fun a b c ⟨h₁, h₂⟩ ⟨h₃, h₄⟩ =>
       ⟨IsOrderConnected.neg_trans h₁ h₃, IsOrderConnected.neg_trans h₄ h₂⟩ }
 #align is_strict_weak_order_of_is_order_connected isStrictWeakOrder_of_isOrderConnected
@@ -389,9 +389,9 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, r y x → C y) → C x) 
 
 /- warning: is_well_founded.fix_eq -> IsWellFounded.fix_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} (r : α -> α -> Prop) [_inst_1 : IsWellFounded.{u} α r] {C : α -> Sort.{u_1}} (F : forall (x : α), (forall (y : α), (r y x) -> (C y)) -> (C x)) (x : α), Eq.{u_1} (C x) (IsWellFounded.fix.{u, u_1} α r _inst_1 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : r y x) => IsWellFounded.fix.{u, u_1} α r _inst_1 C F y))
+  forall {α : Type.{u1}} (r : α -> α -> Prop) [_inst_1 : IsWellFounded.{u1} α r] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (r y x) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (IsWellFounded.fix.{u1, u2} α r _inst_1 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : r y x) => IsWellFounded.fix.{u1, u2} α r _inst_1 C F y))
 but is expected to have type
-  forall {α : Type.{u}} (r : α -> α -> Prop) [inst._@.Mathlib.Order.RelClasses._hyg.3190 : IsWellFounded.{u} α r] {C : α -> Sort.{u_1}} (F : forall (x : α), (forall (y : α), (r y x) -> (C y)) -> (C x)) (x : α), Eq.{u_1} (C x) (IsWellFounded.fix.{u, u_1} α r inst._@.Mathlib.Order.RelClasses._hyg.3190 (fun (y : α) => C y) F x) (F x (fun (y : α) (x._@.Mathlib.Order.RelClasses._hyg.3233 : r y x) => IsWellFounded.fix.{u, u_1} α r inst._@.Mathlib.Order.RelClasses._hyg.3190 (fun (y : α) => C y) F y))
+  forall {α : Type.{u2}} (r : α -> α -> Prop) [_inst_1 : IsWellFounded.{u2} α r] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (r y x) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (IsWellFounded.fix.{u2, u1} α r _inst_1 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : r y x) => IsWellFounded.fix.{u2, u1} α r _inst_1 (fun (y : α) => C y) F y))
 Case conversion may be inaccurate. Consider using '#align is_well_founded.fix_eq IsWellFounded.fix_eqₓ'. -/
 /-- The value from `is_well_founded.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, r y x → C y) → C x) :
@@ -517,9 +517,9 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, y < x → C y) → C x) 
 
 /- warning: well_founded_lt.fix_eq -> WellFoundedLt.fix_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : LT.{u} α] [_inst_2 : WellFoundedLt.{u} α _inst_1] {C : α -> Sort.{u_1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u_1} (C x) (WellFoundedLt.fix.{u, u_1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u} α _inst_1 y x) => WellFoundedLt.fix.{u, u_1} α _inst_1 _inst_2 C F y))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedLt.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedLt.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 y x) => WellFoundedLt.fix.{u1, u2} α _inst_1 _inst_2 C F y))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.RelClasses._hyg.3965 : LT.{u} α] [inst._@.Mathlib.Order.RelClasses._hyg.3968 : WellFoundedLt.{u} α inst._@.Mathlib.Order.RelClasses._hyg.3965] {C : α -> Sort.{u_1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u} α inst._@.Mathlib.Order.RelClasses._hyg.3965 y x) -> (C y)) -> (C x)) (x : α), Eq.{u_1} (C x) (WellFoundedLt.fix.{u, u_1} α inst._@.Mathlib.Order.RelClasses._hyg.3965 inst._@.Mathlib.Order.RelClasses._hyg.3968 (fun (y : α) => C y) F x) (F x (fun (y : α) (x._@.Mathlib.Order.RelClasses._hyg.4011 : LT.lt.{u} α inst._@.Mathlib.Order.RelClasses._hyg.3965 y x) => WellFoundedLt.fix.{u, u_1} α inst._@.Mathlib.Order.RelClasses._hyg.3965 inst._@.Mathlib.Order.RelClasses._hyg.3968 (fun (y : α) => C y) F y))
+  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedLt.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedLt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 y x) => WellFoundedLt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
 Case conversion may be inaccurate. Consider using '#align well_founded_lt.fix_eq WellFoundedLt.fix_eqₓ'. -/
 /-- The value from `well_founded_lt.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, y < x → C y) → C x) :
@@ -562,9 +562,9 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, x < y → C y) → C x) 
 
 /- warning: well_founded_gt.fix_eq -> WellFoundedGt.fix_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : LT.{u} α] [_inst_2 : WellFoundedGt.{u} α _inst_1] {C : α -> Sort.{u_1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u_1} (C x) (WellFoundedGt.fix.{u, u_1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u} α _inst_1 x y) => WellFoundedGt.fix.{u, u_1} α _inst_1 _inst_2 C F y))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedGt.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedGt.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 x y) => WellFoundedGt.fix.{u1, u2} α _inst_1 _inst_2 C F y))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.RelClasses._hyg.4257 : LT.{u} α] [inst._@.Mathlib.Order.RelClasses._hyg.4260 : WellFoundedGt.{u} α inst._@.Mathlib.Order.RelClasses._hyg.4257] {C : α -> Sort.{u_1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u} α inst._@.Mathlib.Order.RelClasses._hyg.4257 x y) -> (C y)) -> (C x)) (x : α), Eq.{u_1} (C x) (WellFoundedGt.fix.{u, u_1} α inst._@.Mathlib.Order.RelClasses._hyg.4257 inst._@.Mathlib.Order.RelClasses._hyg.4260 (fun (y : α) => C y) F x) (F x (fun (y : α) (x._@.Mathlib.Order.RelClasses._hyg.4303 : LT.lt.{u} α inst._@.Mathlib.Order.RelClasses._hyg.4257 x y) => WellFoundedGt.fix.{u, u_1} α inst._@.Mathlib.Order.RelClasses._hyg.4257 inst._@.Mathlib.Order.RelClasses._hyg.4260 (fun (y : α) => C y) F y))
+  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedGt.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedGt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 x y) => WellFoundedGt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
 Case conversion may be inaccurate. Consider using '#align well_founded_gt.fix_eq WellFoundedGt.fix_eqₓ'. -/
 /-- The value from `well_founded_gt.fix` is built from the successive ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, x < y → C y) → C x) :
@@ -597,8 +597,9 @@ def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] :
 -- This isn't made into an instance as it loops with `is_irrefl α r`.
 theorem Subsingleton.is_well_order [Subsingleton α] (r : α → α → Prop) [hr : IsIrrefl α r] :
     IsWellOrder α r :=
-  { hr with trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elim a b,
-    trans := fun a b c h => (not_rel_of_subsingleton r a b h).elim,
+  { hr with 
+    trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elim a b
+    trans := fun a b c h => (not_rel_of_subsingleton r a b h).elim
     wf := ⟨fun a => ⟨_, fun y h => (not_rel_of_subsingleton r y a h).elim⟩⟩ }
 #align subsingleton.is_well_order Subsingleton.is_well_order
 

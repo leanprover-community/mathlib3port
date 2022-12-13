@@ -725,7 +725,7 @@ variable [MulOneClass α]
 @[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
 protected def mulOneClass : MulOneClass (Set α) :=
   { Set.hasOne, Set.hasMul with
-    mul_one := fun s => by simp only [← singleton_one, mul_singleton, mul_one, image_id'],
+    mul_one := fun s => by simp only [← singleton_one, mul_singleton, mul_one, image_id']
     one_mul := fun s => by simp only [← singleton_one, singleton_mul, one_mul, image_id'] }
 #align set.mul_one_class Set.mulOneClass
 
@@ -911,10 +911,10 @@ protected def divisionMonoid : DivisionMonoid (Set α) :=
   { Set.monoid, Set.hasInvolutiveInv, Set.hasDiv, Set.hasZpow with
     mul_inv_rev := fun s t => by 
       simp_rw [← image_inv]
-      exact image_image2_antidistrib mul_inv_rev,
+      exact image_image2_antidistrib mul_inv_rev
     inv_eq_of_mul := fun s t h => by
       obtain ⟨a, b, rfl, rfl, hab⟩ := Set.mul_eq_one_iff.1 h
-      rw [inv_singleton, inv_eq_of_mul_eq_one_right hab],
+      rw [inv_singleton, inv_eq_of_mul_eq_one_right hab]
     div_eq_mul_inv := fun s t => by
       rw [← image_id (s / t), ← image_inv]
       exact image_image2_distrib_right div_eq_mul_inv }
@@ -946,7 +946,7 @@ protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Set α)
   { Set.hasInvolutiveNeg with
     neg_mul := fun _ _ => by 
       simp_rw [← image_neg]
-      exact image2_image_left_comm neg_mul,
+      exact image2_image_left_comm neg_mul
     mul_neg := fun _ _ => by 
       simp_rw [← image_neg]
       exact image_image2_right_comm mul_neg }

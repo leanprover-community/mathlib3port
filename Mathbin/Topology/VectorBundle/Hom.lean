@@ -191,7 +191,7 @@ instance continuousLinearMap.is_linear [∀ x, HasContinuousAdd (E₂ x)]
     { map_add := fun L L' =>
         show (e₂.continuousLinearMapAt 𝕜₂ x).comp ((L + L').comp (e₁.symmL 𝕜₁ x)) = _ by
           simp_rw [add_comp, comp_add]
-          rfl,
+          rfl
       map_smul := fun c L =>
         show (e₂.continuousLinearMapAt 𝕜₂ x).comp ((c • L).comp (e₁.symmL 𝕜₁ x)) = _ by
           simp_rw [smul_comp, comp_smulₛₗ, RingHom.id_apply]

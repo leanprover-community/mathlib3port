@@ -228,8 +228,10 @@ unsafe def unfold_cases (inner : itactic) : tactic Unit :=
 #align tactic.interactive.unfold_cases tactic.interactive.unfold_cases
 
 add_tactic_doc
-  { Name := "unfold_cases", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.unfold_cases], tags := ["induction", "case bashing"] }
+  { Name := "unfold_cases"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.unfold_cases]
+    tags := ["induction", "case bashing"] }
 
 end Interactive
 

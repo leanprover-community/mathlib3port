@@ -73,20 +73,23 @@ instance hasMul (I : Ideal R) : Mul (R ⧸ I) :=
 #align ideal.quotient.has_mul Ideal.Quotient.hasMul
 
 instance commRing (I : Ideal R) : CommRing (R ⧸ I) :=
-  { Submodule.Quotient.addCommGroup I with mul := (· * ·), one := 1,
-    natCast := fun n => Submodule.Quotient.mk n, nat_cast_zero := by simp [Nat.cast],
-    nat_cast_succ := by simp [Nat.cast] <;> rfl,
+  { Submodule.Quotient.addCommGroup I with 
+    mul := (· * ·)
+    one := 1
+    natCast := fun n => Submodule.Quotient.mk n
+    nat_cast_zero := by simp [Nat.cast]
+    nat_cast_succ := by simp [Nat.cast] <;> rfl
     mul_assoc := fun a b c =>
-      (Quotient.inductionOn₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (mul_assoc a b c),
+      (Quotient.inductionOn₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (mul_assoc a b c)
     mul_comm := fun a b =>
-      (Quotient.inductionOn₂' a b) fun a b => congr_arg Submodule.Quotient.mk (mul_comm a b),
+      (Quotient.inductionOn₂' a b) fun a b => congr_arg Submodule.Quotient.mk (mul_comm a b)
     one_mul := fun a =>
-      (Quotient.inductionOn' a) fun a => congr_arg Submodule.Quotient.mk (one_mul a),
+      (Quotient.inductionOn' a) fun a => congr_arg Submodule.Quotient.mk (one_mul a)
     mul_one := fun a =>
-      (Quotient.inductionOn' a) fun a => congr_arg Submodule.Quotient.mk (mul_one a),
+      (Quotient.inductionOn' a) fun a => congr_arg Submodule.Quotient.mk (mul_one a)
     left_distrib := fun a b c =>
       (Quotient.inductionOn₃' a b c) fun a b c =>
-        congr_arg Submodule.Quotient.mk (left_distrib a b c),
+        congr_arg Submodule.Quotient.mk (left_distrib a b c)
     right_distrib := fun a b c =>
       (Quotient.inductionOn₃' a b c) fun a b c =>
         congr_arg Submodule.Quotient.mk (right_distrib a b c) }
@@ -208,9 +211,9 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected noncomputable def field (I : Ideal R) [hI : I.IsMaximal] : Field (R ⧸ I) :=
   { Quotient.commRing I, Quotient.is_domain I with
-    inv := fun a => if ha : a = 0 then 0 else Classical.choose (exists_inv ha),
+    inv := fun a => if ha : a = 0 then 0 else Classical.choose (exists_inv ha)
     mul_inv_cancel := fun a (ha : a ≠ 0) =>
-      show a * dite _ _ _ = _ by rw [dif_neg ha] <;> exact Classical.choose_spec (exists_inv ha),
+      show a * dite _ _ _ = _ by rw [dif_neg ha] <;> exact Classical.choose_spec (exists_inv ha)
     inv_zero := dif_pos rfl }
 #align ideal.quotient.field Ideal.Quotient.field
 
@@ -241,8 +244,10 @@ variable [CommRing S]
 /-- Given a ring homomorphism `f : R →+* S` sending all elements of an ideal to zero,
 lift it to the quotient by this ideal. -/
 def lift (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : R ⧸ I →+* S :=
-  { QuotientAddGroup.lift I.toAddSubgroup f.toAddMonoidHom H with map_one' := f.map_one,
-    map_zero' := f.map_zero, map_add' := fun a₁ a₂ => Quotient.inductionOn₂' a₁ a₂ f.map_add,
+  { QuotientAddGroup.lift I.toAddSubgroup f.toAddMonoidHom H with
+    map_one' := f.map_one
+    map_zero' := f.map_zero
+    map_add' := fun a₁ a₂ => Quotient.inductionOn₂' a₁ a₂ f.map_add
     map_mul' := fun a₁ a₂ => Quotient.inductionOn₂' a₁ a₂ f.map_mul }
 #align ideal.quotient.lift Ideal.Quotient.lift
 

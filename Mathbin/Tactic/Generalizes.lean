@@ -243,8 +243,10 @@ unsafe def generalizes (args : parse generalizes_args_parser) : tactic Unit :=
 #align tactic.interactive.generalizes tactic.interactive.generalizes
 
 add_tactic_doc
-  { Name := "generalizes", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.generalizes], tags := ["context management"],
+  { Name := "generalizes"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.generalizes]
+    tags := ["context management"]
     inheritDescriptionFrom := `tactic.interactive.generalizes }
 
 end Interactive

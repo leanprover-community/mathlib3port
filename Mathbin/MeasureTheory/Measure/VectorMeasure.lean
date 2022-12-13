@@ -604,8 +604,9 @@ variable (v : VectorMeasure α M)
 /-- The pushforward of a vector measure along a function. -/
 def map (v : VectorMeasure α M) (f : α → β) : VectorMeasure β M :=
   if hf : Measurable f then
-    { measureOf' := fun s => if MeasurableSet s then v (f ⁻¹' s) else 0, empty' := by simp,
-      not_measurable' := fun i hi => if_neg hi,
+    { measureOf' := fun s => if MeasurableSet s then v (f ⁻¹' s) else 0
+      empty' := by simp
+      not_measurable' := fun i hi => if_neg hi
       m_Union' := by 
         intro g hg₁ hg₂
         convert v.m_Union (fun i => hf (hg₁ i)) fun i j hij => (hg₂ hij).Preimage _
@@ -722,8 +723,9 @@ end
 /-- The restriction of a vector measure on some set. -/
 def restrict (v : VectorMeasure α M) (i : Set α) : VectorMeasure α M :=
   if hi : MeasurableSet i then
-    { measureOf' := fun s => if MeasurableSet s then v (s ∩ i) else 0, empty' := by simp,
-      not_measurable' := fun i hi => if_neg hi,
+    { measureOf' := fun s => if MeasurableSet s then v (s ∩ i) else 0
+      empty' := by simp
+      not_measurable' := fun i hi => if_neg hi
       m_Union' := by 
         intro f hf₁ hf₂
         convert

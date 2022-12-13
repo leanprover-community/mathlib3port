@@ -202,9 +202,9 @@ theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodup (l₁ ++ a :: l₂) 
 
 /- warning: list.nodup.of_map -> List.Nodup.of_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) {l : List.{u} α}, (List.Nodup.{v} β (List.map.{u, v} α β f l)) -> (List.Nodup.{u} α l)
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) {l : List.{u1} α}, (List.Nodup.{u2} β (List.map.{u1, u2} α β f l)) -> (List.Nodup.{u1} α l)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (f : α -> β) {l : List.{u_1} α}, (List.Nodup.{u_2} β (List.map.{u_1, u_2} α β f l)) -> (List.Nodup.{u_1} α l)
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) {l : List.{u2} α}, (List.Nodup.{u1} β (List.map.{u2, u1} α β f l)) -> (List.Nodup.{u2} α l)
 Case conversion may be inaccurate. Consider using '#align list.nodup.of_map List.Nodup.of_mapₓ'. -/
 theorem Nodup.of_map (f : α → β) {l : List α} : Nodup (map f l) → Nodup l :=
   (Pairwise.of_map f) fun a b => mt <| congr_arg f
@@ -212,9 +212,9 @@ theorem Nodup.of_map (f : α → β) {l : List α} : Nodup (map f l) → Nodup l
 
 /- warning: list.nodup.map_on -> List.Nodup.map_on is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {l : List.{u} α} {f : α -> β}, (forall (x : α), (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) x l) -> (forall (y : α), (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) y l) -> (Eq.{succ v} β (f x) (f y)) -> (Eq.{succ u} α x y))) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.map.{u, v} α β f l))
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : List.{u1} α} {f : α -> β}, (forall (x : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l) -> (forall (y : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) y l) -> (Eq.{succ u2} β (f x) (f y)) -> (Eq.{succ u1} α x y))) -> (List.Nodup.{u1} α l) -> (List.Nodup.{u2} β (List.map.{u1, u2} α β f l))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {l : List.{u_1} α} {f : α -> β}, (forall (x : α), (Membership.mem.{u_1, u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) x l) -> (forall (y : α), (Membership.mem.{u_1, u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) y l) -> (Eq.{succ u_2} β (f x) (f y)) -> (Eq.{succ u_1} α x y))) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.map.{u_1, u_2} α β f l))
+  forall {α : Type.{u2}} {β : Type.{u1}} {l : List.{u2} α} {f : α -> β}, (forall (x : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) x l) -> (forall (y : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) y l) -> (Eq.{succ u1} β (f x) (f y)) -> (Eq.{succ u2} α x y))) -> (List.Nodup.{u2} α l) -> (List.Nodup.{u1} β (List.map.{u2, u1} α β f l))
 Case conversion may be inaccurate. Consider using '#align list.nodup.map_on List.Nodup.map_onₓ'. -/
 theorem Nodup.map_on {f : α → β} (H : ∀ x ∈ l, ∀ y ∈ l, f x = f y → x = y) (d : Nodup l) :
     (map f l).Nodup :=
@@ -240,9 +240,9 @@ theorem nodup_map_iff_inj_on {f : α → β} {l : List α} (d : Nodup l) :
 
 /- warning: list.nodup.map -> List.Nodup.map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {l : List.{u} α} {f : α -> β}, (Function.Injective.{succ u, succ v} α β f) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.map.{u, v} α β f l))
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : List.{u1} α} {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (List.Nodup.{u1} α l) -> (List.Nodup.{u2} β (List.map.{u1, u2} α β f l))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {l : List.{u_1} α} {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.map.{u_1, u_2} α β f l))
+  forall {α : Type.{u2}} {β : Type.{u1}} {l : List.{u2} α} {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (List.Nodup.{u2} α l) -> (List.Nodup.{u1} β (List.map.{u2, u1} α β f l))
 Case conversion may be inaccurate. Consider using '#align list.nodup.map List.Nodup.mapₓ'. -/
 protected theorem Nodup.map {f : α → β} (hf : Injective f) : Nodup l → Nodup (map f l) :=
   Nodup.map_on fun x _ y _ h => hf h
@@ -266,9 +266,9 @@ attribute [protected] nodup.attach
 
 /- warning: list.nodup.pmap -> List.Nodup.pmap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u} α} {H : forall (a : α), (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ v} β (f a ha) (f b hb)) -> (Eq.{succ u} α a b)) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.pmap.{u, v} α β (fun (a : α) => p a) f l H))
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u1} α} {H : forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ u2} β (f a ha) (f b hb)) -> (Eq.{succ u1} α a b)) -> (List.Nodup.{u1} α l) -> (List.Nodup.{u2} β (List.pmap.{u1, u2} α β (fun (a : α) => p a) f l H))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u_1} α} {H : forall (a : α), (Membership.mem.{u_1, u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ u_2} β (f a ha) (f b hb)) -> (Eq.{succ u_1} α a b)) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.pmap.{u_1, u_2} α β (fun (a : α) => p a) f l H))
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u2} α} {H : forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ u1} β (f a ha) (f b hb)) -> (Eq.{succ u2} α a b)) -> (List.Nodup.{u2} α l) -> (List.Nodup.{u1} β (List.pmap.{u2, u1} α β (fun (a : α) => p a) f l H))
 Case conversion may be inaccurate. Consider using '#align list.nodup.pmap List.Nodup.pmapₓ'. -/
 theorem Nodup.pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H}
     (hf : ∀ a ha b hb, f a ha = f b hb → a = b) (h : Nodup l) : Nodup (pmap f l H) := by

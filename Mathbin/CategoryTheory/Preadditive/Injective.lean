@@ -684,7 +684,9 @@ instance TypeCat.enough_injectives :
       (Type
         u₁) where presentation X :=
     Nonempty.intro
-      { j := WithBot X, Injective := inferInstance, f := Option.some,
+      { j := WithBot X
+        Injective := inferInstance
+        f := Option.some
         Mono := by 
           rw [mono_iff_injective]
           exact Option.some_injective X }

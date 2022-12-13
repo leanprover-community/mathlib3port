@@ -268,7 +268,7 @@ warning: set.fintype_Union -> Set.fintypeUnion is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {ι : Sort.{w}} [_inst_1 : DecidableEq.{succ u} α] [_inst_2 : Fintype.{w} (PLift.{w} ι)] (f : ι -> (Set.{u} α)) [_inst_3 : forall (i : ι), Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) (f i))], Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) (Set.union.{u, w} α ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (s : Set.{u} α) (t : Set.{u} α) [_inst_2 : Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) s)] [_inst_3 : Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) t)], Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) (Union.union.{u} (Set.{u} α) (Set.hasUnion.{u} α) s t))
+  forall {α : Type.{u}} [ι : DecidableEq.{succ u} α] (_inst_1 : Set.{u} α) (_inst_2 : Set.{u} α) [f : Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) _inst_1)] [_inst_3 : Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) _inst_2)], Fintype.{u} (coeSort.{max (succ u) 1, succ (succ u)} (Set.{u} α) Type.{u} (Set.hasCoeToSort.{u} α) (Union.union.{u} (Set.{u} α) (Set.hasUnion.{u} α) _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align set.fintype_Union Set.fintypeUnionₓ'. -/
 instance fintypeUnion [DecidableEq α] [Fintype (PLift ι)] (f : ι → Set α) [∀ i, Fintype (f i)] :
     Fintype (⋃ i, f i) :=

@@ -197,9 +197,9 @@ section CoprodCat
 /- warning: filter.Coprod clashes with filter.coprod -> Filter.coprod
 warning: filter.Coprod -> Filter.coprod is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}}, (forall (i : ι), Filter.{u_2} (α i)) -> (Filter.{max u_1 u_2} (forall (i : ι), α i))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}}, (forall (i : ι), Filter.{u2} (α i)) -> (Filter.{max u1 u2} (forall (i : ι), α i))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, (Filter.{u_1} α) -> (Filter.{u_2} β) -> (Filter.{max u_1 u_2} (Prod.{u_1, u_2} α β))
+  forall {ι : Type.{u1}} {α : Type.{u2}}, (Filter.{u1} ι) -> (Filter.{u2} α) -> (Filter.{max u1 u2} (Prod.{u1, u2} ι α))
 Case conversion may be inaccurate. Consider using '#align filter.Coprod Filter.coprodₓ'. -/
 /-- Coproduct of filters. -/
 protected def coprod (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=

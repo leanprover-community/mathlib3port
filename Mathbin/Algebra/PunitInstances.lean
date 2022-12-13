@@ -26,8 +26,12 @@ variable {R S : Type _} (x y : PUnit.{u + 1}) (s : Set PUnit.{u + 1})
 @[to_additive]
 instance : CommGroup PUnit := by
   refine_struct
-        { mul := fun _ _ => star, one := star, inv := fun _ => star, div := fun _ _ => star,
-          npow := fun _ _ => star, zpow := fun _ _ => star.. } <;>
+        { mul := fun _ _ => star
+          one := star
+          inv := fun _ => star
+          div := fun _ _ => star
+          npow := fun _ _ => star
+          zpow := fun _ _ => star.. } <;>
       intros <;>
     exact Subsingleton.elim _ _
 
@@ -63,10 +67,12 @@ instance : CancelCommMonoidWithZero PUnit := by
 
 instance : NormalizedGcdMonoid PUnit := by
   refine'
-        { gcd := fun _ _ => star, lcm := fun _ _ => star, normUnit := fun x => 1,
-          gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elim _ _⟩,
-          gcd_dvd_right := fun _ _ => ⟨star, Subsingleton.elim _ _⟩,
-          dvd_gcd := fun _ _ _ _ _ => ⟨star, Subsingleton.elim _ _⟩,
+        { gcd := fun _ _ => star
+          lcm := fun _ _ => star
+          normUnit := fun x => 1
+          gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elim _ _⟩
+          gcd_dvd_right := fun _ _ => ⟨star, Subsingleton.elim _ _⟩
+          dvd_gcd := fun _ _ _ _ _ => ⟨star, Subsingleton.elim _ _⟩
           gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elim _ _⟩.. } <;>
       intros <;>
     exact Subsingleton.elim _ _

@@ -96,8 +96,9 @@ theorem IsCompact.induction_on {s : Set α} (hs : IsCompact s) {p : Set α → P
     (hmono : ∀ ⦃s t⦄, s ⊆ t → p t → p s) (hunion : ∀ ⦃s t⦄, p s → p t → p (s ∪ t))
     (hnhds : ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, p t) : p s := by
   let f : Filter α :=
-    { sets := { t | p (tᶜ) }, univ_sets := by simpa,
-      sets_of_superset := fun t₁ t₂ ht₁ ht => hmono (compl_subset_compl.2 ht) ht₁,
+    { sets := { t | p (tᶜ) }
+      univ_sets := by simpa
+      sets_of_superset := fun t₁ t₂ ht₁ ht => hmono (compl_subset_compl.2 ht) ht₁
       inter_sets := fun t₁ t₂ ht₁ ht₂ => by simp [compl_inter, hunion ht₁ ht₂] }
   have : sᶜ ∈ f := hs.compl_mem_sets_of_nhds_within (by simpa using hnhds)
   simpa
@@ -1916,7 +1917,7 @@ theorem Subtype.preirreducible_space {s : Set α} (h : IsPreirreducible s) : Pre
 
 theorem Subtype.irreducible_space {s : Set α} (h : IsIrreducible s) : IrreducibleSpace s :=
   { is_preirreducible_univ :=
-      (Subtype.preirreducible_space h.IsPreirreducible).is_preirreducible_univ,
+      (Subtype.preirreducible_space h.IsPreirreducible).is_preirreducible_univ
     to_nonempty := h.Nonempty.to_subtype }
 #align subtype.irreducible_space Subtype.irreducible_space
 

@@ -299,8 +299,9 @@ unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list))
 #align tactic.interactive.apply_assumption tactic.interactive.apply_assumption
 
 add_tactic_doc
-  { Name := "apply_assumption", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.apply_assumption],
+  { Name := "apply_assumption"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.apply_assumption]
     tags := ["context management", "lemma application"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -345,13 +346,17 @@ unsafe def solve_by_elim (all_goals : parse <| parser.optional (tk "*")) (no_dfl
     (opt : solve_by_elim.opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names
   tactic.solve_by_elim
-      { opt with backtrack_all_goals := all_goals ∨ opt, lemma_thunks := some lemma_thunks,
+      { opt with 
+        backtrack_all_goals := all_goals ∨ opt
+        lemma_thunks := some lemma_thunks
         ctx_thunk }
 #align tactic.interactive.solve_by_elim tactic.interactive.solve_by_elim
 
 add_tactic_doc
-  { Name := "solve_by_elim", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.solve_by_elim], tags := ["search"] }
+  { Name := "solve_by_elim"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.solve_by_elim]
+    tags := ["search"] }
 
 end Interactive
 

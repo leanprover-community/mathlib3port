@@ -106,6 +106,8 @@ unsafe def group (locat : parse location) : tactic Unit := do
 end Tactic.Interactive
 
 add_tactic_doc
-  { Name := "group", category := DocCategory.tactic, declNames := [`tactic.interactive.group],
+  { Name := "group"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.group]
     tags := ["decision procedure", "simplification"] }
 

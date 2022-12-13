@@ -234,7 +234,9 @@ unsafe def congrm (arg : parse texpr) : tactic Unit := do
 #align tactic.interactive.congrm tactic.interactive.congrm
 
 add_tactic_doc
-  { Name := "congrm", category := DocCategory.tactic, declNames := [`tactic.interactive.congrm],
+  { Name := "congrm"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.congrm]
     tags := ["congruence"] }
 
 end Tactic.Interactive

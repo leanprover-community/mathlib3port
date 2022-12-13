@@ -123,8 +123,9 @@ instance monoid [Monoid α] : Monoid (ULift α) :=
 #align ulift.monoid ULift.monoid
 
 instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=
-  { ULift.hasOne, ULift.addMonoid with natCast := fun n => ⟨n⟩,
-    nat_cast_zero := congr_arg ULift.up Nat.cast_zero,
+  { ULift.hasOne, ULift.addMonoid with 
+    natCast := fun n => ⟨n⟩
+    nat_cast_zero := congr_arg ULift.up Nat.cast_zero
     nat_cast_succ := fun n => congr_arg ULift.up (Nat.cast_succ _) }
 #align ulift.add_monoid_with_one ULift.addMonoidWithOne
 
@@ -159,8 +160,9 @@ instance group [Group α] : Group (ULift α) :=
 #align ulift.group ULift.group
 
 instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
-  { ULift.addMonoidWithOne, ULift.addGroup with intCast := fun n => ⟨n⟩,
-    int_cast_of_nat := fun n => congr_arg ULift.up (Int.cast_of_nat _),
+  { ULift.addMonoidWithOne, ULift.addGroup with
+    intCast := fun n => ⟨n⟩
+    int_cast_of_nat := fun n => congr_arg ULift.up (Int.cast_of_nat _)
     int_cast_neg_succ_of_nat := fun n => congr_arg ULift.up (Int.cast_negSucc _) }
 #align ulift.add_group_with_one ULift.addGroupWithOne
 

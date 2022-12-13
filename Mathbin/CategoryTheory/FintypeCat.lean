@@ -74,10 +74,15 @@ theorem comp_apply {X Y Z : FintypeCat} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f
 /-- Equivalences between finite types are the same as isomorphisms in `Fintype`. -/
 @[simps]
 def equivEquivIso {A B : FintypeCat} :
-    A ≃ B ≃ (A ≅ B) where 
-  toFun e := { Hom := e, inv := e.symm }
+    A ≃ B ≃
+      (A ≅ B) where 
+  toFun e :=
+    { Hom := e
+      inv := e.symm }
   invFun i :=
-    { toFun := i.Hom, invFun := i.inv, left_inv := Iso.hom_inv_id_apply i,
+    { toFun := i.Hom
+      invFun := i.inv
+      left_inv := Iso.hom_inv_id_apply i
       right_inv := Iso.inv_hom_id_apply i }
   left_inv := by tidy
   right_inv := by tidy
@@ -127,13 +132,14 @@ theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
   ext _ _ <|
     Fin.equiv_iff_eq.mp <|
       Nonempty.intro <|
-        { toFun := fun x => (h.Hom ⟨x⟩).down, invFun := fun x => (h.inv ⟨x⟩).down,
+        { toFun := fun x => (h.Hom ⟨x⟩).down
+          invFun := fun x => (h.inv ⟨x⟩).down
           left_inv := by 
             intro a
             change ULift.down _ = _
             rw [ULift.up_down]
             change ((h.hom ≫ h.inv) _).down = _
-            simpa,
+            simpa
           right_inv := by 
             intro a
             change ULift.down _ = _
@@ -157,7 +163,10 @@ instance : Faithful incl where
 instance : EssSurj incl :=
   ess_surj.mk fun X =>
     let F := Fintype.equivFin X
-    ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ ULift.down, inv := ULift.up ∘ F }⟩
+    ⟨mk (Fintype.card X),
+      Nonempty.intro
+        { Hom := F.symm ∘ ULift.down
+          inv := ULift.up ∘ F }⟩
 
 noncomputable instance : IsEquivalence incl :=
   Equivalence.ofFullyFaithfullyEssSurj _

@@ -122,7 +122,7 @@ instance (X : C) : AddCommGroup (EndCat X) := by
 
 instance (X : C) : Ring (EndCat X) :=
   { (inferInstance : AddCommGroup (EndCat X)), (inferInstance : Monoid (EndCat X)) with
-    left_distrib := fun f g h => Preadditive.add_comp X X X g h f,
+    left_distrib := fun f g h => Preadditive.add_comp X X X g h f
     right_distrib := fun f g h => Preadditive.comp_add X X X h f g }
 
 /-- Composition by a fixed left argument as a group homomorphism -/
@@ -355,7 +355,7 @@ variable (f g)
 /-- A preadditive category has an equalizer for `f` and `g` if it has a kernel for `f - g`. -/
 theorem has_equalizer_of_has_kernel [HasKernel (f - g)] : HasEqualizer f g :=
   HasLimit.mk
-    { Cone := forkOfKernelFork _,
+    { Cone := forkOfKernelFork _
       IsLimit := isLimitForkOfKernelFork (equalizerIsEqualizer (f - g) 0) }
 #align
   category_theory.preadditive.has_equalizer_of_has_kernel CategoryTheory.Preadditive.has_equalizer_of_has_kernel
@@ -363,7 +363,7 @@ theorem has_equalizer_of_has_kernel [HasKernel (f - g)] : HasEqualizer f g :=
 /-- A preadditive category has a kernel for `f - g` if it has an equalizer for `f` and `g`. -/
 theorem has_kernel_of_has_equalizer [HasEqualizer f g] : HasKernel (f - g) :=
   HasLimit.mk
-    { Cone := kernelForkOfFork (equalizer.fork f g),
+    { Cone := kernelForkOfFork (equalizer.fork f g)
       IsLimit := isLimitKernelForkOfFork (limit.isLimit (parallelPair f g)) }
 #align
   category_theory.preadditive.has_kernel_of_has_equalizer CategoryTheory.Preadditive.has_kernel_of_has_equalizer
@@ -434,7 +434,7 @@ variable (f g)
 /-- A preadditive category has a coequalizer for `f` and `g` if it has a cokernel for `f - g`. -/
 theorem has_coequalizer_of_has_cokernel [HasCokernel (f - g)] : HasCoequalizer f g :=
   HasColimit.mk
-    { Cocone := coforkOfCokernelCofork _,
+    { Cocone := coforkOfCokernelCofork _
       IsColimit := isColimitCoforkOfCokernelCofork (coequalizerIsCoequalizer (f - g) 0) }
 #align
   category_theory.preadditive.has_coequalizer_of_has_cokernel CategoryTheory.Preadditive.has_coequalizer_of_has_cokernel
@@ -442,7 +442,7 @@ theorem has_coequalizer_of_has_cokernel [HasCokernel (f - g)] : HasCoequalizer f
 /-- A preadditive category has a cokernel for `f - g` if it has a coequalizer for `f` and `g`. -/
 theorem has_cokernel_of_has_coequalizer [HasCoequalizer f g] : HasCokernel (f - g) :=
   HasColimit.mk
-    { Cocone := cokernelCoforkOfCofork (coequalizer.cofork f g),
+    { Cocone := cokernelCoforkOfCofork (coequalizer.cofork f g)
       IsColimit := isColimitCokernelCoforkOfCofork (colimit.isColimit (parallelPair f g)) }
 #align
   category_theory.preadditive.has_cokernel_of_has_coequalizer CategoryTheory.Preadditive.has_cokernel_of_has_coequalizer

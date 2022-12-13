@@ -84,9 +84,9 @@ def getOrElse (n : PosNum) (t : Tree α) (v : α) : α :=
 
 /- warning: tree.map -> Tree.map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{u_1}}, (α -> β) -> (Tree.{u} α) -> (Tree.{u_1} β)
+  forall {α : Type.{u1}} {β : Type.{u2}}, (α -> β) -> (Tree.{u1} α) -> (Tree.{u2} β)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{_aux_param_0}}, (α -> β) -> (Tree.{u} α) -> (Tree.{_aux_param_0} β)
+  forall {α : Type.{u2}} {β : Type.{u1}}, (α -> β) -> (Tree.{u2} α) -> (Tree.{u1} β)
 Case conversion may be inaccurate. Consider using '#align tree.map Tree.mapₓ'. -/
 /-- Apply a function to each value in the tree.  This is the `map` function for the `tree` functor.
 TODO: implement `traversable tree`. -/

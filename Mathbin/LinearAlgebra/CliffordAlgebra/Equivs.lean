@@ -296,9 +296,9 @@ variable {c₁ c₂}
 `clifford_algebra_quaternion.Q` can be converted to `ℍ[R,c₁,c₂]`. -/
 def toQuaternion : CliffordAlgebra (q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
   CliffordAlgebra.lift (q c₁ c₂)
-    ⟨{ toFun := fun v => (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]), map_add' := fun v₁ v₂ => by simp,
-        map_smul' := fun r v => by ext <;> simp },
-      fun v => by 
+    ⟨{  toFun := fun v => (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂])
+        map_add' := fun v₁ v₂ => by simp
+        map_smul' := fun r v => by ext <;> simp }, fun v => by
       dsimp
       ext
       all_goals dsimp; ring⟩

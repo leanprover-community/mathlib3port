@@ -273,7 +273,7 @@ instance : Inhabited (A →*[n] β) :=
 @[to_additive "`f + g` is the Freiman homomorphism sending `x` to `f x + g x`."]
 instance : Mul (A →*[n] β) :=
   ⟨fun f g =>
-    { toFun := fun x => f x * g x,
+    { toFun := fun x => f x * g x
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_mul, prod_map_mul, map_prod_eq_map_prod f hsA htA hs ht h,
           map_prod_eq_map_prod g hsA htA hs ht h] }⟩
@@ -295,7 +295,7 @@ sending `x` to `(f x)⁻¹`. -/
       "If `f` is a Freiman homomorphism to an additive commutative group, then `-f` is the\nFreiman homomorphism sending `x` to `-f x`."]
 instance : Inv (A →*[n] G) :=
   ⟨fun f =>
-    { toFun := fun x => (f x)⁻¹,
+    { toFun := fun x => (f x)⁻¹
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_inv, prod_map_inv, map_prod_eq_map_prod f hsA htA hs ht h] }⟩
 
@@ -315,7 +315,7 @@ homomorphism sending `x` to `f x / g x`. -/
       "If `f` and `g` are additive Freiman homomorphisms to an additive commutative group,\nthen `f - g` is the additive Freiman homomorphism sending `x` to `f x - g x`"]
 instance : Div (A →*[n] G) :=
   ⟨fun f g =>
-    { toFun := fun x => f x / g x,
+    { toFun := fun x => f x / g x
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_div, prod_map_div, map_prod_eq_map_prod f hsA htA hs ht h,
           map_prod_eq_map_prod g hsA htA hs ht h] }⟩
@@ -352,7 +352,7 @@ instance : CommMonoid (A →*[n] β) where
     ext
     apply mul_comm
   npow m f :=
-    { toFun := fun x => f x ^ m,
+    { toFun := fun x => f x ^ m
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_pow, prod_map_pow, map_prod_eq_map_prod f hsA htA hs ht h] }
   npow_zero' f := by 
@@ -366,25 +366,27 @@ instance : CommMonoid (A →*[n] β) where
 @[to_additive
       "If `β` is an additive commutative group, then `A →*[n] β` is an additive commutative\ngroup too."]
 instance {β} [CommGroup β] : CommGroup (A →*[n] β) :=
-  { FreimanHom.commMonoid with inv := Inv.inv, div := Div.div,
+  { FreimanHom.commMonoid with 
+    inv := Inv.inv
+    div := Div.div
     div_eq_mul_inv := by 
       intros
       ext
-      apply div_eq_mul_inv,
+      apply div_eq_mul_inv
     mul_left_inv := by 
       intros
       ext
-      apply mul_left_inv,
+      apply mul_left_inv
     zpow := fun n f =>
-      { toFun := fun x => f x ^ n,
+      { toFun := fun x => f x ^ n
         map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
-          rw [prod_map_zpow, prod_map_zpow, map_prod_eq_map_prod f hsA htA hs ht h] },
+          rw [prod_map_zpow, prod_map_zpow, map_prod_eq_map_prod f hsA htA hs ht h] }
     zpow_zero' := fun f => by 
       ext x
-      exact zpow_zero _,
+      exact zpow_zero _
     zpow_succ' := fun n f => by 
       ext x
-      simp_rw [zpow_of_nat, pow_succ, mul_apply, coe_mk],
+      simp_rw [zpow_of_nat, pow_succ, mul_apply, coe_mk]
     zpow_neg' := fun n f => by 
       ext x
       simp_rw [zpow_neg_succ_of_nat, zpow_coe_nat]

@@ -110,8 +110,10 @@ unsafe def field_simp (no_dflt : parse only_flag) (hs : parse simp_arg_list)
 #align tactic.interactive.field_simp tactic.interactive.field_simp
 
 add_tactic_doc
-  { Name := "field_simp", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.field_simp], tags := ["simplification", "arithmetic"] }
+  { Name := "field_simp"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.field_simp]
+    tags := ["simplification", "arithmetic"] }
 
 end Interactive
 

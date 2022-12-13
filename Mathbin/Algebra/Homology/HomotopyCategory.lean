@@ -38,7 +38,8 @@ instance homotopy_congruence :
       (homotopic V
         c) where 
   IsEquiv C D :=
-    { refl := fun C => ⟨Homotopy.refl C⟩, symm := fun f g ⟨w⟩ => ⟨w.symm⟩,
+    { refl := fun C => ⟨Homotopy.refl C⟩
+      symm := fun f g ⟨w⟩ => ⟨w.symm⟩
       trans := fun f g h ⟨w₁⟩ ⟨w₂⟩ => ⟨w₁.trans w₂⟩ }
   compLeft := fun E F G m₁ m₂ g ⟨i⟩ => ⟨i.compLeft _⟩
   compRight := fun E F G f m₁ m₂ ⟨i⟩ => ⟨i.compRight _⟩

@@ -419,15 +419,16 @@ theorem of_mul (x y : α) : of (x * y) = of x * of y :=
 #align free_abelian_group.of_mul FreeAbelianGroup.of_mul
 
 instance : Distrib (FreeAbelianGroup α) :=
-  { FreeAbelianGroup.hasMul _ with add := (· + ·),
-    left_distrib := fun x y z => (lift _).map_add _ _,
+  { FreeAbelianGroup.hasMul _ with 
+    add := (· + ·)
+    left_distrib := fun x y z => (lift _).map_add _ _
     right_distrib := fun x y z => by simp only [(· * ·), map_add, ← Pi.add_def, lift.add'] }
 
 instance : NonUnitalNonAssocRing (FreeAbelianGroup α) :=
   { FreeAbelianGroup.distrib, FreeAbelianGroup.addCommGroup _ with
     zero_mul := fun a => by
       have h : 0 * a + 0 * a = 0 * a := by simp [← add_mul]
-      simpa using h,
+      simpa using h
     mul_zero := fun a => rfl }
 
 end Mul
@@ -436,7 +437,8 @@ instance [One α] : One (FreeAbelianGroup α) :=
   ⟨of 1⟩
 
 instance [Semigroup α] : NonUnitalRing (FreeAbelianGroup α) :=
-  { FreeAbelianGroup.nonUnitalNonAssocRing with mul := (· * ·),
+  { FreeAbelianGroup.nonUnitalNonAssocRing with
+    mul := (· * ·)
     mul_assoc := fun x y z => by
       refine'
         FreeAbelianGroup.induction_on z (by simp) (fun L3 => _) (fun L3 ih => _)
@@ -460,7 +462,8 @@ section Monoid
 variable {R : Type _} [Monoid α] [Ring R]
 
 instance : Ring (FreeAbelianGroup α) :=
-  { FreeAbelianGroup.nonUnitalRing _, FreeAbelianGroup.hasOne _ with mul := (· * ·),
+  { FreeAbelianGroup.nonUnitalRing _, FreeAbelianGroup.hasOne _ with
+    mul := (· * ·)
     mul_one := fun x => by 
       unfold Mul.mul Semigroup.mul One.one
       rw [lift.of]
@@ -470,7 +473,7 @@ instance : Ring (FreeAbelianGroup α) :=
         congr 1
         exact mul_one L
       · rw [map_neg, ih]
-      · rw [map_add, ih1, ih2],
+      · rw [map_add, ih1, ih2]
     one_mul := fun x => by 
       unfold Mul.mul Semigroup.mul One.one
       refine' FreeAbelianGroup.induction_on x rfl _ _ _
@@ -503,7 +506,9 @@ def liftMonoid :
       (FreeAbelianGroup α →+*
         R) where 
   toFun f :=
-    { lift f with toFun := lift f, map_one' := (lift.of f _).trans f.map_one,
+    { lift f with 
+      toFun := lift f
+      map_one' := (lift.of f _).trans f.map_one
       map_mul' := fun x y => by
         refine' FreeAbelianGroup.induction_on y (mul_zero _).symm (fun L2 => _) (fun L2 ih => _) _
         · refine' FreeAbelianGroup.induction_on x (zero_mul _).symm (fun L1 => _) (fun L1 ih => _) _

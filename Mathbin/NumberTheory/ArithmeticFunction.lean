@@ -201,22 +201,24 @@ theorem add_apply {f g : ArithmeticFunction R} {n : ℕ} : (f + g) n = f n + g n
 
 instance : AddMonoid (ArithmeticFunction R) :=
   { ArithmeticFunction.hasZero R, ArithmeticFunction.hasAdd with
-    add_assoc := fun _ _ _ => ext fun _ => add_assoc _ _ _,
-    zero_add := fun _ => ext fun _ => zero_add _, add_zero := fun _ => ext fun _ => add_zero _ }
+    add_assoc := fun _ _ _ => ext fun _ => add_assoc _ _ _
+    zero_add := fun _ => ext fun _ => zero_add _
+    add_zero := fun _ => ext fun _ => add_zero _ }
 
 end AddMonoid
 
 instance [AddMonoidWithOne R] : AddMonoidWithOne (ArithmeticFunction R) :=
   { ArithmeticFunction.addMonoid, ArithmeticFunction.hasOne with
-    natCast := fun n => ⟨fun x => if x = 1 then (n : R) else 0, by simp⟩,
-    nat_cast_zero := by ext <;> simp [Nat.cast],
+    natCast := fun n => ⟨fun x => if x = 1 then (n : R) else 0, by simp⟩
+    nat_cast_zero := by ext <;> simp [Nat.cast]
     nat_cast_succ := fun _ => by ext <;> by_cases x = 1 <;> simp [Nat.cast, *] }
 
 instance [AddCommMonoid R] : AddCommMonoid (ArithmeticFunction R) :=
   { ArithmeticFunction.addMonoid with add_comm := fun _ _ => ext fun _ => add_comm _ _ }
 
 instance [AddGroup R] : AddGroup (ArithmeticFunction R) :=
-  { ArithmeticFunction.addMonoid with neg := fun f => ⟨fun n => -f n, by simp⟩,
+  { ArithmeticFunction.addMonoid with
+    neg := fun f => ⟨fun n => -f n, by simp⟩
     add_left_neg := fun _ => ext fun _ => add_left_neg _ }
 
 instance [AddCommGroup R] : AddCommGroup (ArithmeticFunction R) :=
@@ -328,7 +330,8 @@ section Semiring
 variable [Semiring R]
 
 instance : Monoid (ArithmeticFunction R) :=
-  { ArithmeticFunction.hasOne, ArithmeticFunction.hasMul with one_mul := one_smul',
+  { ArithmeticFunction.hasOne, ArithmeticFunction.hasMul with
+    one_mul := one_smul'
     mul_one := fun f => by 
       ext
       rw [mul_apply]
@@ -343,7 +346,7 @@ instance : Monoid (ArithmeticFunction R) :=
         simp only [Con, mem_divisors_antidiagonal, mul_one, Ne.def] at ymem
         simp only [mem_singleton, Prod.ext_iff] at ynmem
         tauto
-      simp [y2ne],
+      simp [y2ne]
     mul_assoc := mul_smul' }
 
 instance : Semiring (ArithmeticFunction R) :=
@@ -352,13 +355,13 @@ instance : Semiring (ArithmeticFunction R) :=
     ArithmeticFunction.monoid with
     zero_mul := fun f => by 
       ext
-      simp only [mul_apply, zero_mul, sum_const_zero, zero_apply],
+      simp only [mul_apply, zero_mul, sum_const_zero, zero_apply]
     mul_zero := fun f => by 
       ext
-      simp only [mul_apply, sum_const_zero, mul_zero, zero_apply],
+      simp only [mul_apply, sum_const_zero, mul_zero, zero_apply]
     left_distrib := fun a b c => by 
       ext
-      simp only [← sum_add_distrib, mul_add, mul_apply, add_apply],
+      simp only [← sum_add_distrib, mul_add, mul_apply, add_apply]
     right_distrib := fun a b c => by 
       ext
       simp only [← sum_add_distrib, add_mul, mul_apply, add_apply] }
@@ -479,7 +482,11 @@ theorem coe_mul_zeta_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} :
     (f * ζ) x = ∑ i in divisors x, f i := by
   apply MulOpposite.op_injective
   rw [op_sum]
-  convert @coe_zeta_mul_apply Rᵐᵒᵖ _ { toFun := MulOpposite.op ∘ f, map_zero' := by simp } x
+  convert
+    @coe_zeta_mul_apply Rᵐᵒᵖ _
+      { toFun := MulOpposite.op ∘ f
+        map_zero' := by simp }
+      x
   rw [mul_apply, mul_apply, op_sum]
   conv_lhs => rw [← map_swap_divisors_antidiagonal]
   rw [sum_map]

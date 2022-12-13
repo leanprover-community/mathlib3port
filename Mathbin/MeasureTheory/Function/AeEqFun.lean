@@ -513,9 +513,14 @@ protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' �
 end Inf
 
 instance [Lattice β] [TopologicalLattice β] : Lattice (α →ₘ[μ] β) :=
-  { AeEqFun.partialOrder with sup := HasSup.sup, le_sup_left := AeEqFun.le_sup_left,
-    le_sup_right := AeEqFun.le_sup_right, sup_le := AeEqFun.sup_le, inf := HasInf.inf,
-    inf_le_left := AeEqFun.inf_le_left, inf_le_right := AeEqFun.inf_le_right,
+  { AeEqFun.partialOrder with 
+    sup := HasSup.sup
+    le_sup_left := AeEqFun.le_sup_left
+    le_sup_right := AeEqFun.le_sup_right
+    sup_le := AeEqFun.sup_le
+    inf := HasInf.inf
+    inf_le_left := AeEqFun.inf_le_left
+    inf_le_right := AeEqFun.inf_le_right
     le_inf := AeEqFun.le_inf }
 
 end Lattice

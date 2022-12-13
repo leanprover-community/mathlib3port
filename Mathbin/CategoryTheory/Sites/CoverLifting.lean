@@ -195,7 +195,10 @@ theorem get_section_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
 
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
 def gluedLimitCone : Limits.Cone (RanCat.diagram G.op ℱ.val (op U)) :=
-  { x, π := { app := fun Y => getSection hu ℱ hS hx Y, naturality' := fun Y Z f => by tidy } }
+  { x
+    π :=
+      { app := fun Y => getSection hu ℱ hS hx Y
+        naturality' := fun Y Z f => by tidy } }
 #align
   category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone CategoryTheory.RanIsSheafOfCoverLifting.gluedLimitCone
 
@@ -315,22 +318,22 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
       Sites.copullback A
         Hl where 
   homEquiv X Y :=
-    { toFun := fun f => ⟨(ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩,
-      invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩,
+    { toFun := fun f => ⟨(ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩
+      invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩
       left_inv := fun f => by 
         ext1
         dsimp
-        rw [Equiv.symm_apply_apply],
+        rw [Equiv.symm_apply_apply]
       right_inv := fun f => by 
         ext1
         dsimp
         rw [Equiv.apply_symm_apply] }
   Unit :=
-    { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩,
+    { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩
       naturality' := fun _ _ f =>
         SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
   counit :=
-    { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩,
+    { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩
       naturality' := fun _ _ f =>
         SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
   hom_equiv_unit' X Y f := by 

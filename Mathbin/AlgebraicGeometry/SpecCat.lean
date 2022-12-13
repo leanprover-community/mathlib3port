@@ -100,7 +100,7 @@ def SpecCat.sheafedSpaceMap {R S : CommRingCat.{u}} (f : R ⟶ S) :
   base := SpecCat.topMap f
   c :=
     { app := fun U =>
-        comap f (unop U) ((TopologicalSpace.Opens.map (SpecCat.topMap f)).obj (unop U)) fun p => id,
+        comap f (unop U) ((TopologicalSpace.Opens.map (SpecCat.topMap f)).obj (unop U)) fun p => id
       naturality' := fun U V i => RingHom.ext fun s => Subtype.eq <| funext fun p => rfl }
 #align algebraic_geometry.Spec.SheafedSpace_map AlgebraicGeometry.SpecCat.sheafedSpaceMap
 

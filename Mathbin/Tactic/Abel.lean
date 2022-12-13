@@ -510,7 +510,9 @@ unsafe def abel (red : parse (tk "!")?) (SOP : parse abel.mode) (loc : parse loc
 #align tactic.interactive.abel tactic.interactive.abel
 
 add_tactic_doc
-  { Name := "abel", category := DocCategory.tactic, declNames := [`tactic.interactive.abel],
+  { Name := "abel"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.abel]
     tags := ["arithmetic", "decision procedure"] }
 
 end Interactive

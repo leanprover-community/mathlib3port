@@ -83,6 +83,8 @@ unsafe def restate_axiom_cmd (_ : parse <| tk "restate_axiom") : lean.parser Uni
 #align restate_axiom_cmd restate_axiom_cmd
 
 add_tactic_doc
-  { Name := "restate_axiom", category := DocCategory.cmd, declNames := [`restate_axiom_cmd],
+  { Name := "restate_axiom"
+    category := DocCategory.cmd
+    declNames := [`restate_axiom_cmd]
     tags := ["renaming", "environment"] }
 

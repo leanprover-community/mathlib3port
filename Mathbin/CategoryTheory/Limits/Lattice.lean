@@ -35,7 +35,7 @@ def finiteLimitCone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) :
     LimitCone
       F where 
   Cone :=
-    { x := Finset.univ.inf F.obj,
+    { x := Finset.univ.inf F.obj
       π := { app := fun j => homOfLe (Finset.inf_le (Fintype.complete _)) } }
   IsLimit := { lift := fun s => homOfLe (Finset.le_inf fun j _ => (s.π.app j).down.down) }
 #align
@@ -48,7 +48,7 @@ def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) :
     ColimitCocone
       F where 
   Cocone :=
-    { x := Finset.univ.sup F.obj,
+    { x := Finset.univ.sup F.obj
       ι := { app := fun i => homOfLe (Finset.le_sup (Fintype.complete _)) } }
   IsColimit := { desc := fun s => homOfLe (Finset.sup_le fun j _ => (s.ι.app j).down.down) }
 #align
@@ -208,7 +208,7 @@ def limitCone (F : J ⥤ α) :
     LimitCone
       F where 
   Cone :=
-    { x := infi F.obj,
+    { x := infi F.obj
       π := { app := fun j => homOfLe (CompleteLattice.Inf_le _ _ (Set.mem_range_self _)) } }
   IsLimit :=
     { lift := fun s =>
@@ -222,7 +222,7 @@ def colimitCocone (F : J ⥤ α) :
     ColimitCocone
       F where 
   Cocone :=
-    { x := supr F.obj,
+    { x := supr F.obj
       ι := { app := fun j => homOfLe (CompleteLattice.le_Sup _ _ (Set.mem_range_self _)) } }
   IsColimit :=
     { desc := fun s =>

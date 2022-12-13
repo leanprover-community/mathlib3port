@@ -53,28 +53,34 @@ def functor :
           D where 
   obj A :=
     { obj := fun X =>
-        { x := A.x.obj X, one := A.one.app X, mul := A.mul.app X, one_mul' := congr_app A.one_mul X,
-          mul_one' := congr_app A.mul_one X, mul_assoc' := congr_app A.mul_assoc X },
+        { x := A.x.obj X
+          one := A.one.app X
+          mul := A.mul.app X
+          one_mul' := congr_app A.one_mul X
+          mul_one' := congr_app A.mul_one X
+          mul_assoc' := congr_app A.mul_assoc X }
       map := fun X Y f =>
-        { Hom := A.x.map f,
+        { Hom := A.x.map f
           one_hom' := by 
             rw [← A.one.naturality, tensor_unit_map]
             dsimp
-            rw [category.id_comp],
+            rw [category.id_comp]
           mul_hom' := by 
             dsimp
-            rw [← A.mul.naturality, tensor_obj_map] },
+            rw [← A.mul.naturality, tensor_obj_map] }
       map_id' := fun X => by 
         ext
         dsimp
-        rw [CategoryTheory.Functor.map_id],
+        rw [CategoryTheory.Functor.map_id]
       map_comp' := fun X Y Z f g => by 
         ext
         dsimp
         rw [functor.map_comp] }
   map A B f :=
     { app := fun X =>
-        { Hom := f.Hom.app X, one_hom' := congr_app f.OneHom X, mul_hom' := congr_app f.MulHom X } }
+        { Hom := f.Hom.app X
+          one_hom' := congr_app f.OneHom X
+          mul_hom' := congr_app f.MulHom X } }
 #align
   category_theory.monoidal.Mon_functor_category_equivalence.functor CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.functor
 
@@ -88,25 +94,26 @@ def inverse :
         (C ⥤
           D) where 
   obj F :=
-    { x := F ⋙ Mon_.forget D, one := { app := fun X => (F.obj X).one },
-      mul := { app := fun X => (F.obj X).mul },
+    { x := F ⋙ Mon_.forget D
+      one := { app := fun X => (F.obj X).one }
+      mul := { app := fun X => (F.obj X).mul }
       one_mul' := by 
         ext X
-        exact (F.obj X).one_mul,
+        exact (F.obj X).one_mul
       mul_one' := by 
         ext X
-        exact (F.obj X).mul_one,
+        exact (F.obj X).mul_one
       mul_assoc' := by 
         ext X
         exact (F.obj X).mul_assoc }
   map F G α :=
     { Hom :=
-        { app := fun X => (α.app X).Hom,
-          naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) },
+        { app := fun X => (α.app X).Hom
+          naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) }
       one_hom' := by 
         ext x
         dsimp
-        rw [(α.app x).OneHom],
+        rw [(α.app x).OneHom]
       mul_hom' := by 
         ext x
         dsimp
@@ -121,21 +128,21 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
   NatIso.ofComponents
     (fun A =>
       { Hom :=
-          { Hom := { app := fun _ => 𝟙 _ },
+          { Hom := { app := fun _ => 𝟙 _ }
             one_hom' := by 
               ext X
               dsimp
-              simp only [category.comp_id],
+              simp only [category.comp_id]
             mul_hom' := by 
               ext X
               dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] },
+              simp only [tensor_id, category.id_comp, category.comp_id] }
         inv :=
-          { Hom := { app := fun _ => 𝟙 _ },
+          { Hom := { app := fun _ => 𝟙 _ }
             one_hom' := by 
               ext X
               dsimp
-              simp only [category.comp_id],
+              simp only [category.comp_id]
             mul_hom' := by 
               ext X
               dsimp
@@ -153,7 +160,11 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
 def counitIso : inverse ⋙ Functor ≅ 𝟭 (C ⥤ Mon_ D) :=
   NatIso.ofComponents
     (fun A =>
-      NatIso.ofComponents (fun X => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy))
+      NatIso.ofComponents
+        (fun X =>
+          { Hom := { Hom := 𝟙 _ }
+            inv := { Hom := 𝟙 _ } })
+        (by tidy))
     (by tidy)
 #align
   category_theory.monoidal.Mon_functor_category_equivalence.counit_iso CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.counitIso
@@ -225,21 +236,21 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
   NatIso.ofComponents
     (fun A =>
       { Hom :=
-          { Hom := { app := fun _ => 𝟙 _ },
+          { Hom := { app := fun _ => 𝟙 _ }
             one_hom' := by 
               ext X
               dsimp
-              simp only [category.comp_id],
+              simp only [category.comp_id]
             mul_hom' := by 
               ext X
               dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] },
+              simp only [tensor_id, category.id_comp, category.comp_id] }
         inv :=
-          { Hom := { app := fun _ => 𝟙 _ },
+          { Hom := { app := fun _ => 𝟙 _ }
             one_hom' := by 
               ext X
               dsimp
-              simp only [category.comp_id],
+              simp only [category.comp_id]
             mul_hom' := by 
               ext X
               dsimp
@@ -257,7 +268,11 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
 def counitIso : inverse ⋙ Functor ≅ 𝟭 (C ⥤ CommMon_ D) :=
   NatIso.ofComponents
     (fun A =>
-      NatIso.ofComponents (fun X => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy))
+      NatIso.ofComponents
+        (fun X =>
+          { Hom := { Hom := 𝟙 _ }
+            inv := { Hom := 𝟙 _ } })
+        (by tidy))
     (by tidy)
 #align
   category_theory.monoidal.CommMon_functor_category_equivalence.counit_iso CategoryTheory.Monoidal.CommMonFunctorCategoryEquivalence.counitIso

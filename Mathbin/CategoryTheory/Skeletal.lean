@@ -116,8 +116,9 @@ variable {C D}
 -/
 noncomputable def Equivalence.skeletonEquiv (e : C ≌ D) : Skeleton C ≃ Skeleton D :=
   let f := ((skeletonEquivalence C).trans e).trans (skeletonEquivalence D).symm
-  { toFun := f.Functor.obj, invFun := f.inverse.obj,
-    left_inv := fun X => skeleton_skeletal C ⟨(f.unitIso.app X).symm⟩,
+  { toFun := f.Functor.obj
+    invFun := f.inverse.obj
+    left_inv := fun X => skeleton_skeletal C ⟨(f.unitIso.app X).symm⟩
     right_inv := fun Y => skeleton_skeletal D ⟨f.counitIso.app Y⟩ }
 #align category_theory.equivalence.skeleton_equiv CategoryTheory.Equivalence.skeletonEquiv
 
@@ -209,7 +210,7 @@ def map₂ (F : C ⥤ D ⥤ E) :
   obj x :=
     { obj := fun y =>
         Quotient.map₂ (fun X Y => (F.obj X).obj Y)
-          (fun X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩ => ⟨(F.obj X₁).mapIso hY ≪≫ (F.mapIso hX).app Y₂⟩) x y,
+          (fun X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩ => ⟨(F.obj X₁).mapIso hY ≪≫ (F.mapIso hX).app Y₂⟩) x y
       map := fun y₁ y₂ =>
         (Quotient.recOnSubsingleton x) fun X =>
           (Quotient.recOnSubsingleton₂ y₁ y₂) fun Y₁ Y₂ hY =>
@@ -291,7 +292,9 @@ theorem map_id_eq : map (𝟭 C) = 𝟭 (ThinSkeleton C) :=
 #align category_theory.thin_skeleton.map_id_eq CategoryTheory.ThinSkeleton.map_id_eq
 
 theorem map_iso_eq {F₁ F₂ : D ⥤ C} (h : F₁ ≅ F₂) : map F₁ = map F₂ :=
-  Functor.eq_of_iso skeletal { Hom := mapNatTrans h.Hom, inv := mapNatTrans h.inv }
+  Functor.eq_of_iso skeletal
+    { Hom := mapNatTrans h.Hom
+      inv := mapNatTrans h.inv }
 #align category_theory.thin_skeleton.map_iso_eq CategoryTheory.ThinSkeleton.map_iso_eq
 
 /-- `from_thin_skeleton C` exhibits the thin skeleton as a skeleton. -/
@@ -319,11 +322,8 @@ def lowerAdjunction (R : D ⥤ C) (L : C ⥤ D) (h : L ⊣ R) : ThinSkeleton.map
     { Unit :=
         { app := fun X => by 
             letI := is_isomorphic_setoid C
-            refine'
-              Quotient.recOnSubsingleton X fun x =>
-                hom_of_le
-                  ⟨h.unit.app
-                      x⟩ },-- TODO: make quotient.rec_on_subsingleton' so the letI isn't needed
+            refine' Quotient.recOnSubsingleton X fun x => hom_of_le ⟨h.unit.app x⟩ }
+      -- TODO: make quotient.rec_on_subsingleton' so the letI isn't needed
       counit :=
         { app := fun X => by 
             letI := is_isomorphic_setoid D

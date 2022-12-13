@@ -70,7 +70,8 @@ section Preorder
 variable [Preorder α]
 
 instance : Preorder (ι →₀ α) :=
-  { Finsupp.hasLe with le_refl := fun f i => le_rfl,
+  { Finsupp.hasLe with 
+    le_refl := fun f i => le_rfl
     le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
 theorem monotone_to_fun : Monotone (Finsupp.toFun : (ι →₀ α) → ι → α) := fun f g h a => le_def.1 h a
@@ -82,8 +83,10 @@ instance [PartialOrder α] : PartialOrder (ι →₀ α) :=
   { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [SemilatticeInf α] : SemilatticeInf (ι →₀ α) :=
-  { Finsupp.partialOrder with inf := zipWith (· ⊓ ·) inf_idem,
-    inf_le_left := fun f g i => inf_le_left, inf_le_right := fun f g i => inf_le_right,
+  { Finsupp.partialOrder with 
+    inf := zipWith (· ⊓ ·) inf_idem
+    inf_le_left := fun f g i => inf_le_left
+    inf_le_right := fun f g i => inf_le_right
     le_inf := fun f g i h1 h2 s => le_inf (h1 s) (h2 s) }
 
 @[simp]
@@ -92,8 +95,10 @@ theorem inf_apply [SemilatticeInf α] {i : ι} {f g : ι →₀ α} : (f ⊓ g) 
 #align finsupp.inf_apply Finsupp.inf_apply
 
 instance [SemilatticeSup α] : SemilatticeSup (ι →₀ α) :=
-  { Finsupp.partialOrder with sup := zipWith (· ⊔ ·) sup_idem,
-    le_sup_left := fun f g i => le_sup_left, le_sup_right := fun f g i => le_sup_right,
+  { Finsupp.partialOrder with 
+    sup := zipWith (· ⊔ ·) sup_idem
+    le_sup_left := fun f g i => le_sup_left
+    le_sup_right := fun f g i => le_sup_right
     sup_le := fun f g h hf hg i => sup_le (hf i) (hg i) }
 
 @[simp]
@@ -169,7 +174,7 @@ instance : OrderedSub (ι →₀ α) :=
 
 instance : CanonicallyOrderedAddMonoid (ι →₀ α) :=
   { Finsupp.orderBot, Finsupp.orderedAddCommMonoid with
-    exists_add_of_le := fun f g h => ⟨g - f, ext fun x => (add_tsub_cancel_of_le <| h x).symm⟩,
+    exists_add_of_le := fun f g h => ⟨g - f, ext fun x => (add_tsub_cancel_of_le <| h x).symm⟩
     le_self_add := fun f g x => le_self_add }
 
 @[simp]

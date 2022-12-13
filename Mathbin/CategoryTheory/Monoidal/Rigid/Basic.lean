@@ -483,9 +483,8 @@ then the functor `tensor_left Y'` is left adjoint to `tensor_left Y`.
 -/
 def tensorLeftAdjunction (Y Y' : C) [ExactPairing Y Y'] : tensorLeft Y' ⊣ tensorLeft Y :=
   Adjunction.mkOfHomEquiv
-    { homEquiv := fun X Z => tensorLeftHomEquiv X Y Y' Z,
-      hom_equiv_naturality_left_symm' := fun X X' Z f g =>
-        tensor_left_hom_equiv_symm_naturality f g,
+    { homEquiv := fun X Z => tensorLeftHomEquiv X Y Y' Z
+      hom_equiv_naturality_left_symm' := fun X X' Z f g => tensor_left_hom_equiv_symm_naturality f g
       hom_equiv_naturality_right' := fun X Z Z' f g => tensor_left_hom_equiv_naturality f g }
 #align category_theory.tensor_left_adjunction CategoryTheory.tensorLeftAdjunction
 
@@ -494,9 +493,9 @@ then the functor `tensor_right Y` is left adjoint to `tensor_right Y'`.
 -/
 def tensorRightAdjunction (Y Y' : C) [ExactPairing Y Y'] : tensorRight Y ⊣ tensorRight Y' :=
   Adjunction.mkOfHomEquiv
-    { homEquiv := fun X Z => tensorRightHomEquiv X Y Y' Z,
+    { homEquiv := fun X Z => tensorRightHomEquiv X Y Y' Z
       hom_equiv_naturality_left_symm' := fun X X' Z f g =>
-        tensor_right_hom_equiv_symm_naturality f g,
+        tensor_right_hom_equiv_symm_naturality f g
       hom_equiv_naturality_right' := fun X Z Z' f g => tensor_right_hom_equiv_naturality f g }
 #align category_theory.tensor_right_adjunction CategoryTheory.tensorRightAdjunction
 

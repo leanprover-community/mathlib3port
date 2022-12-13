@@ -383,8 +383,8 @@ theorem measurableSetMulSupport {m : MeasurableSpace α} [One β] [TopologicalSp
 protected theorem mono {m m' : MeasurableSpace α} [TopologicalSpace β]
     (hf : strongly_measurable[m'] f) (h_mono : m' ≤ m) : strongly_measurable[m] f := by
   let f_approx : ℕ → @simple_func α m β := fun n =>
-    { toFun := hf.approx n,
-      measurableSetFiber' := fun x => h_mono _ (simple_func.measurable_set_fiber' _ x),
+    { toFun := hf.approx n
+      measurableSetFiber' := fun x => h_mono _ (simple_func.measurable_set_fiber' _ x)
       finite_range' := simple_func.finite_range (hf.approx n) }
   exact ⟨f_approx, hf.tendsto_approx⟩
 #align measure_theory.strongly_measurable.mono MeasureTheory.StronglyMeasurable.mono
@@ -752,7 +752,7 @@ theorem stronglyMeasurableOfStronglyMeasurableUnionCover {m : MeasurableSpace α
     let f : ℕ → α →ₛ β := fun n =>
       { toFun := fun x =>
           if hx : x ∈ s then hc.approx n ⟨x, hx⟩
-          else hd.approx n ⟨x, by simpa [hx] using h (mem_univ x)⟩,
+          else hd.approx n ⟨x, by simpa [hx] using h (mem_univ x)⟩
         measurableSetFiber' := by 
           intro x
           convert
@@ -767,7 +767,7 @@ theorem stronglyMeasurableOfStronglyMeasurableUnionCover {m : MeasurableSpace α
           · rw [dif_neg hy]
             have A : y ∈ t := by simpa [hy] using h (mem_univ y)
             simp only [A, hy, false_or_iff, IsEmpty.exists_iff, not_false_iff, and_true_iff,
-              exists_true_left],
+              exists_true_left]
         finite_range' := by
           apply ((hc.approx n).finite_range.union (hd.approx n).finite_range).Subset
           rintro - ⟨y, rfl⟩
@@ -919,7 +919,7 @@ theorem stronglyMeasurableOfMeasurableSpaceLeOn {α E} {m m₂ : MeasurableSpace
     rwa [Set.inter_univ]
   obtain ⟨g_seq_s, hg_seq_tendsto, hg_seq_zero⟩ := strongly_measurable_in_set hs_m hf hf_zero
   let g_seq_s₂ : ℕ → @simple_func α m₂ E := fun n =>
-    { toFun := g_seq_s n,
+    { toFun := g_seq_s n
       measurableSetFiber' := fun x => by
         rw [← Set.inter_univ (g_seq_s n ⁻¹' {x}), ← Set.union_compl_self s,
           Set.inter_union_distrib_left, Set.inter_comm (g_seq_s n ⁻¹' {x})]
@@ -940,7 +940,7 @@ theorem stronglyMeasurableOfMeasurableSpaceLeOn {α E} {m m₂ : MeasurableSpace
             mem_empty_iff_false, iff_false_iff, not_and, not_not_mem]
           refine' imp_of_not_imp_not _ _ fun hys => _
           rw [hg_seq_zero y hys n]
-          exact Ne.symm hx,
+          exact Ne.symm hx
       finite_range' := @simple_func.finite_range _ _ m (g_seq_s n) }
   have hg_eq : ∀ x n, g_seq_s₂ n x = g_seq_s n x := fun x n => rfl
   refine' ⟨g_seq_s₂, fun x => _⟩

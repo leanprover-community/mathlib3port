@@ -101,8 +101,9 @@ instance [Semiring R] [Module R ℝ] :
   zero_smul r := by ext <;> simp [smul_re, smul_im, zero_smul]
 
 instance [CommSemiring R] [Algebra R ℝ] : Algebra R ℂ :=
-  { Complex.ofReal.comp (algebraMap R ℝ) with smul := (· • ·),
-    smul_def' := fun r x => by ext <;> simp [smul_re, smul_im, Algebra.smul_def],
+  { Complex.ofReal.comp (algebraMap R ℝ) with
+    smul := (· • ·)
+    smul_def' := fun r x => by ext <;> simp [smul_re, smul_im, Algebra.smul_def]
     commutes' := fun r ⟨xr, xi⟩ => by ext <;> simp [smul_re, smul_im, Algebra.commutes] }
 
 instance : StarModule ℝ ℂ :=
@@ -150,13 +151,14 @@ open Submodule FiniteDimensional
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
 noncomputable def basisOneI : Basis (Fin 2) ℝ ℂ :=
   Basis.ofEquivFun
-    { toFun := fun z => ![z.re, z.im], invFun := fun c => c 0 + c 1 • I,
-      left_inv := fun z => by simp,
+    { toFun := fun z => ![z.re, z.im]
+      invFun := fun c => c 0 + c 1 • I
+      left_inv := fun z => by simp
       right_inv := fun c => by 
         ext i
-        fin_cases i <;> simp,
-      map_add' := fun z z' => by
-        simp,-- why does `simp` not know how to apply `smul_cons`, which is a `@[simp]` lemma, here?
+        fin_cases i <;> simp
+      map_add' := fun z z' => by simp
+      -- why does `simp` not know how to apply `smul_cons`, which is a `@[simp]` lemma, here?
       map_smul' := fun c z => by simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
 #align complex.basis_one_I Complex.basisOneI
 
@@ -295,7 +297,10 @@ theorem of_real_am_coe : ⇑of_real_am = coe :=
 
 /-- `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
 def conjAe : ℂ ≃ₐ[ℝ] ℂ :=
-  { conj with invFun := conj, left_inv := star_star, right_inv := star_star,
+  { conj with 
+    invFun := conj
+    left_inv := star_star
+    right_inv := star_star
     commutes' := conj_of_real }
 #align complex.conj_ae Complex.conjAe
 
@@ -305,13 +310,13 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
 #align complex.conj_ae_coe Complex.conj_ae_coe
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by 
   ext (i j)
   simp [LinearMap.to_matrix_apply]

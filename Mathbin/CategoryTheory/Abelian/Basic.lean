@@ -160,7 +160,7 @@ def imageFactorisation {X Y : C} (f : X ⟶ Y) [IsIso (Abelian.coimageImageCompa
     ImageFactorisation f where 
   f := imageMonoFactorisation f
   IsImage :=
-    { lift := fun F => inv (Abelian.coimageImageComparison f) ≫ cokernel.desc _ F.e F.kernel_ι_comp,
+    { lift := fun F => inv (Abelian.coimageImageComparison f) ≫ cokernel.desc _ F.e F.kernel_ι_comp
       lift_fac' := fun F => by
         simp only [image_mono_factorisation_m, is_iso.inv_comp_eq, category.assoc,
           abelian.coimage_image_comparison]
@@ -196,7 +196,9 @@ is a normal mono category.
 def normalMonoCategory :
     NormalMonoCategory
       C where normalMonoOfMono X Y f m :=
-    { z := _, g := cokernel.π f, w := by simp,
+    { z := _
+      g := cokernel.π f
+      w := by simp
       IsLimit := by 
         haveI : limits.has_images C := has_images
         haveI : has_equalizers C := preadditive.has_equalizers_of_has_kernels
@@ -220,7 +222,9 @@ is a normal epi category.
 def normalEpiCategory :
     NormalEpiCategory
       C where normalEpiOfEpi X Y f m :=
-    { w := kernel f, g := kernel.ι _, w := kernel.condition _,
+    { w := kernel f
+      g := kernel.ι _
+      w := kernel.condition _
       IsColimit := by 
         haveI : limits.has_images C := has_images
         haveI : has_equalizers C := preadditive.has_equalizers_of_has_kernels
@@ -801,12 +805,12 @@ def abelian : Abelian C :=
        we have a `subsingleton` instance for `has_zero_morphisms`, so `convert` can immediately close
        the goal it creates for the two instances of `has_zero_morphisms`, and the proof is complete. -/
     NonPreadditiveAbelian.preadditive with
-    HasFiniteProducts := by infer_instance,
-    HasKernels := by convert (by infer_instance : limits.has_kernels C),
-    HasCokernels := by convert (by infer_instance : limits.has_cokernels C),
+    HasFiniteProducts := by infer_instance
+    HasKernels := by convert (by infer_instance : limits.has_kernels C)
+    HasCokernels := by convert (by infer_instance : limits.has_cokernels C)
     normalMonoOfMono := by 
       intros
-      convert normal_mono_of_mono f,
+      convert normal_mono_of_mono f
     normalEpiOfEpi := by 
       intros
       convert normal_epi_of_epi f }

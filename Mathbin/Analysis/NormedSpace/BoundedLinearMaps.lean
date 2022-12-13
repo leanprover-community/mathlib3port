@@ -213,10 +213,10 @@ theorem isBoundedLinearMapProdMultilinear {E : ι → Type _} [∀ i, NormedAddC
       p.1.Prod p.2 :=
   { map_add := fun p₁ p₂ => by 
       ext1 m
-      rfl,
+      rfl
     map_smul := fun c p => by 
       ext1 m
-      rfl,
+      rfl
     bound :=
       ⟨1, zero_lt_one, fun p => by 
         rw [one_mul]
@@ -351,8 +351,10 @@ variable {f : E × F → G}
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr norm_nonneg, ",", expr le_max_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem ContinuousLinearMap.isBoundedBilinearMap (f : E →L[𝕜] F →L[𝕜] G) :
     IsBoundedBilinearMap 𝕜 fun x : E × F => f x.1 x.2 :=
-  { add_left := f.map_add₂, smul_left := f.map_smul₂, add_right := fun x => (f x).map_add,
-    smul_right := fun c x => (f x).map_smul c,
+  { add_left := f.map_add₂
+    smul_left := f.map_smul₂
+    add_right := fun x => (f x).map_add
+    smul_right := fun c x => (f x).map_smul c
     bound :=
       ⟨max ‖f‖ 1, zero_lt_one.trans_le (le_max_right _ _), fun x y =>
         (f.le_op_norm₂ x y).trans <| by
@@ -446,7 +448,8 @@ theorem ContinuousLinearMap.continuous₂ (f : E →L[𝕜] F →L[𝕜] G) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr norm_nonneg, ",", expr mul_le_mul_of_nonneg_left, ",", expr le_of_lt C_pos, ",", expr mul_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem IsBoundedBilinearMap.isBoundedLinearMapLeft (h : IsBoundedBilinearMap 𝕜 f) (y : F) :
     IsBoundedLinearMap 𝕜 fun x => f (x, y) :=
-  { map_add := fun x x' => h.add_left _ _ _, map_smul := fun c x => h.smul_left _ _ _,
+  { map_add := fun x x' => h.add_left _ _ _
+    map_smul := fun c x => h.smul_left _ _ _
     bound := by 
       rcases h.bound with ⟨C, C_pos, hC⟩
       refine' ⟨C * (‖y‖ + 1), mul_pos C_pos (lt_of_lt_of_le zero_lt_one (by simp)), fun x => _⟩
@@ -466,7 +469,8 @@ theorem IsBoundedBilinearMap.isBoundedLinearMapLeft (h : IsBoundedBilinearMap �
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem IsBoundedBilinearMap.isBoundedLinearMapRight (h : IsBoundedBilinearMap 𝕜 f) (x : E) :
     IsBoundedLinearMap 𝕜 fun y => f (x, y) :=
-  { map_add := fun y y' => h.add_right _ _ _, map_smul := fun c y => h.smul_right _ _ _,
+  { map_add := fun y y' => h.add_right _ _ _
+    map_smul := fun c y => h.smul_right _ _ _
     bound := by 
       rcases h.bound with ⟨C, C_pos, hC⟩
       refine' ⟨C * (‖x‖ + 1), mul_pos C_pos (lt_of_lt_of_le zero_lt_one (by simp)), fun y => _⟩

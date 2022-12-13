@@ -41,9 +41,9 @@ variable {f fab : α → β} {fbc : β → γ} {ga ga' : α → α} {gb gb' : β
 
 /- warning: function.semiconj.comp_eq -> Function.Semiconj.comp_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Eq.{max (succ u_1) (succ u_2)} (α -> β) (Function.comp.{succ u_1, succ u_1, succ u_2} α α β f ga) (Function.comp.{succ u_1, succ u_2, succ u_2} α β β gb f))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u1, u2} α β f ga gb) -> (Eq.{max (succ u1) (succ u2)} (α -> β) (Function.comp.{succ u1, succ u1, succ u2} α α β f ga) (Function.comp.{succ u1, succ u2, succ u2} α β β gb f))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Eq.{max (succ u_1) (succ u_2)} (α -> β) (Function.comp.{succ u_1, succ u_1, succ u_2} α α β f ga) (Function.comp.{succ u_1, succ u_2, succ u_2} α β β gb f))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u2, u1} α β f ga gb) -> (Eq.{max (succ u2) (succ u1)} (α -> β) (Function.comp.{succ u2, succ u2, succ u1} α α β f ga) (Function.comp.{succ u2, succ u1, succ u1} α β β gb f))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.comp_eq Function.Semiconj.comp_eqₓ'. -/
 protected theorem comp_eq (h : Semiconj f ga gb) : f ∘ ga = gb ∘ f :=
   funext h
@@ -51,9 +51,9 @@ protected theorem comp_eq (h : Semiconj f ga gb) : f ∘ ga = gb ∘ f :=
 
 /- warning: function.semiconj.eq -> Function.Semiconj.eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (forall (x : α), Eq.{succ u_2} β (f (ga x)) (gb (f x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u1, u2} α β f ga gb) -> (forall (x : α), Eq.{succ u2} β (f (ga x)) (gb (f x)))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (forall (x : α), Eq.{succ u_2} β (f (ga x)) (gb (f x)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u2, u1} α β f ga gb) -> (forall (x : α), Eq.{succ u1} β (f (ga x)) (gb (f x)))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.eq Function.Semiconj.eqₓ'. -/
 protected theorem eq (h : Semiconj f ga gb) (x : α) : f (ga x) = gb (f x) :=
   h x
@@ -61,9 +61,9 @@ protected theorem eq (h : Semiconj f ga gb) (x : α) : f (ga x) = gb (f x) :=
 
 /- warning: function.semiconj.comp_right -> Function.Semiconj.comp_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Function.Semiconj.{u_1, u_2} α β f ga' gb') -> (Function.Semiconj.{u_1, u_2} α β f (Function.comp.{succ u_1, succ u_1, succ u_1} α α α ga ga') (Function.comp.{succ u_2, succ u_2, succ u_2} β β β gb gb'))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u1, u2} α β f ga gb) -> (Function.Semiconj.{u1, u2} α β f ga' gb') -> (Function.Semiconj.{u1, u2} α β f (Function.comp.{succ u1, succ u1, succ u1} α α α ga ga') (Function.comp.{succ u2, succ u2, succ u2} β β β gb gb'))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Function.Semiconj.{u_1, u_2} α β f ga' gb') -> (Function.Semiconj.{u_1, u_2} α β f (Function.comp.{succ u_1, succ u_1, succ u_1} α α α ga ga') (Function.comp.{succ u_2, succ u_2, succ u_2} β β β gb gb'))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u2, u1} α β f ga gb) -> (Function.Semiconj.{u2, u1} α β f ga' gb') -> (Function.Semiconj.{u2, u1} α β f (Function.comp.{succ u2, succ u2, succ u2} α α α ga ga') (Function.comp.{succ u1, succ u1, succ u1} β β β gb gb'))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.comp_right Function.Semiconj.comp_rightₓ'. -/
 theorem comp_right (h : Semiconj f ga gb) (h' : Semiconj f ga' gb') :
     Semiconj f (ga ∘ ga') (gb ∘ gb') := fun x => by rw [comp_app, h.eq, h'.eq]
@@ -71,9 +71,9 @@ theorem comp_right (h : Semiconj f ga gb) (h' : Semiconj f ga' gb') :
 
 /- warning: function.semiconj.comp_left -> Function.Semiconj.comp_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {fab : α -> β} {fbc : β -> γ} {ga : α -> α} {gb : β -> β} {gc : γ -> γ}, (Function.Semiconj.{u_1, u_2} α β fab ga gb) -> (Function.Semiconj.{u_2, u_3} β γ fbc gb gc) -> (Function.Semiconj.{u_1, u_3} α γ (Function.comp.{succ u_1, succ u_2, succ u_3} α β γ fbc fab) ga gc)
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {fab : α -> β} {fbc : β -> γ} {ga : α -> α} {gb : β -> β} {gc : γ -> γ}, (Function.Semiconj.{u1, u2} α β fab ga gb) -> (Function.Semiconj.{u2, u3} β γ fbc gb gc) -> (Function.Semiconj.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ fbc fab) ga gc)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {fab : α -> β} {fbc : β -> γ} {ga : α -> α} {gb : β -> β} {gc : γ -> γ}, (Function.Semiconj.{u_1, u_2} α β fab ga gb) -> (Function.Semiconj.{u_2, u_3} β γ fbc gb gc) -> (Function.Semiconj.{u_1, u_3} α γ (Function.comp.{succ u_1, succ u_2, succ u_3} α β γ fbc fab) ga gc)
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {fab : α -> β} {fbc : β -> γ} {ga : α -> α} {gb : β -> β} {gc : γ -> γ}, (Function.Semiconj.{u3, u2} α β fab ga gb) -> (Function.Semiconj.{u2, u1} β γ fbc gb gc) -> (Function.Semiconj.{u3, u1} α γ (Function.comp.{succ u3, succ u2, succ u1} α β γ fbc fab) ga gc)
 Case conversion may be inaccurate. Consider using '#align function.semiconj.comp_left Function.Semiconj.comp_leftₓ'. -/
 theorem comp_left (hab : Semiconj fab ga gb) (hbc : Semiconj fbc gb gc) :
     Semiconj (fbc ∘ fab) ga gc := fun x => by simp only [comp_app, hab.eq, hbc.eq]
@@ -81,9 +81,9 @@ theorem comp_left (hab : Semiconj fab ga gb) (hbc : Semiconj fbc gb gc) :
 
 /- warning: function.semiconj.id_right -> Function.Semiconj.id_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, Function.Semiconj.{u_1, u_2} α β f (id.{succ u_1} α) (id.{succ u_2} β)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, Function.Semiconj.{u1, u2} α β f (id.{succ u1} α) (id.{succ u2} β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β}, Function.Semiconj.{u_1, u_2} α β f (id.{succ u_1} α) (id.{succ u_2} β)
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, Function.Semiconj.{u2, u1} α β f (id.{succ u2} α) (id.{succ u1} β)
 Case conversion may be inaccurate. Consider using '#align function.semiconj.id_right Function.Semiconj.id_rightₓ'. -/
 theorem id_right : Semiconj f id id := fun _ => rfl
 #align function.semiconj.id_right Function.Semiconj.id_right
@@ -95,9 +95,9 @@ theorem id_left : Semiconj id ga ga := fun _ => rfl
 
 /- warning: function.semiconj.inverses_right -> Function.Semiconj.inverses_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Function.RightInverse.{succ u_1, succ u_1} α α ga' ga) -> (Function.LeftInverse.{succ u_2, succ u_2} β β gb' gb) -> (Function.Semiconj.{u_1, u_2} α β f ga' gb')
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u1, u2} α β f ga gb) -> (Function.RightInverse.{succ u1, succ u1} α α ga' ga) -> (Function.LeftInverse.{succ u2, succ u2} β β gb' gb) -> (Function.Semiconj.{u1, u2} α β f ga' gb')
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Function.RightInverse.{succ u_1, succ u_1} α α ga' ga) -> (Function.LeftInverse.{succ u_2, succ u_2} β β gb' gb) -> (Function.Semiconj.{u_1, u_2} α β f ga' gb')
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u2, u1} α β f ga gb) -> (Function.RightInverse.{succ u2, succ u2} α α ga' ga) -> (Function.LeftInverse.{succ u1, succ u1} β β gb' gb) -> (Function.Semiconj.{u2, u1} α β f ga' gb')
 Case conversion may be inaccurate. Consider using '#align function.semiconj.inverses_right Function.Semiconj.inverses_rightₓ'. -/
 theorem inverses_right (h : Semiconj f ga gb) (ha : RightInverse ga' ga) (hb : LeftInverse gb' gb) :
     Semiconj f ga' gb' := fun x => by rw [← hb (f (ga' x)), ← h.eq, ha x]
@@ -105,9 +105,9 @@ theorem inverses_right (h : Semiconj f ga gb) (ha : RightInverse ga' ga) (hb : L
 
 /- warning: function.semiconj.option_map -> Function.Semiconj.option_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Function.Semiconj.{u_1, u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1, u_2} α β f) (Option.map.{u_1, u_1} α α ga) (Option.map.{u_2, u_2} β β gb))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u1, u2} α β f ga gb) -> (Function.Semiconj.{u1, u2} (Option.{u1} α) (Option.{u2} β) (Option.map.{u1, u2} α β f) (Option.map.{u1, u1} α α ga) (Option.map.{u2, u2} β β gb))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u_1, u_2} α β f ga gb) -> (Function.Semiconj.{u_1, u_2} (Option.{u_1} α) (Option.{u_2} β) (Option.map.{u_1, u_2} α β f) (Option.map.{u_1, u_1} α α ga) (Option.map.{u_2, u_2} β β gb))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α} {gb : β -> β}, (Function.Semiconj.{u2, u1} α β f ga gb) -> (Function.Semiconj.{u2, u1} (Option.{u2} α) (Option.{u1} β) (Option.map.{u2, u1} α β f) (Option.map.{u2, u2} α α ga) (Option.map.{u1, u1} β β gb))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.option_map Function.Semiconj.option_mapₓ'. -/
 theorem option_map {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) :
     Semiconj (Option.map f) (Option.map ga) (Option.map gb)
@@ -195,9 +195,9 @@ variable {f : α → β} {ga : α → α → α} {gb : β → β → β}
 
 /- warning: function.semiconj₂.eq -> Function.Semiconj₂.eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (forall (x : α) (y : α), Eq.{succ u_2} β (f (ga x y)) (gb (f x) (f y)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u1, u2} α β f ga gb) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (ga x y)) (gb (f x) (f y)))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (forall (x : α) (y : α), Eq.{succ u_2} β (f (ga x y)) (gb (f x) (f y)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u2, u1} α β f ga gb) -> (forall (x : α) (y : α), Eq.{succ u1} β (f (ga x y)) (gb (f x) (f y)))
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.eq Function.Semiconj₂.eqₓ'. -/
 protected theorem eq (h : Semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x) (f y) :=
   h x y
@@ -205,9 +205,9 @@ protected theorem eq (h : Semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x
 
 /- warning: function.semiconj₂.comp_eq -> Function.Semiconj₂.comp_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (Eq.{max (succ u_1) (succ u_2)} (α -> α -> β) (Function.bicompr.{u_1, u_1, u_1, u_2} α α α β f ga) (Function.bicompl.{u_1, u_1, u_2, u_2, u_2} α α β β β gb f f))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u1, u2} α β f ga gb) -> (Eq.{max (succ u1) (succ u2)} (α -> α -> β) (Function.bicompr.{u1, u1, u1, u2} α α α β f ga) (Function.bicompl.{u1, u1, u2, u2, u2} α α β β β gb f f))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (Eq.{max (succ u_1) (succ u_2)} (α -> α -> β) (Function.bicompr.{u_1, u_1, u_1, u_2} α α α β f ga) (Function.bicompl.{u_1, u_1, u_2, u_2, u_2} α α β β β gb f f))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u2, u1} α β f ga gb) -> (Eq.{max (succ u2) (succ u1)} (α -> α -> β) (Function.bicompr.{u2, u2, u2, u1} α α α β f ga) (Function.bicompl.{u2, u2, u1, u1, u1} α α β β β gb f f))
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.comp_eq Function.Semiconj₂.comp_eqₓ'. -/
 protected theorem comp_eq (h : Semiconj₂ f ga gb) : bicompr f ga = bicompl gb f f :=
   funext fun x => funext <| h x
@@ -220,9 +220,9 @@ theorem id_left (op : α → α → α) : Semiconj₂ id op op := fun _ _ => rfl
 
 /- warning: function.semiconj₂.comp -> Function.Semiconj₂.comp is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} {f' : β -> γ} {gc : γ -> γ -> γ}, (Function.Semiconj₂.{u_2, u_3} β γ f' gb gc) -> (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (Function.Semiconj₂.{u_1, u_3} α γ (Function.comp.{succ u_1, succ u_2, succ u_3} α β γ f' f) ga gc)
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} {f' : β -> γ} {gc : γ -> γ -> γ}, (Function.Semiconj₂.{u2, u3} β γ f' gb gc) -> (Function.Semiconj₂.{u1, u2} α β f ga gb) -> (Function.Semiconj₂.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ f' f) ga gc)
 but is expected to have type
-  forall {α : Type.{u_3}} {β : Type.{u_1}} {γ : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} {f' : β -> γ} {gc : γ -> γ -> γ}, (Function.Semiconj₂.{u_1, u_2} β γ f' gb gc) -> (Function.Semiconj₂.{u_3, u_1} α β f ga gb) -> (Function.Semiconj₂.{u_3, u_2} α γ (Function.comp.{succ u_3, succ u_1, succ u_2} α β γ f' f) ga gc)
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} {f' : β -> γ} {gc : γ -> γ -> γ}, (Function.Semiconj₂.{u3, u2} β γ f' gb gc) -> (Function.Semiconj₂.{u1, u3} α β f ga gb) -> (Function.Semiconj₂.{u1, u2} α γ (Function.comp.{succ u1, succ u3, succ u2} α β γ f' f) ga gc)
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.comp Function.Semiconj₂.compₓ'. -/
 theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb gc) (hf : Semiconj₂ f ga gb) :
     Semiconj₂ (f' ∘ f) ga gc := fun x y => by simp only [hf'.eq, hf.eq, comp_app]
@@ -230,9 +230,9 @@ theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb g
 
 /- warning: function.semiconj₂.is_associative_right -> Function.Semiconj₂.isAssociative_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsAssociative.{u_1} α ga], (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (Function.Surjective.{succ u_1, succ u_2} α β f) -> (IsAssociative.{u_2} β gb)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsAssociative.{u1} α ga], (Function.Semiconj₂.{u1, u2} α β f ga gb) -> (Function.Surjective.{succ u1, succ u2} α β f) -> (IsAssociative.{u2} β gb)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [inst._@.Mathlib.Logic.Function.Conjugate._hyg.1095 : IsAssociative.{u_1} α ga], (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (Function.Surjective.{succ u_1, succ u_2} α β f) -> (IsAssociative.{u_2} β gb)
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsAssociative.{u2} α ga], (Function.Semiconj₂.{u2, u1} α β f ga gb) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (IsAssociative.{u1} β gb)
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.is_associative_right Function.Semiconj₂.isAssociative_rightₓ'. -/
 theorem isAssociative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsAssociative β gb :=
@@ -248,9 +248,9 @@ theorem isAssociative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_in
 
 /- warning: function.semiconj₂.is_idempotent_right -> Function.Semiconj₂.isIdempotent_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsIdempotent.{u_1} α ga], (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (Function.Surjective.{succ u_1, succ u_2} α β f) -> (IsIdempotent.{u_2} β gb)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsIdempotent.{u1} α ga], (Function.Semiconj₂.{u1, u2} α β f ga gb) -> (Function.Surjective.{succ u1, succ u2} α β f) -> (IsIdempotent.{u2} β gb)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [inst._@.Mathlib.Logic.Function.Conjugate._hyg.1195 : IsIdempotent.{u_1} α ga], (Function.Semiconj₂.{u_1, u_2} α β f ga gb) -> (Function.Surjective.{succ u_1, succ u_2} α β f) -> (IsIdempotent.{u_2} β gb)
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsIdempotent.{u2} α ga], (Function.Semiconj₂.{u2, u1} α β f ga gb) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (IsIdempotent.{u1} β gb)
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.is_idempotent_right Function.Semiconj₂.isIdempotent_rightₓ'. -/
 theorem isIdempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsIdempotent β gb :=

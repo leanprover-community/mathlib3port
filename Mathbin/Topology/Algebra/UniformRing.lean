@@ -87,11 +87,11 @@ instance : Ring (Completion α) :=
     one_mul := fun a =>
       Completion.inductionOn a
         (isClosedEq (Continuous.mul continuous_const continuous_id) continuous_id) fun a => by
-        rw [← coe_one, ← coe_mul, one_mul],
+        rw [← coe_one, ← coe_mul, one_mul]
     mul_one := fun a =>
       Completion.inductionOn a
         (isClosedEq (Continuous.mul continuous_id continuous_const) continuous_id) fun a => by
-        rw [← coe_one, ← coe_mul, mul_one],
+        rw [← coe_one, ← coe_mul, mul_one]
     mul_assoc := fun a b c =>
       Completion.inductionOn₃ a b c
         (isClosedEq
@@ -100,7 +100,7 @@ instance : Ring (Completion α) :=
           (Continuous.mul continuous_fst
             (Continuous.mul (continuous_fst.comp continuous_snd)
               (continuous_snd.comp continuous_snd))))
-        fun a b c => by rw [← coe_mul, ← coe_mul, ← coe_mul, ← coe_mul, mul_assoc],
+        fun a b c => by rw [← coe_mul, ← coe_mul, ← coe_mul, ← coe_mul, mul_assoc]
     left_distrib := fun a b c =>
       Completion.inductionOn₃ a b c
         (isClosedEq
@@ -109,7 +109,7 @@ instance : Ring (Completion α) :=
               (continuous_snd.comp continuous_snd)))
           (Continuous.add (Continuous.mul continuous_fst (continuous_fst.comp continuous_snd))
             (Continuous.mul continuous_fst (continuous_snd.comp continuous_snd))))
-        fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, mul_add],
+        fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, mul_add]
     right_distrib := fun a b c =>
       Completion.inductionOn₃ a b c
         (isClosedEq
@@ -138,15 +138,16 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
   have hf' : Continuous (f : α →+ β) := hf
   -- helping the elaborator
   have hf : UniformContinuous f := uniform_continuous_add_monoid_hom_of_continuous hf'
-  { toFun := Completion.extension f, map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero],
+  { toFun := Completion.extension f
+    map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero]
     map_add' := fun a b =>
       Completion.inductionOn₂ a b
         (isClosedEq (continuous_extension.comp continuous_add)
           ((continuous_extension.comp continuous_fst).add
             (continuous_extension.comp continuous_snd)))
         fun a b => by
-        rw [← coe_add, extension_coe hf, extension_coe hf, extension_coe hf, f.map_add],
-    map_one' := by rw [← coe_one, extension_coe hf, f.map_one],
+        rw [← coe_add, extension_coe hf, extension_coe hf, extension_coe hf, f.map_add]
+    map_one' := by rw [← coe_one, extension_coe hf, f.map_one]
     map_mul' := fun a b =>
       Completion.inductionOn₂ a b
         (isClosedEq (continuous_extension.comp continuous_mul)
@@ -187,7 +188,7 @@ instance : Algebra R (Completion A) :=
     commutes' := fun r x =>
       (Completion.inductionOn x (isClosedEq (continuous_mul_left _) (continuous_mul_right _)))
         fun a => by
-        simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a),
+        simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a)
     smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }
 
 theorem algebra_map_def (r : R) :

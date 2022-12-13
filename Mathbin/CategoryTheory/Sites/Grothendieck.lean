@@ -264,8 +264,9 @@ theorem le_def {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ ↔ (J₁ : 
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z6> -/
 instance : PartialOrder (GrothendieckTopology C) :=
-  { GrothendieckTopology.hasLe with le_refl := fun J₁ => le_def.mpr le_rfl,
-    le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃),
+  { GrothendieckTopology.hasLe with
+    le_refl := fun J₁ => le_def.mpr le_rfl
+    le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃)
     le_antisymm := fun J₁ J₂ h₁₂ h₂₁ => GrothendieckTopology.ext (le_antisymm h₁₂ h₂₁) }
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
@@ -273,13 +274,13 @@ instance :
     HasInf
       (GrothendieckTopology
         C) where inf T :=
-    { sieves := inf (sieves '' T),
+    { sieves := inf (sieves '' T)
       top_mem' := by 
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
-        simp,
+        simp
       pullback_stable' := by 
         rintro X Y S hS f _ ⟨⟨_, J, hJ, rfl⟩, rfl⟩
-        apply J.pullback_stable _ (f _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩),
+        apply J.pullback_stable _ (f _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩)
       transitive' := by 
         rintro X S hS R h _ ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         apply
@@ -445,13 +446,16 @@ theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ (f : Y ⟶ X), S f ↔ T f) : S =
 #align category_theory.grothendieck_topology.cover.ext CategoryTheory.GrothendieckTopology.Cover.ext
 
 instance : OrderTop (J.cover X) :=
-  { (inferInstance : Preorder _) with top := ⟨⊤, J.top_mem _⟩, le_top := fun S Y f h => by tauto }
+  { (inferInstance : Preorder _) with 
+    top := ⟨⊤, J.top_mem _⟩
+    le_top := fun S Y f h => by tauto }
 
 instance : SemilatticeInf (J.cover X) :=
   { (inferInstance : Preorder _) with
-    inf := fun S T => ⟨S ⊓ T, J.intersection_covering S.condition T.condition⟩,
-    le_antisymm := fun S T h1 h2 => (ext _ _) fun Y f => ⟨h1 _, h2 _⟩,
-    inf_le_left := fun S T Y f hf => hf.1, inf_le_right := fun S T Y f hf => hf.2,
+    inf := fun S T => ⟨S ⊓ T, J.intersection_covering S.condition T.condition⟩
+    le_antisymm := fun S T h1 h2 => (ext _ _) fun Y f => ⟨h1 _, h2 _⟩
+    inf_le_left := fun S T Y f hf => hf.1
+    inf_le_right := fun S T Y f hf => hf.2
     le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩ }
 
 instance : Inhabited (J.cover X) :=

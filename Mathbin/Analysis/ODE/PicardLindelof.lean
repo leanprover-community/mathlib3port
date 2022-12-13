@@ -85,10 +85,12 @@ instance : Inhabited (PicardLindelof E) :=
   ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0,
       { ht₀ := by 
           rw [Subtype.coe_mk, Icc_self]
-          exact mem_singleton _,
-        hR := by rfl, lipschitz := fun t ht => (LipschitzWith.const 0).LipschitzOnWith _,
-        cont := fun _ _ => by simpa only [Pi.zero_apply] using continuous_on_const,
-        norm_le := fun t ht x hx => norm_zero.le, C_mul_le_R := (zero_mul _).le }⟩⟩
+          exact mem_singleton _
+        hR := by rfl
+        lipschitz := fun t ht => (LipschitzWith.const 0).LipschitzOnWith _
+        cont := fun _ _ => by simpa only [Pi.zero_apply] using continuous_on_const
+        norm_le := fun t ht x hx => norm_zero.le
+        C_mul_le_R := (zero_mul _).le }⟩⟩
 
 theorem t_min_le_t_max : v.tMin ≤ v.tMax :=
   v.t₀.2.1.trans v.t₀.2.2
@@ -452,12 +454,13 @@ theorem exists_is_picard_lindelof_const_of_cont_diff_on_nhds {s : Set E} (hv : C
   exact
     { ht₀ := by 
         rw [← Real.closed_ball_eq_Icc]
-        exact mem_closed_ball_self hε0.le,
-      hR := (half_pos hr).le,
+        exact mem_closed_ball_self hε0.le
+      hR := (half_pos hr).le
       lipschitz := fun t ht =>
         hlip.mono
-          (subset_inter_iff.mp (subset_trans (closed_ball_subset_ball (half_lt_self hr)) hball)).2,
-      cont := fun x hx => continuous_on_const, norm_le := fun t ht x hx => hC ⟨x, hx, rfl⟩,
+          (subset_inter_iff.mp (subset_trans (closed_ball_subset_ball (half_lt_self hr)) hball)).2
+      cont := fun x hx => continuous_on_const
+      norm_le := fun t ht x hx => hC ⟨x, hx, rfl⟩
       C_mul_le_R := by
         rw [add_sub_cancel', sub_sub_cancel, max_self, mul_ite, mul_one]
         split_ifs

@@ -44,8 +44,9 @@ instance [AddMonoid α] : AddMonoid αᵐᵒᵖ :=
   unop_injective.AddMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne αᵐᵒᵖ :=
-  { MulOpposite.addMonoid α, MulOpposite.hasOne α with natCast := fun n => op n,
-    nat_cast_zero := show op ((0 : ℕ) : α) = 0 by simp,
+  { MulOpposite.addMonoid α, MulOpposite.hasOne α with
+    natCast := fun n => op n
+    nat_cast_zero := show op ((0 : ℕ) : α) = 0 by simp
     nat_cast_succ := show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by simp }
 
 instance [AddCommMonoid α] : AddCommMonoid αᵐᵒᵖ :=
@@ -60,8 +61,9 @@ instance [AddGroup α] : AddGroup αᵐᵒᵖ :=
     fun _ _ => rfl
 
 instance [AddGroupWithOne α] : AddGroupWithOne αᵐᵒᵖ :=
-  { MulOpposite.addMonoidWithOne α, MulOpposite.addGroup α with intCast := fun n => op n,
-    int_cast_of_nat := fun n => show op ((n : ℤ) : α) = op n by rw [Int.cast_ofNat],
+  { MulOpposite.addMonoidWithOne α, MulOpposite.addGroup α with
+    intCast := fun n => op n
+    int_cast_of_nat := fun n => show op ((n : ℤ) : α) = op n by rw [Int.cast_ofNat]
     int_cast_neg_succ_of_nat := fun n =>
       show op _ = op (-unop (op ((n + 1 : ℕ) : α))) by erw [unop_op, Int.cast_negSucc] <;> rfl }
 
@@ -99,13 +101,14 @@ instance [CommSemigroup α] : CommSemigroup αᵐᵒᵖ :=
 @[to_additive]
 instance [MulOneClass α] : MulOneClass αᵐᵒᵖ :=
   { MulOpposite.hasMul α, MulOpposite.hasOne α with
-    one_mul := fun x => unop_injective <| mul_one <| unop x,
+    one_mul := fun x => unop_injective <| mul_one <| unop x
     mul_one := fun x => unop_injective <| one_mul <| unop x }
 
 @[to_additive]
 instance [Monoid α] : Monoid αᵐᵒᵖ :=
-  { MulOpposite.semigroup α, MulOpposite.mulOneClass α with npow := fun n x => op <| x.unop ^ n,
-    npow_zero' := fun x => unop_injective <| Monoid.npow_zero x.unop,
+  { MulOpposite.semigroup α, MulOpposite.mulOneClass α with
+    npow := fun n x => op <| x.unop ^ n
+    npow_zero' := fun x => unop_injective <| Monoid.npow_zero x.unop
     npow_succ' := fun n x => unop_injective <| pow_succ' x.unop n }
 
 @[to_additive]
@@ -130,16 +133,17 @@ instance [CancelCommMonoid α] : CancelCommMonoid αᵐᵒᵖ :=
 
 @[to_additive AddOpposite.subNegMonoid]
 instance [DivInvMonoid α] : DivInvMonoid αᵐᵒᵖ :=
-  { MulOpposite.monoid α, MulOpposite.hasInv α with zpow := fun n x => op <| x.unop ^ n,
-    zpow_zero' := fun x => unop_injective <| DivInvMonoid.zpow_zero' x.unop,
+  { MulOpposite.monoid α, MulOpposite.hasInv α with
+    zpow := fun n x => op <| x.unop ^ n
+    zpow_zero' := fun x => unop_injective <| DivInvMonoid.zpow_zero' x.unop
     zpow_succ' := fun n x =>
-      unop_injective <| by rw [unop_op, zpow_of_nat, zpow_of_nat, pow_succ', unop_mul, unop_op],
+      unop_injective <| by rw [unop_op, zpow_of_nat, zpow_of_nat, pow_succ', unop_mul, unop_op]
     zpow_neg' := fun z x => unop_injective <| DivInvMonoid.zpow_neg' z x.unop }
 
 @[to_additive AddOpposite.subtractionMonoid]
 instance [DivisionMonoid α] : DivisionMonoid αᵐᵒᵖ :=
   { MulOpposite.divInvMonoid α, MulOpposite.hasInvolutiveInv α with
-    mul_inv_rev := fun a b => unop_injective <| mul_inv_rev _ _,
+    mul_inv_rev := fun a b => unop_injective <| mul_inv_rev _ _
     inv_eq_of_mul := fun a b h => unop_injective <| inv_eq_of_mul_eq_one_left <| congr_arg unop h }
 
 @[to_additive AddOpposite.subtractionCommMonoid]
@@ -210,7 +214,9 @@ theorem commute_unop [Mul α] {x y : αᵐᵒᵖ} : Commute (unop x) (unop y) �
 #align mul_opposite.commute_unop MulOpposite.commute_unop
 
 /-- The function `mul_opposite.op` is an additive equivalence. -/
-@[simps (config := { fullyApplied := false, simpRhs := true })]
+@[simps (config :=
+      { fullyApplied := false
+        simpRhs := true })]
 def opAddEquiv [Add α] : α ≃+ αᵐᵒᵖ :=
   { opEquiv with map_add' := fun a b => rfl }
 #align mul_opposite.op_add_equiv MulOpposite.opAddEquiv
@@ -277,7 +283,9 @@ instance [CommGroup α] : CommGroup αᵃᵒᵖ :=
 variable {α}
 
 /-- The function `add_opposite.op` is a multiplicative equivalence. -/
-@[simps (config := { fullyApplied := false, simpRhs := true })]
+@[simps (config :=
+      { fullyApplied := false
+        simpRhs := true })]
 def opMulEquiv [Mul α] : α ≃* αᵃᵒᵖ :=
   { opEquiv with map_mul' := fun a b => rfl }
 #align add_opposite.op_mul_equiv AddOpposite.opMulEquiv
@@ -295,7 +303,9 @@ open MulOpposite
 `mul_equiv.inv`. -/
 @[to_additive
       "Negation on an additive group is an `add_equiv` to the opposite group. When `G`\nis commutative, there is `add_equiv.inv`.",
-  simps (config := { fullyApplied := false, simpRhs := true })]
+  simps (config :=
+      { fullyApplied := false
+        simpRhs := true })]
 def MulEquiv.inv' (G : Type _) [DivisionMonoid G] : G ≃* Gᵐᵒᵖ :=
   { (Equiv.inv G).trans opEquiv with map_mul' := fun x y => unop_injective <| mul_inv_rev x y }
 #align mul_equiv.inv' MulEquiv.inv'
@@ -385,9 +395,11 @@ def MulHom.op {M N} [Mul M] [Mul N] :
       (Mᵐᵒᵖ →ₙ*
         Nᵐᵒᵖ) where 
   toFun f :=
-    { toFun := op ∘ f ∘ unop, map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
+    { toFun := op ∘ f ∘ unop
+      map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
   invFun f :=
-    { toFun := unop ∘ f ∘ op, map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
+    { toFun := unop ∘ f ∘ op
+      map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
   left_inv f := by 
     ext
     rfl
@@ -413,9 +425,11 @@ def AddHom.mulOp {M N} [Add M] [Add N] :
       AddHom Mᵐᵒᵖ
         Nᵐᵒᵖ where 
   toFun f :=
-    { toFun := op ∘ f ∘ unop, map_add' := fun x y => unop_injective (f.map_add x.unop y.unop) }
+    { toFun := op ∘ f ∘ unop
+      map_add' := fun x y => unop_injective (f.map_add x.unop y.unop) }
   invFun f :=
-    { toFun := unop ∘ f ∘ op, map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
+    { toFun := unop ∘ f ∘ op
+      map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
   left_inv f := by 
     ext
     rfl
@@ -441,10 +455,12 @@ def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] :
       (Mᵐᵒᵖ →*
         Nᵐᵒᵖ) where 
   toFun f :=
-    { toFun := op ∘ f ∘ unop, map_one' := congr_arg op f.map_one,
+    { toFun := op ∘ f ∘ unop
+      map_one' := congr_arg op f.map_one
       map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
   invFun f :=
-    { toFun := unop ∘ f ∘ op, map_one' := congr_arg unop f.map_one,
+    { toFun := unop ∘ f ∘ op
+      map_one' := congr_arg unop f.map_one
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
   left_inv f := by 
     ext
@@ -470,10 +486,12 @@ def AddMonoidHom.mulOp {M N} [AddZeroClass M] [AddZeroClass N] :
       (Mᵐᵒᵖ →+
         Nᵐᵒᵖ) where 
   toFun f :=
-    { toFun := op ∘ f ∘ unop, map_zero' := unop_injective f.map_zero,
+    { toFun := op ∘ f ∘ unop
+      map_zero' := unop_injective f.map_zero
       map_add' := fun x y => unop_injective (f.map_add x.unop y.unop) }
   invFun f :=
-    { toFun := unop ∘ f ∘ op, map_zero' := congr_arg unop f.map_zero,
+    { toFun := unop ∘ f ∘ op
+      map_zero' := congr_arg unop f.map_zero
       map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
   left_inv f := by 
     ext
@@ -518,13 +536,16 @@ def MulEquiv.op {α β} [Mul α] [Mul β] :
       (αᵐᵒᵖ ≃*
         βᵐᵒᵖ) where 
   toFun f :=
-    { toFun := op ∘ f ∘ unop, invFun := op ∘ f.symm ∘ unop,
-      left_inv := fun x => unop_injective (f.symm_apply_apply x.unop),
-      right_inv := fun x => unop_injective (f.apply_symm_apply x.unop),
+    { toFun := op ∘ f ∘ unop
+      invFun := op ∘ f.symm ∘ unop
+      left_inv := fun x => unop_injective (f.symm_apply_apply x.unop)
+      right_inv := fun x => unop_injective (f.apply_symm_apply x.unop)
       map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
   invFun f :=
-    { toFun := unop ∘ f ∘ op, invFun := unop ∘ f.symm ∘ op, left_inv := fun x => by simp,
-      right_inv := fun x => by simp,
+    { toFun := unop ∘ f ∘ op
+      invFun := unop ∘ f.symm ∘ op
+      left_inv := fun x => by simp
+      right_inv := fun x => by simp
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
   left_inv f := by 
     ext

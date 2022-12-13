@@ -418,11 +418,11 @@ theorem is_simple_order_iff_is_simple_order_order_dual [LE α] [BoundedOrder α]
   constructor <;> intro i <;> haveI := i
   ·
     exact
-      { exists_pair_ne := @exists_pair_ne α _,
+      { exists_pair_ne := @exists_pair_ne α _
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
   ·
     exact
-      { exists_pair_ne := @exists_pair_ne αᵒᵈ _,
+      { exists_pair_ne := @exists_pair_ne αᵒᵈ _
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
 #align is_simple_order_iff_is_simple_order_order_dual is_simple_order_iff_is_simple_order_order_dual
 
@@ -456,14 +456,14 @@ protected def IsSimpleOrder.preorder {α} [LE α] [BoundedOrder α] [IsSimpleOrd
 This is not an instance to prevent loops. -/
 protected def IsSimpleOrder.linearOrder [DecidableEq α] : LinearOrder α :=
   { (inferInstance : PartialOrder α) with
-    le_total := fun a b => by rcases eq_bot_or_eq_top a with (rfl | rfl) <;> simp,
+    le_total := fun a b => by rcases eq_bot_or_eq_top a with (rfl | rfl) <;> simp
     decidableLe := fun a b =>
       if ha : a = ⊥ then isTrue (ha.le.trans bot_le)
       else
         if hb : b = ⊤ then isTrue (le_top.trans hb.ge)
         else
           isFalse fun H =>
-            hb (top_unique (le_trans (top_le_iff.mpr (Or.resolve_left (eq_bot_or_eq_top a) ha)) H)),
+            hb (top_unique (le_trans (top_le_iff.mpr (Or.resolve_left (eq_bot_or_eq_top a) ha)) H))
     DecidableEq := by assumption }
 #align is_simple_order.linear_order IsSimpleOrder.linearOrder
 
@@ -567,14 +567,15 @@ instance (priority := 200) {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSi
 protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α] [IsSimpleOrder α] :
     BooleanAlgebra α :=
   { show BoundedOrder α by infer_instance, IsSimpleOrder.distribLattice with
-    compl := fun x => if x = ⊥ then ⊤ else ⊥, sdiff := fun x y => if x = ⊤ ∧ y = ⊥ then ⊤ else ⊥,
+    compl := fun x => if x = ⊥ then ⊤ else ⊥
+    sdiff := fun x y => if x = ⊤ ∧ y = ⊥ then ⊤ else ⊥
     sdiff_eq := fun x y => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, SDiff.sdiff, compl],
+      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, SDiff.sdiff, compl]
     inf_compl_le_bot := fun x => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp
       · simp only [top_inf_eq]
-        split_ifs with h h <;> simp [h],
+        split_ifs with h h <;> simp [h]
     top_le_sup_compl := fun x => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
 #align is_simple_order.boolean_algebra IsSimpleOrder.booleanAlgebra
 
@@ -587,21 +588,22 @@ open Classical
 /-- A simple `bounded_order` is also complete. -/
 protected noncomputable def completeLattice : CompleteLattice α :=
   { (inferInstance : Lattice α), (inferInstance : BoundedOrder α) with
-    sup := fun s => if ⊤ ∈ s then ⊤ else ⊥, inf := fun s => if ⊥ ∈ s then ⊥ else ⊤,
+    sup := fun s => if ⊤ ∈ s then ⊤ else ⊥
+    inf := fun s => if ⊥ ∈ s then ⊥ else ⊤
     le_Sup := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
-      · rw [if_pos h],
+      · rw [if_pos h]
     Sup_le := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_neg]
         intro con
         exact bot_ne_top (eq_top_iff.2 (h ⊤ con))
-      · exact le_top,
+      · exact le_top
     Inf_le := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_pos h]
-      · exact le_top,
+      · exact le_top
     le_Inf := fun s x h => by 
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
@@ -617,7 +619,7 @@ protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_sup_eq, ← Inf_eq_infi]
         exact le_rfl
-      · simp only [top_sup_eq, le_top],
+      · simp only [top_sup_eq, le_top]
     inf_Sup_le_supr_inf := fun x s => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_inf_eq, bot_le]
@@ -681,7 +683,7 @@ end Bool
 theorem is_simple_order_iff_is_atom_top [PartialOrder α] [BoundedOrder α] :
     IsSimpleOrder α ↔ IsAtom (⊤ : α) :=
   ⟨fun h => @is_atom_top _ _ _ h, fun h =>
-    { exists_pair_ne := ⟨⊤, ⊥, h.1⟩,
+    { exists_pair_ne := ⟨⊤, ⊥, h.1⟩
       eq_bot_or_eq_top := fun a => ((eq_or_lt_of_le le_top).imp_right (h.2 a)).symm }⟩
 #align is_simple_order_iff_is_atom_top is_simple_order_iff_is_atom_top
 

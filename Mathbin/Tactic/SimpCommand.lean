@@ -113,7 +113,9 @@ unsafe def simp_cmd (_ : parse <| tk "#simp") : lean.parser Unit := do
 #align tactic.simp_cmd tactic.simp_cmd
 
 add_tactic_doc
-  { Name := "#simp", category := DocCategory.cmd, declNames := [`tactic.simp_cmd],
+  { Name := "#simp"
+    category := DocCategory.cmd
+    declNames := [`tactic.simp_cmd]
     tags := ["simplification"] }
 
 end Tactic

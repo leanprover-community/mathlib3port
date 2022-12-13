@@ -291,7 +291,8 @@ theorem one_apply_coe (a : Rˣ) : (1 : MulChar R R') a = 1 :=
 
 /-- Multiplication of multiplicative characters. (This needs the target to be commutative.) -/
 def mul (χ χ' : MulChar R R') : MulChar R R' :=
-  { χ.toMonoidHom * χ'.toMonoidHom with toFun := χ * χ',
+  { χ.toMonoidHom * χ'.toMonoidHom with 
+    toFun := χ * χ'
     map_nonunit' := fun a ha => by simp [map_nonunit χ ha] }
 #align mul_char.mul MulChar.mul
 
@@ -321,7 +322,7 @@ protected theorem mul_one (χ : MulChar R R') : χ * 1 = χ := by
 /-- The inverse of a multiplicative character. We define it as `inverse ∘ χ`. -/
 noncomputable def inv (χ : MulChar R R') : MulChar R R' :=
   { MonoidWithZero.inverse.toMonoidHom.comp χ.toMonoidHom with
-    toFun := fun a => MonoidWithZero.inverse (χ a),
+    toFun := fun a => MonoidWithZero.inverse (χ a)
     map_nonunit' := fun a ha => by simp [map_nonunit _ ha] }
 #align mul_char.inv MulChar.inv
 
@@ -372,16 +373,20 @@ theorem inv_mul (χ : MulChar R R') : χ⁻¹ * χ = 1 := by
 
 /-- The commutative group structure on `mul_char R R'`. -/
 noncomputable instance commGroup : CommGroup (MulChar R R') :=
-  { one := 1, mul := (· * ·), inv := Inv.inv, mul_left_inv := inv_mul,
+  { one := 1
+    mul := (· * ·)
+    inv := Inv.inv
+    mul_left_inv := inv_mul
     mul_assoc := by 
       intro χ₁ χ₂ χ₃
       ext a
-      simp [mul_assoc],
+      simp [mul_assoc]
     mul_comm := by 
       intro χ₁ χ₂
       ext a
-      simp [mul_comm],
-    one_mul, mul_one }
+      simp [mul_comm]
+    one_mul
+    mul_one }
 #align mul_char.comm_group MulChar.commGroup
 
 /-- If `a` is a unit and `n : ℕ`, then `(χ ^ n) a = (χ a) ^ n`. -/
@@ -448,7 +453,8 @@ theorem IsQuadratic.eq_of_eq_coe {χ : MulChar R ℤ} (hχ : IsQuadratic χ) {χ
 /-- We can post-compose a multiplicative character with a ring homomorphism. -/
 @[simps]
 def ringHomComp (χ : MulChar R R') (f : R' →+* R'') : MulChar R R'' :=
-  { f.toMonoidHom.comp χ.toMonoidHom with toFun := fun a => f (χ a),
+  { f.toMonoidHom.comp χ.toMonoidHom with
+    toFun := fun a => f (χ a)
     map_nonunit' := fun a ha => by simp only [map_nonunit χ ha, map_zero] }
 #align mul_char.ring_hom_comp MulChar.ringHomComp
 

@@ -438,7 +438,10 @@ def mkHashMap {α : Type u} [DecidableEq α] {β : α → Type v} (hash_fn : α 
     HashMap α β :=
   let n := if nbuckets = 0 then 8 else nbuckets
   let nz : n > 0 := by abstract cases nbuckets <;> simp [if_pos, Nat.succ_ne_zero]
-  { hashFn, size := 0, nbuckets := ⟨n, nz⟩, buckets := mkArray' n [],
+  { hashFn
+    size := 0
+    nbuckets := ⟨n, nz⟩
+    buckets := mkArray' n []
     is_valid := HashMap.mk_valid _ _ }
 #align mk_hash_map mkHashMap
 
@@ -557,18 +560,28 @@ def insert : ∀ (m : HashMap α β) (a : α) (b : β a), HashMap α β
   | ⟨hash_fn, size, n, buckets, v⟩, a, b =>
     let bkt := buckets.read hash_fn a
     if hc : containsAux a bkt then
-      { hashFn, size, nbuckets := n, buckets := buckets.modify hash_fn a (replaceAux a b),
+      { hashFn
+        size
+        nbuckets := n
+        buckets := buckets.modify hash_fn a (replaceAux a b)
         is_valid := v.replace _ a b hc }
     else
       let size' := size + 1
       let buckets' := buckets.modify hash_fn a fun l => ⟨a, b⟩ :: l
       let valid' := v.insert _ a b hc
       if size' ≤ n then
-        { hashFn, size := size', nbuckets := n, buckets := buckets', is_valid := valid' }
+        { hashFn
+          size := size'
+          nbuckets := n
+          buckets := buckets'
+          is_valid := valid' }
       else
         let n' : ℕ+ := ⟨n * 2, mul_pos n.2 (by decide)⟩
         let buckets'' : BucketArray α β n' := buckets'.foldl (mkArray' _ []) (reinsertAux hash_fn)
-        { hashFn, size := size', nbuckets := n', buckets := buckets'',
+        { hashFn
+          size := size'
+          nbuckets := n'
+          buckets := buckets''
           is_valid := insert_lemma _ valid' }
 #align hash_map.insert HashMap.insert
 
@@ -670,7 +683,10 @@ def erase (m : HashMap α β) (a : α) : HashMap α β :=
   match m with
   | ⟨hash_fn, size, n, buckets, v⟩ =>
     if hc : containsAux a (buckets.read hash_fn a) then
-      { hashFn, size := size - 1, nbuckets := n, buckets := buckets.modify hash_fn a (eraseAux a),
+      { hashFn
+        size := size - 1
+        nbuckets := n
+        buckets := buckets.modify hash_fn a (eraseAux a)
         is_valid := v.erase _ a hc }
     else m
 #align hash_map.erase HashMap.erase

@@ -268,7 +268,9 @@ unsafe def ex.proof {et : ExType} (ps : ex et) : Option expr :=
 Intended for use in `ex.set_info`.
 -/
 unsafe def ex_info.set (i : ex_info) (o : Option expr) (pf : Option expr) : ex_info :=
-  { i with orig := o.getOrElse i.pretty, Proof := pf }
+  { i with 
+    orig := o.getOrElse i.pretty
+    Proof := pf }
 #align tactic.ring_exp.ex_info.set tactic.ring_exp.ex_info.set
 
 /-- Update the `ex_info` of the given expression.
@@ -1674,7 +1676,9 @@ unsafe def ring_exp (red : parse (tk "!")?) (loc : parse location) : tactic Unit
 #align tactic.interactive.ring_exp tactic.interactive.ring_exp
 
 add_tactic_doc
-  { Name := "ring_exp", category := DocCategory.tactic, declNames := [`tactic.interactive.ring_exp],
+  { Name := "ring_exp"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.ring_exp]
     tags := ["arithmetic", "simplification", "decision procedure"] }
 
 end Tactic.Interactive

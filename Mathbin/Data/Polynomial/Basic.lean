@@ -449,8 +449,10 @@ theorem support_add : (p + q).support ⊆ p.support ∪ q.support := by
 `C` is provided as a ring homomorphism.
 -/
 def c : R →+* R[X] :=
-  { monomial 0 with map_one' := by simp [monomial_zero_one],
-    map_mul' := by simp [monomial_mul_monomial], map_zero' := by simp }
+  { monomial 0 with 
+    map_one' := by simp [monomial_zero_one]
+    map_mul' := by simp [monomial_mul_monomial]
+    map_zero' := by simp }
 #align polynomial.C Polynomial.c
 
 @[simp]

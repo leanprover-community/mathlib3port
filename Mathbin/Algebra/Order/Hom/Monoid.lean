@@ -134,7 +134,9 @@ instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomCl
 @[to_additive]
 instance [OrderMonoidHomClass F α β] : CoeTC F (α →*o β) :=
   ⟨fun f =>
-    { toFun := f, map_one' := map_one f, map_mul' := map_mul f,
+    { toFun := f
+      map_one' := map_one f
+      map_mul' := map_mul f
       monotone' := OrderMonoidHomClass.monotone _ }⟩
 
 end Monoid
@@ -182,7 +184,10 @@ instance (priority := 100) OrderMonoidWithZeroHomClass.toOrderMonoidHomClass
 
 instance [OrderMonoidWithZeroHomClass F α β] : CoeTC F (α →*₀o β) :=
   ⟨fun f =>
-    { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f,
+    { toFun := f
+      map_one' := map_one f
+      map_zero' := map_zero f
+      map_mul' := map_mul f
       monotone' := OrderMonoidWithZeroHomClass.monotone _ }⟩
 
 end MonoidWithZero
@@ -333,7 +338,9 @@ definitional equalities. -/
 @[to_additive
       "Copy of an `order_monoid_hom` with a new `to_fun` equal to the old one. Useful to fix\ndefinitional equalities."]
 protected def copy (f : α →*o β) (f' : α → β) (h : f' = f) : α →*o β :=
-  { f.toMonoidHom.copy f' h with toFun := f', monotone' := h.symm.subst f.monotone' }
+  { f.toMonoidHom.copy f' h with 
+    toFun := f'
+    monotone' := h.symm.subst f.monotone' }
 #align order_monoid_hom.copy OrderMonoidHom.copy
 
 @[simp, to_additive]

@@ -69,9 +69,9 @@ theorem Pairwise.imp_of_mem {S : α → α → Prop} {l : List α}
 
 /- warning: list.pairwise.imp -> List.Pairwise.imp is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {R : α -> α -> Prop} {S : α -> α -> Prop} {l : List.{u_1} α}, (forall (a : α) (b : α), (R a b) -> (S a b)) -> (List.Pairwise.{u_1} α R l) -> (List.Pairwise.{u_1} α S l)
+  forall {α : Type.{u1}} {R : α -> α -> Prop} {S : α -> α -> Prop} {l : List.{u1} α}, (forall (a : α) (b : α), (R a b) -> (S a b)) -> (List.Pairwise.{u1} α R l) -> (List.Pairwise.{u1} α S l)
 but is expected to have type
-  forall {α : Type.{u_1}} {R : α -> α -> Prop} {S : α -> α -> Prop}, (forall {a : α} {b : α}, (R a b) -> (S a b)) -> (forall {l : List.{u_1} α}, (List.Pairwise.{u_1} α R l) -> (List.Pairwise.{u_1} α S l))
+  forall {α : Type.{u1}} {R : α -> α -> Prop} {S : α -> α -> Prop}, (forall {a : α} {b : α}, (R a b) -> (S a b)) -> (forall {H : List.{u1} α}, (List.Pairwise.{u1} α R H) -> (List.Pairwise.{u1} α S H))
 Case conversion may be inaccurate. Consider using '#align list.pairwise.imp List.Pairwise.impₓ'. -/
 theorem Pairwise.imp (H : ∀ a b, R a b → S a b) : Pairwise R l → Pairwise S l :=
   Pairwise.imp_of_mem fun a b _ _ => H a b
@@ -127,9 +127,9 @@ theorem Pairwise.imp_mem {l : List α} :
 
 /- warning: list.pairwise.sublist -> List.Pairwise.sublist is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {R : α -> α -> Prop} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α}, (List.Sublist.{u_1} α l₁ l₂) -> (List.Pairwise.{u_1} α R l₂) -> (List.Pairwise.{u_1} α R l₁)
+  forall {α : Type.{u1}} {R : α -> α -> Prop} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Sublist.{u1} α l₁ l₂) -> (List.Pairwise.{u1} α R l₂) -> (List.Pairwise.{u1} α R l₁)
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.22242 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.22242} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.22242} {R : α._@.Std.Data.List.Lemmas._hyg.22242 -> α._@.Std.Data.List.Lemmas._hyg.22242 -> Prop}, (List.Sublist.{u_1} α._@.Std.Data.List.Lemmas._hyg.22242 l₁ l₂) -> (List.Pairwise.{u_1} α._@.Std.Data.List.Lemmas._hyg.22242 R l₂) -> (List.Pairwise.{u_1} α._@.Std.Data.List.Lemmas._hyg.22242 R l₁)
+  forall {α : Type.{u1}} {R : List.{u1} α} {l₁ : List.{u1} α} {l₂ : α -> α -> Prop}, (List.Sublist.{u1} α R l₁) -> (List.Pairwise.{u1} α l₂ l₁) -> (List.Pairwise.{u1} α l₂ R)
 Case conversion may be inaccurate. Consider using '#align list.pairwise.sublist List.Pairwise.sublistₓ'. -/
 protected theorem Pairwise.sublist : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ → Pairwise R l₂ → Pairwise R l₁
   | _, _, sublist.slnil, h => h
@@ -211,9 +211,9 @@ theorem pairwise_middle (s : Symmetric R) {a : α} {l₁ l₂ : List α} :
 
 /- warning: list.pairwise_map -> List.pairwise_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {R : α -> α -> Prop} (f : β -> α) {l : List.{u_2} β}, Iff (List.Pairwise.{u_1} α R (List.map.{u_2, u_1} β α f l)) (List.Pairwise.{u_2} β (fun (a : β) (b : β) => R (f a) (f b)) l)
+  forall {α : Type.{u1}} {β : Type.{u2}} {R : α -> α -> Prop} (f : β -> α) {l : List.{u2} β}, Iff (List.Pairwise.{u1} α R (List.map.{u2, u1} β α f l)) (List.Pairwise.{u2} β (fun (a : β) (b : β) => R (f a) (f b)) l)
 but is expected to have type
-  forall {α : Type.{u_1}} {α._@.Std.Data.List.Lemmas._hyg.22520 : Type.{u_2}} {f : α -> α._@.Std.Data.List.Lemmas._hyg.22520} {R : α._@.Std.Data.List.Lemmas._hyg.22520 -> α._@.Std.Data.List.Lemmas._hyg.22520 -> Prop} {l : List.{u_1} α}, Iff (List.Pairwise.{u_2} α._@.Std.Data.List.Lemmas._hyg.22520 R (List.map.{u_1, u_2} α α._@.Std.Data.List.Lemmas._hyg.22520 f l)) (List.Pairwise.{u_1} α (fun (a : α) (b : α) => R (f a) (f b)) l)
+  forall {α : Type.{u2}} {β : Type.{u1}} {R : α -> β} {f : β -> β -> Prop} {l : List.{u2} α}, Iff (List.Pairwise.{u1} β f (List.map.{u2, u1} α β R l)) (List.Pairwise.{u2} α (fun (a : α) (b : α) => f (R a) (R b)) l)
 Case conversion may be inaccurate. Consider using '#align list.pairwise_map List.pairwise_mapₓ'. -/
 theorem pairwise_map (f : β → α) :
     ∀ {l : List β}, Pairwise R (map f l) ↔ Pairwise (fun a b : β => R (f a) (f b)) l
@@ -233,9 +233,9 @@ theorem Pairwise.of_map {S : β → β → Prop} (f : α → β) (H : ∀ a b : 
 
 /- warning: list.pairwise.map -> List.Pairwise.map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {R : α -> α -> Prop} {l : List.{u_1} α} {S : β -> β -> Prop} (f : α -> β), (forall (a : α) (b : α), (R a b) -> (S (f a) (f b))) -> (List.Pairwise.{u_1} α R l) -> (List.Pairwise.{u_2} β S (List.map.{u_1, u_2} α β f l))
+  forall {α : Type.{u1}} {β : Type.{u2}} {R : α -> α -> Prop} {l : List.{u1} α} {S : β -> β -> Prop} (f : α -> β), (forall (a : α) (b : α), (R a b) -> (S (f a) (f b))) -> (List.Pairwise.{u1} α R l) -> (List.Pairwise.{u2} β S (List.map.{u1, u2} α β f l))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {R : α -> α -> Prop} {l : List.{u_1} α} {S : β -> β -> Prop} (f : α -> β), (forall (a : α) (b : α), (R a b) -> (S (f a) (f b))) -> (List.Pairwise.{u_1} α R l) -> (List.Pairwise.{u_2} β S (List.map.{u_1, u_2} α β f l))
+  forall {α : Type.{u2}} {β : Type.{u1}} {R : α -> α -> Prop} {l : List.{u2} α} {S : β -> β -> Prop} (f : α -> β), (forall (a : α) (b : α), (R a b) -> (S (f a) (f b))) -> (List.Pairwise.{u2} α R l) -> (List.Pairwise.{u1} β S (List.map.{u2, u1} α β f l))
 Case conversion may be inaccurate. Consider using '#align list.pairwise.map List.Pairwise.mapₓ'. -/
 theorem Pairwise.map {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b))
     (p : Pairwise R l) : Pairwise S (map f l) :=

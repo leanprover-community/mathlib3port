@@ -50,9 +50,9 @@ def tor (n : ℕ) :
 @[simps]
 def tor' (n : ℕ) : C ⥤ C ⥤ C :=
   Functor.flip
-    { obj := fun X => Functor.leftDerived ((tensoringRight C).obj X) n,
-      map := fun X Y f => NatTrans.leftDerived ((tensoringRight C).map f) n,
-      map_id' := fun X => by rw [(tensoring_right C).map_id, nat_trans.left_derived_id],
+    { obj := fun X => Functor.leftDerived ((tensoringRight C).obj X) n
+      map := fun X Y f => NatTrans.leftDerived ((tensoringRight C).map f) n
+      map_id' := fun X => by rw [(tensoring_right C).map_id, nat_trans.left_derived_id]
       map_comp' := fun X Y Z f g => by
         rw [(tensoring_right C).map_comp, nat_trans.left_derived_comp] }
 #align category_theory.Tor' CategoryTheory.tor'

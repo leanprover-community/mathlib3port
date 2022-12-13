@@ -441,8 +441,10 @@ unsafe def _root_.tactic.interactive.linear_combination
 #align tactic.interactive.linear_combination tactic.interactive.linear_combination
 
 add_tactic_doc
-  { Name := "linear_combination", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.linear_combination], tags := ["arithmetic"] }
+  { Name := "linear_combination"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.linear_combination]
+    tags := ["arithmetic"] }
 
 end InteractiveMode
 

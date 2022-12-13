@@ -25,9 +25,9 @@ useful for append-heavy uses such as logging and pretty printing.
 
 /- warning: dlist.join -> Std.DList.join is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}}, (List.{u_1} (Dlist.{u_1} α)) -> (Dlist.{u_1} α)
+  forall {α : Type.{u1}}, (List.{u1} (Dlist.{u1} α)) -> (Dlist.{u1} α)
 but is expected to have type
-  forall {α : Type.{u_1}}, (List.{u_1} (Std.DList.{u_1} α)) -> (Std.DList.{u_1} α)
+  forall {α : Type.{u1}}, (List.{u1} (Std.DList.{u1} α)) -> (Std.DList.{u1} α)
 Case conversion may be inaccurate. Consider using '#align dlist.join Std.DList.joinₓ'. -/
 /-- Concatenates a list of difference lists to form a single difference list. Similar to
 `list.join`. -/
@@ -38,9 +38,9 @@ def Std.DList.join {α : Type _} : List (Dlist α) → Dlist α
 
 /- warning: dlist_singleton -> Std.DList_singleton is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {a : α}, Eq.{succ u_1} (Dlist.{u_1} α) (Dlist.singleton.{u_1} α a) (Std.DList.lazy_ofList.{u_1} α (fun (_ : Unit) => List.cons.{u_1} α a (List.nil.{u_1} α)))
+  forall {α : Type.{u1}} {a : α}, Eq.{succ u1} (Dlist.{u1} α) (Dlist.singleton.{u1} α a) (Std.DList.lazy_ofList.{u1} α (fun (_ : Unit) => List.cons.{u1} α a (List.nil.{u1} α)))
 but is expected to have type
-  forall {α : Type.{u_1}} {a : α}, Eq.{succ u_1} (Std.DList.{u_1} α) (Std.DList.singleton.{u_1} α a) (Std.DList.lazy_ofList.{u_1} α (Thunk.mk.{u_1} (List.{u_1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => List.cons.{u_1} α a (List.nil.{u_1} α))))
+  forall {α : Type.{u1}} {a : α}, Eq.{succ u1} (Std.DList.{u1} α) (Std.DList.singleton.{u1} α a) (Std.DList.lazy_ofList.{u1} α (Thunk.mk.{u1} (List.{u1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => List.cons.{u1} α a (List.nil.{u1} α))))
 Case conversion may be inaccurate. Consider using '#align dlist_singleton Std.DList_singletonₓ'. -/
 @[simp]
 theorem Std.DList_singleton {α : Type _} {a : α} : Dlist.singleton a = Std.DList.lazy_ofList [a] :=
@@ -49,9 +49,9 @@ theorem Std.DList_singleton {α : Type _} {a : α} : Dlist.singleton a = Std.DLi
 
 /- warning: dlist_lazy -> Std.DList_lazy is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {l : List.{u_1} α}, Eq.{succ u_1} (Dlist.{u_1} α) (Std.DList.lazy_ofList.{u_1} α (fun (_ : Unit) => l)) (Dlist.ofList.{u_1} α l)
+  forall {α : Type.{u1}} {l : List.{u1} α}, Eq.{succ u1} (Dlist.{u1} α) (Std.DList.lazy_ofList.{u1} α (fun (_ : Unit) => l)) (Dlist.ofList.{u1} α l)
 but is expected to have type
-  forall {α : Type.{u_1}} {l : List.{u_1} α}, Eq.{succ u_1} (Std.DList.{u_1} α) (Std.DList.lazy_ofList.{u_1} α (Thunk.mk.{u_1} (List.{u_1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => l))) (Std.DList.ofList.{u_1} α l)
+  forall {α : Type.{u1}} {l : List.{u1} α}, Eq.{succ u1} (Std.DList.{u1} α) (Std.DList.lazy_ofList.{u1} α (Thunk.mk.{u1} (List.{u1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => l))) (Std.DList.ofList.{u1} α l)
 Case conversion may be inaccurate. Consider using '#align dlist_lazy Std.DList_lazyₓ'. -/
 @[simp]
 theorem Std.DList_lazy {α : Type _} {l : List α} : Std.DList.lazy_ofList l = Dlist.ofList l :=

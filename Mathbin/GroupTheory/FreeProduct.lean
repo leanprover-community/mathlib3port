@@ -304,11 +304,11 @@ is `1 : M i` then we have to just return `word` since we need the result to be r
 def rcons {i} (p : Pair M i) : Word M :=
   if h : p.head = 1 then p.tail
   else
-    { toList := ⟨i, p.head⟩::p.tail.toList,
+    { toList := ⟨i, p.head⟩::p.tail.toList
       ne_one := by 
         rintro l (rfl | hl)
         exact h
-        exact p.tail.ne_one l hl,
+        exact p.tail.ne_one l hl
       chain_ne := p.tail.chain_ne.cons' (fst_idx_ne_iff.mp p.fst_idx_ne) }
 #align free_product.word.rcons FreeProduct.Word.rcons
 
@@ -367,8 +367,9 @@ private def equiv_pair_aux (i) : ∀ w : Word M, { p : Pair M i // rcons p = w }
   | w@⟨⟨j, m⟩::ls, h1, h2⟩ =>
     if ij : i = j then
       { val :=
-          { head := ij.symm.rec m, tail := mkAux ls h1 h2,
-            fst_idx_ne := by cases ij <;> exact fst_idx_ne_iff.mpr h2.rel_head' },
+          { head := ij.symm.rec m
+            tail := mkAux ls h1 h2
+            fst_idx_ne := by cases ij <;> exact fst_idx_ne_iff.mpr h2.rel_head' }
         property := by cases ij <;> exact cons_eq_rcons.symm }
     else ⟨⟨1, w, (Option.some_injective _).Ne (Ne.symm ij)⟩, dif_pos rfl⟩
 #align free_product.word.equiv_pair_aux free_product.word.equiv_pair_aux

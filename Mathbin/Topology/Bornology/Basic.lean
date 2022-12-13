@@ -62,8 +62,9 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     Bornology
       α where 
   cobounded :=
-    { sets := { s : Set α | sᶜ ∈ B }, univ_sets := by rwa [← compl_univ] at empty_mem,
-      sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy),
+    { sets := { s : Set α | sᶜ ∈ B }
+      univ_sets := by rwa [← compl_univ] at empty_mem
+      sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy)
       inter_sets := fun x y hx hy => by simpa [compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
   le_cofinite := by 
     rw [le_cofinite_iff_compl_singleton_mem]

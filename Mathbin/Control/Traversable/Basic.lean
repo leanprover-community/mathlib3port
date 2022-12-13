@@ -285,9 +285,9 @@ variable [Applicative F]
 
 /- warning: sum.traverse -> Sum.traverse is a dubious translation:
 lean 3 declaration is
-  forall {σ : Type.{u}} {F : Type.{u} -> Type.{u}} [_inst_1 : Applicative.{u, u} F] {α : Type.{u_1}} {β : Type.{u}}, (α -> (F β)) -> (Sum.{u, u_1} σ α) -> (F (Sum.{u, u} σ β))
+  forall {σ : Type.{u1}} {F : Type.{u1} -> Type.{u1}} [_inst_1 : Applicative.{u1, u1} F] {α : Type.{u2}} {β : Type.{u1}}, (α -> (F β)) -> (Sum.{u1, u2} σ α) -> (F (Sum.{u1, u1} σ β))
 but is expected to have type
-  forall {σ : Type.{u}} {F : Type.{u} -> Type.{u}} [_inst_1 : Applicative.{u, u} F] {α : Type.{_aux_param_0}} {β : Type.{u}}, (α -> (F β)) -> (Sum.{u, _aux_param_0} σ α) -> (F (Sum.{u, u} σ β))
+  forall {σ : Type.{u2}} {F : Type.{u2} -> Type.{u2}} [_inst_1 : Applicative.{u2, u2} F] {α : Type.{u1}} {β : Type.{u2}}, (α -> (F β)) -> (Sum.{u2, u1} σ α) -> (F (Sum.{u2, u2} σ β))
 Case conversion may be inaccurate. Consider using '#align sum.traverse Sum.traverseₓ'. -/
 /-- Defines a `traverse` function on the second component of a sum type.
 This is used to give a `traversable` instance for the functor `σ ⊕ -`. -/

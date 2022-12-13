@@ -279,20 +279,23 @@ theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [In
 #align sym_alg.inv_of_sym SymAlg.inv_of_sym
 
 instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
-  { SymAlg.addCommMonoid with one := 1, mul := (· * ·), zero := 0,
+  { SymAlg.addCommMonoid with 
+    one := 1
+    mul := (· * ·)
+    zero := 0
     zero_mul := fun _ => by
-      rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero],
+      rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero]
     mul_zero := fun _ => by
-      rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero],
+      rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero]
     mul_one := fun _ => by
-      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
+      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym]
     one_mul := fun _ => by
-      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
+      rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, inv_of_mul_self_assoc, sym_unsym]
     left_distrib := fun a b c =>
       match a, b, c with
       | Sym a, Sym b, Sym c => by
         rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_add a, add_mul _ _ a,
-          add_add_add_comm, mul_add],
+          add_add_add_comm, mul_add]
     right_distrib := fun a b c =>
       match a, b, c with
       | Sym a, Sym b, Sym c => by

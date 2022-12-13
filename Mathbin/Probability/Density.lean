@@ -218,7 +218,8 @@ theorem mapAbsolutelyContinuous {X : Ω → E} [HasPdf X ℙ μ] : map X ℙ ≪
 
 /-- A random variable that `has_pdf` is quasi-measure preserving. -/
 theorem toQuasiMeasurePreserving {X : Ω → E} [HasPdf X ℙ μ] : QuasiMeasurePreserving X ℙ μ :=
-  { Measurable := HasPdf.measurable X ℙ μ, AbsolutelyContinuous := mapAbsolutelyContinuous }
+  { Measurable := HasPdf.measurable X ℙ μ
+    AbsolutelyContinuous := mapAbsolutelyContinuous }
 #align measure_theory.pdf.to_quasi_measure_preserving MeasureTheory.pdf.toQuasiMeasurePreserving
 
 theorem haveLebesgueDecompositionOfHasPdf {X : Ω → E} [hX' : HasPdf X ℙ μ] :

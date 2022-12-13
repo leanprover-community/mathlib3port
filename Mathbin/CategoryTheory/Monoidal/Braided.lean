@@ -843,11 +843,13 @@ theorem tensor_associativity (X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C) :
 /-- The tensor product functor from `C × C` to `C` as a monoidal functor. -/
 @[simps]
 def tensorMonoidal : MonoidalFunctor (C × C) C :=
-  { tensor C with ε := (λ_ (𝟙_ C)).inv, μ := fun X Y => tensorμ C X Y,
-    μ_natural' := fun X Y X' Y' f g => tensor_μ_natural C f.1 f.2 g.1 g.2,
-    associativity' := fun X Y Z => tensor_associativity C X.1 X.2 Y.1 Y.2 Z.1 Z.2,
-    left_unitality' := fun ⟨X₁, X₂⟩ => tensor_left_unitality C X₁ X₂,
-    right_unitality' := fun ⟨X₁, X₂⟩ => tensor_right_unitality C X₁ X₂,
+  { tensor C with 
+    ε := (λ_ (𝟙_ C)).inv
+    μ := fun X Y => tensorμ C X Y
+    μ_natural' := fun X Y X' Y' f g => tensor_μ_natural C f.1 f.2 g.1 g.2
+    associativity' := fun X Y Z => tensor_associativity C X.1 X.2 Y.1 Y.2 Z.1 Z.2
+    left_unitality' := fun ⟨X₁, X₂⟩ => tensor_left_unitality C X₁ X₂
+    right_unitality' := fun ⟨X₁, X₂⟩ => tensor_right_unitality C X₁ X₂
     μ_is_iso := by 
       dsimp [tensor_μ]
       infer_instance }

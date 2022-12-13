@@ -30,15 +30,15 @@ def uncurry :
       C × D ⥤
         E where 
   obj F :=
-    { obj := fun X => (F.obj X.1).obj X.2,
-      map := fun X Y f => (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2,
+    { obj := fun X => (F.obj X.1).obj X.2
+      map := fun X Y f => (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2
       map_comp' := fun X Y Z f g => by
         simp only [prod_comp_fst, prod_comp_snd, functor.map_comp, nat_trans.comp_app,
           category.assoc]
         slice_lhs 2 3 => rw [← nat_trans.naturality]
         rw [category.assoc] }
   map F G T :=
-    { app := fun X => (T.app X.1).app X.2,
+    { app := fun X => (T.app X.1).app X.2
       naturality' := fun X Y f => by
         simp only [prod_comp_fst, prod_comp_snd, category.comp_id, category.assoc, Functor.map_id,
           functor.map_comp, nat_trans.id_app, nat_trans.comp_app]
@@ -53,7 +53,9 @@ def curryObj (F : C × D ⥤ E) :
     C ⥤
       D ⥤
         E where 
-  obj X := { obj := fun Y => F.obj (X, Y), map := fun Y Y' g => F.map (𝟙 X, g) }
+  obj X :=
+    { obj := fun Y => F.obj (X, Y)
+      map := fun Y Y' g => F.map (𝟙 X, g) }
   map X X' f := { app := fun Y => F.map (f, 𝟙 Y) }
 #align category_theory.curry_obj CategoryTheory.curryObj
 
@@ -64,10 +66,10 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
   obj F := curryObj F
   map F G T :=
     { app := fun X =>
-        { app := fun Y => T.app (X, Y),
+        { app := fun Y => T.app (X, Y)
           naturality' := fun Y Y' g => by 
             dsimp [curry_obj]
-            rw [nat_trans.naturality] },
+            rw [nat_trans.naturality] }
       naturality' := fun X X' f => by 
         ext; dsimp [curry_obj]
         rw [nat_trans.naturality] }

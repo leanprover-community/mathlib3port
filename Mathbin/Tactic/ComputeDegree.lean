@@ -274,8 +274,10 @@ unsafe def compute_degree_le : tactic Unit :=
 #align tactic.interactive.compute_degree_le tactic.interactive.compute_degree_le
 
 add_tactic_doc
-  { Name := "compute_degree_le", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.compute_degree_le], tags := ["arithmetic", "finishing"] }
+  { Name := "compute_degree_le"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.compute_degree_le]
+    tags := ["arithmetic", "finishing"] }
 
 end Interactive
 

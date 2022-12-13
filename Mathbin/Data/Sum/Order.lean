@@ -172,7 +172,9 @@ section Preorder
 variable [Preorder α] [Preorder β]
 
 instance : Preorder (Sum α β) :=
-  { Sum.hasLe, Sum.hasLt with le_refl := fun _ => refl _, le_trans := fun _ _ _ => trans,
+  { Sum.hasLe, Sum.hasLt with 
+    le_refl := fun _ => refl _
+    le_trans := fun _ _ _ => trans
     lt_iff_le_not_le := fun a b => by
       refine' ⟨fun hab => ⟨hab.mono (fun _ _ => le_of_lt) fun _ _ => le_of_lt, _⟩, _⟩
       · rintro (⟨hba⟩ | ⟨hba⟩)
@@ -384,8 +386,9 @@ section Preorder
 variable [Preorder α] [Preorder β]
 
 instance preorder : Preorder (α ⊕ₗ β) :=
-  { Lex.hasLe, Lex.hasLt with le_refl := refl_of (Lex (· ≤ ·) (· ≤ ·)),
-    le_trans := fun _ _ _ => trans_of (Lex (· ≤ ·) (· ≤ ·)),
+  { Lex.hasLe, Lex.hasLt with 
+    le_refl := refl_of (Lex (· ≤ ·) (· ≤ ·))
+    le_trans := fun _ _ _ => trans_of (Lex (· ≤ ·) (· ≤ ·))
     lt_iff_le_not_le := fun a b => by
       refine' ⟨fun hab => ⟨hab.mono (fun _ _ => le_of_lt) fun _ _ => le_of_lt, _⟩, _⟩
       · rintro (⟨hba⟩ | ⟨hba⟩ | ⟨b, a⟩)
@@ -427,8 +430,10 @@ instance partialOrder [PartialOrder α] [PartialOrder β] : PartialOrder (α ⊕
 #align sum.lex.partial_order Sum.Lex.partialOrder
 
 instance linearOrder [LinearOrder α] [LinearOrder β] : LinearOrder (α ⊕ₗ β) :=
-  { Lex.partialOrder with le_total := total_of (Lex (· ≤ ·) (· ≤ ·)),
-    decidableLe := Lex.decidableRel, DecidableEq := Sum.decidableEq _ _ }
+  { Lex.partialOrder with 
+    le_total := total_of (Lex (· ≤ ·) (· ≤ ·))
+    decidableLe := Lex.decidableRel
+    DecidableEq := Sum.decidableEq _ _ }
 #align sum.lex.linear_order Sum.Lex.linearOrder
 
 /-- The lexicographical bottom of a sum is the bottom of the left component. -/

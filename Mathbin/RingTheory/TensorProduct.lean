@@ -435,9 +435,18 @@ instance : AddMonoidWithOne (A ⊗[R] B) :=
 
 instance : Semiring (A ⊗[R] B) :=
   { (by infer_instance : AddMonoidWithOne (A ⊗[R] B)),
-    (by infer_instance : AddCommMonoid (A ⊗[R] B)) with zero := 0, add := (· + ·), one := 1,
-    mul := fun a b => mul a b, one_mul := one_mul, mul_one := mul_one, mul_assoc := mul_assoc,
-    zero_mul := by simp, mul_zero := by simp, left_distrib := by simp, right_distrib := by simp }
+    (by infer_instance : AddCommMonoid (A ⊗[R] B)) with
+    zero := 0
+    add := (· + ·)
+    one := 1
+    mul := fun a b => mul a b
+    one_mul := one_mul
+    mul_one := mul_one
+    mul_assoc := mul_assoc
+    zero_mul := by simp
+    mul_zero := by simp
+    left_distrib := by simp
+    right_distrib := by simp }
 
 theorem one_def : (1 : A ⊗[R] B) = (1 : A) ⊗ₜ (1 : B) :=
   rfl
@@ -480,7 +489,7 @@ instance leftAlgebra : Algebra S (A ⊗[R] B) :=
         rw [Algebra.commutes, _root_.mul_one, _root_.one_mul]
       · intro y y' h h'
         dsimp at h h'⊢
-        simp only [mul_add, add_mul, h, h'],
+        simp only [mul_add, add_mul, h, h']
     smul_def' := fun r x => by 
       apply TensorProduct.induction_on x
       · simp [smul_zero]
@@ -647,8 +656,9 @@ and evidence of multiplicativity on pure tensors.
 def algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C)
     (w₁ : ∀ (a₁ a₂ : A) (b₁ b₂ : B), f ((a₁ * a₂) ⊗ₜ (b₁ * b₂)) = f (a₁ ⊗ₜ b₁) * f (a₂ ⊗ₜ b₂))
     (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B →ₐ[R] C :=
-  { f with map_one' := by rw [← (algebraMap R C).map_one, ← w₂, (algebraMap R A).map_one] <;> rfl,
-    map_zero' := by rw [LinearMap.to_fun_eq_coe, map_zero],
+  { f with
+    map_one' := by rw [← (algebraMap R C).map_one, ← w₂, (algebraMap R A).map_one] <;> rfl
+    map_zero' := by rw [LinearMap.to_fun_eq_coe, map_zero]
     map_mul' := fun x y => by 
       rw [LinearMap.to_fun_eq_coe]
       apply TensorProduct.induction_on x
@@ -661,7 +671,7 @@ def algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C)
         · intro x₁ x₂ h₁ h₂
           rw [mul_add, map_add, map_add, mul_add, h₁, h₂]
       · intro x₁ x₂ h₁ h₂
-        rw [add_mul, map_add, map_add, add_mul, h₁, h₂],
+        rw [add_mul, map_add, map_add, add_mul, h₁, h₂]
     commutes' := fun r => by rw [LinearMap.to_fun_eq_coe, algebra_map_apply, w₂] }
 #align
   algebra.tensor_product.alg_hom_of_linear_map_tensor_product Algebra.TensorProduct.algHomOfLinearMapTensorProduct
@@ -699,7 +709,8 @@ def algEquivOfLinearEquivTripleTensorProduct (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R
         f ((a₁ * a₂) ⊗ₜ (b₁ * b₂) ⊗ₜ (c₁ * c₂)) = f (a₁ ⊗ₜ b₁ ⊗ₜ c₁) * f (a₂ ⊗ₜ b₂ ⊗ₜ c₂))
     (w₂ : ∀ r, f (((algebraMap R A) r ⊗ₜ[R] (1 : B)) ⊗ₜ[R] (1 : C)) = (algebraMap R D) r) :
     (A ⊗[R] B) ⊗[R] C ≃ₐ[R] D :=
-  { f with toFun := f,
+  { f with 
+    toFun := f
     map_mul' := fun x y => by 
       apply TensorProduct.induction_on x
       · simp only [map_zero, zero_mul]
@@ -723,7 +734,7 @@ def algEquivOfLinearEquivTripleTensorProduct (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R
         · intro x₁ x₂ h₁ h₂
           simp only [tmul_mul_tmul, map_add, mul_add, add_mul, h₁, h₂]
       · intro x₁ x₂ h₁ h₂
-        simp only [tmul_mul_tmul, map_add, mul_add, add_mul, h₁, h₂],
+        simp only [tmul_mul_tmul, map_add, mul_add, add_mul, h₁, h₂]
     commutes' := fun r => by simp [w₂] }
 #align
   algebra.tensor_product.alg_equiv_of_linear_equiv_triple_tensor_product Algebra.TensorProduct.algEquivOfLinearEquivTripleTensorProduct
@@ -1102,10 +1113,10 @@ variable [IsScalarTower R A M] [IsScalarTower R B M]
 `tensor_product.algebra.module` below. -/
 def moduleAux : A ⊗[R] B →ₗ[R] M →ₗ[R] M :=
   TensorProduct.lift
-    { toFun := fun a => a • (Algebra.lsmul R M : B →ₐ[R] Module.EndCat R M).toLinearMap,
+    { toFun := fun a => a • (Algebra.lsmul R M : B →ₐ[R] Module.EndCat R M).toLinearMap
       map_add' := fun r t => by 
         ext
-        simp only [add_smul, LinearMap.add_apply],
+        simp only [add_smul, LinearMap.add_apply]
       map_smul' := fun n r => by 
         ext
         simp only [RingHom.id_apply, LinearMap.smul_apply, smul_assoc] }

@@ -68,6 +68,8 @@ unsafe def swap_var (renames : parse swap_args_parser) : tactic Unit := do
 end Tactic.Interactive
 
 add_tactic_doc
-  { Name := "swap_var", category := DocCategory.tactic, declNames := [`tactic.interactive.swap_var],
+  { Name := "swap_var"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.swap_var]
     tags := ["renaming"] }
 

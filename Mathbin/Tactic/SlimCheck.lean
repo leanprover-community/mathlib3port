@@ -213,10 +213,11 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
   let tgt ← retrieve <| tactic.revert_all >> target
   let tgt' := tactic.add_decorations tgt
   let cfg :=
-    { cfg with traceDiscarded := cfg.traceDiscarded || is_trace_enabled_for `slim_check.discarded,
-      traceShrink := cfg.traceShrink || is_trace_enabled_for `slim_check.shrink.steps,
+    { cfg with
+      traceDiscarded := cfg.traceDiscarded || is_trace_enabled_for `slim_check.discarded
+      traceShrink := cfg.traceShrink || is_trace_enabled_for `slim_check.shrink.steps
       traceShrinkCandidates :=
-        cfg.traceShrinkCandidates || is_trace_enabled_for `slim_check.shrink.candidates,
+        cfg.traceShrinkCandidates || is_trace_enabled_for `slim_check.shrink.candidates
       traceSuccess := cfg.traceSuccess || is_trace_enabled_for `slim_check.success }
   let inst ←
     mk_app `` testable [tgt'] >>= mk_instance <|>

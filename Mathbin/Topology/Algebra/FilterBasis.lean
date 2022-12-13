@@ -81,7 +81,12 @@ def groupFilterBasisOfComm {G : Type _} [CommGroup G] (sets : Set (Set G))
     (nonempty : sets.Nonempty) (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ z ∈ sets, z ⊆ x ∩ y)
     (one : ∀ U ∈ sets, (1 : G) ∈ U) (mul : ∀ U ∈ sets, ∃ V ∈ sets, V * V ⊆ U)
     (inv : ∀ U ∈ sets, ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U) : GroupFilterBasis G :=
-  { sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv,
+  { sets
+    Nonempty
+    inter_sets
+    one' := one
+    mul' := mul
+    inv' := inv
     conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
 #align group_filter_basis_of_comm groupFilterBasisOfComm
 
@@ -118,8 +123,10 @@ is discrete. -/
 @[to_additive
       "The trivial additive group filter basis consists of `{0}` only. The associated\ntopology is discrete."]
 instance : Inhabited (GroupFilterBasis G) :=
-  ⟨by 
-    refine' { sets := {{1}}, Nonempty := singleton_nonempty _.. }
+  ⟨by
+    refine'
+      { sets := {{1}}
+        Nonempty := singleton_nonempty _.. }
     all_goals simp only [exists_prop, mem_singleton_iff]
     · rintro - - rfl rfl
       use {1}
@@ -353,12 +360,12 @@ instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
         rw [mem_singleton_iff] at h
         use univ, univ_mem, {0}, rfl
         rintro a ⟨x, m, -, hm, rfl⟩
-        simp [mem_singleton_iff.1 hm, h],
+        simp [mem_singleton_iff.1 hm, h]
       smul_left' := by 
         rintro x₀ U (h : U ∈ {{(0 : M)}})
         rw [mem_singleton_iff] at h
         use {0}, rfl
-        simp [h],
+        simp [h]
       smul_right' := by 
         rintro m₀ U (h : U ∈ (0 : Set (Set M)))
         rw [Set.mem_zero] at h
@@ -433,8 +440,8 @@ def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : Ring
     smul' := by 
       intro U U_in
       rcases smul U_in with ⟨V, V_in, W, W_in, H⟩
-      exact ⟨V, BR.to_add_group_filter_basis.mem_nhds_zero V_in, W, W_in, H⟩,
-    smul_left' := smul_left,
+      exact ⟨V, BR.to_add_group_filter_basis.mem_nhds_zero V_in, W, W_in, H⟩
+    smul_left' := smul_left
     smul_right' := by 
       intro m₀ U U_in
       rcases smul_right m₀ U_in with ⟨V, V_in, H⟩

@@ -99,11 +99,14 @@ end MulZeroClass
 
 /-- `nontrivial α` is needed here as otherwise we have `1 * ⊤ = ⊤` but also `0 * ⊤ = 0`. -/
 instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
-  { WithTop.mulZeroClass with mul := (· * ·), one := 1, zero := 0,
+  { WithTop.mulZeroClass with 
+    mul := (· * ·)
+    one := 1
+    zero := 0
     one_mul := fun a =>
       match a with
       | ⊤ => mul_top (mt coe_eq_coe.1 one_ne_zero)
-      | (a : α) => by rw [← coe_one, ← coe_mul, one_mul],
+      | (a : α) => by rw [← coe_one, ← coe_mul, one_mul]
     mul_one := fun a =>
       match a with
       | ⊤ => top_mul (mt coe_eq_coe.1 one_ne_zero)
@@ -114,7 +117,8 @@ instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
 protected def MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneClass R] [DecidableEq R]
     [Nontrivial R] [MulZeroOneClass S] [DecidableEq S] [Nontrivial S] (f : R →*₀ S)
     (hf : Function.Injective f) : WithTop R →*₀ WithTop S :=
-  { f.toZeroHom.with_top_map, f.toMonoidHom.toOneHom.with_top_map with toFun := WithTop.map f,
+  { f.toZeroHom.with_top_map, f.toMonoidHom.toOneHom.with_top_map with
+    toFun := WithTop.map f
     map_mul' := fun x y => by
       have : ∀ z, map f z = 0 ↔ z = 0 := fun z =>
         (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
@@ -136,7 +140,9 @@ instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
       simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
 
 instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
-  { WithTop.mulZeroClass with mul := (· * ·), zero := 0,
+  { WithTop.mulZeroClass with 
+    mul := (· * ·)
+    zero := 0
     mul_assoc := fun a b c => by 
       rcases eq_or_ne a 0 with (rfl | ha); · simp only [zero_mul]
       rcases eq_or_ne b 0 with (rfl | hb); · simp only [zero_mul, mul_zero]
@@ -151,7 +157,9 @@ instance [MonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZer
 
 instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] :
     CommMonoidWithZero (WithTop α) :=
-  { WithTop.monoidWithZero with mul := (· * ·), zero := 0,
+  { WithTop.monoidWithZero with 
+    mul := (· * ·)
+    zero := 0
     mul_comm := fun a b => by simp only [or_comm', mul_def, Option.bind_comm a b, mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
@@ -170,7 +178,8 @@ private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := b
 that derives from both `non_assoc_non_unital_semiring` and `canonically_ordered_add_monoid`, both
 of which are required for distributivity. -/
 instance [Nontrivial α] : CommSemiring (WithTop α) :=
-  { WithTop.addCommMonoidWithOne, WithTop.commMonoidWithZero with right_distrib := distrib',
+  { WithTop.addCommMonoidWithOne, WithTop.commMonoidWithZero with
+    right_distrib := distrib'
     left_distrib := fun a b c => by
       rw [mul_comm, distrib', mul_comm b, mul_comm c]
       rfl }

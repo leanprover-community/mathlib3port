@@ -258,8 +258,10 @@ unsafe def mk_iff_of_inductive_prop_cmd (_ : parse (tk "mk_iff_of_inductive_prop
 #align mk_iff_of_inductive_prop_cmd mk_iff_of_inductive_prop_cmd
 
 add_tactic_doc
-  { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd,
-    declNames := [`` mk_iff_of_inductive_prop_cmd], tags := ["logic", "environment"] }
+  { Name := "mk_iff_of_inductive_prop"
+    category := DocCategory.cmd
+    declNames := [`` mk_iff_of_inductive_prop_cmd]
+    tags := ["logic", "environment"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /--
@@ -312,7 +314,9 @@ unsafe def mk_iff_attr :
 #align mk_iff_attr mk_iff_attr
 
 add_tactic_doc
-  { Name := "mk_iff", category := DocCategory.attr, declNames := [`mk_iff_attr],
+  { Name := "mk_iff"
+    category := DocCategory.attr
+    declNames := [`mk_iff_attr]
     tags := ["logic", "environment"] }
 
 end

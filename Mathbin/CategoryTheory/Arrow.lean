@@ -201,7 +201,9 @@ theorem inv_left_hom_right [IsIso sq] : inv sq.left ≫ f.Hom ≫ sq.right = g.H
 instance mono_left [Mono sq] :
     Mono
       sq.left where right_cancellation Z φ ψ h := by
-    let aux : (Z ⟶ f.left) → (arrow.mk (𝟙 Z) ⟶ f) := fun φ => { left := φ, right := φ ≫ f.hom }
+    let aux : (Z ⟶ f.left) → (arrow.mk (𝟙 Z) ⟶ f) := fun φ =>
+      { left := φ
+        right := φ ≫ f.hom }
     show (aux φ).left = (aux ψ).left
     congr 1
     rw [← cancel_mono sq]
@@ -214,7 +216,9 @@ instance mono_left [Mono sq] :
 instance epi_right [Epi sq] :
     Epi
       sq.right where left_cancellation Z φ ψ h := by
-    let aux : (g.right ⟶ Z) → (g ⟶ arrow.mk (𝟙 Z)) := fun φ => { right := φ, left := g.hom ≫ φ }
+    let aux : (g.right ⟶ Z) → (g ⟶ arrow.mk (𝟙 Z)) := fun φ =>
+      { right := φ
+        left := g.hom ≫ φ }
     show (aux φ).right = (aux ψ).right
     congr 1
     rw [← cancel_epi sq]
@@ -287,9 +291,13 @@ def mapArrow (F : C ⥤ D) :
     Arrow C ⥤
       Arrow
         D where 
-  obj a := { left := F.obj a.left, right := F.obj a.right, Hom := F.map a.Hom }
+  obj a :=
+    { left := F.obj a.left
+      right := F.obj a.right
+      Hom := F.map a.Hom }
   map a b f :=
-    { left := F.map f.left, right := F.map f.right,
+    { left := F.map f.left
+      right := F.map f.right
       w' := by 
         have w := f.w
         simp only [id_map] at w

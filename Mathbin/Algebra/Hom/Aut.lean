@@ -44,8 +44,11 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance : Group (MulAut M) := by
   refine_struct
-            { mul := fun g h => MulEquiv.trans h g, one := MulEquiv.refl M, inv := MulEquiv.symm,
-              div := _, npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩,
+            { mul := fun g h => MulEquiv.trans h g
+              one := MulEquiv.refl M
+              inv := MulEquiv.symm
+              div := _
+              npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩
               zpow :=
                 @zpowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩ ⟨MulEquiv.symm⟩ } <;>
           intros <;>
@@ -134,8 +137,10 @@ def conj [Group G] :
       MulAut
         G where 
   toFun g :=
-    { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g,
-      left_inv := fun _ => by simp [mul_assoc], right_inv := fun _ => by simp [mul_assoc],
+    { toFun := fun h => g * h * g⁻¹
+      invFun := fun h => g⁻¹ * h * g
+      left_inv := fun _ => by simp [mul_assoc]
+      right_inv := fun _ => by simp [mul_assoc]
       map_mul' := by simp [mul_assoc] }
   map_mul' _ _ := by ext <;> simp [mul_assoc]
   map_one' := by ext <;> simp [mul_assoc]
@@ -168,8 +173,11 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance group : Group (AddAut A) := by
   refine_struct
-            { mul := fun g h => AddEquiv.trans h g, one := AddEquiv.refl A, inv := AddEquiv.symm,
-              div := _, npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩,
+            { mul := fun g h => AddEquiv.trans h g
+              one := AddEquiv.refl A
+              inv := AddEquiv.symm
+              div := _
+              npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩
               zpow :=
                 @zpowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩ ⟨AddEquiv.symm⟩ } <;>
           intros <;>
@@ -260,9 +268,11 @@ def conj [AddGroup G] :
           G) where 
   toFun g :=
     @Additive.ofMul (AddAut G)
-      { toFun := fun h => g + h + -g,-- this definition is chosen to match `mul_aut.conj`
-        invFun := fun h => -g + h + g,
-        left_inv := fun _ => by simp [add_assoc], right_inv := fun _ => by simp [add_assoc],
+      { toFun := fun h => g + h + -g
+        -- this definition is chosen to match `mul_aut.conj`
+        invFun := fun h => -g + h + g
+        left_inv := fun _ => by simp [add_assoc]
+        right_inv := fun _ => by simp [add_assoc]
         map_add' := by simp [add_assoc] }
   map_add' _ _ := by apply additive.to_mul.injective <;> ext <;> simp [add_assoc]
   map_zero' := by ext <;> simpa

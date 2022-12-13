@@ -136,7 +136,7 @@ instance :
           rcases hx with ⟨x, rfl⟩
           refine' ⟨X1.le (Set.mem_range_self _), X2.le (Set.mem_range_self _), _⟩
           rw [← X1.is_extension x, ← X2.is_extension x] :
-          x ∈ X1.toLinearPmap.eqLocus X2.toLinearPmap),
+          x ∈ X1.toLinearPmap.eqLocus X2.toLinearPmap)
       is_extension := fun m => X1.is_extension _ }
 
 instance : SemilatticeInf (ExtensionOf i f) :=
@@ -167,7 +167,7 @@ def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
     le :=
       le_trans hnonempty.some.le <|
         (LinearPmap.le_Sup _ <|
-            (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩).1,
+            (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩).1
     is_extension := fun m => by
       refine' Eq.trans (hnonempty.some.is_extension m) _
       symm
@@ -187,21 +187,20 @@ theorem ExtensionOf.le_max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤
 variable (i f) [Fact <| Function.Injective i]
 
 instance ExtensionOf.inhabited :
-    Inhabited
-      (ExtensionOf i
+    Inhabited (ExtensionOf i
         f) where default :=
-    { domain := i.range,
+    { domain := i.range
       toFun :=
-        { toFun := fun x => f x.2.some,
+        { toFun := fun x => f x.2.some
           map_add' := fun x y => by
             have eq1 : _ + _ = (x + y).1 := congr_arg₂ (· + ·) x.2.some_spec y.2.some_spec
             rw [← map_add, ← (x + y).2.some_spec] at eq1
-            rw [← Fact.out (Function.Injective i) eq1, map_add],
+            rw [← Fact.out (Function.Injective i) eq1, map_add]
           map_smul' := fun r x => by
             have eq1 : r • _ = (r • x).1 := congr_arg ((· • ·) r) x.2.some_spec
             rw [← LinearMap.map_smul, ← (r • x).2.some_spec] at eq1
-            rw [RingHom.id_apply, ← Fact.out (Function.Injective i) eq1, LinearMap.map_smul] },
-      le := le_refl _,
+            rw [RingHom.id_apply, ← Fact.out (Function.Injective i) eq1, LinearMap.map_smul] }
+      le := le_refl _
       is_extension := fun m => by
         simp only [LinearPmap.mk_apply, LinearMap.coe_mk]
         congr
@@ -349,7 +348,7 @@ def extensionOfMaxAdjoin (h : Module.BaerCat R Q) (y : N) :
   domain := (extensionOfMax i f).domain ⊔ Submodule.span R {y}
   le := le_trans (extensionOfMax i f).le le_sup_left
   toFun :=
-    { toFun := ExtensionOfMaxAdjoin.extensionToFun i f h,
+    { toFun := ExtensionOfMaxAdjoin.extensionToFun i f h
       map_add' := fun a b => by
         have eq1 :
           ↑a + ↑b =
@@ -361,7 +360,7 @@ def extensionOfMaxAdjoin (h : Module.BaerCat R Q) (y : N) :
         rw [extension_of_max_adjoin.extension_to_fun_wd i f h (a + b) _ _ eq1, LinearPmap.map_add,
           map_add]
         unfold extension_of_max_adjoin.extension_to_fun
-        abel,
+        abel
       map_smul' := fun r a => by 
         rw [RingHom.id_apply]
         have eq1 :
@@ -403,12 +402,12 @@ linear map from an ideal can be extended, then the module is injective.-/
 protected theorem injective (h : Module.BaerCat R Q) : Module.Injective R Q :=
   { out := fun X Y ins1 ins2 ins3 ins4 i hi f =>
       haveI : Fact (Function.Injective i) := ⟨hi⟩
-      ⟨{ toFun := fun y =>
+      ⟨{  toFun := fun y =>
             (extension_of_max i f).toLinearPmap
-              ⟨y, (extension_of_max_to_submodule_eq_top i f h).symm ▸ trivial⟩,
+              ⟨y, (extension_of_max_to_submodule_eq_top i f h).symm ▸ trivial⟩
           map_add' := fun x y => by 
             rw [← LinearPmap.map_add]
-            congr ,
+            congr
           map_smul' := fun r x => by 
             rw [← LinearPmap.map_smul]
             congr },

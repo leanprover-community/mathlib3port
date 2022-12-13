@@ -200,7 +200,9 @@ def δ {n} (i : Fin (n + 2)) : [n] ⟶ [n + 1] :=
 
 /-- The `i`-th degeneracy map from `[n+1]` to `[n]` -/
 def σ {n} (i : Fin (n + 1)) : [n + 1] ⟶ [n] :=
-  mkHom { toFun := Fin.predAbove i, monotone' := Fin.pred_above_right_monotone i }
+  mkHom
+    { toFun := Fin.predAbove i
+      monotone' := Fin.pred_above_right_monotone i }
 #align simplex_category.σ SimplexCategory.σ
 
 /-- The generic case of the first simplicial identity -/
@@ -492,7 +494,9 @@ instance :
         let f := monoEquivOfFin X aux
         have hf := (finset.univ.order_emb_of_fin aux).StrictMono
         refine'
-          { Hom := ⟨fun i => f i.down, _⟩, inv := ⟨fun i => ⟨f.symm i⟩, _⟩, hom_inv_id' := _,
+          { Hom := ⟨fun i => f i.down, _⟩
+            inv := ⟨fun i => ⟨f.symm i⟩, _⟩
+            hom_inv_id' := _
             inv_hom_id' := _ }
         · rintro ⟨i⟩ ⟨j⟩ h
           show f i ≤ f j
@@ -558,7 +562,9 @@ section Concrete
 instance :
     ConcreteCategory.{0}
       SimplexCategory where 
-  forget := { obj := fun i => Fin (i.len + 1), map := fun i j f => f.toOrderHom }
+  forget :=
+    { obj := fun i => Fin (i.len + 1)
+      map := fun i j f => f.toOrderHom }
   forget_faithful := {  }
 
 end Concrete
@@ -633,10 +639,10 @@ instance : ReflectsIsomorphisms (forget SimplexCategory) :=
     intro
     exact
       is_iso.of_iso
-        { Hom := f,
+        { Hom := f
           inv :=
             hom.mk
-              { toFun := inv ((forget SimplexCategory).map f),
+              { toFun := inv ((forget SimplexCategory).map f)
                 monotone' := fun y₁ y₂ h => by 
                   by_cases h' : y₁ < y₂
                   · by_contra h''
@@ -645,11 +651,11 @@ instance : ReflectsIsomorphisms (forget SimplexCategory) :=
                     dsimp at ineq
                     erw [Eq, Eq] at ineq
                     exact not_le.mpr h' ineq
-                  · rw [eq_of_le_of_not_lt h h'] },
+                  · rw [eq_of_le_of_not_lt h h'] }
           hom_inv_id' := by 
             ext1
             ext1
-            exact iso.hom_inv_id (as_iso ((forget _).map f)),
+            exact iso.hom_inv_id (as_iso ((forget _).map f))
           inv_hom_id' := by 
             ext1
             ext1
@@ -665,9 +671,10 @@ theorem is_iso_of_bijective {x y : SimplexCategory} {f : x ⟶ y}
 @[simp]
 def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Fin (x.len + 1) ≃o Fin (y.len + 1) :=
   Equiv.toOrderIso
-    { toFun := e.Hom.toOrderHom, invFun := e.inv.toOrderHom,
+    { toFun := e.Hom.toOrderHom
+      invFun := e.inv.toOrderHom
       left_inv := fun i => by
-        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
+        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id'
       right_inv := fun i => by
         simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
     e.Hom.toOrderHom.Monotone e.inv.toOrderHom.Monotone

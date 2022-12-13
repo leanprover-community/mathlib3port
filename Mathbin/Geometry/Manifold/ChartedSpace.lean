@@ -814,7 +814,9 @@ for the topology constructed from this atlas. The `local_homeomorph` version is 
 definition. -/
 protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
     @LocalHomeomorph M H c.toTopologicalSpace _ :=
-  { e with open_source := by convert c.open_source' he, open_target := by convert c.open_target he,
+  { e with 
+    open_source := by convert c.open_source' he
+    open_target := by convert c.open_target he
     continuous_to_fun := by 
       letI : TopologicalSpace M := c.to_topological_space
       rw [continuous_on_open_iff (c.open_source' he)]
@@ -822,7 +824,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
       rw [inter_comm]
       apply TopologicalSpace.GenerateOpen.basic
       simp only [exists_prop, mem_Union, mem_singleton_iff]
-      exact ⟨e, he, ⟨s, s_open, rfl⟩⟩,
+      exact ⟨e, he, ⟨s, s_open, rfl⟩⟩
     continuous_inv_fun := by
       letI : TopologicalSpace M := c.to_topological_space
       apply continuous_on_open_of_generate_from (c.open_target he)

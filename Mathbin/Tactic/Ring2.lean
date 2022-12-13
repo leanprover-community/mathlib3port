@@ -579,7 +579,9 @@ local postfix:1024 "?" => optional
 #align tactic.interactive.ring2 tactic.interactive.ring2
 
 add_tactic_doc
-  { Name := "ring2", category := DocCategory.tactic, declNames := [`tactic.interactive.ring2],
+  { Name := "ring2"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.ring2]
     tags := ["arithmetic", "simplification", "decision procedure"] }
 
 end Interactive

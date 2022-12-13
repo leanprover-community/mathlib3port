@@ -42,7 +42,7 @@ instance groupObj (F : J ⥤ GroupCat.{max v u}) (j) : Group ((F ⋙ forget Grou
       "The flat sections of a functor into `AddGroup` form an additive subgroup of all sections."]
 def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
   { MonCat.sectionsSubmonoid (F ⋙ forget₂ GroupCat MonCat) with
-    carrier := (F ⋙ forget GroupCat).sections,
+    carrier := (F ⋙ forget GroupCat).sections
     inv_mem' := fun a ah j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
       dsimp [functor.sections] at ah
@@ -66,13 +66,13 @@ instance Forget₂.createsLimit (F : J ⥤ GroupCat.{max v u}) :
     CreatesLimit F (forget₂ GroupCat.{max v u} MonCat.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := GroupCat.of (Types.limitCone (F ⋙ forget GroupCat)).x,
+        { x := GroupCat.of (Types.limitCone (F ⋙ forget GroupCat)).x
           π :=
-            { app := MonCat.limitπMonoidHom (F ⋙ forget₂ GroupCat MonCat.{max v u}),
+            { app := MonCat.limitπMonoidHom (F ⋙ forget₂ GroupCat MonCat.{max v u})
               naturality' :=
                 (MonCat.HasLimits.limitCone
-                      (F ⋙ forget₂ GroupCat MonCat.{max v u})).π.naturality } },
-      validLift := by apply is_limit.unique_up_to_iso (MonCat.HasLimits.limitConeIsLimit _) t,
+                      (F ⋙ forget₂ GroupCat MonCat.{max v u})).π.naturality } }
+      validLift := by apply is_limit.unique_up_to_iso (MonCat.HasLimits.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ GroupCat MonCat.{max v u}) (MonCat.HasLimits.limitConeIsLimit _)
           (fun s => _) fun s => rfl }
@@ -176,13 +176,13 @@ instance Forget₂.createsLimit (F : J ⥤ CommGroupCat.{max v u}) :
     CreatesLimit F (forget₂ CommGroupCat GroupCat.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := CommGroupCat.of (Types.limitCone (F ⋙ forget CommGroupCat)).x,
+        { x := CommGroupCat.of (Types.limitCone (F ⋙ forget CommGroupCat)).x
           π :=
             { app :=
                 MonCat.limitπMonoidHom
-                  (F ⋙ forget₂ CommGroupCat GroupCat.{max v u} ⋙ forget₂ GroupCat MonCat.{max v u}),
-              naturality' := (MonCat.HasLimits.limitCone _).π.naturality } },
-      validLift := by apply is_limit.unique_up_to_iso (GroupCat.limitConeIsLimit _) t,
+                  (F ⋙ forget₂ CommGroupCat GroupCat.{max v u} ⋙ forget₂ GroupCat MonCat.{max v u})
+              naturality' := (MonCat.HasLimits.limitCone _).π.naturality } }
+      validLift := by apply is_limit.unique_up_to_iso (GroupCat.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ _ GroupCat.{max v u} ⋙ forget₂ _ MonCat.{max v u})
           (by apply MonCat.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }
@@ -299,10 +299,10 @@ def kernelIsoKer {G H : AddCommGroupCat.{u}} (f : G ⟶ H) :
           by
           -- TODO where is this `has_coe_t_aux.coe` coming from? can we prevent it appearing?
           change (kernel.ι f) g ∈ f.ker
-          simp [AddMonoidHom.mem_ker]⟩,
+          simp [AddMonoidHom.mem_ker]⟩
       map_zero' := by 
         ext
-        simp,
+        simp
       map_add' := fun g g' => by 
         ext
         simp }

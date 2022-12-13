@@ -41,8 +41,10 @@ theorem nat_cast_mem [AddSubmonoidWithOneClass S R] (n : ℕ) : (n : R) ∈ s :=
 
 instance (priority := 74) AddSubmonoidWithOneClass.toAddMonoidWithOne
     [AddSubmonoidWithOneClass S R] : AddMonoidWithOne s :=
-  { AddSubmonoidClass.toAddMonoid s with one := ⟨_, one_mem s⟩,
-    natCast := fun n => ⟨n, nat_cast_mem s n⟩, nat_cast_zero := Subtype.ext Nat.cast_zero,
+  { AddSubmonoidClass.toAddMonoid s with 
+    one := ⟨_, one_mem s⟩
+    natCast := fun n => ⟨n, nat_cast_mem s n⟩
+    nat_cast_zero := Subtype.ext Nat.cast_zero
     nat_cast_succ := fun n => Subtype.ext (Nat.cast_succ _) }
 #align
   add_submonoid_with_one_class.to_add_monoid_with_one AddSubmonoidWithOneClass.toAddMonoidWithOne
@@ -364,10 +366,12 @@ protected theorem sum_mem (s : Subsemiring R) {ι : Type _} {t : Finset ι} {f :
 /-- A subsemiring of a `non_assoc_semiring` inherits a `non_assoc_semiring` structure -/
 instance toNonAssocSemiring : NonAssocSemiring s :=
   { s.toSubmonoid.toMulOneClass, s.toAddSubmonoid.toAddCommMonoid with
-    mul_zero := fun x => Subtype.eq <| mul_zero x, zero_mul := fun x => Subtype.eq <| zero_mul x,
-    right_distrib := fun x y z => Subtype.eq <| right_distrib x y z,
-    left_distrib := fun x y z => Subtype.eq <| left_distrib x y z,
-    natCast := fun n => ⟨n, coe_nat_mem s n⟩, nat_cast_zero := by simp [Nat.cast] <;> rfl,
+    mul_zero := fun x => Subtype.eq <| mul_zero x
+    zero_mul := fun x => Subtype.eq <| zero_mul x
+    right_distrib := fun x y z => Subtype.eq <| right_distrib x y z
+    left_distrib := fun x y z => Subtype.eq <| left_distrib x y z
+    natCast := fun n => ⟨n, coe_nat_mem s n⟩
+    nat_cast_zero := by simp [Nat.cast] <;> rfl
     nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl }
 #align subsemiring.to_non_assoc_semiring Subsemiring.toNonAssocSemiring
 
@@ -581,7 +585,8 @@ theorem gc_map_comap (f : R →+* S) : GaloisConnection (map f) (comap f) := fun
 
 /-- A subsemiring is isomorphic to its image under an injective function -/
 noncomputable def equivMapOfInjective (f : R →+* S) (hf : Function.Injective f) : s ≃+* s.map f :=
-  { Equiv.Set.image f s hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _),
+  { Equiv.Set.image f s hf with
+    map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _)
     map_add' := fun _ _ => Subtype.ext (f.map_add _ _) }
 #align subsemiring.equiv_map_of_injective Subsemiring.equivMapOfInjective
 
@@ -696,12 +701,16 @@ instance : CompleteLattice (Subsemiring R) :=
   { completeLatticeOfInf (Subsemiring R) fun s =>
       IsGlb.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
         is_glb_binfi with
-    bot := ⊥,
+    bot := ⊥
     bot_le := fun s x hx =>
       let ⟨n, hn⟩ := mem_bot.1 hx
-      hn ▸ coe_nat_mem s n,
-    top := ⊤, le_top := fun s x hx => trivial, inf := (· ⊓ ·), inf_le_left := fun s t x => And.left,
-    inf_le_right := fun s t x => And.right, le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
+      hn ▸ coe_nat_mem s n
+    top := ⊤
+    le_top := fun s x hx => trivial
+    inf := (· ⊓ ·)
+    inf_le_left := fun s t x => And.left
+    inf_le_right := fun s t x => And.right
+    le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
 
 theorem eq_top_iff' (A : Subsemiring R) : A = ⊤ ↔ ∀ x : R, x ∈ A :=
   eq_top_iff.trans ⟨fun h m => h <| mem_top m, fun h m _ => h m⟩
@@ -711,7 +720,9 @@ section Center
 
 /-- The center of a semiring `R` is the set of elements that commute with everything in `R` -/
 def center (R) [Semiring R] : Subsemiring R :=
-  { Submonoid.center R with carrier := Set.center R, zero_mem' := Set.zero_mem_center R,
+  { Submonoid.center R with 
+    carrier := Set.center R
+    zero_mem' := Set.zero_mem_center R
     add_mem' := fun a b => Set.add_mem_center }
 #align subsemiring.center Subsemiring.center
 
@@ -747,7 +758,9 @@ section Centralizer
 
 /-- The centralizer of a set as subsemiring. -/
 def centralizer {R} [Semiring R] (s : Set R) : Subsemiring R :=
-  { Submonoid.centralizer s with carrier := s.centralizer, zero_mem' := Set.zero_mem_centralizer _,
+  { Submonoid.centralizer s with 
+    carrier := s.centralizer
+    zero_mem' := Set.zero_mem_centralizer _
     add_mem' := fun x y hx hy => Set.add_mem_centralizer hx hy }
 #align subsemiring.centralizer Subsemiring.centralizer
 
@@ -834,7 +847,7 @@ namespace Submonoid
 /-- The additive closure of a submonoid is a subsemiring. -/
 def subsemiringClosure (M : Submonoid R) : Subsemiring R :=
   { AddSubmonoid.closure (M : Set R) with
-    one_mem' := AddSubmonoid.mem_closure.mpr fun y hy => hy M.one_mem,
+    one_mem' := AddSubmonoid.mem_closure.mpr fun y hy => hy M.one_mem
     mul_mem' := fun x y => MulMemClass.mul_mem_add_closure }
 #align submonoid.subsemiring_closure Submonoid.subsemiringClosure
 
@@ -1063,7 +1076,9 @@ theorem top_prod_top : (⊤ : Subsemiring R).Prod (⊤ : Subsemiring S) = ⊤ :=
 
 /-- Product of subsemirings is isomorphic to their product as monoids. -/
 def prodEquiv (s : Subsemiring R) (t : Subsemiring S) : s.Prod t ≃+* s × t :=
-  { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl, map_add' := fun x y => rfl }
+  { Equiv.Set.prod ↑s ↑t with 
+    map_mul' := fun x y => rfl
+    map_add' := fun x y => rfl }
 #align subsemiring.prod_equiv Subsemiring.prodEquiv
 
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subsemiring R} (hS : Directed (· ≤ ·) S)
@@ -1232,14 +1247,18 @@ variable {s t : Subsemiring R}
 /-- Makes the identity isomorphism from a proof two subsemirings of a multiplicative
     monoid are equal. -/
 def subsemiringCongr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equiv.setCongr <| congr_arg _ h with
+    map_mul' := fun _ _ => rfl
+    map_add' := fun _ _ => rfl }
 #align ring_equiv.subsemiring_congr RingEquiv.subsemiringCongr
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.srange`. -/
 def sofLeftInverse {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) : R ≃+* f.srange :=
-  { f.srangeRestrict with toFun := fun x => f.srangeRestrict x,
-    invFun := fun x => (g ∘ f.srange.Subtype) x, left_inv := h,
+  { f.srangeRestrict with 
+    toFun := fun x => f.srangeRestrict x
+    invFun := fun x => (g ∘ f.srange.Subtype) x
+    left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := RingHom.mem_srange.mp x.Prop

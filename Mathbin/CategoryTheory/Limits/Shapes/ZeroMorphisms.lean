@@ -415,8 +415,11 @@ theorem epi_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : Epi f :=
 Because `X ≅ 0` contains data (even if a subsingleton), we express this `↔` as an `≃`.
 -/
 def idZeroEquivIsoZero (X : C) :
-    𝟙 X = 0 ≃ (X ≅ 0) where 
-  toFun h := { Hom := 0, inv := 0 }
+    𝟙 X = 0 ≃
+      (X ≅ 0) where 
+  toFun h :=
+    { Hom := 0
+      inv := 0 }
   invFun i := zero_of_target_iso_zero (𝟙 X) i
   left_inv := by tidy
   right_inv := by tidy

@@ -102,7 +102,8 @@ def mkFanLimit {f : β → C} (t : Fan f) (lift : ∀ s : Fan f, s.x ⟶ t.x)
     (fac : ∀ (s : Fan f) (j : β), lift s ≫ t.proj j = s.proj j)
     (uniq : ∀ (s : Fan f) (m : s.x ⟶ t.x) (w : ∀ j : β, m ≫ t.proj j = s.proj j), m = lift s) :
     IsLimit t :=
-  { lift, fac' := fun s j => by convert fac s j.as <;> simp,
+  { lift
+    fac' := fun s j => by convert fac s j.as <;> simp
     uniq' := fun s m w => uniq s m fun j => w (Discrete.mk j) }
 #align category_theory.limits.mk_fan_limit CategoryTheory.Limits.mkFanLimit
 
@@ -325,7 +326,7 @@ def limitConeOfUnique :
       (Discrete.functor
         f) where 
   Cone :=
-    { x := f default,
+    { x := f default
       π :=
         { app := fun j =>
             eqToHom
@@ -333,11 +334,11 @@ def limitConeOfUnique :
                 dsimp
                 congr ) } }
   IsLimit :=
-    { lift := fun s => s.π.app default,
+    { lift := fun s => s.π.app default
       fac' := fun s j => by
         have w := (s.π.naturality (eq_to_hom (Unique.default_eq _))).symm
         dsimp at w
-        simpa [eq_to_hom_map] using w,
+        simpa [eq_to_hom_map] using w
       uniq' := fun s m w => by 
         specialize w default
         dsimp at w
@@ -362,7 +363,7 @@ def colimitCoconeOfUnique :
       (Discrete.functor
         f) where 
   Cocone :=
-    { x := f default,
+    { x := f default
       ι :=
         { app := fun j =>
             eqToHom
@@ -372,11 +373,11 @@ def colimitCoconeOfUnique :
                 dsimp
                 congr ) } }
   IsColimit :=
-    { desc := fun s => s.ι.app default,
+    { desc := fun s => s.ι.app default
       fac' := fun s j => by
         have w := s.ι.naturality (eq_to_hom (Unique.eq_default _))
         dsimp at w
-        simpa [eq_to_hom_map] using w,
+        simpa [eq_to_hom_map] using w
       uniq' := fun s m w => by 
         specialize w default
         dsimp at w

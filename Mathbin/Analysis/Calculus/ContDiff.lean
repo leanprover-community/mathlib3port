@@ -3619,12 +3619,12 @@ variable {p' : E → FormalMultilinearSeries 𝕜' E F}
 
 theorem HasFtaylorSeriesUpToOn.restrictScalars (h : HasFtaylorSeriesUpToOn n f p' s) :
     HasFtaylorSeriesUpToOn n f (fun x => (p' x).restrictScalars 𝕜) s :=
-  { zero_eq := fun x hx => h.zero_eq x hx,
+  { zero_eq := fun x hx => h.zero_eq x hx
     fderivWithin := by 
       intro m hm x hx
       convert
         (ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFderivAt.compHasFderivWithinAt _
-          ((h.fderiv_within m hm x hx).restrictScalars 𝕜),
+          ((h.fderiv_within m hm x hx).restrictScalars 𝕜)
     cont := fun m hm =>
       ContinuousMultilinearMap.continuous_restrict_scalars.comp_continuous_on (h.cont m hm) }
 #align has_ftaylor_series_up_to_on.restrict_scalars HasFtaylorSeriesUpToOn.restrictScalars

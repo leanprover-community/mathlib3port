@@ -117,10 +117,13 @@ def mapHom (α : Type u) (β : Type v) [Monoid α] [Monoid β] :
         SingleObj
           β where 
   toFun f :=
-    { obj := id, map := fun _ _ => ⇑f, map_id' := fun _ => f.map_one,
+    { obj := id
+      map := fun _ _ => ⇑f
+      map_id' := fun _ => f.map_one
       map_comp' := fun _ _ _ x y => f.map_mul y x }
   invFun f :=
-    { toFun := @Functor.map _ _ _ _ f (SingleObj.star α) (SingleObj.star α), map_one' := f.map_id _,
+    { toFun := @Functor.map _ _ _ _ f (SingleObj.star α) (SingleObj.star α)
+      map_one' := f.map_id _
       map_mul' := fun x y => f.map_comp y x }
   left_inv := fun ⟨f, h₁, h₂⟩ => rfl
   right_inv f := by cases f <;> obviously

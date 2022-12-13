@@ -188,8 +188,10 @@ theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
 #align with_zero.coe_one WithZero.coe_one
 
 instance [Mul α] : MulZeroClass (WithZero α) :=
-  { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂,
-    zero_mul := fun a => rfl, mul_zero := fun a => by cases a <;> rfl }
+  { WithZero.hasZero with
+    mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂
+    zero_mul := fun a => rfl
+    mul_zero := fun a => by cases a <;> rfl }
 
 @[simp, norm_cast]
 theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a * b : α) : WithZero α) = a * b :=
@@ -232,7 +234,7 @@ instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
     one_mul := fun a =>
       match a with
       | none => rfl
-      | some a => congr_arg some <| one_mul _,
+      | some a => congr_arg some <| one_mul _
     mul_one := fun a =>
       match a with
       | none => rfl
@@ -251,11 +253,12 @@ theorem coe_pow [One α] [Pow α ℕ] {a : α} (n : ℕ) : ↑(a ^ n : α) = (�
 #align with_zero.coe_pow WithZero.coe_pow
 
 instance [Monoid α] : MonoidWithZero (WithZero α) :=
-  { WithZero.mulZeroOneClass, WithZero.semigroupWithZero with npow := fun n x => x ^ n,
+  { WithZero.mulZeroOneClass, WithZero.semigroupWithZero with
+    npow := fun n x => x ^ n
     npow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_zero _,
+      | some x => congr_arg some <| pow_zero _
     npow_succ' := fun n x =>
       match x with
       | none => rfl
@@ -314,16 +317,16 @@ instance [DivInvMonoid α] : DivInvMonoid (WithZero α) :=
       match a, b with
       | none, _ => rfl
       | some a, none => rfl
-      | some a, some b => congr_arg some (div_eq_mul_inv _ _),
-    zpow := fun n x => x ^ n,
+      | some a, some b => congr_arg some (div_eq_mul_inv _ _)
+    zpow := fun n x => x ^ n
     zpow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| zpow_zero _,
+      | some x => congr_arg some <| zpow_zero _
     zpow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| DivInvMonoid.zpow_succ' _ _,
+      | some x => congr_arg some <| DivInvMonoid.zpow_succ' _ _
     zpow_neg' := fun n x =>
       match x with
       | none => rfl
@@ -339,7 +342,7 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
       | none, none => rfl
       | none, some b => rfl
       | some a, none => rfl
-      | some a, some b => congr_arg some <| mul_inv_rev _ _,
+      | some a, some b => congr_arg some <| mul_inv_rev _ _
     inv_eq_of_mul := fun a b =>
       match a, b with
       | none, none => fun _ => rfl
@@ -357,7 +360,8 @@ variable [Group α]
 
 /-- if `G` is a group then `with_zero G` is a group with zero. -/
 instance : GroupWithZero (WithZero α) :=
-  { WithZero.monoidWithZero, WithZero.divInvMonoid, WithZero.nontrivial with inv_zero := inv_zero,
+  { WithZero.monoidWithZero, WithZero.divInvMonoid, WithZero.nontrivial with
+    inv_zero := inv_zero
     mul_inv_cancel := fun a ha => by 
       lift a to α using ha
       norm_cast
@@ -369,8 +373,9 @@ instance [CommGroup α] : CommGroupWithZero (WithZero α) :=
   { WithZero.groupWithZero, WithZero.commMonoidWithZero with }
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
-  { WithZero.addMonoid, WithZero.hasOne with natCast := fun n => if n = 0 then 0 else (n.cast : α),
-    nat_cast_zero := rfl,
+  { WithZero.addMonoid, WithZero.hasOne with
+    natCast := fun n => if n = 0 then 0 else (n.cast : α)
+    nat_cast_zero := rfl
     nat_cast_succ := fun n => by 
       cases n
       show (((1 : ℕ) : α) : WithZero α) = 0 + 1; · rw [Nat.cast_one, coe_one, zero_add]
@@ -383,7 +388,7 @@ instance [Semiring α] : Semiring (WithZero α) :=
     left_distrib := fun a b c => by 
       cases' a with a; · rfl
       cases' b with b <;> cases' c with c <;> try rfl
-      exact congr_arg some (left_distrib _ _ _),
+      exact congr_arg some (left_distrib _ _ _)
     right_distrib := fun a b c => by 
       cases' c with c
       · change (a + b) * 0 = a * 0 + b * 0

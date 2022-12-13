@@ -313,13 +313,13 @@ theorem limit.lift_extend {F : J ⥤ C} [HasLimit F] (c : Cone F) {X : C} (f : X
 -/
 theorem has_limit_of_iso {F G : J ⥤ C} [HasLimit F] (α : F ≅ G) : HasLimit G :=
   HasLimit.mk
-    { Cone := (Cones.postcompose α.Hom).obj (Limit.cone F),
+    { Cone := (Cones.postcompose α.Hom).obj (Limit.cone F)
       IsLimit :=
-        { lift := fun s => limit.lift F ((Cones.postcompose α.inv).obj s),
+        { lift := fun s => limit.lift F ((Cones.postcompose α.inv).obj s)
           fac' := fun s j => by
             rw [cones.postcompose_obj_π, nat_trans.comp_app, limit.cone_π, ← category.assoc,
               limit.lift_π]
-            simp,
+            simp
           uniq' := fun s m w => by 
             apply limit.hom_ext; intro j
             rw [limit.lift_π, cones.postcompose_obj_π, nat_trans.comp_app, ← nat_iso.app_inv,
@@ -507,7 +507,7 @@ open CategoryTheory.Equivalence
 
 instance has_limit_equivalence_comp (e : K ≌ J) [HasLimit F] : HasLimit (e.Functor ⋙ F) :=
   HasLimit.mk
-    { Cone := Cone.whisker e.Functor (Limit.cone F),
+    { Cone := Cone.whisker e.Functor (Limit.cone F)
       IsLimit := IsLimit.whiskerEquivalence (limit.isLimit F) e }
 #align
   category_theory.limits.has_limit_equivalence_comp CategoryTheory.Limits.has_limit_equivalence_comp
@@ -595,13 +595,19 @@ def constLimAdj :
     (const J : C ⥤ J ⥤ C) ⊣
       lim where 
   homEquiv c g :=
-    { toFun := fun f => limit.lift _ ⟨c, f⟩,
-      invFun := fun f => { app := fun j => f ≫ limit.π _ _, naturality' := by tidy },
-      left_inv := fun _ => NatTrans.ext _ _ <| funext fun j => limit.lift_π _ _,
+    { toFun := fun f => limit.lift _ ⟨c, f⟩
+      invFun := fun f =>
+        { app := fun j => f ≫ limit.π _ _
+          naturality' := by tidy }
+      left_inv := fun _ => NatTrans.ext _ _ <| funext fun j => limit.lift_π _ _
       right_inv := fun α => limit.hom_ext fun j => limit.lift_π _ _ }
-  Unit := { app := fun c => limit.lift _ ⟨_, 𝟙 _⟩, naturality' := fun _ _ _ => by tidy }
+  Unit :=
+    { app := fun c => limit.lift _ ⟨_, 𝟙 _⟩
+      naturality' := fun _ _ _ => by tidy }
   counit :=
-    { app := fun g => { app := limit.π _, naturality' := by tidy },
+    { app := fun g =>
+        { app := limit.π _
+          naturality' := by tidy }
       naturality' := fun _ _ _ => by tidy }
   hom_equiv_unit' c g f := limit.hom_ext fun j => by simp
   hom_equiv_counit' c g f := NatTrans.ext _ _ <| funext fun j => rfl
@@ -910,12 +916,12 @@ theorem colimit.desc_extend (F : J ⥤ C) [HasColimit F] (c : Cocone F) {X : C} 
 -/
 theorem has_colimit_of_iso {F G : J ⥤ C} [HasColimit F] (α : G ≅ F) : HasColimit G :=
   HasColimit.mk
-    { Cocone := (Cocones.precompose α.Hom).obj (Colimit.cocone F),
+    { Cocone := (Cocones.precompose α.Hom).obj (Colimit.cocone F)
       IsColimit :=
-        { desc := fun s => colimit.desc F ((Cocones.precompose α.inv).obj s),
+        { desc := fun s => colimit.desc F ((Cocones.precompose α.inv).obj s)
           fac' := fun s j => by
             rw [cocones.precompose_obj_ι, nat_trans.comp_app, colimit.cocone_ι]
-            rw [category.assoc, colimit.ι_desc, ← nat_iso.app_hom, ← iso.eq_inv_comp]; rfl,
+            rw [category.assoc, colimit.ι_desc, ← nat_iso.app_hom, ← iso.eq_inv_comp]; rfl
           uniq' := fun s m w => by 
             apply colimit.hom_ext; intro j
             rw [colimit.ι_desc, cocones.precompose_obj_ι, nat_trans.comp_app, ← nat_iso.app_inv,
@@ -1119,7 +1125,7 @@ open CategoryTheory.Equivalence
 
 instance has_colimit_equivalence_comp (e : K ≌ J) [HasColimit F] : HasColimit (e.Functor ⋙ F) :=
   HasColimit.mk
-    { Cocone := Cocone.whisker e.Functor (Colimit.cocone F),
+    { Cocone := Cocone.whisker e.Functor (Colimit.cocone F)
       IsColimit := IsColimit.whiskerEquivalence (colimit.isColimit F) e }
 #align
   category_theory.limits.has_colimit_equivalence_comp CategoryTheory.Limits.has_colimit_equivalence_comp
@@ -1218,12 +1224,20 @@ def colimConstAdj :
       const
         J where 
   homEquiv f c :=
-    { toFun := fun g => { app := fun _ => colimit.ι _ _ ≫ g, naturality' := by tidy },
-      invFun := fun g => colimit.desc _ ⟨_, g⟩,
-      left_inv := fun _ => colimit.hom_ext fun j => colimit.ι_desc _ _,
+    { toFun := fun g =>
+        { app := fun _ => colimit.ι _ _ ≫ g
+          naturality' := by tidy }
+      invFun := fun g => colimit.desc _ ⟨_, g⟩
+      left_inv := fun _ => colimit.hom_ext fun j => colimit.ι_desc _ _
       right_inv := fun _ => NatTrans.ext _ _ <| funext fun j => colimit.ι_desc _ _ }
-  Unit := { app := fun g => { app := colimit.ι _, naturality' := by tidy }, naturality' := by tidy }
-  counit := { app := fun c => colimit.desc _ ⟨_, 𝟙 _⟩, naturality' := by tidy }
+  Unit :=
+    { app := fun g =>
+        { app := colimit.ι _
+          naturality' := by tidy }
+      naturality' := by tidy }
+  counit :=
+    { app := fun c => colimit.desc _ ⟨_, 𝟙 _⟩
+      naturality' := by tidy }
   hom_equiv_unit' _ _ _ := NatTrans.ext _ _ <| funext fun _ => rfl
   hom_equiv_counit' _ _ _ := colimit.hom_ext fun _ => by simp
 #align category_theory.limits.colim_const_adj CategoryTheory.Limits.colimConstAdj

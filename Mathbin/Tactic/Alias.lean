@@ -203,7 +203,9 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse <| tk "alias") : le
 #align tactic.alias.alias_cmd tactic.alias.alias_cmd
 
 add_tactic_doc
-  { Name := "alias", category := DocCategory.cmd, declNames := [`tactic.alias.alias_cmd],
+  { Name := "alias"
+    category := DocCategory.cmd
+    declNames := [`tactic.alias.alias_cmd]
     tags := ["renaming"] }
 
 /-- Given a definition, look up the definition that it is an alias of.

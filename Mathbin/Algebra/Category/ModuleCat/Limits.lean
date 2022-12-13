@@ -49,7 +49,7 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
       (F ⋙
         forget₂ (ModuleCat R) AddCommGroupCat.{max v w} ⋙
           forget₂ AddCommGroupCat AddGroupCat.{max v w}) with
-    carrier := (F ⋙ forget (ModuleCat R)).sections,
+    carrier := (F ⋙ forget (ModuleCat R)).sections
     smul_mem' := fun r s sh j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
       dsimp [functor.sections] at sh
@@ -95,7 +95,7 @@ def limitCone (F : J ⥤ ModuleCat.{max v w} R) :
     Cone F where 
   x := ModuleCat.of R (Types.limitCone (F ⋙ forget _)).x
   π :=
-    { app := limitπLinearMap F,
+    { app := limitπLinearMap F
       naturality' := fun j j' f =>
         LinearMap.coe_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
 #align Module.has_limits.limit_cone ModuleCat.HasLimits.limitCone
@@ -123,7 +123,9 @@ open HasLimits
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F =>
-          has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+          has_limit.mk
+            { Cone := limit_cone F
+              IsLimit := limit_cone_is_limit F } } }
 #align Module.has_limits_of_size ModuleCat.has_limits_of_size
 
 instance has_limits : HasLimits (ModuleCat.{w} R) :=
@@ -216,7 +218,7 @@ def directLimitCocone :
         f) where 
   x := ModuleCat.of R <| DirectLimit G f
   ι :=
-    { app := Module.DirectLimit.of R ι G f,
+    { app := Module.DirectLimit.of R ι G f
       naturality' := fun i j hij => by 
         apply LinearMap.ext
         intro x

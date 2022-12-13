@@ -1164,15 +1164,15 @@ def sigmaEquivSigmaPi (n : ℕ) :
               i) where 
   toFun i := ⟨i.1.gather i.2, i.1.sigmaCompositionAux i.2⟩
   invFun i :=
-    ⟨{ blocks := (ofFn fun j => (i.2 j).blocks).join,
+    ⟨{  blocks := (ofFn fun j => (i.2 j).blocks).join
         blocks_pos := by
           simp only [and_imp, List.mem_join, exists_imp, forall_mem_of_fn_iff]
-          exact fun i j hj => Composition.blocks_pos _ hj,
+          exact fun i j hj => Composition.blocks_pos _ hj
         blocks_sum := by simp [sum_of_fn, Composition.blocks_sum, Composition.sum_blocks_fun] },
-      { blocks := ofFn fun j => (i.2 j).length,
+      { blocks := ofFn fun j => (i.2 j).length
         blocks_pos :=
           forall_mem_of_fn_iff.2 fun j =>
-            Composition.length_pos_of_pos _ (Composition.blocks_pos' _ _ _),
+            Composition.length_pos_of_pos _ (Composition.blocks_pos' _ _ _)
         blocks_sum := by 
           dsimp only [Composition.length]
           simp [sum_of_fn] }⟩

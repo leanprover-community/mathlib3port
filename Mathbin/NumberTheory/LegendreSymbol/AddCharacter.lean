@@ -140,7 +140,8 @@ theorem map_zsmul_zpow {R' : Type v} [CommGroup R'] (ψ : AddChar R R') (n : ℤ
 
 /-- The additive characters on a commutative additive group form a commutative group. -/
 instance commGroup : CommGroup (AddChar R R') :=
-  { MonoidHom.commMonoid with inv := Inv.inv,
+  { MonoidHom.commMonoid with 
+    inv := Inv.inv
     mul_left_inv := fun ψ => by 
       ext
       rw [MonoidHom.mul_apply, MonoidHom.one_apply, inv_apply, ← map_add_mul, add_left_neg,
@@ -331,7 +332,8 @@ does not divide `n` -/
 noncomputable def primitiveZmodChar (n : ℕ+) (F' : Type v) [Field F'] (h : (n : F') ≠ 0) :
     PrimitiveAddChar (Zmod n) F' :=
   haveI : NeZero ((n : ℕ) : F') := ⟨h⟩
-  { n, Char := zmod_char n (IsCyclotomicExtension.zeta_pow n F' _),
+  { n
+    Char := zmod_char n (IsCyclotomicExtension.zeta_pow n F' _)
     prim := zmod_char_primitive_of_primitive_root n (IsCyclotomicExtension.zeta_spec n F' _) }
 #align add_char.primitive_zmod_char AddChar.primitiveZmodChar
 
@@ -360,7 +362,10 @@ noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F]
     obtain ⟨a, ha⟩ := FiniteField.trace_to_zmod_nondegenerate F one_ne_zero
     rw [one_mul] at ha
     exact ⟨a, fun hf => ha <| (ψ.prim.zmod_char_eq_one_iff pp <| Algebra.trace (Zmod p) F a).mp hf⟩
-  exact { n := ψ.n, Char := ψ', prim := hψ'.is_primitive }
+  exact
+    { n := ψ.n
+      Char := ψ'
+      prim := hψ'.is_primitive }
 #align add_char.primitive_char_finite_field AddChar.primitiveCharFiniteField
 
 /-!

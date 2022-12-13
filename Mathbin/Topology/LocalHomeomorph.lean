@@ -71,8 +71,11 @@ instance : CoeFun (LocalHomeomorph α β) fun _ => α → β :=
 
 /-- The inverse of a local homeomorphism -/
 protected def symm : LocalHomeomorph β α :=
-  { e.toLocalEquiv.symm with open_source := e.open_target, open_target := e.open_source,
-    continuous_to_fun := e.continuous_inv_fun, continuous_inv_fun := e.continuous_to_fun }
+  { e.toLocalEquiv.symm with 
+    open_source := e.open_target
+    open_target := e.open_source
+    continuous_to_fun := e.continuous_inv_fun
+    continuous_inv_fun := e.continuous_to_fun }
 #align local_homeomorph.symm LocalHomeomorph.symm
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
@@ -192,10 +195,12 @@ protected theorem surj_on : SurjOn e e.source e.target :=
 /-- A homeomorphism induces a local homeomorphism on the whole space -/
 @[simps (config := { mfldCfg with simpRhs := true })]
 def Homeomorph.toLocalHomeomorph (e : α ≃ₜ β) : LocalHomeomorph α β :=
-  { e.toEquiv.toLocalEquiv with open_source := is_open_univ, open_target := is_open_univ,
+  { e.toEquiv.toLocalEquiv with 
+    open_source := is_open_univ
+    open_target := is_open_univ
     continuous_to_fun := by 
       erw [← continuous_iff_continuous_on_univ]
-      exact e.continuous_to_fun,
+      exact e.continuous_to_fun
     continuous_inv_fun := by 
       erw [← continuous_iff_continuous_on_univ]
       exact e.continuous_inv_fun }
@@ -761,8 +766,10 @@ variable {s : Set α} (hs : IsOpen s)
 /-- The identity local equiv on a set `s` -/
 @[simps (config := mfldCfg) apply, simps (config := { attrs := [] }) source target]
 def ofSet (s : Set α) (hs : IsOpen s) : LocalHomeomorph α α :=
-  { LocalEquiv.ofSet s with open_source := hs, open_target := hs,
-    continuous_to_fun := continuous_id.ContinuousOn,
+  { LocalEquiv.ofSet s with 
+    open_source := hs
+    open_target := hs
+    continuous_to_fun := continuous_id.ContinuousOn
     continuous_inv_fun := continuous_id.ContinuousOn }
 #align local_homeomorph.of_set LocalHomeomorph.ofSet
 
@@ -785,12 +792,13 @@ end
 /-- Composition of two local homeomorphisms when the target of the first and the source of
 the second coincide. -/
 protected def trans' (h : e.target = e'.source) : LocalHomeomorph α γ :=
-  { LocalEquiv.trans' e.toLocalEquiv e'.toLocalEquiv h with open_source := e.open_source,
-    open_target := e'.open_target,
+  { LocalEquiv.trans' e.toLocalEquiv e'.toLocalEquiv h with
+    open_source := e.open_source
+    open_target := e'.open_target
     continuous_to_fun := by 
       apply e'.continuous_to_fun.comp e.continuous_to_fun
       rw [← h]
-      exact e.to_local_equiv.source_subset_preimage_target,
+      exact e.to_local_equiv.source_subset_preimage_target
     continuous_inv_fun := by
       apply e.continuous_inv_fun.comp e'.continuous_inv_fun
       rw [h]

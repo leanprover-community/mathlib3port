@@ -31,13 +31,15 @@ attribute [local tidy] tactic.discrete_cases
 /-- Construct a cone for the empty diagram given an object. -/
 @[simps]
 def asEmptyCone (X : C) : Cone (Functor.empty.{0} C) :=
-  { x, π := by tidy }
+  { x
+    π := by tidy }
 #align category_theory.limits.as_empty_cone CategoryTheory.Limits.asEmptyCone
 
 /-- Construct a cocone for the empty diagram given an object. -/
 @[simps]
 def asEmptyCocone (X : C) : Cocone (Functor.empty.{0} C) :=
-  { x, ι := by tidy }
+  { x
+    ι := by tidy }
 #align category_theory.limits.as_empty_cocone CategoryTheory.Limits.asEmptyCocone
 
 /-- `X` is terminal if the cone it induces on the empty diagram is limiting. -/
@@ -57,8 +59,12 @@ def isTerminalEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (Y : C) :
         Unique
           (X ⟶
             Y) where 
-  toFun t X := { default := t.lift ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
-  invFun u := { lift := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
+  toFun t X :=
+    { default := t.lift ⟨X, by tidy⟩
+      uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
+  invFun u :=
+    { lift := fun s => (u s.x).default
+      uniq' := fun s _ _ => (u s.x).2 _ }
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.limits.is_terminal_equiv_unique CategoryTheory.Limits.isTerminalEquivUnique
@@ -76,7 +82,9 @@ def isTerminalTop {α : Type _} [Preorder α] [OrderTop α] : IsTerminal (⊤ : 
 
 /-- Transport a term of type `is_terminal` across an isomorphism. -/
 def IsTerminal.ofIso {Y Z : C} (hY : IsTerminal Y) (i : Y ≅ Z) : IsTerminal Z :=
-  IsLimit.ofIsoLimit hY { Hom := { Hom := i.Hom }, inv := { Hom := i.inv } }
+  IsLimit.ofIsoLimit hY
+    { Hom := { Hom := i.Hom }
+      inv := { Hom := i.inv } }
 #align category_theory.limits.is_terminal.of_iso CategoryTheory.Limits.IsTerminal.ofIso
 
 /-- An object `X` is initial iff for every `Y` there is a unique morphism `X ⟶ Y`. -/
@@ -86,8 +94,12 @@ def isInitialEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (X : C) :
         Unique
           (X ⟶
             Y) where 
-  toFun t X := { default := t.desc ⟨X, by tidy⟩, uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
-  invFun u := { desc := fun s => (u s.x).default, uniq' := fun s _ _ => (u s.x).2 _ }
+  toFun t X :=
+    { default := t.desc ⟨X, by tidy⟩
+      uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
+  invFun u :=
+    { desc := fun s => (u s.x).default
+      uniq' := fun s _ _ => (u s.x).2 _ }
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.limits.is_initial_equiv_unique CategoryTheory.Limits.isInitialEquivUnique
@@ -105,7 +117,9 @@ def isInitialBot {α : Type _} [Preorder α] [OrderBot α] : IsInitial (⊥ : α
 
 /-- Transport a term of type `is_initial` across an isomorphism. -/
 def IsInitial.ofIso {X Y : C} (hX : IsInitial X) (i : X ≅ Y) : IsInitial Y :=
-  IsColimit.ofIsoColimit hX { Hom := { Hom := i.Hom }, inv := { Hom := i.inv } }
+  IsColimit.ofIsoColimit hX
+    { Hom := { Hom := i.Hom }
+      inv := { Hom := i.inv } }
 #align category_theory.limits.is_initial.of_iso CategoryTheory.Limits.IsInitial.ofIso
 
 /-- Give the morphism to a terminal object from any other. -/
@@ -444,7 +458,9 @@ theorem has_initial_of_has_terminal_op [HasTerminal Cᵒᵖ] : HasInitial C :=
 instance {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C] :
     HasLimit ((CategoryTheory.Functor.const J).obj (⊤_ C)) :=
   HasLimit.mk
-    { Cone := { x := ⊤_ C, π := { app := fun _ => terminal.from _ } },
+    { Cone :=
+        { x := ⊤_ C
+          π := { app := fun _ => terminal.from _ } }
       IsLimit := { lift := fun s => terminal.from _ } }
 
 /-- The limit of the constant `⊤_ C` functor is `⊤_ C`. -/
@@ -455,7 +471,8 @@ def limitConstTerminal {J : Type _} [Category J] {C : Type _} [Category C] [HasT
   Hom := terminal.from _
   inv :=
     limit.lift ((CategoryTheory.Functor.const J).obj (⊤_ C))
-      { x := ⊤_ C, π := { app := fun j => terminal.from _ } }
+      { x := ⊤_ C
+        π := { app := fun j => terminal.from _ } }
 #align category_theory.limits.limit_const_terminal CategoryTheory.Limits.limitConstTerminal
 
 @[simp, reassoc]
@@ -470,7 +487,9 @@ theorem limit_const_terminal_inv_π {J : Type _} [Category J] {C : Type _} [Cate
 instance {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C] :
     HasColimit ((CategoryTheory.Functor.const J).obj (⊥_ C)) :=
   HasColimit.mk
-    { Cocone := { x := ⊥_ C, ι := { app := fun _ => initial.to _ } },
+    { Cocone :=
+        { x := ⊥_ C
+          ι := { app := fun _ => initial.to _ } }
       IsColimit := { desc := fun s => initial.to _ } }
 
 /-- The colimit of the constant `⊥_ C` functor is `⊥_ C`. -/
@@ -481,7 +500,8 @@ def colimitConstInitial {J : Type _} [Category J] {C : Type _} [Category C] [Has
         C where 
   Hom :=
     colimit.desc ((CategoryTheory.Functor.const J).obj (⊥_ C))
-      { x := ⊥_ C, ι := { app := fun j => initial.to _ } }
+      { x := ⊥_ C
+        ι := { app := fun j => initial.to _ } }
   inv := initial.to _
 #align category_theory.limits.colimit_const_initial CategoryTheory.Limits.colimitConstInitial
 
@@ -584,7 +604,7 @@ def coneOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) :
     Cone F where 
   x := F.obj X
   π :=
-    { app := fun j => F.map (tX.to j),
+    { app := fun j => F.map (tX.to j)
       naturality' := fun j j' k => by 
         dsimp
         rw [← F.map_comp, category.id_comp, tX.hom_ext (tX.to j ≫ k) (tX.to j')] }
@@ -619,7 +639,7 @@ def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C)
     Cone F where 
   x := F.obj X
   π :=
-    { app := fun i => inv (F.map (hX.from _)),
+    { app := fun i => inv (F.map (hX.from _))
       naturality' := by 
         intro i j f
         dsimp
@@ -650,7 +670,7 @@ def coconeOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) :
     Cocone F where 
   x := F.obj X
   ι :=
-    { app := fun j => F.map (tX.from j),
+    { app := fun j => F.map (tX.from j)
       naturality' := fun j j' k => by 
         dsimp
         rw [← F.map_comp, category.comp_id, tX.hom_ext (k ≫ tX.from j') (tX.from j)] }
@@ -687,7 +707,7 @@ def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C)
     Cocone F where 
   x := F.obj X
   ι :=
-    { app := fun i => inv (F.map (hX.to _)),
+    { app := fun i => inv (F.map (hX.to _))
       naturality' := by 
         intro i j f
         dsimp

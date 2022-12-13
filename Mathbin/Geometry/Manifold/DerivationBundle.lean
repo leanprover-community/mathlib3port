@@ -135,8 +135,8 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
         y where 
   toFun v :=
     Derivation.mk'
-      { toFun := fun g => v (g.comp f),
-        map_add' := fun g g' => by rw [SmoothMap.add_comp, Derivation.map_add],
+      { toFun := fun g => v (g.comp f)
+        map_add' := fun g g' => by rw [SmoothMap.add_comp, Derivation.map_add]
         map_smul' := fun k g => by
           simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
       fun g g' => by

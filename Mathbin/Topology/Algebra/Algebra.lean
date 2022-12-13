@@ -61,7 +61,9 @@ variable [HasContinuousSmul R A]
 /-- The inclusion of the base ring in a topological algebra as a continuous linear map. -/
 @[simps]
 def algebraMapClm : R →L[R] A :=
-  { Algebra.linearMap R A with toFun := algebraMap R A, cont := continuous_algebra_map R A }
+  { Algebra.linearMap R A with 
+    toFun := algebraMap R A
+    cont := continuous_algebra_map R A }
 #align algebra_map_clm algebraMapClm
 
 theorem algebra_map_clm_coe : ⇑(algebraMapClm R A) = algebraMap R A :=
@@ -91,7 +93,8 @@ variable [TopologicalSemiring A]
 
 /-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
-  { s.toSubsemiring.topologicalClosure with carrier := closure (s : Set A),
+  { s.toSubsemiring.topologicalClosure with
+    carrier := closure (s : Set A)
     algebra_map_mem' := fun r => s.toSubsemiring.le_topological_closure (s.algebra_map_mem r) }
 #align subalgebra.topological_closure Subalgebra.topologicalClosure
 

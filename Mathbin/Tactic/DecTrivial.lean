@@ -39,6 +39,8 @@ unsafe def tactic.interactive.dec_trivial (revert_deps : parse (parser.optional 
 #align tactic.interactive.dec_trivial tactic.interactive.dec_trivial
 
 add_tactic_doc
-  { Name := "dec_trivial", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.dec_trivial], tags := ["basic", "finishing"] }
+  { Name := "dec_trivial"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.dec_trivial]
+    tags := ["basic", "finishing"] }
 

@@ -213,9 +213,9 @@ variable {V : Type u₁} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] (F 
 
 /- warning: prefunctor.map_path -> Prefunctor.mapPath is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁, u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂, u₂} W] (F : Prefunctor.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁, u₁} V _inst_1 a b) -> (Quiver.Path.{v₂, u₂} W _inst_2 (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F b))
+  forall {V : Type.{u3}} [_inst_1 : Quiver.{u1, u3} V] {W : Type.{u4}} [_inst_2 : Quiver.{u2, u4} W] (F : Prefunctor.{u1, u2, u3, u4} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{u1, u3} V _inst_1 a b) -> (Quiver.Path.{u2, u4} W _inst_2 (Prefunctor.obj.{u1, u2, u3, u4} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{u1, u2, u3, u4} V _inst_1 W _inst_2 F b))
 but is expected to have type
-  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁, u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂, u₂} W] (F : Prefunctor.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁, u₁} V _inst_1 a b) -> (Quiver.Path.{v₂, u₂} W _inst_2 (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F b))
+  forall {V : Type.{u1}} [_inst_1 : Quiver.{u3, u1} V] {W : Type.{u2}} [_inst_2 : Quiver.{u4, u2} W] (F : Prefunctor.{u3, u4, u1, u2} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{u3, u1} V _inst_1 a b) -> (Quiver.Path.{u4, u2} W _inst_2 (Prefunctor.obj.{u3, u4, u1, u2} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{u3, u4, u1, u2} V _inst_1 W _inst_2 F b))
 Case conversion may be inaccurate. Consider using '#align prefunctor.map_path Prefunctor.mapPathₓ'. -/
 /-- The image of a path under a prefunctor. -/
 def mapPath {a : V} : ∀ {b : V}, Path a b → Path (F.obj a) (F.obj b)

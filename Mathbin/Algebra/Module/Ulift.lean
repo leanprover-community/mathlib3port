@@ -116,14 +116,16 @@ instance mulDistribMulAction' [Monoid R] [Monoid M] [MulDistribMulAction R M] :
   { ULift.mulAction' with
     smul_one := fun _ => by 
       ext
-      simp [smul_one],
+      simp [smul_one]
     smul_mul := fun c f g => by 
       ext
       simp [smul_mul'] }
 #align ulift.mul_distrib_mul_action' ULift.mulDistribMulAction'
 
 instance smulWithZero [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero (ULift R) M :=
-  { ULift.hasSmulLeft with smul_zero := fun _ => smul_zero _, zero_smul := zero_smul _ }
+  { ULift.hasSmulLeft with 
+    smul_zero := fun _ => smul_zero _
+    zero_smul := zero_smul _ }
 #align ulift.smul_with_zero ULift.smulWithZero
 
 instance smulWithZero' [Zero R] [Zero M] [SmulWithZero R M] :

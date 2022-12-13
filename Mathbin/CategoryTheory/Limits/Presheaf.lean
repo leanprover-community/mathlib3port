@@ -92,23 +92,23 @@ def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ)
     (c.x ⟶ E) ≃ (P ⟶ (restrictedYoneda A).obj E) :=
   ((uliftTrivial _).symm ≪≫ t.homIso' E).toEquiv.trans
     { toFun := fun k =>
-        { app := fun c p => k.1 (Opposite.op ⟨_, p⟩),
+        { app := fun c p => k.1 (Opposite.op ⟨_, p⟩)
           naturality' := fun c c' f =>
             funext fun p =>
               (k.2
                   (Quiver.Hom.op ⟨f, rfl⟩ :
-                    (Opposite.op ⟨c', P.map f p⟩ : P.Elementsᵒᵖ) ⟶ Opposite.op ⟨c, p⟩)).symm },
+                    (Opposite.op ⟨c', P.map f p⟩ : P.Elementsᵒᵖ) ⟶ Opposite.op ⟨c, p⟩)).symm }
       invFun := fun τ =>
-        { val := fun p => τ.app p.unop.1 p.unop.2,
+        { val := fun p => τ.app p.unop.1 p.unop.2
           property := fun p p' f => by 
             simp_rw [← f.unop.2]
-            apply (congr_fun (τ.naturality f.unop.1) p'.unop.2).symm },
+            apply (congr_fun (τ.naturality f.unop.1) p'.unop.2).symm }
       left_inv := by 
         rintro ⟨k₁, k₂⟩
         ext
         dsimp
         congr 1
-        simp,
+        simp
       right_inv := by 
         rintro ⟨_, _⟩
         rfl }
@@ -226,8 +226,8 @@ This follows from `category_theory.category_of_elements.costructured_arrow_yoned
 def extendAlongYonedaIsoKanApp (X) :
     (extendAlongYoneda A).obj X ≅ ((lan yoneda : (_ ⥤ ℰ) ⥤ _).obj A).obj X :=
   let eq := categoryOfElements.costructuredArrowYonedaEquivalence X
-  { Hom := colimit.pre (LanCat.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor,
-    inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) Eq.inverse,
+  { Hom := colimit.pre (LanCat.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor
+    inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) Eq.inverse
     hom_inv_id' := by
       erw [colimit.pre_pre ((category_of_elements.π X).leftOp ⋙ A) eq.inverse]
       trans colimit.pre ((category_of_elements.π X).leftOp ⋙ A) (𝟭 _)
@@ -236,7 +236,7 @@ def extendAlongYonedaIsoKanApp (X) :
       · ext
         simp only [colimit.ι_pre]
         erw [category.comp_id]
-        congr ,
+        congr
     inv_hom_id' := by
       erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) eq.functor]
       trans colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) (𝟭 _)

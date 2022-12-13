@@ -417,7 +417,7 @@ instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction 
     one_mul := fun x =>
       ext (one_mul x.1) <|
         show (1 : R) • x.2 + x.1 • 0 + 0 * x.2 = x.2 by
-          rw [one_smul, smul_zero, add_zero, zero_mul, add_zero],
+          rw [one_smul, smul_zero, add_zero, zero_mul, add_zero]
     mul_one := fun x =>
       ext (mul_one x.1) <|
         show (x.1 • 0 : A) + (1 : R) • x.2 + x.2 * 0 = x.2 by
@@ -430,11 +430,11 @@ instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
     zero_mul := fun x =>
       ext (zero_mul x.1) <|
         show (0 : R) • x.2 + x.1 • 0 + 0 * x.2 = 0 by
-          rw [zero_smul, zero_add, smul_zero, zero_mul, add_zero],
+          rw [zero_smul, zero_add, smul_zero, zero_mul, add_zero]
     mul_zero := fun x =>
       ext (mul_zero x.1) <|
         show (x.1 • 0 : A) + (0 : R) • x.2 + x.2 * 0 = 0 by
-          rw [smul_zero, zero_add, zero_smul, mul_zero, add_zero],
+          rw [smul_zero, zero_add, zero_smul, mul_zero, add_zero]
     left_distrib := fun x₁ x₂ x₃ =>
       ext (mul_add x₁.1 x₂.1 x₃.1) <|
         show
@@ -442,7 +442,7 @@ instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
             x₁.1 • x₂.2 + x₂.1 • x₁.2 + x₁.2 * x₂.2 + (x₁.1 • x₃.2 + x₃.1 • x₁.2 + x₁.2 * x₃.2)
           by 
           simp only [smul_add, add_smul, mul_add]
-          abel,
+          abel
     right_distrib := fun x₁ x₂ x₃ =>
       ext (add_mul x₁.1 x₂.1 x₃.1) <|
         show
@@ -565,7 +565,7 @@ instance algebra : Algebra S (Unitization R A) :=
       induction x using Unitization.ind
       simp only [mul_add, add_mul, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_apply,
         inl_ring_hom_apply, inl_mul_inl]
-      rw [inl_mul_coe, coe_mul_inl, mul_comm],
+      rw [inl_mul_coe, coe_mul_inl, mul_comm]
     smul_def' := fun s x => by 
       induction x using Unitization.ind
       simp only [mul_add, smul_add, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_apply,
@@ -651,8 +651,8 @@ def lift :
       (Unitization R A →ₐ[R]
         C) where 
   toFun φ :=
-    { toFun := fun x => algebraMap R C x.fst + φ x.snd,
-      map_one' := by simp only [fst_one, map_one, snd_one, φ.map_zero, add_zero],
+    { toFun := fun x => algebraMap R C x.fst + φ x.snd
+      map_one' := by simp only [fst_one, map_one, snd_one, φ.map_zero, add_zero]
       map_mul' := fun x y => by 
         induction x using Unitization.ind
         induction y using Unitization.ind
@@ -660,14 +660,14 @@ def lift :
           add_zero, zero_mul, map_mul, snd_add, snd_mul, snd_inl, smul_zero, snd_coe, zero_add,
           φ.map_add, φ.map_smul, φ.map_mul, zero_smul, zero_add]
         rw [← Algebra.commutes _ (φ x_a)]
-        simp only [Algebra.algebra_map_eq_smul_one, smul_one_mul, add_assoc],
-      map_zero' := by simp only [fst_zero, map_zero, snd_zero, φ.map_zero, add_zero],
+        simp only [Algebra.algebra_map_eq_smul_one, smul_one_mul, add_assoc]
+      map_zero' := by simp only [fst_zero, map_zero, snd_zero, φ.map_zero, add_zero]
       map_add' := fun x y => by 
         induction x using Unitization.ind
         induction y using Unitization.ind
         simp only [fst_add, fst_inl, fst_coe, add_zero, map_add, snd_add, snd_inl, snd_coe,
           zero_add, φ.map_add]
-        rw [add_add_add_comm],
+        rw [add_add_add_comm]
       commutes' := fun r => by
         simp only [algebra_map_eq_inl, fst_inl, snd_inl, φ.map_zero, add_zero] }
   invFun φ := φ.toNonUnitalAlgHom.comp (coeNonUnitalAlgHom R A)

@@ -49,7 +49,7 @@ def limit (F : J ⥤ Mon_ C) : Mon_ C :=
 def limitCone (F : J ⥤ Mon_ C) : Cone F where 
   x := limit F
   π :=
-    { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j },
+    { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j }
       naturality' := fun j j' f => by 
         ext
         exact (limit.cone (F ⋙ Mon_.forget C)).π.naturality f }
@@ -72,7 +72,7 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) :
       (limitCone
         F) where 
   lift s :=
-    { Hom := limit.lift (F ⋙ Mon_.forget C) ((Mon_.forget C).mapCone s),
+    { Hom := limit.lift (F ⋙ Mon_.forget C) ((Mon_.forget C).mapCone s)
       mul_hom' := by 
         ext; dsimp; simp; dsimp
         slice_rhs 1 2 => 
@@ -91,7 +91,10 @@ instance has_limits :
     HasLimits
       (Mon_
         C) where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
+    { HasLimit := fun F =>
+        has_limit.mk
+          { Cone := limit_cone F
+            IsLimit := limit_cone_is_limit F } }
 #align Mon_.has_limits Mon_.has_limits
 
 instance forgetPreservesLimits :

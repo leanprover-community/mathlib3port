@@ -82,9 +82,10 @@ theorem hom_ext {X Y : UniformSpaceCat} {f g : X ⟶ Y} : (f : X → Y) = g → 
 instance hasForgetToTop :
     HasForget₂ UniformSpaceCat.{u}
       TopCat.{u} where forget₂ :=
-    { obj := fun X => TopCat.of X,
+    { obj := fun X => TopCat.of X
       map := fun X Y f =>
-        { toFun := f, continuous_to_fun := UniformContinuous.continuous f.property } }
+        { toFun := f
+          continuous_to_fun := UniformContinuous.continuous f.property } }
 #align UniformSpace.has_forget_to_Top UniformSpaceCat.hasForgetToTop
 
 end UniformSpaceCat
@@ -208,15 +209,16 @@ theorem extension_comp_coe {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
 noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpaceCat UniformSpaceCat :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
-        { toFun := fun f => completionHom X ≫ f, invFun := fun f => extensionHom f,
+        { toFun := fun f => completionHom X ≫ f
+          invFun := fun f => extensionHom f
           left_inv := fun f => by 
             dsimp
-            erw [extension_comp_coe],
+            erw [extension_comp_coe]
           right_inv := fun f => by 
             apply Subtype.eq; funext x; cases f
             exact
               @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpaceCat.separated_space _)
-                f_property _ },
+                f_property _ }
       hom_equiv_naturality_left_symm' := fun X X' Y f g => by
         apply hom_ext; funext x; dsimp
         erw [coe_comp, ← completion.extension_map]

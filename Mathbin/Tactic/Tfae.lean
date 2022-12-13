@@ -154,7 +154,9 @@ end
 ```
 -/
 add_tactic_doc
-  { Name := "tfae", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.tfae_have, `tactic.interactive.tfae_finish],
-    tags := ["logic"], inheritDescriptionFrom := `tactic.interactive.tfae_finish }
+  { Name := "tfae"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.tfae_have, `tactic.interactive.tfae_finish]
+    tags := ["logic"]
+    inheritDescriptionFrom := `tactic.interactive.tfae_finish }
 

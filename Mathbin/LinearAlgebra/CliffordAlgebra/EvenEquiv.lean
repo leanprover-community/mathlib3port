@@ -252,10 +252,10 @@ theorem coe_to_even_reverse_involute (x : CliffordAlgebra Q) :
 def evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) :
     CliffordAlgebra.even Q →ₐ[R] CliffordAlgebra.even Q' :=
   even.lift Q
-    { bilin := -(even.ι Q' : _).bilin,
+    { bilin := -(even.ι Q' : _).bilin
       contract := fun m => by
         simp_rw [LinearMap.neg_apply, even_hom.contract, h, QuadraticForm.neg_apply, map_neg,
-          neg_neg],
+          neg_neg]
       contract_mid := fun m₁ m₂ m₃ => by
         simp_rw [LinearMap.neg_apply, neg_mul_neg, even_hom.contract_mid, h,
           QuadraticForm.neg_apply, smul_neg, neg_smul] }

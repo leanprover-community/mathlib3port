@@ -138,9 +138,11 @@ noncomputable def stoneCechEquivalence (X : TopCat.{u}) (Y : CompHausCat.{u}) :
         compHausToTop.obj
           Y) where 
   toFun f :=
-    { toFun := f ∘ stoneCechUnit, continuous_to_fun := f.2.comp (@continuous_stone_cech_unit X _) }
+    { toFun := f ∘ stoneCechUnit
+      continuous_to_fun := f.2.comp (@continuous_stone_cech_unit X _) }
   invFun f :=
-    { toFun := stoneCechExtend f.2, continuous_to_fun := continuous_stone_cech_extend f.2 }
+    { toFun := stoneCechExtend f.2
+      continuous_to_fun := continuous_stone_cech_extend f.2 }
   left_inv := by 
     rintro ⟨f : StoneCech X ⟶ Y, hf : Continuous f⟩
     ext (x : StoneCech X)
@@ -193,7 +195,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
     Limits.Cone
       F where 
   x :=
-    { toTop := (TopCat.limitCone (F ⋙ compHausToTop)).x,
+    { toTop := (TopCat.limitCone (F ⋙ compHausToTop)).x
       IsCompact := by
         show CompactSpace ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j }
         rw [← is_compact_iff_compact_space]
@@ -213,12 +215,12 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
         intro f
         apply isClosedEq
         · exact (ContinuousMap.continuous (F.map f)).comp (continuous_apply i)
-        · exact continuous_apply j,
+        · exact continuous_apply j
       isHausdorff :=
         show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j } from
           inferInstance }
   π :=
-    { app := fun j => (TopCat.limitCone (F ⋙ compHausToTop)).π.app j,
+    { app := fun j => (TopCat.limitCone (F ⋙ compHausToTop)).π.app j
       naturality' := by 
         intro _ _ _
         ext ⟨x, hx⟩

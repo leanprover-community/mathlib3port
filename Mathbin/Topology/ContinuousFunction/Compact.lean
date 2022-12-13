@@ -184,8 +184,9 @@ open BoundedContinuousFunction
 instance : NormedAddCommGroup C(α, E) :=
   { ContinuousMap.metricSpace _ _, ContinuousMap.addCommGroup with
     dist_eq := fun x y => by
-      rw [← norm_mk_of_compact, ← dist_mk_of_compact, dist_eq_norm, mk_of_compact_sub],
-    dist := dist, norm := norm }
+      rw [← norm_mk_of_compact, ← dist_mk_of_compact, dist_eq_norm, mk_of_compact_sub]
+    dist := dist
+    norm := norm }
 
 instance [Nonempty α] [One E] [NormOneClass E] :
     NormOneClass
@@ -273,7 +274,7 @@ def linearIsometryBoundedOfCompact : C(α, E) ≃ₗᵢ[𝕜] α →ᵇ E :=
   { addEquivBoundedOfCompact α E with
     map_smul' := fun c f => by 
       ext
-      simp,
+      simp
     norm_map' := fun f => rfl }
 #align
   continuous_map.linear_isometry_bounded_of_compact ContinuousMap.linearIsometryBoundedOfCompact

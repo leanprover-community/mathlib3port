@@ -247,15 +247,15 @@ def lift :
       (FreeLieAlgebra R X →ₗ⁅R⁆
         L) where 
   toFun f :=
-    { toFun := fun c => Quot.liftOn c (liftAux R f) (lift_aux_spec R f),
+    { toFun := fun c => Quot.liftOn c (liftAux R f) (lift_aux_spec R f)
       map_add' := by 
         rintro ⟨a⟩ ⟨b⟩
         rw [← lift_aux_map_add]
-        rfl,
+        rfl
       map_smul' := by 
         rintro t ⟨a⟩
         rw [← lift_aux_map_smul]
-        rfl,
+        rfl
       map_lie' := by 
         rintro ⟨a⟩ ⟨b⟩
         rw [← lift_aux_map_mul]

@@ -256,31 +256,50 @@ instance [AddZeroClass α] :
   mul_one := add_zero
 
 instance [h : Monoid α] : AddMonoid (Additive α) :=
-  { Additive.addZeroClass, Additive.addSemigroup with zero := 0, add := (· + ·),
-    nsmul := @Monoid.npow α h, nsmul_zero' := Monoid.npow_zero, nsmul_succ' := Monoid.npow_succ }
+  { Additive.addZeroClass, Additive.addSemigroup with
+    zero := 0
+    add := (· + ·)
+    nsmul := @Monoid.npow α h
+    nsmul_zero' := Monoid.npow_zero
+    nsmul_succ' := Monoid.npow_succ }
 
 instance [h : AddMonoid α] : Monoid (Multiplicative α) :=
-  { Multiplicative.mulOneClass, Multiplicative.semigroup with one := 1, mul := (· * ·),
-    npow := @AddMonoid.nsmul α h, npow_zero' := AddMonoid.nsmul_zero,
+  { Multiplicative.mulOneClass, Multiplicative.semigroup with
+    one := 1
+    mul := (· * ·)
+    npow := @AddMonoid.nsmul α h
+    npow_zero' := AddMonoid.nsmul_zero
     npow_succ' := AddMonoid.nsmul_succ }
 
 instance [LeftCancelMonoid α] : AddLeftCancelMonoid (Additive α) :=
-  { Additive.addMonoid, Additive.addLeftCancelSemigroup with zero := 0, add := (· + ·) }
+  { Additive.addMonoid, Additive.addLeftCancelSemigroup with
+    zero := 0
+    add := (· + ·) }
 
 instance [AddLeftCancelMonoid α] : LeftCancelMonoid (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.leftCancelSemigroup with one := 1, mul := (· * ·) }
+  { Multiplicative.monoid, Multiplicative.leftCancelSemigroup with
+    one := 1
+    mul := (· * ·) }
 
 instance [RightCancelMonoid α] : AddRightCancelMonoid (Additive α) :=
-  { Additive.addMonoid, Additive.addRightCancelSemigroup with zero := 0, add := (· + ·) }
+  { Additive.addMonoid, Additive.addRightCancelSemigroup with
+    zero := 0
+    add := (· + ·) }
 
 instance [AddRightCancelMonoid α] : RightCancelMonoid (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.rightCancelSemigroup with one := 1, mul := (· * ·) }
+  { Multiplicative.monoid, Multiplicative.rightCancelSemigroup with
+    one := 1
+    mul := (· * ·) }
 
 instance [CommMonoid α] : AddCommMonoid (Additive α) :=
-  { Additive.addMonoid, Additive.addCommSemigroup with zero := 0, add := (· + ·) }
+  { Additive.addMonoid, Additive.addCommSemigroup with
+    zero := 0
+    add := (· + ·) }
 
 instance [AddCommMonoid α] : CommMonoid (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.commSemigroup with one := 1, mul := (· * ·) }
+  { Multiplicative.monoid, Multiplicative.commSemigroup with
+    one := 1
+    mul := (· * ·) }
 
 instance [Inv α] : Neg (Additive α) :=
   ⟨fun x => Multiplicative.ofAdd x.toMul⁻¹⟩
@@ -345,23 +364,30 @@ instance [HasInvolutiveNeg α] : HasInvolutiveInv (Multiplicative α) :=
   { Multiplicative.hasInv with inv_inv := @neg_neg _ _ }
 
 instance [DivInvMonoid α] : SubNegMonoid (Additive α) :=
-  { Additive.hasNeg, Additive.hasSub, Additive.addMonoid with sub_eq_add_neg := @div_eq_mul_inv α _,
-    zsmul := @DivInvMonoid.zpow α _, zsmul_zero' := DivInvMonoid.zpow_zero',
-    zsmul_succ' := DivInvMonoid.zpow_succ', zsmul_neg' := DivInvMonoid.zpow_neg' }
+  { Additive.hasNeg, Additive.hasSub, Additive.addMonoid with
+    sub_eq_add_neg := @div_eq_mul_inv α _
+    zsmul := @DivInvMonoid.zpow α _
+    zsmul_zero' := DivInvMonoid.zpow_zero'
+    zsmul_succ' := DivInvMonoid.zpow_succ'
+    zsmul_neg' := DivInvMonoid.zpow_neg' }
 
 instance [SubNegMonoid α] : DivInvMonoid (Multiplicative α) :=
   { Multiplicative.hasInv, Multiplicative.hasDiv, Multiplicative.monoid with
-    div_eq_mul_inv := @sub_eq_add_neg α _, zpow := @SubNegMonoid.zsmul α _,
-    zpow_zero' := SubNegMonoid.zsmul_zero', zpow_succ' := SubNegMonoid.zsmul_succ',
+    div_eq_mul_inv := @sub_eq_add_neg α _
+    zpow := @SubNegMonoid.zsmul α _
+    zpow_zero' := SubNegMonoid.zsmul_zero'
+    zpow_succ' := SubNegMonoid.zsmul_succ'
     zpow_neg' := SubNegMonoid.zsmul_neg' }
 
 instance [DivisionMonoid α] : SubtractionMonoid (Additive α) :=
-  { Additive.subNegMonoid, Additive.hasInvolutiveNeg with neg_add_rev := @mul_inv_rev _ _,
+  { Additive.subNegMonoid, Additive.hasInvolutiveNeg with
+    neg_add_rev := @mul_inv_rev _ _
     neg_eq_of_add := @inv_eq_of_mul_eq_one_right _ _ }
 
 instance [SubtractionMonoid α] : DivisionMonoid (Multiplicative α) :=
   { Multiplicative.divInvMonoid, Multiplicative.hasInvolutiveInv with
-    mul_inv_rev := @neg_add_rev _ _, inv_eq_of_mul := @neg_eq_of_add_eq_zero_right _ _ }
+    mul_inv_rev := @neg_add_rev _ _
+    inv_eq_of_mul := @neg_eq_of_add_eq_zero_right _ _ }
 
 instance [DivisionCommMonoid α] : SubtractionCommMonoid (Additive α) :=
   { Additive.subtractionMonoid, Additive.addCommSemigroup with }

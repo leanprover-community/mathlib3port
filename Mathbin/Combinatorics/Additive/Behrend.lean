@@ -168,7 +168,8 @@ theorem map_le_of_mem_box (hx : x ∈ box n d) :
 
 theorem add_salem_spencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n → ℕ)) := by
   set f : (Fin n → ℕ) →+ EuclideanSpace ℝ (Fin n) :=
-    { toFun := fun f => (coe : ℕ → ℝ) ∘ f, map_zero' := funext fun _ => cast_zero,
+    { toFun := fun f => (coe : ℕ → ℝ) ∘ f
+      map_zero' := funext fun _ => cast_zero
       map_add' := fun _ _ => funext fun _ => cast_add _ _ }
   refine' AddSalemSpencer.of_image (f.to_add_freiman_hom (sphere n d k) 2) _ _
   · exact cast_injective.comp_left.inj_on _

@@ -61,8 +61,12 @@ unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := f
     (found, new_lhs, pr)
     ←
     tactic.ext_simplify_core false
-        { zeta := false, beta := false, singlePass := true, eta := false, proj := false } s
-        (fun u => return u)
+        { zeta := false
+          beta := false
+          singlePass := true
+          eta := false
+          proj := false }
+        s (fun u => return u)
         (fun found s r p e => do
           guard (Not found)
           let matched ← tactic.match_pattern pat e >> return true <|> return false

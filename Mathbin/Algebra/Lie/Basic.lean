@@ -213,10 +213,10 @@ instance :
       (M →ₗ[R]
         N) where 
   bracket x f :=
-    { toFun := fun m => ⁅x, f m⁆ - f ⁅x, m⁆,
+    { toFun := fun m => ⁅x, f m⁆ - f ⁅x, m⁆
       map_add' := fun m n => by 
         simp only [lie_add, LinearMap.map_add]
-        abel,
+        abel
       map_smul' := fun t m => by
         simp only [smul_sub, LinearMap.map_smul, lie_smul, RingHom.id_apply] }
   add_lie x y f := by 
@@ -546,7 +546,11 @@ theorem coe_to_linear_equiv (e : L₁ ≃ₗ⁅R⁆ L₂) : ((e : L₁ ≃ₗ[R]
 
 @[simp]
 theorem to_linear_equiv_mk (f : L₁ →ₗ⁅R⁆ L₂) (g h₁ h₂) :
-    (mk f g h₁ h₂ : L₁ ≃ₗ[R] L₂) = { f with invFun := g, left_inv := h₁, right_inv := h₂ } :=
+    (mk f g h₁ h₂ : L₁ ≃ₗ[R] L₂) =
+      { f with 
+        invFun := g
+        left_inv := h₁
+        right_inv := h₂ } :=
   rfl
 #align lie_equiv.to_linear_equiv_mk LieEquiv.to_linear_equiv_mk
 
@@ -656,7 +660,9 @@ protected theorem surjective (e : L₁ ≃ₗ⁅R⁆ L₂) :
 /-- A bijective morphism of Lie algebras yields an equivalence of Lie algebras. -/
 @[simps]
 noncomputable def ofBijective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Bijective f) : L₁ ≃ₗ⁅R⁆ L₂ :=
-  { LinearEquiv.ofBijective (f : L₁ →ₗ[R] L₂) h with toFun := f, map_lie' := f.map_lie }
+  { LinearEquiv.ofBijective (f : L₁ →ₗ[R] L₂) h with
+    toFun := f
+    map_lie' := f.map_lie }
 #align lie_equiv.of_bijective LieEquiv.ofBijective
 
 end LieEquiv

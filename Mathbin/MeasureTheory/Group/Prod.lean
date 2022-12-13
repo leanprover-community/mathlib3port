@@ -53,7 +53,7 @@ variable (μ ν : Measure G) [SigmaFinite ν] [SigmaFinite μ] {s : Set G}
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a `measurable_equiv`."]
 protected def MeasurableEquiv.shearMulRight [HasMeasurableInv G] : G × G ≃ᵐ G × G :=
   { Equiv.prodShear (Equiv.refl _) Equiv.mulLeft with
-    measurableToFun := measurableFst.prod_mk measurableMul,
+    measurableToFun := measurableFst.prod_mk measurableMul
     measurableInvFun := measurableFst.prod_mk <| measurableFst.inv.mul measurableSnd }
 #align measurable_equiv.shear_mul_right MeasurableEquiv.shearMulRight
 
@@ -62,7 +62,7 @@ protected def MeasurableEquiv.shearMulRight [HasMeasurableInv G] : G × G ≃ᵐ
       "The map `(x, y) ↦ (x, y - x)` as a `measurable_equiv` with as inverse `(x, y) ↦ (x, y + x)`."]
 protected def MeasurableEquiv.shearDivRight [HasMeasurableInv G] : G × G ≃ᵐ G × G :=
   { Equiv.prodShear (Equiv.refl _) Equiv.divRight with
-    measurableToFun := measurableFst.prod_mk <| measurableSnd.div measurableFst,
+    measurableToFun := measurableFst.prod_mk <| measurableSnd.div measurableFst
     measurableInvFun := measurableFst.prod_mk <| measurableSnd.mul measurableFst }
 #align measurable_equiv.shear_div_right MeasurableEquiv.shearDivRight
 

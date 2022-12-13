@@ -308,13 +308,14 @@ variable (F G)
 protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C → D)
     (h_obj : ∀ X, G.obj (obj X) = F.obj X) (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq (G.map (map f)) (F.map f)) : C ⥤ D :=
-  { obj, map := @map,
+  { obj
+    map := @map
     map_id' := by 
       intro X
       apply G.map_injective
       apply eq_of_heq
       trans F.map (𝟙 X); exact h_map
-      rw [F.map_id, G.map_id, h_obj X],
+      rw [F.map_id, G.map_id, h_obj X]
     map_comp' := by 
       intro X Y Z f g
       apply G.map_injective

@@ -87,7 +87,7 @@ def limitCone (F : J ⥤ AlgebraCat.{max v w} R) :
     Cone F where 
   x := AlgebraCat.of R (Types.limitCone (F ⋙ forget _)).x
   π :=
-    { app := limitπAlgHom F,
+    { app := limitπAlgHom F
       naturality' := fun j j' f =>
         AlgHom.coe_fn_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
 #align Algebra.has_limits.limit_cone AlgebraCat.HasLimits.limitCone
@@ -123,7 +123,9 @@ open HasLimits
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F =>
-          has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+          has_limit.mk
+            { Cone := limit_cone F
+              IsLimit := limit_cone_is_limit F } } }
 #align Algebra.has_limits_of_size AlgebraCat.has_limits_of_size
 
 instance has_limits : HasLimits (AlgebraCat.{w} R) :=

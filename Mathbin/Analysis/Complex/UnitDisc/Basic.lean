@@ -96,8 +96,9 @@ theorem mk_neg (z : ℂ) (hz : abs (-z) < 1) : mk (-z) hz = -mk z (abs.map_neg z
 #align complex.unit_disc.mk_neg Complex.UnitDisc.mk_neg
 
 instance : SemigroupWithZero 𝔻 :=
-  { UnitDisc.commSemigroup with zero := mk 0 <| (map_zero _).trans_lt one_pos,
-    zero_mul := fun z => coe_injective <| zero_mul _,
+  { UnitDisc.commSemigroup with
+    zero := mk 0 <| (map_zero _).trans_lt one_pos
+    zero_mul := fun z => coe_injective <| zero_mul _
     mul_zero := fun z => coe_injective <| mul_zero _ }
 
 @[simp]

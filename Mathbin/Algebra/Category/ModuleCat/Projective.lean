@@ -55,8 +55,9 @@ instance Module_enough_projectives :
     EnoughProjectives
       (ModuleCat.{max u v}
         R) where presentation M :=
-    ⟨{ P := ModuleCat.of R (M →₀ R), Projective := projective_of_free Finsupp.basisSingleOne,
-        f := Finsupp.basisSingleOne.constr ℕ id,
+    ⟨{  P := ModuleCat.of R (M →₀ R)
+        Projective := projective_of_free Finsupp.basisSingleOne
+        f := Finsupp.basisSingleOne.constr ℕ id
         Epi :=
           (epi_iff_range_eq_top _).mpr
             (range_eq_top.2 fun m => ⟨Finsupp.single m (1 : R), by simp [Basis.constr]⟩) }⟩

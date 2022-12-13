@@ -203,7 +203,9 @@ theorem ext {S T : Subfield K} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy of a subfield with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : Subfield K) (s : Set K) (hs : s = ↑S) : Subfield K :=
-  { S.toSubring.copy s hs with carrier := s, inv_mem' := hs.symm ▸ S.inv_mem' }
+  { S.toSubring.copy s hs with 
+    carrier := s
+    inv_mem' := hs.symm ▸ S.inv_mem' }
 #align subfield.copy Subfield.copy
 
 @[simp]
@@ -643,8 +645,12 @@ theorem is_glb_Inf (S : Set (Subfield K)) : IsGlb S (inf S) := by
 
 /-- Subfields of a ring form a complete lattice. -/
 instance : CompleteLattice (Subfield K) :=
-  { completeLatticeOfInf (Subfield K) is_glb_Inf with top := ⊤, le_top := fun s x hx => trivial,
-    inf := (· ⊓ ·), inf_le_left := fun s t x => And.left, inf_le_right := fun s t x => And.right,
+  { completeLatticeOfInf (Subfield K) is_glb_Inf with
+    top := ⊤
+    le_top := fun s x hx => trivial
+    inf := (· ⊓ ·)
+    inf_le_left := fun s t x => And.left
+    inf_le_right := fun s t x => And.right
     le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
 
 /-! # subfield closure of a subset -/
@@ -861,7 +867,7 @@ theorem coe_range_restrict_field (f : K →+* L) (x : K) : (f.rangeRestrictField
 the equalizer of f and g as a subfield of R -/
 def eqLocusField (f g : K →+* L) : Subfield K :=
   { (f : K →+* L).eqLocus g with
-    inv_mem' := fun x (hx : f x = g x) => show f x⁻¹ = g x⁻¹ by rw [map_inv₀ f, map_inv₀ g, hx],
+    inv_mem' := fun x (hx : f x = g x) => show f x⁻¹ = g x⁻¹ by rw [map_inv₀ f, map_inv₀ g, hx]
     carrier := { x | f x = g x } }
 #align ring_hom.eq_locus_field RingHom.eqLocusField
 
@@ -919,7 +925,8 @@ variable {s t : Subfield K}
 /-- Makes the identity isomorphism from a proof two subfields of a multiplicative
     monoid are equal. -/
 def subfieldCongr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr <| SetLike.ext'_iff.1 h with map_mul' := fun _ _ => rfl,
+  { Equiv.setCongr <| SetLike.ext'_iff.1 h with
+    map_mul' := fun _ _ => rfl
     map_add' := fun _ _ => rfl }
 #align ring_equiv.subfield_congr RingEquiv.subfieldCongr
 

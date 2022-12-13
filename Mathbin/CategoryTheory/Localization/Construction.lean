@@ -146,7 +146,7 @@ include G hG
 @[simps]
 def liftToPathCategory : Paths (LocQuiver W) ⥤ D :=
   QuivCat.lift
-    { obj := fun X => G.obj X.obj,
+    { obj := fun X => G.obj X.obj
       map := fun X Y => by 
         rintro (f | ⟨g, hg⟩)
         · exact G.map f

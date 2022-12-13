@@ -287,7 +287,10 @@ unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) :
   let non_param_args := args.drop num_params
   let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
   pure
-      { cname := decl, non_param_args, num_non_param_args := non_param_args, rec_args,
+      { cname := decl
+        non_param_args
+        num_non_param_args := non_param_args
+        rec_args
         num_rec_args := rec_args }
 #align tactic.eliminate.get_constructor_info tactic.eliminate.get_constructor_info
 
@@ -302,7 +305,13 @@ unsafe def get_inductive_info (I : Name) : tactic inductive_info := do
   let num_indices := env.inductive_num_indices I
   let constructor_names := env.constructors_of I
   let constructors ← constructor_names.mmap (get_constructor_info I num_params)
-  pure { iname := I, constructors, num_constructors := constructors, type, num_params, num_indices }
+  pure
+      { iname := I
+        constructors
+        num_constructors := constructors
+        type
+        num_params
+        num_indices }
 #align tactic.eliminate.get_inductive_info tactic.eliminate.get_inductive_info
 
 /-- Get information about a major premise. The given `expr` must be a local
@@ -311,7 +320,11 @@ hypothesis.
 unsafe def get_major_premise_info (major_premise : expr) : tactic major_premise_info := do
   let type ← infer_type major_premise
   let ⟨f, args⟩ ← get_app_fn_args_whnf type
-  pure { mpname := major_premise, mpexpr := major_premise, type, args }
+  pure
+      { mpname := major_premise
+        mpexpr := major_premise
+        type
+        args }
 #align tactic.eliminate.get_major_premise_info tactic.eliminate.get_major_premise_info
 
 /-!

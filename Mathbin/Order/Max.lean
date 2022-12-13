@@ -444,81 +444,81 @@ variable [Preorder α] [Preorder β] {a a₁ a₂ : α} {b b₁ b₂ : β} {x y 
 
 /- warning: is_bot.prod_mk -> IsBot.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {a : α} {b : β}, (IsBot.{u_2} α (Preorder.toLE.{u_2} α _inst_1) a) -> (IsBot.{u_3} β (Preorder.toLE.{u_3} β _inst_2) b) -> (IsBot.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) (Prod.mk.{u_2, u_3} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsBot.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.1736 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.1739 : Preorder.{u_2} β] {a : α} {b : β}, (IsBot.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1736) a) -> (IsBot.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1739) b) -> (IsBot.{max u_2 u_1} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1736) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1739)) (Prod.mk.{u_1, u_2} α β a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsBot.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsBot.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsBot.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_bot.prod_mk IsBot.prod_mkₓ'. -/
 theorem IsBot.prod_mk (ha : IsBot a) (hb : IsBot b) : IsBot (a, b) := fun c => ⟨ha _, hb _⟩
 #align is_bot.prod_mk IsBot.prod_mk
 
 /- warning: is_top.prod_mk -> IsTop.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {a : α} {b : β}, (IsTop.{u_2} α (Preorder.toLE.{u_2} α _inst_1) a) -> (IsTop.{u_3} β (Preorder.toLE.{u_3} β _inst_2) b) -> (IsTop.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) (Prod.mk.{u_2, u_3} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsTop.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.1785 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.1788 : Preorder.{u_2} β] {a : α} {b : β}, (IsTop.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1785) a) -> (IsTop.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1788) b) -> (IsTop.{max u_2 u_1} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1785) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1788)) (Prod.mk.{u_1, u_2} α β a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsTop.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsTop.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsTop.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_top.prod_mk IsTop.prod_mkₓ'. -/
 theorem IsTop.prod_mk (ha : IsTop a) (hb : IsTop b) : IsTop (a, b) := fun c => ⟨ha _, hb _⟩
 #align is_top.prod_mk IsTop.prod_mk
 
 /- warning: is_min.prod_mk -> IsMin.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {a : α} {b : β}, (IsMin.{u_2} α (Preorder.toLE.{u_2} α _inst_1) a) -> (IsMin.{u_3} β (Preorder.toLE.{u_3} β _inst_2) b) -> (IsMin.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) (Prod.mk.{u_2, u_3} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsMin.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.1834 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.1837 : Preorder.{u_2} β] {a : α} {b : β}, (IsMin.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1834) a) -> (IsMin.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1837) b) -> (IsMin.{max u_2 u_1} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1834) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1837)) (Prod.mk.{u_1, u_2} α β a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMin.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsMin.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_min.prod_mk IsMin.prod_mkₓ'. -/
 theorem IsMin.prod_mk (ha : IsMin a) (hb : IsMin b) : IsMin (a, b) := fun c hc => ⟨ha hc.1, hb hc.2⟩
 #align is_min.prod_mk IsMin.prod_mk
 
 /- warning: is_max.prod_mk -> IsMax.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {a : α} {b : β}, (IsMax.{u_2} α (Preorder.toLE.{u_2} α _inst_1) a) -> (IsMax.{u_3} β (Preorder.toLE.{u_3} β _inst_2) b) -> (IsMax.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) (Prod.mk.{u_2, u_3} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsMax.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.1884 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.1887 : Preorder.{u_2} β] {a : α} {b : β}, (IsMax.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1884) a) -> (IsMax.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1887) b) -> (IsMax.{max u_2 u_1} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1884) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1887)) (Prod.mk.{u_1, u_2} α β a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMax.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsMax.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_max.prod_mk IsMax.prod_mkₓ'. -/
 theorem IsMax.prod_mk (ha : IsMax a) (hb : IsMax b) : IsMax (a, b) := fun c hc => ⟨ha hc.1, hb hc.2⟩
 #align is_max.prod_mk IsMax.prod_mk
 
 /- warning: is_bot.fst -> IsBot.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsBot.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsBot.{u_2} α (Preorder.toLE.{u_2} α _inst_1) (Prod.fst.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.1934 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.1937 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsBot.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1934) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1937)) x) -> (IsBot.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1934) (Prod.fst.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsBot.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsBot.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_bot.fst IsBot.fstₓ'. -/
 theorem IsBot.fst (hx : IsBot x) : IsBot x.1 := fun c => (hx (c, x.2)).1
 #align is_bot.fst IsBot.fst
 
 /- warning: is_bot.snd -> IsBot.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsBot.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsBot.{u_3} β (Preorder.toLE.{u_3} β _inst_2) (Prod.snd.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsBot.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.1979 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.1982 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsBot.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.1979) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1982)) x) -> (IsBot.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.1982) (Prod.snd.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsBot.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsBot.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_bot.snd IsBot.sndₓ'. -/
 theorem IsBot.snd (hx : IsBot x) : IsBot x.2 := fun c => (hx (x.1, c)).2
 #align is_bot.snd IsBot.snd
 
 /- warning: is_top.fst -> IsTop.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsTop.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsTop.{u_2} α (Preorder.toLE.{u_2} α _inst_1) (Prod.fst.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.2024 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.2027 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsTop.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2024) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2027)) x) -> (IsTop.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2024) (Prod.fst.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsTop.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsTop.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_top.fst IsTop.fstₓ'. -/
 theorem IsTop.fst (hx : IsTop x) : IsTop x.1 := fun c => (hx (c, x.2)).1
 #align is_top.fst IsTop.fst
 
 /- warning: is_top.snd -> IsTop.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsTop.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsTop.{u_3} β (Preorder.toLE.{u_3} β _inst_2) (Prod.snd.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsTop.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.2069 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.2072 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsTop.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2069) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2072)) x) -> (IsTop.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2072) (Prod.snd.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsTop.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsTop.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_top.snd IsTop.sndₓ'. -/
 theorem IsTop.snd (hx : IsTop x) : IsTop x.2 := fun c => (hx (x.1, c)).2
 #align is_top.snd IsTop.snd
 
 /- warning: is_min.fst -> IsMin.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsMin.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsMin.{u_2} α (Preorder.toLE.{u_2} α _inst_1) (Prod.fst.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.2114 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.2117 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsMin.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2114) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2117)) x) -> (IsMin.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2114) (Prod.fst.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMin.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_min.fst IsMin.fstₓ'. -/
 theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc =>
   (hx <| show (c, x.2) ≤ x from (and_iff_left le_rfl).2 hc).1
@@ -526,9 +526,9 @@ theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc =>
 
 /- warning: is_min.snd -> IsMin.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsMin.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsMin.{u_3} β (Preorder.toLE.{u_3} β _inst_2) (Prod.snd.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMin.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.2177 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.2180 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsMin.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2177) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2180)) x) -> (IsMin.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2180) (Prod.snd.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMin.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMin.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_min.snd IsMin.sndₓ'. -/
 theorem IsMin.snd (hx : IsMin x) : IsMin x.2 := fun c hc =>
   (hx <| show (x.1, c) ≤ x from (and_iff_right le_rfl).2 hc).2
@@ -536,9 +536,9 @@ theorem IsMin.snd (hx : IsMin x) : IsMin x.2 := fun c hc =>
 
 /- warning: is_max.fst -> IsMax.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsMax.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsMax.{u_2} α (Preorder.toLE.{u_2} α _inst_1) (Prod.fst.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.2240 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.2243 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsMax.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2240) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2243)) x) -> (IsMax.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2240) (Prod.fst.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMax.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_max.fst IsMax.fstₓ'. -/
 theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc =>
   (hx <| show x ≤ (c, x.2) from (and_iff_left le_rfl).2 hc).1
@@ -546,9 +546,9 @@ theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc =>
 
 /- warning: is_max.snd -> IsMax.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {x : Prod.{u_2, u_3} α β}, (IsMax.{max u_2 u_3} (Prod.{u_2, u_3} α β) (Prod.hasLe.{u_2, u_3} α β (Preorder.toLE.{u_2} α _inst_1) (Preorder.toLE.{u_3} β _inst_2)) x) -> (IsMax.{u_3} β (Preorder.toLE.{u_3} β _inst_2) (Prod.snd.{u_2, u_3} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMax.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Max._hyg.2303 : Preorder.{u_1} α] [inst._@.Mathlib.Order.Max._hyg.2306 : Preorder.{u_2} β] {x : Prod.{u_1, u_2} α β}, (IsMax.{max u_1 u_2} (Prod.{u_1, u_2} α β) (Prod.instLEProd.{u_1, u_2} α β (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Max._hyg.2303) (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2306)) x) -> (IsMax.{u_2} β (Preorder.toLE.{u_2} β inst._@.Mathlib.Order.Max._hyg.2306) (Prod.snd.{u_1, u_2} α β x))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMax.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMax.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_max.snd IsMax.sndₓ'. -/
 theorem IsMax.snd (hx : IsMax x) : IsMax x.2 := fun c hc =>
   (hx <| show x ≤ (x.1, c) from (and_iff_right le_rfl).2 hc).2

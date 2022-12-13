@@ -29,7 +29,7 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
           (forget₂ (ModuleCat.{u} R)
             AddCommGroupCat.{u})) where 
   toFun r :=
-    { app := fun M => by apply DistribMulAction.toAddMonoidHom M r,
+    { app := fun M => by apply DistribMulAction.toAddMonoidHom M r
       naturality' := fun M N f => by 
         ext
         exact (f.map_smul _ _).symm }

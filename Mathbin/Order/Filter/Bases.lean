@@ -99,7 +99,8 @@ instance {α : Type _} : Membership (Set α) (FilterBasis α) :=
 
 -- For illustration purposes, the filter basis defining (at_top : filter ℕ)
 instance : Inhabited (FilterBasis ℕ) :=
-  ⟨{ sets := range ici, Nonempty := ⟨ici 0, mem_range_self 0⟩,
+  ⟨{  sets := range ici
+      Nonempty := ⟨ici 0, mem_range_self 0⟩
       inter_sets := by 
         rintro _ _ ⟨n, rfl⟩ ⟨m, rfl⟩
         refine' ⟨Ici (max n m), mem_range_self _, _⟩
@@ -301,7 +302,7 @@ theorem HasBasis.set_index_subset (h : l.HasBasis p s) (ht : t ∈ l) : s (h.ind
 theorem HasBasis.is_basis (h : l.HasBasis p s) : IsBasis p s :=
   { Nonempty :=
       let ⟨i, hi, H⟩ := h.mem_iff.mp univ_mem
-      ⟨i, hi⟩,
+      ⟨i, hi⟩
     inter := fun i j hi hj => by
       simpa [h.mem_iff] using l.inter_sets (h.mem_of_mem hi) (h.mem_of_mem hj) }
 #align filter.has_basis.is_basis Filter.HasBasis.is_basis

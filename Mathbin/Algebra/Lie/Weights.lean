@@ -354,10 +354,10 @@ def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + 
           χ₃ where 
   toFun x :=
     { toFun := fun m =>
-        ⟨⁅(x : L), (m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
+        ⟨⁅(x : L), (m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩
       map_add' := fun m n => by 
         simp only [LieSubmodule.coe_add, lie_add]
-        rfl,
+        rfl
       map_smul' := fun t m => by
         conv_lhs => 
           congr
@@ -379,7 +379,7 @@ def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + 
 def rootSpaceWeightSpaceProduct (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
     rootSpace H χ₁ ⊗[R] weightSpace M χ₂ →ₗ⁅R,H⁆ weightSpace M χ₃ :=
   liftLie R H (rootSpace H χ₁) (weightSpace M χ₂) (weightSpace M χ₃)
-    { toLinearMap := rootSpaceWeightSpaceProductAux R L H M hχ,
+    { toLinearMap := rootSpaceWeightSpaceProductAux R L H M hχ
       map_lie' := fun x y => by
         ext m <;>
           rw [root_space_weight_space_product_aux, LieHom.lie_apply, LieSubmodule.coe_sub,
@@ -494,7 +494,7 @@ When `L` is Noetherian, it follows from Engel's theorem that the converse holds.
 `lie_algebra.zero_root_subalgebra_eq_iff_is_cartan` -/
 theorem is_cartan_of_zero_root_subalgebra_eq (h : zeroRootSubalgebra R L H = H) :
     H.IsCartanSubalgebra :=
-  { nilpotent := inferInstance,
+  { nilpotent := inferInstance
     self_normalizing := by 
       rw [← h]
       exact zero_root_subalgebra_normalizer_eq_self R L H }

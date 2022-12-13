@@ -73,7 +73,9 @@ end Struct
 
 /-- Endomorphisms of an object form a monoid -/
 instance monoid {C : Type u} [Category.{v} C] {X : C} : Monoid (EndCat X) :=
-  { EndCat.hasMul X, EndCat.hasOne X with mul_one := Category.id_comp, one_mul := Category.comp_id,
+  { EndCat.hasMul X, EndCat.hasOne X with
+    mul_one := Category.id_comp
+    one_mul := Category.comp_id
     mul_assoc := fun x y z => (Category.assoc z y x).symm }
 #align category_theory.End.monoid CategoryTheory.EndCat.monoid
 
@@ -110,7 +112,9 @@ end MulAction
 
 /-- In a groupoid, endomorphisms form a group -/
 instance group {C : Type u} [Groupoid.{v} C] (X : C) : Group (EndCat X) :=
-  { EndCat.monoid with mul_left_inv := Groupoid.comp_inv, inv := Groupoid.inv }
+  { EndCat.monoid with 
+    mul_left_inv := Groupoid.comp_inv
+    inv := Groupoid.inv }
 #align category_theory.End.group CategoryTheory.EndCat.group
 
 end EndCat
@@ -140,8 +144,11 @@ instance inhabited : Inhabited (AutCat X) :=
 
 instance : Group (AutCat X) := by
   refine_struct
-            { one := iso.refl X, inv := iso.symm, mul := flip iso.trans, div := _,
-              npow := @npowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩,
+            { one := iso.refl X
+              inv := iso.symm
+              mul := flip iso.trans
+              div := _
+              npow := @npowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩
               zpow := @zpowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ } <;>
           intros <;>
         try rfl <;>

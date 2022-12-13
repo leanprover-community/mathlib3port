@@ -164,7 +164,7 @@ theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).swap = a.swap / b.swap
 
 instance [MulZeroClass M] [MulZeroClass N] : MulZeroClass (M × N) :=
   { Prod.hasZero, Prod.hasMul with
-    zero_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩,
+    zero_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩
     mul_zero := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
 
 @[to_additive]
@@ -181,28 +181,29 @@ instance [SemigroupWithZero M] [SemigroupWithZero N] : SemigroupWithZero (M × N
 @[to_additive]
 instance [MulOneClass M] [MulOneClass N] : MulOneClass (M × N) :=
   { Prod.hasMul, Prod.hasOne with
-    one_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨one_mul _, one_mul _⟩,
+    one_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨one_mul _, one_mul _⟩
     mul_one := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_one _, mul_one _⟩ }
 
 @[to_additive]
 instance [Monoid M] [Monoid N] : Monoid (M × N) :=
-  { Prod.semigroup, Prod.mulOneClass with npow := fun z a => ⟨Monoid.npow z a.1, Monoid.npow z a.2⟩,
-    npow_zero' := fun z => ext (Monoid.npow_zero _) (Monoid.npow_zero _),
+  { Prod.semigroup, Prod.mulOneClass with
+    npow := fun z a => ⟨Monoid.npow z a.1, Monoid.npow z a.2⟩
+    npow_zero' := fun z => ext (Monoid.npow_zero _) (Monoid.npow_zero _)
     npow_succ' := fun z a => ext (Monoid.npow_succ _ _) (Monoid.npow_succ _ _) }
 
 @[to_additive Prod.subNegMonoid]
 instance [DivInvMonoid G] [DivInvMonoid H] : DivInvMonoid (G × H) :=
   { Prod.monoid, Prod.hasInv, Prod.hasDiv with
-    div_eq_mul_inv := fun a b => mk.inj_iff.mpr ⟨div_eq_mul_inv _ _, div_eq_mul_inv _ _⟩,
-    zpow := fun z a => ⟨DivInvMonoid.zpow z a.1, DivInvMonoid.zpow z a.2⟩,
-    zpow_zero' := fun z => ext (DivInvMonoid.zpow_zero' _) (DivInvMonoid.zpow_zero' _),
-    zpow_succ' := fun z a => ext (DivInvMonoid.zpow_succ' _ _) (DivInvMonoid.zpow_succ' _ _),
+    div_eq_mul_inv := fun a b => mk.inj_iff.mpr ⟨div_eq_mul_inv _ _, div_eq_mul_inv _ _⟩
+    zpow := fun z a => ⟨DivInvMonoid.zpow z a.1, DivInvMonoid.zpow z a.2⟩
+    zpow_zero' := fun z => ext (DivInvMonoid.zpow_zero' _) (DivInvMonoid.zpow_zero' _)
+    zpow_succ' := fun z a => ext (DivInvMonoid.zpow_succ' _ _) (DivInvMonoid.zpow_succ' _ _)
     zpow_neg' := fun z a => ext (DivInvMonoid.zpow_neg' _ _) (DivInvMonoid.zpow_neg' _ _) }
 
 @[to_additive]
 instance [DivisionMonoid G] [DivisionMonoid H] : DivisionMonoid (G × H) :=
   { Prod.divInvMonoid, Prod.hasInvolutiveInv with
-    mul_inv_rev := fun a b => ext (mul_inv_rev _ _) (mul_inv_rev _ _),
+    mul_inv_rev := fun a b => ext (mul_inv_rev _ _) (mul_inv_rev _ _)
     inv_eq_of_mul := fun a b h =>
       ext (inv_eq_of_mul_eq_one_right <| congr_arg fst h)
         (inv_eq_of_mul_eq_one_right <| congr_arg snd h) }

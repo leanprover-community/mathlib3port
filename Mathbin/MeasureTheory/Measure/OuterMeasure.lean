@@ -251,7 +251,9 @@ theorem ext_nonempty {μ₁ μ₂ : OuterMeasure α} (h : ∀ s : Set α, s.None
 #align measure_theory.outer_measure.ext_nonempty MeasureTheory.OuterMeasure.ext_nonempty
 
 instance : Zero (OuterMeasure α) :=
-  ⟨{ measureOf := fun _ => 0, Empty := rfl, mono := fun _ _ _ => le_refl 0,
+  ⟨{  measureOf := fun _ => 0
+      Empty := rfl
+      mono := fun _ _ _ => le_refl 0
       Union_nat := fun s => zero_le _ }⟩
 
 @[simp]
@@ -264,9 +266,9 @@ instance : Inhabited (OuterMeasure α) :=
 
 instance : Add (OuterMeasure α) :=
   ⟨fun m₁ m₂ =>
-    { measureOf := fun s => m₁ s + m₂ s,
-      Empty := show m₁ ∅ + m₂ ∅ = 0 by simp [outer_measure.empty],
-      mono := fun s₁ s₂ h => add_le_add (m₁.mono h) (m₂.mono h),
+    { measureOf := fun s => m₁ s + m₂ s
+      Empty := show m₁ ∅ + m₂ ∅ = 0 by simp [outer_measure.empty]
+      mono := fun s₁ s₂ h => add_le_add (m₁.mono h) (m₂.mono h)
       Union_nat := fun s =>
         calc
           m₁ (⋃ i, s i) + m₂ (⋃ i, s i) ≤ (∑' i, m₁ (s i)) + ∑' i, m₂ (s i) :=
@@ -291,10 +293,11 @@ variable [HasSmul R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
 
 instance : HasSmul R (OuterMeasure α) :=
   ⟨fun c m =>
-    { measureOf := fun s => c • m s, Empty := by rw [← smul_one_mul c (_ : ℝ≥0∞), empty', mul_zero],
+    { measureOf := fun s => c • m s
+      Empty := by rw [← smul_one_mul c (_ : ℝ≥0∞), empty', mul_zero]
       mono := fun s t h => by
         rw [← smul_one_mul c (m s), ← smul_one_mul c (m t)]
-        exact Ennreal.mul_left_mono (m.mono h),
+        exact Ennreal.mul_left_mono (m.mono h)
       Union_nat := fun s => by
         simp_rw [← smul_one_mul c (m _), Ennreal.tsum_mul_left]
         exact Ennreal.mul_left_mono (m.Union _) }⟩
@@ -373,9 +376,9 @@ section Supremum
 
 instance : HasSup (OuterMeasure α) :=
   ⟨fun ms =>
-    { measureOf := fun s => ⨆ m ∈ ms, (m : OuterMeasure α) s,
-      Empty := nonpos_iff_eq_zero.1 <| supr₂_le fun m h => le_of_eq m.Empty,
-      mono := fun s₁ s₂ hs => supr₂_mono fun m hm => m.mono hs,
+    { measureOf := fun s => ⨆ m ∈ ms, (m : OuterMeasure α) s
+      Empty := nonpos_iff_eq_zero.1 <| supr₂_le fun m h => le_of_eq m.Empty
+      mono := fun s₁ s₂ hs => supr₂_mono fun m hm => m.mono hs
       Union_nat := fun f =>
         supr₂_le fun m hm =>
           calc
@@ -431,8 +434,9 @@ def map {β} (f : α → β) :
       OuterMeasure
         β where 
   toFun m :=
-    { measureOf := fun s => m (f ⁻¹' s), Empty := m.Empty,
-      mono := fun s t h => m.mono (preimage_mono h),
+    { measureOf := fun s => m (f ⁻¹' s)
+      Empty := m.Empty
+      mono := fun s t h => m.mono (preimage_mono h)
       Union_nat := fun s => by rw [preimage_Union] <;> exact m.Union_nat fun i => f ⁻¹' s i }
   map_add' m₁ m₂ := coe_fn_injective rfl
   map_smul' c m := coe_fn_injective rfl
@@ -521,8 +525,9 @@ def comap {β} (f : α → β) :
       OuterMeasure
         α where 
   toFun m :=
-    { measureOf := fun s => m (f '' s), Empty := by simp,
-      mono := fun s t h => m.mono <| image_subset f h,
+    { measureOf := fun s => m (f '' s)
+      Empty := by simp
+      mono := fun s t h => m.mono <| image_subset f h
       Union_nat := fun s => by 
         rw [image_Union]
         apply m.Union_nat }
@@ -651,12 +656,12 @@ include m_empty
   a unique maximal outer measure `μ` satisfying `μ s ≤ m s` for all `s : set α`. -/
 protected def ofFunction : OuterMeasure α :=
   let μ s := ⨅ (f : ℕ → Set α) (h : s ⊆ ⋃ i, f i), ∑' i, m (f i)
-  { measureOf := μ,
+  { measureOf := μ
     Empty :=
       le_antisymm
         ((infi_le_of_le fun _ => ∅) <| infi_le_of_le (empty_subset _) <| by simp [m_empty])
-        (zero_le _),
-    mono := fun s₁ s₂ hs => infi_mono fun f => infi_mono' fun hb => ⟨hs.trans hb, le_rfl⟩,
+        (zero_le _)
+    mono := fun s₁ s₂ hs => infi_mono fun f => infi_mono' fun hb => ⟨hs.trans hb, le_rfl⟩
     Union_nat := fun s =>
       Ennreal.le_of_forall_pos_le_add <| by
         intro ε hε(hb : (∑' i, μ (s i)) < ∞)

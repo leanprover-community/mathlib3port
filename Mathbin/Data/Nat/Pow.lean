@@ -20,7 +20,7 @@ namespace Nat
 lean 3 declaration is
   forall {x : Nat} {y : Nat}, (LE.le.{0} Nat Nat.hasLe x y) -> (forall (i : Nat), LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) y i))
 but is expected to have type
-  forall {n : Nat} {m : Nat}, (LE.le.{0} Nat instLENat n m) -> (forall (i : Nat), LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) m i))
+  forall {x : Nat} {y : Nat}, (LE.le.{0} Nat instLENat x y) -> (forall (i : Nat), LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) y i))
 Case conversion may be inaccurate. Consider using '#align nat.pow_le_pow_of_le_left Nat.pow_le_pow_of_le_leftₓ'. -/
 -- This is redundant with `pow_le_pow_of_le_left'`,
 -- We leave a version in the `nat` namespace as well.
@@ -33,7 +33,7 @@ protected theorem pow_le_pow_of_le_left {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ,
 lean 3 declaration is
   forall {x : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) x) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat Nat.hasLe i j) -> (LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x j)))
 but is expected to have type
-  forall {n : Nat}, (GT.gt.{0} Nat instLTNat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat instLENat i j) -> (LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n j)))
+  forall {x : Nat}, (GT.gt.{0} Nat instLTNat x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat instLENat i j) -> (LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) x j)))
 Case conversion may be inaccurate. Consider using '#align nat.pow_le_pow_of_le_right Nat.pow_le_pow_of_le_rightₓ'. -/
 theorem pow_le_pow_of_le_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
   pow_le_pow' H h

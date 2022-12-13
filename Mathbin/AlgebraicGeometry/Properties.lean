@@ -249,7 +249,8 @@ instance (priority := 900) is_reduced_of_is_integral [IsIntegral X] : IsReduced 
 instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.carrier := by
   by_contra H
   replace H : ¬IsPreirreducible (⊤ : Set X.carrier) := fun h =>
-    H { to_preirreducible_space := ⟨h⟩, to_nonempty := inferInstance }
+    H { to_preirreducible_space := ⟨h⟩
+        to_nonempty := inferInstance }
   simp_rw [is_preirreducible_iff_closed_union_closed, not_forall, not_or] at H
   rcases H with ⟨S, T, hS, hT, h₁, h₂, h₃⟩
   erw [not_forall] at h₂ h₃

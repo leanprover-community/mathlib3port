@@ -97,8 +97,11 @@ variable {R} (σ)
 @[simps apply]
 def mapEquiv [CommSemiring S₁] [CommSemiring S₂] (e : S₁ ≃+* S₂) :
     MvPolynomial σ S₁ ≃+* MvPolynomial σ S₂ :=
-  { map (e : S₁ →+* S₂) with toFun := map (e : S₁ →+* S₂), invFun := map (e.symm : S₂ →+* S₁),
-    left_inv := map_left_inverse e.left_inv, right_inv := map_right_inverse e.right_inv }
+  { map (e : S₁ →+* S₂) with 
+    toFun := map (e : S₁ →+* S₂)
+    invFun := map (e.symm : S₂ →+* S₁)
+    left_inv := map_left_inverse e.left_inv
+    right_inv := map_right_inverse e.right_inv }
 #align mv_polynomial.map_equiv MvPolynomial.mapEquiv
 
 @[simp]

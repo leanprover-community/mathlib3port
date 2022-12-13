@@ -965,7 +965,7 @@ instance : CommMonoidWithZero (Associates α) :=
     zero_mul := by 
       rintro ⟨a⟩
       show Associates.mk (0 * a) = Associates.mk 0
-      rw [zero_mul],
+      rw [zero_mul]
     mul_zero := by 
       rintro ⟨a⟩
       show Associates.mk (a * 0) = Associates.mk 0
@@ -1113,12 +1113,13 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
 
 instance : CancelCommMonoidWithZero (Associates α) :=
   { (inferInstance : CommMonoidWithZero (Associates α)) with
-    mul_left_cancel_of_ne_zero := eq_of_mul_eq_mul_left,
+    mul_left_cancel_of_ne_zero := eq_of_mul_eq_mul_left
     mul_right_cancel_of_ne_zero := eq_of_mul_eq_mul_right }
 
 instance : CanonicallyOrderedMonoid (Associates α) :=
   { Associates.cancelCommMonoidWithZero, Associates.boundedOrder, Associates.orderedCommMonoid with
-    exists_mul_of_le := fun a b => id, le_self_mul := fun a b => ⟨b, rfl⟩ }
+    exists_mul_of_le := fun a b => id
+    le_self_mul := fun a b => ⟨b, rfl⟩ }
 
 theorem dvd_not_unit_iff_lt {a b : Associates α} : DvdNotUnit a b ↔ a < b :=
   dvd_and_not_dvd_iff.symm

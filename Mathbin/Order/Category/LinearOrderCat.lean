@@ -50,7 +50,7 @@ instance (α : LinearOrderCat) : LinearOrder α :=
 instance hasForgetToLattice :
     HasForget₂ LinearOrderCat
       LatticeCat where forget₂ :=
-    { obj := fun X => LatticeCat.of X,
+    { obj := fun X => LatticeCat.of X
       map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 #align LinearOrder.has_forget_to_Lattice LinearOrderCat.hasForgetToLattice
 

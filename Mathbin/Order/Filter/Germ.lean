@@ -356,14 +356,16 @@ instance [CommSemigroup M] : CommSemigroup (Germ l M) :=
 
 @[to_additive AddLeftCancelSemigroup]
 instance [LeftCancelSemigroup M] : LeftCancelSemigroup (Germ l M) :=
-  { Germ.semigroup with mul := (· * ·),
+  { Germ.semigroup with 
+    mul := (· * ·)
     mul_left_cancel := fun f₁ f₂ f₃ =>
       (induction_on₃ f₁ f₂ f₃) fun f₁ f₂ f₃ H =>
         coe_eq.2 ((coe_eq.1 H).mono fun x => mul_left_cancel) }
 
 @[to_additive AddRightCancelSemigroup]
 instance [RightCancelSemigroup M] : RightCancelSemigroup (Germ l M) :=
-  { Germ.semigroup with mul := (· * ·),
+  { Germ.semigroup with 
+    mul := (· * ·)
     mul_right_cancel := fun f₁ f₂ f₃ =>
       (induction_on₃ f₁ f₂ f₃) fun f₁ f₂ f₃ H =>
         coe_eq.2 <| (coe_eq.1 H).mono fun x => mul_right_cancel }
@@ -416,11 +418,14 @@ theorem coe_coe_mul_hom [Monoid M] : (coeMulHom l : (α → M) → Germ l M) = c
 
 @[to_additive]
 instance [CommMonoid M] : CommMonoid (Germ l M) :=
-  { Germ.commSemigroup, Germ.monoid with mul := (· * ·), one := 1 }
+  { Germ.commSemigroup, Germ.monoid with 
+    mul := (· * ·)
+    one := 1 }
 
 instance [AddMonoidWithOne M] : AddMonoidWithOne (Germ l M) :=
-  { Germ.hasOne, Germ.addMonoid with natCast := fun n => ↑(n : M),
-    nat_cast_zero := congr_arg coe Nat.cast_zero,
+  { Germ.hasOne, Germ.addMonoid with 
+    natCast := fun n => ↑(n : M)
+    nat_cast_zero := congr_arg coe Nat.cast_zero
     nat_cast_succ := fun n => congr_arg coe (Nat.cast_succ _) }
 
 @[to_additive]
@@ -458,14 +463,19 @@ instance [DivInvMonoid G] : DivInvMonoid (Germ l G) :=
 
 @[to_additive]
 instance [Group G] : Group (Germ l G) :=
-  { Germ.divInvMonoid with mul := (· * ·), one := 1,
+  { Germ.divInvMonoid with 
+    mul := (· * ·)
+    one := 1
     mul_left_inv := by 
       rintro ⟨f⟩
       exact congr_arg (Quot.mk _) (mul_left_inv f) }
 
 @[to_additive]
 instance [CommGroup G] : CommGroup (Germ l G) :=
-  { Germ.group, Germ.commMonoid with mul := (· * ·), one := 1, inv := Inv.inv }
+  { Germ.group, Germ.commMonoid with 
+    mul := (· * ·)
+    one := 1
+    inv := Inv.inv }
 
 end Monoid
 
@@ -648,7 +658,8 @@ instance [Preorder β] : Preorder (Germ l
   le_trans f₁ f₂ f₃ := (induction_on₃ f₁ f₂ f₃) fun f₁ f₂ f₃ => EventuallyLe.trans
 
 instance [PartialOrder β] : PartialOrder (Germ l β) :=
-  { Germ.preorder with le := (· ≤ ·),
+  { Germ.preorder with 
+    le := (· ≤ ·)
     le_antisymm := fun f g =>
       (induction_on₂ f g) fun f g h₁ h₂ => (EventuallyLe.antisymm h₁ h₂).germ_eq }
 

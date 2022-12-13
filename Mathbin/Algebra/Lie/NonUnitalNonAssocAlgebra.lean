@@ -49,8 +49,12 @@ def CommutatorRing (L : Type v) : Type v :=
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
 instance : NonUnitalNonAssocSemiring (CommutatorRing L) :=
   show NonUnitalNonAssocSemiring L from
-    { (inferInstance : AddCommMonoid L) with mul := Bracket.bracket, left_distrib := lie_add,
-      right_distrib := add_lie, zero_mul := zero_lie, mul_zero := lie_zero }
+    { (inferInstance : AddCommMonoid L) with
+      mul := Bracket.bracket
+      left_distrib := lie_add
+      right_distrib := add_lie
+      zero_mul := zero_lie
+      mul_zero := lie_zero }
 
 namespace LieAlgebra
 
@@ -88,7 +92,10 @@ variable {R L} {L₂ : Type w} [LieRing L₂] [LieAlgebra R L₂]
 regard a `lie_hom` as a `non_unital_alg_hom`. -/
 @[simps]
 def toNonUnitalAlgHom (f : L →ₗ⁅R⁆ L₂) : CommutatorRing L →ₙₐ[R] CommutatorRing L₂ :=
-  { f with toFun := f, map_zero' := f.map_zero, map_mul' := f.map_lie }
+  { f with 
+    toFun := f
+    map_zero' := f.map_zero
+    map_mul' := f.map_lie }
 #align lie_hom.to_non_unital_alg_hom LieHom.toNonUnitalAlgHom
 
 theorem to_non_unital_alg_hom_injective :

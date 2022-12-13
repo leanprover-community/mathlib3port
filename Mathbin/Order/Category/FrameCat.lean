@@ -65,7 +65,9 @@ deriving instance LargeCategory, ConcreteCategory for FrameCat
 
 instance hasForgetToLattice :
     HasForget₂ FrameCat
-      LatticeCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => FrameHom.toLatticeHom }
+      LatticeCat where forget₂ :=
+    { obj := fun X => ⟨X⟩
+      map := fun X Y => FrameHom.toLatticeHom }
 #align Frame.has_forget_to_Lattice FrameCat.hasForgetToLattice
 
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/

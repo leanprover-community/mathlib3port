@@ -269,7 +269,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                    "{"
                    []
                    [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-                    ","
+                    []
                     (Term.structInstField
                      (Term.structInstLVal `inj' [])
                      ":="
@@ -297,7 +297,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                               (Tactic.rwRule [] `e)]
                              "]")
                             [])]))))))
-                    ","
+                    []
                     (Term.structInstField
                      (Term.structInstLVal `map_rel_iff' [])
                      ":="
@@ -462,7 +462,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                   "{"
                   []
                   [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `inj' [])
                     ":="
@@ -490,7 +490,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                              (Tactic.rwRule [] `e)]
                             "]")
                            [])]))))))
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `map_rel_iff' [])
                     ":="
@@ -647,7 +647,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
               "{"
               []
               [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `inj' [])
                 ":="
@@ -675,7 +675,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                          (Tactic.rwRule [] `e)]
                         "]")
                        [])]))))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `map_rel_iff' [])
                 ":="
@@ -789,7 +789,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
           "{"
           []
           [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-           ","
+           []
            (Term.structInstField
             (Term.structInstLVal `inj' [])
             ":="
@@ -813,7 +813,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                     [(Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `e)]
                     "]")
                    [])]))))))
-           ","
+           []
            (Term.structInstField
             (Term.structInstLVal `map_rel_iff' [])
             ":="
@@ -855,7 +855,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
         "{"
         []
         [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `inj' [])
           ":="
@@ -879,7 +879,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                   [(Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `e)]
                   "]")
                  [])]))))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `map_rel_iff' [])
           ":="
@@ -919,7 +919,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
        "{"
        []
        [(Term.structInstField (Term.structInstLVal `toFun []) ":=" `f)
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `inj' [])
          ":="
@@ -943,7 +943,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                  [(Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `hf) "," (Tactic.rwRule [] `e)]
                  "]")
                 [])]))))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `map_rel_iff' [])
          ":="
@@ -1460,9 +1460,7 @@ theorem
               exact
                 {
                   toFun := f
-                    ,
                     inj' := fun x y e => by ext1 rw [ hf , hf , e ]
-                    ,
                     map_rel_iff'
                       :=
                       fun

@@ -404,10 +404,12 @@ def equivUnitsAffineMap :
           P₁)ˣ where 
   toFun e := ⟨e, e.symm, congr_arg coe e.symm_trans_self, congr_arg coe e.self_trans_symm⟩
   invFun u :=
-    { toFun := (u : P₁ →ᵃ[k] P₁), invFun := (↑u⁻¹ : P₁ →ᵃ[k] P₁),
-      left_inv := AffineMap.congr_fun u.inv_mul, right_inv := AffineMap.congr_fun u.mul_inv,
+    { toFun := (u : P₁ →ᵃ[k] P₁)
+      invFun := (↑u⁻¹ : P₁ →ᵃ[k] P₁)
+      left_inv := AffineMap.congr_fun u.inv_mul
+      right_inv := AffineMap.congr_fun u.mul_inv
       linear :=
-        LinearMap.GeneralLinearGroup.generalLinearEquiv _ _ <| Units.map AffineMap.linearHom u,
+        LinearMap.GeneralLinearGroup.generalLinearEquiv _ _ <| Units.map AffineMap.linearHom u
       map_vadd' := fun _ _ => (u : P₁ →ᵃ[k] P₁).map_vadd _ _ }
   left_inv e := AffineEquiv.ext fun x => rfl
   right_inv u := Units.ext <| AffineMap.ext fun x => rfl

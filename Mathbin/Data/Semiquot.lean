@@ -187,9 +187,11 @@ instance : PartialOrder
   le_antisymm s t h₁ h₂ := ext_s.2 (Set.Subset.antisymm h₁ h₂)
 
 instance : SemilatticeSup (Semiquot α) :=
-  { Semiquot.partialOrder with sup := fun s => blur s.s,
-    le_sup_left := fun s t => Set.subset_union_left _ _,
-    le_sup_right := fun s t => Set.subset_union_right _ _, sup_le := fun s t u => Set.union_subset }
+  { Semiquot.partialOrder with 
+    sup := fun s => blur s.s
+    le_sup_left := fun s t => Set.subset_union_left _ _
+    le_sup_right := fun s t => Set.subset_union_right _ _
+    sup_le := fun s t u => Set.union_subset }
 
 @[simp]
 theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=

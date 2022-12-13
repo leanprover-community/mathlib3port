@@ -88,8 +88,8 @@ instance forgetCreatesConnectedLimits [IsConnected J] {B : C} :
       (forget
         B) where CreatesLimit K :=
     createsLimitOfReflectsIso fun c t =>
-      { liftedCone := CreatesConnected.raiseCone c,
-        validLift := eqToIso (CreatesConnected.raised_cone_lowers_to_original c t),
+      { liftedCone := CreatesConnected.raiseCone c
+        validLift := eqToIso (CreatesConnected.raised_cone_lowers_to_original c t)
         makesLimit := CreatesConnected.raisedConeIsLimit t }
 #align
   category_theory.over.forget_creates_connected_limits CategoryTheory.Over.forgetCreatesConnectedLimits

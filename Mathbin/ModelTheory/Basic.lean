@@ -633,7 +633,9 @@ theorem injective (f : M ↪[L] N) : Function.Injective f :=
 /-- In an algebraic language, any injective homomorphism is an embedding. -/
 @[simps]
 def ofInjective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) : M ↪[L] N :=
-  { f with inj' := hf, map_rel' := fun n r x => StrongHomClass.map_rel f r x }
+  { f with 
+    inj' := hf
+    map_rel' := fun n r x => StrongHomClass.map_rel f r x }
 #align first_order.language.embedding.of_injective FirstOrder.Language.Embedding.ofInjective
 
 @[simp]
@@ -731,7 +733,7 @@ def symm (f : M ≃[L] N) : N ≃[L] M :=
       simp only [Equiv.to_fun_as_coe]
       rw [Equiv.symm_apply_eq]
       refine' Eq.trans _ (f.map_fun' f' (f.to_equiv.symm ∘ x)).symm
-      rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id],
+      rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id]
     map_rel' := fun n r x => by 
       simp only [Equiv.to_fun_as_coe]
       refine' (f.map_rel' r (f.to_equiv.symm ∘ x)).symm.trans _
@@ -977,7 +979,8 @@ def inducedStructure (e : M ≃ N) : L.StructureCat N :=
 /-- A bijection as a first-order isomorphism with the induced structure on the codomain. -/
 @[simps]
 def inducedStructureEquiv (e : M ≃ N) : @Language.Equiv L M N _ (inducedStructure e) :=
-  { e with map_fun' := fun n f x => by simp [← Function.comp.assoc e.symm e x],
+  { e with 
+    map_fun' := fun n f x => by simp [← Function.comp.assoc e.symm e x]
     map_rel' := fun n r x => by simp [← Function.comp.assoc e.symm e x] }
 #align equiv.induced_Structure_equiv Equiv.inducedStructureEquiv
 

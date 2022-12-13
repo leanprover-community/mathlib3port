@@ -81,7 +81,7 @@ def conePoint : Algebra T where
 def liftedCone : Cone D where 
   x := conePoint D c t
   π :=
-    { app := fun j => { f := c.π.app j },
+    { app := fun j => { f := c.π.app j }
       naturality' := fun X Y f => by 
         ext1
         dsimp
@@ -97,7 +97,7 @@ def liftedConeIsLimit :
       (liftedCone D c
         t) where 
   lift s :=
-    { f := t.lift ((forget T).mapCone s),
+    { f := t.lift ((forget T).mapCone s)
       h' :=
         t.hom_ext fun j => by 
           dsimp
@@ -122,8 +122,8 @@ noncomputable instance forgetCreatesLimits :
         T) where CreatesLimitsOfShape J 𝒥 :=
     { CreatesLimit := fun D =>
         creates_limit_of_reflects_iso fun c t =>
-          { liftedCone := forget_creates_limits.lifted_cone D c t,
-            validLift := cones.ext (iso.refl _) fun j => (id_comp _).symm,
+          { liftedCone := forget_creates_limits.lifted_cone D c t
+            validLift := cones.ext (iso.refl _) fun j => (id_comp _).symm
             makesLimit := forget_creates_limits.lifted_cone_is_limit _ _ _ } }
 #align category_theory.monad.forget_creates_limits CategoryTheory.Monad.forgetCreatesLimits
 
@@ -220,7 +220,9 @@ def coconePoint : Algebra T where
 def liftedCocone : Cocone D where 
   x := coconePoint c t
   ι :=
-    { app := fun j => { f := c.ι.app j, h' := commuting _ _ _ },
+    { app := fun j =>
+        { f := c.ι.app j
+          h' := commuting _ _ _ }
       naturality' := fun A B f => by 
         ext1
         dsimp
@@ -236,7 +238,7 @@ def liftedCoconeIsColimit :
       (liftedCocone c
         t) where 
   desc s :=
-    { f := t.desc ((forget T).mapCocone s),
+    { f := t.desc ((forget T).mapCocone s)
       h' :=
         (isColimitOfPreserves (T : C ⥤ C) t).hom_ext fun j => by
           dsimp
@@ -263,14 +265,17 @@ noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T)
     [PreservesColimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] : CreatesColimit D (forget T) :=
   creates_colimit_of_reflects_iso fun c t =>
     { liftedCocone :=
-        { x := coconePoint c t,
+        { x := coconePoint c t
           ι :=
-            { app := fun j => { f := c.ι.app j, h' := commuting _ _ _ },
+            { app := fun j =>
+                { f := c.ι.app j
+                  h' := commuting _ _ _ }
               naturality' := fun A B f => by 
                 ext1
                 dsimp
-                erw [comp_id, c.w] } },
-      validLift := Cocones.ext (Iso.refl _) (by tidy), makesColimit := liftedCoconeIsColimit _ _ }
+                erw [comp_id, c.w] } }
+      validLift := Cocones.ext (Iso.refl _) (by tidy)
+      makesColimit := liftedCoconeIsColimit _ _ }
 #align category_theory.monad.forget_creates_colimit CategoryTheory.Monad.forgetCreatesColimit
 
 noncomputable instance forgetCreatesColimitsOfShape [PreservesColimitsOfShape J (T : C ⥤ C)] :

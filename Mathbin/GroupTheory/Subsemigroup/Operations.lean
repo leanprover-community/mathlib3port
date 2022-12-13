@@ -81,8 +81,12 @@ def Subsemigroup.toAddSubsemigroup :
       AddSubsemigroup
         (Additive
           M) where 
-  toFun S := { carrier := Additive.toMul ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
-  invFun S := { carrier := Additive.ofMul ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
+  toFun S :=
+    { carrier := Additive.toMul ⁻¹' S
+      add_mem' := fun _ _ => S.mul_mem' }
+  invFun S :=
+    { carrier := Additive.ofMul ⁻¹' S
+      mul_mem' := fun _ _ => S.add_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -125,8 +129,12 @@ def AddSubsemigroup.toSubsemigroup :
       Subsemigroup
         (Multiplicative
           A) where 
-  toFun S := { carrier := Multiplicative.toAdd ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
-  invFun S := { carrier := Multiplicative.ofAdd ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
+  toFun S :=
+    { carrier := Multiplicative.toAdd ⁻¹' S
+      mul_mem' := fun _ _ => S.add_mem' }
+  invFun S :=
+    { carrier := Multiplicative.ofAdd ⁻¹' S
+      add_mem' := fun _ _ => S.mul_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -853,8 +861,10 @@ This is a bidirectional version of `mul_hom.srange_restrict`. -/
       "\nAn additive semigroup homomorphism `f : M →+ N` with a left-inverse `g : N → M` defines an additive\nequivalence between `M` and `f.srange`.\n\nThis is a bidirectional version of `add_hom.srange_restrict`. ",
   simps (config := { simpRhs := true })]
 def ofLeftInverse (f : M →ₙ* N) {g : N → M} (h : Function.LeftInverse g f) : M ≃* f.srange :=
-  { f.srangeRestrict with toFun := f.srangeRestrict, invFun := g ∘ MulMemClass.subtype f.srange,
-    left_inv := h,
+  { f.srangeRestrict with 
+    toFun := f.srangeRestrict
+    invFun := g ∘ MulMemClass.subtype f.srange
+    left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := MulHom.mem_srange.mp x.Prop
@@ -871,7 +881,9 @@ def subsemigroupMap (e : M ≃* N) (S : Subsemigroup M) : S ≃* S.map e.toMulHo
   { -- we restate this for `simps` to avoid `⇑e.symm.to_equiv x`
           e.toMulHom.subsemigroupMap
       S,
-    e.toEquiv.image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
+    e.toEquiv.image S with 
+    toFun := fun x => ⟨e x, _⟩
+    invFun := fun x => ⟨e.symm x, _⟩ }
 #align mul_equiv.subsemigroup_map MulEquiv.subsemigroupMap
 
 end MulEquiv

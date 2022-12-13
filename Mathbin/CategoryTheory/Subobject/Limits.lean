@@ -493,7 +493,12 @@ theorem image_subobject_iso_comp [HasEqualizers C] {X' : C} (h : X' ⟶ X) [IsIs
 theorem image_subobject_le {A B : C} {X : Subobject B} (f : A ⟶ B) [HasImage f] (h : A ⟶ X)
     (w : h ≫ X.arrow = f) : imageSubobject f ≤ X :=
   Subobject.le_of_comm
-    ((imageSubobjectIso f).Hom ≫ image.lift { i := (X : C), e := h, m := X.arrow }) (by simp)
+    ((imageSubobjectIso f).Hom ≫
+      image.lift
+        { i := (X : C)
+          e := h
+          m := X.arrow })
+    (by simp)
 #align category_theory.limits.image_subobject_le CategoryTheory.Limits.image_subobject_le
 
 theorem image_subobject_le_mk {A B : C} {X : C} (g : X ⟶ B) [Mono g] (f : A ⟶ B) [HasImage f]

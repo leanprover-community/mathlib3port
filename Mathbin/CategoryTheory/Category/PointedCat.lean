@@ -90,7 +90,9 @@ instance largeCategory : LargeCategory
 instance concreteCategory :
     ConcreteCategory
       PointedCat where 
-  forget := { obj := PointedCat.X, map := @Hom.toFun }
+  forget :=
+    { obj := PointedCat.X
+      map := @Hom.toFun }
   forget_faithful := ⟨@Hom.ext⟩
 #align Pointed.concrete_category PointedCat.concreteCategory
 
@@ -121,14 +123,14 @@ def typeToPointed : Type u ⥤
 def typeToPointedForgetAdjunction : typeToPointed ⊣ forget PointedCat :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
-        { toFun := fun f => f.toFun ∘ Option.some,
-          invFun := fun f => ⟨fun o => o.elim Y.point f, rfl⟩,
+        { toFun := fun f => f.toFun ∘ Option.some
+          invFun := fun f => ⟨fun o => o.elim Y.point f, rfl⟩
           left_inv := fun f => by 
             ext
             cases x
             exact f.map_point.symm
-            rfl,
-          right_inv := fun f => funext fun _ => rfl },
+            rfl
+          right_inv := fun f => funext fun _ => rfl }
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext
         cases x <;> rfl }

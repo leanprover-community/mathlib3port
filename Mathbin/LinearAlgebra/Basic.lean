@@ -99,7 +99,10 @@ variable (R M) [AddCommMonoid M] [Semiring R] [Module R M]
 `α →₀ β` and `α → β`. -/
 @[simps apply]
 noncomputable def linearEquivFunOnFinite : (α →₀ M) ≃ₗ[R] α → M :=
-  { equivFunOnFinite with toFun := coeFn, map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
+  { equivFunOnFinite with 
+    toFun := coeFn
+    map_add' := fun f g => rfl
+    map_smul' := fun c f => rfl }
 #align finsupp.linear_equiv_fun_on_finite Finsupp.linearEquivFunOnFinite
 
 @[simp]
@@ -123,7 +126,8 @@ theorem linear_equiv_fun_on_finite_symm_coe (f : α →₀ M) :
 /-- If `α` has a unique term, then the type of finitely supported functions `α →₀ M` is
 `R`-linearly equivalent to `M`. -/
 noncomputable def LinearEquiv.finsuppUnique (α : Type _) [Unique α] : (α →₀ M) ≃ₗ[R] M :=
-  { Finsupp.equivFunOnFinite.trans (Equiv.funUnique α M) with map_add' := fun x y => rfl,
+  { Finsupp.equivFunOnFinite.trans (Equiv.funUnique α M) with
+    map_add' := fun x y => rfl
     map_smul' := fun r x => rfl }
 #align finsupp.linear_equiv.finsupp_unique Finsupp.LinearEquiv.finsuppUnique
 
@@ -447,7 +451,8 @@ def applyₗ' :
       (M →ₗ[R] M₂) →ₗ[S]
         M₂ where 
   toFun v :=
-    { toFun := fun f => f v, map_add' := fun f g => f.add_apply g v,
+    { toFun := fun f => f v
+      map_add' := fun f g => f.add_apply g v
       map_smul' := fun x f => f.smul_apply x v }
   map_zero' := LinearMap.ext fun f => f.map_zero
   map_add' x y := LinearMap.ext fun f => f.map_add _ _
@@ -467,10 +472,12 @@ See note [bundled maps over different rings].
 -/
 @[simps]
 def ringLmapEquivSelf [Module S M] [SmulCommClass R S M] : (R →ₗ[R] M) ≃ₗ[S] M :=
-  { applyₗ' S (1 : R) with toFun := fun f => f 1, invFun := smulRight (1 : R →ₗ[R] R),
+  { applyₗ' S (1 : R) with 
+    toFun := fun f => f 1
+    invFun := smulRight (1 : R →ₗ[R] R)
     left_inv := fun f => by 
       ext
-      simp,
+      simp
     right_inv := fun x => by simp }
 #align linear_map.ring_lmap_equiv_self LinearMap.ringLmapEquivSelf
 
@@ -508,7 +515,8 @@ See also `linear_map.applyₗ'` for a version that works with two different semi
 This is the `linear_map` version of `add_monoid_hom.eval`. -/
 @[simps]
 def applyₗ : M →ₗ[R] (M →ₗ[R] M₂) →ₗ[R] M₂ :=
-  { applyₗ' R with toFun := fun v => { applyₗ' R v with toFun := fun f => f v },
+  { applyₗ' R with 
+    toFun := fun v => { applyₗ' R v with toFun := fun f => f v }
     map_smul' := fun x y => LinearMap.ext fun f => map_smul f _ _ }
 #align linear_map.applyₗ LinearMap.applyₗ
 
@@ -536,10 +544,10 @@ def smulRightₗ :
         M₂ →ₗ[R]
           M where 
   toFun f :=
-    { toFun := LinearMap.smulRight f,
+    { toFun := LinearMap.smulRight f
       map_add' := fun m m' => by 
         ext
-        apply smul_add,
+        apply smul_add
       map_smul' := fun c m => by 
         ext
         apply smul_comm }
@@ -722,7 +730,8 @@ include sc
 
 /-- The pushforward of a submodule `p ⊆ M` by `f : M → M₂` -/
 def map (f : F) (p : Submodule R M) : Submodule R₂ M₂ :=
-  { p.toAddSubmonoid.map f with carrier := f '' p,
+  { p.toAddSubmonoid.map f with 
+    carrier := f '' p
     smul_mem' := by 
       rintro c x ⟨y, hy, rfl⟩
       obtain ⟨a, rfl⟩ := σ₁₂.is_surjective c
@@ -812,7 +821,7 @@ noncomputable def equivMapOfInjective (f : F) (i : Injective f) (p : Submodule R
     map_add' := by 
       intros
       simp only [coe_add, map_add, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
-      rfl,
+      rfl
     map_smul' := by 
       intros
       simp only [coe_smul_of_tower, map_smulₛₗ, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
@@ -829,7 +838,8 @@ omit σ₂₁
 
 /-- The pullback of a submodule `p ⊆ M₂` along `f : M → M₂` -/
 def comap (f : F) (p : Submodule R₂ M₂) : Submodule R M :=
-  { p.toAddSubmonoid.comap f with carrier := f ⁻¹' p,
+  { p.toAddSubmonoid.comap f with 
+    carrier := f ⁻¹' p
     smul_mem' := fun a x h => by simp [p.smul_mem _ h] }
 #align submodule.comap Submodule.comap
 
@@ -1610,7 +1620,8 @@ theorem range_neg {R : Type _} {R₂ : Type _} {M : Type _} {M₂ : Type _} [Sem
 
 /-- A linear map version of `add_monoid_hom.eq_locus` -/
 def eqLocus (f g : M →ₛₗ[τ₁₂] M₂) : Submodule R M :=
-  { f.toAddMonoidHom.eqMlocus g.toAddMonoidHom with carrier := { x | f x = g x },
+  { f.toAddMonoidHom.eqMlocus g.toAddMonoidHom with
+    carrier := { x | f x = g x }
     smul_mem' := fun r x (hx : _ = _) =>
       show _ = _ by simpa only [LinearMap.map_smulₛₗ] using congr_arg ((· • ·) (τ₁₂ r)) hx }
 #align linear_map.eq_locus LinearMap.eqLocus
@@ -2190,7 +2201,10 @@ include σ₂₁
 
 /-- Between two zero modules, the zero map is an equivalence. -/
 instance : Zero (M ≃ₛₗ[σ₁₂] M₂) :=
-  ⟨{ (0 : M →ₛₗ[σ₁₂] M₂) with toFun := 0, invFun := 0, right_inv := fun x => Subsingleton.elim _ _,
+  ⟨{ (0 : M →ₛₗ[σ₁₂] M₂) with 
+      toFun := 0
+      invFun := 0
+      right_inv := fun x => Subsingleton.elim _ _
       left_inv := fun x => Subsingleton.elim _ _ }⟩
 
 omit σ₂₁
@@ -2261,10 +2275,10 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
         rw [Submodule.mem_map] at hy
         rcases hy with ⟨x, hx, hxy⟩
         subst hxy
-        simp only [symm_apply_apply, Submodule.coe_mk, coe_coe, hx]⟩,
+        simp only [symm_apply_apply, Submodule.coe_mk, coe_coe, hx]⟩
     left_inv := fun x => by
       simp only [LinearMap.dom_restrict_apply, LinearMap.cod_restrict_apply,
-        LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta],
+        LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta]
     right_inv := fun y => by 
       apply SetCoe.ext
       simp only [LinearMap.dom_restrict_apply, LinearMap.cod_restrict_apply,
@@ -2362,7 +2376,7 @@ protected def curry : (V × V₂ → R) ≃ₗ[R] V → V₂ → R :=
   { Equiv.curry _ _ _ with
     map_add' := fun _ _ => by 
       ext
-      rfl,
+      rfl
     map_smul' := fun _ _ => by 
       ext
       rfl }
@@ -2406,7 +2420,9 @@ variable (p q : Submodule R M)
 
 /-- Linear equivalence between two equal submodules. -/
 def ofEq (h : p = q) : p ≃ₗ[R] q :=
-  { Equiv.Set.ofEq (congr_arg _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equiv.Set.ofEq (congr_arg _ h) with
+    map_smul' := fun _ _ => rfl
+    map_add' := fun _ _ => rfl }
 #align linear_equiv.of_eq LinearEquiv.ofEq
 
 variable {p q}
@@ -2482,7 +2498,9 @@ omit σ₂₁ re₁₂ re₂₁
 
 /-- The top submodule of `M` is linearly equivalent to `M`. -/
 def ofTop (h : p = ⊤) : p ≃ₗ[R] M :=
-  { p.Subtype with invFun := fun x => ⟨x, h.symm ▸ trivial⟩, left_inv := fun ⟨x, h⟩ => rfl,
+  { p.Subtype with 
+    invFun := fun x => ⟨x, h.symm ▸ trivial⟩
+    left_inv := fun ⟨x, h⟩ => rfl
     right_inv := fun x => rfl }
 #align linear_equiv.of_top LinearEquiv.ofTop
 
@@ -2504,7 +2522,10 @@ include σ₂₁ re₁₂ re₂₁
 
 /-- If a linear map has an inverse, it is a linear equivalence. -/
 def ofLinear (h₁ : f.comp g = LinearMap.id) (h₂ : g.comp f = LinearMap.id) : M ≃ₛₗ[σ₁₂] M₂ :=
-  { f with invFun := g, left_inv := LinearMap.ext_iff.1 h₂, right_inv := LinearMap.ext_iff.1 h₁ }
+  { f with 
+    invFun := g
+    left_inv := LinearMap.ext_iff.1 h₂
+    right_inv := LinearMap.ext_iff.1 h₁ }
 #align linear_equiv.of_linear LinearEquiv.ofLinear
 
 omit σ₂₁ re₁₂ re₂₁
@@ -2580,7 +2601,10 @@ This is a computable alternative to `linear_equiv.of_injective`, and a bidirecti
 `linear_map.range_restrict`. -/
 def ofLeftInverse [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {g : M₂ → M}
     (h : Function.LeftInverse g f) : M ≃ₛₗ[σ₁₂] f.range :=
-  { f.range_restrict with toFun := f.range_restrict, invFun := g ∘ f.range.Subtype, left_inv := h,
+  { f.range_restrict with 
+    toFun := f.range_restrict
+    invFun := g ∘ f.range.Subtype
+    left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := LinearMap.mem_range.mp x.Prop
@@ -2844,8 +2868,9 @@ def equivSubtypeMap (p : Submodule R M) (q : Submodule R p) : q ≃ₗ[R] q.map 
         refine' ⟨x, hx, rfl⟩) with
     invFun := by 
       rintro ⟨x, hx⟩
-      refine' ⟨⟨x, _⟩, _⟩ <;> rcases hx with ⟨⟨_, h⟩, _, rfl⟩ <;> assumption,
-    left_inv := fun ⟨⟨_, _⟩, _⟩ => rfl, right_inv := fun ⟨x, ⟨_, h⟩, _, rfl⟩ => rfl }
+      refine' ⟨⟨x, _⟩, _⟩ <;> rcases hx with ⟨⟨_, h⟩, _, rfl⟩ <;> assumption
+    left_inv := fun ⟨⟨_, _⟩, _⟩ => rfl
+    right_inv := fun ⟨x, ⟨_, h⟩, _, rfl⟩ => rfl }
 #align submodule.equiv_subtype_map Submodule.equivSubtypeMap
 
 @[simp]
@@ -3110,8 +3135,9 @@ instance : CoeFun (GeneralLinearGroup R M) fun _ => M → M := by infer_instance
 
 /-- An invertible linear map `f` determines an equivalence from `M` to itself. -/
 def toLinearEquiv (f : GeneralLinearGroup R M) : M ≃ₗ[R] M :=
-  { f.val with invFun := f.inv.toFun,
-    left_inv := fun m => show (f.inv * f.val) m = m by erw [f.inv_val] <;> simp,
+  { f.val with 
+    invFun := f.inv.toFun
+    left_inv := fun m => show (f.inv * f.val) m = m by erw [f.inv_val] <;> simp
     right_inv := fun m => show (f.val * f.inv) m = m by erw [f.val_inv] <;> simp }
 #align linear_map.general_linear_group.to_linear_equiv LinearMap.GeneralLinearGroup.toLinearEquiv
 

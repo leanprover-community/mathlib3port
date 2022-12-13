@@ -321,7 +321,9 @@ def fundamentalGroupoidFunctor :
       CategoryTheory.GroupoidCat where 
   obj X := { α := FundamentalGroupoid X }
   map X Y f :=
-    { obj := f, map := fun x y p => p.mapFn f, map_id' := fun X => rfl,
+    { obj := f
+      map := fun x y p => p.mapFn f
+      map_id' := fun X => rfl
       map_comp' := fun x y z p q =>
         (Quotient.induction_on₂ p q) fun a b => by
           simp [comp_eq, ← Path.Homotopic.map_lift, ← Path.Homotopic.comp_lift] }

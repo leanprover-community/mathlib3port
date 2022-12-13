@@ -170,7 +170,10 @@ theorem infi_to_subfield {ι : Sort _} (S : ι → IntermediateField F E) :
 /-- Construct an algebra isomorphism from an equality of intermediate fields -/
 @[simps apply]
 def equivOfEq {S T : IntermediateField F E} (h : S = T) : S ≃ₐ[F] T := by
-  refine' { toFun := fun x => ⟨x, _⟩, invFun := fun x => ⟨x, _⟩.. } <;> tidy
+  refine'
+      { toFun := fun x => ⟨x, _⟩
+        invFun := fun x => ⟨x, _⟩.. } <;>
+    tidy
 #align intermediate_field.equiv_of_eq IntermediateField.equivOfEq
 
 @[simp]
@@ -397,7 +400,8 @@ theorem adjoin_eq_algebra_adjoin (inv_mem : ∀ x ∈ Algebra.adjoin F S, x⁻¹
   le_antisymm
     (show
       adjoin F S ≤
-        { Algebra.adjoin F S with neg_mem' := fun x => (Algebra.adjoin F S).neg_mem,
+        { Algebra.adjoin F S with
+          neg_mem' := fun x => (Algebra.adjoin F S).neg_mem
           inv_mem' := inv_mem }
       from adjoin_le_iff.mpr Algebra.subset_adjoin)
     (algebra_adjoin_le_adjoin _ _)
@@ -558,21 +562,21 @@ theorem adjoinSimpleIsCompactElement (x : E) : IsCompactElement F⟮⟯ := by
   rintro s ⟨F₀, hF₀⟩ hs hx
   simp only [adjoin_simple_le_iff] at hx⊢
   let F : IntermediateField F E :=
-    { carrier := ⋃ E ∈ s, ↑E,
+    { carrier := ⋃ E ∈ s, ↑E
       add_mem' := by
         rintro x₁ x₂ ⟨-, ⟨F₁, rfl⟩, ⟨-, ⟨hF₁, rfl⟩, hx₁⟩⟩ ⟨-, ⟨F₂, rfl⟩, ⟨-, ⟨hF₂, rfl⟩, hx₂⟩⟩
         obtain ⟨F₃, hF₃, h₁₃, h₂₃⟩ := hs F₁ hF₁ F₂ hF₂
-        exact mem_Union_of_mem F₃ (mem_Union_of_mem hF₃ (F₃.add_mem (h₁₃ hx₁) (h₂₃ hx₂))),
+        exact mem_Union_of_mem F₃ (mem_Union_of_mem hF₃ (F₃.add_mem (h₁₃ hx₁) (h₂₃ hx₂)))
       neg_mem' := by 
         rintro x ⟨-, ⟨E, rfl⟩, ⟨-, ⟨hE, rfl⟩, hx⟩⟩
-        exact mem_Union_of_mem E (mem_Union_of_mem hE (E.neg_mem hx)),
+        exact mem_Union_of_mem E (mem_Union_of_mem hE (E.neg_mem hx))
       mul_mem' := by
         rintro x₁ x₂ ⟨-, ⟨F₁, rfl⟩, ⟨-, ⟨hF₁, rfl⟩, hx₁⟩⟩ ⟨-, ⟨F₂, rfl⟩, ⟨-, ⟨hF₂, rfl⟩, hx₂⟩⟩
         obtain ⟨F₃, hF₃, h₁₃, h₂₃⟩ := hs F₁ hF₁ F₂ hF₂
-        exact mem_Union_of_mem F₃ (mem_Union_of_mem hF₃ (F₃.mul_mem (h₁₃ hx₁) (h₂₃ hx₂))),
+        exact mem_Union_of_mem F₃ (mem_Union_of_mem hF₃ (F₃.mul_mem (h₁₃ hx₁) (h₂₃ hx₂)))
       inv_mem' := by 
         rintro x ⟨-, ⟨E, rfl⟩, ⟨-, ⟨hE, rfl⟩, hx⟩⟩
-        exact mem_Union_of_mem E (mem_Union_of_mem hE (E.inv_mem hx)),
+        exact mem_Union_of_mem E (mem_Union_of_mem hE (E.inv_mem hx))
       algebra_map_mem' := fun x =>
         mem_Union_of_mem F₀ (mem_Union_of_mem hF₀ (F₀.algebra_map_mem x)) }
   have key : Sup s ≤ F := Sup_le fun E hE => subset_Union_of_subset E (subset_Union _ hE)

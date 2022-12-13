@@ -41,7 +41,10 @@ def Over (X : T) :=
 
 -- Satisfying the inhabited linter
 instance Over.inhabited [Inhabited T] :
-    Inhabited (Over (default : T)) where default := { left := default, Hom := 𝟙 _ }
+    Inhabited (Over
+        (default : T)) where default :=
+    { left := default
+      Hom := 𝟙 _ }
 #align category_theory.over.inhabited CategoryTheory.Over.inhabited
 
 namespace Over
@@ -136,7 +139,8 @@ theorem forget_map {U V : Over X} {f : U ⟶ V} : (forget X).map f = f.left :=
 /-- The natural cocone over the forgetful functor `over X ⥤ T` with cocone point `X`. -/
 @[simps]
 def forgetCocone (X : T) : Limits.Cocone (forget X) :=
-  { x, ι := { app := Comma.hom } }
+  { x
+    ι := { app := Comma.hom } }
 #align category_theory.over.forget_cocone CategoryTheory.Over.forgetCocone
 
 /-- A morphism `f : X ⟶ Y` induces a functor `over X ⥤ over Y` in the obvious way.
@@ -298,7 +302,9 @@ variable {D : Type u₂} [Category.{v₂} D]
 def post (F : T ⥤ D) :
     Over X ⥤ Over (F.obj X) where 
   obj Y := mk <| F.map Y.Hom
-  map Y₁ Y₂ f := { left := F.map f.left, w' := by tidy <;> erw [← F.map_comp, w] }
+  map Y₁ Y₂ f :=
+    { left := F.map f.left
+      w' := by tidy <;> erw [← F.map_comp, w] }
 #align category_theory.over.post CategoryTheory.Over.post
 
 end
@@ -313,7 +319,10 @@ def Under (X : T) :=
 
 -- Satisfying the inhabited linter
 instance Under.inhabited [Inhabited T] :
-    Inhabited (Under (default : T)) where default := { right := default, Hom := 𝟙 _ }
+    Inhabited (Under
+        (default : T)) where default :=
+    { right := default
+      Hom := 𝟙 _ }
 #align category_theory.under.inhabited CategoryTheory.Under.inhabited
 
 namespace Under
@@ -399,7 +408,8 @@ theorem forget_map {U V : Under X} {f : U ⟶ V} : (forget X).map f = f.right :=
 /-- The natural cone over the forgetful functor `under X ⥤ T` with cone point `X`. -/
 @[simps]
 def forgetCone (X : T) : Limits.Cone (forget X) :=
-  { x, π := { app := Comma.hom } }
+  { x
+    π := { app := Comma.hom } }
 #align category_theory.under.forget_cone CategoryTheory.Under.forgetCone
 
 /-- A morphism `X ⟶ Y` induces a functor `under Y ⥤ under X` in the obvious way. -/
@@ -497,7 +507,9 @@ variable {D : Type u₂} [Category.{v₂} D]
 def post {X : T} (F : T ⥤ D) :
     Under X ⥤ Under (F.obj X) where 
   obj Y := mk <| F.map Y.Hom
-  map Y₁ Y₂ f := { right := F.map f.right, w' := by tidy <;> erw [← F.map_comp, w] }
+  map Y₁ Y₂ f :=
+    { right := F.map f.right
+      w' := by tidy <;> erw [← F.map_comp, w] }
 #align category_theory.under.post CategoryTheory.Under.post
 
 end

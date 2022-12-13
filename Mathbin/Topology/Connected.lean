@@ -908,7 +908,7 @@ theorem Subtype.preconnected_space {s : Set α} (h : IsPreconnected s) : Preconn
 #align subtype.preconnected_space Subtype.preconnected_space
 
 theorem Subtype.connected_space {s : Set α} (h : IsConnected s) : ConnectedSpace s :=
-  { to_preconnected_space := Subtype.preconnected_space h.IsPreconnected,
+  { to_preconnected_space := Subtype.preconnected_space h.IsPreconnected
     to_nonempty := h.Nonempty.to_subtype }
 #align subtype.connected_space Subtype.connected_space
 

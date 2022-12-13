@@ -38,7 +38,8 @@ namespace Submodule
 
 /-- The set `{0}` is the bottom element of the lattice of submodules. -/
 instance : Bot (Submodule R M) :=
-  ⟨{ (⊥ : AddSubmonoid M) with carrier := {0},
+  ⟨{ (⊥ : AddSubmonoid M) with 
+      carrier := {0}
       smul_mem' := by simp (config := { contextual := true }) }⟩
 
 instance inhabited' : Inhabited (Submodule R M) :=
@@ -139,7 +140,9 @@ theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ :=
 
 /-- The universal set is the top element of the lattice of submodules. -/
 instance : Top (Submodule R M) :=
-  ⟨{ (⊤ : AddSubmonoid M) with carrier := Set.univ, smul_mem' := fun _ _ _ => trivial }⟩
+  ⟨{ (⊤ : AddSubmonoid M) with 
+      carrier := Set.univ
+      smul_mem' := fun _ _ _ => trivial }⟩
 
 @[simp]
 theorem top_coe : ((⊤ : Submodule R M) : Set M) = Set.univ :=
@@ -205,8 +208,9 @@ def topEquiv : (⊤ : Submodule R M) ≃ₗ[R]
 
 instance : HasInf (Submodule R M) :=
   ⟨fun S =>
-    { carrier := ⋂ s ∈ S, (s : Set M), zero_mem' := by simp [zero_mem],
-      add_mem' := by simp (config := { contextual := true }) [add_mem],
+    { carrier := ⋂ s ∈ S, (s : Set M)
+      zero_mem' := by simp [zero_mem]
+      add_mem' := by simp (config := { contextual := true }) [add_mem]
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
 private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → inf S ≤ p :=
@@ -219,21 +223,27 @@ private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q ∈ S, p ≤ q) �
 
 instance : HasInf (Submodule R M) :=
   ⟨fun p q =>
-    { carrier := p ∩ q, zero_mem' := by simp [zero_mem],
-      add_mem' := by simp (config := { contextual := true }) [add_mem],
+    { carrier := p ∩ q
+      zero_mem' := by simp [zero_mem]
+      add_mem' := by simp (config := { contextual := true }) [add_mem]
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with
-    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha,
-    le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
-    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := (· ⊓ ·),
-    le_inf := fun a b c => Set.subset_inter, inf_le_left := fun a b => Set.inter_subset_left _ _,
-    inf_le_right := fun a b => Set.inter_subset_right _ _,
-    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t },
-    le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs, Sup_le := fun s p hs => Inf_le' hs,
-    inf := inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
+    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x }
+    le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha
+    le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb
+    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩
+    inf := (· ⊓ ·)
+    le_inf := fun a b c => Set.subset_inter
+    inf_le_left := fun a b => Set.inter_subset_left _ _
+    inf_le_right := fun a b => Set.inter_subset_right _ _
+    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }
+    le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs
+    Sup_le := fun s p hs => Inf_le' hs
+    inf := inf
+    le_Inf := fun s a => le_Inf'
+    Inf_le := fun s a => Inf_le' }
 
 @[simp]
 theorem inf_coe : ↑(p ⊓ q) = (p ∩ q : Set M) :=

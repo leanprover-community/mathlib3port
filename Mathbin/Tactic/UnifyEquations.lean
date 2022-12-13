@@ -427,8 +427,10 @@ unsafe def unify_equations (eqs : interactive.parse (many ident)) : tactic Unit 
 #align tactic.interactive.unify_equations tactic.interactive.unify_equations
 
 add_tactic_doc
-  { Name := "unify_equations", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.unify_equations], tags := ["simplification"] }
+  { Name := "unify_equations"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.unify_equations]
+    tags := ["simplification"] }
 
 end Interactive
 

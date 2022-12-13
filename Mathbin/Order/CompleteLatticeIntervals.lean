@@ -106,15 +106,15 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
     le_cSup := by 
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).le_cSup_image hct h_bdd
-      rwa [subset_Sup_of_within s (h_Sup ⟨c, hct⟩ h_bdd)] at this,
+      rwa [subset_Sup_of_within s (h_Sup ⟨c, hct⟩ h_bdd)] at this
     cSup_le := by 
       rintro t B ht hB
       have := (Subtype.mono_coe s).cSup_image_le ht hB
-      rwa [subset_Sup_of_within s (h_Sup ht ⟨B, hB⟩)] at this,
+      rwa [subset_Sup_of_within s (h_Sup ht ⟨B, hB⟩)] at this
     le_cInf := by 
       intro t B ht hB
       have := (Subtype.mono_coe s).le_cInf_image ht hB
-      rwa [subset_Inf_of_within s (h_Inf ht ⟨B, hB⟩)] at this,
+      rwa [subset_Inf_of_within s (h_Inf ht ⟨B, hB⟩)] at this
     cInf_le := by 
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).cInf_image_le hct h_bdd

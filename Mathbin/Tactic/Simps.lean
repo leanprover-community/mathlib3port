@@ -316,12 +316,20 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
             | (inl (old_nm, new_nm), is_prefix) =>
               if old_nm ∈ projs fun x => x then
                 projs fun proj =>
-                  if proj = old_nm then { proj with new_name := new_nm, IsPrefix } else proj
+                  if proj = old_nm then
+                    { proj with 
+                      new_name := new_nm
+                      IsPrefix }
+                  else proj
               else projs ++ [⟨old_nm, new_nm, tt, is_prefix⟩]
             | (inr nm, is_prefix) =>
               if nm ∈ projs fun x => x then
                 projs fun proj =>
-                  if proj = nm then { proj with is_default := ff, IsPrefix } else proj
+                  if proj = nm then
+                    { proj with 
+                      is_default := ff
+                      IsPrefix }
+                  else proj
               else projs ++ [⟨nm, nm, ff, is_prefix⟩])
           projs
       when_tracing `simps.debug
@@ -557,8 +565,10 @@ unsafe def initialize_simps_projections_cmd (_ : parse <| tk "initialize_simps_p
 #align initialize_simps_projections_cmd initialize_simps_projections_cmd
 
 add_tactic_doc
-  { Name := "initialize_simps_projections", category := DocCategory.cmd,
-    declNames := [`initialize_simps_projections_cmd], tags := ["simplification"] }
+  { Name := "initialize_simps_projections"
+    category := DocCategory.cmd
+    declNames := [`initialize_simps_projections_cmd]
+    tags := ["simplification"] }
 
 /-- Configuration options for the `@[simps]` attribute.
   * `attrs` specifies the list of attributes given to the generated lemmas. Default: ``[`simp]``.
@@ -661,7 +671,7 @@ unsafe def simps_get_projection_exprs (e : environment) (tgt : expr) (rhs : expr
     proj_data.map fun proj =>
       (rhs_args.inth proj.proj_nrs.head,
         { proj with
-          expr := (proj.expr.instantiate_univ_params univs).instantiate_lambdas_or_apps params,
+          expr := (proj.expr.instantiate_univ_params univs).instantiate_lambdas_or_apps params
           proj_nrs := proj.proj_nrs.tail })
   return new_proj_data
 #align simps_get_projection_exprs simps_get_projection_exprs
@@ -840,7 +850,10 @@ unsafe def simps_add_projections :
                               >   {← rhs_ap}
                               > Retrying with the options \{ rhs_md := semireducible, simp_rhs := tt}.")
               simps_add_projections e nm type lhs rhs args univs must_be_str
-                  { cfg with rhsMd := semireducible, simpRhs := tt } todo to_apply
+                  { cfg with 
+                    rhsMd := semireducible
+                    simpRhs := tt }
+                  todo to_apply
             else do
               when (to_apply ≠ []) <|
                   throwError "Invalid simp lemma {(← nm)}.
@@ -1018,6 +1031,8 @@ unsafe def simps_attr :
 #align simps_attr simps_attr
 
 add_tactic_doc
-  { Name := "simps", category := DocCategory.attr, declNames := [`simps_attr],
+  { Name := "simps"
+    category := DocCategory.attr
+    declNames := [`simps_attr]
     tags := ["simplification"] }
 

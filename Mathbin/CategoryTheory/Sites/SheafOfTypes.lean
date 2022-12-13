@@ -501,7 +501,7 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
       rw [← functor_to_types.naturality _ _ α g.op]
       rfl
   invFun t :=
-    { app := fun Y f => t.1 _ f.2,
+    { app := fun Y f => t.1 _ f.2
       naturality' := fun Y Z g => by 
         ext ⟨f, hf⟩
         apply t.2.to_sieve_compatible _ }
@@ -1085,9 +1085,11 @@ def sheafOfTypesBotEquiv :
       Cᵒᵖ ⥤ Type w where 
   Functor := sheafOfTypesToPresheaf _
   inverse :=
-    { obj := fun P => ⟨P, Presieve.isSheafBot⟩,
+    { obj := fun P => ⟨P, Presieve.isSheafBot⟩
       map := fun P₁ P₂ f => (sheafOfTypesToPresheaf _).Preimage f }
-  unitIso := { Hom := { app := fun _ => ⟨𝟙 _⟩ }, inv := { app := fun _ => ⟨𝟙 _⟩ } }
+  unitIso :=
+    { Hom := { app := fun _ => ⟨𝟙 _⟩ }
+      inv := { app := fun _ => ⟨𝟙 _⟩ } }
   counitIso := Iso.refl _
 #align category_theory.SheafOfTypes_bot_equiv CategoryTheory.sheafOfTypesBotEquiv
 

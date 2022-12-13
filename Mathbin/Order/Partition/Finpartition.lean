@@ -92,7 +92,9 @@ def ofErase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.Sup
 @[simps]
 def ofSubset {a b : α} (P : Finpartition a) {parts : Finset α} (subset : parts ⊆ P.parts)
     (sup_parts : parts.sup id = b) : Finpartition b :=
-  { parts, SupIndep := P.SupIndep.Subset subset, sup_parts,
+  { parts
+    SupIndep := P.SupIndep.Subset subset
+    sup_parts
     not_bot_mem := fun h => P.not_bot_mem (subset h) }
 #align finpartition.of_subset Finpartition.ofSubset
 
@@ -207,11 +209,12 @@ instance : LE (Finpartition a) :=
   ⟨fun P Q => ∀ ⦃b⦄, b ∈ P.parts → ∃ c ∈ Q.parts, b ≤ c⟩
 
 instance : PartialOrder (Finpartition a) :=
-  { Finpartition.hasLe with le_refl := fun P b hb => ⟨b, hb, le_rfl⟩,
+  { Finpartition.hasLe with 
+    le_refl := fun P b hb => ⟨b, hb, le_rfl⟩
     le_trans := fun P Q R hPQ hQR b hb => by
       obtain ⟨c, hc, hbc⟩ := hPQ hb
       obtain ⟨d, hd, hcd⟩ := hQR hc
-      exact ⟨d, hd, hbc.trans hcd⟩,
+      exact ⟨d, hd, hbc.trans hcd⟩
     le_antisymm := fun P Q hPQ hQP => by 
       ext b
       refine' ⟨fun hb => _, fun hb => _⟩
@@ -294,11 +297,11 @@ instance : SemilatticeInf (Finpartition a) :=
     inf_le_left := fun P Q b hb => by
       obtain ⟨c, hc, rfl⟩ := mem_image.1 (mem_of_mem_erase hb)
       rw [mem_product] at hc
-      exact ⟨c.1, hc.1, inf_le_left⟩,
+      exact ⟨c.1, hc.1, inf_le_left⟩
     inf_le_right := fun P Q b hb => by
       obtain ⟨c, hc, rfl⟩ := mem_image.1 (mem_of_mem_erase hb)
       rw [mem_product] at hc
-      exact ⟨c.2, hc.2, inf_le_right⟩,
+      exact ⟨c.2, hc.2, inf_le_right⟩
     le_inf := fun P Q R hPQ hPR b hb => by
       obtain ⟨c, hc, hbc⟩ := hPQ hb
       obtain ⟨d, hd, hbd⟩ := hPR hb
@@ -462,13 +465,13 @@ theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card := by
 
 /-- `⊥` is the partition in singletons, aka discrete partition. -/
 instance (s : Finset α) : Bot (Finpartition s) :=
-  ⟨{ parts := s.map ⟨singleton, singleton_injective⟩,
+  ⟨{  parts := s.map ⟨singleton, singleton_injective⟩
       SupIndep :=
         Set.PairwiseDisjoint.sup_indep
           (by 
             rw [Finset.coe_map]
-            exact finset.pairwise_disjoint_range_singleton.subset (Set.image_subset_range _ _)),
-      sup_parts := by rw [sup_map, comp.left_id, embedding.coe_fn_mk, Finset.sup_singleton'],
+            exact finset.pairwise_disjoint_range_singleton.subset (Set.image_subset_range _ _))
+      sup_parts := by rw [sup_map, comp.left_id, embedding.coe_fn_mk, Finset.sup_singleton']
       not_bot_mem := by simp }⟩
 
 @[simp]

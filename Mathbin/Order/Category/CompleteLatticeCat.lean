@@ -59,7 +59,7 @@ instance hasForgetToBoundedLattice :
     HasForget₂ CompleteLatticeCat
       BoundedLatticeCat where 
   forget₂ :=
-    { obj := fun X => BoundedLatticeCat.of X,
+    { obj := fun X => BoundedLatticeCat.of X
       map := fun X Y => CompleteLatticeHom.toBoundedLatticeHom }
   forget_comp := rfl
 #align CompleteLattice.has_forget_to_BoundedLattice CompleteLatticeCat.hasForgetToBoundedLattice

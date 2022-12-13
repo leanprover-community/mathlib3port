@@ -33,7 +33,8 @@ def truncate [HasZeroMorphisms V] :
       ChainComplex V
         ℕ where 
   obj C :=
-    { x := fun i => C.x (i + 1), d := fun i j => C.d (i + 1) (j + 1),
+    { x := fun i => C.x (i + 1)
+      d := fun i j => C.d (i + 1) (j + 1)
       shape' := fun i j w => by 
         apply C.shape
         simpa }
@@ -116,7 +117,7 @@ def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 
       C where 
   Hom := { f := fun i => 𝟙 _ }
   inv :=
-    { f := fun i => 𝟙 _,
+    { f := fun i => 𝟙 _
       comm' := fun i j => by
         cases j <;>
           · dsimp
@@ -158,13 +159,13 @@ def augmentTruncate (C : ChainComplex V ℕ) :
     augment (truncate.obj C) (C.d 1 0) (C.d_comp_d _ _ _) ≅
       C where 
   Hom :=
-    { f := fun i => by cases i <;> exact 𝟙 _,
+    { f := fun i => by cases i <;> exact 𝟙 _
       comm' := fun i j => by
         rcases i with (_ | _ | i) <;> cases j <;>
           · dsimp
             simp }
   inv :=
-    { f := fun i => by cases i <;> exact 𝟙 _,
+    { f := fun i => by cases i <;> exact 𝟙 _
       comm' := fun i j => by
         rcases i with (_ | _ | i) <;> cases j <;>
           · dsimp
@@ -229,7 +230,8 @@ def truncate [HasZeroMorphisms V] :
       CochainComplex V
         ℕ where 
   obj C :=
-    { x := fun i => C.x (i + 1), d := fun i j => C.d (i + 1) (j + 1),
+    { x := fun i => C.x (i + 1)
+      d := fun i j => C.d (i + 1) (j + 1)
       shape' := fun i j w => by 
         apply C.shape
         simpa }
@@ -310,7 +312,7 @@ def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f 
       C where 
   Hom := { f := fun i => 𝟙 _ }
   inv :=
-    { f := fun i => 𝟙 _,
+    { f := fun i => 𝟙 _
       comm' := fun i j => by
         cases j <;>
           · dsimp
@@ -355,13 +357,13 @@ def augmentTruncate (C : CochainComplex V ℕ) :
     augment (truncate.obj C) (C.d 0 1) (C.d_comp_d _ _ _) ≅
       C where 
   Hom :=
-    { f := fun i => by cases i <;> exact 𝟙 _,
+    { f := fun i => by cases i <;> exact 𝟙 _
       comm' := fun i j => by
         rcases j with (_ | _ | j) <;> cases i <;>
           · dsimp
             simp }
   inv :=
-    { f := fun i => by cases i <;> exact 𝟙 _,
+    { f := fun i => by cases i <;> exact 𝟙 _
       comm' := fun i j => by
         rcases j with (_ | _ | j) <;> cases i <;>
           · dsimp

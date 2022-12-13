@@ -299,7 +299,12 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr)
       let ng ← num_goals
       let s ← read
       let m ← tactic_statement g
-      return { State := s, decl := d, script := m, num_goals := ng, hyps_used := hyps fun h => h g }
+      return
+          { State := s
+            decl := d
+            script := m
+            num_goals := ng
+            hyps_used := hyps fun h => h g }
 #align tactic.apply_declaration_script tactic.apply_declaration_script
 
 -- implementation note: we produce a `tactic (mllist tactic application)` first,
@@ -441,7 +446,10 @@ unsafe def suggest (n : parse (parser.optional (with_desc "n" small_nat)))
   let use ← use.mmap get_local
   let L ←
     tactic.suggest_scripts (n.getOrElse 50)
-        { opt with compulsory_hyps := use, lemma_thunks := some lemma_thunks, ctx_thunk }
+        { opt with 
+          compulsory_hyps := use
+          lemma_thunks := some lemma_thunks
+          ctx_thunk }
   if !opt || is_trace_enabled_for `silence_suggest then skip
     else if L = 0 then fail "There are no applicable declarations" else L trace >> skip
 #align tactic.interactive.suggest tactic.interactive.suggest
@@ -480,7 +488,9 @@ Try this: refine lt_of_not_ge _
 ```
 -/
 add_tactic_doc
-  { Name := "suggest", category := DocCategory.tactic, declNames := [`tactic.interactive.suggest],
+  { Name := "suggest"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.suggest]
     tags := ["search", "Try this"] }
 
 -- Turn off `Try this: exact ...` trace message for `library_search`
@@ -525,8 +535,11 @@ unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : par
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
   let use ← use.mmap get_local
   (tactic.library_search
-          { opt with compulsory_hyps := use, backtrack_all_goals := tt,
-            lemma_thunks := some lemma_thunks, ctx_thunk,
+          { opt with 
+            compulsory_hyps := use
+            backtrack_all_goals := tt
+            lemma_thunks := some lemma_thunks
+            ctx_thunk
             md :=
               if semireducible then Tactic.Transparency.semireducible
               else Tactic.Transparency.reducible } >>=
@@ -536,8 +549,10 @@ unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : par
 #align tactic.interactive.library_search tactic.interactive.library_search
 
 add_tactic_doc
-  { Name := "library_search", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.library_search], tags := ["search", "Try this"] }
+  { Name := "library_search"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.library_search]
+    tags := ["search", "Try this"] }
 
 end Interactive
 
@@ -571,8 +586,10 @@ unsafe def library_search_hole_cmd :
 #align tactic.library_search_hole_cmd tactic.library_search_hole_cmd
 
 add_tactic_doc
-  { Name := "library_search", category := DocCategory.hole_cmd,
-    declNames := [`tactic.library_search_hole_cmd], tags := ["search", "Try this"] }
+  { Name := "library_search"
+    category := DocCategory.hole_cmd
+    declNames := [`tactic.library_search_hole_cmd]
+    tags := ["search", "Try this"] }
 
 end Tactic
 

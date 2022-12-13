@@ -193,7 +193,7 @@ def preservesBinaryBiproductOfPreservesBiproduct (F : C ⥤ D) [PreservesZeroMor
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsLimit) <|
           Cones.ext (Iso.refl _) fun j => by 
             rcases j with ⟨⟨⟩⟩
-            tidy,
+            tidy
       IsColimit :=
         IsColimit.ofIsoColimit
             ((IsColimit.precomposeInvEquiv (diagram_iso_pair _) _).symm
@@ -292,7 +292,7 @@ variable [PreservesZeroMorphisms F] [PreservesBiproduct f F]
 
 instance has_biproduct_of_preserves : HasBiproduct (F.obj ∘ f) :=
   HasBiproduct.mk
-    { Bicone := F.mapBicone (Biproduct.bicone f),
+    { Bicone := F.mapBicone (Biproduct.bicone f)
       IsBilimit := PreservesBiproduct.preserves (Biproduct.isBilimit _) }
 #align
   category_theory.functor.has_biproduct_of_preserves CategoryTheory.Functor.has_biproduct_of_preserves
@@ -391,7 +391,7 @@ variable [PreservesZeroMorphisms F] [PreservesBinaryBiproduct X Y F]
 
 instance has_binary_biproduct_of_preserves : HasBinaryBiproduct (F.obj X) (F.obj Y) :=
   HasBinaryBiproduct.mk
-    { Bicone := F.mapBinaryBicone (BinaryBiproduct.bicone X Y),
+    { Bicone := F.mapBinaryBicone (BinaryBiproduct.bicone X Y)
       IsBilimit := PreservesBinaryBiproduct.preserves (BinaryBiproduct.isBilimit _ _) }
 #align
   category_theory.functor.has_binary_biproduct_of_preserves CategoryTheory.Functor.has_binary_biproduct_of_preserves

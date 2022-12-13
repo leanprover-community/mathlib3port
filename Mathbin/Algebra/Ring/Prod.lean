@@ -30,7 +30,7 @@ namespace Prod
 /-- Product of two distributive types is distributive. -/
 instance [Distrib R] [Distrib S] : Distrib (R × S) :=
   { Prod.hasAdd, Prod.hasMul with
-    left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
+    left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩
     right_distrib := fun a b c => mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
 
 /-- Product of two `non_unital_non_assoc_semiring`s is a `non_unital_non_assoc_semiring`. -/
@@ -327,10 +327,11 @@ theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ring R] [Ring S] [
 
 
 instance [OrderedSemiring α] [OrderedSemiring β] : OrderedSemiring (α × β) :=
-  { Prod.semiring, Prod.partialOrder _ _ with add_le_add_left := fun _ _ => add_le_add_left,
-    zero_le_one := ⟨zero_le_one, zero_le_one⟩,
+  { Prod.semiring, Prod.partialOrder _ _ with
+    add_le_add_left := fun _ _ => add_le_add_left
+    zero_le_one := ⟨zero_le_one, zero_le_one⟩
     mul_le_mul_of_nonneg_left := fun a b c hab hc =>
-      ⟨mul_le_mul_of_nonneg_left hab.1 hc.1, mul_le_mul_of_nonneg_left hab.2 hc.2⟩,
+      ⟨mul_le_mul_of_nonneg_left hab.1 hc.1, mul_le_mul_of_nonneg_left hab.2 hc.2⟩
     mul_le_mul_of_nonneg_right := fun a b c hab hc =>
       ⟨mul_le_mul_of_nonneg_right hab.1 hc.1, mul_le_mul_of_nonneg_right hab.2 hc.2⟩ }
 

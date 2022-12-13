@@ -140,18 +140,18 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
 noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
     InnerProductSpace 𝕜 (n → 𝕜) :=
   InnerProductSpace.ofCore
-    { inner := fun x y => dotProduct (star x) (M.mulVec y),
+    { inner := fun x y => dotProduct (star x) (M.mulVec y)
       conj_sym := fun x y => by
         rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec,
-          hM.is_hermitian.eq],
+          hM.is_hermitian.eq]
       nonneg_re := fun x => by 
         by_cases h : x = 0
         · simp [h]
-        · exact le_of_lt (hM.2 x h),
+        · exact le_of_lt (hM.2 x h)
       definite := fun x hx => by 
         by_contra' h
-        simpa [hx, lt_self_iff_false] using hM.2 x h,
-      add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const],
+        simpa [hx, lt_self_iff_false] using hM.2 x h
+      add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const]
       smul_left := fun x y r => by
         rw [← smul_eq_mul, ← smul_dot_product, star_ring_end_apply, ← star_smul] }
 #align matrix.inner_product_space.of_matrix Matrix.InnerProductSpace.ofMatrix

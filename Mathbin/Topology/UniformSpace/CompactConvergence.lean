@@ -137,7 +137,7 @@ theorem compact_conv_nhd_compact_entourage_nonempty :
 theorem compact_conv_nhd_filter_is_basis :
     Filter.IsBasis (fun KV : Set α × Set (β × β) => IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β) fun KV =>
       compactConvNhd KV.1 KV.2 f :=
-  { Nonempty := compact_conv_nhd_compact_entourage_nonempty,
+  { Nonempty := compact_conv_nhd_compact_entourage_nonempty
     inter := by 
       rintro ⟨K₁, V₁⟩ ⟨K₂, V₂⟩ ⟨hK₁, hV₁⟩ ⟨hK₂, hV₂⟩
       exact

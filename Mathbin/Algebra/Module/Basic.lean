@@ -60,7 +60,9 @@ variable [Semiring R] [AddCommMonoid M] [Module R M] (r s : R) (x y : M)
 -- see Note [lower instance priority]
 /-- A module over a semiring automatically inherits a `mul_action_with_zero` structure. -/
 instance (priority := 100) Module.toMulActionWithZero : MulActionWithZero R M :=
-  { (inferInstance : MulAction R M) with smul_zero := smul_zero, zero_smul := Module.zero_smul }
+  { (inferInstance : MulAction R M) with 
+    smul_zero := smul_zero
+    zero_smul := Module.zero_smul }
 #align module.to_mul_action_with_zero Module.toMulActionWithZero
 
 instance AddCommMonoid.natModule :
@@ -106,18 +108,20 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.module [AddCommMonoid M₂] [HasSmul R M₂] (f : M₂ →+ M)
     (hf : Injective f) (smul : ∀ (c : R) (x), f (c • x) = c • f x) : Module R M₂ :=
-  { hf.DistribMulAction f smul with smul := (· • ·),
-    add_smul := fun c₁ c₂ x => hf <| by simp only [smul, f.map_add, add_smul],
+  { hf.DistribMulAction f smul with 
+    smul := (· • ·)
+    add_smul := fun c₁ c₂ x => hf <| by simp only [smul, f.map_add, add_smul]
     zero_smul := fun x => hf <| by simp only [smul, zero_smul, f.map_zero] }
 #align function.injective.module Function.Injective.module
 
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
 protected def Function.Surjective.module [AddCommMonoid M₂] [HasSmul R M₂] (f : M →+ M₂)
     (hf : Surjective f) (smul : ∀ (c : R) (x), f (c • x) = c • f x) : Module R M₂ :=
-  { hf.DistribMulAction f smul with smul := (· • ·),
+  { hf.DistribMulAction f smul with 
+    smul := (· • ·)
     add_smul := fun c₁ c₂ x => by 
       rcases hf x with ⟨x, rfl⟩
-      simp only [add_smul, ← smul, ← f.map_add],
+      simp only [add_smul, ← smul, ← f.map_add]
     zero_smul := fun x => by 
       rcases hf x with ⟨x, rfl⟩
       simp only [← f.map_zero, ← smul, zero_smul] }
@@ -131,8 +135,9 @@ See also `function.surjective.mul_action_left` and `function.surjective.distrib_
 def Function.Surjective.moduleLeft {R S M : Type _} [Semiring R] [AddCommMonoid M] [Module R M]
     [Semiring S] [HasSmul S M] (f : R →+* S) (hf : Function.Surjective f)
     (hsmul : ∀ (c) (x : M), f c • x = c • x) : Module S M :=
-  { hf.distribMulActionLeft f.toMonoidHom hsmul with smul := (· • ·),
-    zero_smul := fun x => by rw [← f.map_zero, hsmul, zero_smul],
+  { hf.distribMulActionLeft f.toMonoidHom hsmul with
+    smul := (· • ·)
+    zero_smul := fun x => by rw [← f.map_zero, hsmul, zero_smul]
     add_smul := hf.Forall₂.mpr fun a b x => by simp only [← f.map_add, hsmul, add_smul] }
 #align function.surjective.module_left Function.Surjective.moduleLeft
 
@@ -144,7 +149,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 def Module.compHom [Semiring S] (f : S →+* R) : Module S M :=
   { MulActionWithZero.compHom M f.toMonoidWithZeroHom, DistribMulAction.compHom M (f : S →* R) with
-    smul := HasSmul.Comp.smul f, add_smul := fun r s x => by simp [add_smul] }
+    smul := HasSmul.Comp.smul f
+    add_smul := fun r s x => by simp [add_smul] }
 #align module.comp_hom Module.compHom
 
 variable (R) (M)
@@ -154,7 +160,8 @@ variable (R) (M)
 This is a stronger version of `distrib_mul_action.to_add_monoid_End` -/
 @[simps apply_apply]
 def Module.toAddMonoidEnd : R →+* AddMonoid.EndCat M :=
-  { DistribMulAction.toAddMonoidEnd R M with map_zero' := AddMonoidHom.ext fun r => by simp,
+  { DistribMulAction.toAddMonoidEnd R M with
+    map_zero' := AddMonoidHom.ext fun r => by simp
     map_add' := fun x y => AddMonoidHom.ext fun r => by simp [add_smul] }
 #align module.to_add_monoid_End Module.toAddMonoidEnd
 
@@ -189,7 +196,8 @@ structure.
 See note [reducible non-instances]. -/
 @[reducible]
 def Module.addCommMonoidToAddCommGroup [Ring R] [AddCommMonoid M] [Module R M] : AddCommGroup M :=
-  { (inferInstance : AddCommMonoid M) with neg := fun a => (-1 : R) • a,
+  { (inferInstance : AddCommMonoid M) with
+    neg := fun a => (-1 : R) • a
     add_left_neg := fun a =>
       show (-1 : R) • a + a = 0 by 
         nth_rw 2 [← one_smul _ a]
@@ -237,7 +245,7 @@ def Module.ofCore (H : Module.Core R M) : Module R M :=
   letI := H.to_has_smul
   { H with
     zero_smul := fun x =>
-      (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
+      (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero
     smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
 #align module.of_core Module.ofCore
 
@@ -323,7 +331,8 @@ instance (priority := 910) Semiring.toModule [Semiring R] :
 -- see Note [lower instance priority]
 /-- Like `semiring.to_module`, but multiplies on the right. -/
 instance (priority := 910) Semiring.toOppositeModule [Semiring R] : Module Rᵐᵒᵖ R :=
-  { MonoidWithZero.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mul _ _ _,
+  { MonoidWithZero.toOppositeMulActionWithZero R with
+    smul_add := fun r x y => add_mul _ _ _
     add_smul := fun r x y => mul_add _ _ _ }
 #align semiring.to_opposite_module Semiring.toOppositeModule
 

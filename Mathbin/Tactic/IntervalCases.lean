@@ -347,8 +347,10 @@ The variable `n` can belong to any type `α`, with the following restrictions:
 * an instance of `fintype set.Ico l u` is available for the relevant bounds.
 -/
 add_tactic_doc
-  { Name := "interval_cases", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.interval_cases], tags := ["case bashing"] }
+  { Name := "interval_cases"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.interval_cases]
+    tags := ["case bashing"] }
 
 end Interactive
 

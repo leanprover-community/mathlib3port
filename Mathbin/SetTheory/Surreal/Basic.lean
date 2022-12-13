@@ -459,7 +459,7 @@ instance : OrderedAddCommGroup Surreal where
                       "."
                       `le)
                      [`oy `ox])))])))]))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `decidableLe [])
           ":="
@@ -540,7 +540,7 @@ instance : OrderedAddCommGroup Surreal where
                    (Term.app
                     (Term.proj (Term.app (Term.proj `Pgame.not_le "." (fieldIdx "1")) [`h]) "." `le)
                     [`oy `ox])))])))]))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `decidableLe [])
          ":="
@@ -839,7 +839,6 @@ noncomputable
               rintro ⟨ ⟨ x , ox ⟩ ⟩ ⟨ ⟨ y , oy ⟩ ⟩ <;> skip
                 <;>
                 exact or_iff_not_imp_left . 2 fun h => Pgame.not_le . 1 h . le oy ox
-          ,
           decidableLe := Classical.decRel _
         }
 

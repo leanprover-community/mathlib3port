@@ -535,7 +535,9 @@ include σ₂₁
 @[nolint dangerous_instance]
 instance (priority := 100) [s : SemilinearIsometryEquivClass 𝓕 σ₁₂ E E₂] :
     SemilinearIsometryClass 𝓕 σ₁₂ E E₂ :=
-  { s with coe := (coe : 𝓕 → E → E₂), coe_injective' := @FunLike.coe_injective 𝓕 _ _ _ }
+  { s with 
+    coe := (coe : 𝓕 → E → E₂)
+    coe_injective' := @FunLike.coe_injective 𝓕 _ _ _ }
 
 omit σ₂₁
 
@@ -1170,8 +1172,11 @@ variable (R E E₂ E₃)
 
 /-- The natural equivalence `(E × E₂) × E₃ ≃ E × (E₂ × E₃)` is a linear isometry. -/
 def prodAssoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=
-  { Equiv.prodAssoc E E₂ E₃ with toFun := Equiv.prodAssoc E E₂ E₃,
-    invFun := (Equiv.prodAssoc E E₂ E₃).symm, map_add' := by simp, map_smul' := by simp,
+  { Equiv.prodAssoc E E₂ E₃ with 
+    toFun := Equiv.prodAssoc E E₂ E₃
+    invFun := (Equiv.prodAssoc E E₂ E₃).symm
+    map_add' := by simp
+    map_smul' := by simp
     norm_map' := by 
       rintro ⟨⟨e, f⟩, g⟩
       simp only [LinearEquiv.coe_mk, Equiv.prod_assoc_apply, Prod.norm_def, max_assoc] }

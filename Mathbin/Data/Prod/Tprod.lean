@@ -55,9 +55,9 @@ open List
 
 /- warning: list.tprod.mk -> List.Tprod.mk is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), α i) -> (List.Tprod.{u_1, u_2, u_3} ι α l)
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} (l : List.{u1} ι), (forall (i : ι), α i) -> (List.Tprod.{u1, u2, u3} ι α l)
 but is expected to have type
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), α i) -> (List.Tprod.{u_1, u_2, _aux_param_0} ι α l)
+  forall {ι : Type.{u2}} {α : ι -> Type.{u3}} (l : List.{u2} ι), (forall (i : ι), α i) -> (List.Tprod.{u2, u3, u1} ι α l)
 Case conversion may be inaccurate. Consider using '#align list.tprod.mk List.Tprod.mkₓ'. -/
 /-- Turning a function `f : Π i, α i` into an element of the iterated product `tprod α l`. -/
 protected def mk : ∀ (l : List ι) (f : ∀ i, α i), Tprod α l
@@ -82,9 +82,9 @@ variable [DecidableEq ι]
 
 /- warning: list.tprod.elim -> List.Tprod.elim is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] {l : List.{u_1} ι}, (List.Tprod.{u_1, u_2, u_3} ι α l) -> (forall {i : ι}, (Membership.Mem.{u_1, u_1} ι (List.{u_1} ι) (List.hasMem.{u_1} ι) i l) -> (α i))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] {l : List.{u1} ι}, (List.Tprod.{u1, u2, u3} ι α l) -> (forall {i : ι}, (Membership.Mem.{u1, u1} ι (List.{u1} ι) (List.hasMem.{u1} ι) i l) -> (α i))
 but is expected to have type
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] {l : List.{u_1} ι}, (List.Tprod.{u_1, u_2, _aux_param_0} ι α l) -> (forall {i : ι}, (Membership.Mem.{u_1, u_1} ι (List.{u_1} ι) (List.hasMem.{u_1} ι) i l) -> (α i))
+  forall {ι : Type.{u2}} {α : ι -> Type.{u3}} [_inst_1 : DecidableEq.{succ u2} ι] {l : List.{u2} ι}, (List.Tprod.{u2, u3, u1} ι α l) -> (forall {i : ι}, (Membership.Mem.{u2, u2} ι (List.{u2} ι) (List.hasMem.{u2} ι) i l) -> (α i))
 Case conversion may be inaccurate. Consider using '#align list.tprod.elim List.Tprod.elimₓ'. -/
 /-- Given an element of the iterated product `l.prod α`, take a projection into direction `i`.
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
@@ -158,9 +158,9 @@ open List
 
 /- warning: set.tprod -> Set.tprod is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{max u_2 u_3} (List.Tprod.{u_1, u_2, u_3} ι α l))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} (l : List.{u1} ι), (forall (i : ι), Set.{u2} (α i)) -> (Set.{max u2 u3} (List.Tprod.{u1, u2, u3} ι α l))
 but is expected to have type
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{max u_2 _aux_param_0} (List.Tprod.{u_1, u_2, _aux_param_0} ι α l))
+  forall {ι : Type.{u2}} {α : ι -> Type.{u3}} (l : List.{u2} ι), (forall (i : ι), Set.{u3} (α i)) -> (Set.{max u3 u1} (List.Tprod.{u2, u3, u1} ι α l))
 Case conversion may be inaccurate. Consider using '#align set.tprod Set.tprodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A product of sets in `tprod α l`. -/

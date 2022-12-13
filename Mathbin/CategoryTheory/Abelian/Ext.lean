@@ -39,15 +39,15 @@ variable (R : Type _) [Ring R] (C : Type _) [Category C] [Abelian C] [Linear R C
 @[simps obj map]
 def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
   Functor.flip
-    { obj := fun Y => (((linearYoneda R C).obj Y).rightOp.leftDerived n).leftOp,
-      map := fun Y Y' f => (NatTrans.leftDerived ((linearYoneda R C).map f).rightOp n).leftOp,
+    { obj := fun Y => (((linearYoneda R C).obj Y).rightOp.leftDerived n).leftOp
+      map := fun Y Y' f => (NatTrans.leftDerived ((linearYoneda R C).map f).rightOp n).leftOp
       map_id' := by 
         intro X
         ext Y : 2
         dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app,
           functor.left_op_obj, functor.right_op_obj]
         rw [(linear_yoneda R C).map_id, ← unop_id, nat_trans.right_op_id, nat_trans.left_derived_id]
-        rfl,
+        rfl
       map_comp' := by 
         intro X Y Z f g
         rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
@@ -61,7 +61,8 @@ def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) :
     ((ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
   let E := (((linearYoneda R C).obj Y).rightOp.leftDerivedObjProjectiveSucc n X).unop.symm
   E ≪≫
-    { hom := 0, inv := 0,
+    { hom := 0
+      inv := 0
       hom_inv_id' := by 
         let Z : (ModuleCat R)ᵒᵖ := 0
         rw [← (0 : 0 ⟶ Z.unop).unop_op, ← (0 : Z.unop ⟶ 0).unop_op, ← unop_id, ← unop_comp]

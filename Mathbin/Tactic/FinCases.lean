@@ -203,8 +203,10 @@ unsafe def fin_cases :
 end Interactive
 
 add_tactic_doc
-  { Name := "fin_cases", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.fin_cases], tags := ["case bashing"] }
+  { Name := "fin_cases"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.fin_cases]
+    tags := ["case bashing"] }
 
 end Tactic
 

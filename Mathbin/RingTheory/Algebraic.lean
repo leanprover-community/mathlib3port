@@ -434,13 +434,14 @@ variable [CommSemiring R'] [CommSemiring S'] [CommSemiring T'] [Algebra R' S'] [
 
 /-- This is not an instance for the same reasons as `polynomial.has_smul_pi'`. -/
 noncomputable def Polynomial.algebraPi : Algebra R'[X] (S' → T') :=
-  { Polynomial.hasSmulPi' R' S' T' with toFun := fun p z => algebraMap S' T' (aeval z p),
-    map_one' := funext fun z => by simp only [Polynomial.aeval_one, Pi.one_apply, map_one],
-    map_mul' := fun f g => funext fun z => by simp only [Pi.mul_apply, map_mul],
-    map_zero' := funext fun z => by simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero],
+  { Polynomial.hasSmulPi' R' S' T' with
+    toFun := fun p z => algebraMap S' T' (aeval z p)
+    map_one' := funext fun z => by simp only [Polynomial.aeval_one, Pi.one_apply, map_one]
+    map_mul' := fun f g => funext fun z => by simp only [Pi.mul_apply, map_mul]
+    map_zero' := funext fun z => by simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero]
     map_add' := fun f g =>
-      funext fun z => by simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
-    commutes' := fun p f => funext fun z => mul_comm _ _,
+      funext fun z => by simp only [Polynomial.aeval_add, Pi.add_apply, map_add]
+    commutes' := fun p f => funext fun z => mul_comm _ _
     smul_def' := fun p f =>
       funext fun z => by
         simp only [Algebra.algebra_map_eq_smul_one, polynomial_smul_apply', one_mul, Pi.mul_apply,

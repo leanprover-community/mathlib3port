@@ -1716,12 +1716,14 @@ protected unsafe def attr :
                 let t' ← eval_expr (expr → tactic (expr × expr)) (expr.const n [])
                 pure fun e => t' e <|> t e)
               fun _ => failed
-        pure fun e => derive.step e <|> t e,
+        pure fun e => derive.step e <|> t e
       dependencies := [] }
 #align norm_num.attr norm_num.attr
 
 add_tactic_doc
-  { Name := "norm_num", category := DocCategory.attr, declNames := [`norm_num.attr],
+  { Name := "norm_num"
+    category := DocCategory.attr
+    declNames := [`norm_num.attr]
     tags := ["arithmetic", "decision_procedure"] }
 
 /-- Look up the `norm_num` extensions in the cache and return a tactic extending `derive.step` with
@@ -1861,10 +1863,11 @@ def normed_a : ℕ := by apply_normed 2^100
 ```
 -/
 add_tactic_doc
-  { Name := "norm_num", category := DocCategory.tactic,
+  { Name := "norm_num"
+    category := DocCategory.tactic
     declNames :=
       [`tactic.interactive.norm_num1, `tactic.interactive.norm_num,
-        `tactic.interactive.apply_normed],
+        `tactic.interactive.apply_normed]
     tags := ["arithmetic", "decision procedure"] }
 
 end Tactic.Interactive
@@ -1977,7 +1980,9 @@ unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
 #align tactic.norm_num_cmd tactic.norm_num_cmd
 
 add_tactic_doc
-  { Name := "#norm_num", category := DocCategory.cmd, declNames := [`tactic.norm_num_cmd],
+  { Name := "#norm_num"
+    category := DocCategory.cmd
+    declNames := [`tactic.norm_num_cmd]
     tags := ["simplification", "arithmetic", "decision procedure"] }
 
 end Tactic

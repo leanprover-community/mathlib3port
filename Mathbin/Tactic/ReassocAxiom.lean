@@ -134,7 +134,9 @@ unsafe def reassoc_attr :
 #align tactic.reassoc_attr tactic.reassoc_attr
 
 add_tactic_doc
-  { Name := "reassoc", category := DocCategory.attr, declNames := [`tactic.reassoc_attr],
+  { Name := "reassoc"
+    category := DocCategory.attr
+    declNames := [`tactic.reassoc_attr]
     tags := ["category theory"] }
 
 /-- When declaring a class of categories, the axioms can be reformulated to be more amenable
@@ -171,7 +173,9 @@ unsafe def reassoc_cmd (_ : parse <| tk "reassoc_axiom") : lean.parser Unit := d
 #align tactic.reassoc_cmd tactic.reassoc_cmd
 
 add_tactic_doc
-  { Name := "reassoc_axiom", category := DocCategory.cmd, declNames := [`tactic.reassoc_cmd],
+  { Name := "reassoc_axiom"
+    category := DocCategory.cmd
+    declNames := [`tactic.reassoc_cmd]
     tags := ["category theory"] }
 
 namespace Interactive
@@ -251,6 +255,8 @@ Although `reassoc_of` is not a tactic or a meta program, its type is generated
 through meta-programming to make it usable inside normal expressions.
 -/
 add_tactic_doc
-  { Name := "category_theory.reassoc_of", category := DocCategory.tactic,
-    declNames := [`category_theory.reassoc_of], tags := ["category theory"] }
+  { Name := "category_theory.reassoc_of"
+    category := DocCategory.tactic
+    declNames := [`category_theory.reassoc_of]
+    tags := ["category theory"] }
 

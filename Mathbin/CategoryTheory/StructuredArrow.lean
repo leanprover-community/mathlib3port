@@ -222,9 +222,14 @@ def pre (S : D) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S (F ⋙ G) ⥤ St
 def post (S : C) (F : B ⥤ C) (G : C ⥤ D) :
     StructuredArrow S F ⥤
       StructuredArrow (G.obj S)
-        (F ⋙ G) where 
-  obj X := { right := X.right, Hom := G.map X.Hom }
-  map X Y f := { right := f.right, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
+        (F ⋙
+          G) where 
+  obj X :=
+    { right := X.right
+      Hom := G.map X.Hom }
+  map X Y f :=
+    { right := f.right
+      w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 #align category_theory.structured_arrow.post CategoryTheory.StructuredArrow.post
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
@@ -427,9 +432,14 @@ def pre (F : B ⥤ C) (G : C ⥤ D) (S : D) : CostructuredArrow (F ⋙ G) S ⥤ 
 def post (F : B ⥤ C) (G : C ⥤ D) (S : C) :
     CostructuredArrow F S ⥤
       CostructuredArrow (F ⋙ G)
-        (G.obj S) where 
-  obj X := { left := X.left, Hom := G.map X.Hom }
-  map X Y f := { left := f.left, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
+        (G.obj
+          S) where 
+  obj X :=
+    { left := X.left
+      Hom := G.map X.Hom }
+  map X Y f :=
+    { left := f.left
+      w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 #align category_theory.costructured_arrow.post CategoryTheory.CostructuredArrow.post
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :

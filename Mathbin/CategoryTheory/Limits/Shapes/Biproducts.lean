@@ -290,12 +290,16 @@ def Biproduct.isColimit (F : J → C) [HasBiproduct F] : IsColimit (Biproduct.bi
 #align category_theory.limits.biproduct.is_colimit CategoryTheory.Limits.Biproduct.isColimit
 
 instance (priority := 100) has_product_of_has_biproduct [HasBiproduct F] : HasProduct F :=
-  HasLimit.mk { Cone := (Biproduct.bicone F).toCone, IsLimit := Biproduct.isLimit F }
+  HasLimit.mk
+    { Cone := (Biproduct.bicone F).toCone
+      IsLimit := Biproduct.isLimit F }
 #align
   category_theory.limits.has_product_of_has_biproduct CategoryTheory.Limits.has_product_of_has_biproduct
 
 instance (priority := 100) has_coproduct_of_has_biproduct [HasBiproduct F] : HasCoproduct F :=
-  HasColimit.mk { Cocone := (Biproduct.bicone F).toCocone, IsColimit := Biproduct.isColimit F }
+  HasColimit.mk
+    { Cocone := (Biproduct.bicone F).toCocone
+      IsColimit := Biproduct.isColimit F }
 #align
   category_theory.limits.has_coproduct_of_has_biproduct CategoryTheory.Limits.has_coproduct_of_has_biproduct
 
@@ -965,9 +969,13 @@ variable {C} [Unique J] (f : J → C)
 def limitBiconeOfUnique :
     LimitBicone
       f where 
-  Bicone := { x := f default, π := fun j => eqToHom (by congr ), ι := fun j => eqToHom (by congr ) }
+  Bicone :=
+    { x := f default
+      π := fun j => eqToHom (by congr )
+      ι := fun j => eqToHom (by congr ) }
   IsBilimit :=
-    { IsLimit := (limitConeOfUnique f).IsLimit, IsColimit := (colimitCoconeOfUnique f).IsColimit }
+    { IsLimit := (limitConeOfUnique f).IsLimit
+      IsColimit := (colimitCoconeOfUnique f).IsColimit }
 #align category_theory.limits.limit_bicone_of_unique CategoryTheory.Limits.limitBiconeOfUnique
 
 instance (priority := 100) has_biproduct_unique : HasBiproduct f :=
@@ -1087,16 +1095,24 @@ theorem binary_cofan_inr_to_cocone (c : BinaryBicone P Q) : BinaryCofan.inr c.to
   category_theory.limits.binary_bicone.binary_cofan_inr_to_cocone CategoryTheory.Limits.BinaryBicone.binary_cofan_inr_to_cocone
 
 instance (c : BinaryBicone P Q) : IsSplitMono c.inl :=
-  IsSplitMono.mk' { retraction := c.fst, id' := c.inl_fst }
+  IsSplitMono.mk'
+    { retraction := c.fst
+      id' := c.inl_fst }
 
 instance (c : BinaryBicone P Q) : IsSplitMono c.inr :=
-  IsSplitMono.mk' { retraction := c.snd, id' := c.inr_snd }
+  IsSplitMono.mk'
+    { retraction := c.snd
+      id' := c.inr_snd }
 
 instance (c : BinaryBicone P Q) : IsSplitEpi c.fst :=
-  IsSplitEpi.mk' { section_ := c.inl, id' := c.inl_fst }
+  IsSplitEpi.mk'
+    { section_ := c.inl
+      id' := c.inl_fst }
 
 instance (c : BinaryBicone P Q) : IsSplitEpi c.snd :=
-  IsSplitEpi.mk' { section_ := c.inr, id' := c.inr_snd }
+  IsSplitEpi.mk'
+    { section_ := c.inr
+      id' := c.inr_snd }
 
 /-- Convert a `binary_bicone` into a `bicone` over a pair. -/
 @[simps]
@@ -1284,7 +1300,7 @@ theorem has_binary_biproducts_of_finite_biproducts [HasFiniteBiproducts C] :
     HasBinaryBiproducts C :=
   { HasBinaryBiproduct := fun P Q =>
       HasBinaryBiproduct.mk
-        { Bicone := (Biproduct.bicone (pairFunction P Q)).toBinaryBicone,
+        { Bicone := (Biproduct.bicone (pairFunction P Q)).toBinaryBicone
           IsBilimit := (Bicone.toBinaryBiconeIsBilimit _).symm (Biproduct.isBilimit _) } }
 #align
   category_theory.limits.has_binary_biproducts_of_finite_biproducts CategoryTheory.Limits.has_binary_biproducts_of_finite_biproducts

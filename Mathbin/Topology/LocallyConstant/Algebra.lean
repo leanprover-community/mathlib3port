@@ -65,7 +65,7 @@ instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
     one_mul := by 
       intros
       ext
-      simp only [mul_apply, one_apply, one_mul],
+      simp only [mul_apply, one_apply, one_mul]
     mul_one := by 
       intros
       ext
@@ -94,7 +94,7 @@ instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
     zero_mul := by 
       intros
       ext
-      simp only [mul_apply, zero_apply, zero_mul],
+      simp only [mul_apply, zero_apply, zero_mul]
     mul_zero := by 
       intros
       ext
@@ -171,8 +171,9 @@ instance [Monoid Y] : Monoid (LocallyConstant X Y) :=
   { LocallyConstant.semigroup, LocallyConstant.mulOneClass with mul := (· * ·) }
 
 instance [AddMonoidWithOne Y] : AddMonoidWithOne (LocallyConstant X Y) :=
-  { LocallyConstant.addMonoid, LocallyConstant.hasOne with natCast := fun n => const X n,
-    nat_cast_zero := by ext <;> simp [Nat.cast],
+  { LocallyConstant.addMonoid, LocallyConstant.hasOne with
+    natCast := fun n => const X n
+    nat_cast_zero := by ext <;> simp [Nat.cast]
     nat_cast_succ := fun _ => by ext <;> simp [Nat.cast] }
 
 @[to_additive]
@@ -185,7 +186,7 @@ instance [Group Y] : Group (LocallyConstant X Y) :=
     mul_left_inv := by 
       intros
       ext
-      simp only [mul_apply, inv_apply, one_apply, mul_left_inv],
+      simp only [mul_apply, inv_apply, one_apply, mul_left_inv]
     div_eq_mul_inv := by 
       intros
       ext
@@ -200,7 +201,7 @@ instance [Distrib Y] : Distrib (LocallyConstant X Y) :=
     left_distrib := by 
       intros
       ext
-      simp only [mul_apply, add_apply, mul_add],
+      simp only [mul_apply, add_apply, mul_add]
     right_distrib := by 
       intros
       ext
@@ -254,10 +255,10 @@ instance [CommRing Y] : CommRing (LocallyConstant X Y) :=
 variable {R : Type _}
 
 instance [HasSmul R Y] :
-    HasSmul R
-      (LocallyConstant X
+    HasSmul R (LocallyConstant X
         Y) where smul r f :=
-    { toFun := r • f, IsLocallyConstant := ((is_locally_constant f).comp ((· • ·) r) : _) }
+    { toFun := r • f
+      IsLocallyConstant := ((is_locally_constant f).comp ((· • ·) r) : _) }
 
 @[simp]
 theorem coe_smul [HasSmul R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=

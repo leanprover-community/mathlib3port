@@ -80,9 +80,9 @@ variable {β}
 
 /- warning: W_type.elim -> WType.elim is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : α -> Type.{u_2}} (γ : Type.{u_3}), ((Sigma.{u_1, max u_2 u_3} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u_1, u_2} α β) -> γ
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} (γ : Type.{u3}), ((Sigma.{u1, max u2 u3} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u1, u2} α β) -> γ
 but is expected to have type
-  forall {α : Type.{u_1}} {β : α -> Type.{u_2}} (γ : Type.{_aux_param_0}), ((Sigma.{u_1, max u_2 _aux_param_0} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u_1, u_2} α β) -> γ
+  forall {α : Type.{u2}} {β : α -> Type.{u3}} (γ : Type.{u1}), ((Sigma.{u2, max u3 u1} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u2, u3} α β) -> γ
 Case conversion may be inaccurate. Consider using '#align W_type.elim WType.elimₓ'. -/
 /-- The canonical map from `W_type β` into any type `γ` given a map `(Σ a : α, β a → γ) → γ`. -/
 def elim (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) : WType β → γ

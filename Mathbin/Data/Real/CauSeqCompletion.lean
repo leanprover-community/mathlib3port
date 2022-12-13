@@ -123,17 +123,26 @@ private theorem one_def : 1 = mk 1 :=
 
 instance : AddGroup Cauchy := by
   refine'
-        { add := (· + ·), zero := (0 : Cauchy), sub := Sub.sub, neg := Neg.neg, sub_eq_add_neg := _,
-          nsmul := nsmulRec, zsmul := zsmulRec.. } <;>
+        { add := (· + ·)
+          zero := (0 : Cauchy)
+          sub := Sub.sub
+          neg := Neg.neg
+          sub_eq_add_neg := _
+          nsmul := nsmulRec
+          zsmul := zsmulRec.. } <;>
       try intros <;> rfl <;>
     · repeat' refine' fun a => Quotient.induction_on a fun _ => _
       simp [zero_def, add_comm, add_left_comm, sub_eq_neg_add]
 
 instance : AddGroupWithOne Cauchy :=
-  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zero,
-    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succ n), intCast := fun n => mk n,
-    int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n),
-    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_negSucc n), one := 1 }
+  { Cauchy.add_group with 
+    natCast := fun n => mk n
+    nat_cast_zero := congr_arg mk Nat.cast_zero
+    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succ n)
+    intCast := fun n => mk n
+    int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n)
+    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_negSucc n)
+    one := 1 }
 
 @[simp]
 theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=
@@ -147,8 +156,12 @@ theorem of_rat_int_cast (z : ℤ) : of_rat z = z :=
 
 instance : Ring Cauchy := by
   refine'
-        { Cauchy.add_group_with_one with add := (· + ·), zero := (0 : Cauchy), mul := (· * ·),
-          one := 1, npow := npowRec.. } <;>
+        { Cauchy.add_group_with_one with 
+          add := (· + ·)
+          zero := (0 : Cauchy)
+          mul := (· * ·)
+          one := 1
+          npow := npowRec.. } <;>
       try intros <;> rfl <;>
     · repeat' refine' fun a => Quotient.induction_on a fun _ => _
       simp [zero_def, one_def, mul_add, add_mul, add_comm, add_left_comm, sub_eq_add_neg, ←
@@ -255,8 +268,12 @@ theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
 
 /-- The Cauchy completion forms a division ring. -/
 noncomputable instance : DivisionRing Cauchy :=
-  { CauchyCat.ring with inv := Inv.inv, mul_inv_cancel := fun x => CauSeq.Completion.mul_inv_cancel,
-    exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero, ratCast := fun q => ofRat q,
+  { CauchyCat.ring with 
+    inv := Inv.inv
+    mul_inv_cancel := fun x => CauSeq.Completion.mul_inv_cancel
+    exists_pair_ne := ⟨0, 1, zero_ne_one⟩
+    inv_zero
+    ratCast := fun q => ofRat q
     rat_cast_mk := fun n d hd hnd => by
       rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
 

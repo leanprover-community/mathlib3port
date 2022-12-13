@@ -350,7 +350,8 @@ def Γ₀' :
         C where 
   obj K := SimplicialObject.Split.mk' (Γ₀.splitting K)
   map K K' f :=
-    { f := Γ₀.map f, f := f.f,
+    { f := Γ₀.map f
+      f := f.f
       comm' := fun n => by 
         dsimp
         simpa only [← splitting.ι_summand_id, (Γ₀.splitting K).ι_desc] }

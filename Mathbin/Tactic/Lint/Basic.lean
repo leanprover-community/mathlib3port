@@ -55,7 +55,7 @@ unsafe def nolint_attr :
         fail "you need to specify at least one linter to disable"
       skip
   cache_cfg :=
-    { dependencies := [],
+    { dependencies := []
       mk_cache :=
         List.foldlM
           (fun cache d =>
@@ -67,7 +67,9 @@ unsafe def nolint_attr :
 end
 
 add_tactic_doc
-  { Name := "nolint", category := DocCategory.attr, declNames := [`nolint_attr],
+  { Name := "nolint"
+    category := DocCategory.attr
+    declNames := [`nolint_attr]
     tags := ["linting"] }
 
 /-- `should_be_linted linter decl` returns true if `decl` should be checked
@@ -118,6 +120,8 @@ unsafe def linter_attr :
 #align linter_attr linter_attr
 
 add_tactic_doc
-  { Name := "linter", category := DocCategory.attr, declNames := [`linter_attr],
+  { Name := "linter"
+    category := DocCategory.attr
+    declNames := [`linter_attr]
     tags := ["linting"] }
 

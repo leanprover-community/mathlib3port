@@ -219,7 +219,8 @@ def colimitCocone (F : J ⥤ PresheafedSpaceCat.{v} C) :
   x := colimit F
   ι :=
     { app := fun j =>
-        { base := colimit.ι (F ⋙ PresheafedSpaceCat.forget C) j, c := limit.π _ (op j) },
+        { base := colimit.ι (F ⋙ PresheafedSpaceCat.forget C) j
+          c := limit.π _ (op j) }
       naturality' := fun j j' f => by 
         fapply PresheafedSpace.ext
         · ext x
@@ -254,7 +255,10 @@ def descCApp (F : J ⥤ PresheafedSpaceCat.{v} C) (s : Cocone F) (U : (Opens ↥
   by
   refine'
     limit.lift _
-        { x := s.X.presheaf.obj U, π := { app := fun j => _, naturality' := fun j j' f => _ } } ≫
+        { x := s.X.presheaf.obj U
+          π :=
+            { app := fun j => _
+              naturality' := fun j j' f => _ } } ≫
       (limit_obj_iso_limit_comp_evaluation _ _).inv
   -- We still need to construct the `app` and `naturality'` fields omitted above.
   · refine' (s.ι.app (unop j)).c.app U ≫ (F.obj (unop j)).Presheaf.map (eq_to_hom _)
@@ -309,7 +313,9 @@ def desc (F : J ⥤ PresheafedSpaceCat.{v} C) (s : Cocone F) :
     colimit F ⟶
       s.x where 
   base := colimit.desc (F ⋙ PresheafedSpaceCat.forget C) ((PresheafedSpaceCat.forget C).mapCocone s)
-  c := { app := fun U => descCApp F s U, naturality' := fun U V i => desc_c_naturality F s i }
+  c :=
+    { app := fun U => descCApp F s U
+      naturality' := fun U V i => desc_c_naturality F s i }
 #align
   algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc AlgebraicGeometry.PresheafedSpaceCat.ColimitCoconeIsColimit.desc
 
@@ -367,7 +373,9 @@ instance :
     HasColimitsOfShape J
       (PresheafedSpaceCat.{v}
         C) where HasColimit F :=
-    HasColimit.mk { Cocone := colimitCocone F, IsColimit := colimitCoconeIsColimit F }
+    HasColimit.mk
+      { Cocone := colimitCocone F
+        IsColimit := colimitCoconeIsColimit F }
 
 instance :
     PreservesColimitsOfShape J
@@ -389,7 +397,9 @@ instance [HasLimits C] :
       (PresheafedSpaceCat.{v}
         C) where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F =>
-        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+        has_colimit.mk
+          { Cocone := colimit_cocone F
+            IsColimit := colimit_cocone_is_colimit F } }
 
 /-- The underlying topological space of a colimit of presheaved spaces is
 the colimit of the underlying topological spaces.

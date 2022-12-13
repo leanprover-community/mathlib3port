@@ -216,7 +216,8 @@ instance :
         hL) where le E₁ E₂ := ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x
 
 noncomputable instance : Inhabited (SubfieldWithHom K L M hL) :=
-  ⟨{ carrier := ⊥, emb := (Algebra.ofId K M).comp (Algebra.botEquiv K L).toAlgHom }⟩
+  ⟨{  carrier := ⊥
+      emb := (Algebra.ofId K M).comp (Algebra.botEquiv K L).toAlgHom }⟩
 
 theorem le_def : E₁ ≤ E₂ ↔ ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x :=
   Iff.rfl
@@ -243,7 +244,7 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
   if hcn : c.Nonempty then
     let ub : SubfieldWithHom K L M hL :=
       haveI : Nonempty c := Set.Nonempty.to_subtype hcn
-      { carrier := ⨆ i : c, (i : subfield_with_hom K L M hL).carrier,
+      { carrier := ⨆ i : c, (i : subfield_with_hom K L M hL).carrier
         emb :=
           Subalgebra.suprLift (fun i : c => (i : subfield_with_hom K L M hL).carrier)
             (fun i j =>
@@ -311,7 +312,8 @@ theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).carrier
     show algebraMap N L ⟨z, hz⟩ ∈ O
     exact O.algebra_map_mem _
   let O' : subfield_with_hom K L M hL :=
-    { carrier := O.restrict_scalars K, emb := larger_emb.restrict_scalars K }
+    { carrier := O.restrict_scalars K
+      emb := larger_emb.restrict_scalars K }
   have hO' : maximal_subfield_with_hom M hL ≤ O' := by
     refine' ⟨hNO, _⟩
     intro z
@@ -441,7 +443,9 @@ noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSmulDivisors R S]
         exact
           Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)
             (NoZeroSmulDivisors.algebra_map_injective _ _))
-  letI : IsAlgClosure R L := { algClosed := by infer_instance, algebraic := hRL }
+  letI : IsAlgClosure R L :=
+    { algClosed := by infer_instance
+      algebraic := hRL }
   exact IsAlgClosure.equiv _ _ _
 #align is_alg_closure.equiv_of_algebraic' IsAlgClosure.equivOfAlgebraic'
 

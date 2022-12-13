@@ -338,7 +338,7 @@ def IsOpenMap.functor {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) :
 def IsOpenMap.adjunction {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) :
     Adjunction hf.Functor (TopologicalSpace.Opens.map f) :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ },
+    { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ }
       counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 #align is_open_map.adjunction IsOpenMap.adjunction
 

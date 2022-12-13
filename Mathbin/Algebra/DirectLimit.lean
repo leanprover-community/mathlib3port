@@ -381,8 +381,8 @@ instance : Inhabited (DirectLimit G f) :=
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →+* DirectLimit G f :=
   RingHom.mk'
-    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σi, G i)),
-      map_one' := Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inl ⟨i, rfl⟩,
+    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σi, G i))
+      map_one' := Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inl ⟨i, rfl⟩
       map_mul' := fun x y =>
         Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inr ⟨i, x, y, rfl⟩ }
     fun x y => Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inl ⟨i, x, y, rfl⟩
@@ -717,8 +717,9 @@ See note [reducible non-instances]. -/
 protected noncomputable def field [DirectedSystem G fun i j h => f' i j h] :
     Field (Ring.DirectLimit G fun i j h => f' i j h) :=
   { Ring.DirectLimit.commRing G fun i j h => f' i j h,
-    DirectLimit.nontrivial G fun i j h => f' i j h with inv := inv G fun i j h => f' i j h,
-    mul_inv_cancel := fun p => DirectLimit.mul_inv_cancel G fun i j h => f' i j h,
+    DirectLimit.nontrivial G fun i j h => f' i j h with
+    inv := inv G fun i j h => f' i j h
+    mul_inv_cancel := fun p => DirectLimit.mul_inv_cancel G fun i j h => f' i j h
     inv_zero := dif_pos rfl }
 #align field.direct_limit.field Field.DirectLimit.field
 

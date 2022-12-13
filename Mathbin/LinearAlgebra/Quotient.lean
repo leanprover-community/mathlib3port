@@ -209,7 +209,7 @@ where `P : submodule R M`.
 def restrictScalarsEquiv [Ring S] [HasSmul S R] [Module S M] [IsScalarTower S R M]
     (P : Submodule R M) : (M ⧸ P.restrictScalars S) ≃ₗ[S] M ⧸ P :=
   { Quotient.congrRight fun _ _ => Iff.rfl with
-    map_add' := fun x y => Quotient.inductionOn₂' x y fun x' y' => rfl,
+    map_add' := fun x y => Quotient.inductionOn₂' x y fun x' y' => rfl
     map_smul' := fun c x => Quotient.inductionOn' x fun x' => rfl }
 #align submodule.quotient.restrict_scalars_equiv Submodule.Quotient.restrictScalarsEquiv
 
@@ -505,13 +505,13 @@ and `f : M ≃ₗ N` maps `P` to `Q`, then `M ⧸ P` is equivalent to `N ⧸ Q`.
 def Quotient.equiv {N : Type _} [AddCommGroup N] [Module R N] (P : Submodule R M)
     (Q : Submodule R N) (f : M ≃ₗ[R] N) (hf : P.map f = Q) : (M ⧸ P) ≃ₗ[R] N ⧸ Q :=
   { P.mapq Q (f : M →ₗ[R] N) fun x hx => hf ▸ Submodule.mem_map_of_mem hx with
-    toFun := P.mapq Q (f : M →ₗ[R] N) fun x hx => hf ▸ Submodule.mem_map_of_mem hx,
+    toFun := P.mapq Q (f : M →ₗ[R] N) fun x hx => hf ▸ Submodule.mem_map_of_mem hx
     invFun :=
       Q.mapq P (f.symm : N →ₗ[R] M) fun x hx => by
         rw [← hf, Submodule.mem_map] at hx
         obtain ⟨y, hy, rfl⟩ := hx
-        simpa,
-    left_inv := fun x => Quotient.inductionOn' x (by simp),
+        simpa
+    left_inv := fun x => Quotient.inductionOn' x (by simp)
     right_inv := fun x => Quotient.inductionOn' x (by simp) }
 #align submodule.quotient.equiv Submodule.Quotient.equiv
 
@@ -618,7 +618,7 @@ def quotEquivOfEq (h : p = p') : (M ⧸ p) ≃ₗ[R] M ⧸ p' :=
       rfl with
     map_add' := by 
       rintro ⟨x⟩ ⟨y⟩
-      rfl,
+      rfl
     map_smul' := by 
       rintro x ⟨y⟩
       rfl }

@@ -51,9 +51,9 @@ section KroneckerMap
 
 /- warning: matrix.kronecker_map -> Matrix.kroneckerMap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_4}} {γ : Type.{u_6}} {l : Type.{u_8}} {m : Type.{u_9}} {n : Type.{u_10}} {p : Type.{u_11}}, (α -> β -> γ) -> (Matrix.{u_8, u_9, u_2} l m α) -> (Matrix.{u_10, u_11, u_4} n p β) -> (Matrix.{max u_8 u_10, max u_9 u_11, u_6} (Prod.{u_8, u_10} l n) (Prod.{u_9, u_11} m p) γ)
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {l : Type.{u4}} {m : Type.{u5}} {n : Type.{u6}} {p : Type.{u7}}, (α -> β -> γ) -> (Matrix.{u4, u5, u1} l m α) -> (Matrix.{u6, u7, u2} n p β) -> (Matrix.{max u4 u6, max u5 u7, u3} (Prod.{u4, u6} l n) (Prod.{u5, u7} m p) γ)
 but is expected to have type
-  forall {α : Type.{u_2}} {β : Type.{u_4}} {γ : Type.{u_6}} {l : Type.{u_8}} {m : Type.{u_9}} {n : Type.{u_10}} {p : Type.{u_11}}, (α -> β -> γ) -> (Matrix.{u_8, u_9, u_2} l m α) -> (Matrix.{u_10, u_11, u_4} n p β) -> (Matrix.{max u_8 u_10, max u_9 u_11, u_6} (Prod.{u_8, u_10} l n) (Prod.{u_9, u_11} m p) γ)
+  forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u5}} {l : Type.{u6}} {m : Type.{u7}} {n : Type.{u1}} {p : Type.{u2}}, (α -> β -> γ) -> (Matrix.{u6, u7, u3} l m α) -> (Matrix.{u1, u2, u4} n p β) -> (Matrix.{max u6 u1, max u7 u2, u5} (Prod.{u6, u1} l n) (Prod.{u7, u2} m p) γ)
 Case conversion may be inaccurate. Consider using '#align matrix.kronecker_map Matrix.kroneckerMapₓ'. -/
 /-- Produce a matrix with `f` applied to every pair of elements from `A` and `B`. -/
 @[simp]

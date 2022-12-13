@@ -182,9 +182,9 @@ theorem IsO.is_O (hgf : f =o[l] g) : f =O[l] g :=
 /- warning: asymptotics.is_O.is_O_with clashes with asymptotics.is_o.is_O_with -> Asymptotics.IsO.is_O_with
 warning: asymptotics.is_O.is_O_with -> Asymptotics.IsO.is_O_with is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {E : Type.{u_3}} {F : Type.{u_4}} [_inst_1 : HasNorm.{u_3} E] [_inst_2 : HasNorm.{u_4} F] {f : α -> E} {g : α -> F} {l : Filter.{u_1} α}, (Asymptotics.IsO.{u_1, u_3, u_4} α E F _inst_1 _inst_2 l f g) -> (Exists.{1} Real (fun (c : Real) => Asymptotics.IsOWith.{u_1, u_3, u_4} α E F _inst_1 _inst_2 c l f g))
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Exists.{1} Real (fun (c : Real) => Asymptotics.IsOWith.{u1, u2, u3} α E F _inst_1 _inst_2 c l f g))
 but is expected to have type
-  forall {α : Type.{u_1}} {E : Type.{u_3}} {F : Type.{u_4}} [_inst_1 : HasNorm.{u_3} E] [_inst_2 : HasNorm.{u_4} F] {f : α -> E} {g : α -> F} {l : Filter.{u_1} α}, (Asymptotics.IsO.{u_1, u_3, u_4} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsOWith.{u_1, u_3, u_4} α E F _inst_1 _inst_2 (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) l f g)
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsOWith.{u1, u2, u3} α E F _inst_1 _inst_2 (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O.is_O_with Asymptotics.IsO.is_O_withₓ'. -/
 theorem IsO.is_O_with : f =O[l] g → ∃ c : ℝ, IsOWith c l f g :=
   is_O_iff_is_O_with.1
@@ -511,7 +511,7 @@ theorem IsO.trans_is_o {f : α → E} {g : α → F'} {k : α → G} (hfg : f =O
 /- warning: asymptotics.is_o.trans clashes with asymptotics.is_O.trans -> Asymptotics.IsO.trans
 warning: asymptotics.is_o.trans -> Asymptotics.IsO.trans is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {E : Type.{u_3}} {F : Type.{u_4}} {G : Type.{u_5}} [_inst_1 : HasNorm.{u_3} E] [_inst_2 : HasNorm.{u_4} F] [_inst_3 : HasNorm.{u_5} G] {l : Filter.{u_1} α} {f : α -> E} {g : α -> F} {k : α -> G}, (Asymptotics.IsO.{u_1, u_3, u_4} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsO.{u_1, u_4, u_5} α F G _inst_2 _inst_3 l g k) -> (Asymptotics.IsO.{u_1, u_3, u_5} α E G _inst_1 _inst_3 l f k)
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_3 : HasNorm.{u4} G] {l : Filter.{u1} α} {f : α -> E} {g : α -> F} {k : α -> G}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsO.{u1, u3, u4} α F G _inst_2 _inst_3 l g k) -> (Asymptotics.IsO.{u1, u2, u4} α E G _inst_1 _inst_3 l f k)
 but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans Asymptotics.IsO.transₓ'. -/
@@ -575,7 +575,7 @@ theorem IsO.trans_le (hfg : f =O[l] g') (hgk : ∀ x, ‖g' x‖ ≤ ‖k x‖) 
 /- warning: asymptotics.is_o.trans_le clashes with asymptotics.is_O.trans_le -> Asymptotics.IsO.trans_le
 warning: asymptotics.is_o.trans_le -> Asymptotics.IsO.trans_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {E : Type.{u_3}} {F : Type.{u_4}} {G : Type.{u_5}} [_inst_1 : HasNorm.{u_3} E] [_inst_2 : HasNorm.{u_4} F] [_inst_3 : HasNorm.{u_5} G] {f : α -> E} {g : α -> F} {k : α -> G} {l : Filter.{u_1} α}, (Asymptotics.IsO.{u_1, u_3, u_4} α E F _inst_1 _inst_2 l f g) -> (forall (x : α), LE.le.{0} Real Real.hasLe (HasNorm.norm.{u_4} F _inst_2 (g x)) (HasNorm.norm.{u_5} G _inst_3 (k x))) -> (Asymptotics.IsO.{u_1, u_3, u_5} α E G _inst_1 _inst_3 l f k)
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_3 : HasNorm.{u4} G] {f : α -> E} {g : α -> F} {k : α -> G} {l : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (forall (x : α), LE.le.{0} Real Real.hasLe (HasNorm.norm.{u3} F _inst_2 (g x)) (HasNorm.norm.{u4} G _inst_3 (k x))) -> (Asymptotics.IsO.{u1, u2, u4} α E G _inst_1 _inst_3 l f k)
 but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans_le Asymptotics.IsO.trans_leₓ'. -/
@@ -647,7 +647,7 @@ theorem IsO.sup (h : f =O[l] g') (h' : f =O[l'] g') : f =O[l ⊔ l'] g' :=
 /- warning: asymptotics.is_o.sup clashes with asymptotics.is_O.sup -> Asymptotics.IsO.sup
 warning: asymptotics.is_o.sup -> Asymptotics.IsO.sup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {E : Type.{u_3}} {F : Type.{u_4}} [_inst_1 : HasNorm.{u_3} E] [_inst_2 : HasNorm.{u_4} F] {f : α -> E} {g : α -> F} {l : Filter.{u_1} α} {l' : Filter.{u_1} α}, (Asymptotics.IsO.{u_1, u_3, u_4} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsO.{u_1, u_3, u_4} α E F _inst_1 _inst_2 l' f g) -> (Asymptotics.IsO.{u_1, u_3, u_4} α E F _inst_1 _inst_2 (HasSup.sup.{u_1} (Filter.{u_1} α) (SemilatticeSup.toHasSup.{u_1} (Filter.{u_1} α) (Lattice.toSemilatticeSup.{u_1} (Filter.{u_1} α) (ConditionallyCompleteLattice.toLattice.{u_1} (Filter.{u_1} α) (CompleteLattice.toConditionallyCompleteLattice.{u_1} (Filter.{u_1} α) (Filter.completeLattice.{u_1} α))))) l l') f g)
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l' f g) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l l') f g)
 but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.sup Asymptotics.IsO.supₓ'. -/

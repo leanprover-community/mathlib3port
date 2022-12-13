@@ -60,8 +60,10 @@ run_cmd
   add_interactive [`pi_instance]
 
 add_tactic_doc
-  { Name := "pi_instance", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.pi_instance], tags := ["type class"] }
+  { Name := "pi_instance"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.pi_instance]
+    tags := ["type class"] }
 
 end Tactic
 

@@ -493,8 +493,14 @@ def preadditive :
     Preadditive
       C where 
   homGroup X Y :=
-    { add := (· + ·), add_assoc := add_assoc, zero := 0, zero_add := neg_neg, add_zero := add_zero,
-      neg := fun f => -f, add_left_neg := neg_add_self, add_comm := add_comm }
+    { add := (· + ·)
+      add_assoc := add_assoc
+      zero := 0
+      zero_add := neg_neg
+      add_zero := add_zero
+      neg := fun f => -f
+      add_left_neg := neg_add_self
+      add_comm := add_comm }
   add_comp' := add_comp
   comp_add' := comp_add
 #align

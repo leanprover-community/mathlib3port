@@ -104,8 +104,9 @@ instance (priority := 100) to_covariant_mul_le : CovariantClass α α (· * ·) 
 
 -- see Note [lower instance priority]
 instance (priority := 100) toOrderedCommSemiring : OrderedCommSemiring α :=
-  { ‹CanonicallyOrderedCommSemiring α› with zero_le_one := zero_le _,
-    mul_le_mul_of_nonneg_left := fun a b c h _ => mul_le_mul_left' h _,
+  { ‹CanonicallyOrderedCommSemiring α› with
+    zero_le_one := zero_le _
+    mul_le_mul_of_nonneg_left := fun a b c h _ => mul_le_mul_left' h _
     mul_le_mul_of_nonneg_right := fun a b c h _ => mul_le_mul_right' h _ }
 #align
   canonically_ordered_comm_semiring.to_ordered_comm_semiring CanonicallyOrderedCommSemiring.toOrderedCommSemiring

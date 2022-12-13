@@ -83,8 +83,9 @@ The `unelide (at ...)` tactic removes all `hidden` subterms in the target
 types (usually added by `elide`).
 -/
 add_tactic_doc
-  { Name := "elide / unelide", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.elide, `tactic.interactive.unelide],
+  { Name := "elide / unelide"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.elide, `tactic.interactive.unelide]
     tags := ["goal management", "context management", "rewriting"] }
 
 end Interactive

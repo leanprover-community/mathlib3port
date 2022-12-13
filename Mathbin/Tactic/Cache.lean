@@ -56,9 +56,10 @@ by its variant `haveI` described below.
   variables in the context for typeclass inference.
 -/
 add_tactic_doc
-  { Name := "Instance cache tactics", category := DocCategory.tactic,
+  { Name := "Instance cache tactics"
+    category := DocCategory.tactic
     declNames :=
       [`` resetI, `` unfreezingI, `` casesI, `` substI, `` introI, `` introsI, `` haveI, `` letI,
-        `` exactI],
+        `` exactI]
     tags := ["type class", "context management"] }
 

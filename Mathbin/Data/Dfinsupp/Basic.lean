@@ -380,7 +380,7 @@ instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i
 each coordinate. -/
 instance [Semiring γ] [∀ i, AddCommMonoid (β i)] [∀ i, Module γ (β i)] : Module γ (Π₀ i, β i) :=
   { Dfinsupp.distribMulAction with
-    zero_smul := fun c => ext fun i => by simp only [smul_apply, zero_smul, zero_apply],
+    zero_smul := fun c => ext fun i => by simp only [smul_apply, zero_smul, zero_apply]
     add_smul := fun c x y => ext fun i => by simp only [add_apply, smul_apply, add_smul] }
 
 end Algebra
@@ -2173,12 +2173,12 @@ theorem mapRange.add_monoid_hom_comp (f : ∀ i, β₁ i →+ β₂ i) (f₂ : �
 @[simps apply]
 def mapRange.addEquiv (e : ∀ i, β₁ i ≃+ β₂ i) : (Π₀ i, β₁ i) ≃+ Π₀ i, β₂ i :=
   { mapRange.addMonoidHom fun i => (e i).toAddMonoidHom with
-    toFun := mapRange (fun i x => e i x) fun i => (e i).map_zero,
-    invFun := mapRange (fun i x => (e i).symm x) fun i => (e i).symm.map_zero,
+    toFun := mapRange (fun i x => e i x) fun i => (e i).map_zero
+    invFun := mapRange (fun i x => (e i).symm x) fun i => (e i).symm.map_zero
     left_inv := fun x => by
       rw [← map_range_comp] <;>
         · simp_rw [AddEquiv.symm_comp_self]
-          simp,
+          simp
     right_inv := fun x => by
       rw [← map_range_comp] <;>
         · simp_rw [AddEquiv.self_comp_symm]

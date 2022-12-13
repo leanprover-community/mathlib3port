@@ -197,7 +197,9 @@ def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.Hom) _ _
-      { right := X₀, Hom := k₀ } z
+      { right := X₀
+        Hom := k₀ }
+      z
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.right _ a
     convert f.w.symm
@@ -217,12 +219,11 @@ variable {F G}
 @[simps]
 def extendCocone :
     Cocone (F ⋙ G) ⥤
-      Cocone
-        G where 
+      Cocone G where 
   obj c :=
-    { x := c.x,
+    { x := c.x
       ι :=
-        { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X),
+        { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X)
           naturality' := fun X Y f => by 
             dsimp; simp
             -- This would be true if we'd chosen `lift F X` to be `lift F Y`
@@ -478,7 +479,9 @@ def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.Hom) _ _
-      { left := X₀, Hom := k₀ } z
+      { left := X₀
+        Hom := k₀ }
+      z
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.left _ a
     convert f.w
@@ -498,12 +501,11 @@ variable {F G}
 @[simps]
 def extendCone :
     Cone (F ⋙ G) ⥤
-      Cone
-        G where 
+      Cone G where 
   obj c :=
-    { x := c.x,
+    { x := c.x
       π :=
-        { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d),
+        { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d)
           naturality' := fun X Y f => by 
             dsimp; simp
             -- This would be true if we'd chosen `lift F Y` to be `lift F X`

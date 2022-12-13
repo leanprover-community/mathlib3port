@@ -362,7 +362,8 @@ def liftAddHom [AddZeroClass M] [AddCommMonoid N] :
       ((α →₀ M) →+
         N) where 
   toFun F :=
-    { toFun := fun f => f.Sum fun x => F x, map_zero' := Finset.sum_empty,
+    { toFun := fun f => f.Sum fun x => F x
+      map_zero' := Finset.sum_empty
       map_add' := fun _ _ => sum_add_index' (fun x => (F x).map_zero) fun x => (F x).map_add }
   invFun F x := F.comp <| singleAddHom x
   left_inv F := by 

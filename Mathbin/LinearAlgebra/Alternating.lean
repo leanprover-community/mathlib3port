@@ -365,14 +365,16 @@ variable (R M)
 -/
 @[simps]
 def ofSubsingleton [Subsingleton ι] (i : ι) : AlternatingMap R M M ι :=
-  { MultilinearMap.ofSubsingleton R M i with toFun := Function.eval i,
+  { MultilinearMap.ofSubsingleton R M i with
+    toFun := Function.eval i
     map_eq_zero_of_eq' := fun v i j hv hij => (hij <| Subsingleton.elim _ _).elim }
 #align alternating_map.of_subsingleton AlternatingMap.ofSubsingleton
 
 /-- The constant map is alternating when `ι` is empty. -/
 @[simps (config := { fullyApplied := false })]
 def constOfIsEmpty [IsEmpty ι] (m : N) : AlternatingMap R M N ι :=
-  { MultilinearMap.constOfIsEmpty R m with toFun := Function.const _ m,
+  { MultilinearMap.constOfIsEmpty R m with
+    toFun := Function.const _ m
     map_eq_zero_of_eq' := fun v => isEmptyElim }
 #align alternating_map.const_of_is_empty AlternatingMap.constOfIsEmpty
 
@@ -382,7 +384,8 @@ end
 @[simps]
 def codRestrict (f : AlternatingMap R M N ι) (p : Submodule R N) (h : ∀ v, f v ∈ p) :
     AlternatingMap R M p ι :=
-  { f.toMultilinearMap.codRestrict p h with toFun := fun v => ⟨f v, h v⟩,
+  { f.toMultilinearMap.codRestrict p h with
+    toFun := fun v => ⟨f v, h v⟩
     map_eq_zero_of_eq' := fun v i j hv hij => Subtype.ext <| map_eq_zero_of_eq _ _ hv hij }
 #align alternating_map.cod_restrict AlternatingMap.codRestrict
 
@@ -633,7 +636,8 @@ section DomDomCongr
 This is the alternating version of `multilinear_map.dom_dom_congr`. -/
 @[simps]
 def domDomCongr (σ : ι ≃ ι') (f : AlternatingMap R M N ι) : AlternatingMap R M N ι' :=
-  { f.toMultilinearMap.domDomCongr σ with toFun := fun v => f (v ∘ σ),
+  { f.toMultilinearMap.domDomCongr σ with
+    toFun := fun v => f (v ∘ σ)
     map_eq_zero_of_eq' := fun v i j hv hij =>
       f.map_eq_zero_of_eq (v ∘ σ) (by simpa using hv) (σ.symm.Injective.Ne hij) }
 #align alternating_map.dom_dom_congr AlternatingMap.domDomCongr
@@ -767,7 +771,7 @@ def alternatization :
         ι where 
   toFun m :=
     { ∑ σ : Perm ι, σ.sign • m.domDomCongr σ with
-      toFun := ⇑(∑ σ : Perm ι, σ.sign • m.domDomCongr σ),
+      toFun := ⇑(∑ σ : Perm ι, σ.sign • m.domDomCongr σ)
       map_eq_zero_of_eq' := fun v i j hvij hij =>
         alternization_map_eq_zero_of_eq_aux m v i j hij hvij }
   map_add' a b := by 
@@ -966,7 +970,7 @@ The specialized version can be obtained by combining this definition with `fin_s
 def domCoprod (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb) :
     AlternatingMap R' Mᵢ (N₁ ⊗[R'] N₂) (Sum ιa ιb) :=
   { ∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ with
-    toFun := fun v => (⇑(∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ)) v,
+    toFun := fun v => (⇑(∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ)) v
     map_eq_zero_of_eq' := fun v i j hv hij => by
       dsimp only
       rw [MultilinearMap.sum_apply]
@@ -1138,7 +1142,8 @@ def curryLeft {n : ℕ} (f : AlternatingMap R' M'' N'' (Fin n.succ)) :
         (Fin
           n) where 
   toFun m :=
-    { f.toMultilinearMap.curryLeft m with toFun := fun v => f (Matrix.vecCons m v),
+    { f.toMultilinearMap.curryLeft m with
+      toFun := fun v => f (Matrix.vecCons m v)
       map_eq_zero_of_eq' := fun v i j hv hij =>
         f.map_eq_zero_of_eq _ (by rwa [Matrix.cons_val_succ, Matrix.cons_val_succ])
           ((Fin.succ_injective _).Ne hij) }

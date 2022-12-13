@@ -35,7 +35,8 @@ instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul :
   uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_has_uniform_continuous_const_smul
 
 instance : NormedSpace 𝕜 (Completion E) :=
-  { Completion.module with smul := (· • ·),
+  { Completion.module with 
+    smul := (· • ·)
     norm_smul_le := fun c x =>
       (inductionOn x
           (isClosedLe (continuous_const_smul _).norm (continuous_const.mul continuous_norm)))
@@ -45,7 +46,10 @@ variable {𝕜 E}
 
 /-- Embedding of a normed space to its completion as a linear isometry. -/
 def toComplₗᵢ : E →ₗᵢ[𝕜] Completion E :=
-  { toCompl with toFun := coe, map_smul' := coe_smul, norm_map' := norm_coe }
+  { toCompl with 
+    toFun := coe
+    map_smul' := coe_smul
+    norm_map' := norm_coe }
 #align uniform_space.completion.to_complₗᵢ UniformSpace.Completion.toComplₗᵢ
 
 @[simp]
@@ -80,7 +84,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
       · refine' isClosedEq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
       · intro x y
-        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm],
+        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm]
     norm_mul := fun x y => by
       apply completion.induction_on₂ x y <;> clear x y
       ·

@@ -72,12 +72,17 @@ unsafe def subtype_instance := do
   let src ← find_ancestors cl t.app_arg
   let inst :=
     pexpr.mk_structure_instance
-      { struct := cl, field_values := [], field_names := [], sources := src.map to_pexpr }
+      { struct := cl
+        field_values := []
+        field_names := []
+        sources := src.map to_pexpr }
   andthen (refine_struct inst) derive_field_subtype
 #align tactic.interactive.subtype_instance tactic.interactive.subtype_instance
 
 add_tactic_doc
-  { Name := "subtype_instance", category := DocCategory.tactic, declNames := [`` subtype_instance],
+  { Name := "subtype_instance"
+    category := DocCategory.tactic
+    declNames := [`` subtype_instance]
     tags := ["type class", "structures"] }
 
 end Interactive

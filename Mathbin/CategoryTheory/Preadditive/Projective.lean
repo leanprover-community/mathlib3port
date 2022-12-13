@@ -120,7 +120,10 @@ instance (X : Type u) :
       exact ((epi_iff_surjective _).mp epi (f x)).some_spec⟩
 
 instance TypeCat.enough_projectives :
-    EnoughProjectives (Type u) where presentation X := ⟨{ P := X, f := 𝟙 X }⟩
+    EnoughProjectives
+      (Type u) where presentation X :=
+    ⟨{  P := X
+        f := 𝟙 X }⟩
 #align
   category_theory.projective.Type.enough_projectives CategoryTheory.Projective.TypeCat.enough_projectives
 

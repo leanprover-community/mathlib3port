@@ -403,8 +403,14 @@ end Split
 
 instance : Category (Split C) where 
   Hom := Split.Hom
-  id S := { f := 𝟙 _, f := fun n => 𝟙 _, comm' := by tidy }
-  comp S₁ S₂ S₃ Φ₁₂ Φ₂₃ := { f := Φ₁₂.f ≫ Φ₂₃.f, f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n, comm' := by tidy }
+  id S :=
+    { f := 𝟙 _
+      f := fun n => 𝟙 _
+      comm' := by tidy }
+  comp S₁ S₂ S₃ Φ₁₂ Φ₂₃ :=
+    { f := Φ₁₂.f ≫ Φ₂₃.f
+      f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n
+      comm' := by tidy }
 
 variable {C}
 

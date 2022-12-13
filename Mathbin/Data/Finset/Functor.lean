@@ -67,8 +67,9 @@ section Applicative
 variable {α β : Type u} [∀ P, Decidable P]
 
 instance : Applicative Finset :=
-  { Finset.functor, Finset.hasPure with seq := fun α β t s => t.sup fun f => s.image f,
-    seqLeft := fun α β s t => if t = ∅ then ∅ else s,
+  { Finset.functor, Finset.hasPure with
+    seq := fun α β t s => t.sup fun f => s.image f
+    seqLeft := fun α β s t => if t = ∅ then ∅ else s
     seqRight := fun α β s t => if s = ∅ then ∅ else t }
 
 @[simp]
@@ -108,7 +109,7 @@ instance : LawfulApplicative Finset :=
         rw [mem_image] at hf ha
         obtain ⟨b, hb, rfl⟩ := hf
         obtain ⟨_, _, rfl⟩ := ha
-        exact hb,
+        exact hb
     seq_right_eq := fun α β s t => by
       rw [seq_def, fmap_def, seq_right_def]
       obtain rfl | hs := s.eq_empty_or_nonempty
@@ -120,9 +121,10 @@ instance : LawfulApplicative Finset :=
         rw [mem_image] at hf ha
         obtain ⟨b, hb, rfl⟩ := ha
         obtain ⟨_, _, rfl⟩ := hf
-        exact hb,
-    pure_seq_eq_map := fun α β f s => sup_singleton, map_pure := fun α β f a => image_singleton _ _,
-    seq_pure := fun α β s a => sup_singleton'' _ _,
+        exact hb
+    pure_seq_eq_map := fun α β f s => sup_singleton
+    map_pure := fun α β f a => image_singleton _ _
+    seq_pure := fun α β s a => sup_singleton'' _ _
     seq_assoc := fun α β γ s t u => by 
       ext a
       simp_rw [seq_def, fmap_def]
@@ -160,8 +162,10 @@ theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
 #align finset.bind_def Finset.bind_def
 
 instance : LawfulMonad Finset :=
-  { Finset.is_lawful_applicative with bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _,
-    bind_map_eq_seq := fun α β t s => rfl, pure_bind := fun α β t s => sup_singleton,
+  { Finset.is_lawful_applicative with
+    bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _
+    bind_map_eq_seq := fun α β t s => rfl
+    pure_bind := fun α β t s => sup_singleton
     bind_assoc := fun α β γ s f g => by 
       convert sup_bUnion _ _
       exact sup_eq_bUnion _ _ }
@@ -176,7 +180,9 @@ section Alternative
 variable [∀ P, Decidable P]
 
 instance : Alternative Finset :=
-  { Finset.applicative with orelse := fun α => (· ∪ ·), failure := fun α => ∅ }
+  { Finset.applicative with 
+    orelse := fun α => (· ∪ ·)
+    failure := fun α => ∅ }
 
 end Alternative
 

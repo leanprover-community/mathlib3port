@@ -434,11 +434,15 @@ unsafe def move_oper (op : parse pexpr_list) (args : parse move_pexpr_list_or_te
 #align tactic.interactive.move_oper tactic.interactive.move_oper
 
 add_tactic_doc
-  { Name := "move_add", category := DocCategory.tactic, declNames := [`tactic.interactive.move_add],
+  { Name := "move_add"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.move_add]
     tags := ["arithmetic"] }
 
 add_tactic_doc
-  { Name := "move_mul", category := DocCategory.tactic, declNames := [`tactic.interactive.move_mul],
+  { Name := "move_mul"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.move_mul]
     tags := ["arithmetic"] }
 
 end Interactive

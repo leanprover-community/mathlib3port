@@ -156,7 +156,7 @@ theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g :
 -- We'll prove the converse later, when `V` is abelian.
 theorem exact_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
     (p : imageSubobject f = kernelSubobject g) : Exact f g :=
-  { w := comp_eq_zero_of_image_eq_kernel f g p,
+  { w := comp_eq_zero_of_image_eq_kernel f g p
     Epi := by 
       haveI := image_to_kernel_is_iso_of_image_eq_kernel f g p
       infer_instance }

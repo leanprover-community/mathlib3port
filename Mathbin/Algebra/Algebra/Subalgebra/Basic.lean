@@ -328,11 +328,12 @@ def toSubmodule :
         A where 
   toEmbedding :=
     { toFun := fun S =>
-        { carrier := S, zero_mem' := (0 : S).2,
-          add_mem' := fun x y hx hy => (⟨x, hx⟩ + ⟨y, hy⟩ : S).2,
+        { carrier := S
+          zero_mem' := (0 : S).2
+          add_mem' := fun x y hx hy => (⟨x, hx⟩ + ⟨y, hy⟩ : S).2
           smul_mem' := fun c x hx =>
             (Algebra.smul_def c x).symm ▸
-              (⟨algebraMap R A c, S.range_le ⟨c, rfl⟩⟩ * ⟨x, hx⟩ : S).2 },
+              (⟨algebraMap R A c, S.range_le ⟨c, rfl⟩⟩ * ⟨x, hx⟩ : S).2 }
       inj' := fun S T h => ext <| by apply SetLike.ext_iff.1 h }
   map_rel_iff' S T := SetLike.coe_subset_coe.symm.trans SetLike.coe_subset_coe
 #align subalgebra.to_submodule Subalgebra.toSubmodule
@@ -370,7 +371,7 @@ instance algebra' [CommSemiring R'] [HasSmul R' R] [Algebra R' A] [IsScalarTower
       rw [Algebra.algebra_map_eq_smul_one, ← smul_one_smul R x (1 : A), ←
         Algebra.algebra_map_eq_smul_one]
       exact algebra_map_mem S _ with
-    commutes' := fun c x => Subtype.eq <| Algebra.commutes _ _,
+    commutes' := fun c x => Subtype.eq <| Algebra.commutes _ _
     smul_def' := fun c x => Subtype.eq <| Algebra.smul_def _ _ }
 #align subalgebra.algebra' Subalgebra.algebra'
 
@@ -557,7 +558,8 @@ variable (p : Submodule R A)
 /-- A submodule containing `1` and closed under multiplication is a subalgebra. -/
 def toSubalgebra (p : Submodule R A) (h_one : (1 : A) ∈ p)
     (h_mul : ∀ x y, x ∈ p → y ∈ p → x * y ∈ p) : Subalgebra R A :=
-  { p with mul_mem' := h_mul,
+  { p with 
+    mul_mem' := h_mul
     algebra_map_mem' := fun r => by
       rw [Algebra.algebra_map_eq_smul_one]
       exact p.smul_mem _ h_one }
@@ -702,7 +704,10 @@ variable [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
 
 This is a computable alternative to `alg_equiv.of_injective`. -/
 def ofLeftInverse {g : B → A} {f : A →ₐ[R] B} (h : Function.LeftInverse g f) : A ≃ₐ[R] f.range :=
-  { f.range_restrict with toFun := f.range_restrict, invFun := g ∘ f.range.val, left_inv := h,
+  { f.range_restrict with 
+    toFun := f.range_restrict
+    invFun := g ∘ f.range.val
+    left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := f.mem_range.mp x.Prop
@@ -1087,8 +1092,11 @@ theorem coe_inclusion {S T : Subalgebra R A} (h : S ≤ T) (s : S) : (inclusion 
 This is the `subalgebra` version of `linear_equiv.of_eq` and `equiv.set.of_eq`. -/
 @[simps apply]
 def equivOfEq (S T : Subalgebra R A) (h : S = T) : S ≃ₐ[R] T :=
-  { LinearEquiv.ofEq _ _ (congr_arg toSubmodule h) with toFun := fun x => ⟨x, h ▸ x.2⟩,
-    invFun := fun x => ⟨x, h.symm ▸ x.2⟩, map_mul' := fun _ _ => rfl, commutes' := fun _ => rfl }
+  { LinearEquiv.ofEq _ _ (congr_arg toSubmodule h) with
+    toFun := fun x => ⟨x, h ▸ x.2⟩
+    invFun := fun x => ⟨x, h.symm ▸ x.2⟩
+    map_mul' := fun _ _ => rfl
+    commutes' := fun _ => rfl }
 #align subalgebra.equiv_of_eq Subalgebra.equivOfEq
 
 @[simp]
@@ -1116,7 +1124,8 @@ variable (S₁ : Subalgebra R B)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two subalgebras is a subalgebra. -/
 def prod : Subalgebra R (A × B) :=
-  { S.toSubsemiring.Prod S₁.toSubsemiring with carrier := S ×ˢ S₁,
+  { S.toSubsemiring.Prod S₁.toSubsemiring with
+    carrier := S ×ˢ S₁
     algebra_map_mem' := fun r => ⟨algebra_map_mem _ _, algebra_map_mem _ _⟩ }
 #align subalgebra.prod Subalgebra.prod
 
@@ -1160,17 +1169,17 @@ variable {ι : Type _}
 theorem coe_supr_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Directed (· ≤ ·) S) :
     ↑(supr S) = ⋃ i, (S i : Set A) :=
   let K : Subalgebra R A :=
-    { carrier := ⋃ i, S i,
+    { carrier := ⋃ i, S i
       mul_mem' := fun x y hx hy =>
         let ⟨i, hi⟩ := Set.mem_Union.1 hx
         let ⟨j, hj⟩ := Set.mem_Union.1 hy
         let ⟨k, hik, hjk⟩ := dir i j
-        Set.mem_Union.2 ⟨k, Subalgebra.mul_mem (S k) (hik hi) (hjk hj)⟩,
+        Set.mem_Union.2 ⟨k, Subalgebra.mul_mem (S k) (hik hi) (hjk hj)⟩
       add_mem' := fun x y hx hy =>
         let ⟨i, hi⟩ := Set.mem_Union.1 hx
         let ⟨j, hj⟩ := Set.mem_Union.1 hy
         let ⟨k, hik, hjk⟩ := dir i j
-        Set.mem_Union.2 ⟨k, Subalgebra.add_mem (S k) (hik hi) (hjk hj)⟩,
+        Set.mem_Union.2 ⟨k, Subalgebra.add_mem (S k) (hik hi) (hjk hj)⟩
       algebra_map_mem' := fun r =>
         let i := @Nonempty.some ι inferInstance
         Set.mem_Union.2 ⟨i, Subalgebra.algebra_map_mem _ _⟩ }
@@ -1193,15 +1202,15 @@ noncomputable def suprLift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Dire
               let ⟨k, hik, hjk⟩ := dir i j
               rw [hf i k hik, hf j k hjk]
               rfl)
-            (↑(supr K)) (by rw [coe_supr_of_directed dir] <;> rfl),
-        map_one' := Set.Union_lift_const _ (fun _ => 1) (fun _ => rfl) _ (by simp),
-        map_zero' := Set.Union_lift_const _ (fun _ => 0) (fun _ => rfl) _ (by simp),
+            (↑(supr K)) (by rw [coe_supr_of_directed dir] <;> rfl)
+        map_one' := Set.Union_lift_const _ (fun _ => 1) (fun _ => rfl) _ (by simp)
+        map_zero' := Set.Union_lift_const _ (fun _ => 0) (fun _ => rfl) _ (by simp)
         map_mul' :=
           Set.Union_lift_binary (coe_supr_of_directed dir) dir _ (fun _ => (· * ·))
-            (fun _ _ _ => rfl) _ (by simp),
+            (fun _ _ _ => rfl) _ (by simp)
         map_add' :=
           Set.Union_lift_binary (coe_supr_of_directed dir) dir _ (fun _ => (· + ·))
-            (fun _ _ _ => rfl) _ (by simp),
+            (fun _ _ _ => rfl) _ (by simp)
         commutes' := fun r =>
           Set.Union_lift_const _ (fun _ => algebraMap _ _ r) (fun _ => rfl) _ fun i => by
             erw [AlgHom.commutes (f i)] }

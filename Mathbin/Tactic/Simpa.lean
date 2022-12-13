@@ -69,7 +69,9 @@ unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (t
 #align tactic.interactive.simpa tactic.interactive.simpa
 
 add_tactic_doc
-  { Name := "simpa", category := DocCategory.tactic, declNames := [`tactic.interactive.simpa],
+  { Name := "simpa"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.simpa]
     tags := ["simplification"] }
 
 end Interactive

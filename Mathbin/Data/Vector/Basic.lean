@@ -387,9 +387,9 @@ end Scan
 
 /- warning: vector.m_of_fn -> Vector.mOfFn is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u} -> Type.{u_1}} [_inst_1 : Monad.{u, u_1} m] {α : Type.{u}} {n : Nat}, ((Fin n) -> (m α)) -> (m (Vector.{u} α n))
+  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u1}} {n : Nat}, ((Fin n) -> (m α)) -> (m (Vector.{u1} α n))
 but is expected to have type
-  forall {m : Type.{u} -> Type.{_aux_param_0}} [_inst_1 : Monad.{u, _aux_param_0} m] {α : Type.{u}} {n : Nat}, ((Fin n) -> (m α)) -> (m (Vector.{u} α n))
+  forall {m : Type.{u2} -> Type.{u1}} [_inst_1 : Monad.{u2, u1} m] {α : Type.{u2}} {n : Nat}, ((Fin n) -> (m α)) -> (m (Vector.{u2} α n))
 Case conversion may be inaccurate. Consider using '#align vector.m_of_fn Vector.mOfFnₓ'. -/
 /-- Monadic analog of `vector.of_fn`.
 Given a monadic function on `fin n`, return a `vector α n` inside the monad. -/
@@ -409,9 +409,9 @@ theorem m_of_fn_pure {m} [Monad m] [LawfulMonad m] {α} :
 
 /- warning: vector.mmap -> Vector.mmap is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u} -> Type.{u_1}} [_inst_1 : Monad.{u, u_1} m] {α : Type.{u_2}} {β : Type.{u}}, (α -> (m β)) -> (forall {n : Nat}, (Vector.{u_2} α n) -> (m (Vector.{u} β n)))
+  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}}, (α -> (m β)) -> (forall {n : Nat}, (Vector.{u3} α n) -> (m (Vector.{u1} β n)))
 but is expected to have type
-  forall {m : Type.{u} -> Type.{_aux_param_1}} [_inst_1 : Monad.{u, _aux_param_1} m] {α : Type.{_aux_param_0}} {β : Type.{u}}, (α -> (m β)) -> (forall {n : Nat}, (Vector.{_aux_param_0} α n) -> (m (Vector.{u} β n)))
+  forall {m : Type.{u3} -> Type.{u2}} [_inst_1 : Monad.{u3, u2} m] {α : Type.{u1}} {β : Type.{u3}}, (α -> (m β)) -> (forall {n : Nat}, (Vector.{u1} α n) -> (m (Vector.{u3} β n)))
 Case conversion may be inaccurate. Consider using '#align vector.mmap Vector.mmapₓ'. -/
 /-- Apply a monadic function to each component of a vector,
 returning a vector inside the monad. -/

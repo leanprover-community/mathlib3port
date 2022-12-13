@@ -154,14 +154,19 @@ def commMonToLaxBraided :
       LaxBraidedFunctor (Discrete PUnit.{u + 1})
         C where 
   obj A :=
-    { obj := fun _ => A.x, map := fun _ _ _ => 𝟙 _, ε := A.one, μ := fun _ _ => A.mul,
-      map_id' := fun _ => rfl, map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
+    { obj := fun _ => A.x
+      map := fun _ _ _ => 𝟙 _
+      ε := A.one
+      μ := fun _ _ => A.mul
+      map_id' := fun _ => rfl
+      map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
   map A B f :=
-    { app := fun _ => f.Hom,
+    { app := fun _ => f.Hom
       naturality' := fun _ _ _ => by 
         dsimp
-        rw [category.id_comp, category.comp_id],
-      unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
+        rw [category.id_comp, category.comp_id]
+      unit' := f.OneHom
+      tensor' := fun _ _ => f.MulHom }
 #align
   CommMon_.equiv_lax_braided_functor_punit.CommMon_to_lax_braided CommMon_.EquivLaxBraidedFunctorPunit.commMonToLaxBraided
 
@@ -187,7 +192,11 @@ def unitIso :
 /-- Implementation of `CommMon_.equiv_lax_braided_functor_punit`. -/
 @[simps]
 def counitIso : commMonToLaxBraided C ⋙ laxBraidedToCommMon C ≅ 𝟭 (CommMon_ C) :=
-  NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
+  NatIso.ofComponents
+    (fun F =>
+      { Hom := { Hom := 𝟙 _ }
+        inv := { Hom := 𝟙 _ } })
+    (by tidy)
 #align
   CommMon_.equiv_lax_braided_functor_punit.counit_iso CommMon_.EquivLaxBraidedFunctorPunit.counitIso
 

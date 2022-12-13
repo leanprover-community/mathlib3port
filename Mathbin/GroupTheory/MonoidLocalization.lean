@@ -130,7 +130,7 @@ submonoid of `M`, whose quotient is the localization of `M` at `S`. -/
       "An alternate form of the congruence relation on `M × S`, `M` a `comm_monoid` and\n`S` a submonoid of `M`, whose quotient is the localization of `M` at `S`."]
 def r' : Con (M × S) := by
   refine'
-    { R := fun a b : M × S => ∃ c : S, a.1 * b.2 * c = b.1 * a.2 * c,
+    { R := fun a b : M × S => ∃ c : S, a.1 * b.2 * c = b.1 * a.2 * c
       iseqv := ⟨fun a => ⟨1, rfl⟩, fun a b ⟨c, hc⟩ => ⟨c, hc.symm⟩, _⟩.. }
   · rintro a b c ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
     use b.2 * t₁ * t₂
@@ -483,7 +483,10 @@ namespace MonoidHom
 def toLocalizationMap (f : M →* N) (H1 : ∀ y : S, IsUnit (f y))
     (H2 : ∀ z, ∃ x : M × S, z * f x.2 = f x.1) (H3 : ∀ x y, f x = f y ↔ ∃ c : S, x * c = y * c) :
     Submonoid.LocalizationMap S N :=
-  { f with map_units' := H1, surj' := H2, eq_iff_exists' := H3 }
+  { f with 
+    map_units' := H1
+    surj' := H2
+    eq_iff_exists' := H3 }
 #align monoid_hom.to_localization_map MonoidHom.toLocalizationMap
 
 end MonoidHom
@@ -1449,12 +1452,14 @@ variable (S)
 @[to_additive
       "Natural homomorphism sending `x : M`, `M` an `add_comm_monoid`, to the equivalence\nclass of `(x, 0)` in the localization of `M` at a submonoid."]
 def monoidOf : Submonoid.LocalizationMap S (Localization S) :=
-  { (r S).mk'.comp <| MonoidHom.inl M S with toFun := fun x => mk x 1, map_one' := mk_one,
-    map_mul' := fun x y => by rw [mk_mul, mul_one],
+  { (r S).mk'.comp <| MonoidHom.inl M S with
+    toFun := fun x => mk x 1
+    map_one' := mk_one
+    map_mul' := fun x y => by rw [mk_mul, mul_one]
     map_units' := fun y =>
-      isUnit_iff_exists_inv.2 ⟨mk 1 y, by rw [mk_mul, mul_one, one_mul, mk_self]⟩,
+      isUnit_iff_exists_inv.2 ⟨mk 1 y, by rw [mk_mul, mul_one, one_mul, mk_self]⟩
     surj' := fun z =>
-      (induction_on z) fun x => ⟨x, by rw [mk_mul, mul_comm x.fst, ← mk_mul, mk_self, one_mul]⟩,
+      (induction_on z) fun x => ⟨x, by rw [mk_mul, mul_comm x.fst, ← mk_mul, mk_self, one_mul]⟩
     eq_iff_exists' := fun x y =>
       mk_eq_mk_iff.trans <|
         r_iff_exists.trans <| show (∃ c : S, x * 1 * c = y * 1 * c) ↔ _ by rw [mul_one, mul_one] }

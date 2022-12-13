@@ -256,9 +256,11 @@ unsafe def explode_cmd (_ : parse <| tk "#explode") : parser Unit := do
 #align tactic.explode_cmd tactic.explode_cmd
 
 add_tactic_doc
-  { Name := "#explode / #explode_widget", category := DocCategory.cmd,
-    declNames := [`tactic.explode_cmd, `tactic.explode_widget_cmd],
-    inheritDescriptionFrom := `tactic.explode_cmd, tags := ["proof display", "widgets"] }
+  { Name := "#explode / #explode_widget"
+    category := DocCategory.cmd
+    declNames := [`tactic.explode_cmd, `tactic.explode_widget_cmd]
+    inheritDescriptionFrom := `tactic.explode_cmd
+    tags := ["proof display", "widgets"] }
 
 end Tactic
 

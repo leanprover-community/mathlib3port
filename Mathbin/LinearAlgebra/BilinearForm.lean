@@ -160,12 +160,11 @@ theorem ext_iff : B = D ↔ ∀ x y, B x y = D x y :=
 #align bilin_form.ext_iff BilinForm.ext_iff
 
 instance :
-    Zero
-      (BilinForm R
-        M) where zero :=
-    { bilin := fun x y => 0, bilin_add_left := fun x y z => (add_zero 0).symm,
-      bilin_smul_left := fun a x y => (mul_zero a).symm,
-      bilin_add_right := fun x y z => (zero_add 0).symm,
+    Zero (BilinForm R M) where zero :=
+    { bilin := fun x y => 0
+      bilin_add_left := fun x y z => (add_zero 0).symm
+      bilin_smul_left := fun a x y => (mul_zero a).symm
+      bilin_add_right := fun x y z => (zero_add 0).symm
       bilin_smul_right := fun a x y => (mul_zero a).symm }
 
 @[simp]
@@ -181,13 +180,12 @@ theorem zero_apply (x y : M) : (0 : BilinForm R M) x y = 0 :=
 variable (B D B₁ D₁)
 
 instance :
-    Add
-      (BilinForm R
+    Add (BilinForm R
         M) where add B D :=
-    { bilin := fun x y => B x y + D x y,
-      bilin_add_left := fun x y z => by rw [add_left, add_left, add_add_add_comm],
-      bilin_smul_left := fun a x y => by rw [smul_left, smul_left, mul_add],
-      bilin_add_right := fun x y z => by rw [add_right, add_right, add_add_add_comm],
+    { bilin := fun x y => B x y + D x y
+      bilin_add_left := fun x y z => by rw [add_left, add_left, add_add_add_comm]
+      bilin_smul_left := fun a x y => by rw [smul_left, smul_left, mul_add]
+      bilin_add_right := fun x y z => by rw [add_right, add_right, add_add_add_comm]
       bilin_smul_right := fun a x y => by rw [smul_right, smul_right, mul_add] }
 
 @[simp]
@@ -208,9 +206,10 @@ instance {α} [Monoid α] [DistribMulAction α R] [SmulCommClass α R R] :
     HasSmul α
       (BilinForm R
         M) where smul c B :=
-    { bilin := fun x y => c • B x y, bilin_add_left := fun x y z => by rw [add_left, smul_add],
-      bilin_smul_left := fun a x y => by rw [smul_left, ← mul_smul_comm],
-      bilin_add_right := fun x y z => by rw [add_right, smul_add],
+    { bilin := fun x y => c • B x y
+      bilin_add_left := fun x y z => by rw [add_left, smul_add]
+      bilin_smul_left := fun a x y => by rw [smul_left, ← mul_smul_comm]
+      bilin_add_right := fun x y z => by rw [add_right, smul_add]
       bilin_smul_right := fun a x y => by rw [smul_right, ← mul_smul_comm] }
 
 @[simp]
@@ -229,12 +228,12 @@ instance : AddCommMonoid (BilinForm R M) :=
   Function.Injective.addCommMonoid _ coe_injective coe_zero coe_add fun n x => coe_smul _ _
 
 instance :
-    Neg
-      (BilinForm R₁
+    Neg (BilinForm R₁
         M₁) where neg B :=
-    { bilin := fun x y => -B x y, bilin_add_left := fun x y z => by rw [add_left, neg_add],
-      bilin_smul_left := fun a x y => by rw [smul_left, mul_neg],
-      bilin_add_right := fun x y z => by rw [add_right, neg_add],
+    { bilin := fun x y => -B x y
+      bilin_add_left := fun x y z => by rw [add_left, neg_add]
+      bilin_smul_left := fun a x y => by rw [smul_left, mul_neg]
+      bilin_add_right := fun x y z => by rw [add_right, neg_add]
       bilin_smul_right := fun a x y => by rw [smul_right, mul_neg] }
 
 @[simp]
@@ -248,13 +247,12 @@ theorem neg_apply (x y : M₁) : (-B₁) x y = -B₁ x y :=
 #align bilin_form.neg_apply BilinForm.neg_apply
 
 instance :
-    Sub
-      (BilinForm R₁
+    Sub (BilinForm R₁
         M₁) where sub B D :=
-    { bilin := fun x y => B x y - D x y,
-      bilin_add_left := fun x y z => by rw [add_left, add_left, add_sub_add_comm],
-      bilin_smul_left := fun a x y => by rw [smul_left, smul_left, mul_sub],
-      bilin_add_right := fun x y z => by rw [add_right, add_right, add_sub_add_comm],
+    { bilin := fun x y => B x y - D x y
+      bilin_add_left := fun x y z => by rw [add_left, add_left, add_sub_add_comm]
+      bilin_smul_left := fun a x y => by rw [smul_left, smul_left, mul_sub]
+      bilin_add_right := fun x y z => by rw [add_right, add_right, add_sub_add_comm]
       bilin_smul_right := fun a x y => by rw [smul_right, smul_right, mul_sub] }
 
 @[simp]
@@ -301,9 +299,10 @@ def flipHomAux [Algebra R₂ R] :
       BilinForm R
         M where 
   toFun A :=
-    { bilin := fun i j => A j i, bilin_add_left := fun x y z => A.bilin_add_right z x y,
-      bilin_smul_left := fun a x y => A.bilin_smul_right a y x,
-      bilin_add_right := fun x y z => A.bilin_add_left y z x,
+    { bilin := fun i j => A j i
+      bilin_add_left := fun x y z => A.bilin_add_right z x y
+      bilin_smul_left := fun a x y => A.bilin_smul_right a y x
+      bilin_add_right := fun x y z => A.bilin_add_left y z x
       bilin_smul_right := fun a x y => A.bilin_smul_left a y x }
   map_add' A₁ A₂ := by 
     ext
@@ -327,7 +326,9 @@ variable (R₂)
 less structured version of the equiv which applies to general (noncommutative) rings `R` with a
 distinguished commutative subring `R₂`; over a commutative ring use `flip`. -/
 def flipHom [Algebra R₂ R] : BilinForm R M ≃ₗ[R₂] BilinForm R M :=
-  { flipHomAux R₂ with invFun := flipHomAux R₂, left_inv := flip_flip_aux,
+  { flipHomAux R₂ with 
+    invFun := flipHomAux R₂
+    left_inv := flip_flip_aux
     right_inv := flip_flip_aux }
 #align bilin_form.flip_hom BilinForm.flipHom
 
@@ -485,10 +486,11 @@ def LinearMap.toBilinAux (f : M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂) :
 
 /-- Bilinear forms are linearly equivalent to maps with two arguments that are linear in both. -/
 def BilinForm.toLin : BilinForm R₂ M₂ ≃ₗ[R₂] M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂ :=
-  { BilinForm.toLinHom R₂ with invFun := LinearMap.toBilinAux,
+  { BilinForm.toLinHom R₂ with 
+    invFun := LinearMap.toBilinAux
     left_inv := fun B => by 
       ext
-      simp [LinearMap.toBilinAux],
+      simp [LinearMap.toBilinAux]
     right_inv := fun B => by 
       ext
       simp [LinearMap.toBilinAux] }
@@ -1186,7 +1188,7 @@ theorem span_singleton_sup_orthogonal_eq_top {B : BilinForm K V} {x : V} (hx : �
   is complement to its orthogonal complement. -/
 theorem is_compl_span_singleton_orthogonal {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K ∙ x) (B.orthogonal <| K ∙ x) :=
-  { Disjoint := disjoint_iff.2 <| span_singleton_inf_orthogonal_eq_bot hx,
+  { Disjoint := disjoint_iff.2 <| span_singleton_inf_orthogonal_eq_bot hx
     Codisjoint := codisjoint_iff.2 <| span_singleton_sup_orthogonal_eq_top hx }
 #align bilin_form.is_compl_span_singleton_orthogonal BilinForm.is_compl_span_singleton_orthogonal
 

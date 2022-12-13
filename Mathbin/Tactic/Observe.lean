@@ -40,6 +40,8 @@ unsafe def tactic.interactive.observe (trc : parse <| optional (tk "?"))
 #align tactic.interactive.observe tactic.interactive.observe
 
 add_tactic_doc
-  { Name := "observe", category := DocCategory.tactic, declNames := [`tactic.interactive.observe],
+  { Name := "observe"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.observe]
     tags := ["search", "Try this"] }
 

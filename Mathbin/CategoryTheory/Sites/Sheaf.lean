@@ -86,7 +86,7 @@ def conesEquivSieveCompatibleFamily :
       dsimp
       convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp <;> rfl⟩
   invFun x :=
-    { app := fun f => x.1 f.unop.1.Hom f.unop.2,
+    { app := fun f => x.1 f.unop.1.Hom f.unop.2
       naturality' := fun f f' g => by
         refine' Eq.trans _ (x.2 f.unop.1.Hom g.unop.left f.unop.2)
         erw [id_comp]
@@ -378,10 +378,10 @@ def sheafEquivSheafOfTypes :
       SheafOfTypesCat
         J where 
   Functor :=
-    { obj := fun S => ⟨S.val, (is_sheaf_iff_is_sheaf_of_type _ _).1 S.2⟩,
+    { obj := fun S => ⟨S.val, (is_sheaf_iff_is_sheaf_of_type _ _).1 S.2⟩
       map := fun S T f => ⟨f.val⟩ }
   inverse :=
-    { obj := fun S => ⟨S.val, (is_sheaf_iff_is_sheaf_of_type _ _).2 S.2⟩,
+    { obj := fun S => ⟨S.val, (is_sheaf_iff_is_sheaf_of_type _ _).2 S.2⟩
       map := fun S T f => ⟨f.val⟩ }
   unitIso := NatIso.ofComponents (fun X => ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by tidy, by tidy⟩) (by tidy)
   counitIso := NatIso.ofComponents (fun X => ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by tidy, by tidy⟩) (by tidy)
@@ -412,7 +412,7 @@ instance sheafHomHasZsmul :
       (P ⟶
         Q) where smul n f :=
     SheafCat.Hom.mk
-      { app := fun U => n • f.1.app U,
+      { app := fun U => n • f.1.app U
         naturality' := fun U V i => by
           induction' n using Int.induction_on with n ih n ih
           · simp only [zero_smul, comp_zero, zero_comp]
@@ -433,7 +433,7 @@ instance sheafHomHasNsmul :
       (P ⟶
         Q) where smul n f :=
     SheafCat.Hom.mk
-      { app := fun U => n • f.1.app U,
+      { app := fun U => n • f.1.app U
         naturality' := fun U V i => by 
           induction' n with n ih
           · simp only [zero_smul, comp_zero, zero_comp]

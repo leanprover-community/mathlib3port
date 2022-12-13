@@ -67,13 +67,16 @@ instance concreteCategory :
 instance hasForgetToPartialOrder :
     HasForget₂ BoundedOrderCat
       PartialOrderCat where forget₂ :=
-    { obj := fun X => X.toPartialOrder, map := fun X Y => BoundedOrderHom.toOrderHom }
+    { obj := fun X => X.toPartialOrder
+      map := fun X Y => BoundedOrderHom.toOrderHom }
 #align BoundedOrder.has_forget_to_PartialOrder BoundedOrderCat.hasForgetToPartialOrder
 
 instance hasForgetToBipointed :
     HasForget₂ BoundedOrderCat
       BipointedCat where 
-  forget₂ := { obj := fun X => ⟨X, ⊥, ⊤⟩, map := fun X Y f => ⟨f, map_bot f, map_top f⟩ }
+  forget₂ :=
+    { obj := fun X => ⟨X, ⊥, ⊤⟩
+      map := fun X Y f => ⟨f, map_bot f, map_top f⟩ }
   forget_comp := rfl
 #align BoundedOrder.has_forget_to_Bipointed BoundedOrderCat.hasForgetToBipointed
 

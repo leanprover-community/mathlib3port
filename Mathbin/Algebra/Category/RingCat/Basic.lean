@@ -83,7 +83,9 @@ instance hasForgetToMon : HasForget₂ SemiRingCat MonCat :=
 instance hasForgetToAddCommMon :
     HasForget₂ SemiRingCat
       AddCommMonCat where-- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
-  forget₂ := { obj := fun R => AddCommMonCat.of R, map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
+  forget₂ :=
+    { obj := fun R => AddCommMonCat.of R
+      map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 #align SemiRing.has_forget_to_AddCommMon SemiRingCat.hasForgetToAddCommMon
 
 end SemiRingCat
@@ -138,7 +140,8 @@ instance hasForgetToAddCommGroup :
     HasForget₂ RingCat
       AddCommGroupCat where-- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
   forget₂ :=
-    { obj := fun R => AddCommGroupCat.of R, map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
+    { obj := fun R => AddCommGroupCat.of R
+      map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 #align Ring.has_forget_to_AddCommGroup RingCat.hasForgetToAddCommGroup
 
 end RingCat

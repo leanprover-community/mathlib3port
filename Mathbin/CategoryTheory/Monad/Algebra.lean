@@ -118,7 +118,7 @@ def isoMk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.Hom ≫ B
     A ≅ B where 
   Hom := { f := h.Hom }
   inv :=
-    { f := h.inv,
+    { f := h.inv
       h' := by 
         rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]
         simp }
@@ -138,11 +138,15 @@ def forget : Algebra T ⥤ C where
 /-- The free functor from the Eilenberg-Moore category, constructing an algebra for any object. -/
 @[simps]
 def free :
-    C ⥤
-      Algebra
+    C ⥤ Algebra
         T where 
-  obj X := { a := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
-  map X Y f := { f := T.map f, h' := T.μ.naturality _ }
+  obj X :=
+    { a := T.obj X
+      a := T.μ.app X
+      assoc' := (T.assoc _).symm }
+  map X Y f :=
+    { f := T.map f
+      h' := T.μ.naturality _ }
 #align category_theory.monad.free CategoryTheory.Monad.free
 
 instance [Inhabited C] : Inhabited (Algebra T) :=
@@ -156,16 +160,16 @@ instance [Inhabited C] : Inhabited (Algebra T) :=
 def adj : T.free ⊣ T.forget :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
-        { toFun := fun f => T.η.app X ≫ f.f,
+        { toFun := fun f => T.η.app X ≫ f.f
           invFun := fun f =>
-            { f := T.map f ≫ Y.a,
+            { f := T.map f ≫ Y.a
               h' := by 
                 dsimp
-                simp [← Y.assoc, ← T.μ.naturality_assoc] },
+                simp [← Y.assoc, ← T.μ.naturality_assoc] }
           left_inv := fun f => by 
             ext
             dsimp
-            simp,
+            simp
           right_inv := fun f => by
             dsimp only [forget_obj, monad_to_functor_eq_coe]
             rw [← T.η.naturality_assoc, Y.unit]
@@ -175,7 +179,7 @@ def adj : T.free ⊣ T.forget :=
 /-- Given an algebra morphism whose carrier part is an isomorphism, we get an algebra isomorphism.
 -/
 theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
-  ⟨⟨{ f := inv f.f,
+  ⟨⟨{   f := inv f.f
         h' := by 
           rw [is_iso.eq_comp_inv f.f, category.assoc, ← f.h]
           simp },
@@ -224,10 +228,11 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) :
       Algebra
         T₂ where 
   obj A :=
-    { a := A.a, a := h.app A.a ≫ A.a,
+    { a := A.a
+      a := h.app A.a ≫ A.a
       unit' := by 
         dsimp
-        simp [A.unit],
+        simp [A.unit]
       assoc' := by 
         dsimp
         simp [A.assoc] }
@@ -404,7 +409,7 @@ def isoMk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h
     A ≅ B where 
   Hom := { f := h.Hom }
   inv :=
-    { f := h.inv,
+    { f := h.inv
       h' := by 
         rw [h.eq_inv_comp, ← reassoc_of w, ← functor.map_comp]
         simp }
@@ -426,11 +431,15 @@ def forget : Coalgebra G ⥤ C where
 object. -/
 @[simps]
 def cofree :
-    C ⥤
-      Coalgebra
+    C ⥤ Coalgebra
         G where 
-  obj X := { a := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
-  map X Y f := { f := G.map f, h' := (G.δ.naturality _).symm }
+  obj X :=
+    { a := G.obj X
+      a := G.δ.app X
+      coassoc' := (G.coassoc _).symm }
+  map X Y f :=
+    { f := G.map f
+      h' := (G.δ.naturality _).symm }
 #align category_theory.comonad.cofree CategoryTheory.Comonad.cofree
 
 -- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if
@@ -443,14 +452,14 @@ def adj : G.forget ⊣ G.cofree :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f =>
-            { f := X.a ≫ G.map f,
+            { f := X.a ≫ G.map f
               h' := by 
                 dsimp
-                simp [← coalgebra.coassoc_assoc] },
-          invFun := fun g => g.f ≫ G.ε.app Y,
+                simp [← coalgebra.coassoc_assoc] }
+          invFun := fun g => g.f ≫ G.ε.app Y
           left_inv := fun f => by 
             dsimp
-            rw [category.assoc, G.ε.naturality, functor.id_map, X.counit_assoc],
+            rw [category.assoc, G.ε.naturality, functor.id_map, X.counit_assoc]
           right_inv := fun g => by 
             ext1; dsimp
             rw [functor.map_comp, g.h_assoc, cofree_obj_a, comonad.right_counit]
@@ -460,7 +469,7 @@ def adj : G.forget ⊣ G.cofree :=
 /-- Given a coalgebra morphism whose carrier part is an isomorphism, we get a coalgebra isomorphism.
 -/
 theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
-  ⟨⟨{ f := inv f.f,
+  ⟨⟨{   f := inv f.f
         h' := by 
           rw [is_iso.eq_inv_comp f.f, ← f.h_assoc]
           simp },

@@ -605,14 +605,14 @@ def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x ⟶ 
       ∀ (s : PullbackCone f g) (m : s.x ⟶ t.x) (w : ∀ j : WalkingCospan, m ≫ t.π.app j = s.π.app j),
         m = lift s) :
     IsLimit t :=
-  { lift,
+  { lift
     fac' := fun s j =>
       Option.casesOn j
         (by 
           rw [← s.w inl, ← t.w inl, ← category.assoc]
           congr
           exact fac_left s)
-        fun j' => WalkingPair.casesOn j' (fac_left s) (fac_right s),
+        fun j' => WalkingPair.casesOn j' (fac_left s) (fac_right s)
     uniq' := uniq }
 #align
   category_theory.limits.pullback_cone.is_limit_aux CategoryTheory.Limits.PullbackCone.isLimitAux
@@ -867,10 +867,10 @@ def isColimitAux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.x 
       ∀ (s : PushoutCocone f g) (m : t.x ⟶ s.x) (w : ∀ j : WalkingSpan, t.ι.app j ≫ m = s.ι.app j),
         m = desc s) :
     IsColimit t :=
-  { desc,
+  { desc
     fac' := fun s j =>
       Option.casesOn j (by simp [← s.w fst, ← t.w fst, fac_left s]) fun j' =>
-        WalkingPair.casesOn j' (fac_left s) (fac_right s),
+        WalkingPair.casesOn j' (fac_left s) (fac_right s)
     uniq' := uniq }
 #align
   category_theory.limits.pushout_cocone.is_colimit_aux CategoryTheory.Limits.PushoutCocone.isColimitAux
@@ -2908,7 +2908,10 @@ variable {C}
 
 /-- Given a morphism `f : X ⟶ Y`, we can take morphisms over `Y` to morphisms over `X` via
 pullbacks. This is right adjoint to `over.map` (TODO) -/
-@[simps (config := { rhsMd := semireducible, simpRhs := true }) obj_left obj_hom mapLeft]
+@[simps (config :=
+      { rhsMd := semireducible
+        simpRhs := true })
+      obj_left obj_hom mapLeft]
 def baseChange [HasPullbacks C] {X Y : C} (f : X ⟶ Y) :
     Over Y ⥤ Over
         X where 

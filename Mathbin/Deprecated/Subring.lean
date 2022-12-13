@@ -89,7 +89,7 @@ theorem is_subring_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι �
     (h : ∀ i, IsSubring (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubring (⋃ i, s i) :=
   { to_is_add_subgroup :=
-      is_add_subgroup_Union_of_directed (fun i => (h i).to_is_add_subgroup) Directed,
+      is_add_subgroup_Union_of_directed (fun i => (h i).to_is_add_subgroup) Directed
     to_is_submonoid := is_submonoid_Union_of_directed (fun i => (h i).to_is_submonoid) Directed }
 #align is_subring_Union_of_directed is_subring_Union_of_directed
 
@@ -181,7 +181,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
 
 theorem closure.is_subring : IsSubring (closure s) :=
   { AddGroup.closure.is_add_subgroup _ with
-    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.is_submonoid _,
+    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.is_submonoid _
     mul_mem := fun a b ha hb =>
       AddGroup.InClosure.rec_on hb
         (fun c hc =>

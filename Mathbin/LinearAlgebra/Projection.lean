@@ -307,11 +307,12 @@ theorem of_is_compl_prod_apply {p q : Submodule R₁ E} (h : IsCompl p q)
 /-- The natural linear equivalence between `(p →ₗ[R₁] F) × (q →ₗ[R₁] F)` and `E →ₗ[R₁] F`. -/
 def ofIsComplProdEquiv {p q : Submodule R₁ E} (h : IsCompl p q) :
     ((p →ₗ[R₁] F) × (q →ₗ[R₁] F)) ≃ₗ[R₁] E →ₗ[R₁] F :=
-  { ofIsComplProd h with invFun := fun φ => ⟨φ.domRestrict p, φ.domRestrict q⟩,
+  { ofIsComplProd h with 
+    invFun := fun φ => ⟨φ.domRestrict p, φ.domRestrict q⟩
     left_inv := by 
       intro φ; ext
       · exact of_is_compl_left_apply h x
-      · exact of_is_compl_right_apply h x,
+      · exact of_is_compl_right_apply h x
     right_inv := by 
       intro φ; ext
       obtain ⟨a, b, hab, _⟩ := exists_unique_add_of_is_compl h x

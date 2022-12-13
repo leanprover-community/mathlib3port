@@ -178,7 +178,8 @@ structure Embedding [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f :
 
 theorem Function.Injective.embedding_induced [t : TopologicalSpace β] {f : α → β}
     (hf : Injective f) : @Embedding α β (t.induced f) t f :=
-  { induced := rfl, inj := hf }
+  { induced := rfl
+    inj := hf }
 #align function.injective.embedding_induced Function.Injective.embedding_induced
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
@@ -199,7 +200,7 @@ theorem Embedding.comp {g : β → γ} {f : α → β} (hg : Embedding g) (hf : 
 
 theorem embedding_of_embedding_compose {f : α → β} {g : β → γ} (hf : Continuous f)
     (hg : Continuous g) (hgf : Embedding (g ∘ f)) : Embedding f :=
-  { induced := (inducing_of_inducing_compose hf hg hgf.to_inducing).induced,
+  { induced := (inducing_of_inducing_compose hf hg hgf.to_inducing).induced
     inj := fun a₁ a₂ h => hgf.inj <| by simp [h, (· ∘ ·)] }
 #align embedding_of_embedding_compose embedding_of_embedding_compose
 

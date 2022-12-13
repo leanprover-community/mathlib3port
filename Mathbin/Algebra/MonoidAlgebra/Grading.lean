@@ -43,9 +43,10 @@ variable (R) [CommSemiring R]
 
 /-- The submodule corresponding to each grade given by the degree function `f`. -/
 abbrev gradeBy (f : M → ι) (i : ι) : Submodule R (AddMonoidAlgebra R M) :=
-  { carrier := { a | ∀ m, m ∈ a.support → f m = i }, zero_mem' := Set.empty_subset _,
+  { carrier := { a | ∀ m, m ∈ a.support → f m = i }
+    zero_mem' := Set.empty_subset _
     add_mem' := fun a b ha hb m h =>
-      Or.rec_on (Finset.mem_union.mp (Finsupp.support_add h)) (ha m) (hb m),
+      Or.rec_on (Finset.mem_union.mp (Finsupp.support_add h)) (ha m) (hb m)
     smul_mem' := fun a m h => Set.Subset.trans Finsupp.support_smul h }
 #align add_monoid_algebra.grade_by AddMonoidAlgebra.gradeBy
 
@@ -130,12 +131,12 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
   AddMonoidAlgebra.lift R M _
     { toFun := fun m =>
         DirectSum.of (fun i : ι => gradeBy R f i) (f m.toAdd)
-          ⟨Finsupp.single m.toAdd 1, single_mem_grade_by _ _ _⟩,
+          ⟨Finsupp.single m.toAdd 1, single_mem_grade_by _ _ _⟩
       map_one' :=
         DirectSum.of_eq_of_graded_monoid_eq
           (by
             congr 2 <;> try ext <;>
-              simp only [Submodule.mem_to_add_submonoid, to_add_one, AddMonoidHom.map_zero]),
+              simp only [Submodule.mem_to_add_submonoid, to_add_one, AddMonoidHom.map_zero])
       map_mul' := fun i j => by 
         symm
         convert DirectSum.of_mul_of _ _

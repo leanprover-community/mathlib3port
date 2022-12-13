@@ -64,7 +64,7 @@ theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
     rcases is_idempotent_complete.idempotents_split X p hp with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
     exact
       ⟨Nonempty.intro
-          { Cone := fork.of_ι i (show i ≫ 𝟙 X = i ≫ p by rw [comp_id, ← h₂, ← assoc, h₁, id_comp]),
+          { Cone := fork.of_ι i (show i ≫ 𝟙 X = i ≫ p by rw [comp_id, ← h₂, ← assoc, h₁, id_comp])
             IsLimit := by 
               apply fork.is_limit.mk'
               intro s

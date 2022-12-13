@@ -72,32 +72,32 @@ open LinearMap Submodule
 protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σi, φ i) R (ι →₀ M) :=
   Basis.of_repr
     { toFun := fun g =>
-        { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2,
-          support := g.support.Sigma fun i => ((b i).repr (g i)).support,
+        { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2
+          support := g.support.Sigma fun i => ((b i).repr (g i)).support
           mem_support_to_fun := fun ix => by
             simp only [Finset.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
             intro b hg
-            simpa [hg] using b },
+            simpa [hg] using b }
       invFun := fun g =>
         { toFun := fun i =>
-            (b i).repr.symm (g.comapDomain _ (Set.inj_on_of_injective sigma_mk_injective _)),
-          support := g.support.image Sigma.fst,
+            (b i).repr.symm (g.comapDomain _ (Set.inj_on_of_injective sigma_mk_injective _))
+          support := g.support.image Sigma.fst
           mem_support_to_fun := fun i => by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
             simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply,
               exists_and_right, mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image,
-              not_forall] },
+              not_forall] }
       left_inv := fun g => by 
         ext i
         rw [← (b i).repr.Injective.eq_iff]
         ext x
-        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply],
+        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
       right_inv := fun g => by 
         ext ⟨i, x⟩
-        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply],
+        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
       map_add' := fun g h => by 
         ext ⟨i, x⟩
-        simp only [coe_mk, add_apply, LinearEquiv.map_add],
+        simp only [coe_mk, add_apply, LinearEquiv.map_add]
       map_smul' := fun c h => by 
         ext ⟨i, x⟩
         simp only [coe_mk, smul_apply, LinearEquiv.map_smul, RingHom.id_apply] }

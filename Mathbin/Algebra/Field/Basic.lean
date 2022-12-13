@@ -285,13 +285,14 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (rat_cast : ∀ n : ℚ, f n = n) :
     DivisionRing K' :=
   { hf.GroupWithZero f zero one mul inv div npow zpow,
-    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with ratCast := coe,
+    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
+    ratCast := coe
     rat_cast_mk := fun a b h1 h2 =>
       hf
         (by
-          erw [rat_cast, mul, inv, int_cast, nat_cast] <;>
-            exact DivisionRing.rat_cast_mk a b h1 h2),
-    qsmul := (· • ·), qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Rat.smul_def, rat_cast]) }
+          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2)
+    qsmul := (· • ·)
+    qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Rat.smul_def, rat_cast]) }
 #align function.injective.division_ring Function.Injective.divisionRing
 
 -- See note [reducible non-instances]
@@ -322,13 +323,14 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (rat_cast : ∀ n : ℚ, f n = n) :
     Field K' :=
   { hf.CommGroupWithZero f zero one mul inv div npow zpow,
-    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with ratCast := coe,
+    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
+    ratCast := coe
     rat_cast_mk := fun a b h1 h2 =>
       hf
         (by
-          erw [rat_cast, mul, inv, int_cast, nat_cast] <;>
-            exact DivisionRing.rat_cast_mk a b h1 h2),
-    qsmul := (· • ·), qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Rat.smul_def, rat_cast]) }
+          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2)
+    qsmul := (· • ·)
+    qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Rat.smul_def, rat_cast]) }
 #align function.injective.field Function.Injective.field
 
 /-! ### Order dual -/

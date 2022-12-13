@@ -1445,7 +1445,10 @@ theorem induction {C : FreeAlgebra R X → Prop}
   by
   -- the arguments are enough to construct a subalgebra, and a mapping into it from X
   let s : Subalgebra R (FreeAlgebra R X) :=
-    { carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
+    { carrier := C
+      mul_mem' := h_mul
+      add_mem' := h_add
+      algebra_map_mem' := h_grade0 }
   let of : X → s := Subtype.coind (ι R) h_grade1
   -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (FreeAlgebra R X) = s.val.comp (lift R of) := by

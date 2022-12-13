@@ -295,10 +295,11 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
     exact smul_mem _ _ (subset_span <| Or.inr <| hly1 _ ht)
   -- Hence this span is a subring. Call this subring `S₁`.
   let S₁ : Subring A :=
-    { carrier := span S₀ (insert 1 ↑y : Set A), one_mem' := subset_span <| Or.inl rfl,
-      mul_mem' := fun p q hp hq => this <| mul_mem_mul hp hq,
-      zero_mem' := (span S₀ (insert 1 ↑y : Set A)).zero_mem,
-      add_mem' := fun _ _ => (span S₀ (insert 1 ↑y : Set A)).add_mem,
+    { carrier := span S₀ (insert 1 ↑y : Set A)
+      one_mem' := subset_span <| Or.inl rfl
+      mul_mem' := fun p q hp hq => this <| mul_mem_mul hp hq
+      zero_mem' := (span S₀ (insert 1 ↑y : Set A)).zero_mem
+      add_mem' := fun _ _ => (span S₀ (insert 1 ↑y : Set A)).add_mem
       neg_mem' := fun _ => (span S₀ (insert 1 ↑y : Set A)).neg_mem }
   have : S₁ = Subalgebra.toSubring (Algebra.adjoin S₀ (↑y : Set A)) := by
     ext z
@@ -348,16 +349,16 @@ theorem is_integral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module 
     [IsScalarTower R A M] [NoZeroSmulDivisors A M] (N : Submodule R M) (hN : N ≠ ⊥) (hN' : N.Fg)
     (x : A) (hx : ∀ n ∈ N, x • n ∈ N) : IsIntegral R x := by
   let A' : Subalgebra R A :=
-    { carrier := { x | ∀ n ∈ N, x • n ∈ N },
-      mul_mem' := fun a b ha hb n hn => smul_smul a b n ▸ ha _ (hb _ hn),
-      one_mem' := fun n hn => (one_smul A n).symm ▸ hn,
-      add_mem' := fun a b ha hb n hn => (add_smul a b n).symm ▸ N.add_mem (ha _ hn) (hb _ hn),
-      zero_mem' := fun n hn => (zero_smul A n).symm ▸ N.zero_mem,
+    { carrier := { x | ∀ n ∈ N, x • n ∈ N }
+      mul_mem' := fun a b ha hb n hn => smul_smul a b n ▸ ha _ (hb _ hn)
+      one_mem' := fun n hn => (one_smul A n).symm ▸ hn
+      add_mem' := fun a b ha hb n hn => (add_smul a b n).symm ▸ N.add_mem (ha _ hn) (hb _ hn)
+      zero_mem' := fun n hn => (zero_smul A n).symm ▸ N.zero_mem
       algebra_map_mem' := fun r n hn => (algebra_map_smul A r n).symm ▸ N.smul_mem r hn }
   let f : A' →ₐ[R] Module.EndCat R N :=
     AlgHom.ofLinearMap
-      { toFun := fun x => (DistribMulAction.toLinearMap R M x).restrict x.Prop,
-        map_add' := fun x y => LinearMap.ext fun n => Subtype.ext <| add_smul x y n,
+      { toFun := fun x => (DistribMulAction.toLinearMap R M x).restrict x.Prop
+        map_add' := fun x y => LinearMap.ext fun n => Subtype.ext <| add_smul x y n
         map_smul' := fun r s => LinearMap.ext fun n => Subtype.ext <| smul_assoc r s n }
       (LinearMap.ext fun n => Subtype.ext <| one_smul _ _) fun x y =>
       LinearMap.ext fun n => Subtype.ext <| mul_smul x y n

@@ -51,7 +51,8 @@ protected def hasPointwiseNeg :
     Neg
       (Submodule R
         M) where neg p :=
-    { -p.toAddSubmonoid with carrier := -(p : Set M),
+    { -p.toAddSubmonoid with 
+      carrier := -(p : Set M)
       smul_mem' := fun r m hm => Set.mem_neg.2 <| smul_neg r m ▸ p.smul_mem r <| Set.mem_neg.1 hm }
 #align submodule.has_pointwise_neg Submodule.hasPointwiseNeg
 
@@ -173,9 +174,12 @@ theorem zero_eq_bot : (0 : Submodule R M) = ⊥ :=
 #align submodule.zero_eq_bot Submodule.zero_eq_bot
 
 instance : CanonicallyOrderedAddMonoid (Submodule R M) :=
-  { Submodule.pointwiseAddCommMonoid, Submodule.completeLattice with zero := 0, bot := ⊥,
-    add := (· + ·), add_le_add_left := fun a b => sup_le_sup_left,
-    exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩,
+  { Submodule.pointwiseAddCommMonoid, Submodule.completeLattice with
+    zero := 0
+    bot := ⊥
+    add := (· + ·)
+    add_le_add_left := fun a b => sup_le_sup_left
+    exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩
     le_self_add := fun a b => le_sup_left }
 
 section

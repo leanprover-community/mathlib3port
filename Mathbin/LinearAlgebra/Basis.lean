@@ -295,7 +295,8 @@ theorem repr_apply_eq (f : M → ι → R) (hadd : ∀ x y, f (x + y) = f x + f 
     (hsmul : ∀ (c : R) (x : M), f (c • x) = c • f x) (f_eq : ∀ i, f (b i) = Finsupp.single i 1)
     (x : M) (i : ι) : b.repr x i = f x i := by
   let f_i : M →ₗ[R] R :=
-    { toFun := fun x => f x i, map_add' := fun _ _ => by rw [hadd, Pi.add_apply],
+    { toFun := fun x => f x i
+      map_add' := fun _ _ => by rw [hadd, Pi.add_apply]
       map_smul' := fun _ _ => by simp [hsmul, Pi.smul_apply] }
   have : Finsupp.lapply i ∘ₗ ↑b.repr = f_i := by
     refine' b.ext fun j => _
@@ -790,9 +791,12 @@ section Singleton
 /-- `basis.singleton ι R` is the basis sending the unique element of `ι` to `1 : R`. -/
 protected def singleton (ι R : Type _) [Unique ι] [Semiring R] : Basis ι R R :=
   of_repr
-    { toFun := fun x => Finsupp.single default x, invFun := fun f => f default,
-      left_inv := fun x => by simp, right_inv := fun f => Finsupp.unique_ext (by simp),
-      map_add' := fun x y => by simp, map_smul' := fun c x => by simp }
+    { toFun := fun x => Finsupp.single default x
+      invFun := fun f => f default
+      left_inv := fun x => by simp
+      right_inv := fun f => Finsupp.unique_ext (by simp)
+      map_add' := fun x y => by simp
+      map_smul' := fun c x => by simp }
 #align basis.singleton Basis.singleton
 
 @[simp]
@@ -817,9 +821,12 @@ theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup
     refine'
       ⟨of_repr <|
           LinearEquiv.symm
-            { toFun := fun f => f default • x, invFun := fun y => Finsupp.single default (w y).some,
-              left_inv := fun f => Finsupp.unique_ext _, right_inv := fun y => _,
-              map_add' := fun y z => _, map_smul' := fun c y => _ }⟩
+            { toFun := fun f => f default • x
+              invFun := fun y => Finsupp.single default (w y).some
+              left_inv := fun f => Finsupp.unique_ext _
+              right_inv := fun y => _
+              map_add' := fun y z => _
+              map_smul' := fun c y => _ }⟩
     · rw [Finsupp.add_apply, add_smul]
     · rw [Finsupp.smul_apply, smul_assoc]
       simp
@@ -863,7 +870,9 @@ variable [Fintype ι] (b : Basis ι R M)
 -/
 def Basis.equivFun : M ≃ₗ[R] ι → R :=
   LinearEquiv.trans b.repr
-    ({ Finsupp.equivFunOnFinite with toFun := coeFn, map_add' := Finsupp.coe_add,
+    ({ Finsupp.equivFunOnFinite with 
+        toFun := coeFn
+        map_add' := Finsupp.coe_add
         map_smul' := Finsupp.coe_smul } :
       (ι →₀ R) ≃ₗ[R] ι → R)
 #align basis.equiv_fun Basis.equivFun
@@ -995,14 +1004,15 @@ and `f`, `g` form a bijection between the basis vectors,
 -/
 def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ range b') (hg : ∀ i, g (b' i) ∈ range b)
     (hgf : ∀ i, g (f (b i)) = b i) (hfg : ∀ i, f (g (b' i)) = b' i) : M ≃ₗ[R] M' :=
-  { b.constr R (f ∘ b) with invFun := b'.constr R (g ∘ b'),
+  { b.constr R (f ∘ b) with 
+    invFun := b'.constr R (g ∘ b')
     left_inv :=
       have : (b'.constr R (g ∘ b')).comp (b.constr R (f ∘ b)) = LinearMap.id :=
         b.ext fun i =>
           Exists.elim (hf i) fun i' hi' => by
             rw [LinearMap.comp_apply, b.constr_basis, Function.comp_apply, ← hi', b'.constr_basis,
               Function.comp_apply, hi', hgf, LinearMap.id_apply]
-      fun x => congr_arg (fun h : M →ₗ[R] M => h x) this,
+      fun x => congr_arg (fun h : M →ₗ[R] M => h x) this
     right_inv :=
       have : (b.constr R (f ∘ b)).comp (b'.constr R (g ∘ b')) = LinearMap.id :=
         b'.ext fun i =>
@@ -1091,7 +1101,8 @@ variable (hli : LinearIndependent R v) (hsp : ⊤ ≤ span R (range v))
 protected noncomputable def mk : Basis ι R M :=
   Basis.of_repr
     { hli.repr.comp (LinearMap.id.codRestrict _ fun h => hsp Submodule.mem_top) with
-      invFun := Finsupp.total _ _ _ v, left_inv := fun x => hli.total_repr ⟨x, _⟩,
+      invFun := Finsupp.total _ _ _ v
+      left_inv := fun x => hli.total_repr ⟨x, _⟩
       right_inv := fun x => hli.repr_eq rfl }
 #align basis.mk Basis.mk
 

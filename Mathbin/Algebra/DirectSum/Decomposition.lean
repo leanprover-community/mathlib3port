@@ -84,7 +84,8 @@ protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0)
   let ℳ' : ι → AddSubmonoid M := fun i =>
     (⟨ℳ i, fun _ _ => AddMemClass.add_mem, ZeroMemClass.zero_mem _⟩ : AddSubmonoid M)
   haveI t : DirectSum.Decomposition ℳ' :=
-    { decompose' := DirectSum.decompose ℳ, left_inv := fun _ => (decompose ℳ).left_inv _,
+    { decompose' := DirectSum.decompose ℳ
+      left_inv := fun _ => (decompose ℳ).left_inv _
       right_inv := fun _ => (decompose ℳ).right_inv _ }
   have mem : ∀ m, m ∈ supr ℳ' := fun m =>
     (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸

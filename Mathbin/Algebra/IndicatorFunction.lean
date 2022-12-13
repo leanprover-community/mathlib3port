@@ -43,9 +43,9 @@ variable [One M] [One N] {s t : Set α} {f g : α → M} {a : α}
 
 /- warning: set.indicator -> Set.indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {M : Type.{u_2}} [_inst_3 : Zero.{u_2} M], (Set.{u_1} α) -> (α -> M) -> α -> M
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_3 : Zero.{u2} M], (Set.{u1} α) -> (α -> M) -> α -> M
 but is expected to have type
-  forall {α : Type.{u_1}} {M : Type.{_aux_param_0}} [_inst_3 : Zero.{_aux_param_0} M], (Set.{u_1} α) -> (α -> M) -> α -> M
+  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_3 : Zero.{u1} M], (Set.{u2} α) -> (α -> M) -> α -> M
 Case conversion may be inaccurate. Consider using '#align set.indicator Set.indicatorₓ'. -/
 /-- `indicator s f a` is `f a` if `a ∈ s`, `0` otherwise.  -/
 noncomputable def indicator {M} [Zero M] (s : Set α) (f : α → M) : α → M

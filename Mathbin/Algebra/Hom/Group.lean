@@ -234,7 +234,9 @@ theorem ne_one_of_map {R S F : Type _} [One R] [One S] [OneHomClass F R S] {f : 
 
 @[to_additive]
 instance [OneHomClass F M N] : CoeTC F (OneHom M N) :=
-  ⟨fun f => { toFun := f, map_one' := map_one f }⟩
+  ⟨fun f =>
+    { toFun := f
+      map_one' := map_one f }⟩
 
 @[simp, to_additive]
 theorem OneHom.coe_coe [OneHomClass F M N] (f : F) : ((f : OneHom M N) : M → N) = f :=
@@ -289,7 +291,9 @@ theorem map_mul [MulHomClass F M N] (f : F) (x y : M) : f (x * y) = f x * f y :=
 
 @[to_additive]
 instance [MulHomClass F M N] : CoeTC F (M →ₙ* N) :=
-  ⟨fun f => { toFun := f, map_mul' := map_mul f }⟩
+  ⟨fun f =>
+    { toFun := f
+      map_mul' := map_mul f }⟩
 
 @[simp, to_additive]
 theorem MulHom.coe_coe [MulHomClass F M N] (f : F) : ((f : MulHom M N) : M → N) = f :=
@@ -341,7 +345,10 @@ instance MonoidHom.monoidHomClass :
 
 @[to_additive]
 instance [MonoidHomClass F M N] : CoeTC F (M →* N) :=
-  ⟨fun f => { toFun := f, map_one' := map_one f, map_mul' := map_mul f }⟩
+  ⟨fun f =>
+    { toFun := f
+      map_one' := map_one f
+      map_mul' := map_mul f }⟩
 
 @[simp, to_additive]
 theorem MonoidHom.coe_coe [MonoidHomClass F M N] (f : F) : ((f : M →* N) : M → N) = f :=
@@ -467,7 +474,11 @@ instance MonoidWithZeroHom.monoidWithZeroHomClass :
 #align monoid_with_zero_hom.monoid_with_zero_hom_class MonoidWithZeroHom.monoidWithZeroHomClass
 
 instance [MonoidWithZeroHomClass F M N] : CoeTC F (M →*₀ N) :=
-  ⟨fun f => { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f }⟩
+  ⟨fun f =>
+    { toFun := f
+      map_one' := map_one f
+      map_zero' := map_zero f
+      map_mul' := map_mul f }⟩
 
 @[simp]
 theorem MonoidWithZeroHom.coe_coe [MonoidWithZeroHomClass F M N] (f : F) :
@@ -1398,7 +1409,7 @@ sending `x` to `f x * g x`. -/
 @[to_additive]
 instance [Mul M] [CommSemigroup N] : Mul (M →ₙ* N) :=
   ⟨fun f g =>
-    { toFun := fun m => f m * g m,
+    { toFun := fun m => f m * g m
       map_mul' := by 
         intros ; show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_comm (f x)] }⟩
@@ -1439,7 +1450,8 @@ sending `x` to `f x * g x`. -/
 @[to_additive]
 instance {M N} {mM : MulOneClass M} [CommMonoid N] : Mul (M →* N) :=
   ⟨fun f g =>
-    { toFun := fun m => f m * g m, map_one' := show f 1 * g 1 = 1 by simp,
+    { toFun := fun m => f m * g m
+      map_one' := show f 1 * g 1 = 1 by simp
       map_mul' := by 
         intros ; show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_comm (f x)] }⟩
@@ -1631,5 +1643,7 @@ end MonoidHom
 with zero morphism sending `x` to `f x * g x`. -/
 instance {M N} {hM : MulZeroOneClass M} [CommMonoidWithZero N] : Mul (M →*₀ N) :=
   ⟨fun f g =>
-    { (f * g : M →* N) with toFun := fun a => f a * g a, map_zero' := by rw [map_zero, zero_mul] }⟩
+    { (f * g : M →* N) with 
+      toFun := fun a => f a * g a
+      map_zero' := by rw [map_zero, zero_mul] }⟩
 

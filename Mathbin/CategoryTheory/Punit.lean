@@ -55,7 +55,9 @@ abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
 def equiv :
     Discrete PUnit ⥤ C ≌
       C where 
-  Functor := { obj := fun F => F.obj ⟨⟨⟩⟩, map := fun F G θ => θ.app ⟨⟨⟩⟩ }
+  Functor :=
+    { obj := fun F => F.obj ⟨⟨⟩⟩
+      map := fun F G θ => θ.app ⟨⟨⟩⟩ }
   inverse := Functor.const _
   unitIso := by 
     apply nat_iso.of_components _ _
@@ -101,7 +103,12 @@ theorem equiv_punit_iff_unique :
       Nonempty.intro
         (CategoryTheory.Equivalence.mk ((Functor.Const _).obj ⟨⟨⟩⟩) ((Functor.Const _).obj p) _
           (by apply functor.punit_ext))
-    exact nat_iso.of_components (fun _ => { Hom := default, inv := default }) fun _ _ _ => by tidy
+    exact
+      nat_iso.of_components
+        (fun _ =>
+          { Hom := default
+            inv := default })
+        fun _ _ _ => by tidy
 #align category_theory.equiv_punit_iff_unique CategoryTheory.equiv_punit_iff_unique
 
 end CategoryTheory

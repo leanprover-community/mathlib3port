@@ -110,8 +110,10 @@ unsafe def unused_decls_cmd (_ : parse <| tk "#list_unused_decls") : lean.parser
 #align tactic.unused_decls_cmd tactic.unused_decls_cmd
 
 add_tactic_doc
-  { Name := "#list_unused_decls", category := DocCategory.cmd,
-    declNames := [`tactic.unused_decls_cmd], tags := ["debugging"] }
+  { Name := "#list_unused_decls"
+    category := DocCategory.cmd
+    declNames := [`tactic.unused_decls_cmd]
+    tags := ["debugging"] }
 
 end Tactic
 

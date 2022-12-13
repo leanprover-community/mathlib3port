@@ -66,7 +66,8 @@ section Preorder
 variable [∀ i, Preorder (α i)]
 
 instance : Preorder (Π₀ i, α i) :=
-  { Dfinsupp.hasLe α with le_refl := fun f i => le_rfl,
+  { Dfinsupp.hasLe α with 
+    le_refl := fun f i => le_rfl
     le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
 theorem coe_fn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f g => le_def.1
@@ -79,13 +80,14 @@ instance [∀ i, PartialOrder (α i)] : PartialOrder (Π₀ i, α i) :=
     le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem,
+  { Dfinsupp.partialOrder α with
+    inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem
     inf_le_left := fun f g i => by 
       rw [zip_with_apply]
-      exact inf_le_left,
+      exact inf_le_left
     inf_le_right := fun f g i => by 
       rw [zip_with_apply]
-      exact inf_le_right,
+      exact inf_le_right
     le_inf := fun f g h hf hg i => by 
       rw [zip_with_apply]
       exact le_inf (hf i) (hg i) }
@@ -96,13 +98,14 @@ theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) 
 #align dfinsupp.inf_apply Dfinsupp.inf_apply
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem,
+  { Dfinsupp.partialOrder α with
+    sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem
     le_sup_left := fun f g i => by 
       rw [zip_with_apply]
-      exact le_sup_left,
+      exact le_sup_left
     le_sup_right := fun f g i => by 
       rw [zip_with_apply]
-      exact le_sup_right,
+      exact le_sup_right
     sup_le := fun f g h hf hg i => by 
       rw [zip_with_apply]
       exact sup_le (hf i) (hg i) }
@@ -223,7 +226,7 @@ instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
       ⟨g - f, by 
         ext i
         rw [add_apply, tsub_apply]
-        exact (add_tsub_cancel_of_le <| h i).symm⟩,
+        exact (add_tsub_cancel_of_le <| h i).symm⟩
     le_self_add := fun f g i => by 
       rw [add_apply]
       exact le_self_add }

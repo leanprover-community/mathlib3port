@@ -20,8 +20,10 @@ unsafe def hint_tactic_attribute :
 #align tactic.hint.hint_tactic_attribute tactic.hint.hint_tactic_attribute
 
 add_tactic_doc
-  { Name := "hint_tactic", category := DocCategory.attr,
-    declNames := [`tactic.hint.hint_tactic_attribute], tags := ["rewrite", "search"] }
+  { Name := "hint_tactic"
+    category := DocCategory.attr
+    declNames := [`tactic.hint.hint_tactic_attribute]
+    tags := ["rewrite", "search"] }
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
@@ -50,8 +52,10 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit := d
 #align tactic.hint.add_hint_tactic tactic.hint.add_hint_tactic
 
 add_tactic_doc
-  { Name := "add_hint_tactic", category := DocCategory.cmd,
-    declNames := [`tactic.hint.add_hint_tactic], tags := ["search"] }
+  { Name := "add_hint_tactic"
+    category := DocCategory.cmd
+    declNames := [`tactic.hint.add_hint_tactic]
+    tags := ["search"] }
 
 add_hint_tactic rfl
 
@@ -131,7 +135,9 @@ tactic), or
 2. `add_hint_tactic "my_tactic"`, specifying a string which works as an interactive tactic.
 -/
 add_tactic_doc
-  { Name := "hint", category := DocCategory.tactic, declNames := [`tactic.interactive.hint],
+  { Name := "hint"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.hint]
     tags := ["search", "Try this"] }
 
 end Interactive

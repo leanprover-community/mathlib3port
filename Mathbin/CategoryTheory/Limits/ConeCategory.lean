@@ -55,7 +55,7 @@ def Cone.fromCostructuredArrow (F : J ⥤ C) :
       Cone F where 
   obj c := ⟨c.left, c.Hom⟩
   map c d f :=
-    { Hom := f.left,
+    { Hom := f.left
       w' := fun j => by 
         convert congr_fun (congr_arg nat_trans.app f.w) j
         dsimp
@@ -76,9 +76,10 @@ def Cone.equivCostructuredArrow (F : J ⥤ C) : Cone F ≌ CostructuredArrow (co
 /-- A cone is a limit cone iff it is terminal. -/
 def Cone.isLimitEquivIsTerminal {F : J ⥤ C} (c : Cone F) : IsLimit c ≃ IsTerminal c :=
   IsLimit.isoUniqueConeMorphism.toEquiv.trans
-    { toFun := fun h => is_terminal.of_unique _,
-      invFun := fun h s => ⟨⟨IsTerminal.from h s⟩, fun a => IsTerminal.hom_ext h a _⟩,
-      left_inv := by tidy, right_inv := by tidy }
+    { toFun := fun h => is_terminal.of_unique _
+      invFun := fun h s => ⟨⟨IsTerminal.from h s⟩, fun a => IsTerminal.hom_ext h a _⟩
+      left_inv := by tidy
+      right_inv := by tidy }
 #align
   category_theory.limits.cone.is_limit_equiv_is_terminal CategoryTheory.Limits.Cone.isLimitEquivIsTerminal
 
@@ -151,7 +152,7 @@ def Cocone.fromStructuredArrow (F : J ⥤ C) :
       Cocone F where 
   obj c := ⟨c.right, c.Hom⟩
   map c d f :=
-    { Hom := f.right,
+    { Hom := f.right
       w' := fun j => by 
         convert (congr_fun (congr_arg nat_trans.app f.w) j).symm
         dsimp
@@ -172,9 +173,10 @@ def Cocone.equivStructuredArrow (F : J ⥤ C) : Cocone F ≌ StructuredArrow F (
 /-- A cocone is a colimit cocone iff it is initial. -/
 def Cocone.isColimitEquivIsInitial {F : J ⥤ C} (c : Cocone F) : IsColimit c ≃ IsInitial c :=
   IsColimit.isoUniqueCoconeMorphism.toEquiv.trans
-    { toFun := fun h => is_initial.of_unique _,
-      invFun := fun h s => ⟨⟨IsInitial.to h s⟩, fun a => IsInitial.hom_ext h a _⟩,
-      left_inv := by tidy, right_inv := by tidy }
+    { toFun := fun h => is_initial.of_unique _
+      invFun := fun h s => ⟨⟨IsInitial.to h s⟩, fun a => IsInitial.hom_ext h a _⟩
+      left_inv := by tidy
+      right_inv := by tidy }
 #align
   category_theory.limits.cocone.is_colimit_equiv_is_initial CategoryTheory.Limits.Cocone.isColimitEquivIsInitial
 

@@ -114,7 +114,8 @@ theorem summable_inner (f g : lp G 2) : Summable fun i => ⟪f i, g i⟫ :=
 #align lp.summable_inner lp.summable_inner
 
 instance : InnerProductSpace 𝕜 (lp G 2) :=
-  { lp.normedSpace with inner := fun f g => ∑' i, ⟪f i, g i⟫,
+  { lp.normedSpace with 
+    inner := fun f g => ∑' i, ⟪f i, g i⟫
     norm_sq_eq_inner := fun f => by
       calc
         ‖f‖ ^ 2 = ‖f‖ ^ (2 : ℝ≥0∞).toReal := by norm_cast
@@ -125,14 +126,14 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = _ := by congr
         
       · norm_num
-      · exact summable_inner f f,
+      · exact summable_inner f f
     conj_sym := fun f g => by
       calc
         conj _ = conj (∑' i, ⟪g i, f i⟫) := by congr
         _ = ∑' i, conj ⟪g i, f i⟫ := is_R_or_C.conj_cle.map_tsum
         _ = ∑' i, ⟪f i, g i⟫ := by simp only [inner_conj_sym]
         _ = _ := by congr
-        ,
+        
     add_left := fun f₁ f₂ g => by
       calc
         _ = ∑' i, ⟪(f₁ + f₂) i, g i⟫ := _
@@ -143,7 +144,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         
       · congr
       · exact summable_inner f₁ g
-      · exact summable_inner f₂ g,
+      · exact summable_inner f₂ g
     smul_left := fun f g c => by
       calc
         _ = ∑' i, ⟪c • f i, g i⟫ := _
@@ -296,7 +297,7 @@ variable {𝕜 E V}
 `V i` is dense, then `(E, V)` is a Hilbert sum of `G`. -/
 theorem IsHilbertSum.mk [∀ i, CompleteSpace <| G i] (hVortho : OrthogonalFamily 𝕜 V)
     (hVtotal : ⊤ ≤ (⨆ i, (V i).toLinearMap.range).topologicalClosure) : IsHilbertSum 𝕜 E V :=
-  { OrthogonalFamily := hVortho,
+  { OrthogonalFamily := hVortho
     surjective_isometry := by 
       rw [← LinearIsometry.coe_to_linear_map]
       exact

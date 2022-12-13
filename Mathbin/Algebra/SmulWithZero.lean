@@ -174,8 +174,10 @@ variable (M)
 
 /-- Compose a `mul_action_with_zero` with a `monoid_with_zero_hom`, with action `f r' • m` -/
 def MulActionWithZero.compHom (f : R' →*₀ R) : MulActionWithZero R' M :=
-  { SmulWithZero.compHom M f.toZeroHom with smul := (· • ·) ∘ f,
-    mul_smul := fun r s m => by simp [mul_smul], one_smul := fun m => by simp }
+  { SmulWithZero.compHom M f.toZeroHom with
+    smul := (· • ·) ∘ f
+    mul_smul := fun r s m => by simp [mul_smul]
+    one_smul := fun m => by simp }
 #align mul_action_with_zero.comp_hom MulActionWithZero.compHom
 
 end MonoidWithZero

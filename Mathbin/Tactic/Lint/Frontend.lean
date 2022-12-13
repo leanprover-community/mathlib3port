@@ -376,6 +376,8 @@ unsafe def lint_hole_cmd : hole_command where
 #align lint_hole_cmd lint_hole_cmd
 
 add_tactic_doc
-  { Name := "Lint", category := DocCategory.hole_cmd, declNames := [`lint_hole_cmd],
+  { Name := "Lint"
+    category := DocCategory.hole_cmd
+    declNames := [`lint_hole_cmd]
     tags := ["linting"] }
 

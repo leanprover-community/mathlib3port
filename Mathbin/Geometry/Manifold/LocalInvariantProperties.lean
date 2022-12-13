@@ -629,7 +629,7 @@ theorem is_local_structomorph_within_at_local_invariant_prop [ClosedUnderRestric
         · exact closed_under_restriction' heG is_open_interior
         · have : s ∩ u ∩ e.source = s ∩ (e.source ∩ u) := by mfld_set_tac
           simpa only [this, interior_interior, hu.interior_eq, mfld_simps] using hef
-        · simp only [*, interior_interior, hu.interior_eq, mfld_simps],
+        · simp only [*, interior_interior, hu.interior_eq, mfld_simps]
     right_invariance' := by 
       intro s x f e' he'G he'x h hx
       have hxs : x ∈ s := by simpa only [e'.left_inv he'x, mfld_simps] using hx
@@ -638,13 +638,13 @@ theorem is_local_structomorph_within_at_local_invariant_prop [ClosedUnderRestric
       · intro y hy
         simp only [mfld_simps] at hy
         simp only [hef ⟨hy.1, hy.2.2⟩, mfld_simps]
-      · simp only [hex, he'x, mfld_simps],
+      · simp only [hex, he'x, mfld_simps]
     congr_of_forall := by 
       intro s x f g hfgs hfg' h hx
       rcases h hx with ⟨e, heG, hef, hex⟩
       refine' ⟨e, heG, _, hex⟩
       intro y hy
-      rw [← hef hy, hfgs y hy.1],
+      rw [← hef hy, hfgs y hy.1]
     left_invariance' := by 
       intro s x f e' he'G he' hfx h hx
       rcases h hx with ⟨e, heG, hef, hex⟩

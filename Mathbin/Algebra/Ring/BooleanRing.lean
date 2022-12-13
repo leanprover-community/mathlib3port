@@ -245,12 +245,14 @@ The data is defined so that:
 -/
 def toBooleanAlgebra : BooleanAlgebra α :=
   { Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self inf_sup_self with
-    le_sup_inf := le_sup_inf, top := 1,
-    le_top := fun a => show a + 1 + a * 1 = 1 by assoc_rw [mul_one, add_comm, add_self, add_zero],
-    bot := 0, bot_le := fun a => show 0 + a + 0 * a = a by rw [zero_mul, zero_add, add_zero],
-    compl := fun a => 1 + a,
+    le_sup_inf := le_sup_inf
+    top := 1
+    le_top := fun a => show a + 1 + a * 1 = 1 by assoc_rw [mul_one, add_comm, add_self, add_zero]
+    bot := 0
+    bot_le := fun a => show 0 + a + 0 * a = a by rw [zero_mul, zero_add, add_zero]
+    compl := fun a => 1 + a
     inf_compl_le_bot := fun a =>
-      show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by norm_num [mul_add, mul_self, add_self] ,
+      show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by norm_num [mul_add, mul_self, add_self]
     top_le_sup_compl := fun a => by
       change
         1 + (a + (1 + a) + a * (1 + a)) + 1 * (a + (1 + a) + a * (1 + a)) =
@@ -473,8 +475,11 @@ variable [BooleanAlgebra α] [BooleanAlgebra β] [BooleanAlgebra γ]
 -/
 @[reducible]
 def BooleanAlgebra.toBooleanRing : BooleanRing α :=
-  { GeneralizedBooleanAlgebra.toNonUnitalCommRing with one := ⊤, one_mul := fun _ => top_inf_eq,
-    mul_one := fun _ => inf_top_eq, mul_self := fun b => inf_idem }
+  { GeneralizedBooleanAlgebra.toNonUnitalCommRing with
+    one := ⊤
+    one_mul := fun _ => top_inf_eq
+    mul_one := fun _ => inf_top_eq
+    mul_self := fun b => inf_idem }
 #align boolean_algebra.to_boolean_ring BooleanAlgebra.toBooleanRing
 
 scoped[BooleanRingOfBooleanAlgebra]
@@ -582,7 +587,9 @@ def OrderIso.asBoolalgAsBoolring (α : Type _) [BooleanAlgebra α] : AsBoolalg (
 `α`. -/
 @[simps]
 def RingEquiv.asBoolringAsBoolalg (α : Type _) [BooleanRing α] : AsBoolring (AsBoolalg α) ≃+* α :=
-  { ofBoolring.trans ofBoolalg with map_mul' := fun a b => rfl, map_add' := of_boolalg_symm_diff }
+  { ofBoolring.trans ofBoolalg with 
+    map_mul' := fun a b => rfl
+    map_add' := of_boolalg_symm_diff }
 #align ring_equiv.as_boolring_as_boolalg RingEquiv.asBoolringAsBoolalg
 
 open Bool

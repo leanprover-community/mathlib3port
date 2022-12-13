@@ -390,14 +390,21 @@ instance : AddMonoid Num where
       transfer
 
 instance : AddMonoidWithOne Num :=
-  { Num.addMonoid with natCast := Num.ofNat', one := 1, nat_cast_zero := of_nat'_zero,
+  { Num.addMonoid with 
+    natCast := Num.ofNat'
+    one := 1
+    nat_cast_zero := of_nat'_zero
     nat_cast_succ := fun _ => of_nat'_succ }
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer -/
 instance : CommSemiring Num := by
   refine_struct
-          { Num.addMonoid, Num.addMonoidWithOne with mul := (· * ·), one := 1, add := (· + ·),
-            zero := 0, npow := @npowRec Num ⟨1⟩ ⟨(· * ·)⟩ } <;>
+          { Num.addMonoid, Num.addMonoidWithOne with
+            mul := (· * ·)
+            one := 1
+            add := (· + ·)
+            zero := 0
+            npow := @npowRec Num ⟨1⟩ ⟨(· * ·)⟩ } <;>
         try intros ; rfl <;>
       try
         run_tac
@@ -411,32 +418,33 @@ instance : CommSemiring Num := by
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic num.transfer_rw -/
 instance : OrderedCancelAddCommMonoid Num :=
-  { Num.commSemiring with lt := (· < ·),
+  { Num.commSemiring with 
+    lt := (· < ·)
     lt_iff_le_not_le := by 
       intro a b
       run_tac
         transfer_rw
-      apply lt_iff_le_not_le,
-    le := (· ≤ ·),
+      apply lt_iff_le_not_le
+    le := (· ≤ ·)
     le_refl := by
       run_tac
-        transfer,
+        transfer
     le_trans := by 
       intro a b c
       run_tac
         transfer_rw
-      apply le_trans,
+      apply le_trans
     le_antisymm := by 
       intro a b
       run_tac
         transfer_rw
-      apply le_antisymm,
+      apply le_antisymm
     add_le_add_left := by 
       intro a b h c
       revert h
       run_tac
         transfer_rw
-      exact fun h => add_le_add_left h c,
+      exact fun h => add_le_add_left h c
     le_of_add_le_add_left := by 
       intro a b c
       run_tac
@@ -452,19 +460,21 @@ instance : LinearOrderedSemiring Num :=
       intro a b
       run_tac
         transfer_rw
-      apply le_total,
-    zero_le_one := by decide,
+      apply le_total
+    zero_le_one := by decide
     mul_lt_mul_of_pos_left := by 
       intro a b c
       run_tac
         transfer_rw
-      apply mul_lt_mul_of_pos_left,
+      apply mul_lt_mul_of_pos_left
     mul_lt_mul_of_pos_right := by 
       intro a b c
       run_tac
         transfer_rw
-      apply mul_lt_mul_of_pos_right,
-    decidableLt := Num.decidableLt, decidableLe := Num.decidableLe, DecidableEq := Num.decidableEq,
+      apply mul_lt_mul_of_pos_right
+    decidableLt := Num.decidableLt
+    decidableLe := Num.decidableLe
+    DecidableEq := Num.decidableEq
     exists_pair_ne := ⟨0, 1, by decide⟩ }
 
 @[simp, norm_cast]
@@ -610,14 +620,19 @@ instance : AddCommSemigroup PosNum := by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer -/
 instance : CommMonoid PosNum := by
-  refine_struct { mul := (· * ·), one := (1 : PosNum), npow := @npowRec PosNum ⟨1⟩ ⟨(· * ·)⟩ } <;>
+  refine_struct
+        { mul := (· * ·)
+          one := (1 : PosNum)
+          npow := @npowRec PosNum ⟨1⟩ ⟨(· * ·)⟩ } <;>
       try intros ; rfl <;>
     run_tac
       transfer
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic pos_num.transfer -/
 instance : Distrib PosNum := by
-  refine' { add := (· + ·), mul := (· * ·).. } <;>
+  refine'
+      { add := (· + ·)
+        mul := (· * ·).. } <;>
     · run_tac
         transfer
       simp [mul_add, mul_comm]
@@ -1492,8 +1507,10 @@ instance : AddCommGroup ZNum where
       transfer
 
 instance : AddMonoidWithOne ZNum :=
-  { ZNum.addCommGroup with one := 1, natCast := fun n => ZNum.ofInt' n,
-    nat_cast_zero := show (Num.ofNat' 0).toZnum = 0 by rw [Num.of_nat'_zero] <;> rfl,
+  { ZNum.addCommGroup with 
+    one := 1
+    natCast := fun n => ZNum.ofInt' n
+    nat_cast_zero := show (Num.ofNat' 0).toZnum = 0 by rw [Num.of_nat'_zero] <;> rfl
     nat_cast_succ := fun n =>
       show (Num.ofNat' (n + 1)).toZnum = (Num.ofNat' n).toZnum + 1 by
         rw [Num.of_nat'_succ, Num.add_one, Num.to_znum_succ, ZNum.add_one] }
@@ -1507,40 +1524,41 @@ instance : AddMonoidWithOne ZNum :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic znum.transfer_rw -/
 instance : LinearOrderedCommRing ZNum :=
-  { ZNum.linearOrder, ZNum.addCommGroup, ZNum.addMonoidWithOne with mul := (· * ·),
+  { ZNum.linearOrder, ZNum.addCommGroup, ZNum.addMonoidWithOne with
+    mul := (· * ·)
     mul_assoc := by
       run_tac
-        transfer,
-    one := 1,
+        transfer
+    one := 1
     one_mul := by
       run_tac
-        transfer,
+        transfer
     mul_one := by
       run_tac
-        transfer,
+        transfer
     left_distrib := by
       run_tac
         transfer
-      simp [mul_add],
+      simp [mul_add]
     right_distrib := by
       run_tac
         transfer
-      simp [mul_add, mul_comm],
+      simp [mul_add, mul_comm]
     mul_comm := by
       run_tac
-        transfer,
-    exists_pair_ne := ⟨0, 1, by decide⟩,
+        transfer
+    exists_pair_ne := ⟨0, 1, by decide⟩
     add_le_add_left := by 
       intro a b h c
       revert h
       run_tac
         transfer_rw
-      exact fun h => add_le_add_left h c,
+      exact fun h => add_le_add_left h c
     mul_pos := fun a b =>
       show 0 < a → 0 < b → 0 < a * b by
         run_tac
           transfer_rw
-        apply mul_pos,
+        apply mul_pos
     zero_le_one := by decide }
 
 @[simp, norm_cast]

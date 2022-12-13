@@ -334,8 +334,10 @@ protected theorem mul_assoc (x y z : R[S⁻¹]) : x * y * z = x * (y * z) := by
 #align ore_localization.mul_assoc OreLocalization.mul_assoc
 
 instance : Monoid R[S⁻¹] :=
-  { OreLocalization.hasMul, OreLocalization.hasOne with one_mul := OreLocalization.one_mul,
-    mul_one := OreLocalization.mul_one, mul_assoc := OreLocalization.mul_assoc }
+  { OreLocalization.hasMul, OreLocalization.hasOne with
+    one_mul := OreLocalization.one_mul
+    mul_one := OreLocalization.mul_one
+    mul_assoc := OreLocalization.mul_assoc }
 
 protected theorem mul_inv (s s' : S) : (s : R) /ₒ s' * (s' /ₒ s) = 1 := by
   simp [ore_div_mul_char (s : R) s' s' s 1 1 (by simp)]
@@ -703,8 +705,11 @@ protected theorem add_comm (x y : R[S⁻¹]) : x + y = y + x := by
 #align ore_localization.add_comm OreLocalization.add_comm
 
 instance : AddCommMonoid R[S⁻¹] :=
-  { OreLocalization.hasAdd with add_comm := OreLocalization.add_comm,
-    add_assoc := OreLocalization.add_assoc, zero := zero, zero_add := OreLocalization.zero_add,
+  { OreLocalization.hasAdd with 
+    add_comm := OreLocalization.add_comm
+    add_assoc := OreLocalization.add_assoc
+    zero := zero
+    zero_add := OreLocalization.zero_add
     add_zero := fun x => by rw [OreLocalization.add_comm, OreLocalization.zero_add] }
 
 protected theorem zero_mul (x : R[S⁻¹]) : 0 * x = 0 := by
@@ -760,8 +765,10 @@ theorem right_distrib (x y z : R[S⁻¹]) : (x + y) * z = x * z + y * z := by
 #align ore_localization.right_distrib OreLocalization.right_distrib
 
 instance : Semiring R[S⁻¹] :=
-  { OreLocalization.addCommMonoid, OreLocalization.monoid with zero_mul := OreLocalization.zero_mul,
-    mul_zero := OreLocalization.mul_zero, left_distrib := OreLocalization.left_distrib,
+  { OreLocalization.addCommMonoid, OreLocalization.monoid with
+    zero_mul := OreLocalization.zero_mul
+    mul_zero := OreLocalization.mul_zero
+    left_distrib := OreLocalization.left_distrib
     right_distrib := right_distrib }
 
 section UMP
@@ -781,7 +788,7 @@ def universalHom : R[S⁻¹] →+* T :=
   { universalMulHom f.toMonoidHom fS hf with
     map_zero' := by
       rw [MonoidHom.to_fun_eq_coe, OreLocalization.zero_def, universal_mul_hom_apply]
-      simp,
+      simp
     map_add' := fun x y => by
       induction' x using OreLocalization.ind with r₁ s₁
       induction' y using OreLocalization.ind with r₂ s₂
@@ -945,7 +952,8 @@ protected theorem inv_zero : (0 : R[R⁰⁻¹])⁻¹ = 0 := by
 
 instance : DivisionRing R[R⁰⁻¹] :=
   { OreLocalization.nontrivial, OreLocalization.hasInv, OreLocalization.ring with
-    mul_inv_cancel := OreLocalization.mul_inv_cancel, inv_zero := OreLocalization.inv_zero }
+    mul_inv_cancel := OreLocalization.mul_inv_cancel
+    inv_zero := OreLocalization.inv_zero }
 
 end DivisionRing
 

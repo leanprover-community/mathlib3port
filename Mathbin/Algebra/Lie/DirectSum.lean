@@ -108,16 +108,16 @@ variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
 instance lieRing : LieRing (⨁ i, L i) :=
   { (inferInstance : AddCommGroup _) with
-    bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0,
+    bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0
     add_lie := fun x y z => by 
       ext
-      simp only [zip_with_apply, add_apply, add_lie],
+      simp only [zip_with_apply, add_apply, add_lie]
     lie_add := fun x y z => by 
       ext
-      simp only [zip_with_apply, add_apply, lie_add],
+      simp only [zip_with_apply, add_apply, lie_add]
     lie_self := fun x => by 
       ext
-      simp only [zip_with_apply, add_apply, lie_self, zero_apply],
+      simp only [zip_with_apply, add_apply, lie_self, zero_apply]
     leibniz_lie := fun x y z => by 
       ext
       simp only [sub_apply, zip_with_apply, add_apply, zero_apply]
@@ -141,7 +141,8 @@ variable (R ι L)
 /-- The inclusion of each component into the direct sum as morphism of Lie algebras. -/
 @[simps]
 def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
-  { lof R ι L j with toFun := of L j,
+  { lof R ι L j with 
+    toFun := of L j
     map_lie' := fun x y => by 
       ext i
       by_cases h : j = i
@@ -153,7 +154,8 @@ def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
 /-- The projection map onto one component, as a morphism of Lie algebras. -/
 @[simps]
 def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
-  { component R ι L j with toFun := component R ι L j,
+  { component R ι L j with 
+    toFun := component R ι L j
     map_lie' := fun x y => by
       simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
 #align direct_sum.lie_algebra_component DirectSum.lieAlgebraComponent
@@ -209,7 +211,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
       -- And finish with trivial case analysis.
       toModule
       R ι L' fun i => (f i : L i →ₗ[R] L') with
-    toFun := toModule R ι L' fun i => (f i : L i →ₗ[R] L'),
+    toFun := toModule R ι L' fun i => (f i : L i →ₗ[R] L')
     map_lie' := fun x y => by 
       let f' i := (f i : L i →ₗ[R] L')
       suffices

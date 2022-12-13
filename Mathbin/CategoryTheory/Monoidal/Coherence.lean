@@ -488,8 +488,10 @@ run_cmd
   add_interactive [`pure_coherence, `coherence]
 
 add_tactic_doc
-  { Name := "coherence", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.coherence], tags := ["category theory"] }
+  { Name := "coherence"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.coherence]
+    tags := ["category theory"] }
 
 example (f) : (λ_ (𝟙_ C)).Hom ≫ f ≫ (λ_ (𝟙_ C)).Hom = (ρ_ (𝟙_ C)).Hom ≫ f ≫ (ρ_ (𝟙_ C)).Hom := by
   coherence

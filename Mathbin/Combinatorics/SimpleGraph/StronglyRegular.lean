@@ -56,7 +56,9 @@ variable {G} {n k ℓ μ : ℕ}
 /-- Empty graphs are strongly regular. Note that `ℓ` can take any value
   for empty graphs, since there are no pairs of adjacent vertices. -/
 theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 0 ℓ 0 :=
-  { card := rfl, regular := bot_degree, of_adj := fun v w h => h.elim,
+  { card := rfl
+    regular := bot_degree
+    of_adj := fun v w h => h.elim
     of_not_adj := fun v w h => by
       simp only [card_eq_zero, filter_congr_decidable, Fintype.card_of_finset, forall_true_left,
         not_false_iff, bot_adj]
@@ -68,10 +70,11 @@ theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 
   for complete graphs, since there are no distinct pairs of non-adjacent vertices. -/
 theorem IsSRGWith.top :
     (⊤ : SimpleGraph V).IsSRGWith (Fintype.card V) (Fintype.card V - 1) (Fintype.card V - 2) μ :=
-  { card := rfl, regular := IsRegularOfDegree.top,
+  { card := rfl
+    regular := IsRegularOfDegree.top
     of_adj := fun v w h => by 
       rw [card_common_neighbors_top]
-      exact h,
+      exact h
     of_not_adj := fun v w h h' => False.elim <| by simpa using h }
 #align simple_graph.is_SRG_with.top SimpleGraph.IsSRGWith.top
 
@@ -168,8 +171,9 @@ theorem IsSRGWith.card_common_neighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k
 /-- The complement of a strongly regular graph is strongly regular. -/
 theorem IsSRGWith.compl (h : G.IsSRGWith n k ℓ μ) :
     Gᶜ.IsSRGWith n (n - k - 1) (n - (2 * k - μ) - 2) (n - (2 * k - ℓ)) :=
-  { card := h.card, regular := h.compl_is_regular,
-    of_adj := fun v w ha => h.card_common_neighbors_eq_of_adj_compl ha,
+  { card := h.card
+    regular := h.compl_is_regular
+    of_adj := fun v w ha => h.card_common_neighbors_eq_of_adj_compl ha
     of_not_adj := fun v w hn hna => h.card_common_neighbors_eq_of_not_adj_compl hn hna }
 #align simple_graph.is_SRG_with.compl SimpleGraph.IsSRGWith.compl
 

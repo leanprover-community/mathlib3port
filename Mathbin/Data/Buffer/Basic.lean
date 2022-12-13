@@ -234,7 +234,9 @@ theorem read_singleton (c : α) : [c].toBuffer.read ⟨0, by simp⟩ = c := by s
 /-- The natural equivalence between lists and buffers, using
 `list.to_buffer` and `buffer.to_list`. -/
 def listEquivBuffer (α : Type _) : List α ≃ Buffer α := by
-  refine' { toFun := List.toBuffer, invFun := Buffer.toList.. } <;>
+  refine'
+      { toFun := List.toBuffer
+        invFun := Buffer.toList.. } <;>
     simp [left_inverse, Function.RightInverse]
 #align buffer.list_equiv_buffer Buffer.listEquivBuffer
 

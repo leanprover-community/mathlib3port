@@ -192,7 +192,9 @@ end RingSeminorm
 
 /-- The norm of a `non_unital_semi_normed_ring` as a `ring_seminorm`. -/
 def normRingSeminorm (R : Type _) [NonUnitalSemiNormedRing R] : RingSeminorm R :=
-  { normAddGroupSeminorm R with toFun := norm, mul_le' := norm_mul_le }
+  { normAddGroupSeminorm R with 
+    toFun := norm
+    mul_le' := norm_mul_le }
 #align norm_ring_seminorm normRingSeminorm
 
 namespace RingNorm
@@ -276,7 +278,8 @@ variable [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 /-- The trivial seminorm on a ring `R` is the `mul_ring_seminorm` taking value `0` at `0` and `1` at
 every other element. -/
 instance : One (MulRingSeminorm R) :=
-  ⟨{ (1 : AddGroupSeminorm R) with map_one' := if_neg one_ne_zero,
+  ⟨{ (1 : AddGroupSeminorm R) with 
+      map_one' := if_neg one_ne_zero
       map_mul' := fun x y => by 
         obtain rfl | hx := eq_or_ne x 0
         · simp

@@ -65,24 +65,25 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] :
   /- We construct the direct factor `Y` associated to `p : F ⟶ F` by computing
       the equalizer of the identity and `p.app j` on each object `(j : J)`.  -/
   let Y : J ⥤ C :=
-    { obj := fun j => limits.equalizer (𝟙 _) (p.app j),
+    { obj := fun j => limits.equalizer (𝟙 _) (p.app j)
       map := fun j j' φ =>
         equalizer.lift (limits.equalizer.ι (𝟙 _) (p.app j) ≫ F.map φ)
-          (by rw [comp_id, assoc, p.naturality φ, ← assoc, ← limits.equalizer.condition, comp_id]),
+          (by rw [comp_id, assoc, p.naturality φ, ← assoc, ← limits.equalizer.condition, comp_id])
       map_id' := fun j => by 
         ext
-        simp only [comp_id, Functor.map_id, equalizer.lift_ι, id_comp],
+        simp only [comp_id, Functor.map_id, equalizer.lift_ι, id_comp]
       map_comp' := fun j j' j'' φ φ' => by 
         ext
         simp only [assoc, functor.map_comp, equalizer.lift_ι, equalizer.lift_ι_assoc] }
   let i : Y ⟶ F :=
-    { app := fun j => equalizer.ι _ _, naturality' := fun j j' φ => by rw [equalizer.lift_ι] }
+    { app := fun j => equalizer.ι _ _
+      naturality' := fun j j' φ => by rw [equalizer.lift_ι] }
   let e : F ⟶ Y :=
     { app := fun j =>
         equalizer.lift (p.app j)
           (by 
             rw [comp_id]
-            exact (congr_app hp j).symm),
+            exact (congr_app hp j).symm)
       naturality' := fun j j' φ => by 
         ext
         simp only [assoc, equalizer.lift_ι, nat_trans.naturality, equalizer.lift_ι_assoc] }
@@ -107,7 +108,7 @@ def obj (P : Karoubi (J ⥤ C)) :
     J ⥤ Karoubi C where 
   obj j := ⟨P.x.obj j, P.p.app j, congr_app P.idem j⟩
   map j j' φ :=
-    { f := P.p.app j ≫ P.x.map φ,
+    { f := P.p.app j ≫ P.x.map φ
       comm := by 
         simp only [nat_trans.naturality, assoc]
         have h := congr_app P.idem j
@@ -143,13 +144,13 @@ instance :
         C) where 
   preimage P Q f :=
     { f :=
-        { app := fun j => (f.app j).f,
+        { app := fun j => (f.app j).f
           naturality' := fun j j' φ => by 
             rw [← karoubi.comp_p_assoc]
             have h := hom_ext.mp (f.naturality φ)
             simp only [comp_f] at h
             dsimp [karoubi_functor_category_embedding] at h
-            erw [← h, assoc, ← P.p.naturality_assoc φ, p_comp (f.app j')] },
+            erw [← h, assoc, ← P.p.naturality_assoc φ, p_comp (f.app j')] }
       comm := by 
         ext j
         exact (f.app j).comm }

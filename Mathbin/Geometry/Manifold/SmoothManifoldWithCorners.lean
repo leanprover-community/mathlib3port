@@ -386,12 +386,13 @@ def ModelWithCorners.prod {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Ty
     (I : ModelWithCorners 𝕜 E H) {E' : Type v'} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
     {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') :
     ModelWithCorners 𝕜 (E × E') (ModelProd H H') :=
-  { I.toLocalEquiv.Prod I'.toLocalEquiv with toFun := fun x => (I x.1, I' x.2),
-    invFun := fun x => (I.symm x.1, I'.symm x.2),
-    source := { x | x.1 ∈ I.source ∧ x.2 ∈ I'.source },
-    source_eq := by simp only [set_of_true, mfld_simps],
-    uniqueDiff' := I.uniqueDiff'.Prod I'.uniqueDiff',
-    continuous_to_fun := I.continuous_to_fun.prod_map I'.continuous_to_fun,
+  { I.toLocalEquiv.Prod I'.toLocalEquiv with
+    toFun := fun x => (I x.1, I' x.2)
+    invFun := fun x => (I.symm x.1, I'.symm x.2)
+    source := { x | x.1 ∈ I.source ∧ x.2 ∈ I'.source }
+    source_eq := by simp only [set_of_true, mfld_simps]
+    uniqueDiff' := I.uniqueDiff'.Prod I'.uniqueDiff'
+    continuous_to_fun := I.continuous_to_fun.prod_map I'.continuous_to_fun
     continuous_inv_fun := I.continuous_inv_fun.prod_map I'.continuous_inv_fun }
 #align model_with_corners.prod ModelWithCorners.prod
 
@@ -502,7 +503,7 @@ variable (n)
 the maps that are `C^n` when read in `E` through `I`. -/
 def contDiffGroupoid : StructureGroupoid H :=
   Pregroupoid.groupoid
-    { property := fun f s => ContDiffOn 𝕜 n (I ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I),
+    { property := fun f s => ContDiffOn 𝕜 n (I ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I)
       comp := fun f g u v hf hg hu hv huv => by
         have : I ∘ (g ∘ f) ∘ I.symm = (I ∘ g ∘ I.symm) ∘ I ∘ f ∘ I.symm := by
           ext x
@@ -514,13 +515,13 @@ def contDiffGroupoid : StructureGroupoid H :=
           exact hx1.2
         · refine' hf.mono _
           rintro x ⟨hx1, hx2⟩
-          exact ⟨hx1.1, hx2⟩,
+          exact ⟨hx1.1, hx2⟩
       id_mem := by 
         apply ContDiffOn.congr cont_diff_id.cont_diff_on
         rintro x ⟨hx1, hx2⟩
         rcases mem_range.1 hx2 with ⟨y, hy⟩
         rw [← hy]
-        simp only [mfld_simps],
+        simp only [mfld_simps]
       locality := fun f u hu H => by 
         apply contDiffOnOfLocallyContDiffOn
         rintro y ⟨hy1, hy2⟩
@@ -533,7 +534,7 @@ def contDiffGroupoid : StructureGroupoid H :=
           congr 1
           rw [inter_comm]
         rw [this] at hv
-        exact ⟨I.symm ⁻¹' v, v_open.preimage I.continuous_symm, by simpa, hv⟩,
+        exact ⟨I.symm ⁻¹' v, v_open.preimage I.continuous_symm, by simpa, hv⟩
       congr := fun f g u hu fg hf => by 
         apply hf.congr
         rintro y ⟨hy1, hy2⟩

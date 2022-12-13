@@ -292,7 +292,7 @@ theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
   { mp := by 
       rintro ⟨_, h⟩
       rw [eq_iff] at h
-      tidy,
+      tidy
     mpr := by 
       rintro ⟨_⟩ <;> subst a
       · apply mem_mk_left
@@ -487,7 +487,7 @@ theorem from_rel_irreflexive {sym : Symmetric r} :
   { mp := fun h =>
       Sym2.ind <| by 
         rintro a b hr (rfl : a = b)
-        exact h _ hr,
+        exact h _ hr
     mpr := fun h x hr => h (from_rel_prop.mpr hr) rfl }
 #align sym2.from_rel_irreflexive Sym2.from_rel_irreflexive
 
@@ -539,7 +539,7 @@ private theorem perm_card_two_iff {a₁ b₁ a₂ b₂ : α} :
     [a₁, b₁].Perm [a₂, b₂] ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ a₁ = b₂ ∧ b₁ = a₂ :=
   { mp := by 
       simp [← Multiset.coe_eq_coe, ← Multiset.cons_coe, Multiset.cons_eq_cons]
-      tidy,
+      tidy
     mpr := by 
       intro h
       cases h <;> rw [h.1, h.2]

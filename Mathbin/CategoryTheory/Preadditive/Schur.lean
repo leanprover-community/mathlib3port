@@ -120,7 +120,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                      (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
                     []
                     (Term.app `inv [`f]))))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `exists_pair_ne [])
                 ":="
@@ -132,12 +132,12 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                   ","
                   (Term.app `id_nonzero [(Term.hole "_")])]
                  "⟩"))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `inv_zero [])
                 ":="
                 (Term.app `dif_pos [`rfl]))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `mul_inv_cancel [])
                 ":="
@@ -211,7 +211,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                     (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
                    []
                    (Term.app `inv [`f]))))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `exists_pair_ne [])
                ":="
@@ -223,12 +223,12 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                  ","
                  (Term.app `id_nonzero [(Term.hole "_")])]
                 "⟩"))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `inv_zero [])
                ":="
                (Term.app `dif_pos [`rfl]))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `mul_inv_cancel [])
                ":="
@@ -291,7 +291,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
                []
                (Term.app `inv [`f]))))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `exists_pair_ne [])
            ":="
@@ -303,9 +303,9 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
              ","
              (Term.app `id_nonzero [(Term.hole "_")])]
             "⟩"))
-          ","
+          []
           (Term.structInstField (Term.structInstLVal `inv_zero []) ":=" (Term.app `dif_pos [`rfl]))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `mul_inv_cancel [])
            ":="
@@ -364,7 +364,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
               (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
               []
               (Term.app `inv [`f]))))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `exists_pair_ne [])
           ":="
@@ -376,9 +376,9 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
             ","
             (Term.app `id_nonzero [(Term.hole "_")])]
            "⟩"))
-         ","
+         []
          (Term.structInstField (Term.structInstLVal `inv_zero []) ":=" (Term.app `dif_pos [`rfl]))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `mul_inv_cancel [])
           ":="
@@ -429,7 +429,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
              (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
              []
              (Term.app `inv [`f]))))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `exists_pair_ne [])
          ":="
@@ -441,9 +441,9 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
            ","
            (Term.app `id_nonzero [(Term.hole "_")])]
           "⟩"))
-        ","
+        []
         (Term.structInstField (Term.structInstLVal `inv_zero []) ":=" (Term.app `dif_pos [`rfl]))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `mul_inv_cancel [])
          ":="
@@ -772,11 +772,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
             {
               ( inferInstance : Ring End X ) with
               inv := fun f => if h : f = 0 then 0 else haveI := is_iso_of_hom_simple h inv f
-                ,
                 exists_pair_ne := ⟨ 𝟙 X , 0 , id_nonzero _ ⟩
-                ,
                 inv_zero := dif_pos rfl
-                ,
                 mul_inv_cancel
                   :=
                   fun

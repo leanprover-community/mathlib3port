@@ -373,9 +373,11 @@ where the distance is given by `dist x y = (1/2)^n`, where `n` is the smallest i
 protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, UniformSpace (E n)]
     (h : ∀ n, uniformity (E n) = 𝓟 idRel) : MetricSpace (∀ n, E n) :=
   haveI : ∀ n, DiscreteTopology (E n) := fun n => discreteTopologyOfDiscreteUniformity (h n)
-  { dist_triangle := PiNat.dist_triangle, dist_comm := PiNat.dist_comm,
-    dist_self := PiNat.dist_self, eq_of_dist_eq_zero := PiNat.eq_of_dist_eq_zero,
-    toUniformSpace := PiCat.uniformSpace _,
+  { dist_triangle := PiNat.dist_triangle
+    dist_comm := PiNat.dist_comm
+    dist_self := PiNat.dist_self
+    eq_of_dist_eq_zero := PiNat.eq_of_dist_eq_zero
+    toUniformSpace := PiCat.uniformSpace _
     uniformity_dist := by
       simp [PiCat.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
         PseudoMetricSpace.uniformity_dist, h, idRel]

@@ -198,7 +198,7 @@ theorem is_subgraph_eq_le : (IsSubgraph : SimpleGraph V → SimpleGraph V → Pr
 /-- The supremum of two graphs `x ⊔ y` has edges where either `x` or `y` have edges. -/
 instance : HasSup (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj ⊔ y.Adj,
+    { Adj := x.Adj ⊔ y.Adj
       symm := fun v w h => by rwa [Pi.sup_apply, Pi.sup_apply, x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
@@ -209,7 +209,7 @@ theorem sup_adj (x y : SimpleGraph V) (v w : V) : (x ⊔ y).Adj v w ↔ x.Adj v 
 /-- The infimum of two graphs `x ⊓ y` has edges where both `x` and `y` have edges. -/
 instance : HasInf (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj ⊓ y.Adj,
+    { Adj := x.Adj ⊓ y.Adj
       symm := fun v w h => by rwa [Pi.inf_apply, Pi.inf_apply, x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
@@ -223,8 +223,8 @@ are adjacent in the complement, and every nonadjacent pair of vertices is adjace
 -/
 instance : HasCompl (SimpleGraph V) :=
   ⟨fun G =>
-    { Adj := fun v w => v ≠ w ∧ ¬G.Adj v w,
-      symm := fun v w ⟨hne, _⟩ => ⟨hne.symm, by rwa [adj_comm]⟩,
+    { Adj := fun v w => v ≠ w ∧ ¬G.Adj v w
+      symm := fun v w ⟨hne, _⟩ => ⟨hne.symm, by rwa [adj_comm]⟩
       loopless := fun v ⟨hne, _⟩ => (hne rfl).elim }⟩
 
 @[simp]
@@ -235,7 +235,7 @@ theorem compl_adj (G : SimpleGraph V) (v w : V) : Gᶜ.Adj v w ↔ v ≠ w ∧ �
 /-- The difference of two graphs `x \ y` has the edges of `x` with the edges of `y` removed. -/
 instance : SDiff (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj \ y.Adj,
+    { Adj := x.Adj \ y.Adj
       symm := fun v w h => by change x.adj w v ∧ ¬y.adj w v <;> rwa [x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
@@ -244,26 +244,34 @@ theorem sdiff_adj (x y : SimpleGraph V) (v w : V) : (x \ y).Adj v w ↔ x.Adj v 
 #align simple_graph.sdiff_adj SimpleGraph.sdiff_adj
 
 instance : BooleanAlgebra (SimpleGraph V) :=
-  { PartialOrder.lift Adj ext with le := (· ≤ ·), sup := (· ⊔ ·), inf := (· ⊓ ·),
-    compl := HasCompl.compl, sdiff := (· \ ·), top := completeGraph V, bot := emptyGraph V,
-    le_top := fun x v w h => x.ne_of_adj h, bot_le := fun x v w h => h.elim,
-    sup_le := fun x y z hxy hyz v w h => h.casesOn (fun h => hxy h) fun h => hyz h,
+  { PartialOrder.lift Adj ext with 
+    le := (· ≤ ·)
+    sup := (· ⊔ ·)
+    inf := (· ⊓ ·)
+    compl := HasCompl.compl
+    sdiff := (· \ ·)
+    top := completeGraph V
+    bot := emptyGraph V
+    le_top := fun x v w h => x.ne_of_adj h
+    bot_le := fun x v w h => h.elim
+    sup_le := fun x y z hxy hyz v w h => h.casesOn (fun h => hxy h) fun h => hyz h
     sdiff_eq := fun x y => by 
       ext (v w)
       refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
       rintro rfl
-      exact x.irrefl h.1,
-    le_sup_left := fun x y v w h => Or.inl h, le_sup_right := fun x y v w h => Or.inr h,
-    le_inf := fun x y z hxy hyz v w h => ⟨hxy h, hyz h⟩,
+      exact x.irrefl h.1
+    le_sup_left := fun x y v w h => Or.inl h
+    le_sup_right := fun x y v w h => Or.inr h
+    le_inf := fun x y z hxy hyz v w h => ⟨hxy h, hyz h⟩
     le_sup_inf := fun a b c v w h =>
-      Or.dcases_on h.2 Or.inl <|
-        (Or.dcases_on h.1 fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩,
-    inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1,
+      Or.dcases_on h.2 Or.inl <| (Or.dcases_on h.1 fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩
+    inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1
     top_le_sup_compl := fun a v w ne => by 
       by_cases a.adj v w
       exact Or.inl h
-      exact Or.inr ⟨Ne, h⟩,
-    inf_le_left := fun x y v w h => h.1, inf_le_right := fun x y v w h => h.2 }
+      exact Or.inr ⟨Ne, h⟩
+    inf_le_left := fun x y v w h => h.1
+    inf_le_right := fun x y v w h => h.2 }
 
 @[simp]
 theorem top_adj (v w : V) : (⊤ : SimpleGraph V).Adj v w ↔ v ≠ w :=
@@ -472,8 +480,9 @@ theorem Dart.to_prod_injective : Function.Injective (Dart.toProd : G.Dart → V 
 
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
   Fintype.ofEquiv (Σv, G.neighborSet v)
-    { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩,
-      invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩, left_inv := fun s => by ext <;> simp,
+    { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩
+      invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩
+      left_inv := fun s => by ext <;> simp
       right_inv := fun d => by ext <;> simp }
 #align simple_graph.dart.fintype SimpleGraph.Dart.fintype
 

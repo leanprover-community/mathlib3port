@@ -130,18 +130,21 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
             we use the `pre_apply` subtactic of `solve_by_elim` to preprocess each new goal with `intros`.
         -/
       solve_by_elim
-      { use_symmetry := False, use_exfalso := False,
-        lemma_thunks := some (pure Eq :: equiv_congr_lemmas), ctx_thunk := pure [],
-        max_depth := cfg,-- Subgoals may contain function types,
+      { use_symmetry := False
+        use_exfalso := False
+        lemma_thunks := some (pure Eq :: equiv_congr_lemmas)
+        ctx_thunk := pure []
+        max_depth := cfg
+        -- Subgoals may contain function types,
         -- and we want to continue trying to construct equivalences after the binders.
-        pre_apply := tactic.intros >> skip,
-        backtrack_all_goals :=
-          tt,-- If solve_by_elim gets stuck, make sure it isn't because there's a later `≃` or `↔` goal
+        pre_apply := tactic.intros >> skip
+        backtrack_all_goals := tt
+        -- If solve_by_elim gets stuck, make sure it isn't because there's a later `≃` or `↔` goal
         -- that we should still attempt.
         discharger :=
           (sorry >> sorry) >> (sorry <|> sorry) <|>
-            trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >>
-              failed,-- We use the `accept` tactic in `solve_by_elim` to provide tracing.
+            trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >> failed
+        -- We use the `accept` tactic in `solve_by_elim` to provide tracing.
         accept := fun goals =>
           lock_tactic_state do
             when_tracing `equiv_rw_type do
@@ -328,7 +331,9 @@ unsafe def equiv_rw (l : parse pexpr_list_or_texpr) (locat : parse location)
 #align tactic.interactive.equiv_rw tactic.interactive.equiv_rw
 
 add_tactic_doc
-  { Name := "equiv_rw", category := DocCategory.tactic, declNames := [`tactic.interactive.equiv_rw],
+  { Name := "equiv_rw"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.equiv_rw]
     tags := ["rewriting", "equiv", "transport"] }
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -354,8 +359,10 @@ add_tactic_doc
 #align tactic.interactive.equiv_rw_type tactic.interactive.equiv_rw_type
 
 add_tactic_doc
-  { Name := "equiv_rw_type", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.equiv_rw_type], tags := ["rewriting", "equiv", "transport"] }
+  { Name := "equiv_rw_type"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.equiv_rw_type]
+    tags := ["rewriting", "equiv", "transport"] }
 
 end Tactic.Interactive
 

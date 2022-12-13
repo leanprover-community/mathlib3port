@@ -20,8 +20,10 @@ unsafe def fconstructor : tactic Unit :=
 #align tactic.interactive.fconstructor tactic.interactive.fconstructor
 
 add_tactic_doc
-  { Name := "fconstructor", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.fconstructor], tags := ["logic", "goal management"] }
+  { Name := "fconstructor"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.fconstructor]
+    tags := ["logic", "goal management"] }
 
 /-- `try_for n { tac }` executes `tac` for `n` ticks, otherwise uses `sorry` to close the goal.
 Never fails. Useful for debugging. -/
@@ -41,7 +43,9 @@ unsafe def substs (l : parse (parser.many ident)) : tactic Unit :=
 #align tactic.interactive.substs tactic.interactive.substs
 
 add_tactic_doc
-  { Name := "substs", category := DocCategory.tactic, declNames := [`tactic.interactive.substs],
+  { Name := "substs"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.substs]
     tags := ["rewriting"] }
 
 /-- Unfold coercion-related definitions -/
@@ -53,8 +57,10 @@ unsafe def unfold_coes (loc : parse location) : tactic Unit :=
 #align tactic.interactive.unfold_coes tactic.interactive.unfold_coes
 
 add_tactic_doc
-  { Name := "unfold_coes", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.unfold_coes], tags := ["simplification"] }
+  { Name := "unfold_coes"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.unfold_coes]
+    tags := ["simplification"] }
 
 /-- Unfold `has_well_founded.r`, `sizeof` and other such definitions. -/
 unsafe def unfold_wf :=
@@ -136,7 +142,9 @@ unsafe def swap (n := 2) : tactic Unit := do
 #align tactic.interactive.swap tactic.interactive.swap
 
 add_tactic_doc
-  { Name := "swap", category := DocCategory.tactic, declNames := [`tactic.interactive.swap],
+  { Name := "swap"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.swap]
     tags := ["goal management"] }
 
 /-- `rotate` moves the first goal to the back. `rotate n` will do this `n` times.
@@ -148,7 +156,9 @@ unsafe def rotate (n := 1) : tactic Unit :=
 #align tactic.interactive.rotate tactic.interactive.rotate
 
 add_tactic_doc
-  { Name := "rotate", category := DocCategory.tactic, declNames := [`tactic.interactive.rotate],
+  { Name := "rotate"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.rotate]
     tags := ["goal management"] }
 
 /-- Clear all hypotheses starting with `_`, like `_match` and `_let_match`. -/
@@ -164,7 +174,9 @@ unsafe def clear_ : tactic Unit :=
 #align tactic.interactive.clear_ tactic.interactive.clear_
 
 add_tactic_doc
-  { Name := "clear_", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_],
+  { Name := "clear_"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.clear_]
     tags := ["context management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -189,7 +201,9 @@ unsafe def replace (h : parse (parser.optional ident))
 #align tactic.interactive.replace tactic.interactive.replace
 
 add_tactic_doc
-  { Name := "replace", category := DocCategory.tactic, declNames := [`tactic.interactive.replace],
+  { Name := "replace"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.replace]
     tags := ["context management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -202,8 +216,10 @@ unsafe def classical (bang : parse <| parser.optional (tk "!")) :=
 #align tactic.interactive.classical tactic.interactive.classical
 
 add_tactic_doc
-  { Name := "classical", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.classical], tags := ["classical logic", "type class"] }
+  { Name := "classical"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.classical]
+    tags := ["classical logic", "type class"] }
 
 private unsafe def generalize_arg_p_aux : pexpr → parser (pexpr × Name)
   | app (app (macro _ [const `eq _]) h) (local_const x _ _ _) => pure (h, x)
@@ -245,8 +261,10 @@ unsafe def generalize_hyp (h : parse (parser.optional ident)) (_ : parse <| tk "
 #align tactic.interactive.generalize_hyp tactic.interactive.generalize_hyp
 
 add_tactic_doc
-  { Name := "generalize_hyp", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.generalize_hyp], tags := ["context management"] }
+  { Name := "generalize_hyp"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.generalize_hyp]
+    tags := ["context management"] }
 
 unsafe def compact_decl_aux :
     List Name → BinderInfo → expr → List expr → tactic (List (List Name × BinderInfo × expr))
@@ -317,8 +335,8 @@ unsafe def refine_one (str : structure_instance_info) :
   let e' ←
     to_expr <|
         pexpr.mk_structure_instance
-          { struct := some struct_n,
-            field_names := str.field_names ++ missing_f'.map Prod.snd ++ src_field_names,
+          { struct := some struct_n
+            field_names := str.field_names ++ missing_f'.map Prod.snd ++ src_field_names
             field_values := field_values ++ vs.map to_pexpr ++ src_field_vals }
   tactic.exact e'
   let gs ←
@@ -524,11 +542,13 @@ unsafe def apply_field : tactic Unit :=
 #align tactic.interactive.apply_field tactic.interactive.apply_field
 
 add_tactic_doc
-  { Name := "refine_struct", category := DocCategory.tactic,
+  { Name := "refine_struct"
+    category := DocCategory.tactic
     declNames :=
       [`tactic.interactive.refine_struct, `tactic.interactive.apply_field,
-        `tactic.interactive.have_field],
-    tags := ["structures"], inheritDescriptionFrom := `tactic.interactive.refine_struct }
+        `tactic.interactive.have_field]
+    tags := ["structures"]
+    inheritDescriptionFrom := `tactic.interactive.refine_struct }
 
 /-- `apply_rules hs with attrs n` applies the list of lemmas `hs` and all lemmas tagged with an
 attribute from the list `attrs`, as well as the `assumption` tactic on the
@@ -564,8 +584,10 @@ unsafe def apply_rules (args : parse opt_pexpr_list) (attrs : parse with_ident_l
 #align tactic.interactive.apply_rules tactic.interactive.apply_rules
 
 add_tactic_doc
-  { Name := "apply_rules", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.apply_rules], tags := ["lemma application"] }
+  { Name := "apply_rules"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.apply_rules]
+    tags := ["lemma application"] }
 
 unsafe def return_cast (f : Option expr) (t : Option (expr × expr)) (es : List (expr × expr × expr))
     (e x x' eq_h : expr) : tactic (Option (expr × expr) × List (expr × expr × expr)) :=
@@ -655,8 +677,10 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!")))
 #align tactic.interactive.h_generalize tactic.interactive.h_generalize
 
 add_tactic_doc
-  { Name := "h_generalize", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.h_generalize], tags := ["context management"] }
+  { Name := "h_generalize"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.h_generalize]
+    tags := ["context management"] }
 
 /-- Tests whether `t` is definitionally equal to `p`. The difference with `guard_expr_eq` is that
   this uses definitional equality instead of alpha-equivalence. -/
@@ -676,8 +700,10 @@ unsafe def guard_target' (p : parse texpr) : tactic Unit := do
 #align tactic.interactive.guard_target' tactic.interactive.guard_target'
 
 add_tactic_doc
-  { Name := "guard_target'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.guard_target'], tags := ["testing"] }
+  { Name := "guard_target'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.guard_target']
+    tags := ["testing"] }
 
 /-- Tries to solve the goal using a canonical proof of `true` or the `reflexivity` tactic.
 Unlike `trivial` or `trivial'`, does not the `contradiction` tactic.
@@ -687,7 +713,9 @@ unsafe def triv : tactic Unit :=
 #align tactic.interactive.triv tactic.interactive.triv
 
 add_tactic_doc
-  { Name := "triv", category := DocCategory.tactic, declNames := [`tactic.interactive.triv],
+  { Name := "triv"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.triv]
     tags := ["finishing"] }
 
 /--
@@ -700,7 +728,9 @@ unsafe def trivial' : tactic Unit :=
 #align tactic.interactive.trivial' tactic.interactive.trivial'
 
 add_tactic_doc
-  { Name := "trivial'", category := DocCategory.tactic, declNames := [`tactic.interactive.trivial'],
+  { Name := "trivial'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.trivial']
     tags := ["finishing"] }
 
 /-- Similar to `existsi`. `use x` will instantiate the first term of an `∃` or `Σ` goal with `x`. It
@@ -751,8 +781,10 @@ unsafe def use (l : parse pexpr_list_or_texpr) : tactic Unit :=
 #align tactic.interactive.use tactic.interactive.use
 
 add_tactic_doc
-  { Name := "use", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.use, `tactic.interactive.existsi], tags := ["logic"],
+  { Name := "use"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.use, `tactic.interactive.existsi]
+    tags := ["logic"]
     inheritDescriptionFrom := `tactic.interactive.use }
 
 /-- `clear_aux_decl` clears every `aux_decl` in the local context for the current goal.
@@ -783,9 +815,11 @@ unsafe def clear_aux_decl : tactic Unit :=
 #align tactic.interactive.clear_aux_decl tactic.interactive.clear_aux_decl
 
 add_tactic_doc
-  { Name := "clear_aux_decl", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.clear_aux_decl, `tactic.clear_aux_decl],
-    tags := ["context management"], inheritDescriptionFrom := `tactic.interactive.clear_aux_decl }
+  { Name := "clear_aux_decl"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.clear_aux_decl, `tactic.clear_aux_decl]
+    tags := ["context management"]
+    inheritDescriptionFrom := `tactic.interactive.clear_aux_decl }
 
 unsafe def loc.get_local_pp_names : Loc → tactic (List Name)
   | loc.wildcard => List.map expr.local_pp_name <$> local_context
@@ -819,8 +853,10 @@ unsafe def change' (q : parse texpr) :
 #align tactic.interactive.change' tactic.interactive.change'
 
 add_tactic_doc
-  { Name := "change'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.change', `tactic.interactive.change], tags := ["renaming"],
+  { Name := "change'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.change', `tactic.interactive.change]
+    tags := ["renaming"]
     inheritDescriptionFrom := `tactic.interactive.change' }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -874,7 +910,9 @@ unsafe def set (h_simp : parse (parser.optional (tk "!"))) (a : parse ident)
 #align tactic.interactive.set tactic.interactive.set
 
 add_tactic_doc
-  { Name := "set", category := DocCategory.tactic, declNames := [`tactic.interactive.set],
+  { Name := "set"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.set]
     tags := ["context management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
@@ -888,8 +926,10 @@ unsafe def clear_except (xs : parse (parser.many ident)) : tactic Unit := do
 #align tactic.interactive.clear_except tactic.interactive.clear_except
 
 add_tactic_doc
-  { Name := "clear_except", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.clear_except], tags := ["context management"] }
+  { Name := "clear_except"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.clear_except]
+    tags := ["context management"] }
 
 unsafe def format_names (ns : List Name) : format :=
   format.join <| List.intersperse " " (ns.map to_fmt)
@@ -1050,8 +1090,9 @@ unsafe def extract_goal (print_use : parse <| tk "!" *> pure true <|> pure false
 #align tactic.interactive.extract_goal tactic.interactive.extract_goal
 
 add_tactic_doc
-  { Name := "extract_goal", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.extract_goal],
+  { Name := "extract_goal"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.extract_goal]
     tags := ["goal management", "proof extraction", "debugging"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -1086,7 +1127,9 @@ unsafe def inhabit (t : parse parser.pexpr) (inst_name : parse (parser.optional 
 #align tactic.interactive.inhabit tactic.interactive.inhabit
 
 add_tactic_doc
-  { Name := "inhabit", category := DocCategory.tactic, declNames := [`tactic.interactive.inhabit],
+  { Name := "inhabit"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.inhabit]
     tags := ["context management", "type class"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
@@ -1097,8 +1140,9 @@ unsafe def revert_deps (ns : parse (parser.many ident)) : tactic Unit :=
 #align tactic.interactive.revert_deps tactic.interactive.revert_deps
 
 add_tactic_doc
-  { Name := "revert_deps", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.revert_deps],
+  { Name := "revert_deps"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.revert_deps]
     tags := ["context management", "goal management"] }
 
 /-- `revert_after n` reverts all the hypotheses after `n`. -/
@@ -1107,8 +1151,9 @@ unsafe def revert_after (n : parse ident) : tactic Unit :=
 #align tactic.interactive.revert_after tactic.interactive.revert_after
 
 add_tactic_doc
-  { Name := "revert_after", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.revert_after],
+  { Name := "revert_after"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.revert_after]
     tags := ["context management", "goal management"] }
 
 /-- Reverts all local constants on which the target depends (recursively). -/
@@ -1117,8 +1162,9 @@ unsafe def revert_target_deps : tactic Unit :=
 #align tactic.interactive.revert_target_deps tactic.interactive.revert_target_deps
 
 add_tactic_doc
-  { Name := "revert_target_deps", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.revert_target_deps],
+  { Name := "revert_target_deps"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.revert_target_deps]
     tags := ["context management", "goal management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
@@ -1129,8 +1175,10 @@ unsafe def clear_value (ns : parse (parser.many ident)) : tactic Unit :=
 #align tactic.interactive.clear_value tactic.interactive.clear_value
 
 add_tactic_doc
-  { Name := "clear_value", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.clear_value], tags := ["context management"] }
+  { Name := "clear_value"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.clear_value]
+    tags := ["context management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -1174,8 +1222,10 @@ add_tactic_doc
 #align tactic.interactive.generalize' tactic.interactive.generalize'
 
 add_tactic_doc
-  { Name := "generalize'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.generalize'], tags := ["context management"] }
+  { Name := "generalize'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.generalize']
+    tags := ["context management"] }
 
 /-- If the expression `q` is a local variable with type `x = t` or `t = x`, where `x` is a local
 constant, `tactic.interactive.subst' q` substitutes `x` by `t` everywhere in the main goal and
@@ -1191,7 +1241,9 @@ unsafe def subst' (q : parse texpr) : tactic Unit := do
 #align tactic.interactive.subst' tactic.interactive.subst'
 
 add_tactic_doc
-  { Name := "subst'", category := DocCategory.tactic, declNames := [`tactic.interactive.subst'],
+  { Name := "subst'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.subst']
     tags := ["context management"] }
 
 end Interactive

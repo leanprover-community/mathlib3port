@@ -1507,7 +1507,7 @@ warning: lim -> lim is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : TopologicalSpace.{u} α] [_inst_2 : Nonempty.{succ u} α], (Filter.{v} β) -> (β -> α) -> α
 but is expected to have type
-  forall {α : Type.{u}} [_inst_1 : TopologicalSpace.{u} α] [_inst_2 : Nonempty.{succ u} α], (Filter.{u} α) -> α
+  forall {α : Type.{u}} [β : TopologicalSpace.{u} α] [_inst_1 : Nonempty.{succ u} α], (Filter.{u} α) -> α
 Case conversion may be inaccurate. Consider using '#align lim limₓ'. -/
 /-- If `f` is a filter in `β` and `g : β → α` is a function, then `lim f` is a limit of `g` at `f`,
 if it exists. -/

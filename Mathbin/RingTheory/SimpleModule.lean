@@ -167,7 +167,7 @@ noncomputable instance Module.EndCat.divisionRing [DecidableEq (Module.EndCat R 
       else
         LinearMap.inverse f (Equiv.ofBijective _ (bijective_of_ne_zero h)).invFun
           (Equiv.ofBijective _ (bijective_of_ne_zero h)).left_inv
-          (Equiv.ofBijective _ (bijective_of_ne_zero h)).right_inv,
+          (Equiv.ofBijective _ (bijective_of_ne_zero h)).right_inv
     exists_pair_ne :=
       ⟨0, 1, by 
         haveI := IsSimpleModule.nontrivial R M
@@ -175,13 +175,13 @@ noncomputable instance Module.EndCat.divisionRing [DecidableEq (Module.EndCat R 
         contrapose! h
         intro x y
         simp_rw [ext_iff, one_apply, zero_apply] at h
-        rw [← h x, h y]⟩,
+        rw [← h x, h y]⟩
     mul_inv_cancel := by 
       intro a a0
       change a * dite _ _ _ = 1
       ext
       rw [dif_neg a0, mul_eq_comp, one_apply, comp_apply]
-      exact (Equiv.ofBijective _ (bijective_of_ne_zero a0)).right_inv x,
+      exact (Equiv.ofBijective _ (bijective_of_ne_zero a0)).right_inv x
     inv_zero := dif_pos rfl }
 #align module.End.division_ring Module.EndCat.divisionRing
 

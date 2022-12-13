@@ -237,7 +237,10 @@ def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : �
     (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z)
     (H : ∀ s : Set α, IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s) :
     PseudoMetricSpace α :=
-  { dist, dist_self, dist_comm, dist_triangle,
+  { dist
+    dist_self
+    dist_comm
+    dist_triangle
     toUniformSpace :=
       { UniformSpace.coreOfDist dist dist_self dist_comm dist_triangle with
         is_open_uniformity := by 
@@ -259,8 +262,9 @@ def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : �
               ⟨min r p, lt_min hr hp, fun x (hx : dist _ _ < _) =>
                 lt_of_lt_of_le hx (min_le_left r p), fun x (hx : dist _ _ < _) =>
                 lt_of_lt_of_le hx (min_le_right r p)⟩
-          · infer_instance },
-    uniformity_dist := rfl, toBornology := Bornology.ofDist dist dist_self dist_comm dist_triangle,
+          · infer_instance }
+    uniformity_dist := rfl
+    toBornology := Bornology.ofDist dist dist_self dist_comm dist_triangle
     cobounded_sets := rfl }
 #align pseudo_metric_space.of_metrizable PseudoMetricSpace.ofMetrizable
 
@@ -1295,13 +1299,15 @@ theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | ed
 -- see Note [lower instance priority]
 /-- A pseudometric space induces a pseudoemetric space -/
 instance (priority := 100) PseudoMetricSpace.toPseudoEmetricSpace : PseudoEmetricSpace α :=
-  { ‹PseudoMetricSpace α› with edist := edist, edist_self := by simp [edist_dist],
-    edist_comm := by simp only [edist_dist, dist_comm] <;> simp,
+  { ‹PseudoMetricSpace α› with 
+    edist := edist
+    edist_self := by simp [edist_dist]
+    edist_comm := by simp only [edist_dist, dist_comm] <;> simp
     edist_triangle := fun x y z => by
       simp only [edist_dist, ← Ennreal.of_real_add, dist_nonneg]
       rw [Ennreal.of_real_le_of_real_iff _]
       · exact dist_triangle _ _ _
-      · simpa using add_le_add (dist_nonneg : 0 ≤ dist x y) dist_nonneg,
+      · simpa using add_le_add (dist_nonneg : 0 ≤ dist x y) dist_nonneg
     uniformity_edist := Metric.uniformity_edist }
 #align pseudo_metric_space.to_pseudo_emetric_space PseudoMetricSpace.toPseudoEmetricSpace
 
@@ -1397,15 +1403,17 @@ def PseudoEmetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEmetri
     (dist : α → α → ℝ) (edist_ne_top : ∀ x y : α, edist x y ≠ ⊤)
     (h : ∀ x y, dist x y = Ennreal.toReal (edist x y)) : PseudoMetricSpace α :=
   let m : PseudoMetricSpace α :=
-    { dist, dist_self := fun x => by simp [h],
-      dist_comm := fun x y => by simp [h, PseudoEmetricSpace.edist_comm],
+    { dist
+      dist_self := fun x => by simp [h]
+      dist_comm := fun x y => by simp [h, PseudoEmetricSpace.edist_comm]
       dist_triangle := fun x y z => by 
         simp only [h]
         rw [← Ennreal.to_real_add (edist_ne_top _ _) (edist_ne_top _ _),
           Ennreal.to_real_le_to_real (edist_ne_top _ _)]
         · exact edist_triangle _ _ _
-        · simp [Ennreal.add_eq_top, edist_ne_top],
-      edist := edist, edist_dist := fun x y => by simp [h, Ennreal.of_real_to_real, edist_ne_top] }
+        · simp [Ennreal.add_eq_top, edist_ne_top]
+      edist := edist
+      edist_dist := fun x y => by simp [h, Ennreal.of_real_to_real, edist_ne_top] }
   m.replaceUniformity <| by
     rw [uniformity_pseudoedist, Metric.uniformity_edist]
     rfl
@@ -1428,7 +1436,8 @@ See Note [forgetful inheritance].
 def PseudoMetricSpace.replaceBornology {α} [B : Bornology α] (m : PseudoMetricSpace α)
     (H : ∀ s, @IsBounded _ B s ↔ @IsBounded _ PseudoMetricSpace.toBornology s) :
     PseudoMetricSpace α :=
-  { m with toBornology := B,
+  { m with 
+    toBornology := B
     cobounded_sets :=
       Set.ext <|
         compl_surjective.forall.2 fun s =>
@@ -3275,7 +3284,8 @@ of the edistance to reals. -/
 def EmetricSpace.toMetricSpaceOfDist {α : Type u} [e : EmetricSpace α] (dist : α → α → ℝ)
     (edist_ne_top : ∀ x y : α, edist x y ≠ ⊤) (h : ∀ x y, dist x y = Ennreal.toReal (edist x y)) :
     MetricSpace α :=
-  { PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top h with dist,
+  { PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top h with
+    dist
     eq_of_dist_eq_zero := fun x y hxy => by
       simpa [h, Ennreal.to_real_eq_zero_iff, edist_ne_top x y] using hxy }
 #align emetric_space.to_metric_space_of_dist EmetricSpace.toMetricSpaceOfDist

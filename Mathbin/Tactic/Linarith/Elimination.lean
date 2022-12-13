@@ -145,7 +145,9 @@ unsafe def pcomp.cmp (p1 p2 : pcomp) : Ordering :=
 
 /-- `pcomp.scale c n` scales the coefficients of `c` by `n` and notes this in the `comp_source`. -/
 unsafe def pcomp.scale (c : pcomp) (n : ℕ) : pcomp :=
-  { c with c := c.c.scale n, src := c.src.scale n }
+  { c with 
+    c := c.c.scale n
+    src := c.src.scale n }
 #align linarith.pcomp.scale linarith.pcomp.scale
 
 /-- `pcomp.add c1 c2 elim_var` creates the result of summing the linear comparisons `c1` and `c2`,
@@ -182,8 +184,12 @@ The history is the singleton set `{n}`.
 No variables have been eliminated (effectively or implicitly).
 -/
 unsafe def pcomp.assump (c : Comp) (n : ℕ) : pcomp :=
-  { c, src := CompSource.assump n, history := mk_rb_set.insert n, effective := mk_rb_set,
-    implicit := mk_rb_set, vars := rb_set.of_list c.vars }
+  { c
+    src := CompSource.assump n
+    history := mk_rb_set.insert n
+    effective := mk_rb_set
+    implicit := mk_rb_set
+    vars := rb_set.of_list c.vars }
 #align linarith.pcomp.assump linarith.pcomp.assump
 
 unsafe instance pcomp.to_format : has_to_format pcomp :=

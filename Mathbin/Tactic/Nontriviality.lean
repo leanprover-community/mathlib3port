@@ -131,8 +131,10 @@ unsafe def nontriviality (t : parse texpr ?)
 #align tactic.interactive.nontriviality tactic.interactive.nontriviality
 
 add_tactic_doc
-  { Name := "nontriviality", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.nontriviality], tags := ["logic", "type class"] }
+  { Name := "nontriviality"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.nontriviality]
+    tags := ["logic", "type class"] }
 
 end Tactic.Interactive
 

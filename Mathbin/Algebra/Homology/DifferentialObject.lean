@@ -86,19 +86,19 @@ def dgoToHomologicalComplex :
         (ComplexShape.up'
           b) where 
   obj X :=
-    { x := fun i => X.x i,
+    { x := fun i => X.x i
       d := fun i j =>
-        if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0,
+        if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0
       shape' := fun i j w => by 
         dsimp at w
-        convert dif_neg w,
+        convert dif_neg w
       d_comp_d' := fun i j k hij hjk => by 
         dsimp at hij hjk; substs hij hjk
         have : X.d i ≫ X.d _ = _ := (congr_fun X.d_squared i : _)
         reassoc! this
         simp [this] }
   map X Y f :=
-    { f := f.f,
+    { f := f.f
       comm' := fun i j h => by 
         dsimp at h⊢
         subst h
@@ -117,13 +117,14 @@ def homologicalComplexToDgo :
         (GradedObjectWithShift b
           V) where 
   obj X :=
-    { x := fun i => X.x i, d := fun i => X.d i (i + 1 • b),
+    { x := fun i => X.x i
+      d := fun i => X.d i (i + 1 • b)
       d_squared' := by 
         ext i
         dsimp
         simp }
   map X Y f :=
-    { f := f.f,
+    { f := f.f
       comm' := by 
         ext i
         dsimp
@@ -137,7 +138,10 @@ def dgoEquivHomologicalComplexUnitIso :
     𝟭 (DifferentialObject (GradedObjectWithShift b V)) ≅
       dgoToHomologicalComplex b V ⋙ homologicalComplexToDgo b V :=
   NatIso.ofComponents
-    (fun X => { Hom := { f := fun i => 𝟙 (X.x i) }, inv := { f := fun i => 𝟙 (X.x i) } }) (by tidy)
+    (fun X =>
+      { Hom := { f := fun i => 𝟙 (X.x i) }
+        inv := { f := fun i => 𝟙 (X.x i) } })
+    (by tidy)
 #align
   homological_complex.dgo_equiv_homological_complex_unit_iso HomologicalComplex.dgoEquivHomologicalComplexUnitIso
 
@@ -150,13 +154,13 @@ def dgoEquivHomologicalComplexCounitIso :
   NatIso.ofComponents
     (fun X =>
       { Hom :=
-          { f := fun i => 𝟙 (X.x i),
+          { f := fun i => 𝟙 (X.x i)
             comm' := fun i j h => by 
               dsimp at h⊢; subst h
               delta homological_complex_to_dgo
-              simp },
+              simp }
         inv :=
-          { f := fun i => 𝟙 (X.x i),
+          { f := fun i => 𝟙 (X.x i)
             comm' := fun i j h => by 
               dsimp at h⊢; subst h
               delta homological_complex_to_dgo

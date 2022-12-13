@@ -625,30 +625,37 @@ include S
 
 instance : CompleteLattice (AffineSubspace k P) :=
   { PartialOrder.lift (coe : AffineSubspace k P → Set P) coe_injective with
-    sup := fun s1 s2 => affineSpan k (s1 ∪ s2),
+    sup := fun s1 s2 => affineSpan k (s1 ∪ s2)
     le_sup_left := fun s1 s2 =>
-      Set.Subset.trans (Set.subset_union_left s1 s2) (subset_span_points k _),
+      Set.Subset.trans (Set.subset_union_left s1 s2) (subset_span_points k _)
     le_sup_right := fun s1 s2 =>
-      Set.Subset.trans (Set.subset_union_right s1 s2) (subset_span_points k _),
+      Set.Subset.trans (Set.subset_union_right s1 s2) (subset_span_points k _)
     sup_le := fun s1 s2 s3 hs1 hs2 =>
-      span_points_subset_coe_of_subset_coe (Set.union_subset hs1 hs2),
+      span_points_subset_coe_of_subset_coe (Set.union_subset hs1 hs2)
     inf := fun s1 s2 =>
       mk (s1 ∩ s2) fun c p1 p2 p3 hp1 hp2 hp3 =>
-        ⟨s1.smul_vsub_vadd_mem c hp1.1 hp2.1 hp3.1, s2.smul_vsub_vadd_mem c hp1.2 hp2.2 hp3.2⟩,
-    inf_le_left := fun _ _ => Set.inter_subset_left _ _,
-    inf_le_right := fun _ _ => Set.inter_subset_right _ _, le_inf := fun _ _ _ => Set.subset_inter,
-    top := { carrier := Set.univ, smul_vsub_vadd_mem := fun _ _ _ _ _ _ _ => Set.mem_univ _ },
-    le_top := fun _ _ _ => Set.mem_univ _,
-    bot := { carrier := ∅, smul_vsub_vadd_mem := fun _ _ _ _ => False.elim },
-    bot_le := fun _ _ => False.elim, sup := fun s => affineSpan k (⋃ s' ∈ s, (s' : Set P)),
+        ⟨s1.smul_vsub_vadd_mem c hp1.1 hp2.1 hp3.1, s2.smul_vsub_vadd_mem c hp1.2 hp2.2 hp3.2⟩
+    inf_le_left := fun _ _ => Set.inter_subset_left _ _
+    inf_le_right := fun _ _ => Set.inter_subset_right _ _
+    le_inf := fun _ _ _ => Set.subset_inter
+    top :=
+      { carrier := Set.univ
+        smul_vsub_vadd_mem := fun _ _ _ _ _ _ _ => Set.mem_univ _ }
+    le_top := fun _ _ _ => Set.mem_univ _
+    bot :=
+      { carrier := ∅
+        smul_vsub_vadd_mem := fun _ _ _ _ => False.elim }
+    bot_le := fun _ _ => False.elim
+    sup := fun s => affineSpan k (⋃ s' ∈ s, (s' : Set P))
     inf := fun s =>
       mk (⋂ s' ∈ s, (s' : Set P)) fun c p1 p2 p3 hp1 hp2 hp3 =>
         Set.mem_Inter₂.2 fun s2 hs2 => by 
           rw [Set.mem_Inter₂] at *
-          exact s2.smul_vsub_vadd_mem c (hp1 s2 hs2) (hp2 s2 hs2) (hp3 s2 hs2),
-    le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bUnion_of_mem h) (subset_span_points k _),
-    Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe (Set.Union₂_subset h),
-    Inf_le := fun _ _ => Set.bInter_subset_of_mem, le_Inf := fun _ _ => Set.subset_Inter₂ }
+          exact s2.smul_vsub_vadd_mem c (hp1 s2 hs2) (hp2 s2 hs2) (hp3 s2 hs2)
+    le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bUnion_of_mem h) (subset_span_points k _)
+    Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe (Set.Union₂_subset h)
+    Inf_le := fun _ _ => Set.bInter_subset_of_mem
+    le_Inf := fun _ _ => Set.subset_Inter₂ }
 
 instance : Inhabited (AffineSubspace k P) :=
   ⟨⊤⟩

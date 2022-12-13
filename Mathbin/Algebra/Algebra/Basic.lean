@@ -484,8 +484,8 @@ section ULift
 
 instance ULift.algebra : Algebra R (ULift A) :=
   { ULift.module', (ULift.ringEquiv : ULift A ≃+* A).symm.toRingHom.comp (algebraMap R A) with
-    toFun := fun r => ULift.up (algebraMap R A r),
-    commutes' := fun r x => ULift.down_injective <| Algebra.commutes r x.down,
+    toFun := fun r => ULift.up (algebraMap R A r)
+    commutes' := fun r x => ULift.down_injective <| Algebra.commutes r x.down
     smul_def' := fun r x => ULift.down_injective <| Algebra.smul_def' r x.down }
 #align ulift.algebra ULift.algebra
 
@@ -502,8 +502,10 @@ end ULift
 
 /-- Algebra over a subsemiring. This builds upon `subsemiring.module`. -/
 instance ofSubsemiring (S : Subsemiring R) : Algebra S A :=
-  { (algebraMap R A).comp S.Subtype with smul := (· • ·),
-    commutes' := fun r x => Algebra.commutes r x, smul_def' := fun r x => Algebra.smul_def r x }
+  { (algebraMap R A).comp S.Subtype with 
+    smul := (· • ·)
+    commutes' := fun r x => Algebra.commutes r x
+    smul_def' := fun r x => Algebra.smul_def r x }
 #align algebra.of_subsemiring Algebra.ofSubsemiring
 
 theorem algebra_map_of_subsemiring (S : Subsemiring R) :
@@ -594,11 +596,11 @@ variable {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
 instance : Algebra R Aᵐᵒᵖ :=
   { MulOpposite.hasSmul A R with
-    toRingHom := (algebraMap R A).toOpposite fun x y => Algebra.commutes _ _,
+    toRingHom := (algebraMap R A).toOpposite fun x y => Algebra.commutes _ _
     smul_def' := fun c x =>
       unop_injective <| by 
         dsimp
-        simp only [op_mul, Algebra.smul_def, Algebra.commutes, op_unop],
+        simp only [op_mul, Algebra.smul_def, Algebra.commutes, op_unop]
     commutes' := fun r =>
       MulOpposite.rec fun x => by dsimp <;> simp only [← op_mul, Algebra.commutes] }
 
@@ -658,7 +660,7 @@ theorem End_is_unit_iff (f : Module.EndCat R M) : IsUnit f ↔ Function.Bijectiv
 theorem End_algebra_map_is_unit_inv_apply_eq_iff {x : R}
     (h : IsUnit (algebraMap R (Module.EndCat R M) x)) (m m' : M) : h.Unit⁻¹ m = m' ↔ m = x • m' :=
   { mp := fun H =>
-      ((congr_arg h.Unit H).symm.trans (End_is_unit_apply_inv_apply_of_is_unit h _)).symm,
+      ((congr_arg h.Unit H).symm.trans (End_is_unit_apply_inv_apply_of_is_unit h _)).symm
     mpr := fun H =>
       H.symm ▸ by 
         apply_fun h.unit using ((Module.End_is_unit_iff _).mp h).Injective
@@ -669,7 +671,7 @@ theorem End_algebra_map_is_unit_inv_apply_eq_iff {x : R}
 
 theorem End_algebra_map_is_unit_inv_apply_eq_iff' {x : R}
     (h : IsUnit (algebraMap R (Module.EndCat R M) x)) (m m' : M) : m' = h.Unit⁻¹ m ↔ m = x • m' :=
-  { mp := fun H => ((congr_arg h.Unit H).trans (End_is_unit_apply_inv_apply_of_is_unit h _)).symm,
+  { mp := fun H => ((congr_arg h.Unit H).trans (End_is_unit_apply_inv_apply_of_is_unit h _)).symm
     mpr := fun H =>
       H.symm ▸ by 
         apply_fun h.unit using ((Module.End_is_unit_iff _).mp h).Injective

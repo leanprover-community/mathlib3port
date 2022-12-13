@@ -34,13 +34,15 @@ theorem IsSmulRegular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α}
 
 instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] :
     SmulWithZero α (∀ i, f i) :=
-  { Pi.instSMul with smul_zero := fun _ => funext fun _ => smul_zero _,
+  { Pi.instSMul with 
+    smul_zero := fun _ => funext fun _ => smul_zero _
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero Pi.smulWithZero
 
 instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)]
     [∀ i, SmulWithZero (g i) (f i)] : SmulWithZero (∀ i, g i) (∀ i, f i) :=
-  { Pi.hasSmul' with smul_zero := fun _ => funext fun _ => smul_zero _,
+  { Pi.hasSmul' with 
+    smul_zero := fun _ => funext fun _ => smul_zero _
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero' Pi.smulWithZero'
 
@@ -58,7 +60,8 @@ variable (I f)
 
 instance module (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i] :
     @Module α (∀ i : I, f i) r (@Pi.addCommMonoid I f m) :=
-  { Pi.distribMulAction _ with add_smul := fun c f g => funext fun i => add_smul _ _ _,
+  { Pi.distribMulAction _ with
+    add_smul := fun c f g => funext fun i => add_smul _ _ _
     zero_smul := fun f => funext fun i => zero_smul α _ }
 #align pi.module Pi.module
 

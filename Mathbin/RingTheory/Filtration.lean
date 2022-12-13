@@ -93,11 +93,11 @@ instance : HasSup (I.Filtration M) :=
 /-- The `Sup` of a family of `I.filtration`s is an `I.filtration`. -/
 instance : HasSup (I.Filtration M) :=
   ⟨fun S =>
-    { n := sup (Ideal.Filtration.n '' S),
+    { n := sup (Ideal.Filtration.n '' S)
       mono := fun i => by 
         apply Sup_le_Sup_of_forall_exists_le _
         rintro _ ⟨⟨_, F, hF, rfl⟩, rfl⟩
-        exact ⟨_, ⟨⟨_, F, hF, rfl⟩, rfl⟩, F.mono i⟩,
+        exact ⟨_, ⟨⟨_, F, hF, rfl⟩, rfl⟩, F.mono i⟩
       smul_le := fun i => by
         rw [Sup_eq_supr', supr_apply, Submodule.smul_supr, supr_apply]
         apply supr_mono _
@@ -113,11 +113,11 @@ instance : HasInf (I.Filtration M) :=
 /-- The `Inf` of a family of `I.filtration`s is an `I.filtration`. -/
 instance : HasInf (I.Filtration M) :=
   ⟨fun S =>
-    { n := inf (Ideal.Filtration.n '' S),
+    { n := inf (Ideal.Filtration.n '' S)
       mono := fun i => by 
         apply Inf_le_Inf_of_forall_exists_le _
         rintro _ ⟨⟨_, F, hF, rfl⟩, rfl⟩
-        exact ⟨_, ⟨⟨_, F, hF, rfl⟩, rfl⟩, F.mono i⟩,
+        exact ⟨_, ⟨⟨_, F, hF, rfl⟩, rfl⟩, F.mono i⟩
       smul_le := fun i => by 
         rw [Inf_eq_infi', infi_apply, infi_apply]
         refine' submodule.smul_infi_le.trans _

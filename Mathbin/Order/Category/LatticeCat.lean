@@ -66,7 +66,9 @@ instance : ConcreteCategory LatticeCat :=
 instance hasForgetToPartialOrder :
     HasForget₂ LatticeCat
       PartialOrderCat where 
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
+  forget₂ :=
+    { obj := fun X => ⟨X⟩
+      map := fun X Y f => f }
   forget_comp := rfl
 #align Lattice.has_forget_to_PartialOrder LatticeCat.hasForgetToPartialOrder
 

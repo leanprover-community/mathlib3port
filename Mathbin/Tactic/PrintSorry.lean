@@ -125,6 +125,8 @@ unsafe def print_sorry_in_cmd (_ : parse <| tk "#print_sorry_in") : parser Unit 
 #align print_sorry_in_cmd print_sorry_in_cmd
 
 add_tactic_doc
-  { Name := "print_sorry_in", category := DocCategory.cmd, declNames := [`print_sorry_in_cmd],
+  { Name := "print_sorry_in"
+    category := DocCategory.cmd
+    declNames := [`print_sorry_in_cmd]
     tags := ["search", "environment", "debugging"] }
 

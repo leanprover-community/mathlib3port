@@ -57,7 +57,8 @@ include V W
 
 /-- The linear map underlying a continuous affine map is continuous. -/
 def contLinear (f : P →A[R] Q) : V →L[R] W :=
-  { f.linear with toFun := f.linear,
+  { f.linear with 
+    toFun := f.linear
     cont := by 
       rw [AffineMap.continuous_linear_iff]
       exact f.cont }
@@ -202,12 +203,14 @@ theorem norm_eq (h : f 0 = 0) : ‖f‖ = ‖f.contLinear‖ :=
 
 noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
   AddGroupNorm.toNormedAddCommGroup
-    { toFun := fun f => max ‖f 0‖ ‖f.contLinear‖, map_zero' := by simp, neg' := fun f => by simp,
+    { toFun := fun f => max ‖f 0‖ ‖f.contLinear‖
+      map_zero' := by simp
+      neg' := fun f => by simp
       add_le' := fun f g => by
         simp only [Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
         exact
           ⟨(norm_add_le _ _).trans (add_le_add (le_max_left _ _) (le_max_left _ _)),
-            (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩,
+            (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩
       eq_zero_of_map_eq_zero' := fun f h₀ => by
         rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
         · rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂

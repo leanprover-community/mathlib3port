@@ -494,7 +494,9 @@ def piLinearEquiv {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M'
     [∀ i, Module A (M' i)] [∀ i, SmulCommClass A R' (M' i)]
     [∀ i, HasContinuousConstSmul R' (M' i)] :
     (∀ i, ContinuousMultilinearMap A M₁ (M' i)) ≃ₗ[R'] ContinuousMultilinearMap A M₁ (∀ i, M' i) :=
-  { piEquiv with map_add' := fun x y => rfl, map_smul' := fun c x => rfl }
+  { piEquiv with 
+    map_add' := fun x y => rfl
+    map_smul' := fun c x => rfl }
 #align continuous_multilinear_map.pi_linear_equiv ContinuousMultilinearMap.piLinearEquiv
 
 end Module

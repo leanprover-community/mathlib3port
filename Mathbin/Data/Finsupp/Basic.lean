@@ -343,12 +343,12 @@ theorem map_range_finset_sum (f : M →+ N) (s : Finset ι) (g : ι → α →�
 @[simps apply]
 def mapRange.addEquiv (f : M ≃+ N) : (α →₀ M) ≃+ (α →₀ N) :=
   { mapRange.addMonoidHom f.toAddMonoidHom with
-    toFun := (mapRange f f.map_zero : (α →₀ M) → α →₀ N),
-    invFun := (mapRange f.symm f.symm.map_zero : (α →₀ N) → α →₀ M),
+    toFun := (mapRange f f.map_zero : (α →₀ M) → α →₀ N)
+    invFun := (mapRange f.symm f.symm.map_zero : (α →₀ N) → α →₀ M)
     left_inv := fun x => by
       rw [← map_range_comp _ _ _ _] <;> simp_rw [AddEquiv.symm_comp_self]
       · exact map_range_id _
-      · rfl,
+      · rfl
     right_inv := fun x => by
       rw [← map_range_comp _ _ _ _] <;> simp_rw [AddEquiv.self_comp_symm]
       · exact map_range_id _
@@ -730,7 +730,10 @@ theorem mapDomain.add_monoid_hom_comp_map_range [AddCommMonoid N] (f : α → β
 theorem map_domain_map_range [AddCommMonoid N] (f : α → β) (v : α →₀ M) (g : M → N) (h0 : g 0 = 0)
     (hadd : ∀ x y, g (x + y) = g x + g y) :
     mapDomain f (mapRange g h0 v) = mapRange g h0 (mapDomain f v) :=
-  let g' : M →+ N := { toFun := g, map_zero' := h0, map_add' := hadd }
+  let g' : M →+ N :=
+    { toFun := g
+      map_zero' := h0
+      map_add' := hadd }
   AddMonoidHom.congr_fun (mapDomain.add_monoid_hom_comp_map_range f g') v
 #align finsupp.map_domain_map_range Finsupp.map_domain_map_range
 
@@ -1567,7 +1570,9 @@ instance [AddZeroClass M] [DistribSmul R M] :
   smul_zero x := ext fun _ => smul_zero _
 
 instance [Monoid R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction R (α →₀ M) :=
-  { Finsupp.distribSmul _ _ with smul := (· • ·), one_smul := fun x => ext fun _ => one_smul _ _,
+  { Finsupp.distribSmul _ _ with 
+    smul := (· • ·)
+    one_smul := fun x => ext fun _ => one_smul _ _
     mul_smul := fun r s x => ext fun _ => mul_smul _ _ _ }
 
 instance [Monoid R] [Monoid S] [AddMonoid M] [DistribMulAction R M] [DistribMulAction S M]
@@ -1583,8 +1588,9 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐ�
     IsCentralScalar R (α →₀ M) where op_smul_eq_smul r a := ext fun _ => op_smul_eq_smul _ _
 
 instance [Semiring R] [AddCommMonoid M] [Module R M] : Module R (α →₀ M) :=
-  { Finsupp.distribMulAction α M with smul := (· • ·),
-    zero_smul := fun x => ext fun _ => zero_smul _ _,
+  { Finsupp.distribMulAction α M with 
+    smul := (· • ·)
+    zero_smul := fun x => ext fun _ => zero_smul _ _
     add_smul := fun a x y => ext fun _ => add_smul _ _ _ }
 
 variable {α M} {R}

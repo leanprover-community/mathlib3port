@@ -108,12 +108,12 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
         X) where PreservesLimit K :=
     { preserves := fun c l =>
         { lift := fun s =>
-            prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s)),
+            prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s))
           fac' := fun s j => by 
             apply prod.hom_ext
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]
               exact (nat_trans_from_is_connected (s.π ≫ γ₁ X) j (Classical.arbitrary _)).symm
-            · simp [← l.fac (forget_cone s) j],
+            · simp [← l.fac (forget_cone s) j]
           uniq' := fun s m L => by 
             apply prod.hom_ext
             · erw [limit.lift_π, ← L (Classical.arbitrary J), assoc, lim_map_π, comp_id]

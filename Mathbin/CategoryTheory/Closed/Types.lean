@@ -33,10 +33,13 @@ instance (X : Type v₁) :
     IsLeftAdjoint
       (Types.binaryProductFunctor.obj
         X) where 
-  right := { obj := fun Y => X ⟶ Y, map := fun Y₁ Y₂ f g => g ≫ f }
+  right :=
+    { obj := fun Y => X ⟶ Y
+      map := fun Y₁ Y₂ f g => g ≫ f }
   adj :=
     Adjunction.mkOfUnitCounit
-      { Unit := { app := fun Z (z : Z) x => ⟨x, z⟩ }, counit := { app := fun Z xf => xf.2 xf.1 } }
+      { Unit := { app := fun Z (z : Z) x => ⟨x, z⟩ }
+        counit := { app := fun Z xf => xf.2 xf.1 } }
 
 instance : HasFiniteProducts (Type v₁) :=
   has_finite_products_of_has_products.{v₁} _

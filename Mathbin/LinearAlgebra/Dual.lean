@@ -510,10 +510,13 @@ theorem lc_coeffs (m : M) : DualBases.lc e (h.coeffs m) = m := by
 @[simps]
 def basis : Basis ι R M :=
   Basis.of_repr
-    { toFun := coeffs h, invFun := lc e, left_inv := lc_coeffs h, right_inv := coeffs_lc h,
+    { toFun := coeffs h
+      invFun := lc e
+      left_inv := lc_coeffs h
+      right_inv := coeffs_lc h
       map_add' := fun v w => by 
         ext i
-        exact (ε i).map_add v w,
+        exact (ε i).map_add v w
       map_smul' := fun c v => by 
         ext i
         exact (ε i).map_smul c v }
@@ -909,11 +912,12 @@ theorem LinearMap.dual_map_comp_dual_map {M₃ : Type _} [AddCommGroup M₃] [Mo
 
 /-- The `linear_equiv` version of `linear_map.dual_map`. -/
 def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : Dual R M₂ ≃ₗ[R] Dual R M₁ :=
-  { f.toLinearMap.dualMap with invFun := f.symm.toLinearMap.dualMap,
+  { f.toLinearMap.dualMap with 
+    invFun := f.symm.toLinearMap.dualMap
     left_inv := by 
       intro φ; ext x
       simp only [LinearMap.dual_map_apply, LinearEquiv.coe_to_linear_map, LinearMap.to_fun_eq_coe,
-        LinearEquiv.apply_symm_apply],
+        LinearEquiv.apply_symm_apply]
     right_inv := by 
       intro φ; ext x
       simp only [LinearMap.dual_map_apply, LinearEquiv.coe_to_linear_map, LinearMap.to_fun_eq_coe,

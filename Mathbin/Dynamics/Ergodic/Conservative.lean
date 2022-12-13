@@ -69,7 +69,7 @@ namespace Conservative
 
 /-- The identity map is conservative w.r.t. any measure. -/
 protected theorem id (μ : Measure α) : Conservative id μ :=
-  { toQuasiMeasurePreserving := QuasiMeasurePreserving.id μ,
+  { toQuasiMeasurePreserving := QuasiMeasurePreserving.id μ
     exists_mem_image_mem := fun s hs h0 =>
       let ⟨x, hx⟩ := nonempty_of_measure_ne_zero h0
       ⟨x, hx, 1, one_ne_zero, hx⟩ }

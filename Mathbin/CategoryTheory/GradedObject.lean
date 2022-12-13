@@ -136,29 +136,29 @@ end
 
 instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
-    { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
+    { f := fun n => (comap fun _ => C) fun b : β => b + n • s
       ε :=
         (comapId β fun _ => C).symm ≪≫
           comapEq C
             (by 
               ext
-              simp),
+              simp)
       μ := fun m n =>
         comapComp _ _ _ ≪≫
           comapEq C
             (by 
               ext
-              simp [add_zsmul, add_comm]),
+              simp [add_zsmul, add_comm])
       left_unitality := by 
         introv
         ext
         dsimp
-        simpa,
+        simpa
       right_unitality := by 
         introv
         ext
         dsimp
-        simpa,
+        simpa
       associativity := by 
         introv
         ext

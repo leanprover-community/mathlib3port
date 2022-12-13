@@ -643,7 +643,9 @@ theorem neg_apply : (-x) i = -x i :=
 /-- The canonical map `pi_Lp.equiv` between `pi_Lp ∞ β` and `Π i, β i` as a linear isometric
 equivalence. -/
 def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] ∀ i, β i :=
-  { PiLp.equiv ∞ β with map_add' := fun f g => rfl, map_smul' := fun c f => rfl,
+  { PiLp.equiv ∞ β with 
+    map_add' := fun f g => rfl
+    map_smul' := fun c f => rfl
     norm_map' := fun f => by
       suffices (finset.univ.sup fun i => ‖f i‖₊) = ⨆ i, ‖f i‖₊ by
         simpa only [Nnreal.coe_supr] using congr_arg (coe : ℝ≥0 → ℝ) this
@@ -819,7 +821,9 @@ variable (𝕜 p)
 /-- `pi_Lp.equiv` as a linear map. -/
 @[simps (config := { fullyApplied := false })]
 protected def linearEquiv : PiLp p β ≃ₗ[𝕜] ∀ i, β i :=
-  { LinearEquiv.refl _ _ with toFun := PiLp.equiv _ _, invFun := (PiLp.equiv _ _).symm }
+  { LinearEquiv.refl _ _ with 
+    toFun := PiLp.equiv _ _
+    invFun := (PiLp.equiv _ _).symm }
 #align pi_Lp.linear_equiv PiLp.linearEquiv
 
 section Basis

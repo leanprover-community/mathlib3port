@@ -73,7 +73,8 @@ theorem coe_mul_unit_closed_ball [NonUnitalSemiNormedRing 𝕜] (x y : closedBal
 
 /-- Closed unit ball in a semi normed ring as a bundled `submonoid`. -/
 def Submonoid.unitClosedBall (𝕜 : Type _) [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
-  { Subsemigroup.unitClosedBall 𝕜 with carrier := closedBall 0 1,
+  { Subsemigroup.unitClosedBall 𝕜 with 
+    carrier := closedBall 0 1
     one_mem' := mem_closed_ball_zero_iff.2 norm_one.le }
 #align submonoid.unit_closed_ball Submonoid.unitClosedBall
 

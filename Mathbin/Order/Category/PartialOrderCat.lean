@@ -110,15 +110,15 @@ def preorderToPartialOrderForgetAdjunction :
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f =>
-            ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp to_antisymmetrization_mono⟩,
+            ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp to_antisymmetrization_mono⟩
           invFun := fun f =>
             ⟨fun a => (Quotient.liftOn' a f) fun a b h => (AntisymmRel.image h f.mono).Eq,
-              fun a b => (Quotient.inductionOn₂' a b) fun a b h => f.mono h⟩,
+              fun a b => (Quotient.inductionOn₂' a b) fun a b h => f.mono h⟩
           left_inv := fun f =>
-            OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl,
-          right_inv := fun f => OrderHom.ext _ _ <| funext fun x => rfl },
+            OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl
+          right_inv := fun f => OrderHom.ext _ _ <| funext fun x => rfl }
       hom_equiv_naturality_left_symm' := fun X Y Z f g =>
-        OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl,
+        OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl
       hom_equiv_naturality_right' := fun X Y Z f g => OrderHom.ext _ _ <| funext fun x => rfl }
 #align Preorder_to_PartialOrder_forget_adjunction preorderToPartialOrderForgetAdjunction
 

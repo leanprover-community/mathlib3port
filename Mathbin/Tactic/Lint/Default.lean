@@ -91,8 +91,10 @@ Adding the attribute `@[nolint doc_blame unused_arguments]` to a declaration
 omits it from only the specified linter checks.
 -/
 add_tactic_doc
-  { Name := "linting commands", category := DocCategory.cmd,
-    declNames := [`lint_cmd, `lint_mathlib_cmd, `lint_all_cmd, `list_linters], tags := ["linting"] }
+  { Name := "linting commands"
+    category := DocCategory.cmd
+    declNames := [`lint_cmd, `lint_mathlib_cmd, `lint_all_cmd, `list_linters]
+    tags := ["linting"] }
 
 /-- The default linters used in mathlib CI. -/
 unsafe def mathlib_linters : List Name := by

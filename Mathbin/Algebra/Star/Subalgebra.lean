@@ -331,15 +331,15 @@ instance :
       (Subalgebra R
         A) where 
   star S :=
-    { carrier := star S.carrier,
+    { carrier := star S.carrier
       mul_mem' := fun x y hx hy => by
         simp only [Set.mem_star, Subalgebra.mem_carrier] at *
-        exact (star_mul x y).symm ▸ mul_mem hy hx,
-      one_mem' := Set.mem_star.mp ((star_one A).symm ▸ one_mem S : star (1 : A) ∈ S),
+        exact (star_mul x y).symm ▸ mul_mem hy hx
+      one_mem' := Set.mem_star.mp ((star_one A).symm ▸ one_mem S : star (1 : A) ∈ S)
       add_mem' := fun x y hx hy => by
         simp only [Set.mem_star, Subalgebra.mem_carrier] at *
-        exact (star_add x y).symm ▸ add_mem hx hy,
-      zero_mem' := Set.mem_star.mp ((star_zero A).symm ▸ zero_mem S : star (0 : A) ∈ S),
+        exact (star_add x y).symm ▸ add_mem hx hy
+      zero_mem' := Set.mem_star.mp ((star_zero A).symm ▸ zero_mem S : star (0 : A) ∈ S)
       algebra_map_mem' := fun r => by
         simpa only [Set.mem_star, Subalgebra.mem_carrier, ← algebra_map_star_comm] using
           S.algebra_map_mem (star r) }

@@ -55,7 +55,8 @@ def lift :
       (WithOne α →*
         β) where 
   toFun f :=
-    { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
+    { toFun := fun x => Option.casesOn x 1 f
+      map_one' := rfl
       map_mul' := fun x y =>
         (WithOne.cases_on x
             (by 
@@ -127,8 +128,10 @@ theorem map_comp (f : α →ₙ* β) (g : β →ₙ* γ) : map (g.comp f) = (map
 /-- A version of `equiv.option_congr` for `with_one`. -/
 @[to_additive "A version of `equiv.option_congr` for `with_zero`.", simps apply]
 def MulEquiv.withOneCongr (e : α ≃* β) : WithOne α ≃* WithOne β :=
-  { map e.toMulHom with toFun := map e.toMulHom, invFun := map e.symm.toMulHom,
-    left_inv := fun x => (map_map _ _ _).trans <| by induction x using WithOne.cases_on <;> · simp,
+  { map e.toMulHom with 
+    toFun := map e.toMulHom
+    invFun := map e.symm.toMulHom
+    left_inv := fun x => (map_map _ _ _).trans <| by induction x using WithOne.cases_on <;> · simp
     right_inv := fun x =>
       (map_map _ _ _).trans <| by induction x using WithOne.cases_on <;> · simp }
 #align mul_equiv.with_one_congr MulEquiv.withOneCongr

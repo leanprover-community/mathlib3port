@@ -154,7 +154,7 @@ def tensorObj (X Y : Center C) : Center C :=
   ⟨X.1 ⊗ Y.1,
     { β := fun U =>
         α_ _ _ _ ≪≫
-          (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _,
+          (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _
       monoidal' := fun U U' => by 
         dsimp
         simp only [comp_tensor_id, id_tensor_comp, category.assoc, half_braiding.monoidal]
@@ -173,7 +173,7 @@ def tensorObj (X Y : Center C) : Center C :=
         slice_rhs 6 6 => rw [associator_conjugation]
         slice_rhs 3 3 => rw [associator_conjugation]
         -- Finish with an application of the coherence theorem.
-        coherence,
+        coherence
       naturality' := fun U U' f => by 
         dsimp
         rw [category.assoc, category.assoc, category.assoc, category.assoc,
@@ -203,7 +203,8 @@ def tensorHom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶
 @[simps]
 def tensorUnit : Center C :=
   ⟨𝟙_ C,
-    { β := fun U => λ_ U ≪≫ (ρ_ U).symm, monoidal' := fun U U' => by simp,
+    { β := fun U => λ_ U ≪≫ (ρ_ U).symm
+      monoidal' := fun U U' => by simp
       naturality' := fun U U' f => by 
         dsimp
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
@@ -383,7 +384,7 @@ open BraidedCategory
 @[simps]
 def ofBraidedObj (X : C) : Center C :=
   ⟨X,
-    { β := fun Y => β_ X Y,
+    { β := fun Y => β_ X Y
       monoidal' := fun U U' => by
         rw [iso.eq_inv_comp, ← category.assoc, ← category.assoc, iso.eq_comp_inv, category.assoc,
           category.assoc]
@@ -398,15 +399,17 @@ variable (C)
 def ofBraided : MonoidalFunctor C
       (Center C) where 
   obj := ofBraidedObj
-  map X X' f := { f, comm' := fun U => braiding_naturality _ _ }
+  map X X' f :=
+    { f
+      comm' := fun U => braiding_naturality _ _ }
   ε :=
-    { f := 𝟙 _,
+    { f := 𝟙 _
       comm' := fun U => by 
         dsimp
         rw [tensor_id, category.id_comp, tensor_id, category.comp_id, ← braiding_right_unitor,
           category.assoc, iso.hom_inv_id, category.comp_id] }
   μ X Y :=
-    { f := 𝟙 _,
+    { f := 𝟙 _
       comm' := fun U => by 
         dsimp
         rw [tensor_id, tensor_id, category.id_comp, category.comp_id, ← iso.inv_comp_eq, ←

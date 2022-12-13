@@ -66,7 +66,9 @@ variable [Ring k] [Module k V] (b : AffineBasis ι k P)
 
 /-- The unique point in a single-point space is the simplest example of an affine basis. -/
 instance : Inhabited (AffineBasis PUnit k PUnit) :=
-  ⟨{ points := id, ind := affine_independent_of_subsingleton k id, tot := by simp }⟩
+  ⟨{  points := id
+      ind := affine_independent_of_subsingleton k id
+      tot := by simp }⟩
 
 include b
 
@@ -228,10 +230,10 @@ noncomputable def coords :
     P →ᵃ[k] ι → k where 
   toFun q i := b.Coord i q
   linear :=
-    { toFun := fun v i => -(b.basisOf i).sumCoords v,
+    { toFun := fun v i => -(b.basisOf i).sumCoords v
       map_add' := fun v w => by 
         ext i
-        simp only [LinearMap.map_add, Pi.add_apply, neg_add],
+        simp only [LinearMap.map_add, Pi.add_apply, neg_add]
       map_smul' := fun t v => by 
         ext i
         simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] }
@@ -340,9 +342,10 @@ theorem to_matrix_mul_to_matrix : b.toMatrix b₂.points ⬝ b₂.toMatrix b.poi
 #align affine_basis.to_matrix_mul_to_matrix AffineBasis.to_matrix_mul_to_matrix
 
 theorem is_unit_to_matrix : IsUnit (b.toMatrix b₂.points) :=
-  ⟨{ val := b.toMatrix b₂.points, inv := b₂.toMatrix b.points,
-      val_inv := b.to_matrix_mul_to_matrix b₂, inv_val := b₂.to_matrix_mul_to_matrix b },
-    rfl⟩
+  ⟨{  val := b.toMatrix b₂.points
+      inv := b₂.toMatrix b.points
+      val_inv := b.to_matrix_mul_to_matrix b₂
+      inv_val := b₂.to_matrix_mul_to_matrix b }, rfl⟩
 #align affine_basis.is_unit_to_matrix AffineBasis.is_unit_to_matrix
 
 theorem is_unit_to_matrix_iff [Nontrivial k] (p : ι → P) :

@@ -198,8 +198,11 @@ theorem mk_mul_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
 
 instance : AddCommGroup ℍ[R,c₁,c₂] := by
   refine_struct
-              { add := (· + ·), neg := Neg.neg, sub := Sub.sub, zero := (0 : ℍ[R,c₁,c₂]),
-                zsmul := @zsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩,
+              { add := (· + ·)
+                neg := Neg.neg
+                sub := Sub.sub
+                zero := (0 : ℍ[R,c₁,c₂])
+                zsmul := @zsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩
                 nsmul := @nsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ } <;>
             intros <;>
           try rfl <;>
@@ -208,17 +211,22 @@ instance : AddCommGroup ℍ[R,c₁,c₂] := by
     ring
 
 instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
-  { QuaternionAlgebra.addCommGroup with natCast := fun n => ((n : R) : ℍ[R,c₁,c₂]),
-    nat_cast_zero := by simp, nat_cast_succ := by simp, intCast := fun n => ((n : R) : ℍ[R,c₁,c₂]),
-    int_cast_of_nat := fun _ => congr_arg coe (Int.cast_of_nat _),
+  { QuaternionAlgebra.addCommGroup with
+    natCast := fun n => ((n : R) : ℍ[R,c₁,c₂])
+    nat_cast_zero := by simp
+    nat_cast_succ := by simp
+    intCast := fun n => ((n : R) : ℍ[R,c₁,c₂])
+    int_cast_of_nat := fun _ => congr_arg coe (Int.cast_of_nat _)
     int_cast_neg_succ_of_nat := fun n =>
-      show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_ofNat, coe_neg],
+      show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_ofNat, coe_neg]
     one := 1 }
 
 instance : Ring ℍ[R,c₁,c₂] := by
   refine_struct
               { QuaternionAlgebra.addGroupWithOne, QuaternionAlgebra.addCommGroup with
-                add := (· + ·), mul := (· * ·), one := 1,
+                add := (· + ·)
+                mul := (· * ·)
+                one := 1
                 npow := @npowRec _ ⟨(1 : ℍ[R,c₁,c₂])⟩ ⟨(· * ·)⟩ } <;>
             intros <;>
           try rfl <;>
@@ -341,7 +349,8 @@ theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑(x * y) := by rw [coe_mul, 
 /-- Quaternion conjugate. -/
 def conj : ℍ[R,c₁,c₂] ≃ₗ[R] ℍ[R,c₁,c₂] :=
   (LinearEquiv.ofInvolutive
-      { toFun := fun a => ⟨a.1, -a.2, -a.3, -a.4⟩, map_add' := fun a b => by ext <;> simp [neg_add],
+      { toFun := fun a => ⟨a.1, -a.2, -a.3, -a.4⟩
+        map_add' := fun a b => by ext <;> simp [neg_add]
         map_smul' := fun r a => by ext <;> simp })
     fun a => by simp
 #align quaternion_algebra.conj QuaternionAlgebra.conj
@@ -486,8 +495,11 @@ open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
 def conjAe : ℍ[R,c₁,c₂] ≃ₐ[R] ℍ[R,c₁,c₂]ᵐᵒᵖ :=
-  { conj.toAddEquiv.trans opAddEquiv with toFun := op ∘ conj, invFun := conj ∘ unop,
-    map_mul' := fun x y => by simp, commutes' := fun r => by simp }
+  { conj.toAddEquiv.trans opAddEquiv with 
+    toFun := op ∘ conj
+    invFun := conj ∘ unop
+    map_mul' := fun x y => by simp
+    commutes' := fun r => by simp }
 #align quaternion_algebra.conj_ae QuaternionAlgebra.conjAe
 
 @[simp]
@@ -1015,8 +1027,9 @@ instance : Inv ℍ[R] :=
   ⟨fun a => (normSq a)⁻¹ • a.conj⟩
 
 instance : DivisionRing ℍ[R] :=
-  { Quaternion.nontrivial, Quaternion.ring with inv := Inv.inv,
-    inv_zero := by rw [has_inv_inv, conj_zero, smul_zero],
+  { Quaternion.nontrivial, Quaternion.ring with
+    inv := Inv.inv
+    inv_zero := by rw [has_inv_inv, conj_zero, smul_zero]
     mul_inv_cancel := fun a ha => by
       rw [has_inv_inv, Algebra.mul_smul_comm, self_mul_conj, smul_coe,
         inv_mul_cancel (norm_sq_ne_zero.2 ha), coe_one] }

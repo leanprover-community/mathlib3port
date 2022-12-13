@@ -65,15 +65,15 @@ abbrev composeAndSheafify (G : E ⥤ D) : SheafCat J E ⥤ SheafCat J D :=
 def composeEquiv (adj : G ⊣ F) (X : SheafCat J E) (Y : SheafCat J D) :
     ((composeAndSheafify J G).obj X ⟶ Y) ≃ (X ⟶ (sheafCompose J F).obj Y) :=
   let A := adj.whiskerRight Cᵒᵖ
-  { toFun := fun η => ⟨A.homEquiv _ _ (J.toSheafify _ ≫ η.val)⟩,
-    invFun := fun γ => ⟨J.sheafifyLift ((A.homEquiv _ _).symm ((sheafToPresheaf _ _).map γ)) Y.2⟩,
+  { toFun := fun η => ⟨A.homEquiv _ _ (J.toSheafify _ ≫ η.val)⟩
+    invFun := fun γ => ⟨J.sheafifyLift ((A.homEquiv _ _).symm ((sheafToPresheaf _ _).map γ)) Y.2⟩
     left_inv := by 
       intro η
       ext1
       dsimp
       symm
       apply J.sheafify_lift_unique
-      rw [Equiv.symm_apply_apply],
+      rw [Equiv.symm_apply_apply]
     right_inv := by 
       intro γ
       ext1
@@ -87,11 +87,11 @@ and `F` preserves the correct limits. -/
 @[simps unit_app_val counit_app_val]
 def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
   Adjunction.mkOfHomEquiv
-    { homEquiv := composeEquiv J adj,
+    { homEquiv := composeEquiv J adj
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext1
         dsimp
-        simp,
+        simp
       hom_equiv_naturality_right' := fun X Y Y' f g => by
         ext1
         dsimp

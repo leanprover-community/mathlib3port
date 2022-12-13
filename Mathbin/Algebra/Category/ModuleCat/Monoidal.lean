@@ -368,7 +368,7 @@ instance :
       (ModuleCat.{u}
         R) where closed' M :=
     { isAdj :=
-        { right := (linearCoyoneda R (ModuleCat.{u} R)).obj (op M),
+        { right := (linearCoyoneda R (ModuleCat.{u} R)).obj (op M)
           adj := Adjunction.mkOfHomEquiv { homEquiv := fun N P => monoidalClosedHomEquiv M N P } } }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

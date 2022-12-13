@@ -161,7 +161,10 @@ private unsafe def add_rewrite (v : vertex) (rw : rewrite) : tactic graph := do
       let new_edge : edge := ⟨v, new_vertex_id, rw, rw⟩
       let new_vertex : vertex := ⟨new_vertex_id, rw, pp, v, some new_edge⟩
       trace_if_enabled `rewrite_search f! "new edge: {v } → {new_vertex}"
-      return { g with vertices := g new_vertex, vmap := g pp (new_vertex_id :: existing_ids) }
+      return
+          { g with 
+            vertices := g new_vertex
+            vmap := g pp (new_vertex_id :: existing_ids) }
 #align tactic.rewrite_search.graph.add_rewrite tactic.rewrite_search.graph.add_rewrite
 
 /-- Add all single-step rewrites starting at a particular vertex to the graph.

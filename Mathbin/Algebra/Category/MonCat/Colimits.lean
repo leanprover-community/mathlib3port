@@ -271,7 +271,9 @@ instance has_colimits_Mon :
     HasColimits
       MonCat where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F =>
-        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
+        has_colimit.mk
+          { Cocone := colimit_cocone F
+            IsColimit := colimit_is_colimit F } }
 #align Mon.colimits.has_colimits_Mon MonCat.Colimits.has_colimits_Mon
 
 end MonCat.Colimits

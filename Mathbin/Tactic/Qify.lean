@@ -54,7 +54,7 @@ unsafe def qify_attr :
               let c ← mk_const n
               return (c, tt))
             ns >>=
-          simp_lemmas.mk.append_with_symm,
+          simp_lemmas.mk.append_with_symm
       dependencies := [] }
 #align qify.qify_attr qify.qify_attr
 
@@ -178,10 +178,14 @@ unsafe def tactic.interactive.qify (sl : parse simp_arg_list) (l : parse locatio
 end
 
 add_tactic_doc
-  { Name := "qify", category := DocCategory.attr, declNames := [`qify.qify_attr],
+  { Name := "qify"
+    category := DocCategory.attr
+    declNames := [`qify.qify_attr]
     tags := ["coercions", "transport"] }
 
 add_tactic_doc
-  { Name := "qify", category := DocCategory.tactic, declNames := [`tactic.interactive.qify],
+  { Name := "qify"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.qify]
     tags := ["coercions", "transport"] }
 

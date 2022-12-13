@@ -250,21 +250,22 @@ instance (r : R → R → Prop) :
     simp [smul_quot, add_quot, add_mul, add_comm]
 
 instance {R : Type u₁} [Ring R] (r : R → R → Prop) : Ring (RingQuot r) :=
-  { RingQuot.semiring r with neg := Neg.neg,
+  { RingQuot.semiring r with 
+    neg := Neg.neg
     add_left_neg := by 
       rintro ⟨⟨⟩⟩
-      simp [neg_quot, add_quot, ← zero_quot],
-    sub := Sub.sub,
+      simp [neg_quot, add_quot, ← zero_quot]
+    sub := Sub.sub
     sub_eq_add_neg := by 
       rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-      simp [neg_quot, sub_quot, add_quot, sub_eq_add_neg],
-    zsmul := (· • ·),
+      simp [neg_quot, sub_quot, add_quot, sub_eq_add_neg]
+    zsmul := (· • ·)
     zsmul_zero' := by 
       rintro ⟨⟨⟩⟩
-      simp [smul_quot, ← zero_quot],
+      simp [smul_quot, ← zero_quot]
     zsmul_succ' := by 
       rintro n ⟨⟨⟩⟩
-      simp [smul_quot, add_quot, add_mul, add_comm],
+      simp [smul_quot, add_quot, add_mul, add_comm]
     zsmul_neg' := by 
       rintro n ⟨⟨⟩⟩
       simp [smul_quot, neg_quot, add_mul] }
@@ -344,12 +345,12 @@ def lift {r : R → R → Prop} :
             case add_left _ _ _ _ r' => simp [r']
             case mul_left _ _ _ _ r' => simp [r']
             case mul_right _ _ _ _ r' => simp [r'])
-          x.toQuot,
-      map_zero' := by simp [← zero_quot, f.map_zero],
+          x.toQuot
+      map_zero' := by simp [← zero_quot, f.map_zero]
       map_add' := by 
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
-        simp [add_quot, f.map_add x y],
-      map_one' := by simp [← one_quot, f.map_one],
+        simp [add_quot, f.map_add x y]
+      map_one' := by simp [← one_quot, f.map_one]
       map_mul' := by 
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
         simp [mul_quot, f.map_mul x y] }
@@ -547,15 +548,15 @@ def liftAlgHom {s : A → A → Prop} :
             case add_left _ _ _ _ r' => simp [r']
             case mul_left _ _ _ _ r' => simp [r']
             case mul_right _ _ _ _ r' => simp [r'])
-          x.toQuot,
-      map_zero' := by simp [← zero_quot, f.map_zero],
+          x.toQuot
+      map_zero' := by simp [← zero_quot, f.map_zero]
       map_add' := by 
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
-        simp [add_quot, f.map_add x y],
-      map_one' := by simp [← one_quot, f.map_one],
+        simp [add_quot, f.map_add x y]
+      map_one' := by simp [← one_quot, f.map_one]
       map_mul' := by 
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
-        simp [mul_quot, f.map_mul x y],
+        simp [mul_quot, f.map_mul x y]
       commutes' := by 
         rintro x
         simp [← one_quot, smul_quot, Algebra.algebra_map_eq_smul_one] }

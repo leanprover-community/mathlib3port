@@ -167,7 +167,8 @@ variable {H : Type _} [Group H] [TopologicalSpace H]
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
-  { (U : Subgroup G).Prod (V : Subgroup H) with carrier := U ×ˢ V,
+  { (U : Subgroup G).Prod (V : Subgroup H) with
+    carrier := U ×ˢ V
     is_open' := U.IsOpen.Prod V.IsOpen }
 #align open_subgroup.prod OpenSubgroup.prod
 
@@ -181,9 +182,9 @@ instance : PartialOrder (OpenSubgroup G) :=
 @[to_additive]
 instance : SemilatticeInf (OpenSubgroup G) :=
   { OpenSubgroup.partialOrder with
-    inf := fun U V => { (U : Subgroup G) ⊓ V with is_open' := IsOpen.inter U.IsOpen V.IsOpen },
-    inf_le_left := fun U V => Set.inter_subset_left _ _,
-    inf_le_right := fun U V => Set.inter_subset_right _ _,
+    inf := fun U V => { (U : Subgroup G) ⊓ V with is_open' := IsOpen.inter U.IsOpen V.IsOpen }
+    inf_le_left := fun U V => Set.inter_subset_left _ _
+    inf_le_right := fun U V => Set.inter_subset_right _ _
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
 
 @[to_additive]
@@ -295,9 +296,9 @@ instance : SemilatticeSup (OpenSubgroup G) :=
       { (U : Subgroup G) ⊔ V with
         is_open' :=
           show IsOpen (((U : Subgroup G) ⊔ V : Subgroup G) : Set G) from
-            Subgroup.is_open_mono le_sup_left U.IsOpen },
-    le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left,
-    le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right,
+            Subgroup.is_open_mono le_sup_left U.IsOpen }
+    le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left
+    le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right
     sup_le := fun U V W hU hV => coe_subgroup_le.1 (sup_le hU hV) }
 
 @[to_additive]

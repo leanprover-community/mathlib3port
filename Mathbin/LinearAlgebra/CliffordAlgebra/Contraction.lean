@@ -366,9 +366,11 @@ theorem change_form_comp_change_form :
 This is $\bar \lambda_B$ from [bourbaki2007][] $9 Proposition 3. -/
 @[simps apply]
 def changeFormEquiv : CliffordAlgebra Q ≃ₗ[R] CliffordAlgebra Q' :=
-  { changeForm h with toFun := changeForm h, invFun := changeForm (changeForm.neg_proof h),
+  { changeForm h with 
+    toFun := changeForm h
+    invFun := changeForm (changeForm.neg_proof h)
     left_inv := fun x =>
-      (change_form_change_form _ _ x).trans <| by simp_rw [add_right_neg, change_form_self_apply],
+      (change_form_change_form _ _ x).trans <| by simp_rw [add_right_neg, change_form_self_apply]
     right_inv := fun x =>
       (change_form_change_form _ _ x).trans <| by simp_rw [add_left_neg, change_form_self_apply] }
 #align clifford_algebra.change_form_equiv CliffordAlgebra.changeFormEquiv

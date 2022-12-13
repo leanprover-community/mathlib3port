@@ -57,7 +57,9 @@ def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M) (h₁ : Funct
 @[to_additive "The inverse of a bijective `add_monoid_hom` is an `add_monoid_hom`.", simps]
 def MonoidHom.inverse {A B : Type _} [Monoid A] [Monoid B] (f : A →* B) (g : B → A)
     (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →* A :=
-  { (f : A →ₙ* B).inverse g h₁ h₂ with toFun := g, map_one' := by rw [← f.map_one, h₁] }
+  { (f : A →ₙ* B).inverse g h₁ h₂ with 
+    toFun := g
+    map_one' := by rw [← f.map_one, h₁] }
 #align monoid_hom.inverse MonoidHom.inverse
 
 /-- add_equiv α β is the type of an equiv α ≃ β which preserves addition. -/
@@ -107,13 +109,16 @@ variable (F)
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) [Mul M] [Mul N] [h : MulEquivClass F M N] : MulHomClass F M N :=
-  { h with coe := (coe : F → M → N), coe_injective' := @FunLike.coe_injective F _ _ _ }
+  { h with 
+    coe := (coe : F → M → N)
+    coe_injective' := @FunLike.coe_injective F _ _ _ }
 
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) [MulOneClass M] [MulOneClass N] [MulEquivClass F M N] :
     MonoidHomClass F M N :=
-  { MulEquivClass.mulHomClass F with coe := (coe : F → M → N),
+  { MulEquivClass.mulHomClass F with 
+    coe := (coe : F → M → N)
     map_one := fun e =>
       calc
         e 1 = e 1 * 1 := (mul_one _).symm
@@ -154,8 +159,11 @@ end MulEquivClass
 @[to_additive]
 instance [Mul α] [Mul β] [MulEquivClass F α β] : CoeTC F (α ≃* β) :=
   ⟨fun f =>
-    { toFun := f, invFun := EquivLike.inv f, left_inv := EquivLike.left_inv f,
-      right_inv := EquivLike.right_inv f, map_mul' := map_mul f }⟩
+    { toFun := f
+      invFun := EquivLike.inv f
+      left_inv := EquivLike.left_inv f
+      right_inv := EquivLike.right_inv f
+      map_mul' := map_mul f }⟩
 
 namespace MulEquiv
 
@@ -288,7 +296,9 @@ theorem symm_bijective : Function.Bijective (symm : M ≃* N → N ≃* M) :=
 @[simp, to_additive]
 theorem symm_mk (f : M → N) (g h₁ h₂ h₃) :
     (MulEquiv.mk f g h₁ h₂ h₃).symm =
-      { (MulEquiv.mk f g h₁ h₂ h₃).symm with toFun := g, invFun := f } :=
+      { (MulEquiv.mk f g h₁ h₂ h₃).symm with 
+        toFun := g
+        invFun := f } :=
   rfl
 #align mul_equiv.symm_mk MulEquiv.symm_mk
 
@@ -578,8 +588,9 @@ This is the `mul_equiv` version of `equiv.Pi_congr_right`, and the dependent ver
   simps apply]
 def piCongrRight {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)]
     (es : ∀ j, Ms j ≃* Ns j) : (∀ j, Ms j) ≃* ∀ j, Ns j :=
-  { Equiv.piCongrRight fun j => (es j).toEquiv with toFun := fun x j => es j (x j),
-    invFun := fun x j => (es j).symm (x j),
+  { Equiv.piCongrRight fun j => (es j).toEquiv with
+    toFun := fun x j => es j (x j)
+    invFun := fun x j => (es j).symm (x j)
     map_mul' := fun x y => funext fun j => (es j).map_mul (x j) (y j) }
 #align mul_equiv.Pi_congr_right MulEquiv.piCongrRight
 

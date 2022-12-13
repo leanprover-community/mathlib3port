@@ -49,20 +49,24 @@ instance :
     ConcreteCategory.{v}
       (AlgebraCat.{v}
         R) where 
-  forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
+  forget :=
+    { obj := fun R => R
+      map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 
 instance hasForgetToRing :
     HasForget₂ (AlgebraCat.{v} R)
       RingCat.{v} where forget₂ :=
-    { obj := fun A => RingCat.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
+    { obj := fun A => RingCat.of A
+      map := fun A₁ A₂ f => AlgHom.toRingHom f }
 #align Algebra.has_forget_to_Ring AlgebraCat.hasForgetToRing
 
 instance hasForgetToModule :
     HasForget₂ (AlgebraCat.{v} R)
       (ModuleCat.{v}
         R) where forget₂ :=
-    { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
+    { obj := fun M => ModuleCat.of R M
+      map := fun M₁ M₂ f => AlgHom.toLinearMap f }
 #align Algebra.has_forget_to_Module AlgebraCat.hasForgetToModule
 
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
@@ -122,7 +126,9 @@ def free :
     Type u ⥤
       AlgebraCat.{u}
         R where 
-  obj S := { carrier := FreeAlgebra R S, isRing := Algebra.semiringToRing R }
+  obj S :=
+    { carrier := FreeAlgebra R S
+      isRing := Algebra.semiringToRing R }
   map S T f := FreeAlgebra.lift _ <| FreeAlgebra.ι _ ∘ f
   -- obviously can fill the next two goals, but it is slow
   map_id' := by 
@@ -142,13 +148,13 @@ def free :
 /-- The free/forget adjunction for `R`-algebras. -/
 def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
   Adjunction.mkOfHomEquiv
-    { homEquiv := fun X A =>
-        (FreeAlgebra.lift _).symm,-- Relying on `obviously` to fill out these proofs is very slow :(
+    { homEquiv := fun X A => (FreeAlgebra.lift _).symm
+      -- Relying on `obviously` to fill out these proofs is very slow :(
       hom_equiv_naturality_left_symm' := by 
         intros
         ext
         simp only [free_map, Equiv.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp,
-          Function.comp_apply, types_comp_apply],
+          Function.comp_apply, types_comp_apply]
       hom_equiv_naturality_right' := by 
         intros
         ext

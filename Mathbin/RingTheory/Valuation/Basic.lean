@@ -92,7 +92,10 @@ export ValuationClass (map_add_le_max)
 
 instance [ValuationClass F R Γ₀] : CoeTC F (Valuation R Γ₀) :=
   ⟨fun f =>
-    { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f,
+    { toFun := f
+      map_one' := map_one f
+      map_zero' := map_zero f
+      map_mul' := map_mul f
       map_add_le_max' := map_add_le_max f }⟩
 
 end
@@ -231,7 +234,8 @@ theorem unit_map_eq (u : Rˣ) : (Units.map (v : R →* Γ₀) u : Γ₀) = v u :
 
 /-- A ring homomorphism `S → R` induces a map `valuation R Γ₀ → valuation S Γ₀`. -/
 def comap {S : Type _} [Ring S] (f : S →+* R) (v : Valuation R Γ₀) : Valuation S Γ₀ :=
-  { v.toMonoidWithZeroHom.comp f.toMonoidWithZeroHom with toFun := v ∘ f,
+  { v.toMonoidWithZeroHom.comp f.toMonoidWithZeroHom with
+    toFun := v ∘ f
     map_add_le_max' := fun x y => by simp only [comp_app, map_add, f.map_add] }
 #align valuation.comap Valuation.comap
 
@@ -254,7 +258,8 @@ theorem comap_comp {S₁ : Type _} {S₂ : Type _} [Ring S₁] [Ring S₂] (f : 
 /-- A `≤`-preserving group homomorphism `Γ₀ → Γ'₀` induces a map `valuation R Γ₀ → valuation R Γ'₀`.
 -/
 def map (f : Γ₀ →*₀ Γ'₀) (hf : Monotone f) (v : Valuation R Γ₀) : Valuation R Γ'₀ :=
-  { MonoidWithZeroHom.comp f v.toMonoidWithZeroHom with toFun := f ∘ v,
+  { MonoidWithZeroHom.comp f v.toMonoidWithZeroHom with
+    toFun := f ∘ v
     map_add_le_max' := fun r s =>
       calc
         f (v (r + s)) ≤ f (max (v r) (v s)) := hf (v.map_add r s)
@@ -1004,8 +1009,12 @@ theorem comap_comp {S₁ : Type _} {S₂ : Type _} [Ring S₁] [Ring S₂] (f : 
 -/
 def map (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotone f) (v : AddValuation R Γ₀) :
     AddValuation R Γ'₀ :=
-  v.map { toFun := f, map_mul' := f.map_add, map_one' := f.map_zero, map_zero' := ht } fun x y h =>
-    hf h
+  v.map
+    { toFun := f
+      map_mul' := f.map_add
+      map_one' := f.map_zero
+      map_zero' := ht }
+    fun x y h => hf h
 #align add_valuation.map AddValuation.map
 
 /-- Two additive valuations on `R` are defined to be equivalent if they induce the same
@@ -1087,7 +1096,11 @@ theorem of_eq {v' : AddValuation R Γ₀} (h : v = v') : v.IsEquiv v' :=
 
 theorem map {v' : AddValuation R Γ₀} (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotone f)
     (inf : Injective f) (h : v.IsEquiv v') : (v.map f ht hf).IsEquiv (v'.map f ht hf) :=
-  h.map { toFun := f, map_mul' := f.map_add, map_one' := f.map_zero, map_zero' := ht }
+  h.map
+    { toFun := f
+      map_mul' := f.map_add
+      map_one' := f.map_zero
+      map_zero' := ht }
     (fun x y h => hf h) inf
 #align add_valuation.is_equiv.map AddValuation.IsEquiv.map
 

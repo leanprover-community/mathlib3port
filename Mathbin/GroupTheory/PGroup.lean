@@ -104,11 +104,12 @@ theorem order_of_coprime {n : ℕ} (hn : p.Coprime n) (g : G) : (orderOf g).Copr
 noncomputable def powEquiv {n : ℕ} (hn : p.Coprime n) : G ≃ G :=
   let h : ∀ g : G, (Nat.card (Subgroup.zpowers g)).Coprime n := fun g =>
     order_eq_card_zpowers' g ▸ hG.order_of_coprime hn g
-  { toFun := (· ^ n), invFun := fun g => (powCoprime (h g)).symm ⟨g, Subgroup.mem_zpowers g⟩,
+  { toFun := (· ^ n)
+    invFun := fun g => (powCoprime (h g)).symm ⟨g, Subgroup.mem_zpowers g⟩
     left_inv := fun g =>
       Subtype.ext_iff.1 <|
         (powCoprime (h (g ^ n))).left_inv
-          ⟨g, _, Subtype.ext_iff.1 <| (powCoprime (h g)).left_inv ⟨g, Subgroup.mem_zpowers g⟩⟩,
+          ⟨g, _, Subtype.ext_iff.1 <| (powCoprime (h g)).left_inv ⟨g, Subgroup.mem_zpowers g⟩⟩
     right_inv := fun g =>
       Subtype.ext_iff.1 <| (powCoprime (h g)).right_inv ⟨g, Subgroup.mem_zpowers g⟩ }
 #align is_p_group.pow_equiv IsPGroup.powEquiv

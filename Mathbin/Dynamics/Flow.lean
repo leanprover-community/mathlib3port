@@ -96,7 +96,9 @@ variable {τ : Type _} [AddMonoid τ] [TopologicalSpace τ] [HasContinuousAdd τ
   [TopologicalSpace α] (ϕ : Flow τ α)
 
 instance : Inhabited (Flow τ α) :=
-  ⟨{ toFun := fun _ x => x, cont' := continuous_snd, map_add' := fun _ _ _ => rfl,
+  ⟨{  toFun := fun _ x => x
+      cont' := continuous_snd
+      map_add' := fun _ _ _ => rfl
       map_zero' := fun _ => rfl }⟩
 
 instance : CoeFun (Flow τ α) fun _ => τ → α → α :=

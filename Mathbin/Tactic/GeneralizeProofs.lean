@@ -109,8 +109,10 @@ unsafe def generalize_proofs : parse ident_* → parse location → tactic Unit 
 end Interactive
 
 add_tactic_doc
-  { Name := "generalize_proofs", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.generalize_proofs], tags := ["context management"] }
+  { Name := "generalize_proofs"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.generalize_proofs]
+    tags := ["context management"] }
 
 end Tactic
 

@@ -323,10 +323,12 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
 -/
 noncomputable def sheafYonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⋙ yoneda ⟶ ℱ'.val ⋙ yoneda := by
   let α := sheaf_coyoneda_hom H α
-  refine' { app := _, naturality' := _ }
+  refine'
+    { app := _
+      naturality' := _ }
   · intro U
     refine'
-      { app := fun X => (α.app X).app U,
+      { app := fun X => (α.app X).app U
         naturality' := fun X Y f => by simpa using congr_app (α.naturality f) U }
   · intro U V i
     ext (X x)
@@ -339,7 +341,7 @@ between presheaves.
 -/
 noncomputable def sheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ ℱ'.val :=
   let α' := sheafYonedaHom H α
-  { app := fun X => yoneda.preimage (α'.app X),
+  { app := fun X => yoneda.preimage (α'.app X)
     naturality' := fun X Y f => yoneda.map_injective (by simpa using α'.naturality f) }
 #align category_theory.cover_dense.sheaf_hom CategoryTheory.CoverDense.sheafHom
 
@@ -514,8 +516,10 @@ noncomputable def sheafEquivOfCoverPreservingCoverLifting : SheafCat J A ≌ She
     exact is_iso.of_iso ((@as_iso _ _ _ _ _ (Ran.reflective A G.op)).app ℱ.val)
   haveI : is_iso α.counit := nat_iso.is_iso_of_is_iso_app _
   exact
-    { Functor := sites.pullback A Hd.compatible_preserving Hp, inverse := sites.copullback A Hl,
-      unitIso := as_iso α.unit, counitIso := as_iso α.counit,
+    { Functor := sites.pullback A Hd.compatible_preserving Hp
+      inverse := sites.copullback A Hl
+      unitIso := as_iso α.unit
+      counitIso := as_iso α.counit
       functor_unit_iso_comp' := fun ℱ => by convert α.left_triangle_components }
 #align
   category_theory.cover_dense.Sheaf_equiv_of_cover_preserving_cover_lifting CategoryTheory.CoverDense.sheafEquivOfCoverPreservingCoverLifting

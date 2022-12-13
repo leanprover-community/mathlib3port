@@ -41,8 +41,12 @@ structure Ctop (α σ : Type _) where
 variable {α : Type _} {β : Type _} {σ : Type _} {τ : Type _}
 
 instance : Inhabited (Ctop α (Set α)) :=
-  ⟨{ f := id, top := singleton, top_mem := mem_singleton, inter := fun s t _ _ => s ∩ t,
-      inter_mem := fun s t a => id, inter_sub := fun s t a ha => Subset.rfl }⟩
+  ⟨{  f := id
+      top := singleton
+      top_mem := mem_singleton
+      inter := fun s t _ _ => s ∩ t
+      inter_mem := fun s t a => id
+      inter_sub := fun s t a ha => Subset.rfl }⟩
 
 namespace Ctop
 
@@ -61,9 +65,11 @@ theorem coe_mk (f T h₁ I h₂ h₃ a) : (@Ctop.mk α σ f T h₁ I h₂ h₃) 
 /-- Map a ctop to an equivalent representation type. -/
 def ofEquiv (E : σ ≃ τ) : Ctop α σ → Ctop α τ
   | ⟨f, T, h₁, I, h₂, h₃⟩ =>
-    { f := fun a => f (E.symm a), top := fun x => E (T x), top_mem := fun x => by simpa using h₁ x,
-      inter := fun a b x h => E (I (E.symm a) (E.symm b) x h),
-      inter_mem := fun a b x h => by simpa using h₂ (E.symm a) (E.symm b) x h,
+    { f := fun a => f (E.symm a)
+      top := fun x => E (T x)
+      top_mem := fun x => by simpa using h₁ x
+      inter := fun a b x h => E (I (E.symm a) (E.symm b) x h)
+      inter_mem := fun a b x h => by simpa using h₂ (E.symm a) (E.symm b) x h
       inter_sub := fun a b x h => by simpa using h₃ (E.symm a) (E.symm b) x h }
 #align ctop.of_equiv Ctop.ofEquiv
 
@@ -167,9 +173,11 @@ variable [TopologicalSpace α]
 /-- The topological space realizer made of the open sets. -/
 protected def id : Realizer α :=
   ⟨{ x : Set α // IsOpen x },
-    { f := Subtype.val, top := fun _ => ⟨univ, is_open_univ⟩, top_mem := mem_univ,
-      inter := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => ⟨_, h₁.inter h₂⟩,
-      inter_mem := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a => id,
+    { f := Subtype.val
+      top := fun _ => ⟨univ, is_open_univ⟩
+      top_mem := mem_univ
+      inter := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => ⟨_, h₁.inter h₂⟩
+      inter_mem := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a => id
       inter_sub := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => Subset.refl _ },
     (ext Subtype.property) fun x s h =>
       let ⟨t, h, o, m⟩ := mem_nhds_iff.1 h
@@ -197,9 +205,10 @@ theorem of_equiv_F (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.of_equiv E)
 /-- A realizer of the neighborhood of a point. -/
 protected def nhds (F : Realizer α) (a : α) : (𝓝 a).Realizer :=
   ⟨{ s : F.σ // a ∈ F.f s },
-    { f := fun s => F.f s.1, pt := ⟨_, F.f.top_mem a⟩,
-      inf := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => ⟨_, F.f.inter_mem x y a ⟨h₁, h₂⟩⟩,
-      inf_le_left := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).1,
+    { f := fun s => F.f s.1
+      pt := ⟨_, F.f.top_mem a⟩
+      inf := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => ⟨_, F.f.inter_mem x y a ⟨h₁, h₂⟩⟩
+      inf_le_left := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).1
       inf_le_right := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).2 },
     filter_eq <|
       Set.ext fun x =>

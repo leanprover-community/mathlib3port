@@ -35,12 +35,15 @@ def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') :
     HomologicalComplex (HomologicalComplex V c')
       c where 
   x i :=
-    { x := fun j => (C.x j).x i, d := fun j j' => (C.d j j').f i,
+    { x := fun j => (C.x j).x i
+      d := fun j j' => (C.d j j').f i
       shape' := fun j j' w => by 
         rw [C.shape j j' w]
-        simp,
+        simp
       d_comp_d' := fun j₁ j₂ j₃ _ _ => congr_hom (C.d_comp_d j₁ j₂ j₃) i }
-  d i i' := { f := fun j => (C.x j).d i i', comm' := fun j j' h => ((C.d j j').comm i i').symm }
+  d i i' :=
+    { f := fun j => (C.x j).d i i'
+      comm' := fun j j' h => ((C.d j j').comm i i').symm }
   shape' i i' w := by 
     ext j
     exact (C.X j).shape i i' w
@@ -57,7 +60,8 @@ def flip :
   obj C := flipObj C
   map C D f :=
     { f := fun i =>
-        { f := fun j => (f.f j).f i, comm' := fun j j' h => congr_hom (f.comm j j') i } }
+        { f := fun j => (f.f j).f i
+          comm' := fun j j' h => congr_hom (f.comm j j') i } }
 #align homological_complex.flip HomologicalComplex.flip
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
@@ -67,13 +71,13 @@ def flipEquivalenceUnitIso :
   NatIso.ofComponents
     (fun C =>
       { Hom :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
+          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
             comm' := fun i j h => by 
               ext
               dsimp
-              simp only [category.id_comp, category.comp_id] },
+              simp only [category.id_comp, category.comp_id] }
         inv :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
+          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
             comm' := fun i j h => by 
               ext
               dsimp
@@ -91,13 +95,13 @@ def flipEquivalenceCounitIso :
   NatIso.ofComponents
     (fun C =>
       { Hom :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
+          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
             comm' := fun i j h => by 
               ext
               dsimp
-              simp only [category.id_comp, category.comp_id] },
+              simp only [category.id_comp, category.comp_id] }
         inv :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
+          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
             comm' := fun i j h => by 
               ext
               dsimp

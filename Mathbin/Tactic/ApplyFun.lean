@@ -62,7 +62,7 @@ namespace Tactic
                   | _ => throwError "failed to apply { ( ← e ) } at { ← hyp }"
           clear hyp
           let hyp ← note hyp . local_pp_name none prf
-          try <| tactic.dsimp_hyp hyp simp_lemmas.mk [ ] { eta := False , beta := True }
+          try <| tactic.dsimp_hyp hyp simp_lemmas.mk [ ] { eta := False beta := True }
 #align tactic.apply_fun_to_hyp tactic.apply_fun_to_hyp
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -164,8 +164,10 @@ unsafe def apply_fun (q : parse texpr) (locs : parse location)
 #align tactic.interactive.apply_fun tactic.interactive.apply_fun
 
 add_tactic_doc
-  { Name := "apply_fun", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.apply_fun], tags := ["context management"] }
+  { Name := "apply_fun"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.apply_fun]
+    tags := ["context management"] }
 
 end Interactive
 

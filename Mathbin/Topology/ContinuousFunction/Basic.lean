@@ -64,7 +64,9 @@ theorem map_continuous_within_at (f : F) (s : Set α) (a : α) : ContinuousWithi
 #align map_continuous_within_at map_continuous_within_at
 
 instance : CoeTC F C(α, β) :=
-  ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f }⟩
+  ⟨fun f =>
+    { toFun := f
+      continuous_to_fun := map_continuous f }⟩
 
 end ContinuousMapClass
 

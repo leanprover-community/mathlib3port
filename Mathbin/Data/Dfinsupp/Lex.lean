@@ -66,7 +66,7 @@ theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y 
 instance Lex.is_strict_order [LinearOrder ι] [∀ i, PartialOrder (α i)] :
     IsStrictOrder (Lex (Π₀ i, α i)) (· < ·) :=
   let i : IsStrictOrder (Lex (∀ i, α i)) (· < ·) := Pi.Lex.is_strict_order
-  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a,
+  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a
     trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
 #align dfinsupp.lex.is_strict_order Dfinsupp.Lex.is_strict_order
 
@@ -119,9 +119,9 @@ irreducible_def Lex.decidableLt : @DecidableRel (Lex (Π₀ i, α i)) (· < ·) 
 instance Lex.linearOrder : LinearOrder (Lex (Π₀ i, α i)) :=
   { Lex.partialOrder with
     le_total :=
-      ltTrichotomyRec (fun f g h => Or.inl h.le) (fun f g h => Or.inl h.le) fun f g h =>
-        Or.inr h.le,
-    decidableLt := by infer_instance, decidableLe := by infer_instance,
+      ltTrichotomyRec (fun f g h => Or.inl h.le) (fun f g h => Or.inl h.le) fun f g h => Or.inr h.le
+    decidableLt := by infer_instance
+    decidableLe := by infer_instance
     DecidableEq := by infer_instance }
 #align dfinsupp.lex.linear_order Dfinsupp.Lex.linearOrder
 

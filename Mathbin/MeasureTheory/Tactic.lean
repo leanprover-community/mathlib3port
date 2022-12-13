@@ -144,8 +144,9 @@ when attempting to match lemmas with the goal.
 `measurability?` reports back the proof term it found.
 -/
 add_tactic_doc
-  { Name := "measurability / measurability'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.measurability, `tactic.interactive.measurability'],
+  { Name := "measurability / measurability'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.measurability, `tactic.interactive.measurability']
     tags := ["lemma application"] }
 
 end Interactive

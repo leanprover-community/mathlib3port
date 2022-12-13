@@ -1188,10 +1188,10 @@ noncomputable def preimageMkEquivSubgroupTimesSet (s : Subgroup α) (t : Set (α
   { toFun := fun ⟨a, ha⟩ =>
       ⟨⟨(Quotient.out' (Quotient.mk' a))⁻¹ * a,
           left_rel_apply.mp (@Quotient.exact' _ (leftRel s) _ _ <| Quotient.out_eq' _)⟩,
-        ⟨Quotient.mk' a, ha⟩⟩,
+        ⟨Quotient.mk' a, ha⟩⟩
     invFun := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ =>
-      ⟨Quotient.out' x * a, show Quotient.mk' _ ∈ t by simp [h hx ha, hx]⟩,
-    left_inv := fun ⟨a, ha⟩ => Subtype.eq <| show _ * _ = a by simp,
+      ⟨Quotient.out' x * a, show Quotient.mk' _ ∈ t by simp [h hx ha, hx]⟩
+    left_inv := fun ⟨a, ha⟩ => Subtype.eq <| show _ * _ = a by simp
     right_inv := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ => show (_, _) = _ by simp [h hx ha] }
 #align
   quotient_group.preimage_mk_equiv_subgroup_times_set QuotientGroup.preimageMkEquivSubgroupTimesSet

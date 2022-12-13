@@ -31,7 +31,7 @@ theorem has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair {C : Type 
   let e := equalizer.ι (π₁ ≫ f) (π₂ ≫ g)
   HasLimit.mk
     { Cone :=
-        PullbackCone.mk (e ≫ π₁) (e ≫ π₂) <| by simp only [category.assoc, equalizer.condition],
+        PullbackCone.mk (e ≫ π₁) (e ≫ π₂) <| by simp only [category.assoc, equalizer.condition]
       IsLimit :=
         (PullbackCone.IsLimit.mk _
             (fun s =>
@@ -74,7 +74,7 @@ theorem has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair {C : T
   HasColimit.mk
     { Cocone :=
         PushoutCocone.mk (ι₁ ≫ c) (ι₂ ≫ c) <| by
-          rw [← category.assoc, ← category.assoc, coequalizer.condition],
+          rw [← category.assoc, ← category.assoc, coequalizer.condition]
       IsColimit :=
         (PushoutCocone.IsColimit.mk _
             (fun s =>

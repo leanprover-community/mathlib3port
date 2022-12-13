@@ -298,7 +298,9 @@ variable (𝕜)
 
 /-- `star` bundled as a linear isometric equivalence -/
 def starₗᵢ : E ≃ₗᵢ⋆[𝕜] E :=
-  { starAddEquiv with map_smul' := star_smul, norm_map' := norm_star }
+  { starAddEquiv with 
+    map_smul' := star_smul
+    norm_map' := norm_star }
 #align starₗᵢ starₗᵢ
 
 variable {𝕜}

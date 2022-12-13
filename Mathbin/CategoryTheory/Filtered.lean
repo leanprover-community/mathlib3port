@@ -281,10 +281,10 @@ variable {D : Type u₁} [Category.{v₁} D]
 -/
 theorem of_right_adjoint {L : D ⥤ C} {R : C ⥤ D} (h : L ⊣ R) : IsFiltered D :=
   { cocone_objs := fun X Y =>
-      ⟨_, h.homEquiv _ _ (leftToMax _ _), h.homEquiv _ _ (rightToMax _ _), ⟨⟩⟩,
+      ⟨_, h.homEquiv _ _ (leftToMax _ _), h.homEquiv _ _ (rightToMax _ _), ⟨⟩⟩
     cocone_maps := fun X Y f g =>
       ⟨_, h.homEquiv _ _ (coeqHom _ _), by
-        rw [← h.hom_equiv_naturality_left, ← h.hom_equiv_naturality_left, coeq_condition]⟩,
+        rw [← h.hom_equiv_naturality_left, ← h.hom_equiv_naturality_left, coeq_condition]⟩
     Nonempty := IsFiltered.nonempty.map R.obj }
 #align category_theory.is_filtered.of_right_adjoint CategoryTheory.IsFiltered.of_right_adjoint
 
@@ -683,11 +683,10 @@ then `D` is cofiltered.
 theorem of_left_adjoint {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : IsCofiltered D :=
   { cocone_objs := fun X Y =>
       ⟨L.obj (min (R.obj X) (R.obj Y)), (h.homEquiv _ X).symm (minToLeft _ _),
-        (h.homEquiv _ Y).symm (minToRight _ _), ⟨⟩⟩,
+        (h.homEquiv _ Y).symm (minToRight _ _), ⟨⟩⟩
     cocone_maps := fun X Y f g =>
       ⟨L.obj (eq (R.map f) (R.map g)), (h.homEquiv _ _).symm (eqHom _ _), by
-        rw [← h.hom_equiv_naturality_right_symm, ← h.hom_equiv_naturality_right_symm,
-          eq_condition]⟩,
+        rw [← h.hom_equiv_naturality_right_symm, ← h.hom_equiv_naturality_right_symm, eq_condition]⟩
     Nonempty := IsCofiltered.nonempty.map L.obj }
 #align category_theory.is_cofiltered.of_left_adjoint CategoryTheory.IsCofiltered.of_left_adjoint
 

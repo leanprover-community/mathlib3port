@@ -226,7 +226,12 @@ def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type v) X :=
 /-- There is a canonical map from the stalk to the original fiber, given by evaluating sections.
 -/
 def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.stalk x ⟶ T x := by
-  refine' colimit.desc _ { x := T x, ι := { app := fun U f => _, naturality' := _ } }
+  refine'
+    colimit.desc _
+      { x := T x
+        ι :=
+          { app := fun U f => _
+            naturality' := _ } }
   · exact f.1 ⟨x, (unop U).2⟩
   · tidy
 #align Top.stalk_to_fiber TopCat.stalkToFiber
@@ -294,13 +299,13 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
     (fun X =>
       { Hom := by 
           rintro ⟨f, c⟩
-          exact ⟨f, c⟩,
+          exact ⟨f, c⟩
         inv := by 
           rintro ⟨f, c⟩
-          exact ⟨f, c⟩,
+          exact ⟨f, c⟩
         hom_inv_id' := by 
           ext (⟨f, p⟩x)
-          rfl,
+          rfl
         inv_hom_id' := by 
           ext (⟨f, p⟩x)
           rfl })

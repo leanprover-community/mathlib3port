@@ -271,8 +271,8 @@ theorem IsClosed.mono {α} {t₁ t₂ : TopologicalSpace α} {s : Set α} (hs : 
   `t ≤ s` if every set open in `s` is also open in `t` (`t` is finer than `s`). -/
 instance : PartialOrder (TopologicalSpace α) :=
   { TopologicalSpace.hasLe with
-    le_antisymm := fun t s h₁ h₂ => topological_space_eq <| le_antisymm h₂ h₁,
-    le_refl := fun t => le_refl t.IsOpen,
+    le_antisymm := fun t s h₁ h₂ => topological_space_eq <| le_antisymm h₂ h₁
+    le_refl := fun t => le_refl t.IsOpen
     le_trans := fun a b c h₁ h₂ => TopologicalSpace.le_def.mpr (le_trans h₂ h₁) }
 
 theorem le_generate_from_iff_subset_is_open {g : Set (Set α)} {t : TopologicalSpace α} :

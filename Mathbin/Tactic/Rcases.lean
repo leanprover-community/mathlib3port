@@ -1108,7 +1108,9 @@ unsafe def rcases : parse rcases_parse → tactic Unit
 #align tactic.interactive.rcases tactic.interactive.rcases
 
 add_tactic_doc
-  { Name := "rcases", category := DocCategory.tactic, declNames := [`tactic.interactive.rcases],
+  { Name := "rcases"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.rcases]
     tags := ["induction"] }
 
 /-- The `rintro` tactic is a combination of the `intros` tactic with `rcases` to
@@ -1145,8 +1147,10 @@ unsafe def rintros :=
 #align tactic.interactive.rintros tactic.interactive.rintros
 
 add_tactic_doc
-  { Name := "rintro", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.rintro, `tactic.interactive.rintros], tags := ["induction"],
+  { Name := "rintro"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.rintro, `tactic.interactive.rintros]
+    tags := ["induction"]
     inheritDescriptionFrom := `tactic.interactive.rintro }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -1212,7 +1216,9 @@ unsafe def obtain : parse obtain_parse → tactic Unit
 #align tactic.interactive.obtain tactic.interactive.obtain
 
 add_tactic_doc
-  { Name := "obtain", category := DocCategory.tactic, declNames := [`tactic.interactive.obtain],
+  { Name := "obtain"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.obtain]
     tags := ["induction"] }
 
 /-- The `rsuffices` tactic is an alternative version of `suffices`, that allows the usage
@@ -1224,8 +1230,10 @@ unsafe def rsuffices (h : parse obtain_parse) : tactic Unit :=
 #align tactic.interactive.rsuffices tactic.interactive.rsuffices
 
 add_tactic_doc
-  { Name := "rsuffices", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.rsuffices], tags := ["induction"] }
+  { Name := "rsuffices"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.rsuffices]
+    tags := ["induction"] }
 
 /--
 The `rsufficesI` tactic is an instance-cache aware version of `rsuffices`; it resets the instance
@@ -1236,8 +1244,10 @@ unsafe def rsufficesI (h : parse obtain_parse) : tactic Unit :=
 #align tactic.interactive.rsufficesI tactic.interactive.rsufficesI
 
 add_tactic_doc
-  { Name := "rsufficesI", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.rsufficesI], tags := ["induction", "type class"] }
+  { Name := "rsufficesI"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.rsufficesI]
+    tags := ["induction", "type class"] }
 
 end Interactive
 

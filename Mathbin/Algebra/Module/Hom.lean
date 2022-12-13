@@ -29,7 +29,10 @@ instance :
     DistribMulAction R
       (A →+
         B) where 
-  smul r f := { toFun := r • f, map_zero' := by simp, map_add' := fun x y => by simp [smul_add] }
+  smul r f :=
+    { toFun := r • f
+      map_zero' := by simp
+      map_add' := fun x y => by simp [smul_add] }
   one_smul f := by simp
   mul_smul r s f := by simp [mul_smul]
   smul_add r f g := ext fun x => by simp [smul_add]
@@ -56,7 +59,8 @@ instance [DistribMulAction Rᵐᵒᵖ B] [IsCentralScalar R B] : IsCentralScalar
 end
 
 instance [Semiring R] [AddMonoid A] [AddCommMonoid B] [Module R B] : Module R (A →+ B) :=
-  { AddMonoidHom.distribMulAction with add_smul := fun r s x => ext fun y => by simp [add_smul],
+  { AddMonoidHom.distribMulAction with
+    add_smul := fun r s x => ext fun y => by simp [add_smul]
     zero_smul := fun x => ext fun y => by simp [zero_smul] }
 
 end AddMonoidHom

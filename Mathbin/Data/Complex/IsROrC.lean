@@ -140,7 +140,7 @@ theorem inv_def (z : K) : z⁻¹ = conj z * ((‖z‖ ^ 2)⁻¹ : ℝ) :=
 theorem ext_iff : ∀ {z w : K}, z = w ↔ re z = re w ∧ im z = im w := fun z w =>
   { mp := by 
       rintro rfl
-      cc,
+      cc
     mpr := by 
       rintro ⟨h₁, h₂⟩
       rw [← re_add_im z, ← re_add_im w, h₁, h₂] }
@@ -174,7 +174,8 @@ theorem one_im : im (1 : K) = 0 := by rw [← of_real_one, of_real_im]
 
 @[norm_cast]
 theorem of_real_inj {z w : ℝ} : (z : K) = (w : K) ↔ z = w :=
-  { mp := fun h => by convert congr_arg re h <;> simp only [of_real_re], mpr := fun h => by rw [h] }
+  { mp := fun h => by convert congr_arg re h <;> simp only [of_real_re]
+    mpr := fun h => by rw [h] }
 #align is_R_or_C.of_real_inj IsROrC.of_real_inj
 
 @[simp, is_R_or_C_simps]
@@ -996,25 +997,29 @@ end FiniteDimensional
 section Instances
 
 noncomputable instance Real.isROrC : IsROrC ℝ :=
-  { Real.denselyNormedField, Real.metricSpace with re := AddMonoidHom.id ℝ, im := 0, i := 0,
-    I_re_ax := by simp only [AddMonoidHom.map_zero], I_mul_I_ax := Or.intro_left _ rfl,
+  { Real.denselyNormedField, Real.metricSpace with
+    re := AddMonoidHom.id ℝ
+    im := 0
+    i := 0
+    I_re_ax := by simp only [AddMonoidHom.map_zero]
+    I_mul_I_ax := Or.intro_left _ rfl
     re_add_im_ax := fun z => by
-      simp only [add_zero, mul_zero, Algebra.id.map_eq_id, RingHom.id_apply, AddMonoidHom.id_apply],
-    of_real_re_ax := fun r => by simp only [AddMonoidHom.id_apply, Algebra.id.map_eq_self],
-    of_real_im_ax := fun r => by simp only [AddMonoidHom.zero_apply],
+      simp only [add_zero, mul_zero, Algebra.id.map_eq_id, RingHom.id_apply, AddMonoidHom.id_apply]
+    of_real_re_ax := fun r => by simp only [AddMonoidHom.id_apply, Algebra.id.map_eq_self]
+    of_real_im_ax := fun r => by simp only [AddMonoidHom.zero_apply]
     mul_re_ax := fun z w => by
-      simp only [sub_zero, mul_zero, AddMonoidHom.zero_apply, AddMonoidHom.id_apply],
-    mul_im_ax := fun z w => by simp only [add_zero, zero_mul, mul_zero, AddMonoidHom.zero_apply],
-    conj_re_ax := fun z => by simp only [star_ring_end_apply, star_id_of_comm],
-    conj_im_ax := fun z => by simp only [neg_zero, AddMonoidHom.zero_apply],
-    conj_I_ax := by simp only [RingHom.map_zero, neg_zero],
+      simp only [sub_zero, mul_zero, AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
+    mul_im_ax := fun z w => by simp only [add_zero, zero_mul, mul_zero, AddMonoidHom.zero_apply]
+    conj_re_ax := fun z => by simp only [star_ring_end_apply, star_id_of_comm]
+    conj_im_ax := fun z => by simp only [neg_zero, AddMonoidHom.zero_apply]
+    conj_I_ax := by simp only [RingHom.map_zero, neg_zero]
     norm_sq_eq_def_ax := fun z => by
       simp only [sq, Real.norm_eq_abs, ← abs_mul, abs_mul_self z, add_zero, mul_zero,
-        AddMonoidHom.zero_apply, AddMonoidHom.id_apply],
-    mul_im_I_ax := fun z => by simp only [mul_zero, AddMonoidHom.zero_apply],
+        AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
+    mul_im_I_ax := fun z => by simp only [mul_zero, AddMonoidHom.zero_apply]
     inv_def_ax := fun z => by
       simp only [star_ring_end_apply, star, sq, Real.norm_eq_abs, abs_mul_abs_self, ←
-        div_eq_mul_inv, Algebra.id.map_eq_id, id.def, RingHom.id_apply, div_self_mul_self'],
+        div_eq_mul_inv, Algebra.id.map_eq_id, id.def, RingHom.id_apply, div_self_mul_self']
     div_I_ax := fun z => by simp only [div_zero, mul_zero, neg_zero] }
 #align real.is_R_or_C Real.isROrC
 
@@ -1153,7 +1158,10 @@ theorem continuous_im : Continuous (im : K → ℝ) :=
 
 /-- Conjugate as an `ℝ`-algebra equivalence -/
 def conjAe : K ≃ₐ[ℝ] K :=
-  { conj with invFun := conj, left_inv := conj_conj, right_inv := conj_conj,
+  { conj with 
+    invFun := conj
+    left_inv := conj_conj
+    right_inv := conj_conj
     commutes' := conj_of_real }
 #align is_R_or_C.conj_ae IsROrC.conjAe
 

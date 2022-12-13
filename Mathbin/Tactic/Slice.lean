@@ -122,7 +122,8 @@ composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invo
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 -/
 add_tactic_doc
-  { Name := "slice", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.slice_lhs, `tactic.interactive.slice_rhs],
+  { Name := "slice"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.slice_lhs, `tactic.interactive.slice_rhs]
     tags := ["category theory"] }
 

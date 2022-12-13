@@ -167,11 +167,11 @@ instance colimitMonoid : Monoid M :=
     one_mul := fun x => by 
       apply Quot.induction_on x; clear x; intro x; cases' x with j x
       rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, 1⟩ ⟨j, x⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one,
-        one_mul, F.map_id, id_apply],
+        one_mul, F.map_id, id_apply]
     mul_one := fun x => by 
       apply Quot.induction_on x; clear x; intro x; cases' x with j x
       rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, 1⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one,
-        mul_one, F.map_id, id_apply],
+        mul_one, F.map_id, id_apply]
     mul_assoc := fun x y z => by 
       apply Quot.induction_on₃ x y z; clear x y z; intro x y z
       cases' x with j₁ x; cases' y with j₂ y; cases' z with j₃ z

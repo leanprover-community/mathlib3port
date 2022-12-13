@@ -96,7 +96,8 @@ local notation "𝖣" => D.toGlueData
 
 /-- The glue data of locally ringed spaces spaces associated to a family of glue data of schemes. -/
 abbrev toLocallyRingedSpaceGlueData : LocallyRingedSpaceCat.GlueData :=
-  { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToLocallyRingedSpace }
+  { f_open := D.f_open
+    toGlueData := 𝖣.mapGlueData forgetToLocallyRingedSpace }
 #align
   algebraic_geometry.Scheme.glue_data.to_LocallyRingedSpace_glue_data AlgebraicGeometry.SchemeCat.GlueData.toLocallyRingedSpaceGlueData
 

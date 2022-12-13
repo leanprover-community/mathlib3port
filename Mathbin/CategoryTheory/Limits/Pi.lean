@@ -36,7 +36,9 @@ variable {F : J ⥤ ∀ i, C i}
 def coneCompEval (c : Cone F) (i : I) :
     Cone (F ⋙ pi.eval C i) where 
   x := c.x i
-  π := { app := fun j => c.π.app j i, naturality' := fun j j' f => congr_fun (c.π.naturality f) i }
+  π :=
+    { app := fun j => c.π.app j i
+      naturality' := fun j j' f => congr_fun (c.π.naturality f) i }
 #align category_theory.pi.cone_comp_eval CategoryTheory.pi.coneCompEval
 
 /--
@@ -45,7 +47,9 @@ A cocone over `F : J ⥤ Π i, C i` has as its components cocones over each of t
 def coconeCompEval (c : Cocone F) (i : I) :
     Cocone (F ⋙ pi.eval C i) where 
   x := c.x i
-  ι := { app := fun j => c.ι.app j i, naturality' := fun j j' f => congr_fun (c.ι.naturality f) i }
+  ι :=
+    { app := fun j => c.ι.app j i
+      naturality' := fun j j' f => congr_fun (c.ι.naturality f) i }
 #align category_theory.pi.cocone_comp_eval CategoryTheory.pi.coconeCompEval
 
 /--
@@ -55,7 +59,7 @@ def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ pi.eval C i)) :
     Cone F where 
   x i := (c i).x
   π :=
-    { app := fun j i => (c i).π.app j,
+    { app := fun j i => (c i).π.app j
       naturality' := fun j j' f => by 
         ext i
         exact (c i).π.naturality f }
@@ -68,7 +72,7 @@ def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) :
     Cocone F where 
   x i := (c i).x
   ι :=
-    { app := fun j i => (c i).ι.app j,
+    { app := fun j i => (c i).ι.app j
       naturality' := fun j j' f => by 
         ext i
         exact (c i).ι.naturality f }
@@ -116,7 +120,7 @@ then `F` has a limit.
 -/
 theorem has_limit_of_has_limit_comp_eval : HasLimit F :=
   HasLimit.mk
-    { Cone := coneOfConeCompEval fun i => Limit.cone _,
+    { Cone := coneOfConeCompEval fun i => Limit.cone _
       IsLimit := coneOfConeEvalIsLimit fun i => limit.isLimit _ }
 #align
   category_theory.pi.has_limit_of_has_limit_comp_eval CategoryTheory.pi.has_limit_of_has_limit_comp_eval
@@ -133,7 +137,7 @@ there is a colimit for `F`.
 -/
 theorem has_colimit_of_has_colimit_comp_eval : HasColimit F :=
   HasColimit.mk
-    { Cocone := coconeOfCoconeCompEval fun i => Colimit.cocone _,
+    { Cocone := coconeOfCoconeCompEval fun i => Colimit.cocone _
       IsColimit := coconeOfCoconeEvalIsColimit fun i => colimit.isColimit _ }
 #align
   category_theory.pi.has_colimit_of_has_colimit_comp_eval CategoryTheory.pi.has_colimit_of_has_colimit_comp_eval

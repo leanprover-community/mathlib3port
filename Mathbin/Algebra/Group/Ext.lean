@@ -33,7 +33,9 @@ theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m
   have h₁ : (@Monoid.toMulOneClass _ m₁).one = (@Monoid.toMulOneClass _ m₂).one :=
     congr_arg (@MulOneClass.one M) (MulOneClass.ext h_mul)
   set f : @MonoidHom M M (@Monoid.toMulOneClass _ m₁) (@Monoid.toMulOneClass _ m₂) :=
-    { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
+    { toFun := id
+      map_one' := h₁
+      map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
   have hpow : m₁.npow = m₂.npow := by 
     ext (n x)
     exact @MonoidHom.map_pow M M m₁ m₂ f x n
@@ -112,7 +114,9 @@ theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : 
   have h₁ : (@DivInvMonoid.toMonoid _ m₁).one = (@DivInvMonoid.toMonoid _ m₂).one :=
     congr_arg (@Monoid.one M) (Monoid.ext h_mul)
   set f : @MonoidHom M M (by letI := m₁ <;> infer_instance) (by letI := m₂ <;> infer_instance) :=
-    { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
+    { toFun := id
+      map_one' := h₁
+      map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
   have hpow : (@DivInvMonoid.toMonoid _ m₁).npow = (@DivInvMonoid.toMonoid _ m₂).npow :=
     congr_arg (@Monoid.npow M) (Monoid.ext h_mul)
   have hzpow : m₁.zpow = m₂.zpow := by 

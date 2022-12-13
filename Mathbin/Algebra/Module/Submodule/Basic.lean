@@ -322,7 +322,9 @@ theorem coe_mem (x : p) : (x : M) ∈ p :=
 variable (p)
 
 instance : AddCommMonoid p :=
-  { p.toAddSubmonoid.toAddCommMonoid with add := (· + ·), zero := 0 }
+  { p.toAddSubmonoid.toAddCommMonoid with 
+    add := (· + ·)
+    zero := 0 }
 
 instance module' [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
   refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·).. } <;>
@@ -430,7 +432,10 @@ def restrictScalarsEmbedding :
 as turning it into a type and adding a module structure. -/
 @[simps (config := { simpRhs := true })]
 def restrictScalarsEquiv (p : Submodule R M) : p.restrictScalars S ≃ₗ[R] p :=
-  { AddEquiv.refl p with toFun := id, invFun := id, map_smul' := fun c x => rfl }
+  { AddEquiv.refl p with 
+    toFun := id
+    invFun := id
+    map_smul' := fun c x => rfl }
 #align submodule.restrict_scalars_equiv Submodule.restrictScalarsEquiv
 
 end RestrictScalars
@@ -529,7 +534,10 @@ theorem sub_mem_iff_right (hx : x ∈ p) : x - y ∈ p ↔ y ∈ p := by
 #align submodule.sub_mem_iff_right Submodule.sub_mem_iff_right
 
 instance : AddCommGroup p :=
-  { p.toAddSubgroup.toAddCommGroup with add := (· + ·), zero := 0, neg := Neg.neg }
+  { p.toAddSubgroup.toAddCommGroup with 
+    add := (· + ·)
+    zero := 0
+    neg := Neg.neg }
 
 end AddCommGroup
 

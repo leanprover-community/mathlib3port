@@ -187,8 +187,10 @@ instance decidableLt [LT R] [DecidableRel ((· < ·) : R → R → Prop)] :
 #align tropical.decidable_lt Tropical.decidableLt
 
 instance [Preorder R] : Preorder (Tropical R) :=
-  { Tropical.hasLe, Tropical.hasLt with le_refl := fun _ => le_rfl,
-    le_trans := fun _ _ _ h h' => le_trans h h', lt_iff_le_not_le := fun _ _ => lt_iff_le_not_le }
+  { Tropical.hasLe, Tropical.hasLt with
+    le_refl := fun _ => le_rfl
+    le_trans := fun _ _ _ h h' => le_trans h h'
+    lt_iff_le_not_le := fun _ _ => lt_iff_le_not_le }
 
 /-- Reinterpret `x : R` as an element of `tropical R`, preserving the order. -/
 def tropOrderIso [Preorder R] : R ≃o Tropical R :=
@@ -280,14 +282,17 @@ theorem trop_add_def (x y : Tropical R) : x + y = trop (min (untrop x) (untrop y
 #align tropical.trop_add_def Tropical.trop_add_def
 
 instance : LinearOrder (Tropical R) :=
-  { Tropical.partialOrder with le_total := fun a b => le_total (untrop a) (untrop b),
-    decidableLe := Tropical.decidableLe, decidableLt := Tropical.decidableLt,
-    DecidableEq := Tropical.decidableEq, max := fun a b => trop (max (untrop a) (untrop b)),
+  { Tropical.partialOrder with
+    le_total := fun a b => le_total (untrop a) (untrop b)
+    decidableLe := Tropical.decidableLe
+    decidableLt := Tropical.decidableLt
+    DecidableEq := Tropical.decidableEq
+    max := fun a b => trop (max (untrop a) (untrop b))
     max_def := by 
       ext (x y)
       rw [maxDefault, max_def, apply_ite trop, trop_untrop, trop_untrop,
-        if_congr untrop_le_iff rfl rfl],
-    min := (· + ·),
+        if_congr untrop_le_iff rfl rfl]
+    min := (· + ·)
     min_def := by 
       ext (x y)
       rw [trop_add_def, minDefault, min_def, apply_ite trop, trop_untrop, trop_untrop,
@@ -367,7 +372,7 @@ theorem add_eq_zero_iff {a b : Tropical (WithTop R)} : a + b = 0 ↔ a = 0 ∧ b
 
 instance [OrderTop R] : AddCommMonoid (Tropical R) :=
   { Tropical.hasZero, Tropical.addCommSemigroup with
-    zero_add := fun _ => untrop_injective (min_top_left _),
+    zero_add := fun _ => untrop_injective (min_top_left _)
     add_zero := fun _ => untrop_injective (min_top_right _) }
 
 end Order
@@ -406,8 +411,9 @@ theorem untrop_one [Zero R] : untrop (1 : Tropical R) = 0 :=
 #align tropical.untrop_one Tropical.untrop_one
 
 instance [LinearOrder R] [OrderTop R] [Zero R] : AddMonoidWithOne (Tropical R) :=
-  { Tropical.hasOne, Tropical.addCommMonoid with natCast := fun n => if n = 0 then 0 else 1,
-    nat_cast_zero := rfl,
+  { Tropical.hasOne, Tropical.addCommMonoid with
+    natCast := fun n => if n = 0 then 0 else 1
+    nat_cast_zero := rfl
     nat_cast_succ := fun n => (untrop_inj_iff _ _).1 (by cases n <;> simp [Nat.cast]) }
 
 instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
@@ -458,8 +464,9 @@ instance [AddZeroClass R] : MulOneClass
   mul_one _ := untrop_injective <| add_zero _
 
 instance [AddMonoid R] : Monoid (Tropical R) :=
-  { Tropical.mulOneClass, Tropical.semigroup with npow := fun n x => x ^ n,
-    npow_zero' := fun _ => untrop_injective <| zero_smul _ _,
+  { Tropical.mulOneClass, Tropical.semigroup with
+    npow := fun n x => x ^ n
+    npow_zero' := fun _ => untrop_injective <| zero_smul _ _
     npow_succ' := fun _ _ => untrop_injective <| succ_nsmul _ _ }
 
 @[simp]
@@ -471,11 +478,12 @@ instance [AddCommMonoid R] : CommMonoid (Tropical R) :=
   { Tropical.monoid, Tropical.commSemigroup with }
 
 instance [AddGroup R] : Group (Tropical R) :=
-  { Tropical.monoid with inv := Inv.inv,
-    mul_left_inv := fun _ => untrop_injective <| add_left_neg _,
-    zpow := fun n x => trop <| n • untrop x,
-    zpow_zero' := fun _ => untrop_injective <| zero_zsmul _,
-    zpow_succ' := fun _ _ => untrop_injective <| AddGroup.zsmul_succ' _ _,
+  { Tropical.monoid with 
+    inv := Inv.inv
+    mul_left_inv := fun _ => untrop_injective <| add_left_neg _
+    zpow := fun n x => trop <| n • untrop x
+    zpow_zero' := fun _ => untrop_injective <| zero_zsmul _
+    zpow_succ' := fun _ _ => untrop_injective <| AddGroup.zsmul_succ' _ _
     zpow_neg' := fun _ _ => untrop_injective <| AddGroup.zsmul_neg' _ _ }
 
 instance [AddCommGroup R] : CommGroup (Tropical R) :=
@@ -551,7 +559,7 @@ variable [LinearOrderedAddCommMonoidWithTop R]
 
 instance : CommSemiring (Tropical R) :=
   { Tropical.addMonoidWithOne, Tropical.distrib, Tropical.addCommMonoid, Tropical.commMonoid with
-    zero_mul := fun _ => untrop_injective (top_add _),
+    zero_mul := fun _ => untrop_injective (top_add _)
     mul_zero := fun _ => untrop_injective (add_top _) }
 
 @[simp]

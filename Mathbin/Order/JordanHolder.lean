@@ -146,7 +146,9 @@ instance :
       Fin (x.length + 1) → X where coe := CompositionSeries.series
 
 instance [Inhabited X] : Inhabited (CompositionSeries X) :=
-  ⟨{ length := 0, series := default, step' := fun x => x.elim0 }⟩
+  ⟨{  length := 0
+      series := default
+      step' := fun x => x.elim0 }⟩
 
 variable {X}
 

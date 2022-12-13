@@ -75,7 +75,9 @@ def obj (P : Karoubi (HomologicalComplex C c)) :
   x n :=
     ⟨P.x.x n, P.p.f n, by
       simpa only [HomologicalComplex.comp_f] using HomologicalComplex.congr_hom P.idem n⟩
-  d i j := { f := P.p.f i ≫ P.x.d i j, comm := by tidy }
+  d i j :=
+    { f := P.p.f i ≫ P.x.d i j
+      comm := by tidy }
   shape' i j hij := by simp only [hom_eq_zero_iff, P.X.shape i j hij, limits.comp_zero]
 #align
   category_theory.idempotents.karoubi_homological_complex_equivalence.functor.obj CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.Functor.obj
@@ -84,7 +86,9 @@ def obj (P : Karoubi (HomologicalComplex C c)) :
 on morphisms. -/
 @[simps]
 def map {P Q : Karoubi (HomologicalComplex C c)} (f : P ⟶ Q) :
-    obj P ⟶ obj Q where f n := { f := f.f.f n, comm := by simp }
+    obj P ⟶ obj Q where f n :=
+    { f := f.f.f n
+      comm := by simp }
 #align
   category_theory.idempotents.karoubi_homological_complex_equivalence.functor.map CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.Functor.map
 
@@ -111,11 +115,14 @@ def obj (K : HomologicalComplex (Karoubi C) c) :
       (HomologicalComplex C
         c) where 
   x :=
-    { x := fun n => (K.x n).x, d := fun i j => (K.d i j).f,
-      shape' := fun i j hij => hom_eq_zero_iff.mp (K.shape i j hij),
+    { x := fun n => (K.x n).x
+      d := fun i j => (K.d i j).f
+      shape' := fun i j hij => hom_eq_zero_iff.mp (K.shape i j hij)
       d_comp_d' := fun i j k hij hjk => by
         simpa only [comp_f] using hom_eq_zero_iff.mp (K.d_comp_d i j k) }
-  p := { f := fun n => (K.x n).p, comm' := by simp }
+  p :=
+    { f := fun n => (K.x n).p
+      comm' := by simp }
   idem := by tidy
 #align
   category_theory.idempotents.karoubi_homological_complex_equivalence.inverse.obj CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.Inverse.obj
@@ -125,10 +132,9 @@ on morphisms -/
 @[simps]
 def map {K L : HomologicalComplex (Karoubi C) c} (f : K ⟶ L) :
     obj K ⟶
-      obj
-        L where 
+      obj L where 
   f :=
-    { f := fun n => (f.f n).f,
+    { f := fun n => (f.f n).f
       comm' := fun i j hij => by simpa only [comp_f] using hom_ext.mp (f.comm' i j hij) }
   comm := by tidy
 #align
@@ -165,15 +171,15 @@ def unitIso :
   Hom :=
     { app := fun P =>
         { f :=
-            { f := fun n => P.p.f n,
+            { f := fun n => P.p.f n
               comm' := fun i j hij => by 
                 dsimp
                 simp only [HomologicalComplex.Hom.comm, HomologicalComplex.Hom.comm_assoc,
-                  homological_complex.p_idem] },
+                  homological_complex.p_idem] }
           comm := by 
             ext n
             dsimp
-            simp only [homological_complex.p_idem] },
+            simp only [homological_complex.p_idem] }
       naturality' := fun P Q φ => by 
         ext
         dsimp
@@ -182,14 +188,14 @@ def unitIso :
   inv :=
     { app := fun P =>
         { f :=
-            { f := fun n => P.p.f n,
+            { f := fun n => P.p.f n
               comm' := fun i j hij => by 
                 dsimp
-                simp only [HomologicalComplex.Hom.comm, assoc, homological_complex.p_idem] },
+                simp only [HomologicalComplex.Hom.comm, assoc, homological_complex.p_idem] }
           comm := by 
             ext n
             dsimp
-            simp only [homological_complex.p_idem] },
+            simp only [homological_complex.p_idem] }
       naturality' := fun P Q φ => by 
         ext
         dsimp

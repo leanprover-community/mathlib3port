@@ -3278,7 +3278,8 @@ instance (priority := 100) T3Space.t25Space [T3Space α] : T25Space α := by
 
 protected theorem Embedding.t3Space [TopologicalSpace β] [T3Space β] {f : α → β}
     (hf : Embedding f) : T3Space α :=
-  { to_t0_space := hf.T0Space, toRegularSpace := hf.to_inducing.RegularSpace }
+  { to_t0_space := hf.T0Space
+    toRegularSpace := hf.to_inducing.RegularSpace }
 #align embedding.t3_space Embedding.t3Space
 
 instance Subtype.t3Space [T3Space α] {p : α → Prop} : T3Space (Subtype p) :=
@@ -3362,7 +3363,7 @@ theorem normalOfCompactT2 [CompactSpace α] [T2Space α] : NormalSpace α :=
 
 protected theorem ClosedEmbedding.normalSpace [TopologicalSpace β] [NormalSpace β] {f : α → β}
     (hf : ClosedEmbedding f) : NormalSpace α :=
-  { toT1Space := hf.toEmbedding.T1Space,
+  { toT1Space := hf.toEmbedding.T1Space
     normal := by 
       intro s t hs ht hst
       have H : SeparatedNhds (f '' s) (f '' t) :=

@@ -94,7 +94,12 @@ instance (priority := 100) {F : Type _} [NonUnitalAlgHomClass F R A B] : LinearM
 
 instance {F R A B : Type _} [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
     [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [NonUnitalAlgHomClass F R A B] :
-    CoeTC F (A →ₙₐ[R] B) where coe f := { (f : A →ₙ+* B) with toFun := f, map_smul' := map_smul f }
+    CoeTC F
+      (A →ₙₐ[R]
+        B) where coe f :=
+    { (f : A →ₙ+* B) with 
+      toFun := f
+      map_smul' := map_smul f }
 
 end NonUnitalAlgHomClass
 

@@ -218,9 +218,9 @@ theorem not_nonempty_pempty : ¬Nonempty PEmpty := fun ⟨h⟩ => h.elim
 
 /- warning: congr_heq -> congr_heq is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_1}} {γ : Sort.{u_2}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u_1 u_2} (α -> γ) f (β -> γ) g) -> (HEq.{u_1} α x β y) -> (Eq.{u_2} γ (f x) (g y))
+  forall {α : Sort.{u1}} {β : Sort.{u1}} {γ : Sort.{u2}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u1 u2} (α -> γ) f (β -> γ) g) -> (HEq.{u1} α x β y) -> (Eq.{u2} γ (f x) (g y))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_1}} {γ : Sort.{u_2}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u_1 u_2} (α -> γ) f (β -> γ) g) -> (HEq.{u_1} α x β y) -> (Eq.{u_2} γ (f x) (g y))
+  forall {α : Sort.{u2}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u2 u1} (α -> γ) f (β -> γ) g) -> (HEq.{u2} α x β y) -> (Eq.{u1} γ (f x) (g y))
 Case conversion may be inaccurate. Consider using '#align congr_heq congr_heqₓ'. -/
 theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g)
     (h₂ : HEq x y) : f x = g y := by 
@@ -231,9 +231,9 @@ theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {
 
 /- warning: congr_arg_heq -> congr_arg_heq is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} (f : forall (a : α), β a) {a₁ : α} {a₂ : α}, (Eq.{u_1} α a₁ a₂) -> (HEq.{u_2} (β a₁) (f a₁) (β a₂) (f a₂))
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} (f : forall (a : α), β a) {a₁ : α} {a₂ : α}, (Eq.{u1} α a₁ a₂) -> (HEq.{u2} (β a₁) (f a₁) (β a₂) (f a₂))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} (f : forall (a : α), β a) {a₁ : α} {a₂ : α}, (Eq.{u_1} α a₁ a₂) -> (HEq.{u_2} (β a₁) (f a₁) (β a₂) (f a₂))
+  forall {α : Sort.{u2}} {β : α -> Sort.{u1}} (f : forall (a : α), β a) {a₁ : α} {a₂ : α}, (Eq.{u2} α a₁ a₂) -> (HEq.{u1} (β a₁) (f a₁) (β a₂) (f a₂))
 Case conversion may be inaccurate. Consider using '#align congr_arg_heq congr_arg_heqₓ'. -/
 theorem congr_arg_heq {α} {β : α → Sort _} (f : ∀ a, β a) :
     ∀ {a₁ a₂ : α}, a₁ = a₂ → HEq (f a₁) (f a₂)
@@ -242,9 +242,9 @@ theorem congr_arg_heq {α} {β : α → Sort _} (f : ∀ a, β a) :
 
 /- warning: ulift.down_injective -> ULift.down_injective is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}}, Function.Injective.{succ (max u_1 u_2), succ u_1} (ULift.{u_2, u_1} α) α (ULift.down.{u_2, u_1} α)
+  forall {α : Type.{u1}}, Function.Injective.{succ (max u1 u2), succ u1} (ULift.{u2, u1} α) α (ULift.down.{u2, u1} α)
 but is expected to have type
-  forall {α : Type.{u_1}}, Function.Injective.{max (succ u_1) (succ u_2), succ u_1} (ULift.{u_2, u_1} α) α (ULift.down.{u_2, u_1} α)
+  forall {α : Type.{u2}}, Function.Injective.{max (succ u2) (succ u1), succ u2} (ULift.{u1, u2} α) α (ULift.down.{u1, u2} α)
 Case conversion may be inaccurate. Consider using '#align ulift.down_injective ULift.down_injectiveₓ'. -/
 theorem ULift.down_injective {α : Sort _} : Function.Injective (@ULift.down α)
   | ⟨a⟩, ⟨b⟩, rfl => rfl
@@ -252,9 +252,9 @@ theorem ULift.down_injective {α : Sort _} : Function.Injective (@ULift.down α)
 
 /- warning: ulift.down_inj -> ULift.down_inj is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {a : ULift.{u_2, u_1} α} {b : ULift.{u_2, u_1} α}, Iff (Eq.{succ u_1} α (ULift.down.{u_2, u_1} α a) (ULift.down.{u_2, u_1} α b)) (Eq.{succ (max u_1 u_2)} (ULift.{u_2, u_1} α) a b)
+  forall {α : Type.{u1}} {a : ULift.{u2, u1} α} {b : ULift.{u2, u1} α}, Iff (Eq.{succ u1} α (ULift.down.{u2, u1} α a) (ULift.down.{u2, u1} α b)) (Eq.{succ (max u1 u2)} (ULift.{u2, u1} α) a b)
 but is expected to have type
-  forall {α : Type.{u_1}} {a : ULift.{u_2, u_1} α} {b : ULift.{u_2, u_1} α}, Iff (Eq.{succ u_1} α (ULift.down.{u_2, u_1} α a) (ULift.down.{u_2, u_1} α b)) (Eq.{max (succ u_1) (succ u_2)} (ULift.{u_2, u_1} α) a b)
+  forall {α : Type.{u2}} {a : ULift.{u1, u2} α} {b : ULift.{u1, u2} α}, Iff (Eq.{succ u2} α (ULift.down.{u1, u2} α a) (ULift.down.{u1, u2} α b)) (Eq.{max (succ u2) (succ u1)} (ULift.{u1, u2} α) a b)
 Case conversion may be inaccurate. Consider using '#align ulift.down_inj ULift.down_injₓ'. -/
 @[simp]
 theorem ULift.down_inj {α : Sort _} {a b : ULift α} : a.down = b.down ↔ a = b :=
@@ -285,9 +285,9 @@ theorem ne_comm {α} {a b : α} : a ≠ b ↔ b ≠ a :=
 
 /- warning: eq_iff_eq_cancel_left -> eq_iff_eq_cancel_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {b : α} {c : α}, Iff (forall {a : α}, Iff (Eq.{succ u_1} α a b) (Eq.{succ u_1} α a c)) (Eq.{succ u_1} α b c)
+  forall {α : Type.{u1}} {b : α} {c : α}, Iff (forall {a : α}, Iff (Eq.{succ u1} α a b) (Eq.{succ u1} α a c)) (Eq.{succ u1} α b c)
 but is expected to have type
-  forall {α : Sort.{u_1}} {b : α} {c : α}, Iff (forall {a : α}, Iff (Eq.{u_1} α a b) (Eq.{u_1} α a c)) (Eq.{u_1} α b c)
+  forall {α : Sort.{u1}} {b : α} {c : α}, Iff (forall {a : α}, Iff (Eq.{u1} α a b) (Eq.{u1} α a c)) (Eq.{u1} α b c)
 Case conversion may be inaccurate. Consider using '#align eq_iff_eq_cancel_left eq_iff_eq_cancel_leftₓ'. -/
 @[simp]
 theorem eq_iff_eq_cancel_left {b c : α} : (∀ {a}, a = b ↔ a = c) ↔ b = c :=
@@ -296,9 +296,9 @@ theorem eq_iff_eq_cancel_left {b c : α} : (∀ {a}, a = b ↔ a = c) ↔ b = c 
 
 /- warning: eq_iff_eq_cancel_right -> eq_iff_eq_cancel_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {a : α} {b : α}, Iff (forall {c : α}, Iff (Eq.{succ u_1} α a c) (Eq.{succ u_1} α b c)) (Eq.{succ u_1} α a b)
+  forall {α : Type.{u1}} {a : α} {b : α}, Iff (forall {c : α}, Iff (Eq.{succ u1} α a c) (Eq.{succ u1} α b c)) (Eq.{succ u1} α a b)
 but is expected to have type
-  forall {α : Sort.{u_1}} {a : α} {b : α}, Iff (forall {c : α}, Iff (Eq.{u_1} α a c) (Eq.{u_1} α b c)) (Eq.{u_1} α a b)
+  forall {α : Sort.{u1}} {a : α} {b : α}, Iff (forall {c : α}, Iff (Eq.{u1} α a c) (Eq.{u1} α b c)) (Eq.{u1} α a b)
 Case conversion may be inaccurate. Consider using '#align eq_iff_eq_cancel_right eq_iff_eq_cancel_rightₓ'. -/
 @[simp]
 theorem eq_iff_eq_cancel_right {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b :=
@@ -948,7 +948,7 @@ theorem and_iff_left_of_imp {a b : Prop} (h : a → b) : a ∧ b ↔ a :=
 lean 3 declaration is
   forall {a : Prop} {b : Prop}, (b -> a) -> (Iff (And a b) b)
 but is expected to have type
-  forall {b : Prop} {a : Prop}, (b -> a) -> (Iff (And a b) b)
+  forall {a : Prop} {b : Prop}, (a -> b) -> (Iff (And b a) a)
 Case conversion may be inaccurate. Consider using '#align and_iff_right_of_imp and_iff_right_of_impₓ'. -/
 theorem and_iff_right_of_imp {a b : Prop} (h : b → a) : a ∧ b ↔ b :=
   Iff.intro And.right fun hb => ⟨h hb, hb⟩
@@ -1075,7 +1075,7 @@ theorem or_of_or_of_imp_of_imp (h₁ : a ∨ b) (h₂ : a → c) (h₃ : b → d
 lean 3 declaration is
   forall {a : Prop} {b : Prop} {c : Prop}, (Or a c) -> (a -> b) -> (Or b c)
 but is expected to have type
-  forall {a : Prop} {c : Prop} {b : Prop}, (Or a c) -> (a -> b) -> (Or b c)
+  forall {a : Prop} {b : Prop} {c : Prop}, (Or a b) -> (a -> c) -> (Or c b)
 Case conversion may be inaccurate. Consider using '#align or_of_or_of_imp_left or_of_or_of_imp_leftₓ'. -/
 theorem or_of_or_of_imp_left (h₁ : a ∨ c) (h : a → b) : b ∨ c :=
   Or.imp_left h h₁
@@ -1085,7 +1085,7 @@ theorem or_of_or_of_imp_left (h₁ : a ∨ c) (h : a → b) : b ∨ c :=
 lean 3 declaration is
   forall {a : Prop} {b : Prop} {c : Prop}, (Or c a) -> (a -> b) -> (Or c b)
 but is expected to have type
-  forall {c : Prop} {a : Prop} {b : Prop}, (Or c a) -> (a -> b) -> (Or c b)
+  forall {a : Prop} {b : Prop} {c : Prop}, (Or a b) -> (b -> c) -> (Or a c)
 Case conversion may be inaccurate. Consider using '#align or_of_or_of_imp_right or_of_or_of_imp_rightₓ'. -/
 theorem or_of_or_of_imp_right (h₁ : c ∨ a) (h : a → b) : c ∨ b :=
   Or.imp_right h h₁
@@ -1101,7 +1101,7 @@ theorem Or.elim3 (h : a ∨ b ∨ c) (ha : a → d) (hb : b → d) (hc : c → d
 lean 3 declaration is
   forall {a : Prop} {b : Prop} {c : Prop} {d : Prop} {e : Prop} {f : Prop}, (a -> d) -> (b -> e) -> (c -> f) -> (Or a (Or b c)) -> (Or d (Or e f))
 but is expected to have type
-  forall {a : Prop} {d : Prop} {b : Prop} {e : Prop} {c : Prop} {f : Prop}, (a -> d) -> (b -> e) -> (c -> f) -> (Or a (Or b c)) -> (Or d (Or e f))
+  forall {a : Prop} {b : Prop} {c : Prop} {d : Prop} {e : Prop} {f : Prop}, (a -> b) -> (c -> d) -> (e -> f) -> (Or a (Or c e)) -> (Or b (Or d f))
 Case conversion may be inaccurate. Consider using '#align or.imp3 Or.imp3ₓ'. -/
 theorem Or.imp3 (had : a → d) (hbe : b → e) (hcf : c → f) : a ∨ b ∨ c → d ∨ e ∨ f :=
   Or.imp had <| Or.imp hbe hcf
@@ -1185,7 +1185,7 @@ protected theorem Decidable.imp_iff_or_not [Decidable b] : b → a ↔ a ∨ ¬b
 lean 3 declaration is
   forall {a : Prop} {b : Prop}, Iff (b -> a) (Or a (Not b))
 but is expected to have type
-  forall {b : Prop} {a : Prop}, Iff (b -> a) (Or a (Not b))
+  forall {a : Prop} {b : Prop}, Iff (a -> b) (Or b (Not a))
 Case conversion may be inaccurate. Consider using '#align imp_iff_or_not imp_iff_or_notₓ'. -/
 theorem imp_iff_or_not : b → a ↔ a ∨ ¬b :=
   Decidable.imp_iff_or_not
@@ -1215,7 +1215,7 @@ protected theorem Function.mtr : (¬a → ¬b) → b → a :=
 lean 3 declaration is
   forall {a : Prop} {b : Prop} {c : Prop} [_inst_1 : Decidable c], ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
 but is expected to have type
-  forall {c : Prop} {a : Prop} {b : Prop} [inst._@.Std.Logic._hyg.11804 : Decidable c], ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
+  forall {a : Prop} {b : Prop} {c : Prop} [_inst_1 : Decidable a], ((Not a) -> (Iff b c)) -> (Iff (Or b a) (Or c a))
 Case conversion may be inaccurate. Consider using '#align decidable.or_congr_left Decidable.or_congr_left'ₓ'. -/
 -- See Note [decidable namespace]
 protected theorem Decidable.or_congr_left' [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c := by
@@ -1227,7 +1227,7 @@ protected theorem Decidable.or_congr_left' [Decidable c] (h : ¬c → (a ↔ b))
 lean 3 declaration is
   forall {a : Prop} {b : Prop} {c : Prop}, ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
 but is expected to have type
-  forall {c : Prop} {a : Prop} {b : Prop}, ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
+  forall {a : Prop} {b : Prop} {c : Prop}, ((Not a) -> (Iff b c)) -> (Iff (Or b a) (Or c a))
 Case conversion may be inaccurate. Consider using '#align or_congr_left or_congr_left'ₓ'. -/
 theorem or_congr_left' (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
   Decidable.or_congr_left' h
@@ -1384,7 +1384,7 @@ theorem imp_or : a → b ∨ c ↔ (a → b) ∨ (a → c) :=
 lean 3 declaration is
   forall {a : Prop} {b : Prop} {c : Prop} [_inst_1 : Decidable b], Iff (a -> (Or b c)) (Or (a -> b) (a -> c))
 but is expected to have type
-  forall {b : Prop} {a : Sort.{u_1}} {c : Prop} [inst._@.Std.Logic._hyg.10409 : Decidable b], Iff (a -> (Or b c)) (Or (a -> b) (a -> c))
+  forall {a : Prop} {b : Sort.{u_1}} {c : Prop} [_inst_1 : Decidable a], Iff (b -> (Or a c)) (Or (b -> a) (b -> c))
 Case conversion may be inaccurate. Consider using '#align decidable.imp_or_distrib' Decidable.imp_or'ₓ'. -/
 -- See Note [decidable namespace]
 protected theorem Decidable.imp_or' [Decidable b] : a → b ∨ c ↔ (a → b) ∨ (a → c) := by
@@ -1469,7 +1469,7 @@ theorem not_iff_comm : (¬a ↔ b) ↔ (¬b ↔ a) :=
 lean 3 declaration is
   forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Not (Iff a b)) (Iff (Not a) b)
 but is expected to have type
-  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.10834 : Decidable b], Iff (Not (Iff a b)) (Iff (Not a) b)
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable a], Iff (Not (Iff b a)) (Iff (Not b) a)
 Case conversion may be inaccurate. Consider using '#align decidable.not_iff Decidable.not_iffₓ'. -/
 -- See Note [decidable namespace]
 protected theorem Decidable.not_iff : ∀ [Decidable b], ¬(a ↔ b) ↔ (¬a ↔ b) := by
@@ -1499,7 +1499,7 @@ theorem iff_not_comm : (a ↔ ¬b) ↔ (b ↔ ¬a) :=
 lean 3 declaration is
   forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Iff a b) (Or (And a b) (And (Not a) (Not b)))
 but is expected to have type
-  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.11002 : Decidable b], Iff (Iff a b) (Or (And a b) (And (Not a) (Not b)))
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable a], Iff (Iff b a) (Or (And b a) (And (Not b) (Not a)))
 Case conversion may be inaccurate. Consider using '#align decidable.iff_iff_and_or_not_and_not Decidable.iff_iff_and_or_not_and_notₓ'. -/
 -- See Note [decidable namespace]
 protected theorem Decidable.iff_iff_and_or_not_and_not [Decidable b] : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b :=
@@ -1533,7 +1533,7 @@ theorem iff_iff_not_or_and_or_not : (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) :=
 lean 3 declaration is
   forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Not (And a (Not b))) (a -> b)
 but is expected to have type
-  forall {b : Prop} {a : Prop} [inst._@.Std.Logic._hyg.11201 : Decidable b], Iff (Not (And a (Not b))) (a -> b)
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable a], Iff (Not (And b (Not a))) (b -> a)
 Case conversion may be inaccurate. Consider using '#align decidable.not_and_not_right Decidable.not_and_not_rightₓ'. -/
 -- See Note [decidable namespace]
 protected theorem Decidable.not_and_not_right [Decidable b] : ¬(a ∧ ¬b) ↔ a → b :=
@@ -1683,9 +1683,9 @@ variable {α β : Type _} [Membership α β] {s t : β} {a b : α}
 
 /- warning: ne_of_mem_of_not_mem -> ne_of_mem_of_not_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1, u_2} α β] {s : β} {a : α} {b : α}, (Membership.Mem.{u_1, u_2} α β _inst_1 a s) -> (Not (Membership.Mem.{u_1, u_2} α β _inst_1 b s)) -> (Ne.{succ u_1} α a b)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Membership.{u1, u2} α β] {s : β} {a : α} {b : α}, (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (Not (Membership.Mem.{u1, u2} α β _inst_1 b s)) -> (Ne.{succ u1} α a b)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Std.Logic._hyg.12352 : Membership.{u_1, u_2} α β] {s : β} {a : α} {b : α}, (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12352 a s) -> (Not (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12352 b s)) -> (Ne.{succ u_1} α a b)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {a : α} {b : α}, (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Not (Membership.mem.{u2, u1} α β _inst_1 b s)) -> (Ne.{succ u2} α a b)
 Case conversion may be inaccurate. Consider using '#align ne_of_mem_of_not_mem ne_of_mem_of_not_memₓ'. -/
 theorem ne_of_mem_of_not_mem (h : a ∈ s) : b ∉ s → a ≠ b :=
   mt fun e => e ▸ h
@@ -1693,9 +1693,9 @@ theorem ne_of_mem_of_not_mem (h : a ∈ s) : b ∉ s → a ≠ b :=
 
 /- warning: ne_of_mem_of_not_mem' -> ne_of_mem_of_not_mem' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1, u_2} α β] {s : β} {t : β} {a : α}, (Membership.Mem.{u_1, u_2} α β _inst_1 a s) -> (Not (Membership.Mem.{u_1, u_2} α β _inst_1 a t)) -> (Ne.{succ u_2} β s t)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Membership.{u1, u2} α β] {s : β} {t : β} {a : α}, (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (Not (Membership.Mem.{u1, u2} α β _inst_1 a t)) -> (Ne.{succ u2} β s t)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Std.Logic._hyg.12400 : Membership.{u_1, u_2} α β] {s : β} {t : β} {a : α}, (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12400 a s) -> (Not (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12400 a t)) -> (Ne.{succ u_2} β s t)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {t : β} {a : α}, (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Not (Membership.mem.{u2, u1} α β _inst_1 a t)) -> (Ne.{succ u1} β s t)
 Case conversion may be inaccurate. Consider using '#align ne_of_mem_of_not_mem' ne_of_mem_of_not_mem'ₓ'. -/
 theorem ne_of_mem_of_not_mem' (h : a ∈ s) : a ∉ t → s ≠ t :=
   mt fun e => e ▸ h
@@ -1703,9 +1703,9 @@ theorem ne_of_mem_of_not_mem' (h : a ∈ s) : a ∉ t → s ≠ t :=
 
 /- warning: has_mem.mem.ne_of_not_mem -> Membership.Mem.ne_of_not_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1, u_2} α β] {s : β} {a : α} {b : α}, (Membership.Mem.{u_1, u_2} α β _inst_1 a s) -> (Not (Membership.Mem.{u_1, u_2} α β _inst_1 b s)) -> (Ne.{succ u_1} α a b)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Membership.{u1, u2} α β] {s : β} {a : α} {b : α}, (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (Not (Membership.Mem.{u1, u2} α β _inst_1 b s)) -> (Ne.{succ u1} α a b)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Std.Logic._hyg.12352 : Membership.{u_1, u_2} α β] {s : β} {a : α} {b : α}, (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12352 a s) -> (Not (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12352 b s)) -> (Ne.{succ u_1} α a b)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {a : α} {b : α}, (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Not (Membership.mem.{u2, u1} α β _inst_1 b s)) -> (Ne.{succ u2} α a b)
 Case conversion may be inaccurate. Consider using '#align has_mem.mem.ne_of_not_mem Membership.Mem.ne_of_not_memₓ'. -/
 /-- **Alias** of `ne_of_mem_of_not_mem`. -/
 theorem Membership.Mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
@@ -1714,9 +1714,9 @@ theorem Membership.Mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
 
 /- warning: has_mem.mem.ne_of_not_mem' -> Membership.Mem.ne_of_not_mem' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1, u_2} α β] {s : β} {t : β} {a : α}, (Membership.Mem.{u_1, u_2} α β _inst_1 a s) -> (Not (Membership.Mem.{u_1, u_2} α β _inst_1 a t)) -> (Ne.{succ u_2} β s t)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Membership.{u1, u2} α β] {s : β} {t : β} {a : α}, (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (Not (Membership.Mem.{u1, u2} α β _inst_1 a t)) -> (Ne.{succ u2} β s t)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Std.Logic._hyg.12400 : Membership.{u_1, u_2} α β] {s : β} {t : β} {a : α}, (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12400 a s) -> (Not (Membership.mem.{u_1, u_2} α β inst._@.Std.Logic._hyg.12400 a t)) -> (Ne.{succ u_2} β s t)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {t : β} {a : α}, (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Not (Membership.mem.{u2, u1} α β _inst_1 a t)) -> (Ne.{succ u1} β s t)
 Case conversion may be inaccurate. Consider using '#align has_mem.mem.ne_of_not_mem' Membership.Mem.ne_of_not_mem'ₓ'. -/
 /-- **Alias** of `ne_of_mem_of_not_mem'`. -/
 theorem Membership.Mem.ne_of_not_mem' : a ∈ s → a ∉ t → s ≠ t :=
@@ -1753,9 +1753,9 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
 
 /- warning: ball_mem_comm -> ball_mem_comm is a dubious translation:
 lean 3 declaration is
-  forall {α : outParam.{succ (succ u_1)} Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1, u_2} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.Mem.{u_1, u_2} α β _inst_1 a s) -> (forall (b : α), (Membership.Mem.{u_1, u_2} α β _inst_1 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.Mem.{u_1, u_2} α β _inst_1 a s) -> (Membership.Mem.{u_1, u_2} α β _inst_1 b s) -> (p a b))
+  forall {α : outParam.{succ (succ u1)} Type.{u1}} {β : Type.{u2}} [_inst_1 : Membership.{u1, u2} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (forall (b : α), (Membership.Mem.{u1, u2} α β _inst_1 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (Membership.Mem.{u1, u2} α β _inst_1 b s) -> (p a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.3445 : Membership.{u_1, u_2} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.mem.{u_1, u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3445 a s) -> (forall (b : α), (Membership.mem.{u_1, u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3445 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.mem.{u_1, u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3445 a s) -> (Membership.mem.{u_1, u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3445 b s) -> (p a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.mem.{u2, u1} α β _inst_1 a s) -> (forall (b : α), (Membership.mem.{u2, u1} α β _inst_1 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Membership.mem.{u2, u1} α β _inst_1 b s) -> (p a b))
 Case conversion may be inaccurate. Consider using '#align ball_mem_comm ball_mem_commₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
@@ -1765,9 +1765,9 @@ theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Pro
 
 /- warning: ne_of_apply_ne -> ne_of_apply_ne is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) {x : α} {y : α}, (Ne.{u_2} β (f x) (f y)) -> (Ne.{u_1} α x y)
+  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : α -> β) {x : α} {y : α}, (Ne.{u2} β (f x) (f y)) -> (Ne.{u1} α x y)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) {x : α} {y : α}, (Ne.{u_2} β (f x) (f y)) -> (Ne.{u_1} α x y)
+  forall {α : Sort.{u2}} {β : Sort.{u1}} (f : α -> β) {x : α} {y : α}, (Ne.{u1} β (f x) (f y)) -> (Ne.{u2} α x y)
 Case conversion may be inaccurate. Consider using '#align ne_of_apply_ne ne_of_apply_neₓ'. -/
 theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y :=
   fun w : x = y => h (congr_arg f w)
@@ -1781,9 +1781,9 @@ theorem eq_equivalence : Equivalence (@Eq α) :=
 
 /- warning: eq_rec_constant -> eq_rec_constant is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {a : α} {a' : α} {β : Sort.{u_2}} (y : β) (h : Eq.{u_1} α a a'), Eq.{u_2} ((fun (a : α) => β) a') (Eq.ndrec.{u_2, u_1} α a (fun (a : α) => β) y a' h) y
+  forall {α : Sort.{u1}} {a : α} {a' : α} {β : Sort.{u2}} (y : β) (h : Eq.{u1} α a a'), Eq.{u2} ((fun (a : α) => β) a') (Eq.ndrec.{u2, u1} α a (fun (a : α) => β) y a' h) y
 but is expected to have type
-  forall {α : Sort.{u_1}} {a : α} {a' : α} {β : Sort.{u_2}} (y : β) (h : Eq.{u_1} α a a'), Eq.{u_2} β (Eq.rec.{u_2, u_1} α a (fun (α_1 : α) (x._@.Std.Logic._hyg.12248 : Eq.{u_1} α a α_1) => β) y a' h) y
+  forall {α : Sort.{u2}} {a : α} {a' : α} {β : Sort.{u1}} (y : β) (h : Eq.{u2} α a a'), Eq.{u1} β (Eq.rec.{u1, u2} α a (fun (a_1 : α) (x._@.Std.Logic._hyg.12248 : Eq.{u2} α a a_1) => β) y a' h) y
 Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec_constantₓ'. -/
 /-- Transport through trivial families is the identity. -/
 @[simp]
@@ -1817,9 +1817,9 @@ theorem cast_cast :
 
 /- warning: congr_refl_left -> congr_refl_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) {a : α} {b : α} (h : Eq.{u_1} α a b), Eq.{0} (Eq.{u_2} β (f a) (f b)) (congr.{u_1, u_2} α β f f a b (rfl.{imax u_1 u_2} (α -> β) f) h) (congr_arg.{u_1, u_2} α β a b f h)
+  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : α -> β) {a : α} {b : α} (h : Eq.{u1} α a b), Eq.{0} (Eq.{u2} β (f a) (f b)) (congr.{u1, u2} α β f f a b (rfl.{imax u1 u2} (α -> β) f) h) (congr_arg.{u1, u2} α β a b f h)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) {a : α} {b : α} (h : Eq.{u_1} α a b), Eq.{0} (Eq.{u_2} β (f a) (f b)) (congr.{u_1, u_2} α β f f a b (Eq.refl.{imax u_1 u_2} (α -> β) f) h) (congr_arg.{u_1, u_2} α β a b f h)
+  forall {α : Sort.{u2}} {β : Sort.{u1}} (f : α -> β) {a : α} {b : α} (h : Eq.{u2} α a b), Eq.{0} (Eq.{u1} β (f a) (f b)) (congr.{u2, u1} α β f f a b (Eq.refl.{imax u2 u1} (α -> β) f) h) (congr_arg.{u2, u1} α β a b f h)
 Case conversion may be inaccurate. Consider using '#align congr_refl_left congr_refl_leftₓ'. -/
 @[simp]
 theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) :
@@ -1829,9 +1829,9 @@ theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) 
 
 /- warning: congr_refl_right -> congr_refl_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {g : α -> β} (h : Eq.{imax u_1 u_2} (α -> β) f g) (a : α), Eq.{0} (Eq.{u_2} β (f a) (g a)) (congr.{u_1, u_2} α β f g a a h (rfl.{u_1} α a)) (congr_fun.{u_1, u_2} α (fun (x : α) => β) f (fun (a : α) => g a) h a)
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β} {g : α -> β} (h : Eq.{imax u1 u2} (α -> β) f g) (a : α), Eq.{0} (Eq.{u2} β (f a) (g a)) (congr.{u1, u2} α β f g a a h (rfl.{u1} α a)) (congr_fun.{u1, u2} α (fun (x : α) => β) f (fun (a : α) => g a) h a)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {g : α -> β} (h : Eq.{imax u_1 u_2} (α -> β) f g) (a : α), Eq.{0} (Eq.{u_2} β (f a) (g a)) (congr.{u_1, u_2} α β f g a a h (Eq.refl.{u_1} α a)) (congr_fun.{u_1, u_2} α (fun (x : α) => β) f g h a)
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β} {g : α -> β} (h : Eq.{imax u2 u1} (α -> β) f g) (a : α), Eq.{0} (Eq.{u1} β (f a) (g a)) (congr.{u2, u1} α β f g a a h (Eq.refl.{u2} α a)) (congr_fun.{u2, u1} α (fun (x : α) => β) f g h a)
 Case conversion may be inaccurate. Consider using '#align congr_refl_right congr_refl_rightₓ'. -/
 @[simp]
 theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α) :
@@ -1841,9 +1841,9 @@ theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α)
 
 /- warning: congr_arg_refl -> congr_arg_refl is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (a : α), Eq.{0} (Eq.{u_2} β (f a) (f a)) (congr_arg.{u_1, u_2} α β a a f (rfl.{u_1} α a)) (rfl.{u_2} β (f a))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : α -> β) (a : α), Eq.{0} (Eq.{u2} β (f a) (f a)) (congr_arg.{u1, u2} α β a a f (rfl.{u1} α a)) (rfl.{u2} β (f a))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (a : α), Eq.{0} (Eq.{u_2} β (f a) (f a)) (congr_arg.{u_1, u_2} α β a a f (Eq.refl.{u_1} α a)) (Eq.refl.{u_2} β (f a))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} (f : α -> β) (a : α), Eq.{0} (Eq.{u1} β (f a) (f a)) (congr_arg.{u2, u1} α β a a f (Eq.refl.{u2} α a)) (Eq.refl.{u1} β (f a))
 Case conversion may be inaccurate. Consider using '#align congr_arg_refl congr_arg_reflₓ'. -/
 @[simp]
 theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) :
@@ -1853,9 +1853,9 @@ theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) :
 
 /- warning: congr_fun_rfl -> congr_fun_rfl is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (a : α), Eq.{0} (Eq.{u_2} β (f a) (f a)) (congr_fun.{u_1, u_2} α (fun (ᾰ : α) => β) f f (rfl.{imax u_1 u_2} (α -> β) f) a) (rfl.{u_2} β (f a))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : α -> β) (a : α), Eq.{0} (Eq.{u2} β (f a) (f a)) (congr_fun.{u1, u2} α (fun (ᾰ : α) => β) f f (rfl.{imax u1 u2} (α -> β) f) a) (rfl.{u2} β (f a))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (a : α), Eq.{0} (Eq.{u_2} β (f a) (f a)) (congr_fun.{u_1, u_2} α (fun (x : α) => β) f f (Eq.refl.{imax u_1 u_2} (α -> β) f) a) (Eq.refl.{u_2} β (f a))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} (f : α -> β) (a : α), Eq.{0} (Eq.{u1} β (f a) (f a)) (congr_fun.{u2, u1} α (fun (ᾰ : α) => β) f f (Eq.refl.{imax u2 u1} (α -> β) f) a) (Eq.refl.{u1} β (f a))
 Case conversion may be inaccurate. Consider using '#align congr_fun_rfl congr_fun_rflₓ'. -/
 @[simp]
 theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) :
@@ -1865,9 +1865,9 @@ theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) :
 
 /- warning: congr_fun_congr_arg -> congr_fun_congr_arg is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) {a : α} {a' : α} (p : Eq.{u_1} α a a') (b : β), Eq.{0} (Eq.{u_3} γ (f a b) (f a' b)) (congr_fun.{u_2, u_3} β (fun (ᾰ : β) => γ) (f a) (f a') (congr_arg.{u_1, imax u_2 u_3} α (β -> γ) a a' f p) b) (congr_arg.{u_1, u_3} α γ a a' (fun (a : α) => f a b) p)
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (f : α -> β -> γ) {a : α} {a' : α} (p : Eq.{u1} α a a') (b : β), Eq.{0} (Eq.{u3} γ (f a b) (f a' b)) (congr_fun.{u2, u3} β (fun (ᾰ : β) => γ) (f a) (f a') (congr_arg.{u1, imax u2 u3} α (β -> γ) a a' f p) b) (congr_arg.{u1, u3} α γ a a' (fun (a : α) => f a b) p)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) {a : α} {a' : α} (p : Eq.{u_1} α a a') (b : β), Eq.{0} (Eq.{u_3} γ (f a b) (f a' b)) (congr_fun.{u_2, u_3} β (fun (x : β) => γ) (f a) (f a') (congr_arg.{u_1, imax u_2 u_3} α (β -> γ) a a' f p) b) (congr_arg.{u_1, u_3} α γ a a' (fun (a : α) => f a b) p)
+  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (f : α -> β -> γ) {a : α} {a' : α} (p : Eq.{u3} α a a') (b : β), Eq.{0} (Eq.{u1} γ (f a b) (f a' b)) (congr_fun.{u2, u1} β (fun (ᾰ : β) => γ) (f a) (f a') (congr_arg.{u3, imax u2 u1} α (β -> γ) a a' f p) b) (congr_arg.{u3, u1} α γ a a' (fun (a : α) => f a b) p)
 Case conversion may be inaccurate. Consider using '#align congr_fun_congr_arg congr_fun_congr_argₓ'. -/
 @[simp]
 theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : α} (p : a = a') (b : β) :
@@ -1884,9 +1884,9 @@ theorem heq_of_cast_eq :
 
 /- warning: cast_eq_iff_heq -> cast_eq_iff_heq is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_1}} {a : α} {a' : β} {e : Eq.{succ u_1} Sort.{u_1} α β}, Iff (Eq.{u_1} β (cast.{u_1} α β e a) a') (HEq.{u_1} α a β a')
+  forall {α : Sort.{u1}} {β : Sort.{u1}} {a : α} {a' : β} {e : Eq.{succ u1} Sort.{u1} α β}, Iff (Eq.{u1} β (cast.{u1} α β e a) a') (HEq.{u1} α a β a')
 but is expected to have type
-  forall {a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.4061 : Sort.{u_1}} {a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.4062 : Sort.{u_1}} {e : Eq.{succ u_1} Sort.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.4061 a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.4062} {a : a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.4061} {a' : a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.4062}, Iff (Eq.{u_1} a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.4062 (cast.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.4061 a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.4062 e a) a') (HEq.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.4061 a a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.4062 a')
+  forall {α : Sort.{u1}} {β : Sort.{u1}} {a : Eq.{succ u1} Sort.{u1} α β} {a' : α} {e : β}, Iff (Eq.{u1} β (cast.{u1} α β a a') e) (HEq.{u1} α a' β e)
 Case conversion may be inaccurate. Consider using '#align cast_eq_iff_heq cast_eq_iff_heqₓ'. -/
 theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
   ⟨heq_of_cast_eq _, fun h => by cases h <;> rfl⟩
@@ -1894,9 +1894,9 @@ theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast
 
 /- warning: rec_heq_of_heq -> rec_heq_of_heq is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {a : α} {b : α} {β : Sort.{u_2}} {C : α -> Sort.{u_2}} {x : C a} {y : β} (eq : Eq.{u_1} α a b), (HEq.{u_2} (C a) x β y) -> (HEq.{u_2} (C b) (Eq.ndrec.{u_2, u_1} α a C x b eq) β y)
+  forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} (eq : Eq.{u1} α a b), (HEq.{u2} (C a) x β y) -> (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b eq) β y)
 but is expected to have type
-  forall {α : Sort.{u_1}} {a : α} {β : Sort.{u_2}} {b : α} {C : α -> Sort.{u_2}} {x : C a} {y : β} (e : Eq.{u_1} α a b), (HEq.{u_2} (C a) x β y) -> (HEq.{u_2} (C b) (Eq.ndrec.{u_2, u_1} α a C x b e) β y)
+  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (eq : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.ndrec.{u1, u2} α a C x β eq) b y)
 Case conversion may be inaccurate. Consider using '#align rec_heq_of_heq rec_heq_of_heqₓ'. -/
 theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (eq : a = b) (h : HEq x y) :
     HEq (@Eq.ndrec α a C x b Eq) y := by subst Eq <;> exact h
@@ -1904,9 +1904,9 @@ theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (eq : a = b) 
 
 /- warning: eq.congr -> Eq.congr is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {x₁ : α} {x₂ : α} {y₁ : α} {y₂ : α}, (Eq.{u_1} α x₁ y₁) -> (Eq.{u_1} α x₂ y₂) -> (Iff (Eq.{u_1} α x₁ x₂) (Eq.{u_1} α y₁ y₂))
+  forall {α : Sort.{u1}} {x₁ : α} {x₂ : α} {y₁ : α} {y₂ : α}, (Eq.{u1} α x₁ y₁) -> (Eq.{u1} α x₂ y₂) -> (Iff (Eq.{u1} α x₁ x₂) (Eq.{u1} α y₁ y₂))
 but is expected to have type
-  forall {α._@.Mathlib.Logic.Basic._hyg.4202 : Sort.{u_1}} {x₁ : α._@.Mathlib.Logic.Basic._hyg.4202} {y₁ : α._@.Mathlib.Logic.Basic._hyg.4202} {x₂ : α._@.Mathlib.Logic.Basic._hyg.4202} {y₂ : α._@.Mathlib.Logic.Basic._hyg.4202}, (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.4202 x₁ y₁) -> (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.4202 x₂ y₂) -> (Iff (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.4202 x₁ x₂) (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.4202 y₁ y₂))
+  forall {α : Sort.{u1}} {x₁ : α} {x₂ : α} {y₁ : α} {y₂ : α}, (Eq.{u1} α x₁ x₂) -> (Eq.{u1} α y₁ y₂) -> (Iff (Eq.{u1} α x₁ y₁) (Eq.{u1} α x₂ y₂))
 Case conversion may be inaccurate. Consider using '#align eq.congr Eq.congrₓ'. -/
 protected theorem Eq.congr {x₁ x₂ y₁ y₂ : α} (h₁ : x₁ = y₁) (h₂ : x₂ = y₂) : x₁ = x₂ ↔ y₁ = y₂ := by
   subst h₁
@@ -1925,9 +1925,9 @@ theorem Eq.congr_right {x y z : α} (h : x = y) : z = x ↔ z = y := by rw [h]
 
 /- warning: congr_arg2 -> congr_arg₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u_1} α x x') -> (Eq.{u_2} β y y') -> (Eq.{u_3} γ (f x y) (f x' y'))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u1} α x x') -> (Eq.{u2} β y y') -> (Eq.{u3} γ (f x y) (f x' y'))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u_1} α x x') -> (Eq.{u_2} β y y') -> (Eq.{u_3} γ (f x y) (f x' y'))
+  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u3} α x x') -> (Eq.{u2} β y y') -> (Eq.{u1} γ (f x y) (f x' y'))
 Case conversion may be inaccurate. Consider using '#align congr_arg2 congr_arg₂ₓ'. -/
 theorem congr_arg₂ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y y' : β} (hx : x = x')
     (hy : y = y') : f x y = f x' y' := by 
@@ -1939,9 +1939,9 @@ variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a 
 
 /- warning: congr_fun₂ -> congr_fun₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (Eq.{imax u_1 u_2 u_3} (forall (a : α) (b : β a), γ a b) f g) -> (forall (a : α) (b : β a), Eq.{u_3} (γ a b) (f a b) (g a b))
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (Eq.{imax u1 u2 u3} (forall (a : α) (b : β a), γ a b) f g) -> (forall (a : α) (b : β a), Eq.{u3} (γ a b) (f a b) (g a b))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (Eq.{imax u_1 u_2 u_3} (forall (a : α) (b : β a), γ a b) f g) -> (forall (a : α) (b : β a), Eq.{u_3} (γ a b) (f a b) (g a b))
+  forall {α : Sort.{u3}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u1}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (Eq.{imax u3 u2 u1} (forall (a : α) (b : β a), γ a b) f g) -> (forall (a : α) (b : β a), Eq.{u1} (γ a b) (f a b) (g a b))
 Case conversion may be inaccurate. Consider using '#align congr_fun₂ congr_fun₂ₓ'. -/
 theorem congr_fun₂ {f g : ∀ a b, γ a b} (h : f = g) (a : α) (b : β a) : f a b = g a b :=
   congr_fun (congr_fun h _) _
@@ -1949,9 +1949,9 @@ theorem congr_fun₂ {f g : ∀ a b, γ a b} (h : f = g) (a : α) (b : β a) : f
 
 /- warning: congr_fun₃ -> congr_fun₃ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (Eq.{imax u_1 u_2 u_3 u_4} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g) -> (forall (a : α) (b : β a) (c : γ a b), Eq.{u_4} (δ a b c) (f a b c) (g a b c))
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u4}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (Eq.{imax u1 u2 u3 u4} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g) -> (forall (a : α) (b : β a) (c : γ a b), Eq.{u4} (δ a b c) (f a b c) (g a b c))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (Eq.{imax u_1 u_2 u_3 u_4} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g) -> (forall (a : α) (b : β a) (c : γ a b), Eq.{u_4} (δ a b c) (f a b c) (g a b c))
+  forall {α : Sort.{u4}} {β : α -> Sort.{u3}} {γ : forall (a : α), (β a) -> Sort.{u2}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u1}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (Eq.{imax u4 u3 u2 u1} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g) -> (forall (a : α) (b : β a) (c : γ a b), Eq.{u1} (δ a b c) (f a b c) (g a b c))
 Case conversion may be inaccurate. Consider using '#align congr_fun₃ congr_fun₃ₓ'. -/
 theorem congr_fun₃ {f g : ∀ a b c, δ a b c} (h : f = g) (a : α) (b : β a) (c : γ a b) :
     f a b c = g a b c :=
@@ -1960,9 +1960,9 @@ theorem congr_fun₃ {f g : ∀ a b c, δ a b c} (h : f = g) (a : α) (b : β a)
 
 /- warning: funext₂ -> funext₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (forall (a : α) (b : β a), Eq.{u_3} (γ a b) (f a b) (g a b)) -> (Eq.{imax u_1 u_2 u_3} (forall (a : α) (b : β a), γ a b) f g)
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (forall (a : α) (b : β a), Eq.{u3} (γ a b) (f a b) (g a b)) -> (Eq.{imax u1 u2 u3} (forall (a : α) (b : β a), γ a b) f g)
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : α -> Sort.{u_3}} {γ : forall (a : α), (β a) -> Sort.{u_1}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (forall (a : α) (b : β a), Eq.{u_1} (γ a b) (f a b) (g a b)) -> (Eq.{imax u_2 u_3 u_1} (forall (a : α) (b : β a), γ a b) f g)
+  forall {α : Sort.{u2}} {β : α -> Sort.{u1}} {γ : forall (a : α), (β a) -> Sort.{u3}} {f : forall (a : α) (b : β a), γ a b} {g : forall (a : α) (b : β a), γ a b}, (forall (a : α) (b : β a), Eq.{u3} (γ a b) (f a b) (g a b)) -> (Eq.{imax u2 u1 u3} (forall (a : α) (b : β a), γ a b) f g)
 Case conversion may be inaccurate. Consider using '#align funext₂ funext₂ₓ'. -/
 theorem funext₂ {f g : ∀ a b, γ a b} (h : ∀ a b, f a b = g a b) : f = g :=
   funext fun _ => funext <| h _
@@ -1970,9 +1970,9 @@ theorem funext₂ {f g : ∀ a b, γ a b} (h : ∀ a b, f a b = g a b) : f = g :
 
 /- warning: funext₃ -> funext₃ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (forall (a : α) (b : β a) (c : γ a b), Eq.{u_4} (δ a b c) (f a b c) (g a b c)) -> (Eq.{imax u_1 u_2 u_3 u_4} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g)
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u4}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (forall (a : α) (b : β a) (c : γ a b), Eq.{u4} (δ a b c) (f a b c) (g a b c)) -> (Eq.{imax u1 u2 u3 u4} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g)
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : α -> Sort.{u_3}} {γ : forall (a : α), (β a) -> Sort.{u_4}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_1}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (forall (a : α) (b : β a) (c : γ a b), Eq.{u_1} (δ a b c) (f a b c) (g a b c)) -> (Eq.{imax u_2 u_3 u_4 u_1} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g)
+  forall {α : Sort.{u3}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u1}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u4}} {f : forall (a : α) (b : β a) (c : γ a b), δ a b c} {g : forall (a : α) (b : β a) (c : γ a b), δ a b c}, (forall (a : α) (b : β a) (c : γ a b), Eq.{u4} (δ a b c) (f a b c) (g a b c)) -> (Eq.{imax u3 u2 u1 u4} (forall (a : α) (b : β a) (c : γ a b), δ a b c) f g)
 Case conversion may be inaccurate. Consider using '#align funext₃ funext₃ₓ'. -/
 theorem funext₃ {f g : ∀ a b c, δ a b c} (h : ∀ a b c, f a b c = g a b c) : f = g :=
   funext fun _ => funext₂ <| h _
@@ -2029,9 +2029,9 @@ theorem forall₅_congr {p q : ∀ a b c d, ε a b c d → Prop}
 
 /- warning: exists₂_congr -> exists₂_congr is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {p : forall (a : α), (β a) -> Prop} {q : forall (a : α), (β a) -> Prop}, (forall (a : α) (b : β a), Iff (p a b) (q a b)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => p a b))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => q a b))))
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {p : forall (a : α), (β a) -> Prop} {q : forall (a : α), (β a) -> Prop}, (forall (a : α) (b : β a), Iff (p a b) (q a b)) -> (Iff (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => p a b))) (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => q a b))))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {p : forall (a : α), (β a) -> Prop} {q : forall (a : α), (β a) -> Prop}, (forall (a : α) (b : β a), Iff (p a b) (q a b)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => p a b))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => q a b))))
+  forall {α : Sort.{u2}} {β : α -> Sort.{u1}} {p : forall (a : α), (β a) -> Prop} {q : forall (a : α), (β a) -> Prop}, (forall (a : α) (b : β a), Iff (p a b) (q a b)) -> (Iff (Exists.{u2} α (fun (a : α) => Exists.{u1} (β a) (fun (b : β a) => p a b))) (Exists.{u2} α (fun (a : α) => Exists.{u1} (β a) (fun (b : β a) => q a b))))
 Case conversion may be inaccurate. Consider using '#align exists₂_congr exists₂_congrₓ'. -/
 theorem exists₂_congr {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) :
     (∃ a b, p a b) ↔ ∃ a b, q a b :=
@@ -2040,9 +2040,9 @@ theorem exists₂_congr {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a
 
 /- warning: exists₃_congr -> exists₃_congr is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {p : forall (a : α) (b : β a), (γ a b) -> Prop} {q : forall (a : α) (b : β a), (γ a b) -> Prop}, (forall (a : α) (b : β a) (c : γ a b), Iff (p a b c) (q a b c)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => p a b c)))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => q a b c)))))
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}} {p : forall (a : α) (b : β a), (γ a b) -> Prop} {q : forall (a : α) (b : β a), (γ a b) -> Prop}, (forall (a : α) (b : β a) (c : γ a b), Iff (p a b c) (q a b c)) -> (Iff (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => p a b c)))) (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => q a b c)))))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {p : forall (a : α) (b : β a), (γ a b) -> Prop} {q : forall (a : α) (b : β a), (γ a b) -> Prop}, (forall (a : α) (b : β a) (c : γ a b), Iff (p a b c) (q a b c)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => p a b c)))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => q a b c)))))
+  forall {α : Sort.{u3}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u1}} {p : forall (a : α) (b : β a), (γ a b) -> Prop} {q : forall (a : α) (b : β a), (γ a b) -> Prop}, (forall (a : α) (b : β a) (c : γ a b), Iff (p a b c) (q a b c)) -> (Iff (Exists.{u3} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u1} (γ a b) (fun (c : γ a b) => p a b c)))) (Exists.{u3} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u1} (γ a b) (fun (c : γ a b) => q a b c)))))
 Case conversion may be inaccurate. Consider using '#align exists₃_congr exists₃_congrₓ'. -/
 theorem exists₃_congr {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c ↔ q a b c) :
     (∃ a b c, p a b c) ↔ ∃ a b c, q a b c :=
@@ -2051,9 +2051,9 @@ theorem exists₃_congr {p q : ∀ a b, γ a b → Prop} (h : ∀ a b c, p a b c
 
 /- warning: exists₄_congr -> exists₄_congr is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {p : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), Iff (p a b c d) (q a b c d)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => p a b c d))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => q a b c d))))))
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u4}} {p : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), Iff (p a b c d) (q a b c d)) -> (Iff (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => Exists.{u4} (δ a b c) (fun (d : δ a b c) => p a b c d))))) (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => Exists.{u4} (δ a b c) (fun (d : δ a b c) => q a b c d))))))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {p : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), Iff (p a b c d) (q a b c d)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => p a b c d))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => q a b c d))))))
+  forall {α : Sort.{u4}} {β : α -> Sort.{u3}} {γ : forall (a : α), (β a) -> Sort.{u2}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u1}} {p : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), Iff (p a b c d) (q a b c d)) -> (Iff (Exists.{u4} α (fun (a : α) => Exists.{u3} (β a) (fun (b : β a) => Exists.{u2} (γ a b) (fun (c : γ a b) => Exists.{u1} (δ a b c) (fun (d : δ a b c) => p a b c d))))) (Exists.{u4} α (fun (a : α) => Exists.{u3} (β a) (fun (b : β a) => Exists.{u2} (γ a b) (fun (c : γ a b) => Exists.{u1} (δ a b c) (fun (d : δ a b c) => q a b c d))))))
 Case conversion may be inaccurate. Consider using '#align exists₄_congr exists₄_congrₓ'. -/
 theorem exists₄_congr {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p a b c d ↔ q a b c d) :
     (∃ a b c d, p a b c d) ↔ ∃ a b c d, q a b c d :=
@@ -2062,9 +2062,9 @@ theorem exists₄_congr {p q : ∀ a b c, δ a b c → Prop} (h : ∀ a b c d, p
 
 /- warning: exists₅_congr -> exists₅_congr is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {ε : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Sort.{u_5}} {p : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c) (e : ε a b c d), Iff (p a b c d e) (q a b c d e)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => p a b c d e)))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => q a b c d e)))))))
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u4}} {ε : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Sort.{u5}} {p : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c) (e : ε a b c d), Iff (p a b c d e) (q a b c d e)) -> (Iff (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => Exists.{u4} (δ a b c) (fun (d : δ a b c) => Exists.{u5} (ε a b c d) (fun (e : ε a b c d) => p a b c d e)))))) (Exists.{u1} α (fun (a : α) => Exists.{u2} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => Exists.{u4} (δ a b c) (fun (d : δ a b c) => Exists.{u5} (ε a b c d) (fun (e : ε a b c d) => q a b c d e)))))))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u_4}} {ε : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Sort.{u_5}} {p : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c) (e : ε a b c d), Iff (p a b c d e) (q a b c d e)) -> (Iff (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => p a b c d e)))))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => Exists.{u_3} (γ a b) (fun (c : γ a b) => Exists.{u_4} (δ a b c) (fun (d : δ a b c) => Exists.{u_5} (ε a b c d) (fun (e : ε a b c d) => q a b c d e)))))))
+  forall {α : Sort.{u5}} {β : α -> Sort.{u4}} {γ : forall (a : α), (β a) -> Sort.{u3}} {δ : forall (a : α) (b : β a), (γ a b) -> Sort.{u2}} {ε : forall (a : α) (b : β a) (c : γ a b), (δ a b c) -> Sort.{u1}} {p : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop} {q : forall (a : α) (b : β a) (c : γ a b) (d : δ a b c), (ε a b c d) -> Prop}, (forall (a : α) (b : β a) (c : γ a b) (d : δ a b c) (e : ε a b c d), Iff (p a b c d e) (q a b c d e)) -> (Iff (Exists.{u5} α (fun (a : α) => Exists.{u4} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => Exists.{u2} (δ a b c) (fun (d : δ a b c) => Exists.{u1} (ε a b c d) (fun (e : ε a b c d) => p a b c d e)))))) (Exists.{u5} α (fun (a : α) => Exists.{u4} (β a) (fun (b : β a) => Exists.{u3} (γ a b) (fun (c : γ a b) => Exists.{u2} (δ a b c) (fun (d : δ a b c) => Exists.{u1} (ε a b c d) (fun (e : ε a b c d) => q a b c d e)))))))
 Case conversion may be inaccurate. Consider using '#align exists₅_congr exists₅_congrₓ'. -/
 theorem exists₅_congr {p q : ∀ a b c d, ε a b c d → Prop}
     (h : ∀ a b c d e, p a b c d e ↔ q a b c d e) :
@@ -2114,9 +2114,9 @@ variable {ι β : Sort _} {κ : ι → Sort _} {p q : α → Prop} {b : Prop}
 
 /- warning: exists_imp_exists' -> Exists.imp' is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {p : α -> Prop} {q : β -> Prop} (f : α -> β), (forall (a : α), (p a) -> (q (f a))) -> (Exists.{u_1} α (fun (a : α) => p a)) -> (Exists.{u_3} β (fun (b : β) => q b))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {p : α -> Prop} {q : β -> Prop} (f : α -> β), (forall (a : α), (p a) -> (q (f a))) -> (Exists.{u1} α (fun (a : α) => p a)) -> (Exists.{u2} β (fun (b : β) => q b))
 but is expected to have type
-  forall {α : Sort.{u_2}} {p : α -> Prop} {β : Sort.{u_1}} {q : β -> Prop} (f : α -> β), (forall (a : α), (p a) -> (q (f a))) -> (Exists.{u_2} α (fun (a : α) => p a)) -> (Exists.{u_1} β (fun (b : β) => q b))
+  forall {α : Sort.{u1}} {β : α -> Prop} {p : Sort.{u2}} {q : p -> Prop} (f : α -> p), (forall (a : α), (β a) -> (q (f a))) -> (Exists.{u1} α (fun (a : α) => β a)) -> (Exists.{u2} p (fun (b : p) => q b))
 Case conversion may be inaccurate. Consider using '#align exists_imp_exists' Exists.imp'ₓ'. -/
 theorem Exists.imp' {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : ∀ a, p a → q (f a))
     (hp : ∃ a, p a) : ∃ b, q b :=
@@ -2125,9 +2125,9 @@ theorem Exists.imp' {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : �
 
 /- warning: forall_swap -> forall_swap is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {p : α -> β -> Prop}, Iff (forall (x : α) (y : β), p x y) (forall (y : β) (x : α), p x y)
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {p : α -> β -> Prop}, Iff (forall (x : α) (y : β), p x y) (forall (y : β) (x : α), p x y)
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {p : α -> β -> Prop}, Iff (forall (x : α) (y : β), p x y) (forall (y : β) (x : α), p x y)
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {p : α -> β -> Prop}, Iff (forall (x : α) (y : β), p x y) (forall (y : β) (x : α), p x y)
 Case conversion may be inaccurate. Consider using '#align forall_swap forall_swapₓ'. -/
 theorem forall_swap {p : α → β → Prop} : (∀ x y, p x y) ↔ ∀ y x, p x y :=
   ⟨swap, swap⟩
@@ -2135,9 +2135,9 @@ theorem forall_swap {p : α → β → Prop} : (∀ x y, p x y) ↔ ∀ y x, p x
 
 /- warning: forall₂_swap -> forall₂_swap is a dubious translation:
 lean 3 declaration is
-  forall {ι₁ : Sort.{u_1}} {ι₂ : Sort.{u_2}} {κ₁ : ι₁ -> Sort.{u_3}} {κ₂ : ι₂ -> Sort.{u_4}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (forall (i₁ : ι₁) (j₁ : κ₁ i₁) (i₂ : ι₂) (j₂ : κ₂ i₂), p i₁ j₁ i₂ j₂) (forall (i₂ : ι₂) (j₂ : κ₂ i₂) (i₁ : ι₁) (j₁ : κ₁ i₁), p i₁ j₁ i₂ j₂)
+  forall {ι₁ : Sort.{u1}} {ι₂ : Sort.{u2}} {κ₁ : ι₁ -> Sort.{u3}} {κ₂ : ι₂ -> Sort.{u4}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (forall (i₁ : ι₁) (j₁ : κ₁ i₁) (i₂ : ι₂) (j₂ : κ₂ i₂), p i₁ j₁ i₂ j₂) (forall (i₂ : ι₂) (j₂ : κ₂ i₂) (i₁ : ι₁) (j₁ : κ₁ i₁), p i₁ j₁ i₂ j₂)
 but is expected to have type
-  forall {ι₁ : Sort.{u_1}} {ι₂ : Sort.{u_2}} {κ₁ : ι₁ -> Sort.{u_3}} {κ₂ : ι₂ -> Sort.{u_4}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (forall (i₁ : ι₁) (j₁ : κ₁ i₁) (i₂ : ι₂) (j₂ : κ₂ i₂), p i₁ j₁ i₂ j₂) (forall (i₂ : ι₂) (j₂ : κ₂ i₂) (i₁ : ι₁) (j₁ : κ₁ i₁), p i₁ j₁ i₂ j₂)
+  forall {ι₁ : Sort.{u4}} {ι₂ : Sort.{u3}} {κ₁ : ι₁ -> Sort.{u2}} {κ₂ : ι₂ -> Sort.{u1}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (forall (i₁ : ι₁) (j₁ : κ₁ i₁) (i₂ : ι₂) (j₂ : κ₂ i₂), p i₁ j₁ i₂ j₂) (forall (i₂ : ι₂) (j₂ : κ₂ i₂) (i₁ : ι₁) (j₁ : κ₁ i₁), p i₁ j₁ i₂ j₂)
 Case conversion may be inaccurate. Consider using '#align forall₂_swap forall₂_swapₓ'. -/
 theorem forall₂_swap {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ : ι₂ → Sort _}
     {p : ∀ i₁, κ₁ i₁ → ∀ i₂, κ₂ i₂ → Prop} :
@@ -2192,9 +2192,9 @@ theorem Exists.choose_spec {p : α → Prop} (P : ∃ a, p a) : p P.some :=
 
 /- warning: not_exists_of_forall_not -> not_exists_of_forall_not is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Prop}, (forall (x : α), Not (p x)) -> (Not (Exists.{u_1} α (fun (x : α) => p x)))
+  forall {α : Sort.{u1}} {p : α -> Prop}, (forall (x : α), Not (p x)) -> (Not (Exists.{u1} α (fun (x : α) => p x)))
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop}, (forall (x : α), (p x) -> b) -> (Exists.{u_1} α (fun (x : α) => p x)) -> b
+  forall {α : Sort.{u1}} {p : α -> Prop} {h : Prop}, (forall (x : α), (p x) -> h) -> (Exists.{u1} α (fun (x : α) => p x)) -> h
 Case conversion may be inaccurate. Consider using '#align not_exists_of_forall_not not_exists_of_forall_notₓ'. -/
 --theorem forall_not_of_not_exists (h : ¬ ∃ x, p x) : ∀ x, ¬ p x :=
 --forall_imp_of_exists_imp h
@@ -2286,9 +2286,9 @@ theorem forall_true_iff' (h : ∀ a, p a ↔ True) : (∀ a, p a) ↔ True :=
 
 /- warning: forall_2_true_iff -> forall₂_true_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}}, Iff (forall (a : α), (β a) -> True) True
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}}, Iff (forall (a : α), (β a) -> True) True
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : α -> Sort.{u_1}}, Iff (forall (a : α), (β a) -> True) True
+  forall {α : Sort.{u2}} {β : α -> Sort.{u1}}, Iff (forall (a : α), (β a) -> True) True
 Case conversion may be inaccurate. Consider using '#align forall_2_true_iff forall₂_true_iffₓ'. -/
 @[simp]
 theorem forall₂_true_iff {β : α → Sort _} : (∀ a, β a → True) ↔ True :=
@@ -2297,9 +2297,9 @@ theorem forall₂_true_iff {β : α → Sort _} : (∀ a, β a → True) ↔ Tru
 
 /- warning: forall_3_true_iff -> forall₃_true_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {γ : forall (a : α), (β a) -> Sort.{u_3}}, Iff (forall (a : α) (b : β a), (γ a b) -> True) True
+  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u3}}, Iff (forall (a : α) (b : β a), (γ a b) -> True) True
 but is expected to have type
-  forall {α : Sort.{u_3}} {β : α -> Sort.{u_1}} {γ : forall (a : α), (β a) -> Sort.{u_2}}, Iff (forall (a : α) (b : β a), (γ a b) -> True) True
+  forall {α : Sort.{u3}} {β : α -> Sort.{u2}} {γ : forall (a : α), (β a) -> Sort.{u1}}, Iff (forall (a : α) (b : β a), (γ a b) -> True) True
 Case conversion may be inaccurate. Consider using '#align forall_3_true_iff forall₃_true_iffₓ'. -/
 @[simp]
 theorem forall₃_true_iff {β : α → Sort _} {γ : ∀ a, β a → Sort _} :
@@ -2365,9 +2365,9 @@ theorem exists_or : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ ∃ x, q x :=
 
 /- warning: exists_and_distrib_left -> exists_and_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {q : Prop} {p : α -> Prop}, Iff (Exists.{u_1} α (fun (x : α) => And q (p x))) (And q (Exists.{u_1} α (fun (x : α) => p x)))
+  forall {α : Sort.{u1}} {q : Prop} {p : α -> Prop}, Iff (Exists.{u1} α (fun (x : α) => And q (p x))) (And q (Exists.{u1} α (fun (x : α) => p x)))
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop}, Iff (Exists.{u_1} α (fun (x : α) => And b (p x))) (And b (Exists.{u_1} α (fun (x : α) => p x)))
+  forall {α : Sort.{u1}} {q : α -> Prop} {p : Prop}, Iff (Exists.{u1} α (fun (x : α) => And p (q x))) (And p (Exists.{u1} α (fun (x : α) => q x)))
 Case conversion may be inaccurate. Consider using '#align exists_and_distrib_left exists_and_leftₓ'. -/
 @[simp]
 theorem exists_and_left {q : Prop} {p : α → Prop} : (∃ x, q ∧ p x) ↔ q ∧ ∃ x, p x :=
@@ -2376,9 +2376,9 @@ theorem exists_and_left {q : Prop} {p : α → Prop} : (∃ x, q ∧ p x) ↔ q 
 
 /- warning: exists_and_distrib_right -> exists_and_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {q : Prop} {p : α -> Prop}, Iff (Exists.{u_1} α (fun (x : α) => And (p x) q)) (And (Exists.{u_1} α (fun (x : α) => p x)) q)
+  forall {α : Sort.{u1}} {q : Prop} {p : α -> Prop}, Iff (Exists.{u1} α (fun (x : α) => And (p x) q)) (And (Exists.{u1} α (fun (x : α) => p x)) q)
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop}, Iff (Exists.{u_1} α (fun (x : α) => And (p x) b)) (And (Exists.{u_1} α (fun (x : α) => p x)) b)
+  forall {α : Sort.{u1}} {q : α -> Prop} {p : Prop}, Iff (Exists.{u1} α (fun (x : α) => And (q x) p)) (And (Exists.{u1} α (fun (x : α) => q x)) p)
 Case conversion may be inaccurate. Consider using '#align exists_and_distrib_right exists_and_rightₓ'. -/
 @[simp]
 theorem exists_and_right {q : Prop} {p : α → Prop} : (∃ x, p x ∧ q) ↔ (∃ x, p x) ∧ q := by
@@ -2462,9 +2462,9 @@ theorem exists_eq_right {a' : α} : (∃ a, p a ∧ a = a') ↔ p a' :=
 
 /- warning: exists_eq_right_right -> exists_eq_right_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Prop} {q : α -> Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And (q a) (Eq.{u_1} α a a')))) (And (p a') (q a'))
+  forall {α : Sort.{u1}} {p : α -> Prop} {q : α -> Prop} {a' : α}, Iff (Exists.{u1} α (fun (a : α) => And (p a) (And (q a) (Eq.{u1} α a a')))) (And (p a') (q a'))
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And b (Eq.{u_1} α a a')))) (And (p a') b)
+  forall {α : Sort.{u1}} {p : α -> Prop} {q : Prop} {a' : α}, Iff (Exists.{u1} α (fun (a : α) => And (p a) (And q (Eq.{u1} α a a')))) (And (p a') q)
 Case conversion may be inaccurate. Consider using '#align exists_eq_right_right exists_eq_right_rightₓ'. -/
 @[simp]
 theorem exists_eq_right_right {a' : α} : (∃ a : α, p a ∧ q a ∧ a = a') ↔ p a' ∧ q a' :=
@@ -2473,9 +2473,9 @@ theorem exists_eq_right_right {a' : α} : (∃ a : α, p a ∧ q a ∧ a = a') �
 
 /- warning: exists_eq_right_right' -> exists_eq_right_right' is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Prop} {q : α -> Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And (q a) (Eq.{u_1} α a' a)))) (And (p a') (q a'))
+  forall {α : Sort.{u1}} {p : α -> Prop} {q : α -> Prop} {a' : α}, Iff (Exists.{u1} α (fun (a : α) => And (p a) (And (q a) (Eq.{u1} α a' a)))) (And (p a') (q a'))
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Prop} {b : Prop} {a' : α}, Iff (Exists.{u_1} α (fun (a : α) => And (p a) (And b (Eq.{u_1} α a' a)))) (And (p a') b)
+  forall {α : Sort.{u1}} {p : α -> Prop} {q : Prop} {a' : α}, Iff (Exists.{u1} α (fun (a : α) => And (p a) (And q (Eq.{u1} α a' a)))) (And (p a') q)
 Case conversion may be inaccurate. Consider using '#align exists_eq_right_right' exists_eq_right_right'ₓ'. -/
 @[simp]
 theorem exists_eq_right_right' {a' : α} : (∃ a : α, p a ∧ q a ∧ a' = a) ↔ p a' ∧ q a' :=
@@ -2542,9 +2542,9 @@ theorem exists_or_eq_right' (y : α) (p : α → Prop) : ∃ x : α, p x ∨ y =
 
 /- warning: forall_apply_eq_imp_iff -> forall_apply_eq_imp_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u_3} β (f a) b) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u2} β (f a) b) -> (p b)) (forall (a : α), p (f a))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u_1} β (f a) b) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u1} β (f a) b) -> (p b)) (forall (a : α), p (f a))
 Case conversion may be inaccurate. Consider using '#align forall_apply_eq_imp_iff forall_apply_eq_imp_iffₓ'. -/
 @[simp]
 theorem forall_apply_eq_imp_iff {f : α → β} {p : β → Prop} :
@@ -2554,9 +2554,9 @@ theorem forall_apply_eq_imp_iff {f : α → β} {p : β → Prop} :
 
 /- warning: forall_apply_eq_imp_iff' -> forall_apply_eq_imp_iff' is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u_3} β (f a) b) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u2} β (f a) b) -> (p b)) (forall (a : α), p (f a))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u_1} β (f a) b) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u1} β (f a) b) -> (p b)) (forall (a : α), p (f a))
 Case conversion may be inaccurate. Consider using '#align forall_apply_eq_imp_iff' forall_apply_eq_imp_iff'ₓ'. -/
 @[simp]
 theorem forall_apply_eq_imp_iff' {f : α → β} {p : β → Prop} :
@@ -2567,9 +2567,9 @@ theorem forall_apply_eq_imp_iff' {f : α → β} {p : β → Prop} :
 
 /- warning: forall_eq_apply_imp_iff -> forall_eq_apply_imp_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u_3} β b (f a)) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u2} β b (f a)) -> (p b)) (forall (a : α), p (f a))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u_1} β b (f a)) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β} {p : β -> Prop}, Iff (forall (a : α) (b : β), (Eq.{u1} β b (f a)) -> (p b)) (forall (a : α), p (f a))
 Case conversion may be inaccurate. Consider using '#align forall_eq_apply_imp_iff forall_eq_apply_imp_iffₓ'. -/
 @[simp]
 theorem forall_eq_apply_imp_iff {f : α → β} {p : β → Prop} :
@@ -2578,9 +2578,9 @@ theorem forall_eq_apply_imp_iff {f : α → β} {p : β → Prop} :
 
 /- warning: forall_eq_apply_imp_iff' -> forall_eq_apply_imp_iff' is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u_3} β b (f a)) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u2} β b (f a)) -> (p b)) (forall (a : α), p (f a))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u_1} β b (f a)) -> (p b)) (forall (a : α), p (f a))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β} {p : β -> Prop}, Iff (forall (b : β) (a : α), (Eq.{u1} β b (f a)) -> (p b)) (forall (a : α), p (f a))
 Case conversion may be inaccurate. Consider using '#align forall_eq_apply_imp_iff' forall_eq_apply_imp_iff'ₓ'. -/
 @[simp]
 theorem forall_eq_apply_imp_iff' {f : α → β} {p : β → Prop} :
@@ -2591,9 +2591,9 @@ theorem forall_eq_apply_imp_iff' {f : α → β} {p : β → Prop} :
 
 /- warning: forall_apply_eq_imp_iff₂ -> forall_apply_eq_imp_iff₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_3}} {f : α -> β} {p : α -> Prop} {q : β -> Prop}, Iff (forall (b : β) (a : α), (p a) -> (Eq.{u_3} β (f a) b) -> (q b)) (forall (a : α), (p a) -> (q (f a)))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β} {p : α -> Prop} {q : β -> Prop}, Iff (forall (b : β) (a : α), (p a) -> (Eq.{u2} β (f a) b) -> (q b)) (forall (a : α), (p a) -> (q (f a)))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {f : α -> β} {p : α -> Prop} {q : β -> Prop}, Iff (forall (b : β) (a : α), (p a) -> (Eq.{u_1} β (f a) b) -> (q b)) (forall (a : α), (p a) -> (q (f a)))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β} {p : α -> Prop} {q : β -> Prop}, Iff (forall (b : β) (a : α), (p a) -> (Eq.{u1} β (f a) b) -> (q b)) (forall (a : α), (p a) -> (q (f a)))
 Case conversion may be inaccurate. Consider using '#align forall_apply_eq_imp_iff₂ forall_apply_eq_imp_iff₂ₓ'. -/
 @[simp]
 theorem forall_apply_eq_imp_iff₂ {f : α → β} {p : α → Prop} {q : β → Prop} :
@@ -2621,9 +2621,9 @@ theorem exists_comm {p : α → β → Prop} : (∃ a b, p a b) ↔ ∃ b a, p a
 
 /- warning: exists₂_comm -> exists₂_comm is a dubious translation:
 lean 3 declaration is
-  forall {ι₁ : Sort.{u_1}} {ι₂ : Sort.{u_2}} {κ₁ : ι₁ -> Sort.{u_3}} {κ₂ : ι₂ -> Sort.{u_4}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (Exists.{u_1} ι₁ (fun (i₁ : ι₁) => Exists.{u_3} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => Exists.{u_2} ι₂ (fun (i₂ : ι₂) => Exists.{u_4} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => p i₁ j₁ i₂ j₂))))) (Exists.{u_2} ι₂ (fun (i₂ : ι₂) => Exists.{u_4} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => Exists.{u_1} ι₁ (fun (i₁ : ι₁) => Exists.{u_3} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => p i₁ j₁ i₂ j₂)))))
+  forall {ι₁ : Sort.{u1}} {ι₂ : Sort.{u2}} {κ₁ : ι₁ -> Sort.{u3}} {κ₂ : ι₂ -> Sort.{u4}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (Exists.{u1} ι₁ (fun (i₁ : ι₁) => Exists.{u3} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => Exists.{u2} ι₂ (fun (i₂ : ι₂) => Exists.{u4} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => p i₁ j₁ i₂ j₂))))) (Exists.{u2} ι₂ (fun (i₂ : ι₂) => Exists.{u4} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => Exists.{u1} ι₁ (fun (i₁ : ι₁) => Exists.{u3} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => p i₁ j₁ i₂ j₂)))))
 but is expected to have type
-  forall {ι₁ : Sort.{u_1}} {ι₂ : Sort.{u_2}} {κ₁ : ι₁ -> Sort.{u_3}} {κ₂ : ι₂ -> Sort.{u_4}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (Exists.{u_1} ι₁ (fun (i₁ : ι₁) => Exists.{u_3} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => Exists.{u_2} ι₂ (fun (i₂ : ι₂) => Exists.{u_4} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => p i₁ j₁ i₂ j₂))))) (Exists.{u_2} ι₂ (fun (i₂ : ι₂) => Exists.{u_4} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => Exists.{u_1} ι₁ (fun (i₁ : ι₁) => Exists.{u_3} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => p i₁ j₁ i₂ j₂)))))
+  forall {ι₁ : Sort.{u4}} {ι₂ : Sort.{u3}} {κ₁ : ι₁ -> Sort.{u2}} {κ₂ : ι₂ -> Sort.{u1}} {p : forall (i₁ : ι₁), (κ₁ i₁) -> (forall (i₂ : ι₂), (κ₂ i₂) -> Prop)}, Iff (Exists.{u4} ι₁ (fun (i₁ : ι₁) => Exists.{u2} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => Exists.{u3} ι₂ (fun (i₂ : ι₂) => Exists.{u1} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => p i₁ j₁ i₂ j₂))))) (Exists.{u3} ι₂ (fun (i₂ : ι₂) => Exists.{u1} (κ₂ i₂) (fun (j₂ : κ₂ i₂) => Exists.{u4} ι₁ (fun (i₁ : ι₁) => Exists.{u2} (κ₁ i₁) (fun (j₁ : κ₁ i₁) => p i₁ j₁ i₂ j₂)))))
 Case conversion may be inaccurate. Consider using '#align exists₂_comm exists₂_commₓ'. -/
 theorem exists₂_comm {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ : ι₂ → Sort _}
     {p : ∀ i₁, κ₁ i₁ → ∀ i₂, κ₂ i₂ → Prop} :
@@ -2675,7 +2675,7 @@ theorem forall_or_right {q : Prop} {p : α → Prop} : (∀ x, p x ∨ q) ↔ (�
 lean 3 declaration is
   forall {p : Prop} {q : Prop}, Iff (Exists.{0} p (fun (h : p) => q)) (And p q)
 but is expected to have type
-  forall {b : Prop} {a : Prop}, Iff (Exists.{0} a (fun (_h : a) => b)) (And a b)
+  forall {p : Prop} {q : Prop}, Iff (Exists.{0} q (fun (h : q) => p)) (And q p)
 Case conversion may be inaccurate. Consider using '#align exists_prop exists_propₓ'. -/
 @[simp]
 theorem exists_prop {p q : Prop} : (∃ h : p, q) ↔ p ∧ q :=
@@ -2806,9 +2806,9 @@ theorem forall_true_left (p : True → Prop) : (∀ x, p x) ↔ p True.intro :=
 
 /- warning: exists_unique.elim2 -> ExistsUnique.elim₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [_inst_1 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} {b : Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (h : p x) => q x h))) -> (forall (x : α) (h : p x), (q x h) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y x)) -> b) -> b
+  forall {α : Sort.{u1}} {p : α -> Sort.{u2}} [_inst_1 : forall (x : α), Subsingleton.{u2} (p x)] {q : forall (x : α), (p x) -> Prop} {b : Prop}, (ExistsUnique.{u1} α (fun (x : α) => ExistsUnique.{u2} (p x) (fun (h : p x) => q x h))) -> (forall (x : α) (h : p x), (q x h) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u1} α y x)) -> b) -> b
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.9120 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} {b : Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (h : p x) => q x h))) -> (forall (x : α) (h : p x), (q x h) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y x)) -> b) -> b
+  forall {α : Sort.{u2}} {p : α -> Sort.{u1}} [_inst_1 : forall (x : α), Subsingleton.{u1} (p x)] {q : forall (x : α), (p x) -> Prop} {b : Prop}, (ExistsUnique.{u2} α (fun (x : α) => ExistsUnique.{u1} (p x) (fun (h : p x) => q x h))) -> (forall (x : α) (h : p x), (q x h) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u2} α y x)) -> b) -> b
 Case conversion may be inaccurate. Consider using '#align exists_unique.elim2 ExistsUnique.elim₂ₓ'. -/
 theorem ExistsUnique.elim₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)]
     {q : ∀ (x) (h : p x), Prop} {b : Prop} (h₂ : ∃! (x : _)(h : p x), q x h)
@@ -2820,9 +2820,9 @@ theorem ExistsUnique.elim₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingle
 
 /- warning: exists_unique.intro2 -> ExistsUnique.intro₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [_inst_1 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} (w : α) (hp : p w), (q w hp) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y w)) -> (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx)))
+  forall {α : Sort.{u1}} {p : α -> Sort.{u2}} [_inst_1 : forall (x : α), Subsingleton.{u2} (p x)] {q : forall (x : α), (p x) -> Prop} (w : α) (hp : p w), (q w hp) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u1} α y w)) -> (ExistsUnique.{u1} α (fun (x : α) => ExistsUnique.{u2} (p x) (fun (hx : p x) => q x hx)))
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.9256 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} (w : α) (hp : p w), (q w hp) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y w)) -> (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx)))
+  forall {α : Sort.{u2}} {p : α -> Sort.{u1}} [_inst_1 : forall (x : α), Subsingleton.{u1} (p x)] {q : forall (x : α), (p x) -> Prop} (w : α) (hp : p w), (q w hp) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u2} α y w)) -> (ExistsUnique.{u2} α (fun (x : α) => ExistsUnique.{u1} (p x) (fun (hx : p x) => q x hx)))
 Case conversion may be inaccurate. Consider using '#align exists_unique.intro2 ExistsUnique.intro₂ₓ'. -/
 theorem ExistsUnique.intro₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)]
     {q : ∀ (x : α) (h : p x), Prop} (w : α) (hp : p w) (hq : q w hp)
@@ -2833,9 +2833,9 @@ theorem ExistsUnique.intro₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingl
 
 /- warning: exists_unique.exists2 -> ExistsUnique.exists₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx))) -> (Exists.{u_1} α (fun (x : α) => Exists.{u_2} (p x) (fun (hx : p x) => q x hx)))
+  forall {α : Sort.{u1}} {p : α -> Sort.{u2}} {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u1} α (fun (x : α) => ExistsUnique.{u2} (p x) (fun (hx : p x) => q x hx))) -> (Exists.{u1} α (fun (x : α) => Exists.{u2} (p x) (fun (hx : p x) => q x hx)))
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx))) -> (Exists.{u_1} α (fun (x : α) => Exists.{u_2} (p x) (fun (hx : p x) => q x hx)))
+  forall {α : Sort.{u2}} {p : α -> Sort.{u1}} {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u2} α (fun (x : α) => ExistsUnique.{u1} (p x) (fun (hx : p x) => q x hx))) -> (Exists.{u2} α (fun (x : α) => Exists.{u1} (p x) (fun (hx : p x) => q x hx)))
 Case conversion may be inaccurate. Consider using '#align exists_unique.exists2 ExistsUnique.exists₂ₓ'. -/
 theorem ExistsUnique.exists₂ {α : Sort _} {p : α → Sort _} {q : ∀ (x : α) (h : p x), Prop}
     (h : ∃! (x : _)(hx : p x), q x hx) : ∃ (x : _)(hx : p x), q x hx :=
@@ -2844,9 +2844,9 @@ theorem ExistsUnique.exists₂ {α : Sort _} {p : α → Sort _} {q : ∀ (x : �
 
 /- warning: exists_unique.unique2 -> ExistsUnique.unique₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [_inst_1 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx))) -> (forall {y₁ : α} {y₂ : α} (hpy₁ : p y₁), (q y₁ hpy₁) -> (forall (hpy₂ : p y₂), (q y₂ hpy₂) -> (Eq.{u_1} α y₁ y₂)))
+  forall {α : Sort.{u1}} {p : α -> Sort.{u2}} [_inst_1 : forall (x : α), Subsingleton.{u2} (p x)] {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u1} α (fun (x : α) => ExistsUnique.{u2} (p x) (fun (hx : p x) => q x hx))) -> (forall {y₁ : α} {y₂ : α} (hpy₁ : p y₁), (q y₁ hpy₁) -> (forall (hpy₂ : p y₂), (q y₂ hpy₂) -> (Eq.{u1} α y₁ y₂)))
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.9452 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx))) -> (forall {y₁ : α} {y₂ : α} (hpy₁ : p y₁), (q y₁ hpy₁) -> (forall (hpy₂ : p y₂), (q y₂ hpy₂) -> (Eq.{u_1} α y₁ y₂)))
+  forall {α : Sort.{u2}} {p : α -> Sort.{u1}} [_inst_1 : forall (x : α), Subsingleton.{u1} (p x)] {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u2} α (fun (x : α) => ExistsUnique.{u1} (p x) (fun (hx : p x) => q x hx))) -> (forall {y₁ : α} {y₂ : α} (hpy₁ : p y₁), (q y₁ hpy₁) -> (forall (hpy₂ : p y₂), (q y₂ hpy₂) -> (Eq.{u2} α y₁ y₂)))
 Case conversion may be inaccurate. Consider using '#align exists_unique.unique2 ExistsUnique.unique₂ₓ'. -/
 theorem ExistsUnique.unique₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)]
     {q : ∀ (x : α) (hx : p x), Prop} (h : ∃! (x : _)(hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁)
@@ -2939,9 +2939,9 @@ end Classical
 
 /- warning: exists.classical_rec_on -> Exists.classicalRecOn is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {p : α -> Prop}, (Exists.{u_1} α (fun (a : α) => p a)) -> (forall {C : Sort.{u}}, (forall (a : α), (p a) -> C) -> C)
+  forall {α : Sort.{u2}} {p : α -> Prop}, (Exists.{u2} α (fun (a : α) => p a)) -> (forall {C : Sort.{u1}}, (forall (a : α), (p a) -> C) -> C)
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Prop}, (Exists.{u_1} α (fun (a : α) => p a)) -> (forall {C : Sort.{u_2}}, (forall (a : α), (p a) -> C) -> C)
+  forall {α : Sort.{u1}} {p : α -> Prop}, (Exists.{u1} α (fun (a : α) => p a)) -> (forall {C : Sort.{u2}}, (forall (a : α), (p a) -> C) -> C)
 Case conversion may be inaccurate. Consider using '#align exists.classical_rec_on Exists.classicalRecOnₓ'. -/
 /-- This function has the same type as `exists.rec_on`, and can be used to case on an equality,
 but `exists.rec_on` can only eliminate into Prop, while this version eliminates into any universe
@@ -3279,9 +3279,9 @@ theorem ite_eq_or_eq : ite P a b = a ∨ ite P a b = b :=
 
 /- warning: apply_dite -> apply_dite is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (x : P -> α) (y : (Not P) -> α), Eq.{u_2} β (f (dite.{u_1} α P _inst_1 x y)) (dite.{u_2} β P _inst_1 (fun (h : P) => f (x h)) (fun (h : Not P) => f (y h)))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (x : P -> α) (y : (Not P) -> α), Eq.{u2} β (f (dite.{u1} α P _inst_1 x y)) (dite.{u2} β P _inst_1 (fun (h : P) => f (x h)) (fun (h : Not P) => f (y h)))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [inst._@.Std.Logic._hyg.12540 : Decidable P] (x : P -> α) (y : (Not P) -> α), Eq.{u_2} β (f (dite.{u_1} α P inst._@.Std.Logic._hyg.12540 x y)) (dite.{u_2} β P inst._@.Std.Logic._hyg.12540 (fun (h : P) => f (x h)) (fun (h : Not P) => f (y h)))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (x : P -> α) (y : (Not P) -> α), Eq.{u1} β (f (dite.{u2} α P _inst_1 x y)) (dite.{u1} β P _inst_1 (fun (h : P) => f (x h)) (fun (h : Not P) => f (y h)))
 Case conversion may be inaccurate. Consider using '#align apply_dite apply_diteₓ'. -/
 /-- A function applied to a `dite` is a `dite` of that function applied to each of the branches. -/
 theorem apply_dite (x : P → α) (y : ¬P → α) :
@@ -3290,9 +3290,9 @@ theorem apply_dite (x : P → α) (y : ¬P → α) :
 
 /- warning: apply_ite -> apply_ite is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (a : α) (b : α), Eq.{u_2} β (f (ite.{u_1} α P _inst_1 a b)) (ite.{u_2} β P _inst_1 (f a) (f b))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (a : α) (b : α), Eq.{u2} β (f (ite.{u1} α P _inst_1 a b)) (ite.{u2} β P _inst_1 (f a) (f b))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} (f : α -> β) (P : Prop) [inst._@.Std.Logic._hyg.12634 : Decidable P] (x : α) (y : α), Eq.{u_2} β (f (ite.{u_1} α P inst._@.Std.Logic._hyg.12634 x y)) (ite.{u_2} β P inst._@.Std.Logic._hyg.12634 (f x) (f y))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} (f : α -> β) (P : Prop) [_inst_1 : Decidable P] (a : α) (b : α), Eq.{u1} β (f (ite.{u2} α P _inst_1 a b)) (ite.{u1} β P _inst_1 (f a) (f b))
 Case conversion may be inaccurate. Consider using '#align apply_ite apply_iteₓ'. -/
 /-- A function applied to a `ite` is a `ite` of that function applied to each of the branches. -/
 theorem apply_ite : f (ite P a b) = ite P (f a) (f b) :=
@@ -3301,9 +3301,9 @@ theorem apply_ite : f (ite P a b) = ite P (f a) (f b) :=
 
 /- warning: apply_dite2 -> apply_dite₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : P -> α) (b : (Not P) -> α) (c : P -> β) (d : (Not P) -> β), Eq.{u_3} γ (f (dite.{u_1} α P _inst_3 a b) (dite.{u_2} β P _inst_3 c d)) (dite.{u_3} γ P _inst_3 (fun (h : P) => f (a h) (c h)) (fun (h : Not P) => f (b h) (d h)))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : P -> α) (b : (Not P) -> α) (c : P -> β) (d : (Not P) -> β), Eq.{u3} γ (f (dite.{u1} α P _inst_3 a b) (dite.{u2} β P _inst_3 c d)) (dite.{u3} γ P _inst_3 (fun (h : P) => f (a h) (c h)) (fun (h : Not P) => f (b h) (d h)))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} (f : α -> β -> γ) (P : Prop) [inst._@.Mathlib.Logic.Basic._hyg.14036 : Decidable P] (a : P -> α) (b : (Not P) -> α) (c : P -> β) (d : (Not P) -> β), Eq.{u_1} γ (f (dite.{u_2} α P inst._@.Mathlib.Logic.Basic._hyg.14036 a b) (dite.{u_3} β P inst._@.Mathlib.Logic.Basic._hyg.14036 c d)) (dite.{u_1} γ P inst._@.Mathlib.Logic.Basic._hyg.14036 (fun (h : P) => f (a h) (c h)) (fun (h : Not P) => f (b h) (d h)))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {γ : Sort.{u3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : P -> α) (b : (Not P) -> α) (c : P -> β) (d : (Not P) -> β), Eq.{u3} γ (f (dite.{u2} α P _inst_3 a b) (dite.{u1} β P _inst_3 c d)) (dite.{u3} γ P _inst_3 (fun (h : P) => f (a h) (c h)) (fun (h : Not P) => f (b h) (d h)))
 Case conversion may be inaccurate. Consider using '#align apply_dite2 apply_dite₂ₓ'. -/
 /-- A two-argument function applied to two `dite`s is a `dite` of that two-argument function
 applied to each of the branches. -/
@@ -3315,9 +3315,9 @@ theorem apply_dite₂ (f : α → β → γ) (P : Prop) [Decidable P] (a : P →
 
 /- warning: apply_ite2 -> apply_ite₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : α) (b : α) (c : β) (d : β), Eq.{u_3} γ (f (ite.{u_1} α P _inst_3 a b) (ite.{u_2} β P _inst_3 c d)) (ite.{u_3} γ P _inst_3 (f a c) (f b d))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : α) (b : α) (c : β) (d : β), Eq.{u3} γ (f (ite.{u1} α P _inst_3 a b) (ite.{u2} β P _inst_3 c d)) (ite.{u3} γ P _inst_3 (f a c) (f b d))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} (f : α -> β -> γ) (P : Prop) [inst._@.Mathlib.Logic.Basic._hyg.14192 : Decidable P] (a : α) (b : α) (c : β) (d : β), Eq.{u_1} γ (f (ite.{u_2} α P inst._@.Mathlib.Logic.Basic._hyg.14192 a b) (ite.{u_3} β P inst._@.Mathlib.Logic.Basic._hyg.14192 c d)) (ite.{u_1} γ P inst._@.Mathlib.Logic.Basic._hyg.14192 (f a c) (f b d))
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {γ : Sort.{u3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : α) (b : α) (c : β) (d : β), Eq.{u3} γ (f (ite.{u2} α P _inst_3 a b) (ite.{u1} β P _inst_3 c d)) (ite.{u3} γ P _inst_3 (f a c) (f b d))
 Case conversion may be inaccurate. Consider using '#align apply_ite2 apply_ite₂ₓ'. -/
 /-- A two-argument function applied to two `ite`s is a `ite` of that two-argument function
 applied to each of the branches. -/

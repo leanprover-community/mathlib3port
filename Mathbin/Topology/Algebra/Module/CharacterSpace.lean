@@ -85,8 +85,10 @@ theorem coe_to_clm (φ : characterSpace 𝕜 A) : ⇑(toClm φ) = φ :=
 
 /-- Elements of the character space are non-unital algebra homomorphisms. -/
 instance : NonUnitalAlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
-  { characterSpace.continuousLinearMapClass with map_smul := fun φ => map_smul φ,
-    map_zero := fun φ => map_zero φ, map_mul := fun φ => φ.Prop.2 }
+  { characterSpace.continuousLinearMapClass with
+    map_smul := fun φ => map_smul φ
+    map_zero := fun φ => map_zero φ
+    map_mul := fun φ => φ.Prop.2 }
 
 /-- An element of the character space, as an non-unital algebra homomorphism. -/
 def toNonUnitalAlgHom (φ : characterSpace 𝕜 A) :
@@ -145,7 +147,8 @@ instance : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     · have : ∀ a, φ (a * 1) = 0 := fun a => by simp only [map_mul φ, h₂, mul_zero]
       exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_one] using this)
     · exact (sub_eq_zero.mp h₂).symm
-  { characterSpace.nonUnitalAlgHomClass with map_one := map_one',
+  { characterSpace.nonUnitalAlgHomClass with
+    map_one := map_one'
     commutes := fun φ r => by
       rw [Algebra.algebra_map_eq_smul_one, Algebra.id.map_eq_id, RingHom.id_apply]
       change ((φ : WeakDual 𝕜 A) : A →L[𝕜] 𝕜) (r • 1) = r
@@ -154,7 +157,9 @@ instance : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
 /-- An element of the character space of a unital algebra, as an algebra homomorphism. -/
 @[simps]
 def toAlgHom (φ : characterSpace 𝕜 A) : A →ₐ[𝕜] 𝕜 :=
-  { toNonUnitalAlgHom φ with map_one' := map_one φ, commutes' := AlgHomClass.commutes φ }
+  { toNonUnitalAlgHom φ with 
+    map_one' := map_one φ
+    commutes' := AlgHomClass.commutes φ }
 #align weak_dual.character_space.to_alg_hom WeakDual.characterSpace.toAlgHom
 
 theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
@@ -227,7 +232,8 @@ def gelfandTransform :
       C(characterSpace 𝕜 A,
         𝕜) where 
   toFun a :=
-    { toFun := fun φ => φ a, continuous_to_fun := (eval_continuous a).comp continuous_induced_dom }
+    { toFun := fun φ => φ a
+      continuous_to_fun := (eval_continuous a).comp continuous_induced_dom }
   map_one' := by 
     ext
     simp only [coe_mk, coe_one, Pi.one_apply, map_one a]

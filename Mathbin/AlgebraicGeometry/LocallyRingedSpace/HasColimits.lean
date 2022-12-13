@@ -78,7 +78,7 @@ noncomputable def coproductCofan :
     Cocone F where 
   x := coproduct F
   ι :=
-    { app := fun j => ⟨colimit.ι (F ⋙ forget_to_SheafedSpace) j, inferInstance⟩,
+    { app := fun j => ⟨colimit.ι (F ⋙ forget_to_SheafedSpace) j, inferInstance⟩
       naturality' := fun j j' f => by 
         cases j
         cases j'

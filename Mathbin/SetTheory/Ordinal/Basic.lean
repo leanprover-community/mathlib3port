@@ -957,7 +957,7 @@ instance : LinearOrder Ordinal :=
                   right
                   rw [h],
                 exact Or.inr (Or.inl h)])
-          h₁ h₂,
+          h₁ h₂
     decidableLe := Classical.decRel _ }
 
 instance : WellFoundedLt Ordinal :=

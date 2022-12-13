@@ -240,7 +240,8 @@ variable (M R)
 /-- Interpret `finsupp.filter s` as a linear map from `α →₀ M` to `supported M R s`. -/
 def restrictDom (s : Set α) : (α →₀ M) →ₗ[R] supported M R s :=
   LinearMap.codRestrict _
-    { toFun := filter (· ∈ s), map_add' := fun l₁ l₂ => filter_add,
+    { toFun := filter (· ∈ s)
+      map_add' := fun l₁ l₂ => filter_add
       map_smul' := fun a l => filter_smul }
     fun l => (mem_supported' _ _).2 fun x => filter_apply_neg (· ∈ s) l
 #align finsupp.restrict_dom Finsupp.restrictDom
@@ -354,8 +355,8 @@ def lsum :
       (α →₀ M) →ₗ[R]
         N where 
   toFun F :=
-    { toFun := fun d => d.Sum fun i => F i,
-      map_add' := (liftAddHom fun x => (F x).toAddMonoidHom).map_add,
+    { toFun := fun d => d.Sum fun i => F i
+      map_add' := (liftAddHom fun x => (F x).toAddMonoidHom).map_add
       map_smul' := fun c f => by simp [sum_smul_index', smul_sum] }
   invFun F x := F.comp (lsingle x)
   left_inv F := by 
@@ -793,7 +794,7 @@ noncomputable def congr {α' : Type _} (s : Set α) (t : Set α') (e : s ≃ t) 
 @[simps]
 def mapRange.linearMap (f : M →ₗ[R] N) : (α →₀ M) →ₗ[R] α →₀ N :=
   { mapRange.addMonoidHom f.toAddMonoidHom with
-    toFun := (mapRange f f.map_zero : (α →₀ M) → α →₀ N),
+    toFun := (mapRange f f.map_zero : (α →₀ M) → α →₀ N)
     map_smul' := fun c v => map_range_smul c v (f.map_smul c) }
 #align finsupp.map_range.linear_map Finsupp.mapRange.linearMap
 
@@ -820,7 +821,8 @@ theorem mapRange.linear_map_to_add_monoid_hom (f : M →ₗ[R] N) :
 @[simps apply]
 def mapRange.linearEquiv (e : M ≃ₗ[R] N) : (α →₀ M) ≃ₗ[R] α →₀ N :=
   { mapRange.linearMap e.toLinearMap, mapRange.addEquiv e.toAddEquiv with
-    toFun := mapRange e e.map_zero, invFun := mapRange e.symm e.symm.map_zero }
+    toFun := mapRange e e.map_zero
+    invFun := mapRange e.symm e.symm.map_zero }
 #align finsupp.map_range.linear_equiv Finsupp.mapRange.linearEquiv
 
 @[simp]
@@ -969,7 +971,7 @@ noncomputable def finsuppProdLequiv {α β : Type _} (R : Type _) {M : Type _} [
   { finsuppProdEquiv with
     map_add' := fun f g => by 
       ext
-      simp [finsupp_prod_equiv, curry_apply],
+      simp [finsupp_prod_equiv, curry_apply]
     map_smul' := fun c f => by 
       ext
       simp [finsupp_prod_equiv, curry_apply] }
@@ -1011,10 +1013,10 @@ protected def Fintype.total :
       (α → R) →ₗ[R]
         M where 
   toFun v :=
-    { toFun := fun f => ∑ i, f i • v i,
+    { toFun := fun f => ∑ i, f i • v i
       map_add' := fun f g => by
         simp_rw [← Finset.sum_add_distrib, ← add_smul]
-        rfl,
+        rfl
       map_smul' := fun r f => by 
         simp_rw [Finset.smul_sum, smul_smul]
         rfl }

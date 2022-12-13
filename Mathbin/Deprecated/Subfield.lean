@@ -92,7 +92,7 @@ theorem closure.is_submonoid : IsSubmonoid (closure S) :=
         exact
           ⟨p * r, IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hp hr, q * s,
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs,
-            (div_mul_div_comm _ _ _ _).symm⟩,
+            (div_mul_div_comm _ _ _ _).symm⟩
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ring.closure.is_subring.to_is_submonoid }
 #align field.closure.is_submonoid Field.closure.is_submonoid
 
@@ -115,11 +115,11 @@ theorem closure.isSubfield : IsSubfield (closure S) :=
               (ring.closure.is_subring.to_is_submonoid.mul_mem hp hs)
               (ring.closure.is_subring.to_is_submonoid.mul_mem hq hr),
             q * s, ring.closure.is_subring.to_is_submonoid.mul_mem hq hs,
-            (div_add_div p r hq0 hs0).symm⟩,
-    zero_mem := h0,
+            (div_add_div p r hq0 hs0).symm⟩
+    zero_mem := h0
     neg_mem := by 
       rintro _ ⟨p, hp, q, hq, rfl⟩
-      exact ⟨-p, ring.closure.is_subring.to_is_add_subgroup.neg_mem hp, q, hq, neg_div q p⟩,
+      exact ⟨-p, ring.closure.is_subring.to_is_add_subgroup.neg_mem hp, q, hq, neg_div q p⟩
     inv_mem := by 
       rintro _ ⟨p, hp, q, hq, rfl⟩
       exact ⟨q, hq, p, hp, (inv_div _ _).symm⟩ }
@@ -154,7 +154,7 @@ theorem isSubfieldUnionOfDirected {ι : Type _} [hι : Nonempty ι] {s : ι → 
     IsSubfield (⋃ i, s i) :=
   { inv_mem := fun x hx =>
       let ⟨i, hi⟩ := Set.mem_Union.1 hx
-      Set.mem_Union.2 ⟨i, (hs i).inv_mem hi⟩,
+      Set.mem_Union.2 ⟨i, (hs i).inv_mem hi⟩
     to_is_subring := is_subring_Union_of_directed (fun i => (hs i).to_is_subring) Directed }
 #align is_subfield_Union_of_directed isSubfieldUnionOfDirected
 

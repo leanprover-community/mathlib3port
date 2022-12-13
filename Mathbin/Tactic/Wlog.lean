@@ -380,7 +380,10 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
 #align tactic.interactive.wlog tactic.interactive.wlog
 
 add_tactic_doc
-  { Name := "wlog", category := DocCategory.tactic, declNames := [`` wlog], tags := ["logic"] }
+  { Name := "wlog"
+    category := DocCategory.tactic
+    declNames := [`` wlog]
+    tags := ["logic"] }
 
 end Interactive
 

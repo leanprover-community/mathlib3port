@@ -477,7 +477,11 @@ It assumes that `python3` is available on the path.
 unsafe def sage_output (arg_list : List String := []) : tactic json := do
   let path ← get_mathlib_dir
   let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list
-  let s ← unsafe_run_io <| Io.cmd { cmd := "python3", args }
+  let s ←
+    unsafe_run_io <|
+        Io.cmd
+          { cmd := "python3"
+            args }
   let some j ← pure (json.parse s) |
     throwError "Invalid json: {← s}"
   pure j
@@ -692,7 +696,9 @@ unsafe def _root_.tactic.interactive.polyrith (restr : parse (tk "only")?)
 #align tactic.interactive.polyrith tactic.interactive.polyrith
 
 add_tactic_doc
-  { Name := "polyrith", category := DocCategory.tactic, declNames := [`tactic.interactive.polyrith],
+  { Name := "polyrith"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.polyrith]
     tags := ["arithmetic", "finishing", "decision procedure"] }
 
 end Polyrith

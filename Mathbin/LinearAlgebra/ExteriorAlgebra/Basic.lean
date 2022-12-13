@@ -288,7 +288,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
             hn (fun i => f <| Fin.succ i) (x.pred hx)
               (y.pred (ne_of_lt <| lt_of_le_of_lt x.zero_le h).symm) (fin.pred_lt_pred_iff.mpr h) _
           simp only [Fin.succ_pred]
-          exact hfxy,
+          exact hfxy
     toFun := F }
 #align exterior_algebra.ι_multi ExteriorAlgebra.ιMulti
 

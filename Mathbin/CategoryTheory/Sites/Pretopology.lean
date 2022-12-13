@@ -84,8 +84,9 @@ theorem le_def {K₁ K₂ : Pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C
 variable (C)
 
 instance : PartialOrder (Pretopology C) :=
-  { Pretopology.hasLe with le_refl := fun K => le_def.mpr le_rfl,
-    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃),
+  { Pretopology.hasLe with 
+    le_refl := fun K => le_def.mpr le_rfl
+    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃)
     le_antisymm := fun K₁ K₂ h₁₂ h₂₁ => Pretopology.ext _ _ (le_antisymm h₁₂ h₂₁) }
 
 instance :
@@ -93,8 +94,10 @@ instance :
       (Pretopology
         C) where 
   top :=
-    { coverings := fun _ => Set.univ, has_isos := fun _ _ _ _ => Set.mem_univ _,
-      pullbacks := fun _ _ _ _ _ => Set.mem_univ _, Transitive := fun _ _ _ _ _ => Set.mem_univ _ }
+    { coverings := fun _ => Set.univ
+      has_isos := fun _ _ _ _ => Set.mem_univ _
+      pullbacks := fun _ _ _ _ _ => Set.mem_univ _
+      Transitive := fun _ _ _ _ _ => Set.mem_univ _ }
   le_top K X S hS := Set.mem_univ _
 
 instance : Inhabited (Pretopology C) :=

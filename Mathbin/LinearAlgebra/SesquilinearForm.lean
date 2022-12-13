@@ -407,7 +407,7 @@ theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x 
   is complement to its orthogonal complement. -/
 theorem is_compl_span_singleton_orthogonal {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K ∙ x) (Submodule.orthogonalBilin (K ∙ x) B) :=
-  { Disjoint := disjoint_iff.2 <| span_singleton_inf_orthogonal_eq_bot B x hx,
+  { Disjoint := disjoint_iff.2 <| span_singleton_inf_orthogonal_eq_bot B x hx
     Codisjoint := codisjoint_iff.2 <| span_singleton_sup_orthogonal_eq_top hx }
 #align linear_map.is_compl_span_singleton_orthogonal LinearMap.is_compl_span_singleton_orthogonal
 

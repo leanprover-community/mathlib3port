@@ -114,7 +114,7 @@ def hcomp {F G : LaxMonoidalFunctor C D} {H K : LaxMonoidalFunctor D E} (α : Mo
   { NatTrans.hcomp α.toNatTrans β.toNatTrans with
     unit' := by 
       dsimp; simp
-      conv_lhs => rw [← K.to_functor.map_comp, α.unit],
+      conv_lhs => rw [← K.to_functor.map_comp, α.unit]
     tensor' := fun X Y => by 
       dsimp; simp
       conv_lhs => rw [← K.to_functor.map_comp, α.tensor, K.to_functor.map_comp] }
@@ -151,10 +151,11 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     F ≅ G where 
   Hom := { app := fun X => (app X).Hom }
   inv :=
-    { (NatIso.ofComponents app @naturality).inv with app := fun X => (app X).inv,
+    { (NatIso.ofComponents app @naturality).inv with
+      app := fun X => (app X).inv
       unit' := by 
         dsimp
-        rw [← Unit, assoc, iso.hom_inv_id, comp_id],
+        rw [← Unit, assoc, iso.hom_inv_id, comp_id]
       tensor' := fun X Y => by 
         dsimp
         rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id,
@@ -191,7 +192,7 @@ noncomputable section
 def monoidalUnit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
     LaxMonoidalFunctor.id C ⟶ F.toLaxMonoidalFunctor ⊗⋙ (monoidalInverse F).toLaxMonoidalFunctor :=
   let e := F.toFunctor.asEquivalence
-  { toNatTrans := e.Unit,
+  { toNatTrans := e.Unit
     tensor' := fun X Y =>
       by
       -- This proof is not pretty; golfing welcome!
@@ -225,13 +226,13 @@ instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidal
 def monoidalCounit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
     (monoidalInverse F).toLaxMonoidalFunctor ⊗⋙ F.toLaxMonoidalFunctor ⟶ LaxMonoidalFunctor.id D :=
   let e := F.toFunctor.asEquivalence
-  { toNatTrans := e.counit,
+  { toNatTrans := e.counit
     unit' := by 
       dsimp
       simp only [category.comp_id, category.assoc, functor.map_inv, functor.map_comp,
         nat_iso.inv_inv_app, is_iso.inv_comp, is_equivalence.fun_inv_map, adjunction.hom_equiv_unit]
       erw [e.counit_app_functor, ← e.functor.map_comp_assoc, iso.hom_inv_id_app]
-      dsimp; simp,
+      dsimp; simp
     tensor' := fun X Y => by 
       dsimp
       simp only [adjunction.hom_equiv_unit, adjunction.hom_equiv_naturality_right, category.assoc,

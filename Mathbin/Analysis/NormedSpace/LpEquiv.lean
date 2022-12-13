@@ -101,7 +101,9 @@ variable (𝕜 : Type _) [NontriviallyNormedField 𝕜] [∀ i, NormedSpace 𝕜
 /-- The canonical `linear_isometry_equiv` between `lp E p` and `pi_Lp p E` when `E : α → Type u`
 with `[fintype α]` and `[fact (1 ≤ p)]`. -/
 noncomputable def lpPiLpₗᵢ [Fact (1 ≤ p)] : lp E p ≃ₗᵢ[𝕜] PiLp p E :=
-  { AddEquiv.lpPiLp with map_smul' := fun k f => rfl, norm_map' := equiv_lp_pi_Lp_norm }
+  { AddEquiv.lpPiLp with 
+    map_smul' := fun k f => rfl
+    norm_map' := equiv_lp_pi_Lp_norm }
 #align lp_pi_Lpₗᵢ lpPiLpₗᵢ
 
 variable {𝕜}
@@ -155,7 +157,8 @@ theorem coe_add_equiv_lp_bcf_symm (f : α →ᵇ E) : (AddEquiv.lpBcf.symm f : �
 
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as a `linear_isometry_equiv`. -/
 noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →ᵇ E :=
-  { AddEquiv.lpBcf with map_smul' := fun k f => rfl,
+  { AddEquiv.lpBcf with 
+    map_smul' := fun k f => rfl
     norm_map' := fun f => by 
       simp only [norm_eq_supr_norm, lp.norm_eq_csupr]
       rfl }

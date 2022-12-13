@@ -1187,7 +1187,8 @@ structure on the domain. -/
       "A group homomorphism from an `add_group` to a `seminormed_add_group` induces a\n`seminormed_add_group` structure on the domain."]
 def SeminormedGroup.induced [Group E] [SeminormedGroup F] [MonoidHomClass 𝓕 E F] (f : 𝓕) :
     SeminormedGroup E :=
-  { PseudoMetricSpace.induced f _ with norm := fun x => ‖f x‖,
+  { PseudoMetricSpace.induced f _ with 
+    norm := fun x => ‖f x‖
     dist_eq := fun x y => by simpa only [map_div, ← dist_eq_norm_div] }
 #align seminormed_group.induced SeminormedGroup.induced
 

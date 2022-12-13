@@ -144,8 +144,10 @@ You can use the usual interactive syntax for `simp`, e.g.
 (and so only simplifiying along definitional lemmas).
 -/
 add_tactic_doc
-  { Name := "simp_result", category := DocCategory.tactic,
-    declNames := [`` simp_result, `` dsimp_result], tags := ["simplification"] }
+  { Name := "simp_result"
+    category := DocCategory.tactic
+    declNames := [`` simp_result, `` dsimp_result]
+    tags := ["simplification"] }
 
 end Interactive
 

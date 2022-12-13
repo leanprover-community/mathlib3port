@@ -108,16 +108,16 @@ and essentially surjective when `R` is reflective.
 -/
 @[simps]
 def Monad.comparison (h : L ⊣ R) :
-    D ⥤
-      h.toMonad.Algebra where 
+    D ⥤ h.toMonad.Algebra where 
   obj X :=
-    { a := R.obj X, a := R.map (h.counit.app X),
+    { a := R.obj X
+      a := R.map (h.counit.app X)
       assoc' := by 
         dsimp
         rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]
         rfl }
   map X Y f :=
-    { f := R.map f,
+    { f := R.map f
       h' := by 
         dsimp
         rw [← R.map_comp, adjunction.counit_naturality, R.map_comp] }
@@ -149,8 +149,10 @@ instance (T : Monad C) :
     EssSurj
       (Monad.comparison
         T.adj) where mem_ess_image X :=
-    ⟨{ a := X.a, a := X.a, unit' := by simpa using X.unit, assoc' := by simpa using X.assoc },
-      ⟨Monad.Algebra.isoMk (Iso.refl _) (by simp)⟩⟩
+    ⟨{  a := X.a
+        a := X.a
+        unit' := by simpa using X.unit
+        assoc' := by simpa using X.assoc }, ⟨Monad.Algebra.isoMk (Iso.refl _) (by simp)⟩⟩
 
 /--
 Gven any adjunction `L ⊣ R`, there is a comparison functor `category_theory.comonad.comparison L`
@@ -162,13 +164,14 @@ def Comonad.comparison (h : L ⊣ R) :
     C ⥤
       h.toComonad.Coalgebra where 
   obj X :=
-    { a := L.obj X, a := L.map (h.Unit.app X),
+    { a := L.obj X
+      a := L.map (h.Unit.app X)
       coassoc' := by 
         dsimp
         rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]
         rfl }
   map X Y f :=
-    { f := L.map f,
+    { f := L.map f
       h' := by 
         dsimp
         rw [← L.map_comp]
@@ -204,9 +207,10 @@ instance (G : Comonad C) :
     EssSurj
       (Comonad.comparison
         G.adj) where mem_ess_image X :=
-    ⟨{ a := X.a, a := X.a, counit' := by simpa using X.counit,
-        coassoc' := by simpa using X.coassoc },
-      ⟨Comonad.Coalgebra.isoMk (Iso.refl _) (by simp)⟩⟩
+    ⟨{  a := X.a
+        a := X.a
+        counit' := by simpa using X.counit
+        coassoc' := by simpa using X.coassoc }, ⟨Comonad.Coalgebra.isoMk (Iso.refl _) (by simp)⟩⟩
 
 /-- A right adjoint functor `R : D ⥤ C` is *monadic* if the comparison functor `monad.comparison R`
 from `D` to the category of Eilenberg-Moore algebras for the adjunction is an equivalence.

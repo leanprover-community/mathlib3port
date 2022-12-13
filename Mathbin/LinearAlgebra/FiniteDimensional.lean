@@ -607,15 +607,16 @@ noncomputable def basisSingleton (ι : Type _) [Unique ι] (h : finrank K V = 1)
   let b := basisUnique ι h
   let h : b.repr v default ≠ 0 := mt basisUnique.repr_eq_zero_iff.mp hv
   Basis.of_repr
-    { toFun := fun w => Finsupp.single default (b.repr w default / b.repr v default),
-      invFun := fun f => f default • v, map_add' := by simp [add_div],
-      map_smul' := by simp [mul_div],
+    { toFun := fun w => Finsupp.single default (b.repr w default / b.repr v default)
+      invFun := fun f => f default • v
+      map_add' := by simp [add_div]
+      map_smul' := by simp [mul_div]
       left_inv := fun w => by 
         apply_fun b.repr using b.repr.to_equiv.injective
         apply_fun Equiv.finsuppUnique
         simp only [LinearEquiv.map_smulₛₗ, Finsupp.coe_smul, Finsupp.single_eq_same,
           RingHom.id_apply, smul_eq_mul, Pi.smul_apply, Equiv.finsupp_unique_apply]
-        exact div_mul_cancel _ h,
+        exact div_mul_cancel _ h
       right_inv := fun f => by 
         ext
         simp only [LinearEquiv.map_smulₛₗ, Finsupp.coe_smul, Finsupp.single_eq_same,
@@ -1174,7 +1175,7 @@ noncomputable def divisionRingOfFiniteDimensional (F K : Type _) [Field F] [Ring
         Classical.choose <|
           (show Function.Surjective (LinearMap.mulLeft F x) from
               LinearMap.injective_iff_surjective.1 fun _ _ => (mul_right_inj' H).1)
-            1,
+            1
     mul_inv_cancel := fun x hx =>
       show x * dite _ _ _ = _ by 
         rw [dif_neg hx]
@@ -1182,7 +1183,7 @@ noncomputable def divisionRingOfFiniteDimensional (F K : Type _) [Field F] [Ring
           Classical.choose_spec
             ((show Function.Surjective (LinearMap.mulLeft F x) from
                 LinearMap.injective_iff_surjective.1 fun _ _ => (mul_right_inj' hx).1)
-              1),
+              1)
     inv_zero := dif_pos rfl }
 #align division_ring_of_finite_dimensional divisionRingOfFiniteDimensional
 
@@ -1520,7 +1521,7 @@ theorem Subalgebra.is_simple_order_of_finrank (hr : finrank F E = 2) :
     IsSimpleOrder (Subalgebra F E) :=
   let i := nontrivial_of_finrank_pos (zero_lt_two.trans_eq hr.symm)
   { to_nontrivial :=
-      ⟨⟨⊥, ⊤, fun h => by cases hr.symm.trans (Subalgebra.bot_eq_top_iff_finrank_eq_one.1 h)⟩⟩,
+      ⟨⟨⊥, ⊤, fun h => by cases hr.symm.trans (Subalgebra.bot_eq_top_iff_finrank_eq_one.1 h)⟩⟩
     eq_bot_or_eq_top := by 
       intro S
       haveI : FiniteDimensional F E := finite_dimensional_of_finrank_eq_succ hr

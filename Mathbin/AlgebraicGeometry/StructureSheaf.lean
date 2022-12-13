@@ -253,8 +253,11 @@ def structurePresheafInCommRing :
         R) where 
   obj U := CommRingCat.of ((structureSheafInType R).1.obj U)
   map U V i :=
-    { toFun := (structureSheafInType R).1.map i, map_zero' := rfl, map_add' := fun x y => rfl,
-      map_one' := rfl, map_mul' := fun x y => rfl }
+    { toFun := (structureSheafInType R).1.map i
+      map_zero' := rfl
+      map_add' := fun x y => rfl
+      map_one' := rfl
+      map_mul' := fun x y => rfl }
 #align
   algebraic_geometry.structure_presheaf_in_CommRing AlgebraicGeometry.structurePresheafInCommRing
 
@@ -562,7 +565,7 @@ formed by gluing the `open_to_localization` maps. -/
 def stalkToFiberRingHom (x : PrimeSpectrum.top R) :
     (structureSheaf R).Presheaf.stalk x ⟶ CommRingCat.of (Localization.AtPrime x.asIdeal) :=
   Limits.colimit.desc ((OpenNhds.inclusion x).op ⋙ (structureSheaf R).1)
-    { x := _,
+    { x := _
       ι :=
         { app := fun U =>
             openToLocalization R ((OpenNhds.inclusion _).obj (unop U)) x (unop U).2 } }
@@ -699,11 +702,11 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   -- This amounts showing that `a * d * r = c * b * r`, for some power `r = f ^ n` of `f`.
   -- We define `I` as the ideal of *all* elements `r` satisfying the above equation.
   let I : Ideal R :=
-    { carrier := { r : R | a * d * r = c * b * r },
-      zero_mem' := by simp only [Set.mem_set_of_eq, mul_zero],
+    { carrier := { r : R | a * d * r = c * b * r }
+      zero_mem' := by simp only [Set.mem_set_of_eq, mul_zero]
       add_mem' := fun r₁ r₂ hr₁ hr₂ => by 
         dsimp at hr₁ hr₂⊢
-        simp only [mul_add, hr₁, hr₂],
+        simp only [mul_add, hr₁, hr₂]
       smul_mem' := fun r₁ r₂ hr₂ => by 
         dsimp at hr₂⊢
         simp only [mul_comm r₁ r₂, ← mul_assoc, hr₂] }

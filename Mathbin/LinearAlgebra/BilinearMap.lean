@@ -82,7 +82,10 @@ def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = 
     M →ₛₗ[ρ₁₂]
       N →ₛₗ[σ₁₂]
         P where 
-  toFun m := { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m }
+  toFun m :=
+    { toFun := f m
+      map_add' := H3 m
+      map_smul' := fun c => H4 c m }
   map_add' m₁ m₂ := LinearMap.ext <| H1 m₁ m₂
   map_smul' c m := LinearMap.ext <| H2 c m
 #align linear_map.mk₂'ₛₗ LinearMap.mk₂'ₛₗ
@@ -318,7 +321,8 @@ variable (R M Nₗ Pₗ)
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip
-    { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ fun g x => g.map_add _ _,
+    { toFun := lcomp R Pₗ
+      map_add' := fun f f' => ext₂ fun g x => g.map_add _ _
       map_smul' := fun (c : R) f => ext₂ fun g x => g.map_smul _ _ }
 #align linear_map.llcomp LinearMap.llcomp
 

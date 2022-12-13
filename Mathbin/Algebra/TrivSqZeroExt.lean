@@ -413,28 +413,30 @@ theorem inr_mul_inl [Semiring R] [AddCommMonoid M] [Module R M] (r : R) (m : M) 
 instance [Monoid R] [AddMonoid M] [DistribMulAction R M] : MulOneClass (tsze R M) :=
   { TrivSqZeroExt.hasOne, TrivSqZeroExt.hasMul with
     one_mul := fun x =>
-      ext (one_mul x.1) <| show (1 : R) • x.2 + x.1 • 0 = x.2 by rw [one_smul, smul_zero, add_zero],
+      ext (one_mul x.1) <| show (1 : R) • x.2 + x.1 • 0 = x.2 by rw [one_smul, smul_zero, add_zero]
     mul_one := fun x =>
       ext (mul_one x.1) <|
         show (x.1 • 0 : M) + (1 : R) • x.2 = x.2 by rw [smul_zero, zero_add, one_smul] }
 
 instance [AddMonoidWithOne R] [AddMonoid M] : AddMonoidWithOne (tsze R M) :=
-  { TrivSqZeroExt.addMonoid, TrivSqZeroExt.hasOne with natCast := fun n => (n, 0),
-    nat_cast_zero := by simp [Nat.cast], nat_cast_succ := fun _ => by ext <;> simp [Nat.cast] }
+  { TrivSqZeroExt.addMonoid, TrivSqZeroExt.hasOne with
+    natCast := fun n => (n, 0)
+    nat_cast_zero := by simp [Nat.cast]
+    nat_cast_succ := fun _ => by ext <;> simp [Nat.cast] }
 
 instance [Semiring R] [AddCommMonoid M] [Module R M] : NonAssocSemiring (tsze R M) :=
   { TrivSqZeroExt.addMonoidWithOne, TrivSqZeroExt.mulOneClass, TrivSqZeroExt.addCommMonoid with
     zero_mul := fun x =>
-      ext (zero_mul x.1) <| show (0 : R) • x.2 + x.1 • 0 = 0 by rw [zero_smul, zero_add, smul_zero],
+      ext (zero_mul x.1) <| show (0 : R) • x.2 + x.1 • 0 = 0 by rw [zero_smul, zero_add, smul_zero]
     mul_zero := fun x =>
       ext (mul_zero x.1) <|
-        show (x.1 • 0 : M) + (0 : R) • x.2 = 0 by rw [smul_zero, zero_add, zero_smul],
+        show (x.1 • 0 : M) + (0 : R) • x.2 = 0 by rw [smul_zero, zero_add, zero_smul]
     left_distrib := fun x₁ x₂ x₃ =>
       ext (mul_add x₁.1 x₂.1 x₃.1) <|
         show
           x₁.1 • (x₂.2 + x₃.2) + (x₂.1 + x₃.1) • x₁.2 =
             x₁.1 • x₂.2 + x₂.1 • x₁.2 + (x₁.1 • x₃.2 + x₃.1 • x₁.2)
-          by simp_rw [smul_add, add_smul, add_add_add_comm],
+          by simp_rw [smul_add, add_smul, add_add_add_comm]
     right_distrib := fun x₁ x₂ x₃ =>
       ext (add_mul x₁.1 x₂.1 x₃.1) <|
         show
@@ -484,7 +486,8 @@ variable [CommSemiring S] [CommSemiring R] [AddCommMonoid M]
 variable [Algebra S R] [Module S M] [Module R M] [IsScalarTower S R M]
 
 instance algebra' : Algebra S (tsze R M) :=
-  { (TrivSqZeroExt.inlHom R M).comp (algebraMap S R) with commutes' := fun r x => mul_comm _ _,
+  { (TrivSqZeroExt.inlHom R M).comp (algebraMap S R) with
+    commutes' := fun r x => mul_comm _ _
     smul_def' := fun r x =>
       ext (Algebra.smul_def _ _) <|
         show r • x.2 = algebraMap S R r • x.2 + x.1 • 0 by

@@ -110,16 +110,18 @@ open MonoidalCategory
 /-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
 def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] :
     LaxMonoidalFunctor C (Type v) :=
-  { coyoneda.obj (op (𝟙_ C)) with ε := fun p => 𝟙 _,
-    μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2), μ_natural' := by tidy,
+  { coyoneda.obj (op (𝟙_ C)) with 
+    ε := fun p => 𝟙 _
+    μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2)
+    μ_natural' := by tidy
     associativity' := fun X Y Z => by 
       ext ⟨⟨f, g⟩, h⟩; dsimp at f g h
       dsimp; simp only [iso.cancel_iso_inv_left, category.assoc]
       conv_lhs =>
         rw [← category.id_comp h, tensor_comp, category.assoc, associator_naturality, ←
           category.assoc, unitors_inv_equal, triangle_assoc_comp_right_inv]
-      conv_rhs => rw [← category.id_comp f, tensor_comp],
-    left_unitality' := by tidy,
+      conv_rhs => rw [← category.id_comp f, tensor_comp]
+    left_unitality' := by tidy
     right_unitality' := fun X => by 
       ext ⟨f, ⟨⟩⟩; dsimp at f
       dsimp; simp only [category.assoc]

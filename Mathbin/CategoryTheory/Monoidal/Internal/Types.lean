@@ -37,7 +37,8 @@ instance monMonoid (A : Mon_ (Type u)) :
 def functor : Mon_ (Type u) ⥤ MonCat.{u} where 
   obj A := ⟨A.x⟩
   map A B f :=
-    { toFun := f.Hom, map_one' := congr_fun f.OneHom PUnit.unit,
+    { toFun := f.Hom
+      map_one' := congr_fun f.OneHom PUnit.unit
       map_mul' := fun x y => congr_fun f.MulHom (x, y) }
 #align Mon_Type_equivalence_Mon.functor MonTypeEquivalenceMon.functor
 
@@ -45,19 +46,20 @@ def functor : Mon_ (Type u) ⥤ MonCat.{u} where
 -/
 def inverse :
     MonCat.{u} ⥤
-      Mon_
-        (Type
+      Mon_ (Type
           u) where 
   obj A :=
-    { x := A, one := fun _ => 1, mul := fun p => p.1 * p.2,
+    { x := A
+      one := fun _ => 1
+      mul := fun p => p.1 * p.2
       one_mul' := by 
         ext ⟨_, _⟩
         dsimp
-        simp,
+        simp
       mul_one' := by 
         ext ⟨_, _⟩
         dsimp
-        simp,
+        simp
       mul_assoc' := by 
         ext ⟨⟨x, y⟩, z⟩
         simp [mul_assoc] }
@@ -76,12 +78,22 @@ def monTypeEquivalenceMon :
   Functor := Functor
   inverse := inverse
   unitIso :=
-    NatIso.ofComponents (fun A => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
+    NatIso.ofComponents
+      (fun A =>
+        { Hom := { Hom := 𝟙 _ }
+          inv := { Hom := 𝟙 _ } })
+      (by tidy)
   counitIso :=
     NatIso.ofComponents
       (fun A =>
-        { Hom := { toFun := id, map_one' := rfl, map_mul' := fun x y => rfl },
-          inv := { toFun := id, map_one' := rfl, map_mul' := fun x y => rfl } })
+        { Hom :=
+            { toFun := id
+              map_one' := rfl
+              map_mul' := fun x y => rfl }
+          inv :=
+            { toFun := id
+              map_one' := rfl
+              map_mul' := fun x y => rfl } })
       (by tidy)
 #align Mon_Type_equivalence_Mon monTypeEquivalenceMon
 
@@ -140,12 +152,22 @@ def commMonTypeEquivalenceCommMon :
   Functor := Functor
   inverse := inverse
   unitIso :=
-    NatIso.ofComponents (fun A => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
+    NatIso.ofComponents
+      (fun A =>
+        { Hom := { Hom := 𝟙 _ }
+          inv := { Hom := 𝟙 _ } })
+      (by tidy)
   counitIso :=
     NatIso.ofComponents
       (fun A =>
-        { Hom := { toFun := id, map_one' := rfl, map_mul' := fun x y => rfl },
-          inv := { toFun := id, map_one' := rfl, map_mul' := fun x y => rfl } })
+        { Hom :=
+            { toFun := id
+              map_one' := rfl
+              map_mul' := fun x y => rfl }
+          inv :=
+            { toFun := id
+              map_one' := rfl
+              map_mul' := fun x y => rfl } })
       (by tidy)
 #align CommMon_Type_equivalence_CommMon commMonTypeEquivalenceCommMon
 

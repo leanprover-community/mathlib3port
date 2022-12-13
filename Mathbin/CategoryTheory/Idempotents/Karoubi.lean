@@ -239,7 +239,7 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
     use Y
     exact
       Nonempty.intro
-        { Hom := ⟨i, by erw [id_comp, ← h₂, ← assoc, h₁, id_comp]⟩,
+        { Hom := ⟨i, by erw [id_comp, ← h₂, ← assoc, h₁, id_comp]⟩
           inv := ⟨e, by erw [comp_id, ← h₂, assoc, h₁, comp_id]⟩ }⟩
 
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/

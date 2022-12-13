@@ -71,13 +71,13 @@ instance colimitSemiring : Semiring R :=
       cases' x with j x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
       rw [CategoryTheory.Functor.map_id, id_apply, id_apply, mul_zero x]
-      rfl,
+      rfl
     zero_mul := fun x => by 
       apply Quot.induction_on x; clear x; intro x
       cases' x with j x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
       rw [CategoryTheory.Functor.map_id, id_apply, id_apply, zero_mul x]
-      rfl,
+      rfl
     left_distrib := fun x y z => by 
       apply Quot.induction_on₃ x y z; clear x y z; intro x y z
       cases' x with j₁ x; cases' y with j₂ y; cases' z with j₃ z
@@ -90,7 +90,7 @@ instance colimitSemiring : Semiring R :=
         colimit_add_mk_eq _ ⟨k, _⟩ ⟨k, _⟩ k (𝟙 k) (𝟙 k)]
       simp only [CategoryTheory.Functor.map_id, id_apply]
       erw [left_distrib (F.map f x) (F.map g y) (F.map h z)]
-      rfl,
+      rfl
     right_distrib := fun x y z => by 
       apply Quot.induction_on₃ x y z; clear x y z; intro x y z
       cases' x with j₁ x; cases' y with j₂ y; cases' z with j₃ z
@@ -120,7 +120,7 @@ def colimitCocone : cocone F where
             j,
           (AddCommMonCat.FilteredColimits.colimitCocone
                   (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u})).ι.app
-            j with },
+            j with }
       naturality' := fun j j' f =>
         RingHom.coe_inj ((Types.colimitCocone (F ⋙ forget SemiRingCat)).ι.naturality f) }
 #align SemiRing.filtered_colimits.colimit_cocone SemiRingCat.FilteredColimits.colimitCocone

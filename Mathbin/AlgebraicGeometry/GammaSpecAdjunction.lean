@@ -346,11 +346,12 @@ theorem right_triangle (R : CommRingCat) :
 @[simps Unit counit]
 def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.to_LocallyRingedSpace :=
   Adjunction.mkOfUnitCounit
-    { Unit := identityToΓSpec, counit := (NatIso.op specΓIdentity).inv,
+    { Unit := identityToΓSpec
+      counit := (NatIso.op specΓIdentity).inv
       left_triangle' := by 
         ext X
         erw [category.id_comp]
-        exact congr_arg Quiver.Hom.op (left_triangle X),
+        exact congr_arg Quiver.Hom.op (left_triangle X)
       right_triangle' := by 
         ext1
         ext1 R

@@ -153,17 +153,20 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] :
         (⊤_
           C) where 
   Functor :=
-    { obj := fun X => ⟨Over.mk (terminal.from X.1), X.2.mono_terminal_from⟩,
+    { obj := fun X => ⟨Over.mk (terminal.from X.1), X.2.mono_terminal_from⟩
       map := fun X Y f => MonoOver.homMk f (by ext1 ⟨⟨⟩⟩) }
   inverse :=
     { obj := fun X =>
         ⟨X.obj.left, fun Z f g => by 
           rw [← cancel_mono X.arrow]
-          apply Subsingleton.elim⟩,
+          apply Subsingleton.elim⟩
       map := fun X Y f => f.1 }
-  unitIso := { Hom := { app := fun X => 𝟙 _ }, inv := { app := fun X => 𝟙 _ } }
+  unitIso :=
+    { Hom := { app := fun X => 𝟙 _ }
+      inv := { app := fun X => 𝟙 _ } }
   counitIso :=
-    { Hom := { app := fun X => Over.homMk (𝟙 _) }, inv := { app := fun X => Over.homMk (𝟙 _) } }
+    { Hom := { app := fun X => Over.homMk (𝟙 _) }
+      inv := { app := fun X => Over.homMk (𝟙 _) } }
 #align
   category_theory.subterminals_equiv_mono_over_terminal CategoryTheory.subterminalsEquivMonoOverTerminal
 

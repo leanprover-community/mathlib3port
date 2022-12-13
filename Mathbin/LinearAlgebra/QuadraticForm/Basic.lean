@@ -340,11 +340,13 @@ def ofPolar (to_fun : M → R) (to_fun_smul : ∀ (a : R) (x : M), to_fun (a •
     (polar_add_left : ∀ x x' y : M, polar to_fun (x + x') y = polar to_fun x y + polar to_fun x' y)
     (polar_smul_left : ∀ (a : R) (x y : M), polar to_fun (a • x) y = a • polar to_fun x y) :
     QuadraticForm R M :=
-  { toFun, to_fun_smul,
+  { toFun
+    to_fun_smul
     exists_companion' :=
-      ⟨{ bilin := polar to_fun, bilin_add_left := polar_add_left,
-          bilin_smul_left := polar_smul_left,
-          bilin_add_right := fun x y z => by simp_rw [polar_comm _ x, polar_add_left],
+      ⟨{  bilin := polar to_fun
+          bilin_add_left := polar_add_left
+          bilin_smul_left := polar_smul_left
+          bilin_add_right := fun x y z => by simp_rw [polar_comm _ x, polar_add_left]
           bilin_smul_right := fun r x y => by
             simp_rw [polar_comm _ x, polar_smul_left, smul_eq_mul] },
         fun x y => by rw [BilinForm.coe_fn_mk, polar, sub_sub, add_sub_cancel'_right]⟩ }
@@ -371,8 +373,8 @@ variable [Monoid S] [DistribMulAction S R] [SmulCommClass S R R]
 When `R` is commutative, this provides an `R`-action via `algebra.id`. -/
 instance : HasSmul S (QuadraticForm R M) :=
   ⟨fun a Q =>
-    { toFun := a • Q,
-      to_fun_smul := fun b x => by rw [Pi.smul_apply, map_smul, Pi.smul_apply, mul_smul_comm],
+    { toFun := a • Q
+      to_fun_smul := fun b x => by rw [Pi.smul_apply, map_smul, Pi.smul_apply, mul_smul_comm]
       exists_companion' :=
         let ⟨B, h⟩ := Q.exists_companion
         ⟨a • B, by simp [h]⟩ }⟩
@@ -390,7 +392,8 @@ theorem smul_apply (a : S) (Q : QuadraticForm R M) (x : M) : (a • Q) x = a •
 end HasSmul
 
 instance : Zero (QuadraticForm R M) :=
-  ⟨{ toFun := fun x => 0, to_fun_smul := fun a x => by simp only [mul_zero],
+  ⟨{  toFun := fun x => 0
+      to_fun_smul := fun a x => by simp only [mul_zero]
       exists_companion' := ⟨0, fun x y => by simp only [add_zero, BilinForm.zero_apply]⟩ }⟩
 
 @[simp]
@@ -408,7 +411,8 @@ instance : Inhabited (QuadraticForm R M) :=
 
 instance : Add (QuadraticForm R M) :=
   ⟨fun Q Q' =>
-    { toFun := Q + Q', to_fun_smul := fun a x => by simp only [Pi.add_apply, map_smul, mul_add],
+    { toFun := Q + Q'
+      to_fun_smul := fun a x => by simp only [Pi.add_apply, map_smul, mul_add]
       exists_companion' :=
         let ⟨B, h⟩ := Q.exists_companion
         let ⟨B', h'⟩ := Q'.exists_companion
@@ -493,7 +497,8 @@ variable [Ring R] [AddCommGroup M] [Module R M]
 
 instance : Neg (QuadraticForm R M) :=
   ⟨fun Q =>
-    { toFun := -Q, to_fun_smul := fun a x => by simp only [Pi.neg_apply, map_smul, mul_neg],
+    { toFun := -Q
+      to_fun_smul := fun a x => by simp only [Pi.neg_apply, map_smul, mul_neg]
       exists_companion' :=
         let ⟨B, h⟩ := Q.exists_companion
         ⟨-B, fun x y => by simp_rw [Pi.neg_apply, h, BilinForm.neg_apply, neg_add]⟩ }⟩

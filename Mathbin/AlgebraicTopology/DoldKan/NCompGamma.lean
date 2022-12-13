@@ -141,7 +141,7 @@ def natTrans :
         _ where 
   app X :=
     { f :=
-        { app := fun Δ => (Γ₀.splitting K[X]).desc Δ fun A => pInfty.f A.1.unop.len ≫ X.map A.e.op,
+        { app := fun Δ => (Γ₀.splitting K[X]).desc Δ fun A => pInfty.f A.1.unop.len ≫ X.map A.e.op
           naturality' := fun Δ Δ' θ => by
             apply (Γ₀.splitting K[X]).hom_ext'
             intro A
@@ -153,7 +153,7 @@ def natTrans :
             simp only [← X.map_comp]
             congr 2
             simp only [eq_to_hom_refl, id_comp, comp_id, ← op_comp]
-            exact Quiver.Hom.unop_inj (A.fac_pull θ) },
+            exact Quiver.Hom.unop_inj (A.fac_pull θ) }
       comm := by 
         apply (Γ₀.splitting K[X]).hom_ext
         intro n

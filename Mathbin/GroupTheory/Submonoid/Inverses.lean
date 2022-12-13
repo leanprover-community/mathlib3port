@@ -32,7 +32,7 @@ namespace Submonoid
 @[to_additive]
 noncomputable instance [Monoid M] : Group (IsUnit.submonoid M) :=
   { show Monoid (IsUnit.submonoid M) by infer_instance with
-    inv := fun x => ⟨_, x.Prop.Unit⁻¹.IsUnit⟩,
+    inv := fun x => ⟨_, x.Prop.Unit⁻¹.IsUnit⟩
     mul_left_inv := fun x => Subtype.eq x.Prop.Unit.inv_val }
 
 @[to_additive]
@@ -147,11 +147,11 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
   { S.fromCommLeftInv with
     invFun := fun x => by 
       choose x' hx using hS x.prop
-      exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩,
+      exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩
     left_inv := fun x =>
       Subtype.eq <| by 
         dsimp; generalize_proofs h; rw [← h.some.mul_left_inj]
-        exact h.some.inv_val.trans ((S.mul_from_left_inv x).symm.trans (by rw [h.some_spec])),
+        exact h.some.inv_val.trans ((S.mul_from_left_inv x).symm.trans (by rw [h.some_spec]))
     right_inv := fun x => by 
       dsimp
       ext

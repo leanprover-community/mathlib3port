@@ -80,8 +80,10 @@ unsafe def rewrite_search (explain : parse <| optional (tk "?"))
 #align tactic.interactive.rewrite_search tactic.interactive.rewrite_search
 
 add_tactic_doc
-  { Name := "rewrite_search", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.rewrite_search], tags := ["rewriting", "search"] }
+  { Name := "rewrite_search"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.rewrite_search]
+    tags := ["rewriting", "search"] }
 
 end Tactic.Interactive
 

@@ -68,7 +68,9 @@ export CentroidHomClass (map_mul_left map_mul_right)
 
 instance [NonUnitalNonAssocSemiring α] [CentroidHomClass F α] : CoeTC F (CentroidHom α) :=
   ⟨fun f =>
-    { (f : α →+ α) with toFun := f, map_mul_left' := map_mul_left f,
+    { (f : α →+ α) with 
+      toFun := f
+      map_mul_left' := map_mul_left f
       map_mul_right' := map_mul_right f }⟩
 
 /-! ### Centroid homomorphisms -/
@@ -135,8 +137,9 @@ theorem to_End_injective : Injective (CentroidHom.toEnd : CentroidHom α → Add
 /-- Copy of a `centroid_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : CentroidHom α) (f' : α → α) (h : f' = f) : CentroidHom α :=
-  { f.toAddMonoidHom.copy f' <| h with toFun := f',
-    map_mul_left' := fun a b => by simp_rw [h, map_mul_left],
+  { f.toAddMonoidHom.copy f' <| h with 
+    toFun := f'
+    map_mul_left' := fun a b => by simp_rw [h, map_mul_left]
     map_mul_right' := fun a b => by simp_rw [h, map_mul_right] }
 #align centroid_hom.copy CentroidHom.copy
 
@@ -153,7 +156,9 @@ variable (α)
 
 /-- `id` as a `centroid_hom`. -/
 protected def id : CentroidHom α :=
-  { AddMonoidHom.id α with map_mul_left' := fun _ _ => rfl, map_mul_right' := fun _ _ => rfl }
+  { AddMonoidHom.id α with 
+    map_mul_left' := fun _ _ => rfl
+    map_mul_right' := fun _ _ => rfl }
 #align centroid_hom.id CentroidHom.id
 
 instance : Inhabited (CentroidHom α) :=
@@ -179,7 +184,7 @@ theorem id_apply (a : α) : CentroidHom.id α a = a :=
 /-- Composition of `centroid_hom`s as a `centroid_hom`. -/
 def comp (g f : CentroidHom α) : CentroidHom α :=
   { g.toAddMonoidHom.comp f.toAddMonoidHom with
-    map_mul_left' := fun a b => (congr_arg g <| f.map_mul_left' _ _).trans <| g.map_mul_left' _ _,
+    map_mul_left' := fun a b => (congr_arg g <| f.map_mul_left' _ _).trans <| g.map_mul_left' _ _
     map_mul_right' := fun a b =>
       (congr_arg g <| f.map_mul_right' _ _).trans <| g.map_mul_right' _ _ }
 #align centroid_hom.comp CentroidHom.comp
@@ -225,7 +230,8 @@ theorem cancel_left {g f₁ f₂ : CentroidHom α} (hg : Injective g) :
 #align centroid_hom.cancel_left CentroidHom.cancel_left
 
 instance : Zero (CentroidHom α) :=
-  ⟨{ (0 : α →+ α) with map_mul_left' := fun a b => (mul_zero _).symm,
+  ⟨{ (0 : α →+ α) with 
+      map_mul_left' := fun a b => (mul_zero _).symm
       map_mul_right' := fun a b => (zero_mul _).symm }⟩
 
 instance : One (CentroidHom α) :=
@@ -233,7 +239,8 @@ instance : One (CentroidHom α) :=
 
 instance : Add (CentroidHom α) :=
   ⟨fun f g =>
-    { (f + g : α →+ α) with map_mul_left' := fun a b => by simp [map_mul_left, mul_add],
+    { (f + g : α →+ α) with
+      map_mul_left' := fun a b => by simp [map_mul_left, mul_add]
       map_mul_right' := fun a b => by simp [map_mul_right, add_mul] }⟩
 
 instance : Mul (CentroidHom α) :=
@@ -244,7 +251,7 @@ instance hasNsmul : HasSmul ℕ (CentroidHom α) :=
     { (n • f : α →+ α) with
       map_mul_left' := fun a b => by 
         change n • f (a * b) = a * n • f b
-        rw [map_mul_left f, ← mul_smul_comm],
+        rw [map_mul_left f, ← mul_smul_comm]
       map_mul_right' := fun a b => by
         change n • f (a * b) = n • f a * b
         rw [map_mul_right f, ← smul_mul_assoc] }⟩
@@ -257,7 +264,7 @@ instance hasNpowNat : Pow (CentroidHom α) ℕ :=
         induction' n with n ih
         · simp
         · rw [pow_succ]
-          exact (congr_arg f.to_End ih).trans (f.map_mul_left' _ _),
+          exact (congr_arg f.to_End ih).trans (f.map_mul_left' _ _)
       map_mul_right' := fun a b => by 
         induction' n with n ih
         · simp
@@ -385,12 +392,14 @@ variable [NonUnitalNonAssocRing α]
 /-- Negation of `centroid_hom`s as a `centroid_hom`. -/
 instance : Neg (CentroidHom α) :=
   ⟨fun f =>
-    { (-f : α →+ α) with map_mul_left' := by simp [map_mul_left],
+    { (-f : α →+ α) with 
+      map_mul_left' := by simp [map_mul_left]
       map_mul_right' := by simp [map_mul_right] }⟩
 
 instance : Sub (CentroidHom α) :=
   ⟨fun f g =>
-    { (f - g : α →+ α) with map_mul_left' := fun a b => by simp [map_mul_left, mul_sub],
+    { (f - g : α →+ α) with
+      map_mul_left' := fun a b => by simp [map_mul_left, mul_sub]
       map_mul_right' := fun a b => by simp [map_mul_right, sub_mul] }⟩
 
 instance hasZsmul : HasSmul ℤ (CentroidHom α) :=
@@ -398,7 +407,7 @@ instance hasZsmul : HasSmul ℤ (CentroidHom α) :=
     { (n • f : α →+ α) with
       map_mul_left' := fun a b => by 
         change n • f (a * b) = a * n • f b
-        rw [map_mul_left f, ← mul_smul_comm],
+        rw [map_mul_left f, ← mul_smul_comm]
       map_mul_right' := fun a b => by
         change n • f (a * b) = n • f a * b
         rw [map_mul_right f, ← smul_mul_assoc] }⟩

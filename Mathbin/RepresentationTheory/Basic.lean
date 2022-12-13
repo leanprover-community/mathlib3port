@@ -385,8 +385,8 @@ def linHom :
       (V →ₗ[k]
         W) where 
   toFun g :=
-    { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹,
-      map_add' := fun f₁ f₂ => by simp_rw [add_comp, comp_add],
+    { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹
+      map_add' := fun f₁ f₂ => by simp_rw [add_comp, comp_add]
       map_smul' := fun r f => by simp_rw [RingHom.id_apply, smul_comp, comp_smul] }
   map_one' :=
     LinearMap.ext fun x => by
@@ -409,7 +409,8 @@ def dual :
       (Module.Dual k
         V) where 
   toFun g :=
-    { toFun := fun f => f ∘ₗ ρV g⁻¹, map_add' := fun f₁ f₂ => by simp only [add_comp],
+    { toFun := fun f => f ∘ₗ ρV g⁻¹
+      map_add' := fun f₁ f₂ => by simp only [add_comp]
       map_smul' := fun r f => by 
         ext
         simp only [coe_comp, Function.comp_apply, smul_apply, RingHom.id_apply] }

@@ -659,7 +659,9 @@ example (P : fin 7 → Prop) (h : P 5) : P (fin.succ (fin.succ 3)) := by norm_fi
 ```
 -/
 add_tactic_doc
-  { Name := "norm_fin", category := DocCategory.tactic, declNames := [`tactic.interactive.norm_fin],
+  { Name := "norm_fin"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.norm_fin]
     tags := ["arithmetic", "decision procedure"] }
 
 end Interactive

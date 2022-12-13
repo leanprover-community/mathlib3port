@@ -117,7 +117,8 @@ def pairwiseToOpensLeCover :
   Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCover
 
 instance (V : OpensLeCover U) : Nonempty (StructuredArrow V (pairwiseToOpensLeCover U)) :=
-  ⟨{ right := single V.index, Hom := V.homToIndex }⟩
+  ⟨{  right := single V.index
+      Hom := V.homToIndex }⟩
 
 -- This is a case bash: for each pair of types of objects in `pairwise ι`,
 -- we have to explicitly construct a zigzag.
@@ -129,39 +130,93 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
     is_connected_of_zigzag fun A B => by
       rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;>
         dsimp at *
-      · refine' ⟨[{ left := ⟨⟨⟩⟩, right := pair i i', Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
-        exact
-          List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
-            (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩) List.Chain.nil)
       · refine'
-          ⟨[{ left := ⟨⟨⟩⟩, right := pair i' i, Hom := (le_inf (b.le.trans inf_le_left) a.le).Hom },
-              { left := ⟨⟨⟩⟩, right := single i', Hom := (b.le.trans inf_le_left).Hom }, _],
-            _, rfl⟩
+          ⟨[{   left := ⟨⟨⟩⟩
+                right := pair i i'
+                Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
         exact
-          List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := right i' i }⟩)
-            (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i' i }⟩)
-              (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i' j' }⟩) List.Chain.nil))
+          List.Chain.cons
+            (Or.inr
+              ⟨{  left := 𝟙 _
+                  right := left i i' }⟩)
+            (List.Chain.cons
+              (Or.inl
+                ⟨{  left := 𝟙 _
+                    right := right i i' }⟩)
+              List.Chain.nil)
       · refine'
-          ⟨[{ left := ⟨⟨⟩⟩, right := single i, Hom := (a.le.trans inf_le_left).Hom },
-              { left := ⟨⟨⟩⟩, right := pair i i',
+          ⟨[{   left := ⟨⟨⟩⟩
+                right := pair i' i
+                Hom := (le_inf (b.le.trans inf_le_left) a.le).Hom },
+              { left := ⟨⟨⟩⟩
+                right := single i'
+                Hom := (b.le.trans inf_le_left).Hom },
+              _], _, rfl⟩
+        exact
+          List.Chain.cons
+            (Or.inr
+              ⟨{  left := 𝟙 _
+                  right := right i' i }⟩)
+            (List.Chain.cons
+              (Or.inl
+                ⟨{  left := 𝟙 _
+                    right := left i' i }⟩)
+              (List.Chain.cons
+                (Or.inr
+                  ⟨{  left := 𝟙 _
+                      right := left i' j' }⟩)
+                List.Chain.nil))
+      · refine'
+          ⟨[{   left := ⟨⟨⟩⟩
+                right := single i
+                Hom := (a.le.trans inf_le_left).Hom },
+              { left := ⟨⟨⟩⟩
+                right := pair i i'
                 Hom := (le_inf (a.le.trans inf_le_left) b.le).Hom },
-              _],
-            _, rfl⟩
+              _], _, rfl⟩
         exact
-          List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i j }⟩)
-            (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
-              (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩) List.Chain.nil))
+          List.Chain.cons
+            (Or.inl
+              ⟨{  left := 𝟙 _
+                  right := left i j }⟩)
+            (List.Chain.cons
+              (Or.inr
+                ⟨{  left := 𝟙 _
+                    right := left i i' }⟩)
+              (List.Chain.cons
+                (Or.inl
+                  ⟨{  left := 𝟙 _
+                      right := right i i' }⟩)
+                List.Chain.nil))
       · refine'
-          ⟨[{ left := ⟨⟨⟩⟩, right := single i, Hom := (a.le.trans inf_le_left).Hom },
-              { left := ⟨⟨⟩⟩, right := pair i i',
+          ⟨[{   left := ⟨⟨⟩⟩
+                right := single i
+                Hom := (a.le.trans inf_le_left).Hom },
+              { left := ⟨⟨⟩⟩
+                right := pair i i'
                 Hom := (le_inf (a.le.trans inf_le_left) (b.le.trans inf_le_left)).Hom },
-              { left := ⟨⟨⟩⟩, right := single i', Hom := (b.le.trans inf_le_left).Hom }, _],
-            _, rfl⟩
+              { left := ⟨⟨⟩⟩
+                right := single i'
+                Hom := (b.le.trans inf_le_left).Hom },
+              _], _, rfl⟩
         exact
-          List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i j }⟩)
-            (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
-              (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩)
-                (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i' j' }⟩) List.Chain.nil)))⟩
+          List.Chain.cons
+            (Or.inl
+              ⟨{  left := 𝟙 _
+                  right := left i j }⟩)
+            (List.Chain.cons
+              (Or.inr
+                ⟨{  left := 𝟙 _
+                    right := left i i' }⟩)
+              (List.Chain.cons
+                (Or.inl
+                  ⟨{  left := 𝟙 _
+                      right := right i i' }⟩)
+                (List.Chain.cons
+                  (Or.inr
+                    ⟨{  left := 𝟙 _
+                        right := left i' j' }⟩)
+                  List.Chain.nil)))⟩
 
 /-- The diagram in `opens X` indexed by pairwise intersections from `U` is isomorphic
 (in fact, equal) to the diagram factored through `opens_le_cover U`.
@@ -308,7 +363,9 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
       exacts[Or.inl h, Or.inr h]
   refine'
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.lift
-        ⟨s.X, { app := _, naturality' := _ }⟩ ≫
+        ⟨s.X,
+          { app := _
+            naturality' := _ }⟩ ≫
       F.1.map (eq_to_hom hι).op
   · apply Opposite.rec
     rintro ((_ | _) | (_ | _))

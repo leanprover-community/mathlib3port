@@ -58,7 +58,8 @@ theorem as_coe (X : PresheafedSpaceCat.{w, v, u} C) : X.carrier = (X : TopCat.{w
 
 @[simp]
 theorem mk_coe (carrier) (presheaf) :
-    (({ carrier, Presheaf } : PresheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
+    (({     carrier
+            Presheaf } : PresheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
   rfl
 #align algebraic_geometry.PresheafedSpace.mk_coe AlgebraicGeometry.PresheafedSpaceCat.mk_coe
 
@@ -69,7 +70,9 @@ instance (X : PresheafedSpaceCat.{v} C) : TopologicalSpace X :=
 def const (X : TopCat) (Z : C) :
     PresheafedSpaceCat C where 
   carrier := X
-  Presheaf := { obj := fun U => Z, map := fun U V f => 𝟙 Z }
+  Presheaf :=
+    { obj := fun U => Z
+      map := fun U V f => 𝟙 Z }
 #align algebraic_geometry.PresheafedSpace.const AlgebraicGeometry.PresheafedSpaceCat.const
 
 instance [Inhabited C] : Inhabited (PresheafedSpaceCat C) :=
@@ -256,8 +259,12 @@ natural transformation between the sheaves.
 @[simps Hom inv]
 def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) :
     X ≅ Y where 
-  Hom := { base := H.Hom, c := α.inv }
-  inv := { base := H.inv, c := Presheaf.toPushforwardOfIso H α.Hom }
+  Hom :=
+    { base := H.Hom
+      c := α.inv }
+  inv :=
+    { base := H.inv
+      c := Presheaf.toPushforwardOfIso H α.Hom }
   hom_inv_id' := by 
     ext
     · simp
@@ -342,7 +349,7 @@ def ofRestrict {U : TopCat} (X : PresheafedSpaceCat.{v, v, u} C) {f : U ⟶ (X :
       X where 
   base := f
   c :=
-    { app := fun V => X.Presheaf.map (h.IsOpenMap.Adjunction.counit.app V.unop).op,
+    { app := fun V => X.Presheaf.map (h.IsOpenMap.Adjunction.counit.app V.unop).op
       naturality' := fun U V f =>
         show _ = _ ≫ X.Presheaf.map _ by 
           rw [← map_comp, ← map_comp]
@@ -495,8 +502,12 @@ def mapPresheaf (F : C ⥤ D) :
     PresheafedSpaceCat.{v, v, u} C ⥤
       PresheafedSpaceCat.{v, v, u}
         D where 
-  obj X := { carrier := X.carrier, Presheaf := X.Presheaf ⋙ F }
-  map X Y f := { base := f.base, c := whiskerRight f.c F }
+  obj X :=
+    { carrier := X.carrier
+      Presheaf := X.Presheaf ⋙ F }
+  map X Y f :=
+    { base := f.base
+      c := whiskerRight f.c F }
 #align category_theory.functor.map_presheaf CategoryTheory.Functor.mapPresheaf
 
 @[simp]
@@ -531,9 +542,9 @@ namespace NatTrans
 /-- A natural transformation induces a natural transformation between the `map_presheaf` functors.
 -/
 def onPresheaf {F G : C ⥤ D} (α : F ⟶ G) :
-    G.mapPresheaf ⟶
-      F.mapPresheaf where app X :=
-    { base := 𝟙 _, c := whiskerLeft X.Presheaf α ≫ eqToHom (Presheaf.Pushforward.id_eq _).symm }
+    G.mapPresheaf ⟶ F.mapPresheaf where app X :=
+    { base := 𝟙 _
+      c := whiskerLeft X.Presheaf α ≫ eqToHom (Presheaf.Pushforward.id_eq _).symm }
 #align category_theory.nat_trans.on_presheaf CategoryTheory.NatTrans.onPresheaf
 
 -- TODO Assemble the last two constructions into a functor

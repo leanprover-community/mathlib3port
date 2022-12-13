@@ -109,13 +109,18 @@ protected theorem is_locally_homeomorph_on (hf : IsCoveringMapOn f s) :
   let he := e.mem_source.2 h
   refine'
     ⟨e.to_local_homeomorph.trans
-        { toFun := fun p => p.1, invFun := fun p => ⟨p, x, rfl⟩,
-          source := e.base_set ×ˢ ({⟨x, rfl⟩} : Set (f ⁻¹' {f x})), target := e.base_set,
+        { toFun := fun p => p.1
+          invFun := fun p => ⟨p, x, rfl⟩
+          source := e.base_set ×ˢ ({⟨x, rfl⟩} : Set (f ⁻¹' {f x}))
+          target := e.base_set
           open_source :=
-            e.open_base_set.prod (singletons_open_iff_discrete.2 (hf (f x) hx).1 ⟨x, rfl⟩),
-          open_target := e.open_base_set, map_source' := fun p => And.left,
-          map_target' := fun p hp => ⟨hp, rfl⟩, left_inv' := fun p hp => Prod.ext rfl hp.2.symm,
-          right_inv' := fun p hp => rfl, continuous_to_fun := continuous_fst.continuous_on,
+            e.open_base_set.prod (singletons_open_iff_discrete.2 (hf (f x) hx).1 ⟨x, rfl⟩)
+          open_target := e.open_base_set
+          map_source' := fun p => And.left
+          map_target' := fun p hp => ⟨hp, rfl⟩
+          left_inv' := fun p hp => Prod.ext rfl hp.2.symm
+          right_inv' := fun p hp => rfl
+          continuous_to_fun := continuous_fst.continuous_on
           continuous_inv_fun := (continuous_id'.prod_mk continuous_const).ContinuousOn },
       ⟨he, by rwa [e.to_local_homeomorph.symm_symm, e.proj_to_fun x he],
         (hf (f x) hx).to_trivialization_apply⟩,

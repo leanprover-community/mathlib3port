@@ -71,7 +71,10 @@ structure Content (G : Type w) [TopologicalSpace G] where
 #align measure_theory.content MeasureTheory.Content
 
 instance : Inhabited (Content G) :=
-  ⟨{ toFun := fun K => 0, mono' := by simp, sup_disjoint' := by simp, sup_le' := by simp }⟩
+  ⟨{  toFun := fun K => 0
+      mono' := by simp
+      sup_disjoint' := by simp
+      sup_le' := by simp }⟩
 
 /-- Although the `to_fun` field of a content takes values in `ℝ≥0`, we register a coercion to
 functions taking values in `ℝ≥0∞` as most constructions below rely on taking suprs and infs, which

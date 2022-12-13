@@ -133,31 +133,39 @@ def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone
 instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := by
   cases j <;> cases k
   exact
-    { elems := {bicone_hom.left_id},
-      complete := fun f => by 
-        cases f
-        simp }
-  exact { elems := ∅, complete := fun f => by cases f }
-  exact
-    { elems := {bicone_hom.left k},
-      complete := fun f => by 
-        cases f
-        simp }
-  exact { elems := ∅, complete := fun f => by cases f }
-  exact
-    { elems := {bicone_hom.right_id},
+    { elems := {bicone_hom.left_id}
       complete := fun f => by 
         cases f
         simp }
   exact
-    { elems := {bicone_hom.right k},
+    { elems := ∅
+      complete := fun f => by cases f }
+  exact
+    { elems := {bicone_hom.left k}
       complete := fun f => by 
         cases f
         simp }
-  exact { elems := ∅, complete := fun f => by cases f }
-  exact { elems := ∅, complete := fun f => by cases f }
   exact
-    { elems := Finset.image bicone_hom.diagram (Fintype.elems (j ⟶ k)),
+    { elems := ∅
+      complete := fun f => by cases f }
+  exact
+    { elems := {bicone_hom.right_id}
+      complete := fun f => by 
+        cases f
+        simp }
+  exact
+    { elems := {bicone_hom.right k}
+      complete := fun f => by 
+        cases f
+        simp }
+  exact
+    { elems := ∅
+      complete := fun f => by cases f }
+  exact
+    { elems := ∅
+      complete := fun f => by cases f }
+  exact
+    { elems := Finset.image bicone_hom.diagram (Fintype.elems (j ⟶ k))
       complete := fun f => by 
         cases f
         simp only [Finset.mem_image]

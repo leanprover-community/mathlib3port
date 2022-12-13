@@ -188,9 +188,10 @@ instance (priority := 100) ConditionallyCompleteLinearOrderBot.toOrderBot
 on the properties of Inf and Sup in a complete lattice.-/
 instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [CompleteLattice α] :
     ConditionallyCompleteLattice α :=
-  { ‹CompleteLattice α› with le_cSup := by intros <;> apply le_Sup <;> assumption,
-    cSup_le := by intros <;> apply Sup_le <;> assumption,
-    cInf_le := by intros <;> apply Inf_le <;> assumption,
+  { ‹CompleteLattice α› with
+    le_cSup := by intros <;> apply le_Sup <;> assumption
+    cSup_le := by intros <;> apply Sup_le <;> assumption
+    cInf_le := by intros <;> apply Inf_le <;> assumption
     le_cInf := by intros <;> apply le_Inf <;> assumption }
 #align
   complete_lattice.to_conditionally_complete_lattice CompleteLattice.toConditionallyCompleteLattice
@@ -211,22 +212,23 @@ open Classical
 @[reducible]
 noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) [i₁ : LinearOrder α]
     [i₂ : OrderBot α] [h : IsWellOrder α (· < ·)] : ConditionallyCompleteLinearOrderBot α :=
-  { i₁, i₂, LinearOrder.toLattice with inf := fun s => if hs : s.Nonempty then h.wf.min s hs else ⊥,
+  { i₁, i₂, LinearOrder.toLattice with
+    inf := fun s => if hs : s.Nonempty then h.wf.min s hs else ⊥
     cInf_le := fun s a hs has => by 
       have s_ne : s.nonempty := ⟨a, has⟩
-      simpa [s_ne] using not_lt.1 (h.wf.not_lt_min s s_ne has),
+      simpa [s_ne] using not_lt.1 (h.wf.not_lt_min s s_ne has)
     le_cInf := fun s a hs has => by 
       simp only [hs, dif_pos]
-      exact has (h.wf.min_mem s hs),
-    sup := fun s => if hs : (upperBounds s).Nonempty then h.wf.min _ hs else ⊥,
+      exact has (h.wf.min_mem s hs)
+    sup := fun s => if hs : (upperBounds s).Nonempty then h.wf.min _ hs else ⊥
     le_cSup := fun s a hs has => by
       have h's : (upperBounds s).Nonempty := hs
       simp only [h's, dif_pos]
-      exact h.wf.min_mem _ h's has,
+      exact h.wf.min_mem _ h's has
     cSup_le := fun s a hs has => by
       have h's : (upperBounds s).Nonempty := ⟨a, has⟩
       simp only [h's, dif_pos]
-      simpa using h.wf.not_lt_min _ h's has,
+      simpa using h.wf.not_lt_min _ h's has
     cSup_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
 #align
   is_well_order.conditionally_complete_linear_order_bot IsWellOrder.conditionallyCompleteLinearOrderBot
@@ -237,9 +239,9 @@ section OrderDual
 
 instance (α : Type _) [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice αᵒᵈ :=
   { OrderDual.hasInf α, OrderDual.hasSup α, OrderDual.lattice α with
-    le_cSup := @ConditionallyCompleteLattice.cInf_le α _,
-    cSup_le := @ConditionallyCompleteLattice.le_cInf α _,
-    le_cInf := @ConditionallyCompleteLattice.cSup_le α _,
+    le_cSup := @ConditionallyCompleteLattice.cInf_le α _
+    cSup_le := @ConditionallyCompleteLattice.le_cInf α _
+    le_cInf := @ConditionallyCompleteLattice.cSup_le α _
     cInf_le := @ConditionallyCompleteLattice.le_cSup α _ }
 
 instance (α : Type _) [ConditionallyCompleteLinearOrder α] : ConditionallyCompleteLinearOrder αᵒᵈ :=
@@ -267,32 +269,34 @@ def conditionallyCompleteLatticeOfSup (α : Type _) [H1 : PartialOrder α] [H2 :
     (bdd_below_pair : ∀ a b : α, BddBelow ({a, b} : Set α))
     (is_lub_Sup : ∀ s : Set α, BddAbove s → s.Nonempty → IsLub s (sup s)) :
     ConditionallyCompleteLattice α :=
-  { H1, H2 with sup := fun a b => sup {a, b},
+  { H1, H2 with 
+    sup := fun a b => sup {a, b}
     le_sup_left := fun a b =>
-      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _),
+      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _)
     le_sup_right := fun a b =>
       (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1
-        (mem_insert_of_mem _ (mem_singleton _)),
+        (mem_insert_of_mem _ (mem_singleton _))
     sup_le := fun a b c hac hbc =>
       (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).2
-        (forall_insert_of_forall (forall_eq.mpr hbc) hac),
-    inf := fun a b => sup (lowerBounds {a, b}),
+        (forall_insert_of_forall (forall_eq.mpr hbc) hac)
+    inf := fun a b => sup (lowerBounds {a, b})
     inf_le_left := fun a b =>
       (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩)
             (bdd_below_pair a b)).2
-        fun c hc => hc <| mem_insert _ _,
+        fun c hc => hc <| mem_insert _ _
     inf_le_right := fun a b =>
       (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩)
             (bdd_below_pair a b)).2
-        fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _),
+        fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _)
     le_inf := fun c a b hca hcb =>
       (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩)
             ⟨c, forall_insert_of_forall (forall_eq.mpr hcb) hca⟩).1
-        (forall_insert_of_forall (forall_eq.mpr hcb) hca),
-    inf := fun s => sup (lowerBounds s), cSup_le := fun s a hs ha => (is_lub_Sup s ⟨a, ha⟩ hs).2 ha,
-    le_cSup := fun s a hs ha => (is_lub_Sup s hs ⟨a, ha⟩).1 ha,
+        (forall_insert_of_forall (forall_eq.mpr hcb) hca)
+    inf := fun s => sup (lowerBounds s)
+    cSup_le := fun s a hs ha => (is_lub_Sup s ⟨a, ha⟩ hs).2 ha
+    le_cSup := fun s a hs ha => (is_lub_Sup s hs ⟨a, ha⟩).1 ha
     cInf_le := fun s a hs ha =>
-      (is_lub_Sup (lowerBounds s) (Nonempty.bdd_above_lower_bounds ⟨a, ha⟩) hs).2 fun b hb => hb ha,
+      (is_lub_Sup (lowerBounds s) (Nonempty.bdd_above_lower_bounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
     le_cInf := fun s a hs ha =>
       (is_lub_Sup (lowerBounds s) hs.bdd_above_lower_bounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Sup conditionallyCompleteLatticeOfSup
@@ -317,32 +321,34 @@ def conditionallyCompleteLatticeOfInf (α : Type _) [H1 : PartialOrder α] [H2 :
     (bdd_below_pair : ∀ a b : α, BddBelow ({a, b} : Set α))
     (is_glb_Inf : ∀ s : Set α, BddBelow s → s.Nonempty → IsGlb s (inf s)) :
     ConditionallyCompleteLattice α :=
-  { H1, H2 with inf := fun a b => inf {a, b},
+  { H1, H2 with 
+    inf := fun a b => inf {a, b}
     inf_le_left := fun a b =>
-      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _),
+      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _)
     inf_le_right := fun a b =>
       (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1
-        (mem_insert_of_mem _ (mem_singleton _)),
+        (mem_insert_of_mem _ (mem_singleton _))
     le_inf := fun c a b hca hcb =>
       (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).2
-        (forall_insert_of_forall (forall_eq.mpr hcb) hca),
-    sup := fun a b => inf (upperBounds {a, b}),
+        (forall_insert_of_forall (forall_eq.mpr hcb) hca)
+    sup := fun a b => inf (upperBounds {a, b})
     le_sup_left := fun a b =>
       (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩)
             (bdd_above_pair a b)).2
-        fun c hc => hc <| mem_insert _ _,
+        fun c hc => hc <| mem_insert _ _
     le_sup_right := fun a b =>
       (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩)
             (bdd_above_pair a b)).2
-        fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _),
+        fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _)
     sup_le := fun a b c hac hbc =>
       (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩)
             ⟨c, forall_insert_of_forall (forall_eq.mpr hbc) hac⟩).1
-        (forall_insert_of_forall (forall_eq.mpr hbc) hac),
-    sup := fun s => inf (upperBounds s), le_cInf := fun s a hs ha => (is_glb_Inf s ⟨a, ha⟩ hs).2 ha,
-    cInf_le := fun s a hs ha => (is_glb_Inf s hs ⟨a, ha⟩).1 ha,
+        (forall_insert_of_forall (forall_eq.mpr hbc) hac)
+    sup := fun s => inf (upperBounds s)
+    le_cInf := fun s a hs ha => (is_glb_Inf s ⟨a, ha⟩ hs).2 ha
+    cInf_le := fun s a hs ha => (is_glb_Inf s hs ⟨a, ha⟩).1 ha
     le_cSup := fun s a hs ha =>
-      (is_glb_Inf (upperBounds s) (Nonempty.bdd_below_upper_bounds ⟨a, ha⟩) hs).2 fun b hb => hb ha,
+      (is_glb_Inf (upperBounds s) (Nonempty.bdd_below_upper_bounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
     cSup_le := fun s a hs ha =>
       (is_glb_Inf (upperBounds s) hs.bdd_below_upper_bounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Inf conditionallyCompleteLatticeOfInf
@@ -847,12 +853,12 @@ instance Pi.conditionallyCompleteLattice {ι : Type _} {α : ∀ i : ι, Type _}
     [∀ i, ConditionallyCompleteLattice (α i)] : ConditionallyCompleteLattice (∀ i, α i) :=
   { Pi.lattice, Pi.hasSup, Pi.hasInf with
     le_cSup := fun s f ⟨g, hg⟩ hf i =>
-      le_cSup ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
+      le_cSup ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩
     cSup_le := fun s f hs hf i =>
       (cSup_le (by haveI := hs.to_subtype <;> apply range_nonempty)) fun b ⟨⟨g, hg⟩, hb⟩ =>
-        hb ▸ hf hg i,
+        hb ▸ hf hg i
     cInf_le := fun s f ⟨g, hg⟩ hf i =>
-      cInf_le ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
+      cInf_le ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩
     le_cInf := fun s f hs hf i =>
       (le_cInf (by haveI := hs.to_subtype <;> apply range_nonempty)) fun b ⟨⟨g, hg⟩, hb⟩ =>
         hb ▸ hf hg i }
@@ -1139,9 +1145,13 @@ theorem is_glb_Inf (s : Set (WithTop α)) : IsGlb s (inf s) := by
 #align with_top.is_glb_Inf WithTop.is_glb_Inf
 
 noncomputable instance : CompleteLinearOrder (WithTop α) :=
-  { WithTop.linearOrder, WithTop.lattice, WithTop.orderTop, WithTop.orderBot with sup := sup,
-    le_Sup := fun s => (is_lub_Sup s).1, Sup_le := fun s => (is_lub_Sup s).2, inf := inf,
-    le_Inf := fun s => (is_glb_Inf s).2, Inf_le := fun s => (is_glb_Inf s).1 }
+  { WithTop.linearOrder, WithTop.lattice, WithTop.orderTop, WithTop.orderBot with
+    sup := sup
+    le_Sup := fun s => (is_lub_Sup s).1
+    Sup_le := fun s => (is_lub_Sup s).2
+    inf := inf
+    le_Inf := fun s => (is_glb_Inf s).2
+    Inf_le := fun s => (is_glb_Inf s).1 }
 
 /-- A version of `with_top.coe_Sup'` with a more convenient but less general statement. -/
 @[norm_cast]
@@ -1372,9 +1382,9 @@ gives a conditionally complete lattice -/
 noncomputable instance WithTop.conditionallyCompleteLattice {α : Type _}
     [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice (WithTop α) :=
   { WithTop.lattice, WithTop.hasSup, WithTop.hasInf with
-    le_cSup := fun S a hS haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS,
-    cSup_le := fun S a hS haS => (WithTop.is_lub_Sup' hS).2 haS,
-    cInf_le := fun S a hS haS => (WithTop.is_glb_Inf' hS).1 haS,
+    le_cSup := fun S a hS haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS
+    cSup_le := fun S a hS haS => (WithTop.is_lub_Sup' hS).2 haS
+    cInf_le := fun S a hS haS => (WithTop.is_glb_Inf' hS).1 haS
     le_cInf := fun S a hS haS => (WithTop.is_glb_Inf' ⟨a, haS⟩).2 haS }
 #align with_top.conditionally_complete_lattice WithTop.conditionallyCompleteLattice
 
@@ -1383,16 +1393,16 @@ gives a conditionally complete lattice -/
 noncomputable instance WithBot.conditionallyCompleteLattice {α : Type _}
     [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice (WithBot α) :=
   { WithBot.lattice, WithBot.hasSup, WithBot.hasInf with
-    le_cSup := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).cInf_le,
-    cSup_le := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).le_cInf,
-    cInf_le := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).le_cSup,
+    le_cSup := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).cInf_le
+    cSup_le := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).le_cInf
+    cInf_le := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).le_cSup
     le_cInf := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).cSup_le }
 #align with_bot.conditionally_complete_lattice WithBot.conditionallyCompleteLattice
 
 noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
     [ConditionallyCompleteLattice α] : CompleteLattice (WithTop (WithBot α)) :=
   { WithTop.hasInf, WithTop.hasSup, WithTop.boundedOrder, WithTop.lattice with
-    le_Sup := fun S a haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS,
+    le_Sup := fun S a haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS
     Sup_le := fun S a ha => by 
       cases' S.eq_empty_or_nonempty with h
       · show ite _ _ _ ≤ a
@@ -1408,7 +1418,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
           use ⊥
           rw [h]
           rintro b ⟨⟩
-      · refine' (WithTop.is_lub_Sup' h).2 ha,
+      · refine' (WithTop.is_lub_Sup' h).2 ha
     Inf_le := fun S a haS =>
       show ite _ _ _ ≤ a by 
         split_ifs
@@ -1421,7 +1431,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
             refine' cInf_le _ haS
             use ⊥
             intro b hb
-            exact bot_le,
+            exact bot_le
     le_Inf := fun S a haS => (WithTop.is_glb_Inf' ⟨a, haS⟩).2 haS }
 #align with_top.with_bot.complete_lattice WithTop.WithBot.completeLattice
 
@@ -1433,9 +1443,9 @@ noncomputable instance WithTop.WithBot.completeLinearOrder {α : Type _}
 noncomputable instance WithBot.WithTop.completeLattice {α : Type _}
     [ConditionallyCompleteLattice α] : CompleteLattice (WithBot (WithTop α)) :=
   { WithBot.hasInf, WithBot.hasSup, WithBot.boundedOrder, WithBot.lattice with
-    le_Sup := (@WithTop.WithBot.completeLattice αᵒᵈ _).Inf_le,
-    Sup_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Inf,
-    Inf_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Sup,
+    le_Sup := (@WithTop.WithBot.completeLattice αᵒᵈ _).Inf_le
+    Sup_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Inf
+    Inf_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Sup
     le_Inf := (@WithTop.WithBot.completeLattice αᵒᵈ _).Sup_le }
 #align with_bot.with_top.complete_lattice WithBot.WithTop.completeLattice
 

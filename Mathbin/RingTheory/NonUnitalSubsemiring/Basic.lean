@@ -342,7 +342,8 @@ theorem gc_map_comap (f : F) :
 /-- A non-unital subsemiring is isomorphic to its image under an injective function -/
 noncomputable def equivMapOfInjective (f : F) (hf : Function.Injective (f : R → S)) :
     s ≃+* s.map f :=
-  { Equiv.Set.image f s hf with map_mul' := fun _ _ => Subtype.ext (map_mul f _ _),
+  { Equiv.Set.image f s hf with
+    map_mul' := fun _ _ => Subtype.ext (map_mul f _ _)
     map_add' := fun _ _ => Subtype.ext (map_add f _ _) }
 #align non_unital_subsemiring.equiv_map_of_injective NonUnitalSubsemiring.equivMapOfInjective
 
@@ -401,7 +402,9 @@ namespace NonUnitalSubsemiring
 
 -- should we define this as the range of the zero homomorphism?
 instance : Bot (NonUnitalSubsemiring R) :=
-  ⟨{ carrier := {0}, add_mem' := fun _ _ _ _ => by simp_all, zero_mem' := Set.mem_singleton 0,
+  ⟨{  carrier := {0}
+      add_mem' := fun _ _ _ _ => by simp_all
+      zero_mem' := Set.mem_singleton 0
       mul_mem' := fun _ _ _ _ => by simp_all }⟩
 
 instance : Inhabited (NonUnitalSubsemiring R) :=
@@ -464,9 +467,14 @@ instance : CompleteLattice (NonUnitalSubsemiring R) :=
   { completeLatticeOfInf (NonUnitalSubsemiring R) fun s =>
       IsGlb.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
         is_glb_binfi with
-    bot := ⊥, bot_le := fun s x hx => (mem_bot.mp hx).symm ▸ zero_mem s, top := ⊤,
-    le_top := fun s x hx => trivial, inf := (· ⊓ ·), inf_le_left := fun s t x => And.left,
-    inf_le_right := fun s t x => And.right, le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
+    bot := ⊥
+    bot_le := fun s x hx => (mem_bot.mp hx).symm ▸ zero_mem s
+    top := ⊤
+    le_top := fun s x hx => trivial
+    inf := (· ⊓ ·)
+    inf_le_left := fun s t x => And.left
+    inf_le_right := fun s t x => And.right
+    le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
 
 theorem eq_top_iff' (A : NonUnitalSubsemiring R) : A = ⊤ ↔ ∀ x : R, x ∈ A :=
   eq_top_iff.trans ⟨fun h m => h <| mem_top m, fun h m _ => h m⟩
@@ -476,7 +484,9 @@ section Center
 
 /-- The center of a semiring `R` is the set of elements that commute with everything in `R` -/
 def center (R) [NonUnitalSemiring R] : NonUnitalSubsemiring R :=
-  { Subsemigroup.center R with carrier := Set.center R, zero_mem' := Set.zero_mem_center R,
+  { Subsemigroup.center R with 
+    carrier := Set.center R
+    zero_mem' := Set.zero_mem_center R
     add_mem' := fun a b => Set.add_mem_center }
 #align non_unital_subsemiring.center NonUnitalSubsemiring.center
 
@@ -514,8 +524,9 @@ section Centralizer
 
 /-- The centralizer of a set as non-unital subsemiring. -/
 def centralizer {R} [NonUnitalSemiring R] (s : Set R) : NonUnitalSubsemiring R :=
-  { Subsemigroup.centralizer s with carrier := s.centralizer,
-    zero_mem' := Set.zero_mem_centralizer _,
+  { Subsemigroup.centralizer s with 
+    carrier := s.centralizer
+    zero_mem' := Set.zero_mem_centralizer _
     add_mem' := fun x y hx hy => Set.add_mem_centralizer hx hy }
 #align non_unital_subsemiring.centralizer NonUnitalSubsemiring.centralizer
 
@@ -821,7 +832,9 @@ theorem top_prod_top : (⊤ : NonUnitalSubsemiring R).Prod (⊤ : NonUnitalSubse
 
 /-- Product of non-unital subsemirings is isomorphic to their product as semigroups. -/
 def prodEquiv (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) : s.Prod t ≃+* s × t :=
-  { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl, map_add' := fun x y => rfl }
+  { Equiv.Set.prod ↑s ↑t with 
+    map_mul' := fun x y => rfl
+    map_add' := fun x y => rfl }
 #align non_unital_subsemiring.prod_equiv NonUnitalSubsemiring.prodEquiv
 
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → NonUnitalSubsemiring R}
@@ -975,14 +988,18 @@ variable {F : Type _} [NonUnitalRingHomClass F R S]
 /-- Makes the identity isomorphism from a proof two non-unital subsemirings of a multiplicative
 monoid are equal. -/
 def nonUnitalSubsemiringCongr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equiv.setCongr <| congr_arg _ h with
+    map_mul' := fun _ _ => rfl
+    map_add' := fun _ _ => rfl }
 #align ring_equiv.non_unital_subsemiring_congr RingEquiv.nonUnitalSubsemiringCongr
 
 /-- Restrict a non-unital ring homomorphism with a left inverse to a ring isomorphism to its
 `non_unital_ring_hom.srange`. -/
 def sofLeftInverse' {g : S → R} {f : F} (h : Function.LeftInverse g f) : R ≃+* srange f :=
-  { srangeRestrict f with toFun := srangeRestrict f, invFun := fun x => g (Subtype (srange f) x),
-    left_inv := h,
+  { srangeRestrict f with 
+    toFun := srangeRestrict f
+    invFun := fun x => g (Subtype (srange f) x)
+    left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := NonUnitalRingHom.mem_srange.mp x.Prop

@@ -59,7 +59,9 @@ unsafe def ancestor_attr :
 #align tactic.ancestor_attr tactic.ancestor_attr
 
 add_tactic_doc
-  { Name := "ancestor", category := DocCategory.attr, declNames := [`tactic.ancestor_attr],
+  { Name := "ancestor"
+    category := DocCategory.attr
+    declNames := [`tactic.ancestor_attr]
     tags := ["transport", "environment"] }
 
 end Performance

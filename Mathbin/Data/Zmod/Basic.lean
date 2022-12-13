@@ -425,7 +425,7 @@ def ringEquivCongr {m n : ℕ} (h : m = n) : Zmod m ≃+* Zmod n := by
       { Fin.cast h with
         map_mul' := fun a b => by 
           rw [OrderIso.to_fun_eq_coe]; ext
-          rw [Fin.coe_cast, Fin.coe_mul, Fin.coe_mul, Fin.coe_cast, Fin.coe_cast, ← h],
+          rw [Fin.coe_cast, Fin.coe_mul, Fin.coe_mul, Fin.coe_cast, Fin.coe_cast, ← h]
         map_add' := fun a b => by 
           rw [OrderIso.to_fun_eq_coe]; ext
           rw [Fin.coe_cast, Fin.coe_add, Fin.coe_add, Fin.coe_cast, Fin.coe_cast, ← h] }
@@ -746,7 +746,11 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
         · rw [← Zmod.eq_iff_modeq_nat, Zmod.nat_cast_zmod_val, Zmod.nat_cast_val]
         · rw [← Zmod.eq_iff_modeq_nat, Zmod.nat_cast_zmod_val, Zmod.nat_cast_val]
       exact ⟨left_inv, left_inv.right_inverse_of_card_le (by simp)⟩
-  { toFun, invFun, map_mul' := RingHom.map_mul _, map_add' := RingHom.map_add _, left_inv := inv.1,
+  { toFun
+    invFun
+    map_mul' := RingHom.map_mul _
+    map_add' := RingHom.map_add _
+    left_inv := inv.1
     right_inv := inv.2 }
 #align zmod.chinese_remainder Zmod.chineseRemainder
 
@@ -1064,7 +1068,8 @@ private theorem mul_inv_cancel_aux (a : Zmod p) (h : a ≠ 0) : a * a⁻¹ = 1 :
 
 /-- Field structure on `zmod p` if `p` is prime. -/
 instance : Field (Zmod p) :=
-  { Zmod.commRing p, Zmod.hasInv p, Zmod.nontrivial p with mul_inv_cancel := mul_inv_cancel_aux p,
+  { Zmod.commRing p, Zmod.hasInv p, Zmod.nontrivial p with
+    mul_inv_cancel := mul_inv_cancel_aux p
     inv_zero := inv_zero p }
 
 /-- `zmod p` is an integral domain when `p` is prime. -/

@@ -159,7 +159,7 @@ def pointedToPartialFun :
                   []
                   "=>"
                   (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `map [])
                 ":="
@@ -180,7 +180,7 @@ def pointedToPartialFun :
                     ","
                     `rfl]
                    "⟩"))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `map_id' [])
                 ":="
@@ -210,7 +210,7 @@ def pointedToPartialFun :
                            []
                            "=>"
                            (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `map_comp' [])
                 ":="
@@ -273,7 +273,7 @@ def pointedToPartialFun :
                  []
                  "=>"
                  (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `map [])
                ":="
@@ -294,7 +294,7 @@ def pointedToPartialFun :
                    ","
                    `rfl]
                   "⟩"))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `map_id' [])
                ":="
@@ -324,7 +324,7 @@ def pointedToPartialFun :
                           []
                           "=>"
                           (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `map_comp' [])
                ":="
@@ -379,7 +379,7 @@ def pointedToPartialFun :
              []
              "=>"
              (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `map [])
            ":="
@@ -400,7 +400,7 @@ def pointedToPartialFun :
                ","
                `rfl]
               "⟩"))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `map_id' [])
            ":="
@@ -430,7 +430,7 @@ def pointedToPartialFun :
                       []
                       "=>"
                       (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `map_comp' [])
            ":="
@@ -479,7 +479,7 @@ def pointedToPartialFun :
             []
             "=>"
             (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `map [])
           ":="
@@ -500,7 +500,7 @@ def pointedToPartialFun :
               ","
               `rfl]
              "⟩"))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `map_id' [])
           ":="
@@ -530,7 +530,7 @@ def pointedToPartialFun :
                      []
                      "=>"
                      (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
-         ","
+         []
          (Term.structInstField
           (Term.structInstLVal `map_comp' [])
           ":="
@@ -577,7 +577,7 @@ def pointedToPartialFun :
            []
            "=>"
            (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `map [])
          ":="
@@ -598,7 +598,7 @@ def pointedToPartialFun :
              ","
              `rfl]
             "⟩"))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `map_id' [])
          ":="
@@ -628,7 +628,7 @@ def pointedToPartialFun :
                     []
                     "=>"
                     (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `map_comp' [])
          ":="
@@ -1228,9 +1228,7 @@ def pointedToPartialFun :
           exact
             {
               obj := fun X => ⟨ Option X , none ⟩
-                ,
                 map := fun X Y f => ⟨ Option.elim' none fun a => f a . toOption , rfl ⟩
-                ,
                 map_id'
                   :=
                   fun
@@ -1239,7 +1237,6 @@ def pointedToPartialFun :
                       PointedCat.Hom.ext _ _
                         <|
                         funext fun o => Option.recOn o rfl fun a => Part.some_to_option _
-                ,
                 map_comp'
                   :=
                   fun
@@ -1318,7 +1315,7 @@ def pointedToPartialFun :
                             "⟨"
                             [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                             "⟩"))))
-                        ","
+                        []
                         (Term.structInstField
                          (Term.structInstLVal `invFun [])
                          ":="
@@ -1334,7 +1331,7 @@ def pointedToPartialFun :
                             (Term.app
                              (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                              [(Term.proj `a "." (fieldIdx "2"))])))))
-                        ","
+                        []
                         (Term.structInstField
                          (Term.structInstLVal `left_inv [])
                          ":="
@@ -1345,7 +1342,7 @@ def pointedToPartialFun :
                            []
                            "=>"
                            (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-                        ","
+                        []
                         (Term.structInstField
                          (Term.structInstLVal `right_inv [])
                          ":="
@@ -1477,7 +1474,7 @@ def pointedToPartialFun :
                          (Term.structInstLVal `toFun [])
                          ":="
                          (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-                        ","
+                        []
                         (Term.structInstField
                          (Term.structInstLVal `invFun [])
                          ":="
@@ -1498,7 +1495,7 @@ def pointedToPartialFun :
                             (Term.app
                              `some
                              [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-                        ","
+                        []
                         (Term.structInstField
                          (Term.structInstLVal `left_inv [])
                          ":="
@@ -1539,7 +1536,7 @@ def pointedToPartialFun :
                                        (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                                       "]"]
                                      [])]))))))]))))
-                        ","
+                        []
                         (Term.structInstField
                          (Term.structInstLVal `right_inv [])
                          ":="
@@ -1697,7 +1694,7 @@ def pointedToPartialFun :
                            "⟨"
                            [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                            "⟩"))))
-                       ","
+                       []
                        (Term.structInstField
                         (Term.structInstLVal `invFun [])
                         ":="
@@ -1713,7 +1710,7 @@ def pointedToPartialFun :
                            (Term.app
                             (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                             [(Term.proj `a "." (fieldIdx "2"))])))))
-                       ","
+                       []
                        (Term.structInstField
                         (Term.structInstLVal `left_inv [])
                         ":="
@@ -1724,7 +1721,7 @@ def pointedToPartialFun :
                           []
                           "=>"
                           (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-                       ","
+                       []
                        (Term.structInstField
                         (Term.structInstLVal `right_inv [])
                         ":="
@@ -1856,7 +1853,7 @@ def pointedToPartialFun :
                         (Term.structInstLVal `toFun [])
                         ":="
                         (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-                       ","
+                       []
                        (Term.structInstField
                         (Term.structInstLVal `invFun [])
                         ":="
@@ -1877,7 +1874,7 @@ def pointedToPartialFun :
                            (Term.app
                             `some
                             [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-                       ","
+                       []
                        (Term.structInstField
                         (Term.structInstLVal `left_inv [])
                         ":="
@@ -1918,7 +1915,7 @@ def pointedToPartialFun :
                                       (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                                      "]"]
                                     [])]))))))]))))
-                       ","
+                       []
                        (Term.structInstField
                         (Term.structInstLVal `right_inv [])
                         ":="
@@ -2065,7 +2062,7 @@ def pointedToPartialFun :
                        "⟨"
                        [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                        "⟩"))))
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `invFun [])
                     ":="
@@ -2081,7 +2078,7 @@ def pointedToPartialFun :
                        (Term.app
                         (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                         [(Term.proj `a "." (fieldIdx "2"))])))))
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `left_inv [])
                     ":="
@@ -2092,7 +2089,7 @@ def pointedToPartialFun :
                       []
                       "=>"
                       (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `right_inv [])
                     ":="
@@ -2221,7 +2218,7 @@ def pointedToPartialFun :
                     (Term.structInstLVal `toFun [])
                     ":="
                     (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `invFun [])
                     ":="
@@ -2240,7 +2237,7 @@ def pointedToPartialFun :
                        `none
                        "else"
                        (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `left_inv [])
                     ":="
@@ -2281,7 +2278,7 @@ def pointedToPartialFun :
                                   (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                                  "]"]
                                 [])]))))))]))))
-                   ","
+                   []
                    (Term.structInstField
                     (Term.structInstLVal `right_inv [])
                     ":="
@@ -2422,7 +2419,7 @@ def pointedToPartialFun :
                       "⟨"
                       [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                       "⟩"))))
-                  ","
+                  []
                   (Term.structInstField
                    (Term.structInstLVal `invFun [])
                    ":="
@@ -2438,7 +2435,7 @@ def pointedToPartialFun :
                       (Term.app
                        (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                        [(Term.proj `a "." (fieldIdx "2"))])))))
-                  ","
+                  []
                   (Term.structInstField
                    (Term.structInstLVal `left_inv [])
                    ":="
@@ -2449,7 +2446,7 @@ def pointedToPartialFun :
                      []
                      "=>"
                      (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-                  ","
+                  []
                   (Term.structInstField
                    (Term.structInstLVal `right_inv [])
                    ":="
@@ -2577,7 +2574,7 @@ def pointedToPartialFun :
                    (Term.structInstLVal `toFun [])
                    ":="
                    (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-                  ","
+                  []
                   (Term.structInstField
                    (Term.structInstLVal `invFun [])
                    ":="
@@ -2596,7 +2593,7 @@ def pointedToPartialFun :
                       `none
                       "else"
                       (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-                  ","
+                  []
                   (Term.structInstField
                    (Term.structInstLVal `left_inv [])
                    ":="
@@ -2637,7 +2634,7 @@ def pointedToPartialFun :
                                  (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                                 "]"]
                                [])]))))))]))))
-                  ","
+                  []
                   (Term.structInstField
                    (Term.structInstLVal `right_inv [])
                    ":="
@@ -2776,7 +2773,7 @@ def pointedToPartialFun :
                      "⟨"
                      [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                      "⟩"))))
-                 ","
+                 []
                  (Term.structInstField
                   (Term.structInstLVal `invFun [])
                   ":="
@@ -2792,7 +2789,7 @@ def pointedToPartialFun :
                      (Term.app
                       (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                       [(Term.proj `a "." (fieldIdx "2"))])))))
-                 ","
+                 []
                  (Term.structInstField
                   (Term.structInstLVal `left_inv [])
                   ":="
@@ -2803,7 +2800,7 @@ def pointedToPartialFun :
                     []
                     "=>"
                     (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-                 ","
+                 []
                  (Term.structInstField
                   (Term.structInstLVal `right_inv [])
                   ":="
@@ -2931,7 +2928,7 @@ def pointedToPartialFun :
                   (Term.structInstLVal `toFun [])
                   ":="
                   (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-                 ","
+                 []
                  (Term.structInstField
                   (Term.structInstLVal `invFun [])
                   ":="
@@ -2950,7 +2947,7 @@ def pointedToPartialFun :
                      `none
                      "else"
                      (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-                 ","
+                 []
                  (Term.structInstField
                   (Term.structInstLVal `left_inv [])
                   ":="
@@ -2991,7 +2988,7 @@ def pointedToPartialFun :
                                 (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                                "]"]
                               [])]))))))]))))
-                 ","
+                 []
                  (Term.structInstField
                   (Term.structInstLVal `right_inv [])
                   ":="
@@ -3117,7 +3114,7 @@ def pointedToPartialFun :
                 (Term.structInstLVal `toFun [])
                 ":="
                 (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `invFun [])
                 ":="
@@ -3136,7 +3133,7 @@ def pointedToPartialFun :
                    `none
                    "else"
                    (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `left_inv [])
                 ":="
@@ -3177,7 +3174,7 @@ def pointedToPartialFun :
                               (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                              "]"]
                             [])]))))))]))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
                 ":="
@@ -3794,7 +3791,7 @@ def pointedToPartialFun :
                (Term.structInstLVal `toFun [])
                ":="
                (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `invFun [])
                ":="
@@ -3813,7 +3810,7 @@ def pointedToPartialFun :
                   `none
                   "else"
                   (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `left_inv [])
                ":="
@@ -3851,7 +3848,7 @@ def pointedToPartialFun :
                              (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                             "]"]
                            [])]))))))]))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `right_inv [])
                ":="
@@ -3910,7 +3907,7 @@ def pointedToPartialFun :
              (Term.structInstLVal `toFun [])
              ":="
              (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-            ","
+            []
             (Term.structInstField
              (Term.structInstLVal `invFun [])
              ":="
@@ -3929,7 +3926,7 @@ def pointedToPartialFun :
                 `none
                 "else"
                 (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-            ","
+            []
             (Term.structInstField
              (Term.structInstLVal `left_inv [])
              ":="
@@ -3967,7 +3964,7 @@ def pointedToPartialFun :
                            (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                           "]"]
                          [])]))))))]))))
-            ","
+            []
             (Term.structInstField
              (Term.structInstLVal `right_inv [])
              ":="
@@ -4018,7 +4015,7 @@ def pointedToPartialFun :
            (Term.structInstLVal `toFun [])
            ":="
            (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `invFun [])
            ":="
@@ -4037,7 +4034,7 @@ def pointedToPartialFun :
               `none
               "else"
               (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `left_inv [])
            ":="
@@ -4075,7 +4072,7 @@ def pointedToPartialFun :
                          (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                         "]"]
                        [])]))))))]))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `right_inv [])
            ":="
@@ -4132,7 +4129,7 @@ def pointedToPartialFun :
          (Term.structInstLVal `toFun [])
          ":="
          (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `invFun [])
          ":="
@@ -4151,7 +4148,7 @@ def pointedToPartialFun :
             `none
             "else"
             (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `left_inv [])
          ":="
@@ -4189,7 +4186,7 @@ def pointedToPartialFun :
                        (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                       "]"]
                      [])]))))))]))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `right_inv [])
          ":="
@@ -4786,7 +4783,7 @@ def pointedToPartialFun :
               (Term.structInstLVal `toFun [])
               ":="
               (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-             ","
+             []
              (Term.structInstField
               (Term.structInstLVal `invFun [])
               ":="
@@ -4805,7 +4802,7 @@ def pointedToPartialFun :
                  `none
                  "else"
                  (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-             ","
+             []
              (Term.structInstField
               (Term.structInstLVal `left_inv [])
               ":="
@@ -4849,7 +4846,7 @@ def pointedToPartialFun :
                             (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                            "]"]
                           [])]))))))]))))
-             ","
+             []
              (Term.structInstField
               (Term.structInstLVal `right_inv [])
               ":="
@@ -4917,7 +4914,7 @@ def pointedToPartialFun :
                 (Term.structInstLVal `toFun [])
                 ":="
                 (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `invFun [])
                 ":="
@@ -4936,7 +4933,7 @@ def pointedToPartialFun :
                    `none
                    "else"
                    (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `left_inv [])
                 ":="
@@ -4980,7 +4977,7 @@ def pointedToPartialFun :
                               (Tactic.simpLemma [] [] `Subtype.coe_eta)]
                              "]"]
                             [])]))))))]))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
                 ":="
@@ -5116,7 +5113,7 @@ def pointedToPartialFun :
                    "⟨"
                    [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                    "⟩"))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `invFun [])
                 ":="
@@ -5132,7 +5129,7 @@ def pointedToPartialFun :
                    (Term.app
                     (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                     [(Term.proj `a "." (fieldIdx "2"))])))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `left_inv [])
                 ":="
@@ -5143,7 +5140,7 @@ def pointedToPartialFun :
                   []
                   "=>"
                   (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
                 ":="
@@ -5773,7 +5770,7 @@ def pointedToPartialFun :
                   "⟨"
                   [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                   "⟩"))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `invFun [])
                ":="
@@ -5789,7 +5786,7 @@ def pointedToPartialFun :
                   (Term.app
                    (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                    [(Term.proj `a "." (fieldIdx "2"))])))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `left_inv [])
                ":="
@@ -5800,7 +5797,7 @@ def pointedToPartialFun :
                  []
                  "=>"
                  (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-              ","
+              []
               (Term.structInstField
                (Term.structInstLVal `right_inv [])
                ":="
@@ -5857,7 +5854,7 @@ def pointedToPartialFun :
                 "⟨"
                 [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                 "⟩"))))
-            ","
+            []
             (Term.structInstField
              (Term.structInstLVal `invFun [])
              ":="
@@ -5873,14 +5870,14 @@ def pointedToPartialFun :
                 (Term.app
                  (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                  [(Term.proj `a "." (fieldIdx "2"))])))))
-            ","
+            []
             (Term.structInstField
              (Term.structInstLVal `left_inv [])
              ":="
              (Term.fun
               "fun"
               (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-            ","
+            []
             (Term.structInstField
              (Term.structInstLVal `right_inv [])
              ":="
@@ -5929,7 +5926,7 @@ def pointedToPartialFun :
               "⟨"
               [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
               "⟩"))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `invFun [])
            ":="
@@ -5945,14 +5942,14 @@ def pointedToPartialFun :
               (Term.app
                (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                [(Term.proj `a "." (fieldIdx "2"))])))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `left_inv [])
            ":="
            (Term.fun
             "fun"
             (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-          ","
+          []
           (Term.structInstField
            (Term.structInstLVal `right_inv [])
            ":="
@@ -5998,7 +5995,7 @@ def pointedToPartialFun :
            []
            "=>"
            (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `invFun [])
          ":="
@@ -6014,14 +6011,14 @@ def pointedToPartialFun :
             (Term.app
              (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
              [(Term.proj `a "." (fieldIdx "2"))])))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `left_inv [])
          ":="
          (Term.fun
           "fun"
           (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-        ","
+        []
         (Term.structInstField
          (Term.structInstLVal `right_inv [])
          ":="
@@ -6319,7 +6316,7 @@ def pointedToPartialFun :
                  "⟨"
                  [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                  "⟩"))))
-             ","
+             []
              (Term.structInstField
               (Term.structInstLVal `invFun [])
               ":="
@@ -6335,14 +6332,14 @@ def pointedToPartialFun :
                  (Term.app
                   (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                   [(Term.proj `a "." (fieldIdx "2"))])))))
-             ","
+             []
              (Term.structInstField
               (Term.structInstLVal `left_inv [])
               ":="
               (Term.fun
                "fun"
                (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-             ","
+             []
              (Term.structInstField
               (Term.structInstLVal `right_inv [])
               ":="
@@ -6405,7 +6402,7 @@ def pointedToPartialFun :
                    "⟨"
                    [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
                    "⟩"))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `invFun [])
                 ":="
@@ -6421,7 +6418,7 @@ def pointedToPartialFun :
                    (Term.app
                     (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                     [(Term.proj `a "." (fieldIdx "2"))])))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `left_inv [])
                 ":="
@@ -6432,7 +6429,7 @@ def pointedToPartialFun :
                   []
                   "=>"
                   (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
                 ":="
@@ -6603,11 +6600,8 @@ def pointedToPartialFun :
                         PartialFunCat.Iso.mk
                           {
                             toFun := fun a => ⟨ some a , some_ne_none a ⟩
-                              ,
                               invFun := fun a => get <| ne_none_iff_is_some . 1 a . 2
-                              ,
                               left_inv := fun a => get_some _ _
-                              ,
                               right_inv
                                 :=
                                 fun
@@ -6652,11 +6646,9 @@ def pointedToPartialFun :
                         PointedCat.Iso.mk
                           {
                               toFun := Option.elim' X . point Subtype.val
-                                ,
                                 invFun
                                   :=
                                   fun a => if h : a = X . point then none else some ⟨ _ , h ⟩
-                                ,
                                 left_inv
                                   :=
                                   fun
@@ -6678,7 +6670,6 @@ def pointedToPartialFun :
                                                       ,
                                                       Subtype.coe_eta
                                                     ]
-                                ,
                                 right_inv
                                   :=
                                   fun
@@ -6720,7 +6711,10 @@ adding a point. -/
 noncomputable def typeToPartialFunIsoPartialFunToPointed :
     typeToPartialFun ⋙ partialFunToPointed ≅ typeToPointed :=
   (NatIso.ofComponents fun X =>
-      { Hom := ⟨id, rfl⟩, inv := ⟨id, rfl⟩, hom_inv_id' := rfl, inv_hom_id' := rfl })
+      { Hom := ⟨id, rfl⟩
+        inv := ⟨id, rfl⟩
+        hom_inv_id' := rfl
+        inv_hom_id' := rfl })
     fun X Y f =>
     PointedCat.Hom.ext _ _ <|
       funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_to_option _

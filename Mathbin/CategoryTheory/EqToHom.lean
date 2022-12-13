@@ -57,12 +57,14 @@ theorem eq_to_hom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) :
 
 theorem comp_eq_to_hom_iff {X Y Y' : C} (p : Y = Y') (f : X ⟶ Y) (g : X ⟶ Y') :
     f ≫ eqToHom p = g ↔ f = g ≫ eqToHom p.symm :=
-  { mp := fun h => h ▸ by simp, mpr := fun h => by simp [eq_whisker h (eq_to_hom p)] }
+  { mp := fun h => h ▸ by simp
+    mpr := fun h => by simp [eq_whisker h (eq_to_hom p)] }
 #align category_theory.comp_eq_to_hom_iff CategoryTheory.comp_eq_to_hom_iff
 
 theorem eq_to_hom_comp_iff {X X' Y : C} (p : X = X') (f : X ⟶ Y) (g : X' ⟶ Y) :
     eqToHom p ≫ g = f ↔ g = eqToHom p.symm ≫ f :=
-  { mp := fun h => h ▸ by simp, mpr := fun h => h ▸ by simp [whisker_eq _ h] }
+  { mp := fun h => h ▸ by simp
+    mpr := fun h => h ▸ by simp [whisker_eq _ h] }
 #align category_theory.eq_to_hom_comp_iff CategoryTheory.eq_to_hom_comp_iff
 
 /-- If we (perhaps unintentionally) perform equational rewriting on

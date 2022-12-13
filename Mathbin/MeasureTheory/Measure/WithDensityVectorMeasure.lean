@@ -40,8 +40,9 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 the vector measure which maps the set `s` to `∫ₛ f ∂μ`. -/
 def Measure.withDensityᵥ {m : MeasurableSpace α} (μ : Measure α) (f : α → E) : VectorMeasure α E :=
   if hf : Integrable f μ then
-    { measureOf' := fun s => if MeasurableSet s then ∫ x in s, f x ∂μ else 0, empty' := by simp,
-      not_measurable' := fun s hs => if_neg hs,
+    { measureOf' := fun s => if MeasurableSet s then ∫ x in s, f x ∂μ else 0
+      empty' := by simp
+      not_measurable' := fun s hs => if_neg hs
       m_Union' := fun s hs₁ hs₂ => by
         convert has_sum_integral_Union hs₁ hs₂ hf.integrable_on
         · ext n

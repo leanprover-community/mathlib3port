@@ -122,7 +122,7 @@ def isoMk (h : A₀.1 ≅ A₁.1) (w : F.map h.Hom ≫ A₁.str = A₀.str ≫ h
     A₀ ≅ A₁ where 
   Hom := { f := h.Hom }
   inv :=
-    { f := h.inv,
+    { f := h.inv
       h' := by 
         rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]
         simp }
@@ -137,7 +137,7 @@ def forget (F : C ⥤ C) : Algebra F ⥤ C where
 
 /-- An algebra morphism with an underlying isomorphism hom in `C` is an algebra isomorphism. -/
 theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
-  ⟨⟨{ f := inv f.1,
+  ⟨⟨{   f := inv f.1
         h' := by 
           rw [is_iso.eq_comp_inv f.1, category.assoc, ← f.h]
           simp },
@@ -168,9 +168,12 @@ algebras of `F` to algebras of `G`.
 -/
 @[simps]
 def functorOfNatTrans {F G : C ⥤ C} (α : G ⟶ F) :
-    Algebra F ⥤ Algebra
+    Algebra F ⥤
+      Algebra
         G where 
-  obj A := { a := A.1, str := α.app A.1 ≫ A.str }
+  obj A :=
+    { a := A.1
+      str := α.app A.1 ≫ A.str }
   map A₀ A₁ f := { f := f.1 }
 #align
   category_theory.endofunctor.algebra.functor_of_nat_trans CategoryTheory.Endofunctor.Algebra.functorOfNatTrans
@@ -375,7 +378,7 @@ def isoMk (h : V₀.1 ≅ V₁.1) (w : V₀.str ≫ F.map h.Hom = h.Hom ≫ V₁
     V₀ ≅ V₁ where 
   Hom := { f := h.Hom }
   inv :=
-    { f := h.inv,
+    { f := h.inv
       h' := by 
         rw [h.eq_inv_comp, ← category.assoc, ← w, category.assoc, ← functor.map_comp]
         simp only [iso.hom_inv_id, Functor.map_id, category.comp_id] }
@@ -391,7 +394,7 @@ def forget (F : C ⥤ C) : Coalgebra F ⥤
 
 /-- A coalgebra morphism with an underlying isomorphism hom in `C` is a coalgebra isomorphism. -/
 theorem iso_of_iso (f : V₀ ⟶ V₁) [IsIso f.1] : IsIso f :=
-  ⟨⟨{ f := inv f.1,
+  ⟨⟨{   f := inv f.1
         h' := by 
           rw [is_iso.eq_inv_comp f.1, ← category.assoc, ← f.h, category.assoc]
           simp },
@@ -425,10 +428,13 @@ coalgebras of `F` to coalgebras of `G`.
 @[simps]
 def functorOfNatTrans {F G : C ⥤ C} (α : F ⟶ G) :
     Coalgebra F ⥤
-      Coalgebra G where 
-  obj V := { V := V.1, str := V.str ≫ α.app V.1 }
+      Coalgebra
+        G where 
+  obj V :=
+    { V := V.1
+      str := V.str ≫ α.app V.1 }
   map V₀ V₁ f :=
-    { f := f.1,
+    { f := f.1
       h' := by rw [category.assoc, ← α.naturality, ← category.assoc, f.h, category.assoc] }
 #align
   category_theory.endofunctor.coalgebra.functor_of_nat_trans CategoryTheory.Endofunctor.Coalgebra.functorOfNatTrans
@@ -529,8 +535,12 @@ def Algebra.toCoalgebraOf (adj : F ⊣ G) :
     Algebra F ⥤
       Coalgebra
         G where 
-  obj A := { V := A.1, str := (adj.homEquiv A.1 A.1).toFun A.2 }
-  map A₁ A₂ f := { f := f.1, h' := Algebra.hom_equiv_naturality_str adj A₁ A₂ f }
+  obj A :=
+    { V := A.1
+      str := (adj.homEquiv A.1 A.1).toFun A.2 }
+  map A₁ A₂ f :=
+    { f := f.1
+      h' := Algebra.hom_equiv_naturality_str adj A₁ A₂ f }
 #align
   category_theory.endofunctor.adjunction.algebra.to_coalgebra_of CategoryTheory.Endofunctor.Adjunction.Algebra.toCoalgebraOf
 
@@ -540,8 +550,12 @@ def Coalgebra.toAlgebraOf (adj : F ⊣ G) :
     Coalgebra G ⥤
       Algebra
         F where 
-  obj V := { a := V.1, str := (adj.homEquiv V.1 V.1).invFun V.2 }
-  map V₁ V₂ f := { f := f.1, h' := Coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f }
+  obj V :=
+    { a := V.1
+      str := (adj.homEquiv V.1 V.1).invFun V.2 }
+  map V₁ V₂ f :=
+    { f := f.1
+      h' := Coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f }
 #align
   category_theory.endofunctor.adjunction.coalgebra.to_algebra_of CategoryTheory.Endofunctor.Adjunction.Coalgebra.toAlgebraOf
 
@@ -554,10 +568,10 @@ def AlgCoalgEquiv.unitIso (adj : F ⊣ G) :
           adj where 
   Hom :=
     { app := fun A =>
-        { f := 𝟙 A.1,
+        { f := 𝟙 A.1
           h' := by 
             erw [F.map_id, category.id_comp, category.comp_id]
-            apply (adj.hom_equiv _ _).left_inv A.str },
+            apply (adj.hom_equiv _ _).left_inv A.str }
       naturality' := fun A₁ A₂ f => by 
         ext1
         dsimp
@@ -565,10 +579,10 @@ def AlgCoalgEquiv.unitIso (adj : F ⊣ G) :
         rfl }
   inv :=
     { app := fun A =>
-        { f := 𝟙 A.1,
+        { f := 𝟙 A.1
           h' := by 
             erw [F.map_id, category.id_comp, category.comp_id]
-            apply ((adj.hom_equiv _ _).left_inv A.str).symm },
+            apply ((adj.hom_equiv _ _).left_inv A.str).symm }
       naturality' := fun A₁ A₂ f => by 
         ext1
         dsimp
@@ -592,11 +606,11 @@ def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
           G) where 
   Hom :=
     { app := fun V =>
-        { f := 𝟙 V.1,
+        { f := 𝟙 V.1
           h' := by 
             dsimp
             erw [G.map_id, category.id_comp, category.comp_id]
-            apply (adj.hom_equiv _ _).right_inv V.str },
+            apply (adj.hom_equiv _ _).right_inv V.str }
       naturality' := fun V₁ V₂ f => by 
         ext1
         dsimp
@@ -604,11 +618,11 @@ def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
         rfl }
   inv :=
     { app := fun V =>
-        { f := 𝟙 V.1,
+        { f := 𝟙 V.1
           h' := by 
             dsimp
             rw [G.map_id, category.comp_id, category.id_comp]
-            apply ((adj.hom_equiv _ _).right_inv V.str).symm },
+            apply ((adj.hom_equiv _ _).right_inv V.str).symm }
       naturality' := fun V₁ V₂ f => by 
         ext1
         dsimp

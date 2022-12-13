@@ -191,8 +191,12 @@ def evaluation :
     C ⥤
       (C ⥤ D) ⥤
         D where 
-  obj X := { obj := fun F => F.obj X, map := fun F G α => α.app X }
-  map X Y f := { app := fun F => F.map f, naturality' := fun F G α => Eq.symm (α.naturality f) }
+  obj X :=
+    { obj := fun F => F.obj X
+      map := fun F G α => α.app X }
+  map X Y f :=
+    { app := fun F => F.map f
+      naturality' := fun F G α => Eq.symm (α.naturality f) }
 #align category_theory.evaluation CategoryTheory.evaluation
 
 /-- The "evaluation of `F` at `X`" functor,
@@ -321,10 +325,10 @@ def functorProdToProdFunctor :
           C) where 
   obj F := ⟨F ⋙ CategoryTheory.prod.fst B C, F ⋙ CategoryTheory.prod.snd B C⟩
   map F G α :=
-    ⟨{ app := fun X => (α.app X).1,
+    ⟨{  app := fun X => (α.app X).1
         naturality' := fun X Y f => by
           simp only [functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
-      { app := fun X => (α.app X).2,
+      { app := fun X => (α.app X).2
         naturality' := fun X Y f => by
           simp only [functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
 #align category_theory.functor_prod_to_prod_functor CategoryTheory.functorProdToProdFunctor

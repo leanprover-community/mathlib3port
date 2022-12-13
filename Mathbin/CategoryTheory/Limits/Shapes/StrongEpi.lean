@@ -54,7 +54,8 @@ theorem StrongEpi.mk' {f : P ⟶ Q} [Epi f]
       ∀ (X Y : C) (z : X ⟶ Y) (hz : Mono z) (u : P ⟶ X) (v : Q ⟶ Y) (sq : CommSq u f z v),
         sq.HasLift) :
     StrongEpi f :=
-  { Epi := inferInstance, llp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
+  { Epi := inferInstance
+    llp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
 #align category_theory.strong_epi.mk' CategoryTheory.StrongEpi.mk'
 
 /-- A strong monomorphism `f` is a monomorphism which has the right lifting property
@@ -69,7 +70,8 @@ theorem StrongMono.mk' {f : P ⟶ Q} [Mono f]
       ∀ (X Y : C) (z : X ⟶ Y) (hz : Epi z) (u : X ⟶ P) (v : Y ⟶ Q) (sq : CommSq u z f v),
         sq.HasLift) :
     StrongMono f :=
-  { Mono := inferInstance, rlp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
+  { Mono := inferInstance
+    rlp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
 #align category_theory.strong_mono.mk' CategoryTheory.StrongMono.mk'
 
 attribute [instance] strong_epi.llp
@@ -90,7 +92,7 @@ variable {R : C} (f : P ⟶ Q) (g : Q ⟶ R)
 
 /-- The composition of two strong epimorphisms is a strong epimorphism. -/
 theorem strong_epi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
-  { Epi := epi_comp _ _,
+  { Epi := epi_comp _ _
     llp := by 
       intros
       infer_instance }
@@ -98,7 +100,7 @@ theorem strong_epi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
 
 /-- The composition of two strong monomorphisms is a strong monomorphism. -/
 theorem strong_mono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
-  { Mono := mono_comp _ _,
+  { Mono := mono_comp _ _
     rlp := by 
       intros
       infer_instance }
@@ -106,7 +108,7 @@ theorem strong_mono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
 
 /-- If `f ≫ g` is a strong epimorphism, then so is `g`. -/
 theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
-  { Epi := epi_of_epi f g,
+  { Epi := epi_of_epi f g
     llp := by 
       intros
       constructor
@@ -120,7 +122,7 @@ theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
 
 /-- If `f ≫ g` is a strong monomorphism, then so is `f`. -/
 theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
-  { Mono := mono_of_mono f g,
+  { Mono := mono_of_mono f g
     rlp := by 
       intros
       constructor
@@ -148,7 +150,7 @@ theorem StrongEpi.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
   { Epi := by 
       rw [arrow.iso_w' e]
       haveI := epi_comp f e.hom.right
-      apply epi_comp,
+      apply epi_comp
     llp := fun X Y z => by 
       intro
       apply has_lifting_property.of_arrow_iso_left e z }
@@ -159,7 +161,7 @@ theorem StrongMono.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
   { Mono := by 
       rw [arrow.iso_w' e]
       haveI := mono_comp f e.hom.right
-      apply mono_comp,
+      apply mono_comp
     rlp := fun X Y z => by 
       intro
       apply has_lifting_property.of_arrow_iso_right z e }

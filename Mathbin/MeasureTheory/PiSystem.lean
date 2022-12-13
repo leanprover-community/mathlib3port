@@ -594,8 +594,9 @@ theorem le_def {α} {a b : DynkinSystem α} : a ≤ b ↔ a.Has ≤ b.Has :=
 #align measurable_space.dynkin_system.le_def MeasurableSpace.DynkinSystem.le_def
 
 instance : PartialOrder (DynkinSystem α) :=
-  { DynkinSystem.hasLe with le_refl := fun a b => le_rfl,
-    le_trans := fun a b c hab hbc => le_def.mpr (le_trans hab hbc),
+  { DynkinSystem.hasLe with 
+    le_refl := fun a b => le_rfl
+    le_trans := fun a b c hab hbc => le_def.mpr (le_trans hab hbc)
     le_antisymm := fun a b h₁ h₂ => ext fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- Every measurable space (σ-algebra) forms a Dynkin system -/

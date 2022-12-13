@@ -282,23 +282,23 @@ instance [HasFaithfulSmul M X] : DistribLattice { P : M // IsLprojection X P } :
     IsLprojection.Subtype.partialOrder with
     le_sup_left := fun P Q => by
       rw [le_def, coe_inf, coe_sup, ← add_sub, mul_add, mul_sub, ← mul_assoc, P.prop.proj.eq,
-        sub_self, add_zero],
+        sub_self, add_zero]
     le_sup_right := fun P Q => by
       rw [le_def, coe_inf, coe_sup, ← add_sub, mul_add, mul_sub, Commute.eq (Commute P.prop Q.prop),
-        ← mul_assoc, Q.prop.proj.eq, add_sub_cancel'_right],
+        ← mul_assoc, Q.prop.proj.eq, add_sub_cancel'_right]
     sup_le := fun P Q R => by
       rw [le_def, le_def, le_def, coe_inf, coe_inf, coe_sup, coe_inf, coe_sup, ← add_sub, add_mul,
         sub_mul, mul_assoc]
       intro h₁ h₂
-      rw [← h₂, ← h₁],
+      rw [← h₂, ← h₁]
     inf_le_left := fun P Q => by
       rw [le_def, coe_inf, coe_inf, coe_inf, mul_assoc, (Q.prop.commute P.prop).Eq, ← mul_assoc,
-        P.prop.proj.eq],
-    inf_le_right := fun P Q => by rw [le_def, coe_inf, coe_inf, coe_inf, mul_assoc, Q.prop.proj.eq],
+        P.prop.proj.eq]
+    inf_le_right := fun P Q => by rw [le_def, coe_inf, coe_inf, coe_inf, mul_assoc, Q.prop.proj.eq]
     le_inf := fun P Q R => by
       rw [le_def, le_def, le_def, coe_inf, coe_inf, coe_inf, coe_inf, ← mul_assoc]
       intro h₁ h₂
-      rw [← h₁, ← h₂],
+      rw [← h₁, ← h₂]
     le_sup_inf := fun P Q R => by
       have e₁ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
         rw [coe_inf, coe_sup, coe_sup, ← add_sub, ← add_sub, ← compl_mul, ← compl_mul, add_mul,
@@ -316,12 +316,12 @@ instance [HasFaithfulSmul M X] : BooleanAlgebra { P : M // IsLprojection X P } :
   { IsLprojection.Subtype.hasCompl, IsLprojection.Subtype.hasSdiff,
     IsLprojection.Subtype.boundedOrder, IsLprojection.Subtype.distribLattice with
     inf_compl_le_bot := fun P =>
-      (Subtype.ext (by rw [coe_inf, coe_compl, coe_bot, ← coe_compl, mul_compl_self])).le,
+      (Subtype.ext (by rw [coe_inf, coe_compl, coe_bot, ← coe_compl, mul_compl_self])).le
     top_le_sup_compl := fun P =>
       (Subtype.ext
           (by
             rw [coe_top, coe_sup, coe_compl, add_sub_cancel'_right, ← coe_compl, mul_compl_self,
-              sub_zero])).le,
+              sub_zero])).le
     sdiff_eq := fun P Q => Subtype.ext <| by rw [coe_sdiff, ← coe_compl, coe_inf] }
 
 end IsLprojection

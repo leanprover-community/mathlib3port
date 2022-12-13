@@ -141,14 +141,16 @@ theorem star_mul' [CommSemigroup R] [StarSemigroup R] (x y : R) : star (x * y) =
 @[simps apply]
 def starMulEquiv [Semigroup R] [StarSemigroup R] : R ≃* Rᵐᵒᵖ :=
   { (HasInvolutiveStar.star_involutive.toPerm star).trans opEquiv with
-    toFun := fun x => MulOpposite.op (star x),
+    toFun := fun x => MulOpposite.op (star x)
     map_mul' := fun x y => (star_mul x y).symm ▸ MulOpposite.op_mul _ _ }
 #align star_mul_equiv starMulEquiv
 
 /-- `star` as a `mul_aut` for commutative `R`. -/
 @[simps apply]
 def starMulAut [CommSemigroup R] [StarSemigroup R] : MulAut R :=
-  { HasInvolutiveStar.star_involutive.toPerm star with toFun := star, map_mul' := star_mul' }
+  { HasInvolutiveStar.star_involutive.toPerm star with
+    toFun := star
+    map_mul' := star_mul' }
 #align star_mul_aut starMulAut
 
 variable (R)
@@ -220,7 +222,9 @@ attribute [simp] star_add
 /-- `star` as an `add_equiv` -/
 @[simps apply]
 def starAddEquiv [AddMonoid R] [StarAddMonoid R] : R ≃+ R :=
-  { HasInvolutiveStar.star_involutive.toPerm star with toFun := star, map_add' := star_add }
+  { HasInvolutiveStar.star_involutive.toPerm star with
+    toFun := star
+    map_add' := star_add }
 #align star_add_equiv starAddEquiv
 
 variable (R)
@@ -369,7 +373,9 @@ See note [reducible non-instances].
 -/
 @[reducible]
 def starRingOfComm {R : Type _} [CommSemiring R] : StarRing R :=
-  { starSemigroupOfComm with star := id, star_add := fun x y => rfl }
+  { starSemigroupOfComm with 
+    star := id
+    star_add := fun x y => rfl }
 #align star_ring_of_comm starRingOfComm
 
 /-- An ordered `*`-ring is a ring which is both an `ordered_add_comm_group` and a `*`-ring,
@@ -487,8 +493,9 @@ instance :
     StarSemigroup
       Rˣ where 
   star u :=
-    { val := star u, inv := star ↑u⁻¹,
-      val_inv := (star_mul _ _).symm.trans <| (congr_arg star u.inv_val).trans <| star_one _,
+    { val := star u
+      inv := star ↑u⁻¹
+      val_inv := (star_mul _ _).symm.trans <| (congr_arg star u.inv_val).trans <| star_one _
       inv_val := (star_mul _ _).symm.trans <| (congr_arg star u.val_inv).trans <| star_one _ }
   star_involutive u := Units.ext (star_involutive _)
   star_mul u v := Units.ext (star_mul _ _)

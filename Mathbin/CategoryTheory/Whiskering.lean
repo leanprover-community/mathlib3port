@@ -72,11 +72,13 @@ def whiskeringLeft :
       (D ⥤ E) ⥤
         C ⥤
           E where 
-  obj F := { obj := fun G => F ⋙ G, map := fun G H α => whiskerLeft F α }
+  obj F :=
+    { obj := fun G => F ⋙ G
+      map := fun G H α => whiskerLeft F α }
   map F G τ :=
     { app := fun H =>
-        { app := fun c => H.map (τ.app c),
-          naturality' := fun X Y f => by dsimp; rw [← H.map_comp, ← H.map_comp, ← τ.naturality] },
+        { app := fun c => H.map (τ.app c)
+          naturality' := fun X Y f => by dsimp; rw [← H.map_comp, ← H.map_comp, ← τ.naturality] }
       naturality' := fun X Y f => by ext; dsimp; rw [f.naturality] }
 #align category_theory.whiskering_left CategoryTheory.whiskeringLeft
 
@@ -91,11 +93,13 @@ def whiskeringRight :
       (C ⥤ D) ⥤
         C ⥤
           E where 
-  obj H := { obj := fun F => F ⋙ H, map := fun _ _ α => whiskerRight α H }
+  obj H :=
+    { obj := fun F => F ⋙ H
+      map := fun _ _ α => whiskerRight α H }
   map G H τ :=
     { app := fun F =>
-        { app := fun c => τ.app (F.obj c),
-          naturality' := fun X Y f => by dsimp; rw [τ.naturality] },
+        { app := fun c => τ.app (F.obj c)
+          naturality' := fun X Y f => by dsimp; rw [τ.naturality] }
       naturality' := fun X Y f => by ext; dsimp; rw [← nat_trans.naturality] }
 #align category_theory.whiskering_right CategoryTheory.whiskeringRight
 

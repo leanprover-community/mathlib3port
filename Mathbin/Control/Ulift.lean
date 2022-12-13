@@ -44,9 +44,9 @@ protected def pure : α → PLift α :=
 
 /- warning: plift.seq -> PLift.seq is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u}} {β : Sort.{v}}, (PLift.{imax u v} (α -> β)) -> (PLift.{u} α) -> (PLift.{v} β)
+  forall {α : Sort.{u1}} {β : Sort.{u2}}, (PLift.{imax u1 u2} (α -> β)) -> (PLift.{u1} α) -> (PLift.{u2} β)
 but is expected to have type
-  forall {α : Sort.{u}} {β : Sort.{v}}, (PLift.{imax u v} (α -> β)) -> (Unit -> (PLift.{u} α)) -> (PLift.{v} β)
+  forall {α : Sort.{u1}} {β : Sort.{u2}}, (PLift.{imax u1 u2} (α -> β)) -> (Unit -> (PLift.{u1} α)) -> (PLift.{u2} β)
 Case conversion may be inaccurate. Consider using '#align plift.seq PLift.seqₓ'. -/
 /-- Applicative sequencing. -/
 protected def seq (f : PLift (α → β)) (x : PLift α) : PLift β :=
@@ -144,9 +144,9 @@ protected def pure : α → ULift α :=
 
 /- warning: ulift.seq -> ULift.seq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}}, (ULift.{u_1, max u v} (α -> β)) -> (ULift.{u_2, u} α) -> (ULift.{u_3, v} β)
+  forall {α : Type.{u1}} {β : Type.{u2}}, (ULift.{u3, max u1 u2} (α -> β)) -> (ULift.{u4, u1} α) -> (ULift.{u5, u2} β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, (ULift.{u_3, max u_1 u_2} (α -> β)) -> (Unit -> (ULift.{u_4, u_1} α)) -> (ULift.{u, u_2} β)
+  forall {α : Type.{u2}} {β : Type.{u3}}, (ULift.{u4, max u2 u3} (α -> β)) -> (Unit -> (ULift.{u5, u2} α)) -> (ULift.{u1, u3} β)
 Case conversion may be inaccurate. Consider using '#align ulift.seq ULift.seqₓ'. -/
 /-- Applicative sequencing. -/
 protected def seq (f : ULift (α → β)) (x : ULift α) : ULift β :=
@@ -156,9 +156,9 @@ protected def seq (f : ULift (α → β)) (x : ULift α) : ULift β :=
 /- warning: ulift.seq_up clashes with ULift.seq_up -> ULift.seq_up
 warning: ulift.seq_up -> ULift.seq_up is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) (x : α), Eq.{succ (max v u_1)} (ULift.{u_1, v} β) (ULift.seq.{u, v, u_2, u_3, u_1} α β (ULift.up.{u_2, max u v} (α -> β) f) (ULift.up.{u_3, u} α x)) (ULift.up.{u_1, v} β (f x))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (x : α), Eq.{succ (max u2 u3)} (ULift.{u3, u2} β) (ULift.seq.{u1, u2, u4, u5, u3} α β (ULift.up.{u4, max u1 u2} (α -> β) f) (ULift.up.{u5, u1} α x)) (ULift.up.{u3, u2} β (f x))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) (x : α), Eq.{max (succ v) (succ u_1)} (ULift.{u_1, v} β) (ULift.seq.{u_1, u, v, u_2, u_3} α β (ULift.up.{u_2, max u v} (α -> β) f) (fun (x._@.Mathlib.Control.ULift._hyg.808 : Unit) => ULift.up.{u_3, u} α x)) (ULift.up.{u_1, v} β (f x))
+  forall {α : Type.{u4}} {β : Type.{u5}} (f : α -> β) (x : α), Eq.{max (succ u5) (succ u3)} (ULift.{u3, u5} β) (ULift.seq.{u3, u4, u5, u2, u1} α β (ULift.up.{u2, max u4 u5} (α -> β) f) (fun (x._@.Mathlib.Control.ULift._hyg.808 : Unit) => ULift.up.{u1, u4} α x)) (ULift.up.{u3, u5} β (f x))
 Case conversion may be inaccurate. Consider using '#align ulift.seq_up ULift.seq_upₓ'. -/
 @[simp]
 theorem seq_up (f : α → β) (x : α) : (ULift.up f).seq (ULift.up x) = ULift.up (f x) :=
@@ -177,9 +177,9 @@ protected def bind (a : ULift α) (f : α → ULift β) : ULift β :=
 /- warning: ulift.bind_up clashes with ULift.bind_up -> ULift.bind_up
 warning: ulift.bind_up -> ULift.bind_up is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} (a : α) (f : α -> (ULift.{u_1, v} β)), Eq.{succ (max v u_1)} (ULift.{u_1, v} β) (ULift.bind.{u, v, u_2, u_1} α β (ULift.up.{u_2, u} α a) f) (f a)
+  forall {α : Type.{u1}} {β : Type.{u2}} (a : α) (f : α -> (ULift.{u3, u2} β)), Eq.{succ (max u2 u3)} (ULift.{u3, u2} β) (ULift.bind.{u1, u2, u4, u3} α β (ULift.up.{u4, u1} α a) f) (f a)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} (a : α) (f : α -> (ULift.{u_1, v} β)), Eq.{max (succ v) (succ u_1)} (ULift.{u_1, v} β) (ULift.bind.{u, v, u_2, u_1} α β (ULift.up.{u_2, u} α a) f) (f a)
+  forall {α : Type.{u3}} {β : Type.{u4}} (a : α) (f : α -> (ULift.{u2, u4} β)), Eq.{max (succ u4) (succ u2)} (ULift.{u2, u4} β) (ULift.bind.{u3, u4, u1, u2} α β (ULift.up.{u1, u3} α a) f) (f a)
 Case conversion may be inaccurate. Consider using '#align ulift.bind_up ULift.bind_upₓ'. -/
 @[simp]
 theorem bind_up (a : α) (f : α → ULift β) : (ULift.up a).bind f = f a :=
@@ -221,9 +221,9 @@ instance : LawfulMonad
 /- warning: ulift.rec.constant clashes with ULift.rec.constant -> ULift.rec.constant
 warning: ulift.rec.constant -> ULift.rec.constant is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Sort.{v}} (b : β), Eq.{imax (succ (max u u_1)) v} (forall (n : ULift.{u_1, u} α), (fun (_x : ULift.{u_1, u} α) => β) n) (ULift.rec.{v, u_1, u} α (fun (_x : ULift.{u_1, u} α) => β) (fun (_x : α) => b)) (fun (_x : ULift.{u_1, u} α) => b)
+  forall {α : Type.{u1}} {β : Sort.{u2}} (b : β), Eq.{imax (succ (max u1 u3)) u2} (forall (n : ULift.{u3, u1} α), (fun (_x : ULift.{u3, u1} α) => β) n) (ULift.rec.{u2, u3, u1} α (fun (_x : ULift.{u3, u1} α) => β) (fun (_x : α) => b)) (fun (_x : ULift.{u3, u1} α) => b)
 but is expected to have type
-  forall {α : Type.{u}} {β : Sort.{v}} (b : β), Eq.{imax (max (succ u) (succ u_1)) v} ((ULift.{u_1, u} α) -> β) (ULift.rec.{v, u_1, u} α (fun (x._@.Mathlib.Control.ULift._hyg.1315 : ULift.{u_1, u} α) => β) (fun (x._@.Mathlib.Control.ULift._hyg.1320 : α) => b)) (fun (x._@.Mathlib.Control.ULift._hyg.1326 : ULift.{u_1, u} α) => b)
+  forall {α : Type.{u2}} {β : Sort.{u3}} (b : β), Eq.{imax (max (succ u2) (succ u1)) u3} ((ULift.{u1, u2} α) -> β) (ULift.rec.{u3, u1, u2} α (fun (_x : ULift.{u1, u2} α) => β) (fun (_x : α) => b)) (fun (_x : ULift.{u1, u2} α) => b)
 Case conversion may be inaccurate. Consider using '#align ulift.rec.constant ULift.rec.constantₓ'. -/
 @[simp]
 theorem rec.constant {α : Type u} {β : Sort v} (b : β) :

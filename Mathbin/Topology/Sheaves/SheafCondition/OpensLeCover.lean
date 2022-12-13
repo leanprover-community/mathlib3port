@@ -122,7 +122,7 @@ def generateEquivalenceOpensLe :
     { obj := fun f =>
         ⟨f.1.left,
           let ⟨_, h, _, ⟨i, hY⟩, _⟩ := f.2
-          ⟨i, hY ▸ h.le⟩⟩,
+          ⟨i, hY ▸ h.le⟩⟩
       map := fun _ _ g => g.left }
   inverse :=
     { obj := fun V =>
@@ -131,7 +131,7 @@ def generateEquivalenceOpensLe :
                 (let ⟨i, h⟩ := V.2
                 h.trans (le_supr U i))).Hom,
           let ⟨i, h⟩ := V.2
-          ⟨U i, h.Hom, (hY.substr (le_supr U i)).Hom, ⟨i, rfl⟩, rfl⟩⟩,
+          ⟨U i, h.Hom, (hY.substr (le_supr U i)).Hom, ⟨i, rfl⟩, rfl⟩⟩
       map := fun _ _ g => Over.homMk g }
   unitIso :=
     eq_to_iso <|
@@ -166,12 +166,12 @@ def whiskerIsoMapGenerateCocone :
                 (presieveOfCoveringAux U
                   Y)).arrows.Cocone.op where 
   Hom :=
-    { Hom := F.map (eqToHom (congr_arg op hY.symm)),
+    { Hom := F.map (eqToHom (congr_arg op hY.symm))
       w' := fun j => by 
         erw [← F.map_comp]
         congr }
   inv :=
-    { Hom := F.map (eqToHom (congr_arg op hY)),
+    { Hom := F.map (eqToHom (congr_arg op hY))
       w' := fun j => by 
         erw [← F.map_comp]
         congr }

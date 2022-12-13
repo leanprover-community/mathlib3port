@@ -181,7 +181,9 @@ instance lieQuotientLieAlgebra :
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/
 @[simps]
 def mk' : M →ₗ⁅R,L⁆ M ⧸ N :=
-  { N.toSubmodule.mkq with toFun := mk, map_lie' := fun r m => rfl }
+  { N.toSubmodule.mkq with 
+    toFun := mk
+    map_lie' := fun r m => rfl }
 #align lie_submodule.quotient.mk' LieSubmodule.Quotient.mk'
 
 @[simp]
@@ -224,7 +226,8 @@ variable (f : L →ₗ⁅R⁆ L')
 /-- The first isomorphism theorem for morphisms of Lie algebras. -/
 @[simps]
 noncomputable def quotKerEquivRange : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
-  { (f : L →ₗ[R] L').quotKerEquivRange with toFun := (f : L →ₗ[R] L').quotKerEquivRange,
+  { (f : L →ₗ[R] L').quotKerEquivRange with
+    toFun := (f : L →ₗ[R] L').quotKerEquivRange
     map_lie' := by 
       rintro ⟨x⟩ ⟨y⟩
       rw [← SetLike.coe_eq_coe, LieSubalgebra.coe_bracket]

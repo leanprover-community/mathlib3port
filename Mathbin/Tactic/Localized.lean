@@ -132,8 +132,10 @@ localized "infix (name := my_add) ` ⊹[` R `] ` := my_add hole! R" in foo
 ```
 -/
 add_tactic_doc
-  { Name := "localized notation", category := DocCategory.cmd,
-    declNames := [`localized_cmd, `open_locale_cmd], tags := ["notation", "type classes"] }
+  { Name := "localized notation"
+    category := DocCategory.cmd
+    declNames := [`localized_cmd, `open_locale_cmd]
+    tags := ["notation", "type classes"] }
 
 /-- Print all commands in a given locale -/
 unsafe def print_localized_commands (ns : List Name) : tactic Unit := do

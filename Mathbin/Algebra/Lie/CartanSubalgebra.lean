@@ -87,7 +87,7 @@ theorem is_cartan_subalgebra_iff_is_ucs_limit :
           erw [H.to_lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot]
           use k
           rw [_root_.eq_bot_iff, LieSubmodule.lcs_le_iff, hk k (le_refl k)]
-          exact le_refl _,
+          exact le_refl _
         self_normalizing := by 
           have hk' := hk (k + 1) k.le_succ
           rw [LieSubmodule.ucs_succ, hk k (le_refl k)] at hk'

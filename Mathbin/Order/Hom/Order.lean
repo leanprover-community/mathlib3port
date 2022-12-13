@@ -36,8 +36,11 @@ instance [SemilatticeSup β] :
     HasSup (α →o β) where sup f g := ⟨fun a => f a ⊔ g a, f.mono.sup g.mono⟩
 
 instance [SemilatticeSup β] : SemilatticeSup (α →o β) :=
-  { (_ : PartialOrder (α →o β)) with sup := HasSup.sup, le_sup_left := fun a b x => le_sup_left,
-    le_sup_right := fun a b x => le_sup_right, sup_le := fun a b c h₀ h₁ x => sup_le (h₀ x) (h₁ x) }
+  { (_ : PartialOrder (α →o β)) with 
+    sup := HasSup.sup
+    le_sup_left := fun a b x => le_sup_left
+    le_sup_right := fun a b x => le_sup_right
+    sup_le := fun a b c h₀ h₁ x => sup_le (h₀ x) (h₁ x) }
 
 @[simps]
 instance [SemilatticeInf β] :
@@ -109,10 +112,12 @@ theorem coe_supr {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) :
 #align order_hom.coe_supr OrderHom.coe_supr
 
 instance [CompleteLattice β] : CompleteLattice (α →o β) :=
-  { (_ : Lattice (α →o β)), OrderHom.orderTop, OrderHom.orderBot with sup := sup,
-    le_Sup := fun s f hf x => le_supr_of_le f (le_supr _ hf),
-    Sup_le := fun s f hf x => supr₂_le fun g hg => hf g hg x, inf := inf,
-    le_Inf := fun s f hf x => le_infi₂ fun g hg => hf g hg x,
+  { (_ : Lattice (α →o β)), OrderHom.orderTop, OrderHom.orderBot with
+    sup := sup
+    le_Sup := fun s f hf x => le_supr_of_le f (le_supr _ hf)
+    Sup_le := fun s f hf x => supr₂_le fun g hg => hf g hg x
+    inf := inf
+    le_Inf := fun s f hf x => le_infi₂ fun g hg => hf g hg x
     Inf_le := fun s f hf x => infi_le_of_le f (infi_le _ hf) }
 
 theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α) :

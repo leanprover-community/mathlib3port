@@ -119,7 +119,7 @@ def NonUnitalAlgHom.lmul : A →ₙₐ[R] EndCat R A :=
     map_mul' := by 
       intro a b
       ext c
-      exact mul_assoc a b c,
+      exact mul_assoc a b c
     map_zero' := by 
       ext a
       exact zero_mul a }
@@ -163,14 +163,14 @@ def Algebra.lmul : A →ₐ[R] EndCat R A :=
   { LinearMap.mul R A with
     map_one' := by 
       ext a
-      exact one_mul a,
+      exact one_mul a
     map_mul' := by 
       intro a b
       ext c
-      exact mul_assoc a b c,
+      exact mul_assoc a b c
     map_zero' := by 
       ext a
-      exact zero_mul a,
+      exact zero_mul a
     commutes' := by 
       intro r
       ext a

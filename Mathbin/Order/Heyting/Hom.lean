@@ -150,7 +150,7 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
       eq_of_forall_le_iff fun c => by
         simp only [← map_inv_le_iff, le_himp_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
-        simp,
+        simp
     map_sdiff := fun f a b =>
       eq_of_forall_ge_iff fun c => by
         simp only [← le_map_inv_iff, sdiff_le_iff]
@@ -164,7 +164,7 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
 def BoundedLatticeHomClass.toBiheytingHomClass [BooleanAlgebra α] [BooleanAlgebra β]
     [BoundedLatticeHomClass F α β] : BiheytingHomClass F α β :=
   { ‹BoundedLatticeHomClass F α β› with
-    map_himp := fun f a b => by rw [himp_eq, himp_eq, map_sup, (is_compl_compl.map _).compl_eq],
+    map_himp := fun f a b => by rw [himp_eq, himp_eq, map_sup, (is_compl_compl.map _).compl_eq]
     map_sdiff := fun f a b => by rw [sdiff_eq, sdiff_eq, map_inf, (is_compl_compl.map _).compl_eq] }
 #align bounded_lattice_hom_class.to_biheyting_hom_class BoundedLatticeHomClass.toBiheytingHomClass
 
@@ -203,19 +203,28 @@ end CoheytingAlgebra
 
 instance [HeytingAlgebra α] [HeytingAlgebra β] [HeytingHomClass F α β] : CoeTC F (HeytingHom α β) :=
   ⟨fun f =>
-    { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_bot' := map_bot f,
+    { toFun := f
+      map_sup' := map_sup f
+      map_inf' := map_inf f
+      map_bot' := map_bot f
       map_himp' := map_himp f }⟩
 
 instance [CoheytingAlgebra α] [CoheytingAlgebra β] [CoheytingHomClass F α β] :
     CoeTC F (CoheytingHom α β) :=
   ⟨fun f =>
-    { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_top' := map_top f,
+    { toFun := f
+      map_sup' := map_sup f
+      map_inf' := map_inf f
+      map_top' := map_top f
       map_sdiff' := map_sdiff f }⟩
 
 instance [BiheytingAlgebra α] [BiheytingAlgebra β] [BiheytingHomClass F α β] :
     CoeTC F (BiheytingHom α β) :=
   ⟨fun f =>
-    { toFun := f, map_sup' := map_sup f, map_inf' := map_inf f, map_himp' := map_himp f,
+    { toFun := f
+      map_sup' := map_sup f
+      map_inf' := map_inf f
+      map_himp' := map_himp f
       map_sdiff' := map_sdiff f }⟩
 
 namespace HeytingHom
@@ -270,7 +279,9 @@ variable (α)
 
 /-- `id` as a `heyting_hom`. -/
 protected def id : HeytingHom α α :=
-  { BotHom.id _ with toLatticeHom := LatticeHom.id _, map_himp' := fun a b => rfl }
+  { BotHom.id _ with 
+    toLatticeHom := LatticeHom.id _
+    map_himp' := fun a b => rfl }
 #align heyting_hom.id HeytingHom.id
 
 @[simp]
@@ -293,7 +304,9 @@ instance : PartialOrder (HeytingHom α β) :=
 
 /-- Composition of `heyting_hom`s as a `heyting_hom`. -/
 def comp (f : HeytingHom β γ) (g : HeytingHom α β) : HeytingHom α γ :=
-  { f.toLatticeHom.comp g.toLatticeHom with toFun := f ∘ g, map_bot' := by simp,
+  { f.toLatticeHom.comp g.toLatticeHom with 
+    toFun := f ∘ g
+    map_bot' := by simp
     map_himp' := fun a b => by simp }
 #align heyting_hom.comp HeytingHom.comp
 
@@ -387,7 +400,9 @@ variable (α)
 
 /-- `id` as a `coheyting_hom`. -/
 protected def id : CoheytingHom α α :=
-  { TopHom.id _ with toLatticeHom := LatticeHom.id _, map_sdiff' := fun a b => rfl }
+  { TopHom.id _ with 
+    toLatticeHom := LatticeHom.id _
+    map_sdiff' := fun a b => rfl }
 #align coheyting_hom.id CoheytingHom.id
 
 @[simp]
@@ -410,7 +425,9 @@ instance : PartialOrder (CoheytingHom α β) :=
 
 /-- Composition of `coheyting_hom`s as a `coheyting_hom`. -/
 def comp (f : CoheytingHom β γ) (g : CoheytingHom α β) : CoheytingHom α γ :=
-  { f.toLatticeHom.comp g.toLatticeHom with toFun := f ∘ g, map_top' := by simp,
+  { f.toLatticeHom.comp g.toLatticeHom with 
+    toFun := f ∘ g
+    map_top' := by simp
     map_sdiff' := fun a b => by simp }
 #align coheyting_hom.comp CoheytingHom.comp
 
@@ -527,7 +544,9 @@ instance : PartialOrder (BiheytingHom α β) :=
 
 /-- Composition of `biheyting_hom`s as a `biheyting_hom`. -/
 def comp (f : BiheytingHom β γ) (g : BiheytingHom α β) : BiheytingHom α γ :=
-  { f.toLatticeHom.comp g.toLatticeHom with toFun := f ∘ g, map_himp' := fun a b => by simp,
+  { f.toLatticeHom.comp g.toLatticeHom with 
+    toFun := f ∘ g
+    map_himp' := fun a b => by simp
     map_sdiff' := fun a b => by simp }
 #align biheyting_hom.comp BiheytingHom.comp
 

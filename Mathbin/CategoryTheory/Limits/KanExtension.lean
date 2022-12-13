@@ -60,7 +60,7 @@ def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) :
     Cone (diagram ι F x) where 
   x := G.obj x
   π :=
-    { app := fun i => G.map i.Hom ≫ f.app i.right,
+    { app := fun i => G.map i.Hom ≫ f.app i.right
       naturality' := by 
         rintro ⟨⟨il⟩, ir, i⟩ ⟨⟨jl⟩, jr, j⟩ ⟨⟨⟨fl⟩⟩, fr, ff⟩
         dsimp at *
@@ -99,7 +99,7 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
       (((whiskeringLeft _ _ _).obj ι).obj G ⟶
         F) where 
   toFun f :=
-    { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (StructuredArrow.mk (𝟙 _)),
+    { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (StructuredArrow.mk (𝟙 _))
       naturality' := by 
         intro x y ff
         dsimp only [whiskering_left]
@@ -110,7 +110,7 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
         rw [limit.w]
         tidy }
   invFun f :=
-    { app := fun x => limit.lift (diagram ι F x) (cone _ f),
+    { app := fun x => limit.lift (diagram ι F x) (cone _ f)
       naturality' := by 
         intro x y ff
         ext j
@@ -180,7 +180,7 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) :
     Cocone (diagram ι F x) where 
   x := G.obj x
   ι :=
-    { app := fun i => f.app i.left ≫ G.map i.Hom,
+    { app := fun i => f.app i.left ≫ G.map i.Hom
       naturality' := by 
         rintro ⟨ir, ⟨il⟩, i⟩ ⟨jl, ⟨jr⟩, j⟩ ⟨fl, ⟨⟨fl⟩⟩, ff⟩
         dsimp at *
@@ -228,7 +228,8 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
           G) where 
   toFun f :=
     { app := fun x => by
-        apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
+        apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _
+      -- sigh
       naturality' := by 
         intro x y ff
         dsimp only [whiskering_left]
@@ -249,7 +250,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
         congr
         simp }
   invFun f :=
-    { app := fun x => colimit.desc (diagram ι F x) (cocone _ f),
+    { app := fun x => colimit.desc (diagram ι F x) (cocone _ f)
       naturality' := by 
         intro x y ff
         ext j

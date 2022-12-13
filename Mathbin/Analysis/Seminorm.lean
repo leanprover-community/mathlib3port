@@ -150,7 +150,8 @@ instance [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] :
     HasSmul R
       (Seminorm 𝕜
         E) where smul r p :=
-    { r • p.toAddGroupSeminorm with toFun := fun x => r • p x,
+    { r • p.toAddGroupSeminorm with 
+      toFun := fun x => r • p x
       smul' := fun _ _ => by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         rw [map_smul_eq_mul, mul_left_comm] }
@@ -174,7 +175,8 @@ instance :
     Add
       (Seminorm 𝕜
         E) where add p q :=
-    { p.toAddGroupSeminorm + q.toAddGroupSeminorm with toFun := fun x => p x + q x,
+    { p.toAddGroupSeminorm + q.toAddGroupSeminorm with
+      toFun := fun x => p x + q x
       smul' := fun a x => by simp only [map_smul_eq_mul, map_smul_eq_mul, mul_add] }
 
 theorem coe_add (p q : Seminorm 𝕜 E) : ⇑(p + q) = p + q :=
@@ -223,7 +225,8 @@ instance :
     HasSup
       (Seminorm 𝕜
         E) where sup p q :=
-    { p.toAddGroupSeminorm ⊔ q.toAddGroupSeminorm with toFun := p ⊔ q,
+    { p.toAddGroupSeminorm ⊔ q.toAddGroupSeminorm with
+      toFun := p ⊔ q
       smul' := fun x v =>
         (congr_arg₂ max (map_smul_eq_mul p x v) (map_smul_eq_mul q x v)).trans <|
           (mul_max_of_nonneg _ _ <| norm_nonneg x).symm }
@@ -283,7 +286,8 @@ variable [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ]
 
 /-- Composition of a seminorm with a linear map is a seminorm. -/
 def comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) : Seminorm 𝕜 E :=
-  { p.toAddGroupSeminorm.comp f.toAddMonoidHom with toFun := fun x => p (f x),
+  { p.toAddGroupSeminorm.comp f.toAddMonoidHom with
+    toFun := fun x => p (f x)
     smul' := fun _ _ => by rw [map_smulₛₗ, map_smul_eq_mul, RingHomIsometric.is_iso] }
 #align seminorm.comp Seminorm.comp
 
@@ -440,7 +444,8 @@ noncomputable instance :
     HasInf
       (Seminorm 𝕜
         E) where inf p q :=
-    { p.toAddGroupSeminorm ⊓ q.toAddGroupSeminorm with toFun := fun x => ⨅ u : E, p u + q (x - u),
+    { p.toAddGroupSeminorm ⊓ q.toAddGroupSeminorm with
+      toFun := fun x => ⨅ u : E, p u + q (x - u)
       smul' := by 
         intro a x
         obtain rfl | ha := eq_or_ne a 0
@@ -461,11 +466,12 @@ theorem inf_apply (p q : Seminorm 𝕜 E) (x : E) : (p ⊓ q) x = ⨅ u : E, p u
 #align seminorm.inf_apply Seminorm.inf_apply
 
 noncomputable instance : Lattice (Seminorm 𝕜 E) :=
-  { Seminorm.semilatticeSup with inf := (· ⊓ ·),
+  { Seminorm.semilatticeSup with 
+    inf := (· ⊓ ·)
     inf_le_left := fun p q x =>
-      cinfi_le_of_le bdd_below_range_add x <| by simp only [sub_self, map_zero, add_zero],
+      cinfi_le_of_le bdd_below_range_add x <| by simp only [sub_self, map_zero, add_zero]
     inf_le_right := fun p q x =>
-      cinfi_le_of_le bdd_below_range_add 0 <| by simp only [sub_self, map_zero, zero_add, sub_zero],
+      cinfi_le_of_le bdd_below_range_add 0 <| by simp only [sub_self, map_zero, zero_add, sub_zero]
     le_inf := fun a b c hab hac x =>
       le_cinfi fun u => (le_map_add_map_sub a _ _).trans <| add_le_add (hab _) (hac _) }
 
@@ -504,12 +510,12 @@ noncomputable instance :
       (Seminorm 𝕜
         E) where sup s :=
     if h : BddAbove (coeFn '' s : Set (E → ℝ)) then
-      { toFun := ⨆ p : s, ((p : Seminorm 𝕜 E) : E → ℝ),
+      { toFun := ⨆ p : s, ((p : Seminorm 𝕜 E) : E → ℝ)
         map_zero' := by 
           rw [supr_apply, ← @Real.csupr_const_zero s]
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
-          exact map_zero i.1,
+          exact map_zero i.1
         add_le' := fun x y => by 
           rcases h with ⟨q, hq⟩
           obtain rfl | h := s.eq_empty_or_nonempty
@@ -521,12 +527,12 @@ noncomputable instance :
                   ((i : Seminorm 𝕜 E).add_le' x y).trans <|
                     add_le_add (le_csupr ⟨q x, _⟩ i) (le_csupr ⟨q y, _⟩ i) <;>
               rw [mem_upper_bounds, forall_range_iff] <;>
-            exact fun j => hq (mem_image_of_mem _ j.2) _,
+            exact fun j => hq (mem_image_of_mem _ j.2) _
         neg' := fun x => by 
           simp only [supr_apply]
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
-          exact i.1.neg' _,
+          exact i.1.neg' _
         smul' := fun a x => by 
           simp only [supr_apply]
           rw [← smul_eq_mul,

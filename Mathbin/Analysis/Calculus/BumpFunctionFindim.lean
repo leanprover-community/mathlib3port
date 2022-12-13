@@ -43,7 +43,10 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
   obtain ⟨d, d_pos, hd⟩ : ∃ (d : ℝ)(hr : 0 < d), Euclidean.closedBall x d ⊆ s
   exact euclidean.nhds_basis_closed_ball.mem_iff.1 hs
   let c : ContDiffBumpOfInner (toEuclidean x) :=
-    { R := d / 2, r := d, r_pos := half_pos d_pos, r_lt_R := half_lt_self d_pos }
+    { R := d / 2
+      r := d
+      r_pos := half_pos d_pos
+      r_lt_R := half_lt_self d_pos }
   let f : E → ℝ := c ∘ toEuclidean
   have f_supp : f.support ⊆ Euclidean.ball x d := by
     intro y hy

@@ -216,8 +216,10 @@ theorem mk_mul_mk [OrderedSemiring α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) 
 #align nonneg.mk_mul_mk Nonneg.mk_mul_mk
 
 instance addMonoidWithOne [OrderedSemiring α] : AddMonoidWithOne { x : α // 0 ≤ x } :=
-  { Nonneg.hasOne, Nonneg.orderedAddCommMonoid with natCast := fun n => ⟨n, Nat.cast_nonneg n⟩,
-    nat_cast_zero := by simp [Nat.cast], nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl }
+  { Nonneg.hasOne, Nonneg.orderedAddCommMonoid with
+    natCast := fun n => ⟨n, Nat.cast_nonneg n⟩
+    nat_cast_zero := by simp [Nat.cast]
+    nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl }
 #align nonneg.add_monoid_with_one Nonneg.addMonoidWithOne
 
 @[simp, norm_cast]
@@ -309,7 +311,7 @@ def coeRingHom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
 instance canonicallyOrderedAddMonoid [OrderedRing α] :
     CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
   { Nonneg.orderedAddCommMonoid, Nonneg.orderBot with
-    le_self_add := fun a b => le_add_of_nonneg_right b.2,
+    le_self_add := fun a b => le_add_of_nonneg_right b.2
     exists_add_of_le := fun a b h =>
       ⟨⟨b - a, sub_nonneg_of_le h⟩, Subtype.ext (add_sub_cancel'_right _ _).symm⟩ }
 #align nonneg.canonically_ordered_add_monoid Nonneg.canonicallyOrderedAddMonoid

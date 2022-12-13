@@ -246,7 +246,9 @@ theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : NonemptyCompacts α
 /-- In an inhabited space, the type of nonempty compact subsets is also inhabited, with
 default element the singleton set containing the default element. -/
 instance [Inhabited α] : Inhabited (NonemptyCompacts α) :=
-  ⟨{ carrier := {default}, is_compact' := is_compact_singleton, nonempty' := singleton_nonempty _ }⟩
+  ⟨{  carrier := {default}
+      is_compact' := is_compact_singleton
+      nonempty' := singleton_nonempty _ }⟩
 
 instance to_compact_space {s : NonemptyCompacts α} : CompactSpace s :=
   is_compact_iff_compact_space.1 s.IsCompact

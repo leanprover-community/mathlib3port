@@ -130,10 +130,11 @@ instance : PartialOrder (Enorm 𝕜
 
 /-- The `enorm` sending each non-zero vector to infinity. -/
 noncomputable instance : Top (Enorm 𝕜 V) :=
-  ⟨{ toFun := fun x => if x = 0 then 0 else ⊤, eq_zero' := fun x => by split_ifs <;> simp [*],
+  ⟨{  toFun := fun x => if x = 0 then 0 else ⊤
+      eq_zero' := fun x => by split_ifs <;> simp [*]
       map_add_le' := fun x y => by
         split_ifs with hxy hx hy hy hx hy hy <;> try simp [*]
-        simpa [hx, hy] using hxy,
+        simpa [hx, hy] using hxy
       map_smul_le' := fun c x => by
         split_ifs with hcx hx hx <;> simp only [smul_eq_zero, not_or] at hcx
         · simp only [mul_zero, le_refl]
@@ -155,15 +156,18 @@ noncomputable instance : OrderTop (Enorm 𝕜
   le_top e x := if h : x = 0 then by simp [h] else by simp [top_map h]
 
 noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
-  { Enorm.partialOrder with le := (· ≤ ·), lt := (· < ·),
+  { Enorm.partialOrder with 
+    le := (· ≤ ·)
+    lt := (· < ·)
     sup := fun e₁ e₂ =>
-      { toFun := fun x => max (e₁ x) (e₂ x),
-        eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
+      { toFun := fun x => max (e₁ x) (e₂ x)
+        eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1
         map_add_le' := fun x y =>
           max_le (le_trans (e₁.map_add_le _ _) <| add_le_add (le_max_left _ _) (le_max_left _ _))
-            (le_trans (e₂.map_add_le _ _) <| add_le_add (le_max_right _ _) (le_max_right _ _)),
-        map_smul_le' := fun c x => le_of_eq <| by simp only [map_smul, Ennreal.mul_max] },
-    le_sup_left := fun e₁ e₂ x => le_max_left _ _, le_sup_right := fun e₁ e₂ x => le_max_right _ _,
+            (le_trans (e₂.map_add_le _ _) <| add_le_add (le_max_right _ _) (le_max_right _ _))
+        map_smul_le' := fun c x => le_of_eq <| by simp only [map_smul, Ennreal.mul_max] }
+    le_sup_left := fun e₁ e₂ x => le_max_left _ _
+    le_sup_right := fun e₁ e₂ x => le_max_right _ _
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_le (h₁ x) (h₂ x) }
 
 @[simp, norm_cast]
@@ -221,7 +225,8 @@ theorem finite_edist_eq (x y : e.finiteSubspace) : edist x y = e (x - y) :=
 
 /-- Normed group instance on `e.finite_subspace`. -/
 instance : NormedAddCommGroup e.finiteSubspace :=
-  { finiteSubspace.metricSpace e, Submodule.addCommGroup _ with norm := fun x => (e x).toReal,
+  { finiteSubspace.metricSpace e, Submodule.addCommGroup _ with
+    norm := fun x => (e x).toReal
     dist_eq := fun x y => rfl }
 
 theorem finite_norm_eq (x : e.finiteSubspace) : ‖x‖ = (e x).toReal :=

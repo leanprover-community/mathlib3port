@@ -197,7 +197,8 @@ is equal to `0` unless `(q - 1) ∣ i`, in which case the sum is `q - 1`. -/
 theorem sum_pow_units [Fintype Kˣ] (i : ℕ) :
     (∑ x : Kˣ, (x ^ i : K)) = if q - 1 ∣ i then -1 else 0 := by
   let φ : Kˣ →* K :=
-    { toFun := fun x => x ^ i, map_one' := by rw [Units.val_one, one_pow],
+    { toFun := fun x => x ^ i
+      map_one' := by rw [Units.val_one, one_pow]
       map_mul' := by 
         intros
         rw [Units.val_mul, mul_pow] }

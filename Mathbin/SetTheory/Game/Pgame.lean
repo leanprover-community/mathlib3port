@@ -498,7 +498,7 @@ instance : Preorder Pgame :=
     le_refl := fun x => by 
       induction' x with _ _ _ _ IHl IHr
       exact
-        le_of_forall_lf (fun i => lf_of_le_move_left (IHl i)) fun i => lf_of_move_right_le (IHr i),
+        le_of_forall_lf (fun i => lf_of_le_move_left (IHl i)) fun i => lf_of_move_right_le (IHr i)
     le_trans := by
       suffices :
         ∀ {x y z : Pgame},
@@ -511,7 +511,7 @@ instance : Preorder Pgame :=
       exact
         ⟨le_trans_aux (fun i => (IHxl i).2.1) fun j => (IHzr j).2.2,
           le_trans_aux (fun i => (IHyl i).2.2) fun j => (IHxr j).1,
-          le_trans_aux (fun i => (IHzl i).1) fun j => (IHyr j).2.1⟩,
+          le_trans_aux (fun i => (IHzl i).1) fun j => (IHyr j).2.1⟩
     lt_iff_le_not_le := fun x y => by 
       rw [Pgame.not_le]
       rfl }

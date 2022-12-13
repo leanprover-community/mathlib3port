@@ -326,12 +326,13 @@ theorem to_iso (f : X ⟶ Y) [h : is_open_immersion f] [h' : Epi f.base] : IsIso
   apply (config := { instances := false }) is_iso_of_components
   · let this : X ≃ₜ Y :=
       (Homeomorph.ofEmbedding _ h.base_open.to_embedding).trans
-        { toFun := Subtype.val,
+        { toFun := Subtype.val
           invFun := fun x =>
             ⟨x, by 
               rw [set.range_iff_surjective.mpr ((TopCat.epi_iff_surjective _).mp h')]
-              trivial⟩,
-          left_inv := fun ⟨_, _⟩ => rfl, right_inv := fun _ => rfl }
+              trivial⟩
+          left_inv := fun ⟨_, _⟩ => rfl
+          right_inv := fun _ => rfl }
     convert is_iso.of_iso (TopCat.isoOfHomeo this)
     · ext
       rfl
@@ -384,7 +385,7 @@ def pullbackConeOfLeftFst :
                     use (TopCat.pullbackIsoProdSubtype _ _).inv ⟨⟨_, _⟩, h₂⟩
                     simpa using h₁
                   · rintro _ ⟨x, h₁, rfl⟩
-                    exact ⟨_, h₁, concrete_category.congr_hom pullback.condition x⟩)),
+                    exact ⟨_, h₁, concrete_category.congr_hom pullback.condition x⟩))
       naturality' := by 
         intro U V i
         induction U using Opposite.rec
@@ -445,7 +446,7 @@ def pullbackConeOfLeftLift :
                   erw [← Set.preimage_preimage]
                 erw [Set.preimage_image_eq _
                     (TopCat.snd_open_embedding_of_left_open_embedding hf.base_open g.base).inj]
-                simp)),
+                simp))
       naturality' := fun U V i => by 
         erw [s.snd.c.naturality_assoc]
         rw [category.assoc]
@@ -912,7 +913,7 @@ is an open immersion iff every stalk map is an iso.
 -/
 theorem of_stalk_iso {X Y : SheafedSpaceCat C} (f : X ⟶ Y) (hf : OpenEmbedding f.base)
     [H : ∀ x : X, IsIso (PresheafedSpaceCat.stalkMap f x)] : SheafedSpaceCat.IsOpenImmersion f :=
-  { base_open := hf,
+  { base_open := hf
     c_iso := fun U => by
       apply (config := { instances := false })
         TopCat.Presheaf.app_is_iso_of_stalk_functor_map_iso
@@ -1433,13 +1434,16 @@ provided fields are isomorphic with the original open cover. -/
 def OpenCover.copy {X : SchemeCat} (𝒰 : OpenCover X) (J : Type _) (obj : J → SchemeCat)
     (map : ∀ i, obj i ⟶ X) (e₁ : J ≃ 𝒰.J) (e₂ : ∀ i, obj i ≅ 𝒰.obj (e₁ i))
     (e₂ : ∀ i, map i = (e₂ i).Hom ≫ 𝒰.map (e₁ i)) : OpenCover X :=
-  { J, obj, map, f := fun x => e₁.symm (𝒰.f x),
+  { J
+    obj
+    map
+    f := fun x => e₁.symm (𝒰.f x)
     Covers := fun x => by
       rw [e₂, Scheme.comp_val_base, coe_comp, Set.range_comp, set.range_iff_surjective.mpr,
         Set.image_univ, e₁.right_inverse_symm]
       · exact 𝒰.covers x
       · rw [← TopCat.epi_iff_surjective]
-        infer_instance,
+        infer_instance
     IsOpen := fun i => by 
       rw [e₂]
       infer_instance }
@@ -1574,8 +1578,11 @@ def OpenCover.finiteSubcover {X : SchemeCat} (𝒰 : OpenCover X) [H : CompactSp
     rcases h' with ⟨y, _, ⟨hy, rfl⟩, hy'⟩
     exact ⟨⟨y, hy⟩, hy'⟩
   exact
-    { J := t, obj := fun x => 𝒰.obj (𝒰.f x.1), map := fun x => 𝒰.map (𝒰.f x.1),
-      f := fun x => (h x).some, Covers := fun x => (h x).some_spec }
+    { J := t
+      obj := fun x => 𝒰.obj (𝒰.f x.1)
+      map := fun x => 𝒰.map (𝒰.f x.1)
+      f := fun x => (h x).some
+      Covers := fun x => (h x).some_spec }
 #align
   algebraic_geometry.Scheme.open_cover.finite_subcover AlgebraicGeometry.SchemeCat.OpenCover.finiteSubcover
 

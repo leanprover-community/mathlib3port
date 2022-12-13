@@ -92,12 +92,16 @@ private unsafe def mono_aux (ns : List Name) (hs : List expr) : tactic Unit := d
                 skip) <|>
       first
           (hs fun h =>
-            apply_core h { md := transparency.none, NewGoals := new_goals.non_dep_only } >>
+            apply_core h
+                { md := transparency.none
+                  NewGoals := new_goals.non_dep_only } >>
               skip) <|>
         first
           (ns fun n => do
             let c ← mk_const n
-            apply_core c { md := transparency.none, NewGoals := new_goals.non_dep_only }
+            apply_core c
+                { md := transparency.none
+                  NewGoals := new_goals.non_dep_only }
             skip)
   all_goals' mono_aux
 #align tactic.mono_aux tactic.mono_aux
@@ -323,9 +327,24 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
                   (fs₁.zip preds).foldl (fun (e : expr) ⟨f, c, _⟩ => e.replace_with (pred_g c) f) e
               let t' := t'.replace_with (pred_g c) f₂
               return
-                  { orig_nm := i, func_nm := p ++ "functional" ++ sub, type := i,
-                    loc_type := t' loc_args, concl := t', loc_args, args, insts := t' }
-        return { pd_name := c, type := c, f₁, f₂, u_f, intros, locals := ls, params, u_names }
+                  { orig_nm := i
+                    func_nm := p ++ "functional" ++ sub
+                    type := i
+                    loc_type := t' loc_args
+                    concl := t'
+                    loc_args
+                    args
+                    insts := t' }
+        return
+            { pd_name := c
+              type := c
+              f₁
+              f₂
+              u_f
+              intros
+              locals := ls
+              params
+              u_names }
   -- Introduce all functionals
       pds
       fun pd : coind_pred => do
@@ -536,7 +555,10 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
     let ctxts ←
       ctxts'.mmap fun v =>
           local_const v.local_uniq_name v.local_pp_name v.local_binding_info <$> infer_type v
-    let mvars ← apply_core rule { approx := false, NewGoals := NewGoals.all }
+    let mvars ←
+      apply_core rule
+          { approx := false
+            NewGoals := NewGoals.all }
     let g
       ←-- analyse relation
           List.head <$>

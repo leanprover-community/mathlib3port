@@ -93,7 +93,10 @@ instance injective_of_divisible [DivisibleBy A ℤ] :
         rcases IsPrincipalIdealRing.principal I with ⟨m, rfl⟩
         by_cases m_eq_zero : m = 0
         · subst m_eq_zero
-          refine' ⟨{ toFun := _, map_add' := _, map_smul' := _ }, fun n hn => _⟩
+          refine'
+            ⟨{  toFun := _
+                map_add' := _
+                map_smul' := _ }, fun n hn => _⟩
           · intro n
             exact g 0
           · intro n1 n2
@@ -105,7 +108,10 @@ instance injective_of_divisible [DivisibleBy A ℤ] :
             symm
             convert map_zero _
         · set gₘ := g ⟨m, Submodule.subset_span (Set.mem_singleton _)⟩ with gm_eq
-          refine' ⟨{ toFun := _, map_add' := _, map_smul' := _ }, fun n hn => _⟩
+          refine'
+            ⟨{  toFun := _
+                map_add' := _
+                map_smul' := _ }, fun n hn => _⟩
           · intro n
             exact n • DivisibleBy.div gₘ m
           · intro n1 n2

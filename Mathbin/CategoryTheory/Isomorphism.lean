@@ -105,8 +105,15 @@ theorem symm_inv (α : X ≅ Y) : α.symm.inv = α.Hom :=
 
 @[simp]
 theorem symm_mk {X Y : C} (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_id) :
-    Iso.symm { Hom, inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id } =
-      { Hom := inv, inv := hom, hom_inv_id' := inv_hom_id, inv_hom_id' := hom_inv_id } :=
+    Iso.symm
+        { Hom
+          inv
+          hom_inv_id' := hom_inv_id
+          inv_hom_id' := inv_hom_id } =
+      { Hom := inv
+        inv := hom
+        hom_inv_id' := inv_hom_id
+        inv_hom_id' := hom_inv_id } :=
   rfl
 #align category_theory.iso.symm_mk CategoryTheory.Iso.symm_mk
 
@@ -153,9 +160,18 @@ infixr:80 " ≪≫ " => Iso.trans
 @[simp]
 theorem trans_mk {X Y Z : C} (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_id) (hom' : Y ⟶ Z)
     (inv' : Z ⟶ Y) (hom_inv_id') (inv_hom_id') (hom_inv_id'') (inv_hom_id'') :
-    Iso.trans { Hom, inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id }
-        { Hom := hom', inv := inv', hom_inv_id', inv_hom_id' } =
-      { Hom := hom ≫ hom', inv := inv' ≫ inv, hom_inv_id' := hom_inv_id'',
+    Iso.trans
+        { Hom
+          inv
+          hom_inv_id' := hom_inv_id
+          inv_hom_id' := inv_hom_id }
+        { Hom := hom'
+          inv := inv'
+          hom_inv_id'
+          inv_hom_id' } =
+      { Hom := hom ≫ hom'
+        inv := inv' ≫ inv
+        hom_inv_id' := hom_inv_id''
         inv_hom_id' := inv_hom_id'' } :=
   rfl
 #align category_theory.iso.trans_mk CategoryTheory.Iso.trans_mk

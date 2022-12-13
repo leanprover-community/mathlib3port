@@ -202,7 +202,11 @@ instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
       tidy
     haveI : strong_epi e := strong_epi_of_epi e
     haveI : mono m := concrete_category.mono_of_injective _ (by tidy)
-    exact Nonempty.intro { i, m, e }⟩
+    exact
+      Nonempty.intro
+        { i
+          m
+          e }⟩
 
 end NonemptyFinLinOrdCat
 

@@ -47,9 +47,9 @@ open Matrix
 
 /- warning: pequiv.to_matrix -> Pequiv.toMatrix is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_3}} {n : Type.{u_4}} {α : Type.{v}} [_inst_1 : DecidableEq.{succ u_4} n] [_inst_2 : Zero.{v} α] [_inst_3 : One.{v} α], (Pequiv.{u_3, u_4} m n) -> (Matrix.{u_3, u_4, v} m n α)
+  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u3} n] [_inst_2 : Zero.{u1} α] [_inst_3 : One.{u1} α], (Pequiv.{u2, u3} m n) -> (Matrix.{u2, u3, u1} m n α)
 but is expected to have type
-  forall {m : Type.{u_3}} {n : Type.{u_4}} {α : Type.{v}} [_inst_1 : DecidableEq.{succ u_4} n] [_inst_2 : Zero.{v} α] [_inst_3 : One.{v} α], (Pequiv.{u_3, u_4} m n) -> (Matrix.{u_3, u_4, v} m n α)
+  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : DecidableEq.{succ u2} n] [_inst_2 : Zero.{u3} α] [_inst_3 : One.{u3} α], (Pequiv.{u1, u2} m n) -> (Matrix.{u1, u2, u3} m n α)
 Case conversion may be inaccurate. Consider using '#align pequiv.to_matrix Pequiv.toMatrixₓ'. -/
 /-- `to_matrix` returns a matrix containing ones and zeros. `f.to_matrix i j` is `1` if
   `f i = some j` and `0` otherwise -/

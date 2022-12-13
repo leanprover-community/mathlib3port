@@ -852,7 +852,7 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant [LocallyCompactSpace G] 
 @[to_additive]
 theorem measurePreservingZpow [CompactSpace G] [RootableBy G ℤ] {n : ℤ} (hn : n ≠ 0) :
     MeasurePreserving (fun g : G => g ^ n) μ μ :=
-  { Measurable := (continuous_zpow n).Measurable,
+  { Measurable := (continuous_zpow n).Measurable
     map_eq := by 
       let f := @zpowGroupHom G _ n
       have hf : Continuous f := continuous_zpow n

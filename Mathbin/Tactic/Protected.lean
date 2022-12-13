@@ -55,7 +55,9 @@ unsafe def protected_attr : user_attribute where
 #align tactic.protected_attr tactic.protected_attr
 
 add_tactic_doc
-  { Name := "protected", category := DocCategory.attr, declNames := [`tactic.protected_attr],
+  { Name := "protected"
+    category := DocCategory.attr
+    declNames := [`tactic.protected_attr]
     tags := ["parsing", "environment"] }
 
 /-- Tactic that is executed when a structure is marked with the `protect_proj` attribute -/
@@ -92,7 +94,9 @@ unsafe def protect_proj_attr :
 #align tactic.protect_proj_attr tactic.protect_proj_attr
 
 add_tactic_doc
-  { Name := "protect_proj", category := DocCategory.attr, declNames := [`tactic.protect_proj_attr],
+  { Name := "protect_proj"
+    category := DocCategory.attr
+    declNames := [`tactic.protect_proj_attr]
     tags := ["parsing", "environment", "structures"] }
 
 end Tactic

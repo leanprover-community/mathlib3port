@@ -322,6 +322,8 @@ unsafe def tactic.interactive.cancel_denoms (l : parse location) : tactic Unit :
 #align tactic.interactive.cancel_denoms tactic.interactive.cancel_denoms
 
 add_tactic_doc
-  { Name := "cancel_denoms", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.cancel_denoms], tags := ["simplification"] }
+  { Name := "cancel_denoms"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.cancel_denoms]
+    tags := ["simplification"] }
 

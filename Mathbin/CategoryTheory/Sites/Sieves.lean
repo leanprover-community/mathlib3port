@@ -299,8 +299,12 @@ instance : CompleteLattice
   le_refl S f q := id
   le_trans S₁ S₂ S₃ S₁₂ S₂₃ Y f h := S₂₃ _ (S₁₂ _ h)
   le_antisymm S R p q := Sieve.ext fun Y f => ⟨p _, q _⟩
-  top := { arrows := fun _ => Set.univ, downward_closed' := fun Y Z f g h => ⟨⟩ }
-  bot := { arrows := fun _ => ∅, downward_closed' := fun _ _ _ p _ => False.elim p }
+  top :=
+    { arrows := fun _ => Set.univ
+      downward_closed' := fun Y Z f g h => ⟨⟩ }
+  bot :=
+    { arrows := fun _ => ∅
+      downward_closed' := fun _ _ _ p _ => False.elim p }
   sup := Sieve.union
   inf := Sieve.inter
   sup := Sieve.sup

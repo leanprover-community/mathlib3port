@@ -650,7 +650,7 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
 
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
-  { lt_top_of_is_compact := fun K hK => Ennreal.mul_lt_top ctop hK.measure_lt_top.Ne,
+  { lt_top_of_is_compact := fun K hK => Ennreal.mul_lt_top ctop hK.measure_lt_top.Ne
     toIsOpenPosMeasure := isOpenPosMeasureSmul μ cpos }
 #align measure_theory.measure.is_haar_measure.smul MeasureTheory.Measure.IsHaarMeasure.smul
 
@@ -662,7 +662,7 @@ theorem isHaarMeasureOfIsCompactNonemptyInterior [TopologicalGroup G] [BorelSpac
     [IsMulLeftInvariant μ] (K : Set G) (hK : IsCompact K) (h'K : (interior K).Nonempty)
     (h : μ K ≠ 0) (h' : μ K ≠ ∞) : IsHaarMeasure μ :=
   { lt_top_of_is_compact := fun L hL =>
-      measure_lt_top_of_is_compact_of_is_mul_left_invariant' h'K h' hL,
+      measure_lt_top_of_is_compact_of_is_mul_left_invariant' h'K h' hL
     toIsOpenPosMeasure := isOpenPosMeasureOfMulLeftInvariantOfCompact K hK h }
 #align
   measure_theory.measure.is_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.isHaarMeasureOfIsCompactNonemptyInterior
@@ -675,12 +675,11 @@ theorem isHaarMeasureMap [BorelSpace G] [TopologicalGroup G] {H : Type _} [Group
     [TopologicalSpace H] [MeasurableSpace H] [BorelSpace H] [T2Space H] [TopologicalGroup H]
     (f : G →* H) (hf : Continuous f) (h_surj : Surjective f)
     (h_prop : Tendsto f (cocompact G) (cocompact H)) : IsHaarMeasure (Measure.map f μ) :=
-  { toIsMulLeftInvariant := isMulLeftInvariantMap f.toMulHom hf.Measurable h_surj,
+  { toIsMulLeftInvariant := isMulLeftInvariantMap f.toMulHom hf.Measurable h_surj
     lt_top_of_is_compact := by 
       intro K hK
       rw [map_apply hf.measurable hK.measurable_set]
-      exact
-        IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).is_compact_preimage hK),
+      exact IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).is_compact_preimage hK)
     toIsOpenPosMeasure := hf.isOpenPosMeasureMap h_surj }
 #align measure_theory.measure.is_haar_measure_map MeasureTheory.Measure.isHaarMeasureMap
 
@@ -700,8 +699,9 @@ See Note [lower instance priority] -/
 @[to_additive
       "A Haar measure on a σ-compact space is σ-finite.\n\nSee Note [lower instance priority]"]
 instance (priority := 100) IsHaarMeasure.sigmaFinite [SigmaCompactSpace G] : SigmaFinite μ :=
-  ⟨⟨{ Set := compactCovering G, set_mem := fun n => mem_univ _,
-        Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n,
+  ⟨⟨{   Set := compactCovering G
+        set_mem := fun n => mem_univ _
+        Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n
         spanning := Union_compact_covering G }⟩⟩
 #align
   measure_theory.measure.is_haar_measure.sigma_finite MeasureTheory.Measure.IsHaarMeasure.sigmaFinite

@@ -729,7 +729,7 @@ def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :
         rw [continuous_iff_continuous_on_univ]
         convert LocalHomeomorph.continuous_on _
         simp only [mfld_simps]
-      simpa only [mfld_simps] using this,
+      simpa only [mfld_simps] using this
     continuous_inv_fun := by
       let p : TangentBundle I H := ⟨I.symm (0 : E), (0 : E)⟩
       have : Continuous (chart_at (ModelProd H E) p).symm := by

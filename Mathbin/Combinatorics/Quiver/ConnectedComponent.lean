@@ -75,9 +75,9 @@ instance :
 
 /- warning: quiver.path.reverse -> Quiver.Path.reverse is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u}} [_inst_1 : Quiver.{succ v, u} V] [_inst_2 : Quiver.HasReverse.{v, u} V _inst_1] {a : V} {b : V}, (Quiver.Path.{succ v, u} V _inst_1 a b) -> (Quiver.Path.{succ v, u} V _inst_1 b a)
+  forall {V : Type.{u2}} [_inst_1 : Quiver.{succ u1, u2} V] [_inst_2 : Quiver.HasReverse.{u1, u2} V _inst_1] {a : V} {b : V}, (Quiver.Path.{succ u1, u2} V _inst_1 a b) -> (Quiver.Path.{succ u1, u2} V _inst_1 b a)
 but is expected to have type
-  forall {V : Type.{u}} [_inst_1 : Quiver.{succ v, u} V] [_inst_2 : Quiver.HasReverse.{v, u} V _inst_1] {a : V} {b : V}, (Quiver.Path.{succ v, u} V _inst_1 a b) -> (Quiver.Path.{succ v, u} V _inst_1 b a)
+  forall {V : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} V] [_inst_2 : Quiver.HasReverse.{u2, u1} V _inst_1] {a : V} {b : V}, (Quiver.Path.{succ u2, u1} V _inst_1 a b) -> (Quiver.Path.{succ u2, u1} V _inst_1 b a)
 Case conversion may be inaccurate. Consider using '#align quiver.path.reverse Quiver.Path.reverseₓ'. -/
 /-- Reverse the direction of a path. -/
 @[simp]

@@ -114,7 +114,9 @@ def endMonoidalStarFunctorIsEquivalence :
     IsEquivalence
       (endMonoidalStarFunctor
           C).toFunctor where 
-  inverse := { obj := fun X => X, map := fun X Y f => f }
+  inverse :=
+    { obj := fun X => X
+      map := fun X Y f => f }
   unitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
   counitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
 #align

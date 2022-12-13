@@ -132,9 +132,10 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) �
 
 instance : UniformSpace (CauchyCat α) :=
   UniformSpace.ofCore
-    { uniformity := (𝓤 α).lift' gen,
-      refl := principal_le_lift'.2 fun s hs ⟨a, b⟩ (a_eq_b : a = b) => a_eq_b ▸ a.property.right hs,
-      symm := symm_gen, comp := comp_gen }
+    { uniformity := (𝓤 α).lift' gen
+      refl := principal_le_lift'.2 fun s hs ⟨a, b⟩ (a_eq_b : a = b) => a_eq_b ▸ a.property.right hs
+      symm := symm_gen
+      comp := comp_gen }
 
 theorem mem_uniformity {s : Set (CauchyCat α × CauchyCat α)} :
     s ∈ 𝓤 (CauchyCat α) ↔ ∃ t ∈ 𝓤 α, gen t ⊆ s :=
@@ -433,7 +434,8 @@ theorem continuous_coe : Continuous (coe : α → Completion α) :=
 #align uniform_space.completion.continuous_coe UniformSpace.Completion.continuous_coe
 
 theorem uniform_embedding_coe [SeparatedSpace α] : UniformEmbedding (coe : α → Completion α) :=
-  { comap_uniformity := comap_coe_eq_uniformity α, inj := separated_pure_cauchy_injective }
+  { comap_uniformity := comap_coe_eq_uniformity α
+    inj := separated_pure_cauchy_injective }
 #align uniform_space.completion.uniform_embedding_coe UniformSpace.Completion.uniform_embedding_coe
 
 theorem coe_injective [SeparatedSpace α] : Function.Injective (coe : α → Completion α) :=

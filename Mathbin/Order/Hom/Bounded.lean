@@ -138,7 +138,11 @@ instance [Bot α] [Bot β] [BotHomClass F α β] : CoeTC F (BotHom α β) :=
 
 instance [Preorder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] [BoundedOrderHomClass F α β] :
     CoeTC F (BoundedOrderHom α β) :=
-  ⟨fun f => { (f : α →o β) with toFun := f, map_top' := map_top f, map_bot' := map_bot f }⟩
+  ⟨fun f =>
+    { (f : α →o β) with 
+      toFun := f
+      map_top' := map_top f
+      map_bot' := map_bot f }⟩
 
 /-! ### Top homomorphisms -/
 

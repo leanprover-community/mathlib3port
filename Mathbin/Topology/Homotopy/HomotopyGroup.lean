@@ -192,11 +192,14 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
       -- joined iff homotopic
       intros ;
       constructor <;> rintro ⟨H⟩
-      exacts[⟨{ toFun := fun t => H ⟨t, Fin.elim0⟩,
-            source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm),
+      exacts[⟨{ 
+            toFun := fun t => H ⟨t, Fin.elim0⟩
+            source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm)
             target' := (H.apply_one _).trans (congr_arg a₂ matrix.zero_empty.symm) }⟩,
-        ⟨{ toFun := fun t0 => H t0.fst, map_zero_left' := fun _ => by convert H.source,
-            map_one_left' := fun _ => by convert H.target, prop' := fun _ _ ⟨i, _⟩ => i.elim0 }⟩])
+        ⟨{  toFun := fun t0 => H t0.fst
+            map_zero_left' := fun _ => by convert H.source
+            map_one_left' := fun _ => by convert H.target
+            prop' := fun _ _ ⟨i, _⟩ => i.elim0 }⟩])
 #align pi0_equiv_path_components pi0EquivPathComponents
 
 /-- The 1-dimensional generalized loops based at `x` are in 1-1 correspondence with
@@ -213,7 +216,7 @@ def genLoopOneEquivPathSelf :
         exact p.1.2⟩
       (p.boundary (fun _ => 0) ⟨0, Or.inl rfl⟩) (p.boundary (fun _ => 1) ⟨1, Or.inr rfl⟩)
   invFun p :=
-    { toFun := fun c => p c.head,
+    { toFun := fun c => p c.head
       boundary := by
         rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
         exacts[p.source, p.target] }
@@ -234,17 +237,18 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x := by
   -- homotopic iff homotopic
   intros ;
   constructor <;> rintro ⟨H⟩
-  exacts[⟨{ toFun := fun tx => H (tx.fst, fun _ => tx.snd),
-        map_zero_left' := fun _ => by convert H.apply_zero _,
-        map_one_left' := fun _ => by convert H.apply_one _,
+  exacts[⟨{ 
+        toFun := fun tx => H (tx.fst, fun _ => tx.snd)
+        map_zero_left' := fun _ => by convert H.apply_zero _
+        map_one_left' := fun _ => by convert H.apply_one _
         prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
-    ⟨{ toFun := fun tx => H (tx.fst, tx.snd.head),
+    ⟨{  toFun := fun tx => H (tx.fst, tx.snd.head)
         map_zero_left' := fun y => by 
           convert H.apply_zero _
-          exact y.one_char,
+          exact y.one_char
         map_one_left' := fun y => by 
           convert H.apply_one _
-          exact y.one_char,
+          exact y.one_char
         prop' := fun t y ⟨i, iH⟩ => by 
           cases Unique.eq_default i; constructor
           · convert H.eq_fst _ _

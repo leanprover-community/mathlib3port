@@ -1182,10 +1182,11 @@ instance : PartialOrder
 instance : HasInf (UniformSpace α) :=
   ⟨fun s =>
     UniformSpace.ofCore
-      { uniformity := ⨅ u ∈ s, @uniformity α u, refl := le_infi fun u => le_infi fun hu => u.refl,
+      { uniformity := ⨅ u ∈ s, @uniformity α u
+        refl := le_infi fun u => le_infi fun hu => u.refl
         symm :=
           le_infi fun u =>
-            le_infi fun hu => le_trans (map_mono <| infi_le_of_le _ <| infi_le _ hu) u.symm,
+            le_infi fun hu => le_trans (map_mono <| infi_le_of_le _ <| infi_le _ hu) u.symm
         comp :=
           le_infi fun u =>
             le_infi fun hu =>
@@ -1201,14 +1202,20 @@ private theorem le_Inf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : �
 #align le_Inf le_Inf
 
 instance : Top (UniformSpace α) :=
-  ⟨UniformSpace.ofCore { uniformity := ⊤, refl := le_top, symm := le_top, comp := le_top }⟩
+  ⟨UniformSpace.ofCore
+      { uniformity := ⊤
+        refl := le_top
+        symm := le_top
+        comp := le_top }⟩
 
 instance : Bot (UniformSpace α) :=
-  ⟨{ toTopologicalSpace := ⊥, uniformity := 𝓟 idRel, refl := le_rfl,
-      symm := by simp [tendsto] <;> apply subset.refl,
+  ⟨{  toTopologicalSpace := ⊥
+      uniformity := 𝓟 idRel
+      refl := le_rfl
+      symm := by simp [tendsto] <;> apply subset.refl
       comp := by 
         rw [lift'_principal]; · simp
-        exact monotone_comp_rel monotone_id monotone_id,
+        exact monotone_comp_rel monotone_id monotone_id
       is_open_uniformity := fun s => by
         simp (config := { contextual := true }) [is_open_fold, subset_def, idRel] }⟩
 
@@ -1216,24 +1223,33 @@ instance : HasInf (UniformSpace α) :=
   ⟨fun u₁ u₂ =>
     @UniformSpace.replaceTopology _ (u₁.toTopologicalSpace ⊓ u₂.toTopologicalSpace)
         (UniformSpace.ofCore
-          { uniformity := u₁.uniformity ⊓ u₂.uniformity, refl := le_inf u₁.refl u₂.refl,
-            symm := u₁.symm.inf u₂.symm,
+          { uniformity := u₁.uniformity ⊓ u₂.uniformity
+            refl := le_inf u₁.refl u₂.refl
+            symm := u₁.symm.inf u₂.symm
             comp := (lift'_inf_le _ _ _).trans <| inf_le_inf u₁.comp u₂.comp }) <|
       eq_of_nhds_eq_nhds fun a => by
         simpa only [nhds_inf, nhds_eq_comap_uniformity] using comap_inf.symm⟩
 
 instance : CompleteLattice (UniformSpace α) :=
-  { UniformSpace.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    le_sup_left := fun a b => le_Inf fun _ ⟨h, _⟩ => h,
-    le_sup_right := fun a b => le_Inf fun _ ⟨_, h⟩ => h,
-    sup_le := fun a b c h₁ h₂ => Inf_le ⟨h₁, h₂⟩, inf := (· ⊓ ·),
-    le_inf := fun a b c h₁ h₂ => show a.uniformity ≤ _ from le_inf h₁ h₂,
-    inf_le_left := fun a b => show _ ≤ a.uniformity from inf_le_left,
-    inf_le_right := fun a b => show _ ≤ b.uniformity from inf_le_right, top := ⊤,
-    le_top := fun a => show a.uniformity ≤ ⊤ from le_top, bot := ⊥, bot_le := fun u => u.refl,
-    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t },
-    le_Sup := fun s u h => le_Inf fun u' h' => h' u h, Sup_le := fun s u h => Inf_le h, inf := inf,
-    le_Inf := fun s a hs => le_Inf hs, Inf_le := fun s a ha => Inf_le ha }
+  { UniformSpace.partialOrder with
+    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x }
+    le_sup_left := fun a b => le_Inf fun _ ⟨h, _⟩ => h
+    le_sup_right := fun a b => le_Inf fun _ ⟨_, h⟩ => h
+    sup_le := fun a b c h₁ h₂ => Inf_le ⟨h₁, h₂⟩
+    inf := (· ⊓ ·)
+    le_inf := fun a b c h₁ h₂ => show a.uniformity ≤ _ from le_inf h₁ h₂
+    inf_le_left := fun a b => show _ ≤ a.uniformity from inf_le_left
+    inf_le_right := fun a b => show _ ≤ b.uniformity from inf_le_right
+    top := ⊤
+    le_top := fun a => show a.uniformity ≤ ⊤ from le_top
+    bot := ⊥
+    bot_le := fun u => u.refl
+    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }
+    le_Sup := fun s u h => le_Inf fun u' h' => h' u h
+    Sup_le := fun s u h => Inf_le h
+    inf := inf
+    le_Inf := fun s a hs => le_Inf hs
+    Inf_le := fun s a ha => Inf_le ha }
 
 theorem infi_uniformity {ι : Sort _} {u : ι → UniformSpace α} :
     (infi u).uniformity = ⨅ i, (u i).uniformity :=

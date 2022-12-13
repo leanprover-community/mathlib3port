@@ -35,7 +35,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
   { inter := by 
       rintro γ₀ γ₁
       use min γ₀ γ₁
-      simp [Valuation.ltAddSubgroup] <;> tauto,
+      simp [Valuation.ltAddSubgroup] <;> tauto
     mul := by 
       rintro γ
       cases' exists_square_le γ with γ₀ h
@@ -45,7 +45,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         (v (r * s) : Γ₀) = v r * v s := Valuation.map_mul _ _ _
         _ < γ₀ * γ₀ := mul_lt_mul₀ r_in s_in
         _ ≤ γ := by exact_mod_cast h
-        ,
+        
     leftMul := by 
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
@@ -60,7 +60,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         change (v (x * y) : Γ₀) < γ
         rw [Valuation.map_mul, Hx, mul_comm]
         rw [Units.val_mul, mul_comm] at vy_lt
-        simpa using mul_inv_lt_of_lt_mul₀ vy_lt,
+        simpa using mul_inv_lt_of_lt_mul₀ vy_lt
     rightMul := by 
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
@@ -99,8 +99,9 @@ namespace Valued
 /-- Alternative `valued` constructor for use when there is no preferred `uniform_space`
 structure. -/
 def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
-  { V, toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _,
-    to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroups_basis.topology _,
+  { V
+    toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
+    to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroups_basis.topology _
     is_topological_valuation := by
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
       intro s

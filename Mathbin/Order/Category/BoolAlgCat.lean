@@ -72,7 +72,8 @@ attribute [local instance] BoundedLatticeHomClass.toBiheytingHomClass
 instance hasForgetToHeytAlg :
     HasForget₂ BoolAlgCat
       HeytAlgCat where forget₂ :=
-    { obj := fun X => ⟨X⟩, map := fun X Y f => show BoundedLatticeHom X Y from f }
+    { obj := fun X => ⟨X⟩
+      map := fun X Y f => show BoundedLatticeHom X Y from f }
 #align BoolAlg.has_forget_to_HeytAlg BoolAlgCat.hasForgetToHeytAlg
 
 end

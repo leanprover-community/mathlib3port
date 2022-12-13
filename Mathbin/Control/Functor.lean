@@ -43,18 +43,18 @@ variable [Functor F] [IsLawfulFunctor F]
 
 /- warning: functor.map_id -> Functor.map_id is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u} -> Type.{v}} {α : Type.{u}} [_inst_1 : Functor.{u, v} F] [_inst_2 : IsLawfulFunctor.{u, v} F _inst_1], Eq.{succ v} ((F α) -> (F α)) (Functor.map.{u, v} F _inst_1 α α (id.{succ u} α)) (id.{succ v} (F α))
+  forall {F : Type.{u1} -> Type.{u2}} {α : Type.{u1}} [_inst_1 : Functor.{u1, u2} F] [_inst_2 : IsLawfulFunctor.{u1, u2} F _inst_1], Eq.{succ u2} ((F α) -> (F α)) (Functor.map.{u1, u2} F _inst_1 α α (id.{succ u1} α)) (id.{succ u2} (F α))
 but is expected to have type
-  forall {F : Type.{u} -> Type.{v}} {α : Type.{u}} [inst._@.Mathlib.Control.Functor._hyg.46 : Functor.{u, v} F] [inst._@.Mathlib.Control.Functor._hyg.49 : LawfulFunctor.{u, v} F inst._@.Mathlib.Control.Functor._hyg.46], Eq.{succ v} ((F α) -> (F α)) ((fun (x._@.Mathlib.Control.Functor._hyg.59 : α -> α) (x._@.Mathlib.Control.Functor._hyg.61 : F α) => Functor.map.{u, v} F inst._@.Mathlib.Control.Functor._hyg.46 α α x._@.Mathlib.Control.Functor._hyg.59 x._@.Mathlib.Control.Functor._hyg.61) (id.{succ u} α)) (id.{succ v} (F α))
+  forall {F : Type.{u1} -> Type.{u2}} {α : Type.{u1}} [_inst_1 : Functor.{u1, u2} F] [_inst_2 : LawfulFunctor.{u1, u2} F _inst_1], Eq.{succ u2} ((F α) -> (F α)) ((fun (x._@.Mathlib.Control.Functor._hyg.59 : α -> α) (x._@.Mathlib.Control.Functor._hyg.61 : F α) => Functor.map.{u1, u2} F _inst_1 α α x._@.Mathlib.Control.Functor._hyg.59 x._@.Mathlib.Control.Functor._hyg.61) (id.{succ u1} α)) (id.{succ u2} (F α))
 Case conversion may be inaccurate. Consider using '#align functor.map_id Functor.map_idₓ'. -/
 theorem Functor.map_id : (· <$> ·) id = (id : F α → F α) := by apply funext <;> apply id_map
 #align functor.map_id Functor.map_id
 
 /- warning: functor.map_comp_map -> Functor.map_comp_map is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u} -> Type.{v}} {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} [_inst_1 : Functor.{u, v} F] [_inst_2 : IsLawfulFunctor.{u, v} F _inst_1] (f : α -> β) (g : β -> γ), Eq.{succ v} ((F α) -> (F γ)) (Function.comp.{succ v, succ v, succ v} (F α) (F β) (F γ) (Functor.map.{u, v} F _inst_1 β γ g) (Functor.map.{u, v} F _inst_1 α β f)) (Functor.map.{u, v} F _inst_1 α γ (Function.comp.{succ u, succ u, succ u} α β γ g f))
+  forall {F : Type.{u1} -> Type.{u2}} {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} [_inst_1 : Functor.{u1, u2} F] [_inst_2 : IsLawfulFunctor.{u1, u2} F _inst_1] (f : α -> β) (g : β -> γ), Eq.{succ u2} ((F α) -> (F γ)) (Function.comp.{succ u2, succ u2, succ u2} (F α) (F β) (F γ) (Functor.map.{u1, u2} F _inst_1 β γ g) (Functor.map.{u1, u2} F _inst_1 α β f)) (Functor.map.{u1, u2} F _inst_1 α γ (Function.comp.{succ u1, succ u1, succ u1} α β γ g f))
 but is expected to have type
-  forall {F : Type.{u} -> Type.{v}} {α : Type.{u}} {β : Type.{u}} {γ : Type.{u}} [inst._@.Mathlib.Control.Functor._hyg.107 : Functor.{u, v} F] [inst._@.Mathlib.Control.Functor._hyg.110 : LawfulFunctor.{u, v} F inst._@.Mathlib.Control.Functor._hyg.107] (f : α -> β) (g : β -> γ), Eq.{succ v} ((F α) -> (F γ)) (Function.comp.{succ v, succ v, succ v} (F α) (F β) (F γ) ((fun (x._@.Mathlib.Control.Functor._hyg.137 : β -> γ) (x._@.Mathlib.Control.Functor._hyg.139 : F β) => Functor.map.{u, v} F inst._@.Mathlib.Control.Functor._hyg.107 β γ x._@.Mathlib.Control.Functor._hyg.137 x._@.Mathlib.Control.Functor._hyg.139) g) ((fun (x._@.Mathlib.Control.Functor._hyg.154 : α -> β) (x._@.Mathlib.Control.Functor._hyg.156 : F α) => Functor.map.{u, v} F inst._@.Mathlib.Control.Functor._hyg.107 α β x._@.Mathlib.Control.Functor._hyg.154 x._@.Mathlib.Control.Functor._hyg.156) f)) ((fun (x._@.Mathlib.Control.Functor._hyg.171 : α -> γ) (x._@.Mathlib.Control.Functor._hyg.173 : F α) => Functor.map.{u, v} F inst._@.Mathlib.Control.Functor._hyg.107 α γ x._@.Mathlib.Control.Functor._hyg.171 x._@.Mathlib.Control.Functor._hyg.173) (Function.comp.{succ u, succ u, succ u} α β γ g f))
+  forall {F : Type.{u1} -> Type.{u2}} {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} [_inst_1 : Functor.{u1, u2} F] [_inst_2 : LawfulFunctor.{u1, u2} F _inst_1] (f : α -> β) (g : β -> γ), Eq.{succ u2} ((F α) -> (F γ)) (Function.comp.{succ u2, succ u2, succ u2} (F α) (F β) (F γ) ((fun (x._@.Mathlib.Control.Functor._hyg.137 : β -> γ) (x._@.Mathlib.Control.Functor._hyg.139 : F β) => Functor.map.{u1, u2} F _inst_1 β γ x._@.Mathlib.Control.Functor._hyg.137 x._@.Mathlib.Control.Functor._hyg.139) g) ((fun (x._@.Mathlib.Control.Functor._hyg.154 : α -> β) (x._@.Mathlib.Control.Functor._hyg.156 : F α) => Functor.map.{u1, u2} F _inst_1 α β x._@.Mathlib.Control.Functor._hyg.154 x._@.Mathlib.Control.Functor._hyg.156) f)) ((fun (x._@.Mathlib.Control.Functor._hyg.171 : α -> γ) (x._@.Mathlib.Control.Functor._hyg.173 : F α) => Functor.map.{u1, u2} F _inst_1 α γ x._@.Mathlib.Control.Functor._hyg.171 x._@.Mathlib.Control.Functor._hyg.173) (Function.comp.{succ u1, succ u1, succ u1} α β γ g f))
 Case conversion may be inaccurate. Consider using '#align functor.map_comp_map Functor.map_comp_mapₓ'. -/
 theorem Functor.map_comp_map (f : α → β) (g : β → γ) :
     ((· <$> ·) g ∘ (· <$> ·) f : F α → F γ) = (· <$> ·) (g ∘ f) := by
@@ -63,9 +63,9 @@ theorem Functor.map_comp_map (f : α → β) (g : β → γ) :
 
 /- warning: functor.ext -> Functor.ext is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u_1} -> Type.{u_2}} {F1 : Functor.{u_1, u_2} F} {F2 : Functor.{u_1, u_2} F} [_inst_3 : IsLawfulFunctor.{u_1, u_2} F F1] [_inst_4 : IsLawfulFunctor.{u_1, u_2} F F2], (forall (α : Type.{u_1}) (β : Type.{u_1}) (f : α -> β) (x : F α), Eq.{succ u_2} (F β) (Functor.map.{u_1, u_2} F F1 α β f x) (Functor.map.{u_1, u_2} F F2 α β f x)) -> (Eq.{succ (max (succ u_1) u_2)} (Functor.{u_1, u_2} F) F1 F2)
+  forall {F : Type.{u1} -> Type.{u2}} {F1 : Functor.{u1, u2} F} {F2 : Functor.{u1, u2} F} [_inst_3 : IsLawfulFunctor.{u1, u2} F F1] [_inst_4 : IsLawfulFunctor.{u1, u2} F F2], (forall (α : Type.{u1}) (β : Type.{u1}) (f : α -> β) (x : F α), Eq.{succ u2} (F β) (Functor.map.{u1, u2} F F1 α β f x) (Functor.map.{u1, u2} F F2 α β f x)) -> (Eq.{succ (max (succ u1) u2)} (Functor.{u1, u2} F) F1 F2)
 but is expected to have type
-  forall {F : Type.{u_1} -> Type.{u_2}} {F1 : Functor.{u_1, u_2} F} {F2 : Functor.{u_1, u_2} F} [inst._@.Mathlib.Control.Functor._hyg.229 : LawfulFunctor.{u_1, u_2} F F1] [inst._@.Mathlib.Control.Functor._hyg.233 : LawfulFunctor.{u_1, u_2} F F2], (forall (α : Type.{u_1}) (β : Type.{u_1}) (f : α -> β) (x : F α), Eq.{succ u_2} (F β) (Functor.map.{u_1, u_2} F F1 α β f x) (Functor.map.{u_1, u_2} F F2 α β f x)) -> (Eq.{max (succ u_2) (succ (succ u_1))} (Functor.{u_1, u_2} F) F1 F2)
+  forall {F : Type.{u2} -> Type.{u1}} {F1 : Functor.{u2, u1} F} {F2 : Functor.{u2, u1} F} [_inst_3 : LawfulFunctor.{u2, u1} F F1] [_inst_4 : LawfulFunctor.{u2, u1} F F2], (forall (α : Type.{u2}) (β : Type.{u2}) (f : α -> β) (x : F α), Eq.{succ u1} (F β) (Functor.map.{u2, u1} F F1 α β f x) (Functor.map.{u2, u1} F F2 α β f x)) -> (Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} F) F1 F2)
 Case conversion may be inaccurate. Consider using '#align functor.ext Functor.extₓ'. -/
 theorem Functor.ext {F} :
     ∀ {F1 : Functor F} {F2 : Functor F} [@IsLawfulFunctor F F1] [@IsLawfulFunctor F F2]
@@ -129,9 +129,9 @@ namespace Const
 
 /- warning: functor.const.ext -> Functor.Const.ext is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {x : Functor.Const.{u_1, u_2} α β} {y : Functor.Const.{u_1, u_2} α β}, (Eq.{succ u_1} α (Functor.Const.run.{u_1, u_2} α β x) (Functor.Const.run.{u_1, u_2} α β y)) -> (Eq.{succ u_1} (Functor.Const.{u_1, u_2} α β) x y)
+  forall {α : Type.{u1}} {β : Type.{u2}} {x : Functor.Const.{u1, u2} α β} {y : Functor.Const.{u1, u2} α β}, (Eq.{succ u1} α (Functor.Const.run.{u1, u2} α β x) (Functor.Const.run.{u1, u2} α β y)) -> (Eq.{succ u1} (Functor.Const.{u1, u2} α β) x y)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {x : Functor.Const.{u_1, u_2} α β} {y : Functor.Const.{u_1, u_2} α β}, (Eq.{succ u_1} α (Functor.Const.run.{u_1, u_2} α β x) (Functor.Const.run.{u_1, u_2} α β y)) -> (Eq.{succ u_1} (Functor.Const.{u_1, u_2} α β) x y)
+  forall {α : Type.{u2}} {β : Type.{u1}} {x : Functor.Const.{u2, u1} α β} {y : Functor.Const.{u2, u1} α β}, (Eq.{succ u2} α (Functor.Const.run.{u2, u1} α β x) (Functor.Const.run.{u2, u1} α β y)) -> (Eq.{succ u2} (Functor.Const.{u2, u1} α β) x y)
 Case conversion may be inaccurate. Consider using '#align functor.const.ext Functor.Const.extₓ'. -/
 protected theorem ext {α β} {x y : Const α β} (h : x.run = y.run) : x = y :=
   h
@@ -188,9 +188,9 @@ instance AddConst.functor {γ} : Functor (AddConst γ) :=
 
 /- warning: functor.add_const.is_lawful_functor -> Functor.AddConst.lawfulFunctor is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u_1}}, IsLawfulFunctor.{u_2, u_1} (Functor.AddConst.{u_1, u_2} γ) (Functor.AddConst.functor.{u_1, u_2} γ)
+  forall {γ : Type.{u1}}, IsLawfulFunctor.{u2, u1} (Functor.AddConst.{u1, u2} γ) (Functor.AddConst.functor.{u1, u2} γ)
 but is expected to have type
-  forall {γ : Type.{u_1}}, LawfulFunctor.{u_2, u_1} (Functor.AddConst.{u_1, u_2} γ) (Functor.AddConst.functor.{u_1, u_2} γ)
+  forall {γ : Type.{u1}}, LawfulFunctor.{u2, u1} (Functor.AddConst.{u1, u2} γ) (Functor.AddConst.functor.{u1, u2} γ)
 Case conversion may be inaccurate. Consider using '#align functor.add_const.is_lawful_functor Functor.AddConst.lawfulFunctorₓ'. -/
 instance AddConst.lawfulFunctor {γ} : IsLawfulFunctor (AddConst γ) :=
   @Const.is_lawful_functor γ
@@ -269,9 +269,9 @@ variable {α β γ : Type v}
 
 /- warning: functor.comp.id_map -> Functor.Comp.id_map is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u} -> Type.{w}} {G : Type.{v} -> Type.{u}} [_inst_1 : Functor.{u, w} F] [_inst_2 : Functor.{v, u} G] [_inst_3 : IsLawfulFunctor.{u, w} F _inst_1] [_inst_4 : IsLawfulFunctor.{v, u} G _inst_2] {α : Type.{v}} (x : Functor.Comp.{u, v, w} F G α), Eq.{succ w} (Functor.Comp.{u, v, w} F G α) (Functor.Comp.map.{u, v, w} F G _inst_1 _inst_2 α α (id.{succ v} α) x) x
+  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Functor.{u1, u3} F] [_inst_2 : Functor.{u2, u1} G] [_inst_3 : IsLawfulFunctor.{u1, u3} F _inst_1] [_inst_4 : IsLawfulFunctor.{u2, u1} G _inst_2] {α : Type.{u2}} (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (Functor.Comp.{u1, u2, u3} F G α) (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 α α (id.{succ u2} α) x) x
 but is expected to have type
-  forall {F : Type.{u} -> Type.{w}} {G : Type.{v} -> Type.{u}} [inst._@.Mathlib.Control.Functor._hyg.1220 : Functor.{u, w} F] [inst._@.Mathlib.Control.Functor._hyg.1223 : Functor.{v, u} G] [inst._@.Mathlib.Control.Functor._hyg.1226 : LawfulFunctor.{u, w} F inst._@.Mathlib.Control.Functor._hyg.1220] [inst._@.Mathlib.Control.Functor._hyg.1229 : LawfulFunctor.{v, u} G inst._@.Mathlib.Control.Functor._hyg.1223] {α : Type.{v}} (x : Functor.Comp.{u, v, w} F G α), Eq.{succ w} (Functor.Comp.{u, v, w} F G α) (Functor.Comp.map.{u, v, w} F G inst._@.Mathlib.Control.Functor._hyg.1220 inst._@.Mathlib.Control.Functor._hyg.1223 α α (id.{succ v} α) x) x
+  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Functor.{u1, u3} F] [_inst_2 : Functor.{u2, u1} G] [_inst_3 : LawfulFunctor.{u1, u3} F _inst_1] [_inst_4 : LawfulFunctor.{u2, u1} G _inst_2] {α : Type.{u2}} (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (Functor.Comp.{u1, u2, u3} F G α) (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 α α (id.{succ u2} α) x) x
 Case conversion may be inaccurate. Consider using '#align functor.comp.id_map Functor.Comp.id_mapₓ'. -/
 protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
   | comp.mk x => by simp [comp.map, Functor.map_id]
@@ -279,9 +279,9 @@ protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
 
 /- warning: functor.comp.comp_map -> Functor.Comp.comp_map is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u} -> Type.{w}} {G : Type.{v} -> Type.{u}} [_inst_1 : Functor.{u, w} F] [_inst_2 : Functor.{v, u} G] [_inst_3 : IsLawfulFunctor.{u, w} F _inst_1] [_inst_4 : IsLawfulFunctor.{v, u} G _inst_2] {α : Type.{v}} {β : Type.{v}} {γ : Type.{v}} (g' : α -> β) (h : β -> γ) (x : Functor.Comp.{u, v, w} F G α), Eq.{succ w} (Functor.Comp.{u, v, w} F G γ) (Functor.Comp.map.{u, v, w} F G _inst_1 _inst_2 α γ (Function.comp.{succ v, succ v, succ v} α β γ h g') x) (Functor.Comp.map.{u, v, w} F G _inst_1 _inst_2 β γ h (Functor.Comp.map.{u, v, w} F G _inst_1 _inst_2 α β g' x))
+  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Functor.{u1, u3} F] [_inst_2 : Functor.{u2, u1} G] [_inst_3 : IsLawfulFunctor.{u1, u3} F _inst_1] [_inst_4 : IsLawfulFunctor.{u2, u1} G _inst_2] {α : Type.{u2}} {β : Type.{u2}} {γ : Type.{u2}} (g' : α -> β) (h : β -> γ) (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (Functor.Comp.{u1, u2, u3} F G γ) (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 α γ (Function.comp.{succ u2, succ u2, succ u2} α β γ h g') x) (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 β γ h (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 α β g' x))
 but is expected to have type
-  forall {F : Type.{u} -> Type.{w}} {G : Type.{v} -> Type.{u}} [inst._@.Mathlib.Control.Functor._hyg.1289 : Functor.{u, w} F] [inst._@.Mathlib.Control.Functor._hyg.1292 : Functor.{v, u} G] [inst._@.Mathlib.Control.Functor._hyg.1295 : LawfulFunctor.{u, w} F inst._@.Mathlib.Control.Functor._hyg.1289] [inst._@.Mathlib.Control.Functor._hyg.1298 : LawfulFunctor.{v, u} G inst._@.Mathlib.Control.Functor._hyg.1292] {α : Type.{v}} {β : Type.{v}} {γ : Type.{v}} (g' : α -> β) (h : β -> γ) (x : Functor.Comp.{u, v, w} F G α), Eq.{succ w} (Functor.Comp.{u, v, w} F G γ) (Functor.Comp.map.{u, v, w} F G inst._@.Mathlib.Control.Functor._hyg.1289 inst._@.Mathlib.Control.Functor._hyg.1292 α γ (Function.comp.{succ v, succ v, succ v} α β γ h g') x) (Functor.Comp.map.{u, v, w} F G inst._@.Mathlib.Control.Functor._hyg.1289 inst._@.Mathlib.Control.Functor._hyg.1292 β γ h (Functor.Comp.map.{u, v, w} F G inst._@.Mathlib.Control.Functor._hyg.1289 inst._@.Mathlib.Control.Functor._hyg.1292 α β g' x))
+  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Functor.{u1, u3} F] [_inst_2 : Functor.{u2, u1} G] [_inst_3 : LawfulFunctor.{u1, u3} F _inst_1] [_inst_4 : LawfulFunctor.{u2, u1} G _inst_2] {α : Type.{u2}} {β : Type.{u2}} {γ : Type.{u2}} (g' : α -> β) (h : β -> γ) (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (Functor.Comp.{u1, u2, u3} F G γ) (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 α γ (Function.comp.{succ u2, succ u2, succ u2} α β γ h g') x) (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 β γ h (Functor.Comp.map.{u1, u2, u3} F G _inst_1 _inst_2 α β g' x))
 Case conversion may be inaccurate. Consider using '#align functor.comp.comp_map Functor.Comp.comp_mapₓ'. -/
 protected theorem comp_map (g' : α → β) (h : β → γ) :
     ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
@@ -295,9 +295,9 @@ instance : IsLawfulFunctor
 
 /- warning: functor.comp.functor_comp_id -> Functor.Comp.functor_comp_id is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u_1} -> Type.{u_2}} [AF : Functor.{u_1, u_2} F] [_inst_5 : IsLawfulFunctor.{u_1, u_2} F AF], Eq.{succ (max (succ u_1) u_2)} (Functor.{u_1, u_2} (Functor.Comp.{u_1, u_1, u_2} F (id.{succ (succ u_1)} Type.{u_1}))) (Functor.Comp.functor.{u_1, u_1, u_2} F (id.{succ (succ u_1)} Type.{u_1}) AF (Applicative.toFunctor.{u_1, u_1} (id.{succ (succ u_1)} Type.{u_1}) (Monad.toApplicative.{u_1, u_1} (id.{succ (succ u_1)} Type.{u_1}) id.monad.{u_1}))) AF
+  forall {F : Type.{u1} -> Type.{u2}} [AF : Functor.{u1, u2} F] [_inst_5 : IsLawfulFunctor.{u1, u2} F AF], Eq.{succ (max (succ u1) u2)} (Functor.{u1, u2} (Functor.Comp.{u1, u1, u2} F (id.{succ (succ u1)} Type.{u1}))) (Functor.Comp.functor.{u1, u1, u2} F (id.{succ (succ u1)} Type.{u1}) AF (Applicative.toFunctor.{u1, u1} (id.{succ (succ u1)} Type.{u1}) (Monad.toApplicative.{u1, u1} (id.{succ (succ u1)} Type.{u1}) id.monad.{u1}))) AF
 but is expected to have type
-  forall {F : Type.{u_1} -> Type.{u_2}} [AF : Functor.{u_1, u_2} F] [inst._@.Mathlib.Control.Functor._hyg.1428 : LawfulFunctor.{u_1, u_2} F AF], Eq.{max (succ u_2) (succ (succ u_1))} (Functor.{u_1, u_2} (Functor.Comp.{u_1, u_1, u_2} F Id.{u_1})) (Functor.Comp.functor.{u_1, u_1, u_2} F Id.{u_1} AF (Applicative.toFunctor.{u_1, u_1} Id.{u_1} (Monad.toApplicative.{u_1, u_1} Id.{u_1} Id.instMonadId.{u_1}))) AF
+  forall {F : Type.{u2} -> Type.{u1}} [AF : Functor.{u2, u1} F] [_inst_5 : LawfulFunctor.{u2, u1} F AF], Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} (Functor.Comp.{u2, u2, u1} F Id.{u2})) (Functor.Comp.functor.{u2, u2, u1} F Id.{u2} AF (Applicative.toFunctor.{u2, u2} Id.{u2} (Monad.toApplicative.{u2, u2} Id.{u2} Id.instMonadId.{u2}))) AF
 Case conversion may be inaccurate. Consider using '#align functor.comp.functor_comp_id Functor.Comp.functor_comp_idₓ'. -/
 theorem functor_comp_id {F} [AF : Functor F] [IsLawfulFunctor F] : @Comp.functor F id _ _ = AF :=
   @Functor.ext F _ AF (@Comp.is_lawful_functor F id _ _ _ _) _ fun α β f x => rfl
@@ -305,9 +305,9 @@ theorem functor_comp_id {F} [AF : Functor F] [IsLawfulFunctor F] : @Comp.functor
 
 /- warning: functor.comp.functor_id_comp -> Functor.Comp.functor_id_comp is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u_1} -> Type.{u_2}} [AF : Functor.{u_1, u_2} F] [_inst_5 : IsLawfulFunctor.{u_1, u_2} F AF], Eq.{succ (max (succ u_1) u_2)} (Functor.{u_1, u_2} (Functor.Comp.{u_2, u_1, u_2} (id.{succ (succ u_2)} Type.{u_2}) F)) (Functor.Comp.functor.{u_2, u_1, u_2} (id.{succ (succ u_2)} Type.{u_2}) F (Applicative.toFunctor.{u_2, u_2} (id.{succ (succ u_2)} Type.{u_2}) (Monad.toApplicative.{u_2, u_2} (id.{succ (succ u_2)} Type.{u_2}) id.monad.{u_2})) AF) AF
+  forall {F : Type.{u1} -> Type.{u2}} [AF : Functor.{u1, u2} F] [_inst_5 : IsLawfulFunctor.{u1, u2} F AF], Eq.{succ (max (succ u1) u2)} (Functor.{u1, u2} (Functor.Comp.{u2, u1, u2} (id.{succ (succ u2)} Type.{u2}) F)) (Functor.Comp.functor.{u2, u1, u2} (id.{succ (succ u2)} Type.{u2}) F (Applicative.toFunctor.{u2, u2} (id.{succ (succ u2)} Type.{u2}) (Monad.toApplicative.{u2, u2} (id.{succ (succ u2)} Type.{u2}) id.monad.{u2})) AF) AF
 but is expected to have type
-  forall {F : Type.{u_1} -> Type.{u_2}} [AF : Functor.{u_1, u_2} F] [inst._@.Mathlib.Control.Functor._hyg.1484 : LawfulFunctor.{u_1, u_2} F AF], Eq.{max (succ u_2) (succ (succ u_1))} (Functor.{u_1, u_2} (Functor.Comp.{u_2, u_1, u_2} Id.{u_2} F)) (Functor.Comp.functor.{u_2, u_1, u_2} Id.{u_2} F (Applicative.toFunctor.{u_2, u_2} Id.{u_2} (Monad.toApplicative.{u_2, u_2} Id.{u_2} Id.instMonadId.{u_2})) AF) AF
+  forall {F : Type.{u2} -> Type.{u1}} [AF : Functor.{u2, u1} F] [_inst_5 : LawfulFunctor.{u2, u1} F AF], Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} (Functor.Comp.{u1, u2, u1} Id.{u1} F)) (Functor.Comp.functor.{u1, u2, u1} Id.{u1} F (Applicative.toFunctor.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) AF) AF
 Case conversion may be inaccurate. Consider using '#align functor.comp.functor_id_comp Functor.Comp.functor_id_compₓ'. -/
 theorem functor_id_comp {F} [AF : Functor F] [IsLawfulFunctor F] : @Comp.functor id F _ _ = AF :=
   @Functor.ext F _ AF (@Comp.is_lawful_functor id F _ _ _ _) _ fun α β f x => rfl
@@ -345,9 +345,9 @@ protected theorem run_pure {α : Type v} : ∀ x : α, (pure x : Comp F G α).ru
 
 /- warning: functor.comp.run_seq -> Functor.Comp.run_seq is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u} -> Type.{w}} {G : Type.{v} -> Type.{u}} [_inst_1 : Applicative.{u, w} F] [_inst_2 : Applicative.{v, u} G] {α : Type.{v}} {β : Type.{v}} (f : Functor.Comp.{u, v, w} F G (α -> β)) (x : Functor.Comp.{u, v, w} F G α), Eq.{succ w} (F (G β)) (Functor.Comp.run.{u, v, w} F G β (Seq.seq.{v, w} (Functor.Comp.{u, v, w} F G) (Functor.Comp.hasSeq.{u, v, w} F G _inst_1 _inst_2) α β f x)) (Seq.seq.{u, w} F (Applicative.toHasSeq.{u, w} F _inst_1) (G α) (G β) (Functor.map.{u, w} F (Applicative.toFunctor.{u, w} F _inst_1) (G (α -> β)) ((G α) -> (G β)) (Seq.seq.{v, u} G (Applicative.toHasSeq.{v, u} G _inst_2) α β) (Functor.Comp.run.{u, v, w} F G (α -> β) f)) (Functor.Comp.run.{u, v, w} F G α x))
+  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Applicative.{u1, u3} F] [_inst_2 : Applicative.{u2, u1} G] {α : Type.{u2}} {β : Type.{u2}} (f : Functor.Comp.{u1, u2, u3} F G (α -> β)) (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (F (G β)) (Functor.Comp.run.{u1, u2, u3} F G β (Seq.seq.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.hasSeq.{u1, u2, u3} F G _inst_1 _inst_2) α β f x)) (Seq.seq.{u1, u3} F (Applicative.toHasSeq.{u1, u3} F _inst_1) (G α) (G β) (Functor.map.{u1, u3} F (Applicative.toFunctor.{u1, u3} F _inst_1) (G (α -> β)) ((G α) -> (G β)) (Seq.seq.{u2, u1} G (Applicative.toHasSeq.{u2, u1} G _inst_2) α β) (Functor.Comp.run.{u1, u2, u3} F G (α -> β) f)) (Functor.Comp.run.{u1, u2, u3} F G α x))
 but is expected to have type
-  forall {F : Type.{u} -> Type.{w}} {G : Type.{v} -> Type.{u}} [inst._@.Mathlib.Control.Functor._hyg.1816 : Applicative.{u, w} F] [inst._@.Mathlib.Control.Functor._hyg.1819 : Applicative.{v, u} G] {α : Type.{v}} {β : Type.{v}} (f : Functor.Comp.{u, v, w} F G (α -> β)) (x : Functor.Comp.{u, v, w} F G α), Eq.{succ w} (F (G β)) (Functor.Comp.run.{u, v, w} F G β (Seq.seq.{v, w} (Functor.Comp.{u, v, w} F G) (Functor.Comp.instSeqComp.{u, v, w} F G inst._@.Mathlib.Control.Functor._hyg.1816 inst._@.Mathlib.Control.Functor._hyg.1819) α β f (fun (x._@.Mathlib.Control.Functor._hyg.1850 : Unit) => x))) (Seq.seq.{u, w} F (Applicative.toSeq.{u, w} F inst._@.Mathlib.Control.Functor._hyg.1816) (G α) (G β) (Functor.map.{u, w} F (Applicative.toFunctor.{u, w} F inst._@.Mathlib.Control.Functor._hyg.1816) (G (α -> β)) ((G α) -> (G β)) (fun (x._@.Mathlib.Control.Functor._hyg.1863 : G (α -> β)) (x._@.Mathlib.Control.Functor._hyg.1865 : G α) => Seq.seq.{v, u} G (Applicative.toSeq.{v, u} G inst._@.Mathlib.Control.Functor._hyg.1819) α β x._@.Mathlib.Control.Functor._hyg.1863 (fun (x._@.Mathlib.Control.Functor._hyg.1878 : Unit) => x._@.Mathlib.Control.Functor._hyg.1865)) (Functor.Comp.run.{u, v, w} F G (α -> β) f)) (fun (x._@.Mathlib.Control.Functor._hyg.1886 : Unit) => Functor.Comp.run.{u, v, w} F G α x))
+  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Applicative.{u1, u3} F] [_inst_2 : Applicative.{u2, u1} G] {α : Type.{u2}} {β : Type.{u2}} (f : Functor.Comp.{u1, u2, u3} F G (α -> β)) (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (F (G β)) (Functor.Comp.run.{u1, u2, u3} F G β (Seq.seq.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.instSeqComp.{u1, u2, u3} F G _inst_1 _inst_2) α β f (fun (x._@.Mathlib.Control.Functor._hyg.1850 : Unit) => x))) (Seq.seq.{u1, u3} F (Applicative.toSeq.{u1, u3} F _inst_1) (G α) (G β) (Functor.map.{u1, u3} F (Applicative.toFunctor.{u1, u3} F _inst_1) (G (α -> β)) ((G α) -> (G β)) (fun (x._@.Mathlib.Control.Functor._hyg.1863 : G (α -> β)) (x._@.Mathlib.Control.Functor._hyg.1865 : G α) => Seq.seq.{u2, u1} G (Applicative.toSeq.{u2, u1} G _inst_2) α β x._@.Mathlib.Control.Functor._hyg.1863 (fun (x._@.Mathlib.Control.Functor._hyg.1878 : Unit) => x._@.Mathlib.Control.Functor._hyg.1865)) (Functor.Comp.run.{u1, u2, u3} F G (α -> β) f)) (fun (x._@.Mathlib.Control.Functor._hyg.1886 : Unit) => Functor.Comp.run.{u1, u2, u3} F G α x))
 Case conversion may be inaccurate. Consider using '#align functor.comp.run_seq Functor.Comp.run_seqₓ'. -/
 @[simp]
 protected theorem run_seq {α β : Type v} (f : Comp F G (α → β)) (x : Comp F G α) :
@@ -356,7 +356,9 @@ protected theorem run_seq {α β : Type v} (f : Comp F G (α → β)) (x : Comp 
 #align functor.comp.run_seq Functor.Comp.run_seq
 
 instance : Applicative (Comp F G) :=
-  { Comp.hasPure with map := @Comp.map F G _ _, seq := @Comp.seq F G _ _ }
+  { Comp.hasPure with 
+    map := @Comp.map F G _ _
+    seq := @Comp.seq F G _ _ }
 
 end Comp
 

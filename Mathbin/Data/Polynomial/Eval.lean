@@ -136,7 +136,9 @@ variable [Semiring T]
 theorem eval₂_sum (p : T[X]) (g : ℕ → T → R[X]) (x : S) :
     (p.Sum g).eval₂ f x = p.Sum fun n a => (g n a).eval₂ f x := by
   let T : R[X] →+ S :=
-    { toFun := eval₂ f x, map_zero' := eval₂_zero _ _, map_add' := fun p q => eval₂_add _ _ }
+    { toFun := eval₂ f x
+      map_zero' := eval₂_zero _ _
+      map_add' := fun p q => eval₂_add _ _ }
   have A : ∀ y, eval₂ f x y = T y := fun y => rfl
   simp only [A]
   rw [Sum, T.map_sum, Sum]
@@ -259,7 +261,9 @@ theorem eval₂_mul_eq_zero_of_right (p : R[X]) (hq : q.eval₂ f x = 0) : (p * 
 
 /-- `eval₂` as a `ring_hom` -/
 def eval₂RingHom (f : R →+* S) (x : S) : R[X] →+* S :=
-  { eval₂AddMonoidHom f x with map_one' := eval₂_one _ _, map_mul' := fun _ _ => eval₂_mul _ _ }
+  { eval₂AddMonoidHom f x with 
+    map_one' := eval₂_one _ _
+    map_mul' := fun _ _ => eval₂_mul _ _ }
 #align polynomial.eval₂_ring_hom Polynomial.eval₂RingHom
 
 @[simp]

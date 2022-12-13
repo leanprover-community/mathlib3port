@@ -98,8 +98,9 @@ unsafe def pretty_cases : tactic Unit :=
 #align tactic.interactive.pretty_cases tactic.interactive.pretty_cases
 
 add_tactic_doc
-  { Name := "pretty_cases", category := DocCategory.tactic,
-    declNames := [`` tactic.interactive.pretty_cases],
+  { Name := "pretty_cases"
+    category := DocCategory.tactic
+    declNames := [`` tactic.interactive.pretty_cases]
     tags := ["context management", "goal management"] }
 
 end Interactive

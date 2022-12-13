@@ -191,8 +191,10 @@ theorem monomial_zero_one : monomial R (0 : σ →₀ ℕ) 1 = 1 :=
 #align mv_power_series.monomial_zero_one MvPowerSeries.monomial_zero_one
 
 instance : AddMonoidWithOne (MvPowerSeries σ R) :=
-  { MvPowerSeries.addMonoid with natCast := fun n => monomial R 0 n,
-    nat_cast_zero := by simp [Nat.cast], nat_cast_succ := by simp [Nat.cast, monomial_zero_one],
+  { MvPowerSeries.addMonoid with 
+    natCast := fun n => monomial R 0 n
+    nat_cast_zero := by simp [Nat.cast]
+    nat_cast_succ := by simp [Nat.cast, monomial_zero_one]
     one := 1 }
 
 instance : Mul (MvPowerSeries σ R) :=
@@ -285,9 +287,12 @@ protected theorem mul_assoc (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ * �
 
 instance : Semiring (MvPowerSeries σ R) :=
   { MvPowerSeries.addMonoidWithOne, MvPowerSeries.hasMul, MvPowerSeries.addCommMonoid with
-    mul_one := MvPowerSeries.mul_one, one_mul := MvPowerSeries.one_mul,
-    mul_assoc := MvPowerSeries.mul_assoc, mul_zero := MvPowerSeries.mul_zero,
-    zero_mul := MvPowerSeries.zero_mul, left_distrib := MvPowerSeries.mul_add,
+    mul_one := MvPowerSeries.mul_one
+    one_mul := MvPowerSeries.one_mul
+    mul_assoc := MvPowerSeries.mul_assoc
+    mul_zero := MvPowerSeries.mul_zero
+    zero_mul := MvPowerSeries.zero_mul
+    left_distrib := MvPowerSeries.mul_add
     right_distrib := MvPowerSeries.add_mul }
 
 end Semiring
@@ -327,8 +332,9 @@ variable (σ) (R)
 
 /-- The constant multivariate formal power series.-/
 def c : R →+* MvPowerSeries σ R :=
-  { monomial R (0 : σ →₀ ℕ) with map_one' := rfl,
-    map_mul' := fun a b => (monomial_mul_monomial 0 0 a b).symm,
+  { monomial R (0 : σ →₀ ℕ) with 
+    map_one' := rfl
+    map_mul' := fun a b => (monomial_mul_monomial 0 0 a b).symm
     map_zero' := (monomial R (0 : _)).map_zero }
 #align mv_power_series.C MvPowerSeries.c
 
@@ -417,8 +423,10 @@ variable (σ) (R)
 
 /-- The constant coefficient of a formal power series.-/
 def constantCoeff : MvPowerSeries σ R →+* R :=
-  { coeff R (0 : σ →₀ ℕ) with toFun := coeff R (0 : σ →₀ ℕ), map_one' := coeff_zero_one,
-    map_mul' := fun φ ψ => by simp [coeff_mul, support_single_ne_zero],
+  { coeff R (0 : σ →₀ ℕ) with 
+    toFun := coeff R (0 : σ →₀ ℕ)
+    map_one' := coeff_zero_one
+    map_mul' := fun φ ψ => by simp [coeff_mul, support_single_ne_zero]
     map_zero' := LinearMap.map_zero _ }
 #align mv_power_series.constant_coeff MvPowerSeries.constantCoeff
 
@@ -567,10 +575,10 @@ instance : Algebra R (MvPowerSeries σ A) :=
   { MvPowerSeries.module with
     commutes' := fun a φ => by 
       ext n
-      simp [Algebra.commutes],
+      simp [Algebra.commutes]
     smul_def' := fun a σ => by 
       ext n
-      simp [(coeff A n).map_smul_of_tower a, Algebra.smul_def],
+      simp [(coeff A n).map_smul_of_tower a, Algebra.smul_def]
     toRingHom := (MvPowerSeries.map σ (algebraMap R A)).comp (c σ R) }
 
 theorem C_eq_algebra_map : c σ R = algebraMap R (MvPowerSeries σ R) :=

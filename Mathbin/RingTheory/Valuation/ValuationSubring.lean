@@ -255,9 +255,9 @@ section Order
 
 instance : SemilatticeSup (ValuationSubring K) :=
   { (inferInstance : PartialOrder (ValuationSubring K)) with
-    sup := fun R S => ofLe R (R.toSubring ⊔ S.toSubring) <| le_sup_left,
-    le_sup_left := fun R S x hx => (le_sup_left : R.toSubring ≤ R.toSubring ⊔ S.toSubring) hx,
-    le_sup_right := fun R S x hx => (le_sup_right : S.toSubring ≤ R.toSubring ⊔ S.toSubring) hx,
+    sup := fun R S => ofLe R (R.toSubring ⊔ S.toSubring) <| le_sup_left
+    le_sup_left := fun R S x hx => (le_sup_left : R.toSubring ≤ R.toSubring ⊔ S.toSubring) hx
+    le_sup_right := fun R S x hx => (le_sup_right : S.toSubring ≤ R.toSubring ⊔ S.toSubring) hx
     sup_le := fun R S T hR hT x hx => (sup_le hR hT : R.toSubring ⊔ S.toSubring ≤ T.toSubring) hx }
 
 /-- The ring homomorphism induced by the partial order. -/
@@ -427,7 +427,7 @@ instance linearOrderOverring : LinearOrder { S | A ≤ S } :=
   { (inferInstance : PartialOrder _) with
     le_total :=
       let i : IsTotal (PrimeSpectrum A) (· ≤ ·) := ⟨fun ⟨x, _⟩ ⟨y, _⟩ => LE.le.is_total.Total x y⟩
-      (prime_spectrum_order_equiv A).symm.toRelEmbedding.IsTotal.Total,
+      (prime_spectrum_order_equiv A).symm.toRelEmbedding.IsTotal.Total
     decidableLe := inferInstance }
 #align valuation_subring.linear_order_overring ValuationSubring.linearOrderOverring
 
@@ -514,9 +514,10 @@ def unitGroupMulEquiv :
     A.unitGroup ≃*
       Aˣ where 
   toFun x :=
-    { val := ⟨x, mem_of_valuation_le_one A _ x.Prop.le⟩,
-      inv := ⟨↑x⁻¹, mem_of_valuation_le_one _ _ x⁻¹.Prop.le⟩,
-      val_inv := Subtype.ext (Units.mul_inv x), inv_val := Subtype.ext (Units.inv_mul x) }
+    { val := ⟨x, mem_of_valuation_le_one A _ x.Prop.le⟩
+      inv := ⟨↑x⁻¹, mem_of_valuation_le_one _ _ x⁻¹.Prop.le⟩
+      val_inv := Subtype.ext (Units.mul_inv x)
+      inv_val := Subtype.ext (Units.inv_mul x) }
   invFun x := ⟨Units.map A.Subtype.toMonoidHom x, A.valuation_unit x⟩
   left_inv a := by 
     ext

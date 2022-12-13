@@ -71,9 +71,9 @@ variable {rα rβ}
 
 /- warning: acc.prod_game_add -> Acc.prod_gameAdd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u_1} α rα a) -> (Acc.{succ u_2} β rβ b) -> (Acc.{max (succ u_1) (succ u_2)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ) (Prod.mk.{u_1, u_2} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u1} α rα a) -> (Acc.{succ u2} β rβ b) -> (Acc.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.GameAdd.{u1, u2} α β rα rβ) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u_1} α rα a) -> (Acc.{succ u_2} β rβ b) -> (Acc.{max (succ u_2) (succ u_1)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ) (Prod.mk.{u_1, u_2} α β a b))
+  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u2} α rα a) -> (Acc.{succ u1} β rβ b) -> (Acc.{max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.GameAdd.{u2, u1} α β rα rβ) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align acc.prod_game_add Acc.prod_gameAddₓ'. -/
 /-- If `a` is accessible under `rα` and `b` is accessible under `rβ`, then `(a, b)` is
   accessible under `prod.game_add rα rβ`. Notice that `prod.lex_accessible` requires the
@@ -89,9 +89,9 @@ theorem Acc.prod_gameAdd {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.Gam
 
 /- warning: well_founded.prod_game_add -> WellFounded.prod_gameAdd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u_1} α rα) -> (WellFounded.{succ u_2} β rβ) -> (WellFounded.{max (succ u_1) (succ u_2)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ))
+  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u1} α rα) -> (WellFounded.{succ u2} β rβ) -> (WellFounded.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.GameAdd.{u1, u2} α β rα rβ))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u_1} α rα) -> (WellFounded.{succ u_2} β rβ) -> (WellFounded.{max (succ u_2) (succ u_1)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ))
+  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u2} α rα) -> (WellFounded.{succ u1} β rβ) -> (WellFounded.{max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.GameAdd.{u2, u1} α β rα rβ))
 Case conversion may be inaccurate. Consider using '#align well_founded.prod_game_add WellFounded.prod_gameAddₓ'. -/
 /-- The sum of two well-founded games is well-founded. -/
 theorem WellFounded.prod_gameAdd (hα : WellFounded rα) (hβ : WellFounded rβ) :

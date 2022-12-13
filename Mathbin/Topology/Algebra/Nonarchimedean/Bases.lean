@@ -49,7 +49,9 @@ theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A)
     (inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j) (mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i)
     (left_mul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x * y) ⁻¹' B i) :
     RingSubgroupsBasis B :=
-  { inter, mul, leftMul,
+  { inter
+    mul
+    leftMul
     rightMul := by 
       intro x i
       cases' leftMul x i with j hj
@@ -320,7 +322,8 @@ variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBas
   (hsmul : ∀ (m : A) (i : ι), ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
 
 theorem SubmodulesRingBasis.to_submodules_basis : SubmodulesBasis B :=
-  { inter := hB.inter, smul := hsmul }
+  { inter := hB.inter
+    smul := hsmul }
 #align submodules_ring_basis.to_submodules_basis SubmodulesRingBasis.to_submodules_basis
 
 example [Nonempty ι] : hB.topology = (hB.to_submodules_basis hsmul).topology :=
@@ -339,7 +342,7 @@ structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → S
 
 theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
-  { inter := hB.inter,
+  { inter := hB.inter
     smul := by 
       letI := BR.topology
       intro m i

@@ -92,16 +92,16 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun g h =>
         { toFun := fun X =>
-            Over.homMk (pullback.lift X.left g.Hom (Over.w X)) (pullback.lift_snd _ _ _),
+            Over.homMk (pullback.lift X.left g.Hom (Over.w X)) (pullback.lift_snd _ _ _)
           invFun := fun Y => by 
             refine' over.hom_mk _ _
             refine' Y.left ≫ pullback.fst
             dsimp
-            rw [← over.w Y, category.assoc, pullback.condition, category.assoc]; rfl,
+            rw [← over.w Y, category.assoc, pullback.condition, category.assoc]; rfl
           left_inv := fun X => by 
             ext
             dsimp
-            simp,
+            simp
           right_inv := fun Y => by 
             ext; dsimp
             simp only [pullback.lift_fst]

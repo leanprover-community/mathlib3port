@@ -383,8 +383,8 @@ theorem mod_by_monic_hom_root (h : IsAdjoinRootMonic S f) (hdeg : 1 < natDegree 
 Auxiliary definition for `is_adjoin_root_monic.power_basis`. -/
 def basis (h : IsAdjoinRootMonic S f) : Basis (Fin (natDegree f)) R S :=
   Basis.of_repr
-    { toFun := fun x => (h.modByMonicHom x).toFinsupp.comapDomain coe (Fin.coe_injective.InjOn _),
-      invFun := fun g => h.map (of_finsupp (g.mapDomain coe)),
+    { toFun := fun x => (h.modByMonicHom x).toFinsupp.comapDomain coe (Fin.coe_injective.InjOn _)
+      invFun := fun g => h.map (of_finsupp (g.mapDomain coe))
       left_inv := fun x => by 
         cases subsingleton_or_nontrivial R
         · haveI := h.subsingleton
@@ -400,7 +400,7 @@ def basis (h : IsAdjoinRootMonic S f) : Basis (Fin (natDegree f)) R S :=
         · simp [hx]
         refine' coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_le _ hi)
         rw [nat_degree_lt_nat_degree_iff hx]
-        · exact degree_mod_by_monic_lt _ h.monic,
+        · exact degree_mod_by_monic_lt _ h.monic
       right_inv := fun g => by 
         nontriviality R
         ext i
@@ -412,10 +412,9 @@ def basis (h : IsAdjoinRootMonic S f) : Basis (Fin (natDegree f)) R S :=
         rw [Polynomial.coeff, Finsupp.map_domain_notin_range]
         rw [Set.mem_range, not_exists]
         rintro i rfl
-        exact i.prop.not_le hm,
+        exact i.prop.not_le hm
       map_add' := fun x y => by
-        simp only [map_add, Finsupp.comap_domain_add_of_injective Fin.coe_injective,
-          to_finsupp_add],
+        simp only [map_add, Finsupp.comap_domain_add_of_injective Fin.coe_injective, to_finsupp_add]
       map_smul' := fun c x => by
         simp only [map_smul, Finsupp.comap_domain_smul_of_injective Fin.coe_injective,
           RingHom.id_apply, to_finsupp_smul] }
@@ -476,7 +475,8 @@ def liftPolyₗ {T : Type _} [AddCommGroup T] [Module R T] (h : IsAdjoinRootMoni
 -/
 def coeff (h : IsAdjoinRootMonic S f) : S →ₗ[R] ℕ → R :=
   h.liftPolyₗ
-    { toFun := Polynomial.coeff, map_add' := fun p q => funext (Polynomial.coeff_add p q),
+    { toFun := Polynomial.coeff
+      map_add' := fun p q => funext (Polynomial.coeff_add p q)
       map_smul' := fun c p => funext (Polynomial.coeff_smul c p) }
 #align is_adjoin_root_monic.coeff IsAdjoinRootMonic.coeff
 
@@ -602,9 +602,10 @@ This is the converse of `is_adjoin_root.of_equiv`: this turns an `is_adjoin_root
 `alg_equiv`, and `is_adjoin_root.of_equiv` turns an `alg_equiv` into an `is_adjoin_root`.
 -/
 def aequiv (h : IsAdjoinRoot S f) (h' : IsAdjoinRoot T f) : S ≃ₐ[R] T :=
-  { h.liftHom h'.root h'.aeval_root with toFun := h.liftHom h'.root h'.aeval_root,
-    invFun := h'.liftHom h.root h.aeval_root,
-    left_inv := fun x => by rw [← h.map_repr x, lift_hom_map, aeval_eq, lift_hom_map, aeval_eq],
+  { h.liftHom h'.root h'.aeval_root with
+    toFun := h.liftHom h'.root h'.aeval_root
+    invFun := h'.liftHom h.root h.aeval_root
+    left_inv := fun x => by rw [← h.map_repr x, lift_hom_map, aeval_eq, lift_hom_map, aeval_eq]
     right_inv := fun x => by rw [← h'.map_repr x, lift_hom_map, aeval_eq, lift_hom_map, aeval_eq] }
 #align is_adjoin_root.aequiv IsAdjoinRoot.aequiv
 

@@ -23,8 +23,12 @@ variable (C : Type u) [Category.{v} C]
 
 /-- Equivalence between two empty categories. -/
 def emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
-  Equivalence.mk { obj := PEmpty.elim ∘ discrete.as, map := fun x => x.as.elim }
-    { obj := PEmpty.elim ∘ discrete.as, map := fun x => x.as.elim } (by tidy) (by tidy)
+  Equivalence.mk
+    { obj := PEmpty.elim ∘ discrete.as
+      map := fun x => x.as.elim }
+    { obj := PEmpty.elim ∘ discrete.as
+      map := fun x => x.as.elim }
+    (by tidy) (by tidy)
 #align category_theory.functor.empty_equivalence CategoryTheory.Functor.emptyEquivalence
 
 /-- The canonical functor out of the empty category. -/

@@ -416,8 +416,9 @@ instead of `tauto`.
 that it is unable to solve before failing.
 -/
 add_tactic_doc
-  { Name := "tautology", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.tautology, `tactic.interactive.tauto],
+  { Name := "tautology"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.tautology, `tactic.interactive.tauto]
     tags := ["logic", "decision procedure"] }
 
 end Interactive

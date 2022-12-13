@@ -112,14 +112,12 @@ open Pointwise
 /-- The submonoid with every element inverted. -/
 @[to_additive " The additive submonoid with every element negated. "]
 protected def hasInv :
-    Inv
-      (Submonoid
-        G) where inv S :=
-    { carrier := (S : Set G)⁻¹,
+    Inv (Submonoid G) where inv S :=
+    { carrier := (S : Set G)⁻¹
       one_mem' :=
         show (1 : G)⁻¹ ∈ S by 
           rw [inv_one]
-          exact S.one_mem,
+          exact S.one_mem
       mul_mem' := fun a b (ha : a⁻¹ ∈ S) (hb : b⁻¹ ∈ S) =>
         show (a * b)⁻¹ ∈ S by 
           rw [mul_inv_rev]
@@ -571,7 +569,8 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
       simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm,
         smul_mul_assoc]
       solve_by_elim (config :=
-        { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
+        { max_depth := 4
+          discharger := tactic.interactive.apply_instance }) [add_mem _ _,
         zero_mem _]
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩
@@ -623,14 +622,15 @@ variable [NonUnitalNonAssocRing R]
 
 This is available as an instance in the `pointwise` locale. -/
 protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
-  { AddSubmonoid.hasInvolutiveNeg with neg := Neg.neg,
+  { AddSubmonoid.hasInvolutiveNeg with 
+    neg := Neg.neg
     neg_mul := fun x y => by
       refine'
           le_antisymm (mul_le.2 fun m hm n hn => _)
             ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
         simp only [AddSubmonoid.mem_neg, ← neg_mul] at *
       · exact mul_mem_mul hm hn
-      · exact mul_mem_mul (neg_mem_neg.2 hm) hn,
+      · exact mul_mem_mul (neg_mem_neg.2 hm) hn
     mul_neg := fun x y => by
       refine'
           le_antisymm (mul_le.2 fun m hm n hn => _)
@@ -681,7 +681,9 @@ section Semiring
 variable [Semiring R]
 
 instance : Monoid (AddSubmonoid R) :=
-  { AddSubmonoid.semigroup, AddSubmonoid.mulOneClass with one := 1, mul := (· * ·) }
+  { AddSubmonoid.semigroup, AddSubmonoid.mulOneClass with
+    one := 1
+    mul := (· * ·) }
 
 theorem closure_pow (s : Set R) : ∀ n : ℕ, closure s ^ n = closure (s ^ n)
   | 0 => by rw [pow_zero, pow_zero, one_eq_closure_one_set]

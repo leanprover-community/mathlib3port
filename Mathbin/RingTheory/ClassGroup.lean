@@ -51,9 +51,9 @@ irreducible_def toPrincipalIdeal : Kˣ →* (FractionalIdeal R⁰ K)ˣ :=
   { toFun := fun x =>
       ⟨spanSingleton _ x, spanSingleton _ x⁻¹, by
         simp only [span_singleton_one, Units.mul_inv', span_singleton_mul_span_singleton], by
-        simp only [span_singleton_one, Units.inv_mul', span_singleton_mul_span_singleton]⟩,
+        simp only [span_singleton_one, Units.inv_mul', span_singleton_mul_span_singleton]⟩
     map_mul' := fun x y =>
-      ext (by simp only [Units.val_mk, Units.val_mul, span_singleton_mul_span_singleton]),
+      ext (by simp only [Units.val_mk, Units.val_mul, span_singleton_mul_span_singleton])
     map_one' := ext (by simp only [span_singleton_one, Units.val_mk, Units.val_one]) }
 #align to_principal_ideal toPrincipalIdeal
 

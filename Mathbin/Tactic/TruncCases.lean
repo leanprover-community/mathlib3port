@@ -113,6 +113,8 @@ end Interactive
 end Tactic
 
 add_tactic_doc
-  { Name := "trunc_cases", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.trunc_cases], tags := ["case bashing"] }
+  { Name := "trunc_cases"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.trunc_cases]
+    tags := ["case bashing"] }
 

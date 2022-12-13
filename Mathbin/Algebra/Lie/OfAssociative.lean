@@ -229,7 +229,10 @@ def LieModule.toEndomorphism :
     L →ₗ⁅R⁆
       Module.EndCat R
         M where 
-  toFun x := { toFun := fun m => ⁅x, m⁆, map_add' := lie_add x, map_smul' := fun t => lie_smul t x }
+  toFun x :=
+    { toFun := fun m => ⁅x, m⁆
+      map_add' := lie_add x
+      map_smul' := fun t => lie_smul t x }
   map_add' x y := by 
     ext m
     apply add_lie
@@ -370,7 +373,8 @@ variable (e : A₁ ≃ₐ[R] A₂)
 
 /-- An equivalence of associative algebras is an equivalence of associated Lie algebras. -/
 def toLieEquiv : A₁ ≃ₗ⁅R⁆ A₂ :=
-  { e.toLinearEquiv with toFun := e.toFun,
+  { e.toLinearEquiv with 
+    toFun := e.toFun
     map_lie' := fun x y => by simp [LieRing.of_associative_ring_bracket] }
 #align alg_equiv.to_lie_equiv AlgEquiv.toLieEquiv
 

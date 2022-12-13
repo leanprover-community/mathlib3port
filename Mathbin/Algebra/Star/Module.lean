@@ -75,7 +75,9 @@ then `star` is a semilinear equivalence. -/
 @[simps]
 def starLinearEquiv (R : Type _) {A : Type _} [CommRing R] [StarRing R] [Semiring A] [StarRing A]
     [Module R A] [StarModule R A] : A ≃ₗ⋆[R] A :=
-  { starAddEquiv with toFun := star, map_smul' := star_smul }
+  { starAddEquiv with 
+    toFun := star
+    map_smul' := star_smul }
 #align star_linear_equiv starLinearEquiv
 
 variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [HasTrivialStar R]

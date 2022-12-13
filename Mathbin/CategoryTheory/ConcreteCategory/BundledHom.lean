@@ -54,10 +54,12 @@ This instance generates the type-class problem `bundled_hom ?m` (which is why th
 `[nolint]`). Currently that is not a problem, as there are almost no instances of `bundled_hom`. -/
 @[nolint dangerous_instance]
 instance category : Category (Bundled c) := by
-  refine'
-          { Hom := fun X Y => @hom X Y X.str Y.str, id := fun X => @bundled_hom.id c hom 𝒞 X X.str,
-            comp := fun X Y Z f g => @bundled_hom.comp c hom 𝒞 X Y Z X.str Y.str Z.str g f,
-            comp_id' := _, id_comp' := _, assoc' := _ } <;>
+  refine' { Hom := fun X Y => @hom X Y X.str Y.str
+            id := fun X => @bundled_hom.id c hom 𝒞 X X.str
+            comp := fun X Y Z f g => @bundled_hom.comp c hom 𝒞 X Y Z X.str Y.str Z.str g f
+            comp_id' := _
+            id_comp' := _
+            assoc' := _ } <;>
         intros <;>
       apply 𝒞.hom_ext <;>
     simp only [𝒞.id_to_fun, 𝒞.comp_to_fun, Function.left_id, Function.right_id]
@@ -73,8 +75,9 @@ instance concreteCategory :
       (Bundled
         c) where 
   forget :=
-    { obj := fun X => X, map := fun X Y f => 𝒞.toFun X.str Y.str f,
-      map_id' := fun X => 𝒞.id_to_fun X.str,
+    { obj := fun X => X
+      map := fun X Y f => 𝒞.toFun X.str Y.str f
+      map_id' := fun X => 𝒞.id_to_fun X.str
       map_comp' := by intros <;> erw [𝒞.comp_to_fun] <;> rfl }
   forget_faithful := { map_injective' := by intros <;> apply 𝒞.hom_ext }
 #align category_theory.bundled_hom.concrete_category CategoryTheory.BundledHom.concreteCategory
@@ -150,7 +153,9 @@ instance bundledHomOfParentProjection (F : ∀ {α}, d α → c α) [ParentProje
 
 instance forget₂ (F : ∀ {α}, d α → c α) [ParentProjection @F] :
     HasForget₂ (Bundled d)
-      (Bundled c) where forget₂ := { obj := fun X => ⟨X, F X.2⟩, map := fun X Y f => f }
+      (Bundled c) where forget₂ :=
+    { obj := fun X => ⟨X, F X.2⟩
+      map := fun X Y f => f }
 #align category_theory.bundled_hom.forget₂ CategoryTheory.BundledHom.forget₂
 
 instance forget₂Full (F : ∀ {α}, d α → c α) [ParentProjection @F] :

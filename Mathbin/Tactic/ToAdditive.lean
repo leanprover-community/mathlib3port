@@ -614,7 +614,9 @@ protected unsafe def attr :
 #align to_additive.attr to_additive.attr
 
 add_tactic_doc
-  { Name := "to_additive", category := DocCategory.attr, declNames := [`to_additive.attr],
+  { Name := "to_additive"
+    category := DocCategory.attr
+    declNames := [`to_additive.attr]
     tags := ["transport", "environment", "lemma derivation"] }
 
 end ToAdditive

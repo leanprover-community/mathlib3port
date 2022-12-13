@@ -226,14 +226,16 @@ variable [TopologicalSpace α] [GroupWithZero α] [HasContinuousMul α]
 /-- Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mulLeft₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equiv.mulLeft₀ c hc with continuous_to_fun := continuous_mul_left _,
+  { Equiv.mulLeft₀ c hc with 
+    continuous_to_fun := continuous_mul_left _
     continuous_inv_fun := continuous_mul_left _ }
 #align homeomorph.mul_left₀ Homeomorph.mulLeft₀
 
 /-- Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mulRight₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equiv.mulRight₀ c hc with continuous_to_fun := continuous_mul_right _,
+  { Equiv.mulRight₀ c hc with 
+    continuous_to_fun := continuous_mul_right _
     continuous_inv_fun := continuous_mul_right _ }
 #align homeomorph.mul_right₀ Homeomorph.mulRight₀
 

@@ -62,7 +62,10 @@ instance has_limits_of_size :
       (Type
         max v
           u) where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
+    { HasLimit := fun F =>
+        has_limit.mk
+          { Cone := limit_cone F
+            IsLimit := limit_cone_is_limit F } }
 #align
   category_theory.limits.types.has_limits_of_size CategoryTheory.Limits.Types.has_limits_of_size
 
@@ -240,7 +243,7 @@ def colimitCocone (F : J ⥤ Type max v u) :
     Cocone F where 
   x := Quot F
   ι :=
-    { app := fun j x => Quot.mk _ ⟨j, x⟩,
+    { app := fun j x => Quot.mk _ ⟨j, x⟩
       naturality' := fun j j' f => funext fun x => Eq.symm (Quot.sound ⟨f, rfl⟩) }
 #align category_theory.limits.types.colimit_cocone CategoryTheory.Limits.Types.colimitCocone
 
@@ -266,7 +269,9 @@ instance has_colimits_of_size :
         max v
           u) where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F =>
-        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+        has_colimit.mk
+          { Cocone := colimit_cocone F
+            IsColimit := colimit_cocone_is_colimit F } }
 #align
   category_theory.limits.types.has_colimits_of_size CategoryTheory.Limits.Types.has_colimits_of_size
 

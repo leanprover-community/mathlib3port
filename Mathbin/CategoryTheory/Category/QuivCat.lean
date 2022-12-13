@@ -72,7 +72,8 @@ def free : Quiv.{v, u} ⥤
       Cat.{max u v, u} where 
   obj V := CatCat.of (Paths V)
   map V W F :=
-    { obj := fun X => F.obj X, map := fun X Y f => F.mapPath f,
+    { obj := fun X => F.obj X
+      map := fun X Y f => F.mapPath f
       map_comp' := fun X Y Z f g => F.map_path_comp f g }
   map_id' V := by 
     change (show paths V ⥤ _ from _) = _
@@ -107,18 +108,19 @@ The adjunction between forming the free category on a quiver, and forgetting a c
 def adj : Cat.free ⊣ Quiv.forget :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun V C =>
-        { toFun := fun F => Paths.of.comp F.toPrefunctor, invFun := fun F => lift F,
+        { toFun := fun F => Paths.of.comp F.toPrefunctor
+          invFun := fun F => lift F
           left_inv := fun F => by 
             ext
             · erw [(eq_conj_eq_to_hom _).symm]
               apply category.id_comp
-            rfl,
+            rfl
           right_inv := by 
             rintro ⟨obj, map⟩
             dsimp only [Prefunctor.comp]
             congr
             ext (X Y f)
-            exact category.id_comp _ },
+            exact category.id_comp _ }
       hom_equiv_naturality_left_symm' := fun V W C f g => by
         change (show paths V ⥤ _ from _) = _
         ext

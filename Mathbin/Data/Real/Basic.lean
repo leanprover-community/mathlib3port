@@ -157,15 +157,25 @@ theorem cauchy_inv : ∀ f, (f⁻¹ : ℝ).cauchy = f.cauchy⁻¹
 /-- `real.equiv_Cauchy` as a ring equivalence. -/
 @[simps]
 def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.CauchyCat :=
-  { equivCauchy with toFun := cauchy, invFun := of_cauchy, map_add' := cauchy_add,
+  { equivCauchy with 
+    toFun := cauchy
+    invFun := of_cauchy
+    map_add' := cauchy_add
     map_mul' := cauchy_mul }
 #align real.ring_equiv_Cauchy Real.ringEquivCauchy
 
 instance : CommRing ℝ := by
   refine_struct
-            { zero := (0 : ℝ), one := (1 : ℝ), mul := (· * ·), add := (· + ·), neg := @Neg.neg ℝ _,
-              sub := fun a b => a + -b, natCast := fun n => ⟨n⟩, intCast := fun n => ⟨n⟩,
-              npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩,
+            { zero := (0 : ℝ)
+              one := (1 : ℝ)
+              mul := (· * ·)
+              add := (· + ·)
+              neg := @Neg.neg ℝ _
+              sub := fun a b => a + -b
+              natCast := fun n => ⟨n⟩
+              intCast := fun n => ⟨n⟩
+              npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩
+              nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩
               zsmul := @zsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@Neg.neg ℝ _⟩ } <;>
           repeat' rintro ⟨_⟩ <;>
         try rfl <;>
@@ -369,13 +379,14 @@ protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b := by
 
 instance : StrictOrderedCommRing ℝ :=
   { Real.commRing, Real.partialOrder, Real.semiring with
-    exists_pair_ne := ⟨0, 1, Real.zero_lt_one.Ne⟩,
+    exists_pair_ne := ⟨0, 1, Real.zero_lt_one.Ne⟩
     add_le_add_left := by 
       simp only [le_iff_eq_or_lt]
       rintro a b ⟨rfl, h⟩
       · simp
-      · exact fun c => Or.inr ((add_lt_add_iff_left c).2 ‹_›),
-    zero_le_one := le_of_lt Real.zero_lt_one, mul_pos := @Real.mul_pos }
+      · exact fun c => Or.inr ((add_lt_add_iff_left c).2 ‹_›)
+    zero_le_one := le_of_lt Real.zero_lt_one
+    mul_pos := @Real.mul_pos }
 
 instance : StrictOrderedRing ℝ :=
   inferInstance
@@ -441,40 +452,42 @@ theorem mk_inf (a b) : (mk (a ⊓ b) : ℝ) = mk a ⊓ mk b :=
 #align real.mk_inf Real.mk_inf
 
 instance : DistribLattice ℝ :=
-  { Real.partialOrder with sup := (· ⊔ ·), le := (· ≤ ·),
+  { Real.partialOrder with 
+    sup := (· ⊔ ·)
+    le := (· ≤ ·)
     le_sup_left := fun a =>
       (Real.indMk a) fun a b =>
         (Real.indMk b) fun b => by 
           rw [← mk_sup, mk_le]
-          exact CauSeq.le_sup_left,
+          exact CauSeq.le_sup_left
     le_sup_right := fun a =>
       (Real.indMk a) fun a b =>
         (Real.indMk b) fun b => by 
           rw [← mk_sup, mk_le]
-          exact CauSeq.le_sup_right,
+          exact CauSeq.le_sup_right
     sup_le := fun a =>
       (Real.indMk a) fun a b =>
         (Real.indMk b) fun b c =>
           (Real.indMk c) fun c => by 
             simp_rw [← mk_sup, mk_le]
-            exact CauSeq.sup_le,
-    inf := (· ⊓ ·),
+            exact CauSeq.sup_le
+    inf := (· ⊓ ·)
     inf_le_left := fun a =>
       (Real.indMk a) fun a b =>
         (Real.indMk b) fun b => by 
           rw [← mk_inf, mk_le]
-          exact CauSeq.inf_le_left,
+          exact CauSeq.inf_le_left
     inf_le_right := fun a =>
       (Real.indMk a) fun a b =>
         (Real.indMk b) fun b => by 
           rw [← mk_inf, mk_le]
-          exact CauSeq.inf_le_right,
+          exact CauSeq.inf_le_right
     le_inf := fun a =>
       (Real.indMk a) fun a b =>
         (Real.indMk b) fun b c =>
           (Real.indMk c) fun c => by 
             simp_rw [← mk_inf, mk_le]
-            exact CauSeq.le_inf,
+            exact CauSeq.le_inf
     le_sup_inf := fun a =>
       (Real.indMk a) fun a b =>
         (Real.indMk b) fun b c =>
@@ -514,13 +527,15 @@ instance : IsDomain ℝ :=
   { Real.nontrivial, Real.commRing, LinearOrderedRing.is_domain with }
 
 noncomputable instance : LinearOrderedField ℝ :=
-  { Real.linearOrderedCommRing with inv := Inv.inv,
+  { Real.linearOrderedCommRing with 
+    inv := Inv.inv
     mul_inv_cancel := by 
       rintro ⟨a⟩ h
       rw [mul_comm]
       simp only [← of_cauchy_inv, ← of_cauchy_mul, ← of_cauchy_one, ← of_cauchy_zero, Ne.def] at *
-      exact CauSeq.Completion.inv_mul_cancel h,
-    inv_zero := by simp [← of_cauchy_zero, ← of_cauchy_inv], ratCast := coe,
+      exact CauSeq.Completion.inv_mul_cancel h
+    inv_zero := by simp [← of_cauchy_zero, ← of_cauchy_inv]
+    ratCast := coe
     rat_cast_mk := fun n d hd h2 => by
       rw [← of_cauchy_rat_cast, Rat.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast,
         of_cauchy_int_cast] }
@@ -695,10 +710,12 @@ protected theorem is_glb_Inf (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddBelow 
 #align real.is_glb_Inf Real.is_glb_Inf
 
 noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
-  { Real.linearOrder, Real.lattice with sup := HasSup.sup, inf := HasInf.inf,
-    le_cSup := fun s a hs ha => (Real.is_lub_Sup s ⟨a, ha⟩ hs).1 ha,
-    cSup_le := fun s a hs ha => (Real.is_lub_Sup s hs ⟨a, ha⟩).2 ha,
-    cInf_le := fun s a hs ha => (Real.is_glb_Inf s ⟨a, ha⟩ hs).1 ha,
+  { Real.linearOrder, Real.lattice with 
+    sup := HasSup.sup
+    inf := HasInf.inf
+    le_cSup := fun s a hs ha => (Real.is_lub_Sup s ⟨a, ha⟩ hs).1 ha
+    cSup_le := fun s a hs ha => (Real.is_lub_Sup s hs ⟨a, ha⟩).2 ha
+    cInf_le := fun s a hs ha => (Real.is_glb_Inf s ⟨a, ha⟩ hs).1 ha
     le_cInf := fun s a hs ha => (Real.is_glb_Inf s hs ⟨a, ha⟩).2 ha }
 
 theorem lt_Inf_add_pos {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : 0 < ε) : ∃ a ∈ s, a < inf s + ε :=

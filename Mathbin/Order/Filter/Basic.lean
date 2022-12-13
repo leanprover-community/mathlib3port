@@ -258,8 +258,9 @@ unsafe def filter_upwards (s : parse types.pexpr_list ?) (wth : parse with_ident
 #align tactic.interactive.filter_upwards tactic.interactive.filter_upwards
 
 add_tactic_doc
-  { Name := "filter_upwards", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.filter_upwards],
+  { Name := "filter_upwards"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.filter_upwards]
     tags := ["goal management", "lemma application"] }
 
 end Tactic.Interactive
@@ -407,13 +408,14 @@ def giGenerate (α : Type _) :
   of elements of the two filters. -/
 instance : HasInf (Filter α) :=
   ⟨fun f g : Filter α =>
-    { sets := { s | ∃ a ∈ f, ∃ b ∈ g, s = a ∩ b }, univ_sets := ⟨_, univ_mem, _, univ_mem, by simp⟩,
+    { sets := { s | ∃ a ∈ f, ∃ b ∈ g, s = a ∩ b }
+      univ_sets := ⟨_, univ_mem, _, univ_mem, by simp⟩
       sets_of_superset := by 
         rintro x y ⟨a, ha, b, hb, rfl⟩ xy
         refine'
           ⟨a ∪ y, mem_of_superset ha (subset_union_left a y), b ∪ y,
             mem_of_superset hb (subset_union_left b y), _⟩
-        rw [← inter_union_distrib_right, union_eq_self_of_subset_left xy],
+        rw [← inter_union_distrib_right, union_eq_self_of_subset_left xy]
       inter_sets := by 
         rintro x y ⟨a, ha, b, hb, rfl⟩ ⟨c, hc, d, hd, rfl⟩
         refine' ⟨a ∩ c, inter_mem ha hc, b ∩ d, inter_mem hb hd, _⟩
@@ -448,8 +450,9 @@ theorem mem_inf_iff_superset {f g : Filter α} {s : Set α} :
 #align filter.mem_inf_iff_superset Filter.mem_inf_iff_superset
 
 instance : Top (Filter α) :=
-  ⟨{ sets := { s | ∀ x, x ∈ s }, univ_sets := fun x => mem_univ x,
-      sets_of_superset := fun x y hx hxy a => hxy (hx a),
+  ⟨{  sets := { s | ∀ x, x ∈ s }
+      univ_sets := fun x => mem_univ x
+      sets_of_superset := fun x y hx hxy a => hxy (hx a)
       inter_sets := fun x y hx hy a => mem_inter (hx _) (hy _) }⟩
 
 theorem mem_top_iff_forall {s : Set α} : s ∈ (⊤ : Filter α) ↔ ∀ x, x ∈ s :=
@@ -846,10 +849,11 @@ theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : N
     (infi f).sets = ⋃ i, (f i).sets :=
   let ⟨i⟩ := Ne
   let u :=
-    { sets := ⋃ i, (f i).sets, univ_sets := by simp only [mem_Union] <;> exact ⟨i, univ_mem⟩,
+    { sets := ⋃ i, (f i).sets
+      univ_sets := by simp only [mem_Union] <;> exact ⟨i, univ_mem⟩
       sets_of_superset := by
         simp only [mem_Union, exists_imp] <;> intro x y i hx hxy <;>
-          exact ⟨i, mem_of_superset hx hxy⟩,
+          exact ⟨i, mem_of_superset hx hxy⟩
       inter_sets := by 
         simp only [mem_Union, exists_imp]
         intro x y a hx b hy
@@ -920,7 +924,8 @@ instance : DistribLattice (Filter α) :=
 
 -- The dual version does not hold! `filter α` is not a `complete_distrib_lattice`. -/
 instance : Coframe (Filter α) :=
-  { Filter.completeLattice with inf := inf,
+  { Filter.completeLattice with 
+    inf := inf
     infi_sup_le_sup_Inf := fun f s => by
       rw [Inf_eq_infi', infi_subtype']
       rintro t ⟨h₁, h₂⟩
@@ -1976,8 +1981,10 @@ def seq (f : Filter (α → β)) (g : Filter α) : Filter β :=
 with this definition we have `s ∈ pure a` defeq `a ∈ s`. -/
 instance : Pure Filter :=
   ⟨fun (α : Type u) x =>
-    { sets := { s | x ∈ s }, inter_sets := fun s t => And.intro,
-      sets_of_superset := fun s t hs hst => hst hs, univ_sets := trivial }⟩
+    { sets := { s | x ∈ s }
+      inter_sets := fun s t => And.intro
+      sets_of_superset := fun s t hs hst => hst hs
+      univ_sets := trivial }⟩
 
 instance : Bind Filter :=
   ⟨@Filter.bind⟩
@@ -2031,8 +2038,9 @@ protected def monad : Monad Filter where map := @Filter.map
 attribute [local instance] Filter.monad
 
 protected theorem is_lawful_monad : LawfulMonad Filter :=
-  { id_map := fun α f => filter_eq rfl, pure_bind := fun α β => pure_bind,
-    bind_assoc := fun α β γ f m₁ m₂ => filter_eq rfl,
+  { id_map := fun α f => filter_eq rfl
+    pure_bind := fun α β => pure_bind
+    bind_assoc := fun α β γ f m₁ m₂ => filter_eq rfl
     bind_pure_comp_eq_map := fun α β f x =>
       Filter.ext fun s => by
         simp only [Bind.bind, bind, Functor.map, mem_map', mem_join, mem_set_of_eq, comp,

@@ -313,7 +313,9 @@ instance has_colimits_AddCommGroup :
     HasColimits
       AddCommGroupCat where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F =>
-        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+        has_colimit.mk
+          { Cocone := colimit_cocone F
+            IsColimit := colimit_cocone_is_colimit F } }
 #align
   AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.has_colimits_AddCommGroup
 

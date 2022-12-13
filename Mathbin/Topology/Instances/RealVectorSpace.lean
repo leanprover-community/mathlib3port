@@ -31,7 +31,9 @@ namespace AddMonoidHom
 /-- Reinterpret a continuous additive homomorphism between two real vector spaces
 as a continuous real-linear map. -/
 def toRealLinearMap (f : E →+ F) (hf : Continuous f) : E →L[ℝ] F :=
-  ⟨{ toFun := f, map_add' := f.map_add, map_smul' := map_real_smul f hf }, hf⟩
+  ⟨{  toFun := f
+      map_add' := f.map_add
+      map_smul' := map_real_smul f hf }, hf⟩
 #align add_monoid_hom.to_real_linear_map AddMonoidHom.toRealLinearMap
 
 @[simp]

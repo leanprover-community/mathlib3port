@@ -111,22 +111,32 @@ instance [AddCommSemigroup α] : AddCommSemigroup (Holor α ds) := by
   refine_struct { add := (· + ·).. } <;> pi_instance_derive_field
 
 instance [AddMonoid α] : AddMonoid (Holor α ds) := by
-  refine_struct { zero := (0 : Holor α ds), add := (· + ·), nsmul := fun n x i => n • x i } <;>
+  refine_struct
+      { zero := (0 : Holor α ds)
+        add := (· + ·)
+        nsmul := fun n x i => n • x i } <;>
     pi_instance_derive_field
 
 instance [AddCommMonoid α] : AddCommMonoid (Holor α ds) := by
-  refine_struct { zero := (0 : Holor α ds), add := (· + ·), nsmul := AddMonoid.nsmul } <;>
+  refine_struct
+      { zero := (0 : Holor α ds)
+        add := (· + ·)
+        nsmul := AddMonoid.nsmul } <;>
     pi_instance_derive_field
 
 instance [AddGroup α] : AddGroup (Holor α ds) := by
   refine_struct
-      { zero := (0 : Holor α ds), add := (· + ·), nsmul := AddMonoid.nsmul,
+      { zero := (0 : Holor α ds)
+        add := (· + ·)
+        nsmul := AddMonoid.nsmul
         zsmul := fun n x i => n • x i } <;>
     pi_instance_derive_field
 
 instance [AddCommGroup α] : AddCommGroup (Holor α ds) := by
   refine_struct
-      { zero := (0 : Holor α ds), add := (· + ·), nsmul := AddMonoid.nsmul,
+      { zero := (0 : Holor α ds)
+        add := (· + ·)
+        nsmul := AddMonoid.nsmul
         zsmul := SubNegMonoid.zsmul } <;>
     pi_instance_derive_field
 

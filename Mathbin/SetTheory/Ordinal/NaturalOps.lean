@@ -342,10 +342,15 @@ instance add_contravariant_class_le :
 #align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariant_class_le
 
 instance : OrderedCancelAddCommMonoid NatOrdinal :=
-  { NatOrdinal.linearOrder with add := (· + ·), add_assoc := nadd_assoc,
-    add_le_add_left := fun a b => add_le_add_left,
-    le_of_add_le_add_left := fun a b c => le_of_add_le_add_left, zero := 0, zero_add := zero_nadd,
-    add_zero := nadd_zero, add_comm := nadd_comm }
+  { NatOrdinal.linearOrder with 
+    add := (· + ·)
+    add_assoc := nadd_assoc
+    add_le_add_left := fun a b => add_le_add_left
+    le_of_add_le_add_left := fun a b c => le_of_add_le_add_left
+    zero := 0
+    zero_add := zero_nadd
+    add_zero := nadd_zero
+    add_comm := nadd_comm }
 
 instance : AddMonoidWithOne NatOrdinal :=
   AddMonoidWithOne.unary

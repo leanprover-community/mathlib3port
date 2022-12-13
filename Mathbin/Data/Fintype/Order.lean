@@ -89,11 +89,12 @@ open Classical
 /-- A finite bounded lattice is complete. -/
 @[reducible]
 noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
-  { ‹Lattice α›, ‹BoundedOrder α› with sup := fun s => s.toFinset.sup id,
-    inf := fun s => s.toFinset.inf id,
-    le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha),
-    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
-    Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha),
+  { ‹Lattice α›, ‹BoundedOrder α› with
+    sup := fun s => s.toFinset.sup id
+    inf := fun s => s.toFinset.inf id
+    le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha)
+    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb
+    Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha)
     le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
 #align fintype.to_complete_lattice Fintype.toCompleteLattice
 
@@ -107,7 +108,7 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
       convert (Finset.inf_sup_distrib_left _ _ _).ge
       convert (Finset.inf_eq_infi _ _).symm
       simp_rw [Set.mem_to_finset]
-      rfl,
+      rfl
     inf_Sup_le_supr_inf := fun a s => by
       convert (Finset.sup_inf_distrib_left _ _ _).le
       convert (Finset.sup_eq_supr _ _).symm

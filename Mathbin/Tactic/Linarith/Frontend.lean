@@ -360,7 +360,9 @@ The option `set_option trace.linarith true` will trace certain intermediate stag
 routine.
 -/
 add_tactic_doc
-  { Name := "linarith", category := DocCategory.tactic, declNames := [`tactic.interactive.linarith],
+  { Name := "linarith"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.linarith]
     tags := ["arithmetic", "decision procedure", "finishing"] }
 
 /--
@@ -386,7 +388,8 @@ unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (
 add_hint_tactic nlinarith
 
 add_tactic_doc
-  { Name := "nlinarith", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.nlinarith],
+  { Name := "nlinarith"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.nlinarith]
     tags := ["arithmetic", "decision procedure", "finishing"] }
 

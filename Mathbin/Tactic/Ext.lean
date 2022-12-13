@@ -213,7 +213,7 @@ private unsafe def ext_attr_core :
   Name := `_ext_core
   descr := "(internal attribute used by ext)"
   cache_cfg :=
-    { dependencies := [],
+    { dependencies := []
       mk_cache := fun ns =>
         ns.mfoldl
           (fun m n => do
@@ -338,7 +338,9 @@ unsafe def extensional_attribute :
 #align extensional_attribute extensional_attribute
 
 add_tactic_doc
-  { Name := "ext", category := DocCategory.attr, declNames := [`extensional_attribute],
+  { Name := "ext"
+    category := DocCategory.attr
+    declNames := [`extensional_attribute]
     tags := ["rewrite", "logic"] }
 
 library_note "partially-applied ext lemmas"/--
@@ -505,7 +507,10 @@ unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool :
   `ext ps (some n)` applies at most `n` extensionality lemmas. Returns the unused patterns. -/
 unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := {  })
     (trace : Bool := false) : tactic (List rcases_patt) := do
-  let ⟨_, σ⟩ ← StateT.run (ext_core cfg) { patts := xs, fuel }
+  let ⟨_, σ⟩ ←
+    StateT.run (ext_core cfg)
+        { patts := xs
+          fuel }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
 #align tactic.ext tactic.ext
@@ -659,8 +664,9 @@ Try this: apply funext, rintro ⟨a, b⟩
 A maximum depth can be provided with `ext x y z : 3`.
 -/
 add_tactic_doc
-  { Name := "ext1 / ext", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.ext1, `tactic.interactive.ext],
+  { Name := "ext1 / ext"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.ext1, `tactic.interactive.ext]
     tags := ["rewriting", "logic"] }
 
 end Tactic

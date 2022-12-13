@@ -44,7 +44,8 @@ instance [TopologicalSemiring A] (s : StarSubalgebra R A) : TopologicalSemiring 
 
 /-- The `star_subalgebra.inclusion` of a star subalgebra is an `embedding`. -/
 theorem embedding_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂) : Embedding (inclusion h) :=
-  { induced := Eq.symm induced_compose, inj := Subtype.map_injective h Function.injective_id }
+  { induced := Eq.symm induced_compose
+    inj := Subtype.map_injective h Function.injective_id }
 #align star_subalgebra.embedding_inclusion StarSubalgebra.embedding_inclusion
 
 /-- The `star_subalgebra.inclusion` of a closed star subalgebra is a `closed_embedding`. -/
@@ -65,7 +66,8 @@ variable [TopologicalSpace B] [Semiring B] [Algebra R B] [StarRing B]
 
 /-- The closure of a star subalgebra in a topological star algebra as a star subalgebra. -/
 def topologicalClosure (s : StarSubalgebra R A) : StarSubalgebra R A :=
-  { s.toSubalgebra.topologicalClosure with carrier := closure (s : Set A),
+  { s.toSubalgebra.topologicalClosure with
+    carrier := closure (s : Set A)
     star_mem' := fun a ha =>
       map_mem_closure continuous_star ha fun x => (star_mem : x ∈ s → star x ∈ s) }
 #align star_subalgebra.topological_closure StarSubalgebra.topologicalClosure
@@ -211,7 +213,8 @@ theorem le_of_is_closed_of_mem {S : StarSubalgebra R A} (hS : IsClosed (S : Set 
 
 /-- The coercion from an elemental algebra to the full algebra as a `closed_embedding`. -/
 theorem closedEmbeddingCoe (x : A) : ClosedEmbedding (coe : elementalStarAlgebra R x → A) :=
-  { induced := rfl, inj := Subtype.coe_injective,
+  { induced := rfl
+    inj := Subtype.coe_injective
     closedRange := by 
       convert elementalStarAlgebra.isClosed R x
       exact

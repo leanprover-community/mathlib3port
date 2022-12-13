@@ -304,18 +304,24 @@ def f := pi_binders ...
 ```
 -/
 add_tactic_doc
-  { Name := "library_note", category := DocCategory.cmd,
-    declNames := [`library_note, `tactic.add_library_note], tags := ["documentation"],
+  { Name := "library_note"
+    category := DocCategory.cmd
+    declNames := [`library_note, `tactic.add_library_note]
+    tags := ["documentation"]
     inheritDescriptionFrom := `library_note }
 
 add_tactic_doc
-  { Name := "add_tactic_doc", category := DocCategory.cmd,
-    declNames := [`add_tactic_doc_command, `tactic.add_tactic_doc], tags := ["documentation"],
+  { Name := "add_tactic_doc"
+    category := DocCategory.cmd
+    declNames := [`add_tactic_doc_command, `tactic.add_tactic_doc]
+    tags := ["documentation"]
     inheritDescriptionFrom := `add_tactic_doc_command }
 
 add_tactic_doc
-  { Name := "copy_doc_string", category := DocCategory.cmd,
-    declNames := [`copy_doc_string_cmd, `tactic.copy_doc_string], tags := ["documentation"],
+  { Name := "copy_doc_string"
+    category := DocCategory.cmd
+    declNames := [`copy_doc_string_cmd, `tactic.copy_doc_string]
+    tags := ["documentation"]
     inheritDescriptionFrom := `copy_doc_string_cmd }
 
 -- add docs to core tactics
@@ -360,8 +366,10 @@ Journal of the ACM (1980)
 (de Moura, Selsam IJCAR 2016).
 -/
 add_tactic_doc
-  { Name := "cc (congruence closure)", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.cc], tags := ["core", "finishing"] }
+  { Name := "cc (congruence closure)"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.cc]
+    tags := ["core", "finishing"] }
 
 /-- `conv {...}` allows the user to perform targeted rewriting on a goal or hypothesis,
 by focusing on particular subexpressions.
@@ -413,11 +421,15 @@ end
 and likewise for `to_rhs`.
 -/
 add_tactic_doc
-  { Name := "conv", category := DocCategory.tactic, declNames := [`tactic.interactive.conv],
+  { Name := "conv"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.conv]
     tags := ["core"] }
 
 add_tactic_doc
-  { Name := "simp", category := DocCategory.tactic, declNames := [`tactic.interactive.simp],
+  { Name := "simp"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.simp]
     tags := ["core", "simplification"] }
 
 /-- Accepts terms with the type `component tactic_state string` or `html empty` and
@@ -441,7 +453,9 @@ component.ignore_props $ component.mk_simple int int 0 (λ _ x y, (x + y, none))
 ```
 -/
 add_tactic_doc
-  { Name := "#html", category := DocCategory.cmd, declNames := [`show_widget_cmd],
+  { Name := "#html"
+    category := DocCategory.cmd
+    declNames := [`show_widget_cmd]
     tags := ["core", "widgets"] }
 
 /-- The `add_decl_doc` command is used to add a doc string to an existing declaration.
@@ -466,6 +480,8 @@ unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse <| 
 #align add_decl_doc_command add_decl_doc_command
 
 add_tactic_doc
-  { Name := "add_decl_doc", category := DocCategory.cmd, declNames := [`` add_decl_doc_command],
+  { Name := "add_decl_doc"
+    category := DocCategory.cmd
+    declNames := [`` add_decl_doc_command]
     tags := ["documentation"] }
 

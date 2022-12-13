@@ -546,9 +546,9 @@ def partition (p : α → Prop) [DecidablePred p] : Ordnode α → Ordnode α ×
 
 /- warning: ordnode.map -> Ordnode.map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{u_1}}, (α -> β) -> (Ordnode.{u} α) -> (Ordnode.{u_1} β)
+  forall {α : Type.{u1}} {β : Type.{u2}}, (α -> β) -> (Ordnode.{u1} α) -> (Ordnode.{u2} β)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{_aux_param_0}}, (α -> β) -> (Ordnode.{u} α) -> (Ordnode.{_aux_param_0} β)
+  forall {α : Type.{u2}} {β : Type.{u1}}, (α -> β) -> (Ordnode.{u2} α) -> (Ordnode.{u1} β)
 Case conversion may be inaccurate. Consider using '#align ordnode.map Ordnode.mapₓ'. -/
 /-- O(n). Map a function across a tree, without changing the structure. Only valid when
 the function is strictly monotone, i.e. `x < y → f x < f y`.
@@ -562,9 +562,9 @@ def map {β} (f : α → β) : Ordnode α → Ordnode β
 
 /- warning: ordnode.fold -> Ordnode.fold is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Sort.{u_1}}, β -> (β -> α -> β -> β) -> (Ordnode.{u} α) -> β
+  forall {α : Type.{u1}} {β : Sort.{u2}}, β -> (β -> α -> β -> β) -> (Ordnode.{u1} α) -> β
 but is expected to have type
-  forall {α : Type.{u}} {β : Sort.{_aux_param_0}}, β -> (β -> α -> β -> β) -> (Ordnode.{u} α) -> β
+  forall {α : Type.{u2}} {β : Sort.{u1}}, β -> (β -> α -> β -> β) -> (Ordnode.{u2} α) -> β
 Case conversion may be inaccurate. Consider using '#align ordnode.fold Ordnode.foldₓ'. -/
 /-- O(n). Fold a function across the structure of a tree.
 
@@ -579,9 +579,9 @@ def fold {β} (z : β) (f : β → α → β → β) : Ordnode α → β
 
 /- warning: ordnode.foldl -> Ordnode.foldl is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Sort.{u_1}}, (β -> α -> β) -> β -> (Ordnode.{u} α) -> β
+  forall {α : Type.{u1}} {β : Sort.{u2}}, (β -> α -> β) -> β -> (Ordnode.{u1} α) -> β
 but is expected to have type
-  forall {α : Type.{u}} {β : Sort.{_aux_param_0}}, (β -> α -> β) -> β -> (Ordnode.{u} α) -> β
+  forall {α : Type.{u2}} {β : Sort.{u1}}, (β -> α -> β) -> β -> (Ordnode.{u2} α) -> β
 Case conversion may be inaccurate. Consider using '#align ordnode.foldl Ordnode.foldlₓ'. -/
 /-- O(n). Fold a function from left to right (in increasing order) across the tree.
 
@@ -593,9 +593,9 @@ def foldl {β} (f : β → α → β) : β → Ordnode α → β
 
 /- warning: ordnode.foldr -> Ordnode.foldr is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Sort.{u_1}}, (α -> β -> β) -> (Ordnode.{u} α) -> β -> β
+  forall {α : Type.{u1}} {β : Sort.{u2}}, (α -> β -> β) -> (Ordnode.{u1} α) -> β -> β
 but is expected to have type
-  forall {α : Type.{u}} {β : Sort.{_aux_param_0}}, (α -> β -> β) -> (Ordnode.{u} α) -> β -> β
+  forall {α : Type.{u2}} {β : Sort.{u1}}, (α -> β -> β) -> (Ordnode.{u2} α) -> β -> β
 Case conversion may be inaccurate. Consider using '#align ordnode.foldr Ordnode.foldrₓ'. -/
 /-- O(n). Fold a function from right to left (in decreasing order) across the tree.
 
@@ -661,9 +661,9 @@ protected def copair {β} (t₁ : Ordnode α) (t₂ : Ordnode β) : Ordnode (Sum
 
 /- warning: ordnode.pmap -> Ordnode.pmap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {P : α -> Prop} {β : Type.{u_1}}, (forall (a : α), (P a) -> β) -> (forall (t : Ordnode.{u} α), (Ordnode.All.{u} α P t) -> (Ordnode.{u_1} β))
+  forall {α : Type.{u1}} {P : α -> Prop} {β : Type.{u2}}, (forall (a : α), (P a) -> β) -> (forall (t : Ordnode.{u1} α), (Ordnode.All.{u1} α P t) -> (Ordnode.{u2} β))
 but is expected to have type
-  forall {α : Type.{u}} {P : α -> Prop} {β : Type.{_aux_param_0}}, (forall (a : α), (P a) -> β) -> (forall (t : Ordnode.{u} α), (Ordnode.All.{u} α P t) -> (Ordnode.{_aux_param_0} β))
+  forall {α : Type.{u2}} {P : α -> Prop} {β : Type.{u1}}, (forall (a : α), (P a) -> β) -> (forall (t : Ordnode.{u2} α), (Ordnode.All.{u2} α P t) -> (Ordnode.{u1} β))
 Case conversion may be inaccurate. Consider using '#align ordnode.pmap Ordnode.pmapₓ'. -/
 /-- O(n). Map a partial function across a set. The result depends on a proof
 that the function is defined on all members of the set.

@@ -217,7 +217,7 @@ noncomputable def isLimit (h : IsPullback fst snd f g) : IsLimit h.Cone :=
 
 /-- If `c` is a limiting pullback cone, then we have a `is_pullback c.fst c.snd f g`. -/
 theorem of_is_limit {c : PullbackCone f g} (h : Limits.IsLimit c) : IsPullback c.fst c.snd f g :=
-  { w := c.condition,
+  { w := c.condition
     is_limit' := ⟨IsLimit.ofIsoLimit h (Limits.PullbackCone.ext (Iso.refl _) (by tidy) (by tidy))⟩ }
 #align category_theory.is_pullback.of_is_limit CategoryTheory.IsPullback.of_is_limit
 
@@ -353,7 +353,7 @@ noncomputable def isColimit (h : IsPushout f g inl inr) : IsColimit h.Cocone :=
 /-- If `c` is a colimiting pushout cocone, then we have a `is_pushout f g c.inl c.inr`. -/
 theorem of_is_colimit {c : PushoutCocone f g} (h : Limits.IsColimit c) :
     IsPushout f g c.inl c.inr :=
-  { w := c.condition,
+  { w := c.condition
     is_colimit' :=
       ⟨IsColimit.ofIsoColimit h (Limits.PushoutCocone.ext (Iso.refl _) (by tidy) (by tidy))⟩ }
 #align category_theory.is_pushout.of_is_colimit CategoryTheory.IsPushout.of_is_colimit
@@ -469,9 +469,9 @@ open ZeroObject
 /-- The square with `0 : 0 ⟶ 0` on the left and `𝟙 X` on the right is a pullback square. -/
 @[simp]
 theorem zero_left (X : C) : IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 : 0 ⟶ X) :=
-  { w := by simp,
+  { w := by simp
     is_limit' :=
-      ⟨{ lift := fun s => 0,
+      ⟨{  lift := fun s => 0
           fac' := fun s => by
             simpa using
               @pullback_cone.equalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _)
@@ -682,9 +682,9 @@ open ZeroObject
 /-- The square with `0 : 0 ⟶ 0` on the right and `𝟙 X` on the left is a pushout square. -/
 @[simp]
 theorem zero_right (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 : X ⟶ 0) :=
-  { w := by simp,
+  { w := by simp
     is_colimit' :=
-      ⟨{ desc := fun s => 0,
+      ⟨{  desc := fun s => 0
           fac' := fun s => by
             have c :=
               @pushout_cocone.coequalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _) (by simp)

@@ -40,8 +40,10 @@ variable [Monoid M] [Monoid N] [Monoid P]
 /-- A multiplicative equivalence of monoids defines a multiplicative equivalence
 of their groups of units. -/
 def mapEquiv (h : M ≃* N) : Mˣ ≃* Nˣ :=
-  { map h.toMonoidHom with invFun := map h.symm.toMonoidHom,
-    left_inv := fun u => ext <| h.left_inv u, right_inv := fun u => ext <| h.right_inv u }
+  { map h.toMonoidHom with 
+    invFun := map h.symm.toMonoidHom
+    left_inv := fun u => ext <| h.left_inv u
+    right_inv := fun u => ext <| h.right_inv u }
 #align units.map_equiv Units.mapEquiv
 
 @[simp]
@@ -196,7 +198,10 @@ end Equiv
 `mul_equiv.inv' G : G ≃* Gᵐᵒᵖ` for the non-commutative case. -/
 @[to_additive "When the `add_group` is commutative, `equiv.neg` is an `add_equiv`.", simps apply]
 def MulEquiv.inv (G : Type _) [DivisionCommMonoid G] : G ≃* G :=
-  { Equiv.inv G with toFun := Inv.inv, invFun := Inv.inv, map_mul' := mul_inv }
+  { Equiv.inv G with 
+    toFun := Inv.inv
+    invFun := Inv.inv
+    map_mul' := mul_inv }
 #align mul_equiv.inv MulEquiv.inv
 
 @[simp]

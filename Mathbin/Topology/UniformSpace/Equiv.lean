@@ -149,7 +149,9 @@ protected theorem continuous_symm (h : α ≃ᵤ β) : Continuous h.symm :=
 /-- A uniform isomorphism as a homeomorphism. -/
 @[simps]
 protected def toHomeomorph (e : α ≃ᵤ β) : α ≃ₜ β :=
-  { e.toEquiv with continuous_to_fun := e.Continuous, continuous_inv_fun := e.continuous_symm }
+  { e.toEquiv with 
+    continuous_to_fun := e.Continuous
+    continuous_inv_fun := e.continuous_symm }
 #align uniform_equiv.to_homeomorph UniformEquiv.toHomeomorph
 
 @[simp]
@@ -182,8 +184,11 @@ def changeInv (f : α ≃ᵤ β) (g : β → α) (hg : Function.RightInverse g f
         g x = f.symm (f (g x)) := (f.left_inv (g x)).symm
         _ = f.symm x := by rw [hg x]
         
-  { toFun := f, invFun := g, left_inv := by convert f.left_inv, right_inv := by convert f.right_inv,
-    uniform_continuous_to_fun := f.UniformContinuous,
+  { toFun := f
+    invFun := g
+    left_inv := by convert f.left_inv
+    right_inv := by convert f.right_inv
+    uniform_continuous_to_fun := f.UniformContinuous
     uniform_continuous_inv_fun := by convert f.symm.uniform_continuous }
 #align uniform_equiv.change_inv UniformEquiv.changeInv
 
@@ -337,7 +342,8 @@ theorem coe_punit_prod : ⇑(punitProd α) = Prod.snd :=
 
 /-- Uniform equivalence between `ulift α` and `α`. -/
 def ulift : ULift.{v, u} α ≃ᵤ α :=
-  { Equiv.ulift with uniform_continuous_to_fun := uniform_continuous_comap,
+  { Equiv.ulift with 
+    uniform_continuous_to_fun := uniform_continuous_comap
     uniform_continuous_inv_fun := by
       have hf : UniformInducing (@Equiv.ulift.{v, u} α).toFun := ⟨rfl⟩
       simp_rw [hf.uniform_continuous_iff]
@@ -392,7 +398,8 @@ end UniformEquiv
 @[simps]
 def Equiv.toUniformEquivOfUniformInducing [UniformSpace α] [UniformSpace β] (f : α ≃ β)
     (hf : UniformInducing f) : α ≃ᵤ β :=
-  { f with uniform_continuous_to_fun := hf.UniformContinuous,
+  { f with 
+    uniform_continuous_to_fun := hf.UniformContinuous
     uniform_continuous_inv_fun :=
       hf.uniform_continuous_iff.2 <| by simpa using uniform_continuous_id }
 #align equiv.to_uniform_equiv_of_uniform_inducing Equiv.toUniformEquivOfUniformInducing

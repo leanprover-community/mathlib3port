@@ -112,7 +112,7 @@ theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [A
     (hp : (finrank F A).Prime) : IsSimpleOrder (Subalgebra F A) :=
   { to_nontrivial :=
       ⟨⟨⊥, ⊤, fun he =>
-          Nat.not_prime_one ((Subalgebra.bot_eq_top_iff_finrank_eq_one.1 he).subst hp)⟩⟩,
+          Nat.not_prime_one ((Subalgebra.bot_eq_top_iff_finrank_eq_one.1 he).subst hp)⟩⟩
     eq_bot_or_eq_top := fun K => by
       haveI := finite_dimensional_of_finrank hp.pos
       letI := divisionRingOfFiniteDimensional F K

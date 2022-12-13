@@ -58,12 +58,16 @@ def colimitCoconeIsColimit (X : Cᵒᵖ) :
   category_theory.coyoneda.colimit_cocone_is_colimit CategoryTheory.coyoneda.colimitCoconeIsColimit
 
 instance (X : Cᵒᵖ) : HasColimit (coyoneda.obj X) :=
-  HasColimit.mk { Cocone := _, IsColimit := colimitCoconeIsColimit X }
+  HasColimit.mk
+    { Cocone := _
+      IsColimit := colimitCoconeIsColimit X }
 
 /-- The colimit of `coyoneda.obj X` is isomorphic to `punit`.
 -/
 noncomputable def colimitCoyonedaIso (X : Cᵒᵖ) : colimit (coyoneda.obj X) ≅ PUnit :=
-  colimit.isoColimitCocone { Cocone := _, IsColimit := colimitCoconeIsColimit X }
+  colimit.isoColimitCocone
+    { Cocone := _
+      IsColimit := colimitCoconeIsColimit X }
 #align category_theory.coyoneda.colimit_coyoneda_iso CategoryTheory.coyoneda.colimitCoyonedaIso
 
 end Coyoneda
@@ -80,8 +84,8 @@ instance yonedaPreservesLimits (X : C) :
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
             { lift := fun s x =>
-                Quiver.Hom.unop (t.lift ⟨op X, fun j => (s.π.app j x).op, fun j₁ j₂ α => _⟩),
-              fac' := fun s j => funext fun x => Quiver.Hom.op_inj (t.fac _ _),
+                Quiver.Hom.unop (t.lift ⟨op X, fun j => (s.π.app j x).op, fun j₁ j₂ α => _⟩)
+              fac' := fun s j => funext fun x => Quiver.Hom.op_inj (t.fac _ _)
               uniq' := fun s m w =>
                 funext fun x => by
                   refine' Quiver.Hom.op_inj (t.uniq ⟨op X, _, _⟩ _ fun j => _)
@@ -102,8 +106,9 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) :
                 t.lift
                   ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α => by
                     dsimp
-                    simp [← s.w α]⟩,-- See library note [dsimp, simp]
-              fac' := fun s j => funext fun x => t.fac _ _,
+                    simp [← s.w α]⟩
+              -- See library note [dsimp, simp]
+              fac' := fun s j => funext fun x => t.fac _ _
               uniq' := fun s m w =>
                 funext fun x => by 
                   refine' t.uniq ⟨unop X, _⟩ _ fun j => _
@@ -116,8 +121,8 @@ def yonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ Cᵒ�
   let s' : ∀ s : Cone K, Cone (K ⋙ yoneda.obj s.x.unop) := fun s =>
     ⟨PUnit, fun j _ => (s.π.app j).unop, fun j₁ j₂ α =>
       funext fun _ => Quiver.Hom.op_inj (s.w α).symm⟩
-  { lift := fun s => ((t s.x.unop).lift (s' s) PUnit.unit).op,
-    fac' := fun s j => Quiver.Hom.unop_inj (congr_fun ((t s.x.unop).fac (s' s) j) PUnit.unit),
+  { lift := fun s => ((t s.x.unop).lift (s' s) PUnit.unit).op
+    fac' := fun s j => Quiver.Hom.unop_inj (congr_fun ((t s.x.unop).fac (s' s) j) PUnit.unit)
     uniq' := fun s m w => by 
       apply Quiver.Hom.unop_inj
       suffices (fun x : PUnit => m.unop) = (t s.X.unop).lift (s' s) by
@@ -132,8 +137,8 @@ def coyonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ C) (
     (t : ∀ X : Cᵒᵖ, IsLimit ((coyoneda.obj X).mapCone c)) : IsLimit c :=
   let s' : ∀ s : Cone K, Cone (K ⋙ coyoneda.obj (op s.x)) := fun s =>
     ⟨PUnit, fun j _ => s.π.app j, fun j₁ j₂ α => funext fun _ => (s.w α).symm⟩
-  { lift := fun s => (t (op s.x)).lift (s' s) PUnit.unit,
-    fac' := fun s j => congr_fun ((t _).fac (s' s) j) PUnit.unit,
+  { lift := fun s => (t (op s.x)).lift (s' s) PUnit.unit
+    fac' := fun s j => congr_fun ((t _).fac (s' s) j) PUnit.unit
     uniq' := fun s m w => by
       suffices (fun x : PUnit => m) = (t _).lift (s' s) by apply congr_fun this PUnit.unit
       apply (t _).uniq (s' s) _ fun j => _

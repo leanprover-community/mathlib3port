@@ -768,8 +768,8 @@ theorem isClosedRangeComapOfSurjective (hf : Surjective f) : IsClosed (Set.range
   prime_spectrum.is_closed_range_comap_of_surjective PrimeSpectrum.isClosedRangeComapOfSurjective
 
 theorem closedEmbeddingComapOfSurjective (hf : Surjective f) : ClosedEmbedding (comap f) :=
-  { induced := (comap_inducing_of_surjective S f hf).induced,
-    inj := comap_injective_of_surjective f hf,
+  { induced := (comap_inducing_of_surjective S f hf).induced
+    inj := comap_injective_of_surjective f hf
     closedRange := isClosedRangeComapOfSurjective S f hf }
 #align
   prime_spectrum.closed_embedding_comap_of_surjective PrimeSpectrum.closedEmbeddingComapOfSurjective
@@ -906,7 +906,7 @@ theorem localization_away_comap_range (S : Type v) [CommRing S] [Algebra R S] (r
 
 theorem localization_away_open_embedding (S : Type v) [CommRing S] [Algebra R S] (r : R)
     [IsLocalization.Away r S] : OpenEmbedding (comap (algebraMap R S)) :=
-  { toEmbedding := localization_comap_embedding S (Submonoid.powers r),
+  { toEmbedding := localization_comap_embedding S (Submonoid.powers r)
     open_range := by 
       rw [localization_away_comap_range S r]
       exact is_open_basic_open }

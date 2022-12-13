@@ -75,7 +75,10 @@ end
 
 /-- Every normal monomorphism is a regular monomorphism. -/
 instance (priority := 100) NormalMono.regularMono (f : X ⟶ Y) [I : NormalMono f] : RegularMono f :=
-  { I with left := I.g, right := 0, w := by simpa using I.w }
+  { I with 
+    left := I.g
+    right := 0
+    w := by simpa using I.w }
 #align category_theory.normal_mono.regular_mono CategoryTheory.NormalMono.regularMono
 
 /-- If `f` is a normal mono, then any map `k : W ⟶ Y` such that `k ≫ normal_mono.g = 0` induces
@@ -183,7 +186,10 @@ end
 
 /-- Every normal epimorphism is a regular epimorphism. -/
 instance (priority := 100) NormalEpi.regularEpi (f : X ⟶ Y) [I : NormalEpi f] : RegularEpi f :=
-  { I with left := I.g, right := 0, w := by simpa using I.w }
+  { I with 
+    left := I.g
+    right := 0
+    w := by simpa using I.w }
 #align category_theory.normal_epi.regular_epi CategoryTheory.NormalEpi.regularEpi
 
 /-- If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`

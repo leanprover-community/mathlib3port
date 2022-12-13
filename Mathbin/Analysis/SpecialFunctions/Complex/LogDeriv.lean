@@ -25,8 +25,10 @@ open Real TopologicalSpace
 is complex differentiable at all points but the negative real semi-axis. -/
 def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
   LocalHomeomorph.ofContinuousOpen
-    { toFun := exp, invFun := log, source := { z : ℂ | z.im ∈ ioo (-π) π },
-      target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 },
+    { toFun := exp
+      invFun := log
+      source := { z : ℂ | z.im ∈ ioo (-π) π }
+      target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 }
       map_source' := by 
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
         refine' (not_or_of_imp fun hz => _).symm
@@ -34,12 +36,12 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
           rw [exp_im] at hz
           simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
         rw [mem_set_of_eq, ← of_real_def, exp_of_real_re]
-        exact Real.exp_pos x,
+        exact Real.exp_pos x
       map_target' := fun z h =>
         suffices 0 ≤ z.re ∨ z.im ≠ 0 by
           simpa [log_im, neg_pi_lt_arg, (arg_le_pi _).lt_iff_ne, arg_eq_pi_iff, not_and_or]
-        h.imp (fun h => le_of_lt h) id,
-      left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2),
+        h.imp (fun h => le_of_lt h) id
+      left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2)
       right_inv' := fun x hx =>
         exp_log <| by 
           rintro rfl

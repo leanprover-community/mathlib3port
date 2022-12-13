@@ -449,9 +449,9 @@ section
 
 /- warning: category_theory.equivalence.pow_nat -> CategoryTheory.Equivalence.powNat is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C], (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1) -> Nat -> (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1)
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1) -> Nat -> (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1)
 but is expected to have type
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C], (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1) -> Nat -> (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1)
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1) -> Nat -> (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1)
 Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.pow_nat CategoryTheory.Equivalence.powNatₓ'. -/
 -- There's of course a monoid structure on `C ≌ C`,
 -- but let's not encourage using it.
@@ -465,9 +465,9 @@ def powNat (e : C ≌ C) : ℕ → (C ≌ C)
 
 /- warning: category_theory.equivalence.pow -> CategoryTheory.Equivalence.pow is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C], (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1) -> Int -> (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1)
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1) -> Int -> (CategoryTheory.Equivalence.{u1, u1, u2, u2} C _inst_1 C _inst_1)
 but is expected to have type
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C], (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1) -> Int -> (CategoryTheory.Equivalence.{v₁, v₁, u₁, u₁} C _inst_1 C _inst_1)
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1) -> Int -> (CategoryTheory.Equivalence.{u2, u2, u1, u1} C _inst_1 C _inst_1)
 Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.pow CategoryTheory.Equivalence.powₓ'. -/
 /-- Powers of an auto-equivalence.  Use `(^)` instead. -/
 def pow (e : C ≌ C) : ℤ → (C ≌ C)

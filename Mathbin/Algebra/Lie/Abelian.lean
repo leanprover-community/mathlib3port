@@ -195,11 +195,12 @@ theorem coe_max_triv_hom_apply (f : M →ₗ⁅R,L⁆ N) (m : maxTrivSubmodule R
 
 /-- The maximal trivial submodules of Lie-equivalent Lie modules are Lie-equivalent. -/
 def maxTrivEquiv (e : M ≃ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M ≃ₗ⁅R,L⁆ maxTrivSubmodule R L N :=
-  { maxTrivHom (e : M →ₗ⁅R,L⁆ N) with toFun := maxTrivHom (e : M →ₗ⁅R,L⁆ N),
-    invFun := maxTrivHom (e.symm : N →ₗ⁅R,L⁆ M),
+  { maxTrivHom (e : M →ₗ⁅R,L⁆ N) with
+    toFun := maxTrivHom (e : M →ₗ⁅R,L⁆ N)
+    invFun := maxTrivHom (e.symm : N →ₗ⁅R,L⁆ M)
     left_inv := fun m => by 
       ext
-      simp,
+      simp
     right_inv := fun n => by 
       ext
       simp }
@@ -232,7 +233,7 @@ def maxTrivLinearMapEquivLieModuleHom :
       M →ₗ⁅R,L⁆
         N where 
   toFun f :=
-    { toLinearMap := f.val,
+    { toLinearMap := f.val
       map_lie' := fun x m => by
         have hf : ⁅x, f.val⁆ m = 0 := by rw [f.property x, LinearMap.zero_apply]
         rw [LieHom.lie_apply, sub_eq_zero, ← LinearMap.to_fun_eq_coe] at hf

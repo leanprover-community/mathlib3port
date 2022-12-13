@@ -67,7 +67,8 @@ instance : GcdMonoid ℕ where
 
 instance : NormalizedGcdMonoid ℕ :=
   { (inferInstance : GcdMonoid ℕ), (inferInstance : NormalizationMonoid ℕ) with
-    normalize_gcd := fun a b => normalize_eq _, normalize_lcm := fun a b => normalize_eq _ }
+    normalize_gcd := fun a b => normalize_eq _
+    normalize_lcm := fun a b => normalize_eq _ }
 
 theorem gcd_eq_nat_gcd (m n : ℕ) : gcd m n = Nat.gcd m n :=
   rfl
@@ -147,7 +148,7 @@ instance : GcdMonoid ℤ where
 
 instance : NormalizedGcdMonoid ℤ :=
   { Int.normalizationMonoid, (inferInstance : GcdMonoid ℤ) with
-    normalize_gcd := fun a b => normalize_coe_nat _,
+    normalize_gcd := fun a b => normalize_coe_nat _
     normalize_lcm := fun a b => normalize_coe_nat _ }
 
 theorem coe_gcd (i j : ℤ) : ↑(Int.gcd i j) = GcdMonoid.gcd i j :=

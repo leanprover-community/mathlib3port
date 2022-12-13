@@ -86,10 +86,14 @@ def swap : TwopCat ⥤ TwopCat where
 @[simps]
 def swapEquiv : TwopCat ≌ TwopCat :=
   Equivalence.mk swap swap
-    ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f =>
-      rfl)
-    ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f =>
-      rfl)
+    ((NatIso.ofComponents fun X =>
+        { Hom := ⟨id, rfl, rfl⟩
+          inv := ⟨id, rfl, rfl⟩ })
+      fun X Y f => rfl)
+    ((NatIso.ofComponents fun X =>
+        { Hom := ⟨id, rfl, rfl⟩
+          inv := ⟨id, rfl, rfl⟩ })
+      fun X Y f => rfl)
 #align Twop.swap_equiv TwopCat.swapEquiv
 
 @[simp]
@@ -155,14 +159,14 @@ def pointedToTwopFstForgetCompBipointedToPointedFstAdjunction :
     pointedToTwopFst ⊣ forget₂ TwopCat BipointedCat ⋙ bipointedToPointedFst :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
-        { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩,
-          invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.2 f.toFun, f.map_point, rfl⟩,
+        { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩
+          invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.2 f.toFun, f.map_point, rfl⟩
           left_inv := fun f => by 
             ext
             cases x
             exact f.map_snd.symm
-            rfl,
-          right_inv := fun f => PointedCat.Hom.ext _ _ rfl },
+            rfl
+          right_inv := fun f => PointedCat.Hom.ext _ _ rfl }
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext
         cases x <;> rfl }
@@ -174,14 +178,14 @@ def pointedToTwopSndForgetCompBipointedToPointedSndAdjunction :
     pointedToTwopSnd ⊣ forget₂ TwopCat BipointedCat ⋙ bipointedToPointedSnd :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
-        { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩,
-          invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.1 f.toFun, rfl, f.map_point⟩,
+        { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩
+          invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.1 f.toFun, rfl, f.map_point⟩
           left_inv := fun f => by 
             ext
             cases x
             exact f.map_fst.symm
-            rfl,
-          right_inv := fun f => PointedCat.Hom.ext _ _ rfl },
+            rfl
+          right_inv := fun f => PointedCat.Hom.ext _ _ rfl }
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext
         cases x <;> rfl }

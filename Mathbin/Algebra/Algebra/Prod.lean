@@ -35,7 +35,7 @@ instance algebra : Algebra R (A × B) :=
     commutes' := by 
       rintro r ⟨a, b⟩
       dsimp
-      rw [commutes r a, commutes r b],
+      rw [commutes r a, commutes r b]
     smul_def' := by 
       rintro r ⟨a, b⟩
       dsimp

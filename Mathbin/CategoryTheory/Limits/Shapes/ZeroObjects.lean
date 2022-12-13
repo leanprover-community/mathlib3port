@@ -140,13 +140,17 @@ theorem Iso.is_zero_iff {X Y : C} (e : X ≅ Y) : IsZero X ↔ IsZero Y :=
 
 theorem Functor.is_zero (F : C ⥤ D) (hF : ∀ X, IsZero (F.obj X)) : IsZero F := by
   constructor <;> intro G <;> refine' ⟨⟨⟨_⟩, _⟩⟩
-  · refine' { app := fun X => (hF _).to _, naturality' := _ }
+  · refine'
+      { app := fun X => (hF _).to _
+        naturality' := _ }
     intros
     exact (hF _).eq_of_src _ _
   · intro f
     ext
     apply (hF _).eq_of_src _ _
-  · refine' { app := fun X => (hF _).from _, naturality' := _ }
+  · refine'
+      { app := fun X => (hF _).from _
+        naturality' := _ }
     intros
     exact (hF _).eq_of_tgt _ _
   · intro f

@@ -114,7 +114,9 @@ unsafe def split_ifs (at_ : parse location) (names : parse with_ident_list) : ta
 add_hint_tactic split_ifs
 
 add_tactic_doc
-  { Name := "split_ifs", category := DocCategory.tactic, declNames := [`` split_ifs],
+  { Name := "split_ifs"
+    category := DocCategory.tactic
+    declNames := [`` split_ifs]
     tags := ["case bashing"] }
 
 end Interactive

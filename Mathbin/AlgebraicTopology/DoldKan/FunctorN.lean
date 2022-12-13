@@ -55,9 +55,12 @@ def n₁ :
       Karoubi
         (ChainComplex C
           ℕ) where 
-  obj X := { x := AlternatingFaceMapComplex.obj X, p := pInfty, idem := P_infty_idem }
+  obj X :=
+    { x := AlternatingFaceMapComplex.obj X
+      p := pInfty
+      idem := P_infty_idem }
   map X Y f :=
-    { f := P_infty ≫ AlternatingFaceMapComplex.map f,
+    { f := P_infty ≫ AlternatingFaceMapComplex.map f
       comm := by 
         ext
         simp }

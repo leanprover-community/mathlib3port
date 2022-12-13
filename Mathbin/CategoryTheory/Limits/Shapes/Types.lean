@@ -64,9 +64,12 @@ theorem pi_map_π_apply {β : Type u} {f g : β → Type u} (α : ∀ j, f j ⟶
 /-- The category of types has `punit` as a terminal object. -/
 def terminalLimitCone :
     Limits.LimitCone
-      (Functor.empty (Type
+      (Functor.empty
+        (Type
           u)) where 
-  Cone := { x := PUnit, π := by tidy }
+  Cone :=
+    { x := PUnit
+      π := by tidy }
   IsLimit := by tidy
 #align
   category_theory.limits.types.terminal_limit_cone CategoryTheory.Limits.Types.terminalLimitCone
@@ -85,8 +88,11 @@ noncomputable def isTerminalPunit : IsTerminal (PUnit : Type u) :=
 def initialColimitCocone :
     Limits.ColimitCocone
       (Functor.empty
-        (Type u)) where 
-  Cocone := { x := PEmpty, ι := by tidy }
+        (Type
+          u)) where 
+  Cocone :=
+    { x := PEmpty
+      ι := by tidy }
   IsColimit := by tidy
 #align
   category_theory.limits.types.initial_colimit_cocone CategoryTheory.Limits.Types.initialColimitCocone
@@ -188,7 +194,7 @@ def binaryProductFunctor :
         Type
           u where 
   obj X :=
-    { obj := fun Y => X × Y,
+    { obj := fun Y => X × Y
       map := fun Y₁ Y₂ f => (binaryProductLimit X Y₂).lift (BinaryFan.mk Prod.fst (Prod.snd ≫ f)) }
   map X₁ X₂ f :=
     { app := fun Y => (binaryProductLimit X₂ Y).lift (BinaryFan.mk (Prod.fst ≫ f) Prod.snd) }
@@ -347,9 +353,11 @@ def productLimitCone {J : Type u} (F : J → Type max u v) :
     Limits.LimitCone
       (Discrete.functor
         F) where 
-  Cone := { x := ∀ j, F j, π := { app := fun j f => f j.as } }
+  Cone :=
+    { x := ∀ j, F j
+      π := { app := fun j f => f j.as } }
   IsLimit :=
-    { lift := fun s x j => s.π.app ⟨j⟩ x,
+    { lift := fun s x j => s.π.app ⟨j⟩ x
       uniq' := fun s m w => funext fun x => funext fun j => (congr_fun (w ⟨j⟩) x : _) }
 #align category_theory.limits.types.product_limit_cone CategoryTheory.Limits.Types.productLimitCone
 
@@ -378,9 +386,11 @@ def coproductColimitCocone {J : Type u} (F : J → Type u) :
     Limits.ColimitCocone
       (Discrete.functor
         F) where 
-  Cocone := { x := Σj, F j, ι := { app := fun j x => ⟨j.as, x⟩ } }
+  Cocone :=
+    { x := Σj, F j
+      ι := { app := fun j x => ⟨j.as, x⟩ } }
   IsColimit :=
-    { desc := fun s x => s.ι.app ⟨x.1⟩ x.2,
+    { desc := fun s x => s.ι.app ⟨x.1⟩ x.2
       uniq' := fun s m w => by 
         ext ⟨j, x⟩
         have := congr_fun (w ⟨j⟩) x

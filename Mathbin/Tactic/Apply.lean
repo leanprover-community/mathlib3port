@@ -116,7 +116,9 @@ private unsafe def relation_tactic (md : Transparency) (op_for : environment →
   match op_for env (expr.const_name r) with
     | some refl => do
       let r ← mk_const refl
-      retry_apply r { md, NewGoals := new_goals.non_dep_only }
+      retry_apply r
+          { md
+            NewGoals := new_goals.non_dep_only }
       return ()
     | none =>
       fail <|

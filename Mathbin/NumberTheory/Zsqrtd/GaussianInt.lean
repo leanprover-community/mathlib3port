@@ -261,12 +261,16 @@ instance : Nontrivial ℤ[i] :=
   ⟨⟨0, 1, by decide⟩⟩
 
 instance : EuclideanDomain ℤ[i] :=
-  { GaussianInt.commRing, GaussianInt.nontrivial with Quotient := (· / ·), remainder := (· % ·),
+  { GaussianInt.commRing, GaussianInt.nontrivial with
+    Quotient := (· / ·)
+    remainder := (· % ·)
     quotient_zero := by 
       simp [div_def]
-      rfl,
-    quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def], R := _,
-    r_well_founded := measure_wf (Int.natAbs ∘ norm), remainder_lt := nat_abs_norm_mod_lt,
+      rfl
+    quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def]
+    R := _
+    r_well_founded := measure_wf (Int.natAbs ∘ norm)
+    remainder_lt := nat_abs_norm_mod_lt
     mul_left_not_lt := fun a b hb0 => not_lt_of_ge <| norm_le_norm_mul_left a hb0 }
 
 open PrincipalIdealRing

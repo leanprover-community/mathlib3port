@@ -740,7 +740,8 @@ theorem measure_to_measurable_inter {s t : Set α} (hs : MeasurableSet s) (ht : 
 
 
 instance [MeasurableSpace α] : Zero (Measure α) :=
-  ⟨{ toOuterMeasure := 0, m_Union := fun f hf hd => tsum_zero.symm,
+  ⟨{  toOuterMeasure := 0
+      m_Union := fun f hf hd => tsum_zero.symm
       trimmed := OuterMeasure.trim_zero }⟩
 
 @[simp]
@@ -762,10 +763,10 @@ instance [MeasurableSpace α] : Inhabited (Measure α) :=
 
 instance [MeasurableSpace α] : Add (Measure α) :=
   ⟨fun μ₁ μ₂ =>
-    { toOuterMeasure := μ₁.toOuterMeasure + μ₂.toOuterMeasure,
+    { toOuterMeasure := μ₁.toOuterMeasure + μ₂.toOuterMeasure
       m_Union := fun s hs hd =>
         show μ₁ (⋃ i, s i) + μ₂ (⋃ i, s i) = ∑' i, μ₁ (s i) + μ₂ (s i) by
-          rw [Ennreal.tsum_add, measure_Union hd hs, measure_Union hd hs],
+          rw [Ennreal.tsum_add, measure_Union hd hs, measure_Union hd hs]
       trimmed := by rw [outer_measure.trim_add, μ₁.trimmed, μ₂.trimmed] }⟩
 
 @[simp]
@@ -792,11 +793,11 @@ variable [HasSmul R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
 
 instance [MeasurableSpace α] : HasSmul R (Measure α) :=
   ⟨fun c μ =>
-    { toOuterMeasure := c • μ.toOuterMeasure,
+    { toOuterMeasure := c • μ.toOuterMeasure
       m_Union := fun s hs hd => by
         rw [← smul_one_smul ℝ≥0∞ c (_ : outer_measure α)]
         dsimp
-        simp_rw [measure_Union hd hs, Ennreal.tsum_mul_left],
+        simp_rw [measure_Union hd hs, Ennreal.tsum_mul_left]
       trimmed := by rw [outer_measure.trim_smul, μ.trimmed] }⟩
 
 @[simp]
@@ -1003,7 +1004,8 @@ private theorem measure_le_Inf (h : ∀ μ' ∈ m, μ ≤ μ') : μ ≤ inf m :=
 
 instance [MeasurableSpace α] : CompleteSemilatticeInf (Measure α) :=
   { (by infer_instance : PartialOrder (Measure α)), (by infer_instance : HasInf (Measure α)) with
-    Inf_le := fun s a => measure_Inf_le, le_Inf := fun s a => measure_le_Inf }
+    Inf_le := fun s a => measure_Inf_le
+    le_Inf := fun s a => measure_le_Inf }
 
 instance [MeasurableSpace α] : CompleteLattice (Measure α) :=
   { /- Adding an explicit `top` makes `leanchecker` fail, see lean#364, disable for now
@@ -1015,7 +1017,8 @@ instance [MeasurableSpace α] : CompleteLattice (Measure α) :=
       -/
       completeLatticeOfCompleteSemilatticeInf
       (Measure α) with
-    bot := 0, bot_le := fun a s hs => bot_le }
+    bot := 0
+    bot_le := fun a s hs => bot_le }
 
 end InfCat
 
@@ -4347,8 +4350,10 @@ theorem sigmaFiniteTrimMono {m m₂ m0 : MeasurableSpace α} {μ : Measure α} (
   refine' measure.finite_spanning_sets_in.sigma_finite _
   · use Set.univ
   · refine'
-      { Set := spanning_sets (μ.trim (hm₂.trans hm)), set_mem := fun _ => Set.mem_univ _,
-        Finite := fun i => _,-- This is the only one left to prove
+      { Set := spanning_sets (μ.trim (hm₂.trans hm))
+        set_mem := fun _ => Set.mem_univ _
+        Finite := fun i => _
+        -- This is the only one left to prove
         spanning := Union_spanning_sets _ }
     calc
       (μ.trim hm) (spanning_sets (μ.trim (hm₂.trans hm)) i) =

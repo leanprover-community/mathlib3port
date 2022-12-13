@@ -50,13 +50,14 @@ def rightAdjointLiftStructEquiv :
       (sq.rightAdjoint
           adj).LiftStruct where 
   toFun l :=
-    { l := adj.homEquiv _ _ l.l, fac_left' := by rw [← adj.hom_equiv_naturality_left, l.fac_left],
+    { l := adj.homEquiv _ _ l.l
+      fac_left' := by rw [← adj.hom_equiv_naturality_left, l.fac_left]
       fac_right' := by rw [← adjunction.hom_equiv_naturality_right, l.fac_right] }
   invFun l :=
-    { l := (adj.homEquiv _ _).symm l.l,
+    { l := (adj.homEquiv _ _).symm l.l
       fac_left' := by 
         rw [← adjunction.hom_equiv_naturality_left_symm, l.fac_left]
-        apply (adj.hom_equiv _ _).left_inv,
+        apply (adj.hom_equiv _ _).left_inv
       fac_right' := by 
         rw [← adjunction.hom_equiv_naturality_right_symm, l.fac_right]
         apply (adj.hom_equiv _ _).left_inv }
@@ -101,14 +102,14 @@ def leftAdjointLiftStructEquiv :
       (sq.leftAdjoint
           adj).LiftStruct where 
   toFun l :=
-    { l := (adj.homEquiv _ _).symm l.l,
-      fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left],
+    { l := (adj.homEquiv _ _).symm l.l
+      fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left]
       fac_right' := by rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
   invFun l :=
-    { l := (adj.homEquiv _ _) l.l,
+    { l := (adj.homEquiv _ _) l.l
       fac_left' := by 
         rw [← adj.hom_equiv_naturality_left, l.fac_left]
-        apply (adj.hom_equiv _ _).right_inv,
+        apply (adj.hom_equiv _ _).right_inv
       fac_right' := by 
         rw [← adj.hom_equiv_naturality_right, l.fac_right]
         apply (adj.hom_equiv _ _).right_inv }

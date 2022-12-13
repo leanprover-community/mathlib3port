@@ -229,7 +229,9 @@ def equivTensor :
         ((Representation.ofMulAction k G G).tprod (1 : Representation k G ((Fin n → G) →₀ k))) :=
   ActionCat.mkIso
     (LinearEquiv.toModuleIso
-      { toTensorAux k G n with invFun := ofTensorAux k G n, left_inv := to_tensor_aux_left_inv,
+      { toTensorAux k G n with 
+        invFun := ofTensorAux k G n
+        left_inv := to_tensor_aux_left_inv
         right_inv := fun x => by convert to_tensor_aux_right_inv x })
     (toTensor k G n).comm
 #align group_cohomology.resolution.equiv_tensor GroupCohomology.Resolution.equivTensor
@@ -293,7 +295,9 @@ def classifyingSpaceUniversalCover [Monoid G] :
         MonCat.of
           G) where 
   obj n := ActionCat.ofMulAction G (Fin (n.unop.len + 1) → G)
-  map m n f := { hom := fun x => x ∘ f.unop.toOrderHom, comm' := fun g => rfl }
+  map m n f :=
+    { hom := fun x => x ∘ f.unop.toOrderHom
+      comm' := fun g => rfl }
   map_id' n := rfl
   map_comp' i j k f g := rfl
 #align classifying_space_universal_cover classifyingSpaceUniversalCover

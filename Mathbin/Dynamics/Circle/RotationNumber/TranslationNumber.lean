@@ -187,7 +187,8 @@ instance :
     Monoid
       CircleDeg1Lift where 
   mul f g :=
-    { toFun := f ∘ g, monotone' := f.Monotone.comp g.Monotone,
+    { toFun := f ∘ g
+      monotone' := f.Monotone.comp g.Monotone
       map_add_one' := fun x => by simp [map_add_one] }
   one := ⟨id, monotone_id, fun _ => rfl⟩
   mul_one f := coe_inj <| Function.comp.right_id f
@@ -233,11 +234,12 @@ theorem units_apply_inv_apply (f : CircleDeg1Liftˣ) (x : ℝ) : f ((f⁻¹ : Ci
 /-- If a lift of a circle map is bijective, then it is an order automorphism of the line. -/
 def toOrderIso :
     CircleDeg1Liftˣ →*
-      ℝ ≃o
-        ℝ where 
+      ℝ ≃o ℝ where 
   toFun f :=
-    { toFun := f, invFun := ⇑f⁻¹, left_inv := units_inv_apply_apply f,
-      right_inv := units_apply_inv_apply f,
+    { toFun := f
+      invFun := ⇑f⁻¹
+      left_inv := units_inv_apply_apply f
+      right_inv := units_apply_inv_apply f
       map_rel_iff' := fun x y => ⟨fun h => by simpa using mono (↑f⁻¹) h, mono f⟩ }
   map_one' := rfl
   map_mul' f g := rfl
@@ -262,15 +264,15 @@ theorem coe_to_order_iso_inv (f : CircleDeg1Liftˣ) : ⇑(toOrderIso f)⁻¹ = (
 theorem is_unit_iff_bijective {f : CircleDeg1Lift} : IsUnit f ↔ Bijective f :=
   ⟨fun ⟨u, h⟩ => h ▸ (toOrderIso u).Bijective, fun h =>
     Units.isUnit
-      { val := f,
+      { val := f
         inv :=
-          { toFun := (Equiv.ofBijective f h).symm,
+          { toFun := (Equiv.ofBijective f h).symm
             monotone' := fun x y hxy =>
               (f.strict_mono_iff_injective.2 h.1).le_iff_le.1
-                (by simp only [Equiv.ofBijective_apply_symm_apply f h, hxy]),
+                (by simp only [Equiv.ofBijective_apply_symm_apply f h, hxy])
             map_add_one' := fun x =>
-              h.1 <| by simp only [Equiv.ofBijective_apply_symm_apply f, f.map_add_one] },
-        val_inv := ext <| Equiv.ofBijective_apply_symm_apply f h,
+              h.1 <| by simp only [Equiv.ofBijective_apply_symm_apply f, f.map_add_one] }
+        val_inv := ext <| Equiv.ofBijective_apply_symm_apply f h
         inv_val := ext <| Equiv.ofBijective_symm_apply_apply f h }⟩
 #align circle_deg1_lift.is_unit_iff_bijective CircleDeg1Lift.is_unit_iff_bijective
 
@@ -303,8 +305,9 @@ def translate : Multiplicative ℝ →* CircleDeg1Liftˣ := by
     exact
       { toFun := fun x =>
           ⟨fun y => x.toAdd + y, fun y₁ y₂ h => add_le_add_left h _, fun y =>
-            (add_assoc _ _ _).symm⟩,
-        map_one' := ext <| zero_add, map_mul' := fun x y => ext <| add_assoc _ _ }
+            (add_assoc _ _ _).symm⟩
+        map_one' := ext <| zero_add
+        map_mul' := fun x y => ext <| add_assoc _ _ }
 #align circle_deg1_lift.translate CircleDeg1Lift.translate
 
 @[simp]
@@ -420,9 +423,9 @@ noncomputable instance :
     Lattice
       CircleDeg1Lift where 
   sup f g :=
-    { toFun := fun x => max (f x) (g x),
-      monotone' := fun x y h =>
-        max_le_max (f.mono h) (g.mono h),-- TODO: generalize to `monotone.max`
+    { toFun := fun x => max (f x) (g x)
+      monotone' := fun x y h => max_le_max (f.mono h) (g.mono h)
+      -- TODO: generalize to `monotone.max`
       map_add_one' := fun x => by simp [max_add_add_right] }
   le f g := ∀ x, f x ≤ g x
   le_refl f x := le_refl (f x)
@@ -432,7 +435,8 @@ noncomputable instance :
   le_sup_right f g x := le_max_right (f x) (g x)
   sup_le f₁ f₂ f₃ h₁ h₂ x := max_le (h₁ x) (h₂ x)
   inf f g :=
-    { toFun := fun x => min (f x) (g x), monotone' := fun x y h => min_le_min (f.mono h) (g.mono h),
+    { toFun := fun x => min (f x) (g x)
+      monotone' := fun x y h => min_le_min (f.mono h) (g.mono h)
       map_add_one' := fun x => by simp [min_add_add_right] }
   inf_le_left f g x := min_le_left (f x) (g x)
   inf_le_right f g x := min_le_right (f x) (g x)

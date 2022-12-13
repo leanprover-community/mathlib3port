@@ -387,7 +387,11 @@ since this is typically needed when using stronger unification.
 -/
 unsafe def linarith_config.update_reducibility (cfg : linarith_config) (reduce_semi : Bool) :
     linarith_config :=
-  if reduce_semi then { cfg with Transparency := semireducible, discharger := sorry } else cfg
+  if reduce_semi then
+    { cfg with 
+      Transparency := semireducible
+      discharger := sorry }
+  else cfg
 #align linarith.linarith_config.update_reducibility linarith.linarith_config.update_reducibility
 
 /-!

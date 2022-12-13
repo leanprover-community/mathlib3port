@@ -163,9 +163,8 @@ instance {A B : Mon_ C} (f : A ⟶ B) [e : IsIso ((forget C).map f)] : IsIso f.H
 /-- The forgetful functor from monoid objects to the ambient category reflects isomorphisms. -/
 instance :
     ReflectsIsomorphisms
-      (forget
-        C) where reflects X Y f e :=
-    ⟨⟨{ Hom := inv f.hom,
+      (forget C) where reflects X Y f e :=
+    ⟨⟨{   Hom := inv f.hom
           mul_hom' := by
             simp only [is_iso.comp_inv_eq, hom.mul_hom, category.assoc, ← tensor_comp_assoc,
               is_iso.inv_hom_id, tensor_id, category.id_comp] },
@@ -178,12 +177,15 @@ and checking compatibility with unit and multiplication only in the forward dire
 def isoOfIso {M N : Mon_ C} (f : M.x ≅ N.x) (one_f : M.one ≫ f.Hom = N.one)
     (mul_f : M.mul ≫ f.Hom = (f.Hom ⊗ f.Hom) ≫ N.mul) :
     M ≅ N where 
-  Hom := { Hom := f.Hom, one_hom' := one_f, mul_hom' := mul_f }
+  Hom :=
+    { Hom := f.Hom
+      one_hom' := one_f
+      mul_hom' := mul_f }
   inv :=
-    { Hom := f.inv,
+    { Hom := f.inv
       one_hom' := by 
         rw [← one_f]
-        simp,
+        simp
       mul_hom' := by 
         rw [← cancel_mono f.hom]
         slice_rhs 2 3 => rw [mul_f]
@@ -195,10 +197,10 @@ instance uniqueHomFromTrivial (A : Mon_ C) :
       (trivial C ⟶
         A) where 
   default :=
-    { Hom := A.one,
+    { Hom := A.one
       one_hom' := by 
         dsimp
-        simp,
+        simp
       mul_hom' := by 
         dsimp
         simp [A.one_mul, unitors_equal] }
@@ -227,22 +229,23 @@ That is, a lax monoidal functor `F : C ⥤ D` induces a functor `Mon_ C ⥤ Mon_
 @[simps]
 def mapMon (F : LaxMonoidalFunctor C D) :
     Mon_ C ⥤
-      Mon_
-        D where 
+      Mon_ D where 
   obj A :=
-    { x := F.obj A.x, one := F.ε ≫ F.map A.one, mul := F.μ _ _ ≫ F.map A.mul,
+    { x := F.obj A.x
+      one := F.ε ≫ F.map A.one
+      mul := F.μ _ _ ≫ F.map A.mul
       one_mul' := by 
         conv_lhs => rw [comp_tensor_id, ← F.to_functor.map_id]
         slice_lhs 2 3 => rw [F.μ_natural]
         slice_lhs 3 4 => rw [← F.to_functor.map_comp, A.one_mul]
         rw [F.to_functor.map_id]
-        rw [F.left_unitality],
+        rw [F.left_unitality]
       mul_one' := by 
         conv_lhs => rw [id_tensor_comp, ← F.to_functor.map_id]
         slice_lhs 2 3 => rw [F.μ_natural]
         slice_lhs 3 4 => rw [← F.to_functor.map_comp, A.mul_one]
         rw [F.to_functor.map_id]
-        rw [F.right_unitality],
+        rw [F.right_unitality]
       mul_assoc' := by 
         conv_lhs => rw [comp_tensor_id, ← F.to_functor.map_id]
         slice_lhs 2 3 => rw [F.μ_natural]
@@ -255,10 +258,10 @@ def mapMon (F : LaxMonoidalFunctor C D) :
         slice_rhs 1 3 => rw [← F.associativity]
         simp only [category.assoc] }
   map A B f :=
-    { Hom := F.map f.Hom,
+    { Hom := F.map f.Hom
       one_hom' := by 
         dsimp
-        rw [category.assoc, ← F.to_functor.map_comp, f.one_hom],
+        rw [category.assoc, ← F.to_functor.map_comp, f.one_hom]
       mul_hom' := by 
         dsimp
         rw [category.assoc, F.μ_natural_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp,
@@ -308,14 +311,19 @@ def monToLaxMonoidal :
       LaxMonoidalFunctor (Discrete PUnit.{u + 1})
         C where 
   obj A :=
-    { obj := fun _ => A.x, map := fun _ _ _ => 𝟙 _, ε := A.one, μ := fun _ _ => A.mul,
-      map_id' := fun _ => rfl, map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
+    { obj := fun _ => A.x
+      map := fun _ _ _ => 𝟙 _
+      ε := A.one
+      μ := fun _ _ => A.mul
+      map_id' := fun _ => rfl
+      map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
   map A B f :=
-    { app := fun _ => f.Hom,
+    { app := fun _ => f.Hom
       naturality' := fun _ _ _ => by 
         dsimp
-        rw [category.id_comp, category.comp_id],
-      unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
+        rw [category.id_comp, category.comp_id]
+      unit' := f.OneHom
+      tensor' := fun _ _ => f.MulHom }
 #align
   Mon_.equiv_lax_monoidal_functor_punit.Mon_to_lax_monoidal Mon_.EquivLaxMonoidalFunctorPunit.monToLaxMonoidal
 
@@ -337,7 +345,11 @@ def unitIso :
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
 def counitIso : monToLaxMonoidal C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon_ C) :=
-  NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
+  NatIso.ofComponents
+    (fun F =>
+      { Hom := { Hom := 𝟙 _ }
+        inv := { Hom := 𝟙 _ } })
+    (by tidy)
 #align Mon_.equiv_lax_monoidal_functor_punit.counit_iso Mon_.EquivLaxMonoidalFunctorPunit.counitIso
 
 end EquivLaxMonoidalFunctorPunit
@@ -554,14 +566,17 @@ instance monMonoidal :
       (Mon_
         C) where 
   tensorObj M N :=
-    { x := M.x ⊗ N.x, one := (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one),
-      mul := tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul), one_mul' := Mon_tensor_one_mul M N,
-      mul_one' := Mon_tensor_mul_one M N, mul_assoc' := Mon_tensor_mul_assoc M N }
+    { x := M.x ⊗ N.x
+      one := (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one)
+      mul := tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul)
+      one_mul' := Mon_tensor_one_mul M N
+      mul_one' := Mon_tensor_mul_one M N
+      mul_assoc' := Mon_tensor_mul_assoc M N }
   tensorHom M N P Q f g :=
-    { Hom := f.Hom ⊗ g.Hom,
+    { Hom := f.Hom ⊗ g.Hom
       one_hom' := by 
         dsimp
-        slice_lhs 2 3 => rw [← tensor_comp, hom.one_hom f, hom.one_hom g],
+        slice_lhs 2 3 => rw [← tensor_comp, hom.one_hom f, hom.one_hom g]
       mul_hom' := by 
         dsimp
         slice_rhs 1 2 => rw [tensor_μ_natural]

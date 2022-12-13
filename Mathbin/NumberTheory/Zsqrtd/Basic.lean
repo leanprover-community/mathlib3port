@@ -175,19 +175,29 @@ theorem mul_im (z w : ℤ√d) : (z * w).im = z.re * w.im + z.im * w.re :=
 
 instance : AddCommGroup (ℤ√d) := by
   refine_struct
-          { add := (· + ·), zero := (0 : ℤ√d), sub := fun a b => a + -b, neg := Neg.neg,
-            zsmul := @zsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩,
+          { add := (· + ·)
+            zero := (0 : ℤ√d)
+            sub := fun a b => a + -b
+            neg := Neg.neg
+            zsmul := @zsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩
             nsmul := @nsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩ } <;>
         intros <;>
       try rfl <;>
     simp [ext, add_comm, add_left_comm]
 
 instance : AddGroupWithOne (ℤ√d) :=
-  { Zsqrtd.addCommGroup with natCast := fun n => of_int n, intCast := of_int, one := 1 }
+  { Zsqrtd.addCommGroup with 
+    natCast := fun n => of_int n
+    intCast := of_int
+    one := 1 }
 
 instance : CommRing (ℤ√d) := by
   refine_struct
-          { Zsqrtd.addGroupWithOne with add := (· + ·), zero := (0 : ℤ√d), mul := (· * ·), one := 1,
+          { Zsqrtd.addGroupWithOne with 
+            add := (· + ·)
+            zero := (0 : ℤ√d)
+            mul := (· * ·)
+            one := 1
             npow := @npowRec (ℤ√d) ⟨1⟩ ⟨(· * ·)⟩ } <;>
         intros <;>
       try rfl <;>
@@ -915,7 +925,9 @@ theorem le_antisymm {a b : ℤ√d} (ab : a ≤ b) (ba : b ≤ a) : a = b :=
 #align zsqrtd.le_antisymm Zsqrtd.le_antisymm
 
 instance : LinearOrder (ℤ√d) :=
-  { Zsqrtd.preorder with le_antisymm := @Zsqrtd.le_antisymm, le_total := Zsqrtd.le_total,
+  { Zsqrtd.preorder with 
+    le_antisymm := @Zsqrtd.le_antisymm
+    le_total := Zsqrtd.le_total
     decidableLe := Zsqrtd.decidableLe }
 
 protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : ℤ√d}, a * b = 0 → a = 0 ∨ b = 0
@@ -966,7 +978,8 @@ protected theorem mul_pos (a b : ℤ√d) (a0 : 0 < a) (b0 : 0 < b) : 0 < a * b 
 
 instance : LinearOrderedCommRing (ℤ√d) :=
   { Zsqrtd.commRing, Zsqrtd.linearOrder, Zsqrtd.nontrivial with
-    add_le_add_left := @Zsqrtd.add_le_add_left, mul_pos := @Zsqrtd.mul_pos,
+    add_le_add_left := @Zsqrtd.add_le_add_left
+    mul_pos := @Zsqrtd.mul_pos
     zero_le_one := by decide }
 
 instance : LinearOrderedRing (ℤ√d) := by infer_instance
@@ -1011,11 +1024,12 @@ def lift {d : ℤ} :
       (ℤ√d →+*
         R) where 
   toFun r :=
-    { toFun := fun a => a.1 + a.2 * (r : R), map_zero' := by simp,
+    { toFun := fun a => a.1 + a.2 * (r : R)
+      map_zero' := by simp
       map_add' := fun a b => by 
         simp
-        ring,
-      map_one' := by simp,
+        ring
+      map_one' := by simp
       map_mul' := fun a b => by
         have :
           (a.re + a.im * r : R) * (b.re + b.im * r) =

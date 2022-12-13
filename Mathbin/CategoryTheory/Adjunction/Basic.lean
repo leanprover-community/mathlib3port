@@ -290,18 +290,18 @@ def mkOfHomEquiv (adj : CoreHomEquiv F G) : F ⊣ G :=
   { -- See note [dsimp, simp].
     adj with
     Unit :=
-      { app := fun X => (adj.homEquiv X (F.obj X)) (𝟙 (F.obj X)),
+      { app := fun X => (adj.homEquiv X (F.obj X)) (𝟙 (F.obj X))
         naturality' := by 
           intros
           erw [← adj.hom_equiv_naturality_left, ← adj.hom_equiv_naturality_right]
-          dsimp; simp },
+          dsimp; simp }
     counit :=
-      { app := fun Y => (adj.homEquiv _ _).invFun (𝟙 (G.obj Y)),
+      { app := fun Y => (adj.homEquiv _ _).invFun (𝟙 (G.obj Y))
         naturality' := by 
           intros
           erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm]
-          dsimp; simp },
-    hom_equiv_unit' := fun X Y f => by erw [← adj.hom_equiv_naturality_right] <;> simp,
+          dsimp; simp }
+    hom_equiv_unit' := fun X Y f => by erw [← adj.hom_equiv_naturality_right] <;> simp
     hom_equiv_counit' := fun X Y f => by erw [← adj.hom_equiv_naturality_left_symm] <;> simp }
 #align category_theory.adjunction.mk_of_hom_equiv CategoryTheory.Adjunction.mkOfHomEquiv
 
@@ -311,7 +311,8 @@ satisfying the triangle identities. -/
 def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
   { adj with
     homEquiv := fun X Y =>
-      { toFun := fun f => adj.Unit.app X ≫ G.map f, invFun := fun g => F.map g ≫ adj.counit.app Y,
+      { toFun := fun f => adj.Unit.app X ≫ G.map f
+        invFun := fun g => F.map g ≫ adj.counit.app Y
         left_inv := fun f => by 
           change F.map (_ ≫ _) ≫ _ = _
           rw [F.map_comp, assoc, ← functor.comp_map, adj.counit.naturality, ← assoc]
@@ -319,7 +320,7 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           have t := congr_arg (fun t : nat_trans _ _ => t.app _) adj.left_triangle
           dsimp at t
           simp only [id_comp] at t
-          exact t,
+          exact t
         right_inv := fun g => by 
           change _ ≫ G.map (_ ≫ _) = _
           rw [G.map_comp, ← assoc, ← functor.comp_map, ← adj.unit.naturality, assoc]
@@ -468,7 +469,7 @@ to `adjunction_of_equiv_right`. -/
 @[simps]
 def adjunctionOfEquivLeft : leftAdjointOfEquiv e he ⊣ G :=
   mkOfHomEquiv
-    { homEquiv := e,
+    { homEquiv := e
       hom_equiv_naturality_left_symm' := by 
         intros
         erw [← he' e he, ← Equiv.apply_eq_iff_eq]
@@ -515,8 +516,8 @@ to `adjunction_of_equiv_left`. -/
 @[simps]
 def adjunctionOfEquivRight : F ⊣ rightAdjointOfEquiv e he :=
   mkOfHomEquiv
-    { homEquiv := e,
-      hom_equiv_naturality_left_symm' := by intros <;> rw [Equiv.symm_apply_eq, he] <;> simp,
+    { homEquiv := e
+      hom_equiv_naturality_left_symm' := by intros <;> rw [Equiv.symm_apply_eq, he] <;> simp
       hom_equiv_naturality_right' := by 
         intro X Y Y' g h
         erw [← he, Equiv.apply_eq_iff_eq, ← assoc, he' e he, comp_id, Equiv.symm_apply_apply] }

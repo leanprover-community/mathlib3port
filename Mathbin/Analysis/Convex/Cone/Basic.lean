@@ -189,18 +189,26 @@ theorem coe_top : ↑(⊤ : ConvexCone 𝕜 E) = (univ : Set E) :=
 #align convex_cone.coe_top ConvexCone.coe_top
 
 instance : CompleteLattice (ConvexCone 𝕜 E) :=
-  { SetLike.partialOrder with le := (· ≤ ·), lt := (· < ·), bot := ⊥,
-    bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := (· ⊓ ·),
-    inf := HasInf.inf, sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    sup := fun s => inf { T | ∀ S ∈ s, S ≤ T },
-    le_sup_left := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.1 hx,
-    le_sup_right := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.2 hx,
-    sup_le := fun a b c ha hb x hx => mem_Inf.1 hx c ⟨ha, hb⟩,
-    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
-    inf_le_right := fun a b x => And.right,
-    le_Sup := fun s p hs x hx => mem_Inf.2 fun t ht => ht p hs hx,
-    Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs,
-    le_Inf := fun s a ha x hx => mem_Inf.2 fun t ht => ha t ht hx,
+  { SetLike.partialOrder with 
+    le := (· ≤ ·)
+    lt := (· < ·)
+    bot := ⊥
+    bot_le := fun S x => False.elim
+    top := ⊤
+    le_top := fun S x hx => mem_top 𝕜 x
+    inf := (· ⊓ ·)
+    inf := HasInf.inf
+    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x }
+    sup := fun s => inf { T | ∀ S ∈ s, S ≤ T }
+    le_sup_left := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.1 hx
+    le_sup_right := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.2 hx
+    sup_le := fun a b c ha hb x hx => mem_Inf.1 hx c ⟨ha, hb⟩
+    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
+    inf_le_left := fun a b x => And.left
+    inf_le_right := fun a b x => And.right
+    le_Sup := fun s p hs x hx => mem_Inf.2 fun t ht => ht p hs hx
+    Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs
+    le_Inf := fun s a ha x hx => mem_Inf.2 fun t ht => ha t ht hx
     Inf_le := fun s a ha x hx => mem_Inf.1 hx _ ha }
 
 instance : Inhabited (ConvexCone 𝕜 E) :=
@@ -460,11 +468,11 @@ theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by rw [pointed, mem_ze
 
 instance : Add (ConvexCone 𝕜 E) :=
   ⟨fun K₁ K₂ =>
-    { carrier := { z | ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z },
+    { carrier := { z | ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z }
       smul_mem' := by 
         rintro c hc _ ⟨x, y, hx, hy, rfl⟩
         rw [smul_add]
-        use c • x, c • y, K₁.smul_mem hc hx, K₂.smul_mem hc hy,
+        use c • x, c • y, K₁.smul_mem hc hx, K₂.smul_mem hc hy
       add_mem' := by 
         rintro _ ⟨x₁, x₂, hx₁, hx₂, rfl⟩ y ⟨y₁, y₂, hy₁, hy₂, rfl⟩
         use x₁ + y₁, x₂ + y₂, K₁.add_mem hx₁ hy₁, K₂.add_mem hx₂ hy₂
@@ -842,12 +850,12 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
     (hf : ∀ x : f.domain, f x ≤ N x) :
     ∃ g : E →ₗ[ℝ] ℝ, (∀ x : f.domain, g x = f x) ∧ ∀ x, g x ≤ N x := by
   let s : ConvexCone ℝ (E × ℝ) :=
-    { carrier := { p : E × ℝ | N p.1 ≤ p.2 },
+    { carrier := { p : E × ℝ | N p.1 ≤ p.2 }
       smul_mem' := fun c hc p hp =>
         calc
           N (c • p.1) = c * N p.1 := N_hom c hc p.1
           _ ≤ c * p.2 := mul_le_mul_of_nonneg_left hp hc.le
-          ,
+          
       add_mem' := fun x hx y hy => (N_add _ _).trans (add_le_add hx hy) }
   obtain ⟨g, g_eq, g_nonneg⟩ := riesz_extension s ((-f).coprod (linear_map.id.to_pmap ⊤)) _ _ <;>
     try

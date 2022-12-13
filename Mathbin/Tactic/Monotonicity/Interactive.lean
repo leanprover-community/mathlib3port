@@ -295,13 +295,9 @@ unsafe
                     ,
                     {
                       function := f
-                        ,
                         left := l
-                        ,
                         right := r
-                        ,
                         to_rel := some <| expr.pi `x BinderInfo.default
-                        ,
                         rel_def
                       }
                 )
@@ -314,11 +310,7 @@ unsafe
             let t₁ ← infer_type e₁
             let rel_def ← to_expr ` `( fun x₀ x₁ => ( x₀ : $ ( t₀ ) ) = ( x₁ : $ ( t₁ ) ) )
             return
-              (
-                e₀
-                  ,
-                  e₁ , id_rs , { function := f , left := l , right := r , to_rel := none , rel_def }
-                )
+              ( e₀ , e₁ , id_rs , { function := f left := l right := r to_rel := none rel_def } )
       |
         expr.app ( expr.app rel e₀ ) e₁
         =>
@@ -334,13 +326,9 @@ unsafe
                     ,
                     {
                       function := f
-                        ,
                         left := l
-                        ,
                         right := r
-                        ,
                         to_rel := expr.app ∘ expr.app rel
-                        ,
                         rel_def := rel
                       }
                 )
@@ -664,7 +652,9 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
 #align tactic.interactive.mono tactic.interactive.mono
 
 add_tactic_doc
-  { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono],
+  { Name := "mono"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.mono]
     tags := ["monotonicity"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -807,7 +797,9 @@ TODO(Simon): with `ac_mono := h` and `ac_mono : p` split the remaining
   gaol if the provided rule does not solve it completely.
 -/
 add_tactic_doc
-  { Name := "ac_mono", category := DocCategory.tactic, declNames := [`tactic.interactive.ac_mono],
+  { Name := "ac_mono"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.ac_mono]
     tags := ["monotonicity"] }
 
 attribute [mono] And.imp Or.imp

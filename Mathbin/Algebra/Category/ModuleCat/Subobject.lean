@@ -35,7 +35,8 @@ variable {R : Type u} [Ring R] (M : ModuleCat.{v} R)
     submodules.-/
 noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
   OrderIso.symm
-    { invFun := fun S => S.arrow.range, toFun := fun N => Subobject.mk (↾N.Subtype),
+    { invFun := fun S => S.arrow.range
+      toFun := fun N => Subobject.mk (↾N.Subtype)
       right_inv := fun S =>
         Eq.symm
           (by 
@@ -52,7 +53,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
               · exact LinearMap.mem_range_self _
             · apply LinearMap.ext
               intro x
-              rfl),
+              rfl)
       left_inv := fun N => by
         convert congr_arg LinearMap.range (underlying_iso_arrow (↾N.subtype)) using 1
         · have :
@@ -62,7 +63,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
             intro x
             rfl
           rw [this, comp_def, LinearEquiv.range_comp]
-        · exact (Submodule.range_subtype _).symm,
+        · exact (Submodule.range_subtype _).symm
       map_rel_iff' := fun S T => by
         refine'
           ⟨fun h => _, fun h =>

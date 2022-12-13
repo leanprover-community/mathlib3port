@@ -535,13 +535,17 @@ theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGlb S (inf S) := by
 We provide explicit values for the fields `bot`, `top`, `inf` to get more convenient definitions
 than we would otherwise obtain from `complete_lattice_of_Inf`. -/
 instance : CompleteLattice (LieSubalgebra R L) :=
-  { completeLatticeOfInf _ Inf_glb with bot := ⊥,
+  { completeLatticeOfInf _ Inf_glb with 
+    bot := ⊥
     bot_le := fun N _ h => by 
       rw [mem_bot] at h
       rw [h]
-      exact N.zero_mem',
-    top := ⊤, le_top := fun _ _ _ => trivial, inf := (· ⊓ ·),
-    le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩, inf_le_left := fun _ _ _ => And.left,
+      exact N.zero_mem'
+    top := ⊤
+    le_top := fun _ _ _ => trivial
+    inf := (· ⊓ ·)
+    le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩
+    inf_le_left := fun _ _ _ => And.left
     inf_le_right := fun _ _ _ => And.right }
 
 instance : AddCommMonoid (LieSubalgebra R
@@ -555,8 +559,8 @@ instance : AddCommMonoid (LieSubalgebra R
 
 instance : CanonicallyOrderedAddMonoid (LieSubalgebra R L) :=
   { LieSubalgebra.addCommMonoid, LieSubalgebra.completeLattice with
-    add_le_add_left := fun a b => sup_le_sup_left,
-    exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩,
+    add_le_add_left := fun a b => sup_le_sup_left
+    exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩
     le_self_add := fun a b => le_sup_left }
 
 @[simp]
@@ -598,7 +602,8 @@ theorem well_founded_of_noetherian [IsNoetherian R L] :
   let f :
     ((· > ·) : LieSubalgebra R L → LieSubalgebra R L → Prop) →r
       ((· > ·) : Submodule R L → Submodule R L → Prop) :=
-    { toFun := coe, map_rel' := fun N N' h => h }
+    { toFun := coe
+      map_rel' := fun N N' h => h }
   RelHomClass.well_founded f (is_noetherian_iff_well_founded.mp inferInstance)
 #align lie_subalgebra.well_founded_of_noetherian LieSubalgebra.well_founded_of_noetherian
 

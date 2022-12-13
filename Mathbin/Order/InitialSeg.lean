@@ -414,7 +414,9 @@ theorem cod_restrict_top (p) (f : r ≺i s) (H H₂) : (codRestrict p f H H₂).
 
 /-- Principal segment from an empty type into a type with a minimal element. -/
 def ofIsEmpty (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) : r ≺i s :=
-  { RelEmbedding.ofIsEmpty r s with top := b, down' := by simp [H] }
+  { RelEmbedding.ofIsEmpty r s with 
+    top := b
+    down' := by simp [H] }
 #align principal_seg.of_is_empty PrincipalSeg.ofIsEmpty
 
 @[simp]

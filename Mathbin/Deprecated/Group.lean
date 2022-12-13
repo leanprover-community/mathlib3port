@@ -122,7 +122,8 @@ theorem coe_of {f : M → N} (hf : IsMonoidHom f) : ⇑(MonoidHom.of hf) = f :=
 
 @[to_additive]
 theorem is_monoid_hom_coe (f : M →* N) : IsMonoidHom (f : M → N) :=
-  { map_mul := f.map_mul, map_one := f.map_one }
+  { map_mul := f.map_mul
+    map_one := f.map_one }
 #align monoid_hom.is_monoid_hom_coe MonoidHom.is_monoid_hom_coe
 
 end MonoidHom
@@ -142,7 +143,8 @@ theorem is_mul_hom (h : M ≃* N) : IsMulHom h :=
 @[to_additive
       "An additive bijection between two additive monoids is an additive\nmonoid hom (deprecated). "]
 theorem is_monoid_hom (h : M ≃* N) : IsMonoidHom h :=
-  { map_mul := h.map_mul, map_one := h.map_one }
+  { map_mul := h.map_mul
+    map_one := h.map_one }
 #align mul_equiv.is_monoid_hom MulEquiv.is_monoid_hom
 
 end MulEquiv
@@ -163,7 +165,7 @@ preserves multiplication when the target is commutative. -/
       "The negation of a map which preserves addition, preserves addition\nwhen the target is commutative."]
 theorem inv {α β} [MulOneClass α] [CommGroup β] {f : α → β} (hf : IsMonoidHom f) :
     IsMonoidHom fun a => (f a)⁻¹ :=
-  { map_one := hf.map_one.symm ▸ inv_one,
+  { map_one := hf.map_one.symm ▸ inv_one
     map_mul := fun a b => (hf.map_mul a b).symm ▸ mul_inv _ _ }
 #align is_monoid_hom.inv IsMonoidHom.inv
 
@@ -173,7 +175,8 @@ end IsMonoidHom
 @[to_additive "A map to an additive group preserving addition is an additive monoid\nhomomorphism."]
 theorem IsMulHom.to_is_monoid_hom [MulOneClass α] [Group β] {f : α → β} (hf : IsMulHom f) :
     IsMonoidHom f :=
-  { map_one := mul_right_eq_self.1 <| by rw [← hf.map_mul, one_mul], map_mul := hf.map_mul }
+  { map_one := mul_right_eq_self.1 <| by rw [← hf.map_mul, one_mul]
+    map_mul := hf.map_mul }
 #align is_mul_hom.to_is_monoid_hom IsMulHom.to_is_monoid_hom
 
 namespace IsMonoidHom
@@ -183,7 +186,8 @@ variable [MulOneClass α] [MulOneClass β] {f : α → β}
 /-- The identity map is a monoid homomorphism. -/
 @[to_additive "The identity map is an additive monoid homomorphism."]
 theorem id : IsMonoidHom (@id α) :=
-  { map_one := rfl, map_mul := fun _ _ => rfl }
+  { map_one := rfl
+    map_mul := fun _ _ => rfl }
 #align is_monoid_hom.id IsMonoidHom.id
 
 /-- The composite of two monoid homomorphisms is a monoid homomorphism. -/
@@ -202,13 +206,15 @@ namespace IsAddMonoidHom
 /-- Left multiplication in a ring is an additive monoid morphism. -/
 theorem is_add_monoid_hom_mul_left {γ : Type _} [NonUnitalNonAssocSemiring γ] (x : γ) :
     IsAddMonoidHom fun y : γ => x * y :=
-  { map_zero := mul_zero x, map_add := fun y z => mul_add x y z }
+  { map_zero := mul_zero x
+    map_add := fun y z => mul_add x y z }
 #align is_add_monoid_hom.is_add_monoid_hom_mul_left IsAddMonoidHom.is_add_monoid_hom_mul_left
 
 /-- Right multiplication in a ring is an additive monoid morphism. -/
 theorem is_add_monoid_hom_mul_right {γ : Type _} [NonUnitalNonAssocSemiring γ] (x : γ) :
     IsAddMonoidHom fun y : γ => y * x :=
-  { map_zero := zero_mul x, map_add := fun y z => add_mul y z x }
+  { map_zero := zero_mul x
+    map_add := fun y z => add_mul y z x }
 #align is_add_monoid_hom.is_add_monoid_hom_mul_right IsAddMonoidHom.is_add_monoid_hom_mul_right
 
 end IsAddMonoidHom
@@ -329,11 +335,13 @@ section
 variable [NonAssocSemiring R] [NonAssocSemiring S]
 
 theorem to_is_monoid_hom (f : R →+* S) : IsMonoidHom f :=
-  { map_one := f.map_one, map_mul := f.map_mul }
+  { map_one := f.map_one
+    map_mul := f.map_mul }
 #align ring_hom.to_is_monoid_hom RingHom.to_is_monoid_hom
 
 theorem to_is_add_monoid_hom (f : R →+* S) : IsAddMonoidHom f :=
-  { map_zero := f.map_zero, map_add := f.map_add }
+  { map_zero := f.map_zero
+    map_add := f.map_add }
 #align ring_hom.to_is_add_monoid_hom RingHom.to_is_add_monoid_hom
 
 end

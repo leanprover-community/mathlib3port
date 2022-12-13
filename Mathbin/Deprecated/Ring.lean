@@ -56,9 +56,9 @@ theorem id : IsSemiringHom (@id α) := by refine' { .. } <;> intros <;> rfl
 /-- The composition of two semiring homomorphisms is a semiring homomorphism. -/
 theorem comp (hf : IsSemiringHom f) {γ} [Semiring γ] {g : β → γ} (hg : IsSemiringHom g) :
     IsSemiringHom (g ∘ f) :=
-  { map_zero := by simpa [map_zero hf] using map_zero hg,
-    map_one := by simpa [map_one hf] using map_one hg,
-    map_add := fun x y => by simp [map_add hf, map_add hg],
+  { map_zero := by simpa [map_zero hf] using map_zero hg
+    map_one := by simpa [map_one hf] using map_one hg
+    map_add := fun x y => by simp [map_add hf, map_add hg]
     map_mul := fun x y => by simp [map_mul hf, map_mul hg] }
 #align is_semiring_hom.comp IsSemiringHom.comp
 
@@ -123,8 +123,8 @@ theorem id : IsRingHom (@id α) := by refine' { .. } <;> intros <;> rfl
 -- see Note [no instance on morphisms]
 /-- The composition of two ring homomorphisms is a ring homomorphism. -/
 theorem comp (hf : IsRingHom f) {γ} [Ring γ] {g : β → γ} (hg : IsRingHom g) : IsRingHom (g ∘ f) :=
-  { map_add := fun x y => by simp [map_add hf] <;> rw [map_add hg] <;> rfl,
-    map_mul := fun x y => by simp [map_mul hf] <;> rw [map_mul hg] <;> rfl,
+  { map_add := fun x y => by simp [map_add hf] <;> rw [map_add hg] <;> rfl
+    map_mul := fun x y => by simp [map_mul hf] <;> rw [map_mul hg] <;> rfl
     map_one := by simp [map_one hf] <;> exact map_one hg }
 #align is_ring_hom.comp IsRingHom.comp
 
@@ -158,7 +158,10 @@ theorem coe_of {f : α → β} (hf : IsSemiringHom f) : ⇑(of hf) = f :=
 #align ring_hom.coe_of RingHom.coe_of
 
 theorem to_is_semiring_hom (f : α →+* β) : IsSemiringHom f :=
-  { map_zero := f.map_zero, map_one := f.map_one, map_add := f.map_add, map_mul := f.map_mul }
+  { map_zero := f.map_zero
+    map_one := f.map_one
+    map_add := f.map_add
+    map_mul := f.map_mul }
 #align ring_hom.to_is_semiring_hom RingHom.to_is_semiring_hom
 
 end

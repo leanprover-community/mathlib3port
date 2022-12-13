@@ -135,8 +135,10 @@ end
 
 instance InducedCategory.groupoid {C : Type u} (D : Type u₂) [Groupoid.{v} D] (F : C → D) :
     Groupoid.{v} (InducedCategory D F) :=
-  { InducedCategory.category F with inv := fun X Y f => Groupoid.inv f,
-    inv_comp' := fun X Y f => Groupoid.inv_comp f, comp_inv' := fun X Y f => Groupoid.comp_inv f }
+  { InducedCategory.category F with
+    inv := fun X Y f => Groupoid.inv f
+    inv_comp' := fun X Y f => Groupoid.inv_comp f
+    comp_inv' := fun X Y f => Groupoid.comp_inv f }
 #align category_theory.induced_category.groupoid CategoryTheory.InducedCategory.groupoid
 
 section

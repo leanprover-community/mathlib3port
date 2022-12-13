@@ -81,14 +81,14 @@ def transferNatTrans :
         H ⋙
           R₂) where 
   toFun h :=
-    { app := fun X => adj₂.Unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _)),
+    { app := fun X => adj₂.Unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _))
       naturality' := fun X Y f => by 
         dsimp
         rw [assoc, ← R₂.map_comp, assoc, ← H.map_comp, ← adj₁.counit_naturality, H.map_comp, ←
           functor.comp_map L₁, ← h.naturality_assoc]
         simp }
   invFun h :=
-    { app := fun X => L₂.map (G.map (adj₁.Unit.app _) ≫ h.app _) ≫ adj₂.counit.app _,
+    { app := fun X => L₂.map (G.map (adj₁.Unit.app _) ≫ h.app _) ≫ adj₂.counit.app _
       naturality' := fun X Y f => by 
         dsimp
         rw [← L₂.map_comp_assoc, ← G.map_comp_assoc, ← adj₁.unit_naturality, G.map_comp_assoc, ←

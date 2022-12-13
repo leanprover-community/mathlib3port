@@ -60,7 +60,7 @@ limiting if the given cones are also.
 def buildLimit : Cone F where 
   x := i.x
   π :=
-    { app := fun j => i.ι ≫ c₁.π.app ⟨_⟩,
+    { app := fun j => i.ι ≫ c₁.π.app ⟨_⟩
       naturality' := fun j₁ j₂ f => by 
         dsimp
         rw [category.id_comp, category.assoc, ← hs ⟨⟨_, _⟩, f⟩, i.condition_assoc, ht] }
@@ -276,7 +276,7 @@ build the cocone for `F` which is colimiting if the given cocones are also.
 def buildColimit : Cocone F where 
   x := i.x
   ι :=
-    { app := fun j => c₂.ι.app ⟨_⟩ ≫ i.π,
+    { app := fun j => c₂.ι.app ⟨_⟩ ≫ i.π
       naturality' := fun j₁ j₂ f => by 
         dsimp
         rw [category.comp_id, ← reassoc_of (hs ⟨⟨_, _⟩, f⟩), i.condition, ← category.assoc, ht] }

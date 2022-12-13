@@ -143,11 +143,11 @@ def KernelFork.IsLimit.lift' {s : KernelFork f} (hs : IsLimit s) {W : C} (k : W 
 def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x)
     (fac : ∀ s : KernelFork f, lift s ≫ t.ι = s.ι)
     (uniq : ∀ (s : KernelFork f) (m : s.x ⟶ t.x) (w : m ≫ t.ι = s.ι), m = lift s) : IsLimit t :=
-  { lift,
+  { lift
     fac' := fun s j => by 
       cases j
       · exact fac s
-      · simp,
+      · simp
     uniq' := fun s m w => uniq s m (w Limits.WalkingParallelPair.zero) }
 #align category_theory.limits.is_limit_aux CategoryTheory.Limits.isLimitAux
 
@@ -397,7 +397,8 @@ theorem kernel_not_iso_of_nonzero (w : f ≠ 0) : IsIso (kernel.ι f) → False 
 
 instance has_kernel_comp_mono {X Y Z : C} (f : X ⟶ Y) [HasKernel f] (g : Y ⟶ Z) [Mono g] :
     HasKernel (f ≫ g) :=
-  ⟨⟨{ Cone := _, IsLimit := isKernelCompMono (limit.isLimit _) g rfl }⟩⟩
+  ⟨⟨{   Cone := _
+        IsLimit := isKernelCompMono (limit.isLimit _) g rfl }⟩⟩
 #align category_theory.limits.has_kernel_comp_mono CategoryTheory.Limits.has_kernel_comp_mono
 
 /-- When `g` is a monomorphism, the kernel of `f ≫ g` is isomorphic to the kernel of `f`.
@@ -419,7 +420,7 @@ instance has_kernel_iso_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [
     HasKernel
       (f ≫
         g) where exists_limit :=
-    ⟨{ Cone := KernelFork.ofι (kernel.ι g ≫ inv f) (by simp),
+    ⟨{  Cone := KernelFork.ofι (kernel.ι g ≫ inv f) (by simp)
         IsLimit :=
           isLimitAux _ (fun s => kernel.lift _ (s.ι ≫ f) (by tidy)) (by tidy) fun s m w => by
             simp_rw [← w]
@@ -591,11 +592,11 @@ def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x �
     (fac : ∀ s : CokernelCofork f, t.π ≫ desc s = s.π)
     (uniq : ∀ (s : CokernelCofork f) (m : t.x ⟶ s.x) (w : t.π ≫ m = s.π), m = desc s) :
     IsColimit t :=
-  { desc,
+  { desc
     fac' := fun s j => by 
       cases j
       · simp
-      · exact fac s,
+      · exact fac s
     uniq' := fun s m w => uniq s m (w Limits.WalkingParallelPair.one) }
 #align category_theory.limits.is_colimit_aux CategoryTheory.Limits.isColimitAux
 
@@ -864,7 +865,7 @@ instance has_cokernel_comp_iso {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasCoker
     HasCokernel
       (f ≫
         g) where exists_colimit :=
-    ⟨{ Cocone := CokernelCofork.ofπ (inv g ≫ cokernel.π f) (by simp),
+    ⟨{  Cocone := CokernelCofork.ofπ (inv g ≫ cokernel.π f) (by simp)
         IsColimit :=
           isColimitAux _
             (fun s =>
@@ -887,7 +888,8 @@ def cokernelCompIsIso {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasCokernel f] [I
 
 instance has_cokernel_epi_comp {X Y : C} (f : X ⟶ Y) [HasCokernel f] {W} (g : W ⟶ X) [Epi g] :
     HasCokernel (g ≫ f) :=
-  ⟨⟨{ Cocone := _, IsColimit := isCokernelEpiComp (colimit.isColimit _) g rfl }⟩⟩
+  ⟨⟨{   Cocone := _
+        IsColimit := isCokernelEpiComp (colimit.isColimit _) g rfl }⟩⟩
 #align category_theory.limits.has_cokernel_epi_comp CategoryTheory.Limits.has_cokernel_epi_comp
 
 /-- When `f` is an epimorphism, the cokernel of `f ≫ g` is isomorphic to the cokernel of `g`.

@@ -90,7 +90,9 @@ unsafe instance : Monad old_conv where
   bind := @old_conv.bind
 
 unsafe instance : Alternative old_conv :=
-  { old_conv.monad with failure := @old_conv.failed, orelse := @old_conv.orelse }
+  { old_conv.monad with 
+    failure := @old_conv.failed
+    orelse := @old_conv.orelse }
 
 unsafe def whnf (md : Transparency := reducible) : old_conv Unit := fun r e => do
   let n ← tactic.whnf e md

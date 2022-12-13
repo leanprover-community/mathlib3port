@@ -145,7 +145,7 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit :=
 def colimitCocone : cocone F where 
   x := colimit
   ι :=
-    { app := cocone_morphism,
+    { app := cocone_morphism
       naturality' := fun j j' f =>
         LinearMap.coe_injective ((Types.colimitCocone (F ⋙ forget (ModuleCat R))).ι.naturality f) }
 #align Module.filtered_colimits.colimit_cocone ModuleCat.FilteredColimits.colimitCocone

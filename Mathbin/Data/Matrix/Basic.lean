@@ -144,9 +144,9 @@ theorem map_injective {f : α → β} (hf : Function.Injective f) :
 
 /- warning: matrix.transpose -> Matrix.transpose is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}}, (Matrix.{u_2, u_3, v} m n α) -> (Matrix.{u_3, u_2, v} n m α)
+  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}}, (Matrix.{u2, u3, u1} m n α) -> (Matrix.{u3, u2, u1} n m α)
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}}, (Matrix.{u_2, u_3, v} m n α) -> (Matrix.{u_3, u_2, v} n m α)
+  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}}, (Matrix.{u1, u2, u3} m n α) -> (Matrix.{u2, u1, u3} n m α)
 Case conversion may be inaccurate. Consider using '#align matrix.transpose Matrix.transposeₓ'. -/
 /-- The transpose of a matrix. -/
 def transpose (M : Matrix m n α) : Matrix n m α
@@ -166,9 +166,9 @@ scoped postfix:1024 "ᴴ" => Matrix.conjTranspose
 
 /- warning: matrix.col -> Matrix.col is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {α : Type.{v}}, (m -> α) -> (Matrix.{u_2, 0, v} m Unit α)
+  forall {m : Type.{u2}} {α : Type.{u1}}, (m -> α) -> (Matrix.{u2, 0, u1} m Unit α)
 but is expected to have type
-  forall {m : Type.{u_2}} {α : Type.{v}}, (m -> α) -> (Matrix.{u_2, 0, v} m Unit α)
+  forall {m : Type.{u1}} {α : Type.{u2}}, (m -> α) -> (Matrix.{u1, 0, u2} m Unit α)
 Case conversion may be inaccurate. Consider using '#align matrix.col Matrix.colₓ'. -/
 /-- `matrix.col u` is the column matrix whose entries are given by `u`. -/
 def col (w : m → α) : Matrix m Unit α
@@ -177,9 +177,9 @@ def col (w : m → α) : Matrix m Unit α
 
 /- warning: matrix.row -> Matrix.row is a dubious translation:
 lean 3 declaration is
-  forall {n : Type.{u_3}} {α : Type.{v}}, (n -> α) -> (Matrix.{0, u_3, v} Unit n α)
+  forall {n : Type.{u2}} {α : Type.{u1}}, (n -> α) -> (Matrix.{0, u2, u1} Unit n α)
 but is expected to have type
-  forall {n : Type.{u_3}} {α : Type.{v}}, (n -> α) -> (Matrix.{0, u_3, v} Unit n α)
+  forall {n : Type.{u1}} {α : Type.{u2}}, (n -> α) -> (Matrix.{0, u1, u2} Unit n α)
 Case conversion may be inaccurate. Consider using '#align matrix.row Matrix.rowₓ'. -/
 /-- `matrix.row u` is the row matrix whose entries are given by `u`. -/
 def row (v : n → α) : Matrix Unit n α
@@ -352,9 +352,9 @@ variable [DecidableEq n]
 
 /- warning: matrix.diagonal -> Matrix.diagonal is a dubious translation:
 lean 3 declaration is
-  forall {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : DecidableEq.{succ u_3} n] [_inst_2 : Zero.{v} α], (n -> α) -> (Matrix.{u_3, u_3, v} n n α)
+  forall {n : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} n] [_inst_2 : Zero.{u1} α], (n -> α) -> (Matrix.{u2, u2, u1} n n α)
 but is expected to have type
-  forall {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : DecidableEq.{succ u_3} n] [_inst_2 : Zero.{v} α], (n -> α) -> (Matrix.{u_3, u_3, v} n n α)
+  forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : Zero.{u2} α], (n -> α) -> (Matrix.{u1, u1, u2} n n α)
 Case conversion may be inaccurate. Consider using '#align matrix.diagonal Matrix.diagonalₓ'. -/
 /-- `diagonal d` is the square matrix such that `(diagonal d) i i = d i` and `(diagonal d) i j = 0`
 if `i ≠ j`.
@@ -896,8 +896,13 @@ protected theorem add_mul [Fintype m] (L M : Matrix l m α) (N : Matrix m n α) 
 #align matrix.add_mul Matrix.add_mul
 
 instance [Fintype n] : NonUnitalNonAssocSemiring (Matrix n n α) :=
-  { Matrix.addCommMonoid with mul := (· * ·), add := (· + ·), zero := 0,
-    mul_zero := Matrix.mul_zero, zero_mul := Matrix.zero_mul, left_distrib := Matrix.mul_add,
+  { Matrix.addCommMonoid with 
+    mul := (· * ·)
+    add := (· + ·)
+    zero := 0
+    mul_zero := Matrix.mul_zero
+    zero_mul := Matrix.zero_mul
+    left_distrib := Matrix.mul_add
     right_distrib := Matrix.add_mul }
 
 @[simp]
@@ -993,9 +998,12 @@ protected theorem mul_one [Fintype n] [DecidableEq n] (M : Matrix m n α) :
 #align matrix.mul_one Matrix.mul_one
 
 instance [Fintype n] [DecidableEq n] : NonAssocSemiring (Matrix n n α) :=
-  { Matrix.nonUnitalNonAssocSemiring with one := 1, one_mul := Matrix.one_mul,
-    mul_one := Matrix.mul_one, natCast := fun n => diagonal fun _ => n,
-    nat_cast_zero := by ext <;> simp [Nat.cast],
+  { Matrix.nonUnitalNonAssocSemiring with 
+    one := 1
+    one_mul := Matrix.one_mul
+    mul_one := Matrix.mul_one
+    natCast := fun n => diagonal fun _ => n
+    nat_cast_zero := by ext <;> simp [Nat.cast]
     nat_cast_succ := fun n => by ext <;> by_cases i = j <;> simp [Nat.cast, *] }
 
 @[simp]
@@ -1010,7 +1018,9 @@ variable (α n)
 /-- `matrix.diagonal` as a `ring_hom`. -/
 @[simps]
 def diagonalRingHom [Fintype n] [DecidableEq n] : (n → α) →+* Matrix n n α :=
-  { diagonalAddMonoidHom n α with toFun := diagonal, map_one' := diagonal_one,
+  { diagonalAddMonoidHom n α with 
+    toFun := diagonal
+    map_one' := diagonal_one
     map_mul' := fun _ _ => (diagonal_mul_diagonal' _ _).symm }
 #align matrix.diagonal_ring_hom Matrix.diagonalRingHom
 
@@ -1099,7 +1109,9 @@ theorem mul_mul_left [Fintype n] (M : Matrix m n α) (N : Matrix n o α) (a : α
 sending `a` to the diagonal matrix with `a` on the diagonal.
 -/
 def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
-  { (smulAddHom α _).flip (1 : Matrix n n α) with toFun := fun a => a • 1, map_one' := by simp,
+  { (smulAddHom α _).flip (1 : Matrix n n α) with
+    toFun := fun a => a • 1
+    map_one' := by simp
     map_mul' := by 
       intros
       ext
@@ -1167,7 +1179,7 @@ variable [CommSemiring R] [Semiring α] [Semiring β] [Algebra R α] [Algebra R 
 instance : Algebra R (Matrix n n α) :=
   { (Matrix.scalar n).comp (algebraMap R α) with
     commutes' := fun r x => by ext;
-      simp [Matrix.scalar, Matrix.mul_apply, Matrix.one_apply, Algebra.commutes, smul_ite],
+      simp [Matrix.scalar, Matrix.mul_apply, Matrix.one_apply, Algebra.commutes, smul_ite]
     smul_def' := fun r x => by ext; simp [Matrix.scalar, Algebra.smul_def r] }
 
 theorem algebra_map_matrix_apply {r : R} {i j : n} :
@@ -1205,7 +1217,8 @@ variable (R)
 /-- `matrix.diagonal` as an `alg_hom`. -/
 @[simps]
 def diagonalAlgHom : (n → α) →ₐ[R] Matrix n n α :=
-  { diagonalRingHom n α with toFun := diagonal,
+  { diagonalRingHom n α with 
+    toFun := diagonal
     commutes' := fun r => (algebra_map_eq_diagonal r).symm }
 #align matrix.diagonal_alg_hom Matrix.diagonalAlgHom
 
@@ -1284,7 +1297,9 @@ variable [Add α] [Add β] [Add γ]
 coefficients. This is `matrix.map` as an `add_equiv`. -/
 @[simps apply]
 def mapMatrix (f : α ≃+ β) : Matrix m n α ≃+ Matrix m n β :=
-  { f.toEquiv.mapMatrix with toFun := fun M => M.map f, invFun := fun M => M.map f.symm,
+  { f.toEquiv.mapMatrix with 
+    toFun := fun M => M.map f
+    invFun := fun M => M.map f.symm
     map_add' := Matrix.map_add f f.map_add }
 #align add_equiv.map_matrix AddEquiv.mapMatrix
 
@@ -1345,7 +1360,8 @@ variable [Module R α] [Module R β] [Module R γ]
 coefficients. This is `matrix.map` as an `linear_equiv`. -/
 @[simps apply]
 def mapMatrix (f : α ≃ₗ[R] β) : Matrix m n α ≃ₗ[R] Matrix m n β :=
-  { f.toEquiv.mapMatrix, f.toLinearMap.mapMatrix with toFun := fun M => M.map f,
+  { f.toEquiv.mapMatrix, f.toLinearMap.mapMatrix with
+    toFun := fun M => M.map f
     invFun := fun M => M.map f.symm }
 #align linear_equiv.map_matrix LinearEquiv.mapMatrix
 
@@ -1378,7 +1394,9 @@ variable [NonAssocSemiring α] [NonAssocSemiring β] [NonAssocSemiring γ]
 coefficients. This is `matrix.map` as a `ring_hom`. -/
 @[simps]
 def mapMatrix (f : α →+* β) : Matrix m m α →+* Matrix m m β :=
-  { f.toAddMonoidHom.mapMatrix with toFun := fun M => M.map f, map_one' := by simp,
+  { f.toAddMonoidHom.mapMatrix with 
+    toFun := fun M => M.map f
+    map_one' := by simp
     map_mul' := fun L M => Matrix.map_mul }
 #align ring_hom.map_matrix RingHom.mapMatrix
 
@@ -1405,7 +1423,8 @@ variable [NonAssocSemiring α] [NonAssocSemiring β] [NonAssocSemiring γ]
 coefficients. This is `matrix.map` as a `ring_equiv`. -/
 @[simps apply]
 def mapMatrix (f : α ≃+* β) : Matrix m m α ≃+* Matrix m m β :=
-  { f.toRingHom.mapMatrix, f.toAddEquiv.mapMatrix with toFun := fun M => M.map f,
+  { f.toRingHom.mapMatrix, f.toAddEquiv.mapMatrix with
+    toFun := fun M => M.map f
     invFun := fun M => M.map f.symm }
 #align ring_equiv.map_matrix RingEquiv.mapMatrix
 
@@ -1440,7 +1459,8 @@ variable [Algebra R α] [Algebra R β] [Algebra R γ]
 coefficients. This is `matrix.map` as a `alg_hom`. -/
 @[simps]
 def mapMatrix (f : α →ₐ[R] β) : Matrix m m α →ₐ[R] Matrix m m β :=
-  { f.toRingHom.mapMatrix with toFun := fun M => M.map f,
+  { f.toRingHom.mapMatrix with 
+    toFun := fun M => M.map f
     commutes' := fun r => Matrix.map_algebra_map r f f.map_zero (f.commutes r) }
 #align alg_hom.map_matrix AlgHom.mapMatrix
 
@@ -1469,7 +1489,8 @@ variable [Algebra R α] [Algebra R β] [Algebra R γ]
 coefficients. This is `matrix.map` as a `alg_equiv`. -/
 @[simps apply]
 def mapMatrix (f : α ≃ₐ[R] β) : Matrix m m α ≃ₐ[R] Matrix m m β :=
-  { f.toAlgHom.mapMatrix, f.toRingEquiv.mapMatrix with toFun := fun M => M.map f,
+  { f.toAlgHom.mapMatrix, f.toRingEquiv.mapMatrix with
+    toFun := fun M => M.map f
     invFun := fun M => M.map f.symm }
 #align alg_equiv.map_matrix AlgEquiv.mapMatrix
 
@@ -1498,9 +1519,9 @@ namespace Matrix
 
 /- warning: matrix.vec_mul_vec -> Matrix.vecMulVec is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : Mul.{v} α], (m -> α) -> (n -> α) -> (Matrix.{u_2, u_3, v} m n α)
+  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}} [_inst_1 : Mul.{u1} α], (m -> α) -> (n -> α) -> (Matrix.{u2, u3, u1} m n α)
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : Mul.{v} α], (m -> α) -> (n -> α) -> (Matrix.{u_2, u_3, v} m n α)
+  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : Mul.{u3} α], (m -> α) -> (n -> α) -> (Matrix.{u1, u2, u3} m n α)
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_vec Matrix.vecMulVecₓ'. -/
 /-- For two vectors `w` and `v`, `vec_mul_vec w v i j` is defined to be `w i * v j`.
     Put another way, `vec_mul_vec w v` is exactly `col w ⬝ row v`. -/
@@ -1521,9 +1542,9 @@ variable [NonUnitalNonAssocSemiring α]
 
 /- warning: matrix.mul_vec -> Matrix.mulVec is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : NonUnitalNonAssocSemiring.{v} α] [_inst_2 : Fintype.{u_3} n], (Matrix.{u_2, u_3, v} m n α) -> (n -> α) -> m -> α
+  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α] [_inst_2 : Fintype.{u3} n], (Matrix.{u2, u3, u1} m n α) -> (n -> α) -> m -> α
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : NonUnitalNonAssocSemiring.{v} α] [_inst_2 : Fintype.{u_3} n], (Matrix.{u_2, u_3, v} m n α) -> (n -> α) -> m -> α
+  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} n], (Matrix.{u1, u2, u3} m n α) -> (n -> α) -> m -> α
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec Matrix.mulVecₓ'. -/
 /-- `mul_vec M v` is the matrix-vector product of `M` and `v`, where `v` is seen as a column matrix.
     Put another way, `mul_vec M v` is the vector whose entries
@@ -1534,9 +1555,9 @@ def mulVec [Fintype n] (M : Matrix m n α) (v : n → α) : m → α
 
 /- warning: matrix.vec_mul -> Matrix.vecMul is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : NonUnitalNonAssocSemiring.{v} α] [_inst_2 : Fintype.{u_2} m], (m -> α) -> (Matrix.{u_2, u_3, v} m n α) -> n -> α
+  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α] [_inst_2 : Fintype.{u2} m], (m -> α) -> (Matrix.{u2, u3, u1} m n α) -> n -> α
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {α : Type.{v}} [_inst_1 : NonUnitalNonAssocSemiring.{v} α] [_inst_2 : Fintype.{u_2} m], (m -> α) -> (Matrix.{u_2, u_3, v} m n α) -> n -> α
+  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u1} m], (m -> α) -> (Matrix.{u1, u2, u3} m n α) -> n -> α
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul Matrix.vecMulₓ'. -/
 /-- `vec_mul v M` is the vector-matrix product of `v` and `M`, where `v` is seen as a row matrix.
     Put another way, `vec_mul v M` is the vector whose entries
@@ -1932,8 +1953,9 @@ variable (m α)
 @[simps]
 def transposeRingEquiv [AddCommMonoid α] [CommSemigroup α] [Fintype m] :
     Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
-  { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ,
-    invFun := fun M => M.unopᵀ,
+  { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv with
+    toFun := fun M => MulOpposite.op Mᵀ
+    invFun := fun M => M.unopᵀ
     map_mul' := fun M N =>
       (congr_arg MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 #align matrix.transpose_ring_equiv Matrix.transposeRingEquiv
@@ -1958,7 +1980,7 @@ variable (R m α)
 def transposeAlgEquiv [CommSemiring R] [CommSemiring α] [Fintype m] [DecidableEq m] [Algebra R α] :
     Matrix m m α ≃ₐ[R] (Matrix m m α)ᵐᵒᵖ :=
   { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv, transposeRingEquiv m α with
-    toFun := fun M => MulOpposite.op Mᵀ,
+    toFun := fun M => MulOpposite.op Mᵀ
     commutes' := fun r => by
       simp only [algebra_map_eq_diagonal, diagonal_transpose, MulOpposite.algebra_map_apply] }
 #align matrix.transpose_alg_equiv Matrix.transposeAlgEquiv
@@ -2164,7 +2186,8 @@ variable (m α)
 def conjTransposeRingEquiv [Semiring α] [StarRing α] [Fintype m] :
     Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { (conjTransposeAddEquiv m m α).trans MulOpposite.opAddEquiv with
-    toFun := fun M => MulOpposite.op Mᴴ, invFun := fun M => M.unopᴴ,
+    toFun := fun M => MulOpposite.op Mᴴ
+    invFun := fun M => M.unopᴴ
     map_mul' := fun M N =>
       (congr_arg MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 #align matrix.conj_transpose_ring_equiv Matrix.conjTransposeRingEquiv

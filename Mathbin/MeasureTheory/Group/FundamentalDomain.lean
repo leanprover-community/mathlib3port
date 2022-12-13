@@ -69,7 +69,8 @@ is a fundamental domain for the action of `G` on `α`. -/
       "If for each `x : α`, exactly one of `g +ᵥ x`, `g : G`, belongs to a measurable set\n`s`, then `s` is a fundamental domain for the additive action of `G` on `α`."]
 theorem mk' (h_meas : NullMeasurableSet s μ) (h_exists : ∀ x : α, ∃! g : G, g • x ∈ s) :
     IsFundamentalDomain G s μ :=
-  { NullMeasurableSet := h_meas, ae_covers := eventually_of_forall fun x => (h_exists x).exists,
+  { NullMeasurableSet := h_meas
+    ae_covers := eventually_of_forall fun x => (h_exists x).exists
     AeDisjoint := fun g hne =>
       Disjoint.aeDisjoint <|
         disjoint_left.2
@@ -90,7 +91,8 @@ theorem mkOfMeasureUnivLe [IsFiniteMeasure μ] [Countable G] (h_meas : NullMeasu
     (h_ae_disjoint : ∀ (g) (_ : g ≠ (1 : G)), AeDisjoint μ (g • s) s)
     (h_qmp : ∀ g : G, QuasiMeasurePreserving ((· • ·) g : α → α) μ μ)
     (h_measure_univ_le : μ (univ : Set α) ≤ ∑' g : G, μ (g • s)) : IsFundamentalDomain G s μ :=
-  { NullMeasurableSet := h_meas, AeDisjoint := h_ae_disjoint,
+  { NullMeasurableSet := h_meas
+    AeDisjoint := h_ae_disjoint
     ae_covers := by
       replace ae_disjoint : Pairwise (ae_disjoint μ on fun g : G => g • s) :=
         pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one h_ae_disjoint h_qmp
@@ -155,8 +157,8 @@ theorem pairwise_ae_disjoint_of_ac {ν} (h : IsFundamentalDomain G s μ) (hν : 
 theorem preimageOfEquiv {ν : Measure β} (h : IsFundamentalDomain G s μ) {f : β → α}
     (hf : QuasiMeasurePreserving f ν μ) {e : G → H} (he : Bijective e)
     (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) : IsFundamentalDomain H (f ⁻¹' s) ν :=
-  { NullMeasurableSet := h.NullMeasurableSet.Preimage hf,
-    ae_covers := (hf.ae h.ae_covers).mono fun x ⟨g, hg⟩ => ⟨e g, by rwa [mem_preimage, hef g x]⟩,
+  { NullMeasurableSet := h.NullMeasurableSet.Preimage hf
+    ae_covers := (hf.ae h.ae_covers).mono fun x ⟨g, hg⟩ => ⟨e g, by rwa [mem_preimage, hef g x]⟩
     AeDisjoint := fun g hg => by 
       lift e to G ≃ H using he
       have : (e.symm g⁻¹)⁻¹ ≠ (e.symm 1)⁻¹ := by simp [hg]

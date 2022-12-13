@@ -293,7 +293,10 @@ theorem closedEmbeddingToContinuousMap [HasContinuousMul B] [T2Space B] :
       · rintro ⟨hf1, hf2⟩
         suffices ∀ x y, f (x * y) = f x * f y by
           refine'
-            ⟨({ f with map_one' := of_not_not hf1, map_mul' := this } : ContinuousMonoidHom A B),
+            ⟨({ f with 
+                  map_one' := of_not_not hf1
+                  map_mul' := this } :
+                ContinuousMonoidHom A B),
               ContinuousMap.ext fun _ => rfl⟩
         intro x y
         contrapose! hf2
@@ -317,7 +320,7 @@ instance [T2Space B] : T2Space (ContinuousMonoidHom A B) :=
 instance : TopologicalGroup (ContinuousMonoidHom A E) :=
   let hi := inducing_to_continuous_map A E
   let hc := hi.Continuous
-  { continuous_mul := hi.continuous_iff.mpr (continuous_mul.comp (Continuous.prod_map hc hc)),
+  { continuous_mul := hi.continuous_iff.mpr (continuous_mul.comp (Continuous.prod_map hc hc))
     continuous_inv := hi.continuous_iff.mpr (continuous_inv.comp hc) }
 
 @[to_additive]

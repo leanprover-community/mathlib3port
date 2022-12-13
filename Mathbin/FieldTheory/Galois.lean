@@ -51,7 +51,9 @@ class IsGalois : Prop where
 variable {F E}
 
 theorem is_galois_iff : IsGalois F E ↔ IsSeparable F E ∧ Normal F E :=
-  ⟨fun h => ⟨h.1, h.2⟩, fun h => { to_is_separable := h.1, toNormal := h.2 }⟩
+  ⟨fun h => ⟨h.1, h.2⟩, fun h =>
+    { to_is_separable := h.1
+      toNormal := h.2 }⟩
 #align is_galois_iff is_galois_iff
 
 attribute [instance] IsGalois.to_is_separable IsGalois.toNormal
@@ -111,15 +113,17 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
     Fintype.card (E ≃ₐ[F] E) = finrank F E := by
   cases' Field.exists_primitive_element F E with α hα
   let iso : F⟮⟯ ≃ₐ[F] E :=
-    { toFun := fun e => e.val,
+    { toFun := fun e => e.val
       invFun := fun e =>
         ⟨e, by 
           rw [hα]
-          exact IntermediateField.mem_top⟩,
+          exact IntermediateField.mem_top⟩
       left_inv := fun _ => by 
         ext
-        rfl,
-      right_inv := fun _ => rfl, map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl,
+        rfl
+      right_inv := fun _ => rfl
+      map_mul' := fun _ _ => rfl
+      map_add' := fun _ _ => rfl
       commutes' := fun _ => rfl }
   have H : IsIntegral F α := IsGalois.integral F α
   have h_sep : (minpoly F α).Separable := IsGalois.separable F α
@@ -153,7 +157,7 @@ variable (F K E : Type _) [Field F] [Field K] [Field E] {E' : Type _} [Field E']
 variable [Algebra F K] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem IsGalois.towerTopOfIsGalois [IsGalois F E] : IsGalois K E :=
-  { to_is_separable := is_separable_tower_top_of_is_separable F K E,
+  { to_is_separable := is_separable_tower_top_of_is_separable F K E
     toNormal := Normal.towerTopOfNormal F K E }
 #align is_galois.tower_top_of_is_galois IsGalois.towerTopOfIsGalois
 
@@ -174,7 +178,8 @@ theorem is_galois_iff_is_galois_bot : IsGalois (⊥ : IntermediateField F E) E �
 #align is_galois_iff_is_galois_bot is_galois_iff_is_galois_bot
 
 theorem IsGalois.ofAlgEquiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
-  { to_is_separable := IsSeparable.of_alg_hom F E f.symm, toNormal := Normal.ofAlgEquiv f }
+  { to_is_separable := IsSeparable.of_alg_hom F E f.symm
+    toNormal := Normal.ofAlgEquiv f }
 #align is_galois.of_alg_equiv IsGalois.ofAlgEquiv
 
 theorem AlgEquiv.transfer_galois (f : E ≃ₐ[F] E') : IsGalois F E ↔ IsGalois F E' :=
@@ -201,7 +206,8 @@ variable (H : Subgroup (E ≃ₐ[F] E)) (K : IntermediateField F E)
 `F`-action on `E`. -/
 def FixedPoints.intermediateField (M : Type _) [Monoid M] [MulSemiringAction M E]
     [SmulCommClass M F E] : IntermediateField F E :=
-  { FixedPoints.subfield M E with carrier := MulAction.fixedPoints M E,
+  { FixedPoints.subfield M E with 
+    carrier := MulAction.fixedPoints M E
     algebra_map_mem' := fun a g => by rw [Algebra.algebra_map_eq_smul_one, smul_comm, smul_one] }
 #align fixed_points.intermediate_field FixedPoints.intermediateField
 
@@ -387,7 +393,9 @@ theorem ofCardAutEqFinrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F
       finrank_mul_finrank, ← h, one_mul, IntermediateField.finrank_fixed_field_eq_card]
     apply Fintype.card_congr
     exact
-      { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := coe, left_inv := fun g => rfl,
+      { toFun := fun g => ⟨g, Subgroup.mem_top g⟩
+        invFun := coe
+        left_inv := fun g => rfl
         right_inv := fun _ => by 
           ext
           rfl }

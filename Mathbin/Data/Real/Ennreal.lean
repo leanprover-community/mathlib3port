@@ -105,7 +105,8 @@ instance covariant_class_add_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· + ·)
 
 noncomputable instance : LinearOrderedCommMonoidWithZero ℝ≥0∞ :=
   { Ennreal.linearOrderedAddCommMonoidWithTop, show CommSemiring ℝ≥0∞ from inferInstance with
-    mul_le_mul_left := fun a b => mul_le_mul_left', zero_le_one := zero_le 1 }
+    mul_le_mul_left := fun a b => mul_le_mul_left'
+    zero_le_one := zero_le 1 }
 
 instance : Inhabited ℝ≥0∞ :=
   ⟨0⟩
@@ -1941,10 +1942,10 @@ theorem order_iso_Iic_one_birational_symm_apply (x : iic (1 : ℝ≥0∞)) :
 @[simps apply_coe]
 def orderIsoIicCoe (a : ℝ≥0) : iic (a : ℝ≥0∞) ≃o iic a :=
   OrderIso.symm
-    { toFun := fun x => ⟨x, coe_le_coe.2 x.2⟩,
-      invFun := fun x => ⟨Ennreal.toNnreal x, coe_le_coe.1 <| coe_to_nnreal_le_self.trans x.2⟩,
-      left_inv := fun x => Subtype.ext <| to_nnreal_coe,
-      right_inv := fun x => Subtype.ext <| coe_to_nnreal (ne_top_of_le_ne_top coe_ne_top x.2),
+    { toFun := fun x => ⟨x, coe_le_coe.2 x.2⟩
+      invFun := fun x => ⟨Ennreal.toNnreal x, coe_le_coe.1 <| coe_to_nnreal_le_self.trans x.2⟩
+      left_inv := fun x => Subtype.ext <| to_nnreal_coe
+      right_inv := fun x => Subtype.ext <| coe_to_nnreal (ne_top_of_le_ne_top coe_ne_top x.2)
       map_rel_iff' := fun x y => by
         simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, coe_coe, coe_le_coe, Subtype.coe_le_coe] }
 #align ennreal.order_iso_Iic_coe Ennreal.orderIsoIicCoe

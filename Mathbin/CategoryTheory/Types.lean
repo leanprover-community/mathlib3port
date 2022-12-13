@@ -370,7 +370,7 @@ instance :
       (Type
         u) where is_split_epi_of_epi X Y f hf :=
     IsSplitEpi.mk'
-      { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf,
+      { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf
         id' := funext <| Function.right_inverse_surj_inv <| (epi_iff_surjective f).1 hf }
 
 end CategoryTheory

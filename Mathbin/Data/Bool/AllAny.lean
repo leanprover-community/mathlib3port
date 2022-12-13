@@ -26,9 +26,9 @@ theorem all_nil (p : α → Bool) : all [] p = tt :=
 
 /- warning: list.all_cons -> List.all_cons is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} (p : α -> Bool) (a : α) (l : List.{u_1} α), Eq.{1} Bool (List.all.{u_1} α (List.cons.{u_1} α a l) p) (and (p a) (List.all.{u_1} α l p))
+  forall {α : Type.{u1}} (p : α -> Bool) (a : α) (l : List.{u1} α), Eq.{1} Bool (List.all.{u1} α (List.cons.{u1} α a l) p) (and (p a) (List.all.{u1} α l p))
 but is expected to have type
-  forall {α._@.Std.Data.List.Init.Lemmas._hyg.1046 : Type.{u_1}} {a : α._@.Std.Data.List.Init.Lemmas._hyg.1046} {l : List.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046} {f : α._@.Std.Data.List.Init.Lemmas._hyg.1046 -> Bool}, Eq.{1} Bool (List.all.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046 (List.cons.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046 a l) f) (and (f a) (List.all.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046 l f))
+  forall {α : Type.{u1}} {p : α} {a : List.{u1} α} {l : α -> Bool}, Eq.{1} Bool (List.all.{u1} α (List.cons.{u1} α p a) l) (and (l p) (List.all.{u1} α a l))
 Case conversion may be inaccurate. Consider using '#align list.all_cons List.all_consₓ'. -/
 @[simp]
 theorem all_cons (p : α → Bool) (a : α) (l : List α) : all (a :: l) p = (p a && all l p) :=
@@ -54,9 +54,9 @@ theorem any_nil (p : α → Bool) : any [] p = ff :=
 
 /- warning: list.any_cons -> List.any_cons is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} (p : α -> Bool) (a : α) (l : List.{u_1} α), Eq.{1} Bool (List.any.{u_1} α (List.cons.{u_1} α a l) p) (or (p a) (List.any.{u_1} α l p))
+  forall {α : Type.{u1}} (p : α -> Bool) (a : α) (l : List.{u1} α), Eq.{1} Bool (List.any.{u1} α (List.cons.{u1} α a l) p) (or (p a) (List.any.{u1} α l p))
 but is expected to have type
-  forall {α._@.Std.Data.List.Init.Lemmas._hyg.970 : Type.{u_1}} {a : α._@.Std.Data.List.Init.Lemmas._hyg.970} {l : List.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970} {f : α._@.Std.Data.List.Init.Lemmas._hyg.970 -> Bool}, Eq.{1} Bool (List.any.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970 (List.cons.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970 a l) f) (or (f a) (List.any.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970 l f))
+  forall {α : Type.{u1}} {p : α} {a : List.{u1} α} {l : α -> Bool}, Eq.{1} Bool (List.any.{u1} α (List.cons.{u1} α p a) l) (or (l p) (List.any.{u1} α a l))
 Case conversion may be inaccurate. Consider using '#align list.any_cons List.any_consₓ'. -/
 @[simp]
 theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = (p a || any l p) :=

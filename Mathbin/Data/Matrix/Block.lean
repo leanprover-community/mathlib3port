@@ -305,9 +305,9 @@ variable [Zero α] [Zero β]
 
 /- warning: matrix.block_diagonal -> Matrix.blockDiagonal is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {o : Type.{u_4}} {α : Type.{u_12}} [_inst_1 : DecidableEq.{succ u_4} o] [_inst_2 : Zero.{u_12} α], (o -> (Matrix.{u_2, u_3, u_12} m n α)) -> (Matrix.{max u_2 u_4, max u_3 u_4, u_12} (Prod.{u_2, u_4} m o) (Prod.{u_3, u_4} n o) α)
+  forall {m : Type.{u1}} {n : Type.{u2}} {o : Type.{u3}} {α : Type.{u4}} [_inst_1 : DecidableEq.{succ u3} o] [_inst_2 : Zero.{u4} α], (o -> (Matrix.{u1, u2, u4} m n α)) -> (Matrix.{max u1 u3, max u2 u3, u4} (Prod.{u1, u3} m o) (Prod.{u2, u3} n o) α)
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {o : Type.{u_4}} {α : Type.{u_12}} [_inst_1 : DecidableEq.{succ u_4} o] [_inst_2 : Zero.{u_12} α], (o -> (Matrix.{u_2, u_3, u_12} m n α)) -> (Matrix.{max u_2 u_4, max u_3 u_4, u_12} (Prod.{u_2, u_4} m o) (Prod.{u_3, u_4} n o) α)
+  forall {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u4} o] [_inst_2 : Zero.{u1} α], (o -> (Matrix.{u2, u3, u1} m n α)) -> (Matrix.{max u2 u4, max u3 u4, u1} (Prod.{u2, u4} m o) (Prod.{u3, u4} n o) α)
 Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal Matrix.blockDiagonalₓ'. -/
 /-- `matrix.block_diagonal M` turns a homogenously-indexed collection of matrices
 `M : o → matrix m n α'` into a `m × o`-by-`n × o` block matrix which has the entries of `M` along
@@ -437,7 +437,9 @@ variable (α m o)
 @[simps]
 def blockDiagonalRingHom [DecidableEq m] [Fintype o] [Fintype m] [NonAssocSemiring α] :
     (o → Matrix m m α) →+* Matrix (m × o) (m × o) α :=
-  { blockDiagonalAddMonoidHom m m o α with toFun := blockDiagonal, map_one' := block_diagonal_one,
+  { blockDiagonalAddMonoidHom m m o α with
+    toFun := blockDiagonal
+    map_one' := block_diagonal_one
     map_mul' := block_diagonal_mul }
 #align matrix.block_diagonal_ring_hom Matrix.blockDiagonalRingHom
 
@@ -463,9 +465,9 @@ section BlockDiag
 
 /- warning: matrix.block_diag -> Matrix.blockDiag is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {o : Type.{u_4}} {α : Type.{u_12}}, (Matrix.{max u_2 u_4, max u_3 u_4, u_12} (Prod.{u_2, u_4} m o) (Prod.{u_3, u_4} n o) α) -> o -> (Matrix.{u_2, u_3, u_12} m n α)
+  forall {m : Type.{u1}} {n : Type.{u2}} {o : Type.{u3}} {α : Type.{u4}}, (Matrix.{max u1 u3, max u2 u3, u4} (Prod.{u1, u3} m o) (Prod.{u2, u3} n o) α) -> o -> (Matrix.{u1, u2, u4} m n α)
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} {o : Type.{u_4}} {α : Type.{u_12}}, (Matrix.{max u_2 u_4, max u_3 u_4, u_12} (Prod.{u_2, u_4} m o) (Prod.{u_3, u_4} n o) α) -> o -> (Matrix.{u_2, u_3, u_12} m n α)
+  forall {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u1}}, (Matrix.{max u2 u4, max u3 u4, u1} (Prod.{u2, u4} m o) (Prod.{u3, u4} n o) α) -> o -> (Matrix.{u2, u3, u1} m n α)
 Case conversion may be inaccurate. Consider using '#align matrix.block_diag Matrix.blockDiagₓ'. -/
 /-- Extract a block from the diagonal of a block diagonal matrix.
 
@@ -576,9 +578,9 @@ variable [Zero α] [Zero β]
 
 /- warning: matrix.block_diagonal' -> Matrix.blockDiagonal' is a dubious translation:
 lean 3 declaration is
-  forall {o : Type.{u_4}} {m' : o -> Type.{u_7}} {n' : o -> Type.{u_8}} {α : Type.{u_12}} [_inst_1 : DecidableEq.{succ u_4} o] [_inst_2 : Zero.{u_12} α], (forall (i : o), Matrix.{u_7, u_8, u_12} (m' i) (n' i) α) -> (Matrix.{max u_4 u_7, max u_4 u_8, u_12} (Sigma.{u_4, u_7} o (fun (i : o) => m' i)) (Sigma.{u_4, u_8} o (fun (i : o) => n' i)) α)
+  forall {o : Type.{u1}} {m' : o -> Type.{u2}} {n' : o -> Type.{u3}} {α : Type.{u4}} [_inst_1 : DecidableEq.{succ u1} o] [_inst_2 : Zero.{u4} α], (forall (i : o), Matrix.{u2, u3, u4} (m' i) (n' i) α) -> (Matrix.{max u1 u2, max u1 u3, u4} (Sigma.{u1, u2} o (fun (i : o) => m' i)) (Sigma.{u1, u3} o (fun (i : o) => n' i)) α)
 but is expected to have type
-  forall {o : Type.{u_4}} {m' : o -> Type.{u_7}} {n' : o -> Type.{u_8}} {α : Type.{u_12}} [_inst_1 : DecidableEq.{succ u_4} o] [_inst_2 : Zero.{u_12} α], (forall (i : o), Matrix.{u_7, u_8, u_12} (m' i) (n' i) α) -> (Matrix.{max u_4 u_7, max u_4 u_8, u_12} (Sigma.{u_4, u_7} o (fun (i : o) => m' i)) (Sigma.{u_4, u_8} o (fun (i : o) => n' i)) α)
+  forall {o : Type.{u2}} {m' : o -> Type.{u3}} {n' : o -> Type.{u4}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} o] [_inst_2 : Zero.{u1} α], (forall (i : o), Matrix.{u3, u4, u1} (m' i) (n' i) α) -> (Matrix.{max u2 u3, max u2 u4, u1} (Sigma.{u2, u3} o (fun (i : o) => m' i)) (Sigma.{u2, u4} o (fun (i : o) => n' i)) α)
 Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal' Matrix.blockDiagonal'ₓ'. -/
 /-- `matrix.block_diagonal' M` turns `M : Π i, matrix (m i) (n i) α` into a
 `Σ i, m i`-by-`Σ i, n i` block matrix which has the entries of `M` along the diagonal
@@ -725,8 +727,10 @@ variable (α m')
 @[simps]
 def blockDiagonal'RingHom [∀ i, DecidableEq (m' i)] [Fintype o] [∀ i, Fintype (m' i)]
     [NonAssocSemiring α] : (∀ i, Matrix (m' i) (m' i) α) →+* Matrix (Σi, m' i) (Σi, m' i) α :=
-  { blockDiagonal'AddMonoidHom m' m' α with toFun := blockDiagonal',
-    map_one' := block_diagonal'_one, map_mul' := block_diagonal'_mul }
+  { blockDiagonal'AddMonoidHom m' m' α with
+    toFun := blockDiagonal'
+    map_one' := block_diagonal'_one
+    map_mul' := block_diagonal'_mul }
 #align matrix.block_diagonal'_ring_hom Matrix.blockDiagonal'RingHom
 
 end
@@ -751,9 +755,9 @@ section BlockDiag'
 
 /- warning: matrix.block_diag' -> Matrix.blockDiag' is a dubious translation:
 lean 3 declaration is
-  forall {o : Type.{u_4}} {m' : o -> Type.{u_7}} {n' : o -> Type.{u_8}} {α : Type.{u_12}}, (Matrix.{max u_4 u_7, max u_4 u_8, u_12} (Sigma.{u_4, u_7} o (fun (i : o) => m' i)) (Sigma.{u_4, u_8} o (fun (i : o) => n' i)) α) -> (forall (k : o), Matrix.{u_7, u_8, u_12} (m' k) (n' k) α)
+  forall {o : Type.{u1}} {m' : o -> Type.{u2}} {n' : o -> Type.{u3}} {α : Type.{u4}}, (Matrix.{max u1 u2, max u1 u3, u4} (Sigma.{u1, u2} o (fun (i : o) => m' i)) (Sigma.{u1, u3} o (fun (i : o) => n' i)) α) -> (forall (k : o), Matrix.{u2, u3, u4} (m' k) (n' k) α)
 but is expected to have type
-  forall {o : Type.{u_4}} {m' : o -> Type.{u_7}} {n' : o -> Type.{u_8}} {α : Type.{u_12}}, (Matrix.{max u_4 u_7, max u_4 u_8, u_12} (Sigma.{u_4, u_7} o (fun (i : o) => m' i)) (Sigma.{u_4, u_8} o (fun (i : o) => n' i)) α) -> (forall (k : o), Matrix.{u_7, u_8, u_12} (m' k) (n' k) α)
+  forall {o : Type.{u2}} {m' : o -> Type.{u3}} {n' : o -> Type.{u4}} {α : Type.{u1}}, (Matrix.{max u2 u3, max u2 u4, u1} (Sigma.{u2, u3} o (fun (i : o) => m' i)) (Sigma.{u2, u4} o (fun (i : o) => n' i)) α) -> (forall (k : o), Matrix.{u3, u4, u1} (m' k) (n' k) α)
 Case conversion may be inaccurate. Consider using '#align matrix.block_diag' Matrix.blockDiag'ₓ'. -/
 /-- Extract a block from the diagonal of a block diagonal matrix.
 

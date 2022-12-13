@@ -324,13 +324,13 @@ theorem is_fraction_ring_of_algebraic (alg : IsAlgebraic A L)
       IsUnit.mk0 _
         (show algebraMap C L y ≠ 0 from fun h =>
           mem_non_zero_divisors_iff_ne_zero.mp hy
-            ((injective_iff_map_eq_zero (algebraMap C L)).mp (algebra_map_injective C A L) _ h)),
+            ((injective_iff_map_eq_zero (algebraMap C L)).mp (algebra_map_injective C A L) _ h))
     surj := fun z =>
       let ⟨x, y, hy, hxy⟩ := exists_integral_multiple (alg z) inj
       ⟨⟨mk' C (x : L) x.2, algebraMap _ _ y,
           mem_non_zero_divisors_iff_ne_zero.mpr fun h =>
             hy (inj _ (by rw [IsScalarTower.algebra_map_apply A C L, h, RingHom.map_zero]))⟩,
-        by rw [SetLike.coe_mk, algebra_map_mk', ← IsScalarTower.algebra_map_apply A C L, hxy]⟩,
+        by rw [SetLike.coe_mk, algebra_map_mk', ← IsScalarTower.algebra_map_apply A C L, hxy]⟩
     eq_iff_exists := fun x y =>
       ⟨fun h => ⟨1, by simpa using algebra_map_injective C A L h⟩, fun ⟨c, hc⟩ =>
         congr_arg (algebraMap _ L)

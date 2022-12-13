@@ -43,20 +43,20 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) :
       (pair M
         N) where 
   Cone :=
-    { x := ModuleCat.of R (M × N),
+    { x := ModuleCat.of R (M × N)
       π :=
         { app := fun j =>
             Discrete.casesOn j fun j =>
-              WalkingPair.casesOn j (LinearMap.fst R M N) (LinearMap.snd R M N),
+              WalkingPair.casesOn j (LinearMap.fst R M N) (LinearMap.snd R M N)
           naturality' := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
   IsLimit :=
-    { lift := fun s => LinearMap.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩),
+    { lift := fun s => LinearMap.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩)
       fac' := by
         rintro s (⟨⟩ | ⟨⟩) <;>
           · ext x
             simp only [binary_fan.π_app_right, binary_fan.π_app_left, ModuleCat.coe_comp,
               Function.comp_apply, LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.prod_apply,
-              Pi.prod],
+              Pi.prod]
       uniq' := fun s m w => by
         ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
@@ -124,14 +124,14 @@ def productLimitCone :
       (Discrete.functor
         f) where 
   Cone :=
-    { x := ModuleCat.of R (∀ j, f j),
+    { x := ModuleCat.of R (∀ j, f j)
       π := Discrete.natTrans fun j => (LinearMap.proj j.as : (∀ j, f j) →ₗ[R] f j.as) }
   IsLimit :=
-    { lift := lift f,
+    { lift := lift f
       fac' := fun s j => by 
         cases j
         ext
-        simp,
+        simp
       uniq' := fun s m w => by 
         ext (x j)
         dsimp only [has_limit.lift]
@@ -175,9 +175,9 @@ open ModuleCat
 of modules.-/
 noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function.Injective j)
     (exac : j.range = g.ker) (h : g.comp f = LinearMap.id) : (A × B) ≃ₗ[R] M :=
-  (({ RightSplit := ⟨asHom f, h⟩, mono := (ModuleCat.mono_iff_injective <| asHom j).mpr hj,
-                  exact := (exact_iff _ _).mpr exac } :
-                RightSplit _ _).Splitting.Iso.trans <|
+  (({             RightSplit := ⟨asHom f, h⟩
+                  mono := (ModuleCat.mono_iff_injective <| asHom j).mpr hj
+                  exact := (exact_iff _ _).mpr exac } : RightSplit _ _).Splitting.Iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_right_split_exact lequivProdOfRightSplitExact
 
@@ -185,9 +185,9 @@ noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function
 of modules.-/
 noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.Surjective g)
     (exac : j.range = g.ker) (h : f.comp j = LinearMap.id) : (A × B) ≃ₗ[R] M :=
-  (({ LeftSplit := ⟨asHom f, h⟩, Epi := (ModuleCat.epi_iff_surjective <| asHom g).mpr hg,
-                  exact := (exact_iff _ _).mpr exac } :
-                LeftSplit _ _).Splitting.Iso.trans <|
+  (({             LeftSplit := ⟨asHom f, h⟩
+                  Epi := (ModuleCat.epi_iff_surjective <| asHom g).mpr hg
+                  exact := (exact_iff _ _).mpr exac } : LeftSplit _ _).Splitting.Iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_left_split_exact lequivProdOfLeftSplitExact
 

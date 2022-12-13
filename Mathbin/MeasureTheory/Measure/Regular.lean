@@ -406,8 +406,10 @@ theorem weaklyRegularOfFinite [BorelSpace α] (μ : Measure α) [IsFiniteMeasure
         ∀ (ε) (_ : ε ≠ 0),
           ∃ (F : _)(_ : F ⊆ s)(U : _)(_ : U ⊇ s),
             IsClosed F ∧ IsOpen U ∧ μ s ≤ μ F + ε ∧ μ U ≤ μ s + ε
-    by 
-    refine' { OuterRegular := fun s hs r hr => _, InnerRegular := H }
+    by
+    refine'
+      { OuterRegular := fun s hs r hr => _
+        InnerRegular := H }
     rcases exists_between hr with ⟨r', hsr', hr'r⟩
     rcases this s hs _ (tsub_pos_iff_lt.2 hsr').ne' with ⟨-, -, U, hsU, -, hUo, -, H⟩
     refine' ⟨U, hsU, hUo, _⟩
@@ -588,8 +590,9 @@ protected theorem smul [Regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • �
 -- see Note [lower instance priority]
 /-- A regular measure in a σ-compact space is σ-finite. -/
 instance (priority := 100) sigmaFinite [SigmaCompactSpace α] [Regular μ] : SigmaFinite μ :=
-  ⟨⟨{ Set := compactCovering α, set_mem := fun n => trivial,
-        Finite := fun n => (is_compact_compact_covering α n).measure_lt_top,
+  ⟨⟨{   Set := compactCovering α
+        set_mem := fun n => trivial
+        Finite := fun n => (is_compact_compact_covering α n).measure_lt_top
         spanning := Union_compact_covering α }⟩⟩
 #align measure_theory.measure.regular.sigma_finite MeasureTheory.Measure.Regular.sigmaFinite
 

@@ -270,7 +270,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear 
             mk_mem_prod hb.1 (mem_univ y)
         exact fun y => e'.mem_source.mpr hb.2
       · rw [dif_neg hb]
-        exact continuous_id,
+        exact continuous_id
     continuous_inv_fun := by 
       by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
@@ -368,7 +368,7 @@ def continuousLinearMapAt (e : Trivialization F (π E)) [e.is_linear R] (b : B) 
   { -- given explicitly to help `simps`
         e.linearMapAt
       R b with
-    toFun := e.linearMapAt R b,
+    toFun := e.linearMapAt R b
     cont := by 
       dsimp
       rw [e.coe_linear_map_at b]
@@ -385,7 +385,7 @@ def symmL (e : Trivialization F (π E)) [e.is_linear R] (b : B) : F →L[R] E b 
   { -- given explicitly to help `simps`
         e.symmₗ
       R b with
-    toFun := e.symm b,
+    toFun := e.symm b
     cont := by 
       by_cases hb : b ∈ e.base_set
       · rw [(FiberBundle.total_space_mk_inducing F E b).continuous_iff]
@@ -418,11 +418,12 @@ def continuousLinearEquivAt (e : Trivialization F (π E)) [e.is_linear R] (b : B
           -- given explicitly to help `simps`
           e.toPretrivialization.linearEquivAt
       R b hb with
-    toFun := fun y => (e (totalSpaceMk b y)).2, invFun := e.symm b,
+    toFun := fun y => (e (totalSpaceMk b y)).2
+    invFun := e.symm b
     continuous_to_fun :=
       continuous_snd.comp
         (e.toLocalHomeomorph.ContinuousOn.comp_continuous
-          (FiberBundle.total_space_mk_inducing F E b).Continuous fun x => e.mem_source.mpr hb),
+          (FiberBundle.total_space_mk_inducing F E b).Continuous fun x => e.mem_source.mpr hb)
     continuous_inv_fun := (e.symmL R b).Continuous }
 #align trivialization.continuous_linear_equiv_at Trivialization.continuousLinearEquivAt
 
@@ -540,7 +541,8 @@ variable {R B F} {ι : Type _} (Z : VectorBundleCore R B F ι)
 /-- Natural identification to a `fiber_bundle_core`. -/
 @[simps (config := mfldCfg)]
 def toFiberBundleCore : FiberBundleCore ι B F :=
-  { Z with coordChange := fun i j b => Z.coordChange i j b,
+  { Z with 
+    coordChange := fun i j b => Z.coordChange i j b
     continuous_on_coord_change := fun i j =>
       isBoundedBilinearMapApply.Continuous.comp_continuous_on
         ((Z.continuous_on_coord_change i j).prod_map continuous_on_id) }
@@ -646,7 +648,7 @@ instance localTriv.is_linear (i : ι) :
       R where linear x hx := by
     dsimp [VectorBundleCore.localTriv] <;>
       exact
-        { map_add := fun v w => by simp only [ContinuousLinearMap.map_add, mfld_simps],
+        { map_add := fun v w => by simp only [ContinuousLinearMap.map_add, mfld_simps]
           map_smul := fun r v => by simp only [ContinuousLinearMap.map_smul, mfld_simps] }
 #align vector_bundle_core.local_triv.is_linear VectorBundleCore.localTriv.is_linear
 
@@ -925,7 +927,7 @@ theorem toVectorBundle :
     @VectorBundle R _ F E _ _ _ _ _ _ a.totalSpaceTopology a.fiberTopology a.toFiberBundle :=
   { trivialization_linear' := by 
       rintro _ ⟨e, he, rfl⟩
-      apply linear_of_mem_pretrivialization_atlas,
+      apply linear_of_mem_pretrivialization_atlas
     continuous_on_coord_change' := by
       rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩
       refine' (a.continuous_on_coord_change he he').congr _

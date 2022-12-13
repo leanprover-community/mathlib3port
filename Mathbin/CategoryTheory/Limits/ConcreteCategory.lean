@@ -115,7 +115,7 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
     { val := fun j =>
         match j with
         | walking_multicospan.left a => x.1 _
-        | walking_multicospan.right b => I.fst b (x.1 _),
+        | walking_multicospan.right b => I.fst b (x.1 _)
       property := by 
         rintro (a | b) (a' | b') (f | f | f)
         · change (I.multicospan.map (𝟙 _)) _ = _

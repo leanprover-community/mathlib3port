@@ -24,26 +24,26 @@ instance : ConditionallyCompleteLinearOrder ℤ :=
     sup := fun s =>
       if h : s.Nonempty ∧ BddAbove s then
         greatestOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1
-      else 0,
+      else 0
     inf := fun s =>
       if h : s.Nonempty ∧ BddBelow s then
         leastOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1
-      else 0,
+      else 0
     le_cSup := by 
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨⟨n, hns⟩, hs⟩
       rw [dif_pos this]
-      exact (greatest_of_bdd _ _ _).2.2 n hns,
+      exact (greatest_of_bdd _ _ _).2.2 n hns
     cSup_le := by 
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨hs, ⟨n, hns⟩⟩
       rw [dif_pos this]
-      exact hns (greatest_of_bdd _ (Classical.choose_spec this.2) _).2.1,
+      exact hns (greatest_of_bdd _ (Classical.choose_spec this.2) _).2.1
     cInf_le := by 
       intro s n hs hns
       have : s.nonempty ∧ BddBelow s := ⟨⟨n, hns⟩, hs⟩
       rw [dif_pos this]
-      exact (least_of_bdd _ _ _).2.2 n hns,
+      exact (least_of_bdd _ _ _).2.2 n hns
     le_cInf := by 
       intro s n hs hns
       have : s.nonempty ∧ BddBelow s := ⟨hs, ⟨n, hns⟩⟩

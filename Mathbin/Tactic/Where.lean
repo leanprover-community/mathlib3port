@@ -192,7 +192,9 @@ unsafe def where_cmd (_ : parse <| tk "#where") : lean.parser Unit := do
 #align where.where_cmd where.where_cmd
 
 add_tactic_doc
-  { Name := "#where", category := DocCategory.cmd, declNames := [`where.where_cmd],
+  { Name := "#where"
+    category := DocCategory.cmd
+    declNames := [`where.where_cmd]
     tags := ["environment"] }
 
 end Where

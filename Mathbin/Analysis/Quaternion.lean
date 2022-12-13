@@ -49,9 +49,11 @@ theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * b.conj).re :=
 
 instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
-    { inner := HasInner.inner, conj_sym := fun x y => by simp [inner_def, mul_comm],
-      nonneg_re := fun x => norm_sq_nonneg, definite := fun x => norm_sq_eq_zero.1,
-      add_left := fun x y z => by simp only [inner_def, add_mul, add_re],
+    { inner := HasInner.inner
+      conj_sym := fun x y => by simp [inner_def, mul_comm]
+      nonneg_re := fun x => norm_sq_nonneg
+      definite := fun x => norm_sq_eq_zero.1
+      add_left := fun x y z => by simp only [inner_def, add_mul, add_re]
       smul_left := fun x y r => by simp [inner_def] }
 
 theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ‖a‖ * ‖a‖ := by

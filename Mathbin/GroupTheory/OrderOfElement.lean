@@ -846,11 +846,11 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
   have pow_mem : ∀ a : M, a ∈ S → ∀ n : ℕ, a ^ (n + 1) ∈ S := fun a ha =>
     Nat.rec (by rwa [zero_add, pow_one]) fun n ih =>
       (congr_arg₂ (· ∈ ·) (pow_succ a (n + 1)).symm hS2).mp (Set.mul_mem_mul ha ih)
-  { carrier := S,
+  { carrier := S
     one_mem' := by 
       obtain ⟨a, ha⟩ := hS1
       rw [← pow_order_of_eq_one a, ← tsub_add_cancel_of_le (succ_le_of_lt (order_of_pos a))]
-      exact pow_mem a ha (orderOf a - 1),
+      exact pow_mem a ha (orderOf a - 1)
     mul_mem' := fun a b ha hb => (congr_arg₂ (· ∈ ·) rfl hS2).mp (Set.mul_mem_mul ha hb) }
 #align submonoid_of_idempotent submonoidOfIdempotent
 
@@ -858,7 +858,8 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
 @[to_additive "A nonempty idempotent subset of a finite add group is a subgroup"]
 def subgroupOfIdempotent {G : Type _} [Group G] [Fintype G] (S : Set G) (hS1 : S.Nonempty)
     (hS2 : S * S = S) : Subgroup G :=
-  { submonoidOfIdempotent S hS1 hS2 with carrier := S,
+  { submonoidOfIdempotent S hS1 hS2 with 
+    carrier := S
     inv_mem' := fun a ha =>
       show a⁻¹ ∈ submonoidOfIdempotent S hS1 hS2 by
         rw [← one_mul a⁻¹, ← pow_one a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]

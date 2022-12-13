@@ -284,18 +284,21 @@ protected theorem add_smul (r s : R'') (x : M ⊗[R] N) : (r + s) • x = r • 
 
 instance : AddCommMonoid (M ⊗[R] N) :=
   { TensorProduct.addCommSemigroup _ _, TensorProduct.addZeroClass _ _ with
-    nsmul := fun n v => n • v, nsmul_zero' := by simp [TensorProduct.zero_smul],
+    nsmul := fun n v => n • v
+    nsmul_zero' := by simp [TensorProduct.zero_smul]
     nsmul_succ' := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul] }
 
 instance leftDistribMulAction : DistribMulAction R' (M ⊗[R] N) :=
   have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
-  { smul := (· • ·), smul_add := fun r x y => TensorProduct.smul_add r x y,
+  { smul := (· • ·)
+    smul_add := fun r x y => TensorProduct.smul_add r x y
     mul_smul := fun r s x =>
       TensorProduct.induction_on x (by simp_rw [TensorProduct.smul_zero])
         (fun m n => by simp_rw [this, mul_smul]) fun x y ihx ihy => by
         simp_rw [TensorProduct.smul_add]
-        rw [ihx, ihy],
-    one_smul := TensorProduct.one_smul, smul_zero := TensorProduct.smul_zero }
+        rw [ihx, ihy]
+    one_smul := TensorProduct.one_smul
+    smul_zero := TensorProduct.smul_zero }
 #align tensor_product.left_distrib_mul_action TensorProduct.leftDistribMulAction
 
 instance : DistribMulAction R (M ⊗[R] N) :=
@@ -316,7 +319,9 @@ theorem smul_tmul_smul (r s : R) (m : M) (n : N) : (r • m) ⊗ₜ[R] (s • n)
 #align tensor_product.smul_tmul_smul TensorProduct.smul_tmul_smul
 
 instance leftModule : Module R'' (M ⊗[R] N) :=
-  { TensorProduct.leftDistribMulAction with smul := (· • ·), add_smul := TensorProduct.add_smul,
+  { TensorProduct.leftDistribMulAction with 
+    smul := (· • ·)
+    add_smul := TensorProduct.add_smul
     zero_smul := TensorProduct.zero_smul }
 #align tensor_product.left_module TensorProduct.leftModule
 
@@ -557,8 +562,9 @@ variable (R M N P)
 with the property that its composition with the canonical bilinear map `M → N → M ⊗ N` is
 the given bilinear map `M → N → P`. -/
 def lift.equiv : (M →ₗ[R] N →ₗ[R] P) ≃ₗ[R] M ⊗ N →ₗ[R] P :=
-  { uncurry R M N P with invFun := fun f => (mk R M N).compr₂ f,
-    left_inv := fun f => LinearMap.ext₂ fun m n => lift.tmul _ _,
+  { uncurry R M N P with 
+    invFun := fun f => (mk R M N).compr₂ f
+    left_inv := fun f => LinearMap.ext₂ fun m n => lift.tmul _ _
     right_inv := fun f => ext' fun m n => lift.tmul _ _ }
 #align tensor_product.lift.equiv TensorProduct.lift.equiv
 
@@ -1254,10 +1260,14 @@ protected theorem add_left_neg (x : M ⊗[R] N) : -x + x = 0 :=
 #align tensor_product.add_left_neg TensorProduct.add_left_neg
 
 instance : AddCommGroup (M ⊗[R] N) :=
-  { TensorProduct.addCommMonoid with neg := Neg.neg, sub := _, sub_eq_add_neg := fun _ _ => rfl,
-    add_left_neg := fun x => TensorProduct.add_left_neg x, zsmul := fun n v => n • v,
-    zsmul_zero' := by simp [TensorProduct.zero_smul],
-    zsmul_succ' := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul],
+  { TensorProduct.addCommMonoid with 
+    neg := Neg.neg
+    sub := _
+    sub_eq_add_neg := fun _ _ => rfl
+    add_left_neg := fun x => TensorProduct.add_left_neg x
+    zsmul := fun n v => n • v
+    zsmul_zero' := by simp [TensorProduct.zero_smul]
+    zsmul_succ' := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul]
     zsmul_neg' := fun n x => by
       change (-n.succ : ℤ) • x = -(((n : ℤ) + 1) • x)
       rw [← zero_add (-↑n.succ • x), ← TensorProduct.add_left_neg (↑n.succ • x), add_assoc, ←

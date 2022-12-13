@@ -388,8 +388,10 @@ The variant `scc'` populates the local context with all equivalences that `scc` 
 This is mostly useful for testing purposes.
 -/
 add_tactic_doc
-  { Name := "scc", category := DocCategory.tactic,
-    declNames := [`` interactive.scc, `` interactive.scc'], tags := ["logic"] }
+  { Name := "scc"
+    category := DocCategory.tactic
+    declNames := [`` interactive.scc, `` interactive.scc']
+    tags := ["logic"] }
 
 end Tactic
 

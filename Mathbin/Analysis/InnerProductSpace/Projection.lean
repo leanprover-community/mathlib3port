@@ -466,7 +466,7 @@ theorem orthogonal_projection_fn_norm_sq (v : E) :
 /-- The orthogonal projection onto a complete subspace. -/
 def orthogonalProjection : E →L[𝕜] K :=
   LinearMap.mkContinuous
-    { toFun := fun v => ⟨orthogonalProjectionFn K v, orthogonal_projection_fn_mem v⟩,
+    { toFun := fun v => ⟨orthogonalProjectionFn K v, orthogonal_projection_fn_mem v⟩
       map_add' := fun x y => by
         have hm : orthogonalProjectionFn K x + orthogonalProjectionFn K y ∈ K :=
           Submodule.add_mem K (orthogonal_projection_fn_mem x) (orthogonal_projection_fn_mem y)
@@ -476,7 +476,7 @@ def orthogonalProjection : E →L[𝕜] K :=
           rw [add_sub_add_comm, inner_add_left, orthogonal_projection_fn_inner_eq_zero _ w hw,
             orthogonal_projection_fn_inner_eq_zero _ w hw, add_zero]
         ext
-        simp [eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero hm ho],
+        simp [eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero hm ho]
       map_smul' := fun c x => by
         have hm : c • orthogonalProjectionFn K x ∈ K :=
           Submodule.smul_mem K _ (orthogonal_projection_fn_mem x)

@@ -59,7 +59,9 @@ def traverse : Multiset α' → F (Multiset β') :=
 #align multiset.traverse Multiset.traverse
 
 instance : Monad Multiset :=
-  { Multiset.functor with pure := fun α x => {x}, bind := @bind }
+  { Multiset.functor with 
+    pure := fun α x => {x}
+    bind := @bind }
 
 @[simp]
 theorem pure_def {α} : (pure : α → Multiset α) = singleton :=

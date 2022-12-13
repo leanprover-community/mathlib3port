@@ -203,7 +203,7 @@ instance : Category (Monad C) where
   id M := { toNatTrans := 𝟙 (M : C ⥤ C) }
   comp _ _ _ f g :=
     { toNatTrans :=
-        { app := fun X => f.app X ≫ g.app X,
+        { app := fun X => f.app X ≫ g.app X
           naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
   id_comp' _ _ _ := by 
     ext
@@ -220,7 +220,7 @@ instance : Category (Comonad C) where
   id M := { toNatTrans := 𝟙 (M : C ⥤ C) }
   comp _ _ _ f g :=
     { toNatTrans :=
-        { app := fun X => f.app X ≫ g.app X,
+        { app := fun X => f.app X ≫ g.app X
           naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
   id_comp' _ _ _ := by 
     ext
@@ -265,9 +265,13 @@ direction is a monad morphism. -/
 @[simps]
 def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
     M ≅ N where 
-  Hom := { toNatTrans := f.Hom, app_η' := f_η, app_μ' := f_μ }
+  Hom :=
+    { toNatTrans := f.Hom
+      app_η' := f_η
+      app_μ' := f_μ }
   inv :=
-    { toNatTrans := f.inv, app_η' := fun X => by simp [← f_η],
+    { toNatTrans := f.inv
+      app_η' := fun X => by simp [← f_η]
       app_μ' := fun X => by 
         rw [← nat_iso.cancel_nat_iso_hom_right f]
         simp only [nat_trans.naturality, iso.inv_hom_id_app, assoc, comp_id, f_μ,
@@ -280,9 +284,13 @@ direction is a comonad morphism. -/
 @[simps]
 def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
     M ≅ N where 
-  Hom := { toNatTrans := f.Hom, app_ε' := f_ε, app_δ' := f_δ }
+  Hom :=
+    { toNatTrans := f.Hom
+      app_ε' := f_ε
+      app_δ' := f_δ }
   inv :=
-    { toNatTrans := f.inv, app_ε' := fun X => by simp [← f_ε],
+    { toNatTrans := f.inv
+      app_ε' := fun X => by simp [← f_ε]
       app_δ' := fun X => by 
         rw [← nat_iso.cancel_nat_iso_hom_left f]
         simp only [reassoc_of (f_δ X), iso.hom_inv_id_app_assoc, nat_trans.naturality_assoc]

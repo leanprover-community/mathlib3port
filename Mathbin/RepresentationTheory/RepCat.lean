@@ -200,7 +200,7 @@ def ofModuleMonoidAlgebra :
       RepCat k G where 
   obj M := RepCat.of (Representation.ofModule k G M)
   map M N f :=
-    { hom := { f with map_smul' := fun r x => f.map_smul (algebraMap k _ r) x },
+    { hom := { f with map_smul' := fun r x => f.map_smul (algebraMap k _ r) x }
       comm' := fun g => by 
         ext
         apply f.map_smul }

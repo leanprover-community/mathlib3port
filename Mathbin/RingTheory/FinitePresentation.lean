@@ -413,7 +413,10 @@ variable {A}
 theorem comp_surjective {f : A →+* B} {g : B →+* C} (hf : f.FinitePresentation) (hg : Surjective g)
     (hker : g.ker.Fg) : (g.comp f).FinitePresentation :=
   @Algebra.FinitePresentation.of_surjective A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra
-    { g with toFun := g, commutes' := fun a => rfl } hg hker hf
+    { g with 
+      toFun := g
+      commutes' := fun a => rfl }
+    hg hker hf
 #align ring_hom.finite_presentation.comp_surjective RingHom.FinitePresentation.comp_surjective
 
 theorem of_surjective (f : A →+* B) (hf : Surjective f) (hker : f.ker.Fg) : f.FinitePresentation :=

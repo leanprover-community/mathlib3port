@@ -158,7 +158,7 @@ unsafe def monotonicity.attr :
   Name := `mono
   descr := "monotonicity of function `f` wrt relations `R₀` and `R₁`: R₀ x y → R₁ (f x) (f y)"
   cache_cfg :=
-    { dependencies := [],
+    { dependencies := []
       mk_cache := fun ls => do
         let ps ← ls.mmap monotonicity.attr.get_param
         let ps := ps.filterMap Prod.fst

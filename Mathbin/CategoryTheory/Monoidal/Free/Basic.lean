@@ -259,9 +259,9 @@ variable {D : Type u'} [Category.{v'} D] [MonoidalCategory D] (f : C → D)
 
 /- warning: category_theory.free_monoidal_category.project_obj -> CategoryTheory.FreeMonoidalCategory.projectObj is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v', u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v', u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
+  forall {C : Type.{u2}} {D : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} D] [_inst_2 : CategoryTheory.MonoidalCategory.{u1, u3} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u2} C) -> D
 but is expected to have type
-  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v', u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v', u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
+  forall {C : Type.{u1}} {D : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u3, u2} D] [_inst_2 : CategoryTheory.MonoidalCategory.{u3, u2} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u1} C) -> D
 Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.project_obj CategoryTheory.FreeMonoidalCategory.projectObjₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
@@ -278,9 +278,9 @@ open Hom
 
 /- warning: category_theory.free_monoidal_category.project_map_aux -> CategoryTheory.FreeMonoidalCategory.projectMapAux is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v', u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v', u'} D _inst_1] (f : C -> D) {X : CategoryTheory.FreeMonoidalCategory.{u} C} {Y : CategoryTheory.FreeMonoidalCategory.{u} C}, (CategoryTheory.FreeMonoidalCategory.Hom.{u} C X Y) -> (Quiver.Hom.{succ v', u'} D (CategoryTheory.CategoryStruct.toQuiver.{v', u'} D (CategoryTheory.Category.toCategoryStruct.{v', u'} D _inst_1)) (CategoryTheory.FreeMonoidalCategory.projectObj.{v', u, u'} C D _inst_1 _inst_2 f X) (CategoryTheory.FreeMonoidalCategory.projectObj.{v', u, u'} C D _inst_1 _inst_2 f Y))
+  forall {C : Type.{u2}} {D : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} D] [_inst_2 : CategoryTheory.MonoidalCategory.{u1, u3} D _inst_1] (f : C -> D) {X : CategoryTheory.FreeMonoidalCategory.{u2} C} {Y : CategoryTheory.FreeMonoidalCategory.{u2} C}, (CategoryTheory.FreeMonoidalCategory.Hom.{u2} C X Y) -> (Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_1)) (CategoryTheory.FreeMonoidalCategory.projectObj.{u1, u2, u3} C D _inst_1 _inst_2 f X) (CategoryTheory.FreeMonoidalCategory.projectObj.{u1, u2, u3} C D _inst_1 _inst_2 f Y))
 but is expected to have type
-  PUnit.{max (max (succ (succ u)) (succ (succ u'))) (succ (succ v'))}
+  PUnit.{max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))}
 Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.project_map_aux CategoryTheory.FreeMonoidalCategory.projectMapAuxₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `free_monoidal_category.project`. -/

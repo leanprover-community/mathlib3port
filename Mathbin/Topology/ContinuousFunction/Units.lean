@@ -33,12 +33,13 @@ def unitsLift :
       C(X,
           M)ˣ where 
   toFun f :=
-    { val := ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩,
-      inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩,
-      val_inv := ext fun x => Units.mul_inv _, inv_val := ext fun x => Units.inv_mul _ }
+    { val := ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩
+      inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩
+      val_inv := ext fun x => Units.mul_inv _
+      inv_val := ext fun x => Units.inv_mul _ }
   invFun f :=
     { toFun := fun x =>
-        ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩,
+        ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩
       continuous_to_fun :=
         continuous_induced_rng.2 <|
           Continuous.prod_mk (f : C(X, M)).Continuous <|

@@ -264,12 +264,12 @@ def congr (e : G ≃* H) (he : G'.map ↑e = H') : G ⧸ G' ≃* H ⧸ H' :=
       -- `simp` doesn't like this lemma...
       map
       G' H' (↑e) (he ▸ G'.le_comap_map e) with
-    toFun := map G' H' (↑e) (he ▸ G'.le_comap_map e),
-    invFun := map H' G' (↑e.symm) (he ▸ (G'.map_equiv_eq_comap_symm e).le),
+    toFun := map G' H' (↑e) (he ▸ G'.le_comap_map e)
+    invFun := map H' G' (↑e.symm) (he ▸ (G'.map_equiv_eq_comap_symm e).le)
     left_inv := fun x => by
       rw [map_map] <;>
         simp only [map_map, ← MulEquiv.coe_monoid_hom_trans, MulEquiv.self_trans_symm,
-          MulEquiv.coe_monoid_hom_refl, map_id_apply],
+          MulEquiv.coe_monoid_hom_refl, map_id_apply]
     right_inv := fun x => by
       rw [map_map] <;>
         simp only [← MulEquiv.coe_monoid_hom_trans, MulEquiv.symm_trans_self,
@@ -369,8 +369,10 @@ with a right inverse `ψ : H → G`. -/
       "The canonical isomorphism `G/(ker φ) ≃+ H` induced by a homomorphism `φ : G →+ H`\nwith a right inverse `ψ : H → G`.",
   simps]
 def quotientKerEquivOfRightInverse (ψ : H → G) (hφ : Function.RightInverse ψ φ) : G ⧸ ker φ ≃* H :=
-  { kerLift φ with toFun := kerLift φ, invFun := mk ∘ ψ,
-    left_inv := fun x => ker_lift_injective φ (by rw [Function.comp_apply, ker_lift_mk', hφ]),
+  { kerLift φ with 
+    toFun := kerLift φ
+    invFun := mk ∘ ψ
+    left_inv := fun x => ker_lift_injective φ (by rw [Function.comp_apply, ker_lift_mk', hφ])
     right_inv := hφ }
 #align
   quotient_group.quotient_ker_equiv_of_right_inverse QuotientGroup.quotientKerEquivOfRightInverse

@@ -152,7 +152,7 @@ noncomputable def embeddingsEquivPrimitiveRoots (C : Type _) [CommRing C] [IsDom
         cases x
         rwa [mem_primitive_roots n.pos, ← is_root_cyclotomic_iff, is_root.def, ←
           map_cyclotomic _ (algebraMap K C), hζ.minpoly_eq_cyclotomic_of_irreducible hirr, ←
-          eval₂_eq_eval_map, ← aeval_def],
+          eval₂_eq_eval_map, ← aeval_def]
       invFun := fun x => by 
         haveI := IsCyclotomicExtension.ne_zero' n K L
         haveI hn := NeZero.of_no_zero_smul_divisors K C n
@@ -160,8 +160,9 @@ noncomputable def embeddingsEquivPrimitiveRoots (C : Type _) [CommRing C] [IsDom
         cases x
         rwa [aeval_def, eval₂_eq_eval_map, hζ.power_basis_gen K, ←
           hζ.minpoly_eq_cyclotomic_of_irreducible hirr, map_cyclotomic, ← is_root.def,
-          is_root_cyclotomic_iff, ← mem_primitive_roots n.pos],
-      left_inv := fun x => Subtype.ext rfl, right_inv := fun x => Subtype.ext rfl }
+          is_root_cyclotomic_iff, ← mem_primitive_roots n.pos]
+      left_inv := fun x => Subtype.ext rfl
+      right_inv := fun x => Subtype.ext rfl }
 #align
   is_primitive_root.embeddings_equiv_primitive_roots IsPrimitiveRoot.embeddingsEquivPrimitiveRoots
 

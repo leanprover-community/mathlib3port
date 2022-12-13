@@ -106,9 +106,9 @@ end
 
 /- warning: equiv_functor.of_is_lawful_functor -> EquivFunctor.ofLawfulFunctor is a dubious translation:
 lean 3 declaration is
-  forall (f : Type.{u₀} -> Type.{u₁}) [_inst_1 : Functor.{u₀, u₁} f] [_inst_2 : IsLawfulFunctor.{u₀, u₁} f _inst_1], EquivFunctor.{u₀, u₁} f
+  forall (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : IsLawfulFunctor.{u1, u2} f _inst_1], EquivFunctor.{u1, u2} f
 but is expected to have type
-  forall (f : Type.{u₀} -> Type.{u₁}) [inst._@.Mathlib.Control.EquivFunctor._hyg.417 : Functor.{u₀, u₁} f] [inst._@.Mathlib.Control.EquivFunctor._hyg.420 : LawfulFunctor.{u₀, u₁} f inst._@.Mathlib.Control.EquivFunctor._hyg.417], EquivFunctor.{u₀, u₁} f
+  forall (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : LawfulFunctor.{u1, u2} f _inst_1], EquivFunctor.{u1, u2} f
 Case conversion may be inaccurate. Consider using '#align equiv_functor.of_is_lawful_functor EquivFunctor.ofLawfulFunctorₓ'. -/
 instance (priority := 100) ofLawfulFunctor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
     EquivFunctor f where 

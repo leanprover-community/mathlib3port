@@ -38,7 +38,7 @@ variable (I f)
 instance algebra {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] :
     Algebra R (∀ i : I, f i) :=
   { (Pi.ringHom fun i => algebraMap R (f i) : R →+* ∀ i : I, f i) with
-    commutes' := fun a f => by ext; simp [Algebra.commutes],
+    commutes' := fun a f => by ext; simp [Algebra.commutes]
     smul_def' := fun a f => by ext; simp [Algebra.smul_def] }
 #align pi.algebra Pi.algebra
 
@@ -62,7 +62,9 @@ etc. -/
 @[simps]
 def evalAlgHom {r : CommSemiring R} [∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] (i : I) :
     (∀ i, f i) →ₐ[R] f i :=
-  { Pi.evalRingHom f i with toFun := fun f => f i, commutes' := fun r => rfl }
+  { Pi.evalRingHom f i with 
+    toFun := fun f => f i
+    commutes' := fun r => rfl }
 #align pi.eval_alg_hom Pi.evalAlgHom
 
 variable (A B : Type _) [CommSemiring R] [Semiring B] [Algebra R B]
@@ -71,7 +73,9 @@ variable (A B : Type _) [CommSemiring R] [Semiring B] [Algebra R B]
 etc. -/
 @[simps]
 def constAlgHom : B →ₐ[R] A → B :=
-  { Pi.constRingHom A B with toFun := Function.const _, commutes' := fun r => rfl }
+  { Pi.constRingHom A B with 
+    toFun := Function.const _
+    commutes' := fun r => rfl }
 #align pi.const_alg_hom Pi.constAlgHom
 
 /-- When `R` is commutative and permits an `algebra_map`, `pi.const_ring_hom` is equal to that
@@ -107,7 +111,8 @@ variable [Algebra R A] [Algebra R B]
 `R`-algebra homomorphism `f` between `A` and `B`. -/
 @[simps]
 protected def compLeft (f : A →ₐ[R] B) (I : Type _) : (I → A) →ₐ[R] I → B :=
-  { f.toRingHom.compLeft I with toFun := fun h => f ∘ h,
+  { f.toRingHom.compLeft I with 
+    toFun := fun h => f ∘ h
     commutes' := fun c => by 
       ext
       exact f.commutes' c }
@@ -128,7 +133,8 @@ def piCongrRight {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R] [�
     [∀ i, Semiring (A₂ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)]
     (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (∀ i, A₁ i) ≃ₐ[R] ∀ i, A₂ i :=
   { @RingEquiv.piCongrRight ι A₁ A₂ _ _ fun i => (e i).toRingEquiv with
-    toFun := fun x j => e j (x j), invFun := fun x j => (e j).symm (x j),
+    toFun := fun x j => e j (x j)
+    invFun := fun x j => (e j).symm (x j)
     commutes' := fun r => by 
       ext i
       simp }

@@ -144,7 +144,9 @@ example [Monoid M] [Monoid N] [MulAction M N] [SmulCommClass M N N] [IsScalarTow
 /-- A stronger form of `units.mul_action'`. -/
 instance mulDistribMulAction' [Group G] [Monoid M] [MulDistribMulAction G M] [SmulCommClass G M M]
     [IsScalarTower G M M] : MulDistribMulAction G Mˣ :=
-  { Units.mulAction' with smul := (· • ·), smul_one := fun m => Units.ext <| smul_one _,
+  { Units.mulAction' with 
+    smul := (· • ·)
+    smul_one := fun m => Units.ext <| smul_one _
     smul_mul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }
 #align units.mul_distrib_mul_action' Units.mulDistribMulAction'
 

@@ -111,7 +111,9 @@ theorem slash_action_eqn' (k : ℤ) (Γ : Subgroup SL(2, ℤ)) [SlashInvariantFo
 #align slash_invariant_form.slash_action_eqn' SlashInvariantForm.slash_action_eqn'
 
 instance [SlashInvariantFormClass F Γ k] : CoeTC F (SlashInvariantForm Γ k) :=
-  ⟨fun f => { toFun := f, slash_action_eq' := slash_action_eqn f }⟩
+  ⟨fun f =>
+    { toFun := f
+      slash_action_eq' := slash_action_eqn f }⟩
 
 @[simp]
 theorem SlashInvariantFormClass.coe_coe [SlashInvariantFormClass F Γ k] (f : F) :
@@ -122,7 +124,7 @@ theorem SlashInvariantFormClass.coe_coe [SlashInvariantFormClass F Γ k] (f : F)
 
 instance hasAdd : Add (SlashInvariantForm Γ k) :=
   ⟨fun f g =>
-    { toFun := f + g,
+    { toFun := f + g
       slash_action_eq' := fun γ => by convert SlashAction.add_action k γ (f : ℍ → ℂ) g <;> simp }⟩
 #align slash_invariant_form.has_add SlashInvariantForm.hasAdd
 
@@ -137,7 +139,8 @@ theorem add_apply (f g : SlashInvariantForm Γ k) (z : ℍ) : (f + g) z = f z + 
 #align slash_invariant_form.add_apply SlashInvariantForm.add_apply
 
 instance hasZero : Zero (SlashInvariantForm Γ k) :=
-  ⟨{ toFun := 0, slash_action_eq' := SlashAction.zero_slash _ }⟩
+  ⟨{  toFun := 0
+      slash_action_eq' := SlashAction.zero_slash _ }⟩
 #align slash_invariant_form.has_zero SlashInvariantForm.hasZero
 
 @[simp]
@@ -151,7 +154,7 @@ variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
 
 instance hasSmul : HasSmul α (SlashInvariantForm Γ k) :=
   ⟨fun c f =>
-    { toFun := c • f,
+    { toFun := c • f
       slash_action_eq' := fun γ => by
         rw [← smul_one_smul ℂ c ⇑f, SlashAction.smul_action k γ ⇑f, slash_action_eqn] }⟩
 #align slash_invariant_form.has_smul SlashInvariantForm.hasSmul
@@ -170,7 +173,7 @@ end
 
 instance hasNeg : Neg (SlashInvariantForm Γ k) :=
   ⟨fun f =>
-    { toFun := -f,
+    { toFun := -f
       slash_action_eq' := fun γ => by
         simpa [ModularForm.subgroup_slash, ModularForm.neg_slash] using f.slash_action_eq' γ }⟩
 #align slash_invariant_form.has_neg SlashInvariantForm.hasNeg
@@ -218,7 +221,8 @@ instance : Module ℂ (SlashInvariantForm Γ k) :=
   coe_hom_injective.Module ℂ coeHom fun _ _ => rfl
 
 instance : One (SlashInvariantForm Γ 0) :=
-  ⟨{ toFun := 1, slash_action_eq' := fun A => ModularForm.is_invariant_one A }⟩
+  ⟨{  toFun := 1
+      slash_action_eq' := fun A => ModularForm.is_invariant_one A }⟩
 
 @[simp]
 theorem one_coe_eq_one : ((1 : SlashInvariantForm Γ 0) : ℍ → ℂ) = 1 :=

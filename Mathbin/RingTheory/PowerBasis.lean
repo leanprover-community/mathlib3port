@@ -298,9 +298,10 @@ See `power_basis.lift_equiv` for a bundled equiv sending `⟨y, hy⟩` to the al
 noncomputable def lift (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.gen) = 0) :
     S →ₐ[A] S' :=
   { pb.Basis.constr A fun i => y ^ (i : ℕ) with
-    map_one' := by convert pb.constr_pow_algebra_map hy 1 using 2 <;> rw [RingHom.map_one],
-    map_zero' := by convert pb.constr_pow_algebra_map hy 0 using 2 <;> rw [RingHom.map_zero],
-    map_mul' := pb.constr_pow_mul hy, commutes' := pb.constr_pow_algebra_map hy }
+    map_one' := by convert pb.constr_pow_algebra_map hy 1 using 2 <;> rw [RingHom.map_one]
+    map_zero' := by convert pb.constr_pow_algebra_map hy 0 using 2 <;> rw [RingHom.map_zero]
+    map_mul' := pb.constr_pow_mul hy
+    commutes' := pb.constr_pow_algebra_map hy }
 #align power_basis.lift PowerBasis.lift
 
 @[simp]

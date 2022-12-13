@@ -357,12 +357,13 @@ variable (p R)
 /-- `witt_vector.frobenius` as an equiv. -/
 @[simps (config := { fullyApplied := false })]
 def frobeniusEquiv [PerfectRing R p] : WittVector p R ≃+* WittVector p R :=
-  { (WittVector.frobenius : WittVector p R →+* WittVector p R) with toFun := WittVector.frobenius,
-    invFun := map (pthRoot R p),
+  { (WittVector.frobenius : WittVector p R →+* WittVector p R) with
+    toFun := WittVector.frobenius
+    invFun := map (pthRoot R p)
     left_inv := fun f =>
       ext fun n => by 
         rw [frobenius_eq_map_frobenius]
-        exact pth_root_frobenius _,
+        exact pth_root_frobenius _
     right_inv := fun f =>
       ext fun n => by 
         rw [frobenius_eq_map_frobenius]

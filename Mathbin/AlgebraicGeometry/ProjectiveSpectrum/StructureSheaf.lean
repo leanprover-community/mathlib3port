@@ -221,8 +221,11 @@ def structurePresheafInCommRing :
         𝒜) where 
   obj U := CommRingCat.of ((structureSheafInType 𝒜).1.obj U)
   map U V i :=
-    { toFun := (structureSheafInType 𝒜).1.map i, map_zero' := rfl, map_add' := fun x y => rfl,
-      map_one' := rfl, map_mul' := fun x y => rfl }
+    { toFun := (structureSheafInType 𝒜).1.map i
+      map_zero' := rfl
+      map_add' := fun x y => rfl
+      map_one' := rfl
+      map_mul' := fun x y => rfl }
 #align
   algebraic_geometry.projective_spectrum.structure_sheaf.structure_presheaf_in_CommRing AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.structurePresheafInCommRing
 
@@ -292,7 +295,7 @@ formed by gluing the `open_to_localization` maps. -/
 def stalkToFiberRingHom (x : ProjectiveSpectrum.top 𝒜) :
     (ProjCat.structureSheaf 𝒜).Presheaf.stalk x ⟶ CommRingCat.of (at x) :=
   Limits.colimit.desc ((OpenNhds.inclusion x).op ⋙ (ProjCat.structureSheaf 𝒜).1)
-    { x := _,
+    { x := _
       ι :=
         { app := fun U =>
             openToLocalization 𝒜 ((OpenNhds.inclusion _).obj (unop U)) x (unop U).2 } }

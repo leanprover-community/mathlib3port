@@ -139,8 +139,10 @@ def ofErase (faces : Set (Finset E))
 @[simps]
 def ofSubcomplex (K : SimplicialComplex 𝕜 E) (faces : Set (Finset E)) (subset : faces ⊆ K.faces)
     (down_closed : ∀ {s t}, s ∈ faces → t ⊆ s → t ∈ faces) : SimplicialComplex 𝕜 E :=
-  { faces, not_empty_mem := fun h => K.not_empty_mem (subset h),
-    indep := fun s hs => K.indep (subset hs), down_closed := fun s t hs hts _ => down_closed hs hts,
+  { faces
+    not_empty_mem := fun h => K.not_empty_mem (subset h)
+    indep := fun s hs => K.indep (subset hs)
+    down_closed := fun s t hs hts _ => down_closed hs hts
     inter_subset_convex_hull := fun s t hs ht =>
       K.inter_subset_convex_hull (subset hs) (subset ht) }
 #align geometry.simplicial_complex.of_subcomplex Geometry.SimplicialComplex.ofSubcomplex
@@ -232,21 +234,24 @@ variable (𝕜 E)
 /-- The complex consisting of only the faces present in both of its arguments. -/
 instance : HasInf (SimplicialComplex 𝕜 E) :=
   ⟨fun K L =>
-    { faces := K.faces ∩ L.faces,
-      not_empty_mem := fun h => K.not_empty_mem (Set.inter_subset_left _ _ h),
-      indep := fun s hs => K.indep hs.1,
-      down_closed := fun s t hs hst ht => ⟨K.down_closed hs.1 hst ht, L.down_closed hs.2 hst ht⟩,
+    { faces := K.faces ∩ L.faces
+      not_empty_mem := fun h => K.not_empty_mem (Set.inter_subset_left _ _ h)
+      indep := fun s hs => K.indep hs.1
+      down_closed := fun s t hs hst ht => ⟨K.down_closed hs.1 hst ht, L.down_closed hs.2 hst ht⟩
       inter_subset_convex_hull := fun s t hs ht => K.inter_subset_convex_hull hs.1 ht.1 }⟩
 
 instance : SemilatticeInf (SimplicialComplex 𝕜 E) :=
-  { (PartialOrder.lift faces) fun x y => ext _ _ with inf := (· ⊓ ·),
-    inf_le_left := fun K L s hs => hs.1, inf_le_right := fun K L s hs => hs.2,
+  { (PartialOrder.lift faces) fun x y => ext _ _ with
+    inf := (· ⊓ ·)
+    inf_le_left := fun K L s hs => hs.1
+    inf_le_right := fun K L s hs => hs.2
     le_inf := fun K L M hKL hKM s hs => ⟨hKL hs, hKM hs⟩ }
 
 instance : Bot (SimplicialComplex 𝕜 E) :=
-  ⟨{ faces := ∅, not_empty_mem := Set.not_mem_empty ∅,
-      indep := fun s hs => (Set.not_mem_empty _ hs).elim,
-      down_closed := fun s _ hs => (Set.not_mem_empty _ hs).elim,
+  ⟨{  faces := ∅
+      not_empty_mem := Set.not_mem_empty ∅
+      indep := fun s hs => (Set.not_mem_empty _ hs).elim
+      down_closed := fun s _ hs => (Set.not_mem_empty _ hs).elim
       inter_subset_convex_hull := fun s _ hs => (Set.not_mem_empty _ hs).elim }⟩
 
 instance : OrderBot (SimplicialComplex 𝕜 E) :=

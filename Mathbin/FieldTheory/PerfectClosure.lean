@@ -29,8 +29,10 @@ class PerfectRing : Type u where
 
 /-- Frobenius automorphism of a perfect ring. -/
 def frobeniusEquiv [PerfectRing R p] : R ≃+* R :=
-  { frobenius R p with invFun := PerfectRing.pthRoot' p,
-    left_inv := PerfectRing.pth_root_frobenius', right_inv := PerfectRing.frobenius_pth_root' }
+  { frobenius R p with 
+    invFun := PerfectRing.pthRoot' p
+    left_inv := PerfectRing.pth_root_frobenius'
+    right_inv := PerfectRing.frobenius_pth_root' }
 #align frobenius_equiv frobeniusEquiv
 
 /-- `p`-th root of an element in a `perfect_ring` as a `ring_hom`. -/
@@ -223,16 +225,16 @@ instance : CommMonoid (PerfectClosure K p) :=
           (Quot.induction_on g) fun ⟨s, z⟩ =>
             congr_arg (Quot.mk _) <| by
               simp only [add_assoc, mul_assoc, RingHom.iterate_map_mul, ← iterate_add_apply,
-                add_comm, add_left_comm],
-    one := mk K p (0, 1),
+                add_comm, add_left_comm]
+    one := mk K p (0, 1)
     one_mul := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_one, iterate_zero_apply, one_mul, zero_add],
+          simp only [RingHom.iterate_map_one, iterate_zero_apply, one_mul, zero_add]
     mul_one := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_one, iterate_zero_apply, mul_one, add_zero],
+          simp only [RingHom.iterate_map_one, iterate_zero_apply, mul_one, add_zero]
     mul_comm := fun e f =>
       Quot.induction_on e fun ⟨m, x⟩ =>
         Quot.induction_on f fun ⟨n, y⟩ =>
@@ -324,21 +326,20 @@ instance : AddCommGroup (PerfectClosure K p) :=
         (Quot.induction_on f) fun ⟨n, y⟩ =>
           (Quot.induction_on g) fun ⟨s, z⟩ =>
             congr_arg (Quot.mk _) <| by
-              simp only [RingHom.iterate_map_add, ← iterate_add_apply, add_assoc, add_comm s _],
-    zero := 0,
+              simp only [RingHom.iterate_map_add, ← iterate_add_apply, add_assoc, add_comm s _]
+    zero := 0
     zero_add := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_zero, iterate_zero_apply, zero_add],
+          simp only [RingHom.iterate_map_zero, iterate_zero_apply, zero_add]
     add_zero := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_zero, iterate_zero_apply, add_zero],
-    sub_eq_add_neg := fun a b => rfl,
+          simp only [RingHom.iterate_map_zero, iterate_zero_apply, add_zero]
+    sub_eq_add_neg := fun a b => rfl
     add_left_neg := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ => by
-        simp only [quot_mk_eq_mk, neg_mk, mk_add_mk, RingHom.iterate_map_neg, add_left_neg,
-          mk_zero],
+        simp only [quot_mk_eq_mk, neg_mk, mk_add_mk, RingHom.iterate_map_neg, add_left_neg, mk_zero]
     add_comm := fun e f =>
       Quot.induction_on e fun ⟨m, x⟩ =>
         Quot.induction_on f fun ⟨n, y⟩ => congr_arg (Quot.mk _) <| by simp only [add_comm] }
@@ -353,7 +354,7 @@ instance : CommRing (PerfectClosure K p) :=
             show Quot.mk _ _ = Quot.mk _ _ by
               simp only [add_assoc, add_comm, add_left_comm] <;> apply r.sound <;>
                 simp only [RingHom.iterate_map_mul, RingHom.iterate_map_add, ← iterate_add_apply,
-                  mul_add, add_comm, add_left_comm],
+                  mul_add, add_comm, add_left_comm]
     right_distrib := fun e f g =>
       (Quot.induction_on e) fun ⟨m, x⟩ =>
         (Quot.induction_on f) fun ⟨n, y⟩ =>
@@ -474,7 +475,7 @@ instance : Inv (PerfectClosure K p) :=
 
 instance : Field (PerfectClosure K p) :=
   { (inferInstance : Inv (PerfectClosure K p)), (inferInstance : CommRing (PerfectClosure K p)) with
-    exists_pair_ne := ⟨0, 1, fun H => zero_ne_one ((eq_iff _ _ _ _).1 H)⟩,
+    exists_pair_ne := ⟨0, 1, fun H => zero_ne_one ((eq_iff _ _ _ _).1 H)⟩
     mul_inv_cancel := fun e =>
       (induction_on e) fun ⟨m, x⟩ H =>
         have := mt (eq_iff _ _ _ _).2 H
@@ -482,7 +483,7 @@ instance : Field (PerfectClosure K p) :=
           (by
             simp only [(frobenius _ _).iterate_map_one, (frobenius K p).iterate_map_zero,
                 iterate_zero_apply, ← (frobenius _ p).iterate_map_mul] at this⊢ <;>
-              rw [mul_inv_cancel this, (frobenius _ _).iterate_map_one]),
+              rw [mul_inv_cancel this, (frobenius _ _).iterate_map_one])
     inv_zero := congr_arg (Quot.mk (R K p)) (by rw [inv_zero]) }
 
 instance :

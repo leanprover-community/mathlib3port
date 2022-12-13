@@ -111,8 +111,9 @@ when attempting to match lemmas with the goal.
 `continuity?` reports back the proof term it found.
 -/
 add_tactic_doc
-  { Name := "continuity / continuity'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.continuity, `tactic.interactive.continuity'],
+  { Name := "continuity / continuity'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.continuity, `tactic.interactive.continuity']
     tags := ["lemma application"] }
 
 end Interactive

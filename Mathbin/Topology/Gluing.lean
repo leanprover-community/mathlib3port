@@ -385,17 +385,19 @@ include U
 @[simps to_glue_data_J to_glue_data_U to_glue_data_V to_glue_data_t to_glue_data_f]
 def ofOpenSubsets : TopCat.GlueData.{u} :=
   mk'.{u}
-    { J, U := fun i => (opens.to_Top <| TopCat.of α).obj (U i),
-      V := fun i j => (opens.map <| Opens.inclusion _).obj (U j),
-      t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩,
+    { J
+      U := fun i => (opens.to_Top <| TopCat.of α).obj (U i)
+      V := fun i j => (opens.map <| Opens.inclusion _).obj (U j)
+      t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩
       V_id := fun i => by 
         ext
         cases U i
-        simp,
+        simp
       t_id := fun i => by 
         ext
-        rfl,
-      t_inter := fun i j k x hx => hx, cocycle := fun i j k x h => rfl }
+        rfl
+      t_inter := fun i j k x hx => hx
+      cocycle := fun i j k x h => rfl }
 #align Top.glue_data.of_open_subsets TopCat.GlueData.ofOpenSubsets
 
 /-- The canonical map from the glue of a family of open subsets `α` into `α`.

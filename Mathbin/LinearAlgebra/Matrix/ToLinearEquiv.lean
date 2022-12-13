@@ -47,10 +47,11 @@ variable [DecidableEq n]
 See `matrix.to_linear_equiv` for the same map on arbitrary modules.
 -/
 def toLinearEquiv' (P : Matrix n n R) (h : Invertible P) : (n → R) ≃ₗ[R] n → R :=
-  { P.toLin' with invFun := (⅟ P).toLin',
+  { P.toLin' with 
+    invFun := (⅟ P).toLin'
     left_inv := fun v =>
       show ((⅟ P).toLin'.comp P.toLin') v = v by
-        rw [← Matrix.to_lin'_mul, P.inv_of_mul_self, Matrix.to_lin'_one, LinearMap.id_apply],
+        rw [← Matrix.to_lin'_mul, P.inv_of_mul_self, Matrix.to_lin'_one, LinearMap.id_apply]
     right_inv := fun v =>
       show (P.toLin'.comp (⅟ P).toLin') v = v by
         rw [← Matrix.to_lin'_mul, P.mul_inv_of_self, Matrix.to_lin'_one, LinearMap.id_apply] }
@@ -85,7 +86,10 @@ See `matrix.to_linear_equiv'` for this result on `n → R`.
 noncomputable def toLinearEquiv [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) :
     M ≃ₗ[R] M := by
   refine'
-        { to_lin b b A with toFun := to_lin b b A, invFun := to_lin b b A⁻¹, left_inv := fun x => _,
+        { to_lin b b A with 
+          toFun := to_lin b b A
+          invFun := to_lin b b A⁻¹
+          left_inv := fun x => _
           right_inv := fun x => _ } <;>
       rw [← LinearMap.comp_apply] <;>
     simp only [← Matrix.to_lin_mul b b b, Matrix.nonsing_inv_mul _ hA, Matrix.mul_nonsing_inv _ hA,

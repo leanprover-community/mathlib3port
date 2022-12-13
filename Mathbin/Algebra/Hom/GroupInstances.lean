@@ -36,7 +36,9 @@ instance [MulOneClass M] [CommMonoid N] :
   mul_one := by intros <;> ext <;> apply mul_one
   mul_comm := by intros <;> ext <;> apply mul_comm
   npow n f :=
-    { toFun := fun x => f x ^ n, map_one' := by simp, map_mul' := fun x y => by simp [mul_pow] }
+    { toFun := fun x => f x ^ n
+      map_one' := by simp
+      map_mul' := fun x y => by simp [mul_pow] }
   npow_zero' f := by 
     ext x
     simp
@@ -48,20 +50,24 @@ instance [MulOneClass M] [CommMonoid N] :
 @[to_additive
       "If `G` is an additive commutative group, then `M →+ G` is an additive commutative\ngroup too."]
 instance {M G} [MulOneClass M] [CommGroup G] : CommGroup (M →* G) :=
-  { MonoidHom.commMonoid with inv := Inv.inv, div := Div.div,
+  { MonoidHom.commMonoid with 
+    inv := Inv.inv
+    div := Div.div
     div_eq_mul_inv := by 
       intros
       ext
-      apply div_eq_mul_inv,
-    mul_left_inv := by intros <;> ext <;> apply mul_left_inv,
+      apply div_eq_mul_inv
+    mul_left_inv := by intros <;> ext <;> apply mul_left_inv
     zpow := fun n f =>
-      { toFun := fun x => f x ^ n, map_one' := by simp, map_mul' := fun x y => by simp [mul_zpow] },
+      { toFun := fun x => f x ^ n
+        map_one' := by simp
+        map_mul' := fun x y => by simp [mul_zpow] }
     zpow_zero' := fun f => by 
       ext x
-      simp,
+      simp
     zpow_succ' := fun n f => by 
       ext x
-      simp [zpow_of_nat, pow_succ],
+      simp [zpow_of_nat, pow_succ]
     zpow_neg' := fun n f => by 
       ext x
       simp }
@@ -71,11 +77,12 @@ instance [AddCommMonoid M] : AddCommMonoid (AddMonoid.EndCat M) :=
 
 instance [AddCommMonoid M] : Semiring (AddMonoid.EndCat M) :=
   { AddMonoid.EndCat.monoid M, AddMonoidHom.addCommMonoid with
-    zero_mul := fun x => AddMonoidHom.ext fun i => rfl,
-    mul_zero := fun x => AddMonoidHom.ext fun i => AddMonoidHom.map_zero _,
-    left_distrib := fun x y z => AddMonoidHom.ext fun i => AddMonoidHom.map_add _ _ _,
-    right_distrib := fun x y z => AddMonoidHom.ext fun i => rfl, natCast := fun n => n • 1,
-    nat_cast_zero := AddMonoid.nsmul_zero _,
+    zero_mul := fun x => AddMonoidHom.ext fun i => rfl
+    mul_zero := fun x => AddMonoidHom.ext fun i => AddMonoidHom.map_zero _
+    left_distrib := fun x y z => AddMonoidHom.ext fun i => AddMonoidHom.map_add _ _ _
+    right_distrib := fun x y z => AddMonoidHom.ext fun i => rfl
+    natCast := fun n => n • 1
+    nat_cast_zero := AddMonoid.nsmul_zero _
     nat_cast_succ := fun n => (AddMonoid.nsmul_succ n 1).trans (add_comm _ _) }
 
 /-- See also `add_monoid.End.nat_cast_def`. -/
@@ -89,8 +96,10 @@ instance [AddCommGroup M] : AddCommGroup (AddMonoid.EndCat M) :=
   AddMonoidHom.addCommGroup
 
 instance [AddCommGroup M] : Ring (AddMonoid.EndCat M) :=
-  { AddMonoid.EndCat.semiring, AddMonoidHom.addCommGroup with intCast := fun z => z • 1,
-    int_cast_of_nat := of_nat_zsmul _, int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
+  { AddMonoid.EndCat.semiring, AddMonoidHom.addCommGroup with
+    intCast := fun z => z • 1
+    int_cast_of_nat := of_nat_zsmul _
+    int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
 
 /-- See also `add_monoid.End.int_cast_def`. -/
 @[simp]
@@ -186,7 +195,10 @@ def compHom [MulOneClass M] [CommMonoid N] [CommMonoid P] :
       (M →* N) →*
         M →*
           P where 
-  toFun g := { toFun := g.comp, map_one' := comp_one g, map_mul' := comp_mul g }
+  toFun g :=
+    { toFun := g.comp
+      map_one' := comp_one g
+      map_mul' := comp_mul g }
   map_one' := by 
     ext1 f
     exact one_comp f

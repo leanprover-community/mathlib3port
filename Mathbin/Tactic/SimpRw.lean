@@ -55,7 +55,9 @@ unsafe def simp_rw (q : parse rw_rules) (l : parse location) : tactic Unit :=
 
 -- equivalent to `simp only [rule] at l`
 add_tactic_doc
-  { Name := "simp_rw", category := DocCategory.tactic, declNames := [`tactic.interactive.simp_rw],
+  { Name := "simp_rw"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.simp_rw]
     tags := ["simplification"] }
 
 end Tactic.Interactive

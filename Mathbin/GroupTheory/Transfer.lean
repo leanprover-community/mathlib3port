@@ -97,7 +97,8 @@ the transfer homomorphism is `transfer ϕ : G →* A`. -/
       "Given `ϕ : H →+ A` from `H : add_subgroup G` to an additive commutative group `A`,\nthe transfer homomorphism is `transfer ϕ : G →+ A`."]
 noncomputable def transfer [FiniteIndex H] : G →* A :=
   let T : leftTransversals (H : Set G) := Inhabited.default
-  { toFun := fun g => diff ϕ T (g • T), map_one' := by rw [one_smul, diff_self],
+  { toFun := fun g => diff ϕ T (g • T)
+    map_one' := by rw [one_smul, diff_self]
     map_mul' := fun g h => by rw [mul_smul, ← diff_mul_diff, smul_diff_smul] }
 #align monoid_hom.transfer MonoidHom.transfer
 

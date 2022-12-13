@@ -185,9 +185,9 @@ instance :
 
 /- warning: lazy_list.mfirst -> LazyList.mfirst is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Alternative.{u_1, u_2} m] {α : Type.{u_3}} {β : Type.{u_1}}, (α -> (m β)) -> (LazyList.{u_3} α) -> (m β)
+  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Alternative.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}}, (α -> (m β)) -> (LazyList.{u3} α) -> (m β)
 but is expected to have type
-  forall {m : Type.{_aux_param_2} -> Type.{_aux_param_1}} [_inst_1 : Alternative.{_aux_param_2, _aux_param_1} m] {α : Type.{_aux_param_0}} {β : Type.{_aux_param_2}}, (α -> (m β)) -> (LazyList.{_aux_param_0} α) -> (m β)
+  forall {m : Type.{u3} -> Type.{u2}} [_inst_1 : Alternative.{u3, u2} m] {α : Type.{u1}} {β : Type.{u3}}, (α -> (m β)) -> (LazyList.{u1} α) -> (m β)
 Case conversion may be inaccurate. Consider using '#align lazy_list.mfirst LazyList.mfirstₓ'. -/
 /-- Try applying function `f` to every element of a `lazy_list` and
 return the result of the first attempt that succeeds. -/

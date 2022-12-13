@@ -58,9 +58,8 @@ theorem is_topological_basis_Iic_principal :
     IsTopologicalBasis (range (Iic ∘ 𝓟 : Set α → Set (Filter α))) :=
   { exists_subset_inter := by 
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl
-      exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩,
-    sUnion_eq :=
-      sUnion_eq_univ_iff.2 fun l => ⟨iic ⊤, ⟨univ, congr_arg iic principal_univ⟩, le_top⟩,
+      exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩
+    sUnion_eq := sUnion_eq_univ_iff.2 fun l => ⟨iic ⊤, ⟨univ, congr_arg iic principal_univ⟩, le_top⟩
     eq_generate_from := rfl }
 #align filter.is_topological_basis_Iic_principal Filter.is_topological_basis_Iic_principal
 

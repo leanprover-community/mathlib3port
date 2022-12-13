@@ -238,7 +238,9 @@ unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ide
 #align tactic.interactive.choose tactic.interactive.choose
 
 add_tactic_doc
-  { Name := "choose", category := DocCategory.tactic, declNames := [`tactic.interactive.choose],
+  { Name := "choose"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.choose]
     tags := ["classical logic"] }
 
 end Interactive

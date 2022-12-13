@@ -60,7 +60,8 @@ protected theorem comp_map {α β γ : Type u} (g : α → β) (h : β → γ) (
 #align equiv.comp_map Equiv.comp_map
 
 protected theorem is_lawful_functor : @IsLawfulFunctor _ Equiv.functor :=
-  { id_map := @Equiv.id_map _ _, comp_map := @Equiv.comp_map _ _ }
+  { id_map := @Equiv.id_map _ _
+    comp_map := @Equiv.comp_map _ _ }
 #align equiv.is_lawful_functor Equiv.is_lawful_functor
 
 protected theorem is_lawful_functor' [F : Functor t']

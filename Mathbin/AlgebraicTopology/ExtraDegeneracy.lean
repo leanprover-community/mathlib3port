@@ -187,7 +187,7 @@ the monotone map which sends `0` to `0` and `i.succ` to `f.to_order_hom i`. -/
 @[simp]
 def shift {n : ℕ} {Δ : SimplexCategory} (f : [n] ⟶ Δ) : [n + 1] ⟶ Δ :=
   SimplexCategory.Hom.mk
-    { toFun := shiftFun f.toOrderHom,
+    { toFun := shiftFun f.toOrderHom
       monotone' := fun i₁ i₂ hi => by 
         by_cases h₁ : i₁ = 0
         · subst h₁
@@ -407,12 +407,12 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
     { Hom := fun i j => by 
         by_cases i + 1 = j
         · exact (-ed.s i) ≫ eq_to_hom (by congr )
-        · exact 0,
+        · exact 0
       zero' := fun i j hij => by 
         split_ifs
         · exfalso
           exact hij h
-        · simp only [eq_self_iff_true],
+        · simp only [eq_self_iff_true]
       comm := fun i => by 
         cases i
         · rw [Homotopy.prev_d_chain_complex, Homotopy.d_next_zero_chain_complex, zero_add]

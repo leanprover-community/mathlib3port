@@ -344,7 +344,7 @@ theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A 
 
 /-- A cyclotomic finite extension of a number field is a number field. -/
 theorem numberField [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L] : NumberField L :=
-  { to_char_zero := char_zero_of_injective_algebra_map (algebraMap K L).Injective,
+  { to_char_zero := char_zero_of_injective_algebra_map (algebraMap K L).Injective
     toFiniteDimensional :=
       @Module.Finite.trans _ K L _ _ _ _
         (@algebraRat L _ (char_zero_of_injective_algebra_map (algebraMap K L).Injective)) _ _
@@ -426,7 +426,7 @@ theorem IsPrimitiveRoot.adjoin_is_cyclotomic_extension {ζ : B} {n : ℕ+} (h : 
   { exists_prim_root := fun i hi => by
       rw [Set.mem_singleton_iff] at hi
       refine' ⟨⟨ζ, subset_adjoin <| Set.mem_singleton ζ⟩, _⟩
-      rwa [← IsPrimitiveRoot.coe_submonoid_class_iff, Subtype.coe_mk, hi],
+      rwa [← IsPrimitiveRoot.coe_submonoid_class_iff, Subtype.coe_mk, hi]
     adjoin_roots := fun x => by
       refine'
         adjoin_induction' (fun b hb => _) (fun a => _) (fun b₁ b₂ hb₁ hb₂ => _)
@@ -473,7 +473,7 @@ variable [IsCyclotomicExtension {n} K L]
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `X ^ n - 1`. -/
 theorem splittingFieldXPowSubOne : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
-  { Splits := splitsXPowSubOne K L (mem_singleton n),
+  { Splits := splitsXPowSubOne K L (mem_singleton n)
     adjoin_roots := by 
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
       congr
@@ -507,7 +507,7 @@ scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.isGalois
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `cyclotomic n K`. -/
 theorem splittingFieldCyclotomic : IsSplittingField K L (cyclotomic n K) :=
-  { Splits := splitsCyclotomic K L (mem_singleton n),
+  { Splits := splitsCyclotomic K L (mem_singleton n)
     adjoin_roots := by 
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
       letI := Classical.decEq L

@@ -66,22 +66,24 @@ def Ulift.equivalence :
     C ≌ ULift.{u₂} C where 
   Functor := Ulift.upFunctor
   inverse := Ulift.downFunctor
-  unitIso := { Hom := 𝟙 _, inv := 𝟙 _ }
+  unitIso :=
+    { Hom := 𝟙 _
+      inv := 𝟙 _ }
   counitIso :=
     { Hom :=
-        { app := fun X => 𝟙 _,
+        { app := fun X => 𝟙 _
           naturality' := fun X Y f => by 
             change f ≫ 𝟙 _ = 𝟙 _ ≫ f
-            simp },
+            simp }
       inv :=
-        { app := fun X => 𝟙 _,
+        { app := fun X => 𝟙 _
           naturality' := fun X Y f => by 
             change f ≫ 𝟙 _ = 𝟙 _ ≫ f
-            simp },
+            simp }
       hom_inv_id' := by 
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
-        simp,
+        simp
       inv_hom_id' := by 
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _

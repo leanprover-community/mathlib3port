@@ -349,7 +349,7 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L]
       have key' := ((Fintype.bijective_iff_injective_and_card f).mpr ⟨hf, key'⟩).2
       obtain ⟨q, hq⟩ := key' ⟨l₁, hl₁⟩
       exact ⟨q, (congr_arg _ (subtype.ext_iff.mp hq)).mp (mk_line_ax (this q)).2, q.2⟩
-  { mkPoint := fun l₁ l₂ hl => Classical.choose (this l₁ l₂ hl),
+  { mkPoint := fun l₁ l₂ hl => Classical.choose (this l₁ l₂ hl)
     mk_point_ax := fun l₁ l₂ hl => Classical.choose_spec (this l₁ l₂ hl) }
 #align configuration.has_lines.has_points Configuration.HasLines.hasPoints
 
@@ -358,7 +358,8 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L]
 noncomputable def HasPoints.hasLines [HasPoints P L] [Fintype P] [Fintype L]
     (h : Fintype.card P = Fintype.card L) : HasLines P L :=
   let this := @HasLines.hasPoints (Dual L) (Dual P) _ _ _ _ h.symm
-  { mkLine := fun _ _ => this.mkPoint, mk_line_ax := fun _ _ => this.mk_point_ax }
+  { mkLine := fun _ _ => this.mkPoint
+    mk_line_ax := fun _ _ => this.mk_point_ax }
 #align configuration.has_points.has_lines Configuration.HasPoints.hasLines
 
 variable (P L)
@@ -391,8 +392,11 @@ instance (priority := 100) hasLines [h : ProjectivePlane P L] : HasLines P L :=
 variable [ProjectivePlane P L]
 
 instance : ProjectivePlane (Dual L) (Dual P) :=
-  { Dual.nondegenerate P L with mkLine := @mkPoint P L _ _, mk_line_ax := fun _ _ => mk_point_ax,
-    mkPoint := @mkLine P L _ _, mk_point_ax := fun _ _ => mk_line_ax,
+  { Dual.nondegenerate P L with 
+    mkLine := @mkPoint P L _ _
+    mk_line_ax := fun _ _ => mk_point_ax
+    mkPoint := @mkLine P L _ _
+    mk_point_ax := fun _ _ => mk_line_ax
     exists_config := by
       obtain ⟨p₁, p₂, p₃, l₁, l₂, l₃, h₁₂, h₁₃, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ :=
         @exists_config P L _ _
@@ -510,8 +514,9 @@ theorem card_points [Fintype P] [Finite L] : Fintype.card P = order P L ^ 2 + or
   cases nonempty_fintype L
   obtain ⟨p, -⟩ := @exists_config P L _ _
   let ϕ : { q // q ≠ p } ≃ Σl : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
-    { toFun := fun q => ⟨⟨mk_line q.2, (mk_line_ax q.2).2⟩, q, (mk_line_ax q.2).1, q.2⟩,
-      invFun := fun lq => ⟨lq.2, lq.2.2.2⟩, left_inv := fun q => Subtype.ext rfl,
+    { toFun := fun q => ⟨⟨mk_line q.2, (mk_line_ax q.2).2⟩, q, (mk_line_ax q.2).1, q.2⟩
+      invFun := fun lq => ⟨lq.2, lq.2.2.2⟩
+      left_inv := fun q => Subtype.ext rfl
       right_inv := fun lq =>
         Sigma.subtype_ext
           (Subtype.ext

@@ -79,14 +79,20 @@ def LinearMap.mkContinuousOfExistsBound (h : ∃ C, ∀ x, ‖f x‖ ≤ C * ‖
 theorem continuous_of_linear_of_boundₛₗ {f : E → F} (h_add : ∀ x y, f (x + y) = f x + f y)
     (h_smul : ∀ (c : 𝕜) (x), f (c • x) = σ c • f x) {C : ℝ} (h_bound : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
     Continuous f :=
-  let φ : E →ₛₗ[σ] F := { toFun := f, map_add' := h_add, map_smul' := h_smul }
+  let φ : E →ₛₗ[σ] F :=
+    { toFun := f
+      map_add' := h_add
+      map_smul' := h_smul }
   AddMonoidHomClass.continuous_of_bound φ C h_bound
 #align continuous_of_linear_of_boundₛₗ continuous_of_linear_of_boundₛₗ
 
 theorem continuous_of_linear_of_bound {f : E → G} (h_add : ∀ x y, f (x + y) = f x + f y)
     (h_smul : ∀ (c : 𝕜) (x), f (c • x) = c • f x) {C : ℝ} (h_bound : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
     Continuous f :=
-  let φ : E →ₗ[𝕜] G := { toFun := f, map_add' := h_add, map_smul' := h_smul }
+  let φ : E →ₗ[𝕜] G :=
+    { toFun := f
+      map_add' := h_add
+      map_smul' := h_smul }
   AddMonoidHomClass.continuous_of_bound φ C h_bound
 #align continuous_of_linear_of_bound continuous_of_linear_of_bound
 
@@ -458,7 +464,10 @@ with `continuous_linear_map.topological_space` to avoid diamond issues.
 See Note [forgetful inheritance] -/
 protected def tmpSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F) :=
   AddGroupSeminorm.toSeminormedAddCommGroup
-    { toFun := norm, map_zero' := op_norm_zero, add_le' := op_norm_add_le, neg' := op_norm_neg }
+    { toFun := norm
+      map_zero' := op_norm_zero
+      add_le' := op_norm_add_le
+      neg' := op_norm_neg }
 #align
   continuous_linear_map.tmp_seminormed_add_comm_group ContinuousLinearMap.tmpSeminormedAddCommGroup
 
@@ -880,11 +889,11 @@ map and a bound on the norm of the image. The linear map can be constructed usin
 def mkContinuous₂ (f : E →ₛₗ[σ₁₃] F →ₛₗ[σ₂₃] G) (C : ℝ) (hC : ∀ x y, ‖f x y‖ ≤ C * ‖x‖ * ‖y‖) :
     E →SL[σ₁₃] F →SL[σ₂₃] G :=
   (LinearMap.mkContinuous
-      { toFun := fun x => (f x).mkContinuous (C * ‖x‖) (hC x),
+      { toFun := fun x => (f x).mkContinuous (C * ‖x‖) (hC x)
         map_add' := fun x y => by 
           ext z
           rw [ContinuousLinearMap.add_apply, mk_continuous_apply, mk_continuous_apply,
-            mk_continuous_apply, map_add, add_apply],
+            mk_continuous_apply, map_add, add_apply]
         map_smul' := fun c x => by 
           ext z
           rw [ContinuousLinearMap.smul_apply, mk_continuous_apply, mk_continuous_apply, map_smulₛₗ,
@@ -1917,7 +1926,7 @@ def extend : Fₗ →SL[σ₁₂] F :=
         h_e h_dense f.UniformContinuous).Continuous
   -- extension of `f` agrees with `f` on the domain of the embedding `e`
   have eq := uniformly_extend_of_ind h_e h_dense f.UniformContinuous
-  { toFun := (h_e.DenseInducing h_dense).extend f,
+  { toFun := (h_e.DenseInducing h_dense).extend f
     map_add' := by 
       refine' h_dense.induction_on₂ _ _
       ·
@@ -1926,14 +1935,14 @@ def extend : Fₗ →SL[σ₁₂] F :=
             ((cont.comp continuous_fst).add (cont.comp continuous_snd))
       · intro x y
         simp only [Eq, ← e.map_add]
-        exact f.map_add _ _,
+        exact f.map_add _ _
     map_smul' := fun k => by 
       refine' fun b => h_dense.induction_on b _ _
       · exact isClosedEq (cont.comp (continuous_const_smul _)) ((continuous_const_smul _).comp cont)
       · intro x
         rw [← map_smul]
         simp only [Eq]
-        exact ContinuousLinearMap.map_smulₛₗ _ _ _,
+        exact ContinuousLinearMap.map_smulₛₗ _ _ _
     cont }
 #align continuous_linear_map.extend ContinuousLinearMap.extend
 
@@ -2099,10 +2108,10 @@ variable (𝕜 E Fₗ)
 `smul_rightL (c : E →L[𝕜] 𝕜) (f : F) (x : E) = c x • f`. -/
 def smulRightL : (E →L[𝕜] 𝕜) →L[𝕜] Fₗ →L[𝕜] E →L[𝕜] Fₗ :=
   (LinearMap.mkContinuous₂
-      { toFun := smulRightₗ,
+      { toFun := smulRightₗ
         map_add' := fun c₁ c₂ => by 
           ext x
-          simp only [add_smul, coe_smul_rightₗ, add_apply, smul_right_apply, LinearMap.add_apply],
+          simp only [add_smul, coe_smul_rightₗ, add_apply, smul_right_apply, LinearMap.add_apply]
         map_smul' := fun m c => by 
           ext x
           simp only [smul_smul, coe_smul_rightₗ, Algebra.id.smul_eq_mul, coe_smul',
@@ -2310,11 +2319,11 @@ def arrowCongrSL (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G)
         -- given explicitly to help `simps`
         e₁₂.arrowCongrEquiv
       e₄₃ with
-    toFun := fun L => (e₄₃ : H →SL[σ₄₃] G).comp (L.comp (e₁₂.symm : F →SL[σ₂₁] E)),
-    invFun := fun L => (e₄₃.symm : G →SL[σ₃₄] H).comp (L.comp (e₁₂ : E →SL[σ₁₂] F)),
-    map_add' := fun f g => by rw [add_comp, comp_add],
-    map_smul' := fun t f => by rw [smul_comp, comp_smulₛₗ],
-    continuous_to_fun := (continuous_id.clm_comp_const _).const_clm_comp _,
+    toFun := fun L => (e₄₃ : H →SL[σ₄₃] G).comp (L.comp (e₁₂.symm : F →SL[σ₂₁] E))
+    invFun := fun L => (e₄₃.symm : G →SL[σ₃₄] H).comp (L.comp (e₁₂ : E →SL[σ₁₂] F))
+    map_add' := fun f g => by rw [add_comp, comp_add]
+    map_smul' := fun t f => by rw [smul_comp, comp_smulₛₗ]
+    continuous_to_fun := (continuous_id.clm_comp_const _).const_clm_comp _
     continuous_inv_fun := (continuous_id.clm_comp_const _).const_clm_comp _ }
 #align continuous_linear_equiv.arrow_congrSL ContinuousLinearEquiv.arrowCongrSL
 

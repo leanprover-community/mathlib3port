@@ -159,10 +159,11 @@ variable (ι M)
 between `⨁ i, M i` and `Π i, M i`. -/
 @[simps apply]
 def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
-  { Dfinsupp.equivFunOnFintype with toFun := coeFn,
+  { Dfinsupp.equivFunOnFintype with 
+    toFun := coeFn
     map_add' := fun f g => by 
       ext
-      simp only [add_apply, Pi.add_apply],
+      simp only [add_apply, Pi.add_apply]
     map_smul' := fun c f => by 
       ext
       simp only [Dfinsupp.coe_smul, RingHom.id_apply] }

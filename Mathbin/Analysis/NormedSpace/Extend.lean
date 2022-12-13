@@ -71,7 +71,10 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     intro c x
     rw [← re_add_im c, add_smul, add_smul, add, smul_ℝ, ← smul_smul, smul_ℝ, smul_I, ← mul_assoc]
     rfl
-  exact { toFun := fc, map_add' := add, map_smul' := smul_𝕜 }
+  exact
+    { toFun := fc
+      map_add' := add
+      map_smul' := smul_𝕜 }
 #align linear_map.extend_to_𝕜' LinearMap.extendTo𝕜'
 
 theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →ₗ[ℝ] ℝ) (x : F) :

@@ -176,7 +176,9 @@ noncomputable def typeEquiv : Type u ≌ SheafOfTypesCat typesGrothendieckTopolo
     (NatIso.ofComponents
       (fun α =>
         -- α ≅ punit ⟶ α
-        { Hom := fun x _ => x, inv := fun f => f PUnit.unit, hom_inv_id' := funext fun x => rfl,
+        { Hom := fun x _ => x
+          inv := fun f => f PUnit.unit
+          hom_inv_id' := funext fun x => rfl
           inv_hom_id' := funext fun f => funext fun y => PUnit.casesOn y rfl })
       fun α β f => rfl)
     (iso.symm <|

@@ -888,21 +888,21 @@ def domDomCongrLinearEquiv' {ι' : Type _} [DecidableEq ι'] (σ : ι ≃ ι') :
       MultilinearMap R (fun i => M₁ (σ.symm i))
         M₂ where 
   toFun f :=
-    { toFun := f ∘ (σ.piCongrLeft' M₁).symm,
+    { toFun := f ∘ (σ.piCongrLeft' M₁).symm
       map_add' := fun m i => by 
         rw [← σ.apply_symm_apply i]
         intro x y
-        simp only [comp_app, Pi_congr_left'_symm_update, f.map_add],
+        simp only [comp_app, Pi_congr_left'_symm_update, f.map_add]
       map_smul' := fun m i c => by 
         rw [← σ.apply_symm_apply i]
         intro x
         simp only [comp_app, Pi_congr_left'_symm_update, f.map_smul] }
   invFun f :=
-    { toFun := f ∘ σ.piCongrLeft' M₁,
+    { toFun := f ∘ σ.piCongrLeft' M₁
       map_add' := fun m i => by 
         rw [← σ.symm_apply_apply i]
         intro x y
-        simp only [comp_app, Pi_congr_left'_update, f.map_add],
+        simp only [comp_app, Pi_congr_left'_update, f.map_add]
       map_smul' := fun m i c => by 
         rw [← σ.symm_apply_apply i]
         intro x
@@ -1087,15 +1087,21 @@ theorem sub_apply (m : ∀ i, M₁ i) : (f - g) m = f m - g m :=
 
 instance : AddCommGroup (MultilinearMap R M₁ M₂) := by
   refine'
-          { MultilinearMap.addCommMonoid with zero := (0 : MultilinearMap R M₁ M₂), add := (· + ·),
-            neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _,
+          { MultilinearMap.addCommMonoid with
+            zero := (0 : MultilinearMap R M₁ M₂)
+            add := (· + ·)
+            neg := Neg.neg
+            sub := Sub.sub
+            sub_eq_add_neg := _
             nsmul := fun n f =>
               ⟨fun m => n • f m, fun m i x y => by simp [smul_add], fun l i x d => by
-                simp [← smul_comm x n]⟩,
+                simp [← smul_comm x n]⟩
             zsmul := fun n f =>
               ⟨fun m => n • f m, fun m i x y => by simp [smul_add], fun l i x d => by
-                simp [← smul_comm x n]⟩,
-            zsmul_zero' := _, zsmul_succ' := _, zsmul_neg' := _.. } <;>
+                simp [← smul_comm x n]⟩
+            zsmul_zero' := _
+            zsmul_succ' := _
+            zsmul_neg' := _.. } <;>
         intros <;>
       ext <;>
     simp [add_comm, add_left_comm, sub_eq_add_neg, add_smul, Nat.succ_eq_add_one]
@@ -1214,7 +1220,8 @@ def MultilinearMap.curryLeft (f : MultilinearMap R M M₂) :
       MultilinearMap R (fun i : Fin n => M i.succ)
         M₂ where 
   toFun x :=
-    { toFun := fun m => f (cons x m), map_add' := fun m i y y' => by simp,
+    { toFun := fun m => f (cons x m)
+      map_add' := fun m i y y' => by simp
       map_smul' := fun m i y c => by simp }
   map_add' x y := by 
     ext m
@@ -1326,7 +1333,8 @@ def MultilinearMap.curryRight (f : MultilinearMap R M M₂) :
       (M (last n) →ₗ[R]
         M₂) where 
   toFun m :=
-    { toFun := fun x => f (snoc m x), map_add' := fun x y => by rw [f.snoc_add],
+    { toFun := fun x => f (snoc m x)
+      map_add' := fun x y => by rw [f.snoc_add]
       map_smul' := fun c x => by simp only [f.snoc_smul, RingHom.id_apply] }
   map_add' m i x y := by 
     ext z
@@ -1396,8 +1404,8 @@ def currySum (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) :
       (MultilinearMap R (fun x : ι' => M')
         M₂) where 
   toFun u :=
-    { toFun := fun v => f (Sum.elim u v),
-      map_add' := fun v i x y => by simp only [← Sum.update_elim_inr, f.map_add],
+    { toFun := fun v => f (Sum.elim u v)
+      map_add' := fun v i x y => by simp only [← Sum.update_elim_inr, f.map_add]
       map_smul' := fun v i c x => by simp only [← Sum.update_elim_inr, f.map_smul] }
   map_add' u i x y :=
     ext fun v => by simp only [MultilinearMap.coe_mk, add_apply, ← Sum.update_elim_inl, f.map_add]

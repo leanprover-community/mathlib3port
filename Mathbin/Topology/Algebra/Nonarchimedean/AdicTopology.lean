@@ -53,13 +53,13 @@ theorem adicBasis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • 
   { inter := by 
       suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by simpa
       intro i j
-      exact ⟨max i j, pow_le_pow (le_max_left i j), pow_le_pow (le_max_right i j)⟩,
+      exact ⟨max i j, pow_le_pow (le_max_left i j), pow_le_pow (le_max_right i j)⟩
     leftMul := by 
       suffices ∀ (a : R) (i : ℕ), ∃ j : ℕ, a • I ^ j ≤ I ^ i by simpa
       intro r n
       use n
       rintro a ⟨x, hx, rfl⟩
-      exact (I ^ n).smul_mem r hx,
+      exact (I ^ n).smul_mem r hx
     mul := by 
       suffices ∀ i : ℕ, ∃ j : ℕ, ↑(I ^ j) * ↑(I ^ j) ⊆ ↑(I ^ i) by simpa
       intro n
@@ -115,7 +115,7 @@ theorem adic_module_basis :
       ⟨max i j,
         le_inf_iff.mpr
           ⟨smul_mono_left <| pow_le_pow (le_max_left i j),
-            smul_mono_left <| pow_le_pow (le_max_right i j)⟩⟩,
+            smul_mono_left <| pow_le_pow (le_max_right i j)⟩⟩
     smul := fun m i =>
       ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
         replace a_in : a ∈ I ^ i := by simpa [(I ^ i).mul_top] using a_in

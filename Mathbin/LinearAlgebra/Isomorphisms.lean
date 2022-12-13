@@ -160,10 +160,11 @@ theorem quotient_quotient_equiv_quotient_aux_mk_mk (x : M) :
 
 /-- **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
 def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=
-  { quotientQuotientEquivQuotientAux S T h with toFun := quotientQuotientEquivQuotientAux S T h,
-    invFun := mapq _ _ (mkq S) (le_comap_map _ _),
+  { quotientQuotientEquivQuotientAux S T h with
+    toFun := quotientQuotientEquivQuotientAux S T h
+    invFun := mapq _ _ (mkq S) (le_comap_map _ _)
     left_inv := fun x =>
-      (Quotient.inductionOn' x) fun x => (Quotient.inductionOn' x) fun x => by simp,
+      (Quotient.inductionOn' x) fun x => (Quotient.inductionOn' x) fun x => by simp
     right_inv := fun x => (Quotient.inductionOn' x) fun x => by simp }
 #align submodule.quotient_quotient_equiv_quotient Submodule.quotientQuotientEquivQuotient
 

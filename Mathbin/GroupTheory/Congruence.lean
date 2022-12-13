@@ -423,11 +423,13 @@ instance : CompleteLattice (Con M) :=
       ⟨fun r hr x y h => (h : ∀ r ∈ s, (r : Con M) x y) r hr, fun r hr x y h r' hr' =>
         hr hr' h⟩ with
     inf := fun c d =>
-      ⟨c.toSetoid ⊓ d.toSetoid, fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩⟩,
-    inf_le_left := fun _ _ _ _ h => h.1, inf_le_right := fun _ _ _ _ h => h.2,
-    le_inf := fun _ _ _ hb hc _ _ h => ⟨hb h, hc h⟩,
-    top := { Setoid.completeLattice.top with mul' := by tauto }, le_top := fun _ _ _ h => trivial,
-    bot := { Setoid.completeLattice.bot with mul' := fun _ _ _ _ h1 h2 => h1 ▸ h2 ▸ rfl },
+      ⟨c.toSetoid ⊓ d.toSetoid, fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩⟩
+    inf_le_left := fun _ _ _ _ h => h.1
+    inf_le_right := fun _ _ _ _ h => h.2
+    le_inf := fun _ _ _ hb hc _ _ h => ⟨hb h, hc h⟩
+    top := { Setoid.completeLattice.top with mul' := by tauto }
+    le_top := fun _ _ _ h => trivial
+    bot := { Setoid.completeLattice.bot with mul' := fun _ _ _ _ h1 h2 => h1 ▸ h2 ▸ rfl }
     bot_le := fun c x y h => h ▸ c.refl x }
 
 /-- The infimum of two congruence relations equals the infimum of the underlying binary
@@ -967,8 +969,10 @@ noncomputable def quotientKerEquivRange (f : M →* P) : (ker f).Quotient ≃* f
   simps]
 def quotientKerEquivOfRightInverse (f : M →* P) (g : P → M) (hf : Function.RightInverse g f) :
     (ker f).Quotient ≃* P :=
-  { kerLift f with toFun := kerLift f, invFun := coe ∘ g,
-    left_inv := fun x => ker_lift_injective _ (by rw [Function.comp_apply, ker_lift_mk, hf]),
+  { kerLift f with 
+    toFun := kerLift f
+    invFun := coe ∘ g
+    left_inv := fun x => ker_lift_injective _ (by rw [Function.comp_apply, ker_lift_mk, hf])
     right_inv := hf }
 #align con.quotient_ker_equiv_of_right_inverse Con.quotientKerEquivOfRightInverse
 
@@ -1196,7 +1200,9 @@ instance mulAction {α M : Type _} [Monoid α] [MulOneClass M] [MulAction α M] 
 
 instance mulDistribMulAction {α M : Type _} [Monoid α] [Monoid M] [MulDistribMulAction α M]
     [IsScalarTower α M M] (c : Con M) : MulDistribMulAction α c.Quotient :=
-  { c.MulAction with smul := (· • ·), smul_one := fun r => congr_arg Quotient.mk' <| smul_one _,
+  { c.MulAction with 
+    smul := (· • ·)
+    smul_one := fun r => congr_arg Quotient.mk' <| smul_one _
     smul_mul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk' <| smul_mul' _ _ _ }
 #align con.mul_distrib_mul_action Con.mulDistribMulAction
 

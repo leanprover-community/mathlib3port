@@ -127,7 +127,8 @@ theorem copy_eq (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : p.copy s hs
 #align sub_mul_action.copy_eq SubMulAction.copy_eq
 
 instance : Bot (SubMulAction R M) :=
-  ⟨{ carrier := ∅, smul_mem' := fun c => Set.not_mem_empty }⟩
+  ⟨{  carrier := ∅
+      smul_mem' := fun c => Set.not_mem_empty }⟩
 
 instance : Inhabited (SubMulAction R M) :=
   ⟨⊥⟩

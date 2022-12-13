@@ -368,8 +368,13 @@ variable {M N P}
 instance : Semiring (Submodule R A) :=
   { to_add_submonoid_injective.Semigroup _ fun m n : Submodule R A => mul_to_add_submonoid m n,
     AddMonoidWithOne.unary, Submodule.pointwiseAddCommMonoid, Submodule.hasOne,
-    Submodule.hasMul with one_mul := Submodule.one_mul, mul_one := Submodule.mul_one,
-    zero_mul := bot_mul, mul_zero := mul_bot, left_distrib := mul_sup, right_distrib := sup_mul }
+    Submodule.hasMul with 
+    one_mul := Submodule.one_mul
+    mul_one := Submodule.mul_one
+    zero_mul := bot_mul
+    mul_zero := mul_bot
+    left_distrib := mul_sup
+    right_distrib := sup_mul }
 
 variable (M)
 
@@ -540,7 +545,7 @@ This is available as an instance in the `pointwise` locale.
 This is a stronger version of `submodule.pointwise_distrib_mul_action`. -/
 protected def pointwiseMulSemiringAction : MulSemiringAction α (Submodule R A) :=
   { Submodule.pointwiseDistribMulAction with
-    smul_mul := fun r x y => Submodule.map_mul x y <| MulSemiringAction.toAlgHom R A r,
+    smul_mul := fun r x y => Submodule.map_mul x y <| MulSemiringAction.toAlgHom R A r
     smul_one := fun r => Submodule.map_one <| MulSemiringAction.toAlgHom R A r }
 #align submodule.pointwise_mul_semiring_action Submodule.pointwiseMulSemiringAction
 
@@ -639,13 +644,13 @@ This is the general form of the ideal quotient, traditionally written $I : J$.
 -/
 instance : Div (Submodule R A) :=
   ⟨fun I J =>
-    { carrier := { x | ∀ y ∈ J, x * y ∈ I },
+    { carrier := { x | ∀ y ∈ J, x * y ∈ I }
       zero_mem' := fun y hy => by 
         rw [zero_mul]
-        apply Submodule.zero_mem,
+        apply Submodule.zero_mem
       add_mem' := fun a b ha hb y hy => by 
         rw [add_mul]
-        exact Submodule.add_mem _ (ha _ hy) (hb _ hy),
+        exact Submodule.add_mem _ (ha _ hy) (hb _ hy)
       smul_mem' := fun r x hx y hy => by 
         rw [Algebra.smul_mul_assoc]
         exact Submodule.smul_mem _ _ (hx _ hy) }⟩

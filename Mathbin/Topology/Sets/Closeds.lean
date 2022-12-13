@@ -167,7 +167,8 @@ theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀ s ∈ S, x
 #align topological_space.closeds.mem_Inf TopologicalSpace.Closeds.mem_Inf
 
 instance : Coframe (Closeds α) :=
-  { Closeds.completeLattice with inf := inf,
+  { Closeds.completeLattice with 
+    inf := inf
     infi_sup_le_sup_Inf := fun a s =>
       (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
 

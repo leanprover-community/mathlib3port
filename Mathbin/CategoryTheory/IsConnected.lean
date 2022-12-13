@@ -117,7 +117,7 @@ theorem constant_of_preserves_morphisms [IsPreconnected J] {α : Type u₁} (F :
     (h : ∀ (j₁ j₂ : J) (f : j₁ ⟶ j₂), F j₁ = F j₂) (j j' : J) : F j = F j' := by
   simpa using
     any_functor_const_on_obj
-      { obj := discrete.mk ∘ F,
+      { obj := discrete.mk ∘ F
         map := fun _ _ f =>
           eq_to_hom
             (by 
@@ -224,7 +224,7 @@ theorem is_preconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPre
 /-- If `J` and `K` are equivalent, then if `J` is connected then `K` is as well. -/
 theorem is_connected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J ≌ K) [IsConnected J] :
     IsConnected K :=
-  { is_nonempty := Nonempty.map e.Functor.obj (by infer_instance),
+  { is_nonempty := Nonempty.map e.Functor.obj (by infer_instance)
     to_is_preconnected := is_preconnected_of_equivalent e }
 #align category_theory.is_connected_of_equivalent CategoryTheory.is_connected_of_equivalent
 
@@ -360,9 +360,10 @@ theorem is_connected_of_zigzag [Nonempty J]
 /-- If `discrete α` is connected, then `α` is (type-)equivalent to `punit`. -/
 def discreteIsConnectedEquivPunit {α : Type u₁} [IsConnected (Discrete α)] : α ≃ PUnit :=
   Discrete.equivOfEquivalence.{u₁, u₁}
-    { Functor := Functor.star (Discrete α),
-      inverse := Discrete.functor fun _ => Classical.arbitrary _,
-      unitIso := iso_constant _ (Classical.arbitrary _), counitIso := Functor.punitExt _ _ }
+    { Functor := Functor.star (Discrete α)
+      inverse := Discrete.functor fun _ => Classical.arbitrary _
+      unitIso := iso_constant _ (Classical.arbitrary _)
+      counitIso := Functor.punitExt _ _ }
 #align
   category_theory.discrete_is_connected_equiv_punit CategoryTheory.discreteIsConnectedEquivPunit
 

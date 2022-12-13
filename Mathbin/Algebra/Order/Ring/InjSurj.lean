@@ -35,12 +35,12 @@ protected def orderedSemiring [OrderedSemiring α] [Zero β] [One β] [Add β] [
     (nat_cast : ∀ n : ℕ, f n = n) : OrderedSemiring β :=
   { hf.OrderedAddCommMonoid f zero add nsmul,
     hf.Semiring f zero one add mul nsmul npow nat_cast with
-    zero_le_one := show f 0 ≤ f 1 by simp only [zero, one, zero_le_one],
+    zero_le_one := show f 0 ≤ f 1 by simp only [zero, one, zero_le_one]
     mul_le_mul_of_nonneg_left := fun a b c h hc =>
       show f (c * a) ≤ f (c * b) by 
         rw [mul, mul]
         refine' mul_le_mul_of_nonneg_left h _
-        rwa [← zero],
+        rwa [← zero]
     mul_le_mul_of_nonneg_right := fun a b c h hc =>
       show f (a * c) ≤ f (b * c) by 
         rw [mul, mul]
@@ -104,7 +104,7 @@ protected def strictOrderedSemiring [StrictOrderedSemiring α] [Zero β] [One β
     hf.OrderedSemiring f zero one add mul nsmul npow nat_cast, pullback_nonzero f zero one with
     mul_lt_mul_of_pos_left := fun a b c h hc =>
       show f (c * a) < f (c * b) by
-        simpa only [mul, zero] using mul_lt_mul_of_pos_left ‹f a < f b› (by rwa [← zero]),
+        simpa only [mul, zero] using mul_lt_mul_of_pos_left ‹f a < f b› (by rwa [← zero])
     mul_lt_mul_of_pos_right := fun a b c h hc =>
       show f (a * c) < f (b * c) by
         simpa only [mul, zero] using mul_lt_mul_of_pos_right ‹f a < f b› (by rwa [← zero]) }

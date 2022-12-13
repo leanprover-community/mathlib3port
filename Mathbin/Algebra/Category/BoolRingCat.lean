@@ -81,14 +81,15 @@ end BoolRingCat
 instance BoolRingCat.hasForgetToBoolAlg :
     HasForget₂ BoolRingCat
       BoolAlgCat where forget₂ :=
-    { obj := fun X => BoolAlgCat.of (AsBoolalg X), map := fun X Y => RingHom.asBoolalg }
+    { obj := fun X => BoolAlgCat.of (AsBoolalg X)
+      map := fun X Y => RingHom.asBoolalg }
 #align BoolRing.has_forget_to_BoolAlg BoolRingCat.hasForgetToBoolAlg
 
 @[simps]
 instance BoolAlgCat.hasForgetToBoolRing :
     HasForget₂ BoolAlgCat
       BoolRingCat where forget₂ :=
-    { obj := fun X => BoolRingCat.of (AsBoolring X),
+    { obj := fun X => BoolRingCat.of (AsBoolring X)
       map := fun X Y => BoundedLatticeHom.asBoolring }
 #align BoolAlg.has_forget_to_BoolRing BoolAlgCat.hasForgetToBoolRing
 

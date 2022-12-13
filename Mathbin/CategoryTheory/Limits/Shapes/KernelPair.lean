@@ -89,7 +89,7 @@ commutes, rather than to additionally show it's a pullback.
 -/
 theorem cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b ≫ f₁)
     (big_k : IsKernelPair (f₁ ≫ f₂) a b) : IsKernelPair f₁ a b :=
-  { w := comm,
+  { w := comm
     is_limit' :=
       ⟨(PullbackCone.isLimitAux' _) fun s => by
           let s' : pullback_cone (f₁ ≫ f₂) (f₁ ≫ f₂) :=
@@ -119,7 +119,7 @@ The converse of `cancel_right_of_mono`.
 -/
 theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : IsKernelPair f₁ a b) :
     IsKernelPair (f₁ ≫ f₂) a b :=
-  { w := by rw [small_k.w_assoc],
+  { w := by rw [small_k.w_assoc]
     is_limit' :=
       ⟨(PullbackCone.isLimitAux' _) fun s => by
           refine' ⟨_, _, _, _⟩

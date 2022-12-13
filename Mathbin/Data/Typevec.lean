@@ -430,9 +430,9 @@ scoped[Mvfunctor] infixl:45 " ⊗ " => Typevec.prod
 
 /- warning: typevec.const -> Typevec.const is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u_1}}, β -> (forall {n : Nat} (α : Typevec.{u_2} n), Typevec.Arrow.{u_2, u_1} n α (Typevec.repeat.{u_1} n β))
+  forall {β : Type.{u1}}, β -> (forall {n : Nat} (α : Typevec.{u2} n), Typevec.Arrow.{u2, u1} n α (Typevec.repeat.{u1} n β))
 but is expected to have type
-  forall {β : Type.{_aux_param_1}}, β -> (forall {n : Nat} (α : Typevec.{_aux_param_0} n), Typevec.Arrow.{_aux_param_0, _aux_param_1} n α (Typevec.repeat.{_aux_param_1} n β))
+  forall {β : Type.{u2}}, β -> (forall {n : Nat} (α : Typevec.{u1} n), Typevec.Arrow.{u1, u2} n α (Typevec.repeat.{u2} n β))
 Case conversion may be inaccurate. Consider using '#align typevec.const Typevec.constₓ'. -/
 /-- `const x α` is an arrow that ignores its source and constructs a `typevec` that
 contains nothing but `x` -/

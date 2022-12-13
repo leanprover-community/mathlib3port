@@ -148,7 +148,7 @@ def cartesianClosedOfReflective :
     CartesianClosed
       D where closed' B :=
     { isAdj :=
-        { right := i ⋙ exp (i.obj B) ⋙ leftAdjoint i,
+        { right := i ⋙ exp (i.obj B) ⋙ leftAdjoint i
           adj := by 
             apply adjunction.restrict_fully_faithful i i (exp.adjunction (i.obj B))
             · symm

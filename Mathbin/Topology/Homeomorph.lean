@@ -184,8 +184,12 @@ def changeInv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g f
         g x = f.symm (f (g x)) := (f.left_inv (g x)).symm
         _ = f.symm x := by rw [hg x]
         
-  { toFun := f, invFun := g, left_inv := by convert f.left_inv, right_inv := by convert f.right_inv,
-    continuous_to_fun := f.Continuous, continuous_inv_fun := by convert f.symm.continuous }
+  { toFun := f
+    invFun := g
+    left_inv := by convert f.left_inv
+    right_inv := by convert f.right_inv
+    continuous_to_fun := f.Continuous
+    continuous_inv_fun := by convert f.symm.continuous }
 #align homeomorph.change_inv Homeomorph.changeInv
 
 @[simp]
@@ -542,7 +546,8 @@ theorem coe_punit_prod : ⇑(punitProd α) = Prod.snd :=
 /-- If both `α` and `β` have a unique element, then `α ≃ₜ β`. -/
 @[simps]
 def Homeomorph.homeomorphOfUnique [Unique α] [Unique β] : α ≃ₜ β :=
-  { Equiv.equivOfUnique α β with continuous_to_fun := @continuous_const α β _ _ default,
+  { Equiv.equivOfUnique α β with
+    continuous_to_fun := @continuous_const α β _ _ default
     continuous_inv_fun := @continuous_const β α _ _ default }
 #align homeomorph.homeomorph_of_unique Homeomorph.homeomorphOfUnique
 
@@ -715,7 +720,8 @@ end Homeomorph
 @[simps]
 def Equiv.toHomeomorphOfInducing [TopologicalSpace α] [TopologicalSpace β] (f : α ≃ β)
     (hf : Inducing f) : α ≃ₜ β :=
-  { f with continuous_to_fun := hf.Continuous,
+  { f with 
+    continuous_to_fun := hf.Continuous
     continuous_inv_fun := hf.continuous_iff.2 <| by simpa using continuous_id }
 #align equiv.to_homeomorph_of_inducing Equiv.toHomeomorphOfInducing
 
@@ -738,7 +744,8 @@ This is not true when T2 is weakened to T1
 (see `continuous.homeo_of_equiv_compact_to_t2.t1_counterexample`). -/
 @[simps]
 def homeoOfEquivCompactToT2 [CompactSpace α] [T2Space β] {f : α ≃ β} (hf : Continuous f) : α ≃ₜ β :=
-  { f with continuous_to_fun := hf,
+  { f with 
+    continuous_to_fun := hf
     continuous_inv_fun := hf.continuous_symm_of_equiv_compact_to_t2 }
 #align continuous.homeo_of_equiv_compact_to_t2 Continuous.homeoOfEquivCompactToT2
 

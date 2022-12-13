@@ -169,7 +169,9 @@ protected theorem map_one : abv 1 = 1 :=
 #align absolute_value.map_one AbsoluteValue.map_one
 
 instance : MonoidWithZeroHomClass (AbsoluteValue R S) R S :=
-  { AbsoluteValue.mulHomClass with map_zero := fun f => f.map_zero, map_one := fun f => f.map_one }
+  { AbsoluteValue.mulHomClass with 
+    map_zero := fun f => f.map_zero
+    map_one := fun f => f.map_one }
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*`, `0` and `1`. -/
 def toMonoidWithZeroHom : R →*₀ S :=

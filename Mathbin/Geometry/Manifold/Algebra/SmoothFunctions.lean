@@ -74,7 +74,8 @@ instance semigroup {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace
 @[to_additive]
 instance monoid {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
     [HasSmoothMul I' G] : Monoid C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.semigroup, SmoothMap.hasOne with one_mul := fun a => by ext <;> exact one_mul _,
+  { SmoothMap.semigroup, SmoothMap.hasOne with
+    one_mul := fun a => by ext <;> exact one_mul _
     mul_one := fun a => by ext <;> exact mul_one _ }
 #align smooth_map.monoid SmoothMap.monoid
 
@@ -98,9 +99,10 @@ instance commMonoid {G : Type _} [CommMonoid G] [TopologicalSpace G] [ChartedSpa
 @[to_additive]
 instance group {G : Type _} [Group G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G] :
     Group C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.monoid with inv := fun f => ⟨fun x => (f x)⁻¹, f.Smooth.inv⟩,
-    mul_left_inv := fun a => by ext <;> exact mul_left_inv _,
-    div := fun f g => ⟨f / g, f.Smooth.div g.Smooth⟩,
+  { SmoothMap.monoid with 
+    inv := fun f => ⟨fun x => (f x)⁻¹, f.Smooth.inv⟩
+    mul_left_inv := fun a => by ext <;> exact mul_left_inv _
+    div := fun f g => ⟨f / g, f.Smooth.div g.Smooth⟩
     div_eq_mul_inv := fun f g => by ext <;> exact div_eq_mul_inv _ _ }
 #align smooth_map.group SmoothMap.group
 
@@ -137,9 +139,9 @@ under pointwise multiplication.
 instance semiring {R : Type _} [Semiring R] [TopologicalSpace R] [ChartedSpace H' R]
     [SmoothRing I' R] : Semiring C^∞⟮I, N; I', R⟯ :=
   { SmoothMap.addCommMonoid, SmoothMap.monoid with
-    left_distrib := fun a b c => by ext <;> exact left_distrib _ _ _,
-    right_distrib := fun a b c => by ext <;> exact right_distrib _ _ _,
-    zero_mul := fun a => by ext <;> exact zero_mul _,
+    left_distrib := fun a b c => by ext <;> exact left_distrib _ _ _
+    right_distrib := fun a b c => by ext <;> exact right_distrib _ _ _
+    zero_mul := fun a => by ext <;> exact zero_mul _
     mul_zero := fun a => by ext <;> exact mul_zero _ }
 #align smooth_map.semiring SmoothMap.semiring
 
@@ -205,7 +207,9 @@ instance module {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
 @[simps]
 def coeFnLinearMap {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
     C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →ₗ[𝕜] N → V :=
-  { (coeFnAddMonoidHom : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →+ _) with toFun := coeFn, map_smul' := coe_smul }
+  { (coeFnAddMonoidHom : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →+ _) with
+    toFun := coeFn
+    map_smul' := coe_smul }
 #align smooth_map.coe_fn_linear_map SmoothMap.coeFnLinearMap
 
 end ModuleStructure
@@ -235,8 +239,10 @@ def c :
 #align smooth_map.C SmoothMap.c
 
 instance algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
-  { SmoothMap.semiring with smul := fun r f => ⟨r • f, smoothConst.smul f.Smooth⟩,
-    toRingHom := SmoothMap.c, commutes' := fun c f => by ext x <;> exact Algebra.commutes' _ _,
+  { SmoothMap.semiring with
+    smul := fun r f => ⟨r • f, smoothConst.smul f.Smooth⟩
+    toRingHom := SmoothMap.c
+    commutes' := fun c f => by ext x <;> exact Algebra.commutes' _ _
     smul_def' := fun c f => by ext x <;> exact Algebra.smul_def' _ _ }
 #align smooth_map.algebra SmoothMap.algebra
 

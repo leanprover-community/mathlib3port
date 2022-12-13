@@ -67,7 +67,7 @@ unsafe def restrict_attr :
                 (tactic.focus1 ∘
                     (tactic.resolve_name >=> tactic.to_expr >=> tactic.apply' >=> fun _ =>
                       tactic.done) >=>
-                  fun _ => t),
+                  fun _ => t)
       dependencies := [] }
 #align Top.presheaf.restrict_attr Top.presheaf.restrict_attr
 
@@ -301,7 +301,7 @@ def pullbackMap {X Y : TopCat.{v}} (f : X ⟶ Y) {ℱ 𝒢 : Y.Presheaf C} (α :
 def pullbackObjObjOfImageOpen {X Y : TopCat.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) (U : Opens X)
     (H : IsOpen (f '' U)) : (pullbackObj f ℱ).obj (op U) ≅ ℱ.obj (op ⟨_, H⟩) := by
   let x : costructured_arrow (opens.map f).op (op U) :=
-    { left := op ⟨f '' U, H⟩,
+    { left := op ⟨f '' U, H⟩
       Hom :=
         ((@hom_of_le _ _ _ ((opens.map f).obj ⟨_, H⟩) (set.image_preimage.le_u_l _)).op :
           op ((opens.map f).obj ⟨⇑f '' ↑U, H⟩) ⟶ op U) }

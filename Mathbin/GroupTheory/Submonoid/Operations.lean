@@ -80,9 +80,13 @@ def Submonoid.toAddSubmonoid :
         (Additive
           M) where 
   toFun S :=
-    { carrier := Additive.toMul ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
+    { carrier := Additive.toMul ⁻¹' S
+      zero_mem' := S.one_mem'
+      add_mem' := fun _ _ => S.mul_mem' }
   invFun S :=
-    { carrier := Additive.ofMul ⁻¹' S, one_mem' := S.zero_mem', mul_mem' := fun _ _ => S.add_mem' }
+    { carrier := Additive.ofMul ⁻¹' S
+      one_mem' := S.zero_mem'
+      mul_mem' := fun _ _ => S.add_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -123,10 +127,12 @@ def AddSubmonoid.toSubmonoid :
         (Multiplicative
           A) where 
   toFun S :=
-    { carrier := Multiplicative.toAdd ⁻¹' S, one_mem' := S.zero_mem',
+    { carrier := Multiplicative.toAdd ⁻¹' S
+      one_mem' := S.zero_mem'
       mul_mem' := fun _ _ => S.add_mem' }
   invFun S :=
-    { carrier := Multiplicative.ofAdd ⁻¹' S, zero_mem' := S.one_mem',
+    { carrier := Multiplicative.ofAdd ⁻¹' S
+      zero_mem' := S.one_mem'
       add_mem' := fun _ _ => S.mul_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
@@ -1272,7 +1278,10 @@ This is a bidirectional version of `monoid_hom.mrange_restrict`. -/
       "\nAn additive monoid homomorphism `f : M →+ N` with a left-inverse `g : N → M` defines an additive\nequivalence between `M` and `f.mrange`.\n\nThis is a bidirectional version of `add_monoid_hom.mrange_restrict`. ",
   simps (config := { simpRhs := true })]
 def ofLeftInverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) : M ≃* f.mrange :=
-  { f.mrangeRestrict with toFun := f.mrangeRestrict, invFun := g ∘ f.mrange.Subtype, left_inv := h,
+  { f.mrangeRestrict with 
+    toFun := f.mrangeRestrict
+    invFun := g ∘ f.mrange.Subtype
+    left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.Prop
@@ -1289,7 +1298,9 @@ def submonoidMap (e : M ≃* N) (S : Submonoid M) : S ≃* S.map e.toMonoidHom :
   { -- we restate this for `simps` to avoid `⇑e.symm.to_equiv x`
           e.toMonoidHom.submonoidMap
       S,
-    e.toEquiv.image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
+    e.toEquiv.image S with 
+    toFun := fun x => ⟨e x, _⟩
+    invFun := fun x => ⟨e.symm x, _⟩ }
 #align mul_equiv.submonoid_map MulEquiv.submonoidMap
 
 end MulEquiv

@@ -68,7 +68,8 @@ open Monoid
 /-- Torsion monoids are really groups. -/
 @[to_additive "Torsion additive monoids are really additive groups"]
 noncomputable def IsTorsion.group [Monoid G] (tG : IsTorsion G) : Group G :=
-  { ‹Monoid G› with inv := fun g => g ^ (orderOf g - 1),
+  { ‹Monoid G› with 
+    inv := fun g => g ^ (orderOf g - 1)
     mul_left_inv := fun g => by
       erw [← pow_succ', tsub_add_cancel_of_le, pow_order_of_eq_one]
       exact order_of_pos' (tG g) }

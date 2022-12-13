@@ -148,7 +148,7 @@ def ringEquiv (e : α ≃ β) [Add β] [Mul β] : by
     { e with
       map_add' := fun x y => by 
         apply e.symm.injective
-        simp,
+        simp
       map_mul' := fun x y => by 
         apply e.symm.injective
         simp }
@@ -279,16 +279,18 @@ protected def nonUnitalSemiring [NonUnitalSemiring β] : NonUnitalSemiring α :=
 /-- Transfer `add_monoid_with_one` across an `equiv` -/
 @[reducible]
 protected def addMonoidWithOne [AddMonoidWithOne β] : AddMonoidWithOne α :=
-  { e.AddMonoid, e.HasOne with natCast := fun n => e.symm n,
-    nat_cast_zero := show e.symm _ = _ by simp [zero_def],
+  { e.AddMonoid, e.HasOne with 
+    natCast := fun n => e.symm n
+    nat_cast_zero := show e.symm _ = _ by simp [zero_def]
     nat_cast_succ := fun n => show e.symm _ = e.symm (e (e.symm _) + _) by simp [add_def, one_def] }
 #align equiv.add_monoid_with_one Equiv.addMonoidWithOne
 
 /-- Transfer `add_group_with_one` across an `equiv` -/
 @[reducible]
 protected def addGroupWithOne [AddGroupWithOne β] : AddGroupWithOne α :=
-  { e.AddMonoidWithOne, e.AddGroup with intCast := fun n => e.symm n,
-    int_cast_of_nat := fun n => by rw [Int.cast_ofNat] <;> rfl,
+  { e.AddMonoidWithOne, e.AddGroup with
+    intCast := fun n => e.symm n
+    int_cast_of_nat := fun n => by rw [Int.cast_ofNat] <;> rfl
     int_cast_neg_succ_of_nat := fun n =>
       congr_arg e.symm <| (Int.cast_negSucc _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
 #align equiv.add_group_with_one Equiv.addGroupWithOne
@@ -455,7 +457,9 @@ variable [Monoid R]
 /-- Transfer `mul_action` across an `equiv` -/
 @[reducible]
 protected def mulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
-  { e.HasSmul R with one_smul := by simp [smul_def], mul_smul := by simp [smul_def, mul_smul] }
+  { e.HasSmul R with 
+    one_smul := by simp [smul_def]
+    mul_smul := by simp [smul_def, mul_smul] }
 #align equiv.mul_action Equiv.mulAction
 
 /-- Transfer `distrib_mul_action` across an `equiv` -/
@@ -467,7 +471,8 @@ protected def distribMulAction (e : α ≃ β) [AddCommMonoid β] :
   intros
   letI := Equiv.addCommMonoid e
   exact
-    ({ Equiv.mulAction R e with smul_zero := by simp [zero_def, smul_def],
+    ({ Equiv.mulAction R e with 
+        smul_zero := by simp [zero_def, smul_def]
         smul_add := by simp [add_def, smul_def, smul_add] } :
       DistribMulAction R α)
 #align equiv.distrib_mul_action Equiv.distribMulAction
@@ -486,7 +491,8 @@ protected def module (e : α ≃ β) [AddCommMonoid β] :
   by 
   intros
   exact
-    ({ Equiv.distribMulAction R e with zero_smul := by simp [zero_def, smul_def],
+    ({ Equiv.distribMulAction R e with
+        zero_smul := by simp [zero_def, smul_def]
         add_smul := by simp [add_def, smul_def, add_smul] } :
       Module R α)
 #align equiv.module Equiv.module

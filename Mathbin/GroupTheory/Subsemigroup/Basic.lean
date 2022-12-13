@@ -165,12 +165,14 @@ protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
 /-- The subsemigroup `M` of the magma `M`. -/
 @[to_additive "The additive subsemigroup `M` of the magma `M`."]
 instance : Top (Subsemigroup M) :=
-  ⟨{ carrier := Set.univ, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
+  ⟨{  carrier := Set.univ
+      mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
 
 /-- The trivial subsemigroup `∅` of a magma `M`. -/
 @[to_additive "The trivial `add_subsemigroup` `∅` of an additive magma `M`."]
 instance : Bot (Subsemigroup M) :=
-  ⟨{ carrier := ∅, mul_mem' := fun a b => by simp }⟩
+  ⟨{  carrier := ∅
+      mul_mem' := fun a b => by simp }⟩
 
 @[to_additive]
 instance : Inhabited (Subsemigroup M) :=
@@ -200,7 +202,7 @@ theorem coe_bot : ((⊥ : Subsemigroup M) : Set M) = ∅ :=
 @[to_additive "The inf of two `add_subsemigroup`s is their intersection."]
 instance : HasInf (Subsemigroup M) :=
   ⟨fun S₁ S₂ =>
-    { carrier := S₁ ∩ S₂,
+    { carrier := S₁ ∩ S₂
       mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
 @[simp, to_additive]
@@ -216,7 +218,7 @@ theorem mem_inf {p p' : Subsemigroup M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧
 @[to_additive]
 instance : HasInf (Subsemigroup M) :=
   ⟨fun s =>
-    { carrier := ⋂ t ∈ s, ↑t,
+    { carrier := ⋂ t ∈ s, ↑t
       mul_mem' := fun x y hx hy =>
         Set.mem_bInter fun i h =>
           i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
@@ -247,9 +249,16 @@ instance : CompleteLattice (Subsemigroup M) :=
   { (completeLatticeOfInf (Subsemigroup M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
         is_glb_binfi with
-    le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x hx => (not_mem_bot hx).elim, top := ⊤,
-    le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInf.inf,
-    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
+    le := (· ≤ ·)
+    lt := (· < ·)
+    bot := ⊥
+    bot_le := fun S x hx => (not_mem_bot hx).elim
+    top := ⊤
+    le_top := fun S x hx => mem_top x
+    inf := (· ⊓ ·)
+    inf := HasInf.inf
+    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
+    inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right }
 
 @[simp, to_additive]

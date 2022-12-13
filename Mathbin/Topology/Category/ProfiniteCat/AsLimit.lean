@@ -53,7 +53,8 @@ abbrev diagram : DiscreteQuotient X ⥤ ProfiniteCat :=
 
 /-- A cone over `X.diagram` whose cone point is `X`. -/
 def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
-  { x, π := { app := fun S => ⟨S.proj, S.proj_is_locally_constant.Continuous⟩ } }
+  { x
+    π := { app := fun S => ⟨S.proj, S.proj_is_locally_constant.Continuous⟩ } }
 #align Profinite.as_limit_cone ProfiniteCat.asLimitCone
 
 instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=

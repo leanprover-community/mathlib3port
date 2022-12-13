@@ -252,9 +252,9 @@ def castNum [z : Zero α] : Num → α
 
 /- warning: pos_num_coe -> posNumCoe is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : One.{u_1} α] [_inst_2 : Add.{u_1} α], CoeTCₓ.{1, succ u_1} PosNum α
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α], CoeTCₓ.{1, succ u1} PosNum α
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Num.Basic._hyg.1794 : One.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.1797 : Add.{u_1} α], CoeTC.{1, succ u_1} PosNum α
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α], CoeTC.{1, succ u1} PosNum α
 Case conversion may be inaccurate. Consider using '#align pos_num_coe posNumCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) posNumCoe : CoeTC PosNum α :=
@@ -263,9 +263,9 @@ instance (priority := 900) posNumCoe : CoeTC PosNum α :=
 
 /- warning: num_nat_coe -> numNatCoe is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : One.{u_1} α] [_inst_2 : Add.{u_1} α] [z : Zero.{u_1} α], CoeTCₓ.{1, succ u_1} Num α
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α] [z : Zero.{u1} α], CoeTCₓ.{1, succ u1} Num α
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Num.Basic._hyg.1809 : One.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.1812 : Add.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.1815 : Zero.{u_1} α], CoeTC.{1, succ u_1} Num α
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α] [z : Zero.{u1} α], CoeTC.{1, succ u1} Num α
 Case conversion may be inaccurate. Consider using '#align num_nat_coe numNatCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) numNatCoe [z : Zero α] : CoeTC Num α :=
@@ -901,9 +901,9 @@ def castZNum : ZNum → α
 
 /- warning: znum_coe -> znumCoe is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : Neg.{u_1} α], CoeTCₓ.{1, succ u_1} ZNum α
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : Neg.{u1} α], CoeTCₓ.{1, succ u1} ZNum α
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Num.Basic._hyg.5220 : Zero.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.5223 : One.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.5226 : Add.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.5229 : Neg.{u_1} α], CoeTC.{1, succ u_1} ZNum α
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : Neg.{u1} α], CoeTC.{1, succ u1} ZNum α
 Case conversion may be inaccurate. Consider using '#align znum_coe znumCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) znumCoe : CoeTC ZNum α :=

@@ -867,7 +867,8 @@ variable (X)
 
 /-- Specialization forms a preorder on the topological space. -/
 def specializationPreorder : Preorder X :=
-  { Preorder.lift (OrderDual.toDual ∘ 𝓝) with le := fun x y => y ⤳ x,
+  { Preorder.lift (OrderDual.toDual ∘ 𝓝) with
+    le := fun x y => y ⤳ x
     lt := fun x y => y ⤳ x ∧ ¬x ⤳ y }
 #align specialization_preorder specializationPreorder
 

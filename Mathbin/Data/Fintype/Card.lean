@@ -514,7 +514,8 @@ theorem card_eq_zero [IsEmpty α] : card α = 0 :=
 theorem card_eq_one_iff_nonempty_unique : card α = 1 ↔ Nonempty (Unique α) :=
   ⟨fun h =>
     let ⟨d, h⟩ := Fintype.card_eq_one_iff.mp h
-    ⟨{ default := d, uniq := h }⟩,
+    ⟨{  default := d
+        uniq := h }⟩,
     fun ⟨h⟩ => Fintype.card_unique⟩
 #align fintype.card_eq_one_iff_nonempty_unique Fintype.card_eq_one_iff_nonempty_unique
 
@@ -2361,7 +2362,8 @@ theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) :
     cases nonempty_fintype β
     haveI := fun y => fintypeOfNotInfinite <| hf y
     let key : Fintype α :=
-      { elems := univ.bUnion fun y : β => (f ⁻¹' {y}).toFinset, complete := by simp }
+      { elems := univ.bUnion fun y : β => (f ⁻¹' {y}).toFinset
+        complete := by simp }
     exact key.false
 #align finite.exists_infinite_fiber Finite.exists_infinite_fiber
 

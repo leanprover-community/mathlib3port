@@ -619,15 +619,17 @@ instance add_swap_covariant_class : CovariantClass Cardinal Cardinal (swap (· +
 #align cardinal.add_swap_covariant_class Cardinal.add_swap_covariant_class
 
 instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
-  { Cardinal.commSemiring, Cardinal.partialOrder with bot := 0, bot_le := Cardinal.zero_le,
-    add_le_add_left := fun a b => add_le_add_left,
+  { Cardinal.commSemiring, Cardinal.partialOrder with
+    bot := 0
+    bot_le := Cardinal.zero_le
+    add_le_add_left := fun a b => add_le_add_left
     exists_add_of_le := fun a b =>
       (induction_on₂ a b) fun α β ⟨⟨f, hf⟩⟩ =>
         have : Sum α (range fᶜ : Set β) ≃ β :=
           (Equiv.sumCongr (Equiv.ofInjective f hf) (Equiv.refl _)).trans <|
             Equiv.Set.sumCompl (range f)
-        ⟨#↥(range fᶜ), mk_congr this.symm⟩,
-    le_self_add := fun a b => (add_zero a).ge.trans <| add_le_add_left (Cardinal.zero_le _) _,
+        ⟨#↥(range fᶜ), mk_congr this.symm⟩
+    le_self_add := fun a b => (add_zero a).ge.trans <| add_le_add_left (Cardinal.zero_le _) _
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b =>
       (induction_on₂ a b) fun α β => by
         simpa only [mul_def, mk_eq_zero_iff, isEmpty_prod] using id }
@@ -669,7 +671,7 @@ instance : CanonicallyLinearOrderedAddMonoid Cardinal.{u} :=
   { (inferInstance : CanonicallyOrderedAddMonoid Cardinal), Cardinal.partialOrder with
     le_total := by 
       rintro ⟨α⟩ ⟨β⟩
-      apply embedding.total,
+      apply embedding.total
     decidableLe := Classical.decRel _ }
 
 -- short-circuit type class inference

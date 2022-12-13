@@ -115,7 +115,8 @@ variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
-  { equivSignedMeasure with map_add' := fun c d => by ext (i hi) <;> rfl,
+  { equivSignedMeasure with 
+    map_add' := fun c d => by ext (i hi) <;> rfl
     map_smul' := by 
       intro r c; ext (i hi)
       · change (r • c i).re = r • (c i).re

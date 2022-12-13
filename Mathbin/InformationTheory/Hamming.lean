@@ -424,14 +424,14 @@ instance : PseudoMetricSpace (Hamming β) :=
   { Hamming.hasDist with
     dist_self := by 
       push_cast
-      exact_mod_cast hamming_dist_self,
+      exact_mod_cast hamming_dist_self
     dist_comm := by 
       push_cast
-      exact_mod_cast hamming_dist_comm,
+      exact_mod_cast hamming_dist_comm
     dist_triangle := by 
       push_cast
-      exact_mod_cast hamming_dist_triangle,
-    toUniformSpace := ⊥,
+      exact_mod_cast hamming_dist_triangle
+    toUniformSpace := ⊥
     uniformity_dist :=
       (uniformity_dist_of_mem_uniformity _ _) fun s => by
         push_cast
@@ -444,8 +444,8 @@ instance : PseudoMetricSpace (Hamming β) :=
           rw [mem_id_rel] at hab
           rw [hab]
           refine' hs (lt_of_eq_of_lt _ hε)
-          exact_mod_cast hamming_dist_self _,
-    toBornology := ⟨⊥, bot_le⟩,
+          exact_mod_cast hamming_dist_self _
+    toBornology := ⟨⊥, bot_le⟩
     cobounded_sets := by 
       ext
       push_cast

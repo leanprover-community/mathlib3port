@@ -178,9 +178,9 @@ instance [WellFoundedLt α] : WellFoundedLt (Antisymmetrization α (· ≤ ·)) 
 instance [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] [IsTotal α (· ≤ ·)] :
     LinearOrder (Antisymmetrization α (· ≤ ·)) :=
   { Antisymmetrization.partialOrder with
-    le_total := fun a b => Quotient.inductionOn₂' a b <| total_of (· ≤ ·),
-    DecidableEq := @Quotient.decidableEq _ (AntisymmRel.setoid _ (· ≤ ·)) AntisymmRel.decidableRel,
-    decidableLe := fun _ _ => Quotient.liftOn₂'.decidable _ _ _ _,
+    le_total := fun a b => Quotient.inductionOn₂' a b <| total_of (· ≤ ·)
+    DecidableEq := @Quotient.decidableEq _ (AntisymmRel.setoid _ (· ≤ ·)) AntisymmRel.decidableRel
+    decidableLe := fun _ _ => Quotient.liftOn₂'.decidable _ _ _ _
     decidableLt := fun _ _ => Quotient.liftOn₂'.decidable _ _ _ _ }
 
 @[simp]

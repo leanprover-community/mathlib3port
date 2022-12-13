@@ -370,9 +370,9 @@ include hdomain
 
 /- warning: ratfunc.div -> Ratfunc.div is a dubious translation:
 lean 3 declaration is
-  forall {K : Type.{u}} [hring : CommRing.{u} K] [hdomain : IsDomain.{u} K (Ring.toSemiring.{u} K (CommRing.toRing.{u} K hring))], (Ratfunc.{u} K hring) -> (Ratfunc.{u} K hring) -> (Ratfunc.{u} K hring)
+  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], (Ratfunc.{u1} K hring) -> (Ratfunc.{u1} K hring) -> (Ratfunc.{u1} K hring)
 but is expected to have type
-  PUnit.{succ (succ u)}
+  PUnit.{succ (succ u1)}
 Case conversion may be inaccurate. Consider using '#align ratfunc.div Ratfunc.divₓ'. -/
 /-- Division of rational functions. -/
 protected irreducible_def div : Ratfunc K → Ratfunc K → Ratfunc K
@@ -389,9 +389,9 @@ theorem of_fraction_ring_div (p q : FractionRing K[X]) :
 
 /- warning: ratfunc.inv -> Ratfunc.inv is a dubious translation:
 lean 3 declaration is
-  forall {K : Type.{u}} [hring : CommRing.{u} K] [hdomain : IsDomain.{u} K (Ring.toSemiring.{u} K (CommRing.toRing.{u} K hring))], (Ratfunc.{u} K hring) -> (Ratfunc.{u} K hring)
+  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], (Ratfunc.{u1} K hring) -> (Ratfunc.{u1} K hring)
 but is expected to have type
-  PUnit.{succ (succ u)}
+  PUnit.{succ (succ u1)}
 Case conversion may be inaccurate. Consider using '#align ratfunc.inv Ratfunc.invₓ'. -/
 /-- Multiplicative inverse of a rational function. -/
 protected irreducible_def inv : Ratfunc K → Ratfunc K
@@ -664,7 +664,7 @@ def mapRingHom [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.co
     map_zero' := by
       simp_rw [MonoidHom.to_fun_eq_coe, ← of_fraction_ring_zero, ← Localization.mk_zero (1 : R[X]⁰),
         ← Localization.mk_zero (1 : S[X]⁰), map_apply_of_fraction_ring_mk, map_zero,
-        Localization.mk_eq_mk', IsLocalization.mk'_zero],
+        Localization.mk_eq_mk', IsLocalization.mk'_zero]
     map_add' := by 
       rintro ⟨x⟩ ⟨y⟩; induction x; induction y
       ·
@@ -777,15 +777,17 @@ include hdomain
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic ratfunc.frac_tac -/
 instance : Field (Ratfunc K) :=
-  { Ratfunc.commRing K, Ratfunc.nontrivial K with inv := Inv.inv,
+  { Ratfunc.commRing K, Ratfunc.nontrivial K with
+    inv := Inv.inv
     inv_zero := by
       run_tac
-        frac_tac,
-    div := (· / ·),
+        frac_tac
+    div := (· / ·)
     div_eq_mul_inv := by
       run_tac
-        frac_tac,
-    mul_inv_cancel := fun _ => mul_inv_cancel, zpow := zpowRec }
+        frac_tac
+    mul_inv_cancel := fun _ => mul_inv_cancel
+    zpow := zpowRec }
 
 end Field
 

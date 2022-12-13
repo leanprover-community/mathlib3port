@@ -20,7 +20,7 @@ namespace MulOpposite
 
 instance [Distrib α] : Distrib αᵐᵒᵖ :=
   { MulOpposite.hasAdd α, MulOpposite.hasMul α with
-    left_distrib := fun x y z => unop_injective <| add_mul (unop y) (unop z) (unop x),
+    left_distrib := fun x y z => unop_injective <| add_mul (unop y) (unop z) (unop x)
     right_distrib := fun x y z => unop_injective <| mul_add (unop z) (unop x) (unop y) }
 
 instance [MulZeroClass α] : MulZeroClass
@@ -89,7 +89,7 @@ instance [Ring α] [IsDomain α] : IsDomain αᵐᵒᵖ :=
 
 instance [GroupWithZero α] : GroupWithZero αᵐᵒᵖ :=
   { MulOpposite.monoidWithZero α, MulOpposite.divInvMonoid α, MulOpposite.nontrivial α with
-    mul_inv_cancel := fun x hx => unop_injective <| inv_mul_cancel <| unop_injective.Ne hx,
+    mul_inv_cancel := fun x hx => unop_injective <| inv_mul_cancel <| unop_injective.Ne hx
     inv_zero := unop_injective inv_zero }
 
 end MulOpposite
@@ -98,7 +98,7 @@ namespace AddOpposite
 
 instance [Distrib α] : Distrib αᵃᵒᵖ :=
   { AddOpposite.hasAdd α, @AddOpposite.hasMul α _ with
-    left_distrib := fun x y z => unop_injective <| @mul_add α _ _ _ x z y,
+    left_distrib := fun x y z => unop_injective <| @mul_add α _ _ _ x z y
     right_distrib := fun x y z => unop_injective <| @add_mul α _ _ _ y x z }
 
 instance [MulZeroClass α] : MulZeroClass
@@ -165,7 +165,7 @@ instance [Ring α] [IsDomain α] : IsDomain αᵃᵒᵖ :=
 
 instance [GroupWithZero α] : GroupWithZero αᵃᵒᵖ :=
   { AddOpposite.monoidWithZero α, AddOpposite.divInvMonoid α, AddOpposite.nontrivial α with
-    mul_inv_cancel := fun x hx => unop_injective <| mul_inv_cancel <| unop_injective.Ne hx,
+    mul_inv_cancel := fun x hx => unop_injective <| mul_inv_cancel <| unop_injective.Ne hx
     inv_zero := unop_injective inv_zero }
 
 end AddOpposite

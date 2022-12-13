@@ -107,9 +107,9 @@ theorem unop_comp_op : (unop : αᵐᵒᵖ → α) ∘ op = id :=
 
 /- warning: mul_opposite.rec -> MulOpposite.rec is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {F : (MulOpposite.{u} α) -> Sort.{v}}, (forall (X : α), F (MulOpposite.op.{u} α X)) -> (forall (X : MulOpposite.{u} α), F X)
+  forall {α : Type.{u1}} {F : (MulOpposite.{u1} α) -> Sort.{u2}}, (forall (X : α), F (MulOpposite.op.{u1} α X)) -> (forall (X : MulOpposite.{u1} α), F X)
 but is expected to have type
-  forall {α : Type.{u_1}} {F : (MulOpposite.{u_1} α) -> Sort.{v}}, (forall (X : α), F (MulOpposite.op.{u_1} α X)) -> (forall (X : MulOpposite.{u_1} α), F X)
+  forall {α : Type.{u2}} {F : (MulOpposite.{u2} α) -> Sort.{u1}}, (forall (X : α), F (MulOpposite.op.{u2} α X)) -> (forall (X : MulOpposite.{u2} α), F X)
 Case conversion may be inaccurate. Consider using '#align mul_opposite.rec MulOpposite.recₓ'. -/
 /-- A recursor for `mul_opposite`. Use as `induction x using mul_opposite.rec`. -/
 @[simp, to_additive "A recursor for `add_opposite`. Use as `induction x using add_opposite.rec`."]
@@ -336,9 +336,9 @@ theorem unop_sub [Sub α] (x y : αᵐᵒᵖ) : unop (x - y) = unop x - unop y :
 
 /- warning: mul_opposite.op_smul -> MulOpposite.op_smul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {R : Type.{u_1}} [_inst_1 : HasSmul.{u_1, u} R α] (c : R) (a : α), Eq.{succ u} (MulOpposite.{u} α) (MulOpposite.op.{u} α (HasSmul.smul.{u_1, u} R α _inst_1 c a)) (HasSmul.smul.{u_1, u} R (MulOpposite.{u} α) (MulOpposite.hasSmul.{u, u_1} α R _inst_1) c (MulOpposite.op.{u} α a))
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : HasSmul.{u2, u1} R α] (c : R) (a : α), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (HasSmul.smul.{u2, u1} R α _inst_1 c a)) (HasSmul.smul.{u2, u1} R (MulOpposite.{u1} α) (MulOpposite.hasSmul.{u1, u2} α R _inst_1) c (MulOpposite.op.{u1} α a))
 but is expected to have type
-  forall {α : Type.{u_2}} {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Opposites._hyg.2195 : SMul.{u_1, u_2} R α] (c : R) (a : α), Eq.{succ u_2} (MulOpposite.{u_2} α) (MulOpposite.op.{u_2} α (HSMul.hSMul.{u_1, u_2, u_2} R α α (instHSMul.{u_1, u_2} R α inst._@.Mathlib.Algebra.Opposites._hyg.2195) c a)) (HSMul.hSMul.{u_1, u_2, u_2} R (MulOpposite.{u_2} α) (MulOpposite.{u_2} α) (instHSMul.{u_1, u_2} R (MulOpposite.{u_2} α) (MulOpposite.instSMulMulOpposite.{u_2, u_1} α R inst._@.Mathlib.Algebra.Opposites._hyg.2195)) c (MulOpposite.op.{u_2} α a))
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : SMul.{u2, u1} R α] (c : R) (a : α), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (HSMul.hSMul.{u2, u1, u1} R α α (instHSMul.{u2, u1} R α _inst_1) c a)) (HSMul.hSMul.{u2, u1, u1} R (MulOpposite.{u1} α) (MulOpposite.{u1} α) (instHSMul.{u2, u1} R (MulOpposite.{u1} α) (MulOpposite.instSMulMulOpposite.{u1, u2} α R _inst_1)) c (MulOpposite.op.{u1} α a))
 Case conversion may be inaccurate. Consider using '#align mul_opposite.op_smul MulOpposite.op_smulₓ'. -/
 @[simp, to_additive]
 theorem op_smul {R : Type _} [HasSmul R α] (c : R) (a : α) : op (c • a) = c • op a :=
@@ -347,9 +347,9 @@ theorem op_smul {R : Type _} [HasSmul R α] (c : R) (a : α) : op (c • a) = c 
 
 /- warning: mul_opposite.unop_smul -> MulOpposite.unop_smul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {R : Type.{u_1}} [_inst_1 : HasSmul.{u_1, u} R α] (c : R) (a : MulOpposite.{u} α), Eq.{succ u} α (MulOpposite.unop.{u} α (HasSmul.smul.{u_1, u} R (MulOpposite.{u} α) (MulOpposite.hasSmul.{u, u_1} α R _inst_1) c a)) (HasSmul.smul.{u_1, u} R α _inst_1 c (MulOpposite.unop.{u} α a))
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : HasSmul.{u2, u1} R α] (c : R) (a : MulOpposite.{u1} α), Eq.{succ u1} α (MulOpposite.unop.{u1} α (HasSmul.smul.{u2, u1} R (MulOpposite.{u1} α) (MulOpposite.hasSmul.{u1, u2} α R _inst_1) c a)) (HasSmul.smul.{u2, u1} R α _inst_1 c (MulOpposite.unop.{u1} α a))
 but is expected to have type
-  forall {α : Type.{u_2}} {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Opposites._hyg.2223 : SMul.{u_1, u_2} R α] (c : R) (a : MulOpposite.{u_2} α), Eq.{succ u_2} α (MulOpposite.unop.{u_2} α (HSMul.hSMul.{u_1, u_2, u_2} R (MulOpposite.{u_2} α) (MulOpposite.{u_2} α) (instHSMul.{u_1, u_2} R (MulOpposite.{u_2} α) (MulOpposite.instSMulMulOpposite.{u_2, u_1} α R inst._@.Mathlib.Algebra.Opposites._hyg.2223)) c a)) (HSMul.hSMul.{u_1, u_2, u_2} R α α (instHSMul.{u_1, u_2} R α inst._@.Mathlib.Algebra.Opposites._hyg.2223) c (MulOpposite.unop.{u_2} α a))
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : SMul.{u2, u1} R α] (c : R) (a : MulOpposite.{u1} α), Eq.{succ u1} α (MulOpposite.unop.{u1} α (HSMul.hSMul.{u2, u1, u1} R (MulOpposite.{u1} α) (MulOpposite.{u1} α) (instHSMul.{u2, u1} R (MulOpposite.{u1} α) (MulOpposite.instSMulMulOpposite.{u1, u2} α R _inst_1)) c a)) (HSMul.hSMul.{u2, u1, u1} R α α (instHSMul.{u2, u1} R α _inst_1) c (MulOpposite.unop.{u1} α a))
 Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_smul MulOpposite.unop_smulₓ'. -/
 @[simp, to_additive]
 theorem unop_smul {R : Type _} [HasSmul R α] (c : R) (a : αᵐᵒᵖ) : unop (c • a) = c • unop a :=

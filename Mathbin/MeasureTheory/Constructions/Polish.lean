@@ -640,7 +640,8 @@ theorem MeasurableSet.imageOfMeasurableInjOn [SecondCountableTopology β] (hs : 
 /-- An injective continuous function on a Polish space is a measurable embedding. -/
 theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injective f) :
     MeasurableEmbedding f :=
-  { Injective := f_inj, Measurable := f_cont.Measurable,
+  { Injective := f_inj
+    Measurable := f_cont.Measurable
     measurableSetImage' := fun u hu =>
       hu.imageOfContinuousOnInjOn f_cont.ContinuousOn (f_inj.InjOn _) }
 #align continuous.measurable_embedding Continuous.measurableEmbedding
@@ -649,8 +650,8 @@ theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injectiv
 the restriction of `f` to `s` is a measurable embedding. -/
 theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : ContinuousOn f s)
     (f_inj : InjOn f s) : MeasurableEmbedding (s.restrict f) :=
-  { Injective := inj_on_iff_injective.1 f_inj,
-    Measurable := (continuous_on_iff_continuous_restrict.1 f_cont).Measurable,
+  { Injective := inj_on_iff_injective.1 f_inj
+    Measurable := (continuous_on_iff_continuous_restrict.1 f_cont).Measurable
     measurableSetImage' := by 
       intro u hu
       have A : MeasurableSet ((coe : s → γ) '' u) :=
@@ -665,7 +666,8 @@ theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : Contin
 is a measurable embedding. -/
 theorem Measurable.measurableEmbedding [SecondCountableTopology β] (f_meas : Measurable f)
     (f_inj : Injective f) : MeasurableEmbedding f :=
-  { Injective := f_inj, Measurable := f_meas,
+  { Injective := f_inj
+    Measurable := f_meas
     measurableSetImage' := fun u hu => hu.imageOfMeasurableInjOn f_meas (f_inj.InjOn _) }
 #align measurable.measurable_embedding Measurable.measurableEmbedding
 

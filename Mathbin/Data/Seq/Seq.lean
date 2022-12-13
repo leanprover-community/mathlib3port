@@ -562,7 +562,7 @@ warning: seq.rec_on -> Seq.recOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {C : (Seq.{u} α) -> Sort.{v}} (s : Seq.{u} α), (C (Seq.nil.{u} α)) -> (forall (x : α) (s : Seq.{u} α), C (Seq.cons.{u} α x s)) -> (C s)
 but is expected to have type
-  forall {f : Type.{u} -> Type.{v}} {motive : (Seq.{u, v} f) -> Sort.{u_1}} (t : Seq.{u, v} f), (forall (seq : forall {α : Type.{u}} {β : Type.{u}}, (f (α -> β)) -> (Unit -> (f α)) -> (f β)), motive (Seq.mk.{u, v} f seq)) -> (motive t)
+  forall {α : Type.{u} -> Type.{v}} {C : (Seq.{u, v} α) -> Sort.{u_1}} (s : Seq.{u, v} α), (forall (seq : forall {α_1 : Type.{u}} {β : Type.{u}}, (α (α_1 -> β)) -> (Unit -> (α α_1)) -> (α β)), C (Seq.mk.{u, v} α seq)) -> (C s)
 Case conversion may be inaccurate. Consider using '#align seq.rec_on Seq.recOnₓ'. -/
 /-- Recursion principle for sequences, compare with `list.rec_on`. -/
 def recOn {C : Seq α → Sort v} (s : Seq α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by

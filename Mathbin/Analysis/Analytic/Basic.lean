@@ -432,7 +432,8 @@ theorem HasFpowerSeriesOnBall.analyticAt (hf : HasFpowerSeriesOnBall f p x r) : 
 
 theorem HasFpowerSeriesOnBall.congr (hf : HasFpowerSeriesOnBall f p x r)
     (hg : EqOn f g (Emetric.ball x r)) : HasFpowerSeriesOnBall g p x r :=
-  { r_le := hf.r_le, r_pos := hf.r_pos,
+  { r_le := hf.r_le
+    r_pos := hf.r_pos
     HasSum := fun y hy => by 
       convert hf.has_sum hy
       apply hg.symm
@@ -443,7 +444,8 @@ theorem HasFpowerSeriesOnBall.congr (hf : HasFpowerSeriesOnBall f p x r)
 same power series around `x + y`. -/
 theorem HasFpowerSeriesOnBall.compSub (hf : HasFpowerSeriesOnBall f p x r) (y : E) :
     HasFpowerSeriesOnBall (fun z => f (z - y)) p (x + y) r :=
-  { r_le := hf.r_le, r_pos := hf.r_pos,
+  { r_le := hf.r_le
+    r_pos := hf.r_pos
     HasSum := fun z hz => by 
       convert hf.has_sum hz
       abel }
@@ -540,8 +542,9 @@ theorem analyticOnConst {v : F} {s : Set E} : AnalyticOn 𝕜 (fun _ => v) s := 
 
 theorem HasFpowerSeriesOnBall.add (hf : HasFpowerSeriesOnBall f pf x r)
     (hg : HasFpowerSeriesOnBall g pg x r) : HasFpowerSeriesOnBall (f + g) (pf + pg) x r :=
-  { r_le := le_trans (le_min_iff.2 ⟨hf.r_le, hg.r_le⟩) (pf.min_radius_le_radius_add pg),
-    r_pos := hf.r_pos, HasSum := fun y hy => (hf.HasSum hy).add (hg.HasSum hy) }
+  { r_le := le_trans (le_min_iff.2 ⟨hf.r_le, hg.r_le⟩) (pf.min_radius_le_radius_add pg)
+    r_pos := hf.r_pos
+    HasSum := fun y hy => (hf.HasSum hy).add (hg.HasSum hy) }
 #align has_fpower_series_on_ball.add HasFpowerSeriesOnBall.add
 
 theorem HasFpowerSeriesAt.add (hf : HasFpowerSeriesAt f pf x) (hg : HasFpowerSeriesAt g pg x) :
@@ -560,8 +563,9 @@ theorem HasFpowerSeriesOnBall.neg (hf : HasFpowerSeriesOnBall f pf x r) :
     HasFpowerSeriesOnBall (-f) (-pf) x r :=
   { r_le := by 
       rw [pf.radius_neg]
-      exact hf.r_le,
-    r_pos := hf.r_pos, HasSum := fun y hy => (hf.HasSum hy).neg }
+      exact hf.r_le
+    r_pos := hf.r_pos
+    HasSum := fun y hy => (hf.HasSum hy).neg }
 #align has_fpower_series_on_ball.neg HasFpowerSeriesOnBall.neg
 
 theorem HasFpowerSeriesAt.neg (hf : HasFpowerSeriesAt f pf x) : HasFpowerSeriesAt (-f) (-pf) x :=
@@ -623,7 +627,8 @@ power series `g ∘ p` on the same ball. -/
 theorem ContinuousLinearMap.compHasFpowerSeriesOnBall (g : F →L[𝕜] G)
     (h : HasFpowerSeriesOnBall f p x r) :
     HasFpowerSeriesOnBall (g ∘ f) (g.compFormalMultilinearSeries p) x r :=
-  { r_le := h.r_le.trans (p.radius_le_radius_continuous_linear_map_comp _), r_pos := h.r_pos,
+  { r_le := h.r_le.trans (p.radius_le_radius_continuous_linear_map_comp _)
+    r_pos := h.r_pos
     HasSum := fun y hy => by
       simpa only [ContinuousLinearMap.comp_formal_multilinear_series_apply,
         ContinuousLinearMap.comp_continuous_multilinear_map_coe, Function.comp_apply] using
@@ -913,7 +918,8 @@ This is not totally obvious as we need to check the convergence of the series. -
 protected theorem FormalMultilinearSeries.hasFpowerSeriesOnBall [CompleteSpace F]
     (p : FormalMultilinearSeries 𝕜 E F) (h : 0 < p.radius) :
     HasFpowerSeriesOnBall p.Sum p 0 p.radius :=
-  { r_le := le_rfl, r_pos := h,
+  { r_le := le_rfl
+    r_pos := h
     HasSum := fun y hy => by 
       rw [zero_add]
       exact p.has_sum hy }
@@ -1070,8 +1076,8 @@ theorem HasFpowerSeriesOnBall.rEqTopOfExists {f : 𝕜 → E} {r : ℝ≥0∞} {
   { r_le :=
       Ennreal.le_of_forall_pos_nnreal_lt fun r hr hr' =>
         let ⟨p', hp'⟩ := h' r hr
-        (h.exchangeRadius hp').r_le,
-    r_pos := Ennreal.coe_lt_top,
+        (h.exchangeRadius hp').r_le
+    r_pos := Ennreal.coe_lt_top
     HasSum := fun y hy =>
       let ⟨r', hr'⟩ := exists_gt ‖y‖₊
       let ⟨p', hp'⟩ := h' r' hr'.ne_bot.bot_lt
@@ -1392,8 +1398,8 @@ theorem HasFpowerSeriesOnBall.changeOrigin (hf : HasFpowerSeriesOnBall f p x r)
     (h : (‖y‖₊ : ℝ≥0∞) < r) : HasFpowerSeriesOnBall f (p.changeOrigin y) (x + y) (r - ‖y‖₊) :=
   { r_le := by 
       apply le_trans _ p.change_origin_radius
-      exact tsub_le_tsub hf.r_le le_rfl,
-    r_pos := by simp [h],
+      exact tsub_le_tsub hf.r_le le_rfl
+    r_pos := by simp [h]
     HasSum := fun z hz => by 
       convert (p.change_origin y).HasSum _
       · rw [mem_emetric_ball_zero_iff, lt_tsub_iff_right, add_comm] at hz

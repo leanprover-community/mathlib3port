@@ -40,7 +40,8 @@ inductive finiteInterClosure : Set (Set α)
 #align has_finite_inter.finite_inter_closure HasFiniteInter.finiteInterClosure
 
 theorem finite_inter_closure_has_finite_inter : HasFiniteInter (finiteInterClosure S) :=
-  { univ_mem := finiteInterClosure.univ, inter_mem := fun _ h _ => finiteInterClosure.inter h }
+  { univ_mem := finiteInterClosure.univ
+    inter_mem := fun _ h _ => finiteInterClosure.inter h }
 #align
   has_finite_inter.finite_inter_closure_has_finite_inter HasFiniteInter.finite_inter_closure_has_finite_inter
 

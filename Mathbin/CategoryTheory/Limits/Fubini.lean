@@ -87,16 +87,16 @@ def coneOfConeUncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j))
   π :=
     { app := fun j =>
         (Q j).lift
-          { x := c.x,
+          { x := c.x
             π :=
-              { app := fun k => c.π.app (j, k),
+              { app := fun k => c.π.app (j, k)
                 naturality' := fun k k' f => by 
                   dsimp; simp only [category.id_comp]
                   have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j, k') (𝟙 j, f)
                   dsimp at this
                   simp only [category.id_comp, CategoryTheory.Functor.map_id, nat_trans.id_app] at
                     this
-                  exact this } },
+                  exact this } }
       naturality' := fun j j' f =>
         (Q j').hom_ext
           (by 
@@ -121,9 +121,9 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
         c) where 
   lift s :=
     P.lift
-      { x := s.x,
+      { x := s.x
         π :=
-          { app := fun p => s.π.app p.1 ≫ (D.obj p.1).π.app p.2,
+          { app := fun p => s.π.app p.1 ≫ (D.obj p.1).π.app p.2
             naturality' := fun p p' f => by 
               dsimp; simp only [category.id_comp, category.assoc]
               rcases p with ⟨j, k⟩
@@ -145,8 +145,12 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
     apply (Q j).hom_ext
     intro k
     simp
-  uniq' s m w := by 
-    refine' P.uniq { x := s.X, π := _ } m _
+  uniq' s m w := by
+    refine'
+      P.uniq
+        { x := s.X
+          π := _ }
+        m _
     rintro ⟨j, k⟩
     dsimp
     rw [← w j]

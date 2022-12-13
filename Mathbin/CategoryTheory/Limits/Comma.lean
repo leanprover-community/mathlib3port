@@ -55,14 +55,16 @@ cone.
 @[simps]
 def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L R))
     {c₂ : Cone (F ⋙ snd L R)} (t₂ : IsLimit c₂) :
-    Cone
-      F where 
+    Cone F where 
   x :=
-    { left := c₁.x, right := c₂.x, Hom := (isLimitOfPreserves R t₂).lift (limitAuxiliaryCone _ c₁) }
+    { left := c₁.x
+      right := c₂.x
+      Hom := (isLimitOfPreserves R t₂).lift (limitAuxiliaryCone _ c₁) }
   π :=
     { app := fun j =>
-        { left := c₁.π.app j, right := c₂.π.app j,
-          w' := ((isLimitOfPreserves R t₂).fac (limitAuxiliaryCone F c₁) j).symm },
+        { left := c₁.π.app j
+          right := c₂.π.app j
+          w' := ((isLimitOfPreserves R t₂).fac (limitAuxiliaryCone F c₁) j).symm }
       naturality' := fun j₁ j₂ t => by ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] }
 #align category_theory.comma.cone_of_preserves CategoryTheory.Comma.coneOfPreserves
 
@@ -74,7 +76,8 @@ def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F �
       (coneOfPreserves F c₁
         t₂) where 
   lift s :=
-    { left := t₁.lift ((fst L R).mapCone s), right := t₂.lift ((snd L R).mapCone s),
+    { left := t₁.lift ((fst L R).mapCone s)
+      right := t₂.lift ((snd L R).mapCone s)
       w' :=
         (isLimitOfPreserves R t₂).hom_ext fun j => by
           rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac,
@@ -101,15 +104,16 @@ colimit cocone.
 @[simps]
 def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)}
     (t₁ : IsColimit c₁) (c₂ : Cocone (F ⋙ snd L R)) :
-    Cocone
-      F where 
+    Cocone F where 
   x :=
-    { left := c₁.x, right := c₂.x,
+    { left := c₁.x
+      right := c₂.x
       Hom := (isColimitOfPreserves L t₁).desc (colimitAuxiliaryCocone _ c₂) }
   ι :=
     { app := fun j =>
-        { left := c₁.ι.app j, right := c₂.ι.app j,
-          w' := (isColimitOfPreserves L t₁).fac (colimitAuxiliaryCocone _ c₂) j },
+        { left := c₁.ι.app j
+          right := c₂.ι.app j
+          w' := (isColimitOfPreserves L t₁).fac (colimitAuxiliaryCocone _ c₂) j }
       naturality' := fun j₁ j₂ t => by ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] }
 #align category_theory.comma.cocone_of_preserves CategoryTheory.Comma.coconeOfPreserves
 
@@ -121,7 +125,8 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
       (coconeOfPreserves F t₁
         c₂) where 
   desc s :=
-    { left := t₁.desc ((fst L R).mapCocone s), right := t₂.desc ((snd L R).mapCocone s),
+    { left := t₁.desc ((fst L R).mapCocone s)
+      right := t₂.desc ((snd L R).mapCocone s)
       w' :=
         (isColimitOfPreserves L t₁).hom_ext fun j => by
           rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc,
@@ -212,8 +217,8 @@ instance has_limits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArr
 noncomputable instance createsLimit [i : PreservesLimit (F ⋙ proj X G) G] :
     CreatesLimit F (proj X G) :=
   creates_limit_of_reflects_iso fun c t =>
-    { liftedCone := @Comma.coneOfPreserves _ _ _ _ _ i punitCone t,
-      makesLimit := Comma.coneOfPreservesIsLimit _ punitConeIsLimit _,
+    { liftedCone := @Comma.coneOfPreserves _ _ _ _ _ i punitCone t
+      makesLimit := Comma.coneOfPreservesIsLimit _ punitConeIsLimit _
       validLift := (Cones.ext (Iso.refl _)) fun j => (id_comp _).symm }
 #align category_theory.structured_arrow.creates_limit CategoryTheory.StructuredArrow.createsLimit
 
@@ -261,8 +266,8 @@ instance has_colimits [HasColimits A] [PreservesColimits G] : HasColimits (Costr
 noncomputable instance createsColimit [i : PreservesColimit (F ⋙ proj G X) G] :
     CreatesColimit F (proj G X) :=
   creates_colimit_of_reflects_iso fun c t =>
-    { liftedCocone := @Comma.coconeOfPreserves _ _ _ _ _ i t punitCocone,
-      makesColimit := Comma.coconeOfPreservesIsColimit _ _ punitCoconeIsColimit,
+    { liftedCocone := @Comma.coconeOfPreserves _ _ _ _ _ i t punitCocone
+      makesColimit := Comma.coconeOfPreservesIsColimit _ _ punitCoconeIsColimit
       validLift := (Cocones.ext (Iso.refl _)) fun j => comp_id _ }
 #align
   category_theory.costructured_arrow.creates_colimit CategoryTheory.CostructuredArrow.createsColimit

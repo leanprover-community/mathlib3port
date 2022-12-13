@@ -315,7 +315,7 @@ unsafe def attr :
                     e ≤|≥
                   local_context >>=
                     List.foldl (fun tac h => tac ≤|≥ compare_hyp e h)
-                      (fail "no applicable positivity extension found"),
+                      (fail "no applicable positivity extension found")
       dependencies := [] }
 #align tactic.positivity.attr tactic.positivity.attr
 
@@ -450,8 +450,9 @@ namespace Interactive
 #align tactic.interactive.positivity tactic.interactive.positivity
 
 add_tactic_doc
-  { Name := "positivity", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.positivity],
+  { Name := "positivity"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.positivity]
     tags := ["arithmetic", "monotonicity", "finishing"] }
 
 end Interactive

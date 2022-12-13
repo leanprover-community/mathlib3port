@@ -236,9 +236,10 @@ theorem, and is shown by
 def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
   let i := choose s.exists_compl_positive_negative
   let hi := choose_spec s.exists_compl_positive_negative
-  { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1,
-    negPart := s.toMeasureOfLeZero (iᶜ) hi.1.compl hi.2.2, posPartFinite := inferInstance,
-    negPartFinite := inferInstance,
+  { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1
+    negPart := s.toMeasureOfLeZero (iᶜ) hi.1.compl hi.2.2
+    posPartFinite := inferInstance
+    negPartFinite := inferInstance
     MutuallySingular := by 
       refine' ⟨iᶜ, hi.1.compl, _, _⟩
       · rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.compl]

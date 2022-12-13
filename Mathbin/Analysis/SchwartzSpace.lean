@@ -192,7 +192,8 @@ variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F] [Nor
 
 instance : HasSmul 𝕜 𝓢(E, F) :=
   ⟨fun c f =>
-    { toFun := c • f, smooth' := (f.smooth _).const_smul c,
+    { toFun := c • f
+      smooth' := (f.smooth _).const_smul c
       decay' := fun k n => by
         refine' ⟨f.seminorm_aux k n * (‖c‖ + 1), fun x => _⟩
         have hc : 0 ≤ ‖c‖ := by positivity
@@ -225,7 +226,8 @@ theorem seminorm_aux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
 
 instance hasNsmul : HasSmul ℕ 𝓢(E, F) :=
   ⟨fun c f =>
-    { toFun := c • f, smooth' := (f.smooth _).const_smul c,
+    { toFun := c • f
+      smooth' := (f.smooth _).const_smul c
       decay' := by
         have : c • (f : E → F) = (c : ℝ) • f := by 
           ext x
@@ -236,7 +238,8 @@ instance hasNsmul : HasSmul ℕ 𝓢(E, F) :=
 
 instance hasZsmul : HasSmul ℤ 𝓢(E, F) :=
   ⟨fun c f =>
-    { toFun := c • f, smooth' := (f.smooth _).const_smul c,
+    { toFun := c • f
+      smooth' := (f.smooth _).const_smul c
       decay' := by
         have : c • (f : E → F) = (c : ℝ) • f := by 
           ext x
@@ -250,7 +253,9 @@ end Smul
 section Zero
 
 instance : Zero 𝓢(E, F) :=
-  ⟨{ toFun := fun _ => 0, smooth' := contDiffConst, decay' := fun _ _ => ⟨1, fun _ => by simp⟩ }⟩
+  ⟨{  toFun := fun _ => 0
+      smooth' := contDiffConst
+      decay' := fun _ _ => ⟨1, fun _ => by simp⟩ }⟩
 
 instance : Inhabited 𝓢(E, F) :=
   ⟨0⟩

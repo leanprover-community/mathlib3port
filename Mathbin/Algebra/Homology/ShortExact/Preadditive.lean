@@ -57,8 +57,9 @@ theorem LeftSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : 
       haveI : mono (f ≫ φ) := by 
         rw [hφ]
         infer_instance
-      exact mono_of_mono f φ,
-    Epi := h.Epi, exact := h.exact }
+      exact mono_of_mono f φ
+    Epi := h.Epi
+    exact := h.exact }
 #align category_theory.left_split.short_exact CategoryTheory.LeftSplit.short_exact
 
 /-- An exact sequence `A -f⟶ B -g⟶ C` is *right split*
@@ -77,8 +78,9 @@ theorem RightSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) 
       haveI : epi (χ ≫ g) := by 
         rw [hχ]
         infer_instance
-      exact epi_of_epi χ g,
-    Mono := h.Mono, exact := h.exact }
+      exact epi_of_epi χ g
+    Mono := h.Mono
+    exact := h.exact }
 #align category_theory.right_split.short_exact CategoryTheory.RightSplit.short_exact
 
 end HasZeroMorphisms
@@ -106,7 +108,7 @@ variable [HasKernels 𝒜] [HasImages 𝒜]
 
 theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B} {φ : B ⟶ A} (hfg : f ≫ g = 0)
     (H : φ ≫ f + g ≫ χ = 𝟙 B) : Exact f g :=
-  { w := hfg,
+  { w := hfg
     Epi := by
       let ψ : (kernel_subobject g : 𝒜) ⟶ image_subobject f :=
         subobject.arrow _ ≫ φ ≫ factor_thru_image_subobject f
@@ -139,26 +141,26 @@ theorem Split.exact (h : Split f g) : Exact f g := by
 theorem Split.left_split (h : Split f g) : LeftSplit f g :=
   { LeftSplit := by 
       obtain ⟨φ, χ, h1, -⟩ := h
-      exact ⟨φ, h1⟩,
+      exact ⟨φ, h1⟩
     Epi := by 
       obtain ⟨φ, χ, -, h2, -⟩ := h
       have : epi (χ ≫ g) := by 
         rw [h2]
         infer_instance
-      exact epi_of_epi χ g,
+      exact epi_of_epi χ g
     exact := h.exact }
 #align category_theory.split.left_split CategoryTheory.Split.left_split
 
 theorem Split.right_split (h : Split f g) : RightSplit f g :=
   { RightSplit := by 
       obtain ⟨φ, χ, -, h1, -⟩ := h
-      exact ⟨χ, h1⟩,
+      exact ⟨χ, h1⟩
     Mono := by 
       obtain ⟨φ, χ, h1, -⟩ := h
       have : mono (f ≫ φ) := by 
         rw [h1]
         infer_instance
-      exact mono_of_mono f φ,
+      exact mono_of_mono f φ
     exact := h.exact }
 #align category_theory.split.right_split CategoryTheory.Split.right_split
 
@@ -363,7 +365,9 @@ protected theorem exact : Exact f g := by
 #align category_theory.splitting.exact CategoryTheory.Splitting.exact
 
 protected theorem short_exact : ShortExact f g :=
-  { Mono := h.Mono, Epi := h.Epi, exact := h.exact }
+  { Mono := h.Mono
+    Epi := h.Epi
+    exact := h.exact }
 #align category_theory.splitting.short_exact CategoryTheory.Splitting.short_exact
 
 end Preadditive

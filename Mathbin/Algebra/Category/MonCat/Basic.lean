@@ -172,8 +172,8 @@ example (R : CommMonCat.{u}) : R ⟶ R :=
   { toFun := fun x => by 
       match_target(R : Type u)
       match_hyp x : (R : Type u)
-      exact x * x,
-    map_one' := by simp,
+      exact x * x
+    map_one' := by simp
     map_mul' := fun x y => by
       rw [mul_assoc x y (x * y), ← mul_assoc y x y, mul_comm y x, mul_assoc, mul_assoc] }
 

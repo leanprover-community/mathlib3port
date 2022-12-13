@@ -45,7 +45,8 @@ defined to be the projective limit of `R` using the Frobenius maps `R → R`
 indexed by the natural numbers, implemented as `{ f : ℕ → R | ∀ n, f (n + 1) ^ p = f n }`. -/
 def Ring.perfectionSubsemiring (R : Type u₁) [CommSemiring R] (p : ℕ) [hp : Fact p.Prime]
     [CharP R p] : Subsemiring (ℕ → R) :=
-  { Monoid.perfection R p with zero_mem' := fun n => zero_pow <| hp.1.Pos,
+  { Monoid.perfection R p with 
+    zero_mem' := fun n => zero_pow <| hp.1.Pos
     add_mem' := fun f g hf hg n => (frobenius_add R p _ _).trans <| congr_arg₂ _ (hf n) (hg n) }
 #align ring.perfection_subsemiring Ring.perfectionSubsemiring
 
@@ -202,11 +203,11 @@ def lift (R : Type u₁) [CommSemiring R] [CharP R p] [PerfectRing R p] (S : Typ
   toFun f :=
     { toFun := fun r =>
         ⟨fun n => f <| (pthRoot R p^[n]) r, fun n => by
-          rw [← f.map_pow, Function.iterate_succ_apply', pth_root_pow_p]⟩,
-      map_one' := ext fun n => (congr_arg f <| RingHom.iterate_map_one _ _).trans f.map_one,
+          rw [← f.map_pow, Function.iterate_succ_apply', pth_root_pow_p]⟩
+      map_one' := ext fun n => (congr_arg f <| RingHom.iterate_map_one _ _).trans f.map_one
       map_mul' := fun x y =>
-        ext fun n => (congr_arg f <| RingHom.iterate_map_mul _ _ _ _).trans <| f.map_mul _ _,
-      map_zero' := ext fun n => (congr_arg f <| RingHom.iterate_map_zero _ _).trans f.map_zero,
+        ext fun n => (congr_arg f <| RingHom.iterate_map_mul _ _ _ _).trans <| f.map_mul _ _
+      map_zero' := ext fun n => (congr_arg f <| RingHom.iterate_map_zero _ _).trans f.map_zero
       map_add' := fun x y =>
         ext fun n => (congr_arg f <| RingHom.iterate_map_add _ _ _ _).trans <| f.map_add _ _ }
   invFun := RingHom.comp <| coeff S p 0
@@ -271,7 +272,7 @@ theorem mk' {f : P →+* R} (g : P ≃+* Ring.Perfection R p) (hfg : Perfection.
   { Injective := fun x y hxy =>
       g.Injective <|
         (RingHom.ext_iff.1 hfg x).symm.trans <|
-          Eq.symm <| (RingHom.ext_iff.1 hfg y).symm.trans <| Perfection.ext fun n => (hxy n).symm,
+          Eq.symm <| (RingHom.ext_iff.1 hfg y).symm.trans <| Perfection.ext fun n => (hxy n).symm
     Surjective := fun y hy =>
       let ⟨x, hx⟩ := g.Surjective ⟨y, hy⟩
       ⟨x, fun n =>
@@ -288,7 +289,7 @@ theorem of : PerfectionMap p (Perfection.coeff R p 0) :=
 
 /-- For a perfect ring, it itself is the perfection. -/
 theorem id [PerfectRing R p] : PerfectionMap p (RingHom.id R) :=
-  { Injective := fun x y hxy => hxy 0,
+  { Injective := fun x y hxy => hxy 0
     Surjective := fun f hf =>
       ⟨f 0, fun n =>
         show (pthRoot R p^[n]) (f 0) = f n from

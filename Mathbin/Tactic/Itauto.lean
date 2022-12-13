@@ -821,7 +821,9 @@ unsafe def itauto (classical : parse (parser.optional (tk "!"))) :
 add_hint_tactic itauto
 
 add_tactic_doc
-  { Name := "itauto", category := DocCategory.tactic, declNames := [`tactic.interactive.itauto],
+  { Name := "itauto"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.itauto]
     tags := ["logic", "propositional logic", "intuitionistic logic", "decision procedure"] }
 
 end Interactive

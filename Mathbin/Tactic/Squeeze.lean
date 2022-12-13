@@ -55,7 +55,9 @@ unsafe def struct_inst : lean.parser pexpr :=
     let (names, values) := unzip fields
     pure <|
         pexpr.mk_structure_instance
-          { field_names := names, field_values := values, sources := srcs }
+          { field_names := names
+            field_values := values
+            sources := srcs }
 #align tactic.struct_inst tactic.struct_inst
 
 /-- pretty print structure instance -/
@@ -404,8 +406,9 @@ end Tactic
 open Tactic.Interactive
 
 add_tactic_doc
-  { Name := "squeeze_simp / squeeze_simpa / squeeze_dsimp / squeeze_scope",
-    category := DocCategory.tactic,
-    declNames := [`` squeeze_simp, `` squeeze_dsimp, `` squeeze_simpa, `` squeeze_scope],
-    tags := ["simplification", "Try this"], inheritDescriptionFrom := `` squeeze_simp }
+  { Name := "squeeze_simp / squeeze_simpa / squeeze_dsimp / squeeze_scope"
+    category := DocCategory.tactic
+    declNames := [`` squeeze_simp, `` squeeze_dsimp, `` squeeze_simpa, `` squeeze_scope]
+    tags := ["simplification", "Try this"]
+    inheritDescriptionFrom := `` squeeze_simp }
 

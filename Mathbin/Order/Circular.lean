@@ -456,9 +456,10 @@ instance (α : Type _) [HasSbtw α] : HasSbtw αᵒᵈ :=
   ⟨fun a b c : α => Sbtw c b a⟩
 
 instance (α : Type _) [h : CircularPreorder α] : CircularPreorder αᵒᵈ :=
-  { OrderDual.hasBtw α, OrderDual.hasSbtw α with btw_refl := btw_refl,
-    btw_cyclic_left := fun a b c => btw_cyclic_right,
-    sbtw_trans_left := fun a b c d habc hbdc => hbdc.trans_right habc,
+  { OrderDual.hasBtw α, OrderDual.hasSbtw α with
+    btw_refl := btw_refl
+    btw_cyclic_left := fun a b c => btw_cyclic_right
+    sbtw_trans_left := fun a b c d habc hbdc => hbdc.trans_right habc
     sbtw_iff_btw_not_btw := fun a b c => @sbtw_iff_btw_not_btw α _ c b a }
 
 instance (α : Type _) [CircularPartialOrder α] : CircularPartialOrder αᵒᵈ :=

@@ -79,7 +79,10 @@ theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : �
     (Halg : ∀ r, p (algebraMap R A r)) (Hadd : ∀ x y, p x → p y → p (x + y))
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   let S : Subalgebra R A :=
-    { carrier := p, mul_mem' := Hmul, add_mem' := Hadd, algebra_map_mem' := Halg }
+    { carrier := p
+      mul_mem' := Hmul
+      add_mem' := Hadd
+      algebra_map_mem' := Halg }
   adjoin_le (show s ≤ S from Hs) h
 #align algebra.adjoin_induction Algebra.adjoin_induction
 

@@ -77,9 +77,9 @@ theorem one_ne_zero [NeZero (1 : α)] : (1 : α) ≠ 0 :=
 
 /- warning: two_ne_zero -> two_ne_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : NeZero.{u_1} α _inst_1 (OfNat.ofNat.{u_1} α 2 (OfNat.mk.{u_1} α 2 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2))))], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 2 (OfNat.mk.{u_1} α 2 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2)))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α _inst_1)))
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.NeZero._hyg.227 : Zero.{u_1} α] [inst._@.Mathlib.Algebra.NeZero._hyg.230 : OfNat.{u_1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))] [inst._@.Mathlib.Algebra.NeZero._hyg.234 : NeZero.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.227 (OfNat.ofNat.{u_1} α 2 inst._@.Mathlib.Algebra.NeZero._hyg.230)], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 2 inst._@.Mathlib.Algebra.NeZero._hyg.230) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.227))
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
 Case conversion may be inaccurate. Consider using '#align two_ne_zero two_ne_zeroₓ'. -/
 theorem two_ne_zero [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
   NeZero.ne (2 : α)
@@ -87,9 +87,9 @@ theorem two_ne_zero [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
 
 /- warning: three_ne_zero -> three_ne_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : NeZero.{u_1} α _inst_1 (OfNat.ofNat.{u_1} α 3 (OfNat.mk.{u_1} α 3 (bit1.{u_1} α _inst_2 _inst_3 (One.one.{u_1} α _inst_2))))], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 3 (OfNat.mk.{u_1} α 3 (bit1.{u_1} α _inst_2 _inst_3 (One.one.{u_1} α _inst_2)))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α _inst_1)))
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.NeZero._hyg.257 : Zero.{u_1} α] [inst._@.Mathlib.Algebra.NeZero._hyg.260 : OfNat.{u_1} α (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))] [inst._@.Mathlib.Algebra.NeZero._hyg.264 : NeZero.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.257 (OfNat.ofNat.{u_1} α 3 inst._@.Mathlib.Algebra.NeZero._hyg.260)], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 3 inst._@.Mathlib.Algebra.NeZero._hyg.260) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.257))
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
 Case conversion may be inaccurate. Consider using '#align three_ne_zero three_ne_zeroₓ'. -/
 theorem three_ne_zero [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
   NeZero.ne (3 : α)
@@ -97,9 +97,9 @@ theorem three_ne_zero [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
 
 /- warning: four_ne_zero -> four_ne_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : NeZero.{u_1} α _inst_1 (OfNat.ofNat.{u_1} α 4 (OfNat.mk.{u_1} α 4 (bit0.{u_1} α _inst_3 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2)))))], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 4 (OfNat.mk.{u_1} α 4 (bit0.{u_1} α _inst_3 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2))))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α _inst_1)))
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.NeZero._hyg.287 : Zero.{u_1} α] [inst._@.Mathlib.Algebra.NeZero._hyg.290 : OfNat.{u_1} α (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))] [inst._@.Mathlib.Algebra.NeZero._hyg.294 : NeZero.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.287 (OfNat.ofNat.{u_1} α 4 inst._@.Mathlib.Algebra.NeZero._hyg.290)], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 4 inst._@.Mathlib.Algebra.NeZero._hyg.290) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.287))
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
 Case conversion may be inaccurate. Consider using '#align four_ne_zero four_ne_zeroₓ'. -/
 theorem four_ne_zero [Add α] [NeZero (4 : α)] : (4 : α) ≠ 0 :=
   NeZero.ne (4 : α)
@@ -130,9 +130,9 @@ theorem one_ne_zero' [NeZero (1 : α)] : (1 : α) ≠ 0 :=
 
 /- warning: two_ne_zero' -> two_ne_zero' is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u_1}) [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : NeZero.{u_1} α _inst_1 (OfNat.ofNat.{u_1} α 2 (OfNat.mk.{u_1} α 2 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2))))], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 2 (OfNat.mk.{u_1} α 2 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2)))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α _inst_1)))
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
 but is expected to have type
-  forall (α : Type.{u_1}) [inst._@.Mathlib.Algebra.NeZero._hyg.373 : Zero.{u_1} α] [inst._@.Mathlib.Algebra.NeZero._hyg.376 : OfNat.{u_1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))] [inst._@.Mathlib.Algebra.NeZero._hyg.380 : NeZero.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.373 (OfNat.ofNat.{u_1} α 2 inst._@.Mathlib.Algebra.NeZero._hyg.376)], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 2 inst._@.Mathlib.Algebra.NeZero._hyg.376) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.373))
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
 Case conversion may be inaccurate. Consider using '#align two_ne_zero' two_ne_zero'ₓ'. -/
 theorem two_ne_zero' [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
   NeZero.ne (2 : α)
@@ -140,9 +140,9 @@ theorem two_ne_zero' [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
 
 /- warning: three_ne_zero' -> three_ne_zero' is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u_1}) [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : NeZero.{u_1} α _inst_1 (OfNat.ofNat.{u_1} α 3 (OfNat.mk.{u_1} α 3 (bit1.{u_1} α _inst_2 _inst_3 (One.one.{u_1} α _inst_2))))], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 3 (OfNat.mk.{u_1} α 3 (bit1.{u_1} α _inst_2 _inst_3 (One.one.{u_1} α _inst_2)))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α _inst_1)))
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
 but is expected to have type
-  forall (α : Type.{u_1}) [inst._@.Mathlib.Algebra.NeZero._hyg.399 : Zero.{u_1} α] [inst._@.Mathlib.Algebra.NeZero._hyg.402 : OfNat.{u_1} α (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))] [inst._@.Mathlib.Algebra.NeZero._hyg.406 : NeZero.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.399 (OfNat.ofNat.{u_1} α 3 inst._@.Mathlib.Algebra.NeZero._hyg.402)], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 3 inst._@.Mathlib.Algebra.NeZero._hyg.402) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.399))
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
 Case conversion may be inaccurate. Consider using '#align three_ne_zero' three_ne_zero'ₓ'. -/
 theorem three_ne_zero' [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
   NeZero.ne (3 : α)
@@ -150,9 +150,9 @@ theorem three_ne_zero' [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
 
 /- warning: four_ne_zero' -> four_ne_zero' is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u_1}) [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : NeZero.{u_1} α _inst_1 (OfNat.ofNat.{u_1} α 4 (OfNat.mk.{u_1} α 4 (bit0.{u_1} α _inst_3 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2)))))], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 4 (OfNat.mk.{u_1} α 4 (bit0.{u_1} α _inst_3 (bit0.{u_1} α _inst_3 (One.one.{u_1} α _inst_2))))) (OfNat.ofNat.{u_1} α 0 (OfNat.mk.{u_1} α 0 (Zero.zero.{u_1} α _inst_1)))
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
 but is expected to have type
-  forall (α : Type.{u_1}) [inst._@.Mathlib.Algebra.NeZero._hyg.425 : Zero.{u_1} α] [inst._@.Mathlib.Algebra.NeZero._hyg.428 : OfNat.{u_1} α (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))] [inst._@.Mathlib.Algebra.NeZero._hyg.432 : NeZero.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.425 (OfNat.ofNat.{u_1} α 4 inst._@.Mathlib.Algebra.NeZero._hyg.428)], Ne.{succ u_1} α (OfNat.ofNat.{u_1} α 4 inst._@.Mathlib.Algebra.NeZero._hyg.428) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Algebra.NeZero._hyg.425))
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
 Case conversion may be inaccurate. Consider using '#align four_ne_zero' four_ne_zero'ₓ'. -/
 theorem four_ne_zero' [Add α] [NeZero (4 : α)] : (4 : α) ≠ 0 :=
   NeZero.ne (4 : α)

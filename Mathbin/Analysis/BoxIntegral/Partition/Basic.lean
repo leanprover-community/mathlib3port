@@ -597,8 +597,9 @@ theorem Union_inf (π₁ π₂ : Prepartition I) : (π₁ ⊓ π₂).union = π�
 #align box_integral.prepartition.Union_inf BoxIntegral.Prepartition.Union_inf
 
 instance : SemilatticeInf (Prepartition I) :=
-  { Prepartition.hasInf, Prepartition.partialOrder with inf_le_left := fun π₁ π₂ => π₁.bUnion_le _,
-    inf_le_right := fun π₁ π₂ => (bUnion_le_iff _).2 fun J hJ => le_rfl,
+  { Prepartition.hasInf, Prepartition.partialOrder with
+    inf_le_left := fun π₁ π₂ => π₁.bUnion_le _
+    inf_le_right := fun π₁ π₂ => (bUnion_le_iff _).2 fun J hJ => le_rfl
     le_inf := fun π π₁ π₂ h₁ h₂ => π₁.le_bUnion_iff.2 ⟨h₁, fun J hJ => restrict_mono h₂⟩ }
 
 /-- The prepartition with boxes `{J ∈ π | p J}`. -/

@@ -100,9 +100,9 @@ theorem Reflexive.set_pairwise_iff (hr : Reflexive r) :
 
 /- warning: set.pairwise.on_injective -> Set.Pairwise.on_injective is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {ι : Type.{u_4}} {r : α -> α -> Prop} {f : ι -> α} {s : Set.{u_1} α}, (Set.Pairwise.{u_1} α s r) -> (Function.Injective.{succ u_4, succ u_1} ι α f) -> (forall (x : ι), Membership.Mem.{u_1, u_1} α (Set.{u_1} α) (Set.hasMem.{u_1} α) (f x) s) -> (Pairwise.{u_4} ι (Function.onFun.{succ u_4, succ u_1, 1} ι α Prop r f))
+  forall {α : Type.{u1}} {ι : Type.{u2}} {r : α -> α -> Prop} {f : ι -> α} {s : Set.{u1} α}, (Set.Pairwise.{u1} α s r) -> (Function.Injective.{succ u2, succ u1} ι α f) -> (forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) s) -> (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop r f))
 but is expected to have type
-  forall {α : Type.{u_1}} {ι : Type.{u_2}} {r : α -> α -> Prop} {f : ι -> α} {s : Set.{u_1} α}, (Set.Pairwise.{u_1} α s r) -> (Function.Injective.{succ u_2, succ u_1} ι α f) -> (forall (x : ι), Membership.mem.{u_1, u_1} α (Set.{u_1} α) (Set.instMembershipSet.{u_1} α) (f x) s) -> (Pairwise.{u_2} ι (Function.onFun.{succ u_2, succ u_1, 1} ι α Prop r f))
+  forall {α : Type.{u2}} {ι : Type.{u1}} {r : α -> α -> Prop} {f : ι -> α} {s : Set.{u2} α}, (Set.Pairwise.{u2} α s r) -> (Function.Injective.{succ u1, succ u2} ι α f) -> (forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s) -> (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι α Prop r f))
 Case conversion may be inaccurate. Consider using '#align set.pairwise.on_injective Set.Pairwise.on_injectiveₓ'. -/
 theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :
     Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.Ne hij)

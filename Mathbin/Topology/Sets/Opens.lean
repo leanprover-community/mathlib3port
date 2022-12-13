@@ -231,13 +231,14 @@ theorem mem_Sup {Us : Set (Opens α)} {x : α} : x ∈ sup Us ↔ ∃ u ∈ Us, 
 #align topological_space.opens.mem_Sup TopologicalSpace.Opens.mem_Sup
 
 instance : Frame (Opens α) :=
-  { Opens.completeLattice with sup := sup,
+  { Opens.completeLattice with 
+    sup := sup
     inf_Sup_le_supr_inf := fun a s =>
       (ext <| by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_Union₂]).le }
 
 theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
-  { inj := Set.inclusion_injective i,
-    induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm,
+  { inj := Set.inclusion_injective i
+    induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm
     open_range := by 
       rw [Set.range_inclusion i]
       exact U.property.preimage continuous_subtype_val }

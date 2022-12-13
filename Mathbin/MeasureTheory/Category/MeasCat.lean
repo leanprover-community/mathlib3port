@@ -90,11 +90,11 @@ def giry : CategoryTheory.Monad
       MeasCat where 
   toFunctor := measure
   η' :=
-    { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurableDirac⟩,
+    { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurableDirac⟩
       naturality' := fun X Y ⟨f, hf⟩ =>
         Subtype.eq <| funext fun a => (Measure.map_dirac hf a).symm }
   μ' :=
-    { app := fun X => ⟨@Measure.join X.1 X.2, Measure.measurableJoin⟩,
+    { app := fun X => ⟨@Measure.join X.1 X.2, Measure.measurableJoin⟩
       naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq <| funext fun μ => Measure.join_map_map hf μ }
   assoc' α := Subtype.eq <| funext fun μ => @Measure.join_map_join _ _ _
   left_unit' α := Subtype.eq <| funext fun μ => @Measure.join_dirac _ _ _
@@ -126,7 +126,7 @@ instance TopCat.hasForgetToMeas : HasForget₂ TopCat.{u} MeasCat.{u} :=
 /- warning: Borel clashes with borel -> borel
 warning: Borel -> borel is a dubious translation:
 lean 3 declaration is
-  CategoryTheory.Functor.{u, u, succ u, succ u} TopCat.{u} TopCat.largeCategory.{u} MeasCat.{u} MeasCat.largeCategory.{u}
+  CategoryTheory.Functor.{u1, u1, succ u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} MeasCat.{u1} MeasCat.largeCategory.{u1}
 but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align Borel borelₓ'. -/

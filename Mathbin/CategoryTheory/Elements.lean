@@ -133,7 +133,10 @@ def toStructuredArrow :
 
 @[simp]
 theorem to_structured_arrow_obj (X) :
-    (toStructuredArrow F).obj X = { left := ⟨⟨⟩⟩, right := X.1, Hom := fun _ => X.2 } :=
+    (toStructuredArrow F).obj X =
+      { left := ⟨⟨⟩⟩
+        right := X.1
+        Hom := fun _ => X.2 } :=
   rfl
 #align
   category_theory.category_of_elements.to_structured_arrow_obj CategoryTheory.categoryOfElements.to_structured_arrow_obj
@@ -173,7 +176,11 @@ theorem from_structured_arrow_map {X Y} (f : X ⟶ Y) :
 def structuredArrowEquivalence : F.Elements ≌ StructuredArrow PUnit F :=
   Equivalence.mk (toStructuredArrow F) (fromStructuredArrow F)
     (NatIso.ofComponents (fun X => eqToIso (by tidy)) (by tidy))
-    (NatIso.ofComponents (fun X => { Hom := { right := 𝟙 _ }, inv := { right := 𝟙 _ } }) (by tidy))
+    (NatIso.ofComponents
+      (fun X =>
+        { Hom := { right := 𝟙 _ }
+          inv := { right := 𝟙 _ } })
+      (by tidy))
 #align
   category_theory.category_of_elements.structured_arrow_equivalence CategoryTheory.categoryOfElements.structuredArrowEquivalence
 

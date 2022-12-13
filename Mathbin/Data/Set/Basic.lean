@@ -79,9 +79,14 @@ instance : HasSubset (Set α) :=
   ⟨(· ≤ ·)⟩
 
 instance {α : Type _} : BooleanAlgebra (Set α) :=
-  { (inferInstance : BooleanAlgebra (α → Prop)) with sup := fun s t => { x | x ∈ s ∨ x ∈ t },
-    le := (· ≤ ·), lt := fun s t => s ⊆ t ∧ ¬t ⊆ s, inf := fun s t => { x | x ∈ s ∧ x ∈ t },
-    bot := ∅, compl := fun s => { x | x ∉ s }, top := univ,
+  { (inferInstance : BooleanAlgebra (α → Prop)) with
+    sup := fun s t => { x | x ∈ s ∨ x ∈ t }
+    le := (· ≤ ·)
+    lt := fun s t => s ⊆ t ∧ ¬t ⊆ s
+    inf := fun s t => { x | x ∈ s ∧ x ∈ t }
+    bot := ∅
+    compl := fun s => { x | x ∉ s }
+    top := univ
     sdiff := fun s t => { x | x ∈ s ∧ x ∉ t } }
 
 instance : HasSSubset (Set α) :=

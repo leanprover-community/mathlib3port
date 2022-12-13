@@ -203,7 +203,7 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
   if h : Nontrivial α then PSum.inl h
   else
     PSum.inr
-      { default := default,
+      { default := default
         uniq := fun x : α => by 
           change x = default
           contrapose! h
@@ -263,9 +263,9 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
 
 /- warning: function.injective.nontrivial -> Function.Injective.nontrivial is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (Nontrivial.{u_2} β)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nontrivial.{u1} α] {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (Nontrivial.{u2} β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.991 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (Nontrivial.{u_2} β)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nontrivial.{u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (Nontrivial.{u1} β)
 Case conversion may be inaccurate. Consider using '#align function.injective.nontrivial Function.Injective.nontrivialₓ'. -/
 /-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
@@ -290,9 +290,9 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
 
 /- warning: function.injective.exists_ne -> Function.Injective.exists_ne is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nontrivial.{u1} α] {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (forall (y : β), Exists.{succ u1} α (fun (x : α) => Ne.{succ u2} β (f x) y))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.1151 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nontrivial.{u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall (y : β), Exists.{succ u2} α (fun (x : α) => Ne.{succ u1} β (f x) y))
 Case conversion may be inaccurate. Consider using '#align function.injective.exists_ne Function.Injective.exists_neₓ'. -/
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/

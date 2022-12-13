@@ -217,7 +217,7 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     F ≅ G where 
   Hom := { app := fun X => (app X).Hom }
   inv :=
-    { app := fun X => (app X).inv,
+    { app := fun X => (app X).inv
       naturality' := fun X Y f => by
         have h := congr_arg (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm
         simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h

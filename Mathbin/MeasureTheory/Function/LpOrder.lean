@@ -96,7 +96,8 @@ theorem coe_fn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
 #align measure_theory.Lp.coe_fn_abs MeasureTheory.lp.coe_fn_abs
 
 noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) :=
-  { lp.lattice, lp.normedAddCommGroup with add_le_add_left := fun f g => add_le_add_left,
+  { lp.lattice, lp.normedAddCommGroup with
+    add_le_add_left := fun f g => add_le_add_left
     solid := fun f g hfg => by 
       rw [← coe_fn_le] at hfg
       simp_rw [Lp.norm_def, Ennreal.to_real_le_to_real (Lp.snorm_ne_top f) (Lp.snorm_ne_top g)]

@@ -53,7 +53,9 @@ instance :
 instance :
     ConcreteCategory
       TopCommRingCat.{u} where 
-  forget := { obj := fun R => R, map := fun R S f => f.val }
+  forget :=
+    { obj := fun R => R
+      map := fun R S f => f.val }
   forget_faithful := {  }
 
 /-- Construct a bundled `TopCommRing` from the underlying type and the appropriate typeclasses. -/

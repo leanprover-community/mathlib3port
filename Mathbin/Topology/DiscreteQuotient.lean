@@ -171,12 +171,13 @@ instance :
 instance : SemilatticeInf (DiscreteQuotient X) :=
   { DiscreteQuotient.partialOrder with
     inf := fun A B =>
-      { Rel := fun x y => A.Rel x y ∧ B.Rel x y,
+      { Rel := fun x y => A.Rel x y ∧ B.Rel x y
         Equiv :=
           ⟨fun a => ⟨A.refl _, B.refl _⟩, fun a b h => ⟨A.symm _ _ h.1, B.symm _ _ h.2⟩,
-            fun a b c h1 h2 => ⟨A.trans _ _ _ h1.1 h2.1, B.trans _ _ _ h1.2 h2.2⟩⟩,
-        clopen := fun x => IsClopen.inter (A.clopen _) (B.clopen _) },
-    inf_le_left := fun a b => by tauto, inf_le_right := fun a b => by tauto,
+            fun a b c h1 h2 => ⟨A.trans _ _ _ h1.1 h2.1, B.trans _ _ _ h1.2 h2.2⟩⟩
+        clopen := fun x => IsClopen.inter (A.clopen _) (B.clopen _) }
+    inf_le_left := fun a b => by tauto
+    inf_le_right := fun a b => by tauto
     le_inf := fun a b c h1 h2 => by tauto }
 
 instance : Inhabited (DiscreteQuotient X) :=
@@ -263,7 +264,10 @@ instance [DiscreteTopology X] :
     OrderBot
       (DiscreteQuotient
         X) where 
-  bot := { Rel := (· = ·), Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ }
+  bot :=
+    { Rel := (· = ·)
+      Equiv := eq_equivalence
+      clopen := fun x => is_clopen_discrete _ }
   bot_le := by 
     rintro S a b (h : a = b)
     rw [h]

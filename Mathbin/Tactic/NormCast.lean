@@ -217,21 +217,30 @@ unsafe instance : Inhabited norm_cast_cache :=
 /-- `add_elim cache e` adds `e` as an `elim` lemma to `cache`. -/
 unsafe def add_elim (cache : norm_cast_cache) (e : expr) : tactic norm_cast_cache := do
   let new_up ← cache.up.add e
-  return { up := new_up, down := cache, squash := cache }
+  return
+      { up := new_up
+        down := cache
+        squash := cache }
 #align norm_cast.add_elim norm_cast.add_elim
 
 /-- `add_move cache e` adds `e` as a `move` lemma to `cache`. -/
 unsafe def add_move (cache : norm_cast_cache) (e : expr) : tactic norm_cast_cache := do
   let new_up ← cache.up.add e true
   let new_down ← cache.down.add e
-  return { up := new_up, down := new_down, squash := cache }
+  return
+      { up := new_up
+        down := new_down
+        squash := cache }
 #align norm_cast.add_move norm_cast.add_move
 
 /-- `add_squash cache e` adds `e` as an `squash` lemma to `cache`. -/
 unsafe def add_squash (cache : norm_cast_cache) (e : expr) : tactic norm_cast_cache := do
   let new_squash ← cache.squash.add e
   let new_down ← cache.down.add e
-  return { up := cache, down := new_down, squash := new_squash }
+  return
+      { up := cache
+        down := new_down
+        squash := new_squash }
 #align norm_cast.add_squash norm_cast.add_squash
 
 /-- The type of the `norm_cast` attribute.
@@ -295,7 +304,10 @@ unsafe def mk_cache (attr : Thunk norm_cast_attr_ty) (names : List Name) : tacti
   let up ← up.add_simp `` ne_from_not_eq
   let down := cache.down
   let down ← down.add_simp `` coe_coe
-  pure { up, down, squash := cache }
+  pure
+      { up
+        down
+        squash := cache }
 #align norm_cast.mk_cache norm_cast.mk_cache
 
 /-- The `norm_cast` attribute.
@@ -322,7 +334,9 @@ unsafe def norm_cast_attr :
           let l ← classify_type ty
           norm_cast_attr decl l persistent prio
   before_unset := some fun _ _ => tactic.skip
-  cache_cfg := { mk_cache := mk_cache norm_cast_attr, dependencies := [] }
+  cache_cfg :=
+    { mk_cache := mk_cache norm_cast_attr
+      dependencies := [] }
 #align norm_cast.norm_cast_attr norm_cast.norm_cast_attr
 
 /-- Classify a declaration as a `norm_cast` rule. -/
@@ -546,7 +560,12 @@ unsafe def derive (e : expr) : tactic (expr × expr) := do
   let cache ← norm_cast_attr.get_cache
   let e ← instantiate_mvars e
   let cfg : SimpConfig :=
-    { zeta := false, beta := false, eta := false, proj := false, iota := false, iotaEqn := false,
+    { zeta := false
+      beta := false
+      eta := false
+      proj := false
+      iota := false
+      iotaEqn := false
       failIfUnchanged := false }
   let e0 := e
   let-- step 1: pre-processing of numerals
@@ -626,7 +645,9 @@ normalizes `h` and tries to use that to close the goal. -/
 unsafe def assumption_mod_cast : tactic Unit :=
   (decorate_error "assumption_mod_cast failed:") do
     let cfg : SimpConfig :=
-      { failIfUnchanged := false, canonizeInstances := false, canonizeProofs := false,
+      { failIfUnchanged := false
+        canonizeInstances := false
+        canonizeProofs := false
         proj := false }
     replace_at derive [] tt
     let ctx ← local_context
@@ -777,11 +798,12 @@ The implementation and behavior of the `norm_cast` family is described in detail
 <https://lean-forward.github.io/norm_cast/norm_cast.pdf>.
 -/
 add_tactic_doc
-  { Name := "norm_cast", category := DocCategory.tactic,
+  { Name := "norm_cast"
+    category := DocCategory.tactic
     declNames :=
       [`` tactic.interactive.norm_cast, `` tactic.interactive.rw_mod_cast,
         `` tactic.interactive.apply_mod_cast, `` tactic.interactive.assumption_mod_cast,
-        `` tactic.interactive.exact_mod_cast, `` tactic.interactive.push_cast],
+        `` tactic.interactive.exact_mod_cast, `` tactic.interactive.push_cast]
     tags := ["coercions", "simplification"] }
 
 /-- The `norm_cast` attribute should be given to lemmas that describe the
@@ -837,6 +859,8 @@ A full description of the tactic, and the use of each lemma category, can be fou
 <https://lean-forward.github.io/norm_cast/norm_cast.pdf>.
 -/
 add_tactic_doc
-  { Name := "norm_cast attributes", category := DocCategory.attr,
-    declNames := [`` norm_cast.norm_cast_attr], tags := ["coercions", "simplification"] }
+  { Name := "norm_cast attributes"
+    category := DocCategory.attr
+    declNames := [`` norm_cast.norm_cast_attr]
+    tags := ["coercions", "simplification"] }
 

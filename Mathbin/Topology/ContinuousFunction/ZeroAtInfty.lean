@@ -86,7 +86,9 @@ instance : CoeFun C₀(α, β) fun _ => α → β :=
 
 instance : CoeTC F C₀(α, β) :=
   ⟨fun f =>
-    { toFun := f, continuous_to_fun := map_continuous f, zero_at_infty' := zero_at_infty f }⟩
+    { toFun := f
+      continuous_to_fun := map_continuous f
+      zero_at_infty' := zero_at_infty f }⟩
 
 @[simp]
 theorem coe_to_continuous_fun (f : C₀(α, β)) : (f.toContinuousMap : α → β) = f :=
@@ -132,7 +134,10 @@ def ContinuousMap.liftZeroAtInfty [CompactSpace α] :
     C(α, β) ≃
       C₀(α,
         β) where 
-  toFun f := { toFun := f, continuous_to_fun := f.Continuous, zero_at_infty' := by simp }
+  toFun f :=
+    { toFun := f
+      continuous_to_fun := f.Continuous
+      zero_at_infty' := by simp }
   invFun f := f
   left_inv f := by 
     ext
@@ -537,10 +542,9 @@ counterparts on `α →ᵇ β`. Ultimately, when `β` is a C⋆-ring, then so is
 variable [TopologicalSpace β] [AddMonoid β] [StarAddMonoid β] [HasContinuousStar β]
 
 instance :
-    HasStar
-      C₀(α,
-        β) where star f :=
-    { toFun := fun x => star (f x), continuous_to_fun := (map_continuous f).star,
+    HasStar C₀(α, β) where star f :=
+    { toFun := fun x => star (f x)
+      continuous_to_fun := (map_continuous f).star
       zero_at_infty' := by
         simpa only [star_zero] using (continuous_star.tendsto (0 : β)).comp (zero_at_infty f) }
 

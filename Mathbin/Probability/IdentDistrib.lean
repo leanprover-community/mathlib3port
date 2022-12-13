@@ -78,26 +78,30 @@ open TopologicalSpace
 variable {μ : Measure α} {ν : Measure β} {f : α → γ} {g : β → γ}
 
 protected theorem refl (hf : AeMeasurable f μ) : IdentDistrib f f μ μ :=
-  { aeMeasurableFst := hf, aeMeasurableSnd := hf, map_eq := rfl }
+  { aeMeasurableFst := hf
+    aeMeasurableSnd := hf
+    map_eq := rfl }
 #align probability_theory.ident_distrib.refl ProbabilityTheory.IdentDistrib.refl
 
 protected theorem symm (h : IdentDistrib f g μ ν) : IdentDistrib g f ν μ :=
-  { aeMeasurableFst := h.aeMeasurableSnd, aeMeasurableSnd := h.aeMeasurableFst,
+  { aeMeasurableFst := h.aeMeasurableSnd
+    aeMeasurableSnd := h.aeMeasurableFst
     map_eq := h.map_eq.symm }
 #align probability_theory.ident_distrib.symm ProbabilityTheory.IdentDistrib.symm
 
 protected theorem trans {ρ : Measure δ} {h : δ → γ} (h₁ : IdentDistrib f g μ ν)
     (h₂ : IdentDistrib g h ν ρ) : IdentDistrib f h μ ρ :=
-  { aeMeasurableFst := h₁.aeMeasurableFst, aeMeasurableSnd := h₂.aeMeasurableSnd,
+  { aeMeasurableFst := h₁.aeMeasurableFst
+    aeMeasurableSnd := h₂.aeMeasurableSnd
     map_eq := h₁.map_eq.trans h₂.map_eq }
 #align probability_theory.ident_distrib.trans ProbabilityTheory.IdentDistrib.trans
 
 protected theorem compOfAeMeasurable {u : γ → δ} (h : IdentDistrib f g μ ν)
     (hu : AeMeasurable u (Measure.map f μ)) : IdentDistrib (u ∘ f) (u ∘ g) μ ν :=
-  { aeMeasurableFst := hu.compAeMeasurable h.aeMeasurableFst,
+  { aeMeasurableFst := hu.compAeMeasurable h.aeMeasurableFst
     aeMeasurableSnd := by 
       rw [h.map_eq] at hu
-      exact hu.comp_ae_measurable h.ae_measurable_snd,
+      exact hu.comp_ae_measurable h.ae_measurable_snd
     map_eq := by
       rw [← AeMeasurable.map_map_of_ae_measurable hu h.ae_measurable_fst, ←
         AeMeasurable.map_map_of_ae_measurable _ h.ae_measurable_snd, h.map_eq]
@@ -112,7 +116,9 @@ protected theorem comp {u : γ → δ} (h : IdentDistrib f g μ ν) (hu : Measur
 
 protected theorem ofAeEq {g : α → γ} (hf : AeMeasurable f μ) (heq : f =ᵐ[μ] g) :
     IdentDistrib f g μ μ :=
-  { aeMeasurableFst := hf, aeMeasurableSnd := hf.congr HEq, map_eq := Measure.map_congr HEq }
+  { aeMeasurableFst := hf
+    aeMeasurableSnd := hf.congr HEq
+    map_eq := Measure.map_congr HEq }
 #align probability_theory.ident_distrib.of_ae_eq ProbabilityTheory.IdentDistrib.ofAeEq
 
 theorem measure_mem_eq (h : IdentDistrib f g μ ν) {s : Set γ} (hs : MeasurableSet s) :

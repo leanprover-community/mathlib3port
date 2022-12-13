@@ -184,8 +184,9 @@ protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a
 #align rat.mul_nonneg Rat.mul_nonneg
 
 instance : LinearOrderedField ℚ :=
-  { Rat.field, Rat.linearOrder, Rat.semiring with zero_le_one := by decide,
-    add_le_add_left := fun a b ab c => Rat.add_le_add_left.2 ab,
+  { Rat.field, Rat.linearOrder, Rat.semiring with
+    zero_le_one := by decide
+    add_le_add_left := fun a b ab c => Rat.add_le_add_left.2 ab
     mul_pos := fun a b ha hb =>
       lt_of_le_of_ne (Rat.mul_nonneg (le_of_lt ha) (le_of_lt hb))
         (mul_ne_zero (ne_of_lt ha).symm (ne_of_lt hb).symm).symm }

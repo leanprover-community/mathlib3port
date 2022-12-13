@@ -74,7 +74,8 @@ def toDiagram :
 /-- Given a diagram of `structured_arrow X F`s, we may obtain a cone with cone point `X`. -/
 @[simps]
 def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F ⋙ F) :=
-  { x, π := { app := fun j => (G.obj j).Hom } }
+  { x
+    π := { app := fun j => (G.obj j).Hom } }
 #align
   category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
 
@@ -87,7 +88,7 @@ def toCone {X : D} (f : X ⟶ F.obj c.x) :
         map f ⋙ pre _ K F) where 
   x := mk f
   π :=
-    { app := fun j => homMk (c.π.app j) rfl,
+    { app := fun j => homMk (c.π.app j) rfl
       naturality' := fun j k g => by 
         ext
         dsimp
@@ -184,8 +185,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₁} D]
 attribute [local instance] has_finite_limits_of_has_finite_limits_of_size
 
 theorem cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C :=
-  { cocone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩,
-    cocone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩,
+  { cocone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩
+    cocone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
     Nonempty := ⟨⊤_ C⟩ }
 #align
   category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_has_finite_limits
@@ -222,8 +223,8 @@ noncomputable def lift : s.x ⟶ F.obj c.x :=
     (F.map <|
       hc.lift <|
         (Cones.postcompose
-              ({ app := fun X => 𝟙 _, naturality' := by simp } :
-                (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
+              ({  app := fun X => 𝟙 _
+                  naturality' := by simp } : (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
           (StructuredArrow.proj s.x F).mapCone s')
 #align
   category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
@@ -356,7 +357,7 @@ attribute [local simp] eq_to_hom_map
                           []
                           ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₁)] "]"]
                           [])])))]))))
-                ","
+                []
                 (Term.structInstField
                  (Term.structInstLVal `naturality' [])
                  ":="
@@ -418,7 +419,7 @@ attribute [local simp] eq_to_hom_map
                           []
                           ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₂)] "]"]
                           [])])))]))))
-                ","
+                []
                 (Term.structInstField
                  (Term.structInstLVal `naturality' [])
                  ":="
@@ -755,7 +756,7 @@ attribute [local simp] eq_to_hom_map
                          []
                          ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₁)] "]"]
                          [])])))]))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `naturality' [])
                 ":="
@@ -817,7 +818,7 @@ attribute [local simp] eq_to_hom_map
                          []
                          ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `h₂)] "]"]
                          [])])))]))))
-               ","
+               []
                (Term.structInstField
                 (Term.structInstLVal `naturality' [])
                 ":="
@@ -1795,12 +1796,12 @@ theorem
           α₁
             : to_diagram F.map_cone c ⋙ map f₁ ⟶ to_diagram s
             :=
-            { app := fun X => eq_to_hom by simp [ ← h₁ ] , naturality' := fun _ _ _ => by ext simp }
+            { app := fun X => eq_to_hom by simp [ ← h₁ ] naturality' := fun _ _ _ => by ext simp }
         let
           α₂
             : to_diagram F.map_cone c ⋙ map f₂ ⟶ to_diagram s
             :=
-            { app := fun X => eq_to_hom by simp [ ← h₂ ] , naturality' := fun _ _ _ => by ext simp }
+            { app := fun X => eq_to_hom by simp [ ← h₂ ] naturality' := fun _ _ _ => by ext simp }
         let
           c₁
             : cone to_diagram s ⋙ pre s.X K F
@@ -1848,8 +1849,8 @@ noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F
   intro K; constructor
   intro c hc
   exact
-    { lift := preserves_finite_limits_of_flat.lift F hc,
-      fac' := preserves_finite_limits_of_flat.fac F hc,
+    { lift := preserves_finite_limits_of_flat.lift F hc
+      fac' := preserves_finite_limits_of_flat.fac F hc
       uniq' := fun s m h => by 
         apply preserves_finite_limits_of_flat.uniq F hc
         exact h

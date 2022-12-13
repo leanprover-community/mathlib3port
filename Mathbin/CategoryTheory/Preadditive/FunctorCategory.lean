@@ -28,45 +28,45 @@ instance functorCategoryPreadditive :
         D) where 
   homGroup F G :=
     { add := fun α β =>
-        { app := fun X => α.app X + β.app X,
+        { app := fun X => α.app X + β.app X
           naturality' := by 
             intros
-            rw [comp_add, add_comp, α.naturality, β.naturality] },
+            rw [comp_add, add_comp, α.naturality, β.naturality] }
       zero :=
-        { app := fun X => 0,
+        { app := fun X => 0
           naturality' := by 
             intros
-            rw [zero_comp, comp_zero] },
+            rw [zero_comp, comp_zero] }
       neg := fun α =>
-        { app := fun X => -α.app X,
+        { app := fun X => -α.app X
           naturality' := by 
             intros
-            rw [comp_neg, neg_comp, α.naturality] },
+            rw [comp_neg, neg_comp, α.naturality] }
       sub := fun α β =>
-        { app := fun X => α.app X - β.app X,
+        { app := fun X => α.app X - β.app X
           naturality' := by 
             intros
-            rw [comp_sub, sub_comp, α.naturality, β.naturality] },
+            rw [comp_sub, sub_comp, α.naturality, β.naturality] }
       add_assoc := by 
         intros
         ext
-        apply add_assoc,
+        apply add_assoc
       zero_add := by 
         intros
         ext
-        apply zero_add,
+        apply zero_add
       add_zero := by 
         intros
         ext
-        apply add_zero,
+        apply add_zero
       sub_eq_add_neg := by 
         intros
         ext
-        apply sub_eq_add_neg,
+        apply sub_eq_add_neg
       add_left_neg := by 
         intros
         ext
-        apply add_left_neg,
+        apply add_left_neg
       add_comm := by 
         intros
         ext

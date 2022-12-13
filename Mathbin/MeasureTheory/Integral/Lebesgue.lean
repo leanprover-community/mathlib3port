@@ -661,7 +661,8 @@ theorem smul_eq_map [HasSmul K β] (k : K) (f : α →ₛ β) : k • f = f.map 
 #align measure_theory.simple_func.smul_eq_map MeasureTheory.SimpleFunc.smul_eq_map
 
 instance [Preorder β] : Preorder (α →ₛ β) :=
-  { SimpleFunc.hasLe with le_refl := fun f a => le_rfl,
+  { SimpleFunc.hasLe with 
+    le_refl := fun f a => le_rfl
     le_trans := fun f g h hfg hgh a => le_trans (hfg _) (hgh a) }
 
 instance [PartialOrder β] : PartialOrder (α →ₛ β) :=
@@ -679,13 +680,17 @@ instance [LE β] [OrderTop β] :
   le_top f a := le_top
 
 instance [SemilatticeInf β] : SemilatticeInf (α →ₛ β) :=
-  { SimpleFunc.partialOrder with inf := (· ⊓ ·), inf_le_left := fun f g a => inf_le_left,
-    inf_le_right := fun f g a => inf_le_right,
+  { SimpleFunc.partialOrder with 
+    inf := (· ⊓ ·)
+    inf_le_left := fun f g a => inf_le_left
+    inf_le_right := fun f g a => inf_le_right
     le_inf := fun f g h hfh hgh a => le_inf (hfh a) (hgh a) }
 
 instance [SemilatticeSup β] : SemilatticeSup (α →ₛ β) :=
-  { SimpleFunc.partialOrder with sup := (· ⊔ ·), le_sup_left := fun f g a => le_sup_left,
-    le_sup_right := fun f g a => le_sup_right,
+  { SimpleFunc.partialOrder with 
+    sup := (· ⊔ ·)
+    le_sup_left := fun f g a => le_sup_left
+    le_sup_right := fun f g a => le_sup_right
     sup_le := fun f g h hfh hgh a => sup_le (hfh a) (hgh a) }
 
 instance [Lattice β] : Lattice (α →ₛ β) :=
@@ -1010,7 +1015,8 @@ def lintegralₗ {m : MeasurableSpace α} :
       Measure α →ₗ[ℝ≥0∞]
         ℝ≥0∞ where 
   toFun f :=
-    { toFun := lintegral f, map_add' := by simp [lintegral, mul_add, Finset.sum_add_distrib],
+    { toFun := lintegral f
+      map_add' := by simp [lintegral, mul_add, Finset.sum_add_distrib]
       map_smul' := fun c μ => by simp [lintegral, mul_left_comm _ c, Finset.mul_sum] }
   map_add' f g := LinearMap.ext fun μ => add_lintegral f g
   map_smul' c f := LinearMap.ext fun μ => const_mul_lintegral f c

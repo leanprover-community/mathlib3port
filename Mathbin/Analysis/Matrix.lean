@@ -545,7 +545,8 @@ declared as an instance because there are several natural choices for defining t
 matrix. -/
 @[local instance]
 def frobeniusNormedRing [DecidableEq m] : NormedRing (Matrix m m α) :=
-  { Matrix.frobeniusSeminormedAddCommGroup with norm := HasNorm.norm,
+  { Matrix.frobeniusSeminormedAddCommGroup with
+    norm := HasNorm.norm
     norm_mul := frobenius_norm_mul }
 #align matrix.frobenius_normed_ring Matrix.frobeniusNormedRing
 

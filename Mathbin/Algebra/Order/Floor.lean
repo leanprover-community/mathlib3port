@@ -548,15 +548,18 @@ instance : FloorRing ℤ where
 /-- A `floor_ring` constructor from the `floor` function alone. -/
 def FloorRing.ofFloor (α) [LinearOrderedRing α] (floor : α → ℤ)
     (gc_coe_floor : GaloisConnection coe floor) : FloorRing α :=
-  { floor, ceil := fun a => -floor (-a), gc_coe_floor,
+  { floor
+    ceil := fun a => -floor (-a)
+    gc_coe_floor
     gc_ceil_coe := fun a z => by rw [neg_le, ← gc_coe_floor, Int.cast_neg, neg_le_neg_iff] }
 #align floor_ring.of_floor FloorRing.ofFloor
 
 /-- A `floor_ring` constructor from the `ceil` function alone. -/
 def FloorRing.ofCeil (α) [LinearOrderedRing α] (ceil : α → ℤ)
     (gc_ceil_coe : GaloisConnection ceil coe) : FloorRing α :=
-  { floor := fun a => -ceil (-a), ceil,
-    gc_coe_floor := fun a z => by rw [le_neg, gc_ceil_coe, Int.cast_neg, neg_le_neg_iff],
+  { floor := fun a => -ceil (-a)
+    ceil
+    gc_coe_floor := fun a z => by rw [le_neg, gc_ceil_coe, Int.cast_neg, neg_le_neg_iff]
     gc_ceil_coe }
 #align floor_ring.of_ceil FloorRing.ofCeil
 

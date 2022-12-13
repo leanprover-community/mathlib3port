@@ -169,7 +169,7 @@ theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α =
   { comap_uniformity := by 
       rw [← uniformity_translate_mul a, comap_map]
       rintro ⟨p₁, p₂⟩ ⟨q₁, q₂⟩
-      simp (config := { contextual := true }) [Prod.eq_iff_fst_eq_snd_eq],
+      simp (config := { contextual := true }) [Prod.eq_iff_fst_eq_snd_eq]
     inj := mul_left_injective a }
 #align uniform_embedding_translate_mul uniform_embedding_translate_mul
 

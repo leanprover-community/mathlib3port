@@ -77,7 +77,8 @@ structure UniformEmbedding (f : α → β) extends UniformInducing f : Prop wher
 
 theorem uniform_embedding_subtype_val {p : α → Prop} :
     UniformEmbedding (Subtype.val : Subtype p → α) :=
-  { comap_uniformity := rfl, inj := Subtype.val_injective }
+  { comap_uniformity := rfl
+    inj := Subtype.val_injective }
 #align uniform_embedding_subtype_val uniform_embedding_subtype_val
 
 theorem uniform_embedding_subtype_coe {p : α → Prop} : UniformEmbedding (coe : Subtype p → α) :=
@@ -88,7 +89,7 @@ theorem uniform_embedding_set_inclusion {s t : Set α} (hst : s ⊆ t) :
     UniformEmbedding (inclusion hst) :=
   { comap_uniformity := by
       erw [uniformity_subtype, uniformity_subtype, comap_comap]
-      congr ,
+      congr
     inj := inclusion_injective hst }
 #align uniform_embedding_set_inclusion uniform_embedding_set_inclusion
 
@@ -131,7 +132,7 @@ theorem Equiv.uniform_embedding {α β : Type _} [UniformSpace α] [UniformSpace
         rw [← map_equiv_symm (f.prod_congr f)]
         exact h₂
       · rw [← map_le_iff_le_comap]
-        exact h₁,
+        exact h₁
     inj := f.Injective }
 #align equiv.uniform_embedding Equiv.uniform_embedding
 
@@ -226,16 +227,20 @@ theorem UniformInducing.prod {α' : Type _} {β' : Type _} [UniformSpace α'] [U
 
 theorem UniformInducing.dense_inducing {f : α → β} (h : UniformInducing f) (hd : DenseRange f) :
     DenseInducing f :=
-  { dense := hd, induced := h.Inducing.induced }
+  { dense := hd
+    induced := h.Inducing.induced }
 #align uniform_inducing.dense_inducing UniformInducing.dense_inducing
 
 theorem UniformEmbedding.embedding {f : α → β} (h : UniformEmbedding f) : Embedding f :=
-  { induced := h.to_uniform_inducing.Inducing.induced, inj := h.inj }
+  { induced := h.to_uniform_inducing.Inducing.induced
+    inj := h.inj }
 #align uniform_embedding.embedding UniformEmbedding.embedding
 
 theorem UniformEmbedding.dense_embedding {f : α → β} (h : UniformEmbedding f) (hd : DenseRange f) :
     DenseEmbedding f :=
-  { dense := hd, inj := h.inj, induced := h.Embedding.induced }
+  { dense := hd
+    inj := h.inj
+    induced := h.Embedding.induced }
 #align uniform_embedding.dense_embedding UniformEmbedding.dense_embedding
 
 theorem closedEmbeddingOfSpacedOut {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β]
@@ -285,7 +290,7 @@ theorem uniform_embedding_subtype_emb (p : α → Prop) {e : α → β} (ue : Un
     (de : DenseEmbedding e) : UniformEmbedding (DenseEmbedding.subtypeEmb p e) :=
   { comap_uniformity := by
       simp [comap_comap, (· ∘ ·), DenseEmbedding.subtypeEmb, uniformity_subtype,
-        ue.comap_uniformity.symm],
+        ue.comap_uniformity.symm]
     inj := (de.Subtype p).inj }
 #align uniform_embedding_subtype_emb uniform_embedding_subtype_emb
 
@@ -452,7 +457,8 @@ def Embedding.comapUniformSpace {α β} [TopologicalSpace α] [u : UniformSpace 
 
 theorem Embedding.to_uniform_embedding {α β} [TopologicalSpace α] [u : UniformSpace β] (f : α → β)
     (h : Embedding f) : @UniformEmbedding α β (h.comapUniformSpace f) u f :=
-  { comap_uniformity := rfl, inj := h.inj }
+  { comap_uniformity := rfl
+    inj := h.inj }
 #align embedding.to_uniform_embedding Embedding.to_uniform_embedding
 
 section UniformExtension

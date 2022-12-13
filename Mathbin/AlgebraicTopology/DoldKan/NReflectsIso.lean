@@ -65,8 +65,7 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
     -- induction step
     · haveI := hn
       use
-        φ
-          { a := P_infty.f (n + 1) ≫ (inv (N₁.map f)).f.f (n + 1),
+        φ { a := P_infty.f (n + 1) ≫ (inv (N₁.map f)).f.f (n + 1)
             b := fun i => inv (f.app (op [n])) ≫ X.σ i }
       simp only [morph_components.id, ← id_φ, ← pre_comp_φ, pre_comp, ← post_comp_φ, post_comp,
         P_infty_f_naturality_assoc, is_iso.hom_inv_id_assoc, assoc, is_iso.inv_hom_id_assoc,

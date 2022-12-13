@@ -150,10 +150,11 @@ unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → t
 #align tactic.interactive.rcongr tactic.interactive.rcongr
 
 add_tactic_doc
-  { Name := "congr'", category := DocCategory.tactic,
-    declNames :=
-      [`tactic.interactive.congr', `tactic.interactive.congr, `tactic.interactive.rcongr],
-    tags := ["congruence"], inheritDescriptionFrom := `tactic.interactive.congr' }
+  { Name := "congr'"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.congr', `tactic.interactive.congr, `tactic.interactive.rcongr]
+    tags := ["congruence"]
+    inheritDescriptionFrom := `tactic.interactive.congr' }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -238,7 +239,9 @@ add_tactic_doc
 #align tactic.interactive.convert tactic.interactive.convert
 
 add_tactic_doc
-  { Name := "convert", category := DocCategory.tactic, declNames := [`tactic.interactive.convert],
+  { Name := "convert"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.convert]
     tags := ["congruence"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -279,9 +282,11 @@ unsafe def ac_change (r : parse texpr) (n : parse (parser.optional (tk "using" *
 #align tactic.interactive.ac_change tactic.interactive.ac_change
 
 add_tactic_doc
-  { Name := "convert_to", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.convert_to, `tactic.interactive.ac_change],
-    tags := ["congruence"], inheritDescriptionFrom := `tactic.interactive.convert_to }
+  { Name := "convert_to"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.convert_to, `tactic.interactive.ac_change]
+    tags := ["congruence"]
+    inheritDescriptionFrom := `tactic.interactive.convert_to }
 
 end Interactive
 

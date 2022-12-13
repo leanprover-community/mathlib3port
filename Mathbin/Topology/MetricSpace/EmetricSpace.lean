@@ -60,11 +60,11 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
     (edist_comm : ∀ x y : α, edist x y = edist y x)
     (edist_triangle : ∀ x y z : α, edist x z ≤ edist x y + edist y z) : UniformSpace α :=
   UniformSpace.ofCore
-    { uniformity := ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε },
+    { uniformity := ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε }
       refl :=
         le_infi fun ε =>
           le_infi <| by
-            simp (config := { contextual := true }) [Set.subset_def, idRel, edist_self, (· > ·)],
+            simp (config := { contextual := true }) [Set.subset_def, idRel, edist_self, (· > ·)]
       comp :=
         le_infi fun ε =>
           le_infi fun h =>
@@ -79,7 +79,7 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
                   _ < ε / 2 + ε / 2 := Ennreal.add_lt_add hac hcb
                   _ = ε := by rw [Ennreal.add_halves]
                   
-              simpa [compRel] ,
+              simpa [compRel]
       symm :=
         tendsto_infi.2 fun ε =>
           tendsto_infi.2 fun h =>

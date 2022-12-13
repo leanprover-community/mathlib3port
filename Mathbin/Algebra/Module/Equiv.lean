@@ -108,7 +108,9 @@ variable [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R}
 @[nolint dangerous_instance]
 instance (priority := 100) [RingHomInvPair σ σ'] [RingHomInvPair σ' σ]
     [s : SemilinearEquivClass F σ M M₂] : SemilinearMapClass F σ M M₂ :=
-  { s with coe := (coe : F → M → M₂), coe_injective' := @FunLike.coe_injective F _ _ _ }
+  { s with 
+    coe := (coe : F → M → M₂)
+    coe_injective' := @FunLike.coe_injective F _ _ _ }
 
 end SemilinearEquivClass
 
@@ -273,7 +275,8 @@ include module_M module_S_M₂ re₁ re₂
 @[symm]
 def symm (e : M ≃ₛₗ[σ] M₂) : M₂ ≃ₛₗ[σ'] M :=
   { e.toLinearMap.inverse e.invFun e.left_inv e.right_inv, e.toEquiv.symm with
-    toFun := e.toLinearMap.inverse e.invFun e.left_inv e.right_inv, invFun := e.toEquiv.symm.invFun,
+    toFun := e.toLinearMap.inverse e.invFun e.left_inv e.right_inv
+    invFun := e.toEquiv.symm.invFun
     map_smul' := fun r x => by rw [map_smulₛₗ] }
 #align linear_equiv.symm LinearEquiv.symm
 
@@ -564,7 +567,9 @@ theorem mk_coe' (f h₁ h₂ h₃ h₄) : (LinearEquiv.mk f h₁ h₂ (⇑e) h�
 @[simp]
 theorem symm_mk (f h₁ h₂ h₃ h₄) :
     (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm =
-      { (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm with toFun := f, invFun := e } :=
+      { (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm with
+        toFun := f
+        invFun := e } :=
   rfl
 #align linear_equiv.symm_mk LinearEquiv.symm_mk
 
@@ -603,7 +608,9 @@ def RingEquiv.toSemilinearEquiv (f : R ≃+* S) : by
     haveI := RingHomInvPair.of_ring_equiv f <;>
         haveI := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;>
       exact R ≃ₛₗ[(↑f : R →+* S)] S :=
-  { f with toFun := f, map_smul' := f.map_mul }
+  { f with 
+    toFun := f
+    map_smul' := f.map_mul }
 #align ring_equiv.to_semilinear_equiv RingEquiv.toSemilinearEquiv
 
 variable [Semiring R₁] [Semiring R₂] [Semiring R₃]
@@ -634,7 +641,10 @@ equivalence from `M` to `M₂` is also an `R`-linear equivalence.
 See also `linear_map.restrict_scalars`. -/
 @[simps]
 def restrictScalars (f : M ≃ₗ[S] M₂) : M ≃ₗ[R] M₂ :=
-  { f.toLinearMap.restrictScalars R with toFun := f, invFun := f.symm, left_inv := f.left_inv,
+  { f.toLinearMap.restrictScalars R with 
+    toFun := f
+    invFun := f.symm
+    left_inv := f.left_inv
     right_inv := f.right_inv }
 #align linear_equiv.restrict_scalars LinearEquiv.restrictScalars
 
@@ -716,8 +726,11 @@ variable (M M₂) [Module R M] [Module R M₂] [Subsingleton M] [Subsingleton M�
 /-- Any two modules that are subsingletons are isomorphic. -/
 @[simps]
 def ofSubsingleton : M ≃ₗ[R] M₂ :=
-  { (0 : M →ₗ[R] M₂) with toFun := fun _ => 0, invFun := fun _ => 0,
-    left_inv := fun x => Subsingleton.elim _ _, right_inv := fun x => Subsingleton.elim _ _ }
+  { (0 : M →ₗ[R] M₂) with 
+    toFun := fun _ => 0
+    invFun := fun _ => 0
+    left_inv := fun x => Subsingleton.elim _ _
+    right_inv := fun x => Subsingleton.elim _ _ }
 #align linear_equiv.of_subsingleton LinearEquiv.ofSubsingleton
 
 @[simp]
@@ -739,7 +752,10 @@ namespace Module
 def compHom.toLinearEquiv {R S : Type _} [Semiring R] [Semiring S] (g : R ≃+* S) :
     haveI := comp_hom S (↑g : R →+* S)
     R ≃ₗ[R] S :=
-  { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
+  { g with 
+    toFun := (g : R → S)
+    invFun := (g.symm : S → R)
+    map_smul' := g.map_mul }
 #align module.comp_hom.to_linear_equiv Module.compHom.toLinearEquiv
 
 end Module

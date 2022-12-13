@@ -225,7 +225,10 @@ variable {A}
 theorem comp_surjective {f : A →+* B} {g : B →+* C} (hf : f.FiniteType) (hg : Surjective g) :
     (g.comp f).FiniteType :=
   @Algebra.FiniteType.ofSurjective A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra hf
-    { g with toFun := g, commutes' := fun a => rfl } hg
+    { g with 
+      toFun := g
+      commutes' := fun a => rfl }
+    hg
 #align ring_hom.finite_type.comp_surjective RingHom.FiniteType.comp_surjective
 
 theorem of_surjective (f : A →+* B) (hf : Surjective f) : f.FiniteType := by

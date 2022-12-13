@@ -365,8 +365,10 @@ theorem chain_lt (s : Flag α) : IsChain (· < ·) (s : Set α) := fun a ha b hb
 
 instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] (s : Flag α) :
     LinearOrder s :=
-  { Subtype.partialOrder _ with le_total := fun a b => s.le_or_le a.2 b.2,
-    DecidableEq := Subtype.decidableEq, decidableLe := Subtype.decidableLe,
+  { Subtype.partialOrder _ with 
+    le_total := fun a b => s.le_or_le a.2 b.2
+    DecidableEq := Subtype.decidableEq
+    decidableLe := Subtype.decidableLe
     decidableLt := Subtype.decidableLt }
 
 end PartialOrder

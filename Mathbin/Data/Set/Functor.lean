@@ -66,7 +66,9 @@ instance : CommApplicative (Set : Type u → Type u) :=
   ⟨fun α β s t => prod_image_seq_comm s t⟩
 
 instance : Alternative Set :=
-  { Set.monad with orelse := fun α => (· ∪ ·), failure := fun α => ∅ }
+  { Set.monad with 
+    orelse := fun α => (· ∪ ·)
+    failure := fun α => ∅ }
 
 end Set
 

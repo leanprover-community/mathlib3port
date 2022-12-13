@@ -82,7 +82,8 @@ variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
 /-- For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
 types, `matrix.reindex`, is an equivalence of Lie algebras. -/
 def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
-  { Matrix.reindexLinearEquiv R R e e with toFun := Matrix.reindex e e,
+  { Matrix.reindexLinearEquiv R R e e with
+    toFun := Matrix.reindex e e
     map_lie' := fun M N => by
       simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply,
         Matrix.submatrix_mul_equiv, Matrix.mul_eq_mul, Matrix.submatrix_sub, Pi.sub_apply] }

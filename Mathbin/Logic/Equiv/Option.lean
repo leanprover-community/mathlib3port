@@ -53,9 +53,9 @@ theorem optionCongr_refl : optionCongr (Equiv.refl α) = Equiv.refl _ :=
 
 /- warning: equiv.option_congr_symm -> Equiv.optionCongr_symm is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} α β), Eq.{max 1 (max (succ u_2) (succ u_1)) (succ u_1) (succ u_2)} (Equiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) (Equiv.symm.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β) (Equiv.optionCongr.{u_1, u_2} α β e)) (Equiv.optionCongr.{u_2, u_1} β α (Equiv.symm.{succ u_1, succ u_2} α β e))
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β), Eq.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2)} (Equiv.{succ u2, succ u1} (Option.{u2} β) (Option.{u1} α)) (Equiv.symm.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β) (Equiv.optionCongr.{u1, u2} α β e)) (Equiv.optionCongr.{u2, u1} β α (Equiv.symm.{succ u1, succ u2} α β e))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} α β), Eq.{max (succ u_1) (succ u_2)} (Equiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) (Equiv.symm.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β) (Equiv.optionCongr.{u_1, u_2} α β e)) (Equiv.optionCongr.{u_2, u_1} β α (Equiv.symm.{succ u_1, succ u_2} α β e))
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} α β), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} (Option.{u1} β) (Option.{u2} α)) (Equiv.symm.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β) (Equiv.optionCongr.{u2, u1} α β e)) (Equiv.optionCongr.{u1, u2} β α (Equiv.symm.{succ u2, succ u1} α β e))
 Case conversion may be inaccurate. Consider using '#align equiv.option_congr_symm Equiv.optionCongr_symmₓ'. -/
 @[simp]
 theorem optionCongr_symm (e : α ≃ β) : (optionCongr e).symm = optionCongr e.symm :=
@@ -64,9 +64,9 @@ theorem optionCongr_symm (e : α ≃ β) : (optionCongr e).symm = optionCongr e.
 
 /- warning: equiv.option_congr_trans -> Equiv.optionCongr_trans is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (e₁ : Equiv.{succ u_1, succ u_2} α β) (e₂ : Equiv.{succ u_2, succ u_3} β γ), Eq.{max 1 (max (succ u_1) (succ u_3)) (succ u_3) (succ u_1)} (Equiv.{succ u_1, succ u_3} (Option.{u_1} α) (Option.{u_3} γ)) (Equiv.trans.{succ u_1, succ u_2, succ u_3} (Option.{u_1} α) (Option.{u_2} β) (Option.{u_3} γ) (Equiv.optionCongr.{u_1, u_2} α β e₁) (Equiv.optionCongr.{u_2, u_3} β γ e₂)) (Equiv.optionCongr.{u_1, u_3} α γ (Equiv.trans.{succ u_1, succ u_2, succ u_3} α β γ e₁ e₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (e₁ : Equiv.{succ u1, succ u2} α β) (e₂ : Equiv.{succ u2, succ u3} β γ), Eq.{max 1 (max (succ u1) (succ u3)) (succ u3) (succ u1)} (Equiv.{succ u1, succ u3} (Option.{u1} α) (Option.{u3} γ)) (Equiv.trans.{succ u1, succ u2, succ u3} (Option.{u1} α) (Option.{u2} β) (Option.{u3} γ) (Equiv.optionCongr.{u1, u2} α β e₁) (Equiv.optionCongr.{u2, u3} β γ e₂)) (Equiv.optionCongr.{u1, u3} α γ (Equiv.trans.{succ u1, succ u2, succ u3} α β γ e₁ e₂))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} (e₁ : Equiv.{succ u_1, succ u_2} α β) (e₂ : Equiv.{succ u_2, succ u_3} β γ), Eq.{max (succ u_1) (succ u_3)} (Equiv.{succ u_1, succ u_3} (Option.{u_1} α) (Option.{u_3} γ)) (Equiv.trans.{succ u_1, succ u_2, succ u_3} (Option.{u_1} α) (Option.{u_2} β) (Option.{u_3} γ) (Equiv.optionCongr.{u_1, u_2} α β e₁) (Equiv.optionCongr.{u_2, u_3} β γ e₂)) (Equiv.optionCongr.{u_1, u_3} α γ (Equiv.trans.{succ u_1, succ u_2, succ u_3} α β γ e₁ e₂))
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (e₁ : Equiv.{succ u3, succ u2} α β) (e₂ : Equiv.{succ u2, succ u1} β γ), Eq.{max (succ u3) (succ u1)} (Equiv.{succ u3, succ u1} (Option.{u3} α) (Option.{u1} γ)) (Equiv.trans.{succ u3, succ u2, succ u1} (Option.{u3} α) (Option.{u2} β) (Option.{u1} γ) (Equiv.optionCongr.{u3, u2} α β e₁) (Equiv.optionCongr.{u2, u1} β γ e₂)) (Equiv.optionCongr.{u3, u1} α γ (Equiv.trans.{succ u3, succ u2, succ u1} α β γ e₁ e₂))
 Case conversion may be inaccurate. Consider using '#align equiv.option_congr_trans Equiv.optionCongr_transₓ'. -/
 @[simp]
 theorem optionCongr_trans (e₁ : α ≃ β) (e₂ : β ≃ γ) :
@@ -76,9 +76,9 @@ theorem optionCongr_trans (e₁ : α ≃ β) (e₂ : β ≃ γ) :
 
 /- warning: equiv.option_congr_eq_equiv_function_map_equiv -> Equiv.optionCongr_eq_equivFunctor_mapEquiv is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_1}} (e : Equiv.{succ u_1, succ u_1} α β), Eq.{max 1 (succ u_1)} (Equiv.{succ u_1, succ u_1} (Option.{u_1} α) (Option.{u_1} β)) (Equiv.optionCongr.{u_1, u_1} α β e) (EquivFunctor.mapEquiv.{u_1, u_1} Option.{u_1} (EquivFunctor.ofLawfulFunctor.{u_1, u_1} Option.{u_1} (Applicative.toFunctor.{u_1, u_1} Option.{u_1} (Monad.toApplicative.{u_1, u_1} Option.{u_1} Option.monad.{u_1})) (LawfulApplicative.to_is_lawful_functor.{u_1, u_1} Option.{u_1} (Monad.toApplicative.{u_1, u_1} Option.{u_1} Option.monad.{u_1}) (LawfulMonad.to_is_lawful_applicative.{u_1, u_1} Option.{u_1} Option.monad.{u_1} Option.is_lawful_monad.{u_1}))) α β e)
+  forall {α : Type.{u1}} {β : Type.{u1}} (e : Equiv.{succ u1, succ u1} α β), Eq.{succ u1} (Equiv.{succ u1, succ u1} (Option.{u1} α) (Option.{u1} β)) (Equiv.optionCongr.{u1, u1} α β e) (EquivFunctor.mapEquiv.{u1, u1} Option.{u1} (EquivFunctor.ofLawfulFunctor.{u1, u1} Option.{u1} (Applicative.toFunctor.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) (LawfulApplicative.to_is_lawful_functor.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1}) (LawfulMonad.to_is_lawful_applicative.{u1, u1} Option.{u1} Option.monad.{u1} Option.is_lawful_monad.{u1}))) α β e)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_1}} (e : Equiv.{succ u_1, succ u_1} α β), Eq.{succ u_1} (Equiv.{succ u_1, succ u_1} (Option.{u_1} α) (Option.{u_1} β)) (Equiv.optionCongr.{u_1, u_1} α β e) (EquivFunctor.mapEquiv.{u_1, u_1} Option.{u_1} (EquivFunctor.ofLawfulFunctor.{u_1, u_1} Option.{u_1} instFunctorOption.{u_1} instLawfulFunctorOptionInstFunctorOption.{u_1}) α β e)
+  forall {α : Type.{u1}} {β : Type.{u1}} (e : Equiv.{succ u1, succ u1} α β), Eq.{succ u1} (Equiv.{succ u1, succ u1} (Option.{u1} α) (Option.{u1} β)) (Equiv.optionCongr.{u1, u1} α β e) (EquivFunctor.mapEquiv.{u1, u1} Option.{u1} (EquivFunctor.ofLawfulFunctor.{u1, u1} Option.{u1} instFunctorOption.{u1} instLawfulFunctorOptionInstFunctorOption.{u1}) α β e)
 Case conversion may be inaccurate. Consider using '#align equiv.option_congr_eq_equiv_function_map_equiv Equiv.optionCongr_eq_equivFunctor_mapEquivₓ'. -/
 /-- When `α` and `β` are in the same universe, this is the same as the result of
 `equiv_functor.map_equiv`. -/
@@ -150,9 +150,9 @@ def removeNone : α ≃ β where
 
 /- warning: equiv.remove_none_symm -> Equiv.removeNone_symm is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)), Eq.{max 1 (max (succ u_2) (succ u_1)) (succ u_1) (succ u_2)} (Equiv.{succ u_2, succ u_1} β α) (Equiv.symm.{succ u_1, succ u_2} α β (Equiv.removeNone.{u_1, u_2} α β e)) (Equiv.removeNone.{u_2, u_1} β α (Equiv.symm.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β) e))
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β)), Eq.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2)} (Equiv.{succ u2, succ u1} β α) (Equiv.symm.{succ u1, succ u2} α β (Equiv.removeNone.{u1, u2} α β e)) (Equiv.removeNone.{u2, u1} β α (Equiv.symm.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β) e))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)), Eq.{max (succ u_1) (succ u_2)} (Equiv.{succ u_2, succ u_1} β α) (Equiv.symm.{succ u_1, succ u_2} α β (Equiv.removeNone.{u_1, u_2} α β e)) (Equiv.removeNone.{u_2, u_1} β α (Equiv.symm.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β) e))
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β)), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} β α) (Equiv.symm.{succ u2, succ u1} α β (Equiv.removeNone.{u2, u1} α β e)) (Equiv.removeNone.{u1, u2} β α (Equiv.symm.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β) e))
 Case conversion may be inaccurate. Consider using '#align equiv.remove_none_symm Equiv.removeNone_symmₓ'. -/
 @[simp]
 theorem removeNone_symm : (removeNone e).symm = removeNone e.symm :=
@@ -174,9 +174,9 @@ theorem removeNone_none {x : α} (h : e (some x) = none) : some (removeNone e x)
 
 /- warning: equiv.option_symm_apply_none_iff -> Equiv.option_symm_apply_none_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)), Iff (Eq.{succ u_1} (Option.{u_1} α) (coeFn.{max 1 (max (succ u_2) (succ u_1)) (succ u_1) (succ u_2), max (succ u_2) (succ u_1)} (Equiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) (fun (_x : Equiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) => (Option.{u_2} β) -> (Option.{u_1} α)) (Equiv.hasCoeToFun.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) (Equiv.symm.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β) e) (Option.none.{u_2} β)) (Option.none.{u_1} α)) (Eq.{succ u_2} (Option.{u_2} β) (coeFn.{max 1 (max (succ u_1) (succ u_2)) (succ u_2) (succ u_1), max (succ u_1) (succ u_2)} (Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) (fun (_x : Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) => (Option.{u_1} α) -> (Option.{u_2} β)) (Equiv.hasCoeToFun.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) e (Option.none.{u_1} α)) (Option.none.{u_2} β))
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β)), Iff (Eq.{succ u1} (Option.{u1} α) (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} (Option.{u2} β) (Option.{u1} α)) (fun (_x : Equiv.{succ u2, succ u1} (Option.{u2} β) (Option.{u1} α)) => (Option.{u2} β) -> (Option.{u1} α)) (Equiv.hasCoeToFun.{succ u2, succ u1} (Option.{u2} β) (Option.{u1} α)) (Equiv.symm.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β) e) (Option.none.{u2} β)) (Option.none.{u1} α)) (Eq.{succ u2} (Option.{u2} β) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β)) (fun (_x : Equiv.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β)) => (Option.{u1} α) -> (Option.{u2} β)) (Equiv.hasCoeToFun.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β)) e (Option.none.{u1} α)) (Option.none.{u2} β))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)), Iff (Eq.{succ u_1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u_2} β) => Option.{u_1} α) (Option.none.{u_2} β)) (FunLike.coe.{max (succ u_1) (succ u_2), succ u_2, succ u_1} (Equiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) (Option.{u_2} β) (fun (a : Option.{u_2} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u_2} β) => Option.{u_1} α) a) (EmbeddingLike.toFunLike.{max (succ u_1) (succ u_2), succ u_2, succ u_1} (Equiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) (Option.{u_2} β) (Option.{u_1} α) (EquivLike.toEmbeddingLike.{max (succ u_1) (succ u_2), succ u_2, succ u_1} (Equiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)) (Option.{u_2} β) (Option.{u_1} α) (Equiv.instEquivLikeEquiv.{succ u_2, succ u_1} (Option.{u_2} β) (Option.{u_1} α)))) (Equiv.symm.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β) e) (Option.none.{u_2} β)) (Option.none.{u_1} α)) (Eq.{succ u_2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u_1} α) => Option.{u_2} β) (Option.none.{u_1} α)) (FunLike.coe.{max (succ u_1) (succ u_2), succ u_1, succ u_2} (Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) (Option.{u_1} α) (fun (a : Option.{u_1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u_1} α) => Option.{u_2} β) a) (EmbeddingLike.toFunLike.{max (succ u_1) (succ u_2), succ u_1, succ u_2} (Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) (Option.{u_1} α) (Option.{u_2} β) (EquivLike.toEmbeddingLike.{max (succ u_1) (succ u_2), succ u_1, succ u_2} (Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) (Option.{u_1} α) (Option.{u_2} β) (Equiv.instEquivLikeEquiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)))) e (Option.none.{u_1} α)) (Option.none.{u_2} β))
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β)), Iff (Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u1} β) => Option.{u2} α) (Option.none.{u1} β)) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} (Option.{u1} β) (Option.{u2} α)) (Option.{u1} β) (fun (_x : Option.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u1} β) => Option.{u2} α) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} (Option.{u1} β) (Option.{u2} α)) (Option.{u1} β) (Option.{u2} α) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} (Option.{u1} β) (Option.{u2} α)) (Option.{u1} β) (Option.{u2} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u2} (Option.{u1} β) (Option.{u2} α)))) (Equiv.symm.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β) e) (Option.none.{u1} β)) (Option.none.{u2} α)) (Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u2} α) => Option.{u1} β) (Option.none.{u2} α)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β)) (Option.{u2} α) (fun (_x : Option.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Option.{u2} α) => Option.{u1} β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β)) (Option.{u2} α) (Option.{u1} β) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β)) (Option.{u2} α) (Option.{u1} β) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β)))) e (Option.none.{u2} α)) (Option.none.{u1} β))
 Case conversion may be inaccurate. Consider using '#align equiv.option_symm_apply_none_iff Equiv.option_symm_apply_none_iffₓ'. -/
 @[simp]
 theorem option_symm_apply_none_iff : e.symm none = none ↔ e none = none :=
@@ -198,9 +198,9 @@ theorem some_removeNone_iff {x : α} : some (removeNone e x) = e none ↔ e.symm
 
 /- warning: equiv.remove_none_option_congr -> Equiv.removeNone_optionCongr is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} α β), Eq.{max 1 (max (succ u_1) (succ u_2)) (succ u_2) (succ u_1)} (Equiv.{succ u_1, succ u_2} α β) (Equiv.removeNone.{u_1, u_2} α β (Equiv.optionCongr.{u_1, u_2} α β e)) e
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β), Eq.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} α β) (Equiv.removeNone.{u1, u2} α β (Equiv.optionCongr.{u1, u2} α β e)) e
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (e : Equiv.{succ u_1, succ u_2} α β), Eq.{max (succ u_1) (succ u_2)} (Equiv.{succ u_1, succ u_2} α β) (Equiv.removeNone.{u_1, u_2} α β (Equiv.optionCongr.{u_1, u_2} α β e)) e
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} α β), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} α β) (Equiv.removeNone.{u2, u1} α β (Equiv.optionCongr.{u2, u1} α β e)) e
 Case conversion may be inaccurate. Consider using '#align equiv.remove_none_option_congr Equiv.removeNone_optionCongrₓ'. -/
 @[simp]
 theorem removeNone_optionCongr (e : α ≃ β) : removeNone e.optionCongr = e :=
@@ -211,9 +211,9 @@ end RemoveNone
 
 /- warning: equiv.option_congr_injective -> Equiv.optionCongr_injective is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Injective.{max 1 (max (succ u_1) (succ u_2)) (succ u_2) (succ u_1), max 1 (max (succ u_1) (succ u_2)) (succ u_2) (succ u_1)} (Equiv.{succ u_1, succ u_2} α β) (Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) (Equiv.optionCongr.{u_1, u_2} α β)
+  forall {α : Type.{u1}} {β : Type.{u2}}, Function.Injective.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} α β) (Equiv.{succ u1, succ u2} (Option.{u1} α) (Option.{u2} β)) (Equiv.optionCongr.{u1, u2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Function.Injective.{max (succ u_1) (succ u_2), max (succ u_1) (succ u_2)} (Equiv.{succ u_1, succ u_2} α β) (Equiv.{succ u_1, succ u_2} (Option.{u_1} α) (Option.{u_2} β)) (Equiv.optionCongr.{u_1, u_2} α β)
+  forall {α : Type.{u2}} {β : Type.{u1}}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} α β) (Equiv.{succ u2, succ u1} (Option.{u2} α) (Option.{u1} β)) (Equiv.optionCongr.{u2, u1} α β)
 Case conversion may be inaccurate. Consider using '#align equiv.option_congr_injective Equiv.optionCongr_injectiveₓ'. -/
 theorem optionCongr_injective : Function.Injective (optionCongr : α ≃ β → Option α ≃ Option β) :=
   Function.LeftInverse.injective removeNone_optionCongr
@@ -229,29 +229,28 @@ def optionSubtype [DecidableEq β] (x : β) :
           y ≠
             x }) where 
   toFun e :=
-    { toFun := fun a => ⟨e a, ((EquivLike.injective _).ne_iff' e.property).2 (some_ne_none _)⟩,
+    { toFun := fun a => ⟨e a, ((EquivLike.injective _).ne_iff' e.property).2 (some_ne_none _)⟩
       invFun := fun b =>
         get
           (ne_none_iff_isSome.1
             (((EquivLike.injective _).ne_iff' ((apply_eq_iff_eq_symm_apply _).1 e.property).symm).2
-              b.property)),
+              b.property))
       left_inv := fun a => by 
         rw [← some_inj, some_get, ← coe_def]
-        exact symm_apply_apply (e : Option α ≃ β) a,
+        exact symm_apply_apply (e : Option α ≃ β) a
       right_inv := fun b => by 
         ext
         simp
         exact apply_symm_apply _ _ }
   invFun e :=
-    ⟨{ toFun := fun a => casesOn' a x (coe ∘ e),
-        invFun := fun b => if h : b = x then none else e.symm ⟨b, h⟩,
+    ⟨{  toFun := fun a => casesOn' a x (coe ∘ e)
+        invFun := fun b => if h : b = x then none else e.symm ⟨b, h⟩
         left_inv := fun a => by 
           cases a; · simp
           simp only [cases_on'_some, Function.comp_apply, Subtype.coe_eta, symm_apply_apply,
             dite_eq_ite]
-          exact if_neg (e a).property,
-        right_inv := fun b => by by_cases h : b = x <;> simp [h] },
-      rfl⟩
+          exact if_neg (e a).property
+        right_inv := fun b => by by_cases h : b = x <;> simp [h] }, rfl⟩
   left_inv e := by 
     ext a
     cases a

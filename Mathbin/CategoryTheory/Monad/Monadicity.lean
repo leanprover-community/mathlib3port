@@ -120,8 +120,12 @@ def comparisonLeftAdjointHomEquiv (A : adj.toMonad.Algebra) (B : D)
         adj.counit_naturality, adj.left_triangle_components_assoc]
       apply eq_comm
     _ ≃ (A ⟶ (comparison adj).obj B) :=
-      { toFun := fun g => { f := _, h' := g.Prop }, invFun := fun f => ⟨f.f, f.h⟩,
-        left_inv := fun g => by ext; rfl, right_inv := fun f => by ext; rfl }
+      { toFun := fun g =>
+          { f := _
+            h' := g.Prop }
+        invFun := fun f => ⟨f.f, f.h⟩
+        left_inv := fun g => by ext; rfl
+        right_inv := fun f => by ext; rfl }
     
 #align
   category_theory.monad.monadicity_internal.comparison_left_adjoint_hom_equiv CategoryTheory.Monad.MonadicityInternal.comparisonLeftAdjointHomEquiv

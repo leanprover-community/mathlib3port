@@ -774,8 +774,10 @@ instance : HasNorm ℚ_[p] :=
   ⟨fun x => padicNormE x⟩
 
 instance : NormedField ℚ_[p] :=
-  { Padic.field, Padic.metricSpace p with dist_eq := fun _ _ => rfl,
-    norm_mul' := by simp [HasNorm.norm, map_mul], norm := norm }
+  { Padic.field, Padic.metricSpace p with
+    dist_eq := fun _ _ => rfl
+    norm_mul' := by simp [HasNorm.norm, map_mul]
+    norm := norm }
 
 instance is_absolute_value :
     IsAbsoluteValue fun a : ℚ_[p] =>
@@ -894,8 +896,11 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ‖(q : ℚ_[p])
       have : (⟨n, d, hn, hd⟩ : ℚ) = 0 := Rat.zero_iff_num_zero.mpr hnz
       norm_num [this]
     else by
-      have hnz' : { num := n, denom := d, Pos := hn, cop := hd } ≠ 0 :=
-        mt Rat.zero_iff_num_zero.1 hnz
+      have hnz' :
+        {   num := n
+            denom := d
+            Pos := hn
+            cop := hd } ≠ 0 := mt Rat.zero_iff_num_zero.1 hnz
       rw [padicNormE.eq_padic_norm]
       norm_cast
       rw [padicNorm.eq_zpow_of_nonzero hnz', padicValRat, neg_sub,

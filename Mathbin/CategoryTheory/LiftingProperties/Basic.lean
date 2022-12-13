@@ -77,7 +77,8 @@ variable (i p)
 instance (priority := 100) of_left_iso [IsIso i] : HasLiftingProperty i p :=
   ⟨fun f g sq =>
     CommSq.HasLift.mk'
-      { l := inv i ≫ f, fac_left' := by simp only [is_iso.hom_inv_id_assoc],
+      { l := inv i ≫ f
+        fac_left' := by simp only [is_iso.hom_inv_id_assoc]
         fac_right' := by simp only [sq.w, assoc, is_iso.inv_hom_id_assoc] }⟩
 #align
   category_theory.has_lifting_property.of_left_iso CategoryTheory.HasLiftingProperty.of_left_iso
@@ -85,7 +86,8 @@ instance (priority := 100) of_left_iso [IsIso i] : HasLiftingProperty i p :=
 instance (priority := 100) of_right_iso [IsIso p] : HasLiftingProperty i p :=
   ⟨fun f g sq =>
     CommSq.HasLift.mk'
-      { l := g ≫ inv p, fac_left' := by simp only [← sq.w_assoc, is_iso.hom_inv_id, comp_id],
+      { l := g ≫ inv p
+        fac_left' := by simp only [← sq.w_assoc, is_iso.hom_inv_id, comp_id]
         fac_right' := by simp only [assoc, is_iso.inv_hom_id, comp_id] }⟩
 #align
   category_theory.has_lifting_property.of_right_iso CategoryTheory.HasLiftingProperty.of_right_iso
@@ -97,8 +99,8 @@ instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] :
     rw [assoc] at fac
     exact
       comm_sq.has_lift.mk'
-        { l := (comm_sq.mk (comm_sq.mk fac).fac_right).lift,
-          fac_left' := by simp only [assoc, comm_sq.fac_left],
+        { l := (comm_sq.mk (comm_sq.mk fac).fac_right).lift
+          fac_left' := by simp only [assoc, comm_sq.fac_left]
           fac_right' := by simp only [comm_sq.fac_right] }⟩
 #align
   category_theory.has_lifting_property.of_comp_left CategoryTheory.HasLiftingProperty.of_comp_left
@@ -111,8 +113,8 @@ instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] :
     let sq₂ := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift
     exact
       comm_sq.has_lift.mk'
-        { l := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift,
-          fac_left' := by simp only [comm_sq.fac_left],
+        { l := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift
+          fac_left' := by simp only [comm_sq.fac_left]
           fac_right' := by simp only [comm_sq.fac_right_assoc, comm_sq.fac_right] }⟩
 #align
   category_theory.has_lifting_property.of_comp_right CategoryTheory.HasLiftingProperty.of_comp_right

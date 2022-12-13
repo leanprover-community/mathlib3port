@@ -20,9 +20,9 @@ open Function
 
 /- warning: multiset.pi.empty -> Multiset.Pi.empty is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} (δ : α -> Type.{u_2}) (a : α), (Membership.Mem.{u_1, u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
+  forall {α : Type.{u1}} (δ : α -> Type.{u2}) (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α))))) -> (δ a)
 but is expected to have type
-  forall {α : Type.{u_1}} (δ : α -> Type.{_aux_param_0}) (a : α), (Membership.Mem.{u_1, u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
+  forall {α : Type.{u2}} (δ : α -> Type.{u1}) (a : α), (Membership.Mem.{u2, u2} α (Multiset.{u2} α) (Multiset.hasMem.{u2} α) a (OfNat.ofNat.{u2} (Multiset.{u2} α) 0 (OfNat.mk.{u2} (Multiset.{u2} α) 0 (Zero.zero.{u2} (Multiset.{u2} α) (Multiset.hasZero.{u2} α))))) -> (δ a)
 Case conversion may be inaccurate. Consider using '#align multiset.pi.empty Multiset.Pi.emptyₓ'. -/
 /-- Given `δ : α → Type*`, `pi.empty δ` is the trivial dependent function out of the empty
 multiset. -/

@@ -205,18 +205,18 @@ def toKaroubiNondegComplexIsoN₁ :
         X where 
   Hom :=
     { f :=
-        { f := fun n => s.ιSummand (IndexSet.id (op [n])) ≫ pInfty.f n,
+        { f := fun n => s.ιSummand (IndexSet.id (op [n])) ≫ pInfty.f n
           comm' := fun i j hij => by 
             dsimp
             rw [assoc, assoc, assoc, π_summand_comp_ι_summand_comp_P_infty_eq_P_infty,
-              HomologicalComplex.Hom.comm] },
+              HomologicalComplex.Hom.comm] }
       comm := by 
         ext n
         dsimp
         rw [id_comp, assoc, P_infty_f_idem] }
   inv :=
     { f :=
-        { f := fun n => s.πSummand (IndexSet.id (op [n])),
+        { f := fun n => s.πSummand (IndexSet.id (op [n]))
           comm' := fun i j hij => by 
             dsimp
             slice_rhs 1 1 => rw [← id_comp (K[X].d i j)]
@@ -224,7 +224,7 @@ def toKaroubiNondegComplexIsoN₁ :
             rw [sum_comp, sum_comp, Finset.sum_eq_single (index_set.id (op [i])), assoc, assoc]
             · intro A h hA
               simp only [assoc, s.ι_summand_comp_d_comp_π_summand_eq_zero _ _ _ hA, comp_zero]
-            · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff] },
+            · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff] }
       comm := by 
         ext n
         dsimp
@@ -253,7 +253,7 @@ def nondegComplexFunctor :
     Split C ⥤ ChainComplex C ℕ where 
   obj S := S.s.nondegComplex
   map S₁ S₂ Φ :=
-    { f := Φ.f,
+    { f := Φ.f
       comm' := fun i j hij => by 
         dsimp
         erw [← ι_summand_naturality_symm_assoc Φ (splitting.index_set.id (op [i])),

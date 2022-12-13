@@ -844,8 +844,8 @@ protected def normalizationMonoid : NormalizationMonoid α :=
         if a = 0 then 0
         else
           ((normalizedFactors a).map
-              (Classical.choose mk_surjective.HasRightInverse : Associates α → α)).Prod,
-      map_one' := by simp,
+              (Classical.choose mk_surjective.HasRightInverse : Associates α → α)).Prod
+      map_one' := by simp
       map_mul' := fun x y => by 
         by_cases hx : x = 0
         · simp [hx]
@@ -1617,15 +1617,17 @@ noncomputable instance : HasInf (Associates α) :=
   ⟨fun a b => (a.factors ⊓ b.factors).Prod⟩
 
 noncomputable instance : Lattice (Associates α) :=
-  { Associates.partialOrder with sup := (· ⊔ ·), inf := (· ⊓ ·),
+  { Associates.partialOrder with 
+    sup := (· ⊔ ·)
+    inf := (· ⊓ ·)
     sup_le := fun a b c hac hbc =>
-      factors_prod c ▸ prod_mono (sup_le (factors_mono hac) (factors_mono hbc)),
-    le_sup_left := fun a b => le_trans (le_of_eq (factors_prod a).symm) <| prod_mono <| le_sup_left,
+      factors_prod c ▸ prod_mono (sup_le (factors_mono hac) (factors_mono hbc))
+    le_sup_left := fun a b => le_trans (le_of_eq (factors_prod a).symm) <| prod_mono <| le_sup_left
     le_sup_right := fun a b =>
-      le_trans (le_of_eq (factors_prod b).symm) <| prod_mono <| le_sup_right,
+      le_trans (le_of_eq (factors_prod b).symm) <| prod_mono <| le_sup_right
     le_inf := fun a b c hac hbc =>
-      factors_prod a ▸ prod_mono (le_inf (factors_mono hac) (factors_mono hbc)),
-    inf_le_left := fun a b => le_trans (prod_mono inf_le_left) (le_of_eq (factors_prod a)),
+      factors_prod a ▸ prod_mono (le_inf (factors_mono hac) (factors_mono hbc))
+    inf_le_left := fun a b => le_trans (prod_mono inf_le_left) (le_of_eq (factors_prod a))
     inf_le_right := fun a b => le_trans (prod_mono inf_le_right) (le_of_eq (factors_prod b)) }
 
 theorem sup_mul_inf (a b : Associates α) : (a ⊔ b) * (a ⊓ b) = a * b :=
@@ -2011,21 +2013,22 @@ noncomputable def UniqueFactorizationMonoid.toGcdMonoid (α : Type _) [CancelCom
 noncomputable def UniqueFactorizationMonoid.toNormalizedGcdMonoid (α : Type _)
     [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α] [NormalizationMonoid α]
     [DecidableEq (Associates α)] [DecidableEq α] : NormalizedGcdMonoid α :=
-  { ‹NormalizationMonoid α› with gcd := fun a b => (Associates.mk a ⊓ Associates.mk b).out,
-    lcm := fun a b => (Associates.mk a ⊔ Associates.mk b).out,
-    gcd_dvd_left := fun a b => (out_dvd_iff a (Associates.mk a ⊓ Associates.mk b)).2 <| inf_le_left,
+  { ‹NormalizationMonoid α› with
+    gcd := fun a b => (Associates.mk a ⊓ Associates.mk b).out
+    lcm := fun a b => (Associates.mk a ⊔ Associates.mk b).out
+    gcd_dvd_left := fun a b => (out_dvd_iff a (Associates.mk a ⊓ Associates.mk b)).2 <| inf_le_left
     gcd_dvd_right := fun a b =>
-      (out_dvd_iff b (Associates.mk a ⊓ Associates.mk b)).2 <| inf_le_right,
+      (out_dvd_iff b (Associates.mk a ⊓ Associates.mk b)).2 <| inf_le_right
     dvd_gcd := fun a b c hac hab =>
       show a ∣ (Associates.mk c ⊓ Associates.mk b).out by
         rw [dvd_out_iff, le_inf_iff, mk_le_mk_iff_dvd_iff, mk_le_mk_iff_dvd_iff] <;>
-          exact ⟨hac, hab⟩,
-    lcm_zero_left := fun a => show (⊤ ⊔ Associates.mk a).out = 0 by simp,
-    lcm_zero_right := fun a => show (Associates.mk a ⊔ ⊤).out = 0 by simp,
+          exact ⟨hac, hab⟩
+    lcm_zero_left := fun a => show (⊤ ⊔ Associates.mk a).out = 0 by simp
+    lcm_zero_right := fun a => show (Associates.mk a ⊔ ⊤).out = 0 by simp
     gcd_mul_lcm := fun a b => by
       rw [← out_mul, mul_comm, sup_mul_inf, mk_mul_mk, out_mk]
-      exact normalize_associated (a * b),
-    normalize_gcd := fun a b => by convert normalize_out _,
+      exact normalize_associated (a * b)
+    normalize_gcd := fun a b => by convert normalize_out _
     normalize_lcm := fun a b => by convert normalize_out _ }
 #align
   unique_factorization_monoid.to_normalized_gcd_monoid UniqueFactorizationMonoid.toNormalizedGcdMonoid

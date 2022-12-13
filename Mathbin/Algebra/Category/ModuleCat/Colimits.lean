@@ -389,7 +389,9 @@ instance has_colimits_Module :
       (ModuleCat.{max v u}
         R) where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F =>
-        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+        has_colimit.mk
+          { Cocone := colimit_cocone F
+            IsColimit := colimit_cocone_is_colimit F } }
 #align Module.colimits.has_colimits_Module ModuleCat.Colimits.has_colimits_Module
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise

@@ -67,9 +67,9 @@ namespace Term
 
 /- warning: first_order.language.term.realize -> FirstOrder.Language.Term.realize is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {M : Type.{w}} [_inst_1 : FirstOrder.Language.StructureCat.{u, v, w} L M] {α : Type.{u'}}, (α -> M) -> (FirstOrder.Language.Term.{u, v, u'} L α) -> M
+  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u2, u3} L M] {α : Type.{u4}}, (α -> M) -> (FirstOrder.Language.Term.{u1, u2, u4} L α) -> M
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {M : Type.{w}} [_inst_1 : FirstOrder.Language.StructureCat.{u, v, w} L M] {α : Type.{u'}}, (α -> M) -> (FirstOrder.Language.Term.{u, v, u'} L α) -> M
+  forall {L : FirstOrder.Language.{u1, u3}} {M : Type.{u4}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u3, u4} L M] {α : Type.{u2}}, (α -> M) -> (FirstOrder.Language.Term.{u1, u3, u2} L α) -> M
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize FirstOrder.Language.Term.realizeₓ'. -/
 /-- A term `t` with variables indexed by `α` can be evaluated by giving a value to each variable. -/
 @[simp]
@@ -237,9 +237,9 @@ open Term
 
 /- warning: first_order.language.bounded_formula.realize -> FirstOrder.Language.BoundedFormula.Realize is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} {M : Type.{w}} [_inst_1 : FirstOrder.Language.StructureCat.{u, v, w} L M] {α : Type.{u'}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
+  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u2, u3} L M] {α : Type.{u4}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
 but is expected to have type
-  forall {L : FirstOrder.Language.{u, v}} {M : Type.{w}} [_inst_1 : FirstOrder.Language.StructureCat.{u, v, w} L M] {α : Type.{u'}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u, v, u'} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
+  forall {L : FirstOrder.Language.{u1, u3}} {M : Type.{u4}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u3, u4} L M] {α : Type.{u2}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize FirstOrder.Language.BoundedFormula.Realizeₓ'. -/
 /-- A bounded formula can be evaluated as true or false by giving values to each free variable. -/
 def Realize : ∀ {l} (f : L.BoundedFormula α l) (v : α → M) (xs : Fin l → M), Prop

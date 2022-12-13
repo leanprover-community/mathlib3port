@@ -233,7 +233,9 @@ def finsuppEquivDfinsupp [DecidableEq ι] [Zero M] [∀ m : M, Decidable (m ≠ 
 @[simps (config := { fullyApplied := false })]
 def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] :
     (ι →₀ M) ≃+ Π₀ i : ι, M :=
-  { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
+  { finsuppEquivDfinsupp with 
+    toFun := Finsupp.toDfinsupp
+    invFun := Dfinsupp.toFinsupp
     map_add' := Finsupp.to_dfinsupp_add }
 #align finsupp_add_equiv_dfinsupp finsuppAddEquivDfinsupp
 
@@ -244,8 +246,11 @@ variable (R)
 @[simps (config := { fullyApplied := false })]
 def finsuppLequivDfinsupp [DecidableEq ι] [Semiring R] [AddCommMonoid M]
     [∀ m : M, Decidable (m ≠ 0)] [Module R M] : (ι →₀ M) ≃ₗ[R] Π₀ i : ι, M :=
-  { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
-    map_smul' := Finsupp.to_dfinsupp_smul, map_add' := Finsupp.to_dfinsupp_add }
+  { finsuppEquivDfinsupp with 
+    toFun := Finsupp.toDfinsupp
+    invFun := Dfinsupp.toFinsupp
+    map_smul' := Finsupp.to_dfinsupp_smul
+    map_add' := Finsupp.to_dfinsupp_add }
 #align finsupp_lequiv_dfinsupp finsuppLequivDfinsupp
 
 section Sigma
@@ -337,8 +342,10 @@ theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →
 /-- `finsupp.split` is an additive equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
 def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σi, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
-  { sigmaFinsuppEquivDfinsupp with toFun := sigmaFinsuppEquivDfinsupp,
-    invFun := sigmaFinsuppEquivDfinsupp.symm, map_add' := sigma_finsupp_equiv_dfinsupp_add }
+  { sigmaFinsuppEquivDfinsupp with 
+    toFun := sigmaFinsuppEquivDfinsupp
+    invFun := sigmaFinsuppEquivDfinsupp.symm
+    map_add' := sigma_finsupp_equiv_dfinsupp_add }
 #align sigma_finsupp_add_equiv_dfinsupp sigmaFinsuppAddEquivDfinsupp
 
 attribute [-instance] Finsupp.addZeroClass

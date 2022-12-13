@@ -227,8 +227,14 @@ def ofPointIso {r t : Cone F} (P : IsLimit r) [i : IsIso (P.lift t)] : IsLimit t
 variable {t : Cone F}
 
 theorem hom_lift (h : IsLimit t) {W : C} (m : W ⟶ t.x) :
-    m = h.lift { x := W, π := { app := fun b => m ≫ t.π.app b } } :=
-  h.uniq { x := W, π := { app := fun b => m ≫ t.π.app b } } m fun b => rfl
+    m =
+      h.lift
+        { x := W
+          π := { app := fun b => m ≫ t.π.app b } } :=
+  h.uniq
+    { x := W
+      π := { app := fun b => m ≫ t.π.app b } }
+    m fun b => rfl
 #align category_theory.limits.is_limit.hom_lift CategoryTheory.Limits.IsLimit.hom_lift
 
 /-- Two morphisms into a limit are equal if their compositions with
@@ -387,15 +393,15 @@ and the functor (up to natural isomorphism).
 def conePointsIsoOfEquivalence {F : J ⥤ C} {s : Cone F} {G : K ⥤ C} {t : Cone G} (P : IsLimit s)
     (Q : IsLimit t) (e : J ≌ K) (w : e.Functor ⋙ G ≅ F) : s.x ≅ t.x :=
   let w' : e.inverse ⋙ F ≅ G := (isoWhiskerLeft e.inverse w).symm ≪≫ invFunIdAssoc e G
-  { Hom := Q.lift ((Cones.equivalenceOfReindexing e.symm w').Functor.obj s),
-    inv := P.lift ((Cones.equivalenceOfReindexing e w).Functor.obj t),
+  { Hom := Q.lift ((Cones.equivalenceOfReindexing e.symm w').Functor.obj s)
+    inv := P.lift ((Cones.equivalenceOfReindexing e w).Functor.obj t)
     hom_inv_id' := by 
       apply hom_ext P; intro j
       dsimp
       simp only [limits.cone.whisker_π, limits.cones.postcompose_obj_π, fac, whisker_left_app,
         assoc, id_comp, inv_fun_id_assoc_hom_app, fac_assoc, nat_trans.comp_app]
       rw [counit_app_functor, ← functor.comp_map, w.hom.naturality]
-      simp,
+      simp
     inv_hom_id' := by 
       apply hom_ext Q
       tidy }
@@ -410,7 +416,10 @@ def homIso (h : IsLimit t) (W : C) :
     ULift.{u₁} (W ⟶ t.x : Type v₃) ≅
       (const J).obj W ⟶ F where 
   Hom f := (t.extend f.down).π
-  inv π := ⟨h.lift { x := W, π }⟩
+  inv π :=
+    ⟨h.lift
+        { x := W
+          π }⟩
   hom_inv_id' := by ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp <;> rfl
 #align category_theory.limits.is_limit.hom_iso CategoryTheory.Limits.IsLimit.homIso
 
@@ -434,9 +443,9 @@ def homIso' (h : IsLimit t) (W : C) :
       { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} (f : j ⟶ j'), p j ≫ F.map f = p j' } :=
   h.homIso W ≪≫
     { Hom := fun π =>
-        ⟨fun j => π.app j, fun j j' f => by convert ← (π.naturality f).symm <;> apply id_comp⟩,
+        ⟨fun j => π.app j, fun j j' f => by convert ← (π.naturality f).symm <;> apply id_comp⟩
       inv := fun p =>
-        { app := fun j => p.1 j,
+        { app := fun j => p.1 j
           naturality' := fun j j' f => by dsimp; rw [id_comp]; exact (p.2 f).symm } }
 #align category_theory.limits.is_limit.hom_iso' CategoryTheory.Limits.IsLimit.homIso'
 
@@ -446,7 +455,8 @@ def homIso' (h : IsLimit t) (W : C) :
 def ofFaithful {t : Cone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) [Faithful G]
     (ht : IsLimit (G.mapCone t)) (lift : ∀ s : Cone F, s.x ⟶ t.x)
     (h : ∀ s, G.map (lift s) = ht.lift (G.mapCone s)) : IsLimit t :=
-  { lift, fac' := fun s j => by apply G.map_injective <;> rw [G.map_comp, h] <;> apply ht.fac,
+  { lift
+    fac' := fun s j => by apply G.map_injective <;> rw [G.map_comp, h] <;> apply ht.fac
     uniq' := fun s m w => by 
       apply G.map_injective; rw [h]
       refine' ht.uniq (G.map_cone s) _ fun j => _
@@ -472,9 +482,11 @@ def isoUniqueConeMorphism {t : Cone F} :
         Unique
           (s ⟶
             t) where 
-  Hom h s := { default := h.liftConeMorphism s, uniq := fun _ => h.uniq_cone_morphism }
+  Hom h s :=
+    { default := h.liftConeMorphism s
+      uniq := fun _ => h.uniq_cone_morphism }
   inv h :=
-    { lift := fun s => (h s).default.Hom,
+    { lift := fun s => (h s).default.Hom
       uniq' := fun s f w => congr_arg ConeMorphism.hom ((h s).uniq ⟨f, w⟩) }
 #align
   category_theory.limits.is_limit.iso_unique_cone_morphism CategoryTheory.Limits.IsLimit.isoUniqueConeMorphism
@@ -757,11 +769,16 @@ variable {t : Cocone F}
 theorem hom_desc (h : IsColimit t) {W : C} (m : t.x ⟶ W) :
     m =
       h.desc
-        { x := W,
+        { x := W
           ι :=
-            { app := fun b => t.ι.app b ≫ m,
+            { app := fun b => t.ι.app b ≫ m
               naturality' := by intros <;> erw [← assoc, t.ι.naturality, comp_id, comp_id] } } :=
-  h.uniq { x := W, ι := { app := fun b => t.ι.app b ≫ m, naturality' := _ } } m fun b => rfl
+  h.uniq
+    { x := W
+      ι :=
+        { app := fun b => t.ι.app b ≫ m
+          naturality' := _ } }
+    m fun b => rfl
 #align category_theory.limits.is_colimit.hom_desc CategoryTheory.Limits.IsColimit.hom_desc
 
 /-- Two morphisms out of a colimit are equal if their compositions with
@@ -929,8 +946,8 @@ and the functor (up to natural isomorphism).
 def coconePointsIsoOfEquivalence {F : J ⥤ C} {s : Cocone F} {G : K ⥤ C} {t : Cocone G}
     (P : IsColimit s) (Q : IsColimit t) (e : J ≌ K) (w : e.Functor ⋙ G ≅ F) : s.x ≅ t.x :=
   let w' : e.inverse ⋙ F ≅ G := (isoWhiskerLeft e.inverse w).symm ≪≫ invFunIdAssoc e G
-  { Hom := P.desc ((Cocones.equivalenceOfReindexing e w).Functor.obj t),
-    inv := Q.desc ((Cocones.equivalenceOfReindexing e.symm w').Functor.obj s),
+  { Hom := P.desc ((Cocones.equivalenceOfReindexing e w).Functor.obj t)
+    inv := Q.desc ((Cocones.equivalenceOfReindexing e.symm w').Functor.obj s)
     hom_inv_id' := by 
       apply hom_ext P; intro j
       dsimp
@@ -938,7 +955,7 @@ def coconePointsIsoOfEquivalence {F : J ⥤ C} {s : Cocone F} {G : K ⥤ C} {t :
         comp_id, limits.cocones.precompose_obj_ι, fac_assoc, nat_trans.comp_app]
       rw [counit_inv_app_functor, ← functor.comp_map, ← w.inv.naturality_assoc]
       dsimp
-      simp,
+      simp
     inv_hom_id' := by 
       apply hom_ext Q
       tidy }
@@ -953,7 +970,10 @@ def homIso (h : IsColimit t) (W : C) :
     ULift.{u₁} (t.x ⟶ W : Type v₃) ≅
       F ⟶ (const J).obj W where 
   Hom f := (t.extend f.down).ι
-  inv ι := ⟨h.desc { x := W, ι }⟩
+  inv ι :=
+    ⟨h.desc
+        { x := W
+          ι }⟩
   hom_inv_id' := by ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp <;> rfl
 #align category_theory.limits.is_colimit.hom_iso CategoryTheory.Limits.IsColimit.homIso
 
@@ -977,9 +997,9 @@ def homIso' (h : IsColimit t) (W : C) :
       { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} (f : j ⟶ j'), F.map f ≫ p j' = p j } :=
   h.homIso W ≪≫
     { Hom := fun ι =>
-        ⟨fun j => ι.app j, fun j j' f => by convert ← ι.naturality f <;> apply comp_id⟩,
+        ⟨fun j => ι.app j, fun j j' f => by convert ← ι.naturality f <;> apply comp_id⟩
       inv := fun p =>
-        { app := fun j => p.1 j,
+        { app := fun j => p.1 j
           naturality' := fun j j' f => by dsimp; rw [comp_id]; exact p.2 f } }
 #align category_theory.limits.is_colimit.hom_iso' CategoryTheory.Limits.IsColimit.homIso'
 
@@ -989,7 +1009,8 @@ def homIso' (h : IsColimit t) (W : C) :
 def ofFaithful {t : Cocone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) [Faithful G]
     (ht : IsColimit (G.mapCocone t)) (desc : ∀ s : Cocone F, t.x ⟶ s.x)
     (h : ∀ s, G.map (desc s) = ht.desc (G.mapCocone s)) : IsColimit t :=
-  { desc, fac' := fun s j => by apply G.map_injective <;> rw [G.map_comp, h] <;> apply ht.fac,
+  { desc
+    fac' := fun s j => by apply G.map_injective <;> rw [G.map_comp, h] <;> apply ht.fac
     uniq' := fun s m w => by 
       apply G.map_injective; rw [h]
       refine' ht.uniq (G.map_cocone s) _ fun j => _
@@ -1016,9 +1037,11 @@ def isoUniqueCoconeMorphism {t : Cocone F} :
         Unique
           (t ⟶
             s) where 
-  Hom h s := { default := h.descCoconeMorphism s, uniq := fun _ => h.uniq_cocone_morphism }
+  Hom h s :=
+    { default := h.descCoconeMorphism s
+      uniq := fun _ => h.uniq_cocone_morphism }
   inv h :=
-    { desc := fun s => (h s).default.Hom,
+    { desc := fun s => (h s).default.Hom
       uniq' := fun s f w => congr_arg CoconeMorphism.hom ((h s).uniq ⟨f, w⟩) }
 #align
   category_theory.limits.is_colimit.iso_unique_cocone_morphism CategoryTheory.Limits.IsColimit.isoUniqueCoconeMorphism

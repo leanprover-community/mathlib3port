@@ -1455,14 +1455,20 @@ However it does not reorder goals or invoke `auto_param` tactics.
 unsafe def fsplit : tactic Unit := do
   let [c] ← target' >>= get_constructors_for |
     fail "fsplit tactic failed, target is not an inductive datatype with only one constructor"
-  mk_const c >>= fun e => apply e { NewGoals := new_goals.all, autoParam := ff } >> skip
+  mk_const c >>= fun e =>
+      apply e
+          { NewGoals := new_goals.all
+            autoParam := ff } >>
+        skip
 #align tactic.fsplit tactic.fsplit
 
 run_cmd
   add_interactive [`fsplit]
 
 add_tactic_doc
-  { Name := "fsplit", category := DocCategory.tactic, declNames := [`tactic.interactive.fsplit],
+  { Name := "fsplit"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.fsplit]
     tags := ["logic", "goal management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
@@ -1478,8 +1484,10 @@ run_cmd
   add_interactive [`injections_and_clear]
 
 add_tactic_doc
-  { Name := "injections_and_clear", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.injections_and_clear], tags := ["context management"] }
+  { Name := "injections_and_clear"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.injections_and_clear]
+    tags := ["context management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `r -/
 /-- Calls `cases` on every local hypothesis, succeeding if
@@ -1596,7 +1604,9 @@ unsafe def run_parser_cmd (_ : interactive.parse <| tk "run_parser") : lean.pars
 #align lean.parser.run_parser_cmd lean.parser.run_parser_cmd
 
 add_tactic_doc
-  { Name := "run_parser", category := DocCategory.cmd, declNames := [`` run_parser_cmd],
+  { Name := "run_parser"
+    category := DocCategory.cmd
+    declNames := [`` run_parser_cmd]
     tags := ["parsing"] }
 
 /-- `get_current_namespace` returns the current namespace (it could be `name.anonymous`).
@@ -1731,7 +1741,9 @@ unsafe def instance_stub : hole_command where
 #align tactic.instance_stub tactic.instance_stub
 
 add_tactic_doc
-  { Name := "instance_stub", category := DocCategory.hole_cmd, declNames := [`tactic.instance_stub],
+  { Name := "instance_stub"
+    category := DocCategory.hole_cmd
+    declNames := [`tactic.instance_stub]
     tags := ["instances"] }
 
 /-- Like `resolve_name` except when the list of goals is
@@ -1840,7 +1852,9 @@ unsafe def match_stub : hole_command where
 #align tactic.match_stub tactic.match_stub
 
 add_tactic_doc
-  { Name := "Match Stub", category := DocCategory.hole_cmd, declNames := [`tactic.match_stub],
+  { Name := "Match Stub"
+    category := DocCategory.hole_cmd
+    declNames := [`tactic.match_stub]
     tags := ["pattern matching"] }
 
 /--
@@ -1918,7 +1932,9 @@ unsafe def eqn_stub : hole_command where
 #align tactic.eqn_stub tactic.eqn_stub
 
 add_tactic_doc
-  { Name := "Equations Stub", category := DocCategory.hole_cmd, declNames := [`tactic.eqn_stub],
+  { Name := "Equations Stub"
+    category := DocCategory.hole_cmd
+    declNames := [`tactic.eqn_stub]
     tags := ["pattern matching"] }
 
 /-- This command lists the constructors that can be used to satisfy the expected type.
@@ -1975,8 +1991,10 @@ unsafe def list_constructors_hole :
 #align tactic.list_constructors_hole tactic.list_constructors_hole
 
 add_tactic_doc
-  { Name := "List Constructors", category := DocCategory.hole_cmd,
-    declNames := [`tactic.list_constructors_hole], tags := ["goal information"] }
+  { Name := "List Constructors"
+    category := DocCategory.hole_cmd
+    declNames := [`tactic.list_constructors_hole]
+    tags := ["goal information"] }
 
 /-- Makes the declaration `classical.prop_decidable` available to type class inference.
 This asserts that all propositions are decidable, but does not have computational content.
@@ -2073,7 +2091,9 @@ unsafe def higher_order_attr :
 #align tactic.higher_order_attr tactic.higher_order_attr
 
 add_tactic_doc
-  { Name := "higher_order", category := DocCategory.attr, declNames := [`tactic.higher_order_attr],
+  { Name := "higher_order"
+    category := DocCategory.attr
+    declNames := [`tactic.higher_order_attr]
     tags := ["lemma derivation"] }
 
 attribute [higher_order map_comp_pure] map_pure
@@ -2104,7 +2124,9 @@ unsafe def interactive_attr :
 #align tactic.interactive_attr tactic.interactive_attr
 
 add_tactic_doc
-  { Name := "interactive", category := DocCategory.attr, declNames := [`` tactic.interactive_attr],
+  { Name := "interactive"
+    category := DocCategory.attr
+    declNames := [`` tactic.interactive_attr]
     tags := ["environment"] }
 
 /-- Use `refine` to partially discharge the goal,
@@ -2252,8 +2274,10 @@ unsafe def succeeds_or_fails_with_msg {α : Type} (t : tactic α) (p : String �
 #align tactic.succeeds_or_fails_with_msg tactic.succeeds_or_fails_with_msg
 
 add_tactic_doc
-  { Name := "setup_tactic_parser", category := DocCategory.cmd,
-    declNames := [`tactic.setup_tactic_parser_cmd], tags := ["parsing", "notation"] }
+  { Name := "setup_tactic_parser"
+    category := DocCategory.cmd
+    declNames := [`tactic.setup_tactic_parser_cmd]
+    tags := ["parsing", "notation"] }
 
 /-- `trace_error msg t` executes the tactic `t`. If `t` fails, traces `msg` and the failure message
 of `t`. -/
@@ -2667,8 +2691,10 @@ unsafe def import_private_cmd (_ : parse <| tk "import_private") : lean.parser U
 #align tactic.import_private_cmd tactic.import_private_cmd
 
 add_tactic_doc
-  { Name := "import_private", category := DocCategory.cmd,
-    declNames := [`tactic.import_private_cmd], tags := ["renaming"] }
+  { Name := "import_private"
+    category := DocCategory.cmd
+    declNames := [`tactic.import_private_cmd]
+    tags := ["renaming"] }
 
 /--
 The command `mk_simp_attribute simp_name "description"` creates a simp set with name `simp_name`.
@@ -2698,8 +2724,10 @@ unsafe def mk_simp_attribute_cmd (_ : parse <| tk "mk_simp_attribute") : lean.pa
 #align tactic.mk_simp_attribute_cmd tactic.mk_simp_attribute_cmd
 
 add_tactic_doc
-  { Name := "mk_simp_attribute", category := DocCategory.cmd,
-    declNames := [`tactic.mk_simp_attribute_cmd], tags := ["simplification"] }
+  { Name := "mk_simp_attribute"
+    category := DocCategory.cmd
+    declNames := [`tactic.mk_simp_attribute_cmd]
+    tags := ["simplification"] }
 
 /-- Given a user attribute name `attr_name`, `get_user_attribute_name attr_name` returns
 the name of the declaration that defines this attribute.

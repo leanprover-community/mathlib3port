@@ -143,11 +143,13 @@ class HasBesicovitchCovering (α : Type _) [MetricSpace α] : Prop where
 /-- There is always a satellite configuration with a single point. -/
 instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] :
     Inhabited (Besicovitch.SatelliteConfig α 0 τ) :=
-  ⟨{ c := default, R := fun i => 1, rpos := fun i => zero_lt_one,
-      h := fun i j hij => (hij (Subsingleton.elim i j)).elim,
+  ⟨{  c := default
+      R := fun i => 1
+      rpos := fun i => zero_lt_one
+      h := fun i j hij => (hij (Subsingleton.elim i j)).elim
       hlast := fun i hi => by 
         rw [Subsingleton.elim i (last 0)] at hi
-        exact (lt_irrefl _ hi).elim,
+        exact (lt_irrefl _ hi).elim
       inter := fun i hi => by 
         rw [Subsingleton.elim i (last 0)] at hi
         exact (lt_irrefl _ hi).elim }⟩
@@ -211,7 +213,9 @@ structure TauPackage (β : Type _) (α : Type _) extends BallPackage β α where
 #align besicovitch.tau_package Besicovitch.TauPackage
 
 instance (α : Type _) : Inhabited (TauPackage α α) :=
-  ⟨{ unitBallPackage α with τ := 2, one_lt_tau := one_lt_two }⟩
+  ⟨{ unitBallPackage α with 
+      τ := 2
+      one_lt_tau := one_lt_two }⟩
 
 variable {α : Type _} [MetricSpace α] {β : Type u}
 
@@ -433,8 +437,9 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
       exact p.r_le _
   -- therefore, one may use them to construct a satellite configuration with `N+1` points
   let sc : satellite_config α N p.τ :=
-    { c := fun k => p.c (p.index (G k)), R := fun k => p.r (p.index (G k)),
-      rpos := fun k => p.rpos (p.index (G k)),
+    { c := fun k => p.c (p.index (G k))
+      R := fun k => p.r (p.index (G k))
+      rpos := fun k => p.rpos (p.index (G k))
       h := by 
         intro a b a_ne_b
         wlog (discharger := tactic.skip) G_le : G a ≤ G b := le_total (G a) (G b) using a b, b a
@@ -447,14 +452,14 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
           exact Or.inl (Gab a b G_lt)
         · intro a_ne_b
           rw [or_comm']
-          exact this a_ne_b.symm,
+          exact this a_ne_b.symm
       hlast := by 
         intro a ha
         have I : (a : ℕ) < N := ha
         have : G a < G (Fin.last N) := by 
           dsimp [G]
           simp [I.ne, (hg a I).1]
-        exact Gab _ _ this,
+        exact Gab _ _ this
       inter := by 
         intro a ha
         have I : (a : ℕ) < N := ha
@@ -489,7 +494,10 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
     rw [← image_univ, eq_empty_of_is_empty (univ : Set β)]
     simp
   -- Now, assume `β` is nonempty.
-  let p : tau_package β α := { q with τ, one_lt_tau := hτ }
+  let p : tau_package β α :=
+    { q with 
+      τ
+      one_lt_tau := hτ }
   -- we use for `s i` the balls of color `i`.
   let s := fun i : Fin N =>
     ⋃ (k : Ordinal.{u}) (hk : k < p.last_step) (h'k : p.color k = i), ({p.index k} : Set β)
@@ -582,7 +590,10 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     covering `s`. Among these, one of them covers a proportion at least `1/N` of `s`. A large
     enough finite subfamily will then cover a proportion at least `1/(N+1)`. -/
   let a : ball_package s α :=
-    { c := fun x => x, R := fun x => r x, rpos := fun x => rpos x x.2, rBound := 1,
+    { c := fun x => x
+      R := fun x => r x
+      rpos := fun x => rpos x x.2
+      rBound := 1
       r_le := fun x => rle x x.2 }
   rcases exist_disjoint_covering_families hτ hN a with ⟨u, hu, hu'⟩
   have u_count : ∀ i, (u i).Countable := by 
@@ -1007,7 +1018,10 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
         subset.trans (closed_ball_subset_ball (hR'.2.2.trans_le (min_le_left _ _))) hr⟩
   choose! r1 hr1 using this
   let q : ball_package s' α :=
-    { c := fun x => x, R := fun x => r1 x, rpos := fun x => (hr1 x.1 x.2).1.2.1, rBound := 1,
+    { c := fun x => x
+      R := fun x => r1 x
+      rpos := fun x => (hr1 x.1 x.2).1.2.1
+      rBound := 1
       r_le := fun x => (hr1 x.1 x.2).1.2.2.le }
   -- by Besicovitch, we cover `s'` with at most `N` families of disjoint balls, all included in
   -- a suitable neighborhood `v` of `s'`.

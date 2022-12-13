@@ -169,16 +169,16 @@ instance : MulZeroOneClass Ereal :=
     one_mul := fun x => by
       induction x using Ereal.rec <;>
         · dsimp only [(· * ·)]
-          simp only [Ereal.mul, ← Ereal.coe_one, zero_lt_one, if_true, one_mul],
+          simp only [Ereal.mul, ← Ereal.coe_one, zero_lt_one, if_true, one_mul]
     mul_one := fun x => by
       induction x using Ereal.rec <;>
         · dsimp only [(· * ·)]
-          simp only [Ereal.mul, ← Ereal.coe_one, zero_lt_one, if_true, mul_one],
+          simp only [Ereal.mul, ← Ereal.coe_one, zero_lt_one, if_true, mul_one]
     zero_mul := fun x => by
       induction x using Ereal.rec <;>
         · simp only [(· * ·)]
           simp only [Ereal.mul, ← Ereal.coe_zero, zero_lt_one, if_true, if_false, lt_irrefl (0 : ℝ),
-            eq_self_iff_true, zero_mul],
+            eq_self_iff_true, zero_mul]
     mul_zero := fun x => by
       induction x using Ereal.rec <;>
         · simp only [(· * ·)]
@@ -804,7 +804,9 @@ theorem neg_le_neg_iff {a b : Ereal} : -a ≤ -b ↔ b ≤ a := by conv_lhs => r
 
 /-- Negation as an order reversing isomorphism on `ereal`. -/
 def negOrderIso : Ereal ≃o Erealᵒᵈ :=
-  { Equiv.neg Ereal with toFun := fun x => OrderDual.toDual (-x), invFun := fun x => -x.ofDual,
+  { Equiv.neg Ereal with 
+    toFun := fun x => OrderDual.toDual (-x)
+    invFun := fun x => -x.ofDual
     map_rel_iff' := fun x y => neg_le_neg_iff }
 #align ereal.neg_order_iso Ereal.negOrderIso
 
@@ -1190,7 +1192,7 @@ instance : CommMonoidWithZero Ereal :=
   { Ereal.hasMul, Ereal.hasOne, Ereal.hasZero, Ereal.mulZeroOneClass with
     mul_assoc := fun x y z => by 
       rw [← sign_eq_and_abs_eq_iff_eq]
-      simp only [mul_assoc, abs_mul, eq_self_iff_true, sign_mul, and_self_iff],
+      simp only [mul_assoc, abs_mul, eq_self_iff_true, sign_mul, and_self_iff]
     mul_comm := Ereal.mul_comm }
 
 @[simp, norm_cast]

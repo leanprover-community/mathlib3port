@@ -618,7 +618,8 @@ theorem Ideal.Quotient.norm_mk_le (r : R) : ‖Ideal.Quotient.mk I r‖ ≤ ‖r
 #align ideal.quotient.norm_mk_le Ideal.Quotient.norm_mk_le
 
 instance Ideal.Quotient.semiNormedCommRing : SemiNormedCommRing (R ⧸ I) :=
-  { Submodule.Quotient.seminormedAddCommGroup I with mul_comm := mul_comm,
+  { Submodule.Quotient.seminormedAddCommGroup I with
+    mul_comm := mul_comm
     norm_mul := fun x y =>
       le_of_forall_pos_le_add fun ε hε => by
         have :=

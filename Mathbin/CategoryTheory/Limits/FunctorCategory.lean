@@ -52,7 +52,7 @@ def evaluationJointlyReflectsLimits {F : J ⥤ K ⥤ C} (c : Cone F)
     IsLimit
       c where 
   lift s :=
-    { app := fun k => (t k).lift ⟨s.x.obj k, whiskerRight s.π ((evaluation K C).obj k)⟩,
+    { app := fun k => (t k).lift ⟨s.x.obj k, whiskerRight s.π ((evaluation K C).obj k)⟩
       naturality' := fun X Y f =>
         (t Y).hom_ext fun j => by 
           rw [assoc, (t Y).fac _ j]
@@ -75,18 +75,17 @@ them together to give a cone for the diagram `F`.
 -/
 @[simps]
 def combineCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) :
-    Cone
-      F where 
+    Cone F where 
   x :=
-    { obj := fun k => (c k).Cone.x,
-      map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩,
+    { obj := fun k => (c k).Cone.x
+      map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩
       map_id' := fun k =>
         (c k).IsLimit.hom_ext fun j => by 
           dsimp
-          simp,
+          simp
       map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₃).IsLimit.hom_ext fun j => by simp }
   π :=
-    { app := fun j => { app := fun k => (c k).Cone.π.app j },
+    { app := fun j => { app := fun k => (c k).Cone.π.app j }
       naturality' := fun j₁ j₂ g => NatTrans.ext _ _ <| funext fun k => (c k).Cone.π.naturality g }
 #align category_theory.limits.combine_cones CategoryTheory.Limits.combineCones
 
@@ -112,7 +111,7 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
     IsColimit
       c where 
   desc s :=
-    { app := fun k => (t k).desc ⟨s.x.obj k, whiskerRight s.ι ((evaluation K C).obj k)⟩,
+    { app := fun k => (t k).desc ⟨s.x.obj k, whiskerRight s.ι ((evaluation K C).obj k)⟩
       naturality' := fun X Y f =>
         (t X).hom_ext fun j => by 
           rw [(t X).fac_assoc _ j]
@@ -141,15 +140,15 @@ def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj
     Cocone
       F where 
   x :=
-    { obj := fun k => (c k).Cocone.x,
-      map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩,
+    { obj := fun k => (c k).Cocone.x
+      map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩
       map_id' := fun k =>
         (c k).IsColimit.hom_ext fun j => by 
           dsimp
-          simp,
+          simp
       map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₁).IsColimit.hom_ext fun j => by simp }
   ι :=
-    { app := fun j => { app := fun k => (c k).Cocone.ι.app j },
+    { app := fun j => { app := fun k => (c k).Cocone.ι.app j }
       naturality' := fun j₁ j₂ g =>
         NatTrans.ext _ _ <| funext fun k => (c k).Cocone.ι.naturality g }
 #align category_theory.limits.combine_cocones CategoryTheory.Limits.combineCocones
@@ -174,7 +173,9 @@ instance functor_category_has_limits_of_shape [HasLimitsOfShape J C] :
     HasLimitsOfShape J
       (K ⥤
         C) where HasLimit F :=
-    HasLimit.mk { Cone := combineCones F fun k => getLimitCone _, IsLimit := combinedIsLimit _ _ }
+    HasLimit.mk
+      { Cone := combineCones F fun k => getLimitCone _
+        IsLimit := combinedIsLimit _ _ }
 #align
   category_theory.limits.functor_category_has_limits_of_shape CategoryTheory.Limits.functor_category_has_limits_of_shape
 
@@ -183,7 +184,8 @@ instance functor_category_has_colimits_of_shape [HasColimitsOfShape J C] :
       (K ⥤
         C) where HasColimit F :=
     HasColimit.mk
-      { Cocone := combineCocones _ fun k => getColimitCocone _, IsColimit := combinedIsColimit _ _ }
+      { Cocone := combineCocones _ fun k => getColimitCocone _
+        IsColimit := combinedIsColimit _ _ }
 #align
   category_theory.limits.functor_category_has_colimits_of_shape CategoryTheory.Limits.functor_category_has_colimits_of_shape
 

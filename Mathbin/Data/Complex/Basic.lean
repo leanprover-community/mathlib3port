@@ -338,9 +338,11 @@ instance : Nontrivial ℂ :=
   pullback_nonzero re rfl rfl
 
 instance : AddCommGroup ℂ := by
-  refine_struct
-                { zero := (0 : ℂ), add := (· + ·), neg := Neg.neg, sub := Sub.sub,
-                  nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩,
+  refine_struct { zero := (0 : ℂ)
+                  add := (· + ·)
+                  neg := Neg.neg
+                  sub := Sub.sub
+                  nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩
                   zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;>
               intros <;>
             try rfl <;>
@@ -350,18 +352,24 @@ instance : AddCommGroup ℂ := by
     · first |ring1|ring_nf
 
 instance : AddGroupWithOne ℂ :=
-  { Complex.addCommGroup with natCast := fun n => ⟨n, 0⟩,
-    nat_cast_zero := by ext <;> simp [Nat.cast],
-    nat_cast_succ := fun _ => by ext <;> simp [Nat.cast], intCast := fun n => ⟨n, 0⟩,
-    int_cast_of_nat := fun _ => by ext <;> simp [fun n => show @coe ℕ ℂ ⟨_⟩ n = ⟨n, 0⟩ from rfl],
+  { Complex.addCommGroup with 
+    natCast := fun n => ⟨n, 0⟩
+    nat_cast_zero := by ext <;> simp [Nat.cast]
+    nat_cast_succ := fun _ => by ext <;> simp [Nat.cast]
+    intCast := fun n => ⟨n, 0⟩
+    int_cast_of_nat := fun _ => by ext <;> simp [fun n => show @coe ℕ ℂ ⟨_⟩ n = ⟨n, 0⟩ from rfl]
     int_cast_neg_succ_of_nat := fun _ => by
-      ext <;> simp [fun n => show @coe ℕ ℂ ⟨_⟩ n = ⟨n, 0⟩ from rfl],
+      ext <;> simp [fun n => show @coe ℕ ℂ ⟨_⟩ n = ⟨n, 0⟩ from rfl]
     one := 1 }
 
 instance : CommRing ℂ := by
   refine_struct
-                { Complex.addGroupWithOne with zero := (0 : ℂ), add := (· + ·), one := 1,
-                  mul := (· * ·), npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨(· * ·)⟩ } <;>
+                { Complex.addGroupWithOne with 
+                  zero := (0 : ℂ)
+                  add := (· + ·)
+                  one := 1
+                  mul := (· * ·)
+                  npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨(· * ·)⟩ } <;>
               intros <;>
             try rfl <;>
           apply ext_iff.2 <;>
@@ -656,8 +664,10 @@ protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : z * z⁻¹ = 1 := by
 
 
 noncomputable instance : Field ℂ :=
-  { Complex.commRing, Complex.nontrivial with inv := Inv.inv,
-    mul_inv_cancel := @Complex.mul_inv_cancel, inv_zero := Complex.inv_zero }
+  { Complex.commRing, Complex.nontrivial with
+    inv := Inv.inv
+    mul_inv_cancel := @Complex.mul_inv_cancel
+    inv_zero := Complex.inv_zero }
 
 @[simp]
 theorem I_zpow_bit0 (n : ℤ) : I ^ bit0 n = (-1) ^ n := by rw [zpow_bit0', I_mul_I]
@@ -1055,8 +1065,8 @@ theorem eq_re_of_real_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re :
 -/
 protected def strictOrderedCommRing : StrictOrderedCommRing ℂ :=
   { Complex.partialOrder, Complex.commRing, Complex.nontrivial with
-    zero_le_one := ⟨zero_le_one, rfl⟩,
-    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg₂ (· + ·) rfl h.2⟩,
+    zero_le_one := ⟨zero_le_one, rfl⟩
+    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg₂ (· + ·) rfl h.2⟩
     mul_pos := fun z w hz hw => by
       simp [lt_def, mul_re, mul_im, ← hz.2, ← hw.2, mul_pos hz.1 hw.1] }
 #align complex.strict_ordered_comm_ring Complex.strictOrderedCommRing

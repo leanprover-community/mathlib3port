@@ -50,10 +50,8 @@ def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : C
         F) where 
   x := c.x.left
   π :=
-    { app := fun X =>
-        Option.casesOn X c.x.Hom fun j : J =>
-          (c.π.app
-              ⟨j⟩).left,-- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
+    { app := fun X => Option.casesOn X c.x.Hom fun j : J => (c.π.app ⟨j⟩).left
+      -- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
       naturality' := fun X Y f => by 
         dsimp; cases X <;> cases Y <;> cases f
         · rw [category.id_comp, category.comp_id]
@@ -71,7 +69,7 @@ def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
           F) where 
   obj := conesEquivInverseObj B F
   map c₁ c₂ f :=
-    { Hom := f.Hom.left,
+    { Hom := f.Hom.left
       w' := fun j => by 
         cases j
         · simp
@@ -90,7 +88,7 @@ def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
       Cone
         F where 
   obj c :=
-    { x := Over.mk (c.π.app none),
+    { x := Over.mk (c.π.app none)
       π :=
         { app := fun ⟨j⟩ =>
             Over.homMk (c.π.app (some j)) (by apply c.w (wide_pullback_shape.hom.term j)) } }
@@ -105,7 +103,13 @@ attribute [local tidy] tactic.case_bash
 def conesEquivUnitIso (B : C) (F : Discrete J ⥤ Over B) :
     𝟭 (Cone (widePullbackDiagramOfDiagramOver B F)) ≅
       conesEquivFunctor B F ⋙ conesEquivInverse B F :=
-  NatIso.ofComponents (fun _ => Cones.ext { Hom := 𝟙 _, inv := 𝟙 _ } (by tidy)) (by tidy)
+  NatIso.ofComponents
+    (fun _ =>
+      Cones.ext
+        { Hom := 𝟙 _
+          inv := 𝟙 _ }
+        (by tidy))
+    (by tidy)
 #align
   category_theory.over.construct_products.cones_equiv_unit_iso CategoryTheory.Over.ConstructProducts.conesEquivUnitIso
 
@@ -114,7 +118,12 @@ def conesEquivUnitIso (B : C) (F : Discrete J ⥤ Over B) :
 def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
     conesEquivInverse B F ⋙ conesEquivFunctor B F ≅ 𝟭 (Cone F) :=
   NatIso.ofComponents
-    (fun _ => Cones.ext { Hom := Over.homMk (𝟙 _), inv := Over.homMk (𝟙 _) } (by tidy)) (by tidy)
+    (fun _ =>
+      Cones.ext
+        { Hom := Over.homMk (𝟙 _)
+          inv := Over.homMk (𝟙 _) }
+        (by tidy))
+    (by tidy)
 #align
   category_theory.over.construct_products.cones_equiv_counit_iso CategoryTheory.Over.ConstructProducts.conesEquivCounitIso
 
@@ -137,7 +146,7 @@ def conesEquiv (B : C) (F : Discrete J ⥤ Over B) :
 theorem has_over_limit_discrete_of_wide_pullback_limit {B : C} (F : Discrete J ⥤ Over B)
     [HasLimit (widePullbackDiagramOfDiagramOver B F)] : HasLimit F :=
   HasLimit.mk
-    { Cone := _,
+    { Cone := _
       IsLimit :=
         IsLimit.ofRightAdjoint (conesEquiv B F).Functor
           (limit.isLimit (widePullbackDiagramOfDiagramOver B F)) }
@@ -182,9 +191,12 @@ way we want to define terminal objects.
 theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
   { HasLimit := fun F =>
       HasLimit.mk
-        { Cone := { x := Over.mk (𝟙 _), π := { app := fun p => p.as.elim } },
+        { Cone :=
+            { x := Over.mk (𝟙 _)
+              π := { app := fun p => p.as.elim } }
           IsLimit :=
-            { lift := fun s => Over.homMk _, fac' := fun _ j => j.as.elim,
+            { lift := fun s => Over.homMk _
+              fac' := fun _ j => j.as.elim
               uniq' := fun s m _ => by 
                 ext
                 rw [over.hom_mk_left]

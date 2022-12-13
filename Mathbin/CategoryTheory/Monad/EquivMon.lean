@@ -39,13 +39,17 @@ attribute [local instance, local reducible] endofunctor_monoidal_category
 /-- To every `Monad C` we associated a monoid object in `C ⥤ C`.-/
 @[simps]
 def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
-  { x := (M : C ⥤ C), one := M.η, mul := M.μ,
+  { x := (M : C ⥤ C)
+    one := M.η
+    mul := M.μ
     one_mul' := by 
       ext
-      simp,-- `obviously` provides this, but slowly
+      simp
+    -- `obviously` provides this, but slowly
     mul_one' := by 
       ext
-      simp,-- `obviously` provides this, but slowly
+      simp
+    -- `obviously` provides this, but slowly
     mul_assoc' := by 
       ext
       dsimp
@@ -73,13 +77,15 @@ variable {C}
 /-- To every monoid object in `C ⥤ C` we associate a `Monad C`. -/
 @[simps]
 def ofMon : Mon_ (C ⥤ C) → Monad C := fun M =>
-  { toFunctor := M.x, η' := M.one, μ' := M.mul,
+  { toFunctor := M.x
+    η' := M.one
+    μ' := M.mul
     left_unit' := fun X => by
       rw [← M.one.id_hcomp_app, ← nat_trans.comp_app, M.mul_one]
-      rfl,
+      rfl
     right_unit' := fun X => by
       rw [← M.one.hcomp_id_app, ← nat_trans.comp_app, M.one_mul]
-      rfl,
+      rfl
     assoc' := fun X => by 
       rw [← nat_trans.hcomp_id_app, ← nat_trans.comp_app]
       simp }
@@ -97,7 +103,7 @@ def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
       app_η' := by 
         intro X
         erw [← nat_trans.comp_app, f.one_hom]
-        rfl,
+        rfl
       app_μ' := by 
         intro X
         erw [← nat_trans.comp_app, f.mul_hom]

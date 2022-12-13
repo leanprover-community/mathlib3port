@@ -100,7 +100,10 @@ unsafe def find_cmd (_ : parse <| tk "#find") : lean.parser Unit := do
 #align find_cmd find_cmd
 
 add_tactic_doc
-  { Name := "#find", category := DocCategory.cmd, declNames := [`find_cmd], tags := ["search"] }
+  { Name := "#find"
+    category := DocCategory.cmd
+    declNames := [`find_cmd]
+    tags := ["search"] }
 
 -- #find (_ : nat) + _ = _ + _
 -- #find _ + _ = _ + _

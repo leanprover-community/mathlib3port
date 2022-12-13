@@ -110,7 +110,9 @@ def lift :
     (α → β) ≃
       (FreeMagma α →ₙ*
         β) where 
-  toFun f := { toFun := liftAux f, map_mul' := fun x y => rfl }
+  toFun f :=
+    { toFun := liftAux f
+      map_mul' := fun x y => rfl }
   invFun F := F ∘ of
   left_inv f := by 
     ext
@@ -284,16 +286,16 @@ instance : IsLawfulTraversable FreeMagma.{u} :=
   { FreeMagma.is_lawful_monad with
     id_traverse := fun α x =>
       FreeMagma.recOnPure x (fun x => rfl) fun x y ih1 ih2 => by
-        rw [traverse_mul, ih1, ih2, mul_map_seq],
+        rw [traverse_mul, ih1, ih2, mul_map_seq]
     comp_traverse := fun F G hf1 hg1 hf2 hg2 α β γ f g x =>
       FreeMagma.recOnPure x
         (fun x => by skip <;> simp only [traverse_pure, traverse_pure', functor_norm])
         fun x y ih1 ih2 => by
         skip <;> rw [traverse_mul, ih1, ih2, traverse_mul] <;>
-          simp only [traverse_mul', functor_norm],
+          simp only [traverse_mul', functor_norm]
     naturality := fun F G hf1 hg1 hf2 hg2 η α β f x =>
       FreeMagma.recOnPure x (fun x => by simp only [traverse_pure, functor_norm]) fun x y ih1 ih2 =>
-        by simp only [traverse_mul, functor_norm] <;> rw [ih1, ih2],
+        by simp only [traverse_mul, functor_norm] <;> rw [ih1, ih2]
     traverse_eq_map_id := fun α β f x =>
       FreeMagma.recOnPure x (fun _ => rfl) fun x y ih1 ih2 => by
         rw [traverse_mul, ih1, ih2, map_mul', mul_map_seq] <;> rfl }
@@ -426,7 +428,7 @@ def lift :
   toFun f :=
     { toFun := fun x =>
         Quot.liftOn x f <| by
-          rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only [map_mul, mul_assoc],
+          rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only [map_mul, mul_assoc]
       map_mul' := fun x y => Quot.induction_on₂ x y (map_mul f) }
   invFun f := f.comp of
   left_inv f := (FunLike.ext _ _) fun x => rfl
@@ -563,7 +565,7 @@ def lift :
       (FreeSemigroup α →ₙ*
         β) where 
   toFun f :=
-    { toFun := fun x => x.2.foldl (fun a b => a * f b) (f x.1),
+    { toFun := fun x => x.2.foldl (fun a b => a * f b) (f x.1)
       map_mul' := fun x y => by
         simp only [head_mul, tail_mul, ← List.foldl_map f, List.foldl_append, List.foldl_cons,
           List.foldl_assoc] }
@@ -736,15 +738,15 @@ instance : IsLawfulTraversable FreeSemigroup.{u} :=
   { FreeSemigroup.is_lawful_monad with
     id_traverse := fun α x =>
       FreeSemigroup.recOnMul x (fun x => rfl) fun x y ih1 ih2 => by
-        rw [traverse_mul, ih1, ih2, mul_map_seq],
+        rw [traverse_mul, ih1, ih2, mul_map_seq]
     comp_traverse := fun F G hf1 hg1 hf2 hg2 α β γ f g x =>
       recOnPure x (fun x => by skip <;> simp only [traverse_pure, traverse_pure', functor_norm])
         fun x y ih1 ih2 => by
         skip <;> rw [traverse_mul, ih1, ih2, traverse_mul] <;>
-          simp only [traverse_mul', functor_norm],
+          simp only [traverse_mul', functor_norm]
     naturality := fun F G hf1 hg1 hf2 hg2 η α β f x =>
       recOnPure x (fun x => by simp only [traverse_pure, functor_norm]) fun x y ih1 ih2 => by
-        skip <;> simp only [traverse_mul, functor_norm] <;> rw [ih1, ih2],
+        skip <;> simp only [traverse_mul, functor_norm] <;> rw [ih1, ih2]
     traverse_eq_map_id := fun α β f x =>
       FreeSemigroup.recOnMul x (fun _ => rfl) fun x y ih1 ih2 => by
         rw [traverse_mul, ih1, ih2, map_mul', mul_map_seq] <;> rfl }

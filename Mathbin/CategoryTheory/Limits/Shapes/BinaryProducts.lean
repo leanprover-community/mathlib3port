@@ -372,10 +372,10 @@ def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : 
       ∀ (s : BinaryFan X Y) (m : s.x ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd),
         m = lift s) :
     IsLimit (BinaryFan.mk fst snd) :=
-  { lift,
+  { lift
     fac' := fun s j => by 
       rcases j with ⟨⟨⟩⟩
-      exacts[fac_left s, fac_right s],
+      exacts[fac_left s, fac_right s]
     uniq' := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align category_theory.limits.binary_fan.is_limit_mk CategoryTheory.Limits.BinaryFan.isLimitMk
 
@@ -389,10 +389,10 @@ def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W}
       ∀ (s : BinaryCofan X Y) (m : W ⟶ s.x) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr),
         m = desc s) :
     IsColimit (BinaryCofan.mk inl inr) :=
-  { desc,
+  { desc
     fac' := fun s j => by 
       rcases j with ⟨⟨⟩⟩
-      exacts[fac_left s, fac_right s],
+      exacts[fac_left s, fac_right s]
     uniq' := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align
   category_theory.limits.binary_cofan.is_colimit_mk CategoryTheory.Limits.BinaryCofan.isColimitMk
@@ -1190,7 +1190,9 @@ variable {C} [HasBinaryProducts C]
 def prod.functor :
     C ⥤ C ⥤
         C where 
-  obj X := { obj := fun Y => X ⨯ Y, map := fun Y Z => prod.map (𝟙 X) }
+  obj X :=
+    { obj := fun Y => X ⨯ Y
+      map := fun Y Z => prod.map (𝟙 X) }
   map Y Z f := { app := fun T => prod.map f (𝟙 T) }
 #align category_theory.limits.prod.functor CategoryTheory.Limits.prod.functor
 
@@ -1209,10 +1211,11 @@ variable {C} [HasBinaryCoproducts C]
 /-- The binary coproduct functor. -/
 @[simps]
 def coprod.functor :
-    C ⥤
-      C ⥤
+    C ⥤ C ⥤
         C where 
-  obj X := { obj := fun Y => X ⨿ Y, map := fun Y Z => coprod.map (𝟙 X) }
+  obj X :=
+    { obj := fun Y => X ⨿ Y
+      map := fun Y Z => coprod.map (𝟙 X) }
   map Y Z f := { app := fun T => coprod.map f (𝟙 T) }
 #align category_theory.limits.coprod.functor CategoryTheory.Limits.coprod.functor
 
@@ -1411,7 +1414,7 @@ variable {C : Type u} [Category.{v} C]
 /-- Auxiliary definition for `over.coprod`. -/
 @[simps]
 def Over.coprodObj [HasBinaryCoproducts C] {A : C} : Over A → Over A ⥤ Over A := fun f =>
-  { obj := fun g => Over.mk (coprod.desc f.Hom g.Hom),
+  { obj := fun g => Over.mk (coprod.desc f.Hom g.Hom)
     map := fun g₁ g₂ k => Over.homMk (coprod.map (𝟙 _) k.left) }
 #align category_theory.over.coprod_obj CategoryTheory.Over.coprodObj
 
@@ -1425,7 +1428,7 @@ def Over.coprod [HasBinaryCoproducts C] {A : C} :
         Over.homMk (coprod.map k.left (𝟙 _))
           (by 
             dsimp
-            rw [coprod.map_desc, category.id_comp, over.w k]),
+            rw [coprod.map_desc, category.id_comp, over.w k])
       naturality' := fun f g k => by
         ext <;>
           · dsimp

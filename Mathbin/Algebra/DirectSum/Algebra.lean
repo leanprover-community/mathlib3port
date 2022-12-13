@@ -106,7 +106,7 @@ def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one 
     (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj)
     (hcommutes : ∀ r, (f 0) (Galgebra.toFun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
   { toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul with
-    toFun := toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul,
+    toFun := toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul
     commutes' := fun r => (DirectSum.to_semiring_of _ _ _ _ _).trans (hcommutes r) }
 #align direct_sum.to_algebra DirectSum.toAlgebra
 

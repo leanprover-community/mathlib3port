@@ -118,22 +118,22 @@ namespace Functor
 theorem IsLocalization.mk' (h₁ : Localization.StrictUniversalPropertyFixedTarget L W D)
     (h₂ : Localization.StrictUniversalPropertyFixedTarget L W W.Localization) :
     IsLocalization L W :=
-  { inverts := h₁.inverts,
+  { inverts := h₁.inverts
     nonempty_is_equivalence :=
       Nonempty.intro
-        { inverse := h₂.lift W.q W.Q_inverts,
+        { inverse := h₂.lift W.q W.Q_inverts
           unitIso :=
             eqToIso
               (Localization.Construction.uniq _ _
                 (by
                   simp only [← functor.assoc, localization.construction.fac, h₂.fac,
-                    functor.comp_id])),
+                    functor.comp_id]))
           counitIso :=
             eqToIso
               (h₁.uniq _ _
                 (by
                   simp only [← functor.assoc, h₂.fac, localization.construction.fac,
-                    functor.comp_id])),
+                    functor.comp_id]))
           functor_unit_iso_comp' := fun X => by
             simpa only [eq_to_iso.hom, eq_to_hom_app, eq_to_hom_map, eq_to_hom_trans,
               eq_to_hom_refl] } }
@@ -404,7 +404,7 @@ theorem of_iso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalization W]
   let F₁ := localization.construction.lift L₁ (localization.inverts L₁ W)
   let F₂ := localization.construction.lift L₂ h
   exact
-    { inverts := h,
+    { inverts := h
       nonempty_is_equivalence :=
         Nonempty.intro (is_equivalence.of_iso (lift_nat_iso W.Q W L₁ L₂ F₁ F₂ e) inferInstance) }
 #align category_theory.functor.is_localization.of_iso CategoryTheory.Functor.IsLocalization.of_iso
@@ -420,7 +420,7 @@ theorem of_equivalence_target {E : Type _} [Category E] (L' : C ⥤ E) (eq : D �
   let F₂ := localization.construction.lift L' h
   let e' : F₁ ⋙ eq.functor ≅ F₂ := lift_nat_iso W.Q W (L ⋙ eq.functor) L' _ _ e
   exact
-    { inverts := h,
+    { inverts := h
       nonempty_is_equivalence := Nonempty.intro (is_equivalence.of_iso e' inferInstance) }
 #align
   category_theory.functor.is_localization.of_equivalence_target CategoryTheory.Functor.IsLocalization.of_equivalence_target

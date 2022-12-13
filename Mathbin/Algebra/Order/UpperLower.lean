@@ -169,7 +169,9 @@ private theorem one_mul (s : UpperSet α) : 1 * s = s :=
 
 @[to_additive]
 instance : CommMonoid (UpperSet α) :=
-  { UpperSet.commSemigroup with one := 1, one_mul := one_mul,
+  { UpperSet.commSemigroup with 
+    one := 1
+    one_mul := one_mul
     mul_one := fun s => by 
       rw [mul_comm]
       exact one_mul _ }
@@ -233,7 +235,9 @@ private theorem one_mul (s : LowerSet α) : 1 * s = s :=
 
 @[to_additive]
 instance : CommMonoid (LowerSet α) :=
-  { LowerSet.commSemigroup with one := 1, one_mul := one_mul,
+  { LowerSet.commSemigroup with 
+    one := 1
+    one_mul := one_mul
     mul_one := fun s => by 
       rw [mul_comm]
       exact one_mul _ }

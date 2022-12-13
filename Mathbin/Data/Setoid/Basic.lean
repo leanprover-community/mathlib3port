@@ -176,11 +176,13 @@ instance : PartialOrder (Setoid α) where
 instance completeLattice : CompleteLattice (Setoid α) :=
   { (completeLatticeOfInf (Setoid α)) fun s =>
       ⟨fun r hr x y h => h _ hr, fun r hr x y h r' hr' => hr hr' h⟩ with
-    inf := HasInf.inf, inf_le_left := fun _ _ _ _ h => h.1, inf_le_right := fun _ _ _ _ h => h.2,
-    le_inf := fun _ _ _ h1 h2 _ _ h => ⟨h1 h, h2 h⟩,
-    top := ⟨fun _ _ => True, ⟨fun _ => trivial, fun _ _ h => h, fun _ _ _ h1 h2 => h1⟩⟩,
-    le_top := fun _ _ _ _ => trivial,
-    bot := ⟨(· = ·), ⟨fun _ => rfl, fun _ _ h => h.symm, fun _ _ _ h1 h2 => h1.trans h2⟩⟩,
+    inf := HasInf.inf
+    inf_le_left := fun _ _ _ _ h => h.1
+    inf_le_right := fun _ _ _ _ h => h.2
+    le_inf := fun _ _ _ h1 h2 _ _ h => ⟨h1 h, h2 h⟩
+    top := ⟨fun _ _ => True, ⟨fun _ => trivial, fun _ _ h => h, fun _ _ _ h1 h2 => h1⟩⟩
+    le_top := fun _ _ _ _ => trivial
+    bot := ⟨(· = ·), ⟨fun _ => rfl, fun _ _ h => h.symm, fun _ _ _ h1 h2 => h1.trans h2⟩⟩
     bot_le := fun r x y h => h ▸ r.2.1 x }
 #align setoid.complete_lattice Setoid.completeLattice
 

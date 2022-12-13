@@ -151,7 +151,8 @@ variable {σ : R →+* S}
 -- `σ` is an `out_param` so it's not dangerous
 @[nolint dangerous_instance]
 instance (priority := 100) [SemilinearMapClass F σ M M₃] : AddMonoidHomClass F M M₃ :=
-  { SemilinearMapClass.toAddHomClass F σ M M₃ with coe := fun f => (f : M → M₃),
+  { SemilinearMapClass.toAddHomClass F σ M M₃ with
+    coe := fun f => (f : M → M₃)
     map_zero := fun f =>
       show f 0 = 0 by 
         rw [← zero_smul R (0 : M), map_smulₛₗ]
@@ -160,7 +161,8 @@ instance (priority := 100) [SemilinearMapClass F σ M M₃] : AddMonoidHomClass 
 -- `R` is an `out_param` so it's not dangerous
 @[nolint dangerous_instance]
 instance (priority := 100) [LinearMapClass F R M M₂] : DistribMulActionHomClass F R M M₂ :=
-  { SemilinearMapClass.addMonoidHomClass F with coe := fun f => (f : M → M₂),
+  { SemilinearMapClass.addMonoidHomClass F with
+    coe := fun f => (f : M → M₂)
     map_smul := fun f c x => by rw [map_smulₛₗ, RingHom.id_apply] }
 
 variable {F} (f : F) [i : SemilinearMapClass F σ M M₃]
@@ -490,7 +492,9 @@ end
 /-- Interpret a `ring_hom` `f` as an `f`-semilinear map. -/
 @[simps]
 def RingHom.toSemilinearMap (f : R →+* S) : R →ₛₗ[f] S :=
-  { f with toFun := f, map_smul' := f.map_mul }
+  { f with 
+    toFun := f
+    map_smul' := f.map_mul }
 #align ring_hom.to_semilinear_map RingHom.toSemilinearMap
 
 section
@@ -574,7 +578,8 @@ def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [Rin
   by
   dsimp [left_inverse, Function.RightInverse] at h₁ h₂ <;>
     exact
-      { toFun := g, map_add' := fun x y => by rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂],
+      { toFun := g
+        map_add' := fun x y => by rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂]
         map_smul' := fun a b => by 
           rw [← h₁ (g (a • b)), ← h₁ (σ' a • g b)]
           simp [h₂] }
@@ -814,7 +819,8 @@ variable [Monoid T] [DistribMulAction T M₂] [SmulCommClass R₂ T M₂]
 
 instance : HasSmul S (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a f =>
-    { toFun := a • f, map_add' := fun x y => by simp only [Pi.smul_apply, f.map_add, smul_add],
+    { toFun := a • f
+      map_add' := fun x y => by simp only [Pi.smul_apply, f.map_add, smul_add]
       map_smul' := fun c x => by simp [Pi.smul_apply, smul_comm (σ₁₂ c)] }⟩
 
 @[simp]
@@ -858,7 +864,9 @@ variable {σ₁₂ : R₁ →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R
 
 /-- The constant 0 map is linear. -/
 instance : Zero (M →ₛₗ[σ₁₂] M₂) :=
-  ⟨{ toFun := 0, map_add' := by simp, map_smul' := by simp }⟩
+  ⟨{  toFun := 0
+      map_add' := by simp
+      map_smul' := by simp }⟩
 
 @[simp]
 theorem zero_apply (x : M) : (0 : M →ₛₗ[σ₁₂] M₂) x = 0 :=
@@ -886,7 +894,8 @@ theorem default_def : (default : M →ₛₗ[σ₁₂] M₂) = 0 :=
 /-- The sum of two linear maps is linear. -/
 instance : Add (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun f g =>
-    { toFun := f + g, map_add' := by simp [add_comm, add_left_comm],
+    { toFun := f + g
+      map_add' := by simp [add_comm, add_left_comm]
       map_smul' := by simp [smul_add] }⟩
 
 @[simp]
@@ -910,7 +919,10 @@ instance : AddCommMonoid (M →ₛₗ[σ₁₂] M₂) :=
 
 /-- The negation of a linear map is linear. -/
 instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
-  ⟨fun f => { toFun := -f, map_add' := by simp [add_comm], map_smul' := by simp }⟩
+  ⟨fun f =>
+    { toFun := -f
+      map_add' := by simp [add_comm]
+      map_smul' := by simp }⟩
 
 @[simp]
 theorem neg_apply (f : M →ₛₗ[σ₁₂] N₂) (x : M) : (-f) x = -f x :=
@@ -934,7 +946,8 @@ omit σ₁₃
 /-- The negation of a linear map is linear. -/
 instance : Sub (M →ₛₗ[σ₁₂] N₂) :=
   ⟨fun f g =>
-    { toFun := f - g, map_add' := fun x y => by simp only [Pi.sub_apply, map_add, add_sub_add_comm],
+    { toFun := f - g
+      map_add' := fun x y => by simp only [Pi.sub_apply, map_add, add_sub_add_comm]
       map_smul' := fun r x => by simp [Pi.sub_apply, map_smul, smul_sub] }⟩
 
 @[simp]
@@ -1077,10 +1090,17 @@ instance Module.EndCat.monoid :
 #align module.End.monoid Module.EndCat.monoid
 
 instance Module.EndCat.semiring : Semiring (Module.EndCat R M) :=
-  { AddMonoidWithOne.unary, Module.EndCat.monoid, LinearMap.addCommMonoid with mul := (· * ·),
-    one := (1 : M →ₗ[R] M), zero := 0, add := (· + ·), mul_zero := comp_zero, zero_mul := zero_comp,
-    left_distrib := fun f g h => comp_add _ _ _, right_distrib := fun f g h => add_comp _ _ _,
-    natCast := fun n => n • 1, nat_cast_zero := AddMonoid.nsmul_zero _,
+  { AddMonoidWithOne.unary, Module.EndCat.monoid, LinearMap.addCommMonoid with
+    mul := (· * ·)
+    one := (1 : M →ₗ[R] M)
+    zero := 0
+    add := (· + ·)
+    mul_zero := comp_zero
+    zero_mul := zero_comp
+    left_distrib := fun f g h => comp_add _ _ _
+    right_distrib := fun f g h => add_comp _ _ _
+    natCast := fun n => n • 1
+    nat_cast_zero := AddMonoid.nsmul_zero _
     nat_cast_succ := fun n => (AddMonoid.nsmul_succ n 1).trans (add_comm _ _) }
 #align module.End.semiring Module.EndCat.semiring
 
@@ -1091,8 +1111,10 @@ theorem Module.EndCat.nat_cast_apply (n : ℕ) (m : M) : (↑n : Module.EndCat R
 #align module.End.nat_cast_apply Module.EndCat.nat_cast_apply
 
 instance Module.EndCat.ring : Ring (Module.EndCat R N₁) :=
-  { Module.EndCat.semiring, LinearMap.addCommGroup with intCast := fun z => z • 1,
-    int_cast_of_nat := of_nat_zsmul _, int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
+  { Module.EndCat.semiring, LinearMap.addCommGroup with
+    intCast := fun z => z • 1
+    int_cast_of_nat := of_nat_zsmul _
+    int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
 #align module.End.ring Module.EndCat.ring
 
 /-- See also `module.End.int_cast_def`. -/
@@ -1209,8 +1231,9 @@ variable [Semiring S] [Module S M] [SmulCommClass S R M]
 This is a stronger version of `distrib_mul_action.to_module_End`. -/
 @[simps]
 def toModuleEnd : S →+* Module.EndCat R M :=
-  { DistribMulAction.toModuleEnd R M with toFun := DistribMulAction.toLinearMap R M,
-    map_zero' := LinearMap.ext <| zero_smul _,
+  { DistribMulAction.toModuleEnd R M with
+    toFun := DistribMulAction.toLinearMap R M
+    map_zero' := LinearMap.ext <| zero_smul _
     map_add' := fun f g => LinearMap.ext <| add_smul _ _ }
 #align module.to_module_End Module.toModuleEnd
 
@@ -1218,8 +1241,10 @@ def toModuleEnd : S →+* Module.EndCat R M :=
 multiplication. -/
 @[simps]
 def moduleEndSelf : Rᵐᵒᵖ ≃+* Module.EndCat R R :=
-  { Module.toModuleEnd R R with toFun := DistribMulAction.toLinearMap R R,
-    invFun := fun f => MulOpposite.op (f 1), left_inv := mul_one,
+  { Module.toModuleEnd R R with 
+    toFun := DistribMulAction.toLinearMap R R
+    invFun := fun f => MulOpposite.op (f 1)
+    left_inv := mul_one
     right_inv := fun f => LinearMap.ext_ring <| one_mul _ }
 #align module.module_End_self Module.moduleEndSelf
 
@@ -1227,8 +1252,11 @@ def moduleEndSelf : Rᵐᵒᵖ ≃+* Module.EndCat R R :=
 multiplication. -/
 @[simps]
 def moduleEndSelfOp : R ≃+* Module.EndCat Rᵐᵒᵖ R :=
-  { Module.toModuleEnd _ _ with toFun := DistribMulAction.toLinearMap _ _, invFun := fun f => f 1,
-    left_inv := mul_one, right_inv := fun f => LinearMap.ext_ring_op <| mul_one _ }
+  { Module.toModuleEnd _ _ with 
+    toFun := DistribMulAction.toLinearMap _ _
+    invFun := fun f => f 1
+    left_inv := mul_one
+    right_inv := fun f => LinearMap.ext_ring_op <| mul_one _ }
 #align module.module_End_self_op Module.moduleEndSelfOp
 
 theorem EndCat.nat_cast_def (n : ℕ) [AddCommMonoid N₁] [Module R N₁] :

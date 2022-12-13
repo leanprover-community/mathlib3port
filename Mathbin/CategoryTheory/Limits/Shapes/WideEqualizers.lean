@@ -228,7 +228,7 @@ def Trident.ofι [Nonempty J] {P : C} (ι : P ⟶ X) (w : ∀ j₁ j₂, ι ≫ 
     Trident f where 
   x := P
   π :=
-    { app := fun X => WalkingParallelFamily.casesOn X ι (ι ≫ f (Classical.arbitrary J)),
+    { app := fun X => WalkingParallelFamily.casesOn X ι (ι ≫ f (Classical.arbitrary J))
       naturality' := fun i j f => by 
         dsimp
         cases' f with _ k
@@ -244,7 +244,7 @@ def Cotrident.ofπ [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j₂, f j�
     Cotrident f where 
   x := P
   ι :=
-    { app := fun X => WalkingParallelFamily.casesOn X (f (Classical.arbitrary J) ≫ π) π,
+    { app := fun X => WalkingParallelFamily.casesOn X (f (Classical.arbitrary J) ≫ π) π
       naturality' := fun i j f => by 
         dsimp
         cases' f with _ k
@@ -326,10 +326,10 @@ def Trident.IsLimit.mk [Nonempty J] (t : Trident f) (lift : ∀ s : Trident f, s
       ∀ (s : Trident f) (m : s.x ⟶ t.x)
         (w : ∀ j : WalkingParallelFamily J, m ≫ t.π.app j = s.π.app j), m = lift s) :
     IsLimit t :=
-  { lift,
+  { lift
     fac' := fun s j =>
       WalkingParallelFamily.casesOn j (fac s)
-        (by rw [← t.w (line (Classical.arbitrary J)), reassoc_of fac, s.w]),
+        (by rw [← t.w (line (Classical.arbitrary J)), reassoc_of fac, s.w])
     uniq' := uniq }
 #align category_theory.limits.trident.is_limit.mk CategoryTheory.Limits.Trident.IsLimit.mk
 
@@ -350,10 +350,10 @@ def Cotrident.IsColimit.mk [Nonempty J] (t : Cotrident f) (desc : ∀ s : Cotrid
       ∀ (s : Cotrident f) (m : t.x ⟶ s.x)
         (w : ∀ j : WalkingParallelFamily J, t.ι.app j ≫ m = s.ι.app j), m = desc s) :
     IsColimit t :=
-  { desc,
+  { desc
     fac' := fun s j =>
       WalkingParallelFamily.casesOn j (by rw [← t.w_assoc (line (Classical.arbitrary J)), fac, s.w])
-        (fac s),
+        (fac s)
     uniq' := uniq }
 #align category_theory.limits.cotrident.is_colimit.mk CategoryTheory.Limits.Cotrident.IsColimit.mk
 
@@ -432,7 +432,7 @@ def Cone.ofTrident {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.m
     Cone F where 
   x := t.x
   π :=
-    { app := fun X => t.π.app X ≫ eqToHom (by tidy),
+    { app := fun X => t.π.app X ≫ eqToHom (by tidy)
       naturality' := fun j j' g => by
         cases g <;>
           · dsimp
@@ -451,7 +451,7 @@ def Cocone.ofCotrident {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j 
     Cocone F where 
   x := t.x
   ι :=
-    { app := fun X => eqToHom (by tidy) ≫ t.ι.app X,
+    { app := fun X => eqToHom (by tidy) ≫ t.ι.app X
       naturality' := fun j j' g => by cases g <;> dsimp <;> simp [cotrident.app_one t] }
 #align category_theory.limits.cocone.of_cotrident CategoryTheory.Limits.Cocone.ofCotrident
 

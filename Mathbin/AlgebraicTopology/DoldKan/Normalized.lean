@@ -136,8 +136,14 @@ def n₁IsoNormalizedMooreComplexCompToKaroubi :
       normalizedMooreComplex A ⋙
         toKaroubi
           _ where 
-  Hom := { app := fun X => { f := pInftyToNormalizedMooreComplex X, comm := by tidy } }
-  inv := { app := fun X => { f := inclusionOfMooreComplexMap X, comm := by tidy } }
+  Hom :=
+    { app := fun X =>
+        { f := pInftyToNormalizedMooreComplex X
+          comm := by tidy } }
+  inv :=
+    { app := fun X =>
+        { f := inclusionOfMooreComplexMap X
+          comm := by tidy } }
   hom_inv_id' := by 
     ext X : 3
     simp only [P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,

@@ -863,7 +863,9 @@ def orelse (c₁ c₂ : Computation α) : Computation α :=
 #align computation.orelse Computation.orelse
 
 instance : Alternative Computation :=
-  { Computation.monad with orelse := @orelse, failure := @empty }
+  { Computation.monad with 
+    orelse := @orelse
+    failure := @empty }
 
 @[simp]
 theorem ret_orelse (a : α) (c₂ : Computation α) : (return a <|> c₂) = return a :=

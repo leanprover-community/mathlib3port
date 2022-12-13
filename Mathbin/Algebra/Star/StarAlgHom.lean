@@ -84,7 +84,11 @@ variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B]
 
 instance [NonUnitalStarAlgHomClass F R A B] :
     CoeTC F
-      (A →⋆ₙₐ[R] B) where coe f := { (f : A →ₙₐ[R] B) with toFun := f, map_star' := map_star f }
+      (A →⋆ₙₐ[R]
+        B) where coe f :=
+    { (f : A →ₙₐ[R] B) with 
+      toFun := f
+      map_star' := map_star f }
 
 end NonUnitalStarAlgHomClass
 
@@ -255,7 +259,8 @@ instance : Inhabited (A →⋆ₙₐ[R] B) :=
 
 instance : MonoidWithZero (A →⋆ₙₐ[R] A) :=
   { NonUnitalStarAlgHom.monoid, NonUnitalStarAlgHom.hasZero with
-    zero_mul := fun f => ext fun x => rfl, mul_zero := fun f => ext fun x => map_zero f }
+    zero_mul := fun f => ext fun x => rfl
+    mul_zero := fun f => ext fun x => map_zero f }
 
 @[simp]
 theorem coe_zero : ((0 : A →⋆ₙₐ[R] B) : A → B) = 0 :=
@@ -319,7 +324,12 @@ instance (priority := 100) toNonUnitalStarAlgHomClass : NonUnitalStarAlgHomClass
   star_alg_hom_class.to_non_unital_star_alg_hom_class StarAlgHomClass.toNonUnitalStarAlgHomClass
 
 instance :
-    CoeTC F (A →⋆ₐ[R] B) where coe f := { (f : A →ₐ[R] B) with toFun := f, map_star' := map_star f }
+    CoeTC F
+      (A →⋆ₐ[R]
+        B) where coe f :=
+    { (f : A →ₐ[R] B) with 
+      toFun := f
+      map_star' := map_star f }
 
 end StarAlgHomClass
 
@@ -679,7 +689,9 @@ namespace StarAlgEquivClass
 -- See note [lower instance priority]
 instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B]
     [Mul B] [HasSmul R B] [HasStar B] [hF : StarAlgEquivClass F R A B] : StarHomClass F A B :=
-  { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective }
+  { hF with 
+    coe := fun f => f
+    coe_injective' := FunLike.coe_injective }
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgEquivClass.starHomClass
@@ -687,7 +699,9 @@ attribute [nolint dangerous_instance] StarAlgEquivClass.starHomClass
 -- See note [lower instance priority]
 instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasStar A] [HasSmul R A] [Add B]
     [Mul B] [HasSmul R B] [HasStar B] [hF : StarAlgEquivClass F R A B] : SmulHomClass F R A B :=
-  { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective }
+  { hF with 
+    coe := fun f => f
+    coe_injective' := FunLike.coe_injective }
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgEquivClass.smulHomClass
@@ -696,14 +710,20 @@ attribute [nolint dangerous_instance] StarAlgEquivClass.smulHomClass
 instance (priority := 100) {F R A B : Type _} [Monoid R] [NonUnitalNonAssocSemiring A]
     [DistribMulAction R A] [HasStar A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
     [HasStar B] [hF : StarAlgEquivClass F R A B] : NonUnitalStarAlgHomClass F R A B :=
-  { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective, map_zero := map_zero }
+  { hF with 
+    coe := fun f => f
+    coe_injective' := FunLike.coe_injective
+    map_zero := map_zero }
 
 -- See note [lower instance priority]
 instance (priority := 100) (F R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A]
     [HasStar A] [Semiring B] [Algebra R B] [HasStar B] [hF : StarAlgEquivClass F R A B] :
     StarAlgHomClass F R A B :=
-  { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective, map_one := map_one,
-    map_zero := map_zero,
+  { hF with 
+    coe := fun f => f
+    coe_injective' := FunLike.coe_injective
+    map_one := map_one
+    map_zero := map_zero
     commutes := fun f r => by simp only [Algebra.algebra_map_eq_smul_one, map_smul, map_one] }
 
 end StarAlgEquivClass
@@ -747,7 +767,9 @@ theorem ext_iff {f g : A ≃⋆ₐ[R] B} : f = g ↔ ∀ a, f a = g a :=
 /-- Star algebra equivalences are reflexive. -/
 @[refl]
 def refl : A ≃⋆ₐ[R] A :=
-  { RingEquiv.refl A with map_smul' := fun r a => rfl, map_star' := fun a => rfl }
+  { RingEquiv.refl A with 
+    map_smul' := fun r a => rfl
+    map_star' := fun a => rfl }
 #align star_alg_equiv.refl StarAlgEquiv.refl
 
 instance : Inhabited (A ≃⋆ₐ[R] A) :=
@@ -764,7 +786,7 @@ def symm (e : A ≃⋆ₐ[R] B) : B ≃⋆ₐ[R] A :=
   { e.toRingEquiv.symm with
     map_star' := fun b => by
       simpa only [e.left_inv (star (e.inv_fun b)), e.right_inv b] using
-        congr_arg e.inv_fun (e.map_star' (e.inv_fun b)).symm,
+        congr_arg e.inv_fun (e.map_star' (e.inv_fun b)).symm
     map_smul' := fun r b => by
       simpa only [e.left_inv (r • e.inv_fun b), e.right_inv b] using
         congr_arg e.inv_fun (e.map_smul' r (e.inv_fun b)).symm }
@@ -801,7 +823,9 @@ theorem mk_coe' (e : A ≃⋆ₐ[R] B) (f h₁ h₂ h₃ h₄ h₅ h₆) :
 @[simp]
 theorem symm_mk (f f') (h₁ h₂ h₃ h₄ h₅ h₆) :
     (⟨f, f', h₁, h₂, h₃, h₄, h₅, h₆⟩ : A ≃⋆ₐ[R] B).symm =
-      { (⟨f, f', h₁, h₂, h₃, h₄, h₅, h₆⟩ : A ≃⋆ₐ[R] B).symm with toFun := f', invFun := f } :=
+      { (⟨f, f', h₁, h₂, h₃, h₄, h₅, h₆⟩ : A ≃⋆ₐ[R] B).symm with
+        toFun := f'
+        invFun := f } :=
   rfl
 #align star_alg_equiv.symm_mk StarAlgEquiv.symm_mk
 
@@ -826,7 +850,7 @@ def trans (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) : A ≃⋆ₐ[R] C
   { e₁.toRingEquiv.trans e₂.toRingEquiv with
     map_smul' := fun r a =>
       show e₂.toFun (e₁.toFun (r • a)) = r • e₂.toFun (e₁.toFun a) by
-        rw [e₁.map_smul', e₂.map_smul'],
+        rw [e₁.map_smul', e₂.map_smul']
     map_star' := fun a =>
       show e₂.toFun (e₁.toFun (star a)) = star (e₂.toFun (e₁.toFun a)) by
         rw [e₁.map_star', e₂.map_star'] }
@@ -897,8 +921,10 @@ def ofStarAlgHom (f : F) (g : G) (h₁ : ∀ x, g (f x) = x) (h₂ : ∀ x, f (g
 
 /-- Promote a bijective star algebra homomorphism to a star algebra equivalence. -/
 noncomputable def ofBijective (f : F) (hf : Function.Bijective f) : A ≃⋆ₐ[R] B :=
-  { RingEquiv.ofBijective f (hf : Function.Bijective (f : A → B)) with toFun := f,
-    map_star' := map_star f, map_smul' := map_smul f }
+  { RingEquiv.ofBijective f (hf : Function.Bijective (f : A → B)) with
+    toFun := f
+    map_star' := map_star f
+    map_smul' := map_smul f }
 #align star_alg_equiv.of_bijective StarAlgEquiv.ofBijective
 
 @[simp]

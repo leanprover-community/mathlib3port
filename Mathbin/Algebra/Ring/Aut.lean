@@ -45,8 +45,11 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance : Group (RingAut R) := by
   refine_struct
-            { mul := fun g h => RingEquiv.trans h g, one := RingEquiv.refl R, inv := RingEquiv.symm,
-              div := _, npow := @npowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩,
+            { mul := fun g h => RingEquiv.trans h g
+              one := RingEquiv.refl R
+              inv := RingEquiv.symm
+              div := _
+              npow := @npowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩
               zpow :=
                 @zpowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩
                   ⟨RingEquiv.symm⟩ } <;>

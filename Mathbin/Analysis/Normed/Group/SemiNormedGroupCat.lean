@@ -130,7 +130,9 @@ theorem hom_ext {M N : SemiNormedGroup₁Cat} (f g : M ⟶ N) (w : (f : M → N)
 instance :
     ConcreteCategory.{u}
       SemiNormedGroup₁Cat where 
-  forget := { obj := fun X => X, map := fun X Y f => f }
+  forget :=
+    { obj := fun X => X
+      map := fun X Y f => f }
   forget_faithful := {  }
 
 /-- Construct a bundled `SemiNormedGroup₁` from the underlying type and typeclass. -/
@@ -170,7 +172,9 @@ def mkIso {M N : SemiNormedGroupCat} (f : M ≅ N) (i : f.hom.NormNoninc) (i' : 
 
 instance :
     HasForget₂ SemiNormedGroup₁Cat
-      SemiNormedGroupCat where forget₂ := { obj := fun X => X, map := fun X Y f => f.1 }
+      SemiNormedGroupCat where forget₂ :=
+    { obj := fun X => X
+      map := fun X Y f => f.1 }
 
 @[simp]
 theorem coe_of (V : Type u) [SeminormedAddCommGroup V] : (SemiNormedGroup₁Cat.of V : Type u) = V :=

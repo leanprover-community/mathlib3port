@@ -91,11 +91,11 @@ For now, this is not an instance by default as it creates an equal-but-not-defeq
 will likely change in Lean 4. -/
 def ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
   RingHom.toAlgebra
-    { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩,
-      map_zero' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero],
-      map_one' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one],
+    { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩
+      map_zero' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero]
+      map_one' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one]
       map_add' := fun x y =>
-        Subtype.ext <| by simp only [map_add, Subalgebra.coe_add, Subtype.coe_mk],
+        Subtype.ext <| by simp only [map_add, Subalgebra.coe_add, Subtype.coe_mk]
       map_mul' := fun x y =>
         Subtype.ext <| by simp only [Subalgebra.coe_mul, map_mul, Subtype.coe_mk] }
 #align number_field.ring_of_integers_algebra NumberField.ringOfIntegersAlgebra

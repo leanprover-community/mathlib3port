@@ -82,7 +82,10 @@ instance : CoeFun (α →ᵇ β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 instance [BoundedContinuousMapClass F α β] : CoeTC F (α →ᵇ β) :=
-  ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f, map_bounded' := map_bounded f }⟩
+  ⟨fun f =>
+    { toFun := f
+      continuous_to_fun := map_continuous f
+      map_bounded' := map_bounded f }⟩
 
 @[simp]
 theorem coe_to_continuous_fun (f : α →ᵇ β) : (f.toContinuousMap : α → β) = f :=
@@ -730,7 +733,7 @@ instance hasNatScalar :
     HasSmul ℕ
       (α →ᵇ
         β) where smul n f :=
-    { toContinuousMap := n • f.toContinuousMap,
+    { toContinuousMap := n • f.toContinuousMap
       map_bounded' := by simpa [coe_nsmul_rec] using (nsmulRec n f).map_bounded' }
 #align bounded_continuous_function.has_nat_scalar BoundedContinuousFunction.hasNatScalar
 
@@ -1035,7 +1038,7 @@ instance hasIntScalar :
     HasSmul ℤ
       (α →ᵇ
         β) where smul n f :=
-    { toContinuousMap := n • f.toContinuousMap,
+    { toContinuousMap := n • f.toContinuousMap
       map_bounded' := by simpa using (zsmulRec n f).map_bounded' }
 #align bounded_continuous_function.has_int_scalar BoundedContinuousFunction.hasIntScalar
 
@@ -1134,7 +1137,7 @@ instance :
     HasSmul 𝕜
       (α →ᵇ
         β) where smul c f :=
-    { toContinuousMap := c • f.toContinuousMap,
+    { toContinuousMap := c • f.toContinuousMap
       map_bounded' :=
         let ⟨b, hb⟩ := f.Bounded
         ⟨dist c 0 * b, fun x y => by
@@ -1273,8 +1276,9 @@ protected def ContinuousLinearMap.compLeftContinuousBounded (g : β →L[𝕜] �
   LinearMap.mkContinuous
     { toFun := fun f =>
         ofNormedAddCommGroup (g ∘ f) (g.Continuous.comp f.Continuous) (‖g‖ * ‖f‖) fun x =>
-          g.le_op_norm_of_le (f.norm_coe_le_norm x),
-      map_add' := fun f g => by ext <;> simp, map_smul' := fun c f => by ext <;> simp }
+          g.le_op_norm_of_le (f.norm_coe_le_norm x)
+      map_add' := fun f g => by ext <;> simp
+      map_smul' := fun c f => by ext <;> simp }
     ‖g‖ fun f => norm_of_normed_add_comm_group_le _ (mul_nonneg (norm_nonneg g) (norm_nonneg f)) _
 #align
   continuous_linear_map.comp_left_continuous_bounded ContinuousLinearMap.compLeftContinuousBounded
@@ -1353,7 +1357,7 @@ theorem coe_npow_rec (f : α →ᵇ R) : ∀ n, ⇑(npowRec n f) = f ^ n
 instance hasNatPow :
     Pow (α →ᵇ R)
       ℕ where pow f n :=
-    { toContinuousMap := f.toContinuousMap ^ n,
+    { toContinuousMap := f.toContinuousMap ^ n
       map_bounded' := by simpa [coe_npow_rec] using (npowRec n f).map_bounded' }
 #align bounded_continuous_function.has_nat_pow BoundedContinuousFunction.hasNatPow
 
@@ -1449,8 +1453,9 @@ def c : 𝕜 →+* α →ᵇ γ where
 #align bounded_continuous_function.C BoundedContinuousFunction.c
 
 instance : Algebra 𝕜 (α →ᵇ γ) :=
-  { BoundedContinuousFunction.module, BoundedContinuousFunction.ring with toRingHom := c,
-    commutes' := fun c f => ext fun x => Algebra.commutes' _ _,
+  { BoundedContinuousFunction.module, BoundedContinuousFunction.ring with
+    toRingHom := c
+    commutes' := fun c f => ext fun x => Algebra.commutes' _ _
     smul_def' := fun c f => ext fun x => Algebra.smul_def' _ _ }
 
 @[simp]
@@ -1482,9 +1487,10 @@ instance hasSmul' : HasSmul (α →ᵇ 𝕜) (α →ᵇ β) :=
 
 instance module' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
   Module.ofCore <|
-    { smul := (· • ·), smul_add := fun c f₁ f₂ => ext fun x => smul_add _ _ _,
-      add_smul := fun c₁ c₂ f => ext fun x => add_smul _ _ _,
-      mul_smul := fun c₁ c₂ f => ext fun x => mul_smul _ _ _,
+    { smul := (· • ·)
+      smul_add := fun c f₁ f₂ => ext fun x => smul_add _ _ _
+      add_smul := fun c₁ c₂ f => ext fun x => add_smul _ _ _
+      mul_smul := fun c₁ c₂ f => ext fun x => mul_smul _ _ _
       one_smul := fun f => ext fun x => one_smul 𝕜 (f x) }
 #align bounded_continuous_function.module' BoundedContinuousFunction.module'
 
@@ -1598,15 +1604,16 @@ instance : PartialOrder (α →ᵇ β) :=
 instance : SemilatticeInf (α →ᵇ β) :=
   { BoundedContinuousFunction.partialOrder with
     inf := fun f g =>
-      { toFun := fun t => f t ⊓ g t, continuous_to_fun := f.Continuous.inf g.Continuous,
+      { toFun := fun t => f t ⊓ g t
+        continuous_to_fun := f.Continuous.inf g.Continuous
         map_bounded' := by 
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
           simp_rw [NormedAddCommGroup.dist_eq] at hf hg⊢
-          exact (norm_inf_sub_inf_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) },
-    inf_le_left := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_left,
-    inf_le_right := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_right,
+          exact (norm_inf_sub_inf_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) }
+    inf_le_left := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_left
+    inf_le_right := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_right
     le_inf := fun f g₁ g₂ w₁ w₂ =>
       ContinuousMap.le_def.mpr fun _ =>
         le_inf (ContinuousMap.le_def.mp w₁ _) (ContinuousMap.le_def.mp w₂ _) }
@@ -1614,15 +1621,16 @@ instance : SemilatticeInf (α →ᵇ β) :=
 instance : SemilatticeSup (α →ᵇ β) :=
   { BoundedContinuousFunction.partialOrder with
     sup := fun f g =>
-      { toFun := fun t => f t ⊔ g t, continuous_to_fun := f.Continuous.sup g.Continuous,
+      { toFun := fun t => f t ⊔ g t
+        continuous_to_fun := f.Continuous.sup g.Continuous
         map_bounded' := by 
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
           simp_rw [NormedAddCommGroup.dist_eq] at hf hg⊢
-          exact (norm_sup_sub_sup_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) },
-    le_sup_left := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_left,
-    le_sup_right := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_right,
+          exact (norm_sup_sub_sup_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) }
+    le_sup_left := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_left
+    le_sup_right := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_right
     sup_le := fun f g₁ g₂ w₁ w₂ =>
       ContinuousMap.le_def.mpr fun _ =>
         sup_le (ContinuousMap.le_def.mp w₁ _) (ContinuousMap.le_def.mp w₂ _) }
@@ -1646,7 +1654,7 @@ instance : NormedLatticeAddCommGroup (α →ᵇ β) :=
       intro f g h₁ h t
       simp only [coe_to_continuous_fun, Pi.add_apply, add_le_add_iff_left, coe_add,
         ContinuousMap.to_fun_eq_coe]
-      exact h₁ _,
+      exact h₁ _
     solid := by 
       intro f g h
       have i1 : ∀ t, ‖f t‖ ≤ ‖g t‖ := fun t => solid (h t)

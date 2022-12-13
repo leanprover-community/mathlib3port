@@ -73,7 +73,8 @@ namespace DirectSum
 a ring to a direct sum of components. -/
 def decomposeRingEquiv : A ≃+* ⨁ i, 𝒜 i :=
   RingEquiv.symm
-    { (decomposeAddEquiv 𝒜).symm with map_mul' := (coeRingHom 𝒜).map_mul,
+    { (decomposeAddEquiv 𝒜).symm with
+      map_mul' := (coeRingHom 𝒜).map_mul
       map_add' := (coeRingHom 𝒜).map_add }
 #align direct_sum.decompose_ring_equiv DirectSum.decomposeRingEquiv
 
@@ -204,8 +205,10 @@ an algebra to a direct sum of components. -/
 @[simps]
 def decomposeAlgEquiv : A ≃ₐ[R] ⨁ i, 𝒜 i :=
   AlgEquiv.symm
-    { (decomposeAddEquiv 𝒜).symm with map_mul' := (coeAlgHom 𝒜).map_mul,
-      map_add' := (coeAlgHom 𝒜).map_add, commutes' := (coeAlgHom 𝒜).commutes }
+    { (decomposeAddEquiv 𝒜).symm with
+      map_mul' := (coeAlgHom 𝒜).map_mul
+      map_add' := (coeAlgHom 𝒜).map_add
+      commutes' := (coeAlgHom 𝒜).commutes }
 #align direct_sum.decompose_alg_equiv DirectSum.decomposeAlgEquiv
 
 end DirectSum

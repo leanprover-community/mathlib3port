@@ -561,8 +561,8 @@ instance : HasSup (Box ι) :=
 
 instance : SemilatticeSup (Box ι) :=
   { Box.partialOrder, Box.hasSup with
-    le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩,
-    le_sup_right := fun I J => le_iff_bounds.2 ⟨inf_le_right, le_sup_right⟩,
+    le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩
+    le_sup_right := fun I J => le_iff_bounds.2 ⟨inf_le_right, le_sup_right⟩
     sup_le := fun I₁ I₂ J h₁ h₂ =>
       le_iff_bounds.2
         ⟨le_inf (antitone_lower h₁) (antitone_lower h₂),
@@ -668,10 +668,10 @@ instance : Lattice (WithBot (Box ι)) :=
   { WithBot.semilatticeSup, Box.WithBot.hasInf with
     inf_le_left := fun I J => by 
       rw [← with_bot_coe_subset_iff, coe_inf]
-      exact inter_subset_left _ _,
+      exact inter_subset_left _ _
     inf_le_right := fun I J => by 
       rw [← with_bot_coe_subset_iff, coe_inf]
-      exact inter_subset_right _ _,
+      exact inter_subset_right _ _
     le_inf := fun I J₁ J₂ h₁ h₂ => by
       simp only [← with_bot_coe_subset_iff, coe_inf] at *
       exact subset_inter h₁ h₂ }

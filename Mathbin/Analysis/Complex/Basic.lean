@@ -46,11 +46,15 @@ theorem norm_eq_abs (z : ℂ) : ‖z‖ = abs z :=
 
 instance : NormedAddCommGroup ℂ :=
   AddGroupNorm.toNormedAddCommGroup
-    { abs with map_zero' := map_zero abs, neg' := abs.map_neg,
+    { abs with 
+      map_zero' := map_zero abs
+      neg' := abs.map_neg
       eq_zero_of_map_eq_zero' := fun _ => abs.eq_zero.1 }
 
 instance : NormedField ℂ :=
-  { Complex.field, Complex.normedAddCommGroup with norm := abs, dist_eq := fun _ _ => rfl,
+  { Complex.field, Complex.normedAddCommGroup with
+    norm := abs
+    dist_eq := fun _ _ => rfl
     norm_mul' := map_mul abs }
 
 instance :

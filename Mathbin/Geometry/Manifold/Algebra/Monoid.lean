@@ -258,7 +258,8 @@ structure SmoothMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCo
 
 @[to_additive]
 instance : One (SmoothMonoidMorphism I I' G G') :=
-  ⟨{ smoothToFun := smoothConst, toMonoidHom := 1 }⟩
+  ⟨{  smoothToFun := smoothConst
+      toMonoidHom := 1 }⟩
 
 @[to_additive]
 instance : Inhabited (SmoothMonoidMorphism I I' G G') :=

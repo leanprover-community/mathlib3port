@@ -848,8 +848,10 @@ unsafe def ring (red : parse (tk "!")?) : tactic Unit :=
 add_hint_tactic ring
 
 add_tactic_doc
-  { Name := "ring", category := DocCategory.tactic, declNames := [`` Ring, `` ring_nf, `` ring1],
-    inheritDescriptionFrom := `` Ring,
+  { Name := "ring"
+    category := DocCategory.tactic
+    declNames := [`` Ring, `` ring_nf, `` ring1]
+    inheritDescriptionFrom := `` Ring
     tags := ["arithmetic", "simplification", "decision procedure"] }
 
 end Interactive

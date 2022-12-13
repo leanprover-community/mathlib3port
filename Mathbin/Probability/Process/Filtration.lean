@@ -97,9 +97,9 @@ instance : Top (Filtration ι m) :=
 
 instance : HasSup (Filtration ι m) :=
   ⟨fun f g =>
-    { seq := fun i => f i ⊔ g i,
+    { seq := fun i => f i ⊔ g i
       mono' := fun i j hij =>
-        sup_le ((f.mono hij).trans le_sup_left) ((g.mono hij).trans le_sup_right),
+        sup_le ((f.mono hij).trans le_sup_left) ((g.mono hij).trans le_sup_right)
       le' := fun i => sup_le (f.le i) (g.le i) }⟩
 
 @[norm_cast]
@@ -109,9 +109,9 @@ theorem coe_fn_sup {f g : Filtration ι m} : ⇑(f ⊔ g) = f ⊔ g :=
 
 instance : HasInf (Filtration ι m) :=
   ⟨fun f g =>
-    { seq := fun i => f i ⊓ g i,
+    { seq := fun i => f i ⊓ g i
       mono' := fun i j hij =>
-        le_inf (inf_le_left.trans (f.mono hij)) (inf_le_right.trans (g.mono hij)),
+        le_inf (inf_le_left.trans (f.mono hij)) (inf_le_right.trans (g.mono hij))
       le' := fun i => inf_le_left.trans (f.le i) }⟩
 
 @[norm_cast]
@@ -121,7 +121,7 @@ theorem coe_fn_inf {f g : Filtration ι m} : ⇑(f ⊓ g) = f ⊓ g :=
 
 instance : HasSup (Filtration ι m) :=
   ⟨fun s =>
-    { seq := fun i => sup ((fun f : Filtration ι m => f i) '' s),
+    { seq := fun i => sup ((fun f : Filtration ι m => f i) '' s)
       mono' := fun i j hij => by 
         refine' Sup_le fun m' hm' => _
         rw [Set.mem_image] at hm'
@@ -129,7 +129,7 @@ instance : HasSup (Filtration ι m) :=
         rw [← hfm']
         refine' (f.mono hij).trans _
         have hfj_mem : f j ∈ (fun g : filtration ι m => g j) '' s := ⟨f, hf_mem, rfl⟩
-        exact le_Sup hfj_mem,
+        exact le_Sup hfj_mem
       le' := fun i => by 
         refine' Sup_le fun m' hm' => _
         rw [Set.mem_image] at hm'
@@ -144,7 +144,7 @@ theorem Sup_def (s : Set (Filtration ι m)) (i : ι) :
 
 noncomputable instance : HasInf (Filtration ι m) :=
   ⟨fun s =>
-    { seq := fun i => if Set.Nonempty s then inf ((fun f : Filtration ι m => f i) '' s) else m,
+    { seq := fun i => if Set.Nonempty s then inf ((fun f : Filtration ι m => f i) '' s) else m
       mono' := fun i j hij => by 
         by_cases h_nonempty : Set.Nonempty s
         swap
@@ -153,7 +153,7 @@ noncomputable instance : HasInf (Filtration ι m) :=
           forall_apply_eq_imp_iff₂]
         refine' fun f hf_mem => le_trans _ (f.mono hij)
         have hfi_mem : f i ∈ (fun g : filtration ι m => g i) '' s := ⟨f, hf_mem, rfl⟩
-        exact Inf_le hfi_mem,
+        exact Inf_le hfi_mem
       le' := fun i => by 
         by_cases h_nonempty : Set.Nonempty s
         swap; · simp only [h_nonempty, if_false, le_refl]

@@ -190,7 +190,9 @@ section Semiring
 variable [Semiring R]
 
 instance unitsMulSemiringAction : MulSemiringAction (ConjAct Rˣ) R :=
-  { ConjAct.unitsMulDistribMulAction with smul := (· • ·), smul_zero := by simp [units_smul_def],
+  { ConjAct.unitsMulDistribMulAction with 
+    smul := (· • ·)
+    smul_zero := by simp [units_smul_def]
     smul_add := by simp [units_smul_def, mul_add, add_mul] }
 #align conj_act.units_mul_semiring_action ConjAct.unitsMulSemiringAction
 
@@ -237,7 +239,9 @@ section DivisionRing
 variable [DivisionRing K]
 
 instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
-  { ConjAct.mulAction₀ with smul := (· • ·), smul_zero := by simp [smul_def],
+  { ConjAct.mulAction₀ with 
+    smul := (· • ·)
+    smul_zero := by simp [smul_def]
     smul_add := by simp [smul_def, mul_add, add_mul] }
 #align conj_act.distrib_mul_action₀ ConjAct.distribMulAction₀
 

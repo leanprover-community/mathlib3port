@@ -292,20 +292,20 @@ def ofCocomplex (Z : C) : CochainComplex C ℕ :=
 `InjectiveResolution.of Z` constructs an injective resolution of the object `Z`.
 -/
 irreducible_def of (Z : C) : InjectiveResolutionCat Z :=
-  { cocomplex := ofCocomplex Z,
+  { cocomplex := ofCocomplex Z
     ι :=
       CochainComplex.mkHom _ _ (Injective.ι Z) 0
         (by
           simp only [of_cocomplex_d, eq_self_iff_true, eq_to_hom_refl, category.comp_id,
             dite_eq_ite, if_true, comp_zero]
           exact (exact_f_d (injective.ι Z)).w)
-        fun n _ => ⟨0, by ext⟩,
-    Injective := by rintro (_ | _ | _ | n) <;> · apply injective.injective_under,
-    exact₀ := by simpa using exact_f_d (injective.ι Z),
+        fun n _ => ⟨0, by ext⟩
+    Injective := by rintro (_ | _ | _ | n) <;> · apply injective.injective_under
+    exact₀ := by simpa using exact_f_d (injective.ι Z)
     exact := by
       rintro (_ | n) <;>
         · simp
-          apply exact_f_d,
+          apply exact_f_d
     Mono := Injective.ι_mono Z }
 #align category_theory.InjectiveResolution.of CategoryTheory.InjectiveResolutionCat.of
 

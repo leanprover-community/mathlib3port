@@ -366,8 +366,8 @@ theorem exists_extension_forall_mem_of_closed_embedding (f : C(X, ℝ)) {t : Set
     ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g ∘ e = f := by
   have h : ℝ ≃o Ioo (-1 : ℝ) 1 := orderIsoIooNegOneOne ℝ
   set F : X →ᵇ ℝ :=
-    { toFun := coe ∘ h ∘ f,
-      continuous_to_fun := continuous_subtype_coe.comp (h.continuous.comp f.continuous),
+    { toFun := coe ∘ h ∘ f
+      continuous_to_fun := continuous_subtype_coe.comp (h.continuous.comp f.continuous)
       map_bounded' :=
         bounded_range_iff.1
           ((bounded_Ioo (-1 : ℝ) 1).mono <| forall_range_iff.2 fun x => (h (f x)).2) }

@@ -378,9 +378,9 @@ theorem abs_inner_le_norm (x y : F) : abs ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ :=
 /-- Normed group structure constructed from an `inner_product_space.core` structure -/
 def toNormedAddCommGroup : NormedAddCommGroup F :=
   AddGroupNorm.toNormedAddCommGroup
-    { toFun := fun x => sqrt (re ⟪x, x⟫),
-      map_zero' := by simp only [sqrt_zero, inner_zero_right, map_zero],
-      neg' := fun x => by simp only [inner_neg_left, neg_neg, inner_neg_right],
+    { toFun := fun x => sqrt (re ⟪x, x⟫)
+      map_zero' := by simp only [sqrt_zero, inner_zero_right, map_zero]
+      neg' := fun x => by simp only [inner_neg_left, neg_neg, inner_neg_right]
       add_le' := fun x y => by
         have h₁ : abs ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ := abs_inner_le_norm _ _
         have h₂ : re ⟪x, y⟫ ≤ abs ⟪x, y⟫ := re_le_abs _
@@ -389,7 +389,7 @@ def toNormedAddCommGroup : NormedAddCommGroup F :=
         have : ‖x + y‖ * ‖x + y‖ ≤ (‖x‖ + ‖y‖) * (‖x‖ + ‖y‖) := by
           simp only [← inner_self_eq_norm_mul_norm, inner_add_add_self, mul_add, mul_comm, map_add]
           linarith
-        exact nonneg_le_nonneg_of_sq_le_sq (add_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) this,
+        exact nonneg_le_nonneg_of_sq_le_sq (add_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) this
       eq_zero_of_map_eq_zero' := fun x hx =>
         (inner_self_eq_zero : ⟪x, x⟫ = 0 ↔ x = 0).1 <| by
           change sqrt (re ⟪x, x⟫) = 0 at hx
@@ -2757,12 +2757,12 @@ instance may be not definitionally equal to some other “natural” instance. S
 -/
 theorem isBoundedBilinearMapInner [NormedSpace ℝ E] :
     IsBoundedBilinearMap ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
-  { add_left := fun _ _ _ => inner_add_left,
+  { add_left := fun _ _ _ => inner_add_left
     smul_left := fun r x y => by
-      simp only [← algebra_map_smul 𝕜 r x, algebra_map_eq_of_real, inner_smul_real_left],
-    add_right := fun _ _ _ => inner_add_right,
+      simp only [← algebra_map_smul 𝕜 r x, algebra_map_eq_of_real, inner_smul_real_left]
+    add_right := fun _ _ _ => inner_add_right
     smul_right := fun r x y => by
-      simp only [← algebra_map_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right],
+      simp only [← algebra_map_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right]
     bound :=
       ⟨1, zero_lt_one, fun x y => by 
         rw [one_mul]
@@ -2841,9 +2841,12 @@ theorem IsROrC.inner_apply (x y : 𝕜) : ⟪x, y⟫ = conj x * y :=
 
 /-- Induced inner product on a submodule. -/
 instance Submodule.innerProductSpace (W : Submodule 𝕜 E) : InnerProductSpace 𝕜 W :=
-  { Submodule.normedSpace W with toNormedAddCommGroup := Submodule.normedAddCommGroup _,
-    inner := fun x y => ⟪(x : E), (y : E)⟫, conj_sym := fun _ _ => inner_conj_sym _ _,
-    norm_sq_eq_inner := fun _ => norm_sq_eq_inner _, add_left := fun _ _ _ => inner_add_left,
+  { Submodule.normedSpace W with
+    toNormedAddCommGroup := Submodule.normedAddCommGroup _
+    inner := fun x y => ⟪(x : E), (y : E)⟫
+    conj_sym := fun _ _ => inner_conj_sym _ _
+    norm_sq_eq_inner := fun _ => norm_sq_eq_inner _
+    add_left := fun _ _ _ => inner_add_left
     smul_left := fun _ _ _ => inner_smul_left }
 #align submodule.inner_product_space Submodule.innerProductSpace
 
@@ -5176,11 +5179,12 @@ proof to obtain a real inner product space structure from a given `𝕜`-inner p
 structure. -/
 def InnerProductSpace.isROrCToReal : InnerProductSpace ℝ E :=
   { HasInner.isROrCToReal 𝕜 E, NormedSpace.restrictScalars ℝ 𝕜 E with
-    toNormedAddCommGroup := InnerProductSpace.toNormedAddCommGroup 𝕜,
-    norm_sq_eq_inner := norm_sq_eq_inner, conj_sym := fun x y => inner_re_symm,
+    toNormedAddCommGroup := InnerProductSpace.toNormedAddCommGroup 𝕜
+    norm_sq_eq_inner := norm_sq_eq_inner
+    conj_sym := fun x y => inner_re_symm
     add_left := fun x y z => by
       change re ⟪x + y, z⟫ = re ⟪x, z⟫ + re ⟪y, z⟫
-      simp [inner_add_left],
+      simp [inner_add_left]
     smul_left := fun x y r => by
       change re ⟪(r : 𝕜) • x, y⟫ = r * re ⟪x, y⟫
       simp [inner_smul_left] }
@@ -5509,7 +5513,8 @@ theorem inner_coe (a b : E) : inner (a : Completion E) (b : Completion E) = (inn
 protected theorem continuous_inner : Continuous (uncurry inner : Completion E × Completion E → 𝕜) :=
   by
   let inner' : E →+ E →+ 𝕜 :=
-    { toFun := fun x => (innerₛₗ x).toAddMonoidHom, map_zero' := by ext x <;> exact inner_zero_left,
+    { toFun := fun x => (innerₛₗ x).toAddMonoidHom
+      map_zero' := by ext x <;> exact inner_zero_left
       map_add' := fun x y => by ext z <;> exact inner_add_left }
   have : Continuous fun p : E × E => inner' p.1 p.2 := continuous_inner
   rw [completion.has_inner, uncurry_curry _]

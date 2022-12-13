@@ -106,8 +106,10 @@ instance : BoundedOrder SignType where
   bot_le := Le.of_neg
 
 instance : HasDistribNeg SignType :=
-  { SignType.hasNeg with neg_neg := fun x => by cases x <;> rfl,
-    neg_mul := fun x y => by casesm*_ <;> rfl, mul_neg := fun x y => by casesm*_ <;> rfl }
+  { SignType.hasNeg with 
+    neg_neg := fun x => by cases x <;> rfl
+    neg_mul := fun x y => by casesm*_ <;> rfl
+    mul_neg := fun x y => by casesm*_ <;> rfl }
 
 /-- `sign_type` is equivalent to `fin 3`. -/
 def fin3Equiv : SignType ≃* Fin

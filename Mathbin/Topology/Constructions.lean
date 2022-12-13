@@ -1067,7 +1067,8 @@ theorem Continuous.subtype_coe {f : β → Subtype p} (hf : Continuous f) :
 
 theorem IsOpen.open_embedding_subtype_coe {s : Set α} (hs : IsOpen s) :
     OpenEmbedding (coe : s → α) :=
-  { induced := rfl, inj := Subtype.coe_injective,
+  { induced := rfl
+    inj := Subtype.coe_injective
     open_range := (Subtype.range_coe : range coe = s).symm ▸ hs }
 #align is_open.open_embedding_subtype_coe IsOpen.open_embedding_subtype_coe
 
@@ -1082,7 +1083,8 @@ theorem IsOpenMap.restrict {f : α → β} (hf : IsOpenMap f) {s : Set α} (hs :
 
 theorem IsClosed.closedEmbeddingSubtypeCoe {s : Set α} (hs : IsClosed s) :
     ClosedEmbedding (coe : { x // x ∈ s } → α) :=
-  { induced := rfl, inj := Subtype.coe_injective,
+  { induced := rfl
+    inj := Subtype.coe_injective
     closedRange := (Subtype.range_coe : range coe = s).symm ▸ hs }
 #align is_closed.closed_embedding_subtype_coe IsClosed.closedEmbeddingSubtypeCoe
 

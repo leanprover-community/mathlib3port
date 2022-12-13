@@ -197,13 +197,15 @@ def mapTriangle (F : TriangulatedFunctorStruct C D) :
         D where 
   obj T := Triangle.mk (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
   map S T f :=
-    { hom₁ := F.map f.hom₁, hom₂ := F.map f.hom₂, hom₃ := F.map f.hom₃,
+    { hom₁ := F.map f.hom₁
+      hom₂ := F.map f.hom₂
+      hom₃ := F.map f.hom₃
       comm₁' := by 
         dsimp
-        simp only [← F.to_functor.map_comp, f.comm₁],
+        simp only [← F.to_functor.map_comp, f.comm₁]
       comm₂' := by 
         dsimp
-        simp only [← F.to_functor.map_comp, f.comm₂],
+        simp only [← F.to_functor.map_comp, f.comm₂]
       comm₃' := by 
         dsimp
         erw [category.assoc, ← F.comm_shift.hom.naturality]
@@ -231,7 +233,9 @@ structure TriangulatedFunctor extends TriangulatedFunctorStruct C D where
   category_theory.pretriangulated.triangulated_functor CategoryTheory.Pretriangulated.TriangulatedFunctor
 
 instance : Inhabited (TriangulatedFunctor C C) :=
-  ⟨{ obj := fun X => X, map := fun _ _ f => f, commShift := by rfl,
+  ⟨{  obj := fun X => X
+      map := fun _ _ f => f
+      commShift := by rfl
       map_distinguished' := by 
         rintro ⟨_, _, _, _⟩ Tdt
         dsimp at *

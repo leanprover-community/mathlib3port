@@ -36,16 +36,19 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
       HomologicalComplex V
         c where 
   obj t :=
-    { x := fun i => (C.x i).obj t, d := fun i j => (C.d i j).app t,
+    { x := fun i => (C.x i).obj t
+      d := fun i j => (C.d i j).app t
       d_comp_d' := fun i j k hij hjk => by
         have := C.d_comp_d i j k
         rw [nat_trans.ext_iff, Function.funext_iff] at this
-        exact this t,
+        exact this t
       shape' := fun i j h => by 
         have := C.shape _ _ h
         rw [nat_trans.ext_iff, Function.funext_iff] at this
         exact this t }
-  map t₁ t₂ h := { f := fun i => (C.x i).map h, comm' := fun i j hij => NatTrans.naturality _ _ }
+  map t₁ t₂ h :=
+    { f := fun i => (C.x i).map h
+      comm' := fun i j hij => NatTrans.naturality _ _ }
   map_id' t := by 
     ext i
     dsimp
@@ -65,7 +68,8 @@ def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
   obj C := C.asFunctor
   map C D f :=
     { app := fun t =>
-        { f := fun i => (f.f i).app t, comm' := fun i j w => NatTrans.congr_app (f.comm i j) t },
+        { f := fun i => (f.f i).app t
+          comm' := fun i j w => NatTrans.congr_app (f.comm i j) t }
       naturality' := fun t t' g => by 
         ext i
         exact (f.f i).naturality g }

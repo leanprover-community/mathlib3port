@@ -63,7 +63,9 @@ instance (priority := 100) ContinuousOrderHomClass.toContinuousMapClass [Preorde
 instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
     [ContinuousOrderHomClass F α β] : CoeTC F (α →Co β) :=
   ⟨fun f =>
-    { toFun := f, monotone' := OrderHomClass.mono f, continuous_to_fun := map_continuous f }⟩
+    { toFun := f
+      monotone' := OrderHomClass.mono f
+      continuous_to_fun := map_continuous f }⟩
 
 /-! ### Top homomorphisms -/
 

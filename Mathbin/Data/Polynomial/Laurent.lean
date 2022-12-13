@@ -522,7 +522,8 @@ section CommSemiring
 variable [CommSemiring R]
 
 instance algebraPolynomial (R : Type _) [CommSemiring R] : Algebra R[X] R[T;T⁻¹] :=
-  { Polynomial.toLaurent with commutes' := fun f l => by simp [mul_comm],
+  { Polynomial.toLaurent with 
+    commutes' := fun f l => by simp [mul_comm]
     smul_def' := fun f l => rfl }
 #align laurent_polynomial.algebra_polynomial LaurentPolynomial.algebraPolynomial
 
@@ -540,13 +541,13 @@ theorem is_localization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[
       cases' t with t ht
       rcases submonoid.mem_closure_singleton.mp ht with ⟨n, rfl⟩
       simp only [is_unit_T n, SetLike.coe_mk, algebra_map_eq_to_laurent,
-        Polynomial.to_laurent_X_pow],
+        Polynomial.to_laurent_X_pow]
     surj := fun f => by
       induction' f using LaurentPolynomial.induction_on_mul_T with f n
       have := (Submonoid.closure ({X} : Set R[X])).pow_mem Submonoid.mem_closure_singleton_self n
       refine' ⟨(f, ⟨_, this⟩), _⟩
       simp only [SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow,
-        mul_T_assoc, add_left_neg, T_zero, mul_one],
+        mul_T_assoc, add_left_neg, T_zero, mul_one]
     eq_iff_exists := fun f g => by
       rw [algebra_map_eq_to_laurent, algebra_map_eq_to_laurent, Polynomial.to_laurent_inj]
       refine' ⟨_, _⟩

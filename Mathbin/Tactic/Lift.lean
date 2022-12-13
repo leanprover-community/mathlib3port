@@ -240,7 +240,9 @@ unsafe def lift (p : parse texpr) (t : parse to_texpr) (h : parse using_texpr)
 #align tactic.interactive.lift tactic.interactive.lift
 
 add_tactic_doc
-  { Name := "lift", category := DocCategory.tactic, declNames := [`tactic.interactive.lift],
+  { Name := "lift"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.lift]
     tags := ["coercions"] }
 
 end Interactive

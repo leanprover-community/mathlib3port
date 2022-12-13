@@ -64,9 +64,9 @@ theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n →
 
 /- warning: dmatrix.transpose -> Dmatrix.transpose is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2, u_3, v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3, u_2, v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
+  forall {m : Type.{u2}} {n : Type.{u3}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u3} n] {α : m -> n -> Type.{u1}}, (Dmatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) -> (Dmatrix.{u3, u2, u1} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2, u_3, v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3, u_2, v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
+  forall {m : Type.{u1}} {n : Type.{u2}} [_inst_2 : Fintype.{u1} m] [_inst_3 : Fintype.{u2} n] {α : m -> n -> Type.{u3}}, (Dmatrix.{u1, u2, u3} m n _inst_2 _inst_3 α) -> (Dmatrix.{u2, u1, u3} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
 Case conversion may be inaccurate. Consider using '#align dmatrix.transpose Dmatrix.transposeₓ'. -/
 /-- The transpose of a dmatrix. -/
 def transpose (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
@@ -78,9 +78,9 @@ scoped postfix:1024 "ᵀ" => Dmatrix.transpose
 
 /- warning: dmatrix.col -> Dmatrix.col is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2, 0, v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
+  forall {m : Type.{u2}} [_inst_2 : Fintype.{u2} m] {α : m -> Type.{u1}}, (forall (i : m), α i) -> (Dmatrix.{u2, 0, u1} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
 but is expected to have type
-  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2, 0, v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
+  forall {m : Type.{u1}} [_inst_2 : Fintype.{u1} m] {α : m -> Type.{u2}}, (forall (i : m), α i) -> (Dmatrix.{u1, 0, u2} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
 Case conversion may be inaccurate. Consider using '#align dmatrix.col Dmatrix.colₓ'. -/
 /-- `dmatrix.col u` is the column matrix whose entries are given by `u`. -/
 def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
@@ -89,9 +89,9 @@ def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
 
 /- warning: dmatrix.row -> Dmatrix.row is a dubious translation:
 lean 3 declaration is
-  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0, u_3, v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
+  forall {n : Type.{u2}} [_inst_3 : Fintype.{u2} n] {α : n -> Type.{u1}}, (forall (j : n), α j) -> (Dmatrix.{0, u2, u1} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
 but is expected to have type
-  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0, u_3, v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
+  forall {n : Type.{u1}} [_inst_3 : Fintype.{u1} n] {α : n -> Type.{u2}}, (forall (j : n), α j) -> (Dmatrix.{0, u1, u2} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
 Case conversion may be inaccurate. Consider using '#align dmatrix.row Dmatrix.rowₓ'. -/
 /-- `dmatrix.row u` is the row matrix whose entries are given by `u`. -/
 def row {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j

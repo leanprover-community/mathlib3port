@@ -501,7 +501,10 @@ protected def OrderIso.toGaloisInsertion [Preorder α] [Preorder β] (oi : α �
 /-- Make a `galois_insertion l u` from a `galois_connection l u` such that `∀ b, b ≤ l (u b)` -/
 def GaloisConnection.toGaloisInsertion {α β : Type _} [Preorder α] [Preorder β] {l : α → β}
     {u : β → α} (gc : GaloisConnection l u) (h : ∀ b, b ≤ l (u b)) : GaloisInsertion l u :=
-  { choice := fun x _ => l x, gc, le_l_u := h, choice_eq := fun _ _ => rfl }
+  { choice := fun x _ => l x
+    gc
+    le_l_u := h
+    choice_eq := fun _ _ => rfl }
 #align galois_connection.to_galois_insertion GaloisConnection.toGaloisInsertion
 
 /-- Lift the bottom along a Galois connection -/
@@ -632,9 +635,10 @@ variable [PartialOrder β]
 /-- Lift the suprema along a Galois insertion -/
 @[reducible]
 def liftSemilatticeSup [SemilatticeSup α] (gi : GaloisInsertion l u) : SemilatticeSup β :=
-  { ‹PartialOrder β› with sup := fun a b => l (u a ⊔ u b),
-    le_sup_left := fun a b => (gi.le_l_u a).trans <| gi.gc.monotone_l <| le_sup_left,
-    le_sup_right := fun a b => (gi.le_l_u b).trans <| gi.gc.monotone_l <| le_sup_right,
+  { ‹PartialOrder β› with 
+    sup := fun a b => l (u a ⊔ u b)
+    le_sup_left := fun a b => (gi.le_l_u a).trans <| gi.gc.monotone_l <| le_sup_left
+    le_sup_right := fun a b => (gi.le_l_u b).trans <| gi.gc.monotone_l <| le_sup_right
     sup_le := fun a b c hac hbc =>
       gi.gc.l_le <| sup_le (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
 #align galois_insertion.lift_semilattice_sup GaloisInsertion.liftSemilatticeSup
@@ -647,9 +651,9 @@ def liftSemilatticeInf [SemilatticeInf α] (gi : GaloisInsertion l u) : Semilatt
     inf := fun a b =>
       gi.choice (u a ⊓ u b) <|
         le_inf (gi.gc.monotone_u <| gi.gc.l_le <| inf_le_left)
-          (gi.gc.monotone_u <| gi.gc.l_le <| inf_le_right),
-    inf_le_left := by simp only [gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_left,
-    inf_le_right := by simp only [gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_right,
+          (gi.gc.monotone_u <| gi.gc.l_le <| inf_le_right)
+    inf_le_left := by simp only [gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_left
+    inf_le_right := by simp only [gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_right
     le_inf := by
       simp only [gi.choice_eq] <;>
         exact fun a b c hac hbc =>
@@ -685,16 +689,17 @@ def liftBoundedOrder [Preorder α] [BoundedOrder α] (gi : GaloisInsertion l u) 
 /-- Lift all suprema and infima along a Galois insertion -/
 @[reducible]
 def liftCompleteLattice [CompleteLattice α] (gi : GaloisInsertion l u) : CompleteLattice β :=
-  { gi.liftBoundedOrder, gi.liftLattice with sup := fun s => l (sup (u '' s)),
-    Sup_le := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).2,
-    le_Sup := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).1,
+  { gi.liftBoundedOrder, gi.liftLattice with
+    sup := fun s => l (sup (u '' s))
+    Sup_le := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).2
+    le_Sup := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).1
     inf := fun s =>
       gi.choice (inf (u '' s)) <|
         (is_glb_Inf _).2 <|
-          gi.gc.monotone_u.mem_lower_bounds_image (gi.is_glb_of_u_image <| is_glb_Inf _).1,
+          gi.gc.monotone_u.mem_lower_bounds_image (gi.is_glb_of_u_image <| is_glb_Inf _).1
     Inf_le := fun s => by 
       rw [gi.choice_eq]
-      exact (gi.is_glb_of_u_image (is_glb_Inf _)).1,
+      exact (gi.is_glb_of_u_image (is_glb_Inf _)).1
     le_Inf := fun s => by 
       rw [gi.choice_eq]
       exact (gi.is_glb_of_u_image (is_glb_Inf _)).2 }
@@ -762,7 +767,10 @@ def GaloisCoinsertion.monotoneIntro [Preorder α] [Preorder β] {l : α → β} 
 /-- Make a `galois_coinsertion l u` from a `galois_connection l u` such that `∀ b, b ≤ l (u b)` -/
 def GaloisConnection.toGaloisCoinsertion {α β : Type _} [Preorder α] [Preorder β] {l : α → β}
     {u : β → α} (gc : GaloisConnection l u) (h : ∀ a, u (l a) ≤ a) : GaloisCoinsertion l u :=
-  { choice := fun x _ => u x, gc, u_l_le := h, choice_eq := fun _ _ => rfl }
+  { choice := fun x _ => u x
+    gc
+    u_l_le := h
+    choice_eq := fun _ _ => rfl }
 #align galois_connection.to_galois_coinsertion GaloisConnection.toGaloisCoinsertion
 
 /-- Lift the top along a Galois connection -/
@@ -911,7 +919,8 @@ def liftBoundedOrder [Preorder β] [BoundedOrder β] (gi : GaloisCoinsertion l u
 /-- Lift all suprema and infima along a Galois coinsertion -/
 @[reducible]
 def liftCompleteLattice [CompleteLattice β] (gi : GaloisCoinsertion l u) : CompleteLattice α :=
-  { @OrderDual.completeLattice _ gi.dual.liftCompleteLattice with inf := fun s => u (inf (l '' s)),
+  { @OrderDual.completeLattice _ gi.dual.liftCompleteLattice with
+    inf := fun s => u (inf (l '' s))
     sup := fun s => gi.choice (sup (l '' s)) _ }
 #align galois_coinsertion.lift_complete_lattice GaloisCoinsertion.liftCompleteLattice
 

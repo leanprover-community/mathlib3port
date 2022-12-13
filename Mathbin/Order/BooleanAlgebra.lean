@@ -185,7 +185,8 @@ theorem inf_sdiff_self_left : y \ x ⊓ x = ⊥ := by rw [inf_comm, inf_sdiff_se
 -- see Note [lower instance priority]
 instance (priority := 100) GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra :
     GeneralizedCoheytingAlgebra α :=
-  { ‹GeneralizedBooleanAlgebra α›, GeneralizedBooleanAlgebra.toOrderBot with sdiff := (· \ ·),
+  { ‹GeneralizedBooleanAlgebra α›, GeneralizedBooleanAlgebra.toOrderBot with
+    sdiff := (· \ ·)
     sdiff_le_iff := fun y x z =>
       ⟨fun h =>
         le_of_inf_le_sup_le
@@ -541,8 +542,9 @@ instance (priority := 100) BooleanAlgebra.toBoundedOrder [h : BooleanAlgebra α]
 def GeneralizedBooleanAlgebra.toBooleanAlgebra [GeneralizedBooleanAlgebra α] [OrderTop α] :
     BooleanAlgebra α :=
   { ‹GeneralizedBooleanAlgebra α›, GeneralizedBooleanAlgebra.toOrderBot, ‹OrderTop α› with
-    compl := fun a => ⊤ \ a, inf_compl_le_bot := fun _ => disjoint_sdiff_self_right.le_bot,
-    top_le_sup_compl := fun _ => le_sup_sdiff,
+    compl := fun a => ⊤ \ a
+    inf_compl_le_bot := fun _ => disjoint_sdiff_self_right.le_bot
+    top_le_sup_compl := fun _ => le_sup_sdiff
     sdiff_eq := fun _ _ => by 
       rw [← inf_sdiff_assoc, inf_top_eq]
       rfl }
@@ -587,7 +589,7 @@ instance (priority := 100) BooleanAlgebra.to_complemented_lattice : Complemented
 instance (priority := 100) BooleanAlgebra.toGeneralizedBooleanAlgebra :
     GeneralizedBooleanAlgebra α :=
   { ‹BooleanAlgebra α› with
-    sup_inf_sdiff := fun a b => by rw [sdiff_eq, ← inf_sup_left, sup_compl_eq_top, inf_top_eq],
+    sup_inf_sdiff := fun a b => by rw [sdiff_eq, ← inf_sup_left, sup_compl_eq_top, inf_top_eq]
     inf_inf_sdiff := fun a b => by
       rw [sdiff_eq, ← inf_inf_distrib_left, inf_compl_eq_bot', inf_bot_eq]
       congr }
@@ -595,9 +597,10 @@ instance (priority := 100) BooleanAlgebra.toGeneralizedBooleanAlgebra :
 
 -- See note [lower instance priority]
 instance (priority := 100) BooleanAlgebra.toBiheytingAlgebra : BiheytingAlgebra α :=
-  { ‹BooleanAlgebra α›, GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra with hnot := compl,
-    le_himp_iff := fun a b c => by rw [himp_eq, is_compl_compl.le_sup_right_iff_inf_left_le],
-    himp_bot := fun _ => himp_eq.trans bot_sup_eq,
+  { ‹BooleanAlgebra α›, GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra with
+    hnot := compl
+    le_himp_iff := fun a b c => by rw [himp_eq, is_compl_compl.le_sup_right_iff_inf_left_le]
+    himp_bot := fun _ => himp_eq.trans bot_sup_eq
     top_sdiff := fun a => by rw [sdiff_eq, top_inf_eq] }
 #align boolean_algebra.to_biheyting_algebra BooleanAlgebra.toBiheytingAlgebra
 
@@ -699,12 +702,14 @@ theorem sdiff_compl : x \ yᶜ = x ⊓ y := by rw [sdiff_eq, compl_compl]
 #align sdiff_compl sdiff_compl
 
 instance : BooleanAlgebra αᵒᵈ :=
-  { OrderDual.distribLattice α, OrderDual.boundedOrder α with compl := fun a => toDual (ofDual aᶜ),
-    sdiff := fun a b => toDual (ofDual b ⇨ ofDual a),
-    himp := fun a b => toDual (ofDual b \ ofDual a),
-    inf_compl_le_bot := fun a => (@codisjoint_hnot_right _ _ (ofDual a)).top_le,
-    top_le_sup_compl := fun a => (@disjoint_compl_right _ _ (ofDual a)).le_bot,
-    sdiff_eq := fun _ _ => himp_eq, himp_eq := fun _ _ => sdiff_eq }
+  { OrderDual.distribLattice α, OrderDual.boundedOrder α with
+    compl := fun a => toDual (ofDual aᶜ)
+    sdiff := fun a b => toDual (ofDual b ⇨ ofDual a)
+    himp := fun a b => toDual (ofDual b \ ofDual a)
+    inf_compl_le_bot := fun a => (@codisjoint_hnot_right _ _ (ofDual a)).top_le
+    top_le_sup_compl := fun a => (@disjoint_compl_right _ _ (ofDual a)).le_bot
+    sdiff_eq := fun _ _ => himp_eq
+    himp_eq := fun _ _ => sdiff_eq }
 
 @[simp]
 theorem sup_inf_inf_compl : x ⊓ y ⊔ x ⊓ yᶜ = x := by rw [← sdiff_eq, sup_inf_sdiff _ _]
@@ -740,25 +745,35 @@ theorem disjoint_compl_right_iff : Disjoint x (yᶜ) ↔ x ≤ y := by
 end BooleanAlgebra
 
 instance PropCat.booleanAlgebra : BooleanAlgebra Prop :=
-  { PropCat.heytingAlgebra, GeneralizedHeytingAlgebra.toDistribLattice with compl := Not,
-    himp_eq := fun p q => propext imp_iff_or_not, inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp,
+  { PropCat.heytingAlgebra, GeneralizedHeytingAlgebra.toDistribLattice with
+    compl := Not
+    himp_eq := fun p q => propext imp_iff_or_not
+    inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp
     top_le_sup_compl := fun p H => Classical.em p }
 #align Prop.boolean_algebra PropCat.booleanAlgebra
 
 instance Pi.booleanAlgebra {ι : Type u} {α : ι → Type v} [∀ i, BooleanAlgebra (α i)] :
     BooleanAlgebra (∀ i, α i) :=
   { Pi.hasSdiff, Pi.heytingAlgebra, Pi.distribLattice with
-    sdiff_eq := fun x y => funext fun i => sdiff_eq, himp_eq := fun x y => funext fun i => himp_eq,
-    inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _,
+    sdiff_eq := fun x y => funext fun i => sdiff_eq
+    himp_eq := fun x y => funext fun i => himp_eq
+    inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _
     top_le_sup_compl := fun _ _ => BooleanAlgebra.top_le_sup_compl _ }
 #align pi.boolean_algebra Pi.booleanAlgebra
 
 instance : BooleanAlgebra Bool :=
-  { Bool.instLinearOrderBool, Bool.boundedOrder with sup := or, le_sup_left := Bool.left_le_or,
-    le_sup_right := Bool.right_le_or, sup_le := fun _ _ _ => Bool.or_le, inf := and,
-    inf_le_left := Bool.and_le_left, inf_le_right := Bool.and_le_right,
-    le_inf := fun _ _ _ => Bool.le_and, le_sup_inf := by decide, compl := not,
-    inf_compl_le_bot := fun a => a.band_bnot_self.le,
+  { Bool.instLinearOrderBool, Bool.boundedOrder with
+    sup := or
+    le_sup_left := Bool.left_le_or
+    le_sup_right := Bool.right_le_or
+    sup_le := fun _ _ _ => Bool.or_le
+    inf := and
+    inf_le_left := Bool.and_le_left
+    inf_le_right := Bool.and_le_right
+    le_inf := fun _ _ _ => Bool.le_and
+    le_sup_inf := by decide
+    compl := not
+    inf_compl_le_bot := fun a => a.band_bnot_self.le
     top_le_sup_compl := fun a => a.bor_bnot_self.ge }
 
 @[simp]
@@ -787,7 +802,7 @@ protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf �
     (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : GeneralizedBooleanAlgebra α :=
   { hf.GeneralizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff,
     hf.DistribLattice f map_sup map_inf with
-    sup_inf_sdiff := fun a b => hf <| by erw [map_sup, map_sdiff, map_inf, sup_inf_sdiff],
+    sup_inf_sdiff := fun a b => hf <| by erw [map_sup, map_sdiff, map_inf, sup_inf_sdiff]
     inf_inf_sdiff := fun a b => hf <| by erw [map_inf, map_sdiff, map_inf, inf_inf_sdiff, map_bot] }
 #align function.injective.generalized_boolean_algebra Function.Injective.generalizedBooleanAlgebra
 
@@ -799,13 +814,15 @@ protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [Top α]
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BooleanAlgebra α :=
-  { hf.GeneralizedBooleanAlgebra f map_sup map_inf map_bot map_sdiff with compl := compl, top := ⊤,
-    le_top := fun a => (@le_top β _ _ _).trans map_top.ge,
-    bot_le := fun a => map_bot.le.trans bot_le,
+  { hf.GeneralizedBooleanAlgebra f map_sup map_inf map_bot map_sdiff with
+    compl := compl
+    top := ⊤
+    le_top := fun a => (@le_top β _ _ _).trans map_top.ge
+    bot_le := fun a => map_bot.le.trans bot_le
     inf_compl_le_bot := fun a =>
-      ((map_inf _ _).trans <| by rw [map_compl, inf_compl_eq_bot, map_bot]).le,
+      ((map_inf _ _).trans <| by rw [map_compl, inf_compl_eq_bot, map_bot]).le
     top_le_sup_compl := fun a =>
-      ((map_sup _ _).trans <| by rw [map_compl, sup_compl_eq_top, map_top]).ge,
+      ((map_sup _ _).trans <| by rw [map_compl, sup_compl_eq_top, map_top]).ge
     sdiff_eq := fun a b =>
       hf <|
         (map_sdiff _ _).trans <|

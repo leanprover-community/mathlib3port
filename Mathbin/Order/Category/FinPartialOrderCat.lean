@@ -72,7 +72,9 @@ instance hasForgetToPartialOrder : HasForget₂ FinPartialOrderCat PartialOrderC
 
 instance hasForgetToFintype :
     HasForget₂ FinPartialOrderCat
-      FintypeCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => coeFn }
+      FintypeCat where forget₂ :=
+    { obj := fun X => ⟨X⟩
+      map := fun X Y => coeFn }
 #align FinPartialOrder.has_forget_to_Fintype FinPartialOrderCat.hasForgetToFintype
 
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/

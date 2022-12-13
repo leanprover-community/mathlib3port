@@ -264,7 +264,9 @@ def mapFunctor (a b : B) :
 /-- The identity oplax functor. -/
 @[simps]
 def id (B : Type u₁) [Bicategory.{w₁, v₁} B] : OplaxFunctor B B :=
-  { PrelaxFunctor.id B with map_id := fun a => 𝟙 (𝟙 a), map_comp := fun a b c f g => 𝟙 (f ≫ g) }
+  { PrelaxFunctor.id B with 
+    map_id := fun a => 𝟙 (𝟙 a)
+    map_comp := fun a b c f g => 𝟙 (f ≫ g) }
 #align category_theory.oplax_functor.id CategoryTheory.OplaxFunctor.id
 
 instance : Inhabited (OplaxFunctor B B) :=
@@ -274,27 +276,27 @@ instance : Inhabited (OplaxFunctor B B) :=
 @[simps]
 def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
   { (F : PrelaxFunctor B C).comp ↑G with
-    map_id := fun a => (G.mapFunctor _ _).map (F.map_id a) ≫ G.map_id (F.obj a),
+    map_id := fun a => (G.mapFunctor _ _).map (F.map_id a) ≫ G.map_id (F.obj a)
     map_comp := fun a b c f g =>
-      (G.mapFunctor _ _).map (F.map_comp f g) ≫ G.map_comp (F.map f) (F.map g),
+      (G.mapFunctor _ _).map (F.map_comp f g) ≫ G.map_comp (F.map f) (F.map g)
     map_comp_naturality_left' := fun a b c f f' η g => by
       dsimp
       rw [← map₂_comp_assoc, map_comp_naturality_left, map₂_comp_assoc, map_comp_naturality_left,
-        assoc],
+        assoc]
     map_comp_naturality_right' := fun a b c f g g' η => by
       dsimp
       rw [← map₂_comp_assoc, map_comp_naturality_right, map₂_comp_assoc, map_comp_naturality_right,
-        assoc],
+        assoc]
     map₂_associator' := fun a b c d f g h => by 
       dsimp
       simp only [map₂_associator, ← map₂_comp_assoc, ← map_comp_naturality_right_assoc,
         whisker_left_comp, assoc]
       simp only [map₂_associator, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right,
-        assoc],
+        assoc]
     map₂_left_unitor' := fun a b f => by 
       dsimp
       simp only [map₂_left_unitor, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right,
-        assoc],
+        assoc]
     map₂_right_unitor' := fun a b f => by 
       dsimp
       simp only [map₂_right_unitor, map₂_comp, map_comp_naturality_right_assoc, whisker_left_comp,
@@ -446,7 +448,8 @@ theorem to_prelax_functor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂
 
 /-- The oplax functor associated with a pseudofunctor. -/
 def toOplax : OplaxFunctor B C :=
-  { (F : PrelaxFunctor B C) with map_id := fun a => (F.map_id a).Hom,
+  { (F : PrelaxFunctor B C) with 
+    map_id := fun a => (F.map_id a).Hom
     map_comp := fun a b c f g => (F.map_comp f g).Hom }
 #align category_theory.pseudofunctor.to_oplax CategoryTheory.Pseudofunctor.toOplax
 
@@ -495,7 +498,8 @@ def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) :=
 /-- The identity pseudofunctor. -/
 @[simps]
 def id (B : Type u₁) [Bicategory.{w₁, v₁} B] : Pseudofunctor B B :=
-  { PrelaxFunctor.id B with map_id := fun a => Iso.refl (𝟙 a),
+  { PrelaxFunctor.id B with 
+    map_id := fun a => Iso.refl (𝟙 a)
     map_comp := fun a b c f g => Iso.refl (f ≫ g) }
 #align category_theory.pseudofunctor.id CategoryTheory.Pseudofunctor.id
 
@@ -506,7 +510,7 @@ instance : Inhabited (Pseudofunctor B B) :=
 @[simps]
 def comp (F : Pseudofunctor B C) (G : Pseudofunctor C D) : Pseudofunctor B D :=
   { (F : PrelaxFunctor B C).comp ↑G with
-    map_id := fun a => (G.mapFunctor _ _).mapIso (F.map_id a) ≪≫ G.map_id (F.obj a),
+    map_id := fun a => (G.mapFunctor _ _).mapIso (F.map_id a) ≪≫ G.map_id (F.obj a)
     map_comp := fun a b c f g =>
       (G.mapFunctor _ _).mapIso (F.map_comp f g) ≪≫ G.map_comp (F.map f) (F.map g) }
 #align category_theory.pseudofunctor.comp CategoryTheory.Pseudofunctor.comp
@@ -515,15 +519,17 @@ def comp (F : Pseudofunctor B C) (G : Pseudofunctor C D) : Pseudofunctor B D :=
 -/
 @[simps]
 def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
-  { (F : PrelaxFunctor B C) with map_id := F'.mapIdIso, map_comp := fun _ _ _ => F'.mapCompIso,
+  { (F : PrelaxFunctor B C) with 
+    map_id := F'.mapIdIso
+    map_comp := fun _ _ _ => F'.mapCompIso
     map₂_whisker_left' := fun a b c f g h η => by 
       dsimp
       rw [F'.map_comp_iso_hom f g, ← F.map_comp_naturality_right_assoc, ← F'.map_comp_iso_hom f h,
-        hom_inv_id, comp_id],
+        hom_inv_id, comp_id]
     map₂_whisker_right' := fun a b c f g η h => by 
       dsimp
       rw [F'.map_comp_iso_hom f h, ← F.map_comp_naturality_left_assoc, ← F'.map_comp_iso_hom g h,
-        hom_inv_id, comp_id],
+        hom_inv_id, comp_id]
     map₂_associator' := fun a b c d f g h => by 
       dsimp
       rw [F'.map_comp_iso_hom (f ≫ g) h, F'.map_comp_iso_hom f g, ← F.map₂_associator_assoc, ←
@@ -536,14 +542,15 @@ def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
 @[simps]
 noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
     [∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), IsIso (F.map_comp f g)] : Pseudofunctor B C :=
-  { (F : PrelaxFunctor B C) with map_id := fun a => asIso (F.map_id a),
-    map_comp := fun a b c f g => asIso (F.map_comp f g),
+  { (F : PrelaxFunctor B C) with 
+    map_id := fun a => asIso (F.map_id a)
+    map_comp := fun a b c f g => asIso (F.map_comp f g)
     map₂_whisker_left' := fun a b c f g h η => by 
       dsimp
-      rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_right],
+      rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_right]
     map₂_whisker_right' := fun a b c f g η h => by 
       dsimp
-      rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_left],
+      rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_left]
     map₂_associator' := fun a b c d f g h => by 
       dsimp
       simp only [← assoc]

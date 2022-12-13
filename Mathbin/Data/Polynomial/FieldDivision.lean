@@ -216,11 +216,14 @@ theorem mul_div_eq_iff_is_root : (X - c a) * (p / (X - c a)) = p ↔ IsRoot p a 
 #align polynomial.mul_div_eq_iff_is_root Polynomial.mul_div_eq_iff_is_root
 
 instance : EuclideanDomain R[X] :=
-  { Polynomial.commRing, Polynomial.nontrivial with Quotient := (· / ·),
-    quotient_zero := by simp [div_def], remainder := (· % ·), R := _,
-    r_well_founded := degree_lt_wf,
-    quotient_mul_add_remainder_eq := quotient_mul_add_remainder_eq_aux,
-    remainder_lt := fun p q hq => remainder_lt_aux _ hq,
+  { Polynomial.commRing, Polynomial.nontrivial with
+    Quotient := (· / ·)
+    quotient_zero := by simp [div_def]
+    remainder := (· % ·)
+    R := _
+    r_well_founded := degree_lt_wf
+    quotient_mul_add_remainder_eq := quotient_mul_add_remainder_eq_aux
+    remainder_lt := fun p q hq => remainder_lt_aux _ hq
     mul_left_not_lt := fun p q hq => not_lt_of_ge (degree_le_mul_left _ hq) }
 
 theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=

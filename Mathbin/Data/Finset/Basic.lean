@@ -1212,7 +1212,7 @@ theorem Nonempty.cons_induction {α : Type _} {p : ∀ s : Finset α, s.Nonempty
 def subtypeInsertEquivOption {t : Finset α} {x : α} (h : x ∉ t) :
     { i // i ∈ insert x t } ≃ Option { i // i ∈ t } := by
   refine'
-    { toFun := fun y => if h : ↑y = x then none else some ⟨y, (mem_insert.mp y.2).resolve_left h⟩,
+    { toFun := fun y => if h : ↑y = x then none else some ⟨y, (mem_insert.mp y.2).resolve_left h⟩
       invFun := fun y => (y.elim ⟨x, mem_insert_self _ _⟩) fun z => ⟨z, mem_insert_of_mem z.2⟩.. }
   · intro y
     by_cases h : ↑y = x
@@ -1255,12 +1255,14 @@ instance : Inter (Finset α) :=
   ⟨fun s t => ⟨_, s.2.ndinter t.1⟩⟩
 
 instance : Lattice (Finset α) :=
-  { Finset.partialOrder with sup := (· ∪ ·),
-    sup_le := fun s t u hs ht a ha => (mem_ndunion.1 ha).elim (fun h => hs h) fun h => ht h,
-    le_sup_left := fun s t a h => mem_ndunion.2 <| Or.inl h,
-    le_sup_right := fun s t a h => mem_ndunion.2 <| Or.inr h, inf := (· ∩ ·),
-    le_inf := fun s t u ht hu a h => mem_ndinter.2 ⟨ht h, hu h⟩,
-    inf_le_left := fun s t a h => (mem_ndinter.1 h).1,
+  { Finset.partialOrder with 
+    sup := (· ∪ ·)
+    sup_le := fun s t u hs ht a ha => (mem_ndunion.1 ha).elim (fun h => hs h) fun h => ht h
+    le_sup_left := fun s t a h => mem_ndunion.2 <| Or.inl h
+    le_sup_right := fun s t a h => mem_ndunion.2 <| Or.inr h
+    inf := (· ∩ ·)
+    le_inf := fun s t u ht hu a h => mem_ndinter.2 ⟨ht h, hu h⟩
+    inf_le_left := fun s t a h => (mem_ndinter.1 h).1
     inf_le_right := fun s t a h => (mem_ndinter.1 h).2 }
 
 @[simp]
@@ -1987,7 +1989,7 @@ instance : GeneralizedBooleanAlgebra (Finset α) :=
   { Finset.hasSdiff, Finset.distribLattice, Finset.orderBot with
     sup_inf_sdiff := fun x y => by
       simp only [ext_iff, mem_union, mem_sdiff, inf_eq_inter, sup_eq_union, mem_inter]
-      tauto,
+      tauto
     inf_inf_sdiff := fun x y => by
       simp only [ext_iff, inter_sdiff_self, inter_empty, inter_assoc, false_iff_iff, inf_eq_inter,
         not_mem_empty]
@@ -3247,7 +3249,7 @@ warning: finset.disj_Union -> Finset.disjUnion is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (s : Finset.{u_1} α) (t : α -> (Finset.{u_2} β)), (Set.PairwiseDisjoint.{u_2, u_1} (Finset.{u_2} β) α (Finset.partialOrder.{u_2} β) (Finset.orderBot.{u_2} β) ((fun (a : Type.{u_1}) (b : Sort.{max (succ u_1) 1}) [self : HasLiftT.{succ u_1, max (succ u_1) 1} a b] => self.0) (Finset.{u_1} α) (Set.{u_1} α) (HasLiftT.mk.{succ u_1, max (succ u_1) 1} (Finset.{u_1} α) (Set.{u_1} α) (CoeTCₓ.coe.{succ u_1, max (succ u_1) 1} (Finset.{u_1} α) (Set.{u_1} α) (Finset.Set.hasCoeT.{u_1} α))) s) t) -> (Finset.{u_2} β)
 but is expected to have type
-  forall {α : Type.{u_1}} (s : Finset.{u_1} α) (t : Finset.{u_1} α), (Disjoint.{u_1} (Finset.{u_1} α) (Finset.partialOrder.{u_1} α) (Finset.orderBot.{u_1} α) s t) -> (Finset.{u_1} α)
+  forall {α : Type.{u_1}} (β : Finset.{u_1} α) (s : Finset.{u_1} α), (Disjoint.{u_1} (Finset.{u_1} α) (Finset.partialOrder.{u_1} α) (Finset.orderBot.{u_1} α) β s) -> (Finset.{u_1} α)
 Case conversion may be inaccurate. Consider using '#align finset.disj_Union Finset.disjUnionₓ'. -/
 /-- `disj_Union s f h` is the set such that `a ∈ disj_Union s f` iff `a ∈ f i` for some `i ∈ s`.
 It is the same as `s.bUnion f`, but it does not require decidable equality on the type. The
@@ -3580,11 +3582,11 @@ Inhabited types are equivalent to `option β` for some `β` by identifying `defa
 def sigmaEquivOptionOfInhabited (α : Type u) [Inhabited α] [DecidableEq α] :
     Σβ : Type u, α ≃ Option β :=
   ⟨{ x : α // x ≠ default },
-    { toFun := fun x : α => if h : x = default then none else some ⟨x, h⟩,
-      invFun := Option.elim' default coe,
+    { toFun := fun x : α => if h : x = default then none else some ⟨x, h⟩
+      invFun := Option.elim' default coe
       left_inv := fun x => by 
         dsimp only
-        split_ifs <;> simp [*],
+        split_ifs <;> simp [*]
       right_inv := by 
         rintro (_ | ⟨x, h⟩)
         · simp

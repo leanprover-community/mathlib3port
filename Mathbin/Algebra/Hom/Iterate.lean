@@ -195,7 +195,9 @@ theorem mul_right_iterate_apply_one : ((· * a)^[n]) 1 = a ^ n := by simp [mul_r
 @[simp, to_additive]
 theorem pow_iterate (n : ℕ) (j : ℕ) : (fun x : G => x ^ n)^[j] = fun x => x ^ n ^ j :=
   letI : MulAction ℕ G :=
-    { smul := fun n g => g ^ n, one_smul := pow_one, mul_smul := fun m n g => pow_mul' g m n }
+    { smul := fun n g => g ^ n
+      one_smul := pow_one
+      mul_smul := fun m n g => pow_mul' g m n }
   smul_iterate n j
 #align pow_iterate pow_iterate
 
@@ -208,7 +210,9 @@ variable [Group G]
 @[simp, to_additive]
 theorem zpow_iterate (n : ℤ) (j : ℕ) : (fun x : G => x ^ n)^[j] = fun x => x ^ n ^ j :=
   letI : MulAction ℤ G :=
-    { smul := fun n g => g ^ n, one_smul := zpow_one, mul_smul := fun m n g => zpow_mul' g m n }
+    { smul := fun n g => g ^ n
+      one_smul := zpow_one
+      mul_smul := fun m n g => zpow_mul' g m n }
   smul_iterate n j
 #align zpow_iterate zpow_iterate
 

@@ -53,7 +53,7 @@ unsafe def zify_attr :
               let c ← mk_const n
               return (c, tt))
             ns >>=
-          simp_lemmas.mk.append_with_symm,
+          simp_lemmas.mk.append_with_symm
       dependencies := [] }
 #align zify.zify_attr zify.zify_attr
 
@@ -147,10 +147,14 @@ unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse locatio
 end
 
 add_tactic_doc
-  { Name := "zify", category := DocCategory.attr, declNames := [`zify.zify_attr],
+  { Name := "zify"
+    category := DocCategory.attr
+    declNames := [`zify.zify_attr]
     tags := ["coercions", "transport"] }
 
 add_tactic_doc
-  { Name := "zify", category := DocCategory.tactic, declNames := [`tactic.interactive.zify],
+  { Name := "zify"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.zify]
     tags := ["coercions", "transport"] }
 

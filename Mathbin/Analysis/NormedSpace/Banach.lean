@@ -302,7 +302,9 @@ theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F)
     (hsurj : LinearMap.range f = ⊤) : ∃ fsymm : NonlinearRightInverse f, 0 < fsymm.nnnorm := by
   choose C hC fsymm h using exists_preimage_norm_le _ (linear_map.range_eq_top.mp hsurj)
   use
-    { toFun := fsymm, nnnorm := ⟨C, hC.lt.le⟩, bound' := fun y => (h y).2,
+    { toFun := fsymm
+      nnnorm := ⟨C, hC.lt.le⟩
+      bound' := fun y => (h y).2
       right_inv' := fun y => (h y).1 }
   exact hC
 #align
@@ -345,7 +347,9 @@ theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e
 the direct map is continuous, thanks to the Banach open mapping theorem that ensures that the
 inverse map is also continuous. -/
 def toContinuousLinearEquivOfContinuous (e : E ≃ₗ[𝕜] F) (h : Continuous e) : E ≃L[𝕜] F :=
-  { e with continuous_to_fun := h, continuous_inv_fun := e.continuous_symm h }
+  { e with 
+    continuous_to_fun := h
+    continuous_inv_fun := e.continuous_symm h }
 #align
   linear_equiv.to_continuous_linear_equiv_of_continuous LinearEquiv.toContinuousLinearEquivOfContinuous
 

@@ -279,11 +279,12 @@ end DistribMulAction
 -- Most of the time we want the instance below this one, which is easier for typeclass resolution
 -- to find.
 instance module' [Semiring R₁] [Module R₁ R] [SmulCommClass R₁ R R] : Module R₁ (⨂[R] i, s i) :=
-  { PiTensorProduct.distribMulAction' with smul := (· • ·),
+  { PiTensorProduct.distribMulAction' with 
+    smul := (· • ·)
     add_smul := fun r r' x =>
       PiTensorProduct.induction_on' x
         (fun r f => by simp [smul_tprod_coeff' _ _, add_smul, add_tprod_coeff']) fun x y ihx ihy =>
-        by simp [PiTensorProduct.smul_add, ihx, ihy, add_add_add_comm],
+        by simp [PiTensorProduct.smul_add, ihx, ihy, add_add_add_comm]
     zero_smul := fun x =>
       PiTensorProduct.induction_on' x
         (fun r f => by 
@@ -584,8 +585,8 @@ private def tmul : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) →ₗ[R] ⨂
   TensorProduct.lift
     { toFun := fun a =>
         PiTensorProduct.lift <|
-          PiTensorProduct.lift (MultilinearMap.currySumEquiv R _ _ M _ (tprod R)) a,
-      map_add' := fun a b => by simp only [LinearEquiv.map_add, LinearMap.map_add],
+          PiTensorProduct.lift (MultilinearMap.currySumEquiv R _ _ M _ (tprod R)) a
+      map_add' := fun a b => by simp only [LinearEquiv.map_add, LinearMap.map_add]
       map_smul' := fun r a => by
         simp only [LinearEquiv.map_smul, LinearMap.map_smul, RingHom.id_apply] }
 #align pi_tensor_product.tmul pi_tensor_product.tmul

@@ -72,8 +72,9 @@ def ρAut {G : GroupCat.{u}} (A : ActionCat V (MonCat.of G)) :
         (AutCat
           A.V) where 
   toFun g :=
-    { Hom := A.ρ g, inv := A.ρ (g⁻¹ : G),
-      hom_inv_id' := (A.ρ.map_mul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_self, ρ_one]),
+    { Hom := A.ρ g
+      inv := A.ρ (g⁻¹ : G)
+      hom_inv_id' := (A.ρ.map_mul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_self, ρ_one])
       inv_hom_id' := (A.ρ.map_mul g (g⁻¹ : G)).symm.trans (by rw [mul_inv_self, ρ_one]) }
   map_one' := by 
     ext
@@ -159,9 +160,11 @@ where the forward direction commutes with the group action. -/
 @[simps]
 def mkIso {M N : ActionCat V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.Hom = f.Hom ≫ N.ρ g) :
     M ≅ N where 
-  Hom := { Hom := f.Hom, comm' := comm }
+  Hom :=
+    { Hom := f.Hom
+      comm' := comm }
   inv :=
-    { Hom := f.inv,
+    { Hom := f.inv
       comm' := fun g => by 
         have w := comm g =≫ f.inv
         simp at w
@@ -189,9 +192,13 @@ def functor :
       SingleObj G ⥤
         V where 
   obj M :=
-    { obj := fun _ => M.V, map := fun _ _ g => M.ρ g, map_id' := fun _ => M.ρ.map_one,
+    { obj := fun _ => M.V
+      map := fun _ _ g => M.ρ g
+      map_id' := fun _ => M.ρ.map_one
       map_comp' := fun _ _ _ g h => M.ρ.map_mul h g }
-  map M N f := { app := fun _ => f.Hom, naturality' := fun _ _ g => f.comm g }
+  map M N f :=
+    { app := fun _ => f.Hom
+      naturality' := fun _ _ g => f.comm g }
 #align Action.functor_category_equivalence.functor ActionCat.FunctorCategoryEquivalence.functor
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
@@ -201,11 +208,14 @@ def inverse :
       ActionCat V
         G where 
   obj F :=
-    { V := F.obj PUnit.unit,
+    { V := F.obj PUnit.unit
       ρ :=
-        { toFun := fun g => F.map g, map_one' := F.map_id PUnit.unit,
+        { toFun := fun g => F.map g
+          map_one' := F.map_id PUnit.unit
           map_mul' := fun g h => F.map_comp h g } }
-  map M N f := { Hom := f.app PUnit.unit, comm' := fun g => f.naturality g }
+  map M N f :=
+    { Hom := f.app PUnit.unit
+      comm' := fun g => f.naturality g }
 #align Action.functor_category_equivalence.inverse ActionCat.FunctorCategoryEquivalence.inverse
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
@@ -350,24 +360,25 @@ instance :
       (ActionCat V
         G) where 
   homGroup X Y :=
-    { zero := ⟨0, by simp⟩, add := fun f g => ⟨f.Hom + g.Hom, by simp [f.comm, g.comm]⟩,
-      neg := fun f => ⟨-f.Hom, by simp [f.comm]⟩,
+    { zero := ⟨0, by simp⟩
+      add := fun f g => ⟨f.Hom + g.Hom, by simp [f.comm, g.comm]⟩
+      neg := fun f => ⟨-f.Hom, by simp [f.comm]⟩
       zero_add := by 
         intros
         ext
-        exact zero_add _,
+        exact zero_add _
       add_zero := by 
         intros
         ext
-        exact add_zero _,
+        exact add_zero _
       add_assoc := by 
         intros
         ext
-        exact add_assoc _ _ _,
+        exact add_assoc _ _ _
       add_left_neg := by 
         intros
         ext
-        exact add_left_neg _,
+        exact add_left_neg _
       add_comm := by 
         intros
         ext
@@ -423,27 +434,27 @@ instance :
       (ActionCat V
         G) where 
   homModule X Y :=
-    { smul := fun r f => ⟨r • f.Hom, by simp [f.comm]⟩,
+    { smul := fun r f => ⟨r • f.Hom, by simp [f.comm]⟩
       one_smul := by 
         intros
         ext
-        exact one_smul _ _,
+        exact one_smul _ _
       smul_zero := by 
         intros
         ext
-        exact smul_zero _,
+        exact smul_zero _
       zero_smul := by 
         intros
         ext
-        exact zero_smul _ _,
+        exact zero_smul _ _
       add_smul := by 
         intros
         ext
-        exact add_smul _ _ _,
+        exact add_smul _ _ _
       smul_add := by 
         intros
         ext
-        exact smul_add _ _ _,
+        exact smul_add _ _ _
       mul_smul := by 
         intros
         ext
@@ -568,7 +579,9 @@ variable (V G)
 /-- When `V` is monoidal the forgetful functor `Action V G` to `V` is monoidal. -/
 @[simps]
 def forgetMonoidal : MonoidalFunctor (ActionCat V G) V :=
-  { ActionCat.forget _ _ with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
+  { ActionCat.forget _ _ with 
+    ε := 𝟙 _
+    μ := fun X Y => 𝟙 _ }
 #align Action.forget_monoidal ActionCat.forgetMonoidal
 
 instance forget_monoidal_faithful : Faithful (forgetMonoidal V G).toFunctor := by
@@ -691,7 +704,9 @@ def actionPunitEquivalence :
     ActionCat V (MonCat.of PUnit) ≌
       V where 
   Functor := forget V _
-  inverse := { obj := fun X => ⟨X, 1⟩, map := fun X Y f => ⟨f, fun ⟨⟩ => by simp⟩ }
+  inverse :=
+    { obj := fun X => ⟨X, 1⟩
+      map := fun X Y f => ⟨f, fun ⟨⟩ => by simp⟩ }
   unitIso :=
     NatIso.ofComponents (fun X => mkIso (Iso.refl _) fun ⟨⟩ => by simpa using ρ_one X) (by tidy)
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
@@ -706,10 +721,15 @@ taking actions of `H` to actions of `G`.
 -/
 @[simps]
 def res {G H : MonCat} (f : G ⟶ H) :
-    ActionCat V H ⥤ ActionCat V
+    ActionCat V H ⥤
+      ActionCat V
         G where 
-  obj M := { V := M.V, ρ := f ≫ M.ρ }
-  map M N p := { Hom := p.Hom, comm' := fun g => p.comm (f g) }
+  obj M :=
+    { V := M.V
+      ρ := f ≫ M.ρ }
+  map M N p :=
+    { Hom := p.Hom
+      comm' := fun g => p.comm (f g) }
 #align Action.res ActionCat.res
 
 /-- The natural isomorphism from restriction along the identity homomorphism to
@@ -766,9 +786,9 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
           (F
             i)) where 
   Cone :=
-    { x := ActionCat.ofMulAction G (∀ i : ι, F i),
+    { x := ActionCat.ofMulAction G (∀ i : ι, F i)
       π :=
-        { app := fun i => ⟨fun x => x i.as, fun g => by ext <;> rfl⟩,
+        { app := fun i => ⟨fun x => x i.as, fun g => by ext <;> rfl⟩
           naturality' := fun i j x => by 
             ext
             trace
@@ -777,16 +797,16 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
             congr } }
   IsLimit :=
     { lift := fun s =>
-        { Hom := fun x i => (s.π.app ⟨i⟩).Hom x,
+        { Hom := fun x i => (s.π.app ⟨i⟩).Hom x
           comm' := fun g => by 
             ext (x j)
             dsimp
-            exact congr_fun ((s.π.app ⟨j⟩).comm g) x },
+            exact congr_fun ((s.π.app ⟨j⟩).comm g) x }
       fac' := fun s j => by 
         ext
         dsimp
         congr
-        rw [discrete.mk_as],
+        rw [discrete.mk_as]
       uniq' := fun s f h => by 
         ext (x j)
         dsimp at *
@@ -808,13 +828,13 @@ def mapAction (F : V ⥤ W) (G : MonCat.{u}) :
       ActionCat W
         G where 
   obj M :=
-    { V := F.obj M.V,
+    { V := F.obj M.V
       ρ :=
-        { toFun := fun g => F.map (M.ρ g),
-          map_one' := by simp only [End.one_def, ActionCat.ρ_one, F.map_id],
+        { toFun := fun g => F.map (M.ρ g)
+          map_one' := by simp only [End.one_def, ActionCat.ρ_one, F.map_id]
           map_mul' := fun g h => by simp only [End.mul_def, F.map_comp, map_mul] } }
   map M N f :=
-    { Hom := F.map f.Hom,
+    { Hom := F.map f.Hom
       comm' := fun g => by 
         dsimp
         rw [← F.map_comp, f.comm, F.map_comp] }
@@ -853,32 +873,34 @@ def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
           F.toFunctor.mapAction
       G with
     ε :=
-      { Hom := F.ε,
+      { Hom := F.ε
         comm' := fun g => by 
           dsimp
-          erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] },
+          erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] }
     μ := fun X Y =>
-      { Hom := F.μ X.V Y.V, comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) },
-    ε_is_iso := by infer_instance, μ_is_iso := by infer_instance,
+      { Hom := F.μ X.V Y.V
+        comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) }
+    ε_is_iso := by infer_instance
+    μ_is_iso := by infer_instance
     μ_natural' := by 
       intros
       ext
       dsimp
-      simp,
+      simp
     associativity' := by 
       intros
       ext
       dsimp
       simp
       dsimp
-      simp,
+      simp
     left_unitality' := by 
       intros
       ext
       dsimp
       simp
       dsimp
-      simp,
+      simp
     right_unitality' := by 
       intros
       ext

@@ -289,7 +289,9 @@ theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} :
 #align pequiv.trans_symm_eq_iff_forall_is_some Pequiv.trans_symm_eq_iff_forall_is_some
 
 instance : Bot (α ≃. β) :=
-  ⟨{ toFun := fun _ => none, invFun := fun _ => none, inv := by simp }⟩
+  ⟨{  toFun := fun _ => none
+      invFun := fun _ => none
+      inv := by simp }⟩
 
 instance : Inhabited (α ≃. β) :=
   ⟨⊥⟩
@@ -425,8 +427,8 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
   { -- `split_ifs; finish` closes this goal from here
     Pequiv.partialOrder with
     inf := fun f g =>
-      { toFun := fun a => if f a = g a then f a else none,
-        invFun := fun b => if f.symm b = g.symm b then f.symm b else none,
+      { toFun := fun a => if f a = g a then f a else none
+        invFun := fun b => if f.symm b = g.symm b then f.symm b else none
         inv := fun a b => by 
           have hf := @mem_iff_mem _ _ f a b
           have hg := @mem_iff_mem _ _ g a b
@@ -440,9 +442,9 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
             rw [h1] at *
             rw [← h2] at hg
             simp only [mem_def, eq_self_iff_true, iff_true_iff] at hf hg
-            rw [hf, hg] },
-    inf_le_left := fun _ _ _ _ => by simp <;> split_ifs <;> cc,
-    inf_le_right := fun _ _ _ _ => by simp <;> split_ifs <;> cc,
+            rw [hf, hg] }
+    inf_le_left := fun _ _ _ _ => by simp <;> split_ifs <;> cc
+    inf_le_right := fun _ _ _ _ => by simp <;> split_ifs <;> cc
     le_inf := fun f g h fg gh a b => by 
       intro H
       have hf := fg a b H

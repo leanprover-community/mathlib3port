@@ -323,8 +323,10 @@ def inducedOrderRingHom : α →+*o β :=
 
 /-- The isomorphism of ordered rings between two conditionally complete linearly ordered fields. -/
 def inducedOrderRingIso : β ≃+*o γ :=
-  { inducedOrderRingHom β γ with invFun := inducedMap γ β, left_inv := induced_map_inv_self _ _,
-    right_inv := induced_map_inv_self _ _,
+  { inducedOrderRingHom β γ with 
+    invFun := inducedMap γ β
+    left_inv := induced_map_inv_self _ _
+    right_inv := induced_map_inv_self _ _
     map_le_map_iff' := fun x y => by
       refine' ⟨fun h => _, fun h => induced_map_mono _ _ h⟩
       simpa [induced_order_ring_hom, AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero,

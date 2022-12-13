@@ -50,10 +50,10 @@ theorem mul_left_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b
 def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M]
     [Nontrivial M] : GroupWithZero M :=
   { ‹Nontrivial M›, ‹CancelMonoidWithZero M› with
-    inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_finite₀ h) 1,
+    inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_finite₀ h) 1
     mul_inv_cancel := fun a ha => by 
       simp [Inv.inv, dif_neg ha]
-      exact Fintype.right_inverse_bij_inv _ _,
+      exact Fintype.right_inverse_bij_inv _ _
     inv_zero := by simp [Inv.inv, dif_pos rfl] }
 #align fintype.group_with_zero_of_cancel Fintype.groupWithZeroOfCancel
 

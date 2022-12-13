@@ -379,20 +379,20 @@ where `g` is a monic polynomial of degree `d`. -/
 @[simps]
 def powerBasisAux' (hg : g.Monic) : Basis (Fin g.natDegree) R (AdjoinRoot g) :=
   Basis.ofEquivFun
-    { toFun := fun f i => (modByMonicHom hg f).coeff i,
-      invFun := fun c => mk g <| ∑ i : Fin g.natDegree, monomial i (c i),
+    { toFun := fun f i => (modByMonicHom hg f).coeff i
+      invFun := fun c => mk g <| ∑ i : Fin g.natDegree, monomial i (c i)
       map_add' := fun f₁ f₂ =>
-        funext fun i => by simp only [(mod_by_monic_hom hg).map_add, coeff_add, Pi.add_apply],
+        funext fun i => by simp only [(mod_by_monic_hom hg).map_add, coeff_add, Pi.add_apply]
       map_smul' := fun f₁ f₂ =>
         funext fun i => by
-          simp only [(mod_by_monic_hom hg).map_smul, coeff_smul, Pi.smul_apply, RingHom.id_apply],
+          simp only [(mod_by_monic_hom hg).map_smul, coeff_smul, Pi.smul_apply, RingHom.id_apply]
       left_inv := fun f =>
         induction_on g f fun f =>
           Eq.symm <|
             mk_eq_mk.mpr <| by
               simp only [mod_by_monic_hom_mk, sum_mod_by_monic_coeff hg degree_le_nat_degree]
               rw [mod_by_monic_eq_sub_mul_div _ hg, sub_sub_cancel]
-              exact dvd_mul_right _ _,
+              exact dvd_mul_right _ _
       right_inv := fun x =>
         funext fun i => by 
           nontriviality R
@@ -602,9 +602,10 @@ guaranteed to be identical to `g`. -/
 @[simps (config := { fullyApplied := false })]
 def equiv' (h₁ : aeval (root g) (minpoly R pb.gen) = 0) (h₂ : aeval pb.gen g = 0) :
     AdjoinRoot g ≃ₐ[R] S :=
-  { AdjoinRoot.liftHom g pb.gen h₂ with toFun := AdjoinRoot.liftHom g pb.gen h₂,
-    invFun := pb.lift (root g) h₁,
-    left_inv := fun x => (induction_on g x) fun f => by rw [lift_hom_mk, pb.lift_aeval, aeval_eq],
+  { AdjoinRoot.liftHom g pb.gen h₂ with
+    toFun := AdjoinRoot.liftHom g pb.gen h₂
+    invFun := pb.lift (root g) h₁
+    left_inv := fun x => (induction_on g x) fun f => by rw [lift_hom_mk, pb.lift_aeval, aeval_eq]
     right_inv := fun x => by 
       obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval x
       rw [pb.lift_aeval, aeval_eq, lift_hom_mk] }

@@ -51,14 +51,14 @@ def R : M × S → M × S → Prop
 #align localized_module.r LocalizedModule.R
 
 theorem R.is_equiv : IsEquiv _ (R S M) :=
-  { refl := fun ⟨m, s⟩ => ⟨1, by rw [one_smul]⟩,
+  { refl := fun ⟨m, s⟩ => ⟨1, by rw [one_smul]⟩
     trans := fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨m3, s3⟩ ⟨u1, hu1⟩ ⟨u2, hu2⟩ => by
       use u1 * u2 * s2
       -- Put everything in the same shape, sorting the terms using `simp`
       have hu1' := congr_arg ((· • ·) (u2 * s3)) hu1
       have hu2' := congr_arg ((· • ·) (u1 * s1)) hu2
       simp only [← mul_smul, smul_assoc, mul_assoc, mul_comm, mul_left_comm] at hu1' hu2'⊢
-      rw [hu2', hu1'],
+      rw [hu2', hu1']
     symm := fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ => ⟨u, hu.symm⟩ }
 #align localized_module.r.is_equiv LocalizedModule.R.is_equiv
 
@@ -218,7 +218,7 @@ instance {M : Type _} [AddCommGroup M] [Module R M] : AddCommGroup (LocalizedMod
     neg := fun p =>
       liftOn p (fun x => LocalizedModule.mk (-x.1) x.2) fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ => by
         rw [mk_eq]
-        exact ⟨u, by simpa⟩,
+        exact ⟨u, by simpa⟩
     add_left_neg := fun p => by
       obtain ⟨⟨m, s⟩, rfl : mk m s = p⟩ := Quotient.exists_rep p
       change
@@ -248,7 +248,7 @@ instance {A : Type _} [Semiring A] [Algebra R A] {S : Submonoid R} :
           rw [← e₁, ← e₂]; swap; rw [eq_comm]
           all_goals
             rw [smul_smul, mul_mul_mul_comm, ← smul_eq_mul, ← smul_eq_mul A, smul_smul_smul_comm,
-              mul_smul, mul_smul]),
+              mul_smul, mul_smul])
     left_distrib := by 
       intro x₁ x₂ x₃
       obtain ⟨⟨a₁, s₁⟩, rfl : mk a₁ s₁ = x₁⟩ := Quotient.exists_rep x₁
@@ -256,7 +256,7 @@ instance {A : Type _} [Semiring A] [Algebra R A] {S : Submonoid R} :
       obtain ⟨⟨a₃, s₃⟩, rfl : mk a₃ s₃ = x₃⟩ := Quotient.exists_rep x₃
       apply mk_eq.mpr _
       use 1
-      simp only [one_mul, smul_add, mul_add, mul_smul_comm, smul_smul, ← mul_assoc, mul_right_comm],
+      simp only [one_mul, smul_add, mul_add, mul_smul_comm, smul_smul, ← mul_assoc, mul_right_comm]
     right_distrib := by 
       intro x₁ x₂ x₃
       obtain ⟨⟨a₁, s₁⟩, rfl : mk a₁ s₁ = x₁⟩ := Quotient.exists_rep x₁
@@ -264,16 +264,15 @@ instance {A : Type _} [Semiring A] [Algebra R A] {S : Submonoid R} :
       obtain ⟨⟨a₃, s₃⟩, rfl : mk a₃ s₃ = x₃⟩ := Quotient.exists_rep x₃
       apply mk_eq.mpr _
       use 1
-      simp only [one_mul, smul_add, add_mul, smul_smul, ← mul_assoc, smul_mul_assoc,
-        mul_right_comm],
+      simp only [one_mul, smul_add, add_mul, smul_smul, ← mul_assoc, smul_mul_assoc, mul_right_comm]
     zero_mul := by 
       intro x
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
-      exact mk_eq.mpr ⟨1, by simp only [zero_mul, smul_zero]⟩,
+      exact mk_eq.mpr ⟨1, by simp only [zero_mul, smul_zero]⟩
     mul_zero := by 
       intro x
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
-      exact mk_eq.mpr ⟨1, by simp only [mul_zero, smul_zero]⟩,
+      exact mk_eq.mpr ⟨1, by simp only [mul_zero, smul_zero]⟩
     mul_assoc := by 
       intro x₁ x₂ x₃
       obtain ⟨⟨a₁, s₁⟩, rfl : mk a₁ s₁ = x₁⟩ := Quotient.exists_rep x₁
@@ -281,12 +280,12 @@ instance {A : Type _} [Semiring A] [Algebra R A] {S : Submonoid R} :
       obtain ⟨⟨a₃, s₃⟩, rfl : mk a₃ s₃ = x₃⟩ := Quotient.exists_rep x₃
       apply mk_eq.mpr _
       use 1
-      simp only [one_mul, smul_smul, ← mul_assoc, mul_right_comm],
-    one := mk 1 (1 : S),
+      simp only [one_mul, smul_smul, ← mul_assoc, mul_right_comm]
+    one := mk 1 (1 : S)
     one_mul := by 
       intro x
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
-      exact mk_eq.mpr ⟨1, by simp only [one_mul, one_smul]⟩,
+      exact mk_eq.mpr ⟨1, by simp only [one_mul, one_smul]⟩
     mul_one := by 
       intro x
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
@@ -476,7 +475,7 @@ instance algebra' {A : Type _} [Semiring A] [Algebra R A] : Algebra R (Localized
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
       dsimp
       rw [← Localization.mk_one_eq_algebra_map, algebra_map_mk, mk_mul_mk, mk_mul_mk, mul_comm,
-        Algebra.commutes],
+        Algebra.commutes]
     smul_def' := by 
       intro r x
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
@@ -709,7 +708,7 @@ instance localized_module_is_localized_module :
         erw [LocalizedModule.smul'_mk, LocalizedModule.mk_linear_map_apply, Submonoid.coe_subtype,
           LocalizedModule.mk_cancel t])
   eq_iff_exists m1 m2 :=
-    { mp := fun eq1 => by simpa only [one_smul] using localized_module.mk_eq.mp eq1,
+    { mp := fun eq1 => by simpa only [one_smul] using localized_module.mk_eq.mp eq1
       mpr := fun ⟨c, eq1⟩ => LocalizedModule.mk_eq.mpr ⟨c, by simpa only [one_smul] using eq1⟩ }
 #align localized_module_is_localized_module localized_module_is_localized_module
 

@@ -73,13 +73,17 @@ instance : Inhabited TopCat :=
 /-- The discrete topology on any type. -/
 def discrete : Type u ⥤ TopCat.{u} where 
   obj X := ⟨X, ⊥⟩
-  map X Y f := { toFun := f, continuous_to_fun := continuous_bot }
+  map X Y f :=
+    { toFun := f
+      continuous_to_fun := continuous_bot }
 #align Top.discrete TopCat.discrete
 
 /-- The trivial topology on any type. -/
 def trivial : Type u ⥤ TopCat.{u} where 
   obj X := ⟨X, ⊤⟩
-  map X Y f := { toFun := f, continuous_to_fun := continuous_top }
+  map X Y f :=
+    { toFun := f
+      continuous_to_fun := continuous_top }
 #align Top.trivial TopCat.trivial
 
 /-- Any homeomorphisms induces an isomorphism in `Top`. -/

@@ -672,12 +672,13 @@ instance presheaf_to_Sheaf_preserves_zero_morphisms [Preadditive D] :
 def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun P Q =>
-        { toFun := fun e => J.toSheafify P ≫ e.val, invFun := fun e => ⟨J.sheafifyLift e Q.2⟩,
-          left_inv := fun e => SheafCat.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm,
-          right_inv := fun e => J.to_sheafify_sheafify_lift _ _ },
+        { toFun := fun e => J.toSheafify P ≫ e.val
+          invFun := fun e => ⟨J.sheafifyLift e Q.2⟩
+          left_inv := fun e => SheafCat.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm
+          right_inv := fun e => J.to_sheafify_sheafify_lift _ _ }
       hom_equiv_naturality_left_symm' := by 
         intro P Q R η γ; ext1; dsimp; symm
-        apply J.sheafify_map_sheafify_lift,
+        apply J.sheafify_map_sheafify_lift
       hom_equiv_naturality_right' := fun P Q R η γ => by
         dsimp
         rw [category.assoc] }

@@ -95,7 +95,7 @@ warning: rat.mk -> Rat.mk is a dubious translation:
 lean 3 declaration is
   Int -> Int -> Rat
 but is expected to have type
-  forall (num : Int) (den : Nat), (autoParam.{0} (Ne.{1} Nat den (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) _auto._@.Std.Data.Rat.Basic._hyg.4) -> (autoParam.{0} (Nat.coprime (Int.natAbs num) den) _auto._@.Std.Data.Rat.Basic._hyg.33) -> Rat
+  forall (ᾰ : Int) (ᾰ_1 : Nat), (autoParam.{0} (Ne.{1} Nat ᾰ_1 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) _auto._@.Std.Data.Rat.Basic._hyg.4) -> (autoParam.{0} (Nat.coprime (Int.natAbs ᾰ) ᾰ_1) _auto._@.Std.Data.Rat.Basic._hyg.33) -> Rat
 Case conversion may be inaccurate. Consider using '#align rat.mk Rat.mkₓ'. -/
 /-- Form the quotient `n / d` where `n d : ℤ`. -/
 def mk : ℤ → ℤ → ℚ
@@ -258,9 +258,9 @@ theorem coe_int_eq_mk (z : ℤ) : (z : ℚ) = z /. 1 :=
 
 /- warning: rat.num_denom_cases_on -> Rat.numDenomCasesOn is a dubious translation:
 lean 3 declaration is
-  forall {C : Rat -> Sort.{u}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d)))) -> (C a)
+  forall {C : Rat -> Sort.{u1}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d)))) -> (C a)
 but is expected to have type
-  PUnit.{imax (succ u) 1 (imax 1 1 u) u}
+  PUnit.{imax (succ u1) 1 (imax 1 1 u1) u1}
 Case conversion may be inaccurate. Consider using '#align rat.num_denom_cases_on Rat.numDenomCasesOnₓ'. -/
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `0 < d` and coprime `n`, `d`. -/
@@ -557,9 +557,17 @@ instance : CommRing ℚ where
       Nat.cast_add, Nat.cast_one, mul_one]
 
 instance : CommGroupWithZero ℚ :=
-  { Rat.commRing with zero := 0, one := 1, mul := (· * ·), inv := Inv.inv, div := (· / ·),
-    exists_pair_ne := ⟨0, 1, Rat.zero_ne_one⟩, inv_zero := rfl,
-    mul_inv_cancel := Rat.mul_inv_cancel, mul_zero := mul_zero, zero_mul := zero_mul }
+  { Rat.commRing with 
+    zero := 0
+    one := 1
+    mul := (· * ·)
+    inv := Inv.inv
+    div := (· / ·)
+    exists_pair_ne := ⟨0, 1, Rat.zero_ne_one⟩
+    inv_zero := rfl
+    mul_inv_cancel := Rat.mul_inv_cancel
+    mul_zero := mul_zero
+    zero_mul := zero_mul }
 
 instance : IsDomain ℚ :=
   NoZeroDivisors.to_is_domain _

@@ -467,7 +467,7 @@ def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) :
           w where 
   obj A := GradedNatTrans ((Center.ofBraided V).obj (unop A)) F G
   map A A' f σ :=
-    { app := fun X => f.unop ≫ σ.app X,
+    { app := fun X => f.unop ≫ σ.app X
       naturality := fun X Y => by 
         have p := σ.naturality X Y
         dsimp at p⊢
@@ -494,14 +494,16 @@ def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Ty
       C ⥤
         D where 
   toFun F :=
-    { obj := fun X => F.obj X, map := fun X Y f => F.map X Y f,
-      map_id' := fun X => congr_fun (F.map_id X) PUnit.unit,
+    { obj := fun X => F.obj X
+      map := fun X Y f => F.map X Y f
+      map_id' := fun X => congr_fun (F.map_id X) PUnit.unit
       map_comp' := fun X Y Z f g => congr_fun (F.map_comp X Y Z) ⟨f, g⟩ }
   invFun F :=
-    { obj := fun X => F.obj X, map := fun X Y f => F.map f,
+    { obj := fun X => F.obj X
+      map := fun X Y f => F.map f
       map_id' := fun X => by 
         ext ⟨⟩
-        exact F.map_id X,
+        exact F.map_id X
       map_comp' := fun X Y Z => by 
         ext ⟨f, g⟩
         exact F.map_comp f g }
@@ -525,10 +527,10 @@ def enrichedNatTransYonedaTypeIsoYonedaNatTrans {C : Type v} [EnrichedCategory (
   NatIso.ofComponents
     (fun α =>
       { Hom := fun σ x =>
-          { app := fun X => σ.app X x,
-            naturality' := fun X Y f => congr_fun (σ.naturality X Y) ⟨x, f⟩ },
+          { app := fun X => σ.app X x
+            naturality' := fun X Y f => congr_fun (σ.naturality X Y) ⟨x, f⟩ }
         inv := fun σ =>
-          { app := fun X x => (σ x).app X,
+          { app := fun X x => (σ x).app X
             naturality := fun X Y => by 
               ext ⟨x, f⟩
               exact (σ x).naturality f } })

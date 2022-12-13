@@ -147,8 +147,9 @@ protected def flip (F : C ⥤ D ⥤ E) :
       C ⥤
         E where 
   obj k :=
-    { obj := fun j => (F.obj j).obj k, map := fun j j' f => (F.map f).app k,
-      map_id' := fun X => by rw [CategoryTheory.Functor.map_id]; rfl,
+    { obj := fun j => (F.obj j).obj k
+      map := fun j j' f => (F.map f).app k
+      map_id' := fun X => by rw [CategoryTheory.Functor.map_id]; rfl
       map_comp' := fun X Y Z f g => by rw [map_comp, ← comp_app] }
   map c c' f := { app := fun j => (F.obj j).map f }
 #align category_theory.functor.flip CategoryTheory.Functor.flip

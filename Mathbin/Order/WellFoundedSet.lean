@@ -1071,7 +1071,10 @@ end IsRefl
 
 theorem PartiallyWellOrderedOn.well_founded_on [IsPreorder α r] (h : s.PartiallyWellOrderedOn r) :
     s.WellFoundedOn fun a b => r a b ∧ ¬r b a := by
-  letI : Preorder α := { le := r, le_refl := refl_of r, le_trans := fun _ _ _ => trans_of r }
+  letI : Preorder α :=
+    { le := r
+      le_refl := refl_of r
+      le_trans := fun _ _ _ => trans_of r }
   change s.well_founded_on (· < ·); change s.partially_well_ordered_on (· ≤ ·) at h
   rw [well_founded_on_iff_no_descending_seq]
   intro f hf

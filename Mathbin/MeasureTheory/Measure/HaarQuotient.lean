@@ -154,7 +154,7 @@ theorem MeasurePreservingQuotientGroup.mk' [Subgroup.Normal Γ]
     (h : μ (𝓕 ∩ QuotientGroup.mk' Γ ⁻¹' K) = c) :
     MeasurePreserving (QuotientGroup.mk' Γ) (μ.restrict 𝓕)
       (c • MeasureTheory.Measure.haarMeasure K) :=
-  { Measurable := continuous_quotient_mk.Measurable,
+  { Measurable := continuous_quotient_mk.Measurable
     map_eq := by rw [h𝓕.map_restrict_quotient K h𝓕_finite, h] <;> rfl }
 #align measure_preserving_quotient_group.mk' MeasurePreservingQuotientGroup.mk'
 

@@ -136,7 +136,7 @@ end ProdLieGroup
 instance normedSpaceLieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
   { modelSpaceSmooth with
-    smoothAdd := smooth_iff.2 ⟨continuous_add, fun x y => contDiffAdd.ContDiffOn⟩,
+    smoothAdd := smooth_iff.2 ⟨continuous_add, fun x y => contDiffAdd.ContDiffOn⟩
     smoothNeg := smooth_iff.2 ⟨continuous_neg, fun x y => contDiffNeg.ContDiffOn⟩ }
 #align normed_space_lie_add_group normedSpaceLieAddGroup
 

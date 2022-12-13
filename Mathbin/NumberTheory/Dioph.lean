@@ -224,8 +224,11 @@ instance (α : Type _) : Inhabited (Poly α) :=
 
 instance : AddCommGroup (Poly α) := by
   refine_struct
-            { add := ((· + ·) : Poly α → Poly α → Poly α), neg := (Neg.neg : Poly α → Poly α),
-              sub := Sub.sub, zero := 0, zsmul := @zsmulRec _ ⟨(0 : Poly α)⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩,
+            { add := ((· + ·) : Poly α → Poly α → Poly α)
+              neg := (Neg.neg : Poly α → Poly α)
+              sub := Sub.sub
+              zero := 0
+              zsmul := @zsmulRec _ ⟨(0 : Poly α)⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩
               nsmul := @nsmulRec _ ⟨(0 : Poly α)⟩ ⟨(· + ·)⟩ } <;>
           intros <;>
         try rfl <;>
@@ -233,12 +236,18 @@ instance : AddCommGroup (Poly α) := by
     simp [sub_eq_add_neg, add_comm, add_assoc]
 
 instance : AddGroupWithOne (Poly α) :=
-  { Poly.addCommGroup with one := 1, natCast := fun n => Poly.const n, intCast := Poly.const }
+  { Poly.addCommGroup with 
+    one := 1
+    natCast := fun n => Poly.const n
+    intCast := Poly.const }
 
 instance : CommRing (Poly α) := by
   refine_struct
             { Poly.addGroupWithOne, Poly.addCommGroup with
-              add := ((· + ·) : Poly α → Poly α → Poly α), zero := 0, mul := (· * ·), one := 1,
+              add := ((· + ·) : Poly α → Poly α → Poly α)
+              zero := 0
+              mul := (· * ·)
+              one := 1
               npow := @npowRec _ ⟨(1 : Poly α)⟩ ⟨(· * ·)⟩ } <;>
           intros <;>
         try rfl <;>

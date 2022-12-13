@@ -83,6 +83,8 @@ end
 ```
 -/
 add_tactic_doc
-  { Name := "rename_var", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.rename_var], tags := ["renaming"] }
+  { Name := "rename_var"
+    category := DocCategory.tactic
+    declNames := [`tactic.interactive.rename_var]
+    tags := ["renaming"] }
 

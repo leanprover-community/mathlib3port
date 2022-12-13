@@ -272,7 +272,7 @@ instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
       refine' WithTop.recTopCoe _ _
       · simp
       · intro
-        rw [← WithTop.coe_zero, ← WithTop.coe_add, zero_add],
+        rw [← WithTop.coe_zero, ← WithTop.coe_add, zero_add]
     add_zero := by 
       refine' WithTop.recTopCoe _ _
       · simp
@@ -286,8 +286,9 @@ instance [AddCommMonoid α] : AddCommMonoid (WithTop α) :=
   { WithTop.addMonoid, WithTop.addCommSemigroup with }
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne (WithTop α) :=
-  { WithTop.hasOne, WithTop.addMonoid with natCast := fun n => ↑(n : α),
-    nat_cast_zero := by rw [Nat.cast_zero, WithTop.coe_zero],
+  { WithTop.hasOne, WithTop.addMonoid with
+    natCast := fun n => ↑(n : α)
+    nat_cast_zero := by rw [Nat.cast_zero, WithTop.coe_zero]
     nat_cast_succ := fun n => by rw [Nat.cast_add_one, WithTop.coe_add, WithTop.coe_one] }
 
 instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne (WithTop α) :=

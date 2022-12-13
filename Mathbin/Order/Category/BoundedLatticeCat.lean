@@ -68,25 +68,29 @@ instance :
 instance hasForgetToBoundedOrder :
     HasForget₂ BoundedLatticeCat
       BoundedOrderCat where forget₂ :=
-    { obj := fun X => BoundedOrderCat.of X, map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
+    { obj := fun X => BoundedOrderCat.of X
+      map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
 #align BoundedLattice.has_forget_to_BoundedOrder BoundedLatticeCat.hasForgetToBoundedOrder
 
 instance hasForgetToLattice :
     HasForget₂ BoundedLatticeCat
       LatticeCat where forget₂ :=
-    { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
+    { obj := fun X => ⟨X⟩
+      map := fun X Y => BoundedLatticeHom.toLatticeHom }
 #align BoundedLattice.has_forget_to_Lattice BoundedLatticeCat.hasForgetToLattice
 
 instance hasForgetToSemilatticeSup :
     HasForget₂ BoundedLatticeCat
       SemilatticeSupCat where forget₂ :=
-    { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toSupBotHom }
+    { obj := fun X => ⟨X⟩
+      map := fun X Y => BoundedLatticeHom.toSupBotHom }
 #align BoundedLattice.has_forget_to_SemilatticeSup BoundedLatticeCat.hasForgetToSemilatticeSup
 
 instance hasForgetToSemilatticeInf :
     HasForget₂ BoundedLatticeCat
       SemilatticeInfCat where forget₂ :=
-    { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toInfTopHom }
+    { obj := fun X => ⟨X⟩
+      map := fun X Y => BoundedLatticeHom.toInfTopHom }
 #align BoundedLattice.has_forget_to_SemilatticeInf BoundedLatticeCat.hasForgetToSemilatticeInf
 
 @[simp]

@@ -40,7 +40,7 @@ def closedUnit (F : D ⥤ C) :
       tensorLeft F ⋙
         closedIhom
           F where app G :=
-    { app := fun X => (ihom.coev (F.obj X)).app (G.obj X),
+    { app := fun X => (ihom.coev (F.obj X)).app (G.obj X)
       naturality' := by 
         intro X Y f
         dsimp
@@ -58,7 +58,7 @@ def closedCounit (F : D ⥤ C) :
       𝟭
         (D ⥤
           C) where app G :=
-    { app := fun X => (ihom.ev (F.obj X)).app (G.obj X),
+    { app := fun X => (ihom.ev (F.obj X)).app (G.obj X)
       naturality' := by 
         intro X Y f
         dsimp
@@ -71,10 +71,12 @@ def closedCounit (F : D ⥤ C) :
 closed in the functor category `F : D ⥤ C` with the pointwise monoidal structure. -/
 @[simps]
 instance closed (F : D ⥤ C) :
-    Closed
-      F where isAdj :=
-    { right := closedIhom F,
-      adj := Adjunction.mkOfUnitCounit { Unit := closedUnit F, counit := closedCounit F } }
+    Closed F where isAdj :=
+    { right := closedIhom F
+      adj :=
+        Adjunction.mkOfUnitCounit
+          { Unit := closedUnit F
+            counit := closedCounit F } }
 #align category_theory.functor.closed CategoryTheory.Functor.closed
 
 /-- If `C` is a monoidal closed category and `D` is groupoid, then the functor category `D ⥤ C`,

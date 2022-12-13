@@ -82,7 +82,8 @@ Note that `R` plays no role but it is convenient to make this generalisation to 
 @[simps]
 def mk (p : AddSubmonoid M) (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p)
     (hB : ∀ (b : B) {m : M}, m ∈ p → b • m ∈ p) : Submodule (A ⊗[R] B) M :=
-  { p with carrier := p,
+  { p with 
+    carrier := p
     smul_mem' := fun ab m =>
       TensorProduct.induction_on ab (fun hm => by simpa only [zero_smul] using p.zero_mem)
         (fun a b hm => by simpa only [TensorProduct.Algebra.smul_def] using hA a (hB b hm))
@@ -111,13 +112,17 @@ def baseChange (S : Type _) [CommSemiring S] [Module S M] [Algebra S A] [Algebra
 /-- Forgetting the `B` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `A`. -/
 @[simps]
 def toSubmodule (p : Submodule (A ⊗[R] B) M) : Submodule A M :=
-  { p with carrier := p, smul_mem' := smul_mem p }
+  { p with 
+    carrier := p
+    smul_mem' := smul_mem p }
 #align subbimodule.to_submodule Subbimodule.toSubmodule
 
 /-- Forgetting the `A` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `B`. -/
 @[simps]
 def toSubmodule' (p : Submodule (A ⊗[R] B) M) : Submodule B M :=
-  { p with carrier := p, smul_mem' := smul_mem' p }
+  { p with 
+    carrier := p
+    smul_mem' := smul_mem' p }
 #align subbimodule.to_submodule' Subbimodule.toSubmodule'
 
 end Algebra

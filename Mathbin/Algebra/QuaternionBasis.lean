@@ -147,7 +147,10 @@ theorem lift_smul (r : R) (x : ℍ[R,c₁,c₂]) : q.lift (r • x) = r • q.li
 @[simps]
 def liftHom : ℍ[R,c₁,c₂] →ₐ[R] A :=
   AlgHom.mk'
-    { toFun := q.lift, map_zero' := q.lift_zero, map_one' := q.lift_one, map_add' := q.lift_add,
+    { toFun := q.lift
+      map_zero' := q.lift_zero
+      map_one' := q.lift_one
+      map_add' := q.lift_add
       map_mul' := q.lift_mul }
     q.lift_smul
 #align quaternion_algebra.basis.lift_hom QuaternionAlgebra.Basis.liftHom
