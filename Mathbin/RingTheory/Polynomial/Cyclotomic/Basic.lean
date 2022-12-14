@@ -1035,7 +1035,7 @@ theorem is_root_cyclotomic_prime_pow_mul_iff_of_char_p {m k p : ℕ} {R : Type _
     rw [cyclotomic_mul_prime_pow_eq R (NeZero.not_char_dvd R p m) hk, is_root.def, eval_pow, h,
       zero_pow]
     simp only [tsub_pos_iff_lt]
-    apply strict_mono_pow hp.out.one_lt (Nat.pred_lt hk.ne')
+    apply pow_strict_mono_right hp.out.one_lt (Nat.pred_lt hk.ne')
 #align
   polynomial.is_root_cyclotomic_prime_pow_mul_iff_of_char_p Polynomial.is_root_cyclotomic_prime_pow_mul_iff_of_char_p
 

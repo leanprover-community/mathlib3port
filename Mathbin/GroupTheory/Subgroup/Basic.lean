@@ -7,6 +7,7 @@ import Mathbin.Algebra.Group.Conj
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Order.Group.InjSurj
 import Mathbin.Data.Countable.Basic
+import Mathbin.Data.Set.Finite
 import Mathbin.GroupTheory.Submonoid.Centralizer
 import Mathbin.GroupTheory.Submonoid.Membership
 import Mathbin.Logic.Encodable.Basic
@@ -2930,6 +2931,27 @@ theorem comap_map_eq_self_of_injective {f : G →* N} (h : Function.Injective f)
     comap f (map f H) = H :=
   comap_map_eq_self (((ker_eq_bot_iff _).mpr h).symm ▸ bot_le)
 #align subgroup.comap_map_eq_self_of_injective Subgroup.comap_map_eq_self_of_injective
+
+@[to_additive]
+theorem map_le_map_iff {f : G →* N} {H K : Subgroup G} : H.map f ≤ K.map f ↔ H ≤ K ⊔ f.ker := by
+  rw [map_le_iff_le_comap, comap_map_eq]
+#align subgroup.map_le_map_iff Subgroup.map_le_map_iff
+
+@[to_additive]
+theorem map_le_map_iff' {f : G →* N} {H K : Subgroup G} :
+    H.map f ≤ K.map f ↔ H ⊔ f.ker ≤ K ⊔ f.ker := by
+  simp only [map_le_map_iff, sup_le_iff, le_sup_right, and_true_iff]
+#align subgroup.map_le_map_iff' Subgroup.map_le_map_iff'
+
+@[to_additive]
+theorem map_eq_map_iff {f : G →* N} {H K : Subgroup G} :
+    H.map f = K.map f ↔ H ⊔ f.ker = K ⊔ f.ker := by simp only [le_antisymm_iff, map_le_map_iff']
+#align subgroup.map_eq_map_iff Subgroup.map_eq_map_iff
+
+@[to_additive]
+theorem map_eq_range_iff {f : G →* N} {H : Subgroup G} : H.map f = f.range ↔ Codisjoint H f.ker :=
+  by rw [f.range_eq_map, map_eq_map_iff, codisjoint_iff, top_sup_eq]
+#align subgroup.map_eq_range_iff Subgroup.map_eq_range_iff
 
 @[to_additive]
 theorem map_le_map_iff_of_injective {f : G →* N} (hf : Function.Injective f) {H K : Subgroup G} :

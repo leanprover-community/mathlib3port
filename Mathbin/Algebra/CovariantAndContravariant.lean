@@ -5,7 +5,7 @@ Authors: Damiano Testa
 -/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Order.Basic
-import Mathbin.Order.Monotone
+import Mathbin.Order.Monotone.Basic
 
 /-!
 

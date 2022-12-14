@@ -28,7 +28,7 @@ We also give analogues of all these notions in the additive world.
 
 noncomputable section
 
-open Ennreal Pointwise BigOperators TopologicalSpace
+open Nnreal Ennreal Pointwise BigOperators TopologicalSpace
 
 open Inv Set Function MeasureTheory.Measure Filter
 
@@ -83,13 +83,27 @@ theorem map_mul_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) 
   IsMulRightInvariant.map_mul_right_eq_self g
 #align measure_theory.map_mul_right_eq_self MeasureTheory.map_mul_right_eq_self
 
-@[to_additive]
-instance [IsMulLeftInvariant μ] (c : ℝ≥0∞) : IsMulLeftInvariant (c • μ) :=
+@[to_additive MeasureTheory.isAddLeftInvariantSmul]
+instance isMulLeftInvariantSmul [IsMulLeftInvariant μ] (c : ℝ≥0∞) : IsMulLeftInvariant (c • μ) :=
   ⟨fun g => by rw [measure.map_smul, map_mul_left_eq_self]⟩
+#align measure_theory.is_mul_left_invariant_smul MeasureTheory.isMulLeftInvariantSmul
 
-@[to_additive]
-instance [IsMulRightInvariant μ] (c : ℝ≥0∞) : IsMulRightInvariant (c • μ) :=
+@[to_additive MeasureTheory.isAddRightInvariantSmul]
+instance isMulRightInvariantSmul [IsMulRightInvariant μ] (c : ℝ≥0∞) : IsMulRightInvariant (c • μ) :=
   ⟨fun g => by rw [measure.map_smul, map_mul_right_eq_self]⟩
+#align measure_theory.is_mul_right_invariant_smul MeasureTheory.isMulRightInvariantSmul
+
+@[to_additive MeasureTheory.isAddLeftInvariantSmulNnreal]
+instance isMulLeftInvariantSmulNnreal [IsMulLeftInvariant μ] (c : ℝ≥0) :
+    IsMulLeftInvariant (c • μ) :=
+  MeasureTheory.isMulLeftInvariantSmul (c : ℝ≥0∞)
+#align measure_theory.is_mul_left_invariant_smul_nnreal MeasureTheory.isMulLeftInvariantSmulNnreal
+
+@[to_additive MeasureTheory.isAddRightInvariantSmulNnreal]
+instance isMulRightInvariantSmulNnreal [IsMulRightInvariant μ] (c : ℝ≥0) :
+    IsMulRightInvariant (c • μ) :=
+  MeasureTheory.isMulRightInvariantSmul (c : ℝ≥0∞)
+#align measure_theory.is_mul_right_invariant_smul_nnreal MeasureTheory.isMulRightInvariantSmulNnreal
 
 section HasMeasurableMul
 

@@ -1578,9 +1578,17 @@ theorem nnnorm_of_nonneg (hr : 0 ≤ r) : ‖r‖₊ = ⟨r, hr⟩ :=
   Nnreal.eq <| norm_of_nonneg hr
 #align real.nnnorm_of_nonneg Real.nnnorm_of_nonneg
 
+@[simp]
+theorem nnnorm_abs (r : ℝ) : ‖|r|‖₊ = ‖r‖₊ := by simp [nnnorm]
+#align real.nnnorm_abs Real.nnnorm_abs
+
 theorem ennnorm_eq_of_real (hr : 0 ≤ r) : (‖r‖₊ : ℝ≥0∞) = Ennreal.ofReal r := by
   rw [← of_real_norm_eq_coe_nnnorm, norm_of_nonneg hr]
 #align real.ennnorm_eq_of_real Real.ennnorm_eq_of_real
+
+theorem ennnorm_eq_of_real_abs (r : ℝ) : (‖r‖₊ : ℝ≥0∞) = Ennreal.ofReal (|r|) := by
+  rw [← Real.nnnorm_abs r, Real.ennnorm_eq_of_real (abs_nonneg _)]
+#align real.ennnorm_eq_of_real_abs Real.ennnorm_eq_of_real_abs
 
 theorem to_nnreal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNnreal = ‖r‖₊ := by
   rw [Real.to_nnreal_of_nonneg hr]

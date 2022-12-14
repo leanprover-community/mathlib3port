@@ -234,6 +234,14 @@ theorem finrank_eq_card_basis' [FiniteDimensional K V] {ι : Type w} (h : Basis 
   rw [Cardinal.mk_fintype, finrank_eq_card_basis h]
 #align finite_dimensional.finrank_eq_card_basis' FiniteDimensional.finrank_eq_card_basis'
 
+/-- Given a basis of a division ring over itself indexed by a type `ι`, then `ι` is `unique`. -/
+noncomputable def Basis.unique {ι : Type _} (b : Basis ι K K) : Unique ι := by
+  have A : Cardinal.mk ι = ↑(FiniteDimensional.finrank K K) :=
+    (FiniteDimensional.finrank_eq_card_basis' b).symm
+  simp only [Cardinal.eq_one_iff_unique, FiniteDimensional.finrank_self, algebraMap.coe_one] at A
+  exact Nonempty.some ((unique_iff_subsingleton_and_nonempty _).2 A)
+#align finite_dimensional.basis.unique FiniteDimensional.Basis.unique
+
 variable (K V)
 
 /-- A finite dimensional vector space has a basis indexed by `fin (finrank K V)`. -/

@@ -9,13 +9,15 @@ import Mathbin.LinearAlgebra.Matrix.Diagonal
 import Mathbin.LinearAlgebra.Matrix.Transvection
 import Mathbin.MeasureTheory.Constructions.Pi
 import Mathbin.MeasureTheory.Measure.Stieltjes
+import Mathbin.MeasureTheory.Measure.HaarOfBasis
 
 /-!
 # Lebesgue measure on the real line and on `ℝⁿ`
 
-We construct Lebesgue measure on the real line, as a particular case of Stieltjes measure associated
-to the function `x ↦ x`. We obtain as a consequence Lebesgue measure on `ℝⁿ`. We prove that they
-are translation invariant.
+We show that the Lebesgue measure on the real line (constructed as a particular case of additive
+Haar measure on inner product spaces) coincides with the Stieltjes measure associated
+to the function `x ↦ x`. We deduce properties of this measure on `ℝ`, and then of the product
+Lebesgue measure on `ℝⁿ`. In particular, we prove that they are translation invariant.
 
 We show that, on `ℝⁿ`, a linear map acts on Lebesgue measure by rescaling it through the absolute
 value of its determinant, in `real.map_linear_map_volume_pi_eq_smul_volume_pi`.
@@ -38,19 +40,34 @@ open BigOperators Ennreal Nnreal TopologicalSpace
 -/
 
 
-/-- Lebesgue measure on the Borel sigma algebra, giving measure `b - a` to the interval `[a, b]`. -/
-instance Real.measureSpace : MeasureSpace ℝ :=
-  ⟨StieltjesFunction.id.Measure⟩
-#align real.measure_space Real.measureSpace
-
 namespace Real
 
 variable {ι : Type _} [Fintype ι]
 
-open TopologicalSpace
+/-- The volume on the real line (as a particular case of the volume on a finite-dimensional
+inner product space) coincides with the Stieltjes measure coming from the identity function. -/
+theorem volume_eq_stieltjes_id : (volume : Measure ℝ) = StieltjesFunction.id.Measure := by
+  haveI : is_add_left_invariant stieltjes_function.id.measure :=
+    ⟨fun a =>
+      Eq.symm <|
+        Real.measure_ext_Ioo_rat fun p q => by
+          simp only [measure.map_apply (measurable_const_add a) measurableSetIoo,
+            sub_sub_sub_cancel_right, StieltjesFunction.measure_Ioo, StieltjesFunction.id_left_lim,
+            StieltjesFunction.id_apply, id.def, preimage_const_add_Ioo]⟩
+  have A : stieltjes_function.id.measure (stdOrthonormalBasis ℝ ℝ).toBasis.parallelepiped = 1 := by
+    change stieltjes_function.id.measure (parallelepiped (stdOrthonormalBasis ℝ ℝ)) = 1
+    rcases parallelepiped_orthonormal_basis_one_dim (stdOrthonormalBasis ℝ ℝ) with (H | H) <;>
+      simp only [H, StieltjesFunction.measure_Icc, StieltjesFunction.id_apply, id.def, tsub_zero,
+        StieltjesFunction.id_left_lim, sub_neg_eq_add, zero_add, Ennreal.of_real_one]
+  conv_rhs =>
+    rw [add_haar_measure_unique stieltjes_function.id.measure
+        (stdOrthonormalBasis ℝ ℝ).toBasis.parallelepiped,
+      A]
+  simp only [volume, Basis.addHaar, one_smul]
+#align real.volume_eq_stieltjes_id Real.volume_eq_stieltjes_id
 
-theorem volume_val (s) : volume s = StieltjesFunction.id.Measure s :=
-  rfl
+theorem volume_val (s) : volume s = StieltjesFunction.id.Measure s := by
+  simp [volume_eq_stieltjes_id]
 #align real.volume_val Real.volume_val
 
 @[simp]
@@ -171,6 +188,21 @@ instance isFiniteMeasureRestrictIoo (x y : ℝ) : IsFiniteMeasure (volume.restri
   ⟨by simp⟩
 #align real.is_finite_measure_restrict_Ioo Real.isFiniteMeasureRestrictIoo
 
+theorem volume_le_diam (s : Set ℝ) : volume s ≤ Emetric.diam s := by
+  by_cases hs : Metric.Bounded s
+  · rw [Real.ediam_eq hs, ← volume_Icc]
+    exact volume.mono (Real.subset_Icc_Inf_Sup_of_bounded hs)
+  · rw [Metric.ediam_of_unbounded hs]
+    exact le_top
+#align real.volume_le_diam Real.volume_le_diam
+
+theorem Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ} (h : ∀ᶠ x in 𝓝 a, p x) :
+    (0 : ℝ≥0∞) < volume { x | p x } := by
+  rcases h.exists_Ioo_subset with ⟨l, u, hx, hs⟩
+  refine' lt_of_lt_of_le _ (measure_mono hs)
+  simpa [-mem_Ioo] using hx.1.trans hx.2
+#align filter.eventually.volume_pos_of_nhds_real Filter.Eventually.volume_pos_of_nhds_real
+
 /-!
 ### Volume of a box in `ℝⁿ`
 -/
@@ -234,14 +266,6 @@ theorem volume_pi_closed_ball (a : ι → ℝ) {r : ℝ} (hr : 0 ≤ r) :
   exact (Ennreal.of_real_pow (mul_nonneg zero_le_two hr) _).symm
 #align real.volume_pi_closed_ball Real.volume_pi_closed_ball
 
-theorem volume_le_diam (s : Set ℝ) : volume s ≤ Emetric.diam s := by
-  by_cases hs : Metric.Bounded s
-  · rw [Real.ediam_eq hs, ← volume_Icc]
-    exact volume.mono (Real.subset_Icc_Inf_Sup_of_bounded hs)
-  · rw [Metric.ediam_of_unbounded hs]
-    exact le_top
-#align real.volume_le_diam Real.volume_le_diam
-
 theorem volume_pi_le_prod_diam (s : Set (ι → ℝ)) :
     volume s ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) :=
   calc
@@ -265,17 +289,9 @@ theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ Emetric.diam
 #align real.volume_pi_le_diam_pow Real.volume_pi_le_diam_pow
 
 /-!
-### Images of the Lebesgue measure under translation/multiplication in ℝ
+### Images of the Lebesgue measure under multiplication in ℝ
 -/
 
-
-instance isAddLeftInvariantRealVolume : IsAddLeftInvariant (volume : Measure ℝ) :=
-  ⟨fun a =>
-    Eq.symm <|
-      Real.measure_ext_Ioo_rat fun p q => by
-        simp [measure.map_apply (measurable_const_add a) measurableSetIoo,
-          sub_sub_sub_cancel_right]⟩
-#align real.is_add_left_invariant_real_volume Real.isAddLeftInvariantRealVolume
 
 theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
     Ennreal.ofReal (|a|) • Measure.map ((· * ·) a) volume = volume := by
@@ -332,12 +348,6 @@ theorem volume_preimage_mul_right {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
       rfl
     
 #align real.volume_preimage_mul_right Real.volume_preimage_mul_right
-
-instance : IsNegInvariant (volume : Measure ℝ) :=
-  ⟨Eq.symm <|
-      Real.measure_ext_Ioo_rat fun p q => by
-        simp [show volume.neg (Ioo (p : ℝ) q) = _ from
-            measure.map_apply measurable_neg measurableSetIoo]⟩
 
 /-!
 ### Images of the Lebesgue measure under translation/linear maps in ℝⁿ
@@ -457,18 +467,7 @@ theorem map_linear_map_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ]
 
 end Real
 
-open TopologicalSpace
-
-theorem Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ} (h : ∀ᶠ x in 𝓝 a, p x) :
-    (0 : ℝ≥0∞) < volume { x | p x } := by
-  rcases h.exists_Ioo_subset with ⟨l, u, hx, hs⟩
-  refine' lt_of_lt_of_le _ (measure_mono hs)
-  simpa [-mem_Ioo] using hx.1.trans hx.2
-#align filter.eventually.volume_pos_of_nhds_real Filter.Eventually.volume_pos_of_nhds_real
-
 section regionBetween
-
-open Classical
 
 variable {α : Type _}
 
@@ -542,21 +541,22 @@ theorem measurableSetGraph (hf : Measurable f) : MeasurableSet { p : α × ℝ |
 theorem volume_region_between_eq_lintegral' (hf : Measurable f) (hg : Measurable g)
     (hs : MeasurableSet s) :
     μ.Prod volume (regionBetween f g s) = ∫⁻ y in s, Ennreal.ofReal ((g - f) y) ∂μ := by
-  rw [measure.prod_apply]
-  · have h :
-      (fun x => volume { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) }) =
-        s.indicator fun x => Ennreal.ofReal (g x - f x) :=
-      by 
-      funext x
-      rw [indicator_apply]
-      split_ifs
-      · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = Ioo (f x) (g x) := by simp [h, Ioo]
-        simp only [hx, Real.volume_Ioo, sub_zero]
-      · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = ∅ := by simp [h]
-        simp only [hx, measure_empty]
-    dsimp only [regionBetween, preimage_set_of_eq]
-    rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
-  · exact measurableSetRegionBetween hf hg hs
+  classical 
+    rw [measure.prod_apply]
+    · have h :
+        (fun x => volume { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) }) =
+          s.indicator fun x => Ennreal.ofReal (g x - f x) :=
+        by 
+        funext x
+        rw [indicator_apply]
+        split_ifs
+        · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = Ioo (f x) (g x) := by simp [h, Ioo]
+          simp only [hx, Real.volume_Ioo, sub_zero]
+        · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = ∅ := by simp [h]
+          simp only [hx, measure_empty]
+      dsimp only [regionBetween, preimage_set_of_eq]
+      rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
+    · exact measurableSetRegionBetween hf hg hs
 #align volume_region_between_eq_lintegral' volume_region_between_eq_lintegral'
 
 /-- The volume of the region between two almost everywhere measurable functions on a measurable set

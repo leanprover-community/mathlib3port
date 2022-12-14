@@ -226,6 +226,11 @@ theorem det_to_lin (b : Basis ι R M) (f : Matrix ι ι R) :
   rw [← LinearMap.det_to_matrix b, LinearMap.to_matrix_to_lin]
 #align linear_map.det_to_lin LinearMap.det_to_lin
 
+@[simp]
+theorem det_to_lin' (f : Matrix ι ι R) : LinearMap.det f.toLin' = f.det := by
+  simp only [← to_lin_eq_to_lin', det_to_lin]
+#align linear_map.det_to_lin' LinearMap.det_to_lin'
+
 /-- To show `P f.det` it suffices to consider `P (to_matrix _ _ f).det` and `P 1`. -/
 @[elab_as_elim]
 theorem detCases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)

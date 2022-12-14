@@ -5,6 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl, Dami
 Yuyang Zhao
 -/
 import Mathbin.Algebra.CovariantAndContravariant
+import Mathbin.Order.MinMax
 
 /-!
 # Ordered monoids
@@ -311,6 +312,20 @@ theorem mul_right_cancel'' [ContravariantClass α α (swap (· * ·)) (· ≤ ·
 -/
 
 end PartialOrder
+
+section LinearOrder
+
+variable [LinearOrder α] {a b c d : α} [CovariantClass α α (· * ·) (· < ·)]
+  [CovariantClass α α (swap (· * ·)) (· < ·)]
+
+@[to_additive]
+theorem min_le_max_of_mul_le_mul (h : a * b ≤ c * d) : min a b ≤ max c d := by
+  simp_rw [min_le_iff, le_max_iff]
+  contrapose! h
+  exact mul_lt_mul_of_lt_of_lt h.1.1 h.2.2
+#align min_le_max_of_mul_le_mul min_le_max_of_mul_le_mul
+
+end LinearOrder
 
 end Mul
 
@@ -1507,7 +1522,7 @@ variable [LinearOrder α]
 
 /- warning: exists_square_le -> exists_square_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1))) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_2))))] (a : α), Exists.{succ u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_2))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) b b) a)
+  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1))) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))] (a : α), Exists.{succ u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) b b) a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9653 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9655 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9653 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9655) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9668 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9670 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_2))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9668 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.9670)] (a : α), Exists.{succ u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_2))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) b b) a)
 Case conversion may be inaccurate. Consider using '#align exists_square_le exists_square_leₓ'. -/
@@ -1980,21 +1995,29 @@ theorem StrictAntiOn.mul_antitone' (hf : StrictAntiOn f s) (hg : AntitoneOn g s)
 #align strict_anti_on.mul_antitone' StrictAntiOn.mul_antitone'
 -/
 
-#print cmp_mul_left' /-
+/- warning: cmp_mul_left' -> cmp_mul_left' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_6 : Mul.{u1} α] [_inst_7 : LinearOrder.{u1} α] [_inst_8 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_7))))))] (a : α) (b : α) (c : α), Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_7))))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_7 a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) a c)) (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_7))))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_7 a b) b c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_6 : Mul.{u1} α] [_inst_7 : LinearOrder.{u1} α] [_inst_8 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14576 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14578 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14576 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14578) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14591 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14593 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_7))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14591 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14593)] (a : α) (b : α) (c : α), Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_7))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u1} α _inst_7 a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) a c)) (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_7))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u1} α _inst_7 a b) b c)
+Case conversion may be inaccurate. Consider using '#align cmp_mul_left' cmp_mul_left'ₓ'. -/
 @[simp, to_additive cmp_add_left]
 theorem cmp_mul_left' {α : Type _} [Mul α] [LinearOrder α] [CovariantClass α α (· * ·) (· < ·)]
     (a b c : α) : cmp (a * b) (a * c) = cmp b c :=
   (strictMono_id.const_mul' a).cmp_map_eq b c
 #align cmp_mul_left' cmp_mul_left'
--/
 
-#print cmp_mul_right' /-
+/- warning: cmp_mul_right' -> cmp_mul_right' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_6 : Mul.{u1} α] [_inst_7 : LinearOrder.{u1} α] [_inst_8 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6))) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_7))))))] (a : α) (b : α) (c : α), Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_7))))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_7 a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) b c)) (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_7))))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_7 a b) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_6 : Mul.{u1} α] [_inst_7 : LinearOrder.{u1} α] [_inst_8 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14742 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14744 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14742 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14744)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14757 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14759 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_7))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14757 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14759)] (a : α) (b : α) (c : α), Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_7))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u1} α _inst_7 a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_6) b c)) (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_7))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u1} α _inst_7 a b) a b)
+Case conversion may be inaccurate. Consider using '#align cmp_mul_right' cmp_mul_right'ₓ'. -/
 @[simp, to_additive cmp_add_right]
 theorem cmp_mul_right' {α : Type _} [Mul α] [LinearOrder α]
     [CovariantClass α α (swap (· * ·)) (· < ·)] (a b c : α) : cmp (a * c) (b * c) = cmp a b :=
   (strictMono_id.mul_const' c).cmp_map_eq a b
 #align cmp_mul_right' cmp_mul_right'
--/
 
 end Mono
 

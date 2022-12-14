@@ -23,9 +23,11 @@ fixed point
 -/
 
 
+open Equiv
+
 universe u v
 
-variable {α : Type u} {β : Type v} {f fa g : α → α} {x y : α} {fb : β → β} {m n k : ℕ} {e : α ≃ α}
+variable {α : Type u} {β : Type v} {f fa g : α → α} {x y : α} {fb : β → β} {m n k : ℕ} {e : Perm α}
 
 namespace Function
 
@@ -97,6 +99,24 @@ theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : �
   rw [Set.preimage_iterate_eq]
   exact h.iterate n
 #align function.is_fixed_pt.preimage_iterate Function.IsFixedPt.preimage_iterate
+
+protected theorem equiv_symm (h : IsFixedPt e x) : IsFixedPt e.symm x :=
+  h.to_left_inverse e.left_inverse_symm
+#align function.is_fixed_pt.equiv_symm Function.IsFixedPt.equiv_symm
+
+protected theorem perm_inv (h : IsFixedPt e x) : IsFixedPt (⇑e⁻¹) x :=
+  h.equiv_symm
+#align function.is_fixed_pt.perm_inv Function.IsFixedPt.perm_inv
+
+protected theorem perm_pow (h : IsFixedPt e x) (n : ℕ) : IsFixedPt (⇑(e ^ n)) x := by
+  rw [← Equiv.Perm.iterate_eq_pow]
+  exact h.iterate _
+#align function.is_fixed_pt.perm_pow Function.IsFixedPt.perm_pow
+
+protected theorem perm_zpow (h : IsFixedPt e x) : ∀ n : ℤ, IsFixedPt (⇑(e ^ n)) x
+  | Int.ofNat n => h.perm_pow _
+  | Int.negSucc n => (h.perm_pow <| n + 1).perm_inv
+#align function.is_fixed_pt.perm_zpow Function.IsFixedPt.perm_zpow
 
 end IsFixedPt
 
@@ -180,21 +200,4 @@ theorem Commute.right_bij_on_fixed_pts_comp (h : Commute f g) :
 #align function.commute.right_bij_on_fixed_pts_comp Function.Commute.right_bij_on_fixed_pts_comp
 
 end Function
-
-namespace Equiv.IsFixedPt
-
-protected theorem symm (h : Function.IsFixedPt e x) : Function.IsFixedPt e.symm x :=
-  h.to_left_inverse e.left_inverse_symm
-#align equiv.is_fixed_pt.symm Equiv.IsFixedPt.symm
-
-protected theorem zpow (h : Function.IsFixedPt e x) (n : ℤ) : Function.IsFixedPt (⇑(e ^ n)) x := by
-  cases n
-  · rw [Int.ofNat_eq_coe, zpow_coe_nat, ← Equiv.Perm.iterate_eq_pow]
-    exact h.iterate n
-  · change Function.IsFixedPt (⇑(e ^ (-(↑(n + 1) : ℤ)))) x
-    rw [zpow_neg, zpow_coe_nat, ← inv_pow, ← Equiv.Perm.iterate_eq_pow, Equiv.Perm.inv_def]
-    exact (Equiv.IsFixedPt.symm h).iterate (n + 1)
-#align equiv.is_fixed_pt.zpow Equiv.IsFixedPt.zpow
-
-end Equiv.IsFixedPt
 

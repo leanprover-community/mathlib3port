@@ -474,7 +474,7 @@ theorem smul_eq_self_of_mem_zpowers {α : Type _} [MulAction G α] (hx : x ∈ S
   obtain ⟨k, rfl⟩ := subgroup.mem_zpowers_iff.mp hx
   rw [← MulAction.to_perm_apply, ← MulAction.to_perm_hom_apply, MonoidHom.map_zpow _ y k,
     MulAction.to_perm_hom_apply]
-  exact Equiv.IsFixedPt.zpow hs k
+  exact Function.IsFixedPt.perm_zpow hs k
 #align smul_eq_self_of_mem_zpowers smul_eq_self_of_mem_zpowers
 
 theorem vadd_eq_self_of_mem_zmultiples {α G : Type _} [AddGroup G] [AddAction G α] {x y : G}

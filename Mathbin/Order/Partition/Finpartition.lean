@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Order.Atoms
+import Mathbin.Order.Atoms.Finite
 import Mathbin.Order.SupIndep
 
 /-!

@@ -30,6 +30,11 @@ We deduce basic properties of any Haar measure on a finite dimensional real vect
 * `add_haar_closed_ball`: the measure of `closed_ball x r` is `r ^ dim * μ (ball 0 1)`.
 * `add_haar_sphere`: spheres have zero measure.
 
+This makes it possible to associate a Lebesgue measure to an `n`-alternating map in dimension `n`.
+This measure is called `alternating_map.measure`. Its main property is
+`ω.measure_parallelepiped v`, stating that the associated measure of the parallelepiped spanned
+by vectors `v₁, ..., vₙ` is given by `|ω v|`.
+
 We also show that a Lebesgue density point `x` of a set `s` (with respect to closed balls) has
 density one for the rescaled copies `{x} + r • t` of a given set `t` with positive measure, in
 `tendsto_add_haar_inter_smul_one_of_density_one`. In particular, `s` intersects `{x} + r • t` for
@@ -75,10 +80,6 @@ theorem add_haar_measure_eq_volume : addHaarMeasure icc01 = volume := by
   convert (add_haar_measure_unique volume Icc01).symm
   simp [Icc01]
 #align measure_theory.add_haar_measure_eq_volume MeasureTheory.add_haar_measure_eq_volume
-
-instance : IsAddHaarMeasure (volume : Measure ℝ) := by
-  rw [← add_haar_measure_eq_volume]
-  infer_instance
 
 /-- The Haar measure equals the Lebesgue measure on `ℝ^ι`. -/
 theorem add_haar_measure_eq_volume_pi (ι : Type _) [Fintype ι] :
@@ -213,9 +214,11 @@ theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Finite ι]
 #align
   measure_theory.measure.map_linear_map_add_haar_pi_eq_smul_add_haar MeasureTheory.Measure.map_linear_map_add_haar_pi_eq_smul_add_haar
 
-theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E)
-    [IsAddHaarMeasure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
+  [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] {F : Type _} [NormedAddCommGroup F]
+  [NormedSpace ℝ F] [CompleteSpace F]
+
+theorem map_linear_map_add_haar_eq_smul_add_haar {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
     Measure.map f μ = Ennreal.ofReal (abs f.det⁻¹) • μ :=
   by
   -- we reduce to the case of `E = ι → ℝ`, for which we have already proved the result using
@@ -251,9 +254,7 @@ theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedAddCommGrou
 /-- The preimage of a set `s` under a linear map `f` with nonzero determinant has measure
 equal to `μ s` times the absolute value of the inverse of the determinant of `f`. -/
 @[simp]
-theorem add_haar_preimage_linear_map {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
-    {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) (s : Set E) :
+theorem add_haar_preimage_linear_map {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) (s : Set E) :
     μ (f ⁻¹' s) = Ennreal.ofReal (abs f.det⁻¹) * μ s :=
   calc
     μ (f ⁻¹' s) = Measure.map f μ s :=
@@ -269,9 +270,8 @@ theorem add_haar_preimage_linear_map {E : Type _} [NormedAddCommGroup E] [Normed
 /-- The preimage of a set `s` under a continuous linear map `f` with nonzero determinant has measure
 equal to `μ s` times the absolute value of the inverse of the determinant of `f`. -/
 @[simp]
-theorem add_haar_preimage_continuous_linear_map {E : Type _} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E)
-    [IsAddHaarMeasure μ] {f : E →L[ℝ] E} (hf : LinearMap.det (f : E →ₗ[ℝ] E) ≠ 0) (s : Set E) :
+theorem add_haar_preimage_continuous_linear_map {f : E →L[ℝ] E}
+    (hf : LinearMap.det (f : E →ₗ[ℝ] E) ≠ 0) (s : Set E) :
     μ (f ⁻¹' s) = Ennreal.ofReal (abs (LinearMap.det (f : E →ₗ[ℝ] E))⁻¹) * μ s :=
   add_haar_preimage_linear_map μ hf s
 #align
@@ -280,9 +280,7 @@ theorem add_haar_preimage_continuous_linear_map {E : Type _} [NormedAddCommGroup
 /-- The preimage of a set `s` under a linear equiv `f` has measure
 equal to `μ s` times the absolute value of the inverse of the determinant of `f`. -/
 @[simp]
-theorem add_haar_preimage_linear_equiv {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
-    (f : E ≃ₗ[ℝ] E) (s : Set E) :
+theorem add_haar_preimage_linear_equiv (f : E ≃ₗ[ℝ] E) (s : Set E) :
     μ (f ⁻¹' s) = Ennreal.ofReal (abs (f.symm : E →ₗ[ℝ] E).det) * μ s := by
   have A : (f : E →ₗ[ℝ] E).det ≠ 0 := (LinearEquiv.is_unit_det' f).NeZero
   convert add_haar_preimage_linear_map μ A s
@@ -293,9 +291,7 @@ theorem add_haar_preimage_linear_equiv {E : Type _} [NormedAddCommGroup E] [Norm
 /-- The preimage of a set `s` under a continuous linear equiv `f` has measure
 equal to `μ s` times the absolute value of the inverse of the determinant of `f`. -/
 @[simp]
-theorem add_haar_preimage_continuous_linear_equiv {E : Type _} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E)
-    [IsAddHaarMeasure μ] (f : E ≃L[ℝ] E) (s : Set E) :
+theorem add_haar_preimage_continuous_linear_equiv (f : E ≃L[ℝ] E) (s : Set E) :
     μ (f ⁻¹' s) = Ennreal.ofReal (abs (f.symm : E →ₗ[ℝ] E).det) * μ s :=
   add_haar_preimage_linear_equiv μ _ s
 #align
@@ -304,9 +300,8 @@ theorem add_haar_preimage_continuous_linear_equiv {E : Type _} [NormedAddCommGro
 /-- The image of a set `s` under a linear map `f` has measure
 equal to `μ s` times the absolute value of the determinant of `f`. -/
 @[simp]
-theorem add_haar_image_linear_map {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
-    (f : E →ₗ[ℝ] E) (s : Set E) : μ (f '' s) = Ennreal.ofReal (abs f.det) * μ s := by
+theorem add_haar_image_linear_map (f : E →ₗ[ℝ] E) (s : Set E) :
+    μ (f '' s) = Ennreal.ofReal (abs f.det) * μ s := by
   rcases ne_or_eq f.det 0 with (hf | hf)
   · let g := (f.equiv_of_det_ne_zero hf).toContinuousLinearEquiv
     change μ (g '' s) = _
@@ -324,9 +319,8 @@ theorem add_haar_image_linear_map {E : Type _} [NormedAddCommGroup E] [NormedSpa
 /-- The image of a set `s` under a continuous linear map `f` has measure
 equal to `μ s` times the absolute value of the determinant of `f`. -/
 @[simp]
-theorem add_haar_image_continuous_linear_map {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
-    (f : E →L[ℝ] E) (s : Set E) : μ (f '' s) = Ennreal.ofReal (abs (f : E →ₗ[ℝ] E).det) * μ s :=
+theorem add_haar_image_continuous_linear_map (f : E →L[ℝ] E) (s : Set E) :
+    μ (f '' s) = Ennreal.ofReal (abs (f : E →ₗ[ℝ] E).det) * μ s :=
   add_haar_image_linear_map μ _ s
 #align
   measure_theory.measure.add_haar_image_continuous_linear_map MeasureTheory.Measure.add_haar_image_continuous_linear_map
@@ -334,9 +328,8 @@ theorem add_haar_image_continuous_linear_map {E : Type _} [NormedAddCommGroup E]
 /-- The image of a set `s` under a continuous linear equiv `f` has measure
 equal to `μ s` times the absolute value of the determinant of `f`. -/
 @[simp]
-theorem add_haar_image_continuous_linear_equiv {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
-    (f : E ≃L[ℝ] E) (s : Set E) : μ (f '' s) = Ennreal.ofReal (abs (f : E →ₗ[ℝ] E).det) * μ s :=
+theorem add_haar_image_continuous_linear_equiv (f : E ≃L[ℝ] E) (s : Set E) :
+    μ (f '' s) = Ennreal.ofReal (abs (f : E →ₗ[ℝ] E).det) * μ s :=
   μ.add_haar_image_linear_map (f : E →ₗ[ℝ] E) s
 #align
   measure_theory.measure.add_haar_image_continuous_linear_equiv MeasureTheory.Measure.add_haar_image_continuous_linear_equiv
@@ -345,10 +338,6 @@ theorem add_haar_image_continuous_linear_equiv {E : Type _} [NormedAddCommGroup 
 ### Basic properties of Haar measures on real vector spaces
 -/
 
-
-variable {E : Type _} [NormedAddCommGroup E] [MeasurableSpace E] [NormedSpace ℝ E]
-  [FiniteDimensional ℝ E] [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ] {F : Type _}
-  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
 
 theorem map_add_haar_smul {r : ℝ} (hr : r ≠ 0) :
     Measure.map ((· • ·) r) μ = Ennreal.ofReal (abs (r ^ finrank ℝ E)⁻¹) • μ := by
@@ -610,6 +599,58 @@ instance (priority := 100) isDoublingMeasureOfIsAddHaarMeasure : IsDoublingMeasu
   simp only [Real.to_nnreal_bit0, Real.to_nnreal_one, le_refl]
 #align
   measure_theory.measure.is_doubling_measure_of_is_add_haar_measure MeasureTheory.Measure.isDoublingMeasureOfIsAddHaarMeasure
+
+section
+
+/-!
+### The Lebesgue measure associated to an alternating map
+-/
+
+
+variable {ι G : Type _} [Fintype ι] [DecidableEq ι] [NormedAddCommGroup G] [NormedSpace ℝ G]
+  [MeasurableSpace G] [BorelSpace G]
+
+theorem add_haar_parallelepiped (b : Basis ι ℝ G) (v : ι → G) :
+    b.addHaar (parallelepiped v) = Ennreal.ofReal (|b.det v|) := by
+  have : FiniteDimensional ℝ G := FiniteDimensional.ofFintypeBasis b
+  have A : parallelepiped v = b.constr ℕ v '' parallelepiped b := by
+    rw [image_parallelepiped]
+    congr 1 with i
+    exact (b.constr_basis ℕ v i).symm
+  rw [A, add_haar_image_linear_map, Basis.add_haar_self, mul_one, ← LinearMap.det_to_matrix b, ←
+    Basis.to_matrix_eq_to_matrix_constr]
+  rfl
+#align measure_theory.measure.add_haar_parallelepiped MeasureTheory.Measure.add_haar_parallelepiped
+
+variable [FiniteDimensional ℝ G] {n : ℕ} [_i : Fact (finrank ℝ G = n)]
+
+include _i
+
+/-- The Lebesgue measure associated to an alternating map. It gives measure `|ω v|` to the
+parallelepiped spanned by the vectors `v₁, ..., vₙ`. Note that it is not always a Haar measure,
+as it can be zero, but it is always locally finite and translation invariant. -/
+noncomputable irreducible_def AlternatingMap.measure (ω : AlternatingMap ℝ G ℝ (Fin n)) :
+  Measure G :=
+  ‖ω (finBasisOfFinrankEq ℝ G _i.out)‖₊ • (finBasisOfFinrankEq ℝ G _i.out).addHaar
+#align alternating_map.measure AlternatingMap.measure
+
+theorem AlternatingMap.measure_parallelepiped (ω : AlternatingMap ℝ G ℝ (Fin n)) (v : Fin n → G) :
+    ω.Measure (parallelepiped v) = Ennreal.ofReal (|ω v|) := by
+  conv_rhs => rw [ω.eq_smul_basis_det (fin_basis_of_finrank_eq ℝ G _i.out)]
+  simp only [add_haar_parallelepiped, AlternatingMap.measure, coe_nnreal_smul_apply,
+    AlternatingMap.smul_apply, Algebra.id.smul_eq_mul, abs_mul, Ennreal.of_real_mul (abs_nonneg _),
+    Real.ennnorm_eq_of_real_abs]
+#align alternating_map.measure_parallelepiped AlternatingMap.measure_parallelepiped
+
+instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : IsAddLeftInvariant ω.Measure := by
+  rw [AlternatingMap.measure]
+  infer_instance
+
+instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : IsLocallyFiniteMeasure ω.Measure := by
+  rw [AlternatingMap.measure]
+  infer_instance
+
+end
 
 /-!
 ### Density points

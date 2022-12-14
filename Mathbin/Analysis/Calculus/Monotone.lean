@@ -6,6 +6,7 @@ Authors: Sébastien Gouëzel
 import Mathbin.MeasureTheory.Measure.Lebesgue
 import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.MeasureTheory.Covering.OneDim
+import Mathbin.Order.Monotone.Extension
 
 /-!
 # Differentiability of monotone functions
@@ -250,8 +251,9 @@ theorem MonotoneOn.ae_differentiable_within_at_of_mem {f : ℝ → ℝ} {s : Set
   apply ae_of_mem_of_ae_of_mem_inter_Ioo
   intro a b as bs hab
   obtain ⟨g, hg, gf⟩ : ∃ g : ℝ → ℝ, Monotone g ∧ eq_on f g (s ∩ Icc a b) :=
-    MonotoneOn.exists_monotone_extension (hf.mono (inter_subset_left s (Icc a b)))
-      ⟨⟨as, ⟨le_rfl, hab.le⟩⟩, fun x hx => hx.2.1⟩ ⟨⟨bs, ⟨hab.le, le_rfl⟩⟩, fun x hx => hx.2.2⟩
+    (hf.mono (inter_subset_left s (Icc a b))).exists_monotone_extension
+      (hf.map_bdd_below (inter_subset_left _ _) ⟨a, fun x hx => hx.2.1, as⟩)
+      (hf.map_bdd_above (inter_subset_left _ _) ⟨b, fun x hx => hx.2.2, bs⟩)
   filter_upwards [hg.ae_differentiable_at] with x hx
   intro h'x
   apply hx.differentiable_within_at.congr_of_eventually_eq _ (gf ⟨h'x.1, h'x.2.1.le, h'x.2.2.le⟩)

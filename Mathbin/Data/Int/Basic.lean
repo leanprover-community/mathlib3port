@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
 import Mathbin.Data.Nat.Basic
-import Mathbin.Order.Monotone
+import Mathbin.Order.Monotone.Basic
 
 /-!
 # Basic instances on the integers

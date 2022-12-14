@@ -81,6 +81,14 @@ theorem mem_or_inv_mem (x : K) : x ∈ A ∨ x⁻¹ ∈ A :=
   A.mem_or_inv_mem' _
 #align valuation_subring.mem_or_inv_mem ValuationSubring.mem_or_inv_mem
 
+instance : SubringClass (ValuationSubring K)
+      K where 
+  zero_mem := zero_mem
+  add_mem := add_mem
+  one_mem := one_mem
+  mul_mem := mul_mem
+  neg_mem := neg_mem
+
 theorem to_subring_injective : Function.Injective (toSubring : ValuationSubring K → Subring K) :=
   fun x y h => by 
   cases x
@@ -328,7 +336,9 @@ instance of_prime_scalar_tower (A : ValuationSubring K) (P : Ideal A) [P.IsPrime
 
 instance of_prime_localization (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
     IsLocalization.AtPrime (A.ofPrime P) P := by
-  apply Localization.subalgebra.is_localization_of_field K
+  apply
+    Localization.subalgebra.is_localization_of_field K P.prime_compl
+      P.prime_compl_le_non_zero_divisors
 #align valuation_subring.of_prime_localization ValuationSubring.of_prime_localization
 
 theorem le_of_prime (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] : A ≤ ofPrime A P :=
@@ -746,8 +756,7 @@ theorem coe_mem_principal_unit_group_iff {x : A.unitGroup} :
       A.unitGroupMulEquiv x ∈ (Units.map (LocalRing.residue A).toMonoidHom).ker :=
   by 
   rw [MonoidHom.mem_ker, Units.ext_iff]
-  dsimp
-  let π := Ideal.Quotient.mk (LocalRing.maximalIdeal A); change _ ↔ π _ = _
+  let π := Ideal.Quotient.mk (LocalRing.maximalIdeal A); convert_to _ ↔ π _ = 1
   rw [← π.map_one, ← sub_eq_zero, ← π.map_sub, Ideal.Quotient.eq_zero_iff_mem, valuation_lt_one_iff]
   simpa
 #align
@@ -951,6 +960,32 @@ theorem subset_pointwise_smul_iff {g : G} {S T : ValuationSubring K} : S ≤ g �
 #align valuation_subring.subset_pointwise_smul_iff ValuationSubring.subset_pointwise_smul_iff
 
 end PointwiseActions
+
+section
+
+variable {L J : Type _} [Field L] [Field J]
+
+/-- The pullback of a valuation subring `A` along a ring homomorphism `K →+* L`. -/
+def comap (A : ValuationSubring L) (f : K →+* L) : ValuationSubring K :=
+  { A.toSubring.comap f with mem_or_inv_mem' := fun k => by simp [ValuationSubring.mem_or_inv_mem] }
+#align valuation_subring.comap ValuationSubring.comap
+
+@[simp]
+theorem coe_comap (A : ValuationSubring L) (f : K →+* L) : (A.comap f : Set K) = f ⁻¹' A :=
+  rfl
+#align valuation_subring.coe_comap ValuationSubring.coe_comap
+
+@[simp]
+theorem mem_comap {A : ValuationSubring L} {f : K →+* L} {x : K} : x ∈ A.comap f ↔ f x ∈ A :=
+  Iff.rfl
+#align valuation_subring.mem_comap ValuationSubring.mem_comap
+
+theorem comap_comap (A : ValuationSubring J) (g : L →+* J) (f : K →+* L) :
+    (A.comap g).comap f = A.comap (g.comp f) :=
+  rfl
+#align valuation_subring.comap_comap ValuationSubring.comap_comap
+
+end
 
 end ValuationSubring
 

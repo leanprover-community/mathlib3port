@@ -8,6 +8,7 @@ import Mathbin.Data.SetLike.Fintype
 import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.PGroup
 import Mathbin.GroupTheory.NoncommPiCoprod
+import Mathbin.Order.Atoms.Finite
 
 /-!
 # Sylow theorems

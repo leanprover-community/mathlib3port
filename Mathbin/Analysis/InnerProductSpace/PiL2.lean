@@ -1003,11 +1003,22 @@ theorem exists_orthonormal_basis :
 #align exists_orthonormal_basis exists_orthonormal_basis
 
 /-- A finite-dimensional `inner_product_space` has an orthonormal basis. -/
-def stdOrthonormalBasis : OrthonormalBasis (Fin (finrank 𝕜 E)) 𝕜 E := by
+irreducible_def stdOrthonormalBasis : OrthonormalBasis (Fin (finrank 𝕜 E)) 𝕜 E := by
   let b := Classical.choose (Classical.choose_spec <| exists_orthonormal_basis 𝕜 E)
   rw [finrank_eq_card_basis b.to_basis]
   exact b.reindex (Fintype.equivFinOfCardEq rfl)
 #align std_orthonormal_basis stdOrthonormalBasis
+
+/-- An orthonormal basis of `ℝ` is made either of the vector `1`, or of the vector `-1`. -/
+theorem orthonormal_basis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
+    (⇑b = fun _ => (1 : ℝ)) ∨ ⇑b = fun _ => (-1 : ℝ) := by
+  have : Unique ι := b.to_basis.unique
+  have : b default = 1 ∨ b default = -1 := by
+    have : ‖b default‖ = 1 := b.orthonormal.1 _
+    rwa [Real.norm_eq_abs, abs_eq (zero_le_one : (0 : ℝ) ≤ 1)] at this
+  rw [eq_const_of_unique b]
+  refine' this.imp _ _ <;> simp
+#align orthonormal_basis_one_dim orthonormal_basis_one_dim
 
 variable {𝕜 E}
 

@@ -1121,12 +1121,12 @@ variable [SetLike σR R] [SetLike σS S] [SubsemiringClass σR R] [SubsemiringCl
 open Subsemiring
 
 /-- Restriction of a ring homomorphism to a subsemiring of the domain. -/
-def restrict (f : R →+* S) (s : σR) : s →+* S :=
+def domRestrict (f : R →+* S) (s : σR) : s →+* S :=
   f.comp <| SubsemiringClass.subtype s
-#align ring_hom.restrict RingHom.restrict
+#align ring_hom.dom_restrict RingHom.domRestrict
 
 @[simp]
-theorem restrict_apply (f : R →+* S) {s : σR} (x : s) : f.restrict s x = f x :=
+theorem restrict_apply (f : R →+* S) {s : σR} (x : s) : f.domRestrict s x = f x :=
   rfl
 #align ring_hom.restrict_apply RingHom.restrict_apply
 
@@ -1134,6 +1134,23 @@ theorem restrict_apply (f : R →+* S) {s : σR} (x : s) : f.restrict s x = f x 
 def codRestrict (f : R →+* S) (s : σS) (h : ∀ x, f x ∈ s) : R →+* s :=
   { (f : R →* S).codRestrict s h, (f : R →+ S).codRestrict s h with toFun := fun n => ⟨f n, h n⟩ }
 #align ring_hom.cod_restrict RingHom.codRestrict
+
+/-- The ring homomorphism from the preimage of `s` to `s`. -/
+def restrict (f : R →+* S) (s' : σR) (s : σS) (h : ∀ x ∈ s', f x ∈ s) : s' →+* s :=
+  (f.domRestrict s').codRestrict s fun x => h x x.2
+#align ring_hom.restrict RingHom.restrict
+
+@[simp]
+theorem coe_restrict_apply (f : R →+* S) (s' : σR) (s : σS) (h : ∀ x ∈ s', f x ∈ s) (x : s') :
+    (f.restrict s' s h x : S) = f x :=
+  rfl
+#align ring_hom.coe_restrict_apply RingHom.coe_restrict_apply
+
+@[simp]
+theorem comp_restrict (f : R →+* S) (s' : σR) (s : σS) (h : ∀ x ∈ s', f x ∈ s) :
+    (SubsemiringClass.subtype s).comp (f.restrict s' s h) = f.comp (SubsemiringClass.subtype s') :=
+  rfl
+#align ring_hom.comp_restrict RingHom.comp_restrict
 
 /-- Restriction of a ring homomorphism to its range interpreted as a subsemiring.
 

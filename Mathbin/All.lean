@@ -1645,6 +1645,7 @@ import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.Data.Set.Intervals.Group
 import Mathbin.Data.Set.Intervals.Infinite
 import Mathbin.Data.Set.Intervals.Instances
+import Mathbin.Data.Set.Intervals.IsoIoo
 import Mathbin.Data.Set.Intervals.Monoid
 import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.Data.Set.Intervals.OrdConnected
@@ -2127,6 +2128,8 @@ import Mathbin.MeasureTheory.Measure.FiniteMeasure
 import Mathbin.MeasureTheory.Measure.GiryMonad
 import Mathbin.MeasureTheory.Measure.Haar
 import Mathbin.MeasureTheory.Measure.HaarLebesgue
+import Mathbin.MeasureTheory.Measure.HaarOfBasis
+import Mathbin.MeasureTheory.Measure.HaarOfInner
 import Mathbin.MeasureTheory.Measure.HaarQuotient
 import Mathbin.MeasureTheory.Measure.Hausdorff
 import Mathbin.MeasureTheory.Measure.Lebesgue
@@ -2218,6 +2221,7 @@ import Mathbin.NumberTheory.Multiplicity
 import Mathbin.NumberTheory.NumberField.Basic
 import Mathbin.NumberTheory.NumberField.ClassNumber
 import Mathbin.NumberTheory.NumberField.Embeddings
+import Mathbin.NumberTheory.NumberField.Norm
 import Mathbin.NumberTheory.Padics.Default
 import Mathbin.NumberTheory.Padics.Hensel
 import Mathbin.NumberTheory.Padics.PadicIntegers
@@ -2241,6 +2245,7 @@ import Mathbin.NumberTheory.Zsqrtd.ToReal
 import Mathbin.Order.Antichain
 import Mathbin.Order.Antisymmetrization
 import Mathbin.Order.Atoms
+import Mathbin.Order.Atoms.Finite
 import Mathbin.Order.Basic
 import Mathbin.Order.BooleanAlgebra
 import Mathbin.Order.Bounded
@@ -2336,7 +2341,10 @@ import Mathbin.Order.Max
 import Mathbin.Order.MinMax
 import Mathbin.Order.Minimal
 import Mathbin.Order.ModularLattice
-import Mathbin.Order.Monotone
+import Mathbin.Order.Monotone.Basic
+import Mathbin.Order.Monotone.Extension
+import Mathbin.Order.Monotone.Odd
+import Mathbin.Order.Monotone.Union
 import Mathbin.Order.Monovary
 import Mathbin.Order.OmegaCompletePartialOrder
 import Mathbin.Order.OrdContinuous

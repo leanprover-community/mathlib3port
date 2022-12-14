@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
 import Mathbin.Logic.Function.Iterate
-import Mathbin.Order.Monotone
+import Mathbin.Order.Monotone.Basic
 
 /-!
 # Inequalities on iterates
