@@ -2,6 +2,11 @@
 Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
+
+! This file was ported from Lean 3 source module data.semiquot
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Lattice
 
@@ -102,14 +107,14 @@ def toTrunc (q : Semiquot α) : Trunc α :=
   q.2.map Subtype.val
 #align semiquot.to_trunc Semiquot.toTrunc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
 def liftOn (q : Semiquot α) (f : α → β) (h : ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), f a = f b) : β :=
   Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ x.2 _ y.2
 #align semiquot.lift_on Semiquot.liftOn
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), f a = f b)
     (a : α) (aq : a ∈ q) : liftOn q f h = f a := by
   revert h <;> rw [eq_mk_of_mem aq] <;> intro <;> rfl
@@ -198,7 +203,7 @@ theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=
   Set.singleton_subset_iff
 #align semiquot.pure_le Semiquot.pure_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- Assert that a `semiquot` contains only one possible value. -/
 def IsPure (q : Semiquot α) : Prop :=
   ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), a = b

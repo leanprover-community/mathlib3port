@@ -6,6 +6,11 @@ Authors: Simon Hudon
 Monad encapsulating continuation passing programming style, similar to
 Haskell's `Cont`, `ContT` and `MonadCont`:
 <http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Cont.html>
+
+! This file was ported from Lean 3 source module control.monad.cont
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Control.Monad.Basic
 import Mathbin.Control.Monad.Writer

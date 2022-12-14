@@ -2,6 +2,11 @@
 Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
+
+! This file was ported from Lean 3 source module data.finset.n_ary
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Prod
 
@@ -165,6 +170,20 @@ theorem image₂_union_right [DecidableEq β] : image₂ f s (t ∪ t') = image�
     push_cast
     exact image2_union_right
 #align finset.image₂_union_right Finset.image₂_union_right
+
+theorem image₂_inter_left [DecidableEq α] (hf : Injective2 f) :
+    image₂ f (s ∩ s') t = image₂ f s t ∩ image₂ f s' t :=
+  coe_injective <| by 
+    push_cast
+    exact image2_inter_left hf
+#align finset.image₂_inter_left Finset.image₂_inter_left
+
+theorem image₂_inter_right [DecidableEq β] (hf : Injective2 f) :
+    image₂ f s (t ∩ t') = image₂ f s t ∩ image₂ f s t' :=
+  coe_injective <| by 
+    push_cast
+    exact image2_inter_right hf
+#align finset.image₂_inter_right Finset.image₂_inter_right
 
 theorem image₂_inter_subset_left [DecidableEq α] :
     image₂ f (s ∩ s') t ⊆ image₂ f s t ∩ image₂ f s' t :=

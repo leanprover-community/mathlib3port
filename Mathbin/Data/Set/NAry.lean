@@ -2,9 +2,13 @@
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
+
+! This file was ported from Lean 3 source module data.set.n_ary
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
-import Mathbin.Data.Set.Basic
-import Mathbin.Data.Set.Image
+import Mathbin.Data.Set.Prod
 
 /-!
 # N-ary images of sets
@@ -84,6 +88,39 @@ theorem image2_subset_iff {u : Set γ} : image2 f s t ⊆ u ↔ ∀ x ∈ s, ∀
   forall_image2_iff
 #align set.image2_subset_iff Set.image2_subset_iff
 
+variable (f)
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem image_prod : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t :=
+  ext fun a =>
+    ⟨by 
+      rintro ⟨_, _, rfl⟩
+      exact ⟨_, _, (mem_prod.1 ‹_›).1, (mem_prod.1 ‹_›).2, rfl⟩, by
+      rintro ⟨_, _, _, _, rfl⟩
+      exact ⟨(_, _), ⟨‹_›, ‹_›⟩, rfl⟩⟩
+#align set.image_prod Set.image_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem image_uncurry_prod (s : Set α) (t : Set β) : uncurry f '' s ×ˢ t = image2 f s t :=
+  image_prod _
+#align set.image_uncurry_prod Set.image_uncurry_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem image2_mk_eq_prod : image2 Prod.mk s t = s ×ˢ t :=
+  ext <| by simp
+#align set.image2_mk_eq_prod Set.image2_mk_eq_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem image2_curry (f : α × β → γ) (s : Set α) (t : Set β) :
+    image2 (fun a b => f (a, b)) s t = f '' s ×ˢ t := by simp [← image_uncurry_prod, uncurry]
+#align set.image2_curry Set.image2_curry
+
+variable {f}
+
 theorem image2_union_left : image2 f (s ∪ s') t = image2 f s t ∪ image2 f s' t := by
   ext c
   constructor
@@ -101,6 +138,16 @@ theorem image2_union_right : image2 f s (t ∪ t') = image2 f s t ∪ image2 f s
     rintro (⟨_, _, _, _, rfl⟩ | ⟨_, _, _, _, rfl⟩) <;> refine' ⟨_, _, ‹_›, _, rfl⟩ <;>
       simp [mem_union, *]
 #align set.image2_union_right Set.image2_union_right
+
+theorem image2_inter_left (hf : Injective2 f) :
+    image2 f (s ∩ s') t = image2 f s t ∩ image2 f s' t := by
+  simp_rw [← image_uncurry_prod, inter_prod, ← image_inter hf.uncurry]
+#align set.image2_inter_left Set.image2_inter_left
+
+theorem image2_inter_right (hf : Injective2 f) :
+    image2 f s (t ∩ t') = image2 f s t ∩ image2 f s t' := by
+  simp_rw [← image_uncurry_prod, prod_inter, ← image_inter hf.uncurry]
+#align set.image2_inter_right Set.image2_inter_right
 
 @[simp]
 theorem image2_empty_left : image2 f ∅ t = ∅ :=

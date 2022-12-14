@@ -5,6 +5,11 @@ Authors: Simon Hudon
 
 Provides a `subtype_instance` tactic which builds instances for algebraic substructures
 (sub-groups, sub-rings...).
+
+! This file was ported from Lean 3 source module tactic.subtype_instance
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Basic
 

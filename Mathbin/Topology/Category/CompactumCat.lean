@@ -2,6 +2,11 @@
 Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
+
+! This file was ported from Lean 3 source module topology.category.Compactum
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monad.Types
 import Mathbin.CategoryTheory.Monad.Limits
@@ -209,7 +214,7 @@ private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a h
   ⟨X.incl a, ha, by simp⟩
 #align Compactum.subset_cl Compactum.subset_cl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
@@ -276,7 +281,7 @@ theorem isClosedCl {X : CompactumCat} (A : Set X) : IsClosed (cl A) := by
   exact cl_cl _ ⟨F, hF, rfl⟩
 #align Compactum.is_closed_cl CompactumCat.isClosedCl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
   by
   -- Notation to be used in this proof.

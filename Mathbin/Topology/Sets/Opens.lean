@@ -2,6 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
+
+! This file was ported from Lean 3 source module topology.sets.opens
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Order.Hom.CompleteLattice
 import Mathbin.Topology.Bases
@@ -283,7 +288,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} :
       exact ⟨V, ⟨V, hV, rfl⟩, H⟩
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.is_basis_iff_nbhd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 theorem is_basis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor

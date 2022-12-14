@@ -2,6 +2,11 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
+
+! This file was ported from Lean 3 source module data.set.pointwise.interval
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.Data.Set.Intervals.Monoid
@@ -414,7 +419,7 @@ variable [LinearOrderedAddCommGroup α] (a b c d : α)
 
 @[simp]
 theorem preimage_const_add_interval : (fun x => a + x) ⁻¹' [b, c] = [b - a, c - a] := by
-  simp only [interval, preimage_const_add_Icc, min_sub_sub_right, max_sub_sub_right]
+  simp only [← Icc_min_max, preimage_const_add_Icc, min_sub_sub_right, max_sub_sub_right]
 #align set.preimage_const_add_interval Set.preimage_const_add_interval
 
 @[simp]
@@ -424,7 +429,7 @@ theorem preimage_add_const_interval : (fun x => x + a) ⁻¹' [b, c] = [b - a, c
 
 @[simp]
 theorem preimage_neg_interval : -[a, b] = [-a, -b] := by
-  simp only [interval, preimage_neg_Icc, min_neg_neg, max_neg_neg]
+  simp only [← Icc_min_max, preimage_neg_Icc, min_neg_neg, max_neg_neg]
 #align set.preimage_neg_interval Set.preimage_neg_interval
 
 @[simp]
@@ -434,7 +439,7 @@ theorem preimage_sub_const_interval : (fun x => x - a) ⁻¹' [b, c] = [b + a, c
 
 @[simp]
 theorem preimage_const_sub_interval : (fun x => a - x) ⁻¹' [b, c] = [a - b, a - c] := by
-  rw [interval, interval, preimage_const_sub_Icc]
+  simp_rw [← Icc_min_max, preimage_const_sub_Icc]
   simp only [sub_eq_add_neg, min_add_add_left, max_add_add_left, min_neg_neg, max_neg_neg]
 #align set.preimage_const_sub_interval Set.preimage_const_sub_interval
 
@@ -674,9 +679,9 @@ theorem preimage_const_mul_Icc_of_neg (a b : α) {c : α} (h : c < 0) :
 theorem preimage_mul_const_interval (ha : a ≠ 0) (b c : α) :
     (fun x => x * a) ⁻¹' [b, c] = [b / a, c / a] :=
   (lt_or_gt_of_ne ha).elim
-    (fun ha => by
-      simp [interval, ha, ha.le, min_div_div_right_of_nonpos, max_div_div_right_of_nonpos])
-    fun ha : 0 < a => by simp [interval, ha, ha.le, min_div_div_right, max_div_div_right]
+    (fun h => by
+      simp [← Icc_min_max, h, h.le, min_div_div_right_of_nonpos, max_div_div_right_of_nonpos])
+    fun ha : 0 < a => by simp [← Icc_min_max, ha, ha.le, min_div_div_right, max_div_div_right]
 #align set.preimage_mul_const_interval Set.preimage_mul_const_interval
 
 @[simp]

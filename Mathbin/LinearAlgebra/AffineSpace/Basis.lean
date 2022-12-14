@@ -2,6 +2,11 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
+
+! This file was ported from Lean 3 source module linear_algebra.affine_space.basis
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.AffineSpace.Independent
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
@@ -427,7 +432,7 @@ theorem card_eq_finrank_add_one [Fintype ι] (b : AffineBasis ι k P) :
   b.ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp b.tot
 #align affine_basis.card_eq_finrank_add_one AffineBasis.card_eq_finrank_add_one
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
     ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe := by
   obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affine_independent k V t

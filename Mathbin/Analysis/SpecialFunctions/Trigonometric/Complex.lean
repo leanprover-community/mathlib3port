@@ -2,6 +2,11 @@
 Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
+
+! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.complex
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.QuadraticDiscriminant
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -171,7 +176,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
   ring
 #align complex.cos_eq_iff_quadratic Complex.cos_eq_iff_quadratic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (w «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (w «expr ≠ » 0) -/
 theorem cos_surjective : Function.Surjective cos := by
   intro x
   obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by

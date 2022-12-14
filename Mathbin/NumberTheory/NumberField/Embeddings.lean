@@ -2,6 +2,11 @@
 Copyright (c) 2022 Xavier Roblot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
+
+! This file was ported from Lean 3 source module number_theory.number_field.embeddings
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.NumberTheory.NumberField.Basic

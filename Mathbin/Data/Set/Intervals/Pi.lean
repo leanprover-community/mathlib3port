@@ -2,6 +2,11 @@
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
+
+! This file was ported from Lean 3 source module data.set.intervals.pi
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.Basic
 import Mathbin.Data.Set.Lattice
@@ -38,7 +43,7 @@ theorem pi_univ_Icc : (pi univ fun i => icc (x i) (y i)) = icc x y :=
   ext fun y => by simp [Pi.le_def, forall_and]
 #align set.pi_univ_Icc Set.pi_univ_Icc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
     (h₁ : ∀ i ∈ s, f₁ i ∈ icc (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ icc (g₁ i) (g₂ i)) :
     s.piecewise f₁ f₂ ∈ icc g₁ g₂ :=

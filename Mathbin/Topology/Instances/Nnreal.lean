@@ -2,6 +2,11 @@
 Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
+
+! This file was ported from Lean 3 source module topology.instances.nnreal
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.InfiniteSum
 import Mathbin.Topology.Algebra.GroupWithZero
@@ -134,7 +139,7 @@ theorem tendsto_real_to_nnreal_at_top : Tendsto Real.toNnreal atTop atTop := by
   simp only [max_eq_left (Set.mem_Ici.1 hx), id.def, Real.coe_to_nnreal']
 #align tendsto_real_to_nnreal_at_top tendsto_real_to_nnreal_at_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align nnreal.nhds_zero Nnreal.nhds_zero

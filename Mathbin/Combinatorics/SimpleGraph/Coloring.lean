@@ -2,6 +2,11 @@
 Copyright (c) 2021 Arthur Paulino. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
+
+! This file was ported from Lean 3 source module combinatorics.simple_graph.coloring
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.SimpleGraph.Clique
 import Mathbin.Data.Nat.Lattice

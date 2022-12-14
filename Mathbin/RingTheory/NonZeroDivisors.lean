@@ -2,6 +2,11 @@
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Devon Tuma
+
+! This file was ported from Lean 3 source module ring_theory.non_zero_divisors
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.GroupTheory.Submonoid.Membership

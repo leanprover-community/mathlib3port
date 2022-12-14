@@ -2,6 +2,11 @@
 Copyright (c) 2017 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Keeley Hoek
+
+! This file was ported from Lean 3 source module data.fin.basic
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Order.WithZero
@@ -1117,6 +1122,11 @@ theorem cast_cast_add_right {n m m' : ℕ} (i : Fin n) (h : n + m' = n + m) :
   ext rfl
 #align fin.cast_cast_add_right Fin.cast_cast_add_right
 
+theorem cast_add_cast_add {m n p : ℕ} (i : Fin m) :
+    castAdd p (castAdd n i) = cast (add_assoc _ _ _).symm (castAdd (n + p) i) :=
+  ext rfl
+#align fin.cast_add_cast_add Fin.cast_add_cast_add
+
 /-- The cast of the successor is the succesor of the cast. See `fin.succ_cast_eq` for rewriting in
 the reverse direction. -/
 @[simp]
@@ -1355,6 +1365,21 @@ theorem cast_nat_add_left {n m m' : ℕ} (i : Fin n) (h : m' + n = m + n) :
     cast h (natAdd m' i) = natAdd m i :=
   ext <| (congr_arg (· + (i : ℕ)) (add_right_cancel h) : _)
 #align fin.cast_nat_add_left Fin.cast_nat_add_left
+
+theorem cast_add_nat_add (p m : ℕ) {n : ℕ} (i : Fin n) :
+    castAdd p (natAdd m i) = cast (add_assoc _ _ _).symm (natAdd m (castAdd p i)) :=
+  ext rfl
+#align fin.cast_add_nat_add Fin.cast_add_nat_add
+
+theorem nat_add_cast_add (p m : ℕ) {n : ℕ} (i : Fin n) :
+    natAdd m (castAdd p i) = cast (add_assoc _ _ _) (castAdd p (natAdd m i)) :=
+  ext rfl
+#align fin.nat_add_cast_add Fin.nat_add_cast_add
+
+theorem nat_add_nat_add (m n : ℕ) {p : ℕ} (i : Fin p) :
+    natAdd m (natAdd n i) = cast (add_assoc _ _ _) (natAdd (m + n) i) :=
+  ext <| (add_assoc _ _ _).symm
+#align fin.nat_add_nat_add Fin.nat_add_nat_add
 
 @[simp]
 theorem cast_nat_add_zero {n n' : ℕ} (i : Fin n) (h : 0 + n = n') :

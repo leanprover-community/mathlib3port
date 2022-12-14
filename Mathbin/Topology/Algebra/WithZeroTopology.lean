@@ -2,6 +2,11 @@
 Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
+
+! This file was ported from Lean 3 source module topology.algebra.with_zero_topology
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Topology.Algebra.Order.Field
@@ -42,7 +47,7 @@ namespace LinearOrderedCommGroupWithZero
 variable {α Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] {γ γ₁ γ₂ : Γ₀} {l : Filter α}
   {f : α → Γ₀}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 /-- The topology on a linearly ordered commutative group with a zero element adjoined.
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
 protected def topologicalSpace : TopologicalSpace Γ₀ :=
@@ -52,7 +57,7 @@ protected def topologicalSpace : TopologicalSpace Γ₀ :=
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (γ) (_ : γ ≠ 0), 𝓟 (iio γ)) :=
   funext <| nhds_mk_of_nhds_single <| le_infi₂ fun γ h₀ => le_principal_iff.2 <| zero_lt_iff.2 h₀
 #align
@@ -63,7 +68,7 @@ theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (�
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : Γ₀) = ⨅ (γ) (_ : γ ≠ 0), 𝓟 (iio γ) := by rw [nhds_eq_update, update_same]
 #align linear_ordered_comm_group_with_zero.nhds_zero LinearOrderedCommGroupWithZero.nhds_zero
 
@@ -88,7 +93,7 @@ theorem nhds_zero_of_units (γ : Γ₀ˣ) : iio ↑γ ∈ 𝓝 (0 : Γ₀) :=
 #align
   linear_ordered_comm_group_with_zero.nhds_zero_of_units LinearOrderedCommGroupWithZero.nhds_zero_of_units
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
 theorem tendsto_zero : Tendsto f l (𝓝 (0 : Γ₀)) ↔ ∀ (γ₀) (_ : γ₀ ≠ 0), ∀ᶠ x in l, f x < γ₀ := by
   simp [nhds_zero]
 #align linear_ordered_comm_group_with_zero.tendsto_zero LinearOrderedCommGroupWithZero.tendsto_zero
@@ -157,14 +162,14 @@ theorem Iio_mem_nhds (h : γ₁ < γ₂) : iio γ₂ ∈ 𝓝 γ₁ := by
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem is_open_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _)(_ : γ ≠ 0), iio γ ⊆ s := by
   rw [is_open_iff_mem_nhds, ← and_forall_ne (0 : Γ₀)]
   simp (config := { contextual := true }) [nhds_of_ne_zero, imp_iff_not_or,
     has_basis_nhds_zero.mem_iff]
 #align linear_ordered_comm_group_with_zero.is_open_iff LinearOrderedCommGroupWithZero.is_open_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem is_closed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _)(_ : γ ≠ 0), s ⊆ ici γ :=
   by
   simp only [← is_open_compl_iff, is_open_iff, mem_compl_iff, not_not, ← compl_Ici,

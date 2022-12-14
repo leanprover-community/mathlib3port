@@ -2,6 +2,11 @@
 Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
+
+! This file was ported from Lean 3 source module set_theory.ordinal.topology
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.SetTheory.Ordinal.Arithmetic
 import Mathbin.Topology.Order.Basic
@@ -234,7 +239,7 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
 #align
   ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.is_normal_iff_strict_mono_and_continuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr < » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (b «expr < » a) -/
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) :
     IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs

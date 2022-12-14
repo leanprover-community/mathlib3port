@@ -2,6 +2,11 @@
 Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
+
+! This file was ported from Lean 3 source module group_theory.group_action.prod
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Prod
 import Mathbin.GroupTheory.GroupAction.Defs
@@ -77,7 +82,7 @@ variable [Pow α E] [Pow β E]
 instance hasPow : Pow (α × β) E where pow p c := (p.1 ^ c, p.2 ^ c)
 #align prod.has_pow Prod.hasPow
 
-@[simp, to_additive smul_snd, to_additive_reorder 6]
+@[simp, to_additive smul_fst, to_additive_reorder 6]
 theorem pow_fst (p : α × β) (c : E) : (p ^ c).fst = p.fst ^ c :=
   rfl
 #align prod.pow_fst Prod.pow_fst

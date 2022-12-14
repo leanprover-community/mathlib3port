@@ -2,6 +2,11 @@
 Copyright (c) 2021 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
+
+! This file was ported from Lean 3 source module topology.algebra.uniform_filter_basis
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.FilterBasis
 import Mathbin.Topology.Algebra.UniformGroup
@@ -37,8 +42,8 @@ protected theorem uniform_add_group : @UniformAddGroup G B.UniformSpace _ :=
   @topological_add_comm_group_is_uniform G _ B.topology B.is_topological_add_group
 #align add_group_filter_basis.uniform_add_group AddGroupFilterBasis.uniform_add_group
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » M) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔
       F.ne_bot ∧ ∀ U ∈ B, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), y - x ∈ U :=

@@ -2,6 +2,11 @@
 Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
+
+! This file was ported from Lean 3 source module ring_theory.valuation.tfae
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Cotangent
 import Mathbin.RingTheory.DedekindDomain.Basic
@@ -178,7 +183,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 #align
   maximal_ideal_is_principal_of_is_dedekind_domain maximal_ideal_is_principal_of_is_dedekind_domain
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])

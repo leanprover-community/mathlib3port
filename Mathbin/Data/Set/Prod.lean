@@ -2,9 +2,13 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
+
+! This file was ported from Lean 3 source module data.set.prod
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
-import Mathbin.Data.Set.Basic
-import Mathbin.Data.Set.NAry
+import Mathbin.Data.Set.Image
 
 /-!
 # Sets in product and pi types
@@ -522,37 +526,6 @@ theorem prod_eq_iff_eq (ht : t.Nonempty) : s ×ˢ t = s₁ ×ˢ t ↔ s = s₁ :
   rfl
 #align set.prod_eq_iff_eq Set.prod_eq_iff_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t :=
-  Set.ext fun a =>
-    ⟨by 
-      rintro ⟨_, _, rfl⟩
-      exact ⟨_, _, (mem_prod.mp ‹_›).1, (mem_prod.mp ‹_›).2, rfl⟩, by
-      rintro ⟨_, _, _, _, rfl⟩
-      exact ⟨(_, _), mem_prod.mpr ⟨‹_›, ‹_›⟩, rfl⟩⟩
-#align set.image_prod Set.image_prod
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem image2_mk_eq_prod : image2 Prod.mk s t = s ×ˢ t :=
-  ext <| by simp
-#align set.image2_mk_eq_prod Set.image2_mk_eq_prod
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem image2_curry (f : α × β → γ) (s : Set α) (t : Set β) :
-    image2 (fun a b => f (a, b)) s t = (s ×ˢ t).image f := by rw [← image2_mk_eq_prod, image_image2]
-#align set.image2_curry Set.image2_curry
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem image_uncurry_prod (f : α → β → γ) (s : Set α) (t : Set β) :
-    uncurry f '' s ×ˢ t = image2 f s t := by
-  rw [← image2_curry]
-  rfl
-#align set.image_uncurry_prod Set.image_uncurry_prod
-
 section Mono
 
 variable [Preorder α] {f : α → Set β} {g : α → Set γ}
@@ -976,7 +949,7 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s)
       exact hf j hj h
 #align set.update_preimage_pi Set.update_preimage_pi
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ (j) (_ : j ≠ i), f j ∈ t j) :
     update f i ⁻¹' pi univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j

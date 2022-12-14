@@ -2,6 +2,11 @@
 Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
+
+! This file was ported from Lean 3 source module order.zorn_atoms
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Order.Zorn
 import Mathbin.Order.Atoms
@@ -17,7 +22,7 @@ statement.
 
 open Set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » «expr⊤»()) -/
 /-- **Zorn's lemma**: A partial order is coatomic if every nonempty chain `c`, `⊤ ∉ c`, has an upper
 bound not equal to `⊤`. -/
 theorem IsCoatomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderTop α]
@@ -34,7 +39,7 @@ theorem IsCoatomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderTop
     exact ⟨z, ⟨le_trans (hxc hy).1 (hcz hy), hz.lt_top⟩, hcz⟩
 #align is_coatomic.of_is_chain_bounded IsCoatomic.of_is_chain_bounded
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ≠ » «expr⊥»()) -/
 /-- **Zorn's lemma**: A partial order is atomic if every nonempty chain `c`, `⊥ ∉ c`, has an lower
 bound not equal to `⊥`. -/
 theorem IsAtomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderBot α]

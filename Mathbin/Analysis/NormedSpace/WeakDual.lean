@@ -2,6 +2,11 @@
 Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Yury Kudryashov
+
+! This file was ported from Lean 3 source module analysis.normed_space.weak_dual
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Module.WeakDual
 import Mathbin.Analysis.NormedSpace.Dual

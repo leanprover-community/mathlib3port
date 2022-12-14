@@ -2,6 +2,11 @@
 Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Lu-Ming Zhang
+
+! This file was ported from Lean 3 source module combinatorics.simple_graph.adj_matrix
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Combinatorics.SimpleGraph.Connectivity

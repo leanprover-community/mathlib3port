@@ -2,6 +2,11 @@
 Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
+
+! This file was ported from Lean 3 source module ring_theory.algebraic_independent
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.LinearAlgebra.LinearIndependent
@@ -307,7 +312,7 @@ theorem algebraic_independent_subtype {s : Set A} :
   by apply @algebraic_independent_comp_subtype _ _ _ id
 #align algebraic_independent_subtype algebraic_independent_subtype
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem algebraic_independent_of_finite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=

@@ -2,6 +2,11 @@
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
+
+! This file was ported from Lean 3 source module algebra.support
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Order.ConditionallyCompleteLattice.Basic
 import Mathbin.Data.Set.Finite
@@ -67,7 +72,7 @@ theorem mul_support_subset_iff {f : α → M} {s : Set α} : mulSupport f ⊆ s 
   Iff.rfl
 #align function.mul_support_subset_iff Function.mul_support_subset_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} :
     mulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=

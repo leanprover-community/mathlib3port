@@ -2,6 +2,11 @@
 Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
+
+! This file was ported from Lean 3 source module analysis.normed_space.add_torsor_bases
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.Calculus.AffineMap
@@ -88,7 +93,7 @@ include V
 
 open AffineMap
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (y «expr ∉ » s) -/
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu : IsOpen u)
@@ -122,7 +127,7 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
 #align
   is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affine_independent_span_eq_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » u) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:631:2: warning: expanding binder collection (s «expr ⊆ » u) -/
 theorem IsOpen.exists_subset_affine_independent_span_eq_top {u : Set P} (hu : IsOpen u)
     (hne : u.Nonempty) :
     ∃ (s : _)(_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ := by

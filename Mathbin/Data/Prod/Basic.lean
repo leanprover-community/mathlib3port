@@ -2,6 +2,11 @@
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
+
+! This file was ported from Lean 3 source module data.prod.basic
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Basic
 import Mathbin.Logic.Function.Basic
@@ -171,6 +176,8 @@ theorem map_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε
   rfl
 #align prod.map_map Prod.map_map
 
+variable {a a₁ a₂ : α} {b b₁ b₂ : β}
+
 /- warning: prod.mk.inj_iff -> Prod.mk.inj_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (Eq.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (And (Eq.{succ u1} α a₁ a₂) (Eq.{succ u2} β b₁ b₂))
@@ -178,7 +185,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.mk.{u2, u1} α β a₁ b₁) (Prod.mk.{u2, u1} α β a₂ b₂)) (And (Eq.{succ u2} α a₁ a₂) (Eq.{succ u1} β b₁ b₂))
 Case conversion may be inaccurate. Consider using '#align prod.mk.inj_iff Prod.mk.inj_iffₓ'. -/
 @[simp]
-theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
+theorem mk.inj_iff : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨Prod.mk.inj, by cc⟩
 #align prod.mk.inj_iff Prod.mk.inj_iff
 
@@ -204,6 +211,14 @@ theorem mk.inj_right {α β : Type _} (b : β) :
   intro b₁ b₂ h
   · simpa only [and_true_iff, eq_self_iff_true, mk.inj_iff] using h
 #align prod.mk.inj_right Prod.mk.inj_right
+
+theorem mk_inj_left : (a, b₁) = (a, b₂) ↔ b₁ = b₂ :=
+  (mk.inj_left _).eq_iff
+#align prod.mk_inj_left Prod.mk_inj_left
+
+theorem mk_inj_right : (a₁, b) = (a₂, b) ↔ a₁ = a₂ :=
+  (mk.inj_right _).eq_iff
+#align prod.mk_inj_right Prod.mk_inj_right
 
 /- warning: prod.ext_iff -> Prod.ext_iff is a dubious translation:
 lean 3 declaration is
@@ -436,6 +451,8 @@ theorem snd_eq_iff : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
   | ⟨a, b⟩, x => by simp
 #align prod.snd_eq_iff Prod.snd_eq_iff
 
+variable {r : α → α → Prop} {s : β → β → Prop} {x y : α × β}
+
 /- warning: prod.lex_def -> Prod.lex_def is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> α -> Prop) (s : β -> β -> Prop) {p : Prod.{u1, u2} α β} {q : Prod.{u1, u2} α β}, Iff (Prod.Lex.{u1, u2} α β r s p q) (Or (r (Prod.fst.{u1, u2} α β p) (Prod.fst.{u1, u2} α β q)) (And (Eq.{succ u1} α (Prod.fst.{u1, u2} α β p) (Prod.fst.{u1, u2} α β q)) (s (Prod.snd.{u1, u2} α β p) (Prod.snd.{u1, u2} α β q))))
@@ -449,6 +466,10 @@ theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × �
     | (a, b), (c, d), Or.inl h => Lex.left _ _ h
     | (a, b), (c, d), Or.inr ⟨e, h⟩ => by change a = c at e <;> subst e <;> exact lex.right _ h⟩
 #align prod.lex_def Prod.lex_def
+
+theorem lex_iff : Lex r s x y ↔ r x.1 y.1 ∨ x.1 = y.1 ∧ s x.2 y.2 :=
+  lex_def _ _
+#align prod.lex_iff Prod.lex_iff
 
 #print Prod.Lex.decidable /-
 instance Lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β → Prop) [DecidableRel r]
@@ -484,6 +505,10 @@ instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl
     IsRefl (α × β) (Lex r s) :=
   ⟨Lex.refl_right _ _⟩
 #align prod.is_refl_right Prod.is_refl_right
+
+instance is_irrefl [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (α × β) (Lex r s) :=
+  ⟨by rintro ⟨i, a⟩ (⟨_, _, h⟩ | ⟨_, h⟩) <;> exact irrefl _ h⟩
+#align prod.is_irrefl Prod.is_irrefl
 
 /- warning: prod.lex.trans -> Prod.Lex.trans is a dubious translation:
 lean 3 declaration is
@@ -532,6 +557,15 @@ instance isTotal_right {r : α → α → Prop} {s : β → β → Prop} [IsTric
     · exact Or.inr (lex.left _ _ hji)⟩
 #align prod.is_total_right Prod.isTotal_right
 -/
+
+instance is_trichotomous [IsTrichotomous α r] [IsTrichotomous β s] :
+    IsTrichotomous (α × β) (Lex r s) :=
+  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by 
+    obtain hij | rfl | hji := trichotomous_of r i j
+    · exact Or.inl (lex.left _ _ hij)
+    · exact (trichotomous_of s a b).imp3 (lex.right _) (congr_arg _) (lex.right _)
+    · exact Or.inr (Or.inr <| lex.left _ _ hji)⟩
+#align prod.is_trichotomous Prod.is_trichotomous
 
 end Prod
 

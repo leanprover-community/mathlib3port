@@ -2,6 +2,11 @@
 Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
+
+! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
+! leanprover-community/mathlib commit 198161d833f2c01498c39c266b0b3dbe2c7a8c07
+! Please do not edit these lines, except to modify the commit id
+! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.Data.Set.Intervals.Disjoint
@@ -243,7 +248,7 @@ theorem integrable_on_Icc_iff_integrable_on_Ioo [HasNoAtoms μ] {f : ℝ → E} 
 
 theorem interval_integrable_iff' [HasNoAtoms μ] :
     IntervalIntegrable f μ a b ↔ IntegrableOn f (interval a b) μ := by
-  rw [interval_integrable_iff, interval, interval_oc, integrable_on_Icc_iff_integrable_on_Ioc]
+  rw [interval_integrable_iff, ← Icc_min_max, interval_oc, integrable_on_Icc_iff_integrable_on_Ioc]
 #align interval_integrable_iff' interval_integrable_iff'
 
 theorem interval_integrable_iff_integrable_Icc_of_le {f : ℝ → E} {a b : ℝ} (hab : a ≤ b)
